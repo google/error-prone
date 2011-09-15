@@ -1,0 +1,5 @@
+# Service Provider Interface registry for our Annotation Processor
+# Presence of this file triggers javac to execute the processor
+# It's in this directory so we don't try to run the processor while developing, since this causes
+# classloader problems.
+com.google.errorprone.ErrorProneProcessor
