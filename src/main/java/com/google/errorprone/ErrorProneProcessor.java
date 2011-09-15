@@ -27,6 +27,7 @@ import javax.annotation.processing.*;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.PropertyResourceBundle;
 import java.util.Set;
 
@@ -43,20 +44,24 @@ public class ErrorProneProcessor extends AbstractProcessor {
 
   private Trees trees;
   private Context context;
-  private JavacElements elementUtils;
 
   @Override
   public void init(ProcessingEnvironment processingEnv) {
     super.init(processingEnv);
     trees = Trees.instance(processingEnv);
+    context = ((JavacProcessingEnvironment)processingEnv).getContext();
+
   }
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     try {
-      PropertyResourceBundle messageBundle = new PropertyResourceBundle(
-          getClass().getResourceAsStream("/com/google/errorprone/errors.properties"));
-      Messages.instance(context).add(messageBundle);
+      String bundlePath = "/com/google/errorprone/errors.properties";
+      InputStream bundleResource = getClass().getResourceAsStream(bundlePath);
+      if (bundleResource == null) {
+        throw new IllegalStateException("Resource bundle not found at " + bundlePath);
+      }
+      Messages.instance(context).add(new PropertyResourceBundle(bundleResource));
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -67,7 +72,7 @@ public class ErrorProneProcessor extends AbstractProcessor {
         if (tree == null) {
           processingEnv.getMessager().printMessage(WARNING, "No tree found for element " + element);
         } else {
-          tree.accept(new ASTVisitor(element, processingEnv), new VisitorState());
+          tree.accept(new ASTVisitor(element, processingEnv, context), new VisitorState());
         }
       }
     }

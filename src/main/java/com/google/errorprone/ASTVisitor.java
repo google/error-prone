@@ -54,9 +54,9 @@ class ASTVisitor implements TreeVisitor<Void, VisitorState> {
   private final Iterable<? extends ErrorProducingMatcher<MethodInvocationTree>>
       methodInvocationMatchers = asList(new PreconditionsCheckNotNullMatcher());
 
-  public ASTVisitor(Element element, ProcessingEnvironment processingEnv) {
+  public ASTVisitor(Element element, ProcessingEnvironment processingEnv, Context context) {
     this.element = element;
-    this.context = ((JavacProcessingEnvironment)processingEnv).getContext();
+    this.context = context;
     this.elementUtils = ((JavacProcessingEnvironment)processingEnv).getElementUtils();
     this.processingEnv = processingEnv;
   }
