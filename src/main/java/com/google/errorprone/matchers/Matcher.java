@@ -17,12 +17,11 @@
 package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
+
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
-
-import java.lang.Thread.State;
 
 /**
  * An embedded predicate DSL for matching Java source code.
@@ -31,8 +30,7 @@ import java.lang.Thread.State;
 public abstract class Matcher<T extends Tree> {
   public abstract boolean matches(T t, VisitorState state);
 
-  <T extends Tree> Matcher<T> allOf(
-      final Matcher<? super T>... matchers) {
+  <T extends Tree> Matcher<T> allOf(final Matcher<? super T>... matchers) {
     return new Matcher<T>() {
       @Override public boolean matches(T t, VisitorState state) {
         for (Matcher<? super T> matcher : matchers) {
