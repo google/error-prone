@@ -48,7 +48,7 @@ public class PreconditionsCheckNotNullTest extends TestCase {
         .getResource("/" + this.getClass().getName().replaceAll("\\.", "/") + ".class")
         .toURI().getPath();
     projectRoot = new File(pathToFileInProject
-        .substring(0, pathToFileInProject.indexOf("error-prone") + "error-prone".length()));
+        .substring(0, pathToFileInProject.lastIndexOf("error-prone") + "error-prone".length()));
     compiler = ToolProvider.getSystemJavaCompiler();
     fileManager = compiler.getStandardFileManager(null, null, null);
     diagnostics = new DiagnosticCollector<JavaFileObject>();
