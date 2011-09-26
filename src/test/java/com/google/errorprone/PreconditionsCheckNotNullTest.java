@@ -75,7 +75,6 @@ public class PreconditionsCheckNotNullTest extends TestCase {
     assertTrue(found);
   }
 
-  //TODO: get the test to pass
   public void testNoErrorForNegativeCase1() throws URISyntaxException {
     File exampleSource = new File(projectRoot, "error-patterns/guava/NegativeCase1.java");
     assertTrue(exampleSource.exists());
