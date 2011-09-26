@@ -41,7 +41,10 @@ public class StaticMethodMatcher extends Matcher<ExpressionTree> {
   public boolean matches(ExpressionTree item, VisitorState state) {
     try {
       MemberSelectTree memberSelectTree = (MemberSelectTree) item;
-      if (memberSelectTree.getExpression().getKind() == IDENTIFIER &&
+      String expectedName = packageName + "." + className;
+      // TODO: check imports other than the first one
+      if (state.imports.get(0).getQualifiedIdentifier().toString().equals(expectedName) &&
+          memberSelectTree.getExpression().getKind() == IDENTIFIER &&
           // TODO: allow fully-qualified references
           memberSelectTree.getExpression().toString().equals(className) &&
           memberSelectTree.getIdentifier().contentEquals(methodName)) {
