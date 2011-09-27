@@ -56,6 +56,7 @@ public class StaticMethodMatcher extends Matcher<ExpressionTree> {
       for (ImportTree importTree : state.imports) {
         if (importTree.getQualifiedIdentifier().toString().equals(packageName + "." + className)) {
           importFound = true;
+          break;
         }
       }
       if (importFound &&
