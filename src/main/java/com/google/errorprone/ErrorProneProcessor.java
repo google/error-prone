@@ -66,9 +66,8 @@ public class ErrorProneProcessor extends AbstractProcessor {
     }
 
     if (!roundEnv.processingOver()) {
-      Set<? extends Element> elements = roundEnv.getRootElements();
+      JavacElements elementUtils = ((JavacProcessingEnvironment)processingEnv).getElementUtils();
       for (Element element : roundEnv.getRootElements()) {
-        JavacElements elementUtils = ((JavacProcessingEnvironment)processingEnv).getElementUtils();
         Pair<JCTree, JCCompilationUnit> treeAndTopLevel =
             elementUtils.getTreeAndTopLevel(element, null, null);
         if (treeAndTopLevel == null) {
