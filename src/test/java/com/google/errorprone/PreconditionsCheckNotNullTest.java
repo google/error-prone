@@ -55,8 +55,12 @@ public class PreconditionsCheckNotNullTest extends TestCase {
   }
 
   // TODO: parameterize the test so each new error type doesn't create a new class?
-  public void testLineNumberAppearsInError() throws URISyntaxException {
-    File exampleSource = new File(projectRoot, "error-patterns/guava/PositiveCase1.java");
+  public void testErrorExpectedForPositiveCase1() throws URISyntaxException {
+    errorExpectedWithCorrectLineNumber("PositiveCase1.java", 9L, 32L);
+  }
+  
+  private void errorExpectedWithCorrectLineNumber(String filename, long lineNum, long colNum) {
+    File exampleSource = new File(projectRoot, "error-patterns/guava/" + filename);
     assertTrue(exampleSource.exists());
     assertFalse(createCompileTask(exampleSource).call());
     boolean found = false;
@@ -65,8 +69,8 @@ public class PreconditionsCheckNotNullTest extends TestCase {
       System.out.println("message = " + message);
       if (diagnostic.getKind() == Kind.ERROR && message.contains("Preconditions#checkNotNull")) {
         assertThat(message, containsString("\"string literal\""));
-        assertThat(diagnostic.getLineNumber(), is(5L));
-        assertThat(diagnostic.getColumnNumber(), is(32L));
+        assertThat(diagnostic.getLineNumber(), is(lineNum));
+        assertThat(diagnostic.getColumnNumber(), is(colNum));
         found = true;
         return;
 
@@ -74,7 +78,7 @@ public class PreconditionsCheckNotNullTest extends TestCase {
     }
     assertTrue(found);
   }
-
+  
   public void testNoErrorForNegativeCase1() throws URISyntaxException {
     File exampleSource = new File(projectRoot, "error-patterns/guava/NegativeCase1.java");
     assertTrue(exampleSource.exists());
