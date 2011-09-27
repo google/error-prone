@@ -56,7 +56,11 @@ public class PreconditionsCheckNotNullTest extends TestCase {
 
   // TODO: parameterize the test so each new error type doesn't create a new class?
   public void testErrorExpectedForPositiveCase1() throws URISyntaxException {
-    errorExpectedWithCorrectLineNumber("PositiveCase1.java", 9L, 32L);
+    errorExpectedWithCorrectLineNumber("PositiveCase1.java", 7L, 32L);
+  }
+  
+  public void testErrorExpectedForPositiveCase2() throws URISyntaxException {
+    errorExpectedWithCorrectLineNumber("PositiveCase2.java", 10L, 55L);
   }
   
   private void errorExpectedWithCorrectLineNumber(String filename, long lineNum, long colNum) {
