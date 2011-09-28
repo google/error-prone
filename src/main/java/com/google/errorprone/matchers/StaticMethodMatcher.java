@@ -18,9 +18,11 @@ package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.MemberSelectTree;
 
 import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
+import static com.sun.source.tree.Tree.Kind.MEMBER_SELECT;
 
 /**
  * Matches a static method expression.
@@ -41,15 +43,28 @@ public class StaticMethodMatcher extends Matcher<ExpressionTree> {
   public boolean matches(ExpressionTree item, VisitorState state) {
     try {
       MemberSelectTree memberSelectTree = (MemberSelectTree) item;
-      String expectedName = packageName + "." + className;
-      // TODO: check imports other than the first one
-      if (state.imports.get(0).getQualifiedIdentifier().toString().equals(expectedName) &&
-          memberSelectTree.getExpression().getKind() == IDENTIFIER &&
-          // TODO: allow fully-qualified references
-          memberSelectTree.getExpression().toString().equals(className) &&
+      
+      // Case 1: Fully-qualified method call
+      if (memberSelectTree.getExpression().getKind() == MEMBER_SELECT &&
+          memberSelectTree.getExpression().toString().equals(packageName + "." + className) &&
           memberSelectTree.getIdentifier().contentEquals(methodName)) {
         return true;
       }
+      
+      // Case 2: Not fully qualified method call -- must check imports
+      boolean importFound = false;
+      for (ImportTree importTree : state.imports) {
+        if (importTree.getQualifiedIdentifier().toString().equals(packageName + "." + className)) {
+          importFound = true;
+          break;
+        }
+      }
+      if (importFound &&
+          memberSelectTree.getExpression().getKind() == IDENTIFIER &&
+          memberSelectTree.getExpression().toString().equals(className) &&
+          memberSelectTree.getIdentifier().contentEquals(methodName)) {
+        return true;
+      } 
     } catch (ClassCastException e) {
       return false;
     }
