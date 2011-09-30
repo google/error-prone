@@ -21,6 +21,7 @@ import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Messages;
 import com.sun.tools.javac.util.Pair;
 
@@ -36,7 +37,7 @@ import static javax.lang.model.SourceVersion.RELEASE_6;
 import static javax.tools.Diagnostic.Kind.WARNING;
 
 /**
- * Top-level class for inspecting Java source code for problems.
+ * Entry point for running error-prone as a JSR-269 annotation processor.
  * @author Alex Eagle (alexeagle@google.com)
  */
 @SupportedAnnotationTypes("*")
@@ -73,8 +74,11 @@ public class ErrorProneProcessor extends AbstractProcessor {
         if (treeAndTopLevel == null) {
           processingEnv.getMessager().printMessage(WARNING, "No tree found for element " + element);
         } else {
-          VisitorState vs = new VisitorState();
-          treeAndTopLevel.snd.accept(new ASTVisitor(treeAndTopLevel.snd, processingEnv, context), vs);
+          JSR269ErrorReporter errorReporter = new JSR269ErrorReporter(
+              Log.instance(context),
+              processingEnv.getMessager(),
+              treeAndTopLevel.snd.getSourceFile());
+          treeAndTopLevel.snd.accept(new ASTVisitor(context, errorReporter), new VisitorState());
         }
       }
     }

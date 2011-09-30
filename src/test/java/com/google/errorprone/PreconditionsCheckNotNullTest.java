@@ -54,7 +54,7 @@ public class PreconditionsCheckNotNullTest extends TestCase {
     diagnostics = new DiagnosticCollector<JavaFileObject>();
   }
 
-  // TODO: parameterize the test so each new error type doesn't create a new class?
+  // TODO: parameterize the test so each new error type doesn't create a new test method?
   public void testErrorExpectedForPositiveCase1() throws URISyntaxException {
     errorExpectedWithCorrectLineNumber("PositiveCase1.java", 7L, 32L);
   }

@@ -39,19 +39,16 @@ class ASTVisitor implements TreeVisitor<Void, VisitorState> {
 
   //TODO: proper logging
   private static final Boolean DEBUG = false;
-  private static final String MESSAGE_BUNDLE_KEY = "error.prone";
 
-  private final JCCompilationUnit tree;
-  private final ProcessingEnvironment processingEnv;
   private final Context context;
+  private final ErrorReporter errorReporter;
 
   private final Iterable<? extends ErrorProducingMatcher<MethodInvocationTree>>
       methodInvocationMatchers = asList(new PreconditionsCheckNotNullMatcher());
 
-  public ASTVisitor(JCCompilationUnit tree, ProcessingEnvironment processingEnv, Context context) {
-    this.tree = tree;
+  public ASTVisitor(Context context, ErrorReporter errorReporter) {
     this.context = context;
-    this.processingEnv = processingEnv;
+    this.errorReporter = errorReporter;
   }
 
   private void trace(Tree tree) {
@@ -69,23 +66,6 @@ class ASTVisitor implements TreeVisitor<Void, VisitorState> {
     }
   }
 
-  private void emitError(AstError error, VisitorState state) {
-    Log log = Log.instance(context);
-    JavaFileObject originalSource = null;
-    originalSource = log.useSource(tree.getSourceFile());
-    try {
-      // Workaround. The first API increments the error count and causes the build to fail.
-      // The second API gets the correct line and column number.
-      // TODO: figure out how to get both features with one error
-      processingEnv.getMessager().printMessage(Kind.ERROR, "");
-      log.error((DiagnosticPosition) error.match, MESSAGE_BUNDLE_KEY, error.message);
-    } finally {
-      if (originalSource != null) {
-        log.useSource(originalSource);
-      }
-    }
-  }
-
   @Override
   public Void visitAnnotation(AnnotationTree annotationTree, VisitorState state) {
     trace(annotationTree);
@@ -98,7 +78,7 @@ class ASTVisitor implements TreeVisitor<Void, VisitorState> {
     for (ErrorProducingMatcher<MethodInvocationTree> matcher : methodInvocationMatchers) {
       AstError error = matcher.matchWithError(methodInvocationTree, state);
       if (error != null) {
-        emitError(error, state);
+        errorReporter.emitError(error);
       }
     }
     return null;
