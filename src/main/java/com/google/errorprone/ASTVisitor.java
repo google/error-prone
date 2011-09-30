@@ -18,19 +18,14 @@ package com.google.errorprone;
 
 import com.google.errorprone.matchers.ErrorProducingMatcher.AstError;
 import com.sun.source.tree.*;
-import com.sun.tools.javac.model.JavacElements;
-import com.sun.tools.javac.processing.JavacProcessingEnvironment;
-import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Log;
-import com.sun.tools.javac.util.Pair;
 import com.google.errorprone.matchers.ErrorProducingMatcher;
 import com.google.errorprone.matchers.PreconditionsCheckNotNullMatcher;
 
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
 import javax.tools.Diagnostic.Kind;
 import javax.tools.JavaFileObject;
 
@@ -46,18 +41,16 @@ class ASTVisitor implements TreeVisitor<Void, VisitorState> {
   private static final Boolean DEBUG = false;
   private static final String MESSAGE_BUNDLE_KEY = "error.prone";
 
-  private final Element element;
-  private final JavacElements elementUtils;
+  private final JCCompilationUnit tree;
   private final ProcessingEnvironment processingEnv;
   private final Context context;
 
   private final Iterable<? extends ErrorProducingMatcher<MethodInvocationTree>>
       methodInvocationMatchers = asList(new PreconditionsCheckNotNullMatcher());
 
-  public ASTVisitor(Element element, ProcessingEnvironment processingEnv, Context context) {
-    this.element = element;
+  public ASTVisitor(JCCompilationUnit tree, ProcessingEnvironment processingEnv, Context context) {
+    this.tree = tree;
     this.context = context;
-    this.elementUtils = ((JavacProcessingEnvironment)processingEnv).getElementUtils();
     this.processingEnv = processingEnv;
   }
 
@@ -78,12 +71,8 @@ class ASTVisitor implements TreeVisitor<Void, VisitorState> {
 
   private void emitError(AstError error, VisitorState state) {
     Log log = Log.instance(context);
-    Pair<JCTree, JCCompilationUnit> treeAndTopLevel =
-        elementUtils.getTreeAndTopLevel(element, null, null);
     JavaFileObject originalSource = null;
-    if (treeAndTopLevel != null) {
-      originalSource = log.useSource(treeAndTopLevel.snd.getSourceFile());
-    }
+    originalSource = log.useSource(tree.getSourceFile());
     try {
       // Workaround. The first API increments the error count and causes the build to fail.
       // The second API gets the correct line and column number.
@@ -334,6 +323,12 @@ class ASTVisitor implements TreeVisitor<Void, VisitorState> {
   @Override
   public Void visitCompilationUnit(CompilationUnitTree compilationUnitTree, VisitorState state) {
     trace(compilationUnitTree);
+    for (ImportTree importTree : compilationUnitTree.getImports()) {
+      importTree.accept(this, state);
+    }
+    for (Tree tree : compilationUnitTree.getTypeDecls()) {
+      tree.accept(this, state);
+    }
     return null;
   }
 

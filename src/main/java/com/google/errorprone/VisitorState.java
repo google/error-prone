@@ -17,7 +17,6 @@
 package com.google.errorprone;
 
 import com.sun.source.tree.ImportTree;
-import com.sun.tools.javac.util.Context;
 
 import java.util.ArrayList;
 import java.util.List;

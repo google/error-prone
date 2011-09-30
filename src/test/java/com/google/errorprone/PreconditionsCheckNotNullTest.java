@@ -48,15 +48,23 @@ public class PreconditionsCheckNotNullTest extends TestCase {
         .getResource("/" + this.getClass().getName().replaceAll("\\.", "/") + ".class")
         .toURI().getPath();
     projectRoot = new File(pathToFileInProject
-        .substring(0, pathToFileInProject.indexOf("error-prone") + "error-prone".length()));
+        .substring(0, pathToFileInProject.lastIndexOf("error-prone") + "error-prone".length()));
     compiler = ToolProvider.getSystemJavaCompiler();
     fileManager = compiler.getStandardFileManager(null, null, null);
     diagnostics = new DiagnosticCollector<JavaFileObject>();
   }
 
   // TODO: parameterize the test so each new error type doesn't create a new class?
-  public void testLineNumberAppearsInError() throws URISyntaxException {
-    File exampleSource = new File(projectRoot, "error-patterns/guava/PositiveCase1.java");
+  public void testErrorExpectedForPositiveCase1() throws URISyntaxException {
+    errorExpectedWithCorrectLineNumber("PositiveCase1.java", 7L, 32L);
+  }
+  
+  public void testErrorExpectedForPositiveCase2() throws URISyntaxException {
+    errorExpectedWithCorrectLineNumber("PositiveCase2.java", 10L, 55L);
+  }
+  
+  private void errorExpectedWithCorrectLineNumber(String filename, long lineNum, long colNum) {
+    File exampleSource = new File(projectRoot, "error-patterns/guava/" + filename);
     assertTrue(exampleSource.exists());
     assertFalse(createCompileTask(exampleSource).call());
     boolean found = false;
@@ -65,8 +73,8 @@ public class PreconditionsCheckNotNullTest extends TestCase {
       System.out.println("message = " + message);
       if (diagnostic.getKind() == Kind.ERROR && message.contains("Preconditions#checkNotNull")) {
         assertThat(message, containsString("\"string literal\""));
-        assertThat(diagnostic.getLineNumber(), is(5L));
-        assertThat(diagnostic.getColumnNumber(), is(32L));
+        assertThat(diagnostic.getLineNumber(), is(lineNum));
+        assertThat(diagnostic.getColumnNumber(), is(colNum));
         found = true;
         return;
 
@@ -74,20 +82,17 @@ public class PreconditionsCheckNotNullTest extends TestCase {
     }
     assertTrue(found);
   }
-
-  //TODO: get the test to pass
-  public void suppresstestNoErrorForNegativeCase1() throws URISyntaxException {
+  
+  public void testNoErrorForNegativeCase1() throws URISyntaxException {
     File exampleSource = new File(projectRoot, "error-patterns/guava/NegativeCase1.java");
     assertTrue(exampleSource.exists());
     assertTrue(createCompileTask(exampleSource).call());
-    boolean found = false;
     for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics.getDiagnostics()) {
       String message = diagnostic.getMessage(ENGLISH);
       if (diagnostic.getKind() == Kind.ERROR && message.contains("Preconditions#checkNotNull")) {
         fail("Error in negative case");
       }
     }
-    assertTrue(found);
   }
 
   private CompilationTask createCompileTask(File exampleSource) {

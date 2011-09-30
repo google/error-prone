@@ -16,12 +16,13 @@
 
 package com.google.errorprone;
 
-import com.sun.source.tree.Tree;
-import com.sun.source.util.Trees;
 import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
+import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Messages;
+import com.sun.tools.javac.util.Pair;
 
 import javax.annotation.processing.*;
 import javax.lang.model.element.Element;
@@ -42,13 +43,11 @@ import static javax.tools.Diagnostic.Kind.WARNING;
 @SupportedSourceVersion(RELEASE_6)
 public class ErrorProneProcessor extends AbstractProcessor {
 
-  private Trees trees;
   private Context context;
 
   @Override
   public void init(ProcessingEnvironment processingEnv) {
     super.init(processingEnv);
-    trees = Trees.instance(processingEnv);
     context = ((JavacProcessingEnvironment)processingEnv).getContext();
 
   }
@@ -67,12 +66,15 @@ public class ErrorProneProcessor extends AbstractProcessor {
     }
 
     if (!roundEnv.processingOver()) {
+      JavacElements elementUtils = ((JavacProcessingEnvironment)processingEnv).getElementUtils();
       for (Element element : roundEnv.getRootElements()) {
-        Tree tree = trees.getTree(element);
-        if (tree == null) {
+        Pair<JCTree, JCCompilationUnit> treeAndTopLevel =
+            elementUtils.getTreeAndTopLevel(element, null, null);
+        if (treeAndTopLevel == null) {
           processingEnv.getMessager().printMessage(WARNING, "No tree found for element " + element);
         } else {
-          tree.accept(new ASTVisitor(element, processingEnv, context), new VisitorState());
+          VisitorState vs = new VisitorState();
+          treeAndTopLevel.snd.accept(new ASTVisitor(treeAndTopLevel.snd, processingEnv, context), vs);
         }
       }
     }
