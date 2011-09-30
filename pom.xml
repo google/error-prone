@@ -58,7 +58,8 @@
         <executions>
           <execution>
             <id>copy-resources</id>
-            <phase>prepare-package</phase>
+            <!-- we'll copy the resource just after the tests are run -->
+            <phase>test</phase>
             <goals>
               <goal>copy-resources</goal>
             </goals>
