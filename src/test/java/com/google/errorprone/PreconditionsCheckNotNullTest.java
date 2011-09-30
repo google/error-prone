@@ -23,12 +23,16 @@ import javax.tools.Diagnostic.Kind;
 import javax.tools.JavaCompiler.CompilationTask;
 import java.io.File;
 import java.net.URISyntaxException;
+import java.net.URLClassLoader;
 
 import static java.util.Arrays.asList;
 import static java.util.Locale.ENGLISH;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.StringContains.containsString;
 import static org.junit.Assert.assertThat;
+
+import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -65,12 +69,11 @@ public class PreconditionsCheckNotNullTest extends TestCase {
   
   private void errorExpectedWithCorrectLineNumber(String filename, long lineNum, long colNum) {
     File exampleSource = new File(projectRoot, "error-patterns/guava/" + filename);
-    assertTrue(exampleSource.exists());
-    assertFalse(createCompileTask(exampleSource).call());
+    assertTrue(exampleSource.getAbsolutePath() + " should exist", exampleSource.exists());
+    assertFalse("Compile should fail", createCompileTask(exampleSource).call());
     boolean found = false;
     for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics.getDiagnostics()) {
       String message = diagnostic.getMessage(ENGLISH);
-      System.out.println("message = " + message);
       if (diagnostic.getKind() == Kind.ERROR && message.contains("Preconditions#checkNotNull")) {
         assertThat(message, containsString("\"string literal\""));
         assertThat(diagnostic.getLineNumber(), is(lineNum));
@@ -80,13 +83,13 @@ public class PreconditionsCheckNotNullTest extends TestCase {
 
       }
     }
-    assertTrue(found);
+    assertTrue("Warning should be found", found);
   }
   
   public void testNoErrorForNegativeCase1() throws URISyntaxException {
     File exampleSource = new File(projectRoot, "error-patterns/guava/NegativeCase1.java");
-    assertTrue(exampleSource.exists());
-    assertTrue(createCompileTask(exampleSource).call());
+    assertTrue(exampleSource.getAbsolutePath() + " should exist", exampleSource.exists());
+    assertTrue("Compile should succeed", createCompileTask(exampleSource).call());
     for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics.getDiagnostics()) {
       String message = diagnostic.getMessage(ENGLISH);
       if (diagnostic.getKind() == Kind.ERROR && message.contains("Preconditions#checkNotNull")) {
@@ -97,9 +100,30 @@ public class PreconditionsCheckNotNullTest extends TestCase {
 
   private CompilationTask createCompileTask(File exampleSource) {
     CompilationTask task = compiler
-        .getTask(null, fileManager, diagnostics, null, asList(ErrorProneProcessor.class.getName()),
+        .getTask(null, fileManager, diagnostics,
+            asList("-classpath", Joiner.on(File.pathSeparator).join(
+              getPath(ErrorProneProcessor.class),
+              getPath(Preconditions.class))),
+            asList(ErrorProneProcessor.class.getName()),
             fileManager.getJavaFileObjects(exampleSource));
     task.setProcessors(asList(new ErrorProneProcessor()));
     return task;
+  }
+
+  private String getPath(Class clazz) {
+    String classname = clazz.getName().replace('.', '/') + ".class";
+    URLClassLoader classLoader = (URLClassLoader) Thread.currentThread().getContextClassLoader();
+    String path = classLoader.findResource(classname).getFile();
+    int jarDelimiter = path.indexOf("!");
+    if (jarDelimiter >= 0) {
+      return path.substring(0, jarDelimiter);
+    } else {
+      int packageStart = path.indexOf(clazz.getPackage().getName().replace('.', '/'));
+      if (packageStart >= 0) {
+        return path.substring(0, packageStart);
+      } else {
+        return path;
+      }
+    }
   }
 }
