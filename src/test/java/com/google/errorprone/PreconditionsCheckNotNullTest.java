@@ -60,15 +60,15 @@ public class PreconditionsCheckNotNullTest extends TestCase {
 
   // TODO: parameterize the test so each new error type doesn't create a new test method?
   public void testErrorExpectedForPositiveCase1() throws URISyntaxException {
-    errorExpectedWithCorrectLineNumber("PositiveCase1.java", 7L, 32L);
+    errorExpectedWithCorrectLineNumber("guava/PositiveCase1.java", 7L, 32L);
   }
   
   public void testErrorExpectedForPositiveCase2() throws URISyntaxException {
-    errorExpectedWithCorrectLineNumber("PositiveCase2.java", 10L, 55L);
+    errorExpectedWithCorrectLineNumber("guava/PositiveCase2.java", 10L, 55L);
   }
   
   private void errorExpectedWithCorrectLineNumber(String filename, long lineNum, long colNum) {
-    File exampleSource = new File(projectRoot, "error-patterns/guava/" + filename);
+    File exampleSource = new File(projectRoot, "error-patterns/" + filename);
     assertTrue(exampleSource.getAbsolutePath() + " should exist", exampleSource.exists());
     assertFalse("Compile should fail", createCompileTask(exampleSource).call());
     boolean found = false;
@@ -83,7 +83,7 @@ public class PreconditionsCheckNotNullTest extends TestCase {
 
       }
     }
-    assertTrue("Warning should be found", found);
+    assertTrue("Warning should be found. Diagnostics: " + diagnostics.getDiagnostics(), found);
   }
   
   public void testNoErrorForNegativeCase1() throws URISyntaxException {

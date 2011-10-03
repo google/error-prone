@@ -74,11 +74,12 @@ public class ErrorProneProcessor extends AbstractProcessor {
         if (treeAndTopLevel == null) {
           processingEnv.getMessager().printMessage(WARNING, "No tree found for element " + element);
         } else {
-          JSR269ErrorReporter errorReporter = new JSR269ErrorReporter(
+          ErrorReporter errorReporter = new JSR269ErrorReporter(
               Log.instance(context),
               processingEnv.getMessager(),
               treeAndTopLevel.snd.getSourceFile());
-          treeAndTopLevel.snd.accept(new ASTVisitor(context, errorReporter), new VisitorState());
+          new ASTVisitor(errorReporter)
+              .visitCompilationUnit(treeAndTopLevel.snd, new VisitorState());
         }
       }
     }
