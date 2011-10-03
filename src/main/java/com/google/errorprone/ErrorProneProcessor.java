@@ -16,6 +16,11 @@
 
 package com.google.errorprone;
 
+import static javax.lang.model.SourceVersion.RELEASE_6;
+import static javax.tools.Diagnostic.Kind.WARNING;
+
+import com.google.errorprone.matchers.ErrorProducingMatcher;
+
 import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import com.sun.tools.javac.tree.JCTree;
@@ -25,16 +30,19 @@ import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Messages;
 import com.sun.tools.javac.util.Pair;
 
-import javax.annotation.processing.*;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.PropertyResourceBundle;
 import java.util.Set;
 
-import static javax.lang.model.SourceVersion.RELEASE_6;
-import static javax.tools.Diagnostic.Kind.WARNING;
+import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.annotation.processing.SupportedSourceVersion;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
 
 /**
  * Entry point for running error-prone as a JSR-269 annotation processor.
@@ -74,11 +82,15 @@ public class ErrorProneProcessor extends AbstractProcessor {
         if (treeAndTopLevel == null) {
           processingEnv.getMessager().printMessage(WARNING, "No tree found for element " + element);
         } else {
-          JSR269ErrorReporter errorReporter = new JSR269ErrorReporter(
+          ErrorReporter errorReporter = new JSR269ErrorReporter(
               Log.instance(context),
               processingEnv.getMessager(),
               treeAndTopLevel.snd.getSourceFile());
-          treeAndTopLevel.snd.accept(new ASTVisitor(context, errorReporter), new VisitorState());
+          List<ErrorProducingMatcher.AstError> astErrors = new ASTVisitor()
+              .visitCompilationUnit(treeAndTopLevel.snd, new VisitorState());
+          for (ErrorProducingMatcher.AstError astError : astErrors) {
+            errorReporter.emitError(astError);
+          }
         }
       }
     }

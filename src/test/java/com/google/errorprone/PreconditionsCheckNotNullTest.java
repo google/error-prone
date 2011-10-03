@@ -16,15 +16,6 @@
 
 package com.google.errorprone;
 
-import junit.framework.TestCase;
-
-import javax.tools.*;
-import javax.tools.Diagnostic.Kind;
-import javax.tools.JavaCompiler.CompilationTask;
-import java.io.File;
-import java.net.URISyntaxException;
-import java.net.URLClassLoader;
-
 import static java.util.Arrays.asList;
 import static java.util.Locale.ENGLISH;
 import static org.hamcrest.CoreMatchers.is;
@@ -33,6 +24,20 @@ import static org.junit.Assert.assertThat;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
+
+import junit.framework.TestCase;
+
+import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URLClassLoader;
+
+import javax.tools.Diagnostic;
+import javax.tools.Diagnostic.Kind;
+import javax.tools.DiagnosticCollector;
+import javax.tools.JavaCompiler.CompilationTask;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardJavaFileManager;
+import javax.tools.ToolProvider;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -60,15 +65,15 @@ public class PreconditionsCheckNotNullTest extends TestCase {
 
   // TODO: parameterize the test so each new error type doesn't create a new test method?
   public void testErrorExpectedForPositiveCase1() throws URISyntaxException {
-    errorExpectedWithCorrectLineNumber("PositiveCase1.java", 7L, 32L);
+    errorExpectedWithCorrectLineNumber("guava/PositiveCase1.java", 7L, 32L);
   }
   
   public void testErrorExpectedForPositiveCase2() throws URISyntaxException {
-    errorExpectedWithCorrectLineNumber("PositiveCase2.java", 10L, 55L);
+    errorExpectedWithCorrectLineNumber("guava/PositiveCase2.java", 10L, 55L);
   }
   
   private void errorExpectedWithCorrectLineNumber(String filename, long lineNum, long colNum) {
-    File exampleSource = new File(projectRoot, "error-patterns/guava/" + filename);
+    File exampleSource = new File(projectRoot, "error-patterns/" + filename);
     assertTrue(exampleSource.getAbsolutePath() + " should exist", exampleSource.exists());
     assertFalse("Compile should fail", createCompileTask(exampleSource).call());
     boolean found = false;
@@ -83,7 +88,7 @@ public class PreconditionsCheckNotNullTest extends TestCase {
 
       }
     }
-    assertTrue("Warning should be found", found);
+    assertTrue("Warning should be found. Diagnostics: " + diagnostics.getDiagnostics(), found);
   }
   
   public void testNoErrorForNegativeCase1() throws URISyntaxException {
