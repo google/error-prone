@@ -16,13 +16,14 @@
 
 package com.google.errorprone;
 
+import com.google.errorprone.matchers.DeadExceptionMatcher;
 import com.google.errorprone.matchers.ErrorProducingMatcher;
 import com.google.errorprone.matchers.ErrorProducingMatcher.AstError;
 import com.google.errorprone.matchers.PreconditionsCheckNotNullMatcher;
 
-import com.sun.source.tree.ImportTree;
-import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.*;
 import com.sun.source.util.TreeScanner;
+import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,6 +37,12 @@ public class ASTVisitor extends TreeScanner<List<AstError>, VisitorState> {
 
   private final Iterable<? extends ErrorProducingMatcher<MethodInvocationTree>>
       methodInvocationMatchers = Arrays.asList(new PreconditionsCheckNotNullMatcher());
+
+  @Override
+  public List<AstError> visitCompilationUnit(CompilationUnitTree compilationUnitTree, VisitorState visitorState) {
+    visitorState.compilationUnit = (JCCompilationUnit)compilationUnitTree;
+    return super.visitCompilationUnit(compilationUnitTree, visitorState);
+  }
 
   @Override
   public List<AstError> visitMethodInvocation(
@@ -57,4 +64,11 @@ public class ASTVisitor extends TreeScanner<List<AstError>, VisitorState> {
     super.visitImport(importTree, state);
     return null;
   }
+
+  @Override
+  public List<AstError> visitNewClass(NewClassTree newClassTree, VisitorState visitorState) {
+    new DeadExceptionMatcher().matchWithError(newClassTree, visitorState);
+    return super.visitNewClass(newClassTree, visitorState);
+  }
+
 }

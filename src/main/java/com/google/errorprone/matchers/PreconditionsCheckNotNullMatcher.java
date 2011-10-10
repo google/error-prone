@@ -16,9 +16,12 @@
 
 package com.google.errorprone.matchers;
 
+import com.google.errorprone.SuggestedFix;
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.MethodInvocationTree;
 import com.google.errorprone.matchers.CapturingMatcher.TreeHolder;
+import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
+import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 
 import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
 import static java.lang.String.format;
@@ -37,9 +40,13 @@ public class PreconditionsCheckNotNullMatcher
         methodSelect(staticMethod("com.google.common.base", "Preconditions", "checkNotNull")),
         argument(0, capture(stringLiteralValue, kindOf(STRING_LITERAL))))
         .matches(tree, state)) {
+      DiagnosticPosition pos = ((JCMethodInvocation) tree).pos();
+      SuggestedFix fix = new SuggestedFix(
+          pos.getStartPosition(), pos.getEndPosition(state.compilationUnit.endPositions), "");
       return new AstError(
           format("String literal %s passed as first argument to Preconditions#checkNotNull",
               stringLiteralValue.get()),
+          fix,
           stringLiteralValue.get());
     }
     return null;
