@@ -14,27 +14,12 @@
  * limitations under the License.
  */
 
-package com.google.errorprone;
+import com.google.common.base.Functions;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Predicates;
 
-import com.sun.source.tree.ImportTree;
-import com.sun.tools.javac.code.Symtab;
-import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
-
-import javax.lang.model.util.Types;
-import java.util.ArrayList;
-import java.util.List;
-
-/**
- * @author alexeagle@google.com (Alex Eagle)
- */
-public class VisitorState {
-  public List<ImportTree> imports = new ArrayList<ImportTree>();
-  public JCCompilationUnit compilationUnit;
-  public final Types types;
-  public final Symtab symtab;
-
-  public VisitorState(Types types, Symtab symtab) {
-    this.types = types;
-    this.symtab = symtab;
+public class PositiveCase1 {
+  public void error() {
+    Preconditions.checkNotNull("string literal");
   }
 }

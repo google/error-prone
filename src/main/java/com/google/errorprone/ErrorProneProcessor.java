@@ -21,19 +21,17 @@ import static javax.tools.Diagnostic.Kind.WARNING;
 
 import com.google.errorprone.matchers.ErrorProducingMatcher;
 
+import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.model.JavacElements;
+import com.sun.tools.javac.model.JavacTypes;
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Log;
-import com.sun.tools.javac.util.Messages;
 import com.sun.tools.javac.util.Pair;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
-import java.util.PropertyResourceBundle;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -46,6 +44,7 @@ import javax.lang.model.element.TypeElement;
 
 /**
  * Entry point for running error-prone as a JSR-269 annotation processor.
+ * This is not viable for checks which need the symbol table as name resolution hasn't happened.
  * @author Alex Eagle (alexeagle@google.com)
  */
 @SupportedAnnotationTypes("*")
@@ -63,16 +62,7 @@ public class ErrorProneProcessor extends AbstractProcessor {
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-    try {
-      String bundlePath = "/com/google/errorprone/errors.properties";
-      InputStream bundleResource = getClass().getResourceAsStream(bundlePath);
-      if (bundleResource == null) {
-        throw new IllegalStateException("Resource bundle not found at " + bundlePath);
-      }
-      Messages.instance(context).add(new PropertyResourceBundle(bundleResource));
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    ErrorFindingCompiler.setupMessageBundle(context);
 
     if (!roundEnv.processingOver()) {
       JavacElements elementUtils = ((JavacProcessingEnvironment)processingEnv).getElementUtils();
@@ -86,8 +76,10 @@ public class ErrorProneProcessor extends AbstractProcessor {
               Log.instance(context),
               processingEnv.getMessager(),
               treeAndTopLevel.snd.getSourceFile());
+          VisitorState visitorState =
+              new VisitorState(JavacTypes.instance(context), Symtab.instance(context));
           List<ErrorProducingMatcher.AstError> astErrors = new ASTVisitor()
-              .visitCompilationUnit(treeAndTopLevel.snd, new VisitorState());
+              .visitCompilationUnit(treeAndTopLevel.snd, visitorState);
           for (ErrorProducingMatcher.AstError astError : astErrors) {
             errorReporter.emitError(astError);
           }
@@ -96,5 +88,4 @@ public class ErrorProneProcessor extends AbstractProcessor {
     }
     return true;
   }
-
 }

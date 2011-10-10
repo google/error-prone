@@ -16,6 +16,7 @@
 
 package com.google.errorprone.matchers;
 
+import com.google.errorprone.SuggestedFix;
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.Tree;
 
@@ -39,10 +40,12 @@ public abstract class ErrorProducingMatcher<T extends Tree> extends Matcher<T> {
 
   public static class AstError {
     public String message;
+    public SuggestedFix suggestedFix;
     public Tree match;
 
-    public AstError(String message, Tree match) {
+    public AstError(String message, SuggestedFix suggestedFix, Tree match) {
       this.message = message;
+      this.suggestedFix = suggestedFix;
       this.match = match;
     }
   }

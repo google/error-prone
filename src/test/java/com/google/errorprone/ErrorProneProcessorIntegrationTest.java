@@ -42,7 +42,7 @@ import javax.tools.ToolProvider;
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class PreconditionsCheckNotNullTest extends TestCase {
+public class ErrorProneProcessorIntegrationTest extends TestCase {
 
   private File projectRoot;
   private javax.tools.JavaCompiler compiler;
