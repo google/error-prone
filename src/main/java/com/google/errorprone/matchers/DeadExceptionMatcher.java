@@ -32,9 +32,9 @@ public class DeadExceptionMatcher extends ErrorProducingMatcher<NewClassTree> {
     if (state.types.isSubtype(((JCNewClass) newClassTree).type, state.symtab.exceptionType)) {
       if (newClassTree.getEnclosingExpression() == null) {
         DiagnosticPosition pos = ((JCTree) newClassTree).pos();
-        System.out.printf("suggestedReplace from %d to %d: \"%s\"\n",
-          pos.getStartPosition(), pos.getStartPosition(), "throw ");
-        return new AstError("Exception created but not thrown, and reference is lost", new SuggestedFix(), newClassTree);
+        return new AstError(newClassTree, "Exception created but not thrown, and reference is lost",
+            new SuggestedFix(pos.getStartPosition(), pos.getStartPosition(), "throw ")
+        );
       }
     }
     return null;

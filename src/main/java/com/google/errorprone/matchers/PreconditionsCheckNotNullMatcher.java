@@ -44,10 +44,11 @@ public class PreconditionsCheckNotNullMatcher
       SuggestedFix fix = new SuggestedFix(
           pos.getStartPosition(), pos.getEndPosition(state.compilationUnit.endPositions), "");
       return new AstError(
+          stringLiteralValue.get(),
           format("String literal %s passed as first argument to Preconditions#checkNotNull",
               stringLiteralValue.get()),
-          fix,
-          stringLiteralValue.get());
+          fix
+      );
     }
     return null;
   }

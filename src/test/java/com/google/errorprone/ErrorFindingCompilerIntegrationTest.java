@@ -31,7 +31,9 @@ import java.net.URISyntaxException;
 import static java.util.Locale.ENGLISH;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.StringContains.containsString;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -47,24 +49,24 @@ public class ErrorFindingCompilerIntegrationTest {
 
   @Test
   public void testShouldFailToCompileSourceFileWithError() throws Exception {
-    new ErrorFindingCompiler(
+    assertFalse(new ErrorFindingCompiler(
         sources("PositiveCase1.java"),
         diagnostics,
         ToolProvider.getSystemJavaCompiler())
-        .run();
+        .run());
     boolean found = false;
     for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics.getDiagnostics()) {
       String message = diagnostic.getMessage(ENGLISH);
       if (diagnostic.getKind() == Kind.ERROR && message.contains("Preconditions#checkNotNull")) {
         assertThat(message, containsString("\"string literal\""));
         assertThat(diagnostic.getLineNumber(), is(23L));
-        assertThat(diagnostic.getColumnNumber(), is(19L));
+        assertThat(diagnostic.getColumnNumber(), is(32L));
         found = true;
         return;
 
       }
     }
-    Assert.assertTrue("Warning should be found. Diagnostics: " + diagnostics.getDiagnostics(), found);
+    assertTrue("Warning should be found. Diagnostics: " + diagnostics.getDiagnostics(), found);
   }
 
   private String[] sources(String... files) throws URISyntaxException {

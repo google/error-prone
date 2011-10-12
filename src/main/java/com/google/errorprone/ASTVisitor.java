@@ -27,6 +27,7 @@ import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -41,7 +42,8 @@ public class ASTVisitor extends TreeScanner<List<AstError>, VisitorState> {
   @Override
   public List<AstError> visitCompilationUnit(CompilationUnitTree compilationUnitTree, VisitorState visitorState) {
     visitorState.compilationUnit = (JCCompilationUnit)compilationUnitTree;
-    return super.visitCompilationUnit(compilationUnitTree, visitorState);
+    List<AstError> errors = super.visitCompilationUnit(compilationUnitTree, visitorState);
+    return errors != null ? errors : Collections.<AstError>emptyList();
   }
 
   @Override

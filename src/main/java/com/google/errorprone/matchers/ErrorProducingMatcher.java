@@ -39,11 +39,11 @@ public abstract class ErrorProducingMatcher<T extends Tree> extends Matcher<T> {
   }
 
   public static class AstError {
+    public Tree match;
     public String message;
     public SuggestedFix suggestedFix;
-    public Tree match;
 
-    public AstError(String message, SuggestedFix suggestedFix, Tree match) {
+    public AstError(Tree match, String message, SuggestedFix suggestedFix) {
       this.message = message;
       this.suggestedFix = suggestedFix;
       this.match = match;

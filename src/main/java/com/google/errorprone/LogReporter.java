@@ -22,18 +22,20 @@ import com.sun.tools.javac.util.Log;
 
 import javax.tools.Diagnostic.Kind;
 import javax.tools.JavaFileObject;
+import java.io.IOException;
+import java.io.Reader;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class CommandLineReporter implements ErrorReporter {
+public class LogReporter implements ErrorReporter {
   private final Log log;
   private final JavaFileObject sourceFile;
 
   // The suffix for properties in src/main/resources/com/google/errorprone/errors.properties
   private static final String MESSAGE_BUNDLE_KEY = "error.prone";
 
-  public CommandLineReporter(Log log, JavaFileObject sourceFile) {
+  public LogReporter(Log log, JavaFileObject sourceFile) {
     this.log = log;
     this.sourceFile = sourceFile;
   }
@@ -44,7 +46,13 @@ public class CommandLineReporter implements ErrorReporter {
     // Swap the log's source and the current file's source; then be sure to swap them back later.
     originalSource = log.useSource(sourceFile);
     try {
-      log.error((DiagnosticPosition) error.match, MESSAGE_BUNDLE_KEY, error.message);
+      CharSequence content = sourceFile.getCharContent(true);
+      log.error((DiagnosticPosition) error.match, MESSAGE_BUNDLE_KEY, error.message
+          + "\nDid you mean to replace \""
+          + content.subSequence(error.suggestedFix.startPosition, error.suggestedFix.endPosition)
+          + "\" with \"" + error.suggestedFix.replaceWith + "\"");
+    } catch (IOException e) {
+      throw new RuntimeException(e);
     } finally {
       if (originalSource != null) {
         log.useSource(originalSource);

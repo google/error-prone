@@ -39,22 +39,27 @@ import java.util.PropertyResourceBundle;
 public class ErrorFindingCompiler {
   private final String[] args;
   private final JavaCompiler compiler;
-  private static DiagnosticCollector<JavaFileObject> diagnostics;
+  private final DiagnosticCollector<JavaFileObject> diagnostics;
 
   public ErrorFindingCompiler(String[] args, DiagnosticCollector<JavaFileObject> diagnostics,
                               JavaCompiler javaCompiler) {
     this.args = args;
+    this.diagnostics = diagnostics;
     this.compiler = javaCompiler;
   }
 
   public static void main(String[] args) throws IOException {
-    new ErrorFindingCompiler(args, new DiagnosticCollector<JavaFileObject>(),
-        ToolProvider.getSystemJavaCompiler()).run();
+    System.exit(new ErrorFindingCompiler(
+        args,
+        null, // Null diagnostics means they are printed to the console
+        ToolProvider.getSystemJavaCompiler())
+        .run() ? 0 : 1);
   }
 
-  public void run() throws IOException {
+  public boolean run() throws IOException {
     StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null);
 
+    //TODO: setup the compiler using all the flags, or extend the javac.main.Main class.
     JavacTask javacTask = (JavacTask) compiler
         .getTask(null, fileManager, diagnostics,
             Collections.<String>emptyList(),
@@ -69,15 +74,18 @@ public class ErrorFindingCompiler {
 
     VisitorState visitorState = new VisitorState(javacTask.getTypes(), Symtab.instance(context));
 
+    boolean hasErrors = false;
     for (CompilationUnitTree compilationUnitTree : compilationUnits) {
-      CommandLineReporter commandLineReporter =
-          new CommandLineReporter(log, compilationUnitTree.getSourceFile());
+      LogReporter logReporter =
+          new LogReporter(log, compilationUnitTree.getSourceFile());
       List<AstError> errors = new ASTVisitor()
           .visitCompilationUnit(compilationUnitTree, visitorState);
       for (AstError error : errors) {
-        commandLineReporter.emitError(error);
+        logReporter.emitError(error);
+        hasErrors = true;
       }
     }
+    return !hasErrors;
   }
 
   static void setupMessageBundle(Context context) {
