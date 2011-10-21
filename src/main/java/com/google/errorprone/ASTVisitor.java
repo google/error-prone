@@ -20,14 +20,13 @@ import com.google.errorprone.matchers.DeadExceptionMatcher;
 import com.google.errorprone.matchers.ErrorProducingMatcher;
 import com.google.errorprone.matchers.ErrorProducingMatcher.AstError;
 import com.google.errorprone.matchers.PreconditionsCheckNotNullMatcher;
-
-import com.sun.source.tree.*;
-import com.sun.source.util.TreePath;
+import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.ImportTree;
+import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.util.TreePathScanner;
-import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 
-import javax.swing.event.ListSelectionEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;

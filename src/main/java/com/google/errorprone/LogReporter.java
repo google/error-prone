@@ -20,10 +20,8 @@ import com.google.errorprone.matchers.ErrorProducingMatcher.AstError;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Log;
 
-import javax.tools.Diagnostic.Kind;
 import javax.tools.JavaFileObject;
 import java.io.IOException;
-import java.io.Reader;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)

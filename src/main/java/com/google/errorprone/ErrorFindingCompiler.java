@@ -26,7 +26,6 @@ import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Messages;
 
 import javax.tools.*;
-import javax.tools.JavaCompiler;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;

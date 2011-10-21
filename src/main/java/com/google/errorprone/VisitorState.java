@@ -17,8 +17,6 @@
 package com.google.errorprone;
 
 import com.sun.source.tree.ImportTree;
-import com.sun.source.tree.Tree;
-import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;

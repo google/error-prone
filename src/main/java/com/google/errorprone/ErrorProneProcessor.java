@@ -16,11 +16,7 @@
 
 package com.google.errorprone;
 
-import static javax.lang.model.SourceVersion.RELEASE_6;
-import static javax.tools.Diagnostic.Kind.WARNING;
-
 import com.google.errorprone.matchers.ErrorProducingMatcher;
-
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.model.JavacTypes;
@@ -31,16 +27,14 @@ import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Pair;
 
+import javax.annotation.processing.*;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
 import java.util.List;
 import java.util.Set;
 
-import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
+import static javax.lang.model.SourceVersion.RELEASE_6;
+import static javax.tools.Diagnostic.Kind.WARNING;
 
 /**
  * Entry point for running error-prone as a JSR-269 annotation processor.

@@ -24,7 +24,7 @@ import com.sun.source.tree.MethodInvocationTree;
  * Applies an Expression matcher to an argument of a MethodInvocation by position.
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class MethodInvocationArgumentMatcher extends Matcher<MethodInvocationTree> {
+public class MethodInvocationArgumentMatcher implements Matcher<MethodInvocationTree> {
   private final int position;
   private final Matcher<ExpressionTree> argumentMatcher;
 

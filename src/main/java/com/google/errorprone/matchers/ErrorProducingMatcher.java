@@ -24,7 +24,7 @@ import com.sun.source.tree.Tree;
  * A matcher which produces an error instead of just a boolean when the predicate matches.
  * @author alexeagle@google.com (Alex Eagle)
  */
-public abstract class ErrorProducingMatcher<T extends Tree> extends Matcher<T> {
+public abstract class ErrorProducingMatcher<T extends Tree> implements Matcher<T> {
   /**
    *
    * @param t an AST node

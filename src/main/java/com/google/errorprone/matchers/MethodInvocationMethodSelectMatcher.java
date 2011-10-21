@@ -24,7 +24,7 @@ import com.sun.source.tree.MethodInvocationTree;
  * Adapts a matcher on MethodInvocationTree to match the MethodSelect of the MethodInvocation.
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class MethodInvocationMethodSelectMatcher extends Matcher<MethodInvocationTree> {
+public class MethodInvocationMethodSelectMatcher implements Matcher<MethodInvocationTree> {
   private final Matcher<ExpressionTree> methodSelectMatcher;
 
   public MethodInvocationMethodSelectMatcher(Matcher<ExpressionTree> methodSelectMatcher) {

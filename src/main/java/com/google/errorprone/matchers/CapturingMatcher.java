@@ -23,7 +23,7 @@ import com.sun.source.tree.Tree;
  * Wraps another matcher and holds the reference to the matched AST node if it matches.
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class CapturingMatcher<T extends Tree> extends Matcher<T> {
+public class CapturingMatcher<T extends Tree> implements Matcher<T> {
   private final Matcher<T> matcher;
   private final TreeHolder holder;
 

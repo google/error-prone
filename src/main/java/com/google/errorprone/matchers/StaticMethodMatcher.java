@@ -28,7 +28,7 @@ import static com.sun.source.tree.Tree.Kind.MEMBER_SELECT;
  * Matches a static method expression.
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class StaticMethodMatcher extends Matcher<ExpressionTree> {
+public class StaticMethodMatcher implements Matcher<ExpressionTree> {
   private final String packageName;
   private final String className;
   private final String methodName;
