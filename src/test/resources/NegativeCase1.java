@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
+import java.lang.Exception;
+import java.lang.IllegalArgumentException;
 import java.lang.RuntimeException;
 
-public class PositiveCase1 {
-  public void error() {
-    new RuntimeException("Not thrown, and reference lost");
+public class NegativeCase1 {
+  public void noError() {
+    Exception e = new RuntimeException("stored");
+    throw new IllegalArgumentException("thrown");
   }
 }

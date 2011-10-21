@@ -78,8 +78,7 @@ public class ErrorFindingCompiler {
     for (CompilationUnitTree compilationUnitTree : compilationUnits) {
       LogReporter logReporter =
           new LogReporter(log, compilationUnitTree.getSourceFile());
-      List<AstError> errors = new ASTVisitor()
-          .visitCompilationUnit(compilationUnitTree, visitorState);
+      List<AstError> errors = new ASTVisitor().scan(compilationUnitTree, visitorState);
       for (AstError error : errors) {
         logReporter.emitError(error);
         hasErrors = true;

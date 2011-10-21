@@ -22,9 +22,12 @@ import com.google.errorprone.matchers.ErrorProducingMatcher.AstError;
 import com.google.errorprone.matchers.PreconditionsCheckNotNullMatcher;
 
 import com.sun.source.tree.*;
+import com.sun.source.util.TreePath;
+import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 
+import javax.swing.event.ListSelectionEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -34,7 +37,19 @@ import java.util.List;
  * Visitor, following the visitor pattern, which may visit each node in the parsed AST.
  * @author Alex Eagle (alexeagle@google.com)
  */
-public class ASTVisitor extends TreeScanner<List<AstError>, VisitorState> {
+public class ASTVisitor extends TreePathScanner<List<AstError>, VisitorState> {
+
+  @Override
+  public List<AstError> reduce(List<AstError> r1, List<AstError> r2) {
+    List<AstError> concat = new ArrayList<AstError>();
+    if (r1 != null) {
+      concat.addAll(r1);
+    }
+    if (r2 != null) {
+      concat.addAll(r2);
+    }
+    return concat;
+  }
 
   private final Iterable<? extends ErrorProducingMatcher<MethodInvocationTree>>
       methodInvocationMatchers = Arrays.asList(new PreconditionsCheckNotNullMatcher());
@@ -69,8 +84,13 @@ public class ASTVisitor extends TreeScanner<List<AstError>, VisitorState> {
 
   @Override
   public List<AstError> visitNewClass(NewClassTree newClassTree, VisitorState visitorState) {
-    new DeadExceptionMatcher().matchWithError(newClassTree, visitorState);
-    return super.visitNewClass(newClassTree, visitorState);
+    List<AstError> result = new ArrayList<AstError>();
+    visitorState.setPath(getCurrentPath());
+    AstError error = new DeadExceptionMatcher().matchWithError(newClassTree, visitorState);
+    if (error != null) {
+      result.add(error);
+    }
+    super.visitNewClass(newClassTree, visitorState);
+    return result;
   }
-
 }

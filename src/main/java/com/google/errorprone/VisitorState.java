@@ -17,6 +17,9 @@
 package com.google.errorprone;
 
 import com.sun.source.tree.ImportTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 
@@ -32,9 +35,18 @@ public class VisitorState {
   public JCCompilationUnit compilationUnit;
   public final Types types;
   public final Symtab symtab;
+  private TreePath path;
 
   public VisitorState(Types types, Symtab symtab) {
     this.types = types;
     this.symtab = symtab;
+  }
+
+  public void setPath(TreePath path) {
+    this.path = path;
+  }
+
+  public TreePath getPath() {
+    return path;
   }
 }
