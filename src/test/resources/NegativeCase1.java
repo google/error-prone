@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
-import java.lang.Exception;
-import java.lang.IllegalArgumentException;
-import java.lang.RuntimeException;
-
 public class NegativeCase1 {
   public void noError() {
     Exception e = new RuntimeException("stored");
+    e = new UnsupportedOperationException("also stored");
     throw new IllegalArgumentException("thrown");
   }
 }
