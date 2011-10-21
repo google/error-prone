@@ -21,6 +21,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.tools.javac.code.Type;
 
 /**
  * Static factory methods which make the DSL read better.
@@ -72,5 +73,17 @@ public class Matchers {
   public static Matcher<MethodInvocationTree> argument(
       final int position, final Matcher<ExpressionTree> argumentMatcher) {
     return new MethodInvocationArgumentMatcher(position, argumentMatcher);
+  }
+
+  public static Matcher<Tree> parentNodeIs(Kind kind) {
+    return new ParentNodeIs(kind);
+  }
+
+  public static <T extends Tree> Matcher<T> not(Matcher<T> matcher) {
+    return new Not<T>(matcher);
+  }
+
+  public static <T extends Tree> Matcher<T> isSubtypeOf(Type type) {
+    return new IsSubtypeOf<T>(type);
   }
 }

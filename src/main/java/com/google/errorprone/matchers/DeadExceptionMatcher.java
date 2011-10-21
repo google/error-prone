@@ -21,8 +21,9 @@ import com.google.errorprone.VisitorState;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
+
+import static com.google.errorprone.matchers.Matchers.*;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -30,15 +31,10 @@ import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 public class DeadExceptionMatcher extends ErrorProducingMatcher<NewClassTree> {
   @Override
   public AstError matchWithError(NewClassTree newClassTree, VisitorState state) {
-    // Are we in a throw statement?
-    if (state.getPath().getParentPath().getLeaf().getKind() == Kind.THROW) {
-      return null;
-    }
-    // Are we the expression in an assignment?
-    if (state.getPath().getParentPath().getLeaf().getKind() == Kind.VARIABLE) {
-      return null;
-    }
-    if (state.types.isSubtype(((JCNewClass) newClassTree).type, state.symtab.exceptionType)) {
+    if (allOf(
+        not(parentNodeIs(Kind.THROW)), // not "throw new Exception..."
+        not(parentNodeIs(Kind.VARIABLE)), // not "Exception e = new Exception..."
+        Matchers.isSubtypeOf(state.symtab.exceptionType)).matches(newClassTree, state)) {
       DiagnosticPosition pos = ((JCTree) newClassTree).pos();
       return new AstError(newClassTree, "Exception created but not thrown, and reference is lost",
           new SuggestedFix(pos.getStartPosition(), pos.getStartPosition(), "throw "));
