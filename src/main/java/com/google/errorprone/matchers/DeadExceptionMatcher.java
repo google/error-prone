@@ -32,9 +32,7 @@ public class DeadExceptionMatcher extends ErrorProducingMatcher<NewClassTree> {
   @Override
   public AstError matchWithError(NewClassTree newClassTree, VisitorState state) {
     if (allOf(
-        not(parentNodeIs(Kind.THROW)), // not "throw new Exception..."
-        not(parentNodeIs(Kind.VARIABLE)), // not "Exception e = new Exception..."
-        not(parentNodeIs(Kind.ASSIGNMENT)), // not "e = new Exception..."
+        parentNodeIs(Kind.EXPRESSION_STATEMENT),
         isSubtypeOf(state.symtab.exceptionType)).matches(newClassTree, state)) {
       DiagnosticPosition pos = ((JCTree) newClassTree).pos();
       return new AstError(newClassTree, "Exception created but not thrown, and reference is lost",
