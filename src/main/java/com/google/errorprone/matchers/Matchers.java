@@ -53,9 +53,9 @@ public class Matchers {
     return new CapturingMatcher<T>(matcher, holder);
   }
 
-  public static Matcher<ExpressionTree> kindOf(final Kind kind) {
-    return new Matcher<ExpressionTree>() {
-      @Override public boolean matches(ExpressionTree tree, VisitorState state) {
+  public static <T extends Tree> Matcher<T> kindOf(final Kind kind) {
+    return new Matcher<T>() {
+      @Override public boolean matches(T tree, VisitorState state) {
         return tree.getKind() == kind;
       }
     };
@@ -71,12 +71,12 @@ public class Matchers {
   }
 
   public static Matcher<MethodInvocationTree> argument(
-      final int position, final Matcher<ExpressionTree> argumentMatcher) {
+      final int position, final Matcher<Tree> argumentMatcher) {
     return new MethodInvocationArgumentMatcher(position, argumentMatcher);
   }
 
-  public static Matcher<Tree> parentNodeIs(Kind kind) {
-    return new ParentNodeIs(kind);
+  public static Matcher<Tree> parentNodeIs(Matcher<Tree> treeMatcher) {
+    return new ParentNodeIs(treeMatcher);
   }
 
   public static <T extends Tree> Matcher<T> not(Matcher<T> matcher) {

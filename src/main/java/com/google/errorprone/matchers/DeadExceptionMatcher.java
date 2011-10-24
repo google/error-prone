@@ -18,8 +18,12 @@ package com.google.errorprone.matchers;
 
 import com.google.errorprone.SuggestedFix;
 import com.google.errorprone.VisitorState;
+import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.source.util.TreePath;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 
@@ -32,11 +36,29 @@ public class DeadExceptionMatcher extends ErrorProducingMatcher<NewClassTree> {
   @Override
   public AstError matchWithError(NewClassTree newClassTree, VisitorState state) {
     if (allOf(
-        parentNodeIs(Kind.EXPRESSION_STATEMENT),
-        isSubtypeOf(state.symtab.exceptionType)).matches(newClassTree, state)) {
+        parentNodeIs(kindOf(Kind.EXPRESSION_STATEMENT)),
+        isSubtypeOf(state.symtab.exceptionType))
+        .matches(newClassTree, state)) {
       DiagnosticPosition pos = ((JCTree) newClassTree).pos();
+
+      // TODO: wrangle this ugly hack into the predicate DSL
+      TreePath enclosingBlockPath = state.getPath();
+      while (!(enclosingBlockPath.getLeaf() instanceof BlockTree)) {
+        enclosingBlockPath = enclosingBlockPath.getParentPath();
+      }
+      BlockTree enclosingBlock = (BlockTree) enclosingBlockPath.getLeaf();
+      StatementTree lastStatement = enclosingBlock.getStatements().get(
+          enclosingBlock.getStatements().size() - 1);
+      Tree parent = state.getPath().getParentPath().getLeaf();
+      DiagnosticPosition statementPos = ((JCTree) parent).pos();
+      // END TODO
+      
+      SuggestedFix suggestedFix = lastStatement.equals(parent)
+          ? new SuggestedFix(pos.getStartPosition(), pos.getStartPosition(), "throw ")
+          : new SuggestedFix(statementPos.getStartPosition(),
+          statementPos.getEndPosition(state.compilationUnit.endPositions), "");
       return new AstError(newClassTree, "Exception created but not thrown, and reference is lost",
-          new SuggestedFix(pos.getStartPosition(), pos.getStartPosition(), "throw "));
+          suggestedFix);
     }
     return null;
   }

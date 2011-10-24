@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
-import java.lang.RuntimeException;
-
 public class PositiveCase1 {
   public void error() {
     new RuntimeException("Not thrown, and reference lost");
+  }
+
+  public void fixIsToDeleteTheFirstStatement() {
+    new IllegalArgumentException("why is this here?");
+    int i = 1;
+    System.out.println("i = " + i);
   }
 }

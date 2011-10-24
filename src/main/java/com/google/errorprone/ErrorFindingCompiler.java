@@ -28,6 +28,7 @@ import com.sun.tools.javac.util.Messages;
 import javax.tools.*;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.PropertyResourceBundle;
@@ -61,7 +62,7 @@ public class ErrorFindingCompiler {
     //TODO: setup the compiler using all the flags, or extend the javac.main.Main class.
     JavacTask javacTask = (JavacTask) compiler
         .getTask(null, fileManager, diagnostics,
-            Collections.<String>emptyList(),
+            Arrays.asList("-Xjcov"), // Instruct javac to maintain a table of endpositions for AST
             Collections.<String>emptyList(),
             fileManager.getJavaFileObjects(args[0]));
     Iterable<? extends CompilationUnitTree> compilationUnits = javacTask.parse();

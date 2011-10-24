@@ -18,20 +18,20 @@ package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class ParentNodeIs implements Matcher<Tree> {
-  private final Kind kind;
+  private final Matcher<Tree> treeMatcher;
 
-  public ParentNodeIs(Kind kind) {
-    this.kind = kind;
+  public ParentNodeIs(Matcher<Tree> treeMatcher) {
+    this.treeMatcher = treeMatcher;
   }
 
   @Override
   public boolean matches(Tree tree, VisitorState state) {
-    return state.getPath().getParentPath().getLeaf().getKind() == kind;
+    Tree parent = state.getPath().getParentPath().getLeaf();
+    return treeMatcher.matches(parent, state);
   }
 }

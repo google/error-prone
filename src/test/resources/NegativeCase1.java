@@ -20,4 +20,8 @@ public class NegativeCase1 {
     e = new UnsupportedOperationException("also stored");
     throw new IllegalArgumentException("thrown");
   }
+
+  public Exception returnsException() {
+    return new RuntimeException("returned");
+  }
 }
