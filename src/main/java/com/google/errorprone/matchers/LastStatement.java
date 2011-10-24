@@ -17,27 +17,23 @@
 package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
-import com.sun.source.tree.Tree;
+import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.StatementTree;
 
 /**
- * Wraps another matcher and holds the reference to the matched AST node if it matches.
+ * Adapts a matcher on a statement to check whether it matches the last statement in a block.
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class CapturingMatcher<T extends Tree> implements Matcher<T> {
-  private final Matcher<Tree> matcher;
-  private final TreeHolder<T> holder;
+public class LastStatement implements Matcher<BlockTree> {
+  private final Matcher<StatementTree> matcher;
 
-  public CapturingMatcher(Matcher<Tree> matcher, TreeHolder<T> holder) {
+  public LastStatement(Matcher<StatementTree> matcher) {
     this.matcher = matcher;
-    this.holder = holder;
   }
 
-  @Override public boolean matches(T item, VisitorState state) {
-    boolean matches = matcher.matches(item, state);
-    if (matches) {
-      holder.set(item);
-    }
-    return matches;
+  @Override
+  public boolean matches(BlockTree blockTree, VisitorState state) {
+    StatementTree last = blockTree.getStatements().get(blockTree.getStatements().size() - 1);
+    return matcher.matches(last, state);
   }
-
 }

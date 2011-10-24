@@ -22,16 +22,21 @@ import com.sun.source.tree.Tree;
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class ParentNodeIs implements Matcher<Tree> {
-  private final Matcher<Tree> treeMatcher;
+public class ParentNodeIs<T extends Tree> implements Matcher<Tree> {
+  private final Matcher<T> treeMatcher;
 
-  public ParentNodeIs(Matcher<Tree> treeMatcher) {
+  public ParentNodeIs(Matcher<T> treeMatcher) {
     this.treeMatcher = treeMatcher;
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public boolean matches(Tree tree, VisitorState state) {
     Tree parent = state.getPath().getParentPath().getLeaf();
-    return treeMatcher.matches(parent, state);
+    try {
+      return treeMatcher.matches((T)parent, state);
+    } catch (ClassCastException e) {
+      return false;
+    }
   }
 }

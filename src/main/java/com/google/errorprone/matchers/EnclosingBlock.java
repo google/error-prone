@@ -17,27 +17,29 @@
 package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
+import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.util.TreePath;
 
 /**
- * Wraps another matcher and holds the reference to the matched AST node if it matches.
+ * Adapts a block matcher to match against the current enclosing block of whatever Tree last
+ * set a TreePath into the state.
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class CapturingMatcher<T extends Tree> implements Matcher<T> {
-  private final Matcher<Tree> matcher;
-  private final TreeHolder<T> holder;
+public class EnclosingBlock<T extends Tree> implements Matcher<T> {
+  private Matcher<BlockTree> matcher;
 
-  public CapturingMatcher(Matcher<Tree> matcher, TreeHolder<T> holder) {
+  public EnclosingBlock(Matcher<BlockTree> matcher) {
     this.matcher = matcher;
-    this.holder = holder;
   }
 
-  @Override public boolean matches(T item, VisitorState state) {
-    boolean matches = matcher.matches(item, state);
-    if (matches) {
-      holder.set(item);
+  @Override
+  public boolean matches(T unused, VisitorState state) {
+    TreePath enclosingBlockPath = state.getPath();
+    while (!(enclosingBlockPath.getLeaf() instanceof BlockTree)) {
+      enclosingBlockPath = enclosingBlockPath.getParentPath();
     }
-    return matches;
+    BlockTree enclosingBlock = (BlockTree) enclosingBlockPath.getLeaf();
+    return matcher.matches(enclosingBlock, state);
   }
-
 }

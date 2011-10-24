@@ -18,7 +18,7 @@ package com.google.errorprone.matchers;
 
 import com.google.errorprone.SuggestedFix;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.matchers.CapturingMatcher.TreeHolder;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
@@ -35,7 +35,7 @@ public class PreconditionsCheckNotNullMatcher
 
   @Override
   public AstError matchWithError(MethodInvocationTree tree, VisitorState state) {
-    TreeHolder stringLiteralValue = new TreeHolder();
+    TreeHolder<ExpressionTree> stringLiteralValue = TreeHolder.create();
 
     if (allOf(
         methodSelect(staticMethod("com.google.common.base", "Preconditions", "checkNotNull")),

@@ -17,11 +17,11 @@
 package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
-import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.Tree;
+import com.sun.source.tree.*;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Type;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Static factory methods which make the DSL read better.
@@ -49,7 +49,7 @@ public class Matchers {
   }
 
   public static <T extends Tree> Matcher<T> capture(
-      final CapturingMatcher.TreeHolder holder, final Matcher<T> matcher) {
+      final TreeHolder<T> holder, final Matcher<Tree> matcher) {
     return new CapturingMatcher<T>(matcher, holder);
   }
 
@@ -61,7 +61,8 @@ public class Matchers {
     };
   }
 
-  public static StaticMethodMatcher staticMethod(String packageName, String className, String methodName) {
+  public static StaticMethodMatcher staticMethod(
+      String packageName, String className, String methodName) {
     return new StaticMethodMatcher(packageName, className, methodName);
   }
 
@@ -71,12 +72,12 @@ public class Matchers {
   }
 
   public static Matcher<MethodInvocationTree> argument(
-      final int position, final Matcher<Tree> argumentMatcher) {
+      final int position, final Matcher<ExpressionTree> argumentMatcher) {
     return new MethodInvocationArgumentMatcher(position, argumentMatcher);
   }
 
-  public static Matcher<Tree> parentNodeIs(Matcher<Tree> treeMatcher) {
-    return new ParentNodeIs(treeMatcher);
+  public static <T extends Tree> Matcher<Tree> parentNodeIs(Matcher<T> treeMatcher) {
+    return new ParentNodeIs<T>(treeMatcher);
   }
 
   public static <T extends Tree> Matcher<T> not(Matcher<T> matcher) {
@@ -85,5 +86,21 @@ public class Matchers {
 
   public static <T extends Tree> Matcher<T> isSubtypeOf(Type type) {
     return new IsSubtypeOf<T>(type);
+  }
+
+  public static <T extends Tree> StoreToBoolean<T> storeToBoolean(AtomicBoolean result, Matcher<T> matcher) {
+    return new StoreToBoolean<T>(result, matcher);
+  }
+
+  public static <T extends Tree> EnclosingBlock<T> enclosingBlock(Matcher<BlockTree> matcher) {
+    return new EnclosingBlock<T>(matcher);
+  }
+
+  public static LastStatement lastStatement(Matcher<StatementTree> matcher) {
+    return new LastStatement(matcher);
+  }
+
+  public static <T extends Tree> Same<T> same(TreeHolder<T> treeHolder) {
+    return new Same<T>(treeHolder);
   }
 }

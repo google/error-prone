@@ -18,14 +18,13 @@ package com.google.errorprone.matchers;
 
 import com.google.errorprone.SuggestedFix;
 import com.google.errorprone.VisitorState;
-import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.StatementTree;
-import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
-import com.sun.source.util.TreePath;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.google.errorprone.matchers.Matchers.*;
 
@@ -35,25 +34,22 @@ import static com.google.errorprone.matchers.Matchers.*;
 public class DeadExceptionMatcher extends ErrorProducingMatcher<NewClassTree> {
   @Override
   public AstError matchWithError(NewClassTree newClassTree, VisitorState state) {
-    if (allOf(
-        parentNodeIs(kindOf(Kind.EXPRESSION_STATEMENT)),
-        isSubtypeOf(state.symtab.exceptionType))
-        .matches(newClassTree, state)) {
-      DiagnosticPosition pos = ((JCTree) newClassTree).pos();
+    TreeHolder<StatementTree> enclosingStatement = TreeHolder.create();
+    AtomicBoolean isLastStatementInBlock = new AtomicBoolean();
 
-      // TODO: wrangle this ugly hack into the predicate DSL
-      TreePath enclosingBlockPath = state.getPath();
-      while (!(enclosingBlockPath.getLeaf() instanceof BlockTree)) {
-        enclosingBlockPath = enclosingBlockPath.getParentPath();
-      }
-      BlockTree enclosingBlock = (BlockTree) enclosingBlockPath.getLeaf();
-      StatementTree lastStatement = enclosingBlock.getStatements().get(
-          enclosingBlock.getStatements().size() - 1);
-      Tree parent = state.getPath().getParentPath().getLeaf();
-      DiagnosticPosition statementPos = ((JCTree) parent).pos();
-      // END TODO
-      
-      SuggestedFix suggestedFix = lastStatement.equals(parent)
+    if (allOf(
+        // The "new X()" expression is the entire statement (and save that statement)
+        parentNodeIs(capture(enclosingStatement, kindOf(Kind.EXPRESSION_STATEMENT))),
+        // X is an Exception
+        isSubtypeOf(state.symtab.exceptionType),
+        // Save whether the new Exception statement is the last in the block
+        storeToBoolean(isLastStatementInBlock,
+            enclosingBlock(lastStatement(same(enclosingStatement))))
+    ).matches(newClassTree, state)) {
+      DiagnosticPosition pos = ((JCTree) newClassTree).pos();
+      DiagnosticPosition statementPos = ((JCTree)enclosingStatement.get()).pos();
+
+      SuggestedFix suggestedFix = isLastStatementInBlock.get()
           ? new SuggestedFix(pos.getStartPosition(), pos.getStartPosition(), "throw ")
           : new SuggestedFix(statementPos.getStartPosition(),
           statementPos.getEndPosition(state.compilationUnit.endPositions), "");

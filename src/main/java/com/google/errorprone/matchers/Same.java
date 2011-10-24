@@ -20,24 +20,19 @@ import com.google.errorprone.VisitorState;
 import com.sun.source.tree.Tree;
 
 /**
- * Wraps another matcher and holds the reference to the matched AST node if it matches.
+ * Whether the given TreeHolder contains a match for the Tree at the time the matcher is run.
+ * This can be used with a capture() to check against the result of a previous match.
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class CapturingMatcher<T extends Tree> implements Matcher<T> {
-  private final Matcher<Tree> matcher;
-  private final TreeHolder<T> holder;
+public class Same<T extends Tree> implements Matcher<T> {
+  private final TreeHolder tree;
 
-  public CapturingMatcher(Matcher<Tree> matcher, TreeHolder<T> holder) {
-    this.matcher = matcher;
-    this.holder = holder;
+  public Same(TreeHolder tree) {
+    this.tree = tree;
   }
 
-  @Override public boolean matches(T item, VisitorState state) {
-    boolean matches = matcher.matches(item, state);
-    if (matches) {
-      holder.set(item);
-    }
-    return matches;
+  @Override
+  public boolean matches(T tree, VisitorState state) {
+    return this.tree.get().equals(tree);
   }
-
 }

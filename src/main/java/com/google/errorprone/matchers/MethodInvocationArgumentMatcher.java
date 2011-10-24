@@ -17,8 +17,8 @@
 package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.Tree;
 
 /**
  * Applies an Expression matcher to an argument of a MethodInvocation by position.
@@ -26,9 +26,9 @@ import com.sun.source.tree.Tree;
  */
 public class MethodInvocationArgumentMatcher implements Matcher<MethodInvocationTree> {
   private final int position;
-  private final Matcher<Tree> argumentMatcher;
+  private final Matcher<ExpressionTree> argumentMatcher;
 
-  public MethodInvocationArgumentMatcher(int position, Matcher<Tree> argumentMatcher) {
+  public MethodInvocationArgumentMatcher(int position, Matcher<ExpressionTree> argumentMatcher) {
     this.position = position;
     this.argumentMatcher = argumentMatcher;
   }

@@ -16,28 +16,31 @@
 
 package com.google.errorprone.matchers;
 
-import com.google.errorprone.VisitorState;
 import com.sun.source.tree.Tree;
 
 /**
- * Wraps another matcher and holds the reference to the matched AST node if it matches.
+ * A substitute for pass-by-reference, allowing a Tree method parameter to act as a return value.
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class CapturingMatcher<T extends Tree> implements Matcher<T> {
-  private final Matcher<Tree> matcher;
-  private final TreeHolder<T> holder;
+public class TreeHolder<T extends Tree> {
+  private T value;
 
-  public CapturingMatcher(Matcher<Tree> matcher, TreeHolder<T> holder) {
-    this.matcher = matcher;
-    this.holder = holder;
+  public TreeHolder(T value) {
+    this.value = value;
   }
 
-  @Override public boolean matches(T item, VisitorState state) {
-    boolean matches = matcher.matches(item, state);
-    if (matches) {
-      holder.set(item);
-    }
-    return matches;
+  public TreeHolder() {
   }
 
+  public void set(T value) {
+    this.value = value;
+  }
+
+  public T get() {
+    return value;
+  }
+
+  public static <T extends Tree> TreeHolder<T> create() {
+    return new TreeHolder<T>();
+  }
 }
