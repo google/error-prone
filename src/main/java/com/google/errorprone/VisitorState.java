@@ -40,8 +40,14 @@ public class VisitorState {
     this.symtab = symtab;
   }
 
-  public void setPath(TreePath path) {
+  public VisitorState(Types types, Symtab symtab, JCCompilationUnit compilationUnit, TreePath path) {
+    this(types, symtab);
+    this.compilationUnit = compilationUnit;
     this.path = path;
+  }
+
+  public VisitorState withPath(TreePath path) {
+    return new VisitorState(types, symtab, compilationUnit, path);
   }
 
   public TreePath getPath() {

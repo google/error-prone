@@ -48,12 +48,25 @@ public class Matchers {
     };
   }
 
+  public static <T extends Tree> Matcher<T> anyOf(final Matcher<? super T>... matchers) {
+    return new Matcher<T>() {
+      @Override public boolean matches(T t, VisitorState state) {
+        for (Matcher<? super T> matcher : matchers) {
+          if (matcher.matches(t, state)) {
+            return true;
+          }
+        }
+        return false;
+      }
+    };
+  }
+
   public static <T extends Tree> Matcher<T> capture(
       final TreeHolder<T> holder, final Matcher<Tree> matcher) {
     return new CapturingMatcher<T>(matcher, holder);
   }
 
-  public static <T extends Tree> Matcher<T> kindOf(final Kind kind) {
+  public static <T extends Tree> Matcher<T> kindIs(final Kind kind) {
     return new Matcher<T>() {
       @Override public boolean matches(T tree, VisitorState state) {
         return tree.getKind() == kind;
@@ -76,8 +89,8 @@ public class Matchers {
     return new MethodInvocationArgumentMatcher(position, argumentMatcher);
   }
 
-  public static <T extends Tree> Matcher<Tree> parentNodeIs(Matcher<T> treeMatcher) {
-    return new ParentNodeIs<T>(treeMatcher);
+  public static <T extends Tree> Matcher<Tree> parentNode(Matcher<T> treeMatcher) {
+    return new ParentNode<T>(treeMatcher);
   }
 
   public static <T extends Tree> Matcher<T> not(Matcher<T> matcher) {

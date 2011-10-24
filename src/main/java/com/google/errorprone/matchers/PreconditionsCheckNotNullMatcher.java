@@ -39,7 +39,7 @@ public class PreconditionsCheckNotNullMatcher
 
     if (allOf(
         methodSelect(staticMethod("com.google.common.base", "Preconditions", "checkNotNull")),
-        argument(0, capture(stringLiteralValue, kindOf(STRING_LITERAL))))
+        argument(0, capture(stringLiteralValue, kindIs(STRING_LITERAL))))
         .matches(tree, state)) {
       DiagnosticPosition pos = ((JCMethodInvocation) tree).pos();
       SuggestedFix fix = new SuggestedFix(

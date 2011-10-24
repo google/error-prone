@@ -24,4 +24,14 @@ public class PositiveCase1 {
     int i = 1;
     System.out.println("i = " + i);
   }
+
+  public void firstStatementWithNoSurroundingBlock() {
+    if (true)
+      new InterruptedException("this should be thrown");
+
+    if (true)
+      return;
+    else
+      new ArithmeticException("should also be thrown");
+  }
 }

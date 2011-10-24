@@ -84,8 +84,8 @@ public class ASTVisitor extends TreePathScanner<List<AstError>, VisitorState> {
   @Override
   public List<AstError> visitNewClass(NewClassTree newClassTree, VisitorState visitorState) {
     List<AstError> result = new ArrayList<AstError>();
-    visitorState.setPath(getCurrentPath());
-    AstError error = new DeadExceptionMatcher().matchWithError(newClassTree, visitorState);
+    AstError error = new DeadExceptionMatcher()
+        .matchWithError(newClassTree, visitorState.withPath(getCurrentPath()));
     if (error != null) {
       result.add(error);
     }

@@ -20,13 +20,14 @@ import com.google.errorprone.SuggestedFix;
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.StatementTree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.google.errorprone.matchers.Matchers.*;
+import static com.sun.source.tree.Tree.Kind.EXPRESSION_STATEMENT;
+import static com.sun.source.tree.Tree.Kind.IF;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -39,12 +40,14 @@ public class DeadExceptionMatcher extends ErrorProducingMatcher<NewClassTree> {
 
     if (allOf(
         // The "new X()" expression is the entire statement (and save that statement)
-        parentNodeIs(capture(enclosingStatement, kindOf(Kind.EXPRESSION_STATEMENT))),
+        parentNode(capture(enclosingStatement, kindIs(EXPRESSION_STATEMENT))),
         // X is an Exception
         isSubtypeOf(state.symtab.exceptionType),
         // Save whether the new Exception statement is the last in the block
-        storeToBoolean(isLastStatementInBlock,
-            enclosingBlock(lastStatement(same(enclosingStatement))))
+        storeToBoolean(isLastStatementInBlock, anyOf(
+            enclosingBlock(lastStatement(same(enclosingStatement))),
+            // it could also be a bare if statement with no braces
+            parentNode(parentNode(kindIs(IF)))))
     ).matches(newClassTree, state)) {
       DiagnosticPosition pos = ((JCTree) newClassTree).pos();
       DiagnosticPosition statementPos = ((JCTree)enclosingStatement.get()).pos();
