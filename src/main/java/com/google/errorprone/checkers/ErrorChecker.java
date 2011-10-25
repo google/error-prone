@@ -66,7 +66,7 @@ public abstract class ErrorChecker<T extends Tree> implements Matcher<T> {
     }
   }
 
-  protected Position getSourcePosition(Tree tree) {
+  protected Position getPosition(Tree tree) {
     DiagnosticPosition pos = ((JCTree) tree).pos();
     return new Position(pos.getStartPosition(),
         pos.getEndPosition(state.compilationUnit.endPositions));

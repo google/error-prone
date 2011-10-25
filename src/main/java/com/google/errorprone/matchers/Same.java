@@ -20,19 +20,18 @@ import com.google.errorprone.VisitorState;
 import com.sun.source.tree.Tree;
 
 /**
- * Whether the given TreeHolder contains a match for the Tree at the time the matcher is run.
- * This can be used with a capture() to check against the result of a previous match.
+ * Whether the given Tree is the same as the one we match against.
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class Same<T extends Tree> implements Matcher<T> {
-  private final TreeHolder tree;
+  private final T tree;
 
-  public Same(TreeHolder tree) {
+  public Same(T tree) {
     this.tree = tree;
   }
 
   @Override
   public boolean matches(T tree, VisitorState state) {
-    return this.tree.get().equals(tree);
+    return this.tree.equals(tree);
   }
 }

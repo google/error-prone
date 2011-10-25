@@ -16,11 +16,13 @@
 
 package com.google.errorprone.fixes;
 
+import com.google.errorprone.checkers.ErrorChecker.Position;
+
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class SuggestedFix {
-  // character offset from beginning of the source file
+  // positions are character offset from beginning of the source file
   public int startPosition;
   public int endPosition;
   public String replaceWith;
@@ -32,4 +34,12 @@ public class SuggestedFix {
   }
 
   public SuggestedFix() {}
+
+  public static SuggestedFix delete(Position statementPos) {
+    return new SuggestedFix(statementPos.start, statementPos.end, "");
+  }
+
+  public static SuggestedFix prefixWith(Position pos, String s) {
+    return new SuggestedFix(pos.start, pos.start, s);
+  }
 }

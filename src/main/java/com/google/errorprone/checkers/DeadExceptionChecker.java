@@ -19,10 +19,11 @@ package com.google.errorprone.checkers;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.TreeHolder;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.StatementTree;
 
+import static com.google.errorprone.fixes.SuggestedFix.delete;
+import static com.google.errorprone.fixes.SuggestedFix.prefixWith;
 import static com.google.errorprone.matchers.Matchers.*;
 import static com.sun.source.tree.Tree.Kind.EXPRESSION_STATEMENT;
 import static com.sun.source.tree.Tree.Kind.IF;
@@ -42,18 +43,16 @@ public class DeadExceptionChecker extends ErrorChecker<NewClassTree> {
   @Override
   public AstError produceError(NewClassTree newClassTree, VisitorState state) {
     StatementTree parent = (StatementTree) getPath().getParentPath().getLeaf();
-    Position pos = getSourcePosition(newClassTree);
-    Position statementPos = getSourcePosition(parent);
 
     boolean isLastStatement = anyOf(
-        enclosingBlock(lastStatement(same(new TreeHolder<StatementTree>(parent)))),
+        enclosingBlock(lastStatement(same(parent))),
         // it could also be a bare if statement with no braces
         parentNode(parentNode(kindIs(IF))))
         .matches(newClassTree, state);
 
     SuggestedFix suggestedFix = isLastStatement
-        ? new SuggestedFix(pos.start, pos.start, "throw ")
-        : new SuggestedFix(statementPos.start, statementPos.end, "");
+        ? prefixWith(getPosition(newClassTree), "throw ")
+        : delete(getPosition(parent));
     return new AstError(newClassTree, "Exception created but not thrown, and reference is lost",
         suggestedFix);
   }

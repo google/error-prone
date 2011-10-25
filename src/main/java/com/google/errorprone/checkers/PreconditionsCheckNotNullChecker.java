@@ -23,6 +23,7 @@ import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
+import static com.google.errorprone.fixes.SuggestedFix.delete;
 import static com.google.errorprone.matchers.Matchers.*;
 import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
 import static java.lang.String.format;
@@ -42,8 +43,7 @@ public class PreconditionsCheckNotNullChecker extends ErrorChecker<MethodInvocat
   @Override
   public AstError produceError(MethodInvocationTree methodInvocationTree, VisitorState state) {
     ExpressionTree stringLiteralValue = methodInvocationTree.getArguments().get(0);
-    Position pos = getSourcePosition(methodInvocationTree);
-    SuggestedFix fix = new SuggestedFix(pos.start, pos.end, "");
+    SuggestedFix fix = delete(getPosition(methodInvocationTree));
     return new AstError(stringLiteralValue,
         format("String literal %s passed as first argument to Preconditions#checkNotNull",
             stringLiteralValue), fix);

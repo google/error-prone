@@ -21,8 +21,6 @@ import com.sun.source.tree.*;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Type;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 /**
  * Static factory methods which make the DSL read better.
  *
@@ -61,11 +59,6 @@ public class Matchers {
     };
   }
 
-  public static <T extends Tree> Matcher<T> capture(
-      final TreeHolder<T> holder, final Matcher<Tree> matcher) {
-    return new CapturingMatcher<T>(matcher, holder);
-  }
-
   public static <T extends Tree> Matcher<T> kindIs(final Kind kind) {
     return new Matcher<T>() {
       @Override public boolean matches(T tree, VisitorState state) {
@@ -93,16 +86,8 @@ public class Matchers {
     return new ParentNode<T>(treeMatcher);
   }
 
-  public static <T extends Tree> Matcher<T> not(Matcher<T> matcher) {
-    return new Not<T>(matcher);
-  }
-
   public static <T extends Tree> Matcher<T> isSubtypeOf(Type type) {
     return new IsSubtypeOf<T>(type);
-  }
-
-  public static <T extends Tree> StoreToBoolean<T> storeToBoolean(AtomicBoolean result, Matcher<T> matcher) {
-    return new StoreToBoolean<T>(result, matcher);
   }
 
   public static <T extends Tree> EnclosingBlock<T> enclosingBlock(Matcher<BlockTree> matcher) {
@@ -113,7 +98,7 @@ public class Matchers {
     return new LastStatement(matcher);
   }
 
-  public static <T extends Tree> Same<T> same(TreeHolder<T> treeHolder) {
-    return new Same<T>(treeHolder);
+  public static <T extends Tree> Same<T> same(T tree) {
+    return new Same<T>(tree);
   }
 }
