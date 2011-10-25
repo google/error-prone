@@ -16,7 +16,7 @@
 
 package com.google.errorprone;
 
-import com.google.errorprone.matchers.ErrorProducingMatcher.AstError;
+import com.google.errorprone.matchers.ErrorChecker.AstError;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Log;
 

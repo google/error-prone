@@ -20,8 +20,6 @@ import com.google.errorprone.SuggestedFix;
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
-import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 
 import static com.google.errorprone.matchers.Matchers.*;
 import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
@@ -30,27 +28,22 @@ import static java.lang.String.format;
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class PreconditionsCheckNotNullMatcher
-    extends ErrorProducingMatcher<MethodInvocationTree> {
+public class PreconditionsCheckNotNullChecker extends ErrorChecker<MethodInvocationTree> {
 
   @Override
-  public AstError matchWithError(MethodInvocationTree tree, VisitorState state) {
-    TreeHolder<ExpressionTree> stringLiteralValue = TreeHolder.create();
-
-    if (allOf(
+  public Matcher<MethodInvocationTree> matcher() {
+    return allOf(
         methodSelect(staticMethod("com.google.common.base", "Preconditions", "checkNotNull")),
-        argument(0, capture(stringLiteralValue, kindIs(STRING_LITERAL))))
-        .matches(tree, state)) {
-      DiagnosticPosition pos = ((JCMethodInvocation) tree).pos();
-      SuggestedFix fix = new SuggestedFix(
-          pos.getStartPosition(), pos.getEndPosition(state.compilationUnit.endPositions), "");
-      return new AstError(
-          stringLiteralValue.get(),
-          format("String literal %s passed as first argument to Preconditions#checkNotNull",
-              stringLiteralValue.get()),
-          fix
-      );
-    }
-    return null;
+        argument(0, Matchers.<ExpressionTree>kindIs(STRING_LITERAL)));
+  }
+
+  @Override
+  public AstError produceError(MethodInvocationTree methodInvocationTree, VisitorState state) {
+    ExpressionTree stringLiteralValue = methodInvocationTree.getArguments().get(0);
+    Position pos = getSourcePosition(methodInvocationTree);
+    SuggestedFix fix = new SuggestedFix(pos.start, pos.end, "");
+    return new AstError(stringLiteralValue,
+        format("String literal %s passed as first argument to Preconditions#checkNotNull",
+            stringLiteralValue), fix);
   }
 }

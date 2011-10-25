@@ -16,7 +16,7 @@
 
 package com.google.errorprone;
 
-import com.google.errorprone.matchers.ErrorProducingMatcher;
+import com.google.errorprone.matchers.ErrorChecker;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.model.JavacTypes;
@@ -72,9 +72,9 @@ public class ErrorProneProcessor extends AbstractProcessor {
               treeAndTopLevel.snd.getSourceFile());
           VisitorState visitorState =
               new VisitorState(JavacTypes.instance(context), Symtab.instance(context));
-          List<ErrorProducingMatcher.AstError> astErrors = new ASTVisitor()
+          List<ErrorChecker.AstError> astErrors = new ASTVisitor()
               .visitCompilationUnit(treeAndTopLevel.snd, visitorState);
-          for (ErrorProducingMatcher.AstError astError : astErrors) {
+          for (ErrorChecker.AstError astError : astErrors) {
             errorReporter.emitError(astError);
           }
         }

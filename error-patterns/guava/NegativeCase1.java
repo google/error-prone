@@ -1,7 +1,3 @@
-import com.google.errorprone.matchers.PreconditionsCheckNotNullMatcher;
-
-import java.lang.System;
-
 class NegativeCase1 {
   public void go() {
     Preconditions.checkNotNull("this is ok");

@@ -16,10 +16,10 @@
 
 package com.google.errorprone;
 
-import com.google.errorprone.matchers.DeadExceptionMatcher;
-import com.google.errorprone.matchers.ErrorProducingMatcher;
-import com.google.errorprone.matchers.ErrorProducingMatcher.AstError;
-import com.google.errorprone.matchers.PreconditionsCheckNotNullMatcher;
+import com.google.errorprone.matchers.DeadExceptionChecker;
+import com.google.errorprone.matchers.ErrorChecker;
+import com.google.errorprone.matchers.ErrorChecker.AstError;
+import com.google.errorprone.matchers.PreconditionsCheckNotNullChecker;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -50,8 +50,8 @@ public class ASTVisitor extends TreePathScanner<List<AstError>, VisitorState> {
     return concat;
   }
 
-  private final Iterable<? extends ErrorProducingMatcher<MethodInvocationTree>>
-      methodInvocationMatchers = Arrays.asList(new PreconditionsCheckNotNullMatcher());
+  private final Iterable<? extends ErrorChecker<MethodInvocationTree>>
+      methodInvocationCheckers = Arrays.asList(new PreconditionsCheckNotNullChecker());
 
   @Override
   public List<AstError> visitCompilationUnit(CompilationUnitTree compilationUnitTree, VisitorState visitorState) {
@@ -64,8 +64,8 @@ public class ASTVisitor extends TreePathScanner<List<AstError>, VisitorState> {
   public List<AstError> visitMethodInvocation(
       MethodInvocationTree methodInvocationTree, VisitorState state) {
     List<AstError> result = new ArrayList<AstError>();
-    for (ErrorProducingMatcher<MethodInvocationTree> matcher : methodInvocationMatchers) {
-      AstError error = matcher.matchWithError(methodInvocationTree, state);
+    for (ErrorChecker<MethodInvocationTree> checker : methodInvocationCheckers) {
+      AstError error = checker.check(methodInvocationTree, state);
       if (error != null) {
         result.add(error);
       }
@@ -84,8 +84,8 @@ public class ASTVisitor extends TreePathScanner<List<AstError>, VisitorState> {
   @Override
   public List<AstError> visitNewClass(NewClassTree newClassTree, VisitorState visitorState) {
     List<AstError> result = new ArrayList<AstError>();
-    AstError error = new DeadExceptionMatcher()
-        .matchWithError(newClassTree, visitorState.withPath(getCurrentPath()));
+    AstError error = new DeadExceptionChecker()
+        .check(newClassTree, visitorState.withPath(getCurrentPath()));
     if (error != null) {
       result.add(error);
     }

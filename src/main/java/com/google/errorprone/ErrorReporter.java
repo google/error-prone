@@ -16,7 +16,7 @@
 
 package com.google.errorprone;
 
-import com.google.errorprone.matchers.ErrorProducingMatcher.AstError;
+import com.google.errorprone.matchers.ErrorChecker.AstError;
 
 /**
  * Strategies for making our errors appear to the user and break their build.
