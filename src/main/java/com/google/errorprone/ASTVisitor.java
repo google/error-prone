@@ -16,10 +16,10 @@
 
 package com.google.errorprone;
 
-import com.google.errorprone.matchers.DeadExceptionChecker;
-import com.google.errorprone.matchers.ErrorChecker;
-import com.google.errorprone.matchers.ErrorChecker.AstError;
-import com.google.errorprone.matchers.PreconditionsCheckNotNullChecker;
+import com.google.errorprone.checkers.DeadExceptionChecker;
+import com.google.errorprone.checkers.ErrorChecker;
+import com.google.errorprone.checkers.ErrorChecker.AstError;
+import com.google.errorprone.checkers.PreconditionsCheckNotNullChecker;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.MethodInvocationTree;

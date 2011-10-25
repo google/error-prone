@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.matchers;
+package com.google.errorprone.checkers;
 
-import com.google.errorprone.SuggestedFix;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.TreeHolder;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.StatementTree;
 

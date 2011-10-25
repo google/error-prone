@@ -16,7 +16,7 @@
 
 package com.google.errorprone;
 
-import com.google.errorprone.matchers.ErrorChecker;
+import com.google.errorprone.checkers.ErrorChecker;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.model.JavacTypes;

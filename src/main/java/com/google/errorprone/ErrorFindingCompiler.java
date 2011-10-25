@@ -16,7 +16,7 @@
 
 package com.google.errorprone;
 
-import com.google.errorprone.matchers.ErrorChecker.AstError;
+import com.google.errorprone.checkers.ErrorChecker.AstError;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.util.JavacTask;
 import com.sun.tools.javac.api.JavacTaskImpl;

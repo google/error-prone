@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone;
+package com.google.errorprone.fixes;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
