@@ -20,9 +20,9 @@ import com.google.errorprone.ErrorCollectingTreeScanner;
 import com.google.errorprone.ErrorFindingCompiler;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.checkers.ErrorChecker.AstError;
-import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.Tree.Kind;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
@@ -44,65 +44,79 @@ import static org.junit.Assert.assertTrue;
 public class StaticMethodMatcherTest {
 
   @Rule public TestName name = new TestName();
+  private File tempDir;
+
+  @Before
+  public void setUp() throws IOException {
+    tempDir = new File(System.getProperty("java.io.tmpdir"),
+        getClass().getCanonicalName() + "." + name.getMethodName());
+    tempDir.mkdirs();
+    tempDir.deleteOnExit();
+
+    writeFile("A.java",
+        "package com.google;",
+        "public class A { ",
+        "  public static int count() {",
+        "     return 1; ",
+        "  }",
+        "}"
+    );
+  }
 
   @Test
   public void shouldMatchUsingImportStatements() throws IOException {
-    assertMatch(true, new String[]{
+    writeFile("B.java",
       "import com.google.A;",
-      "public class " + name.getMethodName() + " {",
+      "public class B {",
       "  public int count() {",
       "    return A.count();",
       "  }",
-      "}",
-    }, new StaticMethodMatcher("com.google", "A", "count"));
+      "}"
+    );
+    assertMatch(true, new StaticMethodMatcher("com.google.A", "count"));
   }
 
   @Test
   public void shouldMatchFullyQualifiedCallSite() throws IOException {
-    assertMatch(true, new String[]{
-      "public class " + name.getMethodName() + " {",
+    writeFile("B.java",
+      "public class B {",
       "  public int count() {",
       "    return com.google.A.count();",
       "  }",
-      "}",
-    }, new StaticMethodMatcher("com.google", "A", "count"));
+      "}"
+    );
+    assertMatch(true, new StaticMethodMatcher("com.google.A", "count"));
   }
 
   @Test
   public void shouldNotMatchWhenPackageDiffers() throws IOException {
-    assertMatch(false, new String[]{
+    writeFile("B.java",
         "import com.android.A;",
-        "public class " + name.getMethodName() + " {",
+        "public class B {",
         "  public int count() {",
         "    return A.count();",
         "  }",
-        "}",
-    }, new StaticMethodMatcher("com.google", "A", "count"));
+        "}"
+    );
+    assertMatch(false, new StaticMethodMatcher("com.google.A", "count"));
   }
 
-  private void assertMatch(final boolean shouldMatch, String[] sourceLines,
-                           final StaticMethodMatcher staticMethodMatcher) throws IOException {
-    File source = new File(System.getProperty("java.io.tmpdir"), name.getMethodName() + ".java");
-    source.deleteOnExit();
+  private void writeFile(String fileName, String... lines) throws IOException {
+    File source = new File(tempDir, fileName);
     PrintWriter writer = new PrintWriter(new FileWriter(source));
-    for (String sourceLine : sourceLines) {
-      writer.println(sourceLine);
+    for (String line : lines) {
+      writer.println(line);
     }
     writer.close();
+  }
 
-
+  private void assertMatch(final boolean shouldMatch,
+                           final StaticMethodMatcher staticMethodMatcher) throws IOException {
     new ErrorFindingCompiler(
-        new String[]{ source.getAbsolutePath() },
+        tempDir.list(),
         new DiagnosticCollector<JavaFileObject>(),
         getSystemJavaCompiler())
         .run(new ErrorCollectingTreeScanner() {
-          @Override
-          public List<AstError> visitImport(ImportTree importTree, VisitorState state) {
-            state.imports.add(importTree);
-            super.visitImport(importTree, state);
-            return null;
-          }
-
           @Override
           public List<AstError> visitMemberSelect(MemberSelectTree node, VisitorState visitorState)
           {

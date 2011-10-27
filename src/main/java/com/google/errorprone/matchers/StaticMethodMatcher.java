@@ -18,56 +18,36 @@ package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.ImportTree;
-import com.sun.source.tree.MemberSelectTree;
-
-import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
-import static com.sun.source.tree.Tree.Kind.MEMBER_SELECT;
+import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
+import com.sun.tools.javac.tree.JCTree.JCIdent;
 
 /**
  * Matches a static method expression.
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class StaticMethodMatcher implements Matcher<ExpressionTree> {
-  private final String packageName;
-  private final String className;
+  private final String fullClassName;
   private final String methodName;
 
-  public StaticMethodMatcher(String packageName, String className, String methodName) {
-    this.packageName = packageName;
-    this.className = className;
+  public StaticMethodMatcher(String fullClassName, String methodName) {
+    this.fullClassName = fullClassName;
     this.methodName = methodName;
   }
 
   @Override
   public boolean matches(ExpressionTree item, VisitorState state) {
     try {
-      MemberSelectTree memberSelectTree = (MemberSelectTree) item;
-      
-      // Case 1: Fully-qualified method call
-      if (memberSelectTree.getExpression().getKind() == MEMBER_SELECT &&
-          memberSelectTree.getExpression().toString().equals(packageName + "." + className) &&
-          memberSelectTree.getIdentifier().contentEquals(methodName)) {
+      JCFieldAccess memberSelectTree = (JCFieldAccess) item;
+      if (memberSelectTree.sym.getQualifiedName().toString().equals(methodName) &&
+          memberSelectTree.sym.owner.getQualifiedName().toString().equals(fullClassName)) {
         return true;
       }
-      
-      // Case 2: Not fully qualified method call -- must check imports
-      boolean importFound = false;
-      for (ImportTree importTree : state.imports) {
-        if (importTree.getQualifiedIdentifier().toString().equals(packageName + "." + className)) {
-          importFound = true;
-          break;
-        }
-      }
-      if (importFound &&
-          memberSelectTree.getExpression().getKind() == IDENTIFIER &&
-          memberSelectTree.getExpression().toString().equals(className) &&
-          memberSelectTree.getIdentifier().contentEquals(methodName)) {
-        return true;
-      } 
+      JCIdent expressionTree = (JCIdent) memberSelectTree.getExpression();
+      return
+        expressionTree.sym.getQualifiedName().toString().equals(fullClassName) &&
+        memberSelectTree.sym.getQualifiedName().toString().equals(methodName);
     } catch (ClassCastException e) {
       return false;
     }
-    return false;
   }
 }

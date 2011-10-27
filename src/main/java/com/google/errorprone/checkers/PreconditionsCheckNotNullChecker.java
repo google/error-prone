@@ -19,7 +19,6 @@ package com.google.errorprone.checkers;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
@@ -36,8 +35,8 @@ public class PreconditionsCheckNotNullChecker extends ErrorChecker<MethodInvocat
   @Override
   public Matcher<MethodInvocationTree> matcher() {
     return allOf(
-        methodSelect(staticMethod("com.google.common.base", "Preconditions", "checkNotNull")),
-        argument(0, Matchers.<ExpressionTree>kindIs(STRING_LITERAL)));
+        methodSelect(staticMethod("com.google.common.base.Preconditions", "checkNotNull")),
+        argument(0, kindIs(STRING_LITERAL, ExpressionTree.class)));
   }
 
   @Override

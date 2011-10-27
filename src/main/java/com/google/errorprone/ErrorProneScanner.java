@@ -20,7 +20,6 @@ import com.google.errorprone.checkers.DeadExceptionChecker;
 import com.google.errorprone.checkers.ErrorChecker;
 import com.google.errorprone.checkers.ErrorChecker.AstError;
 import com.google.errorprone.checkers.PreconditionsCheckNotNullChecker;
-import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 
@@ -51,13 +50,6 @@ public class ErrorProneScanner extends ErrorCollectingTreeScanner {
     }
     super.visitMethodInvocation(methodInvocationTree, state);
     return result;
-  }
-
-  @Override
-  public List<AstError> visitImport(ImportTree importTree, VisitorState state) {
-    state.imports.add(importTree);
-    super.visitImport(importTree, state);
-    return null;
   }
 
   @Override

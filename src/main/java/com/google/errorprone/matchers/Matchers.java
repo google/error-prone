@@ -67,9 +67,16 @@ public class Matchers {
     };
   }
 
-  public static StaticMethodMatcher staticMethod(
-      String packageName, String className, String methodName) {
-    return new StaticMethodMatcher(packageName, className, methodName);
+  public static <T extends Tree> Matcher<T> kindIs(final Kind kind, Class<T> typeInfer) {
+    return new Matcher<T>() {
+      @Override public boolean matches(T tree, VisitorState state) {
+        return tree.getKind() == kind;
+      }
+    };
+  }
+
+  public static StaticMethodMatcher staticMethod(String fullClassName, String methodName) {
+    return new StaticMethodMatcher(fullClassName, methodName);
   }
 
   public static MethodInvocationMethodSelectMatcher methodSelect(

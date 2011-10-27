@@ -64,7 +64,7 @@ public class ErrorFindingCompiler {
         .getTask(null, fileManager, diagnostics,
             Arrays.asList("-Xjcov"), // Instruct javac to maintain a table of endpositions for AST
             Collections.<String>emptyList(),
-            fileManager.getJavaFileObjects(args[0]));
+            fileManager.getJavaFileObjects(args));
     Iterable<? extends CompilationUnitTree> compilationUnits = javacTask.parse();
     javacTask.analyze();
 

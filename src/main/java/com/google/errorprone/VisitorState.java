@@ -16,20 +16,16 @@
 
 package com.google.errorprone;
 
-import com.sun.source.tree.ImportTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 
 import javax.lang.model.util.Types;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class VisitorState {
-  public List<ImportTree> imports = new ArrayList<ImportTree>();
   public JCCompilationUnit compilationUnit;
   public final Types types;
   public final Symtab symtab;
