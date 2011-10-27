@@ -46,9 +46,7 @@ public class LogReporter implements ErrorReporter {
     try {
       CharSequence content = sourceFile.getCharContent(true);
       log.error((DiagnosticPosition) error.match, MESSAGE_BUNDLE_KEY, error.message
-          + "\nDid you mean to replace \""
-          + content.subSequence(error.suggestedFix.startPosition, error.suggestedFix.endPosition)
-          + "\" with \"" + error.suggestedFix.replaceWith + "\"");
+          + "\nDid you mean to " + error.suggestedFix);
     } catch (IOException e) {
       throw new RuntimeException(e);
     } finally {

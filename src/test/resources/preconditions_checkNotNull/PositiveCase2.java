@@ -1,5 +1,4 @@
-import com.google.common.base.Functions;
-import com.google.common.base.Predicates;
+package preconditions_checkNotNull;
 
 /**
  * Test case for fully qualified method call.

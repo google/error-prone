@@ -1,3 +1,5 @@
+package preconditions_checkNotNull;
+
 class NegativeCase1 {
   public void go() {
     Preconditions.checkNotNull("this is ok");

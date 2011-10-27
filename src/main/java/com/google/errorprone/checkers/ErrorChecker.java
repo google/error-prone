@@ -59,17 +59,23 @@ public abstract class ErrorChecker<T extends Tree> implements Matcher<T> {
   public static class Position {
     public final int start;
     public final int end;
+    private final Tree tree;
 
-    public Position(int start, int end) {
+    public Position(int start, int end, Tree tree) {
       this.start = start;
       this.end = end;
+      this.tree = tree;
+    }
+
+    public String getSource() {
+      return tree.toString();
     }
   }
 
   protected Position getPosition(Tree tree) {
     DiagnosticPosition pos = ((JCTree) tree).pos();
     return new Position(pos.getStartPosition(),
-        pos.getEndPosition(state.compilationUnit.endPositions));
+        pos.getEndPosition(state.compilationUnit.endPositions), tree);
   }
 
   /**

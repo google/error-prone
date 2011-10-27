@@ -1,6 +1,6 @@
-import com.google.common.base.Functions;
+package preconditions_checkNotNull;
+
 import com.google.common.base.Preconditions;
-import com.google.common.base.Predicates;
 
 public class PositiveCase1 {
   public void error() {
