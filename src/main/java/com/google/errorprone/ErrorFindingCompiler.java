@@ -53,10 +53,10 @@ public class ErrorFindingCompiler {
         args,
         null, // Null diagnostics means they are printed to the console
         ToolProvider.getSystemJavaCompiler())
-        .run() ? 0 : 1);
+        .run(new ErrorProneScanner()) ? 0 : 1);
   }
 
-  public boolean run() throws IOException {
+  public boolean run(ErrorCollectingTreeScanner scanner) throws IOException {
     StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null);
 
     //TODO: setup the compiler using all the flags, or extend the javac.main.Main class.
@@ -78,7 +78,7 @@ public class ErrorFindingCompiler {
     for (CompilationUnitTree compilationUnitTree : compilationUnits) {
       LogReporter logReporter =
           new LogReporter(log, compilationUnitTree.getSourceFile());
-      List<AstError> errors = new ErrorProneScanner().scan(compilationUnitTree, visitorState);
+      List<AstError> errors = scanner.scan(compilationUnitTree, visitorState);
       for (AstError error : errors) {
         logReporter.emitError(error);
         hasErrors = true;
