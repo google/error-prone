@@ -28,7 +28,7 @@
 
   <groupId>error_prone</groupId>
   <artifactId>error_prone</artifactId>
-  <version>1.0</version>
+  <version>0.1</version>
 
   <dependencies>
     <!-- We must minimise our runtime dependencies as they'll appear in
@@ -85,31 +85,6 @@
           <source>1.6</source>
           <target>1.6</target>
         </configuration>
-      </plugin>
-      <!-- We need to copy our SPI file into /META-INF/services after we compile, since our
-           processor doesn't exist yet, but before we build our JAR. -->
-      <plugin>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>2.5</version>
-        <executions>
-          <execution>
-            <id>copy-resources</id>
-            <!-- we'll copy the resource just after the tests are run -->
-            <phase>test</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${basedir}/target/classes</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>src/main/deploy-only-resources</directory>
-                  <filtering>true</filtering>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>

@@ -20,45 +20,24 @@ import com.google.errorprone.checkers.DeadExceptionChecker;
 import com.google.errorprone.checkers.ErrorChecker;
 import com.google.errorprone.checkers.ErrorChecker.AstError;
 import com.google.errorprone.checkers.PreconditionsCheckNotNullChecker;
-import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
-import com.sun.source.util.TreePathScanner;
-import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
- * Visitor, following the visitor pattern, which may visit each node in the parsed AST.
+ * Scans the parsed AST, looking for violations of any of the configured checks.
  * @author Alex Eagle (alexeagle@google.com)
  */
-public class ASTVisitor extends TreePathScanner<List<AstError>, VisitorState> {
-
-  @Override
-  public List<AstError> reduce(List<AstError> r1, List<AstError> r2) {
-    List<AstError> concat = new ArrayList<AstError>();
-    if (r1 != null) {
-      concat.addAll(r1);
-    }
-    if (r2 != null) {
-      concat.addAll(r2);
-    }
-    return concat;
-  }
+public class ErrorProneScanner extends ErrorCollectingTreeScanner {
 
   private final Iterable<? extends ErrorChecker<MethodInvocationTree>>
       methodInvocationCheckers = Arrays.asList(new PreconditionsCheckNotNullChecker());
-
-  @Override
-  public List<AstError> visitCompilationUnit(CompilationUnitTree compilationUnitTree, VisitorState visitorState) {
-    visitorState.compilationUnit = (JCCompilationUnit)compilationUnitTree;
-    List<AstError> errors = super.visitCompilationUnit(compilationUnitTree, visitorState);
-    return errors != null ? errors : Collections.<AstError>emptyList();
-  }
+  private final Iterable<? extends ErrorChecker<NewClassTree>>
+      newClassCheckers = Arrays.asList(new DeadExceptionChecker());
 
   @Override
   public List<AstError> visitMethodInvocation(
@@ -84,10 +63,12 @@ public class ASTVisitor extends TreePathScanner<List<AstError>, VisitorState> {
   @Override
   public List<AstError> visitNewClass(NewClassTree newClassTree, VisitorState visitorState) {
     List<AstError> result = new ArrayList<AstError>();
-    AstError error = new DeadExceptionChecker()
-        .check(newClassTree, visitorState.withPath(getCurrentPath()));
-    if (error != null) {
-      result.add(error);
+    for (ErrorChecker<NewClassTree> newClassChecker : newClassCheckers) {
+      AstError error = newClassChecker
+          .check(newClassTree, visitorState.withPath(getCurrentPath()));
+      if (error != null) {
+        result.add(error);
+      }
     }
     super.visitNewClass(newClassTree, visitorState);
     return result;

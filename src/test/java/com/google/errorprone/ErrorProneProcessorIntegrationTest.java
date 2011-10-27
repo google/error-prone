@@ -16,28 +16,23 @@
 
 package com.google.errorprone;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
+import com.google.errorprone.annotationprocessor.ErrorProneProcessor;
+import junit.framework.TestCase;
+
+import javax.tools.*;
+import javax.tools.Diagnostic.Kind;
+import javax.tools.JavaCompiler.CompilationTask;
+import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URLClassLoader;
+
 import static java.util.Arrays.asList;
 import static java.util.Locale.ENGLISH;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.StringContains.containsString;
 import static org.junit.Assert.assertThat;
-
-import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
-
-import junit.framework.TestCase;
-
-import java.io.File;
-import java.net.URISyntaxException;
-import java.net.URLClassLoader;
-
-import javax.tools.Diagnostic;
-import javax.tools.Diagnostic.Kind;
-import javax.tools.DiagnosticCollector;
-import javax.tools.JavaCompiler.CompilationTask;
-import javax.tools.JavaFileObject;
-import javax.tools.StandardJavaFileManager;
-import javax.tools.ToolProvider;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)

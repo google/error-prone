@@ -78,7 +78,7 @@ public class ErrorFindingCompiler {
     for (CompilationUnitTree compilationUnitTree : compilationUnits) {
       LogReporter logReporter =
           new LogReporter(log, compilationUnitTree.getSourceFile());
-      List<AstError> errors = new ASTVisitor().scan(compilationUnitTree, visitorState);
+      List<AstError> errors = new ErrorProneScanner().scan(compilationUnitTree, visitorState);
       for (AstError error : errors) {
         logReporter.emitError(error);
         hasErrors = true;
@@ -87,7 +87,7 @@ public class ErrorFindingCompiler {
     return !hasErrors;
   }
 
-  static void setupMessageBundle(Context context) {
+  public static void setupMessageBundle(Context context) {
     try {
       String bundlePath = "/com/google/errorprone/errors.properties";
       InputStream bundleResource = ErrorFindingCompiler.class.getResourceAsStream(bundlePath);
