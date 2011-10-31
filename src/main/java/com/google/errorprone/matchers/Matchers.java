@@ -84,6 +84,10 @@ public class Matchers {
     return new MethodInvocationMethodSelectMatcher(methodSelectMatcher);
   }
 
+  public static Matcher<ExpressionTree> expressionMethodSelect(Matcher<ExpressionTree> methodSelectMatcher) {
+    return new ExpressionMethodSelectMatcher(methodSelectMatcher); 
+  }
+  
   public static Matcher<MethodInvocationTree> argument(
       final int position, final Matcher<ExpressionTree> argumentMatcher) {
     return new MethodInvocationArgumentMatcher(position, argumentMatcher);
@@ -108,4 +112,14 @@ public class Matchers {
   public static <T extends Tree> Same<T> same(T tree) {
     return new Same<T>(tree);
   }
+  
+  public static <T extends Tree> Matcher<T> not(final Matcher<T> matcher) {
+    return new Matcher<T>() {
+      @Override
+      public boolean matches(T t, VisitorState state) {
+        return !matcher.matches(t, state);
+      }
+    };
+  }
+  
 }
