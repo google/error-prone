@@ -26,21 +26,6 @@ import java.util.List;
  */
 public class SuggestedFix {
 
-  public static class Replacement {
-    // positions are character offset from beginning of the source file
-    public int startPosition;
-    public int endPosition;
-    public String replaceWith;
-
-    public Replacement(int startPosition, int endPosition, String replaceWith) {
-      this.startPosition = startPosition;
-      this.endPosition = endPosition;
-      this.replaceWith = replaceWith;
-    }
-  }
-
-  public SuggestedFix() {}
-
   @Override
   public String toString() {
     StringBuilder result = new StringBuilder("replace ");
