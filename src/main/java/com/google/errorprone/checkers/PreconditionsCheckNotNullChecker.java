@@ -48,7 +48,7 @@ public class PreconditionsCheckNotNullChecker extends ErrorChecker<MethodInvocat
     ExpressionTree stringLiteralValue = arguments.get(0);
     SuggestedFix fix = arguments.size() == 2
         ? swap(getPosition(arguments.get(0)), getPosition(arguments.get(1)))
-        : delete(getPosition(methodInvocationTree));
+        : delete(getPosition(state.getPath().getParentPath().getLeaf()));
     return new AstError(stringLiteralValue,
         format("String literal %s passed as first argument to Preconditions#checkNotNull",
             stringLiteralValue), fix);

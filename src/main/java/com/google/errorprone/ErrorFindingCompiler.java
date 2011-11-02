@@ -63,6 +63,9 @@ public class ErrorFindingCompiler {
     JavacTask javacTask = (JavacTask) compiler
         .getTask(null, fileManager, diagnostics,
             Arrays.asList("-Xjcov"), // Instruct javac to maintain a table of endpositions for AST
+            // TODO: need valid classpath for symbol table lookup to work in Preconditions checker
+            //"-classpath",
+            //"/Users/alexeagle/.m2/repository/com/google/guava/guava/r09/guava-r09.jar"),
             Collections.<String>emptyList(),
             fileManager.getJavaFileObjects(args));
     Iterable<? extends CompilationUnitTree> compilationUnits = javacTask.parse();

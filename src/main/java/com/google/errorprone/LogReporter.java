@@ -17,6 +17,7 @@
 package com.google.errorprone;
 
 import com.google.errorprone.checkers.ErrorChecker.AstError;
+import com.google.errorprone.fixes.AppliedFix;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Log;
 
@@ -45,8 +46,9 @@ public class LogReporter implements ErrorReporter {
     originalSource = log.useSource(sourceFile);
     try {
       CharSequence content = sourceFile.getCharContent(true);
+      AppliedFix fix = AppliedFix.fromSource(content).apply(error.suggestedFix);
       log.error((DiagnosticPosition) error.match, MESSAGE_BUNDLE_KEY, error.message
-          + "\nDid you mean to " + error.suggestedFix);
+          + "\nDid you mean " + fix.getNewCodeSnippet());
     } catch (IOException e) {
       throw new RuntimeException(e);
     } finally {

@@ -18,8 +18,9 @@ package com.google.errorprone.fixes;
 
 import com.google.errorprone.checkers.ErrorChecker.Position;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Comparator;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -32,12 +33,24 @@ public class SuggestedFix {
     for (Replacement replacement : replacements) {
       result
           .append("position " + replacement.startPosition + ":" + replacement.endPosition)
-          .append(" with \"" + replacement.replaceWith + "\"");
+          .append(" with \"" + replacement.replaceWith + "\" ");
     }
     return result.toString();
   }
 
-  private List<Replacement> replacements = new ArrayList<Replacement>();
+  private TreeSet<Replacement> replacements = new TreeSet<Replacement>(
+      new Comparator<Replacement>() {
+        @Override
+        public int compare(Replacement o1, Replacement o2) {
+          int a = o2.startPosition;
+          int b = o1.startPosition;
+          return (a < b) ? -1 : ((a > b) ? 1 : 0);
+        }
+      });
+
+  public Set<Replacement> getReplacements() {
+    return replacements;
+  }
 
   private SuggestedFix replace(int start, int end, String replaceWith) {
     replacements.add(new Replacement(start, end, replaceWith));

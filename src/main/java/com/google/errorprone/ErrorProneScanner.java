@@ -43,7 +43,7 @@ public class ErrorProneScanner extends ErrorCollectingTreeScanner {
       MethodInvocationTree methodInvocationTree, VisitorState state) {
     List<AstError> result = new ArrayList<AstError>();
     for (ErrorChecker<MethodInvocationTree> checker : methodInvocationCheckers) {
-      AstError error = checker.check(methodInvocationTree, state);
+      AstError error = checker.check(methodInvocationTree, state.withPath(getCurrentPath()));
       if (error != null) {
         result.add(error);
       }
