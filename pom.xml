@@ -28,7 +28,7 @@
 
   <groupId>error_prone</groupId>
   <artifactId>error_prone</artifactId>
-  <version>0.1</version>
+  <version>0.2</version>
 
   <dependencies>
     <!-- We must minimise our runtime dependencies as they'll appear in
