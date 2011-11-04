@@ -20,6 +20,7 @@ import com.google.errorprone.checkers.DeadExceptionChecker;
 import com.google.errorprone.checkers.ErrorChecker;
 import com.google.errorprone.checkers.ErrorChecker.AstError;
 import com.google.errorprone.checkers.PreconditionsCheckNotNullChecker;
+import com.google.errorprone.checkers.PreconditionsCheckNotNullPrimitive1stArgChecker;
 import com.google.errorprone.checkers.PreconditionsExpensiveStringChecker;
 
 import com.sun.source.tree.MethodInvocationTree;
@@ -38,7 +39,8 @@ public class ErrorProneScanner extends ErrorCollectingTreeScanner {
   private final Iterable<? extends ErrorChecker<MethodInvocationTree>>
       methodInvocationCheckers = Arrays.asList(
           new PreconditionsCheckNotNullChecker(),
-          new PreconditionsExpensiveStringChecker());
+          new PreconditionsExpensiveStringChecker(),
+          new PreconditionsCheckNotNullPrimitive1stArgChecker());
   
   private final Iterable<? extends ErrorChecker<NewClassTree>>
       newClassCheckers = Arrays.asList(new DeadExceptionChecker());
