@@ -28,13 +28,13 @@ import static java.lang.String.format;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Matchers;
 
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree.Kind;
-import com.sun.source.util.SimpleTreeVisitor;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -51,6 +51,7 @@ public class PreconditionsExpensiveStringChecker
     extends ErrorChecker<MethodInvocationTree> {
 
   @Override
+  @SuppressWarnings({"vararg", "unchecked"})
   public Matcher<MethodInvocationTree> matcher() {
     return allOf(
         anyOf(
@@ -60,12 +61,12 @@ public class PreconditionsExpensiveStringChecker
                 "com.google.common.base.Preconditions", "checkState")),
             methodSelect(staticMethod(
                 "com.google.common.base.Preconditions", "checkArgument"))),
-        argument(1, allOf(
+        argument(1, Matchers.<ExpressionTree>allOf(
             kindIs(Kind.METHOD_INVOCATION, ExpressionTree.class),
             expressionMethodSelect(staticMethod("java.lang.String", "format")),
             new StringFormatCallContainsNoSpecialFormattingMatcher(
                 Pattern.compile("%[^%s]"))
-          ))
+        ))
     );
   }
   
