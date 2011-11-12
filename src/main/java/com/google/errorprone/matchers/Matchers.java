@@ -17,7 +17,13 @@
 package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
-import com.sun.source.tree.*;
+
+import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Type;
 
@@ -84,6 +90,10 @@ public class Matchers {
     return new MethodInvocationMethodSelectMatcher(methodSelectMatcher);
   }
 
+  public static Matcher<ExpressionTree> expressionMethodSelect(Matcher<ExpressionTree> methodSelectMatcher) {
+    return new ExpressionMethodSelectMatcher(methodSelectMatcher); 
+  }
+  
   public static Matcher<MethodInvocationTree> argument(
       final int position, final Matcher<ExpressionTree> argumentMatcher) {
     return new MethodInvocationArgumentMatcher(position, argumentMatcher);
@@ -107,5 +117,27 @@ public class Matchers {
 
   public static <T extends Tree> Same<T> same(T tree) {
     return new Same<T>(tree);
+  }
+  
+  public static <T extends Tree> Matcher<T> not(final Matcher<T> matcher) {
+    return new Matcher<T>() {
+      @Override
+      public boolean matches(T t, VisitorState state) {
+        return !matcher.matches(t, state);
+      }
+    };
+  }
+
+  public static Matcher<ExpressionTree> stringLiteral(String value) {
+    return new StringLiteralMatcher(value);
+  }
+
+  public static Matcher<AnnotationTree> hasElementWithValue(
+      String element, Matcher<ExpressionTree> valueMatcher) {
+    return new AnnotationHasElementWithValue(element, valueMatcher);
+  }
+
+  public static Matcher<AnnotationTree> isType(final String annotationClassName) {
+    return new AnnotationTypeMatcher(annotationClassName);
   }
 }

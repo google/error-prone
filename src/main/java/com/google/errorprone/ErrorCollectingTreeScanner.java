@@ -46,7 +46,7 @@ public class ErrorCollectingTreeScanner extends TreePathScanner<List<AstError>, 
   @Override
   public List<AstError> visitCompilationUnit(
       CompilationUnitTree compilationUnitTree, VisitorState visitorState) {
-    visitorState.compilationUnit = (JCCompilationUnit)compilationUnitTree;
+    visitorState = visitorState.forCompilationUnit((JCCompilationUnit) compilationUnitTree);
     List<AstError> errors = super.visitCompilationUnit(compilationUnitTree, visitorState);
     return errors != null ? errors : Collections.<AstError>emptyList();
   }

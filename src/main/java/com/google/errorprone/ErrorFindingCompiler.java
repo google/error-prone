@@ -17,21 +17,28 @@
 package com.google.errorprone;
 
 import com.google.errorprone.checkers.ErrorChecker.AstError;
+
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.util.JavacTask;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.code.Symtab;
+import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Messages;
 
-import javax.tools.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.PropertyResourceBundle;
+
+import javax.tools.DiagnosticCollector;
+import javax.tools.JavaCompiler;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardJavaFileManager;
+import javax.tools.ToolProvider;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -74,8 +81,8 @@ public class ErrorFindingCompiler {
     Context context = ((JavacTaskImpl) javacTask).getContext();
     setupMessageBundle(context);
     Log log = Log.instance(context);
-
-    VisitorState visitorState = new VisitorState(javacTask.getTypes(), Symtab.instance(context));
+    VisitorState visitorState = new VisitorState(javacTask.getTypes(), Symtab.instance(context), TreeMaker
+        .instance(context));
 
     boolean hasErrors = false;
     for (CompilationUnitTree compilationUnitTree : compilationUnits) {

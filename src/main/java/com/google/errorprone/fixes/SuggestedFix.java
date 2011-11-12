@@ -57,6 +57,10 @@ public class SuggestedFix {
     return this;
   }
 
+  public static SuggestedFix replace(Position statementPos, String replaceWith) {
+    return new SuggestedFix().replace(statementPos.start, statementPos.end, replaceWith);
+  }
+  
   public static SuggestedFix delete(Position statementPos) {
     return new SuggestedFix().replace(statementPos.start, statementPos.end, "");
   }

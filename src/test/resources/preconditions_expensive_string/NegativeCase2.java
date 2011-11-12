@@ -14,25 +14,19 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.matchers;
+package preconditions_expensive_string;
 
-import com.google.errorprone.VisitorState;
-import com.sun.source.tree.Tree;
-import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.tree.JCTree;
+import com.google.common.base.Preconditions;
 
 /**
- * @author alexeagle@google.com (Alex Eagle)
+ * Test for methodIs call including string concatenation.
+ * (Not yet supported, so this is a negative case)
+ *
+ * @author sjnickerson@google.com (Simon Nickerson)
  */
-public class IsSubtypeOf<T extends Tree> implements Matcher<T> {
-  private final Type type;
-
-  public IsSubtypeOf(Type type) {
-    this.type = type;
-  }
-
-  @Override
-  public boolean matches(Tree t, VisitorState state) {
-    return state.getTypes().isSubtype(((JCTree) t).type, type);
+public class NegativeCase2 {
+  public void error() {
+    int foo = 42;
+    Preconditions.checkState(true, "The foo" + foo + " is not a good foo");
   }
 }

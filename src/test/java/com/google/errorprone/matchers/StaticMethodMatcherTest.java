@@ -16,27 +16,30 @@
 
 package com.google.errorprone.matchers;
 
+import static javax.tools.ToolProvider.getSystemJavaCompiler;
+import static org.junit.Assert.assertTrue;
+
 import com.google.errorprone.ErrorCollectingTreeScanner;
 import com.google.errorprone.ErrorFindingCompiler;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.checkers.ErrorChecker.AstError;
+
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.Tree.Kind;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 
-import javax.tools.DiagnosticCollector;
-import javax.tools.JavaFileObject;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-import static javax.tools.ToolProvider.getSystemJavaCompiler;
-import static org.junit.Assert.assertTrue;
+import javax.tools.DiagnosticCollector;
+import javax.tools.JavaFileObject;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)

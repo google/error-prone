@@ -16,19 +16,24 @@
 
 package com.google.errorprone.checkers;
 
+import static com.google.errorprone.fixes.SuggestedFix.delete;
+import static com.google.errorprone.fixes.SuggestedFix.swap;
+import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.argument;
+import static com.google.errorprone.matchers.Matchers.kindIs;
+import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.matchers.Matchers.methodSelect;
+import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
+import static java.lang.String.format;
+
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Matcher;
+
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
 import java.util.List;
-
-import static com.google.errorprone.fixes.SuggestedFix.delete;
-import static com.google.errorprone.fixes.SuggestedFix.swap;
-import static com.google.errorprone.matchers.Matchers.*;
-import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
-import static java.lang.String.format;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -36,6 +41,7 @@ import static java.lang.String.format;
 public class PreconditionsCheckNotNullChecker extends ErrorChecker<MethodInvocationTree> {
 
   @Override
+  @SuppressWarnings({"unchecked", "varargs"})
   public Matcher<MethodInvocationTree> matcher() {
     return allOf(
         methodSelect(staticMethod("com.google.common.base.Preconditions", "checkNotNull")),
