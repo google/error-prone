@@ -34,7 +34,7 @@ public abstract class ErrorChecker<T extends Tree> implements Matcher<T> {
   private VisitorState state;
 
   protected Symtab getSymbolTable() {
-    return state.symtab;
+    return state.getSymtab();
   }
 
   protected TreePath getPath() {
@@ -75,7 +75,7 @@ public abstract class ErrorChecker<T extends Tree> implements Matcher<T> {
   protected Position getPosition(Tree tree) {
     DiagnosticPosition pos = ((JCTree) tree).pos();
     return new Position(pos.getStartPosition(),
-        pos.getEndPosition(state.compilationUnit.endPositions), tree);
+        pos.getEndPosition(state.getCompilationUnit().endPositions), tree);
   }
 
   /**

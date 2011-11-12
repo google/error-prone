@@ -17,7 +17,13 @@
 package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
-import com.sun.source.tree.*;
+
+import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Type;
 
@@ -121,5 +127,17 @@ public class Matchers {
       }
     };
   }
-  
+
+  public static Matcher<ExpressionTree> stringLiteral(String value) {
+    return new StringLiteralMatcher(value);
+  }
+
+  public static Matcher<AnnotationTree> hasElementWithValue(
+      String element, Matcher<ExpressionTree> valueMatcher) {
+    return new AnnotationHasElementWithValue(element, valueMatcher);
+  }
+
+  public static Matcher<AnnotationTree> isType(final String annotationClassName) {
+    return new AnnotationTypeMatcher(annotationClassName);
+  }
 }

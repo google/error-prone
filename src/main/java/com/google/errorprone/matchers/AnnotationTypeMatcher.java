@@ -17,22 +17,31 @@
 package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
+
+import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.Tree;
-import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 
 /**
- * @author alexeagle@google.com (Alex Eagle)
+ * @author eaftan@google.com (Eddie Aftandilian)
+ * @author pepstein@google.com (Peter Epstein)
  */
-public class IsSubtypeOf<T extends Tree> implements Matcher<T> {
-  private final Type type;
+public class AnnotationTypeMatcher implements Matcher<AnnotationTree> {
 
-  public IsSubtypeOf(Type type) {
-    this.type = type;
+  private final String annotationClassName;
+
+  public AnnotationTypeMatcher(String annotationClassName) {
+    this.annotationClassName = annotationClassName;
   }
 
   @Override
-  public boolean matches(Tree t, VisitorState state) {
-    return state.getTypes().isSubtype(((JCTree) t).type, type);
+  public boolean matches(AnnotationTree annotationTree, VisitorState state) {
+    Tree type = annotationTree.getAnnotationType();
+    if (type.getKind() == Tree.Kind.IDENTIFIER && type instanceof JCTree.JCIdent) {
+      JCTree.JCIdent jcIdent = (JCTree.JCIdent) type;
+      return jcIdent.sym.getQualifiedName().toString().equals(annotationClassName);
+    } else {
+      return false;
+    }
   }
 }

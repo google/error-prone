@@ -18,11 +18,13 @@ package com.google.errorprone;
 
 import com.google.errorprone.checkers.ErrorChecker.AstError;
 import com.google.errorprone.fixes.AppliedFix;
+
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Log;
 
-import javax.tools.JavaFileObject;
 import java.io.IOException;
+
+import javax.tools.JavaFileObject;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -46,9 +48,13 @@ public class LogReporter implements ErrorReporter {
     originalSource = log.useSource(sourceFile);
     try {
       CharSequence content = sourceFile.getCharContent(true);
-      AppliedFix fix = AppliedFix.fromSource(content).apply(error.suggestedFix);
-      log.error((DiagnosticPosition) error.match, MESSAGE_BUNDLE_KEY, error.message
-          + "\nDid you mean " + fix.getNewCodeSnippet());
+      if (error.suggestedFix == null) {
+        log.error((DiagnosticPosition) error.match, MESSAGE_BUNDLE_KEY, error.message);
+      } else {
+        AppliedFix fix = AppliedFix.fromSource(content).apply(error.suggestedFix);
+        log.error((DiagnosticPosition) error.match, MESSAGE_BUNDLE_KEY, error.message
+            + "\nDid you mean " + fix.getNewCodeSnippet());
+      }
     } catch (IOException e) {
       throw new RuntimeException(e);
     } finally {

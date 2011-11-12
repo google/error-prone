@@ -20,7 +20,7 @@ import com.google.common.base.Preconditions;
 
 
 /**
- * Test for method call involving String.format() and %s 
+ * Test for methodIs call involving String.format() and %s
  *
  * @author sjnickerson@google.com (Simon Nickerson)
  */

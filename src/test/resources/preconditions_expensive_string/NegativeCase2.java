@@ -19,7 +19,7 @@ package preconditions_expensive_string;
 import com.google.common.base.Preconditions;
 
 /**
- * Test for method call including string concatenation.
+ * Test for methodIs call including string concatenation.
  * (Not yet supported, so this is a negative case)
  *
  * @author sjnickerson@google.com (Simon Nickerson)

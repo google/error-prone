@@ -1,7 +1,7 @@
 package preconditions_checkNotNull;
 
 /**
- * Test case for fully qualified method call.
+ * Test case for fully qualified methodIs call.
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public class PositiveCase2 {

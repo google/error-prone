@@ -19,6 +19,7 @@ package com.google.errorprone;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
+import com.sun.tools.javac.tree.TreeMaker;
 
 import javax.lang.model.util.Types;
 
@@ -26,27 +27,50 @@ import javax.lang.model.util.Types;
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class VisitorState {
-  public JCCompilationUnit compilationUnit;
-  public final Types types;
-  public final Symtab symtab;
-  private TreePath path;
+  private final Types types;
+  private final Symtab symtab;
+  private final TreeMaker treeMaker;
+  private final JCCompilationUnit compilationUnit;
+  private final TreePath path;
 
-  public VisitorState(Types types, Symtab symtab) {
-    this.types = types;
-    this.symtab = symtab;
+  public VisitorState(Types types, Symtab symtab, TreeMaker treeMaker) {
+    this(types, symtab, treeMaker, null, null);
   }
 
-  public VisitorState(Types types, Symtab symtab, JCCompilationUnit compilationUnit, TreePath path) {
-    this(types, symtab);
+  private VisitorState(Types types, Symtab symtab, TreeMaker treeMaker,
+      JCCompilationUnit compilationUnit, TreePath path) {
+    this.types = types;
+    this.symtab = symtab;
+    this.treeMaker = treeMaker;
     this.compilationUnit = compilationUnit;
     this.path = path;
   }
 
   public VisitorState withPath(TreePath path) {
-    return new VisitorState(types, symtab, compilationUnit, path);
+    return new VisitorState(getTypes(), getSymtab(), treeMaker, getCompilationUnit(), path);
+  }
+
+  public VisitorState forCompilationUnit(JCCompilationUnit compilationUnit) {
+    return new VisitorState(types, symtab, treeMaker, compilationUnit, path);
   }
 
   public TreePath getPath() {
     return path;
+  }
+
+  public TreeMaker getTreeMaker() {
+    return treeMaker;
+  }
+
+  public Types getTypes() {
+    return types;
+  }
+
+  public Symtab getSymtab() {
+    return symtab;
+  }
+
+  public JCCompilationUnit getCompilationUnit() {
+    return compilationUnit;
   }
 }

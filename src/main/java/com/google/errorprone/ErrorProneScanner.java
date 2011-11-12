@@ -19,10 +19,12 @@ package com.google.errorprone;
 import com.google.errorprone.checkers.DeadExceptionChecker;
 import com.google.errorprone.checkers.ErrorChecker;
 import com.google.errorprone.checkers.ErrorChecker.AstError;
+import com.google.errorprone.checkers.FallThroughSuppressionChecker;
 import com.google.errorprone.checkers.PreconditionsCheckNotNullChecker;
 import com.google.errorprone.checkers.PreconditionsCheckNotNullPrimitive1stArgChecker;
 import com.google.errorprone.checkers.PreconditionsExpensiveStringChecker;
 
+import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 
@@ -44,6 +46,10 @@ public class ErrorProneScanner extends ErrorCollectingTreeScanner {
   
   private final Iterable<? extends ErrorChecker<NewClassTree>>
       newClassCheckers = Arrays.asList(new DeadExceptionChecker());
+
+  private final Iterable<? extends ErrorChecker<AnnotationTree>>
+      annotationCheckers = Arrays.asList(
+          new FallThroughSuppressionChecker());
 
   @Override
   public List<AstError> visitMethodInvocation(
@@ -70,6 +76,20 @@ public class ErrorProneScanner extends ErrorCollectingTreeScanner {
       }
     }
     super.visitNewClass(newClassTree, visitorState);
+    return result;
+  }
+
+  @Override
+  public List<AstError> visitAnnotation(AnnotationTree annotationTree, VisitorState visitorState) {
+    List<AstError> result = new ArrayList<AstError>();
+    for (ErrorChecker<AnnotationTree> annotationChecker : annotationCheckers) {
+      AstError error = annotationChecker
+          .check(annotationTree, visitorState.withPath(getCurrentPath()));
+      if (error != null) {
+        result.add(error);
+      }
+    }
+    super.visitAnnotation(annotationTree, visitorState);
     return result;
   }
 }
