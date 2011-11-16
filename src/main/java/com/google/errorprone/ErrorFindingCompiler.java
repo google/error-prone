@@ -21,8 +21,6 @@ import com.google.errorprone.checkers.ErrorChecker.AstError;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.util.JavacTask;
 import com.sun.tools.javac.api.JavacTaskImpl;
-import com.sun.tools.javac.code.Symtab;
-import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Messages;
@@ -81,8 +79,7 @@ public class ErrorFindingCompiler {
     Context context = ((JavacTaskImpl) javacTask).getContext();
     setupMessageBundle(context);
     Log log = Log.instance(context);
-    VisitorState visitorState = new VisitorState(javacTask.getTypes(), Symtab.instance(context), TreeMaker
-        .instance(context));
+    VisitorState visitorState = new VisitorState(javacTask.getTypes(), context);
 
     boolean hasErrors = false;
     for (CompilationUnitTree compilationUnitTree : compilationUnits) {

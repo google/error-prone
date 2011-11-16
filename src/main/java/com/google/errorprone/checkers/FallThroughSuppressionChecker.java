@@ -21,6 +21,7 @@ import static com.google.errorprone.matchers.Matchers.hasElementWithValue;
 import static com.google.errorprone.matchers.Matchers.isType;
 import static com.google.errorprone.matchers.Matchers.stringLiteral;
 
+import com.google.errorprone.ErrorCollectingTreeScanner;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Matcher;
@@ -32,7 +33,9 @@ import com.sun.source.tree.NewArrayTree;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.ListBuffer;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
@@ -110,5 +113,22 @@ public class FallThroughSuppressionChecker extends ErrorChecker<AnnotationTree> 
     }
     return state.getTreeMaker().NewArray((JCTree.JCExpression) expressionTree.getType(),
         dimensions.toList(), replacementInitializers.toList());
+  }
+
+  public static class Scanner extends ErrorCollectingTreeScanner {
+    public ErrorChecker<AnnotationTree> annotationChecker = new FallThroughSuppressionChecker();
+
+    @Override
+    public List<AstError> visitAnnotation(AnnotationTree annotationTree, VisitorState visitorState) {
+      List<AstError> result = new ArrayList<AstError>();
+      AstError error = annotationChecker
+          .check(annotationTree, visitorState.withPath(getCurrentPath()));
+      if (error != null) {
+        result.add(error);
+      }
+
+      super.visitAnnotation(annotationTree, visitorState);
+      return result;
+    }
   }
 }

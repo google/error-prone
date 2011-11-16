@@ -20,6 +20,7 @@ import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.TreeMaker;
+import com.sun.tools.javac.util.Context;
 
 import javax.lang.model.util.Types;
 
@@ -28,30 +29,28 @@ import javax.lang.model.util.Types;
  */
 public class VisitorState {
   private final Types types;
-  private final Symtab symtab;
-  private final TreeMaker treeMaker;
+  private final Context context;
   private final JCCompilationUnit compilationUnit;
   private final TreePath path;
 
-  public VisitorState(Types types, Symtab symtab, TreeMaker treeMaker) {
-    this(types, symtab, treeMaker, null, null);
-  }
-
-  private VisitorState(Types types, Symtab symtab, TreeMaker treeMaker,
+  public VisitorState(Types types, Context context,
       JCCompilationUnit compilationUnit, TreePath path) {
     this.types = types;
-    this.symtab = symtab;
-    this.treeMaker = treeMaker;
+    this.context = context;
     this.compilationUnit = compilationUnit;
     this.path = path;
   }
 
+  public VisitorState(Types types, Context context) {
+    this(types, context, null, null);
+  }
+
   public VisitorState withPath(TreePath path) {
-    return new VisitorState(getTypes(), getSymtab(), treeMaker, getCompilationUnit(), path);
+    return new VisitorState(getTypes(), context, getCompilationUnit(), path);
   }
 
   public VisitorState forCompilationUnit(JCCompilationUnit compilationUnit) {
-    return new VisitorState(types, symtab, treeMaker, compilationUnit, path);
+    return new VisitorState(types, context, compilationUnit, path);
   }
 
   public TreePath getPath() {
@@ -59,7 +58,7 @@ public class VisitorState {
   }
 
   public TreeMaker getTreeMaker() {
-    return treeMaker;
+    return TreeMaker.instance(context);
   }
 
   public Types getTypes() {
@@ -67,7 +66,7 @@ public class VisitorState {
   }
 
   public Symtab getSymtab() {
-    return symtab;
+    return Symtab.instance(context);
   }
 
   public JCCompilationUnit getCompilationUnit() {
