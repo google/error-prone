@@ -17,6 +17,7 @@
 package com.google.errorprone;
 
 import com.google.errorprone.checkers.DeadExceptionChecker;
+import com.google.errorprone.checkers.EmptyStatementChecker;
 import com.google.errorprone.checkers.ErrorChecker;
 import com.google.errorprone.checkers.ErrorChecker.AstError;
 import com.google.errorprone.checkers.FallThroughSuppressionChecker;
@@ -25,6 +26,7 @@ import com.google.errorprone.checkers.PreconditionsCheckNotNullPrimitive1stArgCh
 import com.google.errorprone.checkers.PreconditionsExpensiveStringChecker;
 
 import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 
@@ -50,6 +52,9 @@ public class ErrorProneScanner extends ErrorCollectingTreeScanner {
   private final Iterable<? extends ErrorChecker<AnnotationTree>>
       annotationCheckers = Arrays.asList(
           new FallThroughSuppressionChecker());
+  
+  private final Iterable<? extends ErrorChecker<EmptyStatementTree>>
+      emptyStatementCheckers = Arrays.asList(new EmptyStatementChecker());
 
   @Override
   public List<AstError> visitMethodInvocation(
@@ -90,6 +95,21 @@ public class ErrorProneScanner extends ErrorCollectingTreeScanner {
       }
     }
     super.visitAnnotation(annotationTree, visitorState);
+    return result;
+  }
+  
+  @Override
+  public List<AstError> visitEmptyStatement(EmptyStatementTree emptyStatementTree, 
+      VisitorState visitorState) {
+    List<AstError> result = new ArrayList<AstError>();
+    for (ErrorChecker<EmptyStatementTree> emptyStatementChecker : emptyStatementCheckers) {
+      AstError error = emptyStatementChecker
+          .check(emptyStatementTree, visitorState.withPath(getCurrentPath()));
+      if (error != null) {
+        result.add(error);
+      }
+    }
+    super.visitEmptyStatement(emptyStatementTree, visitorState);
     return result;
   }
 }
