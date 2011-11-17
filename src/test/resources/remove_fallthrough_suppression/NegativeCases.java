@@ -6,7 +6,7 @@ package remove_fallthrough_suppression;
  * @author pepstein@google.com (Peter Epstein)
  */
 @SuppressWarnings("unchecked")
-public class NegativeCases {
+public class NegativeCases extends ToBeExtended {
 
   @SuppressWarnings("unchecked")
   public void suppressedMethod1a() {}
@@ -16,4 +16,7 @@ public class NegativeCases {
 
   @SuppressWarnings({"varargs", "unchecked"})
   public void suppressedMethod2() {}
+  
+  @Override
+  public void overriddenMethod() {}
 }
