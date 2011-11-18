@@ -17,6 +17,7 @@
 package com.google.errorprone;
 
 import com.google.errorprone.checkers.DeadExceptionChecker;
+import com.google.errorprone.checkers.EmptyIfStatementChecker;
 import com.google.errorprone.checkers.EmptyStatementChecker;
 import com.google.errorprone.checkers.ErrorChecker;
 import com.google.errorprone.checkers.ErrorChecker.AstError;
@@ -54,7 +55,9 @@ public class ErrorProneScanner extends ErrorCollectingTreeScanner {
           new FallThroughSuppressionChecker());
   
   private final Iterable<? extends ErrorChecker<EmptyStatementTree>>
-      emptyStatementCheckers = Arrays.asList(new EmptyStatementChecker());
+      emptyStatementCheckers = Arrays.asList(
+          //new EmptyStatementChecker(),
+          new EmptyIfStatementChecker());
 
   @Override
   public List<AstError> visitMethodInvocation(
