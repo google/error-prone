@@ -17,7 +17,7 @@
 package com.google.errorprone;
 
 import com.google.errorprone.checkers.DeadExceptionChecker;
-import com.google.errorprone.checkers.EmptyIfStatementChecker;
+import com.google.errorprone.checkers.EmptyIfChecker;
 import com.google.errorprone.checkers.EmptyStatementChecker;
 import com.google.errorprone.checkers.ErrorChecker;
 import com.google.errorprone.checkers.ErrorChecker.AstError;
@@ -28,6 +28,7 @@ import com.google.errorprone.checkers.PreconditionsExpensiveStringChecker;
 
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.EmptyStatementTree;
+import com.sun.source.tree.IfTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 
@@ -54,11 +55,16 @@ public class ErrorProneScanner extends ErrorCollectingTreeScanner {
       annotationCheckers = Arrays.asList(
           new FallThroughSuppressionChecker());
   
+  private final Iterable<? extends ErrorChecker<IfTree>>
+      ifCheckers = Arrays.asList(
+          new EmptyIfChecker());
+
+  /*
   private final Iterable<? extends ErrorChecker<EmptyStatementTree>>
       emptyStatementCheckers = Arrays.asList(
-          //new EmptyStatementChecker(),
-          new EmptyIfStatementChecker());
-
+          new EmptyStatementChecker());
+  */
+  
   @Override
   public List<AstError> visitMethodInvocation(
       MethodInvocationTree methodInvocationTree, VisitorState state) {
@@ -101,6 +107,7 @@ public class ErrorProneScanner extends ErrorCollectingTreeScanner {
     return result;
   }
   
+  /*
   @Override
   public List<AstError> visitEmptyStatement(EmptyStatementTree emptyStatementTree, 
       VisitorState visitorState) {
@@ -113,6 +120,21 @@ public class ErrorProneScanner extends ErrorCollectingTreeScanner {
       }
     }
     super.visitEmptyStatement(emptyStatementTree, visitorState);
+    return result;
+  }
+  */
+  
+  @Override
+  public List<AstError> visitIf(IfTree ifTree, VisitorState visitorState) {
+    List<AstError> result = new ArrayList<AstError>();
+    for (ErrorChecker<IfTree> ifChecker : ifCheckers) {
+      AstError error = ifChecker
+          .check(ifTree, visitorState.withPath(getCurrentPath()));
+      if (error != null) {
+        result.add(error);
+      }
+    }
+    super.visitIf(ifTree, visitorState);
     return result;
   }
 }
