@@ -18,7 +18,6 @@ package com.google.errorprone;
 
 import com.google.errorprone.checkers.DeadExceptionChecker;
 import com.google.errorprone.checkers.EmptyIfChecker;
-import com.google.errorprone.checkers.EmptyStatementChecker;
 import com.google.errorprone.checkers.ErrorChecker;
 import com.google.errorprone.checkers.ErrorChecker.AstError;
 import com.google.errorprone.checkers.FallThroughSuppressionChecker;
@@ -27,7 +26,6 @@ import com.google.errorprone.checkers.PreconditionsCheckNotNullPrimitive1stArgCh
 import com.google.errorprone.checkers.PreconditionsExpensiveStringChecker;
 
 import com.sun.source.tree.AnnotationTree;
-import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
@@ -49,7 +47,8 @@ public class ErrorProneScanner extends ErrorCollectingTreeScanner {
           new PreconditionsCheckNotNullPrimitive1stArgChecker());
   
   private final Iterable<? extends ErrorChecker<NewClassTree>>
-      newClassCheckers = Arrays.asList(new DeadExceptionChecker());
+      newClassCheckers = Arrays.asList(
+          new DeadExceptionChecker());
 
   private final Iterable<? extends ErrorChecker<AnnotationTree>>
       annotationCheckers = Arrays.asList(

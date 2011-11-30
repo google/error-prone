@@ -80,6 +80,22 @@ public class Matchers {
       }
     };
   }
+  
+  public static <T extends Tree> Matcher<T> isNull() {
+    return new Matcher<T>() {
+      @Override public boolean matches(T tree, VisitorState state) {
+        return tree == null;
+      }
+    };
+  }
+  
+  public static <T extends Tree> Matcher<T> isNull(Class<T> typeInfer) {
+    return new Matcher<T>() {
+      @Override public boolean matches(T tree, VisitorState state) {
+        return tree == null;
+      }
+    };
+  }
 
   public static StaticMethodMatcher staticMethod(String fullClassName, String methodName) {
     return new StaticMethodMatcher(fullClassName, methodName);
@@ -113,6 +129,11 @@ public class Matchers {
 
   public static LastStatement lastStatement(Matcher<StatementTree> matcher) {
     return new LastStatement(matcher);
+  }
+  
+  public static <T extends StatementTree> NextStatement<T> nextStatement(
+      Matcher<StatementTree> matcher) {
+    return new NextStatement<T>(matcher);
   }
 
   public static <T extends Tree> Same<T> same(T tree) {

@@ -34,6 +34,7 @@ import static com.sun.source.tree.Tree.Kind.IF;
 public class DeadExceptionChecker extends ErrorChecker<NewClassTree> {
 
   @Override
+  @SuppressWarnings("unchecked")
   public Matcher<NewClassTree> matcher() {
     return allOf(
         parentNode(kindIs(EXPRESSION_STATEMENT)),

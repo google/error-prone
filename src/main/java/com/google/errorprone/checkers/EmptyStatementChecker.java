@@ -20,6 +20,7 @@ public class EmptyStatementChecker extends ErrorChecker<EmptyStatementTree> {
   @Override
   public Matcher<EmptyStatementTree> matcher() {
     return new Matcher<EmptyStatementTree>() {
+      // All empty statements match, so just return true.
       @Override
       public boolean matches(EmptyStatementTree t, VisitorState state) {
         return true;
