@@ -70,6 +70,11 @@ public abstract class ErrorChecker<T extends Tree> implements Matcher<T> {
     public String getSource() {
       return tree.toString();
     }
+    
+    @Override
+    public String toString() {
+      return String.format("[%d:%d] = \"%s\"", start, end, tree.toString());
+    }
   }
 
   protected Position getPosition(Tree tree) {

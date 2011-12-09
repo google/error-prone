@@ -52,7 +52,7 @@ public class SuggestedFix {
     return replacements;
   }
 
-  private SuggestedFix replace(int start, int end, String replaceWith) {
+  public SuggestedFix replace(int start, int end, String replaceWith) {
     replacements.add(new Replacement(start, end, replaceWith));
     return this;
   }
