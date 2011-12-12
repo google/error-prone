@@ -52,8 +52,13 @@ public class LogReporter implements ErrorReporter {
         log.error((DiagnosticPosition) error.match, MESSAGE_BUNDLE_KEY, error.message);
       } else {
         AppliedFix fix = AppliedFix.fromSource(content).apply(error.suggestedFix);
-        log.error((DiagnosticPosition) error.match, MESSAGE_BUNDLE_KEY, error.message
-            + "\nDid you mean " + fix.getNewCodeSnippet());
+        if (fix.isRemoveLine()) {
+          log.error((DiagnosticPosition) error.match, MESSAGE_BUNDLE_KEY, error.message
+              + "; did you mean to remove this line?");
+        } else {
+          log.error((DiagnosticPosition) error.match, MESSAGE_BUNDLE_KEY, error.message
+              + "; did you mean '" + fix.getNewCodeSnippet() + "'?");
+        }
       }
     } catch (IOException e) {
       throw new RuntimeException(e);

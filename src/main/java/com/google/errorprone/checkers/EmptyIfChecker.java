@@ -81,18 +81,16 @@ public class EmptyIfChecker extends ErrorChecker<IfTree> {
           SuggestedFix.delete(getPosition(tree)));
     } else if (nextStmtIsBlock) {
       // Following statement is a block. Delete the empty then part of the if.
-      StatementTree empty = tree.getThenStatement();
       return new AstError(
-          empty,
+          tree,
           "empty statement after if",
-          SuggestedFix.delete(getPosition(empty)));
+          SuggestedFix.delete(getPosition(tree.getThenStatement())));
     } else {
       // Following statement is not a block. Delete the empty then part of the if.
-      StatementTree empty = tree.getThenStatement();
       return new AstError(
-          empty,
+          tree,
           "empty statement after if",
-          SuggestedFix.delete(getPosition(empty)));
+          SuggestedFix.delete(getPosition(tree.getThenStatement())));
     }
   }
   

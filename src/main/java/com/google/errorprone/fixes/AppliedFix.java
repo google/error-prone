@@ -30,14 +30,20 @@ import java.util.Set;
 public class AppliedFix {
   private final CharSequence newSource;
   private final String snippet;
+  private final boolean isRemoveLine;
 
-  public AppliedFix(CharSequence newSource, String snippet) {
+  private AppliedFix(CharSequence newSource, String snippet, boolean isRemoveLine) {
     this.newSource = newSource;
     this.snippet = snippet;
+    this.isRemoveLine = isRemoveLine;
   }
 
   public CharSequence getNewCodeSnippet() {
     return snippet;
+  }
+  
+  public boolean isRemoveLine() {
+    return isRemoveLine;
   }
 
   public static class Applier {
@@ -69,6 +75,7 @@ public class AppliedFix {
       LineNumberReader lineNumberReader =
               new LineNumberReader(new StringReader(replaced.toString()));
       String snippet = null;
+      boolean isRemoveLine = false;
       try {
         while(!modifiedLines.contains(lineNumberReader.getLineNumber())) {
           lineNumberReader.readLine();
@@ -76,12 +83,13 @@ public class AppliedFix {
         // TODO: this is over-simplified; need a failing test case
         snippet = lineNumberReader.readLine().trim();
         if (snippet.isEmpty()) {
+          isRemoveLine = true;
           snippet = "to remove this line";
         }
       } catch (IOException e) {
         // impossible since source is in-memory
       }
-      return new AppliedFix(replaced, snippet);
+      return new AppliedFix(replaced, snippet, isRemoveLine);
     }
   }
 
