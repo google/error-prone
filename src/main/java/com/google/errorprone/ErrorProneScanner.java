@@ -21,6 +21,7 @@ import com.google.errorprone.checkers.EmptyIfChecker;
 import com.google.errorprone.checkers.ErrorChecker;
 import com.google.errorprone.checkers.ErrorChecker.AstError;
 import com.google.errorprone.checkers.FallThroughSuppressionChecker;
+import com.google.errorprone.checkers.OrderingFromChecker;
 import com.google.errorprone.checkers.PreconditionsCheckNotNullChecker;
 import com.google.errorprone.checkers.PreconditionsCheckNotNullPrimitive1stArgChecker;
 import com.google.errorprone.checkers.PreconditionsExpensiveStringChecker;
@@ -42,6 +43,7 @@ public class ErrorProneScanner extends ErrorCollectingTreeScanner {
 
   private final Iterable<? extends ErrorChecker<MethodInvocationTree>>
       methodInvocationCheckers = Arrays.asList(
+          new OrderingFromChecker(),
           new PreconditionsCheckNotNullChecker(),
           new PreconditionsExpensiveStringChecker(),
           new PreconditionsCheckNotNullPrimitive1stArgChecker());
