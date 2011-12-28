@@ -10,17 +10,14 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
-import com.google.common.collect.Multimaps;
 import com.google.common.io.Files;
 import com.google.common.io.LineProcessor;
 import com.google.errorprone.BugPattern.MaturityLevel;
-import com.google.errorprone.BugPattern.SeverityLevel;
+
+import org.kohsuke.MetaInfServices;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -29,13 +26,11 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.text.MessageFormat;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
-import org.kohsuke.MetaInfServices;
+
 import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
@@ -49,7 +44,7 @@ import javax.tools.StandardLocation;
  * @author eaftan@google.com (Eddie Aftandilian)
  *
  */
-@MetaInfServices
+@MetaInfServices(Processor.class)
 @SupportedAnnotationTypes({"com.google.errorprone.BugPattern"})
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class DocGen extends AbstractProcessor {

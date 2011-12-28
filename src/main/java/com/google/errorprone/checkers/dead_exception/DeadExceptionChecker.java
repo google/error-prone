@@ -19,14 +19,14 @@ package com.google.errorprone.checkers.dead_exception;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.checkers.ErrorChecker;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.Category;
-import com.google.errorprone.BugPattern.MaturityLevel;
-import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.StatementTree;
 
+import static com.google.errorprone.BugPattern.Category.UNIVERSAL;
+import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.fixes.SuggestedFix.delete;
 import static com.google.errorprone.fixes.SuggestedFix.prefixWith;
 import static com.google.errorprone.matchers.Matchers.*;
@@ -38,12 +38,12 @@ import static com.sun.source.tree.Tree.Kind.IF;
  */
 @BugPattern(
     name = "Dead exception",
-    category = Category.UNIVERSAL,
+    category = UNIVERSAL,
+    severity = ERROR,
+    maturity = ON_BY_DEFAULT,
     summary = "Exception created but not thrown",
-    explanation = "The exception is created with new, but is not thrown, and the " + 
-        "reference is lost.",
-    severity = SeverityLevel.ERROR,
-    maturity = MaturityLevel.ON_BY_DEFAULT)
+    explanation =
+        "The exception is created with new, but is not thrown, and the reference is lost.")
 public class DeadExceptionChecker extends ErrorChecker<NewClassTree> {
 
   @Override

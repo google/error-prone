@@ -32,6 +32,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>error_prone</groupId>
+      <artifactId>error_prone_annotation</artifactId>
+      <version>0.3-SNAPSHOT</version>
+    </dependency>
+    <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>r09</version>
