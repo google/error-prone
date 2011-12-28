@@ -18,6 +18,7 @@ package com.google.errorprone;
 
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symtab;
+import com.sun.tools.javac.model.JavacTypes;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
@@ -25,32 +26,30 @@ import com.sun.tools.javac.util.Context;
 import javax.lang.model.util.Types;
 
 /**
+ * Carries the current state of the visitor as it visits tree nodes.
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class VisitorState {
-  private final Types types;
   private final Context context;
   private final JCCompilationUnit compilationUnit;
   private final TreePath path;
 
-  public VisitorState(Types types, Context context,
-      JCCompilationUnit compilationUnit, TreePath path) {
-    this.types = types;
+  public VisitorState(Context context, JCCompilationUnit compilationUnit, TreePath path) {
     this.context = context;
     this.compilationUnit = compilationUnit;
     this.path = path;
   }
 
-  public VisitorState(Types types, Context context) {
-    this(types, context, null, null);
+  public VisitorState(Context context) {
+    this(context, null, null);
   }
 
   public VisitorState withPath(TreePath path) {
-    return new VisitorState(getTypes(), context, getCompilationUnit(), path);
+    return new VisitorState(context, getCompilationUnit(), path);
   }
 
   public VisitorState forCompilationUnit(JCCompilationUnit compilationUnit) {
-    return new VisitorState(types, context, compilationUnit, path);
+    return new VisitorState(context, compilationUnit, path);
   }
 
   public TreePath getPath() {
@@ -62,7 +61,7 @@ public class VisitorState {
   }
 
   public Types getTypes() {
-    return types;
+    return JavacTypes.instance(context);
   }
 
   public Symtab getSymtab() {

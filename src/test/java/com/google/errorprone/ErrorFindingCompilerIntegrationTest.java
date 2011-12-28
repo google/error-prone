@@ -16,25 +16,28 @@
 
 package com.google.errorprone;
 
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.internal.matchers.StringContains.containsString;
+
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.tools.Diagnostic;
-import javax.tools.DiagnosticCollector;
-import javax.tools.JavaFileObject;
-import javax.tools.ToolProvider;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.util.Locale;
 
-import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.internal.matchers.StringContains.containsString;
+import javax.tools.Diagnostic;
+import javax.tools.DiagnosticCollector;
+import javax.tools.JavaFileObject;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -42,24 +45,26 @@ import static org.junit.internal.matchers.StringContains.containsString;
 public class ErrorFindingCompilerIntegrationTest {
 
   private DiagnosticCollector<JavaFileObject> diagnostics;
+  private PrintWriter printWriter;
 
   @Before
   public void setUp() {
     diagnostics = new DiagnosticCollector<JavaFileObject>();
+    printWriter = new PrintWriter(new OutputStreamWriter(new ByteArrayOutputStream()));
   }
 
   @Test
   public void testShouldFailToCompileSourceFileWithError() throws Exception {
-    assertFalse(new ErrorFindingCompiler(
-        sources("dead_exception/PositiveCase1.java"),
-        diagnostics,
-        ToolProvider.getSystemJavaCompiler())
-        .run(new ErrorProneScanner()));
-    // TODO(eaftan): Test is broken. We don't report column numbers anymore.
-    Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher =
-        hasItem(allOf(
-            //diagnosticLineAndColumn(36L, 7L),
-            diagnosticMessage(containsString("Exception created but not thrown"))));
+    ErrorFindingCompiler compiler = new ErrorFindingCompiler.Builder()
+        .named("test")
+        .redirectOutputTo(printWriter)
+        .listenToDiagnostics(diagnostics)
+        .build();
+    assertThat(compiler.compile(sources("empty_if_statement/PositiveCases.java")), is(1));
+
+    Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher = hasItem(allOf(
+        diagnosticLineAndColumn(41L, 5L),
+        diagnosticMessage(containsString("empty statement after if"))));
     assertThat("Warning should be found. Diagnostics: " + diagnostics.getDiagnostics(),
         diagnostics.getDiagnostics(), matcher);
   }
