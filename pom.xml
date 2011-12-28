@@ -33,7 +33,11 @@
   <dependencies>
     <!-- We must minimise our runtime dependencies as they'll appear in
          the javac classpath for all users! -->
-
+    <dependency>
+      <groupId>error_prone</groupId>
+      <artifactId>error_prone_docgen</artifactId>
+      <version>0.3-SNAPSHOT</version>
+    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit-dep</artifactId>
