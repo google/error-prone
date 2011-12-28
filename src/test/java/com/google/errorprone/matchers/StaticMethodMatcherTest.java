@@ -16,17 +16,21 @@
 
 package com.google.errorprone.matchers;
 
-import static javax.tools.ToolProvider.getSystemJavaCompiler;
+import static com.google.common.io.Files.deleteRecursively;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import com.google.errorprone.ErrorCollectingTreeScanner;
 import com.google.errorprone.ErrorFindingCompiler;
+import com.google.errorprone.ErrorFindingCompiler.Builder;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.checkers.ErrorChecker.AstError;
 
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.Tree.Kind;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -37,9 +41,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-
-import javax.tools.DiagnosticCollector;
-import javax.tools.JavaFileObject;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -54,7 +55,6 @@ public class StaticMethodMatcherTest {
     tempDir = new File(System.getProperty("java.io.tmpdir"),
         getClass().getCanonicalName() + "." + name.getMethodName());
     tempDir.mkdirs();
-    tempDir.deleteOnExit();
 
     writeFile("A.java",
         "package com.google;",
@@ -64,6 +64,11 @@ public class StaticMethodMatcherTest {
         "  }",
         "}"
     );
+  }
+
+  @After
+  public void tearDown() throws Exception {
+    deleteRecursively(tempDir);
   }
 
   @Test
@@ -94,8 +99,10 @@ public class StaticMethodMatcherTest {
   @Test
   public void shouldNotMatchWhenPackageDiffers() throws IOException {
     writeFile("B.java",
-        "import com.android.A;",
         "public class B {",
+        "  static class A {",
+        "    public static int count() { return 0; }",
+        "  }",
         "  public int count() {",
         "    return A.count();",
         "  }",
@@ -115,20 +122,25 @@ public class StaticMethodMatcherTest {
 
   private void assertMatch(final boolean shouldMatch,
                            final StaticMethodMatcher staticMethodMatcher) throws IOException {
-    new ErrorFindingCompiler(
-        tempDir.list(),
-        new DiagnosticCollector<JavaFileObject>(),
-        getSystemJavaCompiler())
-        .run(new ErrorCollectingTreeScanner() {
-          @Override
-          public List<AstError> visitMemberSelect(MemberSelectTree node, VisitorState visitorState)
-          {
-            if (getCurrentPath().getParentPath().getLeaf().getKind() == Kind.METHOD_INVOCATION) {
-              assertTrue(node.toString(),
-                  !shouldMatch ^ staticMethodMatcher.matches(node, visitorState));
-            }
-            return super.visitMemberSelect(node, visitorState);
-          }
-        });
+    ErrorCollectingTreeScanner scanner = new ErrorCollectingTreeScanner() {
+      @Override
+      public List<AstError> visitMemberSelect(MemberSelectTree node, VisitorState visitorState) {
+        if (getCurrentPath().getParentPath().getLeaf().getKind() == Kind.METHOD_INVOCATION) {
+          assertTrue(node.toString(),
+              !shouldMatch ^ staticMethodMatcher.matches(node, visitorState));
+        }
+        return super.visitMemberSelect(node, visitorState);
+      }
+    };
+    ErrorFindingCompiler compiler = new Builder()
+        .usingScanner(scanner)
+        .build();
+
+    File[] files = tempDir.listFiles();
+    String[] args = new String[files.length];
+    for (int i = 0; i < args.length; i++) {
+      args[i] = files[i].getAbsolutePath();
+    }
+    assertThat(compiler.compile(args), is(0));
   }
 }
