@@ -34,7 +34,7 @@ public class ErrorFindingCompiler extends Main {
    * @param args the same args which could be passed to javac on the command line
    */
   public static void main(String[] args) {
-    new ErrorFindingCompiler.Builder().build().compile(args);
+    System.exit(new ErrorFindingCompiler.Builder().build().compile(args));
   }
 
   private ErrorFindingCompiler(String s, PrintWriter printWriter,

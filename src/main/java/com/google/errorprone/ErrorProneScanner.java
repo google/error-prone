@@ -25,10 +25,10 @@ import com.google.errorprone.checkers.OrderingFromChecker;
 import com.google.errorprone.checkers.PreconditionsCheckNotNullChecker;
 import com.google.errorprone.checkers.PreconditionsCheckNotNullPrimitive1stArgChecker;
 import com.google.errorprone.checkers.PreconditionsExpensiveStringChecker;
+import com.google.errorprone.checkers.objects_equal_self_comparison.ObjectsEqualSelfComparisonChecker;
 
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.EmptyStatementTree;
-import com.sun.source.tree.IfTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 
@@ -44,6 +44,7 @@ public class ErrorProneScanner extends ErrorCollectingTreeScanner {
 
   private final Iterable<? extends ErrorChecker<MethodInvocationTree>>
       methodInvocationCheckers = Arrays.asList(
+          new ObjectsEqualSelfComparisonChecker(),
           new OrderingFromChecker(),
           new PreconditionsCheckNotNullChecker(),
           new PreconditionsExpensiveStringChecker(),
