@@ -27,63 +27,28 @@
   </parent>
 
   <groupId>error_prone</groupId>
-  <artifactId>error_prone</artifactId>
+  <artifactId>error_prone_docgen</artifactId>
   <version>0.3-SNAPSHOT</version>
 
   <dependencies>
-    <!-- We must minimise our runtime dependencies as they'll appear in
-         the javac classpath for all users! -->
     <dependency>
       <groupId>error_prone</groupId>
       <artifactId>error_prone_annotation</artifactId>
       <version>0.3-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>error_prone</groupId>
-      <artifactId>error_prone_docgen</artifactId>
-      <version>0.3-SNAPSHOT</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit-dep</artifactId>
-      <version>4.10</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.hamcrest</groupId>
-      <artifactId>hamcrest-core</artifactId>
-      <version>1.2.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>r09</version>
-      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.kohsuke.metainf-services</groupId>
+      <artifactId>metainf-services</artifactId>
+      <version>1.1</version>
+      <optional>true</optional>
     </dependency>
   </dependencies>
 
-  <profiles>
-    <!-- tools.jar is in the classpath by default on MacOS -->
-    <profile>
-      <id>tools-jar</id>
-      <activation>
-        <os>
-          <family>!mac</family>
-        </os>
-      </activation>
-      <dependencies>
-        <dependency>
-          <groupId>openjdk</groupId>
-          <artifactId>tools</artifactId>
-          <version>1.6</version>
-          <scope>system</scope>
-          <systemPath>${java.home}/../lib/tools.jar</systemPath>
-        </dependency>
-      </dependencies>
-    </profile>
-  </profiles>
 
   <build>
     <plugins>

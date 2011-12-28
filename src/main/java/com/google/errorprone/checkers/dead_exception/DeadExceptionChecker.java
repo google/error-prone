@@ -14,14 +14,19 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.checkers;
+package com.google.errorprone.checkers.dead_exception;
 
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.checkers.ErrorChecker;
+import com.google.errorprone.BugPattern;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.StatementTree;
 
+import static com.google.errorprone.BugPattern.Category.UNIVERSAL;
+import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.fixes.SuggestedFix.delete;
 import static com.google.errorprone.fixes.SuggestedFix.prefixWith;
 import static com.google.errorprone.matchers.Matchers.*;
@@ -31,6 +36,14 @@ import static com.sun.source.tree.Tree.Kind.IF;
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
+@BugPattern(
+    name = "Dead exception",
+    category = UNIVERSAL,
+    severity = ERROR,
+    maturity = ON_BY_DEFAULT,
+    summary = "Exception created but not thrown",
+    explanation =
+        "The exception is created with new, but is not thrown, and the reference is lost.")
 public class DeadExceptionChecker extends ErrorChecker<NewClassTree> {
 
   @Override

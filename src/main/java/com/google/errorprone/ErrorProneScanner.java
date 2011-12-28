@@ -16,10 +16,10 @@
 
 package com.google.errorprone;
 
-import com.google.errorprone.checkers.DeadExceptionChecker;
 import com.google.errorprone.checkers.EmptyIfChecker;
 import com.google.errorprone.checkers.ErrorChecker;
 import com.google.errorprone.checkers.ErrorChecker.AstError;
+import com.google.errorprone.checkers.dead_exception.DeadExceptionChecker;
 import com.google.errorprone.checkers.FallThroughSuppressionChecker;
 import com.google.errorprone.checkers.OrderingFromChecker;
 import com.google.errorprone.checkers.PreconditionsCheckNotNullChecker;
