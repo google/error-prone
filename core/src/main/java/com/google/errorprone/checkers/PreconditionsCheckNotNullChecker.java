@@ -16,19 +16,16 @@
 
 package com.google.errorprone.checkers;
 
-import static com.google.errorprone.fixes.SuggestedFix.delete;
-import static com.google.errorprone.fixes.SuggestedFix.swap;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.argument;
 import static com.google.errorprone.matchers.Matchers.kindIs;
-import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
+import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
 import static java.lang.String.format;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.Matcher;
 
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -38,24 +35,28 @@ import java.util.List;
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class PreconditionsCheckNotNullChecker extends ErrorChecker<MethodInvocationTree> {
+public class PreconditionsCheckNotNullChecker extends DescribingMatcher<MethodInvocationTree> {
 
+  @SuppressWarnings({"unchecked"})
   @Override
-  @SuppressWarnings({"unchecked", "varargs"})
-  public Matcher<MethodInvocationTree> matcher() {
+  public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
     return allOf(
         methodSelect(staticMethod("com.google.common.base.Preconditions", "checkNotNull")),
-        argument(0, kindIs(STRING_LITERAL, ExpressionTree.class)));
+        argument(0, kindIs(STRING_LITERAL, ExpressionTree.class)))
+        .matches(methodInvocationTree, state);
   }
 
   @Override
-  public AstError produceError(MethodInvocationTree methodInvocationTree, VisitorState state) {
+  public MatchDescription describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
     List<? extends ExpressionTree> arguments = methodInvocationTree.getArguments();
     ExpressionTree stringLiteralValue = arguments.get(0);
-    SuggestedFix fix = arguments.size() == 2
-        ? swap(getPosition(arguments.get(0)), getPosition(arguments.get(1)))
-        : delete(getPosition(state.getPath().getParentPath().getLeaf()));
-    return new AstError(stringLiteralValue,
+    SuggestedFix fix = new SuggestedFix();
+    if (arguments.size() == 2) {
+      fix.swap(arguments.get(0), arguments.get(1));
+    } else {
+      fix.delete(state.getPath().getParentPath().getLeaf());
+    }
+    return new MatchDescription(stringLiteralValue,
         format("String literal %s passed as first argument to Preconditions#checkNotNull",
             stringLiteralValue), fix);
   }

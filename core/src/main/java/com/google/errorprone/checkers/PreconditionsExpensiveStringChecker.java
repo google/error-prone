@@ -48,11 +48,11 @@ import java.util.regex.Pattern;
  * @author sjnickerson@google.com (Simon Nickerson)
  */
 public class PreconditionsExpensiveStringChecker
-    extends ErrorChecker<MethodInvocationTree> {
+    extends DescribingMatcher<MethodInvocationTree> {
 
   @Override
   @SuppressWarnings({"vararg", "unchecked"})
-  public Matcher<MethodInvocationTree> matcher() {
+  public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
     return allOf(
         anyOf(
             methodSelect(staticMethod(
@@ -67,11 +67,11 @@ public class PreconditionsExpensiveStringChecker
             new StringFormatCallContainsNoSpecialFormattingMatcher(
                 Pattern.compile("%[^%s]"))
         ))
-    );
+    ).matches(methodInvocationTree, state);
   }
   
   @Override
-  public AstError produceError(MethodInvocationTree methodInvocationTree,
+  public MatchDescription describe(MethodInvocationTree methodInvocationTree,
       VisitorState state) {
     MemberSelectTree method =
         (MemberSelectTree) methodInvocationTree.getMethodSelect();
@@ -80,14 +80,12 @@ public class PreconditionsExpensiveStringChecker
         methodInvocationTree.getArguments();
     MethodInvocationTree stringFormat = (MethodInvocationTree) arguments.get(1);
     
-    Position position = getPosition(stringFormat);
-    
     // TODO(sjnickerson): Figure out how to get a suggested fix. Basically we
     // remove the String.format() wrapper, but I don't know how to express
     // this. This current one is not correct!
     SuggestedFix fix = null;
     
-    return new AstError(arguments.get(1),
+    return new MatchDescription(arguments.get(1),
         format("Second argument to Preconditions.%s is a call to " +
             "String.format() which can be unwrapped",
             method.getIdentifier().toString()), fix);

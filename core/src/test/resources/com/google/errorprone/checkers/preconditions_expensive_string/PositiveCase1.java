@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package preconditions_expensive_string;
+package com.google.errorprone.checkers.preconditions_expensive_string;
 
 import com.google.common.base.Preconditions;
 

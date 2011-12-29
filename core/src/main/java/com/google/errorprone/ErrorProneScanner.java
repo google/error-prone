@@ -16,9 +16,9 @@
 
 package com.google.errorprone;
 
+import com.google.errorprone.checkers.DescribingMatcher.MatchDescription;
 import com.google.errorprone.checkers.EmptyIfChecker;
-import com.google.errorprone.checkers.ErrorChecker;
-import com.google.errorprone.checkers.ErrorChecker.AstError;
+import com.google.errorprone.checkers.DescribingMatcher;
 import com.google.errorprone.checkers.dead_exception.DeadExceptionChecker;
 import com.google.errorprone.checkers.FallThroughSuppressionChecker;
 import com.google.errorprone.checkers.OrderingFromChecker;
@@ -42,7 +42,7 @@ import java.util.List;
  */
 public class ErrorProneScanner extends ErrorCollectingTreeScanner {
 
-  private final Iterable<? extends ErrorChecker<MethodInvocationTree>>
+  private final Iterable<? extends DescribingMatcher<MethodInvocationTree>>
       methodInvocationCheckers = Arrays.asList(
           new ObjectsEqualSelfComparisonChecker(),
           new OrderingFromChecker(),
@@ -50,32 +50,26 @@ public class ErrorProneScanner extends ErrorCollectingTreeScanner {
           new PreconditionsExpensiveStringChecker(),
           new PreconditionsCheckNotNullPrimitive1stArgChecker());
   
-  private final Iterable<? extends ErrorChecker<NewClassTree>>
+  private final Iterable<? extends DescribingMatcher<NewClassTree>>
       newClassCheckers = Arrays.asList(
           new DeadExceptionChecker());
 
-  private final Iterable<? extends ErrorChecker<AnnotationTree>>
+  private final Iterable<? extends DescribingMatcher<AnnotationTree>>
       annotationCheckers = Arrays.asList(
           new FallThroughSuppressionChecker());
-  
-  /*
-  private final Iterable<? extends ErrorChecker<IfTree>>
-      ifCheckers = Arrays.asList(
-          new EmptyIfChecker());
-  */
 
-  private final Iterable<? extends ErrorChecker<EmptyStatementTree>>
+  private final Iterable<? extends DescribingMatcher<EmptyStatementTree>>
       emptyStatementCheckers = Arrays.asList(
           new EmptyIfChecker());
   
   @Override
-  public List<AstError> visitMethodInvocation(
+  public List<MatchDescription> visitMethodInvocation(
       MethodInvocationTree methodInvocationTree, VisitorState state) {
-    List<AstError> result = new ArrayList<AstError>();
-    for (ErrorChecker<MethodInvocationTree> checker : methodInvocationCheckers) {
-      AstError error = checker.check(methodInvocationTree, state.withPath(getCurrentPath()));
-      if (error != null) {
-        result.add(error);
+    List<MatchDescription> result = new ArrayList<MatchDescription>();
+    for (DescribingMatcher<MethodInvocationTree> checker : methodInvocationCheckers) {
+      VisitorState newState = state.withPath(getCurrentPath());
+      if (checker.matches(methodInvocationTree, newState)) {
+         result.add(checker.describe(methodInvocationTree, newState));
       }
     }
     super.visitMethodInvocation(methodInvocationTree, state);
@@ -83,13 +77,12 @@ public class ErrorProneScanner extends ErrorCollectingTreeScanner {
   }
 
   @Override
-  public List<AstError> visitNewClass(NewClassTree newClassTree, VisitorState visitorState) {
-    List<AstError> result = new ArrayList<AstError>();
-    for (ErrorChecker<NewClassTree> newClassChecker : newClassCheckers) {
-      AstError error = newClassChecker
-          .check(newClassTree, visitorState.withPath(getCurrentPath()));
-      if (error != null) {
-        result.add(error);
+  public List<MatchDescription> visitNewClass(NewClassTree newClassTree, VisitorState visitorState) {
+    List<MatchDescription> result = new ArrayList<MatchDescription>();
+    for (DescribingMatcher<NewClassTree> newClassChecker : newClassCheckers) {
+      VisitorState state = visitorState.withPath(getCurrentPath());
+      if (newClassChecker.matches(newClassTree, state)) {
+         result.add(newClassChecker.describe(newClassTree, state));
       }
     }
     super.visitNewClass(newClassTree, visitorState);
@@ -97,13 +90,12 @@ public class ErrorProneScanner extends ErrorCollectingTreeScanner {
   }
 
   @Override
-  public List<AstError> visitAnnotation(AnnotationTree annotationTree, VisitorState visitorState) {
-    List<AstError> result = new ArrayList<AstError>();
-    for (ErrorChecker<AnnotationTree> annotationChecker : annotationCheckers) {
-      AstError error = annotationChecker
-          .check(annotationTree, visitorState.withPath(getCurrentPath()));
-      if (error != null) {
-        result.add(error);
+  public List<MatchDescription> visitAnnotation(AnnotationTree annotationTree, VisitorState visitorState) {
+    List<MatchDescription> result = new ArrayList<MatchDescription>();
+    for (DescribingMatcher<AnnotationTree> annotationChecker : annotationCheckers) {
+      VisitorState state = visitorState.withPath(getCurrentPath());
+      if (annotationChecker.matches(annotationTree, state)) {
+         result.add(annotationChecker.describe(annotationTree, state));
       }
     }
     super.visitAnnotation(annotationTree, visitorState);
@@ -111,33 +103,16 @@ public class ErrorProneScanner extends ErrorCollectingTreeScanner {
   }
   
   @Override
-  public List<AstError> visitEmptyStatement(EmptyStatementTree emptyStatementTree, 
+  public List<MatchDescription> visitEmptyStatement(EmptyStatementTree emptyStatementTree,
       VisitorState visitorState) {
-    List<AstError> result = new ArrayList<AstError>();
-    for (ErrorChecker<EmptyStatementTree> emptyStatementChecker : emptyStatementCheckers) {
-      AstError error = emptyStatementChecker
-          .check(emptyStatementTree, visitorState.withPath(getCurrentPath()));
-      if (error != null) {
-        result.add(error);
+    List<MatchDescription> result = new ArrayList<MatchDescription>();
+    for (DescribingMatcher<EmptyStatementTree> emptyStatementChecker : emptyStatementCheckers) {
+      VisitorState state = visitorState.withPath(getCurrentPath());
+      if (emptyStatementChecker.matches(emptyStatementTree, state)) {
+        result.add(emptyStatementChecker.describe(emptyStatementTree, state));
       }
     }
     super.visitEmptyStatement(emptyStatementTree, visitorState);
     return result;
   }
-  
-  /*
-  @Override
-  public List<AstError> visitIf(IfTree ifTree, VisitorState visitorState) {
-    List<AstError> result = new ArrayList<AstError>();
-    for (ErrorChecker<IfTree> ifChecker : ifCheckers) {
-      AstError error = ifChecker
-          .check(ifTree, visitorState.withPath(getCurrentPath()));
-      if (error != null) {
-        result.add(error);
-      }
-    }
-    super.visitIf(ifTree, visitorState);
-    return result;
-  }
-  */
 }

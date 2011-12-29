@@ -2,8 +2,6 @@
 
 package com.google.errorprone.checkers.objects_equal_self_comparison;
 
-import static com.google.errorprone.fixes.SuggestedFix.prefixWith;
-import static com.google.errorprone.fixes.SuggestedFix.replace;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
 import static com.google.errorprone.matchers.Matchers.sameArgument;
@@ -11,9 +9,8 @@ import static com.google.errorprone.matchers.Matchers.staticMethod;
 
 import com.google.errorprone.ErrorCollectingTreeScanner;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.checkers.ErrorChecker;
+import com.google.errorprone.checkers.DescribingMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.Matcher;
 
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree.Kind;
@@ -31,20 +28,21 @@ import java.util.List;
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class ObjectsEqualSelfComparisonChecker extends ErrorChecker<MethodInvocationTree> {
+public class ObjectsEqualSelfComparisonChecker extends DescribingMatcher<MethodInvocationTree> {
 
   @SuppressWarnings({"unchecked"})
   @Override
-  public Matcher<MethodInvocationTree> matcher() {
+  public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
     return allOf(
         methodSelect(staticMethod("com.google.common.base.Objects", "equal")),
-        sameArgument(0, 1));
+        sameArgument(0, 1))
+        .matches(methodInvocationTree, state);
   }
 
   @Override
-  public AstError produceError(MethodInvocationTree methodInvocationTree, VisitorState state) {
+  public MatchDescription describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
     // If we don't find a good field to use, then just replace with "true"
-    SuggestedFix fix = replace(getPosition(methodInvocationTree), "true");
+    SuggestedFix fix = new SuggestedFix().replace(methodInvocationTree, "true");
 
     JCExpression toReplace = (JCExpression) methodInvocationTree.getArguments().get(1);
     // Find containing block
@@ -59,26 +57,27 @@ public class ObjectsEqualSelfComparisonChecker extends ErrorChecker<MethodInvoca
         TypeSymbol variableTypeSymbol = declaration.getType().type.tsym;
 
         if (((JCIdent)toReplace).sym.isMemberOf(variableTypeSymbol, state.getTypes())) {
-          fix = prefixWith(getPosition(toReplace), declaration.getName().toString() + ".");
+          fix = new SuggestedFix().prefixWith(toReplace, declaration.getName().toString() + ".");
         }
       }
     }
 
-    return new AstError(methodInvocationTree, "Objects.equal arguments must be different", fix);
+    return new MatchDescription(methodInvocationTree,
+        "Objects.equal arguments must be different", fix);
   }
 
   public static class Scanner extends ErrorCollectingTreeScanner {
-    private final ErrorChecker<MethodInvocationTree> checker =
+    private final DescribingMatcher<MethodInvocationTree> checker =
         new ObjectsEqualSelfComparisonChecker();
 
     @Override
-    public List<AstError> visitMethodInvocation(MethodInvocationTree node,
+    public List<MatchDescription> visitMethodInvocation(MethodInvocationTree node,
         VisitorState visitorState) {
 
-      AstError error = checker.check(node, visitorState.withPath(getCurrentPath()));
-      List<AstError> result = new ArrayList<AstError>();
-      if (error != null) {
-        result.add(error);
+      VisitorState state = visitorState.withPath(getCurrentPath());
+      List<MatchDescription> result = new ArrayList<MatchDescription>();
+      if (checker.matches(node, state)) {
+        result.add(checker.describe(node, state));
       }
       return result;
     }

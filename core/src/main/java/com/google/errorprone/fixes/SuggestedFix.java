@@ -16,9 +16,16 @@
 
 package com.google.errorprone.fixes;
 
-import com.google.errorprone.checkers.ErrorChecker.Position;
+import com.sun.source.tree.Tree;
+import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
+import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
+import com.sun.tools.javac.util.Pair;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -27,10 +34,9 @@ import java.util.TreeSet;
  */
 public class SuggestedFix {
 
-  @Override
-  public String toString() {
+  public String toString(JCCompilationUnit compilationUnit) {
     StringBuilder result = new StringBuilder("replace ");
-    for (Replacement replacement : replacements) {
+    for (Replacement replacement : getReplacements(compilationUnit.endPositions)) {
       result
           .append("position " + replacement.startPosition + ":" + replacement.endPosition)
           .append(" with \"" + replacement.replaceWith + "\" ");
@@ -38,7 +44,12 @@ public class SuggestedFix {
     return result.toString();
   }
 
-  private TreeSet<Replacement> replacements = new TreeSet<Replacement>(
+  private Collection<Pair<Tree, String>> nodeReplacements = new ArrayList<Pair<Tree, String>>();
+  private Collection<Pair<Tree, Tree>> nodeSwaps = new ArrayList<Pair<Tree, Tree>>();
+  private Collection<Pair<Tree, String>> prefixInsertions = new ArrayList<Pair<Tree, String>>();
+
+  public Set<Replacement> getReplacements(Map<JCTree, Integer> endPositions) {
+    TreeSet<Replacement> replacements = new TreeSet<Replacement>(
       new Comparator<Replacement>() {
         @Override
         public int compare(Replacement o1, Replacement o2) {
@@ -47,31 +58,51 @@ public class SuggestedFix {
           return (a < b) ? -1 : ((a > b) ? 1 : 0);
         }
       });
-
-  public Set<Replacement> getReplacements() {
+    for (Pair<Tree, String> prefixInsertion : prefixInsertions) {
+      DiagnosticPosition pos = (JCTree) prefixInsertion.fst;
+      replacements.add(new Replacement(
+          pos.getStartPosition(),
+          pos.getStartPosition(),
+          prefixInsertion.snd));
+    }
+    for (Pair<Tree, String> nodeReplacement : nodeReplacements) {
+      DiagnosticPosition pos = (JCTree) nodeReplacement.fst;
+      replacements.add(new Replacement(
+          pos.getStartPosition(),
+          pos.getEndPosition(endPositions),
+          nodeReplacement.snd));
+    }
+    for (Pair<Tree, Tree> nodeSwap : nodeSwaps) {
+      DiagnosticPosition pos1 = (JCTree) nodeSwap.fst;
+      DiagnosticPosition pos2 = (JCTree) nodeSwap.snd;
+      replacements.add(new Replacement(
+          pos1.getStartPosition(),
+          pos1.getEndPosition(endPositions),
+          nodeSwap.snd.toString()));
+      replacements.add(new Replacement(
+          pos2.getStartPosition(),
+          pos2.getEndPosition(endPositions),
+          nodeSwap.fst.toString()));
+    }
     return replacements;
   }
 
-  public SuggestedFix replace(int start, int end, String replaceWith) {
-    replacements.add(new Replacement(start, end, replaceWith));
+  public SuggestedFix replace(Tree node, String replaceWith) {
+    nodeReplacements.add(new Pair<Tree, String>(node, replaceWith));
     return this;
   }
 
-  public static SuggestedFix replace(Position statementPos, String replaceWith) {
-    return new SuggestedFix().replace(statementPos.start, statementPos.end, replaceWith);
-  }
-  
-  public static SuggestedFix delete(Position statementPos) {
-    return new SuggestedFix().replace(statementPos.start, statementPos.end, "");
+  public SuggestedFix prefixWith(Tree node, String prefix) {
+    prefixInsertions.add(new Pair<Tree, String>(node, prefix));
+    return this;
   }
 
-  public static SuggestedFix prefixWith(Position pos, String s) {
-    return new SuggestedFix().replace(pos.start, pos.start, s);
+  public SuggestedFix delete(Tree node) {
+    return replace(node, "");
   }
 
-  public static SuggestedFix swap(Position pos1, Position pos2) {
-    return new SuggestedFix()
-        .replace(pos1.start, pos1.end, pos2.getSource())
-        .replace(pos2.start, pos2.end, pos1.getSource());
+  public SuggestedFix swap(Tree node1, Tree node2) {
+    nodeSwaps.add(new Pair<Tree, Tree>(node1, node2));
+    return this;
   }
 }

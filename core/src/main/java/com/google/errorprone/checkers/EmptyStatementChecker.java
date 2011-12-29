@@ -4,7 +4,6 @@ package com.google.errorprone.checkers;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.Matcher;
 
 import com.sun.source.tree.EmptyStatementTree;
 
@@ -15,27 +14,20 @@ import com.sun.source.tree.EmptyStatementTree;
  * 
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class EmptyStatementChecker extends ErrorChecker<EmptyStatementTree> {
+public class EmptyStatementChecker extends DescribingMatcher<EmptyStatementTree> {
 
   @Override
-  public Matcher<EmptyStatementTree> matcher() {
-    return new Matcher<EmptyStatementTree>() {
-      // All empty statements match, so just return true.
-      @Override
-      public boolean matches(EmptyStatementTree t, VisitorState state) {
-        return true;
-      }
-    };
+  public boolean matches(EmptyStatementTree emptyStatementTree, VisitorState state) {
+    return true;
   }
 
   @Override
-  public com.google.errorprone.checkers.ErrorChecker.AstError produceError(
+  public MatchDescription describe(
       EmptyStatementTree emptyStatementTree, VisitorState state) {
-    return new AstError(
+    return new MatchDescription(
         emptyStatementTree,
         "empty statement",
-        SuggestedFix.delete(getPosition(emptyStatementTree)));
+        new SuggestedFix().delete(emptyStatementTree));
   }
-  
 
 }

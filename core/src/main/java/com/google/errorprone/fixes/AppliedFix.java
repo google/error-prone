@@ -16,10 +16,13 @@
 
 package com.google.errorprone.fixes;
 
+import com.sun.tools.javac.tree.JCTree;
+
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.StringReader;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -47,17 +50,19 @@ public class AppliedFix {
   }
 
   public static class Applier {
-    private CharSequence source;
+    private final CharSequence source;
+    private final Map<JCTree, Integer> endPositions;
 
-    public Applier(CharSequence source) {
+    public Applier(CharSequence source, Map<JCTree, Integer> endPositions) {
       this.source = source;
+      this.endPositions = endPositions;
     }
 
     public AppliedFix apply(SuggestedFix suggestedFix) {
       StringBuilder replaced = new StringBuilder(source);
 
       Set<Integer> modifiedLines = new HashSet<Integer>();
-      for (Replacement repl : suggestedFix.getReplacements()) {
+      for (Replacement repl : suggestedFix.getReplacements(endPositions)) {
         replaced.replace(repl.startPosition, repl.endPosition, repl.replaceWith);
 
         // Find the line number(s) being modified
@@ -93,7 +98,7 @@ public class AppliedFix {
     }
   }
 
-  public static Applier fromSource(CharSequence source) {
-    return new Applier(source);
+  public static Applier fromSource(CharSequence source, Map<JCTree, Integer> endPositions) {
+    return new Applier(source, endPositions);
   }
 }

@@ -25,7 +25,7 @@ import com.google.errorprone.ErrorCollectingTreeScanner;
 import com.google.errorprone.ErrorFindingCompiler;
 import com.google.errorprone.ErrorFindingCompiler.Builder;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.checkers.ErrorChecker.AstError;
+import com.google.errorprone.checkers.DescribingMatcher.MatchDescription;
 
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.Tree.Kind;
@@ -124,7 +124,7 @@ public class StaticMethodMatcherTest {
                            final StaticMethodMatcher staticMethodMatcher) throws IOException {
     ErrorCollectingTreeScanner scanner = new ErrorCollectingTreeScanner() {
       @Override
-      public List<AstError> visitMemberSelect(MemberSelectTree node, VisitorState visitorState) {
+      public List<MatchDescription> visitMemberSelect(MemberSelectTree node, VisitorState visitorState) {
         if (getCurrentPath().getParentPath().getLeaf().getKind() == Kind.METHOD_INVOCATION) {
           assertTrue(node.toString(),
               !shouldMatch ^ staticMethodMatcher.matches(node, visitorState));

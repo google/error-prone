@@ -16,7 +16,8 @@
 
 package com.google.errorprone;
 
-import com.google.errorprone.checkers.ErrorChecker.AstError;
+import com.google.errorprone.checkers.DescribingMatcher.MatchDescription;
+
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
@@ -29,11 +30,11 @@ import java.util.List;
  * Base class for scanning a compilation unit's AST, and producing error information.
  * @author Alex Eagle (alexeagle@google.com)
  */
-public class ErrorCollectingTreeScanner extends TreePathScanner<List<AstError>, VisitorState> {
+public class ErrorCollectingTreeScanner extends TreePathScanner<List<MatchDescription>, VisitorState> {
 
   @Override
-  public List<AstError> reduce(List<AstError> r1, List<AstError> r2) {
-    List<AstError> concat = new ArrayList<AstError>();
+  public List<MatchDescription> reduce(List<MatchDescription> r1, List<MatchDescription> r2) {
+    List<MatchDescription> concat = new ArrayList<MatchDescription>();
     if (r1 != null) {
       concat.addAll(r1);
     }
@@ -44,10 +45,10 @@ public class ErrorCollectingTreeScanner extends TreePathScanner<List<AstError>, 
   }
 
   @Override
-  public List<AstError> visitCompilationUnit(
+  public List<MatchDescription> visitCompilationUnit(
       CompilationUnitTree compilationUnitTree, VisitorState visitorState) {
     visitorState = visitorState.forCompilationUnit((JCCompilationUnit) compilationUnitTree);
-    List<AstError> errors = super.visitCompilationUnit(compilationUnitTree, visitorState);
-    return errors != null ? errors : Collections.<AstError>emptyList();
+    List<MatchDescription> errors = super.visitCompilationUnit(compilationUnitTree, visitorState);
+    return errors != null ? errors : Collections.<MatchDescription>emptyList();
   }
 }

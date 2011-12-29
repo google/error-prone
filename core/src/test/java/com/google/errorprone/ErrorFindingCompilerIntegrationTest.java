@@ -46,11 +46,13 @@ public class ErrorFindingCompilerIntegrationTest {
 
   private DiagnosticCollector<JavaFileObject> diagnostics;
   private PrintWriter printWriter;
+  private ByteArrayOutputStream outputStream;
 
   @Before
   public void setUp() {
     diagnostics = new DiagnosticCollector<JavaFileObject>();
-    printWriter = new PrintWriter(new OutputStreamWriter(new ByteArrayOutputStream()));
+    outputStream = new ByteArrayOutputStream();
+    printWriter = new PrintWriter(new OutputStreamWriter(outputStream));
   }
 
   @Test
@@ -69,7 +71,9 @@ public class ErrorFindingCompilerIntegrationTest {
     String[] args = new String[sources.length+1];
     System.arraycopy(sources, 0, args, 0, sources.length);
     args[sources.length] = new String("-proc:none");
-    assertThat(compiler.compile(args), is(1));
+    int exitCode = compiler.compile(args);
+    outputStream.flush();
+    assertThat(outputStream.toString(), exitCode, is(1));
 
     Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher = hasItem(allOf(
         diagnosticLineAndColumn(41L, 5L),

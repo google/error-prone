@@ -32,4 +32,36 @@ public class Replacement {
     this.endPosition = endPosition;
     this.replaceWith = replaceWith;
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Replacement that = (Replacement) o;
+
+    if (endPosition != that.endPosition) {
+      return false;
+    }
+    if (startPosition != that.startPosition) {
+      return false;
+    }
+    if (replaceWith != null ? !replaceWith.equals(that.replaceWith) : that.replaceWith != null) {
+      return false;
+    }
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = startPosition;
+    result = 31 * result + endPosition;
+    result = 31 * result + (replaceWith != null ? replaceWith.hashCode() : 0);
+    return result;
+  }
 }

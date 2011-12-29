@@ -2,7 +2,7 @@
 
 package com.google.errorprone;
 
-import com.google.errorprone.checkers.ErrorChecker.AstError;
+import com.google.errorprone.checkers.DescribingMatcher.MatchDescription;
 
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Env;
@@ -127,12 +127,13 @@ public class ErrorFindingCompiler extends Main {
     public void postFlow(Env<AttrContext> env) {
       VisitorState visitorState = new VisitorState(context);
       LogReporter logReporter = new LogReporter(log,
+          env.toplevel.endPositions,
           env.enclClass.sym.sourcefile != null
               ? env.enclClass.sym.sourcefile
               : env.toplevel.sourcefile);
       ErrorCollectingTreeScanner scanner = context.get(ErrorCollectingTreeScanner.class);
-      List<AstError> errors = scanner.scan(env.toplevel, visitorState);
-      for (AstError error : errors) {
+      List<MatchDescription> errors = scanner.scan(env.toplevel, visitorState);
+      for (MatchDescription error : errors) {
         logReporter.emitError(error);
       }
     }

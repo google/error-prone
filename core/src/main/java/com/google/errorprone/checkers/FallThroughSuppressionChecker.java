@@ -24,7 +24,6 @@ import static com.google.errorprone.matchers.Matchers.stringLiteral;
 import com.google.errorprone.ErrorCollectingTreeScanner;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.Matcher;
 
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
@@ -41,18 +40,19 @@ import java.util.List;
  * @author eaftan@google.com (Eddie Aftandilian)
  * @author pepstein@google.com (Peter Epstein)
  */
-public class FallThroughSuppressionChecker extends ErrorChecker<AnnotationTree> {
+public class FallThroughSuppressionChecker extends DescribingMatcher<AnnotationTree> {
 
   @Override
   @SuppressWarnings({"varargs", "unchecked"})
-  public Matcher<AnnotationTree> matcher() {
+  public boolean matches(AnnotationTree annotationTree, VisitorState state) {
     return allOf(isType("java.lang.SuppressWarnings"),
-                 hasElementWithValue("value", stringLiteral("fallthrough")));
+                 hasElementWithValue("value", stringLiteral("fallthrough")))
+        .matches(annotationTree, state);
   }
 
   @Override
-  public AstError produceError(AnnotationTree annotationTree, VisitorState state) {
-    return new AstError(
+  public MatchDescription describe(AnnotationTree annotationTree, VisitorState state) {
+    return new MatchDescription(
         annotationTree,
         "this has no effect if fallthrough warning is suppressed",
         getSuggestedFix(annotationTree, state));
@@ -67,7 +67,7 @@ public class FallThroughSuppressionChecker extends ErrorChecker<AnnotationTree> 
         switch (expressionTree.getKind()) {
           case STRING_LITERAL:
               // Fallthrough was the only thing suppressed, so remove line.
-            return SuggestedFix.delete(getPosition(annotationTree));
+            return new SuggestedFix().delete(annotationTree);
           case NEW_ARRAY:
             JCTree.JCNewArray newArray =
                 initializersWithoutFallthrough(state, (NewArrayTree) expressionTree);
@@ -79,7 +79,7 @@ public class FallThroughSuppressionChecker extends ErrorChecker<AnnotationTree> 
                   singleInitializer((JCTree.JCLiteral) newArray.getInitializers().get(0), state));
             } else {
               // Fallthrough was the only thing suppressed, so remove line.
-              return SuggestedFix.delete(getPosition(annotationTree));
+              return new SuggestedFix().delete(annotationTree);
             }
             break;
         }
@@ -91,8 +91,8 @@ public class FallThroughSuppressionChecker extends ErrorChecker<AnnotationTree> 
     }
     JCTree.JCAnnotation replacement = state.getTreeMaker()
         .Annotation((JCTree) annotationTree.getAnnotationType(), arguments.toList());
-    return SuggestedFix
-        .replace(getPosition(annotationTree), replacement.toString());
+    return new SuggestedFix()
+        .replace(annotationTree, replacement.toString());
   }
 
   private JCTree.JCLiteral singleInitializer(JCTree.JCLiteral literalExpression,
@@ -115,16 +115,16 @@ public class FallThroughSuppressionChecker extends ErrorChecker<AnnotationTree> 
         dimensions.toList(), replacementInitializers.toList());
   }
 
+
   public static class Scanner extends ErrorCollectingTreeScanner {
-    public ErrorChecker<AnnotationTree> annotationChecker = new FallThroughSuppressionChecker();
+    public DescribingMatcher<AnnotationTree> annotationChecker = new FallThroughSuppressionChecker();
 
     @Override
-    public List<AstError> visitAnnotation(AnnotationTree annotationTree, VisitorState visitorState) {
-      List<AstError> result = new ArrayList<AstError>();
-      AstError error = annotationChecker
-          .check(annotationTree, visitorState.withPath(getCurrentPath()));
-      if (error != null) {
-        result.add(error);
+    public List<MatchDescription> visitAnnotation(AnnotationTree annotationTree, VisitorState visitorState) {
+      List<MatchDescription> result = new ArrayList<MatchDescription>();
+      VisitorState state = visitorState.withPath(getCurrentPath());
+      if (annotationChecker.matches(annotationTree, state)) {
+        result.add(annotationChecker.describe(annotationTree, state));
       }
 
       super.visitAnnotation(annotationTree, visitorState);

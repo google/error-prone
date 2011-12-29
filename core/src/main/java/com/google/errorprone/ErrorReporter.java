@@ -16,12 +16,12 @@
 
 package com.google.errorprone;
 
-import com.google.errorprone.checkers.ErrorChecker.AstError;
+import com.google.errorprone.checkers.DescribingMatcher.MatchDescription;
 
 /**
  * Strategies for making our errors appear to the user and break their build.
  * @author alexeagle@google.com (Alex Eagle)
  */
 public interface ErrorReporter {
-  void emitError(AstError error);
+  void emitError(MatchDescription error);
 }

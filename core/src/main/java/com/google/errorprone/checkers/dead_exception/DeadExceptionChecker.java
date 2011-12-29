@@ -16,22 +16,27 @@
 
 package com.google.errorprone.checkers.dead_exception;
 
-import com.google.errorprone.VisitorState;
-import com.google.errorprone.checkers.ErrorChecker;
-import com.google.errorprone.BugPattern;
-import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.Matcher;
-import com.sun.source.tree.NewClassTree;
-import com.sun.source.tree.StatementTree;
-
 import static com.google.errorprone.BugPattern.Category.UNIVERSAL;
 import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.fixes.SuggestedFix.delete;
-import static com.google.errorprone.fixes.SuggestedFix.prefixWith;
-import static com.google.errorprone.matchers.Matchers.*;
+import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.enclosingBlock;
+import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
+import static com.google.errorprone.matchers.Matchers.kindIs;
+import static com.google.errorprone.matchers.Matchers.lastStatement;
+import static com.google.errorprone.matchers.Matchers.parentNode;
+import static com.google.errorprone.matchers.Matchers.same;
 import static com.sun.source.tree.Tree.Kind.EXPRESSION_STATEMENT;
 import static com.sun.source.tree.Tree.Kind.IF;
+
+import com.google.errorprone.BugPattern;
+import com.google.errorprone.VisitorState;
+import com.google.errorprone.checkers.DescribingMatcher;
+import com.google.errorprone.fixes.SuggestedFix;
+
+import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.StatementTree;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -44,18 +49,19 @@ import static com.sun.source.tree.Tree.Kind.IF;
     summary = "Exception created but not thrown",
     explanation =
         "The exception is created with new, but is not thrown, and the reference is lost.")
-public class DeadExceptionChecker extends ErrorChecker<NewClassTree> {
+public class DeadExceptionChecker extends DescribingMatcher<NewClassTree> {
 
   @Override
-  public Matcher<NewClassTree> matcher() {
+  public boolean matches(NewClassTree newClassTree, VisitorState state) {
     return allOf(
         parentNode(kindIs(EXPRESSION_STATEMENT)),
-        isSubtypeOf(getSymbolTable().exceptionType));
+        isSubtypeOf(state.getSymtab().exceptionType))
+        .matches(newClassTree, state);
   }
 
   @Override
-  public AstError produceError(NewClassTree newClassTree, VisitorState state) {
-    StatementTree parent = (StatementTree) getPath().getParentPath().getLeaf();
+  public MatchDescription describe(NewClassTree newClassTree, VisitorState state) {
+    StatementTree parent = (StatementTree) state.getPath().getParentPath().getLeaf();
 
     boolean isLastStatement = anyOf(
         enclosingBlock(lastStatement(same(parent))),
@@ -63,10 +69,16 @@ public class DeadExceptionChecker extends ErrorChecker<NewClassTree> {
         parentNode(parentNode(kindIs(IF))))
         .matches(newClassTree, state);
 
-    SuggestedFix suggestedFix = isLastStatement
-        ? prefixWith(getPosition(newClassTree), "throw ")
-        : delete(getPosition(parent));
-    return new AstError(newClassTree, "Exception created but not thrown, and reference is lost",
+    SuggestedFix suggestedFix = new SuggestedFix();
+    if (isLastStatement) {
+      suggestedFix.prefixWith(newClassTree, "throw ");
+    } else {
+      suggestedFix.delete(parent);
+    }
+    return new MatchDescription(newClassTree,
+        "Exception created but not thrown, and reference is lost",
         suggestedFix);
   }
+
+
 }

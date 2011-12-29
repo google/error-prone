@@ -23,7 +23,6 @@ import static com.google.errorprone.matchers.Matchers.staticMethod;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 
 import com.sun.source.tree.ExpressionTree;
@@ -54,18 +53,19 @@ import java.util.List;
  * @author sjnickerson@google.com (Simon Nickerson)
  */
 public class PreconditionsCheckNotNullPrimitive1stArgChecker
-    extends ErrorChecker<MethodInvocationTree> {
+    extends DescribingMatcher<MethodInvocationTree> {
 
   @Override
-  public Matcher<MethodInvocationTree> matcher() {
+  public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
     return allOf(
         methodSelect(staticMethod(
             "com.google.common.base.Preconditions", "checkNotNull")),
-        argument(0, Matchers.<ExpressionTree>isSubtypeOf(getSymbolTable().booleanType)));
+        argument(0, Matchers.<ExpressionTree>isSubtypeOf(state.getSymtab().booleanType)))
+        .matches(methodInvocationTree, state);
   }
   
   @Override
-  public AstError produceError(MethodInvocationTree methodInvocationTree,
+  public MatchDescription describe(MethodInvocationTree methodInvocationTree,
       VisitorState state) {
     SuggestedFix fix = null;
     ExpressionTree expression = methodInvocationTree.getArguments().get(0);
@@ -75,11 +75,10 @@ public class PreconditionsCheckNotNullPrimitive1stArgChecker
         OperatorSymbol operator = (OperatorSymbol) binary.getOperator(); 
         if (operator.name.toString().equals("!=")) {
           if (binary.getRightOperand().getKind() == Kind.NULL_LITERAL) {
-            fix = SuggestedFix.replace(getPosition(binary),
+            fix = new SuggestedFix().replace(binary,
                 binary.getLeftOperand().toString());
           } else if (binary.getLeftOperand().getKind() == Kind.NULL_LITERAL) {
-            fix = SuggestedFix.replace(getPosition(binary),
-                binary.getRightOperand().toString());
+            fix = new SuggestedFix().replace(binary, binary.getRightOperand().toString());
           }
         } 
       }
@@ -87,12 +86,12 @@ public class PreconditionsCheckNotNullPrimitive1stArgChecker
     if (fix == null) {
       List<? extends ExpressionTree> args = methodInvocationTree.getArguments();
       if (args.size() == 1) {
-        fix = SuggestedFix.replace(getPosition(methodInvocationTree),
+        fix = new SuggestedFix().replace(methodInvocationTree,
             String.format(
                 "if (!(%s)) { throw new NullPointerException(); }",
                 args.get(0)));
       } else if (args.size() == 2) {
-        fix = SuggestedFix.replace(getPosition(methodInvocationTree),
+        fix = new SuggestedFix().replace(methodInvocationTree,
             String.format(
                 "if (!(%s)) { throw new NullPointerException(%s); }",
                 args.get(0), args.get(1)));
@@ -103,16 +102,16 @@ public class PreconditionsCheckNotNullPrimitive1stArgChecker
           extraArgs.append(", ");
           extraArgs.append(args.get(i).toString());
         }
-        fix = SuggestedFix.replace(getPosition(methodInvocationTree),
+        fix = new SuggestedFix().replace(methodInvocationTree,
             String.format(
                 "if (!(%s)) { throw new NullPointerException(String.format(%s%s); }",
                 args.get(0), args.get(1), extraArgs.toString()));
       }
     }
     
-    return new AstError(methodInvocationTree.getArguments().get(0),
+    return new MatchDescription(methodInvocationTree.getArguments().get(0),
         "First argument to Preconditions.checkNotNull is a boolean rather " +
         "than an object reference.", fix);
   }
-  
+
 }

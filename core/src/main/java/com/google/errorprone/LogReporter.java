@@ -16,13 +16,15 @@
 
 package com.google.errorprone;
 
-import com.google.errorprone.checkers.ErrorChecker.AstError;
+import com.google.errorprone.checkers.DescribingMatcher.MatchDescription;
 import com.google.errorprone.fixes.AppliedFix;
 
+import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Log;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.tools.JavaFileObject;
 
@@ -31,32 +33,34 @@ import javax.tools.JavaFileObject;
  */
 public class LogReporter implements ErrorReporter {
   private final Log log;
+  private final Map<JCTree, Integer> endPositions;
   private final JavaFileObject sourceFile;
 
   // The suffix for properties in src/main/resources/com/google/errorprone/errors.properties
   private static final String MESSAGE_BUNDLE_KEY = "error.prone";
 
-  public LogReporter(Log log, JavaFileObject sourceFile) {
+  public LogReporter(Log log, Map<JCTree, Integer> endPositions, JavaFileObject sourceFile) {
     this.log = log;
+    this.endPositions = endPositions;
     this.sourceFile = sourceFile;
   }
 
   @Override
-  public void emitError(AstError error) {
+  public void emitError(MatchDescription error) {
     JavaFileObject originalSource;
     // Swap the log's source and the current file's source; then be sure to swap them back later.
     originalSource = log.useSource(sourceFile);
     try {
       CharSequence content = sourceFile.getCharContent(true);
       if (error.suggestedFix == null) {
-        log.error((DiagnosticPosition) error.match, MESSAGE_BUNDLE_KEY, error.message);
+        log.error((DiagnosticPosition) error.node, MESSAGE_BUNDLE_KEY, error.message);
       } else {
-        AppliedFix fix = AppliedFix.fromSource(content).apply(error.suggestedFix);
+        AppliedFix fix = AppliedFix.fromSource(content, endPositions).apply(error.suggestedFix);
         if (fix.isRemoveLine()) {
-          log.error((DiagnosticPosition) error.match, MESSAGE_BUNDLE_KEY, error.message
+          log.error((DiagnosticPosition) error.node, MESSAGE_BUNDLE_KEY, error.message
               + "; did you mean to remove this line?");
         } else {
-          log.error((DiagnosticPosition) error.match, MESSAGE_BUNDLE_KEY, error.message
+          log.error((DiagnosticPosition) error.node, MESSAGE_BUNDLE_KEY, error.message
               + "; did you mean '" + fix.getNewCodeSnippet() + "'?");
         }
       }
