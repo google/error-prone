@@ -26,6 +26,7 @@
     <version>0.3-SNAPSHOT</version>
   </parent>
 
+  <name>JSR-269 annotation processor for @BugPattern annotation</name>
   <artifactId>error_prone_docgen</artifactId>
 
   <dependencies>

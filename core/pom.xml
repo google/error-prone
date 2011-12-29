@@ -26,6 +26,7 @@
     <version>0.3-SNAPSHOT</version>
   </parent>
 
+  <name>error-prone library</name>
   <artifactId>error_prone_core</artifactId>
 
   <dependencies>

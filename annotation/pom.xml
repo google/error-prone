@@ -26,5 +26,6 @@
     <version>0.3-SNAPSHOT</version>
   </parent>
 
+  <name>@BugPattern annotation</name>
   <artifactId>error_prone_annotation</artifactId>
 </project>
