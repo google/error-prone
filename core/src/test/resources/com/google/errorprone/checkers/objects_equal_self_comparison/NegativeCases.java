@@ -1,6 +1,6 @@
 // Copyright 2011 Google Inc. All Rights Reserved.
 
-package objects_equal_self_comparison;
+package com.google.errorprone.checkers.objects_equal_self_comparison;
 
 import com.google.common.base.Objects;
 
