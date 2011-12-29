@@ -48,7 +48,7 @@ import java.util.regex.Pattern;
  * @author sjnickerson@google.com (Simon Nickerson)
  */
 public class PreconditionsExpensiveStringChecker
-    extends DescribingMatcher<MethodInvocationTree> {
+    extends RefactoringMatcher<MethodInvocationTree> {
 
   @Override
   @SuppressWarnings({"vararg", "unchecked"})
@@ -71,7 +71,7 @@ public class PreconditionsExpensiveStringChecker
   }
   
   @Override
-  public MatchDescription describe(MethodInvocationTree methodInvocationTree,
+  public Refactor refactor(MethodInvocationTree methodInvocationTree,
       VisitorState state) {
     MemberSelectTree method =
         (MemberSelectTree) methodInvocationTree.getMethodSelect();
@@ -85,7 +85,7 @@ public class PreconditionsExpensiveStringChecker
     // this. This current one is not correct!
     SuggestedFix fix = null;
     
-    return new MatchDescription(arguments.get(1),
+    return new Refactor(arguments.get(1),
         format("Second argument to Preconditions.%s is a call to " +
             "String.format() which can be unwrapped",
             method.getIdentifier().toString()), fix);

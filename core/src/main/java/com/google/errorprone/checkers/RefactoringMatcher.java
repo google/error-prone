@@ -26,7 +26,7 @@ import com.sun.source.tree.Tree;
  * In addition to matching an AST node, also gives a message and/or suggested fix.
  * @author alexeagle@google.com (Alex Eagle)
  */
-public abstract class DescribingMatcher<T extends Tree> implements Matcher<T> {
+public abstract class RefactoringMatcher<T extends Tree> implements Matcher<T> {
 
   /**
    * Additional description of a matched AST node, useful in reporting the error or performing an
@@ -35,9 +35,9 @@ public abstract class DescribingMatcher<T extends Tree> implements Matcher<T> {
    * @param state the shared state
    * @return the description
    */
-  public abstract MatchDescription describe(T t, VisitorState state);
+  public abstract Refactor refactor(T t, VisitorState state);
 
-  public static class MatchDescription {
+  public static class Refactor {
 
     /**
      * The AST node which matched
@@ -50,11 +50,11 @@ public abstract class DescribingMatcher<T extends Tree> implements Matcher<T> {
     public String message;
 
     /**
-     * Optional replacements to suggest or use in automated refactoring
+     * Replacements to suggest in an error message or use in automated refactoring
      */
     public SuggestedFix suggestedFix;
 
-    public MatchDescription(Tree node, String message, SuggestedFix suggestedFix) {
+    public Refactor(Tree node, String message, SuggestedFix suggestedFix) {
       this.message = message;
       this.suggestedFix = suggestedFix;
       this.node = node;

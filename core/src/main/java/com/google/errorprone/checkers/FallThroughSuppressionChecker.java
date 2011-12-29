@@ -38,7 +38,7 @@ import java.util.Collection;
  * @author eaftan@google.com (Eddie Aftandilian)
  * @author pepstein@google.com (Peter Epstein)
  */
-public class FallThroughSuppressionChecker extends DescribingMatcher<AnnotationTree> {
+public class FallThroughSuppressionChecker extends RefactoringMatcher<AnnotationTree> {
 
   @Override
   @SuppressWarnings({"varargs", "unchecked"})
@@ -49,8 +49,8 @@ public class FallThroughSuppressionChecker extends DescribingMatcher<AnnotationT
   }
 
   @Override
-  public MatchDescription describe(AnnotationTree annotationTree, VisitorState state) {
-    return new MatchDescription(
+  public Refactor refactor(AnnotationTree annotationTree, VisitorState state) {
+    return new Refactor(
         annotationTree,
         "this has no effect if fallthrough warning is suppressed",
         getSuggestedFix(annotationTree, state));
@@ -115,13 +115,13 @@ public class FallThroughSuppressionChecker extends DescribingMatcher<AnnotationT
 
 
   public static class Scanner extends ErrorCollectingTreeScanner {
-    public DescribingMatcher<AnnotationTree> annotationChecker = new FallThroughSuppressionChecker();
+    public RefactoringMatcher<AnnotationTree> annotationChecker = new FallThroughSuppressionChecker();
 
     @Override
     public Void visitAnnotation(AnnotationTree annotationTree, VisitorState visitorState) {
       VisitorState state = visitorState.withPath(getCurrentPath());
       if (annotationChecker.matches(annotationTree, state)) {
-        visitorState.getReporter().report(annotationChecker.describe(annotationTree, state));
+        visitorState.getReporter().report(annotationChecker.refactor(annotationTree, state));
       }
 
       super.visitAnnotation(annotationTree, visitorState);

@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class PreconditionsCheckNotNullChecker extends DescribingMatcher<MethodInvocationTree> {
+public class PreconditionsCheckNotNullChecker extends RefactoringMatcher<MethodInvocationTree> {
 
   @SuppressWarnings({"unchecked"})
   @Override
@@ -47,7 +47,7 @@ public class PreconditionsCheckNotNullChecker extends DescribingMatcher<MethodIn
   }
 
   @Override
-  public MatchDescription describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
+  public Refactor refactor(MethodInvocationTree methodInvocationTree, VisitorState state) {
     List<? extends ExpressionTree> arguments = methodInvocationTree.getArguments();
     ExpressionTree stringLiteralValue = arguments.get(0);
     SuggestedFix fix = new SuggestedFix();
@@ -56,7 +56,7 @@ public class PreconditionsCheckNotNullChecker extends DescribingMatcher<MethodIn
     } else {
       fix.delete(state.getPath().getParentPath().getLeaf());
     }
-    return new MatchDescription(stringLiteralValue,
+    return new Refactor(stringLiteralValue,
         format("String literal %s passed as first argument to Preconditions#checkNotNull",
             stringLiteralValue), fix);
   }

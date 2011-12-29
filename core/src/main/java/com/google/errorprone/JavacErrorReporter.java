@@ -16,7 +16,7 @@
 
 package com.google.errorprone;
 
-import com.google.errorprone.checkers.DescribingMatcher.MatchDescription;
+import com.google.errorprone.checkers.RefactoringMatcher.Refactor;
 import com.google.errorprone.fixes.AppliedFix;
 
 import com.sun.tools.javac.tree.JCTree;
@@ -29,9 +29,10 @@ import java.util.Map;
 import javax.tools.JavaFileObject;
 
 /**
+ * Making our errors appear to the user and break their build.
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class LogReporter implements Reporter {
+public class JavacErrorReporter implements Reporter {
   private final Log log;
   private final Map<JCTree, Integer> endPositions;
   private final JavaFileObject sourceFile;
@@ -39,28 +40,28 @@ public class LogReporter implements Reporter {
   // The suffix for properties in src/main/resources/com/google/errorprone/errors.properties
   private static final String MESSAGE_BUNDLE_KEY = "error.prone";
 
-  public LogReporter(Log log, Map<JCTree, Integer> endPositions, JavaFileObject sourceFile) {
+  public JavacErrorReporter(Log log, Map<JCTree, Integer> endPositions, JavaFileObject sourceFile) {
     this.log = log;
     this.endPositions = endPositions;
     this.sourceFile = sourceFile;
   }
 
   @Override
-  public void report(MatchDescription error) {
+  public void report(Refactor refactor) {
     JavaFileObject originalSource;
     // Swap the log's source and the current file's source; then be sure to swap them back later.
     originalSource = log.useSource(sourceFile);
     try {
       CharSequence content = sourceFile.getCharContent(true);
-      if (error.suggestedFix == null || endPositions == null) {
-        log.error((DiagnosticPosition) error.node, MESSAGE_BUNDLE_KEY, error.message);
+      if (refactor.suggestedFix == null || endPositions == null) {
+        log.error((DiagnosticPosition) refactor.node, MESSAGE_BUNDLE_KEY, refactor.message);
       } else {
-        AppliedFix fix = AppliedFix.fromSource(content, endPositions).apply(error.suggestedFix);
+        AppliedFix fix = AppliedFix.fromSource(content, endPositions).apply(refactor.suggestedFix);
         if (fix.isRemoveLine()) {
-          log.error((DiagnosticPosition) error.node, MESSAGE_BUNDLE_KEY, error.message
+          log.error((DiagnosticPosition) refactor.node, MESSAGE_BUNDLE_KEY, refactor.message
               + "; did you mean to remove this line?");
         } else {
-          log.error((DiagnosticPosition) error.node, MESSAGE_BUNDLE_KEY, error.message
+          log.error((DiagnosticPosition) refactor.node, MESSAGE_BUNDLE_KEY, refactor.message
               + "; did you mean '" + fix.getNewCodeSnippet() + "'?");
         }
       }

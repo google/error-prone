@@ -16,8 +16,6 @@
 
 package com.google.errorprone;
 
-import com.google.errorprone.checkers.DescribingMatcher.MatchDescription;
-
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Types;

@@ -53,7 +53,7 @@ import java.util.List;
  * @author sjnickerson@google.com (Simon Nickerson)
  */
 public class PreconditionsCheckNotNullPrimitive1stArgChecker
-    extends DescribingMatcher<MethodInvocationTree> {
+    extends RefactoringMatcher<MethodInvocationTree> {
 
   @Override
   public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
@@ -65,7 +65,7 @@ public class PreconditionsCheckNotNullPrimitive1stArgChecker
   }
   
   @Override
-  public MatchDescription describe(MethodInvocationTree methodInvocationTree,
+  public Refactor refactor(MethodInvocationTree methodInvocationTree,
       VisitorState state) {
     SuggestedFix fix = null;
     ExpressionTree expression = methodInvocationTree.getArguments().get(0);
@@ -109,7 +109,7 @@ public class PreconditionsCheckNotNullPrimitive1stArgChecker
       }
     }
     
-    return new MatchDescription(methodInvocationTree.getArguments().get(0),
+    return new Refactor(methodInvocationTree.getArguments().get(0),
         "First argument to Preconditions.checkNotNull is a boolean rather " +
         "than an object reference.", fix);
   }

@@ -26,7 +26,7 @@ import com.sun.source.tree.Tree;
  *  
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class EmptyIfChecker extends DescribingMatcher<EmptyStatementTree> {
+public class EmptyIfChecker extends RefactoringMatcher<EmptyStatementTree> {
 
   /**
    * Match empty statement if:
@@ -54,9 +54,7 @@ public class EmptyIfChecker extends DescribingMatcher<EmptyStatementTree> {
    * suggest deleting the empty then part of the if.
    */
   @Override
-  public MatchDescription describe(
-      EmptyStatementTree tree, VisitorState state) {
-    
+  public Refactor refactor(EmptyStatementTree tree, VisitorState state) {
     boolean nextStmtIsNull = parentNode(nextStatement(isNull(StatementTree.class)))
         .matches(tree, state);
 
@@ -70,19 +68,18 @@ public class EmptyIfChecker extends DescribingMatcher<EmptyStatementTree> {
       // There are more statements. Delete the empty then part of the if.
       fix.delete(parent.getThenStatement());
     }
-    return new MatchDescription(parent, "empty statement after if", fix);
+    return new Refactor(parent, "empty statement after if", fix);
   }
 
   public static class Scanner extends ErrorCollectingTreeScanner {
-    public DescribingMatcher<EmptyStatementTree> emptyIfChecker =
-        new EmptyIfChecker();
+    public RefactoringMatcher<EmptyStatementTree> emptyIfChecker = new EmptyIfChecker();
     
     @Override 
     public Void visitEmptyStatement(EmptyStatementTree node,
         VisitorState visitorState) {
       VisitorState state = visitorState.withPath(getCurrentPath());
       if (emptyIfChecker.matches(node, state)) {
-        visitorState.getReporter().report(emptyIfChecker.describe(node, state));
+        visitorState.getReporter().report(emptyIfChecker.refactor(node, state));
       }
 
       super.visitEmptyStatement(node, visitorState);

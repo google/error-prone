@@ -32,7 +32,7 @@ import static com.sun.source.tree.Tree.Kind.IF;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.checkers.DescribingMatcher;
+import com.google.errorprone.checkers.RefactoringMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 
 import com.sun.source.tree.NewClassTree;
@@ -49,7 +49,7 @@ import com.sun.source.tree.StatementTree;
     summary = "Exception created but not thrown",
     explanation =
         "The exception is created with new, but is not thrown, and the reference is lost.")
-public class DeadExceptionChecker extends DescribingMatcher<NewClassTree> {
+public class DeadExceptionChecker extends RefactoringMatcher<NewClassTree> {
 
   @Override
   public boolean matches(NewClassTree newClassTree, VisitorState state) {
@@ -60,7 +60,7 @@ public class DeadExceptionChecker extends DescribingMatcher<NewClassTree> {
   }
 
   @Override
-  public MatchDescription describe(NewClassTree newClassTree, VisitorState state) {
+  public Refactor refactor(NewClassTree newClassTree, VisitorState state) {
     StatementTree parent = (StatementTree) state.getPath().getParentPath().getLeaf();
 
     boolean isLastStatement = anyOf(
@@ -75,7 +75,7 @@ public class DeadExceptionChecker extends DescribingMatcher<NewClassTree> {
     } else {
       suggestedFix.delete(parent);
     }
-    return new MatchDescription(newClassTree,
+    return new Refactor(newClassTree,
         "Exception created but not thrown, and reference is lost",
         suggestedFix);
   }

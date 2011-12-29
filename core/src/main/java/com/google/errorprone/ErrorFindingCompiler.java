@@ -122,7 +122,7 @@ public class ErrorFindingCompiler extends Main {
      * Run Error Prone analysis after performing dataflow checks.
      */
     public void postFlow(Env<AttrContext> env) {
-      LogReporter logReporter = new LogReporter(log,
+      JavacErrorReporter logReporter = new JavacErrorReporter(log,
           env.toplevel.endPositions,
           env.enclClass.sym.sourcefile != null
               ? env.enclClass.sym.sourcefile

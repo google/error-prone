@@ -30,7 +30,7 @@ import com.sun.tools.javac.tree.JCTree.JCNewClass;
  * @author sjnickerson@google.com (Simon Nickerson)
  *
  */
-public class OrderingFromChecker extends DescribingMatcher<MethodInvocationTree> {
+public class OrderingFromChecker extends RefactoringMatcher<MethodInvocationTree> {
   @Override
   @SuppressWarnings({"unchecked", "varargs"})
   public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
@@ -42,7 +42,7 @@ public class OrderingFromChecker extends DescribingMatcher<MethodInvocationTree>
   }
   
   @Override
-  public MatchDescription describe(MethodInvocationTree t,
+  public Refactor refactor(MethodInvocationTree t,
       VisitorState state) {
     ExpressionTree arg = t.getArguments().get(0);
     JCNewClass invocation = (JCNewClass) arg;
@@ -56,7 +56,7 @@ public class OrderingFromChecker extends DescribingMatcher<MethodInvocationTree>
 //        .replace(getPosition(t).start, getPosition(invocation).start, "")
 //        .replace(getPosition(t).end - 1, getPosition(t).end, "");
 //
-    return new MatchDescription(t, "Call to Guava's Ordering.from() taking an anonymous inner "
+    return new Refactor(t, "Call to Guava's Ordering.from() taking an anonymous inner "
         + "subclass of Comparator<T>; suggest using new Ordering instead.", fix);
   }
 }

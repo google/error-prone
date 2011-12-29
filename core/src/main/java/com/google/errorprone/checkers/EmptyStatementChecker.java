@@ -14,7 +14,7 @@ import com.sun.source.tree.EmptyStatementTree;
  * 
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class EmptyStatementChecker extends DescribingMatcher<EmptyStatementTree> {
+public class EmptyStatementChecker extends RefactoringMatcher<EmptyStatementTree> {
 
   @Override
   public boolean matches(EmptyStatementTree emptyStatementTree, VisitorState state) {
@@ -22,9 +22,9 @@ public class EmptyStatementChecker extends DescribingMatcher<EmptyStatementTree>
   }
 
   @Override
-  public MatchDescription describe(
+  public Refactor refactor(
       EmptyStatementTree emptyStatementTree, VisitorState state) {
-    return new MatchDescription(
+    return new Refactor(
         emptyStatementTree,
         "empty statement",
         new SuggestedFix().delete(emptyStatementTree));

@@ -16,12 +16,17 @@
 
 package com.google.errorprone;
 
-import com.google.errorprone.checkers.DescribingMatcher.MatchDescription;
+import com.google.errorprone.checkers.RefactoringMatcher.Refactor;
 
 /**
- * Strategies for making our errors appear to the user and break their build.
+ * Strategies for reporting results.
  * @author alexeagle@google.com (Alex Eagle)
  */
 public interface Reporter {
-  void report(MatchDescription error);
+
+  /**
+   * Reports a suggested modification to the code.
+   * @param refactor
+   */
+  void report(Refactor refactor);
 }

@@ -9,7 +9,7 @@ import static com.google.errorprone.matchers.Matchers.staticMethod;
 
 import com.google.errorprone.ErrorCollectingTreeScanner;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.checkers.DescribingMatcher;
+import com.google.errorprone.checkers.RefactoringMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 
 import com.sun.source.tree.MethodInvocationTree;
@@ -25,7 +25,7 @@ import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class ObjectsEqualSelfComparisonChecker extends DescribingMatcher<MethodInvocationTree> {
+public class ObjectsEqualSelfComparisonChecker extends RefactoringMatcher<MethodInvocationTree> {
 
   @SuppressWarnings({"unchecked"})
   @Override
@@ -37,7 +37,7 @@ public class ObjectsEqualSelfComparisonChecker extends DescribingMatcher<MethodI
   }
 
   @Override
-  public MatchDescription describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
+  public Refactor refactor(MethodInvocationTree methodInvocationTree, VisitorState state) {
     // If we don't find a good field to use, then just replace with "true"
     SuggestedFix fix = new SuggestedFix().replace(methodInvocationTree, "true");
 
@@ -59,19 +59,19 @@ public class ObjectsEqualSelfComparisonChecker extends DescribingMatcher<MethodI
       }
     }
 
-    return new MatchDescription(methodInvocationTree,
+    return new Refactor(methodInvocationTree,
         "Objects.equal arguments must be different", fix);
   }
 
   public static class Scanner extends ErrorCollectingTreeScanner {
-    private final DescribingMatcher<MethodInvocationTree> checker =
+    private final RefactoringMatcher<MethodInvocationTree> checker =
         new ObjectsEqualSelfComparisonChecker();
 
     @Override
     public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {
       VisitorState state = visitorState.withPath(getCurrentPath());
       if (checker.matches(node, state)) {
-        visitorState.getReporter().report(checker.describe(node, state));
+        visitorState.getReporter().report(checker.refactor(node, state));
       }
       return null;
     }

@@ -17,7 +17,7 @@
 package com.google.errorprone;
 
 import com.google.errorprone.checkers.EmptyIfChecker;
-import com.google.errorprone.checkers.DescribingMatcher;
+import com.google.errorprone.checkers.RefactoringMatcher;
 import com.google.errorprone.checkers.dead_exception.DeadExceptionChecker;
 import com.google.errorprone.checkers.FallThroughSuppressionChecker;
 import com.google.errorprone.checkers.OrderingFromChecker;
@@ -39,7 +39,7 @@ import java.util.Arrays;
  */
 public class ErrorProneScanner extends ErrorCollectingTreeScanner {
 
-  private final Iterable<? extends DescribingMatcher<MethodInvocationTree>>
+  private final Iterable<? extends RefactoringMatcher<MethodInvocationTree>>
       methodInvocationCheckers = Arrays.asList(
           new ObjectsEqualSelfComparisonChecker(),
           new OrderingFromChecker(),
@@ -47,25 +47,25 @@ public class ErrorProneScanner extends ErrorCollectingTreeScanner {
           new PreconditionsExpensiveStringChecker(),
           new PreconditionsCheckNotNullPrimitive1stArgChecker());
   
-  private final Iterable<? extends DescribingMatcher<NewClassTree>>
+  private final Iterable<? extends RefactoringMatcher<NewClassTree>>
       newClassCheckers = Arrays.asList(
           new DeadExceptionChecker());
 
-  private final Iterable<? extends DescribingMatcher<AnnotationTree>>
+  private final Iterable<? extends RefactoringMatcher<AnnotationTree>>
       annotationCheckers = Arrays.asList(
           new FallThroughSuppressionChecker());
 
-  private final Iterable<? extends DescribingMatcher<EmptyStatementTree>>
+  private final Iterable<? extends RefactoringMatcher<EmptyStatementTree>>
       emptyStatementCheckers = Arrays.asList(
           new EmptyIfChecker());
   
   @Override
   public Void visitMethodInvocation(
       MethodInvocationTree methodInvocationTree, VisitorState state) {
-    for (DescribingMatcher<MethodInvocationTree> checker : methodInvocationCheckers) {
+    for (RefactoringMatcher<MethodInvocationTree> checker : methodInvocationCheckers) {
       VisitorState newState = state.withPath(getCurrentPath());
       if (checker.matches(methodInvocationTree, newState)) {
-         state.getReporter().report(checker.describe(methodInvocationTree, newState));
+         state.getReporter().report(checker.refactor(methodInvocationTree, newState));
       }
     }
     super.visitMethodInvocation(methodInvocationTree, state);
@@ -74,10 +74,10 @@ public class ErrorProneScanner extends ErrorCollectingTreeScanner {
 
   @Override
   public Void visitNewClass(NewClassTree newClassTree, VisitorState visitorState) {
-    for (DescribingMatcher<NewClassTree> newClassChecker : newClassCheckers) {
+    for (RefactoringMatcher<NewClassTree> newClassChecker : newClassCheckers) {
       VisitorState state = visitorState.withPath(getCurrentPath());
       if (newClassChecker.matches(newClassTree, state)) {
-         state.getReporter().report(newClassChecker.describe(newClassTree, state));
+         state.getReporter().report(newClassChecker.refactor(newClassTree, state));
       }
     }
     super.visitNewClass(newClassTree, visitorState);
@@ -86,10 +86,10 @@ public class ErrorProneScanner extends ErrorCollectingTreeScanner {
 
   @Override
   public Void visitAnnotation(AnnotationTree annotationTree, VisitorState visitorState) {
-    for (DescribingMatcher<AnnotationTree> annotationChecker : annotationCheckers) {
+    for (RefactoringMatcher<AnnotationTree> annotationChecker : annotationCheckers) {
       VisitorState state = visitorState.withPath(getCurrentPath());
       if (annotationChecker.matches(annotationTree, state)) {
-         state.getReporter().report(annotationChecker.describe(annotationTree, state));
+         state.getReporter().report(annotationChecker.refactor(annotationTree, state));
       }
     }
     super.visitAnnotation(annotationTree, visitorState);
@@ -99,10 +99,10 @@ public class ErrorProneScanner extends ErrorCollectingTreeScanner {
   @Override
   public Void visitEmptyStatement(EmptyStatementTree emptyStatementTree,
       VisitorState visitorState) {
-    for (DescribingMatcher<EmptyStatementTree> emptyStatementChecker : emptyStatementCheckers) {
+    for (RefactoringMatcher<EmptyStatementTree> emptyStatementChecker : emptyStatementCheckers) {
       VisitorState state = visitorState.withPath(getCurrentPath());
       if (emptyStatementChecker.matches(emptyStatementTree, state)) {
-        state.getReporter().report(emptyStatementChecker.describe(emptyStatementTree, state));
+        state.getReporter().report(emptyStatementChecker.refactor(emptyStatementTree, state));
       }
     }
     super.visitEmptyStatement(emptyStatementTree, visitorState);
