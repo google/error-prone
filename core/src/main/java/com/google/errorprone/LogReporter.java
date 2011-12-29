@@ -31,7 +31,7 @@ import javax.tools.JavaFileObject;
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class LogReporter implements ErrorReporter {
+public class LogReporter implements Reporter {
   private final Log log;
   private final Map<JCTree, Integer> endPositions;
   private final JavaFileObject sourceFile;
@@ -46,7 +46,7 @@ public class LogReporter implements ErrorReporter {
   }
 
   @Override
-  public void emitError(MatchDescription error) {
+  public void report(MatchDescription error) {
     JavaFileObject originalSource;
     // Swap the log's source and the current file's source; then be sure to swap them back later.
     originalSource = log.useSource(sourceFile);

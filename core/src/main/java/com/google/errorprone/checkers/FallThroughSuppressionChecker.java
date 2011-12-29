@@ -32,9 +32,7 @@ import com.sun.source.tree.NewArrayTree;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.ListBuffer;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
@@ -120,15 +118,14 @@ public class FallThroughSuppressionChecker extends DescribingMatcher<AnnotationT
     public DescribingMatcher<AnnotationTree> annotationChecker = new FallThroughSuppressionChecker();
 
     @Override
-    public List<MatchDescription> visitAnnotation(AnnotationTree annotationTree, VisitorState visitorState) {
-      List<MatchDescription> result = new ArrayList<MatchDescription>();
+    public Void visitAnnotation(AnnotationTree annotationTree, VisitorState visitorState) {
       VisitorState state = visitorState.withPath(getCurrentPath());
       if (annotationChecker.matches(annotationTree, state)) {
-        result.add(annotationChecker.describe(annotationTree, state));
+        visitorState.getReporter().report(annotationChecker.describe(annotationTree, state));
       }
 
       super.visitAnnotation(annotationTree, visitorState);
-      return result;
+      return null;
     }
   }
 }

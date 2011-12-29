@@ -22,9 +22,6 @@ import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
@@ -71,15 +68,12 @@ public class ObjectsEqualSelfComparisonChecker extends DescribingMatcher<MethodI
         new ObjectsEqualSelfComparisonChecker();
 
     @Override
-    public List<MatchDescription> visitMethodInvocation(MethodInvocationTree node,
-        VisitorState visitorState) {
-
+    public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {
       VisitorState state = visitorState.withPath(getCurrentPath());
-      List<MatchDescription> result = new ArrayList<MatchDescription>();
       if (checker.matches(node, state)) {
-        result.add(checker.describe(node, state));
+        visitorState.getReporter().report(checker.describe(node, state));
       }
-      return result;
+      return null;
     }
   }
 }

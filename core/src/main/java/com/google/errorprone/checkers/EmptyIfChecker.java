@@ -16,9 +16,6 @@ import com.sun.source.tree.IfTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * This checker finds and fixes empty statements after an if, with no else 
  * part. For example:
@@ -81,16 +78,15 @@ public class EmptyIfChecker extends DescribingMatcher<EmptyStatementTree> {
         new EmptyIfChecker();
     
     @Override 
-    public List<MatchDescription> visitEmptyStatement(EmptyStatementTree node,
+    public Void visitEmptyStatement(EmptyStatementTree node,
         VisitorState visitorState) {
-      List<MatchDescription> result = new ArrayList<MatchDescription>();
       VisitorState state = visitorState.withPath(getCurrentPath());
       if (emptyIfChecker.matches(node, state)) {
-        result.add(emptyIfChecker.describe(node, state));
+        visitorState.getReporter().report(emptyIfChecker.describe(node, state));
       }
 
       super.visitEmptyStatement(node, visitorState);
-      return result;
+      return null;
     }
   }
 }

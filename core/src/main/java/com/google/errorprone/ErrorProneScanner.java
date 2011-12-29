@@ -16,7 +16,6 @@
 
 package com.google.errorprone;
 
-import com.google.errorprone.checkers.DescribingMatcher.MatchDescription;
 import com.google.errorprone.checkers.EmptyIfChecker;
 import com.google.errorprone.checkers.DescribingMatcher;
 import com.google.errorprone.checkers.dead_exception.DeadExceptionChecker;
@@ -32,9 +31,7 @@ import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Scans the parsed AST, looking for violations of any of the configured checks.
@@ -63,56 +60,52 @@ public class ErrorProneScanner extends ErrorCollectingTreeScanner {
           new EmptyIfChecker());
   
   @Override
-  public List<MatchDescription> visitMethodInvocation(
+  public Void visitMethodInvocation(
       MethodInvocationTree methodInvocationTree, VisitorState state) {
-    List<MatchDescription> result = new ArrayList<MatchDescription>();
     for (DescribingMatcher<MethodInvocationTree> checker : methodInvocationCheckers) {
       VisitorState newState = state.withPath(getCurrentPath());
       if (checker.matches(methodInvocationTree, newState)) {
-         result.add(checker.describe(methodInvocationTree, newState));
+         state.getReporter().report(checker.describe(methodInvocationTree, newState));
       }
     }
     super.visitMethodInvocation(methodInvocationTree, state);
-    return result;
+    return null;
   }
 
   @Override
-  public List<MatchDescription> visitNewClass(NewClassTree newClassTree, VisitorState visitorState) {
-    List<MatchDescription> result = new ArrayList<MatchDescription>();
+  public Void visitNewClass(NewClassTree newClassTree, VisitorState visitorState) {
     for (DescribingMatcher<NewClassTree> newClassChecker : newClassCheckers) {
       VisitorState state = visitorState.withPath(getCurrentPath());
       if (newClassChecker.matches(newClassTree, state)) {
-         result.add(newClassChecker.describe(newClassTree, state));
+         state.getReporter().report(newClassChecker.describe(newClassTree, state));
       }
     }
     super.visitNewClass(newClassTree, visitorState);
-    return result;
+    return null;
   }
 
   @Override
-  public List<MatchDescription> visitAnnotation(AnnotationTree annotationTree, VisitorState visitorState) {
-    List<MatchDescription> result = new ArrayList<MatchDescription>();
+  public Void visitAnnotation(AnnotationTree annotationTree, VisitorState visitorState) {
     for (DescribingMatcher<AnnotationTree> annotationChecker : annotationCheckers) {
       VisitorState state = visitorState.withPath(getCurrentPath());
       if (annotationChecker.matches(annotationTree, state)) {
-         result.add(annotationChecker.describe(annotationTree, state));
+         state.getReporter().report(annotationChecker.describe(annotationTree, state));
       }
     }
     super.visitAnnotation(annotationTree, visitorState);
-    return result;
+    return null;
   }
   
   @Override
-  public List<MatchDescription> visitEmptyStatement(EmptyStatementTree emptyStatementTree,
+  public Void visitEmptyStatement(EmptyStatementTree emptyStatementTree,
       VisitorState visitorState) {
-    List<MatchDescription> result = new ArrayList<MatchDescription>();
     for (DescribingMatcher<EmptyStatementTree> emptyStatementChecker : emptyStatementCheckers) {
       VisitorState state = visitorState.withPath(getCurrentPath());
       if (emptyStatementChecker.matches(emptyStatementTree, state)) {
-        result.add(emptyStatementChecker.describe(emptyStatementTree, state));
+        state.getReporter().report(emptyStatementChecker.describe(emptyStatementTree, state));
       }
     }
     super.visitEmptyStatement(emptyStatementTree, visitorState);
-    return result;
+    return null;
   }
 }

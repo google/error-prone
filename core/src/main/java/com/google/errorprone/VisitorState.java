@@ -16,6 +16,8 @@
 
 package com.google.errorprone;
 
+import com.google.errorprone.checkers.DescribingMatcher.MatchDescription;
+
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Types;
@@ -29,25 +31,28 @@ import com.sun.tools.javac.util.Context;
  */
 public class VisitorState {
   private final Context context;
+  private final Reporter reporter;
   private final JCCompilationUnit compilationUnit;
   private final TreePath path;
 
-  public VisitorState(Context context, JCCompilationUnit compilationUnit, TreePath path) {
+  public VisitorState(Context context, Reporter reporter, JCCompilationUnit compilationUnit,
+      TreePath path) {
     this.context = context;
+    this.reporter = reporter;
     this.compilationUnit = compilationUnit;
     this.path = path;
   }
 
-  public VisitorState(Context context) {
-    this(context, null, null);
+  public VisitorState(Context context, Reporter reporter) {
+    this(context, reporter, null, null);
   }
 
   public VisitorState withPath(TreePath path) {
-    return new VisitorState(context, getCompilationUnit(), path);
+    return new VisitorState(context, reporter, getCompilationUnit(), path);
   }
 
   public VisitorState forCompilationUnit(JCCompilationUnit compilationUnit) {
-    return new VisitorState(context, compilationUnit, path);
+    return new VisitorState(context, reporter, compilationUnit, path);
   }
 
   public TreePath getPath() {
@@ -68,5 +73,9 @@ public class VisitorState {
 
   public JCCompilationUnit getCompilationUnit() {
     return compilationUnit;
+  }
+
+  public Reporter getReporter() {
+    return reporter;
   }
 }

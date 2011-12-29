@@ -2,8 +2,6 @@
 
 package com.google.errorprone;
 
-import com.google.errorprone.checkers.DescribingMatcher.MatchDescription;
-
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Env;
 import com.sun.tools.javac.main.JavaCompiler;
@@ -14,7 +12,6 @@ import com.sun.tools.javac.util.Messages;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.List;
 import java.util.PropertyResourceBundle;
 import java.util.Queue;
 
@@ -125,17 +122,14 @@ public class ErrorFindingCompiler extends Main {
      * Run Error Prone analysis after performing dataflow checks.
      */
     public void postFlow(Env<AttrContext> env) {
-      VisitorState visitorState = new VisitorState(context);
       LogReporter logReporter = new LogReporter(log,
           env.toplevel.endPositions,
           env.enclClass.sym.sourcefile != null
               ? env.enclClass.sym.sourcefile
               : env.toplevel.sourcefile);
+      VisitorState visitorState = new VisitorState(context, logReporter);
       ErrorCollectingTreeScanner scanner = context.get(ErrorCollectingTreeScanner.class);
-      List<MatchDescription> errors = scanner.scan(env.toplevel, visitorState);
-      for (MatchDescription error : errors) {
-        logReporter.emitError(error);
-      }
+      scanner.scan(env.toplevel, visitorState);
     }
   }
 

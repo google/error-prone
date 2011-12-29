@@ -16,39 +16,21 @@
 
 package com.google.errorprone;
 
-import com.google.errorprone.checkers.DescribingMatcher.MatchDescription;
-
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Base class for scanning a compilation unit's AST, and producing error information.
  * @author Alex Eagle (alexeagle@google.com)
  */
-public class ErrorCollectingTreeScanner extends TreePathScanner<List<MatchDescription>, VisitorState> {
+public class ErrorCollectingTreeScanner extends TreePathScanner<Void, VisitorState> {
 
   @Override
-  public List<MatchDescription> reduce(List<MatchDescription> r1, List<MatchDescription> r2) {
-    List<MatchDescription> concat = new ArrayList<MatchDescription>();
-    if (r1 != null) {
-      concat.addAll(r1);
-    }
-    if (r2 != null) {
-      concat.addAll(r2);
-    }
-    return concat;
-  }
-
-  @Override
-  public List<MatchDescription> visitCompilationUnit(
+  public Void visitCompilationUnit(
       CompilationUnitTree compilationUnitTree, VisitorState visitorState) {
     visitorState = visitorState.forCompilationUnit((JCCompilationUnit) compilationUnitTree);
-    List<MatchDescription> errors = super.visitCompilationUnit(compilationUnitTree, visitorState);
-    return errors != null ? errors : Collections.<MatchDescription>emptyList();
+    super.visitCompilationUnit(compilationUnitTree, visitorState);
+    return null;
   }
 }
