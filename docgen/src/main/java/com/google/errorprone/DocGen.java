@@ -5,6 +5,7 @@ package com.google.errorprone;
 import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.collect.Iterables.limit;
 import static com.google.common.collect.Iterables.size;
+import static com.google.common.io.Files.readLines;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
@@ -91,13 +92,24 @@ public class DocGen extends AbstractProcessor {
       Locale.ENGLISH);
 
   public static void main(String[] args) throws IOException {
-    if (!new File(args[0]).exists()) {
-      throw new IllegalArgumentException("Provide path to the wiki repository as arg0");
+    if (args.length != 3) {
+      System.err.println("Usage: java DocGen " +
+      		"<path to bugPatterns.txt> <path to wiki repository> <path to examples>");
+      System.exit(1);
     }
-    final File wikiDir = new File(args[0]);
-    Reader patterns = new FileReader(new File("bugPatterns.txt"));
-    String indexPage = 
-        Files.readLines(new File("bugPatterns.txt"), UTF_8, new LineProcessor<String>() {
+    final File bugPatterns = new File(args[0]);
+    if (!bugPatterns.exists()) {
+      System.err.println("Cannot find bugPatterns file: " + args[0]);
+      System.exit(1);
+    }
+    final File wikiDir = new File(args[1]);
+    wikiDir.mkdir();
+    final File exampleDir = new File(args[2]);
+    if (!exampleDir.exists()) {
+      System.err.println("Cannot find example directory: " + args[2]);
+      System.exit(1);
+    }
+    String indexPage = readLines(bugPatterns, UTF_8, new LineProcessor<String>() {
       private Multimap<MaturityLevel, String> index = ArrayListMultimap.create();
       
       @Override
@@ -125,7 +137,7 @@ public class DocGen extends AbstractProcessor {
         writer.write(wikiPageTemplate.format(parts));
         Iterable<String> classNameParts = Splitter.on('.').split(parts[0]);
         String path = Joiner.on('/').join(limit(classNameParts, size(classNameParts) - 1));
-        File[] examples = new File("src/test/resources/" + path).listFiles();
+        File[] examples = new File(exampleDir, path).listFiles();
         if (examples.length > 0) {
           writer.write("==Examples==\n");
         }

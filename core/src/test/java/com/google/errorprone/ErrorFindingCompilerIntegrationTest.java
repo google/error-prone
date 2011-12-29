@@ -60,7 +60,16 @@ public class ErrorFindingCompilerIntegrationTest {
         .redirectOutputTo(printWriter)
         .listenToDiagnostics(diagnostics)
         .build();
-    assertThat(compiler.compile(sources("empty_if_statement/PositiveCases.java")), is(1));
+    String[] sources = sources(
+        "com/google/errorprone/checkers/empty_if_statement/PositiveCases.java");
+    // TODO(eaftan): Running test with the annotation processor compiler enabled causes
+    // the wrong copy of JavaCompiler to be used.  We should probably switch Maven to 
+    // having an explicit docgen phase that calls the annotation processor with proc:only,
+    // then not have the annotation processor on the compile classpath.
+    String[] args = new String[sources.length+1];
+    System.arraycopy(sources, 0, args, 0, sources.length);
+    args[sources.length] = new String("-proc:none");
+    assertThat(compiler.compile(args), is(1));
 
     Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher = hasItem(allOf(
         diagnosticLineAndColumn(41L, 5L),
