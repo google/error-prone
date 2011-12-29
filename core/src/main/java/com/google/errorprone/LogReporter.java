@@ -52,7 +52,7 @@ public class LogReporter implements ErrorReporter {
     originalSource = log.useSource(sourceFile);
     try {
       CharSequence content = sourceFile.getCharContent(true);
-      if (error.suggestedFix == null) {
+      if (error.suggestedFix == null || endPositions == null) {
         log.error((DiagnosticPosition) error.node, MESSAGE_BUNDLE_KEY, error.message);
       } else {
         AppliedFix fix = AppliedFix.fromSource(content, endPositions).apply(error.suggestedFix);

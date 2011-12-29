@@ -49,6 +49,11 @@ public class SuggestedFix {
   private Collection<Pair<Tree, String>> prefixInsertions = new ArrayList<Pair<Tree, String>>();
 
   public Set<Replacement> getReplacements(Map<JCTree, Integer> endPositions) {
+    if (endPositions == null) {
+      throw new IllegalArgumentException(
+          "Cannot produce correct replacements without endPositions." +
+              " Pass -Xjcov to the compiler to enable endPositions.");
+    }
     TreeSet<Replacement> replacements = new TreeSet<Replacement>(
       new Comparator<Replacement>() {
         @Override
