@@ -21,20 +21,18 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.google</groupId>
-    <artifactId>google</artifactId>
-    <version>5</version>
+    <groupId>com.google.errorprone</groupId>
+    <artifactId>error_prone_parent</artifactId>
+    <version>0.3-SNAPSHOT</version>
   </parent>
 
-  <groupId>error_prone</groupId>
   <artifactId>error_prone_docgen</artifactId>
-  <version>0.3-SNAPSHOT</version>
 
   <dependencies>
     <dependency>
-      <groupId>error_prone</groupId>
+      <groupId>com.google.errorprone</groupId>
       <artifactId>error_prone_annotation</artifactId>
-      <version>0.3-SNAPSHOT</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
@@ -48,33 +46,4 @@
       <optional>true</optional>
     </dependency>
   </dependencies>
-
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
-        <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>2.1.2</version>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <phase>package</phase>
-            <goals>
-              <goal>jar-no-fork</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
 </project>

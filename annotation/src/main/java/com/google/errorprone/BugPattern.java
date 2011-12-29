@@ -2,7 +2,6 @@
 
 package com.google.errorprone;
 
-
 /**
  * An annotation intended for implementations of {@link ErrorChecker} which is picked up by our 
  * documentation processor.
