@@ -18,12 +18,10 @@ package com.google.errorprone;
 
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symtab;
-import com.sun.tools.javac.model.JavacTypes;
+import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
-
-import javax.lang.model.util.Types;
 
 /**
  * Carries the current state of the visitor as it visits tree nodes.
@@ -61,7 +59,7 @@ public class VisitorState {
   }
 
   public Types getTypes() {
-    return JavacTypes.instance(context);
+    return Types.instance(context);
   }
 
   public Symtab getSymtab() {

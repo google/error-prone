@@ -26,6 +26,9 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.tree.JCTree.JCIdent;
+
+import java.util.List;
 
 /**
  * Static factory methods which make the DSL read better.
@@ -160,5 +163,21 @@ public class Matchers {
 
   public static Matcher<AnnotationTree> isType(final String annotationClassName) {
     return new AnnotationTypeMatcher(annotationClassName);
+  }
+
+  public static Matcher<? super MethodInvocationTree> sameArgument(
+      final int index1, final int index2) {
+    return new Matcher<MethodInvocationTree>() {
+      @Override
+      public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
+        List<? extends ExpressionTree> arguments = methodInvocationTree.getArguments();
+        if (arguments.get(index1).getKind() == Kind.IDENTIFIER &&
+            arguments.get(index2).getKind() == Kind.IDENTIFIER) {
+          return ((JCIdent) arguments.get(index1)).sym == ((JCIdent) arguments.get(index2)).sym;
+        }
+
+        return false;
+      }
+    };
   }
 }
