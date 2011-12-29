@@ -7,7 +7,6 @@ import static com.google.errorprone.matchers.Matchers.methodSelect;
 import static com.google.errorprone.matchers.Matchers.sameArgument;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 
-import com.google.errorprone.ErrorCollectingTreeScanner;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.checkers.RefactoringMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -15,6 +14,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
+import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
@@ -63,7 +63,7 @@ public class ObjectsEqualSelfComparisonChecker extends RefactoringMatcher<Method
         "Objects.equal arguments must be different", fix);
   }
 
-  public static class Scanner extends ErrorCollectingTreeScanner {
+  public static class Scanner extends TreePathScanner<Void, VisitorState> {
     private final RefactoringMatcher<MethodInvocationTree> checker =
         new ObjectsEqualSelfComparisonChecker();
 

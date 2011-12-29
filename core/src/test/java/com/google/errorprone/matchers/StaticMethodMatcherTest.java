@@ -21,13 +21,13 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-import com.google.errorprone.ErrorCollectingTreeScanner;
 import com.google.errorprone.ErrorFindingCompiler;
 import com.google.errorprone.ErrorFindingCompiler.Builder;
 import com.google.errorprone.VisitorState;
 
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.source.util.TreePathScanner;
 
 import org.junit.After;
 import org.junit.Before;
@@ -120,7 +120,7 @@ public class StaticMethodMatcherTest {
 
   private void assertMatch(final boolean shouldMatch,
                            final StaticMethodMatcher staticMethodMatcher) throws IOException {
-    ErrorCollectingTreeScanner scanner = new ErrorCollectingTreeScanner() {
+    TreePathScanner<Void, VisitorState> scanner = new TreePathScanner<Void, VisitorState>() {
       @Override
       public Void visitMemberSelect(MemberSelectTree node, VisitorState visitorState) {
         if (getCurrentPath().getParentPath().getLeaf().getKind() == Kind.METHOD_INVOCATION) {

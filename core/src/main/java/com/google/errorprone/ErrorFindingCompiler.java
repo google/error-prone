@@ -2,6 +2,7 @@
 
 package com.google.errorprone;
 
+import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Env;
 import com.sun.tools.javac.main.JavaCompiler;
@@ -24,7 +25,7 @@ import javax.tools.JavaFileObject;
 public class ErrorFindingCompiler extends Main {
 
   private final DiagnosticListener<? super JavaFileObject> diagnosticListener;
-  private final ErrorCollectingTreeScanner errorProneScanner;
+  private final TreePathScanner<Void, VisitorState> errorProneScanner;
 
   /**
    * Entry point for compiling Java code with error-prone enabled.
@@ -36,7 +37,7 @@ public class ErrorFindingCompiler extends Main {
 
   private ErrorFindingCompiler(String s, PrintWriter printWriter,
       DiagnosticListener<? super JavaFileObject> diagnosticListener,
-      ErrorCollectingTreeScanner errorProneScanner) {
+      TreePathScanner<Void, VisitorState> errorProneScanner) {
     super(s, printWriter);
     this.diagnosticListener = diagnosticListener;
     this.errorProneScanner = errorProneScanner;
@@ -46,7 +47,7 @@ public class ErrorFindingCompiler extends Main {
     DiagnosticListener<? super JavaFileObject> diagnosticListener = null;
     PrintWriter out = new PrintWriter(System.err, true);
     String compilerName = "javac (with error-prone)";
-    ErrorCollectingTreeScanner scanner = new ErrorProneScanner();
+    TreePathScanner<Void, VisitorState> scanner = new ErrorProneScanner();
 
     public ErrorFindingCompiler build() {
       return new ErrorFindingCompiler(compilerName, out, diagnosticListener, scanner);
@@ -67,7 +68,7 @@ public class ErrorFindingCompiler extends Main {
       return this;
     }
 
-    public Builder usingScanner(ErrorCollectingTreeScanner scanner) {
+    public Builder usingScanner(TreePathScanner<Void, VisitorState> scanner) {
       this.scanner = scanner;
       return this;
     }
@@ -79,10 +80,10 @@ public class ErrorFindingCompiler extends Main {
     if (diagnosticListener != null) {
       context.put(DiagnosticListener.class, diagnosticListener);
     }
-    ErrorCollectingTreeScanner configuredScanner = context.get(ErrorCollectingTreeScanner.class);
+    TreePathScanner<Void, VisitorState> configuredScanner = context.get(TreePathScanner.class);
     if (configuredScanner == null) {
       configuredScanner = this.errorProneScanner;
-      context.put(ErrorCollectingTreeScanner.class, configuredScanner);
+      context.put(TreePathScanner.class, configuredScanner);
     }
     setupMessageBundle(context);
     ErrorCheckingJavaCompiler.preRegister(context);
@@ -121,6 +122,7 @@ public class ErrorFindingCompiler extends Main {
     /**
      * Run Error Prone analysis after performing dataflow checks.
      */
+    @SuppressWarnings("unchecked")
     public void postFlow(Env<AttrContext> env) {
       JavacErrorReporter logReporter = new JavacErrorReporter(log,
           env.toplevel.endPositions,
@@ -128,7 +130,7 @@ public class ErrorFindingCompiler extends Main {
               ? env.enclClass.sym.sourcefile
               : env.toplevel.sourcefile);
       VisitorState visitorState = new VisitorState(context, logReporter);
-      ErrorCollectingTreeScanner scanner = context.get(ErrorCollectingTreeScanner.class);
+      TreePathScanner<Void, VisitorState> scanner = context.get(TreePathScanner.class);
       scanner.scan(env.toplevel, visitorState);
     }
   }

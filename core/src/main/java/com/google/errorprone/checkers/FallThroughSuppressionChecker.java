@@ -21,7 +21,6 @@ import static com.google.errorprone.matchers.Matchers.hasElementWithValue;
 import static com.google.errorprone.matchers.Matchers.isType;
 import static com.google.errorprone.matchers.Matchers.stringLiteral;
 
-import com.google.errorprone.ErrorCollectingTreeScanner;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 
@@ -29,6 +28,7 @@ import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.NewArrayTree;
+import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.ListBuffer;
 
@@ -114,7 +114,7 @@ public class FallThroughSuppressionChecker extends RefactoringMatcher<Annotation
   }
 
 
-  public static class Scanner extends ErrorCollectingTreeScanner {
+  public static class Scanner extends TreePathScanner<Void, VisitorState> {
     public RefactoringMatcher<AnnotationTree> annotationChecker = new FallThroughSuppressionChecker();
 
     @Override

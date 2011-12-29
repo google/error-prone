@@ -19,7 +19,6 @@ package com.google.errorprone;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Types;
-import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
 
@@ -30,27 +29,20 @@ import com.sun.tools.javac.util.Context;
 public class VisitorState {
   private final Context context;
   private final Reporter reporter;
-  private final JCCompilationUnit compilationUnit;
   private final TreePath path;
 
-  public VisitorState(Context context, Reporter reporter, JCCompilationUnit compilationUnit,
-      TreePath path) {
+  public VisitorState(Context context, Reporter reporter, TreePath path) {
     this.context = context;
     this.reporter = reporter;
-    this.compilationUnit = compilationUnit;
     this.path = path;
   }
 
   public VisitorState(Context context, Reporter reporter) {
-    this(context, reporter, null, null);
+    this(context, reporter, null);
   }
 
   public VisitorState withPath(TreePath path) {
-    return new VisitorState(context, reporter, getCompilationUnit(), path);
-  }
-
-  public VisitorState forCompilationUnit(JCCompilationUnit compilationUnit) {
-    return new VisitorState(context, reporter, compilationUnit, path);
+    return new VisitorState(context, reporter, path);
   }
 
   public TreePath getPath() {
@@ -67,10 +59,6 @@ public class VisitorState {
 
   public Symtab getSymtab() {
     return Symtab.instance(context);
-  }
-
-  public JCCompilationUnit getCompilationUnit() {
-    return compilationUnit;
   }
 
   public Reporter getReporter() {

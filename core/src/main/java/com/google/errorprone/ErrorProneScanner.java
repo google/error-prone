@@ -17,19 +17,20 @@
 package com.google.errorprone;
 
 import com.google.errorprone.checkers.EmptyIfChecker;
-import com.google.errorprone.checkers.RefactoringMatcher;
-import com.google.errorprone.checkers.dead_exception.DeadExceptionChecker;
 import com.google.errorprone.checkers.FallThroughSuppressionChecker;
 import com.google.errorprone.checkers.OrderingFromChecker;
 import com.google.errorprone.checkers.PreconditionsCheckNotNullChecker;
 import com.google.errorprone.checkers.PreconditionsCheckNotNullPrimitive1stArgChecker;
 import com.google.errorprone.checkers.PreconditionsExpensiveStringChecker;
+import com.google.errorprone.checkers.RefactoringMatcher;
+import com.google.errorprone.checkers.dead_exception.DeadExceptionChecker;
 import com.google.errorprone.checkers.objects_equal_self_comparison.ObjectsEqualSelfComparisonChecker;
 
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
+import com.sun.source.util.TreePathScanner;
 
 import java.util.Arrays;
 
@@ -37,7 +38,7 @@ import java.util.Arrays;
  * Scans the parsed AST, looking for violations of any of the configured checks.
  * @author Alex Eagle (alexeagle@google.com)
  */
-public class ErrorProneScanner extends ErrorCollectingTreeScanner {
+public class ErrorProneScanner extends TreePathScanner<Void, VisitorState> {
 
   private final Iterable<? extends RefactoringMatcher<MethodInvocationTree>>
       methodInvocationCheckers = Arrays.asList(

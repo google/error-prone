@@ -7,7 +7,6 @@ import static com.google.errorprone.matchers.Matchers.nextStatement;
 import static com.google.errorprone.matchers.Matchers.parentNode;
 import static com.sun.source.tree.Tree.Kind.IF;
 
-import com.google.errorprone.ErrorCollectingTreeScanner;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 
@@ -15,6 +14,7 @@ import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.util.TreePathScanner;
 
 /**
  * This checker finds and fixes empty statements after an if, with no else 
@@ -71,7 +71,7 @@ public class EmptyIfChecker extends RefactoringMatcher<EmptyStatementTree> {
     return new Refactor(parent, "empty statement after if", fix);
   }
 
-  public static class Scanner extends ErrorCollectingTreeScanner {
+  public static class Scanner extends TreePathScanner<Void, VisitorState> {
     public RefactoringMatcher<EmptyStatementTree> emptyIfChecker = new EmptyIfChecker();
     
     @Override 
