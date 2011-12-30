@@ -7,6 +7,7 @@ import static com.google.errorprone.matchers.Matchers.methodSelect;
 import static com.google.errorprone.matchers.Matchers.sameArgument;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 
+import com.google.errorprone.RefactoringVisitorState;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.checkers.RefactoringMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -37,7 +38,7 @@ public class ObjectsEqualSelfComparisonChecker extends RefactoringMatcher<Method
   }
 
   @Override
-  public Refactor refactor(MethodInvocationTree methodInvocationTree, VisitorState state) {
+  public Refactor refactor(MethodInvocationTree methodInvocationTree, RefactoringVisitorState state) {
     // If we don't find a good field to use, then just replace with "true"
     SuggestedFix fix = new SuggestedFix().replace(methodInvocationTree, "true");
 
@@ -63,13 +64,13 @@ public class ObjectsEqualSelfComparisonChecker extends RefactoringMatcher<Method
         "Objects.equal arguments must be different", fix);
   }
 
-  public static class Scanner extends TreePathScanner<Void, VisitorState> {
+  public static class Scanner extends TreePathScanner<Void, RefactoringVisitorState> {
     private final RefactoringMatcher<MethodInvocationTree> checker =
         new ObjectsEqualSelfComparisonChecker();
 
     @Override
-    public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {
-      VisitorState state = visitorState.withPath(getCurrentPath());
+    public Void visitMethodInvocation(MethodInvocationTree node, RefactoringVisitorState visitorState) {
+      RefactoringVisitorState state = visitorState.withPath(getCurrentPath());
       if (checker.matches(node, state)) {
         visitorState.getReporter().report(checker.refactor(node, state));
       }

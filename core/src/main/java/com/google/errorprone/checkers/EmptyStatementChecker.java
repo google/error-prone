@@ -2,6 +2,7 @@
 
 package com.google.errorprone.checkers;
 
+import com.google.errorprone.RefactoringVisitorState;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 
@@ -23,7 +24,7 @@ public class EmptyStatementChecker extends RefactoringMatcher<EmptyStatementTree
 
   @Override
   public Refactor refactor(
-      EmptyStatementTree emptyStatementTree, VisitorState state) {
+      EmptyStatementTree emptyStatementTree, RefactoringVisitorState state) {
     return new Refactor(
         emptyStatementTree,
         "empty statement",

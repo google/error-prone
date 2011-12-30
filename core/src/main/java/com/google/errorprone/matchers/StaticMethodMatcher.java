@@ -17,6 +17,7 @@
 package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
+
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;

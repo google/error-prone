@@ -21,9 +21,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-import com.google.errorprone.ErrorFindingCompiler;
-import com.google.errorprone.ErrorFindingCompiler.Builder;
-import com.google.errorprone.VisitorState;
+import com.google.errorprone.ErrorProneCompiler;
+import com.google.errorprone.ErrorProneCompiler.Builder;
+import com.google.errorprone.RefactoringVisitorState;
 
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.Tree.Kind;
@@ -120,9 +120,9 @@ public class StaticMethodMatcherTest {
 
   private void assertMatch(final boolean shouldMatch,
                            final StaticMethodMatcher staticMethodMatcher) throws IOException {
-    TreePathScanner<Void, VisitorState> scanner = new TreePathScanner<Void, VisitorState>() {
+    TreePathScanner<Void, RefactoringVisitorState> scanner = new TreePathScanner<Void, RefactoringVisitorState>() {
       @Override
-      public Void visitMemberSelect(MemberSelectTree node, VisitorState visitorState) {
+      public Void visitMemberSelect(MemberSelectTree node, RefactoringVisitorState visitorState) {
         if (getCurrentPath().getParentPath().getLeaf().getKind() == Kind.METHOD_INVOCATION) {
           assertTrue(node.toString(),
               !shouldMatch ^ staticMethodMatcher.matches(node, visitorState));
@@ -130,8 +130,8 @@ public class StaticMethodMatcherTest {
         return super.visitMemberSelect(node, visitorState);
       }
     };
-    ErrorFindingCompiler compiler = new Builder()
-        .usingScanner(scanner)
+    ErrorProneCompiler compiler = new Builder()
+        .refactor(scanner)
         .build();
 
     File[] files = tempDir.listFiles();

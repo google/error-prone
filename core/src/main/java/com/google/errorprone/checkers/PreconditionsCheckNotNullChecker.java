@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
 import static java.lang.String.format;
 
+import com.google.errorprone.RefactoringVisitorState;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 
@@ -47,7 +48,7 @@ public class PreconditionsCheckNotNullChecker extends RefactoringMatcher<MethodI
   }
 
   @Override
-  public Refactor refactor(MethodInvocationTree methodInvocationTree, VisitorState state) {
+  public Refactor refactor(MethodInvocationTree methodInvocationTree, RefactoringVisitorState state) {
     List<? extends ExpressionTree> arguments = methodInvocationTree.getArguments();
     ExpressionTree stringLiteralValue = arguments.get(0);
     SuggestedFix fix = new SuggestedFix();

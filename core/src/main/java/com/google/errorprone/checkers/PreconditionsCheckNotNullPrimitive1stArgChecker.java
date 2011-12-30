@@ -21,6 +21,7 @@ import static com.google.errorprone.matchers.Matchers.argument;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 
+import com.google.errorprone.RefactoringVisitorState;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Matchers;
@@ -66,7 +67,7 @@ public class PreconditionsCheckNotNullPrimitive1stArgChecker
   
   @Override
   public Refactor refactor(MethodInvocationTree methodInvocationTree,
-      VisitorState state) {
+      RefactoringVisitorState state) {
     SuggestedFix fix = null;
     ExpressionTree expression = methodInvocationTree.getArguments().get(0);
     if (expression instanceof JCBinary) {

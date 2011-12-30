@@ -25,6 +25,7 @@ import static com.google.errorprone.matchers.Matchers.methodSelect;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static java.lang.String.format;
 
+import com.google.errorprone.RefactoringVisitorState;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Matcher;
@@ -72,7 +73,7 @@ public class PreconditionsExpensiveStringChecker
   
   @Override
   public Refactor refactor(MethodInvocationTree methodInvocationTree,
-      VisitorState state) {
+      RefactoringVisitorState state) {
     MemberSelectTree method =
         (MemberSelectTree) methodInvocationTree.getMethodSelect();
     

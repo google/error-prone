@@ -31,6 +31,7 @@ import static com.sun.source.tree.Tree.Kind.EXPRESSION_STATEMENT;
 import static com.sun.source.tree.Tree.Kind.IF;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.RefactoringVisitorState;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.checkers.RefactoringMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -60,7 +61,7 @@ public class DeadExceptionChecker extends RefactoringMatcher<NewClassTree> {
   }
 
   @Override
-  public Refactor refactor(NewClassTree newClassTree, VisitorState state) {
+  public Refactor refactor(NewClassTree newClassTree, RefactoringVisitorState state) {
     StatementTree parent = (StatementTree) state.getPath().getParentPath().getLeaf();
 
     boolean isLastStatement = anyOf(

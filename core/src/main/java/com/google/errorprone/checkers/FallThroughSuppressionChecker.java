@@ -21,6 +21,7 @@ import static com.google.errorprone.matchers.Matchers.hasElementWithValue;
 import static com.google.errorprone.matchers.Matchers.isType;
 import static com.google.errorprone.matchers.Matchers.stringLiteral;
 
+import com.google.errorprone.RefactoringVisitorState;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 
@@ -49,14 +50,14 @@ public class FallThroughSuppressionChecker extends RefactoringMatcher<Annotation
   }
 
   @Override
-  public Refactor refactor(AnnotationTree annotationTree, VisitorState state) {
+  public Refactor refactor(AnnotationTree annotationTree, RefactoringVisitorState state) {
     return new Refactor(
         annotationTree,
         "this has no effect if fallthrough warning is suppressed",
         getSuggestedFix(annotationTree, state));
   }
 
-  private SuggestedFix getSuggestedFix(AnnotationTree annotationTree, VisitorState state) {
+  private SuggestedFix getSuggestedFix(AnnotationTree annotationTree, RefactoringVisitorState state) {
     ListBuffer<JCTree.JCExpression> arguments = new ListBuffer<JCTree.JCExpression>();
     for (ExpressionTree argumentTree : annotationTree.getArguments()) {
       AssignmentTree assignmentTree = (AssignmentTree) argumentTree;
@@ -94,12 +95,12 @@ public class FallThroughSuppressionChecker extends RefactoringMatcher<Annotation
   }
 
   private JCTree.JCLiteral singleInitializer(JCTree.JCLiteral literalExpression,
-      VisitorState state) {
+      RefactoringVisitorState state) {
     return state.getTreeMaker().Literal(literalExpression.getValue());
   }
 
   @SuppressWarnings("unchecked")
-  private JCTree.JCNewArray initializersWithoutFallthrough(VisitorState state,
+  private JCTree.JCNewArray initializersWithoutFallthrough(RefactoringVisitorState state,
       NewArrayTree expressionTree) {
     ListBuffer<JCTree.JCExpression> replacementInitializers = new ListBuffer<JCTree.JCExpression>();
     ListBuffer<JCTree.JCExpression> dimensions = new ListBuffer<JCTree.JCExpression>();
@@ -114,12 +115,12 @@ public class FallThroughSuppressionChecker extends RefactoringMatcher<Annotation
   }
 
 
-  public static class Scanner extends TreePathScanner<Void, VisitorState> {
+  public static class Scanner extends TreePathScanner<Void, RefactoringVisitorState> {
     public RefactoringMatcher<AnnotationTree> annotationChecker = new FallThroughSuppressionChecker();
 
     @Override
-    public Void visitAnnotation(AnnotationTree annotationTree, VisitorState visitorState) {
-      VisitorState state = visitorState.withPath(getCurrentPath());
+    public Void visitAnnotation(AnnotationTree annotationTree, RefactoringVisitorState visitorState) {
+      RefactoringVisitorState state = visitorState.withPath(getCurrentPath());
       if (annotationChecker.matches(annotationTree, state)) {
         visitorState.getReporter().report(annotationChecker.refactor(annotationTree, state));
       }

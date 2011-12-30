@@ -57,7 +57,7 @@ public class ErrorFindingCompilerIntegrationTest {
 
   @Test
   public void testShouldFailToCompileSourceFileWithError() throws Exception {
-    ErrorFindingCompiler compiler = new ErrorFindingCompiler.Builder()
+    ErrorProneCompiler compiler = new ErrorProneCompiler.Builder()
         .named("test")
         .redirectOutputTo(printWriter)
         .listenToDiagnostics(diagnostics)
