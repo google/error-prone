@@ -24,7 +24,7 @@ import com.google.errorprone.refactors.RefactoringMatcher;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.StatementTree;
 
-import static com.google.errorprone.BugPattern.Category.UNIVERSAL;
+import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.*;
@@ -36,7 +36,7 @@ import static com.sun.source.tree.Tree.Kind.IF;
  */
 @BugPattern(
     name = "Dead exception",
-    category = UNIVERSAL,
+    category = JDK,
     severity = ERROR,
     maturity = ON_BY_DEFAULT,
     summary = "Exception created but not thrown",

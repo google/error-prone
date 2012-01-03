@@ -2,9 +2,15 @@
 
 package com.google.errorprone.refactors;
 
+import static com.google.errorprone.BugPattern.Category.JDK;
+import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+
+import com.google.errorprone.BugPattern;
 import com.google.errorprone.RefactoringVisitorState;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
+
 import com.sun.source.tree.EmptyStatementTree;
 
 /**
@@ -14,6 +20,14 @@ import com.sun.source.tree.EmptyStatementTree;
  * 
  * @author eaftan@google.com (Eddie Aftandilian)
  */
+@BugPattern(
+    name = "Empty statement",
+    category = JDK,
+    severity = WARNING,
+    maturity = ON_BY_DEFAULT,
+    summary = "Empty statement",
+    explanation =
+        "An empty statement has no effect on the program. Consider removing it.")
 public class EmptyStatement extends RefactoringMatcher<EmptyStatementTree> {
 
   @Override

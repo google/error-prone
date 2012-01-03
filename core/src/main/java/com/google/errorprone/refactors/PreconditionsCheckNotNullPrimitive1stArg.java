@@ -16,6 +16,7 @@
 
 package com.google.errorprone.refactors;
 
+import com.google.errorprone.BugPattern;
 import com.google.errorprone.RefactoringVisitorState;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -28,6 +29,9 @@ import com.sun.tools.javac.tree.JCTree.JCBinary;
 
 import java.util.List;
 
+import static com.google.errorprone.BugPattern.Category.GUAVA;
+import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.*;
 
 
@@ -49,6 +53,19 @@ import static com.google.errorprone.matchers.Matchers.*;
  * 
  * @author sjnickerson@google.com (Simon Nickerson)
  */
+@BugPattern(
+    name = "Preconditions.checkNotNull boolean",
+    category = GUAVA,
+    severity = ERROR,
+    maturity = ON_BY_DEFAULT,
+    summary = "Boolean argument to Preconditions.checkNotNull()",
+    explanation =
+        "Preconditions.checkNotNull() takes as an argument a reference that should be " +
+        "non-null. Often a primitive boolean is passed as the argument to check, e.g., " +
+        "`Preconditions.checkNotNull(foo != null, \"Foo is null!\")`. The primitive boolean " +
+        "will be autoboxed into a boxed Boolean, which is non-null, causing the check to " +
+        "always pass without the condition being evaluated. This check ensures that the " +
+        "first argument to Preconditions.checkNotNull() is not a primitive boolean.")
 public class PreconditionsCheckNotNullPrimitive1stArg
     extends RefactoringMatcher<MethodInvocationTree> {
 
