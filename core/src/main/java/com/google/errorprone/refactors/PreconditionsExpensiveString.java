@@ -62,8 +62,7 @@ import java.util.regex.Pattern;
         "Preconditions checks take an error message to display if the check fails. " +
         "The error message is rarely needed, so it should either be cheap to construct " +
         "or constructed only when needed. This check ensures that these error messages " +
-        "are not constructed using String.format(), which is expensive and evaluated " +
-        "eagerly."
+        "are not constructed using expensive methods that are evaluated eagerly."
  )
 public class PreconditionsExpensiveString
     extends RefactoringMatcher<MethodInvocationTree> {
