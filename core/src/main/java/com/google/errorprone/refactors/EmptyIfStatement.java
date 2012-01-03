@@ -2,19 +2,22 @@
 
 package com.google.errorprone.refactors;
 
+import static com.google.errorprone.matchers.Matchers.isNull;
+import static com.google.errorprone.matchers.Matchers.nextStatement;
+import static com.google.errorprone.matchers.Matchers.parentNode;
+import static com.sun.source.tree.Tree.Kind.IF;
+
 import com.google.errorprone.ErrorProneCompiler;
 import com.google.errorprone.RefactoringVisitorState;
 import com.google.errorprone.SearchingVisitorState;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
+
 import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePathScanner;
-
-import static com.google.errorprone.matchers.Matchers.*;
-import static com.sun.source.tree.Tree.Kind.IF;
 
 /**
  * This checker finds and fixes empty statements after an if, with no else 
