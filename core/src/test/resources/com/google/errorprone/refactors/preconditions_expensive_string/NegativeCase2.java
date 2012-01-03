@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package com.google.errorprone;
+package com.google.errorprone.refactors.preconditions_expensive_string;
 
-import com.google.errorprone.refactors.RefactoringMatcher.Refactor;
+import com.google.common.base.Preconditions;
 
 /**
- * Strategies for reporting results.
- * @author alexeagle@google.com (Alex Eagle)
+ * Test for methodIs call including string concatenation.
+ * (Not yet supported, so this is a negative case)
+ *
+ * @author sjnickerson@google.com (Simon Nickerson)
  */
-public interface Reporter {
-
-  /**
-   * Reports a suggested modification to the code.
-   * @param refactor
-   */
-  void report(Refactor refactor);
+public class NegativeCase2 {
+  public void error() {
+    int foo = 42;
+    Preconditions.checkState(true, "The foo" + foo + " is not a good foo");
+  }
 }

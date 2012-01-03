@@ -16,15 +16,8 @@
 
 package com.google.errorprone.matchers;
 
-import com.google.errorprone.RefactoringVisitorState;
 import com.google.errorprone.VisitorState;
-
-import com.sun.source.tree.AnnotationTree;
-import com.sun.source.tree.BlockTree;
-import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.StatementTree;
-import com.sun.source.tree.Tree;
+import com.sun.source.tree.*;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
@@ -101,22 +94,22 @@ public class Matchers {
     };
   }
 
-  public static StaticMethodMatcher staticMethod(String fullClassName, String methodName) {
-    return new StaticMethodMatcher(fullClassName, methodName);
+  public static StaticMethod staticMethod(String fullClassName, String methodName) {
+    return new StaticMethod(fullClassName, methodName);
   }
 
-  public static MethodInvocationMethodSelectMatcher methodSelect(
+  public static MethodInvocationMethodSelect methodSelect(
       Matcher<ExpressionTree> methodSelectMatcher) {
-    return new MethodInvocationMethodSelectMatcher(methodSelectMatcher);
+    return new MethodInvocationMethodSelect(methodSelectMatcher);
   }
 
   public static Matcher<ExpressionTree> expressionMethodSelect(Matcher<ExpressionTree> methodSelectMatcher) {
-    return new ExpressionMethodSelectMatcher(methodSelectMatcher); 
+    return new ExpressionMethodSelect(methodSelectMatcher);
   }
   
   public static Matcher<MethodInvocationTree> argument(
       final int position, final Matcher<ExpressionTree> argumentMatcher) {
-    return new MethodInvocationArgumentMatcher(position, argumentMatcher);
+    return new MethodInvocationArgument(position, argumentMatcher);
   }
 
   public static <T extends Tree> Matcher<Tree> parentNode(Matcher<T> treeMatcher) {
@@ -154,7 +147,7 @@ public class Matchers {
   }
 
   public static Matcher<ExpressionTree> stringLiteral(String value) {
-    return new StringLiteralMatcher(value);
+    return new StringLiteral(value);
   }
 
   public static Matcher<AnnotationTree> hasElementWithValue(
@@ -163,7 +156,7 @@ public class Matchers {
   }
 
   public static Matcher<AnnotationTree> isType(final String annotationClassName) {
-    return new AnnotationTypeMatcher(annotationClassName);
+    return new AnnotationType(annotationClassName);
   }
 
   public static Matcher<? super MethodInvocationTree> sameArgument(

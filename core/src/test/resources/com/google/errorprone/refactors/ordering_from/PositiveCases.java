@@ -13,20 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package ordering_from;
 
-package com.google.errorprone;
+import com.google.common.collect.Ordering;
 
-import com.google.errorprone.refactors.RefactoringMatcher.Refactor;
+import java.util.Comparator;
 
 /**
- * Strategies for reporting results.
- * @author alexeagle@google.com (Alex Eagle)
+ * Positive test cases for theOrdering.from(new Comparator<T>() { ... }) check
+ *
+ * @author sjnickerson@google.com (Simon Nickerson)
  */
-public interface Reporter {
+public class PositiveCases {
 
-  /**
-   * Reports a suggested modification to the code.
-   * @param refactor
-   */
-  void report(Refactor refactor);
+  public static void positiveCase1() {
+    Ordering<String> ord = Ordering.from(new Comparator<String>() {
+      @Override
+      public int compare(String first, String second) {
+        int compare = first.length() - second.length();
+        return (compare != 0) ? compare : first.compareTo(second);
+      }
+    });
+  }
+
 }

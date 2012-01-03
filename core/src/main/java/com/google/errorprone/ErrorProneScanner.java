@@ -16,16 +16,9 @@
 
 package com.google.errorprone;
 
-import com.google.errorprone.checkers.EmptyIfChecker;
-import com.google.errorprone.checkers.FallThroughSuppressionChecker;
-import com.google.errorprone.checkers.OrderingFromChecker;
-import com.google.errorprone.checkers.PreconditionsCheckNotNullChecker;
-import com.google.errorprone.checkers.PreconditionsCheckNotNullPrimitive1stArgChecker;
-import com.google.errorprone.checkers.PreconditionsExpensiveStringChecker;
-import com.google.errorprone.checkers.RefactoringMatcher;
-import com.google.errorprone.checkers.dead_exception.DeadExceptionChecker;
-import com.google.errorprone.checkers.objects_equal_self_comparison.ObjectsEqualSelfComparisonChecker;
-
+import com.google.errorprone.refactors.*;
+import com.google.errorprone.refactors.dead_exception.DeadException;
+import com.google.errorprone.refactors.objects_equal_self_comparison.ObjectsEqualSelfComparison;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -42,23 +35,23 @@ public class ErrorProneScanner extends TreePathScanner<Void, RefactoringVisitorS
 
   private final Iterable<? extends RefactoringMatcher<MethodInvocationTree>>
       methodInvocationCheckers = Arrays.asList(
-          new ObjectsEqualSelfComparisonChecker(),
-          new OrderingFromChecker(),
-          new PreconditionsCheckNotNullChecker(),
-          new PreconditionsExpensiveStringChecker(),
-          new PreconditionsCheckNotNullPrimitive1stArgChecker());
+          new ObjectsEqualSelfComparison(),
+          new OrderingFrom(),
+          new PreconditionsCheckNotNull(),
+          new PreconditionsExpensiveString(),
+          new PreconditionsCheckNotNullPrimitive1stArg());
   
   private final Iterable<? extends RefactoringMatcher<NewClassTree>>
       newClassCheckers = Arrays.asList(
-          new DeadExceptionChecker());
+          new DeadException());
 
   private final Iterable<? extends RefactoringMatcher<AnnotationTree>>
       annotationCheckers = Arrays.asList(
-          new FallThroughSuppressionChecker());
+          new FallThroughSuppression());
 
   private final Iterable<? extends RefactoringMatcher<EmptyStatementTree>>
       emptyStatementCheckers = Arrays.asList(
-          new EmptyIfChecker());
+          new EmptyIfStatement());
   
   @Override
   public Void visitMethodInvocation(

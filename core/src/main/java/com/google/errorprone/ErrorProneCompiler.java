@@ -8,18 +8,26 @@ import com.sun.tools.javac.main.Main;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Messages;
 
+import javax.tools.DiagnosticListener;
+import javax.tools.JavaFileObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.PropertyResourceBundle;
 
-import javax.tools.DiagnosticListener;
-import javax.tools.JavaFileObject;
-
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class ErrorProneCompiler extends Main {
+
+  /**
+   * Entry point for compiling Java code with error-prone enabled.
+   * All default refactors are run, and the compile fails if they find a bug.
+   * @param args the same args which could be passed to javac on the command line
+   */
+  public static void main(String[] args) {
+    System.exit(new ErrorProneCompiler.Builder().build().compile(args));
+  }
 
   private final DiagnosticListener<? super JavaFileObject> diagnosticListener;
   private final TreePathScanner<Void, ? extends VisitorState> errorProneScanner;

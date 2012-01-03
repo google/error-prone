@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-package com.google.errorprone;
+package com.google.errorprone.refactors.preconditions_expensive_string;
 
-import com.google.errorprone.refactors.RefactoringMatcher.Refactor;
+import com.google.common.base.Preconditions;
+
 
 /**
- * Strategies for reporting results.
- * @author alexeagle@google.com (Alex Eagle)
+ * Test for methodIs call involving String.format() and %s
+ *
+ * @author sjnickerson@google.com (Simon Nickerson)
  */
-public interface Reporter {
-
-  /**
-   * Reports a suggested modification to the code.
-   * @param refactor
-   */
-  void report(Refactor refactor);
+public class PositiveCase1 {
+  public void error() {
+    int foo = 42;
+    int bar = 78;
+    Preconditions.checkState(true, String.format("The foo %s (%s) is not a good foo", foo, bar));
+  }
 }
