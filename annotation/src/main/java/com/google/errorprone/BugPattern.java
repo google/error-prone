@@ -31,7 +31,9 @@ public @interface BugPattern {
   Category category();
   
   public enum Category {
-    JDK, GUAVA, APPLICATION_SPECIFIC
+    JDK,        // general Java or JDK errors
+    GUAVA,      // errors specific to Guava
+    ONE_OFF     // one-off refactorings that are not general errors
   }
 
   /**
@@ -47,7 +49,9 @@ public @interface BugPattern {
   SeverityLevel severity();
 
   public enum SeverityLevel {
-    WARNING, ERROR
+    ERROR,
+    WARNING,
+    OFF         // should not be used for general code
   }
 
   MaturityLevel maturity();
