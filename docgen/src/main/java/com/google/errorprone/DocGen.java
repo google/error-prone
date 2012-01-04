@@ -156,7 +156,7 @@ public class DocGen extends AbstractProcessor {
         for (MaturityLevel level : MaturityLevel.values()) {
           Collection<String> bugPatterns = index.get(level);
           if (!bugPatterns.isEmpty()) {
-            result.append("=" + level + "=\n");
+            result.append("==" + level + "==\n");
             for (String bugPattern : bugPatterns) {
               result.append("  * [" + bugPattern.replace(' ', '_') + "]\n");
             }
