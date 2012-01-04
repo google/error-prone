@@ -2,6 +2,9 @@
 
 package com.google.errorprone;
 
+import com.google.errorprone.refactors.RefactoringMatcher.Refactor;
+
+import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Types;
@@ -18,12 +21,27 @@ public class VisitorState {
   private final Context context;
   private final TreePath path;
 
-  public VisitorState(Context context, TreePath path,
+  private VisitorState(Context context, TreePath path,
       RefactorListener refactorListener, MatchListener matchListener) {
     this.context = context;
     this.path = path;
     this.refactorListener = refactorListener;
     this.matchListener = matchListener;
+  }
+
+  public VisitorState(Context context, RefactorListener listener) {
+    this(context, null, listener, new MatchListener() {
+      @Override
+      public void onMatch(Tree tree) {
+      }
+    });
+  }
+
+  public VisitorState(Context context, MatchListener listener) {
+    this(context, null, new RefactorListener() {
+      @Override
+      public void onRefactor(Refactor refactor) {}
+    }, listener);
   }
 
   public VisitorState withPath(TreePath path) {
