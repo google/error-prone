@@ -1,26 +1,41 @@
-// Copyright 2011 Google Inc. All Rights Reserved.
+/*
+ * Copyright 2012 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package com.google.errorprone.refactors.emptyifstatement;
 
+import static com.google.errorprone.BugPattern.Category.JDK;
+import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Matchers.isNull;
+import static com.google.errorprone.matchers.Matchers.nextStatement;
+import static com.google.errorprone.matchers.Matchers.parentNode;
+import static com.sun.source.tree.Tree.Kind.IF;
+
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneCompiler;
-import com.google.errorprone.RefactoringVisitorState;
-import com.google.errorprone.SearchingVisitorState;
+import com.google.errorprone.Scanner;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.refactors.RefactoringMatcher;
+import com.google.errorprone.matchers.Matcher;
 
 import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.util.TreePathScanner;
-
-import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.*;
-import static com.sun.source.tree.Tree.Kind.IF;
 
 /**
  * This checker finds and fixes empty statements after an if, with no else 
@@ -62,14 +77,14 @@ public class EmptyIfStatement extends RefactoringMatcher<EmptyStatementTree> {
   }
 
   /**
-   * We suggest different fixes depending on what follows the parent if statement. 
-   * If there is no statement following the if, then suggest deleting the whole 
-   * if statement. If the next statement is a block, then suggest deleting the 
-   * empty then part of the if.  If the next statement is not a block, then also 
+   * We suggest different fixes depending on what follows the parent if statement.
+   * If there is no statement following the if, then suggest deleting the whole
+   * if statement. If the next statement is a block, then suggest deleting the
+   * empty then part of the if.  If the next statement is not a block, then also
    * suggest deleting the empty then part of the if.
    */
   @Override
-  public Refactor refactor(EmptyStatementTree tree, RefactoringVisitorState state) {
+  public Refactor refactor(EmptyStatementTree tree, VisitorState state) {
     boolean nextStmtIsNull = parentNode(nextStatement(isNull(StatementTree.class)))
         .matches(tree, state);
 
@@ -86,32 +101,17 @@ public class EmptyIfStatement extends RefactoringMatcher<EmptyStatementTree> {
     return new Refactor(parent, "empty statement after if", fix);
   }
 
-  public static class Scanner extends TreePathScanner<Void, RefactoringVisitorState> {
-    public RefactoringMatcher<EmptyStatementTree> emptyIfChecker = new EmptyIfStatement();
-    
-    @Override 
-    public Void visitEmptyStatement(EmptyStatementTree node,
-        RefactoringVisitorState visitorState) {
-      RefactoringVisitorState state = visitorState.withPath(getCurrentPath());
-      if (emptyIfChecker.matches(node, state)) {
-        visitorState.getReporter().report(emptyIfChecker.refactor(node, state));
-      }
+  public static class Search extends Scanner {
 
-      super.visitEmptyStatement(node, visitorState);
-      return null;
-    }
-  }
-
-  public static class Search extends TreePathScanner<Void, SearchingVisitorState> {
-    public RefactoringMatcher<EmptyStatementTree> emptyIfChecker = new EmptyIfStatement();
-
+    public Matcher<EmptyStatementTree> emptyIfMatcher = new EmptyIfStatement();
     @Override
-    public Void visitEmptyStatement(EmptyStatementTree node, SearchingVisitorState state) {
-      if (emptyIfChecker.matches(node, state.withPath(getCurrentPath()))) {
-        state.getListener().onMatch(node);
+    public Void visitEmptyStatement(EmptyStatementTree node, VisitorState state) {
+      if (emptyIfMatcher.matches(node, state.withPath(getCurrentPath()))) {
+        reportMatch(emptyIfMatcher, node, state);
       }
       return null;
     }
+
   }
 
   public static void main(String[] args) {

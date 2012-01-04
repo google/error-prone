@@ -29,7 +29,7 @@
   <name>Maven parent POM</name>
   <groupId>com.google.errorprone</groupId>
   <artifactId>error_prone_parent</artifactId>
-  <version>0.3-SNAPSHOT</version>
+  <version>0.4-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <modules>
@@ -37,6 +37,10 @@
     <module>annotation</module>
     <module>docgen</module>
   </modules>
+
+  <scm>
+    <connection>scm:git:https://code.google.com/p/error-prone</connection>
+  </scm>
 
   <build>
     <plugins>

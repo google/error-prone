@@ -28,8 +28,6 @@ import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
 import static java.lang.String.format;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.SeverityLevel;
-import com.google.errorprone.RefactoringVisitorState;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.refactors.RefactoringMatcher;
@@ -66,7 +64,7 @@ public class PreconditionsCheckNotNull extends RefactoringMatcher<MethodInvocati
   }
 
   @Override
-  public Refactor refactor(MethodInvocationTree methodInvocationTree, RefactoringVisitorState state) {
+  public Refactor refactor(MethodInvocationTree methodInvocationTree, VisitorState state) {
     List<? extends ExpressionTree> arguments = methodInvocationTree.getArguments();
     ExpressionTree stringLiteralValue = arguments.get(0);
     SuggestedFix fix = new SuggestedFix();

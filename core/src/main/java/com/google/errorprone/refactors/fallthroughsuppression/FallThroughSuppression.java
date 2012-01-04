@@ -16,10 +16,15 @@
 
 package com.google.errorprone.refactors.fallthroughsuppression;
 
+import static com.google.errorprone.BugPattern.Category.APPLICATION_SPECIFIC;
+import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.hasElementWithValue;
+import static com.google.errorprone.matchers.Matchers.isType;
+import static com.google.errorprone.matchers.Matchers.stringLiteral;
+
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.Category;
-import com.google.errorprone.BugPattern.MaturityLevel;
-import com.google.errorprone.RefactoringVisitorState;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.refactors.RefactoringMatcher;
@@ -28,18 +33,10 @@ import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.NewArrayTree;
-import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.ListBuffer;
 
 import java.util.Collection;
-
-import static com.google.errorprone.BugPattern.Category.APPLICATION_SPECIFIC;
-import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
-import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.matchers.Matchers.*;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
@@ -68,14 +65,14 @@ public class FallThroughSuppression extends RefactoringMatcher<AnnotationTree> {
   }
 
   @Override
-  public Refactor refactor(AnnotationTree annotationTree, RefactoringVisitorState state) {
+  public Refactor refactor(AnnotationTree annotationTree, VisitorState state) {
     return new Refactor(
         annotationTree,
         "this has no effect if fallthrough warning is suppressed",
         getSuggestedFix(annotationTree, state));
   }
 
-  private SuggestedFix getSuggestedFix(AnnotationTree annotationTree, RefactoringVisitorState state) {
+  private SuggestedFix getSuggestedFix(AnnotationTree annotationTree, VisitorState state) {
     ListBuffer<JCTree.JCExpression> arguments = new ListBuffer<JCTree.JCExpression>();
     for (ExpressionTree argumentTree : annotationTree.getArguments()) {
       AssignmentTree assignmentTree = (AssignmentTree) argumentTree;
@@ -113,12 +110,12 @@ public class FallThroughSuppression extends RefactoringMatcher<AnnotationTree> {
   }
 
   private JCTree.JCLiteral singleInitializer(JCTree.JCLiteral literalExpression,
-      RefactoringVisitorState state) {
+      VisitorState state) {
     return state.getTreeMaker().Literal(literalExpression.getValue());
   }
 
   @SuppressWarnings("unchecked")
-  private JCTree.JCNewArray initializersWithoutFallthrough(RefactoringVisitorState state,
+  private JCTree.JCNewArray initializersWithoutFallthrough(VisitorState state,
       NewArrayTree expressionTree) {
     ListBuffer<JCTree.JCExpression> replacementInitializers = new ListBuffer<JCTree.JCExpression>();
     ListBuffer<JCTree.JCExpression> dimensions = new ListBuffer<JCTree.JCExpression>();
@@ -133,14 +130,14 @@ public class FallThroughSuppression extends RefactoringMatcher<AnnotationTree> {
   }
 
 
-  public static class Scanner extends TreePathScanner<Void, RefactoringVisitorState> {
-    public RefactoringMatcher<AnnotationTree> annotationChecker = new FallThroughSuppression();
+  public static class Scanner extends com.google.errorprone.Scanner {
+    public RefactoringMatcher<AnnotationTree> annotationMatcher = new FallThroughSuppression();
 
     @Override
-    public Void visitAnnotation(AnnotationTree annotationTree, RefactoringVisitorState visitorState) {
-      RefactoringVisitorState state = visitorState.withPath(getCurrentPath());
-      if (annotationChecker.matches(annotationTree, state)) {
-        visitorState.getReporter().report(annotationChecker.refactor(annotationTree, state));
+    public Void visitAnnotation(AnnotationTree annotationTree, VisitorState visitorState) {
+      VisitorState state = visitorState.withPath(getCurrentPath());
+      if (annotationMatcher.matches(annotationTree, state)) {
+        reportMatch(annotationMatcher, annotationTree, state);
       }
 
       super.visitAnnotation(annotationTree, visitorState);

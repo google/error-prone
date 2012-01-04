@@ -16,32 +16,17 @@
 
 package com.google.errorprone;
 
-import com.sun.source.util.TreePath;
-import com.sun.tools.javac.util.Context;
+import com.google.errorprone.refactors.RefactoringMatcher.Refactor;
 
 /**
- * Carries the current state of the visitor as it visits tree nodes.
+ * Strategies for reporting results.
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class RefactoringVisitorState extends VisitorState {
+public interface RefactorListener {
 
-  private final Reporter reporter;
-
-  public RefactoringVisitorState(Context context, Reporter reporter, TreePath path) {
-    super(context, path);
-    this.reporter = reporter;
-  }
-
-  public RefactoringVisitorState(Context context, Reporter reporter) {
-    this(context, reporter, null);
-  }
-
-  public Reporter getReporter() {
-    return reporter;
-  }
-
-  @Override
-  public RefactoringVisitorState withPath(TreePath path) {
-    return new RefactoringVisitorState(context, reporter, path);
-  }
+  /**
+   * Reports a suggested modification to the code.
+   * @param refactor
+   */
+  void onRefactor(Refactor refactor);
 }

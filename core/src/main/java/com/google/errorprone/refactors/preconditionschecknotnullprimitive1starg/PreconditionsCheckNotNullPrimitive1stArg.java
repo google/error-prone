@@ -16,8 +16,15 @@
 
 package com.google.errorprone.refactors.preconditionschecknotnullprimitive1starg;
 
+import static com.google.errorprone.BugPattern.Category.GUAVA;
+import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.argument;
+import static com.google.errorprone.matchers.Matchers.methodSelect;
+import static com.google.errorprone.matchers.Matchers.staticMethod;
+
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.RefactoringVisitorState;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Matchers;
@@ -30,12 +37,6 @@ import com.sun.tools.javac.code.Symbol.OperatorSymbol;
 import com.sun.tools.javac.tree.JCTree.JCBinary;
 
 import java.util.List;
-
-import static com.google.errorprone.BugPattern.Category.GUAVA;
-import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.*;
-
 
 /**
  * Checks that the 1st argument to Preconditions.checkNotNull() isn't a primitive
@@ -82,7 +83,7 @@ public class PreconditionsCheckNotNullPrimitive1stArg
   
   @Override
   public Refactor refactor(MethodInvocationTree methodInvocationTree,
-      RefactoringVisitorState state) {
+      VisitorState state) {
     SuggestedFix fix = null;
     ExpressionTree expression = methodInvocationTree.getArguments().get(0);
     if (expression instanceof JCBinary) {

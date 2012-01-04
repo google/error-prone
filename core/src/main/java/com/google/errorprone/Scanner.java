@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Google Inc. All Rights Reserved.
+ * Copyright 2012 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,21 @@
 
 package com.google.errorprone;
 
+import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.refactors.RefactoringMatcher;
+
 import com.sun.source.tree.Tree;
+import com.sun.source.util.TreePathScanner;
 
 /**
- * A listener which is told about AST nodes which match the search.
  * @author alexeagle@google.com (Alex Eagle)
  */
-public interface MatchListener {
-  void onMatch(Tree tree);
+public class Scanner extends TreePathScanner<Void, VisitorState> {
+  protected <T extends Tree> void reportMatch(Matcher<T> matcher, T match, VisitorState state) {
+    state.getMatchListener().onMatch(match);
+    if (matcher instanceof RefactoringMatcher) {
+      RefactoringMatcher<T> refactoringMatcher = (RefactoringMatcher<T>) matcher;
+      state.getRefactorListener().onRefactor(refactoringMatcher.refactor(match, state));
+    }
+  }
 }

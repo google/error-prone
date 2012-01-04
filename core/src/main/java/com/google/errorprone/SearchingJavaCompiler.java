@@ -1,4 +1,18 @@
-// Copyright 2011 Google Inc. All Rights Reserved.
+/*
+ * Copyright 2011 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package com.google.errorprone;
 
@@ -51,11 +65,10 @@ public class SearchingJavaCompiler extends JavaCompiler {
   /**
    * Run Error Prone analysis after performing dataflow checks.
    */
-  @SuppressWarnings("unchecked")
   public void postFlow(Env<AttrContext> env) {
     resultsPrinter.setCompilationUnit(env.toplevel.sourcefile);
-    SearchingVisitorState visitorState = new SearchingVisitorState(context, resultsPrinter);
-    TreePathScanner<Void, SearchingVisitorState> scanner = context.get(TreePathScanner.class);
+    VisitorState visitorState = new VisitorState(context, resultsPrinter);
+    Scanner scanner = (Scanner) context.get(TreePathScanner.class);
     scanner.scan(env.toplevel, visitorState);
   }
 

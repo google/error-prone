@@ -1,4 +1,18 @@
-// Copyright 2011 Google Inc. All Rights Reserved.
+/*
+ * Copyright 2011 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package com.google.errorprone.refactors.objectsequalselfcomparison;
 
@@ -11,7 +25,6 @@ import static com.google.errorprone.matchers.Matchers.sameArgument;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.RefactoringVisitorState;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.refactors.RefactoringMatcher;
@@ -19,7 +32,6 @@ import com.google.errorprone.refactors.RefactoringMatcher;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
@@ -51,7 +63,7 @@ public class ObjectsEqualSelfComparison extends RefactoringMatcher<MethodInvocat
   }
 
   @Override
-  public Refactor refactor(MethodInvocationTree methodInvocationTree, RefactoringVisitorState state) {
+  public Refactor refactor(MethodInvocationTree methodInvocationTree, VisitorState state) {
     // If we don't find a good field to use, then just replace with "true"
     SuggestedFix fix = new SuggestedFix().replace(methodInvocationTree, "true");
 
@@ -77,15 +89,15 @@ public class ObjectsEqualSelfComparison extends RefactoringMatcher<MethodInvocat
         "Objects.equal arguments must be different", fix);
   }
 
-  public static class Scanner extends TreePathScanner<Void, RefactoringVisitorState> {
-    private final RefactoringMatcher<MethodInvocationTree> checker =
+  public static class Scanner extends com.google.errorprone.Scanner {
+    private final RefactoringMatcher<MethodInvocationTree> matcher =
         new ObjectsEqualSelfComparison();
 
     @Override
-    public Void visitMethodInvocation(MethodInvocationTree node, RefactoringVisitorState visitorState) {
-      RefactoringVisitorState state = visitorState.withPath(getCurrentPath());
-      if (checker.matches(node, state)) {
-        visitorState.getReporter().report(checker.refactor(node, state));
+    public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {
+      VisitorState state = visitorState.withPath(getCurrentPath());
+      if (matcher.matches(node, state)) {
+        reportMatch(matcher, node, state);
       }
       return null;
     }

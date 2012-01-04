@@ -29,7 +29,6 @@ import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static java.lang.String.format;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.RefactoringVisitorState;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Matcher;
@@ -90,7 +89,7 @@ public class PreconditionsExpensiveString
   
   @Override
   public Refactor refactor(MethodInvocationTree methodInvocationTree,
-      RefactoringVisitorState state) {
+      VisitorState state) {
     MemberSelectTree method =
         (MemberSelectTree) methodInvocationTree.getMethodSelect();
     
