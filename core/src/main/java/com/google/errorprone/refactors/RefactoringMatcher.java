@@ -16,9 +16,10 @@
 
 package com.google.errorprone.refactors;
 
-import com.google.errorprone.RefactoringVisitorState;
+import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Matcher;
+
 import com.sun.source.tree.Tree;
 
 /**
@@ -34,7 +35,7 @@ public abstract class RefactoringMatcher<T extends Tree> implements Matcher<T> {
    * @param state the shared state
    * @return the description
    */
-  public abstract Refactor refactor(T t, RefactoringVisitorState state);
+  public abstract Refactor refactor(T t, VisitorState state);
 
   public static class Refactor {
 

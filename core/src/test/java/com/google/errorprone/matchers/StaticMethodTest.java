@@ -16,12 +16,19 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.common.io.Files.deleteRecursively;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
 import com.google.errorprone.ErrorProneCompiler;
 import com.google.errorprone.ErrorProneCompiler.Builder;
-import com.google.errorprone.RefactoringVisitorState;
+import com.google.errorprone.Scanner;
+import com.google.errorprone.VisitorState;
+
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.Tree.Kind;
-import com.sun.source.util.TreePathScanner;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -32,11 +39,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-
-import static com.google.common.io.Files.deleteRecursively;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -118,9 +120,9 @@ public class StaticMethodTest {
 
   private void assertMatch(final boolean shouldMatch,
                            final StaticMethod staticMethod) throws IOException {
-    TreePathScanner<Void, RefactoringVisitorState> scanner = new TreePathScanner<Void, RefactoringVisitorState>() {
+    Scanner scanner = new Scanner() {
       @Override
-      public Void visitMemberSelect(MemberSelectTree node, RefactoringVisitorState visitorState) {
+      public Void visitMemberSelect(MemberSelectTree node, VisitorState visitorState) {
         if (getCurrentPath().getParentPath().getLeaf().getKind() == Kind.METHOD_INVOCATION) {
           assertTrue(node.toString(),
               !shouldMatch ^ staticMethod.matches(node, visitorState));

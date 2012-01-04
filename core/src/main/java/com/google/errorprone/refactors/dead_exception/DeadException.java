@@ -16,27 +16,34 @@
 
 package com.google.errorprone.refactors.dead_exception;
 
+import static com.google.errorprone.BugPattern.Category.JDK;
+import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.enclosingBlock;
+import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
+import static com.google.errorprone.matchers.Matchers.kindIs;
+import static com.google.errorprone.matchers.Matchers.lastStatement;
+import static com.google.errorprone.matchers.Matchers.parentNode;
+import static com.google.errorprone.matchers.Matchers.same;
+import static com.sun.source.tree.Tree.Kind.EXPRESSION_STATEMENT;
+import static com.sun.source.tree.Tree.Kind.IF;
+
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.RefactoringVisitorState;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.refactors.RefactoringMatcher;
+
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.StatementTree;
-
-import static com.google.errorprone.BugPattern.Category.UNIVERSAL;
-import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.*;
-import static com.sun.source.tree.Tree.Kind.EXPRESSION_STATEMENT;
-import static com.sun.source.tree.Tree.Kind.IF;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
 @BugPattern(
     name = "Dead exception",
-    category = UNIVERSAL,
+    category = JDK,
     severity = ERROR,
     maturity = ON_BY_DEFAULT,
     summary = "Exception created but not thrown",
@@ -53,7 +60,7 @@ public class DeadException extends RefactoringMatcher<NewClassTree> {
   }
 
   @Override
-  public Refactor refactor(NewClassTree newClassTree, RefactoringVisitorState state) {
+  public Refactor refactor(NewClassTree newClassTree, VisitorState state) {
     StatementTree parent = (StatementTree) state.getPath().getParentPath().getLeaf();
 
     boolean isLastStatement = anyOf(

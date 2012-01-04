@@ -51,11 +51,10 @@ public class SearchingJavaCompiler extends JavaCompiler {
   /**
    * Run Error Prone analysis after performing dataflow checks.
    */
-  @SuppressWarnings("unchecked")
   public void postFlow(Env<AttrContext> env) {
     resultsPrinter.setCompilationUnit(env.toplevel.sourcefile);
-    SearchingVisitorState visitorState = new SearchingVisitorState(context, resultsPrinter);
-    TreePathScanner<Void, SearchingVisitorState> scanner = context.get(TreePathScanner.class);
+    VisitorState visitorState = new VisitorState(context, resultsPrinter);
+    Scanner scanner = (Scanner) context.get(TreePathScanner.class);
     scanner.scan(env.toplevel, visitorState);
   }
 

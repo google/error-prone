@@ -16,14 +16,20 @@
 
 package com.google.errorprone;
 
-import com.google.errorprone.refactors.*;
+import com.google.errorprone.refactors.EmptyIfStatement;
+import com.google.errorprone.refactors.FallThroughSuppression;
+import com.google.errorprone.refactors.OrderingFrom;
+import com.google.errorprone.refactors.PreconditionsCheckNotNull;
+import com.google.errorprone.refactors.PreconditionsCheckNotNullPrimitive1stArg;
+import com.google.errorprone.refactors.PreconditionsExpensiveString;
+import com.google.errorprone.refactors.RefactoringMatcher;
 import com.google.errorprone.refactors.dead_exception.DeadException;
 import com.google.errorprone.refactors.objects_equal_self_comparison.ObjectsEqualSelfComparison;
+
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
-import com.sun.source.util.TreePathScanner;
 
 import java.util.Arrays;
 
@@ -31,10 +37,10 @@ import java.util.Arrays;
  * Scans the parsed AST, looking for violations of any of the configured checks.
  * @author Alex Eagle (alexeagle@google.com)
  */
-public class ErrorProneScanner extends TreePathScanner<Void, RefactoringVisitorState> {
+public class ErrorProneScanner extends Scanner {
 
   private final Iterable<? extends RefactoringMatcher<MethodInvocationTree>>
-      methodInvocationCheckers = Arrays.asList(
+      methodInvocationMatchers = Arrays.asList(
           new ObjectsEqualSelfComparison(),
           new OrderingFrom(),
           new PreconditionsCheckNotNull(),
@@ -42,24 +48,24 @@ public class ErrorProneScanner extends TreePathScanner<Void, RefactoringVisitorS
           new PreconditionsCheckNotNullPrimitive1stArg());
   
   private final Iterable<? extends RefactoringMatcher<NewClassTree>>
-      newClassCheckers = Arrays.asList(
+      newClassMatchers = Arrays.asList(
           new DeadException());
 
   private final Iterable<? extends RefactoringMatcher<AnnotationTree>>
-      annotationCheckers = Arrays.asList(
+      annotationMatchers = Arrays.asList(
           new FallThroughSuppression());
 
   private final Iterable<? extends RefactoringMatcher<EmptyStatementTree>>
-      emptyStatementCheckers = Arrays.asList(
+      emptyStatementMatchers = Arrays.asList(
           new EmptyIfStatement());
   
   @Override
   public Void visitMethodInvocation(
-      MethodInvocationTree methodInvocationTree, RefactoringVisitorState state) {
-    for (RefactoringMatcher<MethodInvocationTree> checker : methodInvocationCheckers) {
-      RefactoringVisitorState newState = state.withPath(getCurrentPath());
-      if (checker.matches(methodInvocationTree, newState)) {
-         state.getReporter().report(checker.refactor(methodInvocationTree, newState));
+      MethodInvocationTree methodInvocationTree, VisitorState state) {
+    for (RefactoringMatcher<MethodInvocationTree> matcher : methodInvocationMatchers) {
+      VisitorState newState = state.withPath(getCurrentPath());
+      if (matcher.matches(methodInvocationTree, newState)) {
+         reportMatch(matcher, methodInvocationTree, newState);
       }
     }
     super.visitMethodInvocation(methodInvocationTree, state);
@@ -67,11 +73,11 @@ public class ErrorProneScanner extends TreePathScanner<Void, RefactoringVisitorS
   }
 
   @Override
-  public Void visitNewClass(NewClassTree newClassTree, RefactoringVisitorState visitorState) {
-    for (RefactoringMatcher<NewClassTree> newClassChecker : newClassCheckers) {
-      RefactoringVisitorState state = visitorState.withPath(getCurrentPath());
-      if (newClassChecker.matches(newClassTree, state)) {
-         state.getReporter().report(newClassChecker.refactor(newClassTree, state));
+  public Void visitNewClass(NewClassTree newClassTree, VisitorState visitorState) {
+    for (RefactoringMatcher<NewClassTree> matcher : newClassMatchers) {
+      VisitorState state = visitorState.withPath(getCurrentPath());
+      if (matcher.matches(newClassTree, state)) {
+         reportMatch(matcher, newClassTree, state);
       }
     }
     super.visitNewClass(newClassTree, visitorState);
@@ -79,11 +85,11 @@ public class ErrorProneScanner extends TreePathScanner<Void, RefactoringVisitorS
   }
 
   @Override
-  public Void visitAnnotation(AnnotationTree annotationTree, RefactoringVisitorState visitorState) {
-    for (RefactoringMatcher<AnnotationTree> annotationChecker : annotationCheckers) {
-      RefactoringVisitorState state = visitorState.withPath(getCurrentPath());
-      if (annotationChecker.matches(annotationTree, state)) {
-         state.getReporter().report(annotationChecker.refactor(annotationTree, state));
+  public Void visitAnnotation(AnnotationTree annotationTree, VisitorState visitorState) {
+    for (RefactoringMatcher<AnnotationTree> matcher : annotationMatchers) {
+      VisitorState state = visitorState.withPath(getCurrentPath());
+      if (matcher.matches(annotationTree, state)) {
+         reportMatch(matcher, annotationTree, state);
       }
     }
     super.visitAnnotation(annotationTree, visitorState);
@@ -92,11 +98,11 @@ public class ErrorProneScanner extends TreePathScanner<Void, RefactoringVisitorS
   
   @Override
   public Void visitEmptyStatement(EmptyStatementTree emptyStatementTree,
-      RefactoringVisitorState visitorState) {
-    for (RefactoringMatcher<EmptyStatementTree> emptyStatementChecker : emptyStatementCheckers) {
-      RefactoringVisitorState state = visitorState.withPath(getCurrentPath());
-      if (emptyStatementChecker.matches(emptyStatementTree, state)) {
-        state.getReporter().report(emptyStatementChecker.refactor(emptyStatementTree, state));
+      VisitorState visitorState) {
+    for (RefactoringMatcher<EmptyStatementTree> matcher : emptyStatementMatchers) {
+      VisitorState state = visitorState.withPath(getCurrentPath());
+      if (matcher.matches(emptyStatementTree, state)) {
+        reportMatch(matcher, emptyStatementTree, state);
       }
     }
     super.visitEmptyStatement(emptyStatementTree, visitorState);

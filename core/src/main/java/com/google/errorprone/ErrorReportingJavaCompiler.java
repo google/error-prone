@@ -48,15 +48,14 @@ public class ErrorReportingJavaCompiler extends JavaCompiler {
   /**
    * Run Error Prone analysis after performing dataflow checks.
    */
-  @SuppressWarnings("unchecked")
   public void postFlow(Env<AttrContext> env) {
-    JavacErrorReporter logReporter = new JavacErrorReporter(log,
+    JavacErrorRefactorListener logReporter = new JavacErrorRefactorListener(log,
         env.toplevel.endPositions,
         env.enclClass.sym.sourcefile != null
             ? env.enclClass.sym.sourcefile
             : env.toplevel.sourcefile);
-    RefactoringVisitorState visitorState = new RefactoringVisitorState(context, logReporter);
-    TreePathScanner<Void, RefactoringVisitorState> scanner = context.get(TreePathScanner.class);
+    VisitorState visitorState = new VisitorState(context, logReporter);
+    Scanner scanner = (Scanner) context.get(TreePathScanner.class);
     scanner.scan(env.toplevel, visitorState);
   }
 }

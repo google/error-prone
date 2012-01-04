@@ -3,7 +3,7 @@
 package com.google.errorprone;
 
 /**
- * An annotation intended for implementations of {@link ErrorChecker} which is picked up by our 
+ * An annotation intended for implementations of Matcher which is picked up by our 
  * documentation processor.
  * @author eaftan@google.com (Eddie Aftandilian)
  */
@@ -14,11 +14,10 @@ public @interface BugPattern {
    */
   String name();
   
-  
   Category category();
   
   public enum Category {
-    JDK, GUAVA, UNIVERSAL
+    JDK, GUAVA, APPLICATION_SPECIFIC
   }
 
   /**
