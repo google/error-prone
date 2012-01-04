@@ -39,7 +39,8 @@
   </modules>
 
   <scm>
-    <connection>scm:git:https://code.google.com/p/error-prone</connection>
+    <connection>scm:git:http://code.google.com/p/error-prone</connection>
+    <developerConnection>scm:git:https://code.google.com/p/error-prone</developerConnection>
   </scm>
 
   <build>
