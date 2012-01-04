@@ -15,21 +15,21 @@
   limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+  <!-- We don't distribute to the google maven repo yet
   <parent>
     <groupId>com.google</groupId>
     <artifactId>google</artifactId>
     <version>5</version>
   </parent>
-
+  -->
+  
   <name>Maven parent POM</name>
   <groupId>com.google.errorprone</groupId>
   <artifactId>error_prone_parent</artifactId>
-  <version>0.4-SNAPSHOT</version>
+  <version>0.5-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <modules>
@@ -39,7 +39,8 @@
   </modules>
 
   <scm>
-    <connection>scm:git:https://code.google.com/p/error-prone</connection>
+    <connection>scm:git:http://code.google.com/p/error-prone</connection>
+    <developerConnection>scm:git:https://code.google.com/p/error-prone</developerConnection>
   </scm>
 
   <build>
