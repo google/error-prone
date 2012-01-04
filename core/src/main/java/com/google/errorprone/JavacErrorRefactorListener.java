@@ -18,13 +18,15 @@ package com.google.errorprone;
 
 import com.google.errorprone.fixes.AppliedFix;
 import com.google.errorprone.refactors.RefactoringMatcher.Refactor;
+
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Log;
 
-import javax.tools.JavaFileObject;
 import java.io.IOException;
 import java.util.Map;
+
+import javax.tools.JavaFileObject;
 
 /**
  * Making our errors appear to the user and break their build.
