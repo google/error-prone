@@ -39,6 +39,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.text.MessageFormat;
+import java.util.Collection;
 import java.util.Locale;
 import java.util.Set;
 
@@ -144,15 +145,21 @@ public class DocGen extends AbstractProcessor {
       System.exit(1);
     }
     String indexPage = readLines(bugPatterns, UTF_8, new LineProcessor<String>() {
+      
+      // store a list of refactors to generate BugPatterns wiki page
       private Multimap<MaturityLevel, String> index = ArrayListMultimap.create();
       
       @Override
       public String getResult() {
         StringBuilder result = new StringBuilder("#summary Bugs caught by error-prone\n"); 
-        for(MaturityLevel level : index.keySet()) {
-          result.append("=" + level + "=\n");
-          for (String bugPattern : index.get(level)) {
-            result.append("  * [" + bugPattern + "]\n");
+        // enum.values() returns all the values of the enum in declared order 
+        for (MaturityLevel level : MaturityLevel.values()) {
+          Collection<String> bugPatterns = index.get(level);
+          if (!bugPatterns.isEmpty()) {
+            result.append("=" + level + "=\n");
+            for (String bugPattern : bugPatterns) {
+              result.append("  * [" + bugPattern.replace(' ', '_') + "]\n");
+            }
           }
         }
         return result.toString();
