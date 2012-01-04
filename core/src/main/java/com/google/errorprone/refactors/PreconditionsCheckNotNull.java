@@ -42,7 +42,7 @@ import java.util.List;
  * @author alexeagle@google.com (Alex Eagle)
  */
 @BugPattern(
-    name = "Preconditions.checkNotNull",
+    name = "Preconditions checkNotNull",
     category = GUAVA,
     severity = ERROR,
     maturity = ON_BY_DEFAULT,

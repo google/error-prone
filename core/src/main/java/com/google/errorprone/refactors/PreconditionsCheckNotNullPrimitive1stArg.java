@@ -54,7 +54,7 @@ import static com.google.errorprone.matchers.Matchers.*;
  * @author sjnickerson@google.com (Simon Nickerson)
  */
 @BugPattern(
-    name = "Preconditions.checkNotNull boolean",
+    name = "Preconditions checkNotNull boolean",
     category = GUAVA,
     severity = ERROR,
     maturity = ON_BY_DEFAULT,
