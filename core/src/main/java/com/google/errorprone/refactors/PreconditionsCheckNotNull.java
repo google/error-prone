@@ -16,17 +16,21 @@
 
 package com.google.errorprone.refactors;
 
-import com.google.errorprone.RefactoringVisitorState;
+import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.argument;
+import static com.google.errorprone.matchers.Matchers.kindIs;
+import static com.google.errorprone.matchers.Matchers.methodSelect;
+import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
+import static java.lang.String.format;
+
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
+
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
 import java.util.List;
-
-import static com.google.errorprone.matchers.Matchers.*;
-import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
-import static java.lang.String.format;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -43,7 +47,7 @@ public class PreconditionsCheckNotNull extends RefactoringMatcher<MethodInvocati
   }
 
   @Override
-  public Refactor refactor(MethodInvocationTree methodInvocationTree, RefactoringVisitorState state) {
+  public Refactor createRefactor(MethodInvocationTree methodInvocationTree, VisitorState state) {
     List<? extends ExpressionTree> arguments = methodInvocationTree.getArguments();
     ExpressionTree stringLiteralValue = arguments.get(0);
     SuggestedFix fix = new SuggestedFix();

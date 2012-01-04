@@ -16,10 +16,15 @@
 
 package com.google.errorprone.refactors;
 
-import com.google.errorprone.RefactoringVisitorState;
+import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.argument;
+import static com.google.errorprone.matchers.Matchers.methodSelect;
+import static com.google.errorprone.matchers.Matchers.staticMethod;
+
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Matchers;
+
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree.Kind;
@@ -27,8 +32,6 @@ import com.sun.tools.javac.code.Symbol.OperatorSymbol;
 import com.sun.tools.javac.tree.JCTree.JCBinary;
 
 import java.util.List;
-
-import static com.google.errorprone.matchers.Matchers.*;
 
 
 /**
@@ -62,8 +65,8 @@ public class PreconditionsCheckNotNullPrimitive1stArg
   }
   
   @Override
-  public Refactor refactor(MethodInvocationTree methodInvocationTree,
-      RefactoringVisitorState state) {
+  public Refactor createRefactor(MethodInvocationTree methodInvocationTree,
+      VisitorState state) {
     SuggestedFix fix = null;
     ExpressionTree expression = methodInvocationTree.getArguments().get(0);
     if (expression instanceof JCBinary) {

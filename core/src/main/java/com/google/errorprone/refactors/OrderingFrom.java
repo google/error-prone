@@ -2,15 +2,18 @@
 
 package com.google.errorprone.refactors;
 
-import com.google.errorprone.RefactoringVisitorState;
+import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.argument;
+import static com.google.errorprone.matchers.Matchers.methodSelect;
+import static com.google.errorprone.matchers.Matchers.staticMethod;
+
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.NewInstanceAnonymousInnerClass;
+
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
-
-import static com.google.errorprone.matchers.Matchers.*;
 
 /**
  * Checker for a call of the form:
@@ -39,8 +42,8 @@ public class OrderingFrom extends RefactoringMatcher<MethodInvocationTree> {
   }
   
   @Override
-  public Refactor refactor(MethodInvocationTree t,
-      RefactoringVisitorState state) {
+  public Refactor createRefactor(MethodInvocationTree t,
+      VisitorState state) {
     ExpressionTree arg = t.getArguments().get(0);
     JCNewClass invocation = (JCNewClass) arg;
     

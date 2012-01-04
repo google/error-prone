@@ -30,7 +30,7 @@ import java.util.Map;
  * Making our errors appear to the user and break their build.
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class JavacErrorReporter implements Reporter {
+public class JavacErrorRefactorListener implements RefactorListener {
   private final Log log;
   private final Map<JCTree, Integer> endPositions;
   private final JavaFileObject sourceFile;
@@ -38,14 +38,15 @@ public class JavacErrorReporter implements Reporter {
   // The suffix for properties in src/main/resources/com/google/errorprone/errors.properties
   private static final String MESSAGE_BUNDLE_KEY = "error.prone";
 
-  public JavacErrorReporter(Log log, Map<JCTree, Integer> endPositions, JavaFileObject sourceFile) {
+  public JavacErrorRefactorListener(Log log, Map<JCTree, Integer> endPositions,
+      JavaFileObject sourceFile) {
     this.log = log;
     this.endPositions = endPositions;
     this.sourceFile = sourceFile;
   }
 
   @Override
-  public void report(Refactor refactor) {
+  public void onRefactor(Refactor refactor) {
     JavaFileObject originalSource;
     // Swap the log's source and the current file's source; then be sure to swap them back later.
     originalSource = log.useSource(sourceFile);

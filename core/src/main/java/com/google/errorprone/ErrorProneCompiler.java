@@ -8,12 +8,13 @@ import com.sun.tools.javac.main.Main;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Messages;
 
-import javax.tools.DiagnosticListener;
-import javax.tools.JavaFileObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.PropertyResourceBundle;
+
+import javax.tools.DiagnosticListener;
+import javax.tools.JavaFileObject;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -69,13 +70,13 @@ public class ErrorProneCompiler extends Main {
       return this;
     }
 
-    public Builder search(TreePathScanner<Void, SearchingVisitorState> scanner) {
+    public Builder search(SearchingScanner scanner) {
       this.compilerClass = SearchingJavaCompiler.class;
       this.scanner = scanner;
       return this;
     }
 
-    public Builder refactor(TreePathScanner<Void, RefactoringVisitorState> scanner) {
+    public Builder refactor(RefactoringScanner scanner) {
       this.compilerClass = ErrorReportingJavaCompiler.class;
       this.scanner = scanner;
       return this;

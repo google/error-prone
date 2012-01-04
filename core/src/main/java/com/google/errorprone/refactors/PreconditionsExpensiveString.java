@@ -16,11 +16,20 @@
 
 package com.google.errorprone.refactors;
 
-import com.google.errorprone.RefactoringVisitorState;
+import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.argument;
+import static com.google.errorprone.matchers.Matchers.expressionMethodSelect;
+import static com.google.errorprone.matchers.Matchers.kindIs;
+import static com.google.errorprone.matchers.Matchers.methodSelect;
+import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static java.lang.String.format;
+
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
+
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -29,9 +38,6 @@ import com.sun.source.tree.Tree.Kind;
 
 import java.util.List;
 import java.util.regex.Pattern;
-
-import static com.google.errorprone.matchers.Matchers.*;
-import static java.lang.String.format;
 
 /**
  * Error checker for calls to the Preconditions class in Guava which use
@@ -65,8 +71,8 @@ public class PreconditionsExpensiveString
   }
   
   @Override
-  public Refactor refactor(MethodInvocationTree methodInvocationTree,
-      RefactoringVisitorState state) {
+  public Refactor createRefactor(MethodInvocationTree methodInvocationTree,
+      VisitorState state) {
     MemberSelectTree method =
         (MemberSelectTree) methodInvocationTree.getMethodSelect();
     

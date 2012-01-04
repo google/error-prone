@@ -8,16 +8,16 @@ import static com.google.errorprone.matchers.Matchers.parentNode;
 import static com.sun.source.tree.Tree.Kind.IF;
 
 import com.google.errorprone.ErrorProneCompiler;
-import com.google.errorprone.RefactoringVisitorState;
-import com.google.errorprone.SearchingVisitorState;
+import com.google.errorprone.RefactoringScanner;
+import com.google.errorprone.SearchingScanner;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.matchers.Matcher;
 
 import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.util.TreePathScanner;
 
 /**
  * This checker finds and fixes empty statements after an if, with no else 
@@ -57,7 +57,7 @@ public class EmptyIfStatement extends RefactoringMatcher<EmptyStatementTree> {
    * suggest deleting the empty then part of the if.
    */
   @Override
-  public Refactor refactor(EmptyStatementTree tree, RefactoringVisitorState state) {
+  public Refactor createRefactor(EmptyStatementTree tree, VisitorState state) {
     boolean nextStmtIsNull = parentNode(nextStatement(isNull(StatementTree.class)))
         .matches(tree, state);
 
@@ -74,15 +74,14 @@ public class EmptyIfStatement extends RefactoringMatcher<EmptyStatementTree> {
     return new Refactor(parent, "empty statement after if", fix);
   }
 
-  public static class Scanner extends TreePathScanner<Void, RefactoringVisitorState> {
-    public RefactoringMatcher<EmptyStatementTree> emptyIfChecker = new EmptyIfStatement();
+  public static class Scanner extends RefactoringScanner {
+    public RefactoringMatcher<EmptyStatementTree> emptyIfMatcher = new EmptyIfStatement();
     
     @Override 
-    public Void visitEmptyStatement(EmptyStatementTree node,
-        RefactoringVisitorState visitorState) {
-      RefactoringVisitorState state = visitorState.withPath(getCurrentPath());
-      if (emptyIfChecker.matches(node, state)) {
-        visitorState.getReporter().report(emptyIfChecker.refactor(node, state));
+    public Void visitEmptyStatement(EmptyStatementTree node, VisitorState visitorState) {
+      VisitorState state = visitorState.withPath(getCurrentPath());
+      if (emptyIfMatcher.matches(node, state)) {
+        emptyIfMatcher.refactor(node, state);
       }
 
       super.visitEmptyStatement(node, visitorState);
@@ -90,13 +89,13 @@ public class EmptyIfStatement extends RefactoringMatcher<EmptyStatementTree> {
     }
   }
 
-  public static class Search extends TreePathScanner<Void, SearchingVisitorState> {
-    public RefactoringMatcher<EmptyStatementTree> emptyIfChecker = new EmptyIfStatement();
+  public static class Search extends SearchingScanner {
+    public Matcher<EmptyStatementTree> emptyIfMatcher = new EmptyIfStatement();
 
     @Override
-    public Void visitEmptyStatement(EmptyStatementTree node, SearchingVisitorState state) {
-      if (emptyIfChecker.matches(node, state.withPath(getCurrentPath()))) {
-        state.getListener().onMatch(node);
+    public Void visitEmptyStatement(EmptyStatementTree node, VisitorState state) {
+      if (emptyIfMatcher.matches(node, state.withPath(getCurrentPath()))) {
+        reportMatch(node, state);
       }
       return null;
     }
