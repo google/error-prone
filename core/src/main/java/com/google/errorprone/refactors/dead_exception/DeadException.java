@@ -60,7 +60,7 @@ public class DeadException extends RefactoringMatcher<NewClassTree> {
   }
 
   @Override
-  public Refactor createRefactor(NewClassTree newClassTree, VisitorState state) {
+  public Refactor refactor(NewClassTree newClassTree, VisitorState state) {
     StatementTree parent = (StatementTree) state.getPath().getParentPath().getLeaf();
 
     boolean isLastStatement = anyOf(

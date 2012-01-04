@@ -21,7 +21,6 @@ import static com.google.errorprone.matchers.Matchers.hasElementWithValue;
 import static com.google.errorprone.matchers.Matchers.isType;
 import static com.google.errorprone.matchers.Matchers.stringLiteral;
 
-import com.google.errorprone.RefactoringScanner;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 
@@ -49,7 +48,7 @@ public class FallThroughSuppression extends RefactoringMatcher<AnnotationTree> {
   }
 
   @Override
-  public Refactor createRefactor(AnnotationTree annotationTree, VisitorState state) {
+  public Refactor refactor(AnnotationTree annotationTree, VisitorState state) {
     return new Refactor(
         annotationTree,
         "this has no effect if fallthrough warning is suppressed",
@@ -114,14 +113,14 @@ public class FallThroughSuppression extends RefactoringMatcher<AnnotationTree> {
   }
 
 
-  public static class Scanner extends RefactoringScanner {
-    public RefactoringMatcher<AnnotationTree> annotationChecker = new FallThroughSuppression();
+  public static class Scanner extends com.google.errorprone.Scanner {
+    public RefactoringMatcher<AnnotationTree> annotationMatcher = new FallThroughSuppression();
 
     @Override
     public Void visitAnnotation(AnnotationTree annotationTree, VisitorState visitorState) {
       VisitorState state = visitorState.withPath(getCurrentPath());
-      if (annotationChecker.matches(annotationTree, state)) {
-        annotationChecker.refactor(annotationTree, state);
+      if (annotationMatcher.matches(annotationTree, state)) {
+        reportMatch(annotationMatcher, annotationTree, state);
       }
 
       super.visitAnnotation(annotationTree, visitorState);

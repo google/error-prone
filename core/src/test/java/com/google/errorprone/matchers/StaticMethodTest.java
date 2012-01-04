@@ -23,7 +23,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.google.errorprone.ErrorProneCompiler;
 import com.google.errorprone.ErrorProneCompiler.Builder;
-import com.google.errorprone.RefactoringScanner;
+import com.google.errorprone.Scanner;
 import com.google.errorprone.VisitorState;
 
 import com.sun.source.tree.MemberSelectTree;
@@ -120,7 +120,7 @@ public class StaticMethodTest {
 
   private void assertMatch(final boolean shouldMatch,
                            final StaticMethod staticMethod) throws IOException {
-    RefactoringScanner scanner = new RefactoringScanner() {
+    Scanner scanner = new Scanner() {
       @Override
       public Void visitMemberSelect(MemberSelectTree node, VisitorState visitorState) {
         if (getCurrentPath().getParentPath().getLeaf().getKind() == Kind.METHOD_INVOCATION) {

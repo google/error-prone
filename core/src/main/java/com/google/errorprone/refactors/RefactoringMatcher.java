@@ -35,11 +35,7 @@ public abstract class RefactoringMatcher<T extends Tree> implements Matcher<T> {
    * @param state the shared state
    * @return the description
    */
-  protected abstract Refactor createRefactor(T t, VisitorState state);
-
-  public void refactor(T t, VisitorState state) {
-    state.getRefactorListener().onRefactor(createRefactor(t, state));
-  }
+  public abstract Refactor refactor(T t, VisitorState state);
 
   public static class Refactor {
 

@@ -47,7 +47,7 @@ public class PreconditionsCheckNotNull extends RefactoringMatcher<MethodInvocati
   }
 
   @Override
-  public Refactor createRefactor(MethodInvocationTree methodInvocationTree, VisitorState state) {
+  public Refactor refactor(MethodInvocationTree methodInvocationTree, VisitorState state) {
     List<? extends ExpressionTree> arguments = methodInvocationTree.getArguments();
     ExpressionTree stringLiteralValue = arguments.get(0);
     SuggestedFix fix = new SuggestedFix();

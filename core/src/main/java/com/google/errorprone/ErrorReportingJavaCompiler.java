@@ -55,7 +55,7 @@ public class ErrorReportingJavaCompiler extends JavaCompiler {
             ? env.enclClass.sym.sourcefile
             : env.toplevel.sourcefile);
     VisitorState visitorState = new VisitorState(context, logReporter);
-    RefactoringScanner scanner = (RefactoringScanner) context.get(TreePathScanner.class);
+    Scanner scanner = (Scanner) context.get(TreePathScanner.class);
     scanner.scan(env.toplevel, visitorState);
   }
 }

@@ -37,7 +37,7 @@ import java.util.Arrays;
  * Scans the parsed AST, looking for violations of any of the configured checks.
  * @author Alex Eagle (alexeagle@google.com)
  */
-public class ErrorProneScanner extends RefactoringScanner {
+public class ErrorProneScanner extends Scanner {
 
   private final Iterable<? extends RefactoringMatcher<MethodInvocationTree>>
       methodInvocationMatchers = Arrays.asList(
@@ -65,7 +65,7 @@ public class ErrorProneScanner extends RefactoringScanner {
     for (RefactoringMatcher<MethodInvocationTree> matcher : methodInvocationMatchers) {
       VisitorState newState = state.withPath(getCurrentPath());
       if (matcher.matches(methodInvocationTree, newState)) {
-         matcher.refactor(methodInvocationTree, newState);
+         reportMatch(matcher, methodInvocationTree, newState);
       }
     }
     super.visitMethodInvocation(methodInvocationTree, state);
@@ -77,7 +77,7 @@ public class ErrorProneScanner extends RefactoringScanner {
     for (RefactoringMatcher<NewClassTree> matcher : newClassMatchers) {
       VisitorState state = visitorState.withPath(getCurrentPath());
       if (matcher.matches(newClassTree, state)) {
-         matcher.refactor(newClassTree, state);
+         reportMatch(matcher, newClassTree, state);
       }
     }
     super.visitNewClass(newClassTree, visitorState);
@@ -89,7 +89,7 @@ public class ErrorProneScanner extends RefactoringScanner {
     for (RefactoringMatcher<AnnotationTree> matcher : annotationMatchers) {
       VisitorState state = visitorState.withPath(getCurrentPath());
       if (matcher.matches(annotationTree, state)) {
-         matcher.refactor(annotationTree, state);
+         reportMatch(matcher, annotationTree, state);
       }
     }
     super.visitAnnotation(annotationTree, visitorState);
@@ -102,7 +102,7 @@ public class ErrorProneScanner extends RefactoringScanner {
     for (RefactoringMatcher<EmptyStatementTree> matcher : emptyStatementMatchers) {
       VisitorState state = visitorState.withPath(getCurrentPath());
       if (matcher.matches(emptyStatementTree, state)) {
-        matcher.refactor(emptyStatementTree, state);
+        reportMatch(matcher, emptyStatementTree, state);
       }
     }
     super.visitEmptyStatement(emptyStatementTree, visitorState);

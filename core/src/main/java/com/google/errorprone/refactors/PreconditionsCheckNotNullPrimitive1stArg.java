@@ -65,7 +65,7 @@ public class PreconditionsCheckNotNullPrimitive1stArg
   }
   
   @Override
-  public Refactor createRefactor(MethodInvocationTree methodInvocationTree,
+  public Refactor refactor(MethodInvocationTree methodInvocationTree,
       VisitorState state) {
     SuggestedFix fix = null;
     ExpressionTree expression = methodInvocationTree.getArguments().get(0);

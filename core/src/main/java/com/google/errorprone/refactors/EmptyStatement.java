@@ -22,7 +22,7 @@ public class EmptyStatement extends RefactoringMatcher<EmptyStatementTree> {
   }
 
   @Override
-  public Refactor createRefactor(
+  public Refactor refactor(
       EmptyStatementTree emptyStatementTree, VisitorState state) {
     return new Refactor(
         emptyStatementTree,

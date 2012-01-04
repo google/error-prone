@@ -71,7 +71,7 @@ public class PreconditionsExpensiveString
   }
   
   @Override
-  public Refactor createRefactor(MethodInvocationTree methodInvocationTree,
+  public Refactor refactor(MethodInvocationTree methodInvocationTree,
       VisitorState state) {
     MemberSelectTree method =
         (MemberSelectTree) methodInvocationTree.getMethodSelect();

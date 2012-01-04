@@ -14,7 +14,6 @@ import com.google.errorprone.refactors.RefactoringMatcher;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
@@ -37,7 +36,7 @@ public class ObjectsEqualSelfComparison extends RefactoringMatcher<MethodInvocat
   }
 
   @Override
-  public Refactor createRefactor(MethodInvocationTree methodInvocationTree, VisitorState state) {
+  public Refactor refactor(MethodInvocationTree methodInvocationTree, VisitorState state) {
     // If we don't find a good field to use, then just replace with "true"
     SuggestedFix fix = new SuggestedFix().replace(methodInvocationTree, "true");
 
@@ -63,15 +62,15 @@ public class ObjectsEqualSelfComparison extends RefactoringMatcher<MethodInvocat
         "Objects.equal arguments must be different", fix);
   }
 
-  public static class Scanner extends TreePathScanner<Void, VisitorState> {
-    private final RefactoringMatcher<MethodInvocationTree> checker =
+  public static class Scanner extends com.google.errorprone.Scanner {
+    private final RefactoringMatcher<MethodInvocationTree> matcher =
         new ObjectsEqualSelfComparison();
 
     @Override
     public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {
       VisitorState state = visitorState.withPath(getCurrentPath());
-      if (checker.matches(node, state)) {
-        checker.refactor(node, state);
+      if (matcher.matches(node, state)) {
+        reportMatch(matcher, node, state);
       }
       return null;
     }

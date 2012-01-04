@@ -42,7 +42,7 @@ public class OrderingFrom extends RefactoringMatcher<MethodInvocationTree> {
   }
   
   @Override
-  public Refactor createRefactor(MethodInvocationTree t,
+  public Refactor refactor(MethodInvocationTree t,
       VisitorState state) {
     ExpressionTree arg = t.getArguments().get(0);
     JCNewClass invocation = (JCNewClass) arg;

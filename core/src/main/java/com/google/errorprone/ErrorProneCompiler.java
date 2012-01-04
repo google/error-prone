@@ -70,13 +70,13 @@ public class ErrorProneCompiler extends Main {
       return this;
     }
 
-    public Builder search(SearchingScanner scanner) {
+    public Builder search(Scanner scanner) {
       this.compilerClass = SearchingJavaCompiler.class;
       this.scanner = scanner;
       return this;
     }
 
-    public Builder refactor(RefactoringScanner scanner) {
+    public Builder refactor(Scanner scanner) {
       this.compilerClass = ErrorReportingJavaCompiler.class;
       this.scanner = scanner;
       return this;
