@@ -17,8 +17,15 @@
 package com.google.errorprone;
 
 import com.google.errorprone.refactors.*;
-import com.google.errorprone.refactors.dead_exception.DeadException;
-import com.google.errorprone.refactors.objects_equal_self_comparison.ObjectsEqualSelfComparison;
+import com.google.errorprone.refactors.deadexception.DeadException;
+import com.google.errorprone.refactors.emptyifstatement.EmptyIfStatement;
+import com.google.errorprone.refactors.fallthroughsuppression.FallThroughSuppression;
+import com.google.errorprone.refactors.objectsequalselfcomparison.ObjectsEqualSelfComparison;
+import com.google.errorprone.refactors.orderingfrom.OrderingFrom;
+import com.google.errorprone.refactors.preconditionschecknotnull.PreconditionsCheckNotNull;
+import com.google.errorprone.refactors.preconditionschecknotnullprimitive1starg.PreconditionsCheckNotNullPrimitive1stArg;
+import com.google.errorprone.refactors.preconditionsexpensivestring.PreconditionsExpensiveString;
+
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.MethodInvocationTree;

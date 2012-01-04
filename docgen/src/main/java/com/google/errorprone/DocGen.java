@@ -29,6 +29,7 @@ import java.util.Locale;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
@@ -47,32 +48,53 @@ import javax.tools.StandardLocation;
 @SupportedAnnotationTypes({"com.google.errorprone.BugPattern"})
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class DocGen extends AbstractProcessor {
+  
+  private PrintWriter pw;
+  
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void init(ProcessingEnvironment processingEnv) {
+    super.init(processingEnv);
+    try {
+      FileObject manifest = processingEnv.getFiler()
+          .createResource(StandardLocation.SOURCE_OUTPUT, "", "bugPatterns.txt");
+      pw = new PrintWriter(new OutputStreamWriter(manifest.openOutputStream()));
+    } catch (IOException e) {
+      // TODO(eaftan): Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
+    
   /**
    * {@inheritDoc}
    */
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     for (Element element : roundEnv.getElementsAnnotatedWith(BugPattern.class)) {
-      try {
-        FileObject manifest = processingEnv.getFiler()
-            .createResource(StandardLocation.SOURCE_OUTPUT, "", "bugPatterns.txt");
-        PrintWriter pw = new PrintWriter(new OutputStreamWriter(manifest.openOutputStream()));
-        pw.print(element.toString() + "\t");    //0
-        BugPattern annotation = element.getAnnotation(BugPattern.class);
-        pw.print(annotation.name() + "\t");     //1
-        pw.print(annotation.category() + "\t"); //2
-        pw.print(annotation.severity() + "\t"); //3
-        pw.print(annotation.maturity() + "\t"); //4
-        pw.print(annotation.summary() + "\t");  //5
-        pw.println(annotation.explanation().replace("\n", "\\n"));   //6
-        pw.close();
-        
-      } catch (IOException e) {
-        // TODO(eaftan): Auto-generated catch block
-        e.printStackTrace();
-      }
+      pw.print(element.toString() + "\t");    //0
+      BugPattern annotation = element.getAnnotation(BugPattern.class);
+      pw.print(annotation.name() + "\t");     //1
+      pw.print(annotation.category() + "\t"); //2
+      pw.print(annotation.severity() + "\t"); //3
+      pw.print(annotation.maturity() + "\t"); //4
+      pw.print(annotation.summary() + "\t");  //5
+      pw.println(annotation.explanation().replace("\n", "\\n"));   //6
+    }
+    
+    if (roundEnv.processingOver()) {
+      // this was the last round, do cleanup
+      cleanup();
     }
     return true;
+  }
+
+  /**
+   * Perform cleanup after last round of annotation processing.
+   */
+  private void cleanup() {
+    pw.close();
   }
 
   private static final MessageFormat wikiPageTemplate = new MessageFormat(
@@ -102,8 +124,8 @@ public class DocGen extends AbstractProcessor {
     }
     final File wikiDir = new File(args[1]);
     wikiDir.mkdir();
-    final File exampleDir = new File(args[2]);
-    if (!exampleDir.exists()) {
+    final File exampleDirBase = new File(args[2]);
+    if (!exampleDirBase.exists()) {
       System.err.println("Cannot find example directory: " + args[2]);
       System.exit(1);
     }
@@ -135,13 +157,19 @@ public class DocGen extends AbstractProcessor {
         writer.write(wikiPageTemplate.format(parts));
         Iterable<String> classNameParts = Splitter.on('.').split(parts[0]);
         String path = Joiner.on('/').join(limit(classNameParts, size(classNameParts) - 1));
-        File[] examples = new File(exampleDir, path).listFiles();
-        if (examples.length > 0) {
-          writer.write("==Examples==\n");
-        }
-        for (File example: examples) {
-          writer.write("===!" + example.getName() + "===\n");
-          writer.write("{{{\n" + Files.toString(example, Charsets.UTF_8) + "\n}}}\n");
+        File exampleDir = new File(exampleDirBase, path);
+        if (!exampleDir.exists()) {
+          System.err.println("Warning: cannot find path " + exampleDir);
+        } else {
+          File[] examples = exampleDir.listFiles();
+          if (examples.length > 0) {
+            writer.write("==Examples==\n");
+  
+            for (File example: examples) {
+              writer.write("===!" + example.getName() + "===\n");
+              writer.write("{{{\n" + Files.toString(example, Charsets.UTF_8) + "\n}}}\n");
+            }
+          }
         }
         writer.close();
         return true;
