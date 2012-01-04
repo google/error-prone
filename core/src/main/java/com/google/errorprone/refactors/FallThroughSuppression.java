@@ -16,11 +16,15 @@
 
 package com.google.errorprone.refactors;
 
+import static com.google.errorprone.BugPattern.Category.APPLICATION_SPECIFIC;
+import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.hasElementWithValue;
 import static com.google.errorprone.matchers.Matchers.isType;
 import static com.google.errorprone.matchers.Matchers.stringLiteral;
 
+import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 
@@ -37,6 +41,18 @@ import java.util.Collection;
  * @author eaftan@google.com (Eddie Aftandilian)
  * @author pepstein@google.com (Peter Epstein)
  */
+@BugPattern(
+    name = "Fallthrough suppression",
+    category = APPLICATION_SPECIFIC,
+    severity = WARNING,
+    maturity = EXPERIMENTAL,
+    summary = "Remove fallthrough warning suppression annotations",
+    explanation =
+        "Remove all arguments to @SuppressWarnings annotations that suppress the Java " +
+        "compiler's fallthrough warning. If there are no more arguments in a " +
+        "@SuppressWarnings annotation, remove the whole annotation.\n" +
+        "Note: This checker was specific to a refactoring we performed and should not be " +
+        "used as a general error or warning.")
 public class FallThroughSuppression extends RefactoringMatcher<AnnotationTree> {
 
   @Override

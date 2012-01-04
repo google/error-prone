@@ -16,6 +16,9 @@
 
 package com.google.errorprone.refactors;
 
+import static com.google.errorprone.BugPattern.Category.GUAVA;
+import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.argument;
 import static com.google.errorprone.matchers.Matchers.kindIs;
@@ -24,6 +27,7 @@ import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
 import static java.lang.String.format;
 
+import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 
@@ -35,6 +39,18 @@ import java.util.List;
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
+@BugPattern(
+    name = "Preconditions checkNotNull",
+    category = GUAVA,
+    severity = ERROR,
+    maturity = ON_BY_DEFAULT,
+    summary = "Literal argument to Preconditions.checkNotNull()",
+    explanation =
+        "Preconditions.checkNotNull() takes two arguments. The first is the reference " +
+        "that should be non-null. The second is the error message to print (usually a string " +
+        "literal). Often the order of the two arguments is swapped, and the reference is " +
+        "never actually checked for nullity. This check ensures that the first argument to " +
+        "Preconditions.checkNotNull() is not a literal.")
 public class PreconditionsCheckNotNull extends RefactoringMatcher<MethodInvocationTree> {
 
   @SuppressWarnings({"unchecked"})

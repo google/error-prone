@@ -16,6 +16,9 @@
 
 package com.google.errorprone.refactors;
 
+import static com.google.errorprone.BugPattern.Category.GUAVA;
+import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.argument;
@@ -25,6 +28,7 @@ import static com.google.errorprone.matchers.Matchers.methodSelect;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static java.lang.String.format;
 
+import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Matcher;
@@ -47,6 +51,18 @@ import java.util.regex.Pattern;
  * 
  * @author sjnickerson@google.com (Simon Nickerson)
  */
+@BugPattern(
+    name = "Preconditions expensive string",
+    category = GUAVA,
+    severity = WARNING,
+    maturity = ON_BY_DEFAULT,
+    summary = "Expensive error strings for Preconditions checks",
+    explanation =
+        "Preconditions checks take an error message to display if the check fails. " +
+        "The error message is rarely needed, so it should either be cheap to construct " +
+        "or constructed only when needed. This check ensures that these error messages " +
+        "are not constructed using expensive methods that are evaluated eagerly."
+ )
 public class PreconditionsExpensiveString
     extends RefactoringMatcher<MethodInvocationTree> {
 

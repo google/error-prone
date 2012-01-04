@@ -2,11 +2,15 @@
 
 package com.google.errorprone.refactors.objects_equal_self_comparison;
 
+import static com.google.errorprone.BugPattern.Category.GUAVA;
+import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
 import static com.google.errorprone.matchers.Matchers.sameArgument;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 
+import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.refactors.RefactoringMatcher;
@@ -24,6 +28,15 @@ import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
+@BugPattern(
+    name = "Objects equals self comparison",
+    category = GUAVA,
+    severity = ERROR,
+    maturity = ON_BY_DEFAULT,
+    summary = "Objects.equals() used to compare object to itself",
+    explanation =
+        "The two arguments to Objects.equals() are the same object, so this call " +
+        "always returns true.")
 public class ObjectsEqualSelfComparison extends RefactoringMatcher<MethodInvocationTree> {
 
   @SuppressWarnings({"unchecked"})

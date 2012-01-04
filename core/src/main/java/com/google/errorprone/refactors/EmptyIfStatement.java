@@ -2,11 +2,15 @@
 
 package com.google.errorprone.refactors;
 
+import static com.google.errorprone.BugPattern.Category.JDK;
+import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.isNull;
 import static com.google.errorprone.matchers.Matchers.nextStatement;
 import static com.google.errorprone.matchers.Matchers.parentNode;
 import static com.sun.source.tree.Tree.Kind.IF;
 
+import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneCompiler;
 import com.google.errorprone.Scanner;
 import com.google.errorprone.VisitorState;
@@ -28,6 +32,15 @@ import com.sun.source.tree.Tree;
  *  
  * @author eaftan@google.com (Eddie Aftandilian)
  */
+@BugPattern(
+    name = "Empty if",
+    category = JDK,
+    severity = ERROR,
+    maturity = ON_BY_DEFAULT,
+    summary = "Empty statement after if",
+    explanation =
+        "An if statement contains an empty statement as the then clause. A semicolon may " +
+        "have been inserted by accident.")
 public class EmptyIfStatement extends RefactoringMatcher<EmptyStatementTree> {
 
   /**

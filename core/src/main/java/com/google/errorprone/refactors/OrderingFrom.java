@@ -2,11 +2,15 @@
 
 package com.google.errorprone.refactors;
 
+import static com.google.errorprone.BugPattern.Category.GUAVA;
+import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.argument;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 
+import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.NewInstanceAnonymousInnerClass;
@@ -30,6 +34,18 @@ import com.sun.tools.javac.tree.JCTree.JCNewClass;
  * @author sjnickerson@google.com (Simon Nickerson)
  *
  */
+@BugPattern(
+    name = "Ordering from",
+    category = GUAVA,
+    severity = WARNING,
+    maturity = ON_BY_DEFAULT,
+    summary = "Refactor Ordering.from() to cleaner form",
+    explanation =
+        "Calls of the form\n" +
+        "{{{Ordering.from(new Comparator<T>() { ... })}}}\n" +
+        "can be unwrapped to a new anonymous subclass of Ordering\n" +
+        "{{{new Ordering<T>() { ... }}}}\n" +
+        "which is shorter and cleaner (and potentially more efficient).")
 public class OrderingFrom extends RefactoringMatcher<MethodInvocationTree> {
   @Override
   @SuppressWarnings({"unchecked", "varargs"})
