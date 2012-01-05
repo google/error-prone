@@ -26,7 +26,6 @@ import static com.google.errorprone.matchers.Matchers.expressionMethodSelect;
 import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
-import static java.lang.String.format;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -57,7 +56,8 @@ import java.util.regex.Pattern;
     category = GUAVA,
     severity = WARNING,
     maturity = ON_BY_DEFAULT,
-    summary = "Expensive error strings for Preconditions checks",
+    summary = "Second argument to Preconditions.* is a call to String.format(), which " +
+    		"can be unwrapped",
     explanation =
         "Preconditions checks take an error message to display if the check fails. " +
         "The error message is rarely needed, so it should either be cheap to construct " +
@@ -102,10 +102,7 @@ public class PreconditionsExpensiveString
     // this. This current one is not correct!
     SuggestedFix fix = null;
     
-    return new Refactor(arguments.get(1),
-        format("Second argument to Preconditions.%s is a call to " +
-            "String.format() which can be unwrapped",
-            method.getIdentifier().toString()), fix);
+    return new Refactor(arguments.get(1), refactorMessage, fix);
   }
 
   private static class StringFormatCallContainsNoSpecialFormattingMatcher

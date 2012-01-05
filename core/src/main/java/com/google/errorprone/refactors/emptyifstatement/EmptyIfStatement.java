@@ -29,8 +29,8 @@ import com.google.errorprone.ErrorProneCompiler;
 import com.google.errorprone.Scanner;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.refactors.RefactoringMatcher;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.refactors.RefactoringMatcher;
 
 import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.IfTree;
@@ -57,7 +57,7 @@ import com.sun.source.tree.Tree;
         "An if statement contains an empty statement as the then clause. A semicolon may " +
         "have been inserted by accident.")
 public class EmptyIfStatement extends RefactoringMatcher<EmptyStatementTree> {
-
+  
   /**
    * Match empty statement if:
    * - Parent statement is an if
@@ -98,7 +98,7 @@ public class EmptyIfStatement extends RefactoringMatcher<EmptyStatementTree> {
       // There are more statements. Delete the empty then part of the if.
       fix.delete(parent.getThenStatement());
     }
-    return new Refactor(parent, "empty statement after if", fix);
+    return new Refactor(parent, refactorMessage, fix);
   }
 
   public static class Search extends Scanner {

@@ -16,17 +16,19 @@
 
 package com.google.errorprone;
 
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
+import java.lang.annotation.Retention;
+
 /**
  * An annotation intended for implementations of Matcher which is picked up by our 
  * documentation processor.
  * @author eaftan@google.com (Eddie Aftandilian)
  */
+@Retention(RUNTIME)
 public @interface BugPattern {
 
-  /**
-   * Name should be unique
-   */
-  String name();
+  String name();    // should be unique
   
   Category category();
   

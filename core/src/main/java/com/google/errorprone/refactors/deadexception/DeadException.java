@@ -76,7 +76,7 @@ public class DeadException extends RefactoringMatcher<NewClassTree> {
       suggestedFix.delete(parent);
     }
     return new Refactor(newClassTree,
-        "Exception created but not thrown, and reference is lost",
+        refactorMessage,
         suggestedFix);
   }
 

@@ -25,7 +25,6 @@ import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
-import static java.lang.String.format;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -45,7 +44,7 @@ import java.util.List;
     category = GUAVA,
     severity = ERROR,
     maturity = ON_BY_DEFAULT,
-    summary = "Literal argument to Preconditions.checkNotNull()",
+    summary = "Literal passed as first argument to Preconditions.checkNotNull()",
     explanation =
         "Preconditions.checkNotNull() takes two arguments. The first is the reference " +
         "that should be non-null. The second is the error message to print (usually a string " +
@@ -73,8 +72,6 @@ public class PreconditionsCheckNotNull extends RefactoringMatcher<MethodInvocati
     } else {
       fix.delete(state.getPath().getParentPath().getLeaf());
     }
-    return new Refactor(stringLiteralValue,
-        format("String literal %s passed as first argument to Preconditions#checkNotNull",
-            stringLiteralValue), fix);
+    return new Refactor(stringLiteralValue, refactorMessage, fix);
   }
 }

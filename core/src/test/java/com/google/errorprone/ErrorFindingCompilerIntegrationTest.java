@@ -74,7 +74,7 @@ public class ErrorFindingCompilerIntegrationTest {
 
     Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher = hasItem(allOf(
         diagnosticLineAndColumn(41L, 5L),
-        diagnosticMessage(containsString("empty statement after if"))));
+        diagnosticMessage(containsString("Empty statement after if"))));
     assertThat("Warning should be found. Diagnostics: " + diagnostics.getDiagnostics(),
         diagnostics.getDiagnostics(), matcher);
   }

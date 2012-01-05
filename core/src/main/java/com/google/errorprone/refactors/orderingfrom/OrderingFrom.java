@@ -54,7 +54,7 @@ import com.sun.tools.javac.tree.JCTree.JCNewClass;
     category = GUAVA,
     severity = WARNING,
     maturity = ON_BY_DEFAULT,
-    summary = "Refactor Ordering.from() to cleaner form",
+    summary = "Ordering.from() can be refactored to cleaner form",
     explanation =
         "Calls of the form\n" +
         "{{{Ordering.from(new Comparator<T>() { ... })}}}\n" +
@@ -87,7 +87,6 @@ public class OrderingFrom extends RefactoringMatcher<MethodInvocationTree> {
 //        .replace(getPosition(t).start, getPosition(invocation).start, "")
 //        .replace(getPosition(t).end - 1, getPosition(t).end, "");
 //
-    return new Refactor(t, "Call to Guava's Ordering.from() taking an anonymous inner "
-        + "subclass of Comparator<T>; suggest using new Ordering instead.", fix);
+    return new Refactor(t, refactorMessage, fix);
   }
 }

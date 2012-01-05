@@ -16,6 +16,7 @@
 
 package com.google.errorprone.refactors;
 
+import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Matcher;
@@ -27,6 +28,14 @@ import com.sun.source.tree.Tree;
  * @author alexeagle@google.com (Alex Eagle)
  */
 public abstract class RefactoringMatcher<T extends Tree> implements Matcher<T> {
+    
+
+  protected String refactorMessage;
+  
+  public RefactoringMatcher() {
+    BugPattern annotation = this.getClass().getAnnotation(BugPattern.class);
+    refactorMessage = "[" + annotation.name() + "] " + annotation.summary();
+  }
 
   /**
    * Additional description of a matched AST node, useful in reporting the error or performing an

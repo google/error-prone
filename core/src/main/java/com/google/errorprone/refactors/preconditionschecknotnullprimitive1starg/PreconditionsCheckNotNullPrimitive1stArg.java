@@ -61,7 +61,8 @@ import java.util.List;
     category = GUAVA,
     severity = ERROR,
     maturity = ON_BY_DEFAULT,
-    summary = "Boolean argument to Preconditions.checkNotNull()",
+    summary = "First argument to Preconditions.checkNotNull() is a boolean rather " +
+    		"than an object reference",
     explanation =
         "Preconditions.checkNotNull() takes as an argument a reference that should be " +
         "non-null. Often a primitive boolean is passed as the argument to check, e.g., " +
@@ -126,9 +127,7 @@ public class PreconditionsCheckNotNullPrimitive1stArg
       }
     }
     
-    return new Refactor(methodInvocationTree.getArguments().get(0),
-        "First argument to Preconditions.checkNotNull is a boolean rather " +
-        "than an object reference.", fix);
+    return new Refactor(methodInvocationTree.getArguments().get(0), refactorMessage, fix);
   }
 
 }

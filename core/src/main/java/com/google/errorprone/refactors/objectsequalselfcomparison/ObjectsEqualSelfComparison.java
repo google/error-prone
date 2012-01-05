@@ -43,7 +43,7 @@ import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
  * @author alexeagle@google.com (Alex Eagle)
  */
 @BugPattern(
-    name = "Objects equals self comparison",
+    name = "Self comparison",
     category = GUAVA,
     severity = ERROR,
     maturity = ON_BY_DEFAULT,
@@ -85,8 +85,7 @@ public class ObjectsEqualSelfComparison extends RefactoringMatcher<MethodInvocat
       }
     }
 
-    return new Refactor(methodInvocationTree,
-        "Objects.equal arguments must be different", fix);
+    return new Refactor(methodInvocationTree, refactorMessage, fix);
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {

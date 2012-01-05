@@ -47,7 +47,7 @@ import java.util.Collection;
     category = ONE_OFF,
     severity = OFF,
     maturity = EXPERIMENTAL,
-    summary = "Remove fallthrough warning suppression annotations",
+    summary = "Fallthrough warning suppression has no effect if warning is suppressed",
     explanation =
         "Remove all arguments to @SuppressWarnings annotations that suppress the Java " +
         "compiler's fallthrough warning. If there are no more arguments in a " +
@@ -68,7 +68,7 @@ public class FallThroughSuppression extends RefactoringMatcher<AnnotationTree> {
   public Refactor refactor(AnnotationTree annotationTree, VisitorState state) {
     return new Refactor(
         annotationTree,
-        "this has no effect if fallthrough warning is suppressed",
+        refactorMessage,
         getSuggestedFix(annotationTree, state));
   }
 

@@ -54,7 +54,7 @@ public class EmptyStatement extends RefactoringMatcher<EmptyStatementTree> {
       EmptyStatementTree emptyStatementTree, VisitorState state) {
     return new Refactor(
         emptyStatementTree,
-        "empty statement",
+        refactorMessage,
         new SuggestedFix().delete(emptyStatementTree));
   }
 
