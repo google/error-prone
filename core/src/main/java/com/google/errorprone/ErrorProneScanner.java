@@ -25,8 +25,10 @@ import com.google.errorprone.refactors.orderingfrom.OrderingFrom;
 import com.google.errorprone.refactors.preconditionschecknotnull.PreconditionsCheckNotNull;
 import com.google.errorprone.refactors.preconditionschecknotnullprimitive1starg.PreconditionsCheckNotNullPrimitive1stArg;
 import com.google.errorprone.refactors.preconditionsexpensivestring.PreconditionsExpensiveString;
+import com.google.errorprone.refactors.selfassignment.SelfAssignment;
 
 import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
@@ -58,6 +60,10 @@ public class ErrorProneScanner extends Scanner {
   private final Iterable<? extends RefactoringMatcher<EmptyStatementTree>>
       emptyStatementMatchers = Arrays.asList(
           new EmptyIfStatement());
+  
+  private final Iterable<? extends RefactoringMatcher<AssignmentTree>>
+      assignmentMatchers = Arrays.asList(
+          new SelfAssignment());
   
   @Override
   public Void visitMethodInvocation(
@@ -106,6 +112,19 @@ public class ErrorProneScanner extends Scanner {
       }
     }
     super.visitEmptyStatement(emptyStatementTree, visitorState);
+    return null;
+  }
+  
+  @Override
+  public Void visitAssignment(AssignmentTree assignmentTree,
+      VisitorState visitorState) {
+    for (RefactoringMatcher<AssignmentTree> matcher : assignmentMatchers) {
+      VisitorState state = visitorState.withPath(getCurrentPath());
+      if (matcher.matches(assignmentTree, state)) {
+        reportMatch(matcher, assignmentTree, state);
+      }
+    }
+    super.visitAssignment(assignmentTree, visitorState);
     return null;
   }
 }

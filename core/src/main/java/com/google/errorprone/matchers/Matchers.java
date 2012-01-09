@@ -19,6 +19,7 @@ package com.google.errorprone.matchers;
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.*;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 
@@ -173,5 +174,9 @@ public class Matchers {
         return false;
       }
     };
+  }
+  
+  public static Matcher<AssignmentTree> isSelfAssignment() {
+    return new SelfAssignment();
   }
 }
