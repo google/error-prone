@@ -48,4 +48,13 @@ public class PositiveCases {
     int i = 10;
     if (i == 10)            ;
   }
+  
+  public static void positiveCase5() {
+    int i = 10;
+    if (i == 10) 
+      ;
+    {
+      System.out.println("foo");
+    }
+  }
 }
