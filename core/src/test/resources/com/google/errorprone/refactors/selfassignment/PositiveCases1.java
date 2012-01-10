@@ -24,7 +24,7 @@ package com.google.errorprone.refactors.selfassignment;
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class PositiveCases {
+public class PositiveCases1 {
   // TODO(eaftan): what happens with a static field that has the same name 
   // as a local field? 
   
@@ -46,36 +46,10 @@ public class PositiveCases {
   public void test4() {
     this.a = this.a;
   }
-  
+
   public void test5() {
     if ((a = a) != 10) {
       System.out.println("foo");
     }
-  }
-  
-  public void test6() {
-    Foo foo = new Foo();
-    foo.a = 2;
-    foo.a = foo.a;
-  }
-  
-  public void test7() {
-    Foobar f = new Foobar();
-    f.foo = new Foo();
-    f.foo.a = 10;
-    f.foo.a = f.foo.a;
-  }
-  
-  private static class Foo {
-    int a;
-  }
-  
-  private static class Bar {
-    int a;
-  }
-  
-  private static class Foobar {
-    Foo foo;
-    Bar bar;
   }
 }

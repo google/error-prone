@@ -21,23 +21,7 @@ public class SelfAssignment implements Matcher<AssignmentTree> {
   
   @Override
   public boolean matches(AssignmentTree t, VisitorState state) {
-    ExpressionTree lhs = t.getVariable();
-    ExpressionTree rhs = t.getExpression();
-    
-    /* We only consider cases where the lhs and rhs are identifiers or field accesses.
-     * 
-     * Samples:
-     * a = a
-     * foo.a = a
-     * foo.a = bar.a
-     * foo.bar.a = bar.a
-     * foo.bar.a = foo.bar.a
-     * super.a = a  // a here could also be from the superclass
-     */
-    assert(lhs.getKind() == Kind.IDENTIFIER || lhs.getKind() == Kind.MEMBER_SELECT);
-    assert(rhs.getKind() == Kind.IDENTIFIER || rhs.getKind() == Kind.MEMBER_SELECT);
-    
-    return sameFieldAccess(lhs, rhs);
+    return sameFieldAccess(t.getVariable(), t.getExpression());
   }
   
   /**
@@ -52,6 +36,12 @@ public class SelfAssignment implements Matcher<AssignmentTree> {
    * to be undecidable (Ramalingam 94).  
    */
   private boolean sameFieldAccess(ExpressionTree t1, ExpressionTree t2) {
+    // throw up our hands if we're not comparing identifiers and/or field accesses
+    if ((t1.getKind() != Kind.IDENTIFIER && t1.getKind() != Kind.MEMBER_SELECT) ||
+        (t2.getKind() != Kind.IDENTIFIER && t2.getKind() != Kind.MEMBER_SELECT)) {
+      return false;
+    }
+    
     if (t1.getKind() == Kind.IDENTIFIER && t2.getKind() == Kind.IDENTIFIER) {
       return ((JCIdent)t1).sym.equals(((JCIdent)t2).sym);
     } else if (t1.getKind() == Kind.MEMBER_SELECT && t2.getKind() == Kind.MEMBER_SELECT) {
