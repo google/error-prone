@@ -6,6 +6,11 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.isSelfAssignment;
+import static com.sun.source.tree.Tree.Kind.CLASS;
+import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
+import static com.sun.source.tree.Tree.Kind.MEMBER_SELECT;
+import static com.sun.source.tree.Tree.Kind.METHOD;
+import static com.sun.source.tree.Tree.Kind.VARIABLE;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.Scanner;
@@ -13,9 +18,21 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.refactors.RefactoringMatcher;
+import com.google.errorprone.util.EditDistance;
 
 import com.sun.source.tree.AssignmentTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
+import com.sun.source.util.TreePath;
+import com.sun.tools.javac.code.Flags;
+import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCClassDecl;
+import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
+import com.sun.tools.javac.tree.JCTree.JCIdent;
+import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
+import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 
 /**
  * TODO(eaftan): doesn't seem to be visiting assignments in declarations:
@@ -46,19 +63,120 @@ public class SelfAssignment extends RefactoringMatcher<AssignmentTree> {
         .matches(t, state);
   }
 
+  /**
+   * We expect that the lhs is a field and the rhs is an identifier, specifically
+   * a parameter to the method.  We base our suggested fixes on this expectation.
+   * 
+   * Case 1: If lhs is a field and rhs is an identifier, find a method parameter
+   * of the same type and similar name and suggest it as the rhs.  (Guess that they 
+   * have misspelled the identifier.)
+   * 
+   * Case 2: If lhs is a field and rhs is not an identifier, find a method parameter
+   * of the same type and similar name and suggest it as the rhs.
+   * 
+   * Case 3: If lhs is not a field and rhs is an identifier, find a class field
+   * of the same type and similar name and suggest it as the lhs.
+   * 
+   * Case 4: Otherwise suggest deleting the assignment. 
+   */
   @Override
   public Refactor refactor(AssignmentTree t,
       VisitorState state) {
-    // delete statement that is parent of self assignment
+    
+    // the statement that is the parent of the self-assignment expression
     Tree parent = state.getPath().getParentPath().getLeaf();
-    return new Refactor(t, refactorMessage, new SuggestedFix().delete(parent));
+    
+    // default fix is to delete assignment
+    SuggestedFix fix = new SuggestedFix().delete(parent);
+    
+    ExpressionTree lhs = t.getVariable();
+    ExpressionTree rhs = t.getExpression();
+    
+    if ((lhs.getKind() == MEMBER_SELECT && rhs.getKind() == IDENTIFIER) ||
+        (lhs.getKind() == MEMBER_SELECT && rhs.getKind() != IDENTIFIER)) {
+      // find a method parameter of the same type and similar name and suggest it 
+      // as the rhs
+
+      // rhs should be either identifier or field access
+      assert(rhs.getKind() == IDENTIFIER || rhs.getKind() == MEMBER_SELECT);
+      
+      // get current name of rhs
+      String rhsName = null;
+      if (rhs.getKind() == IDENTIFIER) {
+        rhsName = ((JCIdent)rhs).name.toString();
+      } else if (rhs.getKind() == MEMBER_SELECT) {
+        rhsName = ((JCFieldAccess)rhs).name.toString();
+      } 
+      
+      // find method parameters of the same type
+      Type type = ((JCFieldAccess)lhs).type;
+      TreePath path = state.getPath();
+      while (path != null && path.getLeaf().getKind() != METHOD) {
+        path = path.getParentPath();
+      }
+      JCMethodDecl method = (JCMethodDecl)path.getLeaf();
+      int minEditDistance = Integer.MAX_VALUE;
+      String replacement = null;
+      for (JCVariableDecl var : method.params) {
+        if (var.type == type) {
+          int editDistance = EditDistance.getEditDistance(rhsName, var.name.toString());
+          if (editDistance < minEditDistance) {
+            // pick one with minimum edit distance
+            minEditDistance = editDistance;
+            replacement = var.name.toString();
+          }
+        }
+      }
+      if (replacement != null) {
+        // suggest replacing rhs with the parameter
+        fix = new SuggestedFix().replace(rhs, replacement);
+      } 
+    } else if (lhs.getKind() != MEMBER_SELECT && rhs.getKind() == IDENTIFIER) {
+      // find a field of the same type and similar name and suggest it as the lhs
+      
+      // lhs should be identifier 
+      assert(lhs.getKind() == IDENTIFIER);
+      
+      // get current name of lhs
+      String lhsName = ((JCIdent)rhs).name.toString();
+      
+      // find class instance fields of the same type
+      Type type = ((JCIdent)lhs).type;
+      TreePath path = state.getPath();
+      while (path != null && path.getLeaf().getKind() != CLASS) {
+        path = path.getParentPath();
+      }
+      JCClassDecl klass = (JCClassDecl)path.getLeaf();
+      int minEditDistance = Integer.MAX_VALUE;
+      String replacement = null;
+      for (JCTree member : klass.getMembers()) {
+        if (member.getKind() == VARIABLE) {
+          JCVariableDecl var = (JCVariableDecl)member;
+          if (!Flags.isStatic(var.sym) && var.type == type) {
+            int editDistance = EditDistance.getEditDistance(lhsName, var.name.toString());
+            if (editDistance < minEditDistance) {
+              // pick one with minimum edit distance
+              minEditDistance = editDistance;
+              replacement = var.name.toString();
+            }
+          }
+        }
+      }
+      if (replacement != null) {
+        // suggest replacing lhs with the field
+        fix = new SuggestedFix().replace(lhs, "this." + replacement);
+      } 
+    }
+        
+    return new Refactor(t, refactorMessage, fix);
   }
 
   public static class Search extends Scanner {
     public Matcher<AssignmentTree> selfAssignmentMatcher = new SelfAssignment();
     @Override
-    public Void visitAssignment(AssignmentTree node, VisitorState state) {
-      if (selfAssignmentMatcher.matches(node, state.withPath(getCurrentPath()))) {
+    public Void visitAssignment(AssignmentTree node, VisitorState visitorState) {
+      VisitorState state = visitorState.withPath(getCurrentPath());
+      if (selfAssignmentMatcher.matches(node, state)) {
         reportMatch(selfAssignmentMatcher, node, state);
       }
       return null;

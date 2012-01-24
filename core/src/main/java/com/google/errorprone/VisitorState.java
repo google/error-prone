@@ -32,7 +32,7 @@ public class VisitorState {
 
   private final RefactorListener refactorListener;
   private final MatchListener matchListener;
-  private final Context context;
+  public final Context context;
   private final TreePath path;
 
   private VisitorState(Context context, TreePath path,

@@ -49,6 +49,14 @@ public class PositiveCases2 {
     this.foo.a = foo.a;
   }
   
+  public void test9(Foo fao, Foo bar) {
+    this.foo = foo;
+  }
+  
+  public void test10(Foo foo) {
+    foo = foo;
+  }
+     
   private static class Foo {
     int a;
   }

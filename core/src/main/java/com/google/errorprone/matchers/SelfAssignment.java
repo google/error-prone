@@ -63,7 +63,7 @@ public class SelfAssignment implements Matcher<AssignmentTree> {
         s2 = ((JCFieldAccess)t1).sym;
         expr = ((JCFieldAccess)t1).selected;
       }
-      // TODO(eaftan): what about foo.a = a? where foo is of same type as a.
+      // TODO(eaftan): really shouldn't be relying on .toString()
       return expr.toString().equals("this") && s1.equals(s2);
     }
   }

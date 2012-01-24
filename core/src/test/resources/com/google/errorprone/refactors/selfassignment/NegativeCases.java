@@ -60,6 +60,9 @@ public class NegativeCases {
     f1.foo.a = f1.bar.a;
   }
   
+  public void test8(NegativeCases that) {
+    this.a = that.a;
+  }
   
   private static class Foo {
     int a;
