@@ -1,0 +1,99 @@
+// Copyright 2012 Google Inc. All Rights Reserved.
+
+package com.google.errorprone.util;
+
+/**
+ * A utility class for finding the edit distance between strings. 
+ * The edit distance between two strings is the number of deletions, 
+ * insertions, and substitutions required to transform the source to the target.
+ *
+ * @author eaftan@google.com (Eddie Aftandilian)
+ */
+public class EditDistance {
+
+  private EditDistance() { /* disallow instantiation */ }
+
+  /**
+   * Returns the edit distance between two strings.
+   * 
+   * @param source The source string.
+   * @param target The target distance.
+   * @return The edit distance between the source and target string.
+   * @see #getEditDistance(String, String, boolean)
+   */
+  public static int getEditDistance(String source, String target) {
+    return getEditDistance(source, target, true);
+  }
+
+  /**
+   * Returns the edit distance between two strings.
+   * The algorithm used to calculate this distance has space requirements of
+   * len(source)*len(target).
+   * 
+   * @param source The source string.
+   * @param target The target string
+   * @param caseSensitive If true, case is used in comparisons and 'a' != 'A'. 
+   * @return The edit distance between the source and target strings.
+   * @see #getEditDistance(String, String)
+   */
+  public static int getEditDistance(String source, String target, 
+      boolean caseSensitive) {
+
+    // Levenshtein distance algorithm
+
+    int sourceLength = isEmptyOrWhitespace(source) ? 0 : source.length();
+    int targetLength = isEmptyOrWhitespace(target) ? 0 : target.length();
+    
+    if (sourceLength == 0) {
+      return targetLength;
+    }
+
+    if (targetLength == 0) {
+      return sourceLength;
+    }
+
+    if (!caseSensitive) {
+      source = source.toLowerCase();
+      target = target.toLowerCase();
+    }
+
+    int[][] levMatrix = new int[sourceLength + 1][targetLength + 1];
+
+    for (int i = 0; i <= sourceLength; i++) {
+      levMatrix[i][0] = i;
+    }
+
+    for (int i = 0; i <= targetLength; i++) {
+      levMatrix[0][i] = i;
+    }
+
+    for (int i = 1; i <= sourceLength; i++) {
+
+      char sourceI = source.charAt(i - 1);
+      for (int j = 1; j <= targetLength; j++) {
+        char targetJ = target.charAt(j - 1);
+
+        int cost = 0;
+        if (sourceI != targetJ) {
+          cost = 1;
+        } 
+
+        levMatrix[i][j] = Math.min(cost + levMatrix[i - 1][j - 1],
+            Math.min(levMatrix[i - 1][j] + 1, levMatrix[i][j - 1] + 1));
+      }
+    }
+
+    return levMatrix[sourceLength][targetLength];
+  }
+
+  /**
+   * Determines if a string is empty or consists only of whitespace
+   * 
+   * @param source The string to check
+   * @return True if the string is empty or contains only whitespace, 
+   * false otherwise
+   */
+  private static boolean isEmptyOrWhitespace(String source) {
+    return source == null || source.matches("\\s*");
+  }
+}
