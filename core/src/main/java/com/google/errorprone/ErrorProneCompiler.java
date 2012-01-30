@@ -17,14 +17,15 @@
 package com.google.errorprone;
 
 import com.sun.source.util.TreePathScanner;
-import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.main.Main;
 import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Messages;
 
 import java.io.PrintWriter;
 
+import javax.annotation.processing.Processor;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
 
@@ -96,15 +97,11 @@ public class ErrorProneCompiler extends Main {
   }
 
   /**
-   * Method copied from openjdk, and altered to run our initialization.
-   * @param args
-   * @return
+   * Hook into the compile method, to register our components with the compilation's context.
    */
   @Override
-  public int compile(String[] args) {
-    Context context = new Context();
-    JavacFileManager.preRegister(context); // can't create it until Log has been set up
-
+  public int compile(String[] strings, Context context, List<JavaFileObject> javaFileObjects,
+      Iterable<? extends Processor> iterable) {
     if (diagnosticListener != null) {
       context.put(DiagnosticListener.class, diagnosticListener);
     }
@@ -121,7 +118,6 @@ public class ErrorProneCompiler extends Main {
       throw new RuntimeException("The JavaCompiler used must have the preRegister static method. "
           + "We are very sorry.", e);
     }
-    int result = compile(args, context);
-    return result;
+    return super.compile(strings, context, javaFileObjects, iterable);
   }
 }
