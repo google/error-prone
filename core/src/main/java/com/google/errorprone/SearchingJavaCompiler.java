@@ -50,7 +50,7 @@ public class SearchingJavaCompiler extends JavaCompiler {
   public static void preRegister(final Context context) {
     context.put(compilerKey, new Factory<JavaCompiler>() {
       @Override
-      public JavaCompiler make() {
+      public JavaCompiler make(Context context) {
         return new SearchingJavaCompiler(context);
       }
     });
