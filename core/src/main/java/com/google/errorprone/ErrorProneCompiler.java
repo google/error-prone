@@ -21,11 +21,12 @@ import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.main.Main;
 import com.sun.tools.javac.util.Context;
-import com.sun.tools.javac.util.JavacMessages;
+import com.sun.tools.javac.util.Messages;
+
+import java.io.PrintWriter;
 
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
-import java.io.PrintWriter;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -113,7 +114,7 @@ public class ErrorProneCompiler extends Main {
       configuredScanner = this.errorProneScanner;
       context.put(TreePathScanner.class, configuredScanner);
     }
-    JavacMessages.instance(context).add("com.google.errorprone.errors");
+    Messages.instance(context).add("com.google.errorprone.errors");
     try {
       compilerClass.getMethod("preRegister", Context.class).invoke(null, context);
     } catch (Exception e) {
