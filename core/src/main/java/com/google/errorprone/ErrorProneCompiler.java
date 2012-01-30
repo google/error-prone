@@ -17,18 +17,15 @@
 package com.google.errorprone;
 
 import com.sun.source.util.TreePathScanner;
+import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.main.Main;
 import com.sun.tools.javac.util.Context;
-import com.sun.tools.javac.util.Messages;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.util.PropertyResourceBundle;
+import com.sun.tools.javac.util.JavacMessages;
 
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
+import java.io.PrintWriter;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -37,7 +34,7 @@ public class ErrorProneCompiler extends Main {
 
   /**
    * Entry point for compiling Java code with error-prone enabled.
-   * All default refactors are run, and the compile fails if they find a bug.
+   * All default checks are run, and the compile fails if they find a bug.
    * @param args the same args which could be passed to javac on the command line
    */
   public static void main(String[] args) {
@@ -97,9 +94,16 @@ public class ErrorProneCompiler extends Main {
     }
   }
 
+  /**
+   * Method copied from openjdk, and altered to run our initialization.
+   * @param args
+   * @return
+   */
   @Override
-  protected void javaCompilerInit(final Context context) {
-    super.javaCompilerInit(context);
+  public int compile(String[] args) {
+    Context context = new Context();
+    JavacFileManager.preRegister(context); // can't create it until Log has been set up
+
     if (diagnosticListener != null) {
       context.put(DiagnosticListener.class, diagnosticListener);
     }
@@ -109,25 +113,14 @@ public class ErrorProneCompiler extends Main {
       configuredScanner = this.errorProneScanner;
       context.put(TreePathScanner.class, configuredScanner);
     }
-    setupMessageBundle(context);
+    JavacMessages.instance(context).add("com.google.errorprone.errors");
     try {
       compilerClass.getMethod("preRegister", Context.class).invoke(null, context);
     } catch (Exception e) {
       throw new RuntimeException("The JavaCompiler used must have the preRegister static method. "
           + "We are very sorry.", e);
     }
-  }
-
-  public static void setupMessageBundle(Context context) {
-    try {
-      String bundlePath = "/com/google/errorprone/errors.properties";
-      InputStream bundleResource = ErrorProneCompiler.class.getResourceAsStream(bundlePath);
-      if (bundleResource == null) {
-        throw new IllegalStateException("Resource bundle not found at " + bundlePath);
-      }
-      Messages.instance(context).add(new PropertyResourceBundle(bundleResource));
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    int result = compile(args, context);
+    return result;
   }
 }
