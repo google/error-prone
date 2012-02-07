@@ -63,13 +63,18 @@
   </dependencies>
 
   <profiles>
-    <!-- tools.jar is in the classpath by default on MacOS -->
     <profile>
       <id>tools-jar</id>
       <activation>
-        <os>
-          <family>!mac</family>
-        </os>
+          <!-- TODO: tools.jar is in the classpath by default on Apple-provided JDK
+               but not OpenJDK. We don't compile with Apple's JDK right now, so this
+               profile is always enabled.-->
+          <activeByDefault>true</activeByDefault>
+          <!-- Use this to exclude tools.jar on Mac
+          <os>
+              <family>!mac</family>
+          </os>
+          -->
       </activation>
       <dependencies>
         <dependency>

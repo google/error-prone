@@ -21,13 +21,11 @@ import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.main.Main;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.List;
-import com.sun.tools.javac.util.Messages;
-
-import java.io.PrintWriter;
 
 import javax.annotation.processing.Processor;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
+import java.io.PrintWriter;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -111,7 +109,23 @@ public class ErrorProneCompiler extends Main {
       configuredScanner = this.errorProneScanner;
       context.put(TreePathScanner.class, configuredScanner);
     }
-    Messages.instance(context).add("com.google.errorprone.errors");
+
+    // Register our message bundle reflectively, so we can compile against both JDK6 and JDK7.
+    // OpenJDK6: com.sun.tools.javac.util.Messages.instance(context).add("com.google.errorprone.errors");
+    // OpenJDK7: com.sun.tools.javac.util.JavacMessages.instance(context).add("com.google.errorprone.errors");
+    try {
+      Class<?> messagesClass;
+      try {
+        messagesClass = getClass().getClassLoader().loadClass("com.sun.tools.javac.util.Messages");
+      } catch (ClassNotFoundException e) {
+        messagesClass = getClass().getClassLoader().loadClass("com.sun.tools.javac.util.JavacMessages");
+      }
+      Object instance = messagesClass.getMethod("instance", Context.class).invoke(null, context);
+      messagesClass.getMethod("add", String.class).invoke(instance, "com.google.errorprone.errors");
+    } catch (Exception e) {
+      throw new RuntimeException("Unable to register message bundle", e);
+    }
+
     try {
       compilerClass.getMethod("preRegister", Context.class).invoke(null, context);
     } catch (Exception e) {
