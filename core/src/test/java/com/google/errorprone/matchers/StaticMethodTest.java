@@ -16,19 +16,12 @@
 
 package com.google.errorprone.matchers;
 
-import static com.google.common.io.Files.deleteRecursively;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
 import com.google.errorprone.ErrorProneCompiler;
 import com.google.errorprone.ErrorProneCompiler.Builder;
 import com.google.errorprone.Scanner;
 import com.google.errorprone.VisitorState;
-
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.Tree.Kind;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -39,6 +32,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+
+import static com.google.common.io.Files.deleteRecursively;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -66,7 +64,7 @@ public class StaticMethodTest {
 
   @After
   public void tearDown() throws Exception {
-    deleteRecursively(tempDir);
+    deleteRecursively(tempDir.getCanonicalFile());
   }
 
   @Test

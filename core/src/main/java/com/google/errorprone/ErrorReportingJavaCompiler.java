@@ -46,7 +46,11 @@ public class ErrorReportingJavaCompiler extends JavaCompiler {
    */
   public static void preRegister(final Context context) {
     context.put(compilerKey, new Factory<JavaCompiler>() {
-      @Override
+      //@Override for OpenJDK 7 only
+      public JavaCompiler make(Context context) {
+        return new ErrorReportingJavaCompiler(context);
+      }
+      //@Override for OpenJDK 6 only
       public JavaCompiler make() {
         return new ErrorReportingJavaCompiler(context);
       }
