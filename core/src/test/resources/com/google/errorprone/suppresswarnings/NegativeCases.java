@@ -3,12 +3,12 @@
 package com.google.errorprone.refactors;
 
 /**
- * Test to ensure SuppressWarnings annotation is respected.
+ * Test cases to ensure SuppressWarnings annotation is respected.
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 @SuppressWarnings("Dead exception")
-public class SuppressWarningsTest {
+public class NegativeCases {
 
   @SuppressWarnings("Empty if")
   public void testEmptyIf() {
