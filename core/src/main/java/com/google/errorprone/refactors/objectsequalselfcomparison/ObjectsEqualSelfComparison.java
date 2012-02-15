@@ -95,7 +95,7 @@ public class ObjectsEqualSelfComparison extends RefactoringMatcher<MethodInvocat
     @Override
     public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {
       VisitorState state = visitorState.withPath(getCurrentPath());
-      if (matcher.matches(node, state)) {
+      if (!isSuppressed(matcher.getName()) && matcher.matches(node, state)) {
         reportMatch(matcher, node, state);
       }
       return null;

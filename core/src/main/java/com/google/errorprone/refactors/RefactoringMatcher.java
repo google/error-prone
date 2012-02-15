@@ -29,12 +29,17 @@ import com.sun.source.tree.Tree;
  */
 public abstract class RefactoringMatcher<T extends Tree> implements Matcher<T> {
     
-
-  protected String refactorMessage;
+  protected final String name;
+  protected final String refactorMessage;
   
   public RefactoringMatcher() {
     BugPattern annotation = this.getClass().getAnnotation(BugPattern.class);
+    name = annotation.name();
     refactorMessage = "[" + annotation.name() + "] " + annotation.summary();
+  }
+  
+  public String getName() {
+    return name;
   }
 
   /**

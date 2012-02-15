@@ -103,11 +103,11 @@ public class EmptyIfStatement extends RefactoringMatcher<EmptyStatementTree> {
 
   public static class Search extends Scanner {
 
-    public Matcher<EmptyStatementTree> emptyIfMatcher = new EmptyIfStatement();
+    public RefactoringMatcher<EmptyStatementTree> emptyIfMatcher = new EmptyIfStatement();
     @Override
     public Void visitEmptyStatement(EmptyStatementTree node, VisitorState visitorState) {
       VisitorState state = visitorState.withPath(getCurrentPath());
-      if (emptyIfMatcher.matches(node, state)) {
+      if (!isSuppressed(emptyIfMatcher.getName()) && emptyIfMatcher.matches(node, state)) {
         reportMatch(emptyIfMatcher, node, state);
       }
       return null;

@@ -16,7 +16,7 @@
 
 package com.google.errorprone;
 
-import com.google.errorprone.refactors.*;
+import com.google.errorprone.refactors.RefactoringMatcher;
 import com.google.errorprone.refactors.deadexception.DeadException;
 import com.google.errorprone.refactors.emptyifstatement.EmptyIfStatement;
 import com.google.errorprone.refactors.fallthroughsuppression.FallThroughSuppression;
@@ -70,7 +70,7 @@ public class ErrorProneScanner extends Scanner {
       MethodInvocationTree methodInvocationTree, VisitorState state) {
     for (RefactoringMatcher<MethodInvocationTree> matcher : methodInvocationMatchers) {
       VisitorState newState = state.withPath(getCurrentPath());
-      if (matcher.matches(methodInvocationTree, newState)) {
+      if (!isSuppressed(matcher.getName()) && matcher.matches(methodInvocationTree, newState)) {
          reportMatch(matcher, methodInvocationTree, newState);
       }
     }
@@ -82,7 +82,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitNewClass(NewClassTree newClassTree, VisitorState visitorState) {
     for (RefactoringMatcher<NewClassTree> matcher : newClassMatchers) {
       VisitorState state = visitorState.withPath(getCurrentPath());
-      if (matcher.matches(newClassTree, state)) {
+      if (!isSuppressed(matcher.getName()) && matcher.matches(newClassTree, state)) {
          reportMatch(matcher, newClassTree, state);
       }
     }
@@ -94,7 +94,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitAnnotation(AnnotationTree annotationTree, VisitorState visitorState) {
     for (RefactoringMatcher<AnnotationTree> matcher : annotationMatchers) {
       VisitorState state = visitorState.withPath(getCurrentPath());
-      if (matcher.matches(annotationTree, state)) {
+      if (!isSuppressed(matcher.getName()) && matcher.matches(annotationTree, state)) {
          reportMatch(matcher, annotationTree, state);
       }
     }
@@ -107,7 +107,7 @@ public class ErrorProneScanner extends Scanner {
       VisitorState visitorState) {
     for (RefactoringMatcher<EmptyStatementTree> matcher : emptyStatementMatchers) {
       VisitorState state = visitorState.withPath(getCurrentPath());
-      if (matcher.matches(emptyStatementTree, state)) {
+      if (!isSuppressed(matcher.getName()) && matcher.matches(emptyStatementTree, state)) {
         reportMatch(matcher, emptyStatementTree, state);
       }
     }
@@ -120,7 +120,7 @@ public class ErrorProneScanner extends Scanner {
       VisitorState visitorState) {
     for (RefactoringMatcher<AssignmentTree> matcher : assignmentMatchers) {
       VisitorState state = visitorState.withPath(getCurrentPath());
-      if (matcher.matches(assignmentTree, state)) {
+      if (!isSuppressed(matcher.getName()) && matcher.matches(assignmentTree, state)) {
         reportMatch(matcher, assignmentTree, state);
       }
     }

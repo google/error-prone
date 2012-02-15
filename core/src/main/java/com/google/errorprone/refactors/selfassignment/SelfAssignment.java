@@ -172,11 +172,12 @@ public class SelfAssignment extends RefactoringMatcher<AssignmentTree> {
   }
 
   public static class Search extends Scanner {
-    public Matcher<AssignmentTree> selfAssignmentMatcher = new SelfAssignment();
+    public RefactoringMatcher<AssignmentTree> selfAssignmentMatcher = new SelfAssignment();
     @Override
     public Void visitAssignment(AssignmentTree node, VisitorState visitorState) {
       VisitorState state = visitorState.withPath(getCurrentPath());
-      if (selfAssignmentMatcher.matches(node, state)) {
+      if (!isSuppressed(selfAssignmentMatcher.getName()) && 
+          selfAssignmentMatcher.matches(node, state)) {
         reportMatch(selfAssignmentMatcher, node, state);
       }
       return null;
