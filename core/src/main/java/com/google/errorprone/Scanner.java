@@ -41,29 +41,79 @@ import java.util.Set;
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class Scanner extends TreePathScanner<Void, VisitorState> {
-  
+
   private Set<String> suppressions = new HashSet<String>(); 
-  
-   @Override
+
+  /**
+   * Scan a tree from a position identified by a TreePath. 
+   */
+  @Override
   public Void scan(TreePath path, VisitorState state) {
-     Set<String> newSuppressions = null;
-     Set<String> prevSuppressions = suppressions;
-     Symbol sym = getSymbol(path.getLeaf());
-     if (sym != null) {
-       newSuppressions = extendSuppressionSet(sym, state.getSymtab().suppressWarningsType, 
-           suppressions);
-       if (newSuppressions != null) {
-         suppressions = newSuppressions;
-       }
-     }
+    /**
+     * We maintain a list of suppressed warnings for the current node. When we
+     * explore a new node, we have to extend the suppression set with any new
+     * suppressed warnings.  We also have to retain the previous suppression set
+     * so that we can reinstate it when we move up the tree.
+     * 
+     * We avoid copying the suppression set if the next node to explore does not
+     * have any suppressed warnings.  This is the common case. 
+     */
+    Set<String> newSuppressions = null;
+    Set<String> prevSuppressions = suppressions;
+    Symbol sym = getSymbol(path.getLeaf());
+    if (sym != null) {
+      newSuppressions = extendSuppressionSet(sym, state.getSymtab().suppressWarningsType, 
+          suppressions);
+      if (newSuppressions != null) {
+        suppressions = newSuppressions;
+      }
+    }
 
-     try {
-       return super.scan(path, state);
-     } finally {
-       suppressions = prevSuppressions;
-     }
-   }
+    try {
+      return super.scan(path, state);
+    } finally {
+      suppressions = prevSuppressions;
+    }
+  }
 
+  /**
+   * Scan a single node.
+   * The current path is updated for the duration of the scan.
+   */
+  @Override
+  public Void scan(Tree tree, VisitorState state) {
+    if (tree == null) {
+      return null;
+    }
+
+    /**
+     * We maintain a list of suppressed warnings for the current node. When we
+     * explore a new node, we have to extend the suppression set with any new
+     * suppressed warnings.  We also have to retain the previous suppression set
+     * so that we can reinstate it when we move up the tree.
+     * 
+     * We avoid copying the suppression set if the next node to explore does not
+     * have any suppressed warnings.  This is the common case. 
+     */
+    Set<String> newSuppressions = null;
+    Set<String> prevSuppressions = suppressions;
+    Symbol sym = getSymbol(tree);
+    if (sym != null) {
+      newSuppressions = extendSuppressionSet(sym, state.getSymtab().suppressWarningsType, 
+          suppressions);
+      if (newSuppressions != null) {
+        suppressions = newSuppressions;
+      }
+    }
+
+    try {    
+      return super.scan(tree, state);
+    } finally {
+      suppressions = prevSuppressions;
+    }
+
+  }
+    
   /**
    * Given an AST node, returns its symbol.  Only certain AST nodes have
    * symbols, so if there is no symbol for this node, returns null.
@@ -90,39 +140,10 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
         sym = ((JCIdent) tree).sym;
         break;
     }
-    
+
     return sym;
   }
 
-  /**
-   * Scan a single node.
-   * The current path is updated for the duration of the scan.
-   */
-  @Override
-  public Void scan(Tree tree, VisitorState state) {
-    if (tree == null) {
-      return null;
-    }
-    
-    Set<String> newSuppressions = null;
-    Set<String> prevSuppressions = suppressions;
-    Symbol sym = getSymbol(tree);
-    if (sym != null) {
-      newSuppressions = extendSuppressionSet(sym, state.getSymtab().suppressWarningsType, 
-          suppressions);
-      if (newSuppressions != null) {
-        suppressions = newSuppressions;
-      }
-    }
-    
-    try {    
-      return super.scan(tree, state);
-    } finally {
-      suppressions = prevSuppressions;
-    }
-    
-  }
-  
   /**
    * Extends a set of suppressed warnings with the contents of any SuppressWarnings annotations
    * on the given symbol.  Does not mutate the passed-in set of suppressions.  If there were
@@ -138,7 +159,7 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
       Set<String> suppressions) {
     boolean copied = false;
     Set<String> newSuppressions = null;
-    
+
     // Iterate over annotations on this symbol, looking for SuppressWarnings
     for (Attribute.Compound attr : sym.getAnnotationMirrors()) {
       if (attr.type.tsym == suppressWarningsType.tsym) {
@@ -161,15 +182,14 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
         }
       }
     }
-    
+
     return newSuppressions;
   }
-  
+
   public boolean isSuppressed(String warning) {
     return suppressions.contains(warning);
   }
 
-  
   protected <T extends Tree> void reportMatch(Matcher<T> matcher, T match, VisitorState state) {
     state.getMatchListener().onMatch(match);
     if (matcher instanceof RefactoringMatcher) {
