@@ -16,6 +16,9 @@
 
 package com.google.errorprone;
 
+import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Env;
@@ -23,6 +26,7 @@ import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Context.Factory;
 
+import java.util.LinkedList;
 import java.util.Queue;
 
 /**
@@ -74,6 +78,33 @@ public class ErrorReportingJavaCompiler extends JavaCompiler {
             : env.toplevel.sourcefile);
     VisitorState visitorState = new VisitorState(context, logReporter);
     Scanner scanner = (Scanner) context.get(TreePathScanner.class);
-    scanner.scan(env.toplevel, visitorState);
+    
+    /* Each env corresponds to a parse tree (I *think* always a top-level
+     * class), not necessarily to a file as we had previously thought.  Here we
+     * walk up the env to generate a TreePath for this parse tree, then scan it.
+     *
+     * TODO(eaftan): Note that because we are scanning parse trees and not
+     * compilation units, we can never encounter file-level tree nodes, such as
+     * import statements.  Problem?
+     */
+    
+    // create list of Tree nodes from current to top
+    LinkedList<Tree> pathList = new LinkedList<Tree>();
+    Env<AttrContext> envForPath = env;
+    pathList.addFirst(envForPath.tree);
+    while (envForPath.outer != null) {
+      envForPath = envForPath.outer;
+      pathList.addFirst(envForPath.tree);
+    }
+    
+    // generate TreePath based on list
+    if (!(pathList.element() instanceof CompilationUnitTree)) {
+      throw new IllegalStateException("Expected top of tree to be a compilation unit");
+    }
+    TreePath path = new TreePath((CompilationUnitTree) pathList.remove());
+    for (Tree t : pathList) {
+      path = new TreePath(path, t);
+    }
+    scanner.scan(path, visitorState);
   }
 }
