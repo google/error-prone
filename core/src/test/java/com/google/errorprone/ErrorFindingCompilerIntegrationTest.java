@@ -78,6 +78,28 @@ public class ErrorFindingCompilerIntegrationTest {
     assertThat("Warning should be found. Diagnostics: " + diagnostics.getDiagnostics(),
         diagnostics.getDiagnostics(), matcher);
   }
+  
+  @Test
+  public void testShouldSucceedCompileSourceFileWithMultipleTopLevelClasses() throws Exception {
+    ErrorProneCompiler compiler = new ErrorProneCompiler.Builder()
+        .named("test")
+        .redirectOutputTo(printWriter)
+        .listenToDiagnostics(diagnostics)
+        .build();
+    String[] sources = sources(
+        "com/google/errorprone/ClassFileWriter.java");
+    // TODO(eaftan): Running test with the annotation processor compiler enabled causes
+    // the wrong copy of JavaCompiler to be used.  We should probably switch Maven to 
+    // having an explicit docgen phase that calls the annotation processor with proc:only,
+    // then not have the annotation processor on the compile classpath.
+    String[] args = new String[sources.length+1];
+    System.arraycopy(sources, 0, args, 0, sources.length);
+    args[sources.length] = new String("-proc:none");
+    int exitCode = compiler.compile(args);
+    outputStream.flush();
+    assertThat(outputStream.toString(), exitCode, is(0));
+
+  }
 
   private String[] sources(String... files) throws URISyntaxException {
     String[] result = new String[files.length];
