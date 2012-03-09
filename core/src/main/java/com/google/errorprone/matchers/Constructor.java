@@ -42,6 +42,8 @@ public class Constructor implements Matcher<NewClassTree>{
   
   @Override
   public boolean matches(NewClassTree newClassTree, VisitorState state) {
+    /* TODO(eaftan): Don't catch NullPointerException.  Need to do this right now
+     * for internal use, but remember to remove later. */
     try {
       JCNewClass newClass = (JCNewClass) newClassTree;
       String thisClassName = newClass.constructor.getEnclosingElement().toString();
@@ -54,16 +56,7 @@ public class Constructor implements Matcher<NewClassTree>{
       
       return thisClassName.equals(className) && thisParameterTypesAsStrings.equals(parameterTypes);
     } catch (NullPointerException e) {
-      System.err.println("NPE while scanning " + newClassTree.toString());
-      JCNewClass newClass = (JCNewClass) newClassTree;
-      if (newClass.constructor == null) {
-        System.err.println("constructor is null");
-      } else if (newClass.constructor.getEnclosingElement() == null) {
-        System.err.println("getEnclosingElement() returned null");
-        System.err.println("constructor is " + newClass.constructor.toString());
-      }
-      throw e;
+      return false;
     }
   }
-
 }
