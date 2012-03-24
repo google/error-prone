@@ -47,6 +47,8 @@ public class SuggestedFix {
   private Collection<Pair<Tree, String>> nodeReplacements = new ArrayList<Pair<Tree, String>>();
   private Collection<Pair<Tree, Tree>> nodeSwaps = new ArrayList<Pair<Tree, Tree>>();
   private Collection<Pair<Tree, String>> prefixInsertions = new ArrayList<Pair<Tree, String>>();
+  private Collection<String> importsToAdd = new ArrayList<String>();
+  private Collection<String> importsToRemove = new ArrayList<String>();
 
   public Set<Replacement> getReplacements(Map<JCTree, Integer> endPositions) {
     if (endPositions == null) {
@@ -109,5 +111,31 @@ public class SuggestedFix {
   public SuggestedFix swap(Tree node1, Tree node2) {
     nodeSwaps.add(new Pair<Tree, Tree>(node1, node2));
     return this;
+  }
+  
+  /**
+   * Add an import statement as part of this SuggestedFix.
+   * Import string should be of the form "import [static] foo.bar.baz".
+   */
+  public SuggestedFix addImport(String importString) {
+    importsToAdd.add(importString);
+    return this;
+  }
+
+  /**
+   * Remove an import statement as part of this SuggestedFix.
+   * Import string should be of the form "import [static] foo.bar.baz".
+   */
+  public SuggestedFix removeImport(String importString) {
+    importsToRemove.add(importString);
+    return this;
+  }
+  
+  public Collection<String> getImportsToAdd() {
+    return importsToAdd;
+  }
+  
+  public Collection<String> getImportsToRemove() {
+    return importsToRemove;
   }
 }
