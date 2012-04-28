@@ -24,10 +24,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TestName;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 
 import static com.google.common.io.Files.deleteRecursively;
 import static org.hamcrest.CoreMatchers.is;
@@ -40,14 +37,14 @@ public class CompilerBasedTest {
   protected File tempDir;
 
   @Before
-  public void setUp() throws IOException {
+  public void createTempDir() throws IOException {
     tempDir = new File(System.getProperty("java.io.tmpdir"),
         getClass().getCanonicalName() + "." + name.getMethodName());
     tempDir.mkdirs();
   }
 
   @After
-  public void tearDown() throws Exception {
+  public void deleteTempDir() throws Exception {
     deleteRecursively(tempDir.getCanonicalFile());
   }
 
@@ -65,7 +62,12 @@ public class CompilerBasedTest {
         .refactor(scanner)
         .build();
 
-    File[] files = tempDir.listFiles();
+    File[] files = tempDir.listFiles(new FilenameFilter() {
+      @Override
+      public boolean accept(File dir, String name) {
+        return !name.endsWith(".class");
+      }
+    });
     String[] args = new String[files.length];
     for (int i = 0; i < args.length; i++) {
       args[i] = files[i].getAbsolutePath();

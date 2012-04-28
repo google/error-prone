@@ -34,7 +34,6 @@ public class StaticMethodTest extends CompilerBasedTest {
 
   @Before
   public void setUp() throws IOException {
-    super.setUp();
     writeFile("A.java",
         "package com.google;",
         "public class A { ",
