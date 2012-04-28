@@ -16,42 +16,25 @@
 
 package com.google.errorprone.matchers;
 
-import com.google.errorprone.ErrorProneCompiler;
-import com.google.errorprone.ErrorProneCompiler.Builder;
 import com.google.errorprone.Scanner;
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.Tree.Kind;
-import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TestName;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 
-import static com.google.common.io.Files.deleteRecursively;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class StaticMethodTest {
-
-  @Rule public TestName name = new TestName();
-  private File tempDir;
+public class StaticMethodTest extends CompilerBasedTest {
 
   @Before
   public void setUp() throws IOException {
-    tempDir = new File(System.getProperty("java.io.tmpdir"),
-        getClass().getCanonicalName() + "." + name.getMethodName());
-    tempDir.mkdirs();
-
+    super.setUp();
     writeFile("A.java",
         "package com.google;",
         "public class A { ",
@@ -60,11 +43,6 @@ public class StaticMethodTest {
         "  }",
         "}"
     );
-  }
-
-  @After
-  public void tearDown() throws Exception {
-    deleteRecursively(tempDir.getCanonicalFile());
   }
 
   @Test
@@ -77,7 +55,7 @@ public class StaticMethodTest {
       "  }",
       "}"
     );
-    assertMatch(true, new StaticMethod("com.google.A", "count"));
+    assertCompiles(memberSelectMatches(true, new StaticMethod("com.google.A", "count")));
   }
 
   @Test
@@ -89,7 +67,7 @@ public class StaticMethodTest {
       "  }",
       "}"
     );
-    assertMatch(true, new StaticMethod("com.google.A", "count"));
+    assertCompiles(memberSelectMatches(true, new StaticMethod("com.google.A", "count")));
   }
 
   @Test
@@ -104,39 +82,20 @@ public class StaticMethodTest {
         "  }",
         "}"
     );
-    assertMatch(false, new StaticMethod("com.google.A", "count"));
+    assertCompiles(memberSelectMatches(false, new StaticMethod("com.google.A", "count")));
   }
 
-  private void writeFile(String fileName, String... lines) throws IOException {
-    File source = new File(tempDir, fileName);
-    PrintWriter writer = new PrintWriter(new FileWriter(source));
-    for (String line : lines) {
-      writer.println(line);
-    }
-    writer.close();
-  }
-
-  private void assertMatch(final boolean shouldMatch,
-                           final StaticMethod staticMethod) throws IOException {
-    Scanner scanner = new Scanner() {
+  private Scanner memberSelectMatches(final boolean shouldMatch, final StaticMethod toMatch) {
+    return new Scanner() {
       @Override
       public Void visitMemberSelect(MemberSelectTree node, VisitorState visitorState) {
         if (getCurrentPath().getParentPath().getLeaf().getKind() == Kind.METHOD_INVOCATION) {
           assertTrue(node.toString(),
-              !shouldMatch ^ staticMethod.matches(node, visitorState));
+              !shouldMatch ^ toMatch.matches(node, visitorState));
         }
         return super.visitMemberSelect(node, visitorState);
       }
     };
-    ErrorProneCompiler compiler = new Builder()
-        .refactor(scanner)
-        .build();
-
-    File[] files = tempDir.listFiles();
-    String[] args = new String[files.length];
-    for (int i = 0; i < args.length; i++) {
-      args[i] = files[i].getAbsolutePath();
-    }
-    assertThat(compiler.compile(args), is(0));
   }
+
 }
