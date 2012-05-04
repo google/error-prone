@@ -36,6 +36,7 @@
     <module>core</module>
     <module>annotation</module>
     <module>docgen</module>
+    <module>ant</module>
   </modules>
 
   <scm>

@@ -62,6 +62,26 @@
     </dependency>
   </dependencies>
 
+  <build>
+    <plugins>
+      <!-- Include the @BugPattern annotation in the main distribution
+           so users have only one jar to add to their classpath. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>1.2.2</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
   <profiles>
     <profile>
       <id>tools-jar</id>
@@ -86,7 +106,7 @@
         </dependency>
       </dependencies>
     </profile>
-    
+
     <!-- run annotation processor -->
     <profile>
       <id>run-annotation-processor</id>
@@ -122,9 +142,7 @@
             </executions>
           </plugin>
         </plugins>
-      </build>  
+      </build>
     </profile>
-    
-    
   </profiles>
 </project>
