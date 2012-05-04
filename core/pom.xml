@@ -52,7 +52,7 @@
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>r09</version>
-      <scope>compile</scope>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
