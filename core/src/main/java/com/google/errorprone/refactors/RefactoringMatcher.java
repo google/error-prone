@@ -20,7 +20,6 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Matcher;
-
 import com.sun.source.tree.Tree;
 
 /**
@@ -34,6 +33,10 @@ public abstract class RefactoringMatcher<T extends Tree> implements Matcher<T> {
   
   public RefactoringMatcher() {
     BugPattern annotation = this.getClass().getAnnotation(BugPattern.class);
+    if (annotation == null) {
+      throw new IllegalStateException("Class " + this.getClass().getCanonicalName()
+          + " not annotated with @BugPattern");
+    }
     name = annotation.name();
     refactorMessage = "[" + annotation.name() + "] " + annotation.summary();
   }

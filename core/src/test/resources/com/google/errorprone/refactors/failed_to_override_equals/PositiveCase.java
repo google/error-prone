@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Google Inc. All Rights Reserved.
+ * Copyright 2012 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,26 +14,13 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.matchers;
-
-import com.google.errorprone.VisitorState;
-
-import com.sun.source.tree.Tree;
-import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.tree.JCTree;
+package com.google.errorprone.refactors.failed_to_override_equals;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class IsSubtypeOf<T extends Tree> implements Matcher<T> {
-  private final Type type;
-
-  public IsSubtypeOf(Type type) {
-    this.type = type;
-  }
-
-  @Override
-  public boolean matches(Tree t, VisitorState state) {
-    return state.getTypes().isSubtype(((JCTree) t).type, type);
+public class PositiveCase {
+  public boolean equals(PositiveCase other) {
+    return false;
   }
 }

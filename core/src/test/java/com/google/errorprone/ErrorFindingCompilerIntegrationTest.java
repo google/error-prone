@@ -16,22 +16,20 @@
 
 package com.google.errorprone;
 
-import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeDiagnosingMatcher;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.tools.Diagnostic;
-import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URISyntaxException;
-import java.util.Locale;
 
+import static com.google.errorprone.DiagnosticTestHelper.diagnosticLineAndColumn;
+import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.internal.matchers.StringContains.containsString;
@@ -41,13 +39,13 @@ import static org.junit.internal.matchers.StringContains.containsString;
  */
 public class ErrorFindingCompilerIntegrationTest {
 
-  private DiagnosticCollector<JavaFileObject> diagnostics;
+  private DiagnosticTestHelper diagnosticHelper;
   private PrintWriter printWriter;
   private ByteArrayOutputStream outputStream;
 
   @Before
   public void setUp() {
-    diagnostics = new DiagnosticCollector<JavaFileObject>();
+    diagnosticHelper = new DiagnosticTestHelper();
     outputStream = new ByteArrayOutputStream();
     printWriter = new PrintWriter(new OutputStreamWriter(outputStream));
   }
@@ -57,7 +55,7 @@ public class ErrorFindingCompilerIntegrationTest {
     ErrorProneCompiler compiler = new ErrorProneCompiler.Builder()
         .named("test")
         .redirectOutputTo(printWriter)
-        .listenToDiagnostics(diagnostics)
+        .listenToDiagnostics(diagnosticHelper.collector)
         .build();
     String[] sources = sources(
         "com/google/errorprone/refactors/emptyifstatement/PositiveCases.java");
@@ -75,8 +73,8 @@ public class ErrorFindingCompilerIntegrationTest {
     Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher = hasItem(allOf(
         diagnosticLineAndColumn(41L, 5L),
         diagnosticMessage(containsString("Empty statement after if"))));
-    assertThat("Warning should be found. Diagnostics: " + diagnostics.getDiagnostics(),
-        diagnostics.getDiagnostics(), matcher);
+    assertThat("Warning should be found. Diagnostics: " + diagnosticHelper.getDiagnostics(),
+        diagnosticHelper.getDiagnostics(), matcher);
   }
   
   @Test
@@ -84,7 +82,7 @@ public class ErrorFindingCompilerIntegrationTest {
     ErrorProneCompiler compiler = new ErrorProneCompiler.Builder()
         .named("test")
         .redirectOutputTo(printWriter)
-        .listenToDiagnostics(diagnostics)
+        .listenToDiagnostics(diagnosticHelper.collector)
         .build();
     String[] sources = sources(
         "com/google/errorprone/Foo.java");
@@ -107,46 +105,5 @@ public class ErrorFindingCompilerIntegrationTest {
       result[i] = new File(getClass().getResource("/" + files[i]).toURI()).getAbsolutePath();
     }
     return result;
-  }
-
-  private TypeSafeDiagnosingMatcher<Diagnostic<JavaFileObject>> diagnosticLineAndColumn(
-      final long line, final long column) {
-    return new TypeSafeDiagnosingMatcher<Diagnostic<JavaFileObject>>() {
-      @Override
-      protected boolean matchesSafely(
-          Diagnostic<JavaFileObject> item, Description mismatchDescription) {
-        mismatchDescription
-            .appendText("line:column")
-            .appendValue(item.getLineNumber())
-            .appendText(":")
-            .appendValue(item.getColumnNumber());
-        return item.getLineNumber() == line && item.getColumnNumber() == column;
-      }
-
-      @Override
-      public void describeTo(Description description) {
-        description
-            .appendText("a diagnostic on line:column ")
-            .appendValue(line)
-            .appendText(":")
-            .appendValue(column);
-      }
-    };
-  }
-
-  private TypeSafeDiagnosingMatcher<Diagnostic<JavaFileObject>> diagnosticMessage(
-      final Matcher<String> matcher) {
-    return new TypeSafeDiagnosingMatcher<Diagnostic<JavaFileObject>>() {
-      @Override
-      protected boolean matchesSafely(
-          Diagnostic<JavaFileObject> item, Description mismatchDescription) {
-        return matcher.matches(item.getMessage(Locale.getDefault()));
-      }
-
-      @Override
-      public void describeTo(Description description) {
-        description.appendText("a diagnostic with message ").appendDescriptionOf(matcher);
-      }
-    };
   }
 }

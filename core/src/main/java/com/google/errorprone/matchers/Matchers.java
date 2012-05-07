@@ -17,16 +17,10 @@
 package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
-
-import com.sun.source.tree.AnnotationTree;
-import com.sun.source.tree.AssignmentTree;
-import com.sun.source.tree.BlockTree;
-import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.StatementTree;
-import com.sun.source.tree.Tree;
+import com.sun.source.tree.*;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 
 import java.util.List;
@@ -127,12 +121,32 @@ public class Matchers {
     return new ParentNode<T>(treeMatcher);
   }
 
-  public static <T extends Tree> Matcher<T> isSubtypeOf(Type type) {
-    return new IsSubtypeOf<T>(type);
+  public static <T extends Tree> Matcher<T> isSubtypeOf(final Type type) {
+    return new Matcher<T>() {
+      @Override public boolean matches(Tree t, VisitorState state) {
+        return state.getTypes().isSubtype(((JCTree) t).type, type);
+      }
+    };
+  }
+
+  public static <T extends Tree> Matcher<T> isSameType(final Type type) {
+    return new Matcher<T>() {
+      @Override public boolean matches(Tree t, VisitorState state) {
+        return state.getTypes().isSameType(((JCTree) t).type, type);
+      }
+    };
+  }
+
+  public static <T extends Tree> Matcher<T> isSameType(Tree tree) {
+    return isSameType(((JCTree) tree).type);
   }
 
   public static <T extends Tree> EnclosingBlock<T> enclosingBlock(Matcher<BlockTree> matcher) {
     return new EnclosingBlock<T>(matcher);
+  }
+
+  public static <T extends Tree> EnclosingClass<T> enclosingClass(Matcher<ClassTree> matcher) {
+    return new EnclosingClass<T>(matcher);
   }
 
   public static LastStatement lastStatement(Matcher<StatementTree> matcher) {
@@ -188,5 +202,50 @@ public class Matchers {
   
   public static Matcher<AssignmentTree> isSelfAssignment() {
     return new SelfAssignment();
+  }
+
+  public static Matcher<MethodTree> methodReturns(final Type returnType) {
+    return new Matcher<MethodTree>(){
+      @Override
+      public boolean matches(MethodTree methodTree, VisitorState state) {
+        return state.getTypes().isSameType(((JCTree.JCPrimitiveTypeTree)methodTree.getReturnType()).type, returnType);
+      }
+    };
+  }
+
+  public static Matcher<MethodTree> methodIsNamed(final String methodName) {
+    return new Matcher<MethodTree>() {
+      @Override
+      public boolean matches(MethodTree methodTree, VisitorState state) {
+        return methodTree.getName().toString().equals(methodName);
+      }
+    };
+  }
+
+  public static Matcher<MethodTree> methodHasParameters(final Matcher<VariableTree>... variableMatcher) {
+    return new Matcher<MethodTree>() {
+      @Override
+      public boolean matches(MethodTree methodTree, VisitorState state) {
+        if (methodTree.getParameters().size() != variableMatcher.length) {
+          return false;
+        }
+        int paramIndex = 0;
+        for (Matcher<VariableTree> eachVariableMatcher : variableMatcher) {
+          if (!eachVariableMatcher.matches(methodTree.getParameters().get(paramIndex++), state)) {
+            return false;
+          }
+        }
+        return true;
+      }
+    };
+  }
+
+  public static Matcher<VariableTree> variableType(final Matcher<Tree> treeMatcher) {
+    return new Matcher<VariableTree>() {
+      @Override
+      public boolean matches(VariableTree variableTree, VisitorState state) {
+        return treeMatcher.matches(variableTree.getType(), state);
+      }
+    };
   }
 }

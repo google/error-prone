@@ -16,9 +16,9 @@
 
 package com.google.errorprone;
 
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
 import java.lang.annotation.Retention;
+
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * An annotation intended for implementations of Matcher which is picked up by our 
@@ -28,7 +28,7 @@ import java.lang.annotation.Retention;
 @Retention(RUNTIME)
 public @interface BugPattern {
 
-  String name();    // should be unique
+  String name();    // ID of this bug, used in @SuppressWarnings. Should be unique
   
   Category category();
   
