@@ -34,7 +34,7 @@ public class NegativeCase {
 }
 
 class NegativeCase2 {
-  @SuppressWarnings("covariant equals")
+  @SuppressWarnings("CovariantEquals")
   public boolean equals(NegativeCase2 other) {
     return false;
   }

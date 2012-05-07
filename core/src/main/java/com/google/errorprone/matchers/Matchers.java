@@ -199,7 +199,7 @@ public class Matchers {
       }
     };
   }
-  
+
   public static Matcher<AssignmentTree> isSelfAssignment() {
     return new SelfAssignment();
   }

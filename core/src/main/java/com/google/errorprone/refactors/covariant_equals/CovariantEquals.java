@@ -31,12 +31,13 @@ import static com.google.errorprone.matchers.Matchers.*;
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
-@BugPattern(name = "covariant equals",
+@BugPattern(name = "CovariantEquals",
     summary = "equals() method doesn't override Object.equals()",
-    explanation = "To be used by many libraries, an `equals` method must override `Object.equals`. " +
+    explanation = "To be used by many libraries, an `equals` method must override `Object.equals`," +
+        "which has a single parameter of type `java.lang.Object`. " +
         "Defining a method which looks like `equals` but doesn't have the same signature is dangerous, " +
         "since comparisons will have different results depending on which `equals` is called.",
-    category = JDK, maturity = EXPERIMENTAL, severity = ERROR )
+    category = JDK, maturity = EXPERIMENTAL, severity = ERROR)
 public class CovariantEquals extends RefactoringMatcher<MethodTree> {
   @Override
   public boolean matches(MethodTree methodTree, VisitorState state) {

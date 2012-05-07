@@ -16,26 +16,22 @@
 
 package com.google.errorprone.refactors.emptyifstatement;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.isNull;
-import static com.google.errorprone.matchers.Matchers.nextStatement;
-import static com.google.errorprone.matchers.Matchers.parentNode;
-import static com.sun.source.tree.Tree.Kind.IF;
-
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneCompiler;
 import com.google.errorprone.Scanner;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.refactors.RefactoringMatcher;
-
 import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
+
+import static com.google.errorprone.BugPattern.Category.JDK;
+import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Matchers.*;
+import static com.sun.source.tree.Tree.Kind.IF;
 
 /**
  * This checker finds and fixes empty statements after an if, with no else 
@@ -47,15 +43,12 @@ import com.sun.source.tree.Tree;
  *  
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-@BugPattern(
-    name = "Empty if",
-    category = JDK,
-    severity = ERROR,
-    maturity = ON_BY_DEFAULT,
+@BugPattern(name = "EmptyIf",
     summary = "Empty statement after if",
     explanation =
         "An if statement contains an empty statement as the then clause. A semicolon may " +
-        "have been inserted by accident.")
+        "have been inserted by accident.",
+    category = JDK, severity = ERROR, maturity = ON_BY_DEFAULT)
 public class EmptyIfStatement extends RefactoringMatcher<EmptyStatementTree> {
   
   /**

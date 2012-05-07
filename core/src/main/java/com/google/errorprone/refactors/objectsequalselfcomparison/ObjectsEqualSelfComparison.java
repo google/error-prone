@@ -16,41 +16,30 @@
 
 package com.google.errorprone.refactors.objectsequalselfcomparison;
 
-import static com.google.errorprone.BugPattern.Category.GUAVA;
-import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
-import static com.google.errorprone.matchers.Matchers.sameArgument;
-import static com.google.errorprone.matchers.Matchers.staticMethod;
-
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.refactors.RefactoringMatcher;
-
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
-import com.sun.tools.javac.tree.JCTree.JCBlock;
-import com.sun.tools.javac.tree.JCTree.JCExpression;
-import com.sun.tools.javac.tree.JCTree.JCIdent;
-import com.sun.tools.javac.tree.JCTree.JCStatement;
-import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
+import com.sun.tools.javac.tree.JCTree.*;
+
+import static com.google.errorprone.BugPattern.Category.GUAVA;
+import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Matchers.*;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
-@BugPattern(
-    name = "Self comparison",
-    category = GUAVA,
-    severity = ERROR,
-    maturity = ON_BY_DEFAULT,
+@BugPattern(name = "SelfComparison",
     summary = "Objects.equals() used to compare object to itself",
     explanation =
         "The two arguments to Objects.equals() are the same object, so this call " +
-        "always returns true.")
+        "always returns true.",
+    category = GUAVA, severity = ERROR, maturity = ON_BY_DEFAULT)
 public class ObjectsEqualSelfComparison extends RefactoringMatcher<MethodInvocationTree> {
 
   @SuppressWarnings({"unchecked"})

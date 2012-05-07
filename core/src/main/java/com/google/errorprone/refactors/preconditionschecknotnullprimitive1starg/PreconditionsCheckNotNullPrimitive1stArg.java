@@ -16,20 +16,11 @@
 
 package com.google.errorprone.refactors.preconditionschecknotnullprimitive1starg;
 
-import static com.google.errorprone.BugPattern.Category.GUAVA;
-import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.argument;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
-import static com.google.errorprone.matchers.Matchers.staticMethod;
-
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.refactors.RefactoringMatcher;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree.Kind;
@@ -37,6 +28,11 @@ import com.sun.tools.javac.code.Symbol.OperatorSymbol;
 import com.sun.tools.javac.tree.JCTree.JCBinary;
 
 import java.util.List;
+
+import static com.google.errorprone.BugPattern.Category.GUAVA;
+import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Matchers.*;
 
 /**
  * Checks that the 1st argument to Preconditions.checkNotNull() isn't a primitive
@@ -56,11 +52,7 @@ import java.util.List;
  * 
  * @author sjnickerson@google.com (Simon Nickerson)
  */
-@BugPattern(
-    name = "Preconditions checkNotNull boolean",
-    category = GUAVA,
-    severity = ERROR,
-    maturity = ON_BY_DEFAULT,
+@BugPattern(name = "Preconditions.checkNotNull.boolean",
     summary = "First argument to Preconditions.checkNotNull() is a boolean rather " +
     		"than an object reference",
     explanation =
@@ -69,7 +61,8 @@ import java.util.List;
         "`Preconditions.checkNotNull(foo != null, \"Foo is null!\")`. The primitive boolean " +
         "will be autoboxed into a boxed Boolean, which is non-null, causing the check to " +
         "always pass without the condition being evaluated. This check ensures that the " +
-        "first argument to Preconditions.checkNotNull() is not a primitive boolean.")
+        "first argument to Preconditions.checkNotNull() is not a primitive boolean.",
+    category = GUAVA, severity = ERROR, maturity = ON_BY_DEFAULT)
 public class PreconditionsCheckNotNullPrimitive1stArg
     extends RefactoringMatcher<MethodInvocationTree> {
 

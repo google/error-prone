@@ -16,16 +16,15 @@
 
 package com.google.errorprone.refactors.emptystatement;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.refactors.RefactoringMatcher;
-
 import com.sun.source.tree.EmptyStatementTree;
+
+import static com.google.errorprone.BugPattern.Category.JDK;
+import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 /**
  * This checker finds and fixes empty statements, for example:
@@ -34,14 +33,11 @@ import com.sun.source.tree.EmptyStatementTree;
  * 
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-@BugPattern(
-    name = "Empty statement",
-    category = JDK,
-    severity = WARNING,
-    maturity = ON_BY_DEFAULT,
+@BugPattern(name = "EmptyStatement",
     summary = "Empty statement",
     explanation =
-        "An empty statement has no effect on the program. Consider removing it.")
+        "An empty statement has no effect on the program. Consider removing it.",
+    category = JDK, severity = WARNING, maturity = ON_BY_DEFAULT)
 public class EmptyStatement extends RefactoringMatcher<EmptyStatementTree> {
 
   @Override
