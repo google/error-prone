@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.refactors.failed_to_override_equals;
+package com.google.errorprone.refactors.covariant_equals;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -30,6 +30,13 @@ public class NegativeCase {
   }
 
   public void equals(NegativeCase other) {
+  }
+}
+
+class NegativeCase2 {
+  @SuppressWarnings("covariant equals")
+  public boolean equals(NegativeCase2 other) {
+    return false;
   }
 }
 

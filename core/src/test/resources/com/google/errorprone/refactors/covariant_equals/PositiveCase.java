@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.refactors.failed_to_override_equals;
+package com.google.errorprone.refactors.covariant_equals;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
