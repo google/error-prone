@@ -17,7 +17,7 @@
 package com.google.errorprone;
 
 import com.google.errorprone.refactors.RefactoringMatcher;
-import com.google.errorprone.refactors.deadexception.DeadException;
+import com.google.errorprone.refactors.dead_exception.DeadException;
 import com.google.errorprone.refactors.emptyifstatement.EmptyIfStatement;
 import com.google.errorprone.refactors.fallthroughsuppression.FallThroughSuppression;
 import com.google.errorprone.refactors.objectsequalselfcomparison.ObjectsEqualSelfComparison;
@@ -26,12 +26,7 @@ import com.google.errorprone.refactors.preconditionschecknotnull.PreconditionsCh
 import com.google.errorprone.refactors.preconditionschecknotnullprimitive1starg.PreconditionsCheckNotNullPrimitive1stArg;
 import com.google.errorprone.refactors.preconditionsexpensivestring.PreconditionsExpensiveString;
 import com.google.errorprone.refactors.selfassignment.SelfAssignment;
-
-import com.sun.source.tree.AnnotationTree;
-import com.sun.source.tree.AssignmentTree;
-import com.sun.source.tree.EmptyStatementTree;
-import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.*;
 
 import java.util.Arrays;
 

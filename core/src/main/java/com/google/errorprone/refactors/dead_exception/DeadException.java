@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.refactors.deadexception;
+package com.google.errorprone.refactors.dead_exception;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -69,5 +69,19 @@ public class DeadException extends RefactoringMatcher<NewClassTree> {
         suggestedFix);
   }
 
+  public static class Scanner extends com.google.errorprone.Scanner {
+    private DeadException matcher = new DeadException();
+
+    @Override
+    public Void visitNewClass(NewClassTree node, VisitorState visitorState) {
+      VisitorState state = visitorState.withPath(getCurrentPath());
+      if (!isSuppressed(matcher.getName()) &&
+          matcher.matches(node, state)) {
+        reportMatch(matcher, node, state);
+      }
+
+      return super.visitNewClass(node, visitorState);
+    }
+  }
 
 }
