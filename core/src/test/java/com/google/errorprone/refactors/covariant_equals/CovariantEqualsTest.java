@@ -16,18 +16,23 @@
 
 package com.google.errorprone.refactors.covariant_equals;
 
-import com.google.errorprone.DiagnosticTestHelper;
-import com.google.errorprone.ErrorProneCompiler;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.io.File;
-
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.internal.matchers.StringContains.containsString;
+
+import com.google.errorprone.DiagnosticTestHelper;
+import com.google.errorprone.ErrorProneCompiler;
+
+import org.hamcrest.Matcher;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.io.File;
+
+import javax.tools.Diagnostic;
+import javax.tools.JavaFileObject;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -48,8 +53,10 @@ public class CovariantEqualsTest {
   @Test public void testPositiveCase() throws Exception {
     File source = new File(this.getClass().getResource("PositiveCase.java").toURI());
     assertThat(compiler.compile(new String[]{"-Xjcov", source.getAbsolutePath()}), is(1));
-    assertThat("In diagnostics: " + diagnosticHelper.getDiagnostics(), diagnosticHelper.getDiagnostics(),
-        hasItem(diagnosticMessage(containsString("did you mean 'public boolean equals(Object other)"))));
+    Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher = hasItem(
+            diagnosticMessage(containsString("did you mean 'public boolean equals(Object other)")));
+    assertThat("In diagnostics: " + diagnosticHelper.getDiagnostics(),
+        diagnosticHelper.getDiagnostics(), matcher);
   }
 
   @Test public void testNegativeCase() throws Exception {
