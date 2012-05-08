@@ -120,4 +120,15 @@ public class PreconditionsExpensiveString
       return !invalidFormatCharacters.matcher(literal).find();
     }
   }
+
+  public static class Scanner extends com.google.errorprone.Scanner {
+    public RefactoringMatcher<MethodInvocationTree> matcher = new PreconditionsExpensiveString();
+
+    @Override
+    public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {
+      evaluateMatch(node, visitorState, matcher);
+      return super.visitMethodInvocation(node, visitorState);
+    }
+  }
+
 }

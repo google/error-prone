@@ -66,4 +66,15 @@ public class PreconditionsCheckNotNull extends RefactoringMatcher<MethodInvocati
     }
     return new Refactor(stringLiteralValue, refactorMessage, fix);
   }
+
+  public static class Scanner extends com.google.errorprone.Scanner {
+    public RefactoringMatcher<MethodInvocationTree> matcher = new PreconditionsCheckNotNull();
+
+    @Override
+    public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {
+      evaluateMatch(node, visitorState, matcher);
+      return super.visitMethodInvocation(node, visitorState);
+    }
+  }
+
 }

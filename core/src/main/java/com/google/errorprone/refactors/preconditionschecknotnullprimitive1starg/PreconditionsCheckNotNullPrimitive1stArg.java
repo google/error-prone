@@ -123,4 +123,14 @@ public class PreconditionsCheckNotNullPrimitive1stArg
     return new Refactor(methodInvocationTree.getArguments().get(0), refactorMessage, fix);
   }
 
+  public static class Scanner extends com.google.errorprone.Scanner {
+    public RefactoringMatcher<MethodInvocationTree> matcher = new PreconditionsCheckNotNullPrimitive1stArg();
+
+    @Override
+    public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {
+      evaluateMatch(node, visitorState, matcher);
+      return super.visitMethodInvocation(node, visitorState);
+    }
+  }
+
 }

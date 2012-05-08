@@ -98,11 +98,8 @@ public class EmptyIfStatement extends RefactoringMatcher<EmptyStatementTree> {
 
     @Override
     public Void visitEmptyStatement(EmptyStatementTree node, VisitorState visitorState) {
-      VisitorState state = visitorState.withPath(getCurrentPath());
-      if (!isSuppressed(emptyIfMatcher.getName()) && emptyIfMatcher.matches(node, state)) {
-        reportMatch(emptyIfMatcher, node, state);
-      }
-      return null;
+      evaluateMatch(node, visitorState, emptyIfMatcher);
+      return super.visitEmptyStatement(node, visitorState);
     }
   }
 

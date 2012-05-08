@@ -82,4 +82,14 @@ public class OrderingFrom extends RefactoringMatcher<MethodInvocationTree> {
 //
     return new Refactor(t, refactorMessage, fix);
   }
+
+  public static class Scanner extends com.google.errorprone.Scanner {
+    public RefactoringMatcher<MethodInvocationTree> matcher = new OrderingFrom();
+
+    @Override
+    public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {
+      evaluateMatch(node, visitorState, matcher);
+      return super.visitMethodInvocation(node, visitorState);
+    }
+  }
 }

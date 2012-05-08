@@ -59,12 +59,7 @@ public class CovariantEquals extends RefactoringMatcher<MethodTree> {
 
     @Override
     public Void visitMethod(MethodTree node, VisitorState visitorState) {
-      VisitorState state = visitorState.withPath(getCurrentPath());
-      if (!isSuppressed(matcher.getName()) &&
-          matcher.matches(node, state)) {
-        reportMatch(matcher, node, state);
-      }
-
+      evaluateMatch(node, visitorState, matcher);
       return super.visitMethod(node, visitorState);
     }
   }

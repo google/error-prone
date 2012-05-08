@@ -128,14 +128,8 @@ public class FallThroughSuppression extends RefactoringMatcher<AnnotationTree> {
 
     @Override
     public Void visitAnnotation(AnnotationTree annotationTree, VisitorState visitorState) {
-      VisitorState state = visitorState.withPath(getCurrentPath());
-      if (!isSuppressed(annotationMatcher.getName()) && 
-          annotationMatcher.matches(annotationTree, state)) {
-        reportMatch(annotationMatcher, annotationTree, state);
-      }
-
-      super.visitAnnotation(annotationTree, visitorState);
-      return null;
+      evaluateMatch(annotationTree, visitorState, annotationMatcher);
+      return super.visitAnnotation(annotationTree, visitorState);
     }
   }
 }

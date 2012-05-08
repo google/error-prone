@@ -64,62 +64,40 @@ public class ErrorProneScanner extends Scanner {
   public Void visitMethodInvocation(
       MethodInvocationTree methodInvocationTree, VisitorState state) {
     for (RefactoringMatcher<MethodInvocationTree> matcher : methodInvocationMatchers) {
-      VisitorState newState = state.withPath(getCurrentPath());
-      if (!isSuppressed(matcher.getName()) && matcher.matches(methodInvocationTree, newState)) {
-         reportMatch(matcher, methodInvocationTree, newState);
-      }
+      evaluateMatch(methodInvocationTree, state, matcher);
     }
-    super.visitMethodInvocation(methodInvocationTree, state);
-    return null;
+    return super.visitMethodInvocation(methodInvocationTree, state);
   }
 
   @Override
   public Void visitNewClass(NewClassTree newClassTree, VisitorState visitorState) {
     for (RefactoringMatcher<NewClassTree> matcher : newClassMatchers) {
-      VisitorState state = visitorState.withPath(getCurrentPath());
-      if (!isSuppressed(matcher.getName()) && matcher.matches(newClassTree, state)) {
-         reportMatch(matcher, newClassTree, state);
-      }
+      evaluateMatch(newClassTree, visitorState, matcher);
     }
-    super.visitNewClass(newClassTree, visitorState);
-    return null;
+    return super.visitNewClass(newClassTree, visitorState);
   }
 
   @Override
   public Void visitAnnotation(AnnotationTree annotationTree, VisitorState visitorState) {
     for (RefactoringMatcher<AnnotationTree> matcher : annotationMatchers) {
-      VisitorState state = visitorState.withPath(getCurrentPath());
-      if (!isSuppressed(matcher.getName()) && matcher.matches(annotationTree, state)) {
-         reportMatch(matcher, annotationTree, state);
-      }
+      evaluateMatch(annotationTree, visitorState, matcher);
     }
-    super.visitAnnotation(annotationTree, visitorState);
-    return null;
+    return super.visitAnnotation(annotationTree, visitorState);
   }
   
   @Override
-  public Void visitEmptyStatement(EmptyStatementTree emptyStatementTree,
-      VisitorState visitorState) {
+  public Void visitEmptyStatement(EmptyStatementTree emptyStatementTree, VisitorState visitorState) {
     for (RefactoringMatcher<EmptyStatementTree> matcher : emptyStatementMatchers) {
-      VisitorState state = visitorState.withPath(getCurrentPath());
-      if (!isSuppressed(matcher.getName()) && matcher.matches(emptyStatementTree, state)) {
-        reportMatch(matcher, emptyStatementTree, state);
-      }
+      evaluateMatch(emptyStatementTree, visitorState, matcher);
     }
-    super.visitEmptyStatement(emptyStatementTree, visitorState);
-    return null;
+    return super.visitEmptyStatement(emptyStatementTree, visitorState);
   }
   
   @Override
-  public Void visitAssignment(AssignmentTree assignmentTree,
-      VisitorState visitorState) {
+  public Void visitAssignment(AssignmentTree assignmentTree, VisitorState visitorState) {
     for (RefactoringMatcher<AssignmentTree> matcher : assignmentMatchers) {
-      VisitorState state = visitorState.withPath(getCurrentPath());
-      if (!isSuppressed(matcher.getName()) && matcher.matches(assignmentTree, state)) {
-        reportMatch(matcher, assignmentTree, state);
-      }
+      evaluateMatch(assignmentTree, visitorState, matcher);
     }
-    super.visitAssignment(assignmentTree, visitorState);
-    return null;
+    return super.visitAssignment(assignmentTree, visitorState);
   }
 }

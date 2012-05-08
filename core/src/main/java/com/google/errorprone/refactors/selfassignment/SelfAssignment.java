@@ -17,7 +17,6 @@
 package com.google.errorprone.refactors.selfassignment;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.Scanner;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.refactors.RefactoringMatcher;
@@ -171,16 +170,12 @@ public class SelfAssignment extends RefactoringMatcher<AssignmentTree> {
     return new Refactor(t, refactorMessage, fix);
   }
 
-  public static class Search extends Scanner {
+  public static class Scanner extends com.google.errorprone.Scanner {
     public RefactoringMatcher<AssignmentTree> selfAssignmentMatcher = new SelfAssignment();
     @Override
     public Void visitAssignment(AssignmentTree node, VisitorState visitorState) {
-      VisitorState state = visitorState.withPath(getCurrentPath());
-      if (!isSuppressed(selfAssignmentMatcher.getName()) && 
-          selfAssignmentMatcher.matches(node, state)) {
-        reportMatch(selfAssignmentMatcher, node, state);
-      }
-      return null;
+      evaluateMatch(node, visitorState, selfAssignmentMatcher);
+      return super.visitAssignment(node, visitorState);
     }
   }
 

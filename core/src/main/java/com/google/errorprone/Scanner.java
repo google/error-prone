@@ -18,7 +18,6 @@ package com.google.errorprone;
 
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.refactors.RefactoringMatcher;
-
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
@@ -26,11 +25,7 @@ import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.tree.JCTree.JCClassDecl;
-import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
-import com.sun.tools.javac.tree.JCTree.JCIdent;
-import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
-import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
+import com.sun.tools.javac.tree.JCTree.*;
 import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Pair;
 
@@ -39,6 +34,7 @@ import java.util.Set;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
+ * @author eaftan@google.com (Eddie Aftandilian)
  */
 public class Scanner extends TreePathScanner<Void, VisitorState> {
 
@@ -195,6 +191,13 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
     if (matcher instanceof RefactoringMatcher) {
       RefactoringMatcher<T> refactoringMatcher = (RefactoringMatcher<T>) matcher;
       state.getRefactorListener().onRefactor(refactoringMatcher.refactor(match, state));
+    }
+  }
+
+  protected <T extends Tree> void evaluateMatch(T node, VisitorState visitorState, RefactoringMatcher<T> matcher) {
+    VisitorState state = visitorState.withPath(getCurrentPath());
+    if (!isSuppressed(matcher.getName()) && matcher.matches(node, state)) {
+      reportMatch(matcher, node, state);
     }
   }
 }

@@ -74,12 +74,7 @@ public class DeadException extends RefactoringMatcher<NewClassTree> {
 
     @Override
     public Void visitNewClass(NewClassTree node, VisitorState visitorState) {
-      VisitorState state = visitorState.withPath(getCurrentPath());
-      if (!isSuppressed(matcher.getName()) &&
-          matcher.matches(node, state)) {
-        reportMatch(matcher, node, state);
-      }
-
+      evaluateMatch(node, visitorState, matcher);
       return super.visitNewClass(node, visitorState);
     }
   }
