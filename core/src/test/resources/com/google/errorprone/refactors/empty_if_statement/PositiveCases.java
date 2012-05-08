@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package emptyifstatement;
+package com.google.errorprone.refactors.empty_if_statement;
 
 /**
  * Positive test cases for the empty if statement check.

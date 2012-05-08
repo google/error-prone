@@ -19,17 +19,17 @@ package com.google.errorprone.refactors.covariant_equals;
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class NegativeCase {
+public class NegativeCases {
   @Override
   public boolean equals(Object obj) {
     return false;
   }
 
-  public boolean equals(NegativeCase other, String s) {
+  public boolean equals(NegativeCases other, String s) {
     return false;
   }
 
-  public void equals(NegativeCase other) {
+  public void equals(NegativeCases other) {
   }
 }
 
@@ -41,7 +41,7 @@ class NegativeCase2 {
 }
 
 class AnotherClass {
-  public boolean equals(NegativeCase other) {
+  public boolean equals(NegativeCases other) {
     return false;
   }
 }

@@ -26,12 +26,19 @@ import javax.tools.JavaFileObject;
 import java.util.List;
 import java.util.Locale;
 
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.junit.internal.matchers.StringContains.containsString;
+
 /**
  * Utility class for tests which need to assert on the diagnostics produced during compilation.
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class DiagnosticTestHelper {
   public DiagnosticCollector<JavaFileObject> collector = new DiagnosticCollector<JavaFileObject>();
+
+  public static Matcher<Diagnostic<JavaFileObject>> suggestsRemovalOfLine(int line) {
+    return allOf(diagnosticOnLine(line), diagnosticMessage(containsString("remove this line")));
+  }
 
   public List<Diagnostic<? extends JavaFileObject>> getDiagnostics() {
     return collector.getDiagnostics();
@@ -58,6 +65,26 @@ public class DiagnosticTestHelper {
             .appendValue(line)
             .appendText(":")
             .appendValue(column);
+      }
+    };
+  }
+
+  public static TypeSafeDiagnosingMatcher<Diagnostic<JavaFileObject>> diagnosticOnLine(final long line) {
+    return new TypeSafeDiagnosingMatcher<Diagnostic<JavaFileObject>>() {
+      @Override
+      protected boolean matchesSafely(
+          Diagnostic<JavaFileObject> item, Description mismatchDescription) {
+        mismatchDescription
+            .appendText("line ")
+            .appendValue(item.getLineNumber());
+        return item.getLineNumber() == line;
+      }
+
+      @Override
+      public void describeTo(Description description) {
+        description
+            .appendText("a diagnostic on line ")
+            .appendValue(line);
       }
     };
   }

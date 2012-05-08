@@ -13,44 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.google.errorprone.refactors.dead_exception;
 
-package emptyifstatement;
-/**
- *
- * @author eaftan@google.com (Eddie Aftandilian)
- */
 public class NegativeCases {
-
-  // just a normal use of if
-  public static void negativeCase1() {
-    int i = 10;
-    if (i == 10) {
-      System.out.println("foo");
-    }
-    i++;
+  public void noError() {
+    Exception e = new RuntimeException("stored");
+    e = new UnsupportedOperationException("also stored");
+    throw new IllegalArgumentException("thrown");
   }
 
-  // empty then part but nonempty else
-  public static void negativeCase2() {
-    int i = 0;
-    if (i == 10)
-      ;
-    else
-      System.out.println("not 10");
+  public Exception returnsException() {
+    return new RuntimeException("returned");
   }
-
-  // multipart if with non-empty else
-  public static void negativeCase3() {
-    int i = 0;
-    if (i == 10)
-      ;
-    else if (i == 11)
-      ;
-    else if (i == 12)
-      ;
-    else
-      System.out.println("not 10, 11, or 12");
-  }
-
-
 }

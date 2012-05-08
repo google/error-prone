@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.refactors.emptyifstatement;
+package com.google.errorprone.refactors.empty_if_statement;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneCompiler;
-import com.google.errorprone.Scanner;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.refactors.RefactoringMatcher;
@@ -94,9 +93,9 @@ public class EmptyIfStatement extends RefactoringMatcher<EmptyStatementTree> {
     return new Refactor(parent, refactorMessage, fix);
   }
 
-  public static class Search extends Scanner {
-
+  public static class Scanner extends com.google.errorprone.Scanner {
     public RefactoringMatcher<EmptyStatementTree> emptyIfMatcher = new EmptyIfStatement();
+
     @Override
     public Void visitEmptyStatement(EmptyStatementTree node, VisitorState visitorState) {
       VisitorState state = visitorState.withPath(getCurrentPath());
@@ -105,12 +104,11 @@ public class EmptyIfStatement extends RefactoringMatcher<EmptyStatementTree> {
       }
       return null;
     }
-
   }
 
   public static void main(String[] args) {
     System.exit(new ErrorProneCompiler.Builder()
-        .search(new EmptyIfStatement.Search())
+        .search(new Scanner())
         .build()
         .compile(args));
   }

@@ -18,7 +18,7 @@ package com.google.errorprone;
 
 import com.google.errorprone.refactors.RefactoringMatcher;
 import com.google.errorprone.refactors.dead_exception.DeadException;
-import com.google.errorprone.refactors.emptyifstatement.EmptyIfStatement;
+import com.google.errorprone.refactors.empty_if_statement.EmptyIfStatement;
 import com.google.errorprone.refactors.fallthroughsuppression.FallThroughSuppression;
 import com.google.errorprone.refactors.objectsequalselfcomparison.ObjectsEqualSelfComparison;
 import com.google.errorprone.refactors.orderingfrom.OrderingFrom;

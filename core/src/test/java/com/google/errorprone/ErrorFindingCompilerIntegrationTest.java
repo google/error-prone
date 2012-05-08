@@ -58,7 +58,7 @@ public class ErrorFindingCompilerIntegrationTest {
         .listenToDiagnostics(diagnosticHelper.collector)
         .build();
     String[] sources = sources(
-        "com/google/errorprone/refactors/emptyifstatement/PositiveCases.java");
+        "com/google/errorprone/refactors/empty_if_statement/PositiveCases.java");
     // TODO(eaftan): Running test with the annotation processor compiler enabled causes
     // the wrong copy of JavaCompiler to be used.  We should probably switch Maven to 
     // having an explicit docgen phase that calls the annotation processor with proc:only,

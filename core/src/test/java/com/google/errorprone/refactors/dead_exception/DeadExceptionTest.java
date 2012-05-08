@@ -26,8 +26,8 @@ import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import java.io.File;
 
-import static com.google.errorprone.DiagnosticTestHelper.diagnosticLineAndColumn;
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
+import static com.google.errorprone.DiagnosticTestHelper.suggestsRemovalOfLine;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.core.Is.is;
@@ -52,10 +52,10 @@ public class DeadExceptionTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    File source = new File(this.getClass().getResource("PositiveCase.java").toURI());
+    File source = new File(this.getClass().getResource("PositiveCases.java").toURI());
     assertThat(compiler.compile(new String[]{"-Xjcov", source.getAbsolutePath()}), is(1));
     Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher = allOf(
-        hasItem(allOf(diagnosticLineAndColumn(24, 5), diagnosticMessage(containsString("remove this line")))),
+        hasItem(suggestsRemovalOfLine(24)),
         hasItem(diagnosticMessage(containsString("did you mean 'throw new InterruptedException"))),
         hasItem(diagnosticMessage(containsString("did you mean 'throw new RuntimeException"))),
         hasItem(diagnosticMessage(containsString("did you mean 'throw new ArithmeticException"))));
@@ -64,7 +64,7 @@ public class DeadExceptionTest {
   }
 
   @Test public void testNegativeCase() throws Exception {
-    File source = new File(this.getClass().getResource("NegativeCase.java").toURI());
+    File source = new File(this.getClass().getResource("NegativeCases.java").toURI());
     assertThat(compiler.compile(new String[]{source.getAbsolutePath()}), is(0));
   }
 }

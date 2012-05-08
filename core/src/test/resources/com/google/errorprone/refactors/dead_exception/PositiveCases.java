@@ -15,7 +15,7 @@
  */
 package com.google.errorprone.refactors.dead_exception;
 
-public class PositiveCase {
+public class PositiveCases {
   public void error() {
     new RuntimeException("Not thrown, and reference lost");
   }
