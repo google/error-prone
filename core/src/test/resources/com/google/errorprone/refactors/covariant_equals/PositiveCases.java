@@ -19,8 +19,8 @@ package com.google.errorprone.refactors.covariant_equals;
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class PositiveCase {
-  public boolean equals(PositiveCase other) {
+public class PositiveCases {
+  public boolean equals(PositiveCases other) {
     return false;
   }
 }
