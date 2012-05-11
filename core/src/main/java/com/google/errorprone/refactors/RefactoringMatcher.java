@@ -38,7 +38,8 @@ public abstract class RefactoringMatcher<T extends Tree> implements Matcher<T> {
           + " not annotated with @BugPattern");
     }
     name = annotation.name();
-    refactorMessage = "[" + annotation.name() + "] " + annotation.summary();
+    refactorMessage = "[" + annotation.name() + "] " + annotation.summary()
+        + "\n  (see http://code.google.com/p/error-prone/wiki/" + annotation.name() + ")";
   }
   
   public String getName() {
