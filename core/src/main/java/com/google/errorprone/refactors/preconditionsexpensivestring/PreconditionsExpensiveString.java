@@ -16,12 +16,24 @@
 
 package com.google.errorprone.refactors.preconditionsexpensivestring;
 
+import static com.google.errorprone.BugPattern.Category.GUAVA;
+import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.argument;
+import static com.google.errorprone.matchers.Matchers.expressionMethodSelect;
+import static com.google.errorprone.matchers.Matchers.kindIs;
+import static com.google.errorprone.matchers.Matchers.methodSelect;
+import static com.google.errorprone.matchers.Matchers.staticMethod;
+
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.refactors.RefactoringMatcher;
+
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -31,11 +43,6 @@ import com.sun.source.tree.Tree.Kind;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static com.google.errorprone.BugPattern.Category.GUAVA;
-import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.matchers.Matchers.*;
-
 /**
  * Error checker for calls to the Preconditions class in Guava which use
  * 'expensive' methods of producing the error string. In most cases, users are
@@ -44,7 +51,7 @@ import static com.google.errorprone.matchers.Matchers.*;
  * 
  * @author sjnickerson@google.com (Simon Nickerson)
  */
-@BugPattern(name = "Preconditions.ExpensiveString",
+@BugPattern(name = "PreconditionsErrorMessageEagerEvaluation",
     summary = "Second argument to Preconditions.* is a call to String.format(), which " +
     		"can be unwrapped",
     explanation =
