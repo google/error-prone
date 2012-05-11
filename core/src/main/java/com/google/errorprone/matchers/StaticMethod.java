@@ -17,37 +17,43 @@
 package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
+
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
+import com.sun.tools.javac.util.Name;
 
 /**
  * Matches a static method expression.
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class StaticMethod implements Matcher<ExpressionTree> {
-  private final String fullClassName;
+  private final String fullClass;
   private final String methodName;
 
-  public StaticMethod(String fullClassName, String methodName) {
-    this.fullClassName = fullClassName;
+  public StaticMethod(String fullClass, String methodName) {
+    this.fullClass = fullClass;
     this.methodName = methodName;
   }
 
   @Override
   public boolean matches(ExpressionTree item, VisitorState state) {
-    try {
-      JCFieldAccess memberSelectTree = (JCFieldAccess) item;
-      if (memberSelectTree.sym.getQualifiedName().toString().equals(methodName) &&
-          memberSelectTree.sym.owner.getQualifiedName().toString().equals(fullClassName)) {
-        return true;
-      }
-      JCIdent expressionTree = (JCIdent) memberSelectTree.getExpression();
-      return
-        expressionTree.sym.getQualifiedName().toString().equals(fullClassName) &&
-        memberSelectTree.sym.getQualifiedName().toString().equals(methodName);
-    } catch (ClassCastException e) {
+    if (!(item instanceof JCFieldAccess)) {
       return false;
     }
+    JCFieldAccess memberSelectTree = (JCFieldAccess) item;
+    Name fullClassName = Name.fromString(state.getNameTable(), fullClass);
+    boolean methodSame = memberSelectTree.sym.getQualifiedName().equals(
+        Name.fromString(state.getNameTable(), methodName));
+    if (methodSame &&
+        memberSelectTree.sym.owner.getQualifiedName().equals(fullClassName)) {
+      return true;
+    }
+
+    if (!(memberSelectTree.getExpression() instanceof  JCIdent)) {
+      return false;
+    }
+    JCIdent expressionTree = (JCIdent) memberSelectTree.getExpression();
+    return methodSame && expressionTree.sym.getQualifiedName().equals(fullClassName);
   }
 }

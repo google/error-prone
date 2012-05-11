@@ -64,7 +64,16 @@ public class ErrorReportingJavaCompiler extends JavaCompiler {
   @Override
   protected void flow(Env<AttrContext> attrContextEnv, Queue<Env<AttrContext>> envs) {
     super.flow(attrContextEnv, envs);
-    postFlow(attrContextEnv);
+    try {
+      // For profiling with YourKit, add to classpath:
+      // <Profiler Installation Directory>/lib/yjp-controller-api-redist.jar
+//      Controller controller = new Controller();
+//      controller.startCPUProfiling(ProfilingModes.CPU_SAMPLING, "");
+      postFlow(attrContextEnv);
+//      controller.stopCPUProfiling();
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 
   /**
