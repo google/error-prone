@@ -36,15 +36,15 @@ public class EnclosingClass<T extends Tree> implements Matcher<T> {
 
   @Override
   public boolean matches(T unused, VisitorState state) {
-    ClassTree enclosingBlock = findEnclosingClass(state);
-    return matcher.matches(enclosingBlock, state);
+    ClassTree enclosingClass = findEnclosingClass(state);
+    return matcher.matches(enclosingClass, state);
   }
 
   public static ClassTree findEnclosingClass(VisitorState state) {
-    TreePath enclosingBlockPath = state.getPath();
-    while (!(enclosingBlockPath.getLeaf() instanceof ClassTree)) {
-      enclosingBlockPath = enclosingBlockPath.getParentPath();
+    TreePath enclosingClassPath = state.getPath();
+    while (!(enclosingClassPath.getLeaf() instanceof ClassTree)) {
+      enclosingClassPath = enclosingClassPath.getParentPath();
     }
-    return (ClassTree) enclosingBlockPath.getLeaf();
+    return (ClassTree) enclosingClassPath.getLeaf();
   }
 }

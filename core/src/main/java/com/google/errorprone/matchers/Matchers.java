@@ -257,6 +257,28 @@ public class Matchers {
       }
     };
   }
+  
+  /**
+   * Returns true if some method in the class matches the given methodMatcher.
+   * 
+   * @param methodMatcher A matcher on MethodTrees to run against all methods in this class.
+   * @return True if some method in the class matches the given methodMatcher.
+   */
+  public static Matcher<ClassTree> hasMethod(final Matcher<MethodTree> methodMatcher) {
+    return new Matcher<ClassTree>() {
+      @Override
+      public boolean matches(ClassTree t, VisitorState state) {
+        for (Tree member : t.getMembers()) {
+          if (member instanceof MethodTree) {
+            if (methodMatcher.matches((MethodTree)member, state)) {
+              return true;
+            }
+          }
+        }
+        return false;
+      }
+    };
+  }
 
   public static Matcher<VariableTree> variableType(final Matcher<Tree> treeMatcher) {
     return new Matcher<VariableTree>() {

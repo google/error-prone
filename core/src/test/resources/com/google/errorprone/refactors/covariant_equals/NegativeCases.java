@@ -56,3 +56,21 @@ class AnotherClass {
     return null;
   }
 }
+
+/**
+ * Don't issue error when a class already overrides the real
+ * equals. In this case covariant equals is probably a helper.
+ */
+class ClassWithEqualsOverridden {
+  public boolean equals(Object other) {
+    if (other instanceof ClassWithEqualsOverridden) {
+      return equals((ClassWithEqualsOverridden)other);
+    } else {
+      return false;
+    }
+  }
+  
+  public boolean equals(ClassWithEqualsOverridden other) {
+    return true;
+  }
+}

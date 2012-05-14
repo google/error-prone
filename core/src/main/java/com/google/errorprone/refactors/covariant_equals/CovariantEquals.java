@@ -39,12 +39,24 @@ import static com.google.errorprone.matchers.Matchers.*;
         "since comparisons will have different results depending on which `equals` is called.",
     category = JDK, maturity = EXPERIMENTAL, severity = ERROR)
 public class CovariantEquals extends RefactoringMatcher<MethodTree> {
+  
+  /**
+   * Matches any method definitions that fit the following:
+   * 1) Defined method is named "equals."
+   * 2) Defined method returns a boolean.
+   * 3) Defined method takes a single parameter of the same type as the enclosing class.
+   * 4) The enclosing class does not have a method defined that really overrides Object.equals().
+   */
   @Override
-  public boolean matches(MethodTree methodTree, VisitorState state) {
+  public boolean matches(MethodTree methodTree, VisitorState state) { 
     return allOf(
         methodIsNamed("equals"),
         methodReturns(state.getSymtab().booleanType),
-        methodHasParameters(variableType(isSameType(findEnclosingClass(state))))
+        methodHasParameters(variableType(isSameType(findEnclosingClass(state)))),
+        enclosingClass(not(hasMethod(allOf(
+            methodIsNamed("equals"),
+            methodReturns(state.getSymtab().booleanType),
+            methodHasParameters(variableType(isSameType(state.getSymtab().objectType)))))))
     ).matches(methodTree, state);
   }
 
