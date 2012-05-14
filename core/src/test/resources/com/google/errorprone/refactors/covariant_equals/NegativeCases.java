@@ -35,11 +35,9 @@ public class NegativeCases {
   public void equals(NegativeCases other) {
   }
   
-  /*
   public List<Integer> equals(Integer other) {
     return null;
-  }*/
-  
+  }
 }
 
 class NegativeCase2 {
