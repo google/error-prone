@@ -74,3 +74,13 @@ class ClassWithEqualsOverridden {
     return true;
   }
 }
+
+/**
+ * Don't issue error when the covariant equals method is not public.
+ * In that case it wasn't intended to override equals.
+ */
+class ClassWithNonPublicCovariantEquals {
+  boolean equals(ClassWithNonPublicCovariantEquals other) {
+    return true;
+  }
+}

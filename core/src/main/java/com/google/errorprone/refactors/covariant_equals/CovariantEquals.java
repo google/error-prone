@@ -19,6 +19,7 @@ package com.google.errorprone.refactors.covariant_equals;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.matchers.MethodVisibility.Visibility;
 import com.google.errorprone.refactors.RefactoringMatcher;
 import com.sun.source.tree.MethodTree;
 
@@ -48,8 +49,10 @@ public class CovariantEquals extends RefactoringMatcher<MethodTree> {
    * 4) The enclosing class does not have a method defined that really overrides Object.equals().
    */
   @Override
+  @SuppressWarnings("unchecked")    // matchers + varargs cause this
   public boolean matches(MethodTree methodTree, VisitorState state) { 
     return allOf(
+        methodHasVisibility(Visibility.PUBLIC),
         methodIsNamed("equals"),
         methodReturns(state.getSymtab().booleanType),
         methodHasParameters(variableType(isSameType(findEnclosingClass(state)))),
@@ -65,7 +68,7 @@ public class CovariantEquals extends RefactoringMatcher<MethodTree> {
     SuggestedFix fix = new SuggestedFix().replace(methodTree.getParameters().get(0).getType(), "Object");
     return new Refactor(methodTree, refactorMessage, fix);
   }
-
+  
   public static class Scanner extends com.google.errorprone.Scanner {
     private CovariantEquals matcher = new CovariantEquals();
 

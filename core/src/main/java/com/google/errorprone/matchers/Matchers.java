@@ -17,6 +17,8 @@
 package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.matchers.MethodVisibility.Visibility;
+
 import com.sun.source.tree.*;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Type;
@@ -256,6 +258,10 @@ public class Matchers {
         return true;
       }
     };
+  }
+  
+  public static Matcher<MethodTree> methodHasVisibility(final Visibility visibility) {
+    return new MethodVisibility(visibility);
   }
   
   /**
