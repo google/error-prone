@@ -20,8 +20,8 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.refactors.RefactoringMatcher;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
@@ -51,40 +51,26 @@ public class CollectionIncompatibleType extends RefactoringMatcher<MethodInvocat
 
   @Override
   public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
-    if (!(methodInvocationTree instanceof JCMethodInvocation)) {
+    ExpressionTree methodSelect = methodInvocationTree.getMethodSelect();
+    if (!(methodSelect instanceof JCFieldAccess)) {
       return false;
     }
-    if (!(methodInvocationTree.getMethodSelect() instanceof JCFieldAccess)) {
+    JCFieldAccess methodSelectFieldAccess = (JCFieldAccess) methodSelect;
+    if (!COLLECTION_METHODS.contains(methodSelectFieldAccess.sym.toString())) {
       return false;
     }
-    JCExpression expression = ((JCFieldAccess) methodInvocationTree.getMethodSelect())
-        .getExpression();
+    JCExpression expression = methodSelectFieldAccess.getExpression();
     Type collectionGenericType = ((ClassType) expression.type).typarams_field.get(0);
 
-    JCExpression meth = ((JCMethodInvocation) methodInvocationTree).meth;
-    if (!(meth instanceof  JCFieldAccess)) {
-      return false;
-    }
-    Symbol method = ((JCFieldAccess) meth).sym;
-
-    ClassSymbol owner = (ClassSymbol) ((MethodSymbol) method).owner;
+    ClassSymbol owner = (ClassSymbol) ((MethodSymbol) methodSelectFieldAccess.sym).owner;
     Type collectionType = state.getSymtab().classes.get(state.getName("java.util.Collection")).type;
 
-    Type listType = owner.type;
-
-    boolean isSubtype = state.getTypes().isCastable(listType, collectionType);
-
-    if (isSubtype && COLLECTION_METHODS.contains(method.toString())) {
-
-    } else {
+    if (!state.getTypes().isCastable(owner.type, collectionType)) {
       return false;
     }
 
     JCExpression arg0 = ((JCMethodInvocation) methodInvocationTree).args.get(0);
-    if (arg0.type.equals(collectionGenericType)) {
-      return false;
-    }
-    return true;
+    return !arg0.type.equals(collectionGenericType);
   }
 
   @Override
