@@ -70,7 +70,7 @@ public class CollectionIncompatibleType extends RefactoringMatcher<MethodInvocat
     }
 
     JCExpression arg0 = ((JCMethodInvocation) methodInvocationTree).args.get(0);
-    return !state.getTypes().isSameType(arg0.type, collectionGenericType);
+    return !state.getTypes().isCastable(arg0.type, collectionGenericType);
   }
 
   @Override
