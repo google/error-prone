@@ -16,9 +16,14 @@
 
 package com.google.errorprone.refactors.collectionIncompatibleType;
 
+import java.util.ArrayList;
+
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class NegativeCases {
 
+  public boolean ok1() {
+    return new ArrayList<String>().contains("ok");
+  }
 }

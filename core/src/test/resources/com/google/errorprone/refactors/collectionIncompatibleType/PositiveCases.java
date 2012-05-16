@@ -32,12 +32,12 @@ public class PositiveCases {
   }
 
   public boolean bug2() {
-    return collection.remove(new Date());
+    return new ArrayList<String>().remove(new Date());
   }
 
-  public void bug3() {
-    List<String> list = new ArrayList<String>();
-    list.contains(new Exception());
+  public boolean bug3() {
+    List<String> list = new ArrayList<String>(collection);
+    return list.contains(new Exception());
   }
 
 //  public String bug4() {

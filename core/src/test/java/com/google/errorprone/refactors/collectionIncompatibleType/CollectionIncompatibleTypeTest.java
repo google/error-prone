@@ -16,6 +16,16 @@
 
 package com.google.errorprone.refactors.collectionIncompatibleType;
 
+import com.google.errorprone.DiagnosticTestHelper;
+import com.google.errorprone.ErrorProneCompiler;
+import org.hamcrest.Matcher;
+import org.junit.Before;
+import org.junit.Test;
+
+import javax.tools.Diagnostic;
+import javax.tools.JavaFileObject;
+import java.io.File;
+
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticOnLine;
 import static org.hamcrest.CoreMatchers.allOf;
@@ -23,18 +33,6 @@ import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.internal.matchers.StringContains.containsString;
-
-import com.google.errorprone.DiagnosticTestHelper;
-import com.google.errorprone.ErrorProneCompiler;
-
-import org.hamcrest.Matcher;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.io.File;
-
-import javax.tools.Diagnostic;
-import javax.tools.JavaFileObject;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -64,5 +62,10 @@ public class CollectionIncompatibleTypeTest {
     assertThat(diagnosticHelper.getDiagnostics(), matcher);
   }
 
+  @Test
+  public void testNegativeCase() throws Exception {
+    File source = new File(this.getClass().getResource("NegativeCases.java").toURI());
+    assertThat(compiler.compile(new String[]{source.getAbsolutePath()}), is(0));
+  }
 
 }
