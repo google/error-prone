@@ -17,13 +17,9 @@
 package com.google.errorprone.refactors.collectionIncompatibleType;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.Category;
-import com.google.errorprone.BugPattern.MaturityLevel;
-import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.refactors.RefactoringMatcher;
-
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
@@ -33,18 +29,21 @@ import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
-import com.sun.tools.javac.util.Name;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static com.google.errorprone.BugPattern.Category.JDK;
+import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
 @BugPattern(name = "CollectionIncompatibleType",
     summary = "Java generic collections have non-generic methods...",
-    explanation = "...",
-category = Category.JDK, maturity = MaturityLevel.EXPERIMENTAL, severity = SeverityLevel.ERROR)
+    explanation = "TODO",
+    category = JDK, maturity = EXPERIMENTAL, severity = ERROR)
 public class CollectionIncompatibleType extends RefactoringMatcher<MethodInvocationTree> {
 
   public static final List<String> COLLECTION_METHODS = Arrays
@@ -69,8 +68,7 @@ public class CollectionIncompatibleType extends RefactoringMatcher<MethodInvocat
     Symbol method = ((JCFieldAccess) meth).sym;
 
     ClassSymbol owner = (ClassSymbol) ((MethodSymbol) method).owner;
-    Name collectionName = Name.fromString(state.getNameTable(), "java.util.Collection");
-    Type collectionType = state.getSymtab().classes.get(collectionName).type;
+    Type collectionType = state.getSymtab().classes.get(state.getName("java.util.Collection")).type;
 
     Type listType = owner.type;
 

@@ -64,6 +64,10 @@ public class ErrorReportingJavaCompiler extends JavaCompiler {
   @Override
   protected void flow(Env<AttrContext> attrContextEnv, Queue<Env<AttrContext>> envs) {
     super.flow(attrContextEnv, envs);
+    postFlow(attrContextEnv);
+  }
+
+  public void profilePostFlow(Env<AttrContext> attrContextEnv) {
     try {
       // For profiling with YourKit, add to classpath:
       // <Profiler Installation Directory>/lib/yjp-controller-api-redist.jar
@@ -76,9 +80,9 @@ public class ErrorReportingJavaCompiler extends JavaCompiler {
     }
   }
 
-  /**
-   * Run Error Prone analysis after performing dataflow checks.
-   */
+    /**
+    * Run Error Prone analysis after performing dataflow checks.
+    */
   public void postFlow(Env<AttrContext> env) {
     JavacErrorRefactorListener logReporter = new JavacErrorRefactorListener(log,
         env.toplevel.endPositions,
@@ -87,6 +91,11 @@ public class ErrorReportingJavaCompiler extends JavaCompiler {
             : env.toplevel.sourcefile);
     VisitorState visitorState = new VisitorState(context, logReporter);
     Scanner scanner = (Scanner) context.get(TreePathScanner.class);
+    if (scanner == null) {
+      throw new IllegalStateException("No TreePathScanner registered in context. Is annotation processing enabled? " +
+          "Please report bug to error-prone: " +
+          "http://code.google.com/p/error-prone/issues/entry");
+    }
     
     /* Each env corresponds to a parse tree (I *think* always a top-level
      * class), not necessarily to a file as we had previously thought.  Here we

@@ -17,7 +17,6 @@
 package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
@@ -42,9 +41,8 @@ public class StaticMethod implements Matcher<ExpressionTree> {
       return false;
     }
     JCFieldAccess memberSelectTree = (JCFieldAccess) item;
-    Name fullClassName = Name.fromString(state.getNameTable(), fullClass);
-    boolean methodSame = memberSelectTree.sym.getQualifiedName().equals(
-        Name.fromString(state.getNameTable(), methodName));
+    Name fullClassName = state.getName(fullClass);
+    boolean methodSame = memberSelectTree.sym.getQualifiedName().equals(state.getName(methodName));
     if (methodSame &&
         memberSelectTree.sym.owner.getQualifiedName().equals(fullClassName)) {
       return true;
