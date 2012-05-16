@@ -17,11 +17,16 @@
 package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.matchers.MethodVisibility.Visibility;
+
 import com.sun.source.tree.*;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCArrayTypeTree;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
+import com.sun.tools.javac.tree.JCTree.JCPrimitiveTypeTree;
+import com.sun.tools.javac.tree.JCTree.JCTypeApply;
 
 import java.util.List;
 
@@ -208,7 +213,22 @@ public class Matchers {
     return new Matcher<MethodTree>(){
       @Override
       public boolean matches(MethodTree methodTree, VisitorState state) {
-        return state.getTypes().isSameType(((JCTree.JCPrimitiveTypeTree)methodTree.getReturnType()).type, returnType);
+        Tree returnTree = methodTree.getReturnType();
+        Type methodReturnType = null;
+        switch (returnTree.getKind()) {
+          case ARRAY_TYPE:
+            methodReturnType = ((JCArrayTypeTree)returnTree).type;
+            break;
+          case PRIMITIVE_TYPE:
+            methodReturnType = ((JCPrimitiveTypeTree)returnTree).type;
+            break;
+          case PARAMETERIZED_TYPE:
+            methodReturnType = ((JCTypeApply)returnTree).type;
+            break;
+          default:
+            return false;
+        }
+        return state.getTypes().isSameType(methodReturnType, returnType);
       }
     };
   }
@@ -236,6 +256,32 @@ public class Matchers {
           }
         }
         return true;
+      }
+    };
+  }
+  
+  public static Matcher<MethodTree> methodHasVisibility(final Visibility visibility) {
+    return new MethodVisibility(visibility);
+  }
+  
+  /**
+   * Returns true if some method in the class matches the given methodMatcher.
+   * 
+   * @param methodMatcher A matcher on MethodTrees to run against all methods in this class.
+   * @return True if some method in the class matches the given methodMatcher.
+   */
+  public static Matcher<ClassTree> hasMethod(final Matcher<MethodTree> methodMatcher) {
+    return new Matcher<ClassTree>() {
+      @Override
+      public boolean matches(ClassTree t, VisitorState state) {
+        for (Tree member : t.getMembers()) {
+          if (member instanceof MethodTree) {
+            if (methodMatcher.matches((MethodTree)member, state)) {
+              return true;
+            }
+          }
+        }
+        return false;
       }
     };
   }

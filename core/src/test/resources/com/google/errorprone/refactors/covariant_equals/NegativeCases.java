@@ -16,6 +16,9 @@
 
 package com.google.errorprone.refactors.covariant_equals;
 
+import java.util.List;
+import java.lang.Integer;
+
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
@@ -31,6 +34,10 @@ public class NegativeCases {
 
   public void equals(NegativeCases other) {
   }
+  
+  public List<Integer> equals(Integer other) {
+    return null;
+  }
 }
 
 class NegativeCase2 {
@@ -43,5 +50,37 @@ class NegativeCase2 {
 class AnotherClass {
   public boolean equals(NegativeCases other) {
     return false;
+  }
+  
+  public int[] equals(int other) {
+    return null;
+  }
+}
+
+/**
+ * Don't issue error when a class already overrides the real
+ * equals. In this case covariant equals is probably a helper.
+ */
+class ClassWithEqualsOverridden {
+  public boolean equals(Object other) {
+    if (other instanceof ClassWithEqualsOverridden) {
+      return equals((ClassWithEqualsOverridden)other);
+    } else {
+      return false;
+    }
+  }
+  
+  public boolean equals(ClassWithEqualsOverridden other) {
+    return true;
+  }
+}
+
+/**
+ * Don't issue error when the covariant equals method is not public.
+ * In that case it wasn't intended to override equals.
+ */
+class ClassWithNonPublicCovariantEquals {
+  boolean equals(ClassWithNonPublicCovariantEquals other) {
+    return true;
   }
 }

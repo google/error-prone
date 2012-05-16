@@ -19,6 +19,7 @@ package com.google.errorprone.refactors.covariant_equals;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.matchers.MethodVisibility.Visibility;
 import com.google.errorprone.refactors.RefactoringMatcher;
 import com.sun.source.tree.MethodTree;
 
@@ -39,12 +40,26 @@ import static com.google.errorprone.matchers.Matchers.*;
         "since comparisons will have different results depending on which `equals` is called.",
     category = JDK, maturity = EXPERIMENTAL, severity = ERROR)
 public class CovariantEquals extends RefactoringMatcher<MethodTree> {
+  
+  /**
+   * Matches any method definitions that fit the following:
+   * 1) Defined method is named "equals."
+   * 2) Defined method returns a boolean.
+   * 3) Defined method takes a single parameter of the same type as the enclosing class.
+   * 4) The enclosing class does not have a method defined that really overrides Object.equals().
+   */
   @Override
-  public boolean matches(MethodTree methodTree, VisitorState state) {
+  @SuppressWarnings("unchecked")    // matchers + varargs cause this
+  public boolean matches(MethodTree methodTree, VisitorState state) { 
     return allOf(
+        methodHasVisibility(Visibility.PUBLIC),
         methodIsNamed("equals"),
         methodReturns(state.getSymtab().booleanType),
-        methodHasParameters(variableType(isSameType(findEnclosingClass(state))))
+        methodHasParameters(variableType(isSameType(findEnclosingClass(state)))),
+        enclosingClass(not(hasMethod(allOf(
+            methodIsNamed("equals"),
+            methodReturns(state.getSymtab().booleanType),
+            methodHasParameters(variableType(isSameType(state.getSymtab().objectType)))))))
     ).matches(methodTree, state);
   }
 
@@ -53,7 +68,7 @@ public class CovariantEquals extends RefactoringMatcher<MethodTree> {
     SuggestedFix fix = new SuggestedFix().replace(methodTree.getParameters().get(0).getType(), "Object");
     return new Refactor(methodTree, refactorMessage, fix);
   }
-
+  
   public static class Scanner extends com.google.errorprone.Scanner {
     private CovariantEquals matcher = new CovariantEquals();
 
