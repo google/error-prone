@@ -22,11 +22,9 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.refactors.RefactoringMatcher;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ClassType;
-import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 
@@ -59,18 +57,16 @@ public class CollectionIncompatibleType extends RefactoringMatcher<MethodInvocat
     if (!COLLECTION_METHODS.contains(methodSelectFieldAccess.sym.toString())) {
       return false;
     }
-    JCExpression expression = methodSelectFieldAccess.getExpression();
-    Type collectionGenericType = ((ClassType) expression.type).typarams_field.get(0);
 
-    ClassSymbol owner = (ClassSymbol) ((MethodSymbol) methodSelectFieldAccess.sym).owner;
     Type collectionType = state.getSymtab().classes.get(state.getName("java.util.Collection")).type;
-
-    if (!state.getTypes().isCastable(owner.type, collectionType)) {
+    Type accessedReferenceType = ((MethodSymbol) methodSelectFieldAccess.sym).owner.type;
+    if (!state.getTypes().isCastable(accessedReferenceType, collectionType)) {
       return false;
     }
 
-    JCExpression arg0 = ((JCMethodInvocation) methodInvocationTree).args.get(0);
-    return !state.getTypes().isCastable(arg0.type, collectionGenericType);
+    Type collectionGenericType = ((ClassType) methodSelectFieldAccess.getExpression().type).typarams_field.get(0);
+    Type arg0Type = ((JCMethodInvocation) methodInvocationTree).args.get(0).type;
+    return !state.getTypes().isCastable(arg0Type, collectionGenericType);
   }
 
   @Override
