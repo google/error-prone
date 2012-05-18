@@ -28,10 +28,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import static com.google.common.collect.Iterables.transform;
@@ -124,7 +121,9 @@ public class DiagnosticTestHelper {
    */
   public static Matcher<Iterable<Diagnostic<? extends JavaFileObject>>> hasDiagnosticOnAllMatchingLines(
       final File source, Pattern expectedDiagnosticComment) throws IOException {
-    Set<Integer> linesWithBugs = new HashSet<Integer>();
+    List<Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>>> matchers =
+        new ArrayList<Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>>>();
+
     final LineNumberReader reader = new LineNumberReader(new FileReader(source));
     do {
       String line = reader.readLine();
@@ -132,17 +131,10 @@ public class DiagnosticTestHelper {
         break;
       }
       if (expectedDiagnosticComment.matcher(line).matches()) {
-        linesWithBugs.add(reader.getLineNumber());
+        matchers.add(hasItem(diagnosticOnLine(reader.getLineNumber())));
       }
     } while(true);
 
-    Function<Integer, Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>>> adapter =
-        new Function<Integer, Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>>>() {
-          @Override public Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> apply(Integer line) {
-            return hasItem(diagnosticOnLine(line));
-          }
-        };
-
-    return allOf(transform(linesWithBugs, adapter));
+    return allOf(matchers);
   }
 }
