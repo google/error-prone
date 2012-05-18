@@ -19,6 +19,8 @@ package com.google.errorprone.refactors.collectionIncompatibleType;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.refactors.RefactoringMatcher;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -26,47 +28,64 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
-import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
-
-import java.util.Arrays;
-import java.util.List;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Matchers.*;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
 @BugPattern(name = "CollectionIncompatibleType",
-    summary = "Java generic collections have non-generic methods...",
-    explanation = "TODO",
+    summary = "Incompatible type as argument to non-generic Java collections method.",
+    explanation = "Java Collections API has non-generic methods such as Collection.contains(Object). " +
+        "If an argument is given which isn't of a type that may appear in the collection, these " +
+        "methods always return false. This commonly happens when the type of a collection is refactored " +
+        "and the developer relies on the Java compiler to detect callsites where the collection access " +
+        "needs to be updated.",
     category = JDK, maturity = EXPERIMENTAL, severity = ERROR)
 public class CollectionIncompatibleType extends RefactoringMatcher<MethodInvocationTree> {
 
-  public static final List<String> COLLECTION_METHODS = Arrays
-      .asList("contains(java.lang.Object)", "remove(java.lang.Object)");
-
+  @SuppressWarnings("unchecked")
   @Override
   public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
-    ExpressionTree methodSelect = methodInvocationTree.getMethodSelect();
-    if (!(methodSelect instanceof JCFieldAccess)) {
-      return false;
-    }
-    JCFieldAccess methodSelectFieldAccess = (JCFieldAccess) methodSelect;
-    if (!COLLECTION_METHODS.contains(methodSelectFieldAccess.sym.toString())) {
-      return false;
-    }
+    return allOf(
+        methodSelect(anyOf(
+            isDescendantOfMethod("java.util.Map", "get(java.lang.Object)"),
+            isDescendantOfMethod("java.util.Collection", "contains(java.lang.Object)"),
+            isDescendantOfMethod("java.util.Collection", "remove(java.lang.Object)"))),
+        argument(0, not(Matchers.<ExpressionTree>isCastableTo(getGenericType(methodInvocationTree.getMethodSelect(), 0))))
+    ).matches(methodInvocationTree, state);
+  }
 
-    Type collectionType = state.getSymtab().classes.get(state.getName("java.util.Collection")).type;
-    Type accessedReferenceType = ((MethodSymbol) methodSelectFieldAccess.sym).owner.type;
-    if (!state.getTypes().isCastable(accessedReferenceType, collectionType)) {
-      return false;
+  // TODO: is ExpressionTree really the thing we're getting a type from?
+  private Type getGenericType(ExpressionTree expressionTree, int typeIndex) {
+    if (!(expressionTree instanceof JCFieldAccess)) {
+      return Type.noType;
     }
+    return ((ClassType) ((JCFieldAccess) expressionTree).getExpression().type).typarams_field.get(typeIndex);
+  }
 
-    Type collectionGenericType = ((ClassType) methodSelectFieldAccess.getExpression().type).typarams_field.get(0);
-    Type arg0Type = ((JCMethodInvocation) methodInvocationTree).args.get(0).type;
-    return !state.getTypes().isCastable(arg0Type, collectionGenericType);
+  //TODO: is this matcher well-named? when it is, move to static method in Matchers.
+  private Matcher<ExpressionTree> isDescendantOfMethod(final String owner, final String methodName) {
+    return new Matcher<ExpressionTree>() {
+      @Override
+      public boolean matches(ExpressionTree expressionTree, VisitorState state) {
+        if (!(expressionTree instanceof JCFieldAccess)) {
+          return false;
+        }
+
+        JCFieldAccess methodSelectFieldAccess = (JCFieldAccess) expressionTree;
+        if (methodName.equals(methodSelectFieldAccess.sym.toString())) {
+          Type accessedReferenceType = ((MethodSymbol) methodSelectFieldAccess.sym).owner.type;
+
+          Type collectionType = state.getSymtab().classes.get(state.getName(owner)).type;
+          return state.getTypes().isCastable(accessedReferenceType, collectionType);
+        }
+        return false;
+      }
+    };
   }
 
   @Override

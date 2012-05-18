@@ -16,10 +16,7 @@
 
 package com.google.errorprone.refactors.collectionIncompatibleType;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -40,8 +37,8 @@ public class PositiveCases {
     return list.contains(new Exception());
   }
 
-//  public String bug4() {
-//    Map<Integer, String> map = new HashMap<Integer, String>();
-//    return map.get("not an integer");
-//  }
+  public String bug4() {
+    Map<Integer, String> map = new HashMap<Integer, String>();
+    return map.get("not an integer");
+  }
 }

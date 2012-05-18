@@ -18,7 +18,6 @@ package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.MethodVisibility.Visibility;
-
 import com.sun.source.tree.*;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Type;
@@ -130,6 +129,14 @@ public class Matchers {
     return new Matcher<T>() {
       @Override public boolean matches(Tree t, VisitorState state) {
         return state.getTypes().isSubtype(((JCTree) t).type, type);
+      }
+    };
+  }
+
+  public static <T extends Tree> Matcher<T> isCastableTo(final Type type) {
+    return new Matcher<T>() {
+      @Override public boolean matches(T t, VisitorState state) {
+        return state.getTypes().isCastable(((JCTree)t).type, type);
       }
     };
   }

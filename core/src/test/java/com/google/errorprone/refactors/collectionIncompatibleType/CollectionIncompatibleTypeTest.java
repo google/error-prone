@@ -18,17 +18,13 @@ package com.google.errorprone.refactors.collectionIncompatibleType;
 
 import com.google.errorprone.DiagnosticTestHelper;
 import com.google.errorprone.ErrorProneCompiler;
-import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.tools.Diagnostic;
-import javax.tools.JavaFileObject;
 import java.io.File;
 
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticOnLine;
-import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -54,12 +50,12 @@ public class CollectionIncompatibleTypeTest {
   public void testPositiveCase() throws Exception {
     File source = new File(this.getClass().getResource("PositiveCases.java").toURI());
     assertThat(compiler.compile(new String[]{"-Xjcov", source.getAbsolutePath()}), is(1));
-    Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher = allOf(
-        hasItem(diagnosticOnLine(31)),
-        hasItem(diagnosticOnLine(35)),
-        hasItem(diagnosticOnLine(40)),
+    assertThat(diagnosticHelper.getDiagnostics(), hasItem(diagnosticOnLine(28)));
+    assertThat(diagnosticHelper.getDiagnostics(), hasItem(diagnosticOnLine(32)));
+    assertThat(diagnosticHelper.getDiagnostics(), hasItem(diagnosticOnLine(37)));
+    assertThat(diagnosticHelper.getDiagnostics(), hasItem(diagnosticOnLine(42)));
+    assertThat(diagnosticHelper.getDiagnostics(),
         hasItem(diagnosticMessage(containsString("did you mean 'return false;'"))));
-    assertThat(diagnosticHelper.getDiagnostics(), matcher);
   }
 
   @Test
