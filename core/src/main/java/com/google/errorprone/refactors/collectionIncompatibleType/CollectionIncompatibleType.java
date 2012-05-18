@@ -55,7 +55,8 @@ public class CollectionIncompatibleType extends RefactoringMatcher<MethodInvocat
             isDescendantOfMethod("java.util.Map", "get(java.lang.Object)"),
             isDescendantOfMethod("java.util.Collection", "contains(java.lang.Object)"),
             isDescendantOfMethod("java.util.Collection", "remove(java.lang.Object)"))),
-        argument(0, not(Matchers.<ExpressionTree>isCastableTo(getGenericType(methodInvocationTree.getMethodSelect(), 0))))
+        argument(0, not(Matchers.<ExpressionTree>isCastableTo(
+            getGenericType(methodInvocationTree.getMethodSelect(), 0))))
     ).matches(methodInvocationTree, state);
   }
 

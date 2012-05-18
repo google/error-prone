@@ -24,7 +24,8 @@ import org.junit.Test;
 import java.io.File;
 
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
-import static com.google.errorprone.DiagnosticTestHelper.diagnosticOnLine;
+import static com.google.errorprone.DiagnosticTestHelper.hasDiagnosticOnAllMatchingLines;
+import static java.util.regex.Pattern.compile;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -50,12 +51,9 @@ public class CollectionIncompatibleTypeTest {
   public void testPositiveCase() throws Exception {
     File source = new File(this.getClass().getResource("PositiveCases.java").toURI());
     assertThat(compiler.compile(new String[]{"-Xjcov", source.getAbsolutePath()}), is(1));
-    assertThat(diagnosticHelper.getDiagnostics(), hasItem(diagnosticOnLine(28)));
-    assertThat(diagnosticHelper.getDiagnostics(), hasItem(diagnosticOnLine(32)));
-    assertThat(diagnosticHelper.getDiagnostics(), hasItem(diagnosticOnLine(37)));
-    assertThat(diagnosticHelper.getDiagnostics(), hasItem(diagnosticOnLine(42)));
+    assertThat(diagnosticHelper.getDiagnostics(), hasDiagnosticOnAllMatchingLines(source, compile(".*//BUG\\s*$")));
     assertThat(diagnosticHelper.getDiagnostics(),
-        hasItem(diagnosticMessage(containsString("did you mean 'return false;'"))));
+        hasItem(diagnosticMessage(containsString("did you mean 'return false;"))));
   }
 
   @Test

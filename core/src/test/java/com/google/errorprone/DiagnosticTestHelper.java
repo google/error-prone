@@ -16,6 +16,7 @@
 
 package com.google.errorprone;
 
+import com.google.common.base.Function;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
@@ -23,10 +24,19 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.LineNumberReader;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+import java.util.regex.Pattern;
 
+import static com.google.common.collect.Iterables.transform;
 import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.junit.internal.matchers.StringContains.containsString;
 
 /**
@@ -103,5 +113,36 @@ public class DiagnosticTestHelper {
         description.appendText("a diagnostic with message ").appendDescriptionOf(matcher);
       }
     };
+  }
+
+  /**
+   * Matches an Iterable of diagnostics if it contains a diagnostic on each line of the source file that matches the
+   * pattern.
+   * @param source file to find matching lines
+   * @param expectedDiagnosticComment any Pattern, used to match complete lines
+   * @return a Hamcrest matcher
+   */
+  public static Matcher<Iterable<Diagnostic<? extends JavaFileObject>>> hasDiagnosticOnAllMatchingLines(
+      final File source, Pattern expectedDiagnosticComment) throws IOException {
+    Set<Integer> linesWithBugs = new HashSet<Integer>();
+    final LineNumberReader reader = new LineNumberReader(new FileReader(source));
+    do {
+      String line = reader.readLine();
+      if (line == null) {
+        break;
+      }
+      if (expectedDiagnosticComment.matcher(line).matches()) {
+        linesWithBugs.add(reader.getLineNumber());
+      }
+    } while(true);
+
+    Function<Integer, Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>>> adapter =
+        new Function<Integer, Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>>>() {
+          @Override public Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> apply(Integer line) {
+            return hasItem(diagnosticOnLine(line));
+          }
+        };
+
+    return allOf(transform(linesWithBugs, adapter));
   }
 }
