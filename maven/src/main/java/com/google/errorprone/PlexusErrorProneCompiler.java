@@ -23,13 +23,9 @@ import org.codehaus.plexus.compiler.javac.JavacCompiler;
 import java.util.List;
 
 /**
- * @plexus.component
- *   role="org.codehaus.plexus.compiler.Compiler"
- *   role-hint="error-prone"
- *
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class ErrorProneCompiler extends JavacCompiler {
+public class PlexusErrorProneCompiler extends JavacCompiler {
   @Override
   public List compile(CompilerConfiguration config) throws CompilerException {
     throw new UnsupportedOperationException("Uh oh!");
