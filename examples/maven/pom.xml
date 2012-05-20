@@ -30,7 +30,15 @@
         <configuration>
           <source>1.6</source>
           <target>1.6</target>
+          <compilerId>error-prone</compilerId>
         </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>com.google.errorprone</groupId>
+            <artifactId>error_prone_maven</artifactId>
+            <version>0.9-SNAPSHOT</version>
+          </dependency>
+        </dependencies>
       </plugin>
     </plugins>
   </build>
