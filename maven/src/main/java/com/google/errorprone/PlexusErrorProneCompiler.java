@@ -45,6 +45,11 @@ public class PlexusErrorProneCompiler extends JavacCompiler {
    */
   @Override
   public List<CompilerError> compile( CompilerConfiguration config ) throws CompilerException {
+    if (config.isFork()) {
+      throw new UnsupportedOperationException(
+          "At present, the error-prone compiler can only be run in-process");
+    }
+
     File destinationDir = new File(config.getOutputLocation());
 
     if (!destinationDir.exists()) {
@@ -65,25 +70,20 @@ public class PlexusErrorProneCompiler extends JavacCompiler {
 
     String[] args = buildCompilerArguments( config, sourceFiles );
 
-    if (config.isFork()) {
-      throw new UnsupportedOperationException(
-          "error-prone compiler can only be run in-process");
-    } else {
-      final List<CompilerError> messages = new ArrayList<CompilerError>();
-      DiagnosticListener<? super JavaFileObject> listener = new DiagnosticListener<JavaFileObject>() {
-        @Override public void report(Diagnostic<? extends JavaFileObject> diagnostic) {
-          messages.add(new CompilerError(
-              diagnostic.getSource().getName(),
-              diagnostic.getKind() == ERROR,
-              (int)diagnostic.getLineNumber(),
-              (int)diagnostic.getColumnNumber(),
-              -1, -1, // end pos line:column is hard to calculate
-              diagnostic.getMessage(Locale.getDefault())));
-        }
-      };
-      new ErrorProneCompiler.Builder().listenToDiagnostics(listener).build().compile(args);
+    final List<CompilerError> messages = new ArrayList<CompilerError>();
+    DiagnosticListener<? super JavaFileObject> listener = new DiagnosticListener<JavaFileObject>() {
+      @Override public void report(Diagnostic<? extends JavaFileObject> diagnostic) {
+        messages.add(new CompilerError(
+            diagnostic.getSource().getName(),
+            diagnostic.getKind() == ERROR,
+            (int)diagnostic.getLineNumber(),
+            (int)diagnostic.getColumnNumber(),
+            -1, -1, // end pos line:column is hard to calculate
+            diagnostic.getMessage(Locale.getDefault())));
+      }
+    };
+    new ErrorProneCompiler.Builder().listenToDiagnostics(listener).build().compile(args);
 
-      return messages;
-    }
+    return messages;
   }
 }

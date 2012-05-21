@@ -113,6 +113,10 @@ public class ErrorProneCompiler extends Main {
     // Register our message bundle reflectively, so we can compile against both JDK6 and JDK7.
     // OpenJDK6: com.sun.tools.javac.util.Messages.instance(context).add("com.google.errorprone.errors");
     // OpenJDK7: com.sun.tools.javac.util.JavacMessages.instance(context).add("com.google.errorprone.errors");
+    if (System.getProperty("java.vm.vendor").equals("Apple Inc.")) {
+      throw new UnsupportedOperationException("error-prone doesn't work on Apple JDK's yet.\n" +
+          "Vote: http://code.google.com/p/error-prone/issues/detail?id=16");
+    }
     try {
       Class<?> messagesClass;
       try {
@@ -123,7 +127,10 @@ public class ErrorProneCompiler extends Main {
       Object instance = messagesClass.getMethod("instance", Context.class).invoke(null, context);
       messagesClass.getMethod("add", String.class).invoke(instance, "com.google.errorprone.errors");
     } catch (Exception e) {
-      throw new RuntimeException("Unable to register message bundle", e);
+      throw new RuntimeException(String.format(
+          "Unable to register message bundle. java.vm.vendor=[%s],  java.version=[%s]",
+          System.getProperty("java.vm.vendor"), System.getProperty("java.version")),
+          e);
     }
 
     try {
