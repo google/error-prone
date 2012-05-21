@@ -17,21 +17,35 @@
 package com.google.errorprone;
 
 import org.codehaus.plexus.compiler.CompilerConfiguration;
+import org.codehaus.plexus.compiler.CompilerError;
 import org.codehaus.plexus.compiler.CompilerException;
 import org.codehaus.plexus.compiler.javac.JavacCompiler;
 
+import javax.tools.Diagnostic;
+import javax.tools.DiagnosticListener;
+import javax.tools.JavaFileObject;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
+
+import static javax.tools.Diagnostic.Kind.ERROR;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class PlexusErrorProneCompiler extends JavacCompiler {
+
+  /**
+   * Based on the implementation in the parent class.
+   * @param config
+   * @return
+   * @throws CompilerException
+   */
   @Override
-  public List compile( CompilerConfiguration config )
-      throws CompilerException {
-    File destinationDir = new File(config.getOutputLocation() );
+  public List<CompilerError> compile( CompilerConfiguration config ) throws CompilerException {
+    File destinationDir = new File(config.getOutputLocation());
 
     if (!destinationDir.exists()) {
       destinationDir.mkdirs();
@@ -39,12 +53,11 @@ public class PlexusErrorProneCompiler extends JavacCompiler {
 
     String[] sourceFiles = getSourceFiles(config);
 
-    if ((sourceFiles == null) || ( sourceFiles.length == 0 )) {
-      return Collections.EMPTY_LIST;
+    if ((sourceFiles == null) || (sourceFiles.length == 0)) {
+      return Collections.emptyList();
     }
 
-    if ( ( getLogger() != null ) && getLogger().isInfoEnabled() )
-    {
+    if ((getLogger() != null) && getLogger().isInfoEnabled()) {
       getLogger().info( "Compiling " + sourceFiles.length + " " +
           "source file" + ( sourceFiles.length == 1 ? "" : "s" ) +
           " to " + destinationDir.getAbsolutePath() );
@@ -56,9 +69,21 @@ public class PlexusErrorProneCompiler extends JavacCompiler {
       throw new UnsupportedOperationException(
           "error-prone compiler can only be run in-process");
     } else {
-      new ErrorProneCompiler.Builder().build().compile(args);
+      final List<CompilerError> messages = new ArrayList<CompilerError>();
+      DiagnosticListener<? super JavaFileObject> listener = new DiagnosticListener<JavaFileObject>() {
+        @Override public void report(Diagnostic<? extends JavaFileObject> diagnostic) {
+          messages.add(new CompilerError(
+              diagnostic.getSource().getName(),
+              diagnostic.getKind() == ERROR,
+              (int)diagnostic.getLineNumber(),
+              (int)diagnostic.getColumnNumber(),
+              -1, -1, // end pos line:column is hard to calculate
+              diagnostic.getMessage(Locale.getDefault())));
+        }
+      };
+      new ErrorProneCompiler.Builder().listenToDiagnostics(listener).build().compile(args);
 
-      return Collections.emptyList();
+      return messages;
     }
   }
 }
