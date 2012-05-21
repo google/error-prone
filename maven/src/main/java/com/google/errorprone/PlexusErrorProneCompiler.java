@@ -20,6 +20,8 @@ import org.codehaus.plexus.compiler.CompilerConfiguration;
 import org.codehaus.plexus.compiler.CompilerException;
 import org.codehaus.plexus.compiler.javac.JavacCompiler;
 
+import java.io.File;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -27,7 +29,36 @@ import java.util.List;
  */
 public class PlexusErrorProneCompiler extends JavacCompiler {
   @Override
-  public List compile(CompilerConfiguration config) throws CompilerException {
-    throw new UnsupportedOperationException("Uh oh!");
+  public List compile( CompilerConfiguration config )
+      throws CompilerException {
+    File destinationDir = new File(config.getOutputLocation() );
+
+    if (!destinationDir.exists()) {
+      destinationDir.mkdirs();
+    }
+
+    String[] sourceFiles = getSourceFiles(config);
+
+    if ((sourceFiles == null) || ( sourceFiles.length == 0 )) {
+      return Collections.EMPTY_LIST;
+    }
+
+    if ( ( getLogger() != null ) && getLogger().isInfoEnabled() )
+    {
+      getLogger().info( "Compiling " + sourceFiles.length + " " +
+          "source file" + ( sourceFiles.length == 1 ? "" : "s" ) +
+          " to " + destinationDir.getAbsolutePath() );
+    }
+
+    String[] args = buildCompilerArguments( config, sourceFiles );
+
+    if (config.isFork()) {
+      throw new UnsupportedOperationException(
+          "error-prone compiler can only be run in-process");
+    } else {
+      new ErrorProneCompiler.Builder().build().compile(args);
+
+      return Collections.emptyList();
+    }
   }
 }
