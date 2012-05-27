@@ -59,7 +59,7 @@ public class ErrorProneCompiler extends Main {
     DiagnosticListener<? super JavaFileObject> diagnosticListener = null;
     PrintWriter out = new PrintWriter(System.err, true);
     String compilerName = "javac (with error-prone)";
-    TreePathScanner<Void, ? extends VisitorState> scanner = new ErrorProneScanner();
+    TreePathScanner<Void, ? extends VisitorState> scanner = ErrorProneScanner.defaultChecks();
     Class<? extends JavaCompiler> compilerClass = ErrorReportingJavaCompiler.class;
 
     public ErrorProneCompiler build() {
