@@ -35,15 +35,51 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.google.errorprone.BugPattern.MaturityLevel;
 import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
 
 /**
- * Scans the parsed AST, looking for violations of any of the configured checks.
+ * Scans the parsed AST, looking for violations of any of the enabled checks.
  * @author Alex Eagle (alexeagle@google.com)
  */
 public class ErrorProneScanner extends Scanner {
 
+  /**
+   * Selects which checks should be enabled when the compile is run.
+   */
+  public interface EnabledPredicate {
+    boolean isEnabled(Class<? extends RefactoringMatcher<?>> check, BugPattern annotation);
+
+    /**
+     * Selects all checks which are annotated with maturity = ON_BY_DEFAULT.
+     */
+    public static final EnabledPredicate DEFAULT_CHECKS = new EnabledPredicate() {
+      @Override public boolean isEnabled(Class<? extends RefactoringMatcher<?>> check, BugPattern annotation) {
+        return annotation.maturity() == ON_BY_DEFAULT;
+      }
+    };
+  }
+
+  private final Iterable<RefactoringMatcher<MethodInvocationTree>> methodInvocationMatchers;
+  private final Iterable<RefactoringMatcher<NewClassTree>> newClassMatchers;
+  private final Iterable<RefactoringMatcher<AnnotationTree>> annotationMatchers;
+  private final Iterable<RefactoringMatcher<EmptyStatementTree>> emptyStatementMatchers;
+  private final Iterable<RefactoringMatcher<AssignmentTree>> assignmentMatchers;
+  private final Iterable<RefactoringMatcher<MethodTree>> methodMatchers;
+
+  public ErrorProneScanner(EnabledPredicate enabled) {
+    try {
+      this.methodInvocationMatchers = createChecks(enabled, allMethodInvocationMatchers);
+      this.newClassMatchers = createChecks(enabled, allNewClassMatchers);
+      this.annotationMatchers = createChecks(enabled, allAnnotationMatchers);
+      this.emptyStatementMatchers = createChecks(enabled, allEmptyStatementMatchers);
+      this.assignmentMatchers = createChecks(enabled, allAssignmentMatchers);
+      this.methodMatchers = createChecks(enabled, allMethodMatchers);
+    } catch (Exception e) {
+      throw new RuntimeException("Could not reflectively create error prone matchers", e);
+    }
+  }
+
+  //TODO(alex): it's pretty ugly to register all the checks this way.
   @SuppressWarnings("unchecked")
   private final static Iterable<Class<? extends RefactoringMatcher<MethodInvocationTree>>>
       allMethodInvocationMatchers = Arrays.asList(
@@ -82,57 +118,22 @@ public class ErrorProneScanner extends Scanner {
       allMethodMatchers = Arrays.<Class<? extends RefactoringMatcher<MethodTree>>>asList(
           CovariantEquals.class);
 
-  public static ErrorProneScanner defaultChecks() {
-    try {
-      return new ErrorProneScanner(
-          createChecks(ON_BY_DEFAULT, allMethodInvocationMatchers),
-          createChecks(ON_BY_DEFAULT, allNewClassMatchers),
-          createChecks(ON_BY_DEFAULT, allAnnotationMatchers),
-          createChecks(ON_BY_DEFAULT, allEmptyStatementMatchers),
-          createChecks(ON_BY_DEFAULT, allAssignmentMatchers),
-          createChecks(ON_BY_DEFAULT, allMethodMatchers));
-    } catch (Exception e) {
-      throw new RuntimeException("Could not reflectively create error prone matchers", e);
-    }
-  }
-
   private static <T extends Tree> Iterable<RefactoringMatcher<T>> createChecks(
-      MaturityLevel maturityLevel, Iterable<Class<? extends RefactoringMatcher<T>>> matchers)
+      EnabledPredicate predicate, Iterable<Class<? extends RefactoringMatcher<T>>> matchers)
       throws IllegalAccessException, InstantiationException {
     List<RefactoringMatcher<T>> result = new ArrayList<RefactoringMatcher<T>>();
     for (Class<? extends RefactoringMatcher<T>> matcher : matchers) {
-      if (matcher.getAnnotation(BugPattern.class).maturity() == maturityLevel) {
+      if (predicate.isEnabled(matcher, matcher.getAnnotation(BugPattern.class))) {
         result.add(matcher.newInstance());
       }
     }
     return result;
   }
 
-  private final Iterable<RefactoringMatcher<MethodInvocationTree>> methodInvocationTreeMatchers;
-  private final Iterable<RefactoringMatcher<NewClassTree>> newClassTreeMatchers;
-  private final Iterable<RefactoringMatcher<AnnotationTree>> annotationTreeMatchers;
-  private final Iterable<RefactoringMatcher<EmptyStatementTree>> emptyStatementTreeMatchers;
-  private final Iterable<RefactoringMatcher<AssignmentTree>> assignmentTreeMatchers;
-  private final Iterable<RefactoringMatcher<MethodTree>> methodTreeMatchers;
-
-  public ErrorProneScanner(Iterable<RefactoringMatcher<MethodInvocationTree>> methodInvocationTreeMatchers,
-                           Iterable<RefactoringMatcher<NewClassTree>> newClassTreeMatchers,
-                           Iterable<RefactoringMatcher<AnnotationTree>> annotationTreeMatchers,
-                           Iterable<RefactoringMatcher<EmptyStatementTree>> emptyStatementTreeMatchers,
-                           Iterable<RefactoringMatcher<AssignmentTree>> assignmentTreeMatchers,
-                           Iterable<RefactoringMatcher<MethodTree>> methodTreeMatchers) {
-    this.methodInvocationTreeMatchers = methodInvocationTreeMatchers;
-    this.newClassTreeMatchers = newClassTreeMatchers;
-    this.annotationTreeMatchers = annotationTreeMatchers;
-    this.emptyStatementTreeMatchers = emptyStatementTreeMatchers;
-    this.assignmentTreeMatchers = assignmentTreeMatchers;
-    this.methodTreeMatchers = methodTreeMatchers;
-  }
-
   @Override
   public Void visitMethodInvocation(
       MethodInvocationTree methodInvocationTree, VisitorState state) {
-    for (RefactoringMatcher<MethodInvocationTree> matcher : methodInvocationTreeMatchers) {
+    for (RefactoringMatcher<MethodInvocationTree> matcher : methodInvocationMatchers) {
       evaluateMatch(methodInvocationTree, state, matcher);
     }
     return super.visitMethodInvocation(methodInvocationTree, state);
@@ -140,7 +141,7 @@ public class ErrorProneScanner extends Scanner {
 
   @Override
   public Void visitNewClass(NewClassTree newClassTree, VisitorState visitorState) {
-    for (RefactoringMatcher<NewClassTree> matcher : newClassTreeMatchers) {
+    for (RefactoringMatcher<NewClassTree> matcher : newClassMatchers) {
       evaluateMatch(newClassTree, visitorState, matcher);
     }
     return super.visitNewClass(newClassTree, visitorState);
@@ -148,7 +149,7 @@ public class ErrorProneScanner extends Scanner {
 
   @Override
   public Void visitAnnotation(AnnotationTree annotationTree, VisitorState visitorState) {
-    for (RefactoringMatcher<AnnotationTree> matcher : annotationTreeMatchers) {
+    for (RefactoringMatcher<AnnotationTree> matcher : annotationMatchers) {
       evaluateMatch(annotationTree, visitorState, matcher);
     }
     return super.visitAnnotation(annotationTree, visitorState);
@@ -156,7 +157,7 @@ public class ErrorProneScanner extends Scanner {
   
   @Override
   public Void visitEmptyStatement(EmptyStatementTree emptyStatementTree, VisitorState visitorState) {
-    for (RefactoringMatcher<EmptyStatementTree> matcher : emptyStatementTreeMatchers) {
+    for (RefactoringMatcher<EmptyStatementTree> matcher : emptyStatementMatchers) {
       evaluateMatch(emptyStatementTree, visitorState, matcher);
     }
     return super.visitEmptyStatement(emptyStatementTree, visitorState);
@@ -164,7 +165,7 @@ public class ErrorProneScanner extends Scanner {
   
   @Override
   public Void visitAssignment(AssignmentTree assignmentTree, VisitorState visitorState) {
-    for (RefactoringMatcher<AssignmentTree> matcher : assignmentTreeMatchers) {
+    for (RefactoringMatcher<AssignmentTree> matcher : assignmentMatchers) {
       evaluateMatch(assignmentTree, visitorState, matcher);
     }
     return super.visitAssignment(assignmentTree, visitorState);
@@ -172,7 +173,7 @@ public class ErrorProneScanner extends Scanner {
 
   @Override
   public Void visitMethod(MethodTree node, VisitorState visitorState) {
-    for (RefactoringMatcher<MethodTree> matcher : methodTreeMatchers) {
+    for (RefactoringMatcher<MethodTree> matcher : methodMatchers) {
       evaluateMatch(node, visitorState, matcher);
     }
     return super.visitMethod(node, visitorState);

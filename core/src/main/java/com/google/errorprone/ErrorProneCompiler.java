@@ -27,6 +27,8 @@ import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
 import java.io.PrintWriter;
 
+import static com.google.errorprone.ErrorProneScanner.EnabledPredicate.DEFAULT_CHECKS;
+
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
@@ -59,7 +61,7 @@ public class ErrorProneCompiler extends Main {
     DiagnosticListener<? super JavaFileObject> diagnosticListener = null;
     PrintWriter out = new PrintWriter(System.err, true);
     String compilerName = "javac (with error-prone)";
-    TreePathScanner<Void, ? extends VisitorState> scanner = ErrorProneScanner.defaultChecks();
+    TreePathScanner<Void, ? extends VisitorState> scanner = new ErrorProneScanner(DEFAULT_CHECKS);
     Class<? extends JavaCompiler> compilerClass = ErrorReportingJavaCompiler.class;
 
     public ErrorProneCompiler build() {
