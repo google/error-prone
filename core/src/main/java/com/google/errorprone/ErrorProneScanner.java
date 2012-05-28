@@ -32,7 +32,6 @@ import com.google.errorprone.refactors.selfassignment.SelfAssignment;
 import com.sun.source.tree.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
@@ -66,23 +65,10 @@ public class ErrorProneScanner extends Scanner {
   private final Iterable<RefactoringMatcher<AssignmentTree>> assignmentMatchers;
   private final Iterable<RefactoringMatcher<MethodTree>> methodMatchers;
 
+  @SuppressWarnings("unchecked")
   public ErrorProneScanner(EnabledPredicate enabled) {
     try {
-      this.methodInvocationMatchers = createChecks(enabled, allMethodInvocationMatchers);
-      this.newClassMatchers = createChecks(enabled, allNewClassMatchers);
-      this.annotationMatchers = createChecks(enabled, allAnnotationMatchers);
-      this.emptyStatementMatchers = createChecks(enabled, allEmptyStatementMatchers);
-      this.assignmentMatchers = createChecks(enabled, allAssignmentMatchers);
-      this.methodMatchers = createChecks(enabled, allMethodMatchers);
-    } catch (Exception e) {
-      throw new RuntimeException("Could not reflectively create error prone matchers", e);
-    }
-  }
-
-  //TODO(alex): it's pretty ugly to register all the checks this way.
-  @SuppressWarnings("unchecked")
-  private final static Iterable<Class<? extends RefactoringMatcher<MethodInvocationTree>>>
-      allMethodInvocationMatchers = Arrays.asList(
+      this.methodInvocationMatchers = createChecks(enabled,
           ObjectsEqualSelfComparison.class,
           OrderingFrom.class,
           PreconditionsCheckNotNull.class,
@@ -90,36 +76,22 @@ public class ErrorProneScanner extends Scanner {
           PreconditionsCheckNotNullPrimitive1stArg.class,
           CollectionIncompatibleType.class,
           ObjectsEqualSelfComparison.class
-  );
-
-  @SuppressWarnings("unchecked")
-  private final static Iterable<Class<? extends RefactoringMatcher<NewClassTree>>>
-      allNewClassMatchers = Arrays.<Class<? extends RefactoringMatcher<NewClassTree>>>asList(
-          DeadException.class);
-
-  @SuppressWarnings("unchecked")
-  private final static Iterable<Class<? extends RefactoringMatcher<AnnotationTree>>>
-      allAnnotationMatchers = Arrays.<Class<? extends RefactoringMatcher<AnnotationTree>>>asList(
-          FallThroughSuppression.class);
-
-  @SuppressWarnings("unchecked")
-  private final static Iterable<Class<? extends RefactoringMatcher<EmptyStatementTree>>>
-      allEmptyStatementMatchers = Arrays.asList(
+      );
+      this.newClassMatchers = createChecks(enabled, DeadException.class);
+      this.annotationMatchers = createChecks(enabled, FallThroughSuppression.class);
+      this.emptyStatementMatchers = createChecks(enabled,
           EmptyIfStatement.class,
-          EmptyStatement.class);
-
-  @SuppressWarnings("unchecked")
-  private final static Iterable<Class<? extends RefactoringMatcher<AssignmentTree>>>
-      allAssignmentMatchers = Arrays.<Class<? extends RefactoringMatcher<AssignmentTree>>>asList(
-          SelfAssignment.class);
-
-  @SuppressWarnings("unchecked")
-  private final static Iterable<Class<? extends RefactoringMatcher<MethodTree>>>
-      allMethodMatchers = Arrays.<Class<? extends RefactoringMatcher<MethodTree>>>asList(
-          CovariantEquals.class);
+          EmptyStatement.class
+      );
+      this.assignmentMatchers = createChecks(enabled, SelfAssignment.class);
+      this.methodMatchers = createChecks(enabled, CovariantEquals.class);
+    } catch (Exception e) {
+      throw new RuntimeException("Could not reflectively create error prone matchers", e);
+    }
+  }
 
   private static <T extends Tree> Iterable<RefactoringMatcher<T>> createChecks(
-      EnabledPredicate predicate, Iterable<Class<? extends RefactoringMatcher<T>>> matchers)
+      EnabledPredicate predicate, Class<? extends RefactoringMatcher<T>>... matchers)
       throws IllegalAccessException, InstantiationException {
     List<RefactoringMatcher<T>> result = new ArrayList<RefactoringMatcher<T>>();
     for (Class<? extends RefactoringMatcher<T>> matcher : matchers) {
