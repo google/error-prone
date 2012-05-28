@@ -16,11 +16,6 @@
 
 package com.google.errorprone;
 
-import static com.google.common.base.Charsets.UTF_8;
-import static com.google.common.collect.Iterables.limit;
-import static com.google.common.collect.Iterables.size;
-import static com.google.common.io.Files.readLines;
-
 import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
@@ -29,31 +24,24 @@ import com.google.common.collect.Multimap;
 import com.google.common.io.Files;
 import com.google.common.io.LineProcessor;
 import com.google.errorprone.BugPattern.MaturityLevel;
-
 import org.kohsuke.MetaInfServices;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.Writer;
-import java.text.MessageFormat;
-import java.util.Collection;
-import java.util.Locale;
-import java.util.Set;
-
-import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.annotation.processing.Processor;
-import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
+import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
+import java.io.*;
+import java.text.MessageFormat;
+import java.util.Collection;
+import java.util.Locale;
+import java.util.Set;
+
+import static com.google.common.base.Charsets.UTF_8;
+import static com.google.common.collect.Iterables.limit;
+import static com.google.common.collect.Iterables.size;
+import static com.google.common.io.Files.readLines;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
@@ -77,8 +65,7 @@ public class DocGen extends AbstractProcessor {
           .createResource(StandardLocation.SOURCE_OUTPUT, "", "bugPatterns.txt");
       pw = new PrintWriter(new OutputStreamWriter(manifest.openOutputStream()));
     } catch (IOException e) {
-      // TODO(eaftan): Auto-generated catch block
-      e.printStackTrace();
+      throw new RuntimeException(e);
     }
   }
     
