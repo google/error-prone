@@ -18,6 +18,7 @@ package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.MethodVisibility.Visibility;
+
 import com.sun.source.tree.*;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Type;
@@ -38,12 +39,19 @@ import java.util.List;
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class Matchers {
-  private Matchers() {}
 
+  private Matchers() {
+  }
+
+  public static <T extends Tree> Matcher<T> allOf(
+      Class<T> typeInfer, final Matcher<? super T>... matchers) {
+    return allOf(matchers);
+  }
 
   public static <T extends Tree> Matcher<T> allOf(final Matcher<? super T>... matchers) {
     return new Matcher<T>() {
-      @Override public boolean matches(T t, VisitorState state) {
+      @Override
+      public boolean matches(T t, VisitorState state) {
         for (Matcher<? super T> matcher : matchers) {
           if (!matcher.matches(t, state)) {
             return false;
@@ -54,9 +62,15 @@ public class Matchers {
     };
   }
 
+  public static <T extends Tree> Matcher<T> anyOf(
+      Class<T> typeInfer, final Matcher<? super T>... matchers) {
+    return anyOf(matchers);
+  }
+
   public static <T extends Tree> Matcher<T> anyOf(final Matcher<? super T>... matchers) {
     return new Matcher<T>() {
-      @Override public boolean matches(T t, VisitorState state) {
+      @Override
+      public boolean matches(T t, VisitorState state) {
         for (Matcher<? super T> matcher : matchers) {
           if (matcher.matches(t, state)) {
             return true;
@@ -69,7 +83,8 @@ public class Matchers {
 
   public static <T extends Tree> Matcher<T> kindIs(final Kind kind) {
     return new Matcher<T>() {
-      @Override public boolean matches(T tree, VisitorState state) {
+      @Override
+      public boolean matches(T tree, VisitorState state) {
         return tree.getKind() == kind;
       }
     };
@@ -77,23 +92,26 @@ public class Matchers {
 
   public static <T extends Tree> Matcher<T> kindIs(final Kind kind, Class<T> typeInfer) {
     return new Matcher<T>() {
-      @Override public boolean matches(T tree, VisitorState state) {
+      @Override
+      public boolean matches(T tree, VisitorState state) {
         return tree.getKind() == kind;
       }
     };
   }
-  
+
   public static <T extends Tree> Matcher<T> isNull() {
     return new Matcher<T>() {
-      @Override public boolean matches(T tree, VisitorState state) {
+      @Override
+      public boolean matches(T tree, VisitorState state) {
         return tree == null;
       }
     };
   }
-  
+
   public static <T extends Tree> Matcher<T> isNull(Class<T> typeInfer) {
     return new Matcher<T>() {
-      @Override public boolean matches(T tree, VisitorState state) {
+      @Override
+      public boolean matches(T tree, VisitorState state) {
         return tree == null;
       }
     };
@@ -102,7 +120,7 @@ public class Matchers {
   public static StaticMethod staticMethod(String fullClassName, String methodName) {
     return new StaticMethod(fullClassName, methodName);
   }
-  
+
   public static Constructor constructor(String className, List<String> parameterTypes) {
     return new Constructor(className, parameterTypes);
   }
@@ -112,10 +130,11 @@ public class Matchers {
     return new MethodInvocationMethodSelect(methodSelectMatcher);
   }
 
-  public static Matcher<ExpressionTree> expressionMethodSelect(Matcher<ExpressionTree> methodSelectMatcher) {
+  public static Matcher<ExpressionTree> expressionMethodSelect(
+      Matcher<ExpressionTree> methodSelectMatcher) {
     return new ExpressionMethodSelect(methodSelectMatcher);
   }
-  
+
   public static Matcher<MethodInvocationTree> argument(
       final int position, final Matcher<ExpressionTree> argumentMatcher) {
     return new MethodInvocationArgument(position, argumentMatcher);
@@ -127,7 +146,8 @@ public class Matchers {
 
   public static <T extends Tree> Matcher<T> isSubtypeOf(final Type type) {
     return new Matcher<T>() {
-      @Override public boolean matches(Tree t, VisitorState state) {
+      @Override
+      public boolean matches(Tree t, VisitorState state) {
         return state.getTypes().isSubtype(((JCTree) t).type, type);
       }
     };
@@ -135,15 +155,17 @@ public class Matchers {
 
   public static <T extends Tree> Matcher<T> isCastableTo(final Type type) {
     return new Matcher<T>() {
-      @Override public boolean matches(T t, VisitorState state) {
-        return state.getTypes().isCastable(((JCTree)t).type, type);
+      @Override
+      public boolean matches(T t, VisitorState state) {
+        return state.getTypes().isCastable(((JCTree) t).type, type);
       }
     };
   }
 
   public static <T extends Tree> Matcher<T> isSameType(final Type type) {
     return new Matcher<T>() {
-      @Override public boolean matches(Tree t, VisitorState state) {
+      @Override
+      public boolean matches(Tree t, VisitorState state) {
         return state.getTypes().isSameType(((JCTree) t).type, type);
       }
     };
@@ -164,7 +186,7 @@ public class Matchers {
   public static LastStatement lastStatement(Matcher<StatementTree> matcher) {
     return new LastStatement(matcher);
   }
-  
+
   public static <T extends StatementTree> NextStatement<T> nextStatement(
       Matcher<StatementTree> matcher) {
     return new NextStatement<T>(matcher);
@@ -173,7 +195,7 @@ public class Matchers {
   public static <T extends Tree> Same<T> same(T tree) {
     return new Same<T>(tree);
   }
-  
+
   public static <T extends Tree> Matcher<T> not(final Matcher<T> matcher) {
     return new Matcher<T>() {
       @Override
@@ -217,20 +239,20 @@ public class Matchers {
   }
 
   public static Matcher<MethodTree> methodReturns(final Type returnType) {
-    return new Matcher<MethodTree>(){
+    return new Matcher<MethodTree>() {
       @Override
       public boolean matches(MethodTree methodTree, VisitorState state) {
         Tree returnTree = methodTree.getReturnType();
         Type methodReturnType = null;
         switch (returnTree.getKind()) {
           case ARRAY_TYPE:
-            methodReturnType = ((JCArrayTypeTree)returnTree).type;
+            methodReturnType = ((JCArrayTypeTree) returnTree).type;
             break;
           case PRIMITIVE_TYPE:
-            methodReturnType = ((JCPrimitiveTypeTree)returnTree).type;
+            methodReturnType = ((JCPrimitiveTypeTree) returnTree).type;
             break;
           case PARAMETERIZED_TYPE:
-            methodReturnType = ((JCTypeApply)returnTree).type;
+            methodReturnType = ((JCTypeApply) returnTree).type;
             break;
           default:
             return false;
@@ -249,7 +271,8 @@ public class Matchers {
     };
   }
 
-  public static Matcher<MethodTree> methodHasParameters(final Matcher<VariableTree>... variableMatcher) {
+  public static Matcher<MethodTree> methodHasParameters(
+      final Matcher<VariableTree>... variableMatcher) {
     return new Matcher<MethodTree>() {
       @Override
       public boolean matches(MethodTree methodTree, VisitorState state) {
@@ -266,14 +289,14 @@ public class Matchers {
       }
     };
   }
-  
+
   public static Matcher<MethodTree> methodHasVisibility(final Visibility visibility) {
     return new MethodVisibility(visibility);
   }
-  
+
   /**
    * Returns true if some method in the class matches the given methodMatcher.
-   * 
+   *
    * @param methodMatcher A matcher on MethodTrees to run against all methods in this class.
    * @return True if some method in the class matches the given methodMatcher.
    */
@@ -283,7 +306,7 @@ public class Matchers {
       public boolean matches(ClassTree t, VisitorState state) {
         for (Tree member : t.getMembers()) {
           if (member instanceof MethodTree) {
-            if (methodMatcher.matches((MethodTree)member, state)) {
+            if (methodMatcher.matches((MethodTree) member, state)) {
               return true;
             }
           }
