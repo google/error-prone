@@ -15,7 +15,9 @@
   limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -37,24 +39,6 @@
       <scope>compile</scope>
     </dependency>
 
-    <!-- tools.jar is in the classpath by default on Apple-provided JDK
-         but not OpenJDK. We don't compile with Apple's JDK right now, so this
-         dependency is always included. If we ever need to run on the Apple JDK,
-         we could use a profile to exclude this dep, like:
-         <profile>
-          <id>tools-jar</id>
-           <activation>
-            <os>
-             <family>!mac</family>
-            </os>
-    -->
-    <dependency>
-      <groupId>openjdk</groupId>
-      <artifactId>tools</artifactId>
-      <version>1.6</version>
-      <scope>system</scope>
-      <systemPath>${java.home}/../lib/tools.jar</systemPath>
-    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit-dep</artifactId>
@@ -102,6 +86,30 @@
   </build>
 
   <profiles>
+    <profile>
+      <id>tools-jar</id>
+      <!-- tools.jar is in the classpath by default on Apple-provided JDK
+         but not OpenJDK. We don't compile with Apple's JDK right now, so this
+         dependency is always included. If we ever need to run on the Apple JDK,
+         we could change the activation to exclude this dep, like:
+           <activation>
+            <os>
+             <family>!mac</family>
+            </os>
+      -->
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>openjdk</groupId>
+          <artifactId>tools</artifactId>
+          <version>1.6</version>
+          <scope>system</scope>
+          <systemPath>${java.home}/../lib/tools.jar</systemPath>
+        </dependency>
+      </dependencies>
+    </profile>
     <!-- run annotation processor -->
     <profile>
       <id>run-annotation-processor</id>
@@ -132,7 +140,8 @@
                 <configuration>
                   <mainClass>com.google.errorprone.DocGen</mainClass>
                   <arguments>
-                    <argument>${basedir}/target/generated-sources/annotations/bugPatterns.txt</argument>
+                    <argument>${basedir}/target/generated-sources/annotations/bugPatterns.txt
+                    </argument>
                     <argument>${basedir}/target/generated-wiki/</argument>
                     <argument>${basedir}/src/test/resources/</argument>
                   </arguments>
