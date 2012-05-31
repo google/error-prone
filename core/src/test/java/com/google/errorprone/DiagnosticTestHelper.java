@@ -54,6 +54,19 @@ public class DiagnosticTestHelper {
     return collector.getDiagnostics();
   }
 
+  public String describe() {
+    StringBuilder stringBuilder = new StringBuilder().append("Diagnostics:\n");
+    for (Diagnostic<? extends JavaFileObject> diagnostic : getDiagnostics()) {
+      stringBuilder.append("  [")
+          .append(diagnostic.getLineNumber()).append(":")
+          .append(diagnostic.getColumnNumber())
+          .append("]\t");
+      stringBuilder.append(diagnostic.getMessage(Locale.getDefault()).replaceAll("\n", "\\\\n"));
+      stringBuilder.append("\n");
+    }
+    return stringBuilder.toString();
+  }
+
   public static TypeSafeDiagnosingMatcher<Diagnostic<JavaFileObject>> diagnosticLineAndColumn(
       final long line, final long column) {
     return new TypeSafeDiagnosingMatcher<Diagnostic<JavaFileObject>>() {
