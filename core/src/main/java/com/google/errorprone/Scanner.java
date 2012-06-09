@@ -16,8 +16,8 @@
 
 package com.google.errorprone;
 
+import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.refactors.RefactoringMatcher;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
@@ -188,13 +188,13 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
 
   protected <T extends Tree> void reportMatch(Matcher<T> matcher, T match, VisitorState state) {
     state.getMatchListener().onMatch(match);
-    if (matcher instanceof RefactoringMatcher) {
-      RefactoringMatcher<T> refactoringMatcher = (RefactoringMatcher<T>) matcher;
-      state.getRefactorListener().onRefactor(refactoringMatcher.refactor(match, state));
+    if (matcher instanceof DescribingMatcher) {
+      DescribingMatcher<T> describingMatcher = (DescribingMatcher<T>) matcher;
+      state.getDescriptionListener().onDescribed(describingMatcher.describe(match, state));
     }
   }
 
-  protected <T extends Tree> void evaluateMatch(T node, VisitorState visitorState, RefactoringMatcher<T> matcher) {
+  protected <T extends Tree> void evaluateMatch(T node, VisitorState visitorState, DescribingMatcher<T> matcher) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     if (!isSuppressed(matcher.getName()) && matcher.matches(node, state)) {
       reportMatch(matcher, node, state);

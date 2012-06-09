@@ -133,7 +133,7 @@ public class DocGen extends AbstractProcessor {
     }
     String indexPage = readLines(bugPatterns, UTF_8, new LineProcessor<String>() {
       
-      // store a list of refactors to generate BugPatterns wiki page
+      // store a list of bugpatterns to generate BugPatterns wiki page
       private Multimap<MaturityLevel, String> index = ArrayListMultimap.create();
       
       @Override

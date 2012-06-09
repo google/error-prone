@@ -1,16 +1,16 @@
 // Copyright 2012 Google Inc. All Rights Reserved.
 
-package com.google.errorprone.refactors;
+package com.google.errorprone.suppresswarnings;
 
 /**
  * Test cases to ensure SuppressWarnings annotation is respected.
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-@SuppressWarnings("Dead exception")
+@SuppressWarnings("DeadException")
 public class NegativeCases {
 
-  @SuppressWarnings("Empty if")
+  @SuppressWarnings({"EmptyIf", "EmptyStatement"})
   public void testEmptyIf() {
     int i = 0;
     if (i == 10); {
@@ -18,7 +18,7 @@ public class NegativeCases {
     }
   }
 
-  @SuppressWarnings({"bar", "Self assignment"})
+  @SuppressWarnings({"bar", "SelfAssignment"})
   public void testSelfAssignment() {
     int i = 0;
     i = i;

@@ -59,7 +59,7 @@ public class CompilerBasedTest {
 
   protected void assertCompiles(Scanner scanner) throws IOException {
     ErrorProneCompiler compiler = new ErrorProneCompiler.Builder()
-        .refactor(scanner)
+        .report(scanner)
         .build();
 
     File[] files = tempDir.listFiles(new FilenameFilter() {
