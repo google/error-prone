@@ -28,7 +28,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URISyntaxException;
 
-import static com.google.errorprone.DiagnosticTestHelper.diagnosticLineAndColumn;
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
@@ -63,9 +62,8 @@ public class ErrorFindingCompilerIntegrationTest {
     assertThat(outputStream.toString(), exitCode, is(1));
 
     Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher = hasItem(allOf(
-        diagnosticLineAndColumn(41L, 5L),
         diagnosticMessage(containsString("Empty statement after if"))));
-    assertThat("Warning should be found. Diagnostics: " + diagnosticHelper.getDiagnostics(),
+    assertThat("Warning should be found. " + diagnosticHelper.describe(),
         diagnosticHelper.getDiagnostics(), matcher);
   }
   
