@@ -14,27 +14,23 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.refactors.preconditionschecknotnull;
-
-import static com.google.errorprone.BugPattern.Category.GUAVA;
-import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.argument;
-import static com.google.errorprone.matchers.Matchers.kindIs;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
-import static com.google.errorprone.matchers.Matchers.staticMethod;
-import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
+package com.google.errorprone.bugpatterns.preconditionschecknotnull;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.refactors.RefactoringMatcher;
-
+import com.google.errorprone.matchers.DescribingMatcher;
+import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
 import java.util.List;
+
+import static com.google.errorprone.BugPattern.Category.GUAVA;
+import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Matchers.*;
+import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -48,7 +44,7 @@ import java.util.List;
         "never actually checked for nullity. This check ensures that the first argument to " +
         "Preconditions.checkNotNull() is not a literal.",
     category = GUAVA, severity = ERROR, maturity = ON_BY_DEFAULT)
-public class PreconditionsCheckNotNull extends RefactoringMatcher<MethodInvocationTree> {
+public class PreconditionsCheckNotNull extends DescribingMatcher<MethodInvocationTree> {
 
   @SuppressWarnings({"unchecked"})
   @Override
@@ -60,7 +56,7 @@ public class PreconditionsCheckNotNull extends RefactoringMatcher<MethodInvocati
   }
 
   @Override
-  public Refactor refactor(MethodInvocationTree methodInvocationTree, VisitorState state) {
+  public Description describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
     List<? extends ExpressionTree> arguments = methodInvocationTree.getArguments();
     ExpressionTree stringLiteralValue = arguments.get(0);
     SuggestedFix fix = new SuggestedFix();
@@ -69,11 +65,11 @@ public class PreconditionsCheckNotNull extends RefactoringMatcher<MethodInvocati
     } else {
       fix.delete(state.getPath().getParentPath().getLeaf());
     }
-    return new Refactor(stringLiteralValue, refactorMessage, fix);
+    return new Description(stringLiteralValue, diagnosticMessage, fix);
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {
-    public RefactoringMatcher<MethodInvocationTree> matcher = new PreconditionsCheckNotNull();
+    public DescribingMatcher<MethodInvocationTree> matcher = new PreconditionsCheckNotNull();
 
     @Override
     public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {
