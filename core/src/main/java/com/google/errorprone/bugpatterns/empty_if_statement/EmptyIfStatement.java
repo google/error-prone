@@ -87,11 +87,12 @@ public class EmptyIfStatement extends DescribingMatcher<EmptyStatementTree> {
     if (nextStmtIsNull) {
       // No following statements. Delete whole if.
       fix.delete(parent);
+      return new Description(parent, diagnosticMessage, fix);
     } else {
       // There are more statements. Delete the empty then part of the if.
       fix.delete(parent.getThenStatement());
+      return new Description(parent.getThenStatement(), diagnosticMessage, fix);
     }
-    return new Description(parent, diagnosticMessage, fix);
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {

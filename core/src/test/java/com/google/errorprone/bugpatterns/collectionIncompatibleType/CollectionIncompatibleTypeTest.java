@@ -18,9 +18,12 @@ package com.google.errorprone.bugpatterns.collectionIncompatibleType;
 
 import com.google.errorprone.DiagnosticTestHelper;
 import com.google.errorprone.ErrorProneCompiler;
+import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.tools.Diagnostic;
+import javax.tools.JavaFileObject;
 import java.io.File;
 
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
@@ -35,6 +38,7 @@ import static org.junit.internal.matchers.StringContains.containsString;
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class CollectionIncompatibleTypeTest {
+
   private ErrorProneCompiler compiler;
   private DiagnosticTestHelper diagnosticHelper;
 
@@ -51,9 +55,11 @@ public class CollectionIncompatibleTypeTest {
   public void testPositiveCase() throws Exception {
     File source = new File(this.getClass().getResource("PositiveCases.java").toURI());
     assertThat(compiler.compile(new String[]{"-Xjcov", source.getAbsolutePath()}), is(1));
-    assertThat(diagnosticHelper.getDiagnostics(), hasDiagnosticOnAllMatchingLines(source, compile(".*//BUG\\s*$")));
     assertThat(diagnosticHelper.getDiagnostics(),
-        hasItem(diagnosticMessage(containsString("did you mean 'return false;"))));
+        hasDiagnosticOnAllMatchingLines(source, compile(".*//BUG\\s*$")));
+    Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher =
+        hasItem(diagnosticMessage(containsString("did you mean 'return false;")));
+    assertThat(diagnosticHelper.getDiagnostics(), matcher);
   }
 
   @Test

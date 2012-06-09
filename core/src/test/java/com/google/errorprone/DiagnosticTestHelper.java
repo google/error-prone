@@ -16,7 +16,6 @@
 
 package com.google.errorprone;
 
-import com.google.common.base.Function;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
@@ -28,19 +27,22 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
-import static com.google.common.collect.Iterables.transform;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.junit.internal.matchers.StringContains.containsString;
 
 /**
  * Utility class for tests which need to assert on the diagnostics produced during compilation.
+ *
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class DiagnosticTestHelper {
+
   public DiagnosticCollector<JavaFileObject> collector = new DiagnosticCollector<JavaFileObject>();
 
   public static Matcher<Diagnostic<JavaFileObject>> suggestsRemovalOfLine(int line) {
@@ -49,6 +51,19 @@ public class DiagnosticTestHelper {
 
   public List<Diagnostic<? extends JavaFileObject>> getDiagnostics() {
     return collector.getDiagnostics();
+  }
+
+  public String describe() {
+    StringBuilder stringBuilder = new StringBuilder().append("Diagnostics:\n");
+    for (Diagnostic<? extends JavaFileObject> diagnostic : getDiagnostics()) {
+      stringBuilder.append("  [")
+          .append(diagnostic.getLineNumber()).append(":")
+          .append(diagnostic.getColumnNumber())
+          .append("]\t");
+      stringBuilder.append(diagnostic.getMessage(Locale.getDefault()).replaceAll("\n", "\\\\n"));
+      stringBuilder.append("\n");
+    }
+    return stringBuilder.toString();
   }
 
   public static TypeSafeDiagnosingMatcher<Diagnostic<JavaFileObject>> diagnosticLineAndColumn(
@@ -76,7 +91,8 @@ public class DiagnosticTestHelper {
     };
   }
 
-  public static TypeSafeDiagnosingMatcher<Diagnostic<JavaFileObject>> diagnosticOnLine(final long line) {
+  public static TypeSafeDiagnosingMatcher<Diagnostic<JavaFileObject>> diagnosticOnLine(
+      final long line) {
     return new TypeSafeDiagnosingMatcher<Diagnostic<JavaFileObject>>() {
       @Override
       protected boolean matchesSafely(
@@ -113,14 +129,16 @@ public class DiagnosticTestHelper {
   }
 
   /**
-   * Matches an Iterable of diagnostics if it contains a diagnostic on each line of the source file that matches the
-   * pattern.
-   * @param source file to find matching lines
+   * Matches an Iterable of diagnostics if it contains a diagnostic on each line of the source file
+   * that matches the pattern.
+   *
+   * @param source                    file to find matching lines
    * @param expectedDiagnosticComment any Pattern, used to match complete lines
    * @return a Hamcrest matcher
    */
-  public static Matcher<Iterable<Diagnostic<? extends JavaFileObject>>> hasDiagnosticOnAllMatchingLines(
-      final File source, Pattern expectedDiagnosticComment) throws IOException {
+  public static Matcher<Iterable<Diagnostic<? extends JavaFileObject>>>
+  hasDiagnosticOnAllMatchingLines(final File source, Pattern expectedDiagnosticComment)
+      throws IOException {
     List<Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>>> matchers =
         new ArrayList<Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>>>();
 
@@ -131,9 +149,11 @@ public class DiagnosticTestHelper {
         break;
       }
       if (expectedDiagnosticComment.matcher(line).matches()) {
-        matchers.add(hasItem(diagnosticOnLine(reader.getLineNumber())));
+        Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher =
+            hasItem(diagnosticOnLine(reader.getLineNumber()));
+        matchers.add(matcher);
       }
-    } while(true);
+    } while (true);
 
     return allOf(matchers);
   }

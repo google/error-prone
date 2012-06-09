@@ -57,7 +57,7 @@ public class CovariantEquals extends DescribingMatcher<MethodTree> {
         methodIsNamed("equals"),
         methodReturns(state.getSymtab().booleanType),
         methodHasParameters(variableType(isSameType(findEnclosingClass(state)))),
-        enclosingClass(not(hasMethod(allOf(
+        enclosingClass(not(hasMethod(allOf(MethodTree.class,
             methodIsNamed("equals"),
             methodReturns(state.getSymtab().booleanType),
             methodHasParameters(variableType(isSameType(state.getSymtab().objectType)))))))

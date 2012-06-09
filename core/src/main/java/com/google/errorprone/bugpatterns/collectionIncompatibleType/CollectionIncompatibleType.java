@@ -52,7 +52,7 @@ public class CollectionIncompatibleType extends DescribingMatcher<MethodInvocati
   @Override
   public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
     return allOf(
-        methodSelect(anyOf(
+        methodSelect(anyOf(ExpressionTree.class,
             isDescendantOfMethod("java.util.Map", "get(java.lang.Object)"),
             isDescendantOfMethod("java.util.Collection", "contains(java.lang.Object)"),
             isDescendantOfMethod("java.util.Collection", "remove(java.lang.Object)"))),

@@ -40,6 +40,10 @@ import java.util.List;
 public class Matchers {
   private Matchers() {}
 
+  public static <T extends Tree> Matcher<T> allOf(
+      Class<T> typeInfer, final Matcher<? super T>... matchers) {
+    return allOf(matchers);
+  }
 
   public static <T extends Tree> Matcher<T> allOf(final Matcher<? super T>... matchers) {
     return new Matcher<T>() {
@@ -52,6 +56,11 @@ public class Matchers {
         return true;
       }
     };
+  }
+
+  public static <T extends Tree> Matcher<T> anyOf(
+      Class<T> typeInfer, final Matcher<? super T>... matchers) {
+    return anyOf(matchers);
   }
 
   public static <T extends Tree> Matcher<T> anyOf(final Matcher<? super T>... matchers) {
@@ -82,7 +91,7 @@ public class Matchers {
       }
     };
   }
-  
+
   public static <T extends Tree> Matcher<T> isNull() {
     return new Matcher<T>() {
       @Override public boolean matches(T tree, VisitorState state) {
@@ -90,7 +99,7 @@ public class Matchers {
       }
     };
   }
-  
+
   public static <T extends Tree> Matcher<T> isNull(Class<T> typeInfer) {
     return new Matcher<T>() {
       @Override public boolean matches(T tree, VisitorState state) {
@@ -102,7 +111,7 @@ public class Matchers {
   public static StaticMethod staticMethod(String fullClassName, String methodName) {
     return new StaticMethod(fullClassName, methodName);
   }
-  
+
   public static Constructor constructor(String className, List<String> parameterTypes) {
     return new Constructor(className, parameterTypes);
   }
@@ -115,7 +124,7 @@ public class Matchers {
   public static Matcher<ExpressionTree> expressionMethodSelect(Matcher<ExpressionTree> methodSelectMatcher) {
     return new ExpressionMethodSelect(methodSelectMatcher);
   }
-  
+
   public static Matcher<MethodInvocationTree> argument(
       final int position, final Matcher<ExpressionTree> argumentMatcher) {
     return new MethodInvocationArgument(position, argumentMatcher);
@@ -164,7 +173,7 @@ public class Matchers {
   public static LastStatement lastStatement(Matcher<StatementTree> matcher) {
     return new LastStatement(matcher);
   }
-  
+
   public static <T extends StatementTree> NextStatement<T> nextStatement(
       Matcher<StatementTree> matcher) {
     return new NextStatement<T>(matcher);
@@ -173,7 +182,7 @@ public class Matchers {
   public static <T extends Tree> Same<T> same(T tree) {
     return new Same<T>(tree);
   }
-  
+
   public static <T extends Tree> Matcher<T> not(final Matcher<T> matcher) {
     return new Matcher<T>() {
       @Override
@@ -266,14 +275,14 @@ public class Matchers {
       }
     };
   }
-  
+
   public static Matcher<MethodTree> methodHasVisibility(final Visibility visibility) {
     return new MethodVisibility(visibility);
   }
-  
+
   /**
    * Returns true if some method in the class matches the given methodMatcher.
-   * 
+   *
    * @param methodMatcher A matcher on MethodTrees to run against all methods in this class.
    * @return True if some method in the class matches the given methodMatcher.
    */

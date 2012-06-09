@@ -26,8 +26,7 @@ import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import java.io.File;
 
-import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
-import static com.google.errorprone.DiagnosticTestHelper.suggestsRemovalOfLine;
+import static com.google.errorprone.DiagnosticTestHelper.*;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.core.Is.is;
@@ -38,6 +37,7 @@ import static org.junit.internal.matchers.StringContains.containsString;
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class EmptyIfStatementTest {
+
   private ErrorProneCompiler compiler;
   private DiagnosticTestHelper diagnosticHelper;
 
@@ -55,15 +55,19 @@ public class EmptyIfStatementTest {
     File source = new File(this.getClass().getResource("PositiveCases.java").toURI());
     assertThat(compiler.compile(new String[]{"-Xjcov", source.getAbsolutePath()}), is(1));
     Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher = allOf(
-        hasItem(suggestsRemovalOfLine(41)),
+        // TODO: would be less brittle to use hasDiagnosticOnAllMatchingLines
+        hasItem(suggestsRemovalOfLine(42)),
         hasItem(suggestsRemovalOfLine(49)),
-        hasItem(suggestsRemovalOfLine(54)),
-        hasItem(diagnosticMessage(containsString("did you mean 'if (i == 10) {"))));
-    assertThat("In diagnostics: " + diagnosticHelper.getDiagnostics(),
-        diagnosticHelper.getDiagnostics(), matcher);
+        hasItem(suggestsRemovalOfLine(55)),
+        hasItem(allOf(
+            // caret should appear at the semicolon
+            diagnosticLineAndColumn(27, 17),
+            diagnosticMessage(containsString("did you mean 'if (i == 10) {")))));
+    assertThat(diagnosticHelper.describe(), diagnosticHelper.getDiagnostics(), matcher);
   }
 
-  @Test public void testNegativeCase() throws Exception {
+  @Test
+  public void testNegativeCase() throws Exception {
     File source = new File(this.getClass().getResource("NegativeCases.java").toURI());
     assertThat(compiler.compile(new String[]{source.getAbsolutePath()}), is(0));
   }
