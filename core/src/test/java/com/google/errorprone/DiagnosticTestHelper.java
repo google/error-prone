@@ -16,14 +16,13 @@
 
 package com.google.errorprone;
 
-import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.junit.internal.matchers.StringContains.containsString;
-
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
+import javax.tools.Diagnostic;
+import javax.tools.DiagnosticCollector;
+import javax.tools.JavaFileObject;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -33,9 +32,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-import javax.tools.Diagnostic;
-import javax.tools.DiagnosticCollector;
-import javax.tools.JavaFileObject;
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.junit.internal.matchers.StringContains.containsString;
 
 /**
  * Utility class for tests which need to assert on the diagnostics produced during compilation.

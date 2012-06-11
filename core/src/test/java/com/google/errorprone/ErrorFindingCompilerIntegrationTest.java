@@ -16,25 +16,22 @@
 
 package com.google.errorprone;
 
-import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
-import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.internal.matchers.StringContains.containsString;
-
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.tools.Diagnostic;
+import javax.tools.JavaFileObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URISyntaxException;
 
-import javax.tools.Diagnostic;
-import javax.tools.JavaFileObject;
+import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
+import static org.junit.internal.matchers.StringContains.containsString;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -60,16 +57,16 @@ public class ErrorFindingCompilerIntegrationTest {
         .listenToDiagnostics(diagnosticHelper.collector)
         .build();
     int exitCode = compiler.compile(sources(
-        "com/google/errorprone/refactors/empty_if_statement/PositiveCases.java"));
+        "com/google/errorprone/bugpatterns/empty_if_statement/PositiveCases.java"));
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(1));
 
     Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher = hasItem(allOf(
         diagnosticMessage(containsString("Empty statement after if"))));
-    assertThat("Warning should be found. Diagnostics: " + diagnosticHelper.getDiagnostics(),
+    assertThat("Warning should be found. " + diagnosticHelper.describe(),
         diagnosticHelper.getDiagnostics(), matcher);
   }
-
+  
   @Test
   public void testShouldSucceedCompileSourceFileWithMultipleTopLevelClasses() throws Exception {
     ErrorProneCompiler compiler = new ErrorProneCompiler.Builder()

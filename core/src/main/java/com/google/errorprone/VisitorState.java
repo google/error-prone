@@ -16,7 +16,7 @@
 
 package com.google.errorprone;
 
-import com.google.errorprone.refactors.RefactoringMatcher.Refactor;
+import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symtab;
@@ -32,20 +32,20 @@ import java.lang.reflect.Method;
  */
 public class VisitorState {
 
-  private final RefactorListener refactorListener;
+  private final DescriptionListener descriptionListener;
   private final MatchListener matchListener;
   public final Context context;
   private final TreePath path;
 
   private VisitorState(Context context, TreePath path,
-      RefactorListener refactorListener, MatchListener matchListener) {
+      DescriptionListener descriptionListener, MatchListener matchListener) {
     this.context = context;
     this.path = path;
-    this.refactorListener = refactorListener;
+    this.descriptionListener = descriptionListener;
     this.matchListener = matchListener;
   }
 
-  public VisitorState(Context context, RefactorListener listener) {
+  public VisitorState(Context context, DescriptionListener listener) {
     this(context, null, listener, new MatchListener() {
       @Override
       public void onMatch(Tree tree) {
@@ -54,14 +54,14 @@ public class VisitorState {
   }
 
   public VisitorState(Context context, MatchListener listener) {
-    this(context, null, new RefactorListener() {
+    this(context, null, new DescriptionListener() {
       @Override
-      public void onRefactor(Refactor refactor) {}
+      public void onDescribed(Description description) {}
     }, listener);
   }
 
   public VisitorState withPath(TreePath path) {
-    return new VisitorState(context, path, refactorListener, matchListener);
+    return new VisitorState(context, path, descriptionListener, matchListener);
   }
 
   public TreePath getPath() {
@@ -80,8 +80,8 @@ public class VisitorState {
     return Symtab.instance(context);
   }
 
-  public RefactorListener getRefactorListener() {
-    return refactorListener;
+  public DescriptionListener getDescriptionListener() {
+    return descriptionListener;
   }
 
   public MatchListener getMatchListener() {

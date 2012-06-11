@@ -16,19 +16,19 @@
 
 package com.google.errorprone;
 
-import com.google.errorprone.refactors.RefactoringMatcher;
-import com.google.errorprone.refactors.collectionIncompatibleType.CollectionIncompatibleType;
-import com.google.errorprone.refactors.covariant_equals.CovariantEquals;
-import com.google.errorprone.refactors.dead_exception.DeadException;
-import com.google.errorprone.refactors.empty_if_statement.EmptyIfStatement;
-import com.google.errorprone.refactors.emptystatement.EmptyStatement;
-import com.google.errorprone.refactors.fallthroughsuppression.FallThroughSuppression;
-import com.google.errorprone.refactors.objectsequalselfcomparison.ObjectsEqualSelfComparison;
-import com.google.errorprone.refactors.orderingfrom.OrderingFrom;
-import com.google.errorprone.refactors.preconditionschecknotnull.PreconditionsCheckNotNull;
-import com.google.errorprone.refactors.preconditionschecknotnullprimitive1starg.PreconditionsCheckNotNullPrimitive1stArg;
-import com.google.errorprone.refactors.preconditionsexpensivestring.PreconditionsExpensiveString;
-import com.google.errorprone.refactors.selfassignment.SelfAssignment;
+import com.google.errorprone.bugpatterns.collectionIncompatibleType.CollectionIncompatibleType;
+import com.google.errorprone.bugpatterns.covariant_equals.CovariantEquals;
+import com.google.errorprone.bugpatterns.dead_exception.DeadException;
+import com.google.errorprone.bugpatterns.empty_if_statement.EmptyIfStatement;
+import com.google.errorprone.bugpatterns.emptystatement.EmptyStatement;
+import com.google.errorprone.bugpatterns.fallthroughsuppression.FallThroughSuppression;
+import com.google.errorprone.bugpatterns.objectsequalselfcomparison.ObjectsEqualSelfComparison;
+import com.google.errorprone.bugpatterns.orderingfrom.OrderingFrom;
+import com.google.errorprone.bugpatterns.preconditionschecknotnull.PreconditionsCheckNotNull;
+import com.google.errorprone.bugpatterns.preconditionschecknotnullprimitive1starg.PreconditionsCheckNotNullPrimitive1stArg;
+import com.google.errorprone.bugpatterns.preconditionsexpensivestring.PreconditionsExpensiveString;
+import com.google.errorprone.bugpatterns.selfassignment.SelfAssignment;
+import com.google.errorprone.matchers.DescribingMatcher;
 import com.sun.source.tree.*;
 
 import java.util.ArrayList;
@@ -46,24 +46,24 @@ public class ErrorProneScanner extends Scanner {
    * Selects which checks should be enabled when the compile is run.
    */
   public interface EnabledPredicate {
-    boolean isEnabled(Class<? extends RefactoringMatcher<?>> check, BugPattern annotation);
+    boolean isEnabled(Class<? extends DescribingMatcher<?>> check, BugPattern annotation);
 
     /**
      * Selects all checks which are annotated with maturity = ON_BY_DEFAULT.
      */
     public static final EnabledPredicate DEFAULT_CHECKS = new EnabledPredicate() {
-      @Override public boolean isEnabled(Class<? extends RefactoringMatcher<?>> check, BugPattern annotation) {
+      @Override public boolean isEnabled(Class<? extends DescribingMatcher<?>> check, BugPattern annotation) {
         return annotation.maturity() == ON_BY_DEFAULT;
       }
     };
   }
 
-  private final Iterable<RefactoringMatcher<MethodInvocationTree>> methodInvocationMatchers;
-  private final Iterable<RefactoringMatcher<NewClassTree>> newClassMatchers;
-  private final Iterable<RefactoringMatcher<AnnotationTree>> annotationMatchers;
-  private final Iterable<RefactoringMatcher<EmptyStatementTree>> emptyStatementMatchers;
-  private final Iterable<RefactoringMatcher<AssignmentTree>> assignmentMatchers;
-  private final Iterable<RefactoringMatcher<MethodTree>> methodMatchers;
+  private final Iterable<DescribingMatcher<MethodInvocationTree>> methodInvocationMatchers;
+  private final Iterable<DescribingMatcher<NewClassTree>> newClassMatchers;
+  private final Iterable<DescribingMatcher<AnnotationTree>> annotationMatchers;
+  private final Iterable<DescribingMatcher<EmptyStatementTree>> emptyStatementMatchers;
+  private final Iterable<DescribingMatcher<AssignmentTree>> assignmentMatchers;
+  private final Iterable<DescribingMatcher<MethodTree>> methodMatchers;
 
   @SuppressWarnings("unchecked")
   public ErrorProneScanner(EnabledPredicate enabled) {
@@ -90,11 +90,11 @@ public class ErrorProneScanner extends Scanner {
     }
   }
 
-  private static <T extends Tree> Iterable<RefactoringMatcher<T>> createChecks(
-      EnabledPredicate predicate, Class<? extends RefactoringMatcher<T>>... matchers)
+  private static <T extends Tree> Iterable<DescribingMatcher<T>> createChecks(
+      EnabledPredicate predicate, Class<? extends DescribingMatcher<T>>... matchers)
       throws IllegalAccessException, InstantiationException {
-    List<RefactoringMatcher<T>> result = new ArrayList<RefactoringMatcher<T>>();
-    for (Class<? extends RefactoringMatcher<T>> matcher : matchers) {
+    List<DescribingMatcher<T>> result = new ArrayList<DescribingMatcher<T>>();
+    for (Class<? extends DescribingMatcher<T>> matcher : matchers) {
       if (predicate.isEnabled(matcher, matcher.getAnnotation(BugPattern.class))) {
         result.add(matcher.newInstance());
       }
@@ -105,7 +105,7 @@ public class ErrorProneScanner extends Scanner {
   @Override
   public Void visitMethodInvocation(
       MethodInvocationTree methodInvocationTree, VisitorState state) {
-    for (RefactoringMatcher<MethodInvocationTree> matcher : methodInvocationMatchers) {
+    for (DescribingMatcher<MethodInvocationTree> matcher : methodInvocationMatchers) {
       evaluateMatch(methodInvocationTree, state, matcher);
     }
     return super.visitMethodInvocation(methodInvocationTree, state);
@@ -113,7 +113,7 @@ public class ErrorProneScanner extends Scanner {
 
   @Override
   public Void visitNewClass(NewClassTree newClassTree, VisitorState visitorState) {
-    for (RefactoringMatcher<NewClassTree> matcher : newClassMatchers) {
+    for (DescribingMatcher<NewClassTree> matcher : newClassMatchers) {
       evaluateMatch(newClassTree, visitorState, matcher);
     }
     return super.visitNewClass(newClassTree, visitorState);
@@ -121,7 +121,7 @@ public class ErrorProneScanner extends Scanner {
 
   @Override
   public Void visitAnnotation(AnnotationTree annotationTree, VisitorState visitorState) {
-    for (RefactoringMatcher<AnnotationTree> matcher : annotationMatchers) {
+    for (DescribingMatcher<AnnotationTree> matcher : annotationMatchers) {
       evaluateMatch(annotationTree, visitorState, matcher);
     }
     return super.visitAnnotation(annotationTree, visitorState);
@@ -129,7 +129,7 @@ public class ErrorProneScanner extends Scanner {
   
   @Override
   public Void visitEmptyStatement(EmptyStatementTree emptyStatementTree, VisitorState visitorState) {
-    for (RefactoringMatcher<EmptyStatementTree> matcher : emptyStatementMatchers) {
+    for (DescribingMatcher<EmptyStatementTree> matcher : emptyStatementMatchers) {
       evaluateMatch(emptyStatementTree, visitorState, matcher);
     }
     return super.visitEmptyStatement(emptyStatementTree, visitorState);
@@ -137,7 +137,7 @@ public class ErrorProneScanner extends Scanner {
   
   @Override
   public Void visitAssignment(AssignmentTree assignmentTree, VisitorState visitorState) {
-    for (RefactoringMatcher<AssignmentTree> matcher : assignmentMatchers) {
+    for (DescribingMatcher<AssignmentTree> matcher : assignmentMatchers) {
       evaluateMatch(assignmentTree, visitorState, matcher);
     }
     return super.visitAssignment(assignmentTree, visitorState);
@@ -145,7 +145,7 @@ public class ErrorProneScanner extends Scanner {
 
   @Override
   public Void visitMethod(MethodTree node, VisitorState visitorState) {
-    for (RefactoringMatcher<MethodTree> matcher : methodMatchers) {
+    for (DescribingMatcher<MethodTree> matcher : methodMatchers) {
       evaluateMatch(node, visitorState, matcher);
     }
     return super.visitMethod(node, visitorState);

@@ -84,7 +84,7 @@ public class ErrorReportingJavaCompiler extends JavaCompiler {
     * Run Error Prone analysis after performing dataflow checks.
     */
   public void postFlow(Env<AttrContext> env) {
-    JavacErrorRefactorListener logReporter = new JavacErrorRefactorListener(log,
+    JavacErrorDescriptionListener logReporter = new JavacErrorDescriptionListener(log,
         env.toplevel.endPositions,
         env.enclClass.sym.sourcefile != null
             ? env.enclClass.sym.sourcefile

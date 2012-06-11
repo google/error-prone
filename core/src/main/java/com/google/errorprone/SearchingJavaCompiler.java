@@ -26,6 +26,9 @@ import com.sun.tools.javac.util.Context.Factory;
 import java.util.Queue;
 
 /**
+ * Look for matches, but only report the locations of the matches.
+ * Useful for preliminary exploration of a potential problem, before
+ * you've written any error messaging or suggested fixes.
  *
  * @author alexeagle@google.com (Alex Eagle)
  */

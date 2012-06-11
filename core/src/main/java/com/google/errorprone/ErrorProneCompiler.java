@@ -89,7 +89,7 @@ public class ErrorProneCompiler extends Main {
       return this;
     }
 
-    public Builder refactor(Scanner scanner) {
+    public Builder report(Scanner scanner) {
       this.compilerClass = ErrorReportingJavaCompiler.class;
       this.scanner = scanner;
       return this;
