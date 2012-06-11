@@ -37,7 +37,21 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.MethodVisibility.Visibility;
 import com.google.errorprone.refactors.RefactoringMatcher;
 
+import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.AssignmentTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.NewArrayTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
+import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCBlock;
+import com.sun.tools.javac.tree.JCTree.JCExpression;
+import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
+import com.sun.tools.javac.tree.JCTree.JCStatement;
+import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
+import com.sun.tools.javac.util.ListBuffer;
+import com.sun.tools.javac.util.Name;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -74,13 +88,29 @@ public class CovariantEquals extends RefactoringMatcher<MethodTree> {
     ).matches(methodTree, state);
   }
 
+  /**
+   * Generates a new method that overrides Object.equals. 
+   */
   @Override
   public Refactor refactor(MethodTree methodTree, VisitorState state) {
-    SuggestedFix fix = new SuggestedFix()
-        .replace(methodTree.getParameters().get(0).getType(), "Object");
-    return new Refactor(methodTree, refactorMessage, fix);
+    /* Transformation:
+     * 1) Change method signature, substituting "Object" for the parameter type.
+     * 2) Insert at the start of the method body:
+     *    if (!(<parameter name> instanceof <parameter type>)) {
+     *      return false;
+     *    }
+     * 3) For each usage of the parameter in the method, cast it to the
+     *    parameter type.
+     */
+    JCTree parameterType = (JCTree) methodTree.getParameters().get(0).getType();
+    Name parameterName = ((JCVariableDecl) methodTree.getParameters().get(0)).getName();
+    
+    SuggestedFix changeMethodDecl = new SuggestedFix()
+        .replace(parameterType, "Object");
+    //SuggestedFix addType
+    return new Refactor(methodTree, refactorMessage, changeMethodDecl);
   }
-
+  
   public static class Scanner extends com.google.errorprone.Scanner {
 
     private CovariantEquals matcher = new CovariantEquals();
