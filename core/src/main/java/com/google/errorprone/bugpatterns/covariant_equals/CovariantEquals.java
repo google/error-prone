@@ -17,26 +17,22 @@
 package com.google.errorprone.bugpatterns.covariant_equals;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.MaturityLevel;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.MethodVisibility.Visibility;
+
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.NewArrayTree;
-import com.sun.source.tree.Tree;
-import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.JCTree.JCBlock;
-import com.sun.tools.javac.tree.JCTree.JCExpression;
-import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
-import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
-import com.sun.tools.javac.util.ListBuffer;
 import com.sun.tools.javac.util.Name;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.EnclosingClass.findEnclosingClass;
 import static com.google.errorprone.matchers.Matchers.*;
@@ -50,7 +46,7 @@ import static com.google.errorprone.matchers.Matchers.*;
         "which has a single parameter of type `java.lang.Object`. " +
         "Defining a method which looks like `equals` but doesn't have the same signature is dangerous, " +
         "since comparisons will have different results depending on which `equals` is called.",
-    category = JDK, maturity = EXPERIMENTAL, severity = ERROR)
+    category = JDK, maturity = ON_BY_DEFAULT, severity = ERROR)
 public class CovariantEquals extends DescribingMatcher<MethodTree> {
   
   /**
@@ -92,10 +88,20 @@ public class CovariantEquals extends DescribingMatcher<MethodTree> {
     JCTree parameterType = (JCTree) methodTree.getParameters().get(0).getType();
     Name parameterName = ((JCVariableDecl) methodTree.getParameters().get(0)).getName();
     
-    SuggestedFix changeMethodDecl = new SuggestedFix()
-        .replace(parameterType, "Object");
-    //SuggestedFix addType
-    return new Description(methodTree, diagnosticMessage, changeMethodDecl);
+    // Change method signature, substituting Object for parameter type.
+    SuggestedFix fix = new SuggestedFix().replace(parameterType, "Object");
+    
+    // Add type check at start of method body.
+    String typeCheckStmt = "if (!(" + parameterName + " instanceof " + parameterType + ")) {\n"
+        + "  return false;\n"
+        + "}\n";
+    fix.prefixWith(methodTree.getBody().getStatements().get(0), typeCheckStmt);
+    
+    // Cast all uses of the parameter name using a recursive TreeScanner.
+    new CastScanner().scan(methodTree.getBody(), new CastState(parameterName, 
+        parameterType.toString(), fix));
+    
+    return new Description(methodTree, diagnosticMessage, fix);
   }
   
   public static class Scanner extends com.google.errorprone.Scanner {
@@ -105,6 +111,33 @@ public class CovariantEquals extends DescribingMatcher<MethodTree> {
     public Void visitMethod(MethodTree node, VisitorState visitorState) {
       evaluateMatch(node, visitorState, matcher);
       return super.visitMethod(node, visitorState);
+    }
+  }
+  
+  private static class CastState {
+    Name name;
+    String castToType;
+    SuggestedFix fix;
+    
+    public CastState(Name name, String castToType, SuggestedFix fix) {
+      this.name = name;
+      this.castToType = castToType;
+      this.fix = fix;
+    }
+  }
+  
+  /**
+   * A Scanner used to replace all references to a variable with
+   * a casted version.
+   */
+  private static class CastScanner extends TreeScanner<Void, CastState> {
+    @Override
+    public Void visitIdentifier(IdentifierTree node, CastState state) {
+      if (state.name.equals(node.getName())) {
+        state.fix.replace(node, "((" + state.castToType + ") " + state.name + ")");
+      }
+      
+      return super.visitIdentifier(node, state);
     }
   }
 }

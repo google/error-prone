@@ -25,6 +25,7 @@ import org.junit.Test;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import java.io.File;
+import java.util.Arrays;
 
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
 import static org.hamcrest.CoreMatchers.hasItem;
@@ -49,12 +50,14 @@ public class CovariantEqualsTest {
   }
 
   @Test public void testPositiveCase() throws Exception {
-    File source = new File(this.getClass().getResource("PositiveCases.java").toURI());
-    assertThat(compiler.compile(new String[]{"-Xjcov", source.getAbsolutePath()}), is(1));
-    Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher = hasItem(
-            diagnosticMessage(containsString("did you mean 'public boolean equals(Object other)")));
-    assertThat("In diagnostics: " + diagnosticHelper.getDiagnostics(),
-        diagnosticHelper.getDiagnostics(), matcher);
+    for (String inputFile : Arrays.asList("PositiveCase1.java", "PositiveCase2.java")) {
+      File source = new File(this.getClass().getResource(inputFile).toURI());
+      assertThat(compiler.compile(new String[]{"-Xjcov", source.getAbsolutePath()}), is(1));
+      Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher = hasItem(
+              diagnosticMessage(containsString("did you mean 'public boolean equals(Object other)")));
+      assertThat("In diagnostics: " + diagnosticHelper.getDiagnostics(),
+          diagnosticHelper.getDiagnostics(), matcher);
+    }
   }
 
   @Test public void testNegativeCase() throws Exception {
