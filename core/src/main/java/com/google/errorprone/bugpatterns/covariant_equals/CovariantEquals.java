@@ -16,8 +16,22 @@
 
 package com.google.errorprone.bugpatterns.covariant_equals;
 
+import static com.google.errorprone.BugPattern.Category.JDK;
+import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.EnclosingClass.findEnclosingClass;
+import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.enclosingClass;
+import static com.google.errorprone.matchers.Matchers.hasMethod;
+import static com.google.errorprone.matchers.Matchers.isSameType;
+import static com.google.errorprone.matchers.Matchers.methodHasParameters;
+import static com.google.errorprone.matchers.Matchers.methodHasVisibility;
+import static com.google.errorprone.matchers.Matchers.methodIsNamed;
+import static com.google.errorprone.matchers.Matchers.methodReturns;
+import static com.google.errorprone.matchers.Matchers.not;
+import static com.google.errorprone.matchers.Matchers.variableType;
+
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.MaturityLevel;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.DescribingMatcher;
@@ -28,17 +42,16 @@ import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCAnnotation;
+import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.Name;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.EnclosingClass.findEnclosingClass;
-import static com.google.errorprone.matchers.Matchers.*;
+import java.util.List;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
+ * @author eaftan@google.com (Eddie Aftandilian)
  */
 @BugPattern(name = "CovariantEquals",
     summary = "equals() method doesn't override Object.equals()",
@@ -77,19 +90,33 @@ public class CovariantEquals extends DescribingMatcher<MethodTree> {
   @Override
   public Description describe(MethodTree methodTree, VisitorState state) {
     /* Transformation:
-     * 1) Change method signature, substituting "Object" for the parameter type.
-     * 2) Insert at the start of the method body:
+     * 1) Add @Override annotation to method, if it doesn't already exist.
+     * 2) Change method signature, substituting "Object" for the parameter type.
+     * 3) Insert at the start of the method body:
      *    if (!(<parameter name> instanceof <parameter type>)) {
      *      return false;
      *    }
-     * 3) For each usage of the parameter in the method, cast it to the
+     * 4) For each usage of the parameter in the method, cast it to the
      *    parameter type.
      */
     JCTree parameterType = (JCTree) methodTree.getParameters().get(0).getType();
     Name parameterName = ((JCVariableDecl) methodTree.getParameters().get(0)).getName();
     
+    // Add @Override annotation if not present.
+    boolean hasOverrideAnnotation = false;
+    SuggestedFix fix = new SuggestedFix();
+    List<JCAnnotation> annotations = ((JCMethodDecl) methodTree).getModifiers().getAnnotations();
+    for (JCAnnotation annotation : annotations) {
+      if (annotation.annotationType.type.tsym == state.getSymtab().overrideType.tsym) {
+        hasOverrideAnnotation = true;
+      }
+    }
+    if (!hasOverrideAnnotation) {
+      fix.prefixWith(methodTree, "@Override\n");
+    }
+    
     // Change method signature, substituting Object for parameter type.
-    SuggestedFix fix = new SuggestedFix().replace(parameterType, "Object");
+    fix.replace(parameterType, "Object");
     
     // Add type check at start of method body.
     String typeCheckStmt = "if (!(" + parameterName + " instanceof " + parameterType + ")) {\n"

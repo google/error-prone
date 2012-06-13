@@ -50,11 +50,12 @@ public class CovariantEqualsTest {
   }
 
   @Test public void testPositiveCase() throws Exception {
-    for (String inputFile : Arrays.asList("PositiveCase1.java", "PositiveCase2.java")) {
+    for (String inputFile : Arrays.asList("PositiveCase1.java", "PositiveCase2.java", 
+        "PositiveCase3.java")) {
       File source = new File(this.getClass().getResource(inputFile).toURI());
       assertThat(compiler.compile(new String[]{"-Xjcov", source.getAbsolutePath()}), is(1));
       Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher = hasItem(
-              diagnosticMessage(containsString("did you mean 'public boolean equals(Object other)")));
+              diagnosticMessage(containsString("did you mean '@Override")));
       assertThat("In diagnostics: " + diagnosticHelper.getDiagnostics(),
           diagnosticHelper.getDiagnostics(), matcher);
     }
