@@ -30,12 +30,14 @@ import static com.google.errorprone.matchers.Matchers.methodIsNamed;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.variableType;
+import static com.sun.tools.javac.code.Flags.ENUM;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.EnclosingClass;
 import com.google.errorprone.matchers.MethodVisibility.Visibility;
 
 import com.sun.source.tree.IdentifierTree;
@@ -43,6 +45,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCAnnotation;
+import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.Name;
@@ -84,50 +87,47 @@ public class CovariantEquals extends DescribingMatcher<MethodTree> {
     ).matches(methodTree, state);
   }
 
-  /**
-   * Generates a new method that overrides Object.equals. 
-   */
   @Override
   public Description describe(MethodTree methodTree, VisitorState state) {
-    /* Transformation:
-     * 1) Add @Override annotation to method, if it doesn't already exist.
-     * 2) Change method signature, substituting "Object" for the parameter type.
-     * 3) Insert at the start of the method body:
-     *    if (!(<parameter name> instanceof <parameter type>)) {
-     *      return false;
-     *    }
-     * 4) For each usage of the parameter in the method, cast it to the
-     *    parameter type.
-     */
-    JCTree parameterType = (JCTree) methodTree.getParameters().get(0).getType();
-    Name parameterName = ((JCVariableDecl) methodTree.getParameters().get(0)).getName();
-    
-    // Add @Override annotation if not present.
-    boolean hasOverrideAnnotation = false;
     SuggestedFix fix = new SuggestedFix();
-    List<JCAnnotation> annotations = ((JCMethodDecl) methodTree).getModifiers().getAnnotations();
-    for (JCAnnotation annotation : annotations) {
-      if (annotation.annotationType.type.tsym == state.getSymtab().overrideType.tsym) {
-        hasOverrideAnnotation = true;
+        
+    JCClassDecl cls = (JCClassDecl) EnclosingClass.findEnclosingClass(state);
+    if ((cls.getModifiers().flags & ENUM) != 0) {
+      /* If the enclosing class is an enum, then just delete the equals method since enums
+       * should always be compared for reference equality. Enum defines a final equals method for
+       * just this reason. */
+      fix.delete(methodTree);
+    } else {
+      /* Otherwise, change the covariant equals method to override Object.equals. */
+      JCTree parameterType = (JCTree) methodTree.getParameters().get(0).getType();
+      Name parameterName = ((JCVariableDecl) methodTree.getParameters().get(0)).getName();
+      
+      // Add @Override annotation if not present.
+      boolean hasOverrideAnnotation = false;
+      List<JCAnnotation> annotations = ((JCMethodDecl) methodTree).getModifiers().getAnnotations();
+      for (JCAnnotation annotation : annotations) {
+        if (annotation.annotationType.type.tsym == state.getSymtab().overrideType.tsym) {
+          hasOverrideAnnotation = true;
+        }
       }
+      if (!hasOverrideAnnotation) {
+        fix.prefixWith(methodTree, "@Override\n");
+      }
+      
+      // Change method signature, substituting Object for parameter type.
+      fix.replace(parameterType, "Object");
+      
+      // Add type check at start of method body.
+      String typeCheckStmt = "if (!(" + parameterName + " instanceof " + parameterType + ")) {\n"
+          + "  return false;\n"
+          + "}\n";
+      fix.prefixWith(methodTree.getBody().getStatements().get(0), typeCheckStmt);
+      
+      // Cast all uses of the parameter name using a recursive TreeScanner.
+      new CastScanner().scan(methodTree.getBody(), new CastState(parameterName, 
+          parameterType.toString(), fix));
     }
-    if (!hasOverrideAnnotation) {
-      fix.prefixWith(methodTree, "@Override\n");
-    }
-    
-    // Change method signature, substituting Object for parameter type.
-    fix.replace(parameterType, "Object");
-    
-    // Add type check at start of method body.
-    String typeCheckStmt = "if (!(" + parameterName + " instanceof " + parameterType + ")) {\n"
-        + "  return false;\n"
-        + "}\n";
-    fix.prefixWith(methodTree.getBody().getStatements().get(0), typeCheckStmt);
-    
-    // Cast all uses of the parameter name using a recursive TreeScanner.
-    new CastScanner().scan(methodTree.getBody(), new CastState(parameterName, 
-        parameterType.toString(), fix));
-    
+      
     return new Description(methodTree, diagnosticMessage, fix);
   }
   

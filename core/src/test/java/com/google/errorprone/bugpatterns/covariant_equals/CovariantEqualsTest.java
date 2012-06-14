@@ -16,52 +16,65 @@
 
 package com.google.errorprone.bugpatterns.covariant_equals;
 
-import com.google.errorprone.DiagnosticTestHelper;
-import com.google.errorprone.ErrorProneCompiler;
-import org.hamcrest.Matcher;
-import org.junit.Before;
-import org.junit.Test;
-
-import javax.tools.Diagnostic;
-import javax.tools.JavaFileObject;
-import java.io.File;
-import java.util.Arrays;
-
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.internal.matchers.StringContains.containsString;
 
+import com.google.errorprone.DiagnosticTestHelper;
+import com.google.errorprone.ErrorProneCompiler;
+
+import org.hamcrest.Matcher;
+import org.junit.Test;
+
+import java.io.File;
+import java.util.Arrays;
+
+import javax.tools.Diagnostic;
+import javax.tools.JavaFileObject;
+
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class CovariantEqualsTest {
-
-  private ErrorProneCompiler compiler;
-  private DiagnosticTestHelper diagnosticHelper;
-
-  @Before public void setUp() {
+  @Test public void testPositiveCase() throws Exception {
+    ErrorProneCompiler compiler;
+    DiagnosticTestHelper diagnosticHelper;
+    Matcher<Iterable<? super Diagnostic<JavaFileObject>>> overrideMatcher = hasItem(
+        diagnosticMessage(containsString("did you mean '@Override")));
+    for (String inputFile : Arrays.asList("PositiveCase1.java", "PositiveCase2.java", 
+        "PositiveCase3.java")) {
+      diagnosticHelper = new DiagnosticTestHelper();
+      compiler = new ErrorProneCompiler.Builder()
+          .report(new CovariantEquals.Scanner())
+          .listenToDiagnostics(diagnosticHelper.collector)
+          .build();
+      File source = new File(this.getClass().getResource(inputFile).toURI());
+      assertThat(compiler.compile(new String[]{"-Xjcov", source.getAbsolutePath()}), is(1));
+      assertThat("In diagnostics: " + diagnosticHelper.getDiagnostics(),
+          diagnosticHelper.getDiagnostics(), overrideMatcher);
+    }
+    
     diagnosticHelper = new DiagnosticTestHelper();
     compiler = new ErrorProneCompiler.Builder()
         .report(new CovariantEquals.Scanner())
         .listenToDiagnostics(diagnosticHelper.collector)
         .build();
-  }
-
-  @Test public void testPositiveCase() throws Exception {
-    for (String inputFile : Arrays.asList("PositiveCase1.java", "PositiveCase2.java", 
-        "PositiveCase3.java")) {
-      File source = new File(this.getClass().getResource(inputFile).toURI());
-      assertThat(compiler.compile(new String[]{"-Xjcov", source.getAbsolutePath()}), is(1));
-      Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher = hasItem(
-              diagnosticMessage(containsString("did you mean '@Override")));
-      assertThat("In diagnostics: " + diagnosticHelper.getDiagnostics(),
-          diagnosticHelper.getDiagnostics(), matcher);
-    }
+    File source = new File(this.getClass().getResource("PositiveCase4.java").toURI());
+    assertThat(compiler.compile(new String[]{"-Xjcov", source.getAbsolutePath()}), is(1));
+    Matcher<Iterable<? super Diagnostic<JavaFileObject>>> removeMatcher = hasItem(
+            diagnosticMessage(containsString("did you mean to remove this line")));
+    assertThat("In diagnostics: " + diagnosticHelper.getDiagnostics(),
+        diagnosticHelper.getDiagnostics(), removeMatcher);
   }
 
   @Test public void testNegativeCase() throws Exception {
+    DiagnosticTestHelper diagnosticHelper = new DiagnosticTestHelper();
+    ErrorProneCompiler compiler = new ErrorProneCompiler.Builder()
+        .report(new CovariantEquals.Scanner())
+        .listenToDiagnostics(diagnosticHelper.collector)
+        .build();
     File source = new File(this.getClass().getResource("NegativeCases.java").toURI());
     assertThat(compiler.compile(new String[]{source.getAbsolutePath()}), is(0));
   }
