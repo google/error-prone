@@ -31,6 +31,7 @@ import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.variableType;
 import static com.sun.tools.javac.code.Flags.ENUM;
+import static com.sun.tools.javac.code.TypeTags.CLASS;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -43,6 +44,11 @@ import com.google.errorprone.matchers.MethodVisibility.Visibility;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.util.TreeScanner;
+import com.sun.tools.javac.code.Scope;
+import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
@@ -89,9 +95,9 @@ public class CovariantEquals extends DescribingMatcher<MethodTree> {
 
   @Override
   public Description describe(MethodTree methodTree, VisitorState state) {
-    SuggestedFix fix = new SuggestedFix();
-        
+    SuggestedFix fix = new SuggestedFix();    
     JCClassDecl cls = (JCClassDecl) EnclosingClass.findEnclosingClass(state);
+    
     if ((cls.getModifiers().flags & ENUM) != 0) {
       /* If the enclosing class is an enum, then just delete the equals method since enums
        * should always be compared for reference equality. Enum defines a final equals method for

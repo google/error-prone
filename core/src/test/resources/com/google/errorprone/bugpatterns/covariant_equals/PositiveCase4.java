@@ -5,7 +5,8 @@ package com.google.errorprone.bugpatterns.covariant_equals;
 import java.lang.String;
 
 /**
- *
+ * Defining an equals method on an enum. Maybe this should be a separate kind of error?
+ * 
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public enum PositiveCase4 {
