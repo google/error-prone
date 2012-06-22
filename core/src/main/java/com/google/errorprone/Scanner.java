@@ -33,6 +33,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * TODO(eaftan): I'm worried about this performance of this code,
+ * specifically the part that handles SuppressWarnings.  We should
+ * profile it and see where the hotspots are.
+ * 
  * @author alexeagle@google.com (Alex Eagle)
  * @author eaftan@google.com (Eddie Aftandilian)
  */
@@ -182,8 +186,8 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
     return newSuppressions;
   }
 
-  public boolean isSuppressed(String warning) {
-    return suppressions.contains(warning);
+  public boolean isSuppressed(String warningId) {
+    return suppressions.contains(warningId);
   }
 
   protected <T extends Tree> void reportMatch(Matcher<T> matcher, T match, VisitorState state) {
@@ -196,7 +200,15 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
 
   protected <T extends Tree> void evaluateMatch(T node, VisitorState visitorState, DescribingMatcher<T> matcher) {
     VisitorState state = visitorState.withPath(getCurrentPath());
-    if (!isSuppressed(matcher.getName()) && matcher.matches(node, state)) {
+    if (isSuppressed(matcher.getName())) {
+      return;
+    }
+    for (String warningId : matcher.getAltNames()) {
+      if (isSuppressed(warningId)) {
+        return;
+      }
+    }
+    if (matcher.matches(node, state)) {
       reportMatch(matcher, node, state);
     }
   }

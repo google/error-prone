@@ -30,6 +30,9 @@ public @interface BugPattern {
 
   String name();    // ID of this bug, used in @SuppressWarnings. Should be unique
   
+  String[] altNames() default {};    // Alternate IDs for this bug, which may also be used in 
+                                     // @SuppressWarnings
+  
   Category category();
   
   public enum Category {

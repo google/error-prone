@@ -44,6 +44,7 @@ import static com.sun.source.tree.Tree.Kind.IF;
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 @BugPattern(name = "EmptyIf",
+    altNames = {"empty"},
     summary = "Empty statement after if",
     explanation =
         "An if statement contains an empty statement as the then clause. A semicolon may " +

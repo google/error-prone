@@ -27,6 +27,7 @@ import com.sun.source.tree.Tree;
 public abstract class DescribingMatcher<T extends Tree> implements Matcher<T> {
     
   protected final String name;
+  protected final String[] altNames;
   protected final String diagnosticMessage;
   
   public DescribingMatcher() {
@@ -36,12 +37,17 @@ public abstract class DescribingMatcher<T extends Tree> implements Matcher<T> {
           + " not annotated with @BugPattern");
     }
     name = annotation.name();
+    altNames = annotation.altNames();
     diagnosticMessage = "[" + annotation.name() + "] " + annotation.summary()
         + "\n  (see http://code.google.com/p/error-prone/wiki/" + annotation.name() + ")";
   }
   
   public String getName() {
     return name;
+  }
+  
+  public String[] getAltNames() {
+    return altNames;
   }
 
   /**
