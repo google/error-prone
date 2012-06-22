@@ -78,10 +78,11 @@ public class DocGen extends AbstractProcessor {
       pw.print(element.toString() + "\t");    //0
       BugPattern annotation = element.getAnnotation(BugPattern.class);
       pw.print(annotation.name() + "\t");     //1
-      pw.print(annotation.category() + "\t"); //2
-      pw.print(annotation.severity() + "\t"); //3
-      pw.print(annotation.maturity() + "\t"); //4
-      pw.print(annotation.summary() + "\t");  //5
+      pw.print(Joiner.on(", ").join(annotation.altNames()) + "\t");     //2
+      pw.print(annotation.category() + "\t"); //3
+      pw.print(annotation.severity() + "\t"); //4
+      pw.print(annotation.maturity() + "\t"); //5
+      pw.print(annotation.summary() + "\t");  //6
       pw.println(annotation.explanation().replace("\n", "\\n"));   //6
     }
     
@@ -101,14 +102,15 @@ public class DocGen extends AbstractProcessor {
 
   private static final MessageFormat wikiPageTemplate = new MessageFormat(
       Joiner.on("\n").join(
-          "#summary {5}",
+          "#summary {6}",
           "#labels BugPattern",
           "=Bug pattern: {1}=",
-          "  * Category: {2}",
-          "  * Severity: {3}",
-          "  * Maturity: {4}",
+          "  * Alternate names: {2}",
+          "  * Category: {3}",
+          "  * Severity: {4}",
+          "  * Maturity: {5}",
           "==The problem==",
-          "{6}",
+          "{7}",
           ""
       ),
       Locale.ENGLISH);
@@ -156,12 +158,12 @@ public class DocGen extends AbstractProcessor {
       public boolean processLine(String line) throws IOException {
         String[] parts = line.split("\t");
         String checkName = parts[1];
-        String maturity = parts[4];
+        String maturity = parts[5];
         index.put(MaturityLevel.valueOf(maturity), checkName);
         // replace spaces in filename with underscores
         Writer writer = new FileWriter(new File(wikiDir, checkName.replace(' ', '_') + ".wiki"));
         // replace "\n" with a carriage return for explanation
-        parts[6] = parts[6].replace("\\n", "\n");
+        parts[7] = parts[7].replace("\\n", "\n");
         writer.write(wikiPageTemplate.format(parts));
         Iterable<String> classNameParts = Splitter.on('.').split(parts[0]);
         String path = Joiner.on('/').join(limit(classNameParts, size(classNameParts) - 1));
