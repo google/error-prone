@@ -200,10 +200,7 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
 
   protected <T extends Tree> void evaluateMatch(T node, VisitorState visitorState, DescribingMatcher<T> matcher) {
     VisitorState state = visitorState.withPath(getCurrentPath());
-    if (isSuppressed(matcher.getName())) {
-      return;
-    }
-    for (String warningId : matcher.getAltNames()) {
+    for (String warningId : matcher.getNames()) {
       if (isSuppressed(warningId)) {
         return;
       }

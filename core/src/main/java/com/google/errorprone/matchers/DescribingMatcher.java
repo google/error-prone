@@ -16,18 +16,25 @@
 
 package com.google.errorprone.matchers;
 
+import com.google.common.collect.Lists;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.Tree;
+
+import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * In addition to matching an AST node, also gives a message and/or suggested fix.
  * @author alexeagle@google.com (Alex Eagle)
  */
 public abstract class DescribingMatcher<T extends Tree> implements Matcher<T> {
-    
+
   protected final String name;
-  protected final String[] altNames;
+  /**
+   * A collection of IDs for this check, to be checked for in @SuppressWarnings annotations.
+   */
+  protected final Collection<String> names;
   protected final String diagnosticMessage;
   
   public DescribingMatcher() {
@@ -37,7 +44,9 @@ public abstract class DescribingMatcher<T extends Tree> implements Matcher<T> {
           + " not annotated with @BugPattern");
     }
     name = annotation.name();
-    altNames = annotation.altNames();
+    names = Lists.newArrayListWithCapacity(annotation.altNames().length + 1);
+    names.add(name);
+    names.addAll(Arrays.asList(annotation.altNames()));
     diagnosticMessage = "[" + annotation.name() + "] " + annotation.summary()
         + "\n  (see http://code.google.com/p/error-prone/wiki/" + annotation.name() + ")";
   }
@@ -46,8 +55,8 @@ public abstract class DescribingMatcher<T extends Tree> implements Matcher<T> {
     return name;
   }
   
-  public String[] getAltNames() {
-    return altNames;
+  public Collection<String> getNames() {
+    return names;
   }
 
   /**
