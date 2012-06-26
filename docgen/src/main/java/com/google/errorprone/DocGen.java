@@ -105,6 +105,20 @@ public class DocGen extends AbstractProcessor {
           "#summary {6}",
           "#labels BugPattern",
           "=Bug pattern: {1}=",
+          "  * Category: {3}",
+          "  * Severity: {4}",
+          "  * Maturity: {5}",
+          "==The problem==",
+          "{7}",
+          ""
+      ),
+      Locale.ENGLISH);
+  
+  private static final MessageFormat wikiPageTemplateWithAltNames = new MessageFormat(
+      Joiner.on("\n").join(
+          "#summary {6}",
+          "#labels BugPattern",
+          "=Bug pattern: {1}=",
           "  * Alternate names: {2}",
           "  * Category: {3}",
           "  * Severity: {4}",
@@ -158,13 +172,18 @@ public class DocGen extends AbstractProcessor {
       public boolean processLine(String line) throws IOException {
         String[] parts = line.split("\t");
         String checkName = parts[1];
+        String altnames = parts[2];
         String maturity = parts[5];
         index.put(MaturityLevel.valueOf(maturity), checkName);
         // replace spaces in filename with underscores
         Writer writer = new FileWriter(new File(wikiDir, checkName.replace(' ', '_') + ".wiki"));
         // replace "\n" with a carriage return for explanation
         parts[7] = parts[7].replace("\\n", "\n");
-        writer.write(wikiPageTemplate.format(parts));
+        if (altnames.length() <= 0) {
+          writer.write(wikiPageTemplate.format(parts));
+        } else {
+          writer.write(wikiPageTemplateWithAltNames.format(parts));
+        }
         Iterable<String> classNameParts = Splitter.on('.').split(parts[0]);
         String path = Joiner.on('/').join(limit(classNameParts, size(classNameParts) - 1));
         File exampleDir = new File(exampleDirBase, path);
