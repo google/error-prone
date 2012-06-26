@@ -16,11 +16,12 @@
 
 package com.google.errorprone.matchers;
 
-import com.google.common.collect.Lists;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+
 import com.sun.source.tree.Tree;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -44,7 +45,7 @@ public abstract class DescribingMatcher<T extends Tree> implements Matcher<T> {
           + " not annotated with @BugPattern");
     }
     name = annotation.name();
-    names = Lists.newArrayListWithCapacity(annotation.altNames().length + 1);
+    names = new ArrayList<String>(annotation.altNames().length + 1);
     names.add(name);
     names.addAll(Arrays.asList(annotation.altNames()));
     diagnosticMessage = "[" + annotation.name() + "] " + annotation.summary()
