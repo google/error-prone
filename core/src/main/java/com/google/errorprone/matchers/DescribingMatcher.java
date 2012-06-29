@@ -54,7 +54,7 @@ public abstract class DescribingMatcher<T extends Tree> implements Matcher<T> {
             + "\n  (see http://code.google.com/p/error-prone/wiki/" + annotation.name() + ")";
         break;
       case CUSTOM:
-        // annotation.link() must not be provided.
+        // annotation.link() must be provided.
         if (annotation.link().equals("")) {
           throw new IllegalStateException("If linkType element of @BugPattern is CUSTOM, "
               + "a link element must also be provided.");
