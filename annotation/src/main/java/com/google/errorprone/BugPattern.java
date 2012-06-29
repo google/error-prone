@@ -21,7 +21,7 @@ import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * An annotation intended for implementations of Matcher which is picked up by our 
+ * An annotation intended for implementations of Matcher which is picked up by our
  * documentation processor.
  * @author eaftan@google.com (Eddie Aftandilian)
  */
@@ -29,12 +29,21 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface BugPattern {
 
   String name();    // ID of this bug, used in @SuppressWarnings. Should be unique
-  
-  String[] altNames() default {};    // Alternate IDs for this bug, which may also be used in 
+
+  String[] altNames() default {};    // Alternate IDs for this bug, which may also be used in
                                      // @SuppressWarnings
-  
+
+  LinkType linkType() default LinkType.WIKI;
+  String link() default "";     // Used for the link if linkType() is CUSTOM.
+
+  public enum LinkType {
+    WIKI,       // Link to wiki
+    CUSTOM,     // Custom string
+    NONE        // No link should be displayed
+  }
+
   Category category();
-  
+
   public enum Category {
     JDK,        // general Java or JDK errors
     GUAVA,      // errors specific to Guava
@@ -45,7 +54,7 @@ public @interface BugPattern {
    * Wiki syntax not allowed
    */
   String summary();
-  
+
   /**
    * Wiki syntax allowed
    */
@@ -60,7 +69,7 @@ public @interface BugPattern {
   }
 
   MaturityLevel maturity();
-  
+
   public enum MaturityLevel {
     ON_BY_DEFAULT,
     EXPERIMENTAL,

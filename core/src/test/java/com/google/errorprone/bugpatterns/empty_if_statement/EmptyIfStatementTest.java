@@ -62,7 +62,7 @@ public class EmptyIfStatementTest {
         hasItem(allOf(
             // caret should appear at the semicolon
             diagnosticLineAndColumn(27, 17),
-            diagnosticMessage(containsString("did you mean 'if (i == 10) {")))));
+            diagnosticMessage(containsString("Did you mean 'if (i == 10) {")))));
     assertThat(diagnosticHelper.describe(), diagnosticHelper.getDiagnostics(), matcher);
   }
 

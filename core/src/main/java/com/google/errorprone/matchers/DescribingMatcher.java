@@ -37,7 +37,7 @@ public abstract class DescribingMatcher<T extends Tree> implements Matcher<T> {
    */
   protected final Collection<String> names;
   protected final String diagnosticMessage;
-  
+
   public DescribingMatcher() {
     BugPattern annotation = this.getClass().getAnnotation(BugPattern.class);
     if (annotation == null) {
@@ -48,14 +48,33 @@ public abstract class DescribingMatcher<T extends Tree> implements Matcher<T> {
     names = new ArrayList<String>(annotation.altNames().length + 1);
     names.add(name);
     names.addAll(Arrays.asList(annotation.altNames()));
-    diagnosticMessage = "[" + annotation.name() + "] " + annotation.summary()
-        + "\n  (see http://code.google.com/p/error-prone/wiki/" + annotation.name() + ")";
+    switch (annotation.linkType()) {
+      case WIKI:
+        diagnosticMessage = "[" + annotation.name() + "] " + annotation.summary()
+            + "\n  (see http://code.google.com/p/error-prone/wiki/" + annotation.name() + ")";
+        break;
+      case CUSTOM:
+        // annotation.link() must not be provided.
+        if (annotation.link().equals("")) {
+          throw new IllegalStateException("If linkType element of @BugPattern is CUSTOM, "
+              + "a link element must also be provided.");
+        }
+        diagnosticMessage = "[" + annotation.name() + "] " + annotation.summary()
+            + "\n  (see " + annotation.link() + ")";
+        break;
+      case NONE:
+        diagnosticMessage = "[" + annotation.name() + "] " + annotation.summary();
+        break;
+      default:
+        throw new IllegalStateException("Unexpected value for linkType element of @BugPattern: "
+            + annotation.linkType());
+    }
   }
-  
+
   public String getName() {
     return name;
   }
-  
+
   public Collection<String> getNames() {
     return names;
   }

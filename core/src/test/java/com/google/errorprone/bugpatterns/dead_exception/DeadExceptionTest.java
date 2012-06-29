@@ -56,9 +56,9 @@ public class DeadExceptionTest {
     assertThat(compiler.compile(new String[]{"-Xjcov", source.getAbsolutePath()}), is(1));
     Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher = allOf(
         hasItem(suggestsRemovalOfLine(24)),
-        hasItem(diagnosticMessage(containsString("did you mean 'throw new InterruptedException"))),
-        hasItem(diagnosticMessage(containsString("did you mean 'throw new RuntimeException"))),
-        hasItem(diagnosticMessage(containsString("did you mean 'throw new ArithmeticException"))));
+        hasItem(diagnosticMessage(containsString("Did you mean 'throw new InterruptedException"))),
+        hasItem(diagnosticMessage(containsString("Did you mean 'throw new RuntimeException"))),
+        hasItem(diagnosticMessage(containsString("Did you mean 'throw new ArithmeticException"))));
     assertThat("In diagnostics: " + diagnosticHelper.getDiagnostics(),
         diagnosticHelper.getDiagnostics(), matcher);
   }

@@ -42,8 +42,8 @@ public class CovariantEqualsTest {
     ErrorProneCompiler compiler;
     DiagnosticTestHelper diagnosticHelper;
     Matcher<Iterable<? super Diagnostic<JavaFileObject>>> overrideMatcher = hasItem(
-        diagnosticMessage(containsString("did you mean '@Override")));
-    for (String inputFile : Arrays.asList("PositiveCase1.java", "PositiveCase2.java", 
+        diagnosticMessage(containsString("Did you mean '@Override")));
+    for (String inputFile : Arrays.asList("PositiveCase1.java", "PositiveCase2.java",
         "PositiveCase3.java")) {
       diagnosticHelper = new DiagnosticTestHelper();
       compiler = new ErrorProneCompiler.Builder()
@@ -55,7 +55,7 @@ public class CovariantEqualsTest {
       assertThat("In diagnostics: " + diagnosticHelper.getDiagnostics(),
           diagnosticHelper.getDiagnostics(), overrideMatcher);
     }
-    
+
     diagnosticHelper = new DiagnosticTestHelper();
     compiler = new ErrorProneCompiler.Builder()
         .report(new CovariantEquals.Scanner())
@@ -64,7 +64,7 @@ public class CovariantEqualsTest {
     File source = new File(this.getClass().getResource("PositiveCase4.java").toURI());
     assertThat(compiler.compile(new String[]{"-Xjcov", source.getAbsolutePath()}), is(1));
     Matcher<Iterable<? super Diagnostic<JavaFileObject>>> removeMatcher = hasItem(
-            diagnosticMessage(containsString("did you mean to remove this line")));
+            diagnosticMessage(containsString("Did you mean to remove this line")));
     assertThat("In diagnostics: " + diagnosticHelper.getDiagnostics(),
         diagnosticHelper.getDiagnostics(), removeMatcher);
   }

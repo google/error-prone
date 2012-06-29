@@ -58,7 +58,7 @@ public class CollectionIncompatibleTypeTest {
     assertThat(diagnosticHelper.getDiagnostics(),
         hasDiagnosticOnAllMatchingLines(source, compile(".*//BUG\\s*$")));
     Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher =
-        hasItem(diagnosticMessage(containsString("did you mean 'return false;")));
+        hasItem(diagnosticMessage(containsString("Did you mean 'return false;")));
     assertThat(diagnosticHelper.getDiagnostics(), matcher);
   }
 
