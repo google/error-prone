@@ -112,6 +112,11 @@ public class Matchers {
     return new StaticMethod(fullClassName, methodName);
   }
 
+  public static InstanceMethod instanceMethod(Matcher<ExpressionTree> receiverMatcher,
+      String methodName) {
+    return new InstanceMethod(receiverMatcher, methodName);
+  }
+
   public static Constructor constructor(String className, List<String> parameterTypes) {
     return new Constructor(className, parameterTypes);
   }
@@ -154,6 +159,14 @@ public class Matchers {
     return new Matcher<T>() {
       @Override public boolean matches(Tree t, VisitorState state) {
         return state.getTypes().isSameType(((JCTree) t).type, type);
+      }
+    };
+  }
+
+  public static <T extends Tree> Matcher<T> isArrayType() {
+    return new Matcher<T>() {
+      @Override public boolean matches(Tree t, VisitorState state) {
+        return state.getTypes().isArray(((JCTree) t).type);
       }
     };
   }

@@ -16,6 +16,7 @@
 
 package com.google.errorprone;
 
+import com.google.errorprone.bugpatterns.array_equals.ArrayEquals;
 import com.google.errorprone.bugpatterns.collectionIncompatibleType.CollectionIncompatibleType;
 import com.google.errorprone.bugpatterns.covariant_equals.CovariantEquals;
 import com.google.errorprone.bugpatterns.dead_exception.DeadException;
@@ -75,7 +76,8 @@ public class ErrorProneScanner extends Scanner {
           PreconditionsExpensiveString.class,
           PreconditionsCheckNotNullPrimitive1stArg.class,
           CollectionIncompatibleType.class,
-          ObjectsEqualSelfComparison.class
+          ObjectsEqualSelfComparison.class,
+          ArrayEquals.class
       );
       this.newClassMatchers = createChecks(enabled, DeadException.class);
       this.annotationMatchers = createChecks(enabled, FallThroughSuppression.class);
@@ -126,7 +128,7 @@ public class ErrorProneScanner extends Scanner {
     }
     return super.visitAnnotation(annotationTree, visitorState);
   }
-  
+
   @Override
   public Void visitEmptyStatement(EmptyStatementTree emptyStatementTree, VisitorState visitorState) {
     for (DescribingMatcher<EmptyStatementTree> matcher : emptyStatementMatchers) {
@@ -134,7 +136,7 @@ public class ErrorProneScanner extends Scanner {
     }
     return super.visitEmptyStatement(emptyStatementTree, visitorState);
   }
-  
+
   @Override
   public Void visitAssignment(AssignmentTree assignmentTree, VisitorState visitorState) {
     for (DescribingMatcher<AssignmentTree> matcher : assignmentMatchers) {
