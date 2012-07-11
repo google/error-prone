@@ -20,12 +20,11 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.MethodVisibility.Visibility;
 import com.sun.source.tree.*;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.JCTree.JCArrayTypeTree;
-import com.sun.tools.javac.tree.JCTree.JCIdent;
-import com.sun.tools.javac.tree.JCTree.JCPrimitiveTypeTree;
-import com.sun.tools.javac.tree.JCTree.JCTypeApply;
+import com.sun.tools.javac.tree.JCTree.*;
 
 import java.util.List;
 
@@ -307,6 +306,30 @@ public class Matchers {
       @Override
       public boolean matches(VariableTree variableTree, VisitorState state) {
         return treeMatcher.matches(variableTree.getType(), state);
+      }
+    };
+  }
+
+  public static Matcher<ExpressionTree> isDescendantOfMethod(final String fullClassName, final String methodName) {
+    return new Matcher<ExpressionTree>() {
+      @Override
+      public boolean matches(ExpressionTree expressionTree, VisitorState state) {
+        if (!(expressionTree instanceof JCFieldAccess)) {
+          return false;
+        }
+
+        JCFieldAccess methodSelectFieldAccess = (JCFieldAccess) expressionTree;
+        if ("*".equals(methodName) || methodName.equals(methodSelectFieldAccess.sym.toString())) {
+          Type accessedReferenceType = ((MethodSymbol) methodSelectFieldAccess.sym).owner.type;
+
+          ClassSymbol classSymbol = state.getSymtab().classes.get(state.getName(fullClassName));
+          if (classSymbol == null) {
+            return false;
+          }
+          Type collectionType = classSymbol.type;
+          return state.getTypes().isCastable(accessedReferenceType, collectionType);
+        }
+        return false;
       }
     };
   }

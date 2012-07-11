@@ -48,7 +48,7 @@ public class StaticMethod implements Matcher<ExpressionTree> {
       return true;
     }
 
-    if (!(memberSelectTree.getExpression() instanceof  JCIdent)) {
+    if (!(memberSelectTree.getExpression() instanceof JCIdent)) {
       return false;
     }
     JCIdent expressionTree = (JCIdent) memberSelectTree.getExpression();
