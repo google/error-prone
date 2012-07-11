@@ -45,8 +45,8 @@ public class DeadException extends DescribingMatcher<NewClassTree> {
   public boolean matches(NewClassTree newClassTree, VisitorState state) {
     return allOf(
         parentNode(kindIs(EXPRESSION_STATEMENT)),
-        isSubtypeOf(state.getSymtab().exceptionType))
-        .matches(newClassTree, state);
+        isSubtypeOf(state.getSymtab().exceptionType)
+    ).matches(newClassTree, state);
   }
 
   @Override

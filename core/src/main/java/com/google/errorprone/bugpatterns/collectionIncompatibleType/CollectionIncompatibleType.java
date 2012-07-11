@@ -21,11 +21,9 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
@@ -67,27 +65,6 @@ public class CollectionIncompatibleType extends DescribingMatcher<MethodInvocati
       return Type.noType;
     }
     return ((ClassType) ((JCFieldAccess) expressionTree).getExpression().type).typarams_field.get(typeIndex);
-  }
-
-  //TODO: is this matcher well-named? when it is, move to static method in Matchers.
-  private Matcher<ExpressionTree> isDescendantOfMethod(final String owner, final String methodName) {
-    return new Matcher<ExpressionTree>() {
-      @Override
-      public boolean matches(ExpressionTree expressionTree, VisitorState state) {
-        if (!(expressionTree instanceof JCFieldAccess)) {
-          return false;
-        }
-
-        JCFieldAccess methodSelectFieldAccess = (JCFieldAccess) expressionTree;
-        if (methodName.equals(methodSelectFieldAccess.sym.toString())) {
-          Type accessedReferenceType = ((MethodSymbol) methodSelectFieldAccess.sym).owner.type;
-
-          Type collectionType = state.getSymtab().classes.get(state.getName(owner)).type;
-          return state.getTypes().isCastable(accessedReferenceType, collectionType);
-        }
-        return false;
-      }
-    };
   }
 
   @Override

@@ -27,27 +27,56 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  */
 @Retention(RUNTIME)
 public @interface BugPattern {
+  /**
+   * @return ID of this bug, used in @SuppressWarnings. Should be unique
+   */
+  String name();
 
-  String name();    // ID of this bug, used in @SuppressWarnings. Should be unique
-
-  String[] altNames() default {};    // Alternate IDs for this bug, which may also be used in
-                                     // @SuppressWarnings
+  /**
+   * @return Alternate IDs for this bug, which may also be used in @SuppressWarnings
+   */
+  String[] altNames() default {};
 
   LinkType linkType() default LinkType.WIKI;
-  String link() default "";     // Used for the link if linkType() is CUSTOM.
 
+  /**
+   * @return Used for the link if linkType() is CUSTOM.
+   */
+  String link() default "";
+
+  /**
+   * What link to show users in the javac error message, so they can learn more about the error
+   */
   public enum LinkType {
-    WIKI,       // Link to wiki
-    CUSTOM,     // Custom string
-    NONE        // No link should be displayed
+    /**
+     * Link to wiki, using the name identifier
+     */
+    WIKI,
+    /**
+     * Custom string
+     */
+    CUSTOM,
+    /**
+     * No link should be displayed
+     */
+    NONE
   }
 
   Category category();
 
   public enum Category {
-    JDK,        // general Java or JDK errors
-    GUAVA,      // errors specific to Guava
-    ONE_OFF     // one-off refactorings that are not general errors
+    /**
+     * general Java or JDK errors
+     */
+    JDK,
+    /**
+     * errors specific to Guava
+     */
+    GUAVA,
+    /**
+     * one-off refactorings that are not general errors
+     */
+    ONE_OFF
   }
 
   /**
@@ -65,7 +94,10 @@ public @interface BugPattern {
   public enum SeverityLevel {
     ERROR,
     WARNING,
-    OFF         // should not be used for general code
+    /**
+     * should not be used for general code
+     */
+    OFF
   }
 
   MaturityLevel maturity();
