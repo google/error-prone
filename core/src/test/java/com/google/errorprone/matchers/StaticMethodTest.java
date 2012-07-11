@@ -38,7 +38,10 @@ public class StaticMethodTest extends CompilerBasedTest {
         "package com.google;",
         "public class A { ",
         "  public static int count() {",
-        "     return 1; ",
+        "    return 1;",
+        "  }",
+        "  public int instanceCount() {",
+        "    return 2;",
         "  }",
         "}"
     );
@@ -82,6 +85,20 @@ public class StaticMethodTest extends CompilerBasedTest {
         "}"
     );
     assertCompiles(memberSelectMatches(false, new StaticMethod("com.google.A", "count")));
+  }
+
+  @Test
+  public void shouldNotMatchInstanceMethod() throws IOException {
+    writeFile("B.java",
+        "import com.google.A;",
+        "public class B {",
+        "  public int count() {",
+        "    A a = new A();",
+        "    return a.instanceCount();",
+        "  }",
+        "}"
+    );
+    assertCompiles(memberSelectMatches(false, new StaticMethod("com.google.A", "instanceCount")));
   }
 
   private Scanner memberSelectMatches(final boolean shouldMatch, final StaticMethod toMatch) {

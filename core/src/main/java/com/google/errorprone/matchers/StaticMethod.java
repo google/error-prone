@@ -24,6 +24,7 @@ import com.sun.tools.javac.util.Name;
 
 /**
  * Matches a static method expression.
+ *
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class StaticMethod implements Matcher<ExpressionTree> {
@@ -41,6 +42,12 @@ public class StaticMethod implements Matcher<ExpressionTree> {
       return false;
     }
     JCFieldAccess memberSelectTree = (JCFieldAccess) item;
+
+    // Is method static?
+    if (!memberSelectTree.sym.isStatic()) {
+      return false;
+    }
+
     Name fullClassName = state.getName(fullClass);
     boolean methodSame = memberSelectTree.sym.getQualifiedName().equals(state.getName(methodName));
     if (methodSame &&
