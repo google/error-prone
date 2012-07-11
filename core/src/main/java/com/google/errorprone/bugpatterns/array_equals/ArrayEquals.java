@@ -23,8 +23,7 @@ import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.util.Name;
 
 /**
- * TODO(eaftan): tests
- * TODO(eaftan): write a test for InstanceMatcher
+ * TODO(eaftan): tests -- more positive cases, start negative cases
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */

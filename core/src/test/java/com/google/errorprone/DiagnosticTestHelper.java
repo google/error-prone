@@ -16,13 +16,15 @@
 
 package com.google.errorprone;
 
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.internal.matchers.StringContains.containsString;
+
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
-import javax.tools.Diagnostic;
-import javax.tools.DiagnosticCollector;
-import javax.tools.JavaFileObject;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -32,9 +34,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.junit.internal.matchers.StringContains.containsString;
+import javax.tools.Diagnostic;
+import javax.tools.DiagnosticCollector;
+import javax.tools.JavaFileObject;
 
 /**
  * Utility class for tests which need to assert on the diagnostics produced during compilation.
@@ -130,7 +132,8 @@ public class DiagnosticTestHelper {
 
   /**
    * Matches an Iterable of diagnostics if it contains a diagnostic on each line of the source file
-   * that matches the pattern.
+   * that matches the pattern.  Does not match if a diagnostic appears on a line that is *not*
+   * tagged with the pattern.
    *
    * @param source                    file to find matching lines
    * @param expectedDiagnosticComment any Pattern, used to match complete lines
@@ -148,11 +151,13 @@ public class DiagnosticTestHelper {
       if (line == null) {
         break;
       }
+      Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher;
       if (expectedDiagnosticComment.matcher(line).matches()) {
-        Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher =
-            hasItem(diagnosticOnLine(reader.getLineNumber()));
-        matchers.add(matcher);
+        matcher = hasItem(diagnosticOnLine(reader.getLineNumber()));
+      } else {
+        matcher = not(hasItem(diagnosticOnLine(reader.getLineNumber())));
       }
+      matchers.add(matcher);
     } while (true);
 
     return allOf(matchers);

@@ -40,6 +40,18 @@ import java.util.List;
 public class Matchers {
   private Matchers() {}
 
+  /**
+   * A matcher that always returns true.
+   */
+  public static <T extends Tree> Matcher<T> anything() {
+    return new Matcher<T>() {
+      @Override
+      public boolean matches(T t, VisitorState state) {
+        return true;
+      }
+    };
+  }
+
   public static <T extends Tree> Matcher<T> allOf(
       Class<T> typeInfer, final Matcher<? super T>... matchers) {
     return allOf(matchers);

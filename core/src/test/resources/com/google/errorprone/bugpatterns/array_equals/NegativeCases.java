@@ -21,23 +21,34 @@ import java.util.*;
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class PositiveCases {
-  public void intArray() {
-    int[] a = {1, 2, 3};
-    int[] b = {1, 2, 3};
+public class NegativeCases {
+  public void neitherArray() {
+    Object a = new Object();
+    Object b = new Object();
     
-    if (a.equals(b)) {  //BUG
+    if (a.equals(b)) {
+      System.out.println("Objects are equal!");
+    } else {
+      System.out.println("Objects are not equal!");
+    }
+  }
+  
+  public void firstArray() {
+    Object[] a = new Object[3];
+    Object b = new Object();
+    
+    if (a.equals(b)) {
       System.out.println("arrays are equal!");
     } else {
       System.out.println("arrays are not equal!");
     }
   }
   
-  public void objectArray() {
-    Object[] a = new Object[3];
+  public void secondArray() {
+    Object a = new Object();
     Object[] b = new Object[3];
     
-    if (a.equals(b)) {  //BUG
+    if (a.equals(b)) {
       System.out.println("arrays are equal!");
     } else {
       System.out.println("arrays are not equal!");
