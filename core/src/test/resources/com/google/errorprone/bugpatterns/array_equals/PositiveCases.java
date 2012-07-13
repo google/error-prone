@@ -43,4 +43,37 @@ public class PositiveCases {
       System.out.println("arrays are not equal!");
     }
   }
+  
+  public void firstMethodCall() {
+    String s = "hello";
+    char[] b = new char[3];
+    
+    if (s.toCharArray().equals(b)) {  //BUG
+      System.out.println("arrays are equal!");
+    } else {
+      System.out.println("arrays are not equal!");
+    }
+  }
+  
+  public void secondMethodCall() {
+    char[] a = new char[3];
+    String s = "hello";
+    
+    if (a.equals(s.toCharArray())) {  //BUG
+      System.out.println("arrays are equal!");
+    } else {
+      System.out.println("arrays are not equal!");
+    }
+  }
+  
+  public void bothMethodCalls() {
+    String s1 = "hello";
+    String s2 = "world";
+    
+    if (s1.toCharArray().equals(s2.toCharArray())) {  //BUG
+      System.out.println("arrays are equal!");
+    } else {
+      System.out.println("arrays are not equal!");
+    }
+  }
 }

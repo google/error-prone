@@ -55,11 +55,11 @@ public class ArrayEquals extends DescribingMatcher<MethodInvocationTree> {
    */
   @Override
   public Description describe(MethodInvocationTree t, VisitorState state) {
-    Name receiver = ((JCIdent) ((JCFieldAccess) t.getMethodSelect()).getExpression()).getName();
-    Name arg = ((JCIdent) t.getArguments().get(0)).getName();
+    String receiver = ((JCFieldAccess) t.getMethodSelect()).getExpression().toString();
+    String arg = t.getArguments().get(0).toString();
     SuggestedFix fix = new SuggestedFix()
         .replace(t, "Arrays.equals(" + receiver + ", " + arg + ")")
-        .addImport("java.util.Arrays");
+        .addImport("import java.util.Arrays");
     return new Description(t, diagnosticMessage, fix);
   }
 

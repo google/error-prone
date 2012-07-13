@@ -28,6 +28,9 @@ public class InstanceMethod implements Matcher<ExpressionTree> {
       return false;
     }
     JCFieldAccess memberSelectTree = (JCFieldAccess) item;
+    if (memberSelectTree.sym == null) {
+      return false;
+    }
     if (memberSelectTree.sym.isStatic()) {
       return false;
     }
