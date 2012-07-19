@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns.objectsequalselfcomparison;
+package com.google.errorprone.bugpatterns.objects_equal_self_comparison;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;

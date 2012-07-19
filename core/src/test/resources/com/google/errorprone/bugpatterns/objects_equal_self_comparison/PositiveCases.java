@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns.objectsequalselfcomparison;
+package com.google.errorprone.bugpatterns.objects_equal_self_comparison;
 
 import com.google.common.base.Objects;
 
@@ -33,7 +33,7 @@ public class PositiveCases {
       return false;
     }
     PositiveCases other = (PositiveCases)o;
-    return Objects.equal(field, field); //oops, should have been other.field
+    return Objects.equal(field, field); //BUG
   }
 
   @Override

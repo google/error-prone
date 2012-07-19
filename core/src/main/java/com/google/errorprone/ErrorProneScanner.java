@@ -23,7 +23,7 @@ import com.google.errorprone.bugpatterns.dead_exception.DeadException;
 import com.google.errorprone.bugpatterns.empty_if_statement.EmptyIfStatement;
 import com.google.errorprone.bugpatterns.emptystatement.EmptyStatement;
 import com.google.errorprone.bugpatterns.fallthroughsuppression.FallThroughSuppression;
-import com.google.errorprone.bugpatterns.objectsequalselfcomparison.ObjectsEqualSelfComparison;
+import com.google.errorprone.bugpatterns.objects_equal_self_comparison.ObjectsEqualSelfComparison;
 import com.google.errorprone.bugpatterns.orderingfrom.OrderingFrom;
 import com.google.errorprone.bugpatterns.preconditionschecknotnull.PreconditionsCheckNotNull;
 import com.google.errorprone.bugpatterns.preconditionschecknotnullprimitive1starg.PreconditionsCheckNotNullPrimitive1stArg;
