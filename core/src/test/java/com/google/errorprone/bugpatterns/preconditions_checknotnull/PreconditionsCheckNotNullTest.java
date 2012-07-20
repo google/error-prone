@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns.array_equals;
+package com.google.errorprone.bugpatterns.preconditions_checknotnull;
 
 import com.google.errorprone.CompilationHelper;
 import com.google.errorprone.DiagnosticTestHelper;
@@ -28,7 +28,7 @@ import java.io.File;
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class ArrayEqualsTest {
+public class PreconditionsCheckNotNullTest {
 
   private CompilationHelper compilationHelper;
 
@@ -36,27 +36,41 @@ public class ArrayEqualsTest {
   public void setUp() {
     DiagnosticTestHelper diagnosticHelper = new DiagnosticTestHelper();
     ErrorProneCompiler compiler = new ErrorProneCompiler.Builder()
-        .report(new ArrayEquals.Scanner())
+        .report(new PreconditionsCheckNotNull.Scanner())
         .listenToDiagnostics(diagnosticHelper.collector)
         .build();
     compilationHelper = new CompilationHelper(diagnosticHelper, compiler);
   }
 
   @Test
-  public void testPositiveCase() throws Exception {
+  public void testPositiveCase1() throws Exception {
     compilationHelper.assertCompileFails(
-        new File(this.getClass().getResource("PositiveCases.java").toURI()),
-        "Did you mean 'if (Arrays.equals(a, b)) {",
-        "Did you mean 'if (Arrays.equals(a, b)) {",
-        "Did you mean 'if (Arrays.equals(s.toCharArray(), b)) {",
-        "Did you mean 'if (Arrays.equals(a, s.toCharArray())) {",
-        "Did you mean 'if (Arrays.equals(s1.toCharArray(), s2.toCharArray())) {");
+        new File(this.getClass().getResource("PositiveCase1.java").toURI()),
+        "Did you mean '",
+        "Did you mean 'Preconditions.checkNotNull(thing, \"thing is null\")",
+        // TODO(eaftan): This last case has a bug where the replacement is incorrect.  Uncomment
+        // to see what it should do.
+        //"Did you mean 'Preconditions.checkNotNull(thing, \"a string literal that\'s got two parts\"");
+        "Did you mean 'Preconditions.checkNotNull(");
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testPositiveCase2() throws Exception {
+    compilationHelper.assertCompileFails(
+        new File(this.getClass().getResource("PositiveCase2.java").toURI()),
+        "Did you mean '");
+  }
+
+  @Test
+  public void testNegativeCase1() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("NegativeCases.java").toURI()));
+        new File(this.getClass().getResource("NegativeCase1.java").toURI()));
+  }
+
+  @Test
+  public void testNegativeCase2() throws Exception {
+    compilationHelper.assertCompileSucceeds(
+        new File(this.getClass().getResource("NegativeCase2.java").toURI()));
   }
 
 }

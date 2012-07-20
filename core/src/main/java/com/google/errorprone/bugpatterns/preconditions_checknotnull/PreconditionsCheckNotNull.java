@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns.preconditionschecknotnull;
+package com.google.errorprone.bugpatterns.preconditions_checknotnull;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;

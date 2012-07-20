@@ -1,4 +1,4 @@
-package preconditionschecknotnull;
+package com.google.errorprone.bugpatterns.preconditions_checknotnull;
 
 /**
  * Test case for fully qualified methodIs call.
@@ -6,6 +6,6 @@ package preconditionschecknotnull;
  */
 public class PositiveCase2 {
   public void error() {
-    com.google.common.base.Preconditions.checkNotNull("string literal");
+    com.google.common.base.Preconditions.checkNotNull("string literal");    //BUG
   }
 }

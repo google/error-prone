@@ -21,6 +21,8 @@ import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.internal.matchers.StringContains.containsString;
 
+import com.google.common.collect.Lists;
+
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
@@ -30,6 +32,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -114,6 +117,31 @@ public class DiagnosticTestHelper {
     };
   }
 
+  public static TypeSafeDiagnosingMatcher<Diagnostic<JavaFileObject>> diagnosticOnLine(
+      final long line, final String message) {
+    return new TypeSafeDiagnosingMatcher<Diagnostic<JavaFileObject>>() {
+      @Override
+      protected boolean matchesSafely(
+          Diagnostic<JavaFileObject> item, Description mismatchDescription) {
+        mismatchDescription
+            .appendText("line ")
+            .appendValue(item.getLineNumber());
+        return item.getLineNumber() == line
+            && item.getMessage(Locale.getDefault()).contains(message);
+      }
+
+      @Override
+      public void describeTo(Description description) {
+        description
+            .appendText("a diagnostic on line ")
+            .appendValue(line)
+            .appendText(" that contains ")
+            .appendValue(message);
+      }
+    };
+  }
+
+
   public static TypeSafeDiagnosingMatcher<Diagnostic<JavaFileObject>> diagnosticMessage(
       final Matcher<String> matcher) {
     return new TypeSafeDiagnosingMatcher<Diagnostic<JavaFileObject>>() {
@@ -158,6 +186,40 @@ public class DiagnosticTestHelper {
         matcher = not(hasItem(diagnosticOnLine(reader.getLineNumber())));
       }
       matchers.add(matcher);
+    } while (true);
+
+    return allOf(matchers);
+  }
+
+  /**
+   * Matches an Iterable of diagnostics if it contains a diagnostic on each line of the source file
+   * that matches the pattern.  Does not match if a diagnostic appears on a line that is *not*
+   * tagged with the pattern.
+   *
+   * @param source                    file to find matching lines
+   * @param expectedDiagnosticComment any Pattern, used to match complete lines
+   * @return a Hamcrest matcher
+   */
+  public static Matcher<Iterable<Diagnostic<? extends JavaFileObject>>>
+  hasDiagnosticOnAllMatchingLines(final File source, Pattern expectedDiagnosticComment,
+      String... expectedDiagnostics) throws IOException {
+    List<Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>>> matchers =
+        new ArrayList<Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>>>();
+
+    final LineNumberReader reader = new LineNumberReader(new FileReader(source));
+    Iterator<String> expectedDiagnosticsIterator =
+        Lists.newArrayList(expectedDiagnostics).iterator();
+    do {
+      String line = reader.readLine();
+      if (line == null) {
+        break;
+      }
+      if (expectedDiagnosticComment.matcher(line).matches()) {
+        matchers.add(hasItem(diagnosticOnLine(reader.getLineNumber(),
+            expectedDiagnosticsIterator.next())));
+      } else {
+        matchers.add(not(hasItem(diagnosticOnLine(reader.getLineNumber()))));
+      }
     } while (true);
 
     return allOf(matchers);

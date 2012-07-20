@@ -25,7 +25,7 @@ import com.google.errorprone.bugpatterns.emptystatement.EmptyStatement;
 import com.google.errorprone.bugpatterns.fallthroughsuppression.FallThroughSuppression;
 import com.google.errorprone.bugpatterns.objects_equal_self_comparison.ObjectsEqualSelfComparison;
 import com.google.errorprone.bugpatterns.orderingfrom.OrderingFrom;
-import com.google.errorprone.bugpatterns.preconditionschecknotnull.PreconditionsCheckNotNull;
+import com.google.errorprone.bugpatterns.preconditions_checknotnull.PreconditionsCheckNotNull;
 import com.google.errorprone.bugpatterns.preconditionschecknotnullprimitive1starg.PreconditionsCheckNotNullPrimitive1stArg;
 import com.google.errorprone.bugpatterns.preconditionsexpensivestring.PreconditionsExpensiveString;
 import com.google.errorprone.bugpatterns.selfassignment.SelfAssignment;

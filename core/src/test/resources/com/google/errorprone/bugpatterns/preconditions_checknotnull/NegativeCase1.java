@@ -1,6 +1,6 @@
-package preconditionschecknotnull;
+package com.google.errorprone.bugpatterns.preconditions_checknotnull;
 
-class NegativeCase1 {
+public class NegativeCase1 {
   public void go() {
     Preconditions.checkNotNull("this is ok");
   }
