@@ -198,17 +198,18 @@ public class DiagnosticTestHelper {
    *
    * @param source                    file to find matching lines
    * @param expectedDiagnosticComment any Pattern, used to match complete lines
+   * @param expectedMessages          expected error messages
    * @return a Hamcrest matcher
    */
   public static Matcher<Iterable<Diagnostic<? extends JavaFileObject>>>
   hasDiagnosticOnAllMatchingLines(final File source, Pattern expectedDiagnosticComment,
-      String... expectedDiagnostics) throws IOException {
+      String... expectedMessages) throws IOException {
     List<Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>>> matchers =
         new ArrayList<Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>>>();
 
     final LineNumberReader reader = new LineNumberReader(new FileReader(source));
-    Iterator<String> expectedDiagnosticsIterator =
-        Lists.newArrayList(expectedDiagnostics).iterator();
+    Iterator<String> expectedMessagesIterator =
+        Lists.newArrayList(expectedMessages).iterator();
     do {
       String line = reader.readLine();
       if (line == null) {
@@ -216,7 +217,7 @@ public class DiagnosticTestHelper {
       }
       if (expectedDiagnosticComment.matcher(line).matches()) {
         matchers.add(hasItem(diagnosticOnLine(reader.getLineNumber(),
-            expectedDiagnosticsIterator.next())));
+            expectedMessagesIterator.next())));
       } else {
         matchers.add(not(hasItem(diagnosticOnLine(reader.getLineNumber()))));
       }

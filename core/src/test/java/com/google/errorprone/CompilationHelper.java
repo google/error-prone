@@ -28,10 +28,10 @@ public class CompilationHelper {
     assertThat(compiler.compile(new String[]{"-Xjcov", source.getAbsolutePath()}), is(0));
   }
 
-  public void assertCompileFails(File source, String... expectedMessage) throws IOException {
+  public void assertCompileFails(File source, String... expectedMessages) throws IOException {
     assertThat(compiler.compile(new String[]{"-Xjcov", source.getAbsolutePath()}), is(1));
     assertThat(diagnosticHelper.getDiagnostics(),
-        hasDiagnosticOnAllMatchingLines(source, compile(".*//BUG\\s*$"), expectedMessage));
+        hasDiagnosticOnAllMatchingLines(source, compile(".*//BUG\\s*$"), expectedMessages));
   }
 
 }
