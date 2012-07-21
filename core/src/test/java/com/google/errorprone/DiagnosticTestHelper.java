@@ -225,4 +225,36 @@ public class DiagnosticTestHelper {
 
     return allOf(matchers);
   }
+
+  /**
+   * Matches an Iterable of diagnostics if it contains a diagnostic on each line of the source file
+   * that matches the pattern.  Does not match if a diagnostic appears on a line that is *not*
+   * tagged with the pattern.
+   *
+   * @param source                    file to find matching lines
+   * @param expectedDiagnosticComment any Pattern, used to match complete lines
+   * @param expectedMessage           the expected error message for every error
+   * @return a Hamcrest matcher
+   */
+  public static Matcher<Iterable<Diagnostic<? extends JavaFileObject>>>
+  hasDiagnosticOnAllMatchingLines(final File source, Pattern expectedDiagnosticComment,
+      String expectedMessage) throws IOException {
+    List<Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>>> matchers =
+        new ArrayList<Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>>>();
+
+    final LineNumberReader reader = new LineNumberReader(new FileReader(source));
+    do {
+      String line = reader.readLine();
+      if (line == null) {
+        break;
+      }
+      if (expectedDiagnosticComment.matcher(line).matches()) {
+        matchers.add(hasItem(diagnosticOnLine(reader.getLineNumber(), expectedMessage)));
+      } else {
+        matchers.add(not(hasItem(diagnosticOnLine(reader.getLineNumber()))));
+      }
+    } while (true);
+
+    return allOf(matchers);
+  }
 }

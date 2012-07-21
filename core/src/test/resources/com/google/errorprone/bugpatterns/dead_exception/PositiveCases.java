@@ -17,22 +17,22 @@ package com.google.errorprone.bugpatterns.dead_exception;
 
 public class PositiveCases {
   public void error() {
-    new RuntimeException("Not thrown, and reference lost");
+    new RuntimeException("Not thrown, and reference lost"); //BUG
   }
 
   public void fixIsToDeleteTheFirstStatement() {
-    new IllegalArgumentException("why is this here?");
+    new IllegalArgumentException("why is this here?");  //BUG
     int i = 1;
     System.out.println("i = " + i);
   }
 
   public void firstStatementWithNoSurroundingBlock() {
     if (true)
-      new InterruptedException("this should be thrown");
+      new InterruptedException("this should be thrown");    //BUG
 
     if (true)
       return;
     else
-      new ArithmeticException("should also be thrown");
+      new ArithmeticException("should also be thrown"); //BUG
   }
 }

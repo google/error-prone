@@ -17,7 +17,7 @@
 package com.google.errorprone;
 
 import com.google.errorprone.bugpatterns.array_equals.ArrayEquals;
-import com.google.errorprone.bugpatterns.collectionIncompatibleType.CollectionIncompatibleType;
+import com.google.errorprone.bugpatterns.collection_incompatible_type.CollectionIncompatibleType;
 import com.google.errorprone.bugpatterns.covariant_equals.CovariantEquals;
 import com.google.errorprone.bugpatterns.dead_exception.DeadException;
 import com.google.errorprone.bugpatterns.empty_if_statement.EmptyIfStatement;

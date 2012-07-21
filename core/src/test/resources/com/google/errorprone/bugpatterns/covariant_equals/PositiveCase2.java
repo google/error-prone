@@ -22,7 +22,7 @@ package com.google.errorprone.bugpatterns.covariant_equals;
 public class PositiveCase2 {
   int i, j, k;
   
-  public boolean equals(PositiveCase2 other) {
+  public boolean equals(PositiveCase2 other) {  //BUG
     if (i == other.i && j == other.j && k == other.k) {
       return true;
     }

@@ -20,7 +20,7 @@ package com.google.errorprone.bugpatterns.covariant_equals;
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class PositiveCase1 {
-  public boolean equals(PositiveCase1 other) {
+  public boolean equals(PositiveCase1 other) {  //BUG
     return false;
   }
 }

@@ -24,14 +24,14 @@ public class PositiveCases {
 
   public static void positiveCase1() {
     int i = 10;
-    if (i == 10); {
+    if (i == 10); { //BUG
       i++;
     }
   }
 
   public static void positiveCase2() {
     int i = 10;
-    if (i == 10);
+    if (i == 10);   //BUG
     i++;
     System.out.println("foo");
   }
@@ -39,20 +39,20 @@ public class PositiveCases {
   public static void positiveCase3() {
     int i = 10;
     if (i == 10)
-      ;
+      ; //BUG
     i++;
     System.out.println("foo");
   }
 
   public static void positiveCase4() {
     int i = 10;
-    if (i == 10)            ;
+    if (i == 10)            ;   //BUG
   }
   
   public static void positiveCase5() {
     int i = 10;
     if (i == 10) 
-      ;
+      ; //BUG
     {
       System.out.println("foo");
     }

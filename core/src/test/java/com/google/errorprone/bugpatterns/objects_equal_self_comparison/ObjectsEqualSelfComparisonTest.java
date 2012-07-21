@@ -17,8 +17,6 @@
 package com.google.errorprone.bugpatterns.objects_equal_self_comparison;
 
 import com.google.errorprone.CompilationHelper;
-import com.google.errorprone.DiagnosticTestHelper;
-import com.google.errorprone.ErrorProneCompiler;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,17 +32,12 @@ public class ObjectsEqualSelfComparisonTest {
 
   @Before
   public void setUp() {
-    DiagnosticTestHelper diagnosticHelper = new DiagnosticTestHelper();
-    ErrorProneCompiler compiler = new ErrorProneCompiler.Builder()
-        .report(new ObjectsEqualSelfComparison.Scanner())
-        .listenToDiagnostics(diagnosticHelper.collector)
-        .build();
-    compilationHelper = new CompilationHelper(diagnosticHelper, compiler);
+    compilationHelper = new CompilationHelper(new ObjectsEqualSelfComparison.Scanner());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFails(
+    compilationHelper.assertCompileFailsDiffMessages(
         new File(this.getClass().getResource("PositiveCases.java").toURI()),
         "Did you mean 'return Objects.equal(field, other.field)");
   }

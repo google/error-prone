@@ -31,7 +31,6 @@ import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.variableType;
 import static com.sun.tools.javac.code.Flags.ENUM;
-import static com.sun.tools.javac.code.TypeTags.CLASS;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -44,11 +43,6 @@ import com.google.errorprone.matchers.MethodVisibility.Visibility;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.util.TreeScanner;
-import com.sun.tools.javac.code.Scope;
-import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.Symbol.ClassSymbol;
-import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
@@ -70,7 +64,7 @@ import java.util.List;
         "since comparisons will have different results depending on which `equals` is called.",
     category = JDK, maturity = ON_BY_DEFAULT, severity = ERROR)
 public class CovariantEquals extends DescribingMatcher<MethodTree> {
-  
+
   /**
    * Matches any method definitions that fit the following:
    * 1) Defined method is named "equals."
@@ -80,7 +74,7 @@ public class CovariantEquals extends DescribingMatcher<MethodTree> {
    */
   @Override
   @SuppressWarnings("unchecked")    // matchers + varargs cause this
-  public boolean matches(MethodTree methodTree, VisitorState state) { 
+  public boolean matches(MethodTree methodTree, VisitorState state) {
     return allOf(
         methodHasVisibility(Visibility.PUBLIC),
         methodIsNamed("equals"),
@@ -95,9 +89,9 @@ public class CovariantEquals extends DescribingMatcher<MethodTree> {
 
   @Override
   public Description describe(MethodTree methodTree, VisitorState state) {
-    SuggestedFix fix = new SuggestedFix();    
+    SuggestedFix fix = new SuggestedFix();
     JCClassDecl cls = (JCClassDecl) EnclosingClass.findEnclosingClass(state);
-    
+
     if ((cls.getModifiers().flags & ENUM) != 0) {
       /* If the enclosing class is an enum, then just delete the equals method since enums
        * should always be compared for reference equality. Enum defines a final equals method for
@@ -107,7 +101,7 @@ public class CovariantEquals extends DescribingMatcher<MethodTree> {
       /* Otherwise, change the covariant equals method to override Object.equals. */
       JCTree parameterType = (JCTree) methodTree.getParameters().get(0).getType();
       Name parameterName = ((JCVariableDecl) methodTree.getParameters().get(0)).getName();
-      
+
       // Add @Override annotation if not present.
       boolean hasOverrideAnnotation = false;
       List<JCAnnotation> annotations = ((JCMethodDecl) methodTree).getModifiers().getAnnotations();
@@ -119,24 +113,24 @@ public class CovariantEquals extends DescribingMatcher<MethodTree> {
       if (!hasOverrideAnnotation) {
         fix.prefixWith(methodTree, "@Override\n");
       }
-      
+
       // Change method signature, substituting Object for parameter type.
       fix.replace(parameterType, "Object");
-      
+
       // Add type check at start of method body.
       String typeCheckStmt = "if (!(" + parameterName + " instanceof " + parameterType + ")) {\n"
           + "  return false;\n"
           + "}\n";
       fix.prefixWith(methodTree.getBody().getStatements().get(0), typeCheckStmt);
-      
+
       // Cast all uses of the parameter name using a recursive TreeScanner.
-      new CastScanner().scan(methodTree.getBody(), new CastState(parameterName, 
+      new CastScanner().scan(methodTree.getBody(), new CastState(parameterName,
           parameterType.toString(), fix));
     }
-      
+
     return new Description(methodTree, diagnosticMessage, fix);
   }
-  
+
   public static class Scanner extends com.google.errorprone.Scanner {
     private CovariantEquals matcher = new CovariantEquals();
 
@@ -146,19 +140,19 @@ public class CovariantEquals extends DescribingMatcher<MethodTree> {
       return super.visitMethod(node, visitorState);
     }
   }
-  
+
   private static class CastState {
     Name name;
     String castToType;
     SuggestedFix fix;
-    
+
     public CastState(Name name, String castToType, SuggestedFix fix) {
       this.name = name;
       this.castToType = castToType;
       this.fix = fix;
     }
   }
-  
+
   /**
    * A Scanner used to replace all references to a variable with
    * a casted version.
@@ -169,7 +163,7 @@ public class CovariantEquals extends DescribingMatcher<MethodTree> {
       if (state.name.equals(node.getName())) {
         state.fix.replace(node, "((" + state.castToType + ") " + state.name + ")");
       }
-      
+
       return super.visitIdentifier(node, state);
     }
   }

@@ -16,55 +16,37 @@
 
 package com.google.errorprone.bugpatterns.dead_exception;
 
-import com.google.errorprone.DiagnosticTestHelper;
-import com.google.errorprone.ErrorProneCompiler;
-import org.hamcrest.Matcher;
+import com.google.errorprone.CompilationHelper;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.tools.Diagnostic;
-import javax.tools.JavaFileObject;
 import java.io.File;
-
-import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
-import static com.google.errorprone.DiagnosticTestHelper.suggestsRemovalOfLine;
-import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.internal.matchers.StringContains.containsString;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class DeadExceptionTest {
-  private ErrorProneCompiler compiler;
-  private DiagnosticTestHelper diagnosticHelper;
+
+  private CompilationHelper compilationHelper;
 
   @Before
   public void setUp() {
-    diagnosticHelper = new DiagnosticTestHelper();
-    compiler = new ErrorProneCompiler.Builder()
-        .report(new DeadException.Scanner())
-        .listenToDiagnostics(diagnosticHelper.collector)
-        .build();
+    compilationHelper = new CompilationHelper(new DeadException.Scanner());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    File source = new File(this.getClass().getResource("PositiveCases.java").toURI());
-    assertThat(compiler.compile(new String[]{"-Xjcov", source.getAbsolutePath()}), is(1));
-    Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher = allOf(
-        hasItem(suggestsRemovalOfLine(24)),
-        hasItem(diagnosticMessage(containsString("Did you mean 'throw new InterruptedException"))),
-        hasItem(diagnosticMessage(containsString("Did you mean 'throw new RuntimeException"))),
-        hasItem(diagnosticMessage(containsString("Did you mean 'throw new ArithmeticException"))));
-    assertThat("In diagnostics: " + diagnosticHelper.getDiagnostics(),
-        diagnosticHelper.getDiagnostics(), matcher);
+    compilationHelper.assertCompileFailsDiffMessages(
+        new File(this.getClass().getResource("PositiveCases.java").toURI()),
+        "Did you mean 'throw new RuntimeException",
+        "Did you mean",
+        "Did you mean 'throw new InterruptedException",
+        "Did you mean 'throw new ArithmeticException");
   }
 
   @Test public void testNegativeCase() throws Exception {
-    File source = new File(this.getClass().getResource("NegativeCases.java").toURI());
-    assertThat(compiler.compile(new String[]{source.getAbsolutePath()}), is(0));
+    compilationHelper.assertCompileSucceeds(
+        new File(this.getClass().getResource("NegativeCases.java").toURI()));
   }
 }

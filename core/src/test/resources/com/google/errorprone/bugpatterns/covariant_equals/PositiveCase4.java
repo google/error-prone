@@ -20,7 +20,7 @@ public enum PositiveCase4 {
   NEPTUNE,
   PLUTO;   // I don't care what they say, Pluto *is* a planet.
   
-  public boolean equals(PositiveCase4 other) {
+  public boolean equals(PositiveCase4 other) {  //BUG
     return this == other;
   }
 }
