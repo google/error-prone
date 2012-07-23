@@ -107,4 +107,11 @@ public @interface BugPattern {
     EXPERIMENTAL,
     PROPOSED,
   }
+
+  public class Instance {
+    public String name;
+    public String summary;
+    public String altNames;
+    public MaturityLevel maturity;
+  }
 }
