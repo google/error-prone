@@ -112,13 +112,22 @@ public class SuggestedFix {
     nodeSwaps.add(new Pair<Tree, Tree>(node1, node2));
     return this;
   }
-  
+
   /**
    * Add an import statement as part of this SuggestedFix.
-   * Import string should be of the form "import [static] foo.bar.baz".
+   * Import string should be of the form "foo.bar.baz".
    */
   public SuggestedFix addImport(String importString) {
-    importsToAdd.add(importString);
+    importsToAdd.add("import " + importString);
+    return this;
+  }
+
+  /**
+   * Add a static import statement as part of this SuggestedFix.
+   * Import string should be of the form "foo.bar.baz".
+   */
+  public SuggestedFix addStaticImport(String importString) {
+    importsToAdd.add("import static " + importString);
     return this;
   }
 
@@ -130,11 +139,11 @@ public class SuggestedFix {
     importsToRemove.add(importString);
     return this;
   }
-  
+
   public Collection<String> getImportsToAdd() {
     return importsToAdd;
   }
-  
+
   public Collection<String> getImportsToRemove() {
     return importsToRemove;
   }

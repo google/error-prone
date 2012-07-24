@@ -57,7 +57,7 @@ public class ArrayEquals extends DescribingMatcher<MethodInvocationTree> {
     String arg = t.getArguments().get(0).toString();
     SuggestedFix fix = new SuggestedFix()
         .replace(t, "Arrays.equals(" + receiver + ", " + arg + ")")
-        .addImport("import java.util.Arrays");
+        .addImport("java.util.Arrays");
     return new Description(t, diagnosticMessage, fix);
   }
 
