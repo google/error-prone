@@ -16,7 +16,7 @@
 
 package com.google.errorprone.bugpatterns.array_equals;
 
-import com.google.errorprone.CompilationHelper;
+import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -28,16 +28,16 @@ import java.io.File;
  */
 public class ArrayEqualsTest {
 
-  private CompilationHelper compilationHelper;
+  private CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationHelper(new ArrayEquals.Scanner());
+    compilationHelper = new CompilationTestHelper(new ArrayEquals.Scanner());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsDiffMessages(
+    compilationHelper.assertCompileFailsWithMessages(
         new File(this.getClass().getResource("PositiveCases.java").toURI()),
         "Did you mean 'if (Arrays.equals(a, b)) {",
         "Did you mean 'if (Arrays.equals(a, b)) {",

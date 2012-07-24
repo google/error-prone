@@ -16,7 +16,7 @@
 
 package com.google.errorprone.bugpatterns.dead_exception;
 
-import com.google.errorprone.CompilationHelper;
+import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -28,16 +28,16 @@ import java.io.File;
  */
 public class DeadExceptionTest {
 
-  private CompilationHelper compilationHelper;
+  private CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationHelper(new DeadException.Scanner());
+    compilationHelper = new CompilationTestHelper(new DeadException.Scanner());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsDiffMessages(
+    compilationHelper.assertCompileFailsWithMessages(
         new File(this.getClass().getResource("PositiveCases.java").toURI()),
         "Did you mean 'throw new RuntimeException",
         "Did you mean",

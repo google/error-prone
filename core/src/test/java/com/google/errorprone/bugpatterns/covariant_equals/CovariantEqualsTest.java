@@ -16,7 +16,7 @@
 
 package com.google.errorprone.bugpatterns.covariant_equals;
 
-import com.google.errorprone.CompilationHelper;
+import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -28,37 +28,37 @@ import java.io.File;
  */
 public class CovariantEqualsTest {
 
-  private CompilationHelper compilationHelper;
+  private CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationHelper(new CovariantEquals.Scanner());
+    compilationHelper = new CompilationTestHelper(new CovariantEquals.Scanner());
   }
 
   @Test
   public void testPositiveCase1() throws Exception {
-    compilationHelper.assertCompileFailsDiffMessages(
+    compilationHelper.assertCompileFailsWithMessages(
         new File(this.getClass().getResource("PositiveCase1.java").toURI()),
         "Did you mean '@Override");
   }
 
   @Test
   public void testPositiveCase2() throws Exception {
-    compilationHelper.assertCompileFailsDiffMessages(
+    compilationHelper.assertCompileFailsWithMessages(
         new File(this.getClass().getResource("PositiveCase2.java").toURI()),
         "Did you mean '@Override");
   }
 
   @Test
   public void testPositiveCase3() throws Exception {
-    compilationHelper.assertCompileFailsDiffMessages(
+    compilationHelper.assertCompileFailsWithMessages(
         new File(this.getClass().getResource("PositiveCase3.java").toURI()),
         "Did you mean '@Override");
   }
 
   @Test
   public void testPositiveCase4() throws Exception {
-    compilationHelper.assertCompileFailsDiffMessages(
+    compilationHelper.assertCompileFailsWithMessages(
         new File(this.getClass().getResource("PositiveCase4.java").toURI()),
         "Did you mean to remove this line");
   }

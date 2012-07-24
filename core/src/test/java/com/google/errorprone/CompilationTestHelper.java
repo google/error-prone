@@ -28,12 +28,12 @@ import java.io.IOException;
  * Utility class for tests that need to build using error-prone.
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class CompilationHelper {
+public class CompilationTestHelper {
 
   private DiagnosticTestHelper diagnosticHelper;
   private ErrorProneCompiler compiler;
 
-  public CompilationHelper(Scanner scanner) {
+  public CompilationTestHelper(Scanner scanner) {
     diagnosticHelper = new DiagnosticTestHelper();
     compiler = new ErrorProneCompiler.Builder()
         .report(scanner)
@@ -50,7 +50,7 @@ public class CompilationHelper {
    * expectedMessages should match (in order).  The number of expectedMessages should match the
    * number of lines in the file that have been tagged with //BUG.
    */
-  public void assertCompileFailsDiffMessages(File source, String... expectedMessages) throws IOException {
+  public void assertCompileFailsWithMessages(File source, String... expectedMessages) throws IOException {
     assertThat(compiler.compile(new String[]{"-Xjcov", source.getAbsolutePath()}), is(1));
     assertThat(diagnosticHelper.getDiagnostics(),
         hasDiagnosticOnAllMatchingLines(source, compile(".*//BUG\\s*$"), expectedMessages));
@@ -60,7 +60,7 @@ public class CompilationHelper {
    * Assert that the compilation fails, and every line that contains the //BUG pattern produces
    * an error message that matches the one given.
    */
-  public void assertCompileFailsSameMessage(File source, String expectedMessage) throws IOException {
+  public void assertCompileFailsWithSameMessage(File source, String expectedMessage) throws IOException {
     assertThat(compiler.compile(new String[]{"-Xjcov", source.getAbsolutePath()}), is(1));
     assertThat(diagnosticHelper.getDiagnostics(),
         hasDiagnosticOnAllMatchingLines(source, compile(".*//BUG\\s*$"), expectedMessage));

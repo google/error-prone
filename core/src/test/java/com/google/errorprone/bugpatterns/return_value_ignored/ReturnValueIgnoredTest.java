@@ -16,7 +16,7 @@
 
 package com.google.errorprone.bugpatterns.return_value_ignored;
 
-import com.google.errorprone.CompilationHelper;
+import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.bugpatterns.return_value_ignored.ReturnValueIgnored;
 
 import org.junit.Before;
@@ -29,16 +29,16 @@ import java.io.File;
  */
 public class ReturnValueIgnoredTest {
 
-  private CompilationHelper compilationHelper;
+  private CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationHelper(new ReturnValueIgnored.Scanner());
+    compilationHelper = new CompilationTestHelper(new ReturnValueIgnored.Scanner());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsSameMessage(
+    compilationHelper.assertCompileFailsWithSameMessage(
         new File(this.getClass().getResource("PositiveCases.java").toURI()),
         "[ReturnValueIgnored] Ignored return value of method which has no side-effect");
   }

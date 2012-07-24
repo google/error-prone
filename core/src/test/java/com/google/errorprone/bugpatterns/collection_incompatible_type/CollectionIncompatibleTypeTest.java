@@ -16,7 +16,7 @@
 
 package com.google.errorprone.bugpatterns.collection_incompatible_type;
 
-import com.google.errorprone.CompilationHelper;
+import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.bugpatterns.collection_incompatible_type.CollectionIncompatibleType;
 
 import org.junit.Before;
@@ -29,16 +29,16 @@ import java.io.File;
  */
 public class CollectionIncompatibleTypeTest {
 
-  private CompilationHelper compilationHelper;
+  private CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationHelper(new CollectionIncompatibleType.Scanner());
+    compilationHelper = new CompilationTestHelper(new CollectionIncompatibleType.Scanner());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsSameMessage(
+    compilationHelper.assertCompileFailsWithSameMessage(
         new File(this.getClass().getResource("PositiveCases.java").toURI()),
         "Did you mean 'return false;");
   }

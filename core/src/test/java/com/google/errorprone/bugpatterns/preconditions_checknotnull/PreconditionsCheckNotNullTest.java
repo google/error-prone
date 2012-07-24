@@ -16,7 +16,7 @@
 
 package com.google.errorprone.bugpatterns.preconditions_checknotnull;
 
-import com.google.errorprone.CompilationHelper;
+import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -28,16 +28,16 @@ import java.io.File;
  */
 public class PreconditionsCheckNotNullTest {
 
-  private CompilationHelper compilationHelper;
+  private CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationHelper(new PreconditionsCheckNotNull.Scanner());
+    compilationHelper = new CompilationTestHelper(new PreconditionsCheckNotNull.Scanner());
   }
 
   @Test
   public void testPositiveCase1() throws Exception {
-    compilationHelper.assertCompileFailsDiffMessages(
+    compilationHelper.assertCompileFailsWithMessages(
         new File(this.getClass().getResource("PositiveCase1.java").toURI()),
         "Did you mean '",
         "Did you mean 'Preconditions.checkNotNull(thing, \"thing is null\")",
@@ -49,7 +49,7 @@ public class PreconditionsCheckNotNullTest {
 
   @Test
   public void testPositiveCase2() throws Exception {
-    compilationHelper.assertCompileFailsDiffMessages(
+    compilationHelper.assertCompileFailsWithMessages(
         new File(this.getClass().getResource("PositiveCase2.java").toURI()),
         "Did you mean '");
   }
