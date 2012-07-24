@@ -16,19 +16,19 @@
 
 package com.google.errorprone;
 
-import com.google.errorprone.bugpatterns.array_equals.ArrayEquals;
-import com.google.errorprone.bugpatterns.collection_incompatible_type.CollectionIncompatibleType;
-import com.google.errorprone.bugpatterns.covariant_equals.CovariantEquals;
-import com.google.errorprone.bugpatterns.dead_exception.DeadException;
-import com.google.errorprone.bugpatterns.empty_if_statement.EmptyIfStatement;
-import com.google.errorprone.bugpatterns.emptystatement.EmptyStatement;
-import com.google.errorprone.bugpatterns.fallthroughsuppression.FallThroughSuppression;
-import com.google.errorprone.bugpatterns.objects_equal_self_comparison.ObjectsEqualSelfComparison;
-import com.google.errorprone.bugpatterns.orderingfrom.OrderingFrom;
-import com.google.errorprone.bugpatterns.preconditions_checknotnull.PreconditionsCheckNotNull;
-import com.google.errorprone.bugpatterns.preconditionschecknotnullprimitive1starg.PreconditionsCheckNotNullPrimitive1stArg;
-import com.google.errorprone.bugpatterns.preconditionsexpensivestring.PreconditionsExpensiveString;
-import com.google.errorprone.bugpatterns.selfassignment.SelfAssignment;
+import com.google.errorprone.bugpatterns.ArrayEquals;
+import com.google.errorprone.bugpatterns.CollectionIncompatibleType;
+import com.google.errorprone.bugpatterns.CovariantEquals;
+import com.google.errorprone.bugpatterns.DeadException;
+import com.google.errorprone.bugpatterns.EmptyIfStatement;
+import com.google.errorprone.bugpatterns.EmptyStatement;
+import com.google.errorprone.bugpatterns.FallThroughSuppression;
+import com.google.errorprone.bugpatterns.ObjectsEqualSelfComparison;
+import com.google.errorprone.bugpatterns.OrderingFrom;
+import com.google.errorprone.bugpatterns.PreconditionsCheckNotNull;
+import com.google.errorprone.bugpatterns.PreconditionsCheckNotNullPrimitive1stArg;
+import com.google.errorprone.bugpatterns.PreconditionsExpensiveString;
+import com.google.errorprone.bugpatterns.SelfAssignment;
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.sun.source.tree.*;
 
