@@ -38,33 +38,30 @@ public class PreconditionsCheckNotNullTest {
 
   @Test
   public void testPositiveCase1() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("PreconditionsCheckNotNullPositiveCase1.java").toURI()),
-        "Did you mean '",
-        "Did you mean 'Preconditions.checkNotNull(thing, \"thing is null\")",
-        // TODO(eaftan): This last case has a bug where the replacement is incorrect.  Uncomment
-        // to see what it should do.
-        //"Did you mean 'Preconditions.checkNotNull(thing, \"a string literal that\'s got two parts\"");
-        "Did you mean 'Preconditions.checkNotNull(");
+    compilationHelper.assertCompileFails(
+        new File(this.getClass().getResource(
+            "PreconditionsCheckNotNullPositiveCase1.java").toURI()));
   }
 
   @Test
   public void testPositiveCase2() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("PreconditionsCheckNotNullPositiveCase2.java").toURI()),
-        "Did you mean '");
+    compilationHelper.assertCompileFails(
+        new File(this.getClass().getResource(
+            "PreconditionsCheckNotNullPositiveCase2.java").toURI()));
   }
 
   @Test
   public void testNegativeCase1() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("PreconditionsCheckNotNullNegativeCase1.java").toURI()));
+        new File(this.getClass().getResource(
+            "PreconditionsCheckNotNullNegativeCase1.java").toURI()));
   }
 
   @Test
   public void testNegativeCase2() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("PreconditionsCheckNotNullNegativeCase2.java").toURI()));
+        new File(this.getClass().getResource(
+            "PreconditionsCheckNotNullNegativeCase2.java").toURI()));
   }
 
 }

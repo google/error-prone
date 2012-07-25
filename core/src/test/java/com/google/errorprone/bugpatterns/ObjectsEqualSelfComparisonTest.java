@@ -38,15 +38,16 @@ public class ObjectsEqualSelfComparisonTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("ObjectsEqualSelfComparisonPositiveCases.java").toURI()),
-        "Did you mean 'return Objects.equal(field, other.field)");
+    compilationHelper.assertCompileFails(
+        new File(this.getClass().getResource(
+            "ObjectsEqualSelfComparisonPositiveCases.java").toURI()));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("ObjectsEqualSelfComparisonNegativeCases.java").toURI()));
+        new File(this.getClass().getResource(
+            "ObjectsEqualSelfComparisonNegativeCases.java").toURI()));
   }
 
 }

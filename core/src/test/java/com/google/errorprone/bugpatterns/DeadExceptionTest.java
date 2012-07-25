@@ -38,12 +38,8 @@ public class DeadExceptionTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("DeadExceptionPositiveCases.java").toURI()),
-        "Did you mean 'throw new RuntimeException",
-        "Did you mean",
-        "Did you mean 'throw new InterruptedException",
-        "Did you mean 'throw new ArithmeticException");
+    compilationHelper.assertCompileFails(
+        new File(this.getClass().getResource("DeadExceptionPositiveCases.java").toURI()));
   }
 
   @Test public void testNegativeCase() throws Exception {

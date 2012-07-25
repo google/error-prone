@@ -38,6 +38,7 @@ public class ArrayEqualsTest {
 
   @Test
   public void testPositiveCase() throws Exception {
+    /*
     compilationHelper.assertCompileFailsWithMessages(
         new File(this.getClass().getResource("ArrayEqualsPositiveCases.java").toURI()),
         "Did you mean 'if (Arrays.equals(a, b)) {",
@@ -45,6 +46,9 @@ public class ArrayEqualsTest {
         "Did you mean 'if (Arrays.equals(s.toCharArray(), b)) {",
         "Did you mean 'if (Arrays.equals(a, s.toCharArray())) {",
         "Did you mean 'if (Arrays.equals(s1.toCharArray(), s2.toCharArray())) {");
+    */
+    compilationHelper.assertCompileFails(
+        new File(this.getClass().getResource("ArrayEqualsPositiveCases.java").toURI()));
   }
 
   @Test

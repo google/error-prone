@@ -44,7 +44,7 @@ public class AppliedFix {
   public CharSequence getNewCodeSnippet() {
     return snippet;
   }
-  
+
   public boolean isRemoveLine() {
     return isRemoveLine;
   }
@@ -87,6 +87,10 @@ public class AppliedFix {
         }
         // TODO: this is over-simplified; need a failing test case
         snippet = lineNumberReader.readLine().trim();
+        // snip comment from line
+        if (snippet.contains("//")) {
+          snippet = snippet.substring(0, snippet.indexOf("//")).trim();
+        }
         if (snippet.isEmpty()) {
           isRemoveLine = true;
           snippet = "to remove this line";

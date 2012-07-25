@@ -22,7 +22,7 @@ package com.google.errorprone.bugpatterns;
 public class CovariantEqualsPositiveCase2 {
   int i, j, k;
   
-  public boolean equals(CovariantEqualsPositiveCase2 other) {  //BUG
+  public boolean equals(CovariantEqualsPositiveCase2 other) {  //BUG("Did you mean '@Override'")
     if (i == other.i && j == other.j && k == other.k) {
       return true;
     }

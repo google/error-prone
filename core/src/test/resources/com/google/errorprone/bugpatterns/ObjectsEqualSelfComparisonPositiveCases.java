@@ -33,7 +33,7 @@ public class ObjectsEqualSelfComparisonPositiveCases {
       return false;
     }
     ObjectsEqualSelfComparisonPositiveCases other = (ObjectsEqualSelfComparisonPositiveCases)o;
-    return Objects.equal(field, field); //BUG
+    return Objects.equal(field, field); //BUG("Objects.equal(field, other.field)")
   }
 
   @Override

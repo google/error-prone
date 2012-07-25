@@ -38,9 +38,8 @@ public class ReturnValueIgnoredTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithSameMessage(
-        new File(this.getClass().getResource("ReturnValueIgnoredPositiveCases.java").toURI()),
-        "[ReturnValueIgnored] Ignored return value of method which has no side-effect");
+    compilationHelper.assertCompileFails(
+        new File(this.getClass().getResource("ReturnValueIgnoredPositiveCases.java").toURI()));
   }
 
   @Test

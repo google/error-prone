@@ -38,13 +38,8 @@ public class EmptyIfStatementTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("EmptyIfStatementPositiveCases.java").toURI()),
-        "Did you mean 'if (i == 10)",
-        "Did you mean 'if (i == 10)",
-        "Did you mean ",
-        "Did you mean ",
-        "Did you mean ");
+    compilationHelper.assertCompileFails(
+        new File(this.getClass().getResource("EmptyIfStatementPositiveCases.java").toURI()));
   }
 
   @Test

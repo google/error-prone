@@ -34,7 +34,7 @@ public enum CovariantEqualsPositiveCase4 {
   NEPTUNE,
   PLUTO;   // I don't care what they say, Pluto *is* a planet.
   
-  public boolean equals(CovariantEqualsPositiveCase4 other) {  //BUG
+  public boolean equals(CovariantEqualsPositiveCase4 other) {  //BUG("remove this line")
     return this == other;
   }
 }

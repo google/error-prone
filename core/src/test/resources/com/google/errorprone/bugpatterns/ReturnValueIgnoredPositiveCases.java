@@ -26,36 +26,36 @@ import java.util.Locale;
 public class ReturnValueIgnoredPositiveCases {
   String a = "thing";
   { // String methods
-    a.intern(); //BUG
-    a.trim(); //BUG
-    a.trim().concat("b"); //BUG
-    a.concat("append this"); //BUG
-    a.replace('t', 'b'); //BUG
-    a.replace("thi", "fli"); //BUG
-    a.replaceAll("i", "b"); //BUG
-    a.replaceFirst("a", "b"); //BUG
-    a.toLowerCase(); //BUG
-    a.toLowerCase(Locale.ENGLISH); //BUG
-    a.toUpperCase(); //BUG
-    a.toUpperCase(Locale.ENGLISH); //BUG
-    a.substring(0); //BUG
-    a.substring(0, 1); //BUG
-    a.split("b"); //BUG
-    a.split("b", 1); //BUG
+    a.intern(); //BUG("ReturnValueIgnored")
+    a.trim(); //BUG("ReturnValueIgnored")
+    a.trim().concat("b"); //BUG("ReturnValueIgnored")
+    a.concat("append this"); //BUG("ReturnValueIgnored")
+    a.replace('t', 'b'); //BUG("ReturnValueIgnored")
+    a.replace("thi", "fli"); //BUG("ReturnValueIgnored")
+    a.replaceAll("i", "b"); //BUG("ReturnValueIgnored")
+    a.replaceFirst("a", "b"); //BUG("ReturnValueIgnored")
+    a.toLowerCase(); //BUG("ReturnValueIgnored")
+    a.toLowerCase(Locale.ENGLISH); //BUG("ReturnValueIgnored")
+    a.toUpperCase(); //BUG("ReturnValueIgnored")
+    a.toUpperCase(Locale.ENGLISH); //BUG("ReturnValueIgnored")
+    a.substring(0); //BUG("ReturnValueIgnored")
+    a.substring(0, 1); //BUG("ReturnValueIgnored")
+    a.split("b"); //BUG("ReturnValueIgnored")
+    a.split("b", 1); //BUG("ReturnValueIgnored")
   }
 
   BigInteger b = new BigInteger("123456789");
   { // BigInteger methods
-    b.add(new BigInteger("3")); //BUG
-    b.abs(); //BUG
-    b.shiftLeft(3); //BUG
-    b.subtract(BigInteger.TEN); //BUG
+    b.add(new BigInteger("3")); //BUG("ReturnValueIgnored")
+    b.abs(); //BUG("ReturnValueIgnored")
+    b.shiftLeft(3); //BUG("ReturnValueIgnored")
+    b.subtract(BigInteger.TEN); //BUG("ReturnValueIgnored")
   }
 
   BigDecimal c = new BigDecimal("1234.5678");
   { // BigDecimal methods
-    c.add(new BigDecimal("1.3")); //BUG
-    c.abs(); //BUG
-    c.divide(new BigDecimal("4.5")); //BUG
+    c.add(new BigDecimal("1.3")); //BUG("ReturnValueIgnored")
+    c.abs(); //BUG("ReturnValueIgnored")
+    c.divide(new BigDecimal("4.5")); //BUG("ReturnValueIgnored")
   }
 }

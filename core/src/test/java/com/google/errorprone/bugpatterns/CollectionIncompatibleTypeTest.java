@@ -38,15 +38,16 @@ public class CollectionIncompatibleTypeTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithSameMessage(
-        new File(this.getClass().getResource("CollectionIncompatibleTypePositiveCases.java").toURI()),
-        "Did you mean 'return false;");
+    compilationHelper.assertCompileFails(
+        new File(this.getClass().getResource(
+            "CollectionIncompatibleTypePositiveCases.java").toURI()));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("CollectionIncompatibleTypeNegativeCases.java").toURI()));
+        new File(this.getClass().getResource(
+            "CollectionIncompatibleTypeNegativeCases.java").toURI()));
   }
 
 }

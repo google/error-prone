@@ -20,7 +20,7 @@ package com.google.errorprone.bugpatterns;
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class CovariantEqualsPositiveCase1 {
-  public boolean equals(CovariantEqualsPositiveCase1 other) {  //BUG
+  public boolean equals(CovariantEqualsPositiveCase1 other) {  //BUG("Did you mean '@Override'")
     return false;
   }
 }

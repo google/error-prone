@@ -38,30 +38,26 @@ public class CovariantEqualsTest {
 
   @Test
   public void testPositiveCase1() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("CovariantEqualsPositiveCase1.java").toURI()),
-        "Did you mean '@Override");
+    compilationHelper.assertCompileFails(
+        new File(this.getClass().getResource("CovariantEqualsPositiveCase1.java").toURI()));
   }
 
   @Test
   public void testPositiveCase2() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("CovariantEqualsPositiveCase2.java").toURI()),
-        "Did you mean '@Override");
+    compilationHelper.assertCompileFails(
+        new File(this.getClass().getResource("CovariantEqualsPositiveCase2.java").toURI()));
   }
 
   @Test
   public void testPositiveCase3() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("CovariantEqualsPositiveCase3.java").toURI()),
-        "Did you mean '@Override");
+    compilationHelper.assertCompileFails(
+        new File(this.getClass().getResource("CovariantEqualsPositiveCase3.java").toURI()));
   }
 
   @Test
   public void testPositiveCase4() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("CovariantEqualsPositiveCase4.java").toURI()),
-        "Did you mean to remove this line");
+    compilationHelper.assertCompileFails(
+        new File(this.getClass().getResource("CovariantEqualsPositiveCase4.java").toURI()));
   }
 
   @Test public void testNegativeCase() throws Exception {
