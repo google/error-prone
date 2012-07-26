@@ -34,6 +34,7 @@ import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 import java.io.*;
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Set;
@@ -51,9 +52,9 @@ import static com.google.common.io.Files.readLines;
 @SupportedAnnotationTypes({"com.google.errorprone.BugPattern"})
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class DocGen extends AbstractProcessor {
-  
+
   private PrintWriter pw;
-  
+
   /**
    * {@inheritDoc}
    */
@@ -68,7 +69,7 @@ public class DocGen extends AbstractProcessor {
       throw new RuntimeException(e);
     }
   }
-    
+
   /**
    * {@inheritDoc}
    */
@@ -85,7 +86,7 @@ public class DocGen extends AbstractProcessor {
       pw.print(annotation.summary() + "\t");  //6
       pw.println(annotation.explanation().replace("\n", "\\n"));   //6
     }
-    
+
     if (roundEnv.processingOver()) {
       // this was the last round, do cleanup
       cleanup();
@@ -113,7 +114,7 @@ public class DocGen extends AbstractProcessor {
           ""
       ),
       Locale.ENGLISH);
-  
+
   private static final MessageFormat wikiPageTemplateWithAltNames = new MessageFormat(
       Joiner.on("\n").join(
           "#summary {6}",
@@ -148,14 +149,14 @@ public class DocGen extends AbstractProcessor {
       System.exit(1);
     }
     String indexPage = readLines(bugPatterns, UTF_8, new LineProcessor<String>() {
-      
+
       // store a list of bugpatterns to generate BugPatterns wiki page
       private Multimap<MaturityLevel, BugPattern.Instance> index = ArrayListMultimap.create();
-      
+
       @Override
       public String getResult() {
-        StringBuilder result = new StringBuilder("#summary Bugs caught by error-prone\n"); 
-        // enum.values() returns all the values of the enum in declared order 
+        StringBuilder result = new StringBuilder("#summary Bugs caught by error-prone\n");
+        // enum.values() returns all the values of the enum in declared order
         for (MaturityLevel level : MaturityLevel.values()) {
           Collection<BugPattern.Instance> bugPatterns = index.get(level);
           if (!bugPatterns.isEmpty()) {
@@ -193,10 +194,13 @@ public class DocGen extends AbstractProcessor {
         if (!exampleDir.exists()) {
           System.err.println("Warning: cannot find path " + exampleDir);
         } else {
-          File[] examples = exampleDir.listFiles();
+          // Example filename must contain name of check class.
+          File[] examples = exampleDir.listFiles(new FilenameContainsFilter(
+              parts[0].substring(parts[0].lastIndexOf('.') + 1)));
+          Arrays.sort(examples);
           if (examples.length > 0) {
             writer.write("==Examples==\n");
-  
+
             for (File example: examples) {
               writer.write("===!" + example.getName() + "===\n");
               writer.write("{{{\n" + Files.toString(example, Charsets.UTF_8) + "\n}}}\n");
@@ -207,9 +211,22 @@ public class DocGen extends AbstractProcessor {
         return true;
       }
     });
-    
+
     Writer indexWriter = new FileWriter(new File(wikiDir, "BugPatterns.wiki"));
     indexWriter.write(indexPage);
     indexWriter.close();
+  }
+
+  private static class FilenameContainsFilter implements FilenameFilter {
+    private String mustContain;
+
+    public FilenameContainsFilter(String mustContain) {
+      this.mustContain = mustContain;
+    }
+
+    @Override
+    public boolean accept(File dir, String name) {
+      return name.contains(mustContain);
+    }
   }
 }
