@@ -21,6 +21,8 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
@@ -46,7 +48,7 @@ public class ReturnValueIgnored extends DescribingMatcher<MethodInvocationTree> 
     //TODO: look for JSR305's javax.annotation.CheckReturnValue Annotation
     return allOf(
         parentNode(kindIs(Kind.EXPRESSION_STATEMENT, MethodInvocationTree.class)),
-        methodSelect(anyOf(
+        methodSelect(anyOf(ExpressionTree.class,
             isDescendantOfMethod("java.lang.String", "*"),
             isDescendantOfMethod("java.math.BigDecimal", "*"),
             isDescendantOfMethod("java.math.BigInteger", "*")))
