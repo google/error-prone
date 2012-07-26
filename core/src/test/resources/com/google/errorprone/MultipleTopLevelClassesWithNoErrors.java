@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-public class Foo {
+public class MultipleTopLevelClassesWithNoErrors {
   int foo;
   int bar;
 
-  public Foo(int foo, int bar) {
+  public MultipleTopLevelClassesWithNoErrors(int foo, int bar) {
     this.foo = foo;
     this.bar = bar;
   }

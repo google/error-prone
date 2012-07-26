@@ -17,8 +17,6 @@
 package com.google.errorprone;
 
 import com.sun.source.tree.CompilationUnitTree;
-import com.sun.source.tree.Tree;
-import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Env;
@@ -26,7 +24,8 @@ import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Context.Factory;
 
-import java.util.LinkedList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Queue;
 
 /**
@@ -34,6 +33,13 @@ import java.util.Queue;
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class ErrorReportingJavaCompiler extends JavaCompiler {
+
+  /**
+   * A map of compilation units to the number of classes in that file error-prone has encountered.
+   * TODO(eaftan): is this the best data structure for this?
+   */
+  private Map<CompilationUnitTree, Integer> classDefsEncountered =
+      new HashMap<CompilationUnitTree, Integer>();
 
   public ErrorReportingJavaCompiler(Context context) {
     super(context);
@@ -96,33 +102,25 @@ public class ErrorReportingJavaCompiler extends JavaCompiler {
           "Please report bug to error-prone: " +
           "http://code.google.com/p/error-prone/issues/entry");
     }
-    
-    /* Each env corresponds to a parse tree (I *think* always a top-level
-     * class), not necessarily to a file as we had previously thought.  Here we
-     * walk up the env to generate a TreePath for this parse tree, then scan it.
+
+    /* Each env corresponds to a parse tree (I *think* always a top-level class).  Thus we need
+     * some smarts to know when to scan a compilation unit.
      *
-     * TODO(eaftan): Note that because we are scanning parse trees and not
-     * compilation units, we can never encounter file-level tree nodes, such as
-     * import statements.  Problem?
+     * We keep track of compilation units and the number of enclosed class definitions we've seen.
+     * When we've seen all class definitions for a compilation unit, scan the whole compilation
+     * unit.
      */
-    
-    // create list of Tree nodes from current to top
-    LinkedList<Tree> pathList = new LinkedList<Tree>();
-    Env<AttrContext> envForPath = env;
-    pathList.addFirst(envForPath.tree);
-    while (envForPath.outer != null) {
-      envForPath = envForPath.outer;
-      pathList.addFirst(envForPath.tree);
+    Integer seenCount = classDefsEncountered.get(env.toplevel);
+    if (seenCount == null) {
+      seenCount = 1;
+    } else {
+      seenCount++;
     }
-    
-    // generate TreePath based on list
-    if (!(pathList.element() instanceof CompilationUnitTree)) {
-      throw new IllegalStateException("Expected top of tree to be a compilation unit");
+    classDefsEncountered.put(env.toplevel, seenCount);
+
+    if (seenCount == env.toplevel.getTypeDecls().size()) {
+      scanner.scan(env.toplevel, visitorState);
     }
-    TreePath path = new TreePath((CompilationUnitTree) pathList.remove());
-    for (Tree t : pathList) {
-      path = new TreePath(path, t);
-    }
-    scanner.scan(path, visitorState);
   }
+
 }
