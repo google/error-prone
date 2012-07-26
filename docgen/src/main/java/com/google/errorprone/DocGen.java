@@ -150,18 +150,19 @@ public class DocGen extends AbstractProcessor {
     String indexPage = readLines(bugPatterns, UTF_8, new LineProcessor<String>() {
       
       // store a list of bugpatterns to generate BugPatterns wiki page
-      private Multimap<MaturityLevel, String> index = ArrayListMultimap.create();
+      private Multimap<MaturityLevel, BugPattern.Instance> index = ArrayListMultimap.create();
       
       @Override
       public String getResult() {
         StringBuilder result = new StringBuilder("#summary Bugs caught by error-prone\n"); 
         // enum.values() returns all the values of the enum in declared order 
         for (MaturityLevel level : MaturityLevel.values()) {
-          Collection<String> bugPatterns = index.get(level);
+          Collection<BugPattern.Instance> bugPatterns = index.get(level);
           if (!bugPatterns.isEmpty()) {
-            result.append("==" + level + "==\n");
-            for (String bugPattern : bugPatterns) {
-              result.append("  * [" + bugPattern.replace(' ', '_') + "]\n");
+            result.append("==").append(level.name().toLowerCase().replace("_", " ")).append("==\n");
+            for (BugPattern.Instance bugPattern : bugPatterns) {
+              result.append(String.format("  * [%s]: %s\n",
+                  bugPattern.name.replace(' ', '_'), bugPattern.summary));
             }
           }
         }
@@ -171,15 +172,17 @@ public class DocGen extends AbstractProcessor {
       @Override
       public boolean processLine(String line) throws IOException {
         String[] parts = line.split("\t");
-        String checkName = parts[1];
-        String altnames = parts[2];
-        String maturity = parts[5];
-        index.put(MaturityLevel.valueOf(maturity), checkName);
+        BugPattern.Instance pattern = new BugPattern.Instance();
+        pattern.name = parts[1];
+        pattern.altNames = parts[2];
+        pattern.maturity = MaturityLevel.valueOf(parts[5]);
+        pattern.summary = parts[6];
+        index.put(pattern.maturity, pattern);
         // replace spaces in filename with underscores
-        Writer writer = new FileWriter(new File(wikiDir, checkName.replace(' ', '_') + ".wiki"));
+        Writer writer = new FileWriter(new File(wikiDir, pattern.name.replace(' ', '_') + ".wiki"));
         // replace "\n" with a carriage return for explanation
         parts[7] = parts[7].replace("\\n", "\n");
-        if (altnames.length() <= 0) {
+        if (pattern.altNames.length() <= 0) {
           writer.write(wikiPageTemplate.format(parts));
         } else {
           writer.write(wikiPageTemplateWithAltNames.format(parts));
