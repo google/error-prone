@@ -170,7 +170,7 @@ public class DiagnosticTestHelper {
    * @return a Hamcrest matcher
    */
   public static Matcher<Iterable<Diagnostic<? extends JavaFileObject>>>
-  hasDiagnosticOnAllMatchingLines1(final File source) throws IOException {
+  hasDiagnosticOnAllMatchingLines(final File source) throws IOException {
     List<Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>>> matchers =
         new ArrayList<Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>>>();
 

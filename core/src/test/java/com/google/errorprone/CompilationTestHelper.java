@@ -16,7 +16,7 @@
 
 package com.google.errorprone;
 
-import static com.google.errorprone.DiagnosticTestHelper.hasDiagnosticOnAllMatchingLines1;
+import static com.google.errorprone.DiagnosticTestHelper.hasDiagnosticOnAllMatchingLines;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -45,12 +45,13 @@ public class CompilationTestHelper {
   }
 
   /**
-   * TODO(eaftan): javadoc
+   * Assert that the compile fails, and that for each line of the test file that contains
+   * the pattern //BUG("foo"), the diagnostic at that line contains "foo".
    */
   public void assertCompileFails(File source) throws IOException {
     assertThat(compiler.compile(new String[]{"-Xjcov", source.getAbsolutePath()}), is(1));
     assertThat(diagnosticHelper.getDiagnostics(),
-        hasDiagnosticOnAllMatchingLines1(source));
+        hasDiagnosticOnAllMatchingLines(source));
   }
 
 }
