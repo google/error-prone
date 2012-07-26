@@ -57,7 +57,7 @@ public class ErrorFindingCompilerIntegrationTest {
         .listenToDiagnostics(diagnosticHelper.collector)
         .build();
     int exitCode = compiler.compile(sources(
-        "com/google/errorprone/bugpatterns/empty_if_statement/PositiveCases.java"));
+        "com/google/errorprone/bugpatterns/EmptyIfStatementPositiveCases.java"));
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(1));
 
@@ -66,7 +66,7 @@ public class ErrorFindingCompilerIntegrationTest {
     assertThat("Warning should be found. " + diagnosticHelper.describe(),
         diagnosticHelper.getDiagnostics(), matcher);
   }
-  
+
   @Test
   public void testShouldSucceedCompileSourceFileWithMultipleTopLevelClasses() throws Exception {
     ErrorProneCompiler compiler = new ErrorProneCompiler.Builder()

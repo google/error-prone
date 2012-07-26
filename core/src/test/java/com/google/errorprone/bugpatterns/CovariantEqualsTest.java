@@ -38,25 +38,25 @@ public class CovariantEqualsTest {
 
   @Test
   public void testPositiveCase1() throws Exception {
-    compilationHelper.assertCompileFails(
+    compilationHelper.assertCompileFailsWithMessages(
         new File(this.getClass().getResource("CovariantEqualsPositiveCase1.java").toURI()));
   }
 
   @Test
   public void testPositiveCase2() throws Exception {
-    compilationHelper.assertCompileFails(
+    compilationHelper.assertCompileFailsWithMessages(
         new File(this.getClass().getResource("CovariantEqualsPositiveCase2.java").toURI()));
   }
 
   @Test
   public void testPositiveCase3() throws Exception {
-    compilationHelper.assertCompileFails(
+    compilationHelper.assertCompileFailsWithMessages(
         new File(this.getClass().getResource("CovariantEqualsPositiveCase3.java").toURI()));
   }
 
   @Test
   public void testPositiveCase4() throws Exception {
-    compilationHelper.assertCompileFails(
+    compilationHelper.assertCompileFailsWithMessages(
         new File(this.getClass().getResource("CovariantEqualsPositiveCase4.java").toURI()));
   }
 

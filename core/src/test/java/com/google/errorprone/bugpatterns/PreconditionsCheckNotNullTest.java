@@ -38,14 +38,14 @@ public class PreconditionsCheckNotNullTest {
 
   @Test
   public void testPositiveCase1() throws Exception {
-    compilationHelper.assertCompileFails(
+    compilationHelper.assertCompileFailsWithMessages(
         new File(this.getClass().getResource(
             "PreconditionsCheckNotNullPositiveCase1.java").toURI()));
   }
 
   @Test
   public void testPositiveCase2() throws Exception {
-    compilationHelper.assertCompileFails(
+    compilationHelper.assertCompileFailsWithMessages(
         new File(this.getClass().getResource(
             "PreconditionsCheckNotNullPositiveCase2.java").toURI()));
   }

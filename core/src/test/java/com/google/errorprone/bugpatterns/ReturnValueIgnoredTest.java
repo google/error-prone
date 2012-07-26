@@ -38,7 +38,7 @@ public class ReturnValueIgnoredTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFails(
+    compilationHelper.assertCompileFailsWithMessages(
         new File(this.getClass().getResource("ReturnValueIgnoredPositiveCases.java").toURI()));
   }
 

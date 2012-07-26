@@ -38,7 +38,7 @@ public class DeadExceptionTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFails(
+    compilationHelper.assertCompileFailsWithMessages(
         new File(this.getClass().getResource("DeadExceptionPositiveCases.java").toURI()));
   }
 

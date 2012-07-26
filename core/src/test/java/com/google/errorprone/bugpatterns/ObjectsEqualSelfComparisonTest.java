@@ -38,7 +38,7 @@ public class ObjectsEqualSelfComparisonTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFails(
+    compilationHelper.assertCompileFailsWithMessages(
         new File(this.getClass().getResource(
             "ObjectsEqualSelfComparisonPositiveCases.java").toURI()));
   }

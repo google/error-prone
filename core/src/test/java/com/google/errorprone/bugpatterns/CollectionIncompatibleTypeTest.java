@@ -38,7 +38,7 @@ public class CollectionIncompatibleTypeTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFails(
+    compilationHelper.assertCompileFailsWithMessages(
         new File(this.getClass().getResource(
             "CollectionIncompatibleTypePositiveCases.java").toURI()));
   }

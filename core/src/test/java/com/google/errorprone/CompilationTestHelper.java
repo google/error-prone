@@ -48,7 +48,7 @@ public class CompilationTestHelper {
    * Assert that the compile fails, and that for each line of the test file that contains
    * the pattern //BUG("foo"), the diagnostic at that line contains "foo".
    */
-  public void assertCompileFails(File source) throws IOException {
+  public void assertCompileFailsWithMessages(File source) throws IOException {
     assertThat(compiler.compile(new String[]{"-Xjcov", source.getAbsolutePath()}), is(1));
     assertThat(diagnosticHelper.getDiagnostics(),
         hasDiagnosticOnAllMatchingLines(source));

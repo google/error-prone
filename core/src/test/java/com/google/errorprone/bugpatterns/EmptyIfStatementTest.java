@@ -38,7 +38,7 @@ public class EmptyIfStatementTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFails(
+    compilationHelper.assertCompileFailsWithMessages(
         new File(this.getClass().getResource("EmptyIfStatementPositiveCases.java").toURI()));
   }
 
