@@ -103,8 +103,9 @@ public class ErrorReportingJavaCompiler extends JavaCompiler {
           "http://code.google.com/p/error-prone/issues/entry");
     }
 
-    /* Each env corresponds to a parse tree (I *think* always a top-level class).  Thus we need
-     * some smarts to know when to scan a compilation unit.
+    /* Each env corresponds to a top-level class but not necessarily a single compilation unit.
+     * We want to scan a compilation unit all at once so that we see the file-level nodes like
+     * imports and package declarations.
      *
      * We keep track of compilation units and the number of enclosed class definitions we've seen.
      * When we've seen all class definitions for a compilation unit, scan the whole compilation
@@ -120,6 +121,8 @@ public class ErrorReportingJavaCompiler extends JavaCompiler {
 
     if (seenCount == env.toplevel.getTypeDecls().size()) {
       scanner.scan(env.toplevel, visitorState);
+      // Remove compilation unit from map so it can be garbage collected.
+      classDefsEncountered.remove(env.toplevel);
     }
   }
 
