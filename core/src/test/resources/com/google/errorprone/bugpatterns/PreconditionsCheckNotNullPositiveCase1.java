@@ -20,9 +20,12 @@ import com.google.common.base.Preconditions;
 
 public class PreconditionsCheckNotNullPositiveCase1 {
   public void error() {
-    Preconditions.checkNotNull("string literal");   //BUG("remove this line")
+    //BUG: Suggestion includes "remove this line"
+    Preconditions.checkNotNull("string literal");
     String thing = null;
-    Preconditions.checkNotNull("thing is null", thing);     //BUG("(thing, ")
-    Preconditions.checkNotNull("a string literal " + "that's got two parts", thing);    //BUG("")
+    //BUG: Suggestion includes "(thing, "
+    Preconditions.checkNotNull("thing is null", thing);
+    //BUG: Suggestion includes ""
+    Preconditions.checkNotNull("a string literal " + "that's got two parts", thing);
   }
 }

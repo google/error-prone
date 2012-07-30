@@ -26,36 +26,59 @@ import java.util.Locale;
 public class ReturnValueIgnoredPositiveCases {
   String a = "thing";
   { // String methods
-    a.intern(); //BUG("ReturnValueIgnored")
-    a.trim(); //BUG("ReturnValueIgnored")
-    a.trim().concat("b"); //BUG("ReturnValueIgnored")
-    a.concat("append this"); //BUG("ReturnValueIgnored")
-    a.replace('t', 'b'); //BUG("ReturnValueIgnored")
-    a.replace("thi", "fli"); //BUG("ReturnValueIgnored")
-    a.replaceAll("i", "b"); //BUG("ReturnValueIgnored")
-    a.replaceFirst("a", "b"); //BUG("ReturnValueIgnored")
-    a.toLowerCase(); //BUG("ReturnValueIgnored")
-    a.toLowerCase(Locale.ENGLISH); //BUG("ReturnValueIgnored")
-    a.toUpperCase(); //BUG("ReturnValueIgnored")
-    a.toUpperCase(Locale.ENGLISH); //BUG("ReturnValueIgnored")
-    a.substring(0); //BUG("ReturnValueIgnored")
-    a.substring(0, 1); //BUG("ReturnValueIgnored")
-    a.split("b"); //BUG("ReturnValueIgnored")
-    a.split("b", 1); //BUG("ReturnValueIgnored")
+    //BUG: Suggestion includes "ReturnValueIgnored"
+    a.intern();
+    //BUG: Suggestion includes "ReturnValueIgnored"
+    a.trim();
+    //BUG: Suggestion includes "ReturnValueIgnored"
+    a.trim().concat("b");
+    //BUG: Suggestion includes "ReturnValueIgnored"
+    a.concat("append this");
+    //BUG: Suggestion includes "ReturnValueIgnored"
+    a.replace('t', 'b');
+    //BUG: Suggestion includes "ReturnValueIgnored"
+    a.replace("thi", "fli");
+    //BUG: Suggestion includes "ReturnValueIgnored"
+    a.replaceAll("i", "b");
+    //BUG: Suggestion includes "ReturnValueIgnored"
+    a.replaceFirst("a", "b");
+    //BUG: Suggestion includes "ReturnValueIgnored"
+    a.toLowerCase();
+    //BUG: Suggestion includes "ReturnValueIgnored"
+    a.toLowerCase(Locale.ENGLISH);
+    //BUG: Suggestion includes "ReturnValueIgnored"
+    a.toUpperCase();
+    //BUG: Suggestion includes "ReturnValueIgnored"
+    a.toUpperCase(Locale.ENGLISH);
+    //BUG: Suggestion includes "ReturnValueIgnored"
+    a.substring(0);
+    //BUG: Suggestion includes "ReturnValueIgnored"
+    a.substring(0, 1);
+    //BUG: Suggestion includes "ReturnValueIgnored"
+    a.split("b");
+    //BUG: Suggestion includes "ReturnValueIgnored"
+    a.split("b", 1);
   }
 
   BigInteger b = new BigInteger("123456789");
   { // BigInteger methods
-    b.add(new BigInteger("3")); //BUG("ReturnValueIgnored")
-    b.abs(); //BUG("ReturnValueIgnored")
-    b.shiftLeft(3); //BUG("ReturnValueIgnored")
-    b.subtract(BigInteger.TEN); //BUG("ReturnValueIgnored")
+    //BUG: Suggestion includes "ReturnValueIgnored"
+    b.add(new BigInteger("3"));
+    //BUG: Suggestion includes "ReturnValueIgnored"
+    b.abs();
+    //BUG: Suggestion includes "ReturnValueIgnored"
+    b.shiftLeft(3);
+    //BUG: Suggestion includes "ReturnValueIgnored"
+    b.subtract(BigInteger.TEN);
   }
 
   BigDecimal c = new BigDecimal("1234.5678");
   { // BigDecimal methods
-    c.add(new BigDecimal("1.3")); //BUG("ReturnValueIgnored")
-    c.abs(); //BUG("ReturnValueIgnored")
-    c.divide(new BigDecimal("4.5")); //BUG("ReturnValueIgnored")
+    //BUG: Suggestion includes "ReturnValueIgnored"
+    c.add(new BigDecimal("1.3"));
+    //BUG: Suggestion includes "ReturnValueIgnored"
+    c.abs();
+    //BUG: Suggestion includes "ReturnValueIgnored"
+    c.divide(new BigDecimal("4.5"));
   }
 }

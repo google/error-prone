@@ -22,6 +22,7 @@ package com.google.errorprone.bugpatterns;
  */
 public class PreconditionsCheckNotNullPositiveCase2 {
   public void error() {
-    com.google.common.base.Preconditions.checkNotNull("string literal");    //BUG("remove this line")
+    //BUG: Suggestion includes "remove this line"
+    com.google.common.base.Preconditions.checkNotNull("string literal");
   }
 }

@@ -156,10 +156,12 @@ public class DiagnosticTestHelper {
   }
 
   /**
-   * Pattern that marks a bug in a test file.  For example, //BUG("foo.bar()"), where "foo.bar()"
-   * is a string that should be in the diagnostic for that line.
+   * Pattern that marks a bug on the next line in a test file. For example,
+   * //BUG: Suggestion contains "foo.bar()", where "foo.bar()" is a string that should be in the
+   * diagnostic for the line.
    */
-  private static final Pattern BUG_MARKER_PATTERN = Pattern.compile(".*//BUG\\(\"(.*)\"\\)\\s*$");
+  private static final Pattern BUG_MARKER_PATTERN =
+      Pattern.compile(".*//BUG: Suggestion includes \"(.*)\"\\s*$");
 
   /**
    * Matches an Iterable of diagnostics if it contains a diagnostic on each line of the source file
@@ -182,7 +184,8 @@ public class DiagnosticTestHelper {
       }
       java.util.regex.Matcher patternMatcher = BUG_MARKER_PATTERN.matcher(line);
       if (patternMatcher.matches()) {
-        matchers.add(hasItem(diagnosticOnLine(reader.getLineNumber(), patternMatcher.group(1))));
+        matchers.add(hasItem(diagnosticOnLine(reader.getLineNumber() + 1, patternMatcher.group(1))));
+        reader.readLine(); // skip next line -- we know it has an error
       } else {
         matchers.add(not(hasItem(diagnosticOnLine(reader.getLineNumber()))));
       }

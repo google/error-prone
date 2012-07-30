@@ -25,20 +25,24 @@ public class CollectionIncompatibleTypePositiveCases {
   Collection<String> collection = new ArrayList<String>();
 
   public boolean bug() {
-    return collection.contains(this); //BUG("return false")
+    //BUG: Suggestion includes "return false"
+    return collection.contains(this);
   }
 
   public boolean bug2() {
-    return new ArrayList<String>().remove(new Date()); //BUG("return false")
+    //BUG: Suggestion includes "return false"
+    return new ArrayList<String>().remove(new Date());
   }
 
   public boolean bug3() {
     List<String> list = new ArrayList<String>(collection);
-    return list.contains(new Exception()); //BUG("return false")
+    //BUG: Suggestion includes "return false"
+    return list.contains(new Exception());
   }
 
   public String bug4() {
     Map<Integer, String> map = new HashMap<Integer, String>();
-    return map.get("not an integer"); //BUG("return false")
+    //BUG: Suggestion includes "return false"
+    return map.get("not an integer");
   }
 }
