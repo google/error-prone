@@ -183,12 +183,15 @@ public class DiagnosticTestHelper {
         break;
       }
       java.util.regex.Matcher patternMatcher = BUG_MARKER_PATTERN.matcher(line);
+      Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher;
       if (patternMatcher.matches()) {
-        matchers.add(hasItem(diagnosticOnLine(reader.getLineNumber() + 1, patternMatcher.group(1))));
+        matcher = hasItem(diagnosticOnLine(reader.getLineNumber() + 1, patternMatcher.group(1)));
         reader.readLine(); // skip next line -- we know it has an error
       } else {
-        matchers.add(not(hasItem(diagnosticOnLine(reader.getLineNumber()))));
+        // Cast is unnecessary, but javac throws an error because of poor type inference.
+        matcher = (Matcher) not(hasItem(diagnosticOnLine(reader.getLineNumber())));
       }
+      matchers.add(matcher);
     } while (true);
     reader.close();
 
