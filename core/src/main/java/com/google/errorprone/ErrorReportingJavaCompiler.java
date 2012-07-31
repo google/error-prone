@@ -103,26 +103,31 @@ public class ErrorReportingJavaCompiler extends JavaCompiler {
           "http://code.google.com/p/error-prone/issues/entry");
     }
 
-    /* Each env corresponds to a top-level class but not necessarily a single compilation unit.
-     * We want to scan a compilation unit all at once so that we see the file-level nodes like
-     * imports and package declarations.
+    /* Each env corresponds to a top-level class but not necessarily a single file. We want to scan
+     * a file all at once so that we see the file-level nodes like imports and package declarations.
      *
-     * We keep track of compilation units and the number of enclosed class definitions we've seen.
-     * When we've seen all class definitions for a compilation unit, scan the whole compilation
-     * unit.
+     * For the common case where a file contains only one class, we immediately scan the file.
+     * For files that contain more than one class, we keep track of those files and the number of
+     * enclosed class definitions we've seen. When we've seen all class definitions for that file,
+     * we scan the whole file.
      */
-    Integer seenCount = classDefsEncountered.get(env.toplevel);
-    if (seenCount == null) {
-      seenCount = 1;
-    } else {
-      seenCount++;
-    }
-    classDefsEncountered.put(env.toplevel, seenCount);
-
-    if (seenCount == env.toplevel.getTypeDecls().size()) {
+    if (env.toplevel.getTypeDecls().size() == 1) {
       scanner.scan(env.toplevel, visitorState);
-      // Remove compilation unit from map so it can be garbage collected.
-      classDefsEncountered.remove(env.toplevel);
+    } else {
+      Integer seenCount = classDefsEncountered.get(env.toplevel);
+      if (seenCount == null) {
+        seenCount = 1;
+      } else {
+        seenCount++;
+      }
+
+      if (seenCount == env.toplevel.getTypeDecls().size()) {
+        scanner.scan(env.toplevel, visitorState);
+        // Remove compilation unit from map so it can be garbage collected.
+        classDefsEncountered.remove(env.toplevel);
+      } else {
+        classDefsEncountered.put(env.toplevel, seenCount);
+      }
     }
   }
 
