@@ -16,18 +16,18 @@
 
 package com.google.errorprone;
 
-import com.sun.source.util.TreePathScanner;
+import static com.google.errorprone.ErrorProneScanner.EnabledPredicate.DEFAULT_CHECKS;
+
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.main.Main;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.List;
 
+import java.io.PrintWriter;
+
 import javax.annotation.processing.Processor;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
-import java.io.PrintWriter;
-
-import static com.google.errorprone.ErrorProneScanner.EnabledPredicate.DEFAULT_CHECKS;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -44,12 +44,12 @@ public class ErrorProneCompiler extends Main {
   }
 
   private final DiagnosticListener<? super JavaFileObject> diagnosticListener;
-  private final TreePathScanner<Void, ? extends VisitorState> errorProneScanner;
+  private final Scanner errorProneScanner;
   private final Class<? extends JavaCompiler> compilerClass;
 
   private ErrorProneCompiler(String s, PrintWriter printWriter,
       DiagnosticListener<? super JavaFileObject> diagnosticListener,
-      TreePathScanner<Void, ? extends VisitorState> errorProneScanner,
+      Scanner errorProneScanner,
       Class<? extends JavaCompiler> compilerClass) {
     super(s, printWriter);
     this.diagnosticListener = diagnosticListener;
@@ -61,7 +61,7 @@ public class ErrorProneCompiler extends Main {
     DiagnosticListener<? super JavaFileObject> diagnosticListener = null;
     PrintWriter out = new PrintWriter(System.err, true);
     String compilerName = "javac (with error-prone)";
-    TreePathScanner<Void, ? extends VisitorState> scanner = new ErrorProneScanner(DEFAULT_CHECKS);
+    Scanner scanner = new ErrorProneScanner(DEFAULT_CHECKS);
     Class<? extends JavaCompiler> compilerClass = ErrorReportingJavaCompiler.class;
 
     public ErrorProneCompiler build() {
@@ -105,11 +105,8 @@ public class ErrorProneCompiler extends Main {
     if (diagnosticListener != null) {
       context.put(DiagnosticListener.class, diagnosticListener);
     }
-    TreePathScanner<Void, ? extends VisitorState> configuredScanner =
-        context.get(TreePathScanner.class);
-    if (configuredScanner == null) {
-      configuredScanner = this.errorProneScanner;
-      context.put(TreePathScanner.class, configuredScanner);
+    if (context.get(Scanner.class) == null) {
+      context.put(Scanner.class, errorProneScanner);
     }
 
     // Register our message bundle reflectively, so we can compile against both JDK6 and JDK7.

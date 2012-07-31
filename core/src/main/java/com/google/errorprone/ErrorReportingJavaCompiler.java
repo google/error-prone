@@ -23,6 +23,7 @@ import com.sun.tools.javac.comp.Env;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Context.Factory;
+import com.sun.tools.javac.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +37,6 @@ public class ErrorReportingJavaCompiler extends JavaCompiler {
 
   /**
    * A map of compilation units to the number of classes in that file error-prone has encountered.
-   * TODO(eaftan): is this the best data structure for this?
    */
   private Map<CompilationUnitTree, Integer> classDefsEncountered =
       new HashMap<CompilationUnitTree, Integer>();
@@ -86,19 +86,35 @@ public class ErrorReportingJavaCompiler extends JavaCompiler {
     }
   }
 
-    /**
-    * Run Error Prone analysis after performing dataflow checks.
-    */
+  /**
+  * Run Error Prone analysis after performing dataflow checks.
+  */
   public void postFlow(Env<AttrContext> env) {
-    JavacErrorDescriptionListener logReporter = new JavacErrorDescriptionListener(log,
+    runErrorPronePhase(env, log, context, classDefsEncountered);
+  }
+
+  /**
+   * Run the error-prone compiler phase using the Scanner class from the context object,
+   * indexed under the com.google.errorprone.Scanner class.
+   *
+   * @param env The environment that is ready to scan
+   * @param log The compiler log to write to
+   * @param context The compiler Context object
+   * @param classDefsEncountered A map of compilation units to number of enclosed classes
+   * encountered
+   */
+  public static void runErrorPronePhase(Env<AttrContext> env, Log log, Context context,
+      Map<CompilationUnitTree, Integer> classDefsEncountered) {
+    DescriptionListener logReporter = new JavacErrorDescriptionListener(log,
         env.toplevel.endPositions,
         env.enclClass.sym.sourcefile != null
             ? env.enclClass.sym.sourcefile
             : env.toplevel.sourcefile);
     VisitorState visitorState = new VisitorState(context, logReporter);
-    Scanner scanner = (Scanner) context.get(TreePathScanner.class);
+    Scanner scanner = context.get(Scanner.class);
     if (scanner == null) {
-      throw new IllegalStateException("No TreePathScanner registered in context. Is annotation processing enabled? " +
+      throw new IllegalStateException(
+          "No TreePathScanner registered in context. Is annotation processing enabled? " +
           "Please report bug to error-prone: " +
           "http://code.google.com/p/error-prone/issues/entry");
     }
