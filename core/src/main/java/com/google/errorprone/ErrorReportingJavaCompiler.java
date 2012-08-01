@@ -16,17 +16,12 @@
 
 package com.google.errorprone;
 
-import com.sun.source.tree.CompilationUnitTree;
-import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Env;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Context.Factory;
-import com.sun.tools.javac.util.Log;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Queue;
 
 /**
@@ -35,14 +30,11 @@ import java.util.Queue;
  */
 public class ErrorReportingJavaCompiler extends JavaCompiler {
 
-  /**
-   * A map of compilation units to the number of classes in that file error-prone has encountered.
-   */
-  private Map<CompilationUnitTree, Integer> classDefsEncountered =
-      new HashMap<CompilationUnitTree, Integer>();
+  private final ErrorProneAnalyzer errorProneAnalyzer;
 
   public ErrorReportingJavaCompiler(Context context) {
     super(context);
+    errorProneAnalyzer = new ErrorProneAnalyzer(log, context);
   }
 
   /**
@@ -90,61 +82,7 @@ public class ErrorReportingJavaCompiler extends JavaCompiler {
   * Run Error Prone analysis after performing dataflow checks.
   */
   public void postFlow(Env<AttrContext> env) {
-    runErrorPronePhase(env, log, context, classDefsEncountered);
-  }
-
-  /**
-   * Run the error-prone compiler phase using the Scanner class from the context object,
-   * indexed under the com.google.errorprone.Scanner class.
-   *
-   * @param env The environment that is ready to scan
-   * @param log The compiler log to write to
-   * @param context The compiler Context object
-   * @param classDefsEncountered A map of compilation units to number of enclosed classes
-   * encountered
-   */
-  public static void runErrorPronePhase(Env<AttrContext> env, Log log, Context context,
-      Map<CompilationUnitTree, Integer> classDefsEncountered) {
-    DescriptionListener logReporter = new JavacErrorDescriptionListener(log,
-        env.toplevel.endPositions,
-        env.enclClass.sym.sourcefile != null
-            ? env.enclClass.sym.sourcefile
-            : env.toplevel.sourcefile);
-    VisitorState visitorState = new VisitorState(context, logReporter);
-    Scanner scanner = context.get(Scanner.class);
-    if (scanner == null) {
-      throw new IllegalStateException(
-          "No TreePathScanner registered in context. Is annotation processing enabled? " +
-          "Please report bug to error-prone: " +
-          "http://code.google.com/p/error-prone/issues/entry");
-    }
-
-    /* Each env corresponds to a top-level class but not necessarily a single file. We want to scan
-     * a file all at once so that we see the file-level nodes like imports and package declarations.
-     *
-     * For the common case where a file contains only one class, we immediately scan the file.
-     * For files that contain more than one class, we keep track of those files and the number of
-     * enclosed class definitions we've seen. When we've seen all class definitions for that file,
-     * we scan the whole file.
-     */
-    if (env.toplevel.getTypeDecls().size() == 1) {
-      scanner.scan(env.toplevel, visitorState);
-    } else {
-      Integer seenCount = classDefsEncountered.get(env.toplevel);
-      if (seenCount == null) {
-        seenCount = 1;
-      } else {
-        seenCount++;
-      }
-
-      if (seenCount == env.toplevel.getTypeDecls().size()) {
-        scanner.scan(env.toplevel, visitorState);
-        // Remove compilation unit from map so it can be garbage collected.
-        classDefsEncountered.remove(env.toplevel);
-      } else {
-        classDefsEncountered.put(env.toplevel, seenCount);
-      }
-    }
+    errorProneAnalyzer.reportReadyForAnalysis(env);
   }
 
 }
