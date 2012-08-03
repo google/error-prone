@@ -60,6 +60,13 @@ public class CovariantEqualsTest {
         new File(this.getClass().getResource("CovariantEqualsPositiveCase4.java").toURI()));
   }
 
+  @Test
+  public void testPositiveCase5() throws Exception {
+    compilationHelper.assertCompileFailsWithMessages(
+        new File(this.getClass().getResource("CovariantEqualsPositiveCase5.java").toURI()));
+  }
+
+
   @Test public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(
         new File(this.getClass().getResource("CovariantEqualsNegativeCases.java").toURI()));

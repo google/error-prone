@@ -117,15 +117,19 @@ public class CovariantEquals extends DescribingMatcher<MethodTree> {
       // Change method signature, substituting Object for parameter type.
       fix.replace(parameterType, "Object");
 
-      // Add type check at start of method body.
-      String typeCheckStmt = "if (!(" + parameterName + " instanceof " + parameterType + ")) {\n"
-          + "  return false;\n"
-          + "}\n";
-      fix.prefixWith(methodTree.getBody().getStatements().get(0), typeCheckStmt);
+      // If there is a method body...
+      if (methodTree.getBody() != null) {
 
-      // Cast all uses of the parameter name using a recursive TreeScanner.
-      new CastScanner().scan(methodTree.getBody(), new CastState(parameterName,
-          parameterType.toString(), fix));
+        // Add type check at start
+        String typeCheckStmt = "if (!(" + parameterName + " instanceof " + parameterType + ")) {\n"
+            + "  return false;\n"
+            + "}\n";
+        fix.prefixWith(methodTree.getBody().getStatements().get(0), typeCheckStmt);
+
+        // Cast all uses of the parameter name using a recursive TreeScanner.
+        new CastScanner().scan(methodTree.getBody(), new CastState(parameterName,
+            parameterType.toString(), fix));
+      }
     }
 
     return new Description(methodTree, diagnosticMessage, fix);
