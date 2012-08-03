@@ -44,7 +44,7 @@ public class StaticMethod implements Matcher<ExpressionTree> {
     JCFieldAccess memberSelectTree = (JCFieldAccess) item;
 
     // Is method static?
-    if (!memberSelectTree.sym.isStatic()) {
+    if (memberSelectTree.sym == null || !memberSelectTree.sym.isStatic()) {
       return false;
     }
 

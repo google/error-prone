@@ -28,6 +28,8 @@ import com.sun.tools.javac.tree.JCTree.*;
 
 import java.util.List;
 
+import javax.lang.model.element.Modifier;
+
 /**
  * Static factory methods which make the DSL read better.
  *
@@ -302,6 +304,10 @@ public class Matchers {
 
   public static Matcher<MethodTree> methodHasVisibility(final Visibility visibility) {
     return new MethodVisibility(visibility);
+  }
+
+  public static Matcher<MethodTree> methodHasModifier(final Modifier modifier) {
+    return new MethodModifier(modifier);
   }
 
   /**

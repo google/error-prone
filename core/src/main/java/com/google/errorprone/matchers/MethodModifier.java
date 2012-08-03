@@ -25,43 +25,21 @@ import java.util.Set;
 import javax.lang.model.element.Modifier;
 
 /**
- * A matcher for method visibility (public, private, protected, or default).
+ * A matcher for method modifiers (public, private, protected, abstract, final, etc.).
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class MethodVisibility implements Matcher<MethodTree> {
+public class MethodModifier implements Matcher<MethodTree> {
 
-  private final Visibility visibility;
+  private final Modifier modifier;
 
-  public MethodVisibility(Visibility visibility) {
-    this.visibility = visibility;
+  public MethodModifier(Modifier modifier) {
+    this.modifier = modifier;
   }
 
   @Override
   public boolean matches(MethodTree t, VisitorState state) {
     Set<Modifier> modifiers = t.getModifiers().getFlags();
-    if (visibility == Visibility.DEFAULT) {
-      return !(modifiers.contains(Visibility.PUBLIC.toModifier()) ||
-          modifiers.contains(Visibility.PROTECTED.toModifier()) ||
-          modifiers.contains(Visibility.PRIVATE.toModifier()));
-    } else {
-      return modifiers.contains(visibility.toModifier());
-    }
-  }
-
-  public static enum Visibility {
-    PUBLIC    (Modifier.PUBLIC),
-    PROTECTED (Modifier.PROTECTED),
-    DEFAULT   (null),
-    PRIVATE   (Modifier.PRIVATE);
-
-    private Modifier correspondongModifier;
-    Visibility(Modifier correspondingModifier) {
-      this.correspondongModifier = correspondingModifier;
-    }
-
-    public Modifier toModifier() {
-      return correspondongModifier;
-    }
+    return modifiers.contains(modifier);
   }
 }
