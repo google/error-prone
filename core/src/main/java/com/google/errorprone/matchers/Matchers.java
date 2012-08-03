@@ -179,6 +179,15 @@ public class Matchers {
   public static <T extends Tree> Matcher<T> isArrayType() {
     return new Matcher<T>() {
       @Override public boolean matches(Tree t, VisitorState state) {
+        Type type1 = state.getType("int[]");
+        Type type2 = state.getType("java.lang.Object[]");
+        Type type3 = state.getType("java.lang.Object");
+        Type type4 = state.getType("boolean");
+        Type type5 = state.getType("int[][]");
+        Type type6 = state.getType("java.util.ArrayList");
+        Type type7 = state.getType("java.util.ArrayList<java.lang.Object>");
+        Type type8 = state.getType("java.util.HashMap<java.lang.Object, java.lang.Object>");
+        Type type9 = state.getType("java.util.ArrayList<? extends java.lang.Object>");
         return state.getTypes().isArray(((JCTree) t).type);
       }
     };

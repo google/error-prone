@@ -22,6 +22,15 @@ import java.util.*;
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public class ArrayEqualsPositiveCases {
+  
+  //DEBUG -- remove
+  public void genericTest() {
+    ArrayList<Object> l1 = new ArrayList<Object>();
+    if (l1.equals(l2)) {
+      System.out.println("actually, this is fine");
+    }
+  }
+  
   public void intArray() {
     int[] a = {1, 2, 3};
     int[] b = {1, 2, 3};
