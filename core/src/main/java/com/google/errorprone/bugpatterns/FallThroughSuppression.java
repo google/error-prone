@@ -21,6 +21,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
@@ -50,12 +51,14 @@ import static com.google.errorprone.matchers.Matchers.*;
     category = ONE_OFF, severity = OFF, maturity = EXPERIMENTAL)
 public class FallThroughSuppression extends DescribingMatcher<AnnotationTree> {
 
-  @Override
   @SuppressWarnings({"varargs", "unchecked"})
+  private static final Matcher<AnnotationTree> matcher = allOf(
+      isType("java.lang.SuppressWarnings"),
+      hasElementWithValue("value", stringLiteral("fallthrough")));
+
+  @Override
   public boolean matches(AnnotationTree annotationTree, VisitorState state) {
-    return allOf(isType("java.lang.SuppressWarnings"),
-                 hasElementWithValue("value", stringLiteral("fallthrough")))
-        .matches(annotationTree, state);
+    return matcher.matches(annotationTree, state);
   }
 
   @Override

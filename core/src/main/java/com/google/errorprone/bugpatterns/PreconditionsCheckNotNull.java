@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Google Inc. All Rights Reserved.
+ * Copyright 2012 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
@@ -47,12 +48,13 @@ import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
 public class PreconditionsCheckNotNull extends DescribingMatcher<MethodInvocationTree> {
 
   @SuppressWarnings({"unchecked"})
+  private static final Matcher<MethodInvocationTree> matcher = allOf(
+      methodSelect(staticMethod("com.google.common.base.Preconditions", "checkNotNull")),
+      argument(0, kindIs(STRING_LITERAL, ExpressionTree.class)));
+
   @Override
   public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
-    return allOf(
-        methodSelect(staticMethod("com.google.common.base.Preconditions", "checkNotNull")),
-        argument(0, kindIs(STRING_LITERAL, ExpressionTree.class)))
-        .matches(methodInvocationTree, state);
+    return matcher.matches(methodInvocationTree, state);
   }
 
   @Override

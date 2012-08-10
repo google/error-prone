@@ -28,7 +28,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class SelfAssignmentTest extends CompilerBasedTest {
+public class SelfAssignmentMatcherTest extends CompilerBasedTest {
   @Test public void identifierSelfAssignmentMatches() throws IOException {
     writeFile("A.java",
         "public class A {{",
@@ -36,7 +36,7 @@ public class SelfAssignmentTest extends CompilerBasedTest {
         "  a = a;",
         "}}"
     );
-    assertCompiles(assignmentMatches(true, new SelfAssignment()));
+    assertCompiles(assignmentMatches(true, new SelfAssignmentMatcher()));
   }
   
   @Test public void memberSelectSelfAssignmentMatches() throws IOException {
@@ -51,7 +51,7 @@ public class SelfAssignmentTest extends CompilerBasedTest {
         "  a.foo = a.foo;",
         "}}"
         );
-    assertCompiles(assignmentMatches(true, new SelfAssignment()));
+    assertCompiles(assignmentMatches(true, new SelfAssignmentMatcher()));
   }
 
   @Test public void matchesFieldSelfAssignment() throws IOException {
@@ -63,7 +63,7 @@ public class SelfAssignmentTest extends CompilerBasedTest {
         "  }",
         "}"
     );
-    assertCompiles(assignmentMatches(true, new SelfAssignment()));
+    assertCompiles(assignmentMatches(true, new SelfAssignmentMatcher()));
   }
 
   @Test public void cannotDetermineWhenIdenticalReferencesAreAssigned() throws IOException {
@@ -80,10 +80,10 @@ public class SelfAssignmentTest extends CompilerBasedTest {
         "  a.foo = b.foo;",
         "}}"
     );
-    assertCompiles(assignmentMatches(false, new SelfAssignment()));
+    assertCompiles(assignmentMatches(false, new SelfAssignmentMatcher()));
   }
 
-  private Scanner assignmentMatches(final boolean shouldMatch, final SelfAssignment toMatch) {
+  private Scanner assignmentMatches(final boolean shouldMatch, final SelfAssignmentMatcher toMatch) {
     return new Scanner() {
       @Override
       public Void visitAssignment(AssignmentTree node, VisitorState visitorState) {

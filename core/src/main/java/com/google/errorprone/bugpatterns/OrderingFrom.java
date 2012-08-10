@@ -21,6 +21,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.NewInstanceAnonymousInnerClass;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -56,14 +57,15 @@ import static com.google.errorprone.matchers.Matchers.*;
         "which is shorter and cleaner (and potentially more efficient).",
     category = GUAVA, severity = WARNING, maturity = ON_BY_DEFAULT)
 public class OrderingFrom extends DescribingMatcher<MethodInvocationTree> {
-  @Override
+
   @SuppressWarnings({"unchecked", "varargs"})
+  private static final Matcher<MethodInvocationTree> matcher = allOf(
+      methodSelect(staticMethod("com.google.common.collect.Ordering", "from")),
+      argument(0, new NewInstanceAnonymousInnerClass("java.util.Comparator")));
+
+  @Override
   public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
-    return allOf(
-        methodSelect(staticMethod(
-            "com.google.common.collect.Ordering", "from")),
-        argument(0, new NewInstanceAnonymousInnerClass("java.util.Comparator")))
-        .matches(methodInvocationTree, state);
+    return matcher.matches(methodInvocationTree, state);
   }
   
   @Override

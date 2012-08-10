@@ -21,6 +21,8 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.SelfAssignmentMatcher;
 import com.google.errorprone.util.EditDistance;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
@@ -34,7 +36,6 @@ import com.sun.tools.javac.tree.JCTree.*;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.isSelfAssignment;
 import static com.sun.source.tree.Tree.Kind.*;
 
 /**
@@ -57,10 +58,11 @@ import static com.sun.source.tree.Tree.Kind.*;
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
 public class SelfAssignment extends DescribingMatcher<AssignmentTree> {
 
+  private static final Matcher<AssignmentTree> matcher = new SelfAssignmentMatcher();
+
   @Override
   public boolean matches(AssignmentTree t, VisitorState state) {
-    return isSelfAssignment()
-        .matches(t, state);
+    return matcher.matches(t, state);
   }
 
   /**

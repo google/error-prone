@@ -17,7 +17,6 @@
 package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
-
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree.Kind;
@@ -31,7 +30,7 @@ import com.sun.tools.javac.tree.JCTree.JCIdent;
  * 
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class SelfAssignment implements Matcher<AssignmentTree> {
+public class SelfAssignmentMatcher implements Matcher<AssignmentTree> {
   
   @Override
   public boolean matches(AssignmentTree t, VisitorState state) {

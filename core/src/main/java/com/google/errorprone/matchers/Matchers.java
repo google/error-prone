@@ -26,9 +26,8 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.*;
 
-import java.util.List;
-
 import javax.lang.model.element.Modifier;
+import java.util.List;
 
 /**
  * Static factory methods which make the DSL read better.
@@ -245,10 +244,6 @@ public class Matchers {
         return false;
       }
     };
-  }
-
-  public static Matcher<AssignmentTree> isSelfAssignment() {
-    return new SelfAssignment();
   }
 
   public static Matcher<MethodTree> methodReturns(final Type returnType) {

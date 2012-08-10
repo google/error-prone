@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Google Inc. All Rights Reserved.
+ * Copyright 2012 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,24 +57,26 @@ import static com.google.errorprone.matchers.Matchers.*;
 public class PreconditionsExpensiveString
     extends DescribingMatcher<MethodInvocationTree> {
 
-  @Override
   @SuppressWarnings({"vararg", "unchecked"})
+  private static final Matcher<MethodInvocationTree> matcher = allOf(
+      anyOf(
+          methodSelect(staticMethod(
+              "com.google.common.base.Preconditions", "checkNotNull")),
+          methodSelect(staticMethod(
+              "com.google.common.base.Preconditions", "checkState")),
+          methodSelect(staticMethod(
+              "com.google.common.base.Preconditions", "checkArgument"))),
+      argument(1, Matchers.<ExpressionTree>allOf(
+          kindIs(Kind.METHOD_INVOCATION, ExpressionTree.class),
+          expressionMethodSelect(staticMethod("java.lang.String", "format")),
+          new StringFormatCallContainsNoSpecialFormattingMatcher(
+              Pattern.compile("%[^%s]"))
+      ))
+  );
+
+  @Override
   public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
-    return allOf(
-        anyOf(
-            methodSelect(staticMethod(
-                "com.google.common.base.Preconditions", "checkNotNull")),
-            methodSelect(staticMethod(
-                "com.google.common.base.Preconditions", "checkState")),
-            methodSelect(staticMethod(
-                "com.google.common.base.Preconditions", "checkArgument"))),
-        argument(1, Matchers.<ExpressionTree>allOf(
-            kindIs(Kind.METHOD_INVOCATION, ExpressionTree.class),
-            expressionMethodSelect(staticMethod("java.lang.String", "format")),
-            new StringFormatCallContainsNoSpecialFormattingMatcher(
-                Pattern.compile("%[^%s]"))
-        ))
-    ).matches(methodInvocationTree, state);
+    return matcher.matches(methodInvocationTree, state);
   }
   
   @Override

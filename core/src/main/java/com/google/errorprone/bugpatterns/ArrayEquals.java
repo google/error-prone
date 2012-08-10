@@ -16,23 +16,21 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.argument;
-import static com.google.errorprone.matchers.Matchers.instanceMethod;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
-
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
+
+import static com.google.errorprone.BugPattern.Category.JDK;
+import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Matchers.*;
 
 /**
  * TODO(eaftan): tests -- more positive cases, start negative cases
@@ -48,17 +46,18 @@ import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
     category = JDK, severity = ERROR, maturity = ON_BY_DEFAULT)
 public class ArrayEquals extends DescribingMatcher<MethodInvocationTree> {
 
+  @SuppressWarnings("unchecked")
+  private static final Matcher<MethodInvocationTree> matcher = Matchers.allOf(
+      methodSelect(instanceMethod(Matchers.<ExpressionTree>isArrayType(), "equals")),
+      argument(0, Matchers.<ExpressionTree>isArrayType()));
+
   /**
    * Matches calls to an equals instance method in which both the receiver and the argument are
    * of an array type.
    */
-  @SuppressWarnings("unchecked")
   @Override
   public boolean matches(MethodInvocationTree t, VisitorState state) {
-    return Matchers.allOf(
-        methodSelect(instanceMethod(Matchers.<ExpressionTree>isArrayType(), "equals")),
-        argument(0, Matchers.<ExpressionTree>isArrayType())).
-        matches(t, state);
+    return matcher.matches(t, state);
   }
 
   /**

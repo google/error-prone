@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Used to run an error-prone analysis.
+ * Used to run an error-prone analysis as a phase in the javac compiler.
  */
 public class ErrorProneAnalyzer {
 

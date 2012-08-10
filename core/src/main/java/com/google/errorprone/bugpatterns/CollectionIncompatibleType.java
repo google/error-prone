@@ -19,9 +19,7 @@ package com.google.errorprone.bugpatterns;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
-import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matchers;
+import com.google.errorprone.matchers.*;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
@@ -47,16 +45,21 @@ import static com.google.errorprone.matchers.Matchers.*;
 public class CollectionIncompatibleType extends DescribingMatcher<MethodInvocationTree> {
 
   @SuppressWarnings("unchecked")
+  private final MethodInvocationMethodSelect isGenericCollectionsMethod =
+      methodSelect(anyOf(ExpressionTree.class,
+          isDescendantOfMethod("java.util.Map", "get(java.lang.Object)"),
+          isDescendantOfMethod("java.util.Collection", "contains(java.lang.Object)"),
+          isDescendantOfMethod("java.util.Collection", "remove(java.lang.Object)")));
+
+  @SuppressWarnings("unchecked")
   @Override
   public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
-    return allOf(
-        methodSelect(anyOf(ExpressionTree.class,
-            isDescendantOfMethod("java.util.Map", "get(java.lang.Object)"),
-            isDescendantOfMethod("java.util.Collection", "contains(java.lang.Object)"),
-            isDescendantOfMethod("java.util.Collection", "remove(java.lang.Object)"))),
+    Matcher<MethodInvocationTree> matcher = allOf(
+        isGenericCollectionsMethod,
         argument(0, not(Matchers.<ExpressionTree>isCastableTo(
             getGenericType(methodInvocationTree.getMethodSelect(), 0))))
-    ).matches(methodInvocationTree, state);
+    );
+    return matcher.matches(methodInvocationTree, state);
   }
 
   // TODO: is ExpressionTree really the thing we're getting a type from?
