@@ -19,7 +19,10 @@ package com.google.errorprone.bugpatterns;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.*;
+import com.google.errorprone.matchers.DescribingMatcher;
+import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
@@ -45,7 +48,7 @@ import static com.google.errorprone.matchers.Matchers.*;
 public class CollectionIncompatibleType extends DescribingMatcher<MethodInvocationTree> {
 
   @SuppressWarnings("unchecked")
-  private final MethodInvocationMethodSelect isGenericCollectionsMethod =
+  private final Matcher<MethodInvocationTree> isGenericCollectionsMethod =
       methodSelect(anyOf(ExpressionTree.class,
           isDescendantOfMethod("java.util.Map", "get(java.lang.Object)"),
           isDescendantOfMethod("java.util.Collection", "contains(java.lang.Object)"),

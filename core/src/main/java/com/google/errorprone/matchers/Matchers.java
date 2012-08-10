@@ -133,7 +133,7 @@ public class Matchers {
     return new Constructor(className, parameterTypes);
   }
 
-  public static MethodInvocationMethodSelect methodSelect(
+  public static Matcher<MethodInvocationTree> methodSelect(
       Matcher<ExpressionTree> methodSelectMatcher) {
     return new MethodInvocationMethodSelect(methodSelectMatcher);
   }
