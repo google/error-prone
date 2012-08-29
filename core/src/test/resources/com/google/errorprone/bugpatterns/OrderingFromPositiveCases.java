@@ -28,6 +28,7 @@ import java.util.Comparator;
 public class OrderingFromPositiveCases {
 
   public static void positiveCase1() {
+    //BUG: Suggestion includes "new Ordering<String>("
     Ordering<String> ord = Ordering.from(new Comparator<String>() {
       @Override
       public int compare(String first, String second) {

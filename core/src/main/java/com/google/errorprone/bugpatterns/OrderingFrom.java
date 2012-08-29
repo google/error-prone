@@ -16,6 +16,14 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.BugPattern.Category.GUAVA;
+import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.argument;
+import static com.google.errorprone.matchers.Matchers.methodSelect;
+import static com.google.errorprone.matchers.Matchers.staticMethod;
+
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -23,14 +31,22 @@ import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.NewInstanceAnonymousInnerClass;
-import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.MethodInvocationTree;
-import com.sun.tools.javac.tree.JCTree.JCNewClass;
 
-import static com.google.errorprone.BugPattern.Category.GUAVA;
-import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.matchers.Matchers.*;
+import com.sun.source.tree.MethodInvocationTree;
+import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCClassDecl;
+import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
+import com.sun.tools.javac.tree.JCTree.JCIdent;
+import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
+import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
+import com.sun.tools.javac.tree.JCTree.JCNewClass;
+import com.sun.tools.javac.tree.JCTree.JCTypeApply;
+import com.sun.tools.javac.tree.Pretty;
+import com.sun.tools.javac.util.List;
+
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.ArrayList;
 
 /**
  * Checker for a call of the form:
@@ -48,7 +64,7 @@ import static com.google.errorprone.matchers.Matchers.*;
  *
  */
 @BugPattern(name = "OrderingFrom",
-    summary = "Ordering.from() can be refactored to cleaner form",
+    summary = "Ordering.from(new Comparator<T>() { }) can be refactored to cleaner form",
     explanation =
         "Calls of the form\n" +
         "{{{Ordering.from(new Comparator<T>() { ... })}}}\n" +
@@ -69,25 +85,62 @@ public class OrderingFrom extends DescribingMatcher<MethodInvocationTree> {
   }
   
   @Override
-  public Description describe(MethodInvocationTree t,
+  public Description describe(MethodInvocationTree methodInvocation,
                               VisitorState state) {
-    ExpressionTree arg = t.getArguments().get(0);
-    JCNewClass invocation = (JCNewClass) arg;
-    
-//    Position lastBracket = new Position(getPosition(t).end - 1, getPosition(t).end, t);
-//    Position pos = new Position(getPosition(t).start, getPosition(invocation).start, t);
-//    JCTypeApply identifier = (JCTypeApply)invocation.getIdentifier();
-//
-    SuggestedFix fix = new SuggestedFix();
-//        .replace(getPosition(identifier), "Ordering<" + identifier.getTypeArguments() + ">")
-//        .replace(getPosition(t).start, getPosition(invocation).start, "")
-//        .replace(getPosition(t).end - 1, getPosition(t).end, "");
-//
-    return new Description(t, diagnosticMessage, fix);
-  }
+    // e.g. new Comparator<String>() { ... }
+    JCNewClass newComparatorInvocation = (JCNewClass) methodInvocation.getArguments().get(0);
+    // e.g. String
+    JCTypeApply typeArgument = (JCTypeApply)newComparatorInvocation.getIdentifier();
 
+    // e.g. Ordering
+    JCIdent orderingIdent = (JCIdent)
+        ((JCFieldAccess) ((JCMethodInvocation) methodInvocation).meth).selected;
+    // e.g. Ordering<String>
+    JCTypeApply newOrderingType = state.getTreeMaker().TypeApply(orderingIdent,
+        ((JCTypeApply) newComparatorInvocation.clazz).arguments);
+    
+    // Find the class definition and remove the default constructor (it confuses the pretty printer)
+    JCClassDecl def = newComparatorInvocation.def;
+    
+    // Note that List is not java.util.List, and it's not very nice to deal with.
+    ArrayList<JCTree> allDefsExceptConstructor = new ArrayList<JCTree>();
+    for (JCTree individualDef : def.defs) {
+      if (individualDef instanceof JCMethodDecl) {
+        JCMethodDecl methodDecl = (JCMethodDecl) individualDef;
+        if (!methodDecl.name.toString().equals("<init>")) {
+          allDefsExceptConstructor.add(individualDef);
+        }
+      } else {
+        allDefsExceptConstructor.add(individualDef);
+      }
+    }
+    
+    // e.g. new Ordering<String>() { ... }
+    JCNewClass newClass = state.getTreeMaker().NewClass(
+        newComparatorInvocation.encl, newComparatorInvocation.typeargs, newOrderingType,
+        newComparatorInvocation.args,
+        state.getTreeMaker().ClassDef(
+            def.mods, def.name, def.typarams, def.extending, def.implementing,
+            List.from((JCTree[]) allDefsExceptConstructor.toArray(
+                new JCTree[allDefsExceptConstructor.size()]))));
+    
+    StringWriter sw = new StringWriter();
+    try {
+      Pretty pretty = new Pretty(sw, true);
+      pretty.printExpr(newClass);
+    } catch (IOException impossible) {
+      throw new AssertionError("Impossible IOException");
+    }
+    
+    String replacement = sw.toString().replace("@Override()", "@Override");
+    
+    SuggestedFix fix = new SuggestedFix().replace(methodInvocation, replacement);
+    
+    return new Description(methodInvocation, diagnosticMessage, fix);
+  }
+  
   public static class Scanner extends com.google.errorprone.Scanner {
-    public DescribingMatcher<MethodInvocationTree> matcher = new OrderingFrom();
+    private final DescribingMatcher<MethodInvocationTree> matcher = new OrderingFrom();
 
     @Override
     public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {
