@@ -18,7 +18,6 @@ package com.google.errorprone.matchers;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-
 import com.sun.source.tree.Tree;
 
 import java.util.ArrayList;
@@ -55,7 +54,7 @@ public abstract class DescribingMatcher<T extends Tree> implements Matcher<T> {
         break;
       case CUSTOM:
         // annotation.link() must be provided.
-        if (annotation.link().equals("")) {
+        if (annotation.link().isEmpty()) {
           throw new IllegalStateException("If linkType element of @BugPattern is CUSTOM, "
               + "a link element must also be provided.");
         }

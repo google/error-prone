@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Google Inc. All Rights Reserved.
+ * Copyright 2012 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.matchers;
+package com.google.errorprone.suppliers;
 
 import com.google.errorprone.VisitorState;
 
 /**
- * An embedded predicate DSL for matching Java source code.
+ * Simple supplier pattern, which allows delayed binding to access to runtime elements.
  * @author alexeagle@google.com (Alex Eagle)
  */
-public interface Matcher<T> {
-  boolean matches(T t, VisitorState state);
+public interface Supplier<T> {
+  T get(VisitorState state);
 }

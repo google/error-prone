@@ -22,17 +22,15 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.Type.ClassType;
-import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.*;
+import static com.google.errorprone.suppliers.Suppliers.genericTypeOf;
+import static com.google.errorprone.suppliers.Suppliers.receiverInstance;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -48,29 +46,24 @@ import static com.google.errorprone.matchers.Matchers.*;
 public class CollectionIncompatibleType extends DescribingMatcher<MethodInvocationTree> {
 
   @SuppressWarnings("unchecked")
-  private final Matcher<MethodInvocationTree> isGenericCollectionsMethod =
+  private static final Matcher<MethodInvocationTree> isGenericCollectionsMethod =
       methodSelect(anyOf(ExpressionTree.class,
           isDescendantOfMethod("java.util.Map", "get(java.lang.Object)"),
           isDescendantOfMethod("java.util.Collection", "contains(java.lang.Object)"),
           isDescendantOfMethod("java.util.Collection", "remove(java.lang.Object)")));
 
-  @SuppressWarnings("unchecked")
-  @Override
-  public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
-    Matcher<MethodInvocationTree> matcher = allOf(
-        isGenericCollectionsMethod,
-        argument(0, not(Matchers.<ExpressionTree>isCastableTo(
-            getGenericType(methodInvocationTree.getMethodSelect(), 0))))
-    );
-    return matcher.matches(methodInvocationTree, state);
-  }
+  private static final Matcher<ExpressionTree> castableToMethodReceiverType =
+      isCastableTo(genericTypeOf(receiverInstance(), 0));
 
-  // TODO: is ExpressionTree really the thing we're getting a type from?
-  private Type getGenericType(ExpressionTree expressionTree, int typeIndex) {
-    if (!(expressionTree instanceof JCFieldAccess)) {
-      return Type.noType;
-    }
-    return ((ClassType) ((JCFieldAccess) expressionTree).getExpression().type).typarams_field.get(typeIndex);
+  @SuppressWarnings("unchecked")
+  private static final Matcher<MethodInvocationTree> matcher = allOf(
+      isGenericCollectionsMethod,
+      argument(0, not(castableToMethodReceiverType))
+  );
+
+  @Override
+  public boolean matches(final MethodInvocationTree methodInvocationTree, VisitorState state) {
+    return matcher.matches(methodInvocationTree, state);
   }
 
   @Override
