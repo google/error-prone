@@ -21,6 +21,7 @@ import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.internal.matchers.StringContains.containsString;
 
+import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
@@ -185,7 +186,8 @@ public class DiagnosticTestHelper {
       java.util.regex.Matcher patternMatcher = BUG_MARKER_PATTERN.matcher(line);
       Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher;
       if (patternMatcher.matches()) {
-        matcher = hasItem(diagnosticOnLine(reader.getLineNumber() + 1, patternMatcher.group(1)));
+        String patternToMatch = patternMatcher.group(1);
+        matcher = hasItem(diagnosticOnLine(reader.getLineNumber() + 1, patternToMatch));
         reader.readLine(); // skip next line -- we know it has an error
       } else {
         // Cast is unnecessary, but javac throws an error because of poor type inference.

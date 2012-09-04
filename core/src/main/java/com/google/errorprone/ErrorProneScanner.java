@@ -29,6 +29,7 @@ import com.google.errorprone.bugpatterns.PreconditionsCheckNotNull;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNullPrimitive1stArg;
 import com.google.errorprone.bugpatterns.PreconditionsExpensiveString;
 import com.google.errorprone.bugpatterns.SelfAssignment;
+import com.google.errorprone.bugpatterns.SuppressWarningsDeprecated;
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.sun.source.tree.*;
 
@@ -80,7 +81,9 @@ public class ErrorProneScanner extends Scanner {
           ArrayEquals.class
       );
       this.newClassMatchers = createChecks(enabled, DeadException.class);
-      this.annotationMatchers = createChecks(enabled, FallThroughSuppression.class);
+      this.annotationMatchers = createChecks(enabled,
+          FallThroughSuppression.class,
+          SuppressWarningsDeprecated.class);
       this.emptyStatementMatchers = createChecks(enabled,
           EmptyIfStatement.class,
           EmptyStatement.class
