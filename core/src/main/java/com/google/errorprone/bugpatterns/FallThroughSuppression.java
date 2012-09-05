@@ -58,8 +58,8 @@ public class FallThroughSuppression extends AbstractSuppressWarningsMatcher {
       hasElementWithValue("value", stringLiteral("fallthrough")));
 
   @Override
-  protected Matcher<AnnotationTree> getMatcher() {
-    return matcher;
+  public final boolean matches(AnnotationTree annotationTree, VisitorState state) {
+    return matcher.matches(annotationTree, state);
   }
   
   @Override
