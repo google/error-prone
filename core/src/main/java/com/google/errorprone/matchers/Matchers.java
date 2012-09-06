@@ -188,6 +188,20 @@ public class Matchers {
     return isSameType(((JCTree) tree).type);
   }
 
+  /**
+   * Matches a type based on the name of the type.
+   *
+   * @param type A string representation of the type (e.g., "java.lang.Object")
+   * @return true if the type of the tree matches the string
+   */
+  public static <T extends Tree> Matcher<T> isSameType(final String type) {
+    return new Matcher<T>() {
+      @Override public boolean matches(Tree t, VisitorState state) {
+        return type.equals(((JCTree) t).type.toString());
+      }
+    };
+  }
+
   public static <T extends Tree> EnclosingBlock<T> enclosingBlock(Matcher<BlockTree> matcher) {
     return new EnclosingBlock<T>(matcher);
   }
