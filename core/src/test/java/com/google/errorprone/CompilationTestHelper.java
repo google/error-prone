@@ -49,8 +49,9 @@ public class CompilationTestHelper {
    * the pattern //BUG("foo"), the diagnostic at that line contains "foo".
    */
   public void assertCompileFailsWithMessages(File source) throws IOException {
-    assertThat(compiler.compile(new String[]{"-Xjcov", source.getAbsolutePath()}), is(1));
-    assertThat(diagnosticHelper.getDiagnostics(),
+    assertThat("Compiler returned an unexpected error code",
+        compiler.compile(new String[]{"-Xjcov", source.getAbsolutePath()}), is(1));
+    assertThat("Compiler returned unexpected diagnostics", diagnosticHelper.getDiagnostics(),
         hasDiagnosticOnAllMatchingLines(source));
   }
 

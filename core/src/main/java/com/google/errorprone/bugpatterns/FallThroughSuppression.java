@@ -30,6 +30,7 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.ListBuffer;
 
 import java.util.Collection;
+import java.util.List;
 
 import static com.google.errorprone.BugPattern.Category.ONE_OFF;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
@@ -49,7 +50,7 @@ import static com.google.errorprone.matchers.Matchers.*;
         "Note: This checker was specific to a refactoring we performed and should not be " +
         "used as a general error or warning.",
     category = ONE_OFF, severity = OFF, maturity = EXPERIMENTAL)
-public class FallThroughSuppression extends DescribingMatcher<AnnotationTree> {
+public class FallThroughSuppression extends AbstractSuppressWarningsMatcher {
 
   @SuppressWarnings({"varargs", "unchecked"})
   private static final Matcher<AnnotationTree> matcher = allOf(
@@ -57,76 +58,15 @@ public class FallThroughSuppression extends DescribingMatcher<AnnotationTree> {
       hasElementWithValue("value", stringLiteral("fallthrough")));
 
   @Override
-  public boolean matches(AnnotationTree annotationTree, VisitorState state) {
+  public final boolean matches(AnnotationTree annotationTree, VisitorState state) {
     return matcher.matches(annotationTree, state);
   }
-
+  
   @Override
-  public Description describe(AnnotationTree annotationTree, VisitorState state) {
-    return new Description(
-        annotationTree,
-        diagnosticMessage,
-        getSuggestedFix(annotationTree, state));
+  protected void processSuppressWarningsValues(List<String> values) {
+    values.remove("fallthrough");
   }
-
-  private SuggestedFix getSuggestedFix(AnnotationTree annotationTree, VisitorState state) {
-    ListBuffer<JCTree.JCExpression> arguments = new ListBuffer<JCTree.JCExpression>();
-    for (ExpressionTree argumentTree : annotationTree.getArguments()) {
-      AssignmentTree assignmentTree = (AssignmentTree) argumentTree;
-      if (assignmentTree.getVariable().toString().equals("value")) {
-        ExpressionTree expressionTree = assignmentTree.getExpression();
-        switch (expressionTree.getKind()) {
-          case STRING_LITERAL:
-              // Fallthrough was the only thing suppressed, so remove line.
-            return new SuggestedFix().delete(annotationTree);
-          case NEW_ARRAY:
-            JCTree.JCNewArray newArray =
-                initializersWithoutFallthrough(state, (NewArrayTree) expressionTree);
-            if (newArray.getInitializers().size() >= 2) {
-              arguments.add(newArray);
-            } else if (newArray.getInitializers().size() == 1) {
-              // Only one left, so get rid of the curly braces.
-              arguments.add(
-                  singleInitializer((JCTree.JCLiteral) newArray.getInitializers().get(0), state));
-            } else {
-              // Fallthrough was the only thing suppressed, so remove line.
-              return new SuggestedFix().delete(annotationTree);
-            }
-            break;
-        }
-      } else {
-        // SuppressWarnings only has a value element, but if they ever add more,
-        // we want to keep them.
-        arguments.add((JCTree.JCExpression) argumentTree);
-      }
-    }
-    JCTree.JCAnnotation replacement = state.getTreeMaker()
-        .Annotation((JCTree) annotationTree.getAnnotationType(), arguments.toList());
-    return new SuggestedFix()
-        .replace(annotationTree, replacement.toString());
-  }
-
-  private JCTree.JCLiteral singleInitializer(JCTree.JCLiteral literalExpression,
-      VisitorState state) {
-    return state.getTreeMaker().Literal(literalExpression.getValue());
-  }
-
-  @SuppressWarnings("unchecked")
-  private JCTree.JCNewArray initializersWithoutFallthrough(VisitorState state,
-      NewArrayTree expressionTree) {
-    ListBuffer<JCTree.JCExpression> replacementInitializers = new ListBuffer<JCTree.JCExpression>();
-    ListBuffer<JCTree.JCExpression> dimensions = new ListBuffer<JCTree.JCExpression>();
-    dimensions.addAll((Collection<? extends JCTree.JCExpression>) expressionTree.getDimensions());
-    for (ExpressionTree elementTree : expressionTree.getInitializers()) {
-      if (!stringLiteral("fallthrough").matches(elementTree, state)) {
-        replacementInitializers.add((JCTree.JCExpression) elementTree);
-      }
-    }
-    return state.getTreeMaker().NewArray((JCTree.JCExpression) expressionTree.getType(),
-        dimensions.toList(), replacementInitializers.toList());
-  }
-
-
+  
   public static class Scanner extends com.google.errorprone.Scanner {
     public DescribingMatcher<AnnotationTree> annotationMatcher = new FallThroughSuppression();
 
