@@ -18,17 +18,9 @@ package com.google.errorprone;
 
 import com.google.errorprone.matchers.Description;
 
-import com.sun.tools.javac.parser.Scanner;
-import com.sun.tools.javac.main.JavaCompiler;
-import com.sun.tools.javac.comp.Attr;
-import com.sun.tools.javac.parser.Parser;
-import com.sun.source.tree.Tree.Kind;
-import com.sun.tools.javac.tree.JCTree.JCClassDecl;
-import com.sun.tools.javac.tree.JCTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
-import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ArrayType;
@@ -41,8 +33,6 @@ import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Name;
 
 import java.lang.reflect.Method;
-
-import javax.tools.JavaFileObject;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -161,88 +151,82 @@ public class VisitorState {
   }
 
   /**
-   * Given the string representation of a type, return the matching Type.
+   * Given the string representation of a simple (non-array, non-generic) type, return the
+   * matching Type.
    *
-   * TODO(eaftan): support wildcard generics, inner classes,
-   * check that the returned types behave as expected
-   *
-   * @param typeStr The canonical string representation of a type (e.g., "java.lang.Object")
+   * @param typeStr The canonical string representation of a simple type (e.g., "java.lang.Object")
+   * @return The Type that corresponds to the string, or null if it cannot be found
    */
-  public Type getType(String typeStr) {
-    // way 1
-
-    // Code borrowed from JavacTaskImpl.parseType.
-    JavaCompiler compiler = JavaCompiler.instance(context);
-    JavaFileObject prev = compiler.log.useSource(null);
-    Scanner.Factory scannerFactory = Scanner.Factory.instance(context);
-    Parser.Factory parserFactory = Parser.Factory.instance(context);
-    Attr attr = Attr.instance(context);
-    try {
-      Scanner scanner = scannerFactory.newScanner((typeStr+"\u0000").toCharArray(),
-          typeStr.length());
-      Parser parser = parserFactory.newParser(scanner, false, false);
-      JCTree tree = parser.type();
-
-
-
-      /* This is a hack.  attr.attribType needs an environment to compile against, and I chose
-       * the class that is currently being compiled since (1) it is sure to exist, and (2) it is
-       * in the Enter.typeDecls data structure that attr.attribType will use to find the
-       * environment.  I could avoid doing this if I duplicate code from Attr, but I think this
-       * is a better option.
-       */
-      TreePath currPath = path;
-      while (currPath.getLeaf().getKind() != Kind.CLASS) {
-        currPath = currPath.getParentPath();
-      }
-      JCClassDecl classTree = (JCClassDecl) currPath.getLeaf();
-      return attr.attribType(tree, classTree.sym);
-    } finally {
-      compiler.log.useSource(prev);
+  public Type getTypeFromString(String typeStr) {
+    validateTypeStr(typeStr);
+    if (isPrimitiveType(typeStr)) {
+      return getPrimitiveType(typeStr);
     }
-
-
-    // way 2
-//    if (isPrimitiveType(typeStr)) {
-//      return getPrimitiveType(typeStr);
-//    } else if (isArrayType(typeStr)) {
-//      ClassSymbol arraySymbol = getSymtab().arrayClass;
-//      Type elemType = getType(typeStr.substring(0, typeStr.length() - 2));
-//      if (elemType != null) {
-//        return new ArrayType(elemType, arraySymbol);
-//      }
-//      return null;
-//    } else if (isGenericType(typeStr)) {
-//      // extract base type
-//      Name baseTypeName = getName(typeStr.substring(0, typeStr.indexOf("<")));
-//      TypeSymbol baseTypeSym =  getSymtab().classes.get(baseTypeName);
-//      if (baseTypeSym != null) {
-//        // extract generic types
-//        String[] typeArgs = typeStr.substring(typeStr.indexOf("<") + 1, typeStr.length() - 1)
-//            .split(",");
-//        List<Type> typeArgsList = null;
-//        for (int i = 0; i < typeArgs.length; i++) {
-//          // TODO(eaftan): anything with getType should be prepared to handle null return value
-//          Type t = getType(typeArgs[i].trim());
-//          if (typeArgsList == null) {
-//            typeArgsList = List.<Type>of(t);
-//          } else {
-//            typeArgsList.append(t);
-//          }
-//          return new ClassType(Type.noType, typeArgsList, baseTypeSym);
-//        }
-//      }
-//      return null;
-//    } else {    // class type
-//      Name typeName = getName(typeStr);
-//      ClassSymbol typeSymbol = getSymtab().classes.get(typeName);
-//      if (typeSymbol != null) {
-//        return typeSymbol.asType();
-//      }
-//      return null;
-//    }
+    Name typeName = getName(typeStr);
+    ClassSymbol typeSymbol = getSymtab().classes.get(typeName);
+    if (typeSymbol != null) {
+      return typeSymbol.asType();
+    }
+    return null;
   }
 
+  /**
+   * Build an instance of a Type.
+   */
+  public Type getType(Type baseType, boolean isArray, List<Type> typeParams) {
+    boolean isGeneric = typeParams != null && !typeParams.equals(List.nil());
+    if (!isArray && !isGeneric) {
+      // Simple type.
+      return baseType;
+    } else if (isArray && !isGeneric) {
+      // Array type, not generic.
+      ClassSymbol arraySymbol = getSymtab().arrayClass;
+      return new ArrayType(baseType, arraySymbol);
+    } else if (!isArray && isGeneric) {
+      return new ClassType(Type.noType, typeParams, baseType.tsym);
+    } else {
+      throw new IllegalArgumentException("Unsupported arguments to getType");
+    }
+  }
+
+  /**
+   * Build an instance of a Type.
+   */
+  public Type getType(Type baseType, boolean isArray, java.util.List<Type> typeParams) {
+    boolean isGeneric = typeParams != null && !typeParams.equals(List.nil());
+    if (!isArray && !isGeneric) {
+      // Simple type.
+      return baseType;
+    } else if (isArray && !isGeneric) {
+      // Array type, not generic.
+      ClassSymbol arraySymbol = getSymtab().arrayClass;
+      return new ArrayType(baseType, arraySymbol);
+    } else if (!isArray && isGeneric) {
+      // Generic type, not array.
+      List<Type> typeParamsCopy = List.from(typeParams.toArray(new Type[typeParams.size()]));
+      return new ClassType(Type.noType, typeParamsCopy, baseType.tsym);
+    } else {
+      throw new IllegalArgumentException("Unsupported arguments to getType");
+    }
+  }
+
+  /**
+   * Validates a type string, ensuring it is not generic and not an array type.
+   */
+  private static void validateTypeStr(String typeStr) {
+    if (typeStr.contains("[") || typeStr.contains("]")) {
+      throw new IllegalArgumentException("Cannot convert array types, please build them using "
+          + "getType()");
+    }
+    if (typeStr.contains("<") || typeStr.contains(">")) {
+      throw new IllegalArgumentException("Cannot covnert generic types, please build them using "
+          + "getType()");
+    }
+  }
+
+  /**
+   * Given a string that represents a primitive type (e.g., "int"), return the corresponding Type.
+   */
   private Type getPrimitiveType(String typeStr) {
     if (typeStr.equals("byte")) {
       return getSymtab().byteType;
@@ -265,14 +249,6 @@ public class VisitorState {
     }
   }
 
-  private static boolean isArrayType(String typeStr) {
-    return typeStr.endsWith("[]");
-  }
-
-  private static boolean isGenericType(String typeStr) {
-    return typeStr.contains("<");
-  }
-
   private static boolean isPrimitiveType(String typeStr) {
     return typeStr.equals("byte") || typeStr.equals("short") || typeStr.equals("int") ||
         typeStr.equals("long") || typeStr.equals("float") || typeStr.equals("double") ||
@@ -281,5 +257,9 @@ public class VisitorState {
 
   private interface NameLookupStrategy {
     Name fromString(Context context, String nameStr);
+  }
+
+  public class TypeBuilder {
+
   }
 }
