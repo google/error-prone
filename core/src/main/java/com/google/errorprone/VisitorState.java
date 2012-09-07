@@ -154,6 +154,11 @@ public class VisitorState {
    * Given the string representation of a simple (non-array, non-generic) type, return the
    * matching Type.
    *
+   * <p>If this method returns null, the compiler has not seen this type yet, which means that if
+   * you are comparing other types to this for equality or the subtype relation, your result would
+   * always be false even if it could create the type.  Thus it might be best to bail out early in
+   * your matcher if this method returns null on your type of interest.
+   *
    * @param typeStr The canonical string representation of a simple type (e.g., "java.lang.Object")
    * @return The Type that corresponds to the string, or null if it cannot be found
    */
@@ -257,9 +262,5 @@ public class VisitorState {
 
   private interface NameLookupStrategy {
     Name fromString(Context context, String nameStr);
-  }
-
-  public class TypeBuilder {
-
   }
 }
