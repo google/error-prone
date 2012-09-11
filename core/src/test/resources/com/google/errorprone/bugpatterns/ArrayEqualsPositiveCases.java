@@ -22,6 +22,7 @@ import java.util.*;
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public class ArrayEqualsPositiveCases {
+    
   public void intArray() {
     int[] a = {1, 2, 3};
     int[] b = {1, 2, 3};

@@ -17,12 +17,19 @@
 package com.google.errorprone;
 
 import com.google.errorprone.matchers.Description;
+
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symtab;
+import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.Type.ArrayType;
+import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.Types;
+import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Name;
 
 import java.lang.reflect.Method;
@@ -80,6 +87,14 @@ public class VisitorState {
     return Symtab.instance(context);
   }
 
+  public JavacElements getElements() {
+    return JavacElements.instance(context);
+  }
+
+  public Name.Table getNames() {
+    return Name.Table.instance(context);
+  }
+
   public DescriptionListener getDescriptionListener() {
     return descriptionListener;
   }
@@ -133,6 +148,116 @@ public class VisitorState {
 
   public Name getName(String nameStr) {
     return NAME_LOOKUP_STRATEGY.fromString(context, nameStr);
+  }
+
+  /**
+   * Given the string representation of a simple (non-array, non-generic) type, return the
+   * matching Type.
+   *
+   * <p>If this method returns null, the compiler has not seen this type yet, which means that if
+   * you are comparing other types to this for equality or the subtype relation, your result would
+   * always be false even if it could create the type.  Thus it might be best to bail out early in
+   * your matcher if this method returns null on your type of interest.
+   *
+   * @param typeStr The canonical string representation of a simple type (e.g., "java.lang.Object")
+   * @return The Type that corresponds to the string, or null if it cannot be found
+   */
+  public Type getTypeFromString(String typeStr) {
+    validateTypeStr(typeStr);
+    if (isPrimitiveType(typeStr)) {
+      return getPrimitiveType(typeStr);
+    }
+    Name typeName = getName(typeStr);
+    ClassSymbol typeSymbol = getSymtab().classes.get(typeName);
+    if (typeSymbol != null) {
+      return typeSymbol.asType();
+    }
+    return null;
+  }
+
+  /**
+   * Build an instance of a Type.
+   */
+  public Type getType(Type baseType, boolean isArray, List<Type> typeParams) {
+    boolean isGeneric = typeParams != null && !typeParams.equals(List.nil());
+    if (!isArray && !isGeneric) {
+      // Simple type.
+      return baseType;
+    } else if (isArray && !isGeneric) {
+      // Array type, not generic.
+      ClassSymbol arraySymbol = getSymtab().arrayClass;
+      return new ArrayType(baseType, arraySymbol);
+    } else if (!isArray && isGeneric) {
+      return new ClassType(Type.noType, typeParams, baseType.tsym);
+    } else {
+      throw new IllegalArgumentException("Unsupported arguments to getType");
+    }
+  }
+
+  /**
+   * Build an instance of a Type.
+   */
+  public Type getType(Type baseType, boolean isArray, java.util.List<Type> typeParams) {
+    boolean isGeneric = typeParams != null && !typeParams.equals(List.nil());
+    if (!isArray && !isGeneric) {
+      // Simple type.
+      return baseType;
+    } else if (isArray && !isGeneric) {
+      // Array type, not generic.
+      ClassSymbol arraySymbol = getSymtab().arrayClass;
+      return new ArrayType(baseType, arraySymbol);
+    } else if (!isArray && isGeneric) {
+      // Generic type, not array.
+      List<Type> typeParamsCopy = List.from(typeParams.toArray(new Type[typeParams.size()]));
+      return new ClassType(Type.noType, typeParamsCopy, baseType.tsym);
+    } else {
+      throw new IllegalArgumentException("Unsupported arguments to getType");
+    }
+  }
+
+  /**
+   * Validates a type string, ensuring it is not generic and not an array type.
+   */
+  private static void validateTypeStr(String typeStr) {
+    if (typeStr.contains("[") || typeStr.contains("]")) {
+      throw new IllegalArgumentException("Cannot convert array types, please build them using "
+          + "getType()");
+    }
+    if (typeStr.contains("<") || typeStr.contains(">")) {
+      throw new IllegalArgumentException("Cannot covnert generic types, please build them using "
+          + "getType()");
+    }
+  }
+
+  /**
+   * Given a string that represents a primitive type (e.g., "int"), return the corresponding Type.
+   */
+  private Type getPrimitiveType(String typeStr) {
+    if (typeStr.equals("byte")) {
+      return getSymtab().byteType;
+    } else if (typeStr.equals("short")) {
+      return getSymtab().shortType;
+    } else if (typeStr.equals("int")) {
+      return getSymtab().intType;
+    } else if (typeStr.equals("long")) {
+      return getSymtab().longType;
+    } else if (typeStr.equals("float")) {
+      return getSymtab().floatType;
+    } else if (typeStr.equals("double")) {
+      return getSymtab().doubleType;
+    } else if (typeStr.equals("boolean")) {
+      return getSymtab().booleanType;
+    } else if (typeStr.equals("char")) {
+      return getSymtab().charType;
+    } else {
+      throw new IllegalStateException("Type string " + typeStr + " expected to be primitive");
+    }
+  }
+
+  private static boolean isPrimitiveType(String typeStr) {
+    return typeStr.equals("byte") || typeStr.equals("short") || typeStr.equals("int") ||
+        typeStr.equals("long") || typeStr.equals("float") || typeStr.equals("double") ||
+        typeStr.equals("boolean") || typeStr.equals("char");
   }
 
   private interface NameLookupStrategy {

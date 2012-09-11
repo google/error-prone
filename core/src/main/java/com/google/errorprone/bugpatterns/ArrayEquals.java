@@ -33,8 +33,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.*;
 
 /**
- * TODO(eaftan): tests -- more positive cases, start negative cases
- *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 @BugPattern(name = "ArrayEquals",
@@ -75,11 +73,11 @@ public class ArrayEquals extends DescribingMatcher<MethodInvocationTree> {
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {
-    public DescribingMatcher<MethodInvocationTree> matcher = new ArrayEquals();
+    public DescribingMatcher<MethodInvocationTree> scannerMatcher = new ArrayEquals();
 
     @Override
     public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {
-      evaluateMatch(node, visitorState, matcher);
+      evaluateMatch(node, visitorState, scannerMatcher);
       return super.visitMethodInvocation(node, visitorState);
     }
   }
