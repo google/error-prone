@@ -51,43 +51,60 @@ public class LongLiteralLowerCaseSuffix extends DescribingMatcher<LiteralTree> {
     @Override
     public boolean matches(LiteralTree literalTree, VisitorState state) {
       if (literalTree.getKind() == Kind.LONG_LITERAL) {
-        // Ugh. The javac AST doesn't seem to record whether the suffix is present, or whether it's
-        // an 'l' or 'L'. We have to look at the original source code. 
-        JCLiteral longLiteral = (JCLiteral) literalTree;
-        try {
-          CharSequence sourceFile = state.getPath().getCompilationUnit().getSourceFile()
-              .getCharContent(false);
-          if (sourceFile == null) {
-            return false;
-          }
-          // Loop through characters of source code from the start position until we hit
-          // a non-digit, non-underscore character. If it's 'l', it's the case we're after.
-          for (int pos = longLiteral.getStartPosition(); pos < sourceFile.length(); pos++) {
-            char literalChar = sourceFile.charAt(pos);
-            if (Character.isDigit(literalChar)
-                || literalChar == '_' /* Java 7 allows '_' within literals */) {
-              continue;
-            }
-            return literalChar == 'l';
-          }
-        } catch (IOException e) {
-          // IOException while loading content - don't match.
-          return false;
-        }
+        // The javac AST doesn't seem to record whether the suffix is present, or whether it's
+        // an 'l' or 'L'. We have to look at the original source
+        String longLiteral = getLongLiteral(literalTree, state);
+        return longLiteral != null && longLiteral.endsWith("l");
+      } else {
+        return false;
       }
-      return false;
     }
   };
 
-  @Override
-  public boolean matches(LiteralTree methodInvocationTree, VisitorState state) {
-    return matcher.matches(methodInvocationTree, state);
+  /**
+   * Extracts the long literal corresponding to a given {@link LiteralTree} node from the source
+   * code as a string. Returns null if the source code is not available.
+   */
+  private static String getLongLiteral(LiteralTree literalTree, VisitorState state) {
+    JCLiteral longLiteral = (JCLiteral) literalTree;
+    try {
+      CharSequence sourceFile = state.getPath().getCompilationUnit().getSourceFile()
+          .getCharContent(false);
+      if (sourceFile == null) {
+        return null;
+      }
+      int start = longLiteral.getStartPosition();
+      for (int pos = start; pos < sourceFile.length(); pos++) {
+        char literalChar = sourceFile.charAt(pos);
+        if (Character.isDigit(literalChar)
+            || literalChar == 'x' || literalChar == 'X' /* hex literal */
+            || literalChar == '_' /* Java 7 allows '_' within literals */) {
+          continue;
+        }
+        if (literalChar == 'l' || literalChar == 'L') {
+          return sourceFile.subSequence(start, pos + 1).toString();
+        } else {
+          return sourceFile.subSequence(start, pos).toString();
+        }
+      }
+      return null;
+    } catch (IOException e) {
+      // IOException while loading content - don't match.
+      return null;
+    }
   }
   
   @Override
-  public Description describe(LiteralTree t, VisitorState state) {
-    SuggestedFix fix = new SuggestedFix().replace(t, t.toString().toUpperCase());
-    return new Description(t, diagnosticMessage, fix);
+  public boolean matches(LiteralTree literalTree, VisitorState state) {
+    return matcher.matches(literalTree, state);
+  }
+  
+  @Override
+  public Description describe(LiteralTree literalTree, VisitorState state) {
+    StringBuilder longLiteral = new StringBuilder(getLongLiteral(literalTree, state));
+    longLiteral.setCharAt(longLiteral.length() - 1, 'L');
+    SuggestedFix fix = new SuggestedFix().replace(literalTree, longLiteral.toString());
+    return new Description(literalTree, diagnosticMessage, fix);
   }
   
   public static class Scanner extends com.google.errorprone.Scanner {
