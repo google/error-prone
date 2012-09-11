@@ -23,6 +23,7 @@ import com.google.errorprone.bugpatterns.DeadException;
 import com.google.errorprone.bugpatterns.EmptyIfStatement;
 import com.google.errorprone.bugpatterns.EmptyStatement;
 import com.google.errorprone.bugpatterns.FallThroughSuppression;
+import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
 import com.google.errorprone.bugpatterns.ObjectsEqualSelfComparison;
 import com.google.errorprone.bugpatterns.OrderingFrom;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNull;
@@ -66,6 +67,7 @@ public class ErrorProneScanner extends Scanner {
   private final Iterable<DescribingMatcher<EmptyStatementTree>> emptyStatementMatchers;
   private final Iterable<DescribingMatcher<AssignmentTree>> assignmentMatchers;
   private final Iterable<DescribingMatcher<MethodTree>> methodMatchers;
+  private final Iterable<DescribingMatcher<LiteralTree>> literalMatchers;
 
   @SuppressWarnings("unchecked")
   public ErrorProneScanner(EnabledPredicate enabled) {
@@ -90,6 +92,7 @@ public class ErrorProneScanner extends Scanner {
       );
       this.assignmentMatchers = createChecks(enabled, SelfAssignment.class);
       this.methodMatchers = createChecks(enabled, CovariantEquals.class);
+      this.literalMatchers = createChecks(enabled, LongLiteralLowerCaseSuffix.class);
     } catch (Exception e) {
       throw new RuntimeException("Could not reflectively create error prone matchers", e);
     }
@@ -154,5 +157,13 @@ public class ErrorProneScanner extends Scanner {
       evaluateMatch(node, visitorState, matcher);
     }
     return super.visitMethod(node, visitorState);
+  }
+  
+  @Override
+  public Void visitLiteral(LiteralTree literalTree, VisitorState visitorState) {
+    for (DescribingMatcher<LiteralTree> matcher : literalMatchers) {
+      evaluateMatch(literalTree, visitorState, matcher);
+    }
+    return super.visitLiteral(literalTree, visitorState);
   }
 }
