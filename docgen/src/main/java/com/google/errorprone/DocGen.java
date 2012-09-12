@@ -111,6 +111,9 @@ public class DocGen extends AbstractProcessor {
           "  * Maturity: {5}",
           "==The problem==",
           "{7}",
+          "==Suppression==",
+          "Suppress false positives by adding an ''@SuppressWarnings(\"{1}\")'' annotation to the "
+          + "enclosing element.",
           ""
       ),
       Locale.ENGLISH);
@@ -126,6 +129,9 @@ public class DocGen extends AbstractProcessor {
           "  * Maturity: {5}",
           "==The problem==",
           "{7}",
+          "==Suppression==",
+          "Suppress false positives by adding an ''@SuppressWarnings(\"{1}\")'' annotation to the "
+          + "enclosing element.",
           ""
       ),
       Locale.ENGLISH);
