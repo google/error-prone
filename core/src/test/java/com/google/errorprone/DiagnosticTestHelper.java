@@ -132,8 +132,9 @@ public class DiagnosticTestHelper {
         description
             .appendText("a diagnostic on line ")
             .appendValue(line)
-            .appendText(" that contains ")
-            .appendValue(message);
+            .appendText(" that contains \n")
+            .appendValue(message)
+            .appendText("\n");
       }
     };
   }

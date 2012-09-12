@@ -20,6 +20,12 @@ package com.google.errorprone.bugpatterns;
  * Positive cases for {@link LongLiteralLowerCaseSuffix}.
  */
 public class LongLiteralLowerCaseSuffixPositiveCases {
+  
+  // This constant string includes non-ASCII characters to make sure that we're not confusing
+  // bytes and chars:
+  @SuppressWarnings("unused")
+  private static final String TEST_STRING = "Îñţérñåţîöñåļîžåţîờñ";
+  
   public void positiveLowerCase() {
     //BUG: Suggestion includes "value = 123432L"
     long value = 123432l;
@@ -41,8 +47,8 @@ public class LongLiteralLowerCaseSuffixPositiveCases {
   }
   
   public void positiveHexLowerCase() {
-    //BUG: Suggestion includes "value = 0x80L"
-    long value = 0x80l;
+    //BUG: Suggestion includes "value = 0x8abcDEF0L"
+    long value = 0x8abcDEF0l;
     //BUG: Suggestion includes "value = 0X80L"
     value = 0X80l;
   }
@@ -55,15 +61,15 @@ public class LongLiteralLowerCaseSuffixPositiveCases {
   }
   
   public void negativeHexLowerCase() {
-    //BUG: Suggestion includes "value = -0x80L"
-    long value = -0x80l;
+    //BUG: Suggestion includes "value = -0x8abcDEF0L"
+    long value = -0x8abcDEF0l;
     //BUG: Suggestion includes "value = -0X80L"
     value = -0X80l;
   }
   
   public void negativeHexExtraSpacesLowerCase() {
-    //BUG: Suggestion includes "value = -  0x80L"
-    long value = -  0x80l;
+    //BUG: Suggestion includes "value = -  0x8abcDEF0L"
+    long value = -  0x8abcDEF0l;
   }
   
   public void positiveOctalLowerCase() {

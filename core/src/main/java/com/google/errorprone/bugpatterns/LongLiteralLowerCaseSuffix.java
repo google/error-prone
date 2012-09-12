@@ -46,7 +46,6 @@ import java.io.IOException;
     category = JDK, severity = ERROR, maturity = ON_BY_DEFAULT)
 public class LongLiteralLowerCaseSuffix extends DescribingMatcher<LiteralTree> {
 
-  @SuppressWarnings({"unchecked", "varargs"})
   private static final Matcher<LiteralTree> matcher = new Matcher<LiteralTree>() {
     @Override
     public boolean matches(LiteralTree literalTree, VisitorState state) {
@@ -76,8 +75,11 @@ public class LongLiteralLowerCaseSuffix extends DescribingMatcher<LiteralTree> {
       int start = longLiteral.getStartPosition();
       for (int pos = start; pos < sourceFile.length(); pos++) {
         char literalChar = sourceFile.charAt(pos);
-        if (Character.isDigit(literalChar)
-            || literalChar == 'x' || literalChar == 'X' /* hex literal */
+        if ((literalChar >= '0' && literalChar <= '9')
+            || (literalChar >= 'a' && literalChar <= 'f') // hex digits
+            || (literalChar >= 'A' && literalChar <= 'F') 
+            || literalChar == 'x' || literalChar == 'X' // hex literal: 0x...
+            // No need to add test for Java 7 binary literals 0b... 'b' has already been checked
             || literalChar == '_' /* Java 7 allows '_' within literals */) {
           continue;
         }
@@ -108,11 +110,11 @@ public class LongLiteralLowerCaseSuffix extends DescribingMatcher<LiteralTree> {
   }
   
   public static class Scanner extends com.google.errorprone.Scanner {
-    private final DescribingMatcher<LiteralTree> matcher = new LongLiteralLowerCaseSuffix();
+    private final DescribingMatcher<LiteralTree> scannerMatcher = new LongLiteralLowerCaseSuffix();
     
     @Override
     public Void visitLiteral(LiteralTree node, VisitorState visitorState) {
-      evaluateMatch(node, visitorState, matcher);
+      evaluateMatch(node, visitorState, scannerMatcher);
       return super.visitLiteral(node, visitorState);
     }
   }
