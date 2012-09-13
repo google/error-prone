@@ -32,6 +32,7 @@ import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Name;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 
 /**
@@ -215,6 +216,19 @@ public class VisitorState {
     }
   }
 
+  /**
+   * Gets the current source file.
+   * 
+   * @return the source file as a sequence of characters, or null if it is not available
+   */
+  public CharSequence getSourceCode() {
+    try {
+      return getPath().getCompilationUnit().getSourceFile().getCharContent(false);
+    } catch (IOException e) {
+      return null;
+    }
+  }
+  
   /**
    * Validates a type string, ensuring it is not generic and not an array type.
    */

@@ -31,8 +31,6 @@ import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
 
-import java.io.IOException;
-
 /**
  * Matcher for a <code>long</code> literal with a lower-case ell for a suffix (e.g.
  * <code>234l</code>) rather than the more readable upper-case ell (e.g. <code>234L</code>).
@@ -66,34 +64,28 @@ public class LongLiteralLowerCaseSuffix extends DescribingMatcher<LiteralTree> {
    */
   private static String getLongLiteral(LiteralTree literalTree, VisitorState state) {
     JCLiteral longLiteral = (JCLiteral) literalTree;
-    try {
-      CharSequence sourceFile = state.getPath().getCompilationUnit().getSourceFile()
-          .getCharContent(false);
-      if (sourceFile == null) {
-        return null;
-      }
-      int start = longLiteral.getStartPosition();
-      for (int pos = start; pos < sourceFile.length(); pos++) {
-        char literalChar = sourceFile.charAt(pos);
-        if ((literalChar >= '0' && literalChar <= '9')
-            || (literalChar >= 'a' && literalChar <= 'f') // hex digits
-            || (literalChar >= 'A' && literalChar <= 'F') 
-            || literalChar == 'x' || literalChar == 'X' // hex literal: 0x...
-            // No need to add test for Java 7 binary literals 0b... 'b' has already been checked
-            || literalChar == '_' /* Java 7 allows '_' within literals */) {
-          continue;
-        }
-        if (literalChar == 'l' || literalChar == 'L') {
-          return sourceFile.subSequence(start, pos + 1).toString();
-        } else {
-          return sourceFile.subSequence(start, pos).toString();
-        }
-      }
-      return null;
-    } catch (IOException e) {
-      // IOException while loading content - don't match.
+    CharSequence sourceFile = state.getSourceCode();
+    if (sourceFile == null) {
       return null;
     }
+    int start = longLiteral.getStartPosition();
+    for (int pos = start; pos < sourceFile.length(); pos++) {
+      char literalChar = sourceFile.charAt(pos);
+      if ((literalChar >= '0' && literalChar <= '9')
+          || (literalChar >= 'a' && literalChar <= 'f') // hex digits
+          || (literalChar >= 'A' && literalChar <= 'F') 
+          || literalChar == 'x' || literalChar == 'X' // hex literal: 0x...
+          // No need to add test for Java 7 binary literals 0b... 'b' has already been checked
+          || literalChar == '_' /* Java 7 allows '_' within literals */) {
+        continue;
+      }
+      if (literalChar == 'l' || literalChar == 'L') {
+        return sourceFile.subSequence(start, pos + 1).toString();
+      } else {
+        return sourceFile.subSequence(start, pos).toString();
+      }
+    }
+    return null;
   }
   
   @Override
