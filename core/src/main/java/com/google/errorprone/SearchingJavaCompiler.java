@@ -75,7 +75,7 @@ public class SearchingJavaCompiler extends JavaCompiler {
   public void postFlow(Env<AttrContext> env) {
     resultsPrinter.setCompilationUnit(env.toplevel.sourcefile);
     VisitorState visitorState = new VisitorState(context, resultsPrinter);
-    Scanner scanner = (Scanner) context.get(TreePathScanner.class);
+    Scanner scanner = context.get(Scanner.class);
     scanner.scan(env.toplevel, visitorState);
   }
 
