@@ -83,6 +83,21 @@ public class ErrorReportingJavaCompilerIntegrationTest {
     assertThat(outputStream.toString(), exitCode, is(0));
   }
 
+  @Test
+  public void testShouldSucceedCompileSourceFileWithMultipleTopLevelClassesExtends()
+      throws Exception {
+    ErrorProneCompiler compiler = new ErrorProneCompiler.Builder()
+        .named("test")
+        .redirectOutputTo(printWriter)
+        .listenToDiagnostics(diagnosticHelper.collector)
+        .build();
+    int exitCode = compiler.compile(
+        sources("com/google/errorprone/MultipleTopLevelClassesExtender.java",
+            "com/google/errorprone/MultipleTopLevelClassesExtended.java"));
+    outputStream.flush();
+    assertThat(outputStream.toString(), exitCode, is(0));
+  }
+
   private String[] sources(String... files) throws URISyntaxException {
     String[] result = new String[files.length];
     for (int i = 0; i < result.length; i++) {
