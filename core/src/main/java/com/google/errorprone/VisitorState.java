@@ -20,6 +20,7 @@ import com.google.errorprone.matchers.Description;
 
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
@@ -177,6 +178,14 @@ public class VisitorState {
   }
 
   /**
+   * Given the string representation of a symbol, returns the Symbol object.
+   */
+  public Symbol getSymbolFromString(String symStr) {
+    Name symName = getName(symStr);
+    return getSymtab().classes.get(symName);
+  }
+
+  /**
    * Build an instance of a Type.
    */
   public Type getType(Type baseType, boolean isArray, List<Type> typeParams) {
@@ -218,7 +227,7 @@ public class VisitorState {
 
   /**
    * Gets the current source file.
-   * 
+   *
    * @return the source file as a sequence of characters, or null if it is not available
    */
   public CharSequence getSourceCode() {
@@ -228,7 +237,7 @@ public class VisitorState {
       return null;
     }
   }
-  
+
   /**
    * Validates a type string, ensuring it is not generic and not an array type.
    */

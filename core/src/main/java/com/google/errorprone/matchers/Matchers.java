@@ -21,6 +21,7 @@ import com.google.errorprone.matchers.MethodVisibility.Visibility;
 import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.*;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
@@ -261,8 +262,27 @@ public class Matchers {
     };
   }
 
+  /**
+   * Determines whether a method has an annotation of the given type.
+   *
+   * @param annotationType The type of the annotation to look for (e.g, "javax.annotation.Nullable")
+   */
+  public static Matcher<ExpressionTree> methodHasAnnotation(final String annotationType) {
+    return new Matcher<ExpressionTree>() {
+      @Override
+      public boolean matches (ExpressionTree methodTree, VisitorState state) {
+        Symbol annotationSym = state.getSymbolFromString(annotationType);
+        boolean match = false;
+        if (annotationSym != null) {
+          match = ((JCIdent) methodTree).sym.attribute(annotationSym) != null;
+        }
+        return match;
+      }
+    };
+  }
+
   public static Matcher<MethodTree> methodReturns(final Type returnType) {
-    return new Matcher<MethodTree>(){
+    return new Matcher<MethodTree>() {
       @Override
       public boolean matches(MethodTree methodTree, VisitorState state) {
         Tree returnTree = methodTree.getReturnType();

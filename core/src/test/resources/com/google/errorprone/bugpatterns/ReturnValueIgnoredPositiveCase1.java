@@ -23,7 +23,7 @@ import java.util.Locale;
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class ReturnValueIgnoredPositiveCases {
+public class ReturnValueIgnoredPositiveCase1 {
   String a = "thing";
   { // String methods
     //BUG: Suggestion includes "ReturnValueIgnored"

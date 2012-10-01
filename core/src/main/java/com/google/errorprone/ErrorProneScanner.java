@@ -29,6 +29,7 @@ import com.google.errorprone.bugpatterns.OrderingFrom;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNull;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNullPrimitive1stArg;
 import com.google.errorprone.bugpatterns.PreconditionsExpensiveString;
+import com.google.errorprone.bugpatterns.ReturnValueIgnored;
 import com.google.errorprone.bugpatterns.SelfAssignment;
 import com.google.errorprone.bugpatterns.SuppressWarningsDeprecated;
 import com.google.errorprone.matchers.DescribingMatcher;
@@ -80,7 +81,8 @@ public class ErrorProneScanner extends Scanner {
           PreconditionsCheckNotNullPrimitive1stArg.class,
           CollectionIncompatibleType.class,
           ObjectsEqualSelfComparison.class,
-          ArrayEquals.class
+          ArrayEquals.class,
+          ReturnValueIgnored.class
       );
       this.newClassMatchers = createChecks(enabled, DeadException.class);
       this.annotationMatchers = createChecks(enabled,
@@ -158,7 +160,7 @@ public class ErrorProneScanner extends Scanner {
     }
     return super.visitMethod(node, visitorState);
   }
-  
+
   @Override
   public Void visitLiteral(LiteralTree literalTree, VisitorState visitorState) {
     for (DescribingMatcher<LiteralTree> matcher : literalMatchers) {
