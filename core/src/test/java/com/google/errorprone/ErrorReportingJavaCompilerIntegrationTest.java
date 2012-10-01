@@ -64,8 +64,8 @@ public class ErrorReportingJavaCompilerIntegrationTest {
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(1));
 
-    Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher = hasItem(allOf(
-        diagnosticMessage(containsString("Empty statement after if"))));
+    Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher = hasItem(
+        diagnosticMessage(containsString("[EmptyIf]")));
     assertThat("Warning should be found. " + diagnosticHelper.describe(),
         diagnosticHelper.getDiagnostics(), matcher);
   }
@@ -83,8 +83,12 @@ public class ErrorReportingJavaCompilerIntegrationTest {
     assertThat(outputStream.toString(), exitCode, is(0));
   }
 
+  /**
+   * Regression test for a bug in which multiple top-level classes may cause
+   * NullPointerExceptions in the matchers.
+   */
   @Test
-  public void testShouldSucceedCompileSourceFileWithMultipleTopLevelClassesExtends()
+  public void testShouldFailCompileSourceFileWithMultipleTopLevelClassesExtends()
       throws Exception {
     ErrorProneCompiler compiler = new ErrorProneCompiler.Builder()
         .named("test")
@@ -95,7 +99,12 @@ public class ErrorReportingJavaCompilerIntegrationTest {
         sources("com/google/errorprone/MultipleTopLevelClassesExtender.java",
             "com/google/errorprone/MultipleTopLevelClassesExtended.java"));
     outputStream.flush();
-    assertThat(outputStream.toString(), exitCode, is(0));
+    assertThat(outputStream.toString(), exitCode, is(1));
+
+    Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher = hasItem(
+        diagnosticMessage(containsString("[SelfAssignment]")));
+    assertThat("Warning should be found. " + diagnosticHelper.describe(),
+        diagnosticHelper.getDiagnostics(), matcher);
   }
 
   private String[] sources(String... files) throws URISyntaxException {

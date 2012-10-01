@@ -16,14 +16,14 @@
 
 package com.google.errorprone;
 
-import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.Tree;
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Env;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Log;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Used to run an error-prone analysis as a phase in the javac compiler.
@@ -35,14 +35,20 @@ public class ErrorProneAnalyzer {
   private final Scanner errorProneScanner;
 
   /**
-   * Records how many classes error-prone has encountered in each file.
+   * Which trees error-prone has encountered.
    */
-  private final Map<CompilationUnitTree, Integer> classDefsEncountered;
+  private final Set<Tree> treesEncountered;
+
+  /**
+   * Which compilation units have been scanned.
+   */
+  private final Set<Env<AttrContext>> compilationUnitsScanned;
 
   public ErrorProneAnalyzer(Log log, Context context) {
     this.log = log;
     this.context = context;
-    this.classDefsEncountered = new HashMap<CompilationUnitTree, Integer>();
+    this.treesEncountered = new HashSet<Tree>();
+    this.compilationUnitsScanned = new HashSet<Env<AttrContext>>();
     this.errorProneScanner = context.get(Scanner.class);
     if (this.errorProneScanner == null) {
       throw new IllegalStateException(
@@ -54,42 +60,48 @@ public class ErrorProneAnalyzer {
 
   /**
    * Reports that a class (represented by the env) is ready for error-prone to analyze. The
-   * analysis will only occur when all classes in a compilation unit (a file) have been seen,
-   * since unseen ones may not have been attributed yet.
+   * analysis will only occur when all classes in a compilation unit (a file) have been seen.
    */
   public void reportReadyForAnalysis(Env<AttrContext> env) {
+    if (!compilationUnitsScanned.contains(env)) {
+      // TODO(eaftan): This check for size == 1 is an optimization for the common case of 1 class
+      // per file. We should benchmark to see if it actually helps.
+      if (env.toplevel.getTypeDecls().size() == 1) {
+        errorProneScanner.scan(env.toplevel, createVisitorState(env));
+        compilationUnitsScanned.add(env);
+      } else {
+        treesEncountered.add(env.tree);
+        if (allClassesSeen(env)) {
+          errorProneScanner.scan(env.toplevel, createVisitorState(env));
+          compilationUnitsScanned.add(env);
+        }
+      }
+    }
+  }
+
+  /**
+   * Create a VisitorState object from an environment.
+   */
+  private VisitorState createVisitorState(Env<AttrContext> env) {
     DescriptionListener logReporter = new JavacErrorDescriptionListener(log,
         env.toplevel.endPositions,
         env.enclClass.sym.sourcefile != null
             ? env.enclClass.sym.sourcefile
             : env.toplevel.sourcefile);
     VisitorState visitorState = new VisitorState(context, logReporter);
+    return visitorState;
+  }
 
-    /* Each env corresponds to a top-level class but not necessarily a single file. We want to scan
-     * a file all at once so that we see the file-level nodes like imports and package declarations.
-     *
-     * For the common case where a file contains only one class, we immediately scan the file.
-     * For files that contain more than one class, we keep track of those files and the number of
-     * enclosed class definitions we've seen. When we've seen all class definitions for that file,
-     * we scan the whole file.
-     */
-    if (env.toplevel.getTypeDecls().size() == 1) {
-      errorProneScanner.scan(env.toplevel, visitorState);
-    } else {
-      Integer seenCount = classDefsEncountered.get(env.toplevel);
-      if (seenCount == null) {
-        seenCount = 1;
-      } else {
-        seenCount++;
-      }
-
-      if (seenCount == env.toplevel.getTypeDecls().size()) {
-        errorProneScanner.scan(env.toplevel, visitorState);
-        classDefsEncountered.remove(env.toplevel);
-      } else {
-        classDefsEncountered.put(env.toplevel, seenCount);
+  /**
+   * Determines whether all classes in this compilation unit been seen.
+   */
+  private boolean allClassesSeen(Env<AttrContext> env) {
+    for (Tree tree : env.toplevel.getTypeDecls()) {
+      if (!treesEncountered.contains(tree)) {
+        return false;
       }
     }
+    return true;
   }
 
 }
