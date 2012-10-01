@@ -16,4 +16,9 @@
 
 public class MultipleTopLevelClassesExtended {}
 
-final class Foo1 {}
+final class Foo1 {
+  public void foo() {
+    int i = 10;
+    i = i;
+  }
+}

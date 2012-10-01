@@ -34,7 +34,7 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.*;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.sun.source.tree.Tree.Kind.*;
 
@@ -43,11 +43,11 @@ import static com.sun.source.tree.Tree.Kind.*;
  * int i = 10;  // this can't be an error, but why aren't we visiting it?
  * or incrementing assignments:
  * i += 10; // maybe this becomes i = i + 10 by this compiler phase?
- * 
- * 
+ *
+ *
  * Also consider cases where the parent is not a statement or there is
  * no parent?
- * 
+ *
  * @author eaftan@google.com (Eddie Aftandilian)
  *
  */
@@ -55,7 +55,7 @@ import static com.sun.source.tree.Tree.Kind.*;
     summary = "Variable assigned to itself",
     explanation = "The left-hand side and right-hand side of this assignment are the same. " +
     		"It has no effect.",
-    category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
+    category = JDK, severity = ERROR, maturity = ON_BY_DEFAULT)
 public class SelfAssignment extends DescribingMatcher<AssignmentTree> {
 
   private static final Matcher<AssignmentTree> matcher = new SelfAssignmentMatcher();
@@ -68,48 +68,48 @@ public class SelfAssignment extends DescribingMatcher<AssignmentTree> {
   /**
    * We expect that the lhs is a field and the rhs is an identifier, specifically
    * a parameter to the method.  We base our suggested fixes on this expectation.
-   * 
+   *
    * Case 1: If lhs is a field and rhs is an identifier, find a method parameter
-   * of the same type and similar name and suggest it as the rhs.  (Guess that they 
+   * of the same type and similar name and suggest it as the rhs.  (Guess that they
    * have misspelled the identifier.)
-   * 
+   *
    * Case 2: If lhs is a field and rhs is not an identifier, find a method parameter
    * of the same type and similar name and suggest it as the rhs.
-   * 
+   *
    * Case 3: If lhs is not a field and rhs is an identifier, find a class field
    * of the same type and similar name and suggest it as the lhs.
-   * 
-   * Case 4: Otherwise suggest deleting the assignment. 
+   *
+   * Case 4: Otherwise suggest deleting the assignment.
    */
   @Override
   public Description describe(AssignmentTree t,
                               VisitorState state) {
-    
+
     // the statement that is the parent of the self-assignment expression
     Tree parent = state.getPath().getParentPath().getLeaf();
-    
+
     // default fix is to delete assignment
     SuggestedFix fix = new SuggestedFix().delete(parent);
-    
+
     ExpressionTree lhs = t.getVariable();
     ExpressionTree rhs = t.getExpression();
-    
+
     if ((lhs.getKind() == MEMBER_SELECT && rhs.getKind() == IDENTIFIER) ||
         (lhs.getKind() == MEMBER_SELECT && rhs.getKind() != IDENTIFIER)) {
-      // find a method parameter of the same type and similar name and suggest it 
+      // find a method parameter of the same type and similar name and suggest it
       // as the rhs
 
       // rhs should be either identifier or field access
       assert(rhs.getKind() == IDENTIFIER || rhs.getKind() == MEMBER_SELECT);
-      
+
       // get current name of rhs
       String rhsName = null;
       if (rhs.getKind() == IDENTIFIER) {
         rhsName = ((JCIdent)rhs).name.toString();
       } else if (rhs.getKind() == MEMBER_SELECT) {
         rhsName = ((JCFieldAccess)rhs).name.toString();
-      } 
-      
+      }
+
       // find method parameters of the same type
       Type type = ((JCFieldAccess)lhs).type;
       TreePath path = state.getPath();
@@ -132,16 +132,16 @@ public class SelfAssignment extends DescribingMatcher<AssignmentTree> {
       if (replacement != null) {
         // suggest replacing rhs with the parameter
         fix = new SuggestedFix().replace(rhs, replacement);
-      } 
+      }
     } else if (lhs.getKind() != MEMBER_SELECT && rhs.getKind() == IDENTIFIER) {
       // find a field of the same type and similar name and suggest it as the lhs
-      
-      // lhs should be identifier 
+
+      // lhs should be identifier
       assert(lhs.getKind() == IDENTIFIER);
-      
+
       // get current name of lhs
       String lhsName = ((JCIdent)rhs).name.toString();
-      
+
       // find class instance fields of the same type
       Type type = ((JCIdent)lhs).type;
       TreePath path = state.getPath();
@@ -167,9 +167,9 @@ public class SelfAssignment extends DescribingMatcher<AssignmentTree> {
       if (replacement != null) {
         // suggest replacing lhs with the field
         fix = new SuggestedFix().replace(lhs, "this." + replacement);
-      } 
+      }
     }
-        
+
     return new Description(t, diagnosticMessage, fix);
   }
 
