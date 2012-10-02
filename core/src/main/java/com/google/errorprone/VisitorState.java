@@ -20,6 +20,7 @@ import com.google.errorprone.matchers.Description;
 
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
@@ -174,6 +175,14 @@ public class VisitorState {
       return typeSymbol.asType();
     }
     return null;
+  }
+
+  /**
+   * Given the string representation of a symbol, returns the Symbol object.
+   */
+  public Symbol getSymbolFromString(String symStr) {
+    Name symName = getName(symStr);
+    return getSymtab().classes.get(symName);
   }
 
   /**

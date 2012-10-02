@@ -18,6 +18,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+  <!-- Added this because the JSR 305 dependency wouldn't download from the
+       default repository.  -->
+  <repositories>
+    <repository>
+      <id>alt-repo1</id>
+      <name>repo1.maven.org</name>
+      <url>http://repo1.maven.org</url>
+    </repository>
+  </repositories>
+
   <parent>
     <groupId>com.google.errorprone</groupId>
     <artifactId>error_prone_parent</artifactId>
@@ -71,6 +81,12 @@
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>r09</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>jsr305</artifactId>
+      <version>2.0.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>

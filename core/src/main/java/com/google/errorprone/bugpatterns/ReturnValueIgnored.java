@@ -16,6 +16,17 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.BugPattern.Category.JDK;
+import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.isDescendantOfMethod;
+import static com.google.errorprone.matchers.Matchers.kindIs;
+import static com.google.errorprone.matchers.Matchers.methodHasAnnotation;
+import static com.google.errorprone.matchers.Matchers.methodSelect;
+import static com.google.errorprone.matchers.Matchers.parentNode;
+
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.DescribingMatcher;
@@ -28,11 +39,6 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.*;
-
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
@@ -40,15 +46,15 @@ import static com.google.errorprone.matchers.Matchers.*;
     altNames = {"ResultOfMethodCallIgnored"},
     summary = "Ignored return value of method which has no side-effect",
     explanation = "Method calls that have no side-effect are pointless if you ignore the value returned.",
-    category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
+    category = JDK, severity = ERROR, maturity = ON_BY_DEFAULT)
 public class ReturnValueIgnored extends DescribingMatcher<MethodInvocationTree> {
   @SuppressWarnings("unchecked")
   @Override
   public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
-    //TODO: look for JSR305's javax.annotation.CheckReturnValue Annotation
     return allOf(
         parentNode(kindIs(Kind.EXPRESSION_STATEMENT, MethodInvocationTree.class)),
         methodSelect(anyOf(ExpressionTree.class,
+            methodHasAnnotation("javax.annotation.CheckReturnValue"),
             isDescendantOfMethod("java.lang.String", "*"),
             isDescendantOfMethod("java.math.BigDecimal", "*"),
             isDescendantOfMethod("java.math.BigInteger", "*")))
