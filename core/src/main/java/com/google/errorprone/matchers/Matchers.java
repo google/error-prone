@@ -271,12 +271,19 @@ public class Matchers {
     return new Matcher<ExpressionTree>() {
       @Override
       public boolean matches (ExpressionTree methodTree, VisitorState state) {
-        Symbol annotationSym = state.getSymbolFromString(annotationType);
-        boolean match = false;
-        if (annotationSym != null) {
-          match = ((JCIdent) methodTree).sym.attribute(annotationSym) != null;
+        Symbol methodSym;
+        switch (methodTree.getKind()) {
+          case IDENTIFIER:
+            methodSym = ((JCIdent) methodTree).sym;
+            break;
+          case MEMBER_SELECT:
+            methodSym = ((JCFieldAccess) methodTree).sym;
+            break;
+          default:
+            return false;
         }
-        return match;
+        Symbol annotationSym = state.getSymbolFromString(annotationType);
+        return (annotationSym != null) && (methodSym.attribute(annotationSym) != null);
       }
     };
   }

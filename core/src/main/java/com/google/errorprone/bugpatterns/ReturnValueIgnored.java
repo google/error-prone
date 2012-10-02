@@ -51,8 +51,6 @@ public class ReturnValueIgnored extends DescribingMatcher<MethodInvocationTree> 
   @SuppressWarnings("unchecked")
   @Override
   public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
-    //TODO: look for JSR305's javax.annotation.CheckReturnValue Annotation
-
     return allOf(
         parentNode(kindIs(Kind.EXPRESSION_STATEMENT, MethodInvocationTree.class)),
         methodSelect(anyOf(ExpressionTree.class,

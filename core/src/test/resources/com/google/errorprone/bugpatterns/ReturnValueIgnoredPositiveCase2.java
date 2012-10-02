@@ -33,4 +33,23 @@ public class ReturnValueIgnoredPositiveCase2 {
     increment(i);
     System.out.println(i);
   }
+  
+  public void testIntValue() {
+    IntValue value = new IntValue(10);
+    //BUG: Suggestion includes "ReturnValueIgnored"
+    value.increment();
+  }
+  
+  private class IntValue {
+    final int i;
+    
+    public IntValue(int i) {
+      this.i = i;
+    }
+    
+    @CheckReturnValue
+    public IntValue increment() {
+      return new IntValue(i + 1);
+    }
+  }
 }

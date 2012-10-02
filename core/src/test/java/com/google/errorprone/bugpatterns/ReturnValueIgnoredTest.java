@@ -36,13 +36,11 @@ public class ReturnValueIgnoredTest {
     compilationHelper = new CompilationTestHelper(new ReturnValueIgnored.Scanner());
   }
 
-  /*
   @Test
   public void testPositiveCase1() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
         new File(this.getClass().getResource("ReturnValueIgnoredPositiveCase1.java").toURI()));
   }
-  */
 
   @Test
   public void testPositiveCase2() throws Exception {

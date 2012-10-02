@@ -227,7 +227,7 @@ public class VisitorState {
 
   /**
    * Gets the current source file.
-   *
+   * 
    * @return the source file as a sequence of characters, or null if it is not available
    */
   public CharSequence getSourceCode() {
@@ -237,7 +237,7 @@ public class VisitorState {
       return null;
     }
   }
-
+  
   /**
    * Validates a type string, ensuring it is not generic and not an array type.
    */
