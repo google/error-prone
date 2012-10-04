@@ -17,18 +17,29 @@
 package com.google.errorprone.bugpatterns;
 
 import java.math.BigInteger;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class ReturnValueIgnoredNegativeCases {
+  /*
   String a = "thing";
   {
     String b = a.trim();
     System.out.println(a.trim());
     new String(new BigInteger(new byte[]{0x01}).add(BigInteger.ONE).toString());
   }
+  
   String run() {
     return a.trim();
   }
+  */
+  
+  public void methodDoesntMatch() {
+    Map<String, Integer> map = new HashMap<String, Integer>();
+    map.put("test", 1);
+  }
+  
 }

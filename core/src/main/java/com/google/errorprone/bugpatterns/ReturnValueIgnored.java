@@ -29,15 +29,19 @@ import static com.google.errorprone.matchers.Matchers.parentNode;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.MethodInvocationMethodSelect;
 
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.StatementTree;
-import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -45,9 +49,23 @@ import com.sun.source.tree.Tree.Kind;
 @BugPattern(name = "ReturnValueIgnored",
     altNames = {"ResultOfMethodCallIgnored"},
     summary = "Ignored return value of method which has no side-effect",
-    explanation = "Method calls that have no side-effect are pointless if you ignore the value returned.",
+    explanation = "Method calls that have no side-effect are pointless if you ignore the value "
+        + "returned.",
     category = JDK, severity = ERROR, maturity = ON_BY_DEFAULT)
 public class ReturnValueIgnored extends DescribingMatcher<MethodInvocationTree> {
+
+  /**
+   * A list of types which this checker should examine method calls on.
+   */
+  private static final List<String> typesToCheck = Arrays.asList("java.lang.String",
+      "java.math.BigInteger", "java.math.BigDecimal");
+
+  /**
+   * Matches if the method being called is a statement (rather than an expression), and the method
+   *    1) Has been annotated with @CheckReturnValue, or
+   *    2) Is being called on an instance of the specified types, and the method returns the same
+   *       type (e.g. String.trim()).
+   */
   @SuppressWarnings("unchecked")
   @Override
   public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
@@ -55,26 +73,21 @@ public class ReturnValueIgnored extends DescribingMatcher<MethodInvocationTree> 
         parentNode(kindIs(Kind.EXPRESSION_STATEMENT, MethodInvocationTree.class)),
         methodSelect(anyOf(ExpressionTree.class,
             methodHasAnnotation("javax.annotation.CheckReturnValue"),
-            isDescendantOfMethod("java.lang.String", "*"),
-            isDescendantOfMethod("java.math.BigDecimal", "*"),
-            isDescendantOfMethod("java.math.BigInteger", "*")))
+            allOf(isDescendantOfMethod("java.lang.String", "*"),
+                isDescendantOfMethod("java.math.BigDecimal", "*"),
+                isDescendantOfMethod("java.math.BigInteger", "*"))))
     ).matches(methodInvocationTree, state);
   }
 
-  private Matcher<MethodInvocationTree> parentIsStatement() {
-    return new Matcher<MethodInvocationTree>(){
-      @Override
-      public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
-        Tree parent = state.getPath().getParentPath().getLeaf();
-        return parent instanceof StatementTree;
-      }
-    };
-  }
-
-
+  /**
+   * My guess is that the best fix for this would be to take the receiver of the method invocation
+   * and assign the result to that.
+   */
   @Override
   public Description describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
-    return new Description(methodInvocationTree, diagnosticMessage, null);
+    String retTypeStr = ((JCMethodInvocation) methodInvocationTree).type.toString();
+    SuggestedFix fix = new SuggestedFix().prefixWith(methodInvocationTree, retTypeStr);
+    return new Description(methodInvocationTree, diagnosticMessage, fix);
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {

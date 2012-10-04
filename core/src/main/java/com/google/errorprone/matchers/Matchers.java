@@ -378,7 +378,8 @@ public class Matchers {
     };
   }
 
-  public static Matcher<ExpressionTree> isDescendantOfMethod(final String fullClassName, final String methodName) {
+  public static Matcher<ExpressionTree> isDescendantOfMethod(final String fullClassName,
+      final String methodName) {
     return new Matcher<ExpressionTree>() {
       @Override
       public boolean matches(ExpressionTree expressionTree, VisitorState state) {
@@ -389,13 +390,11 @@ public class Matchers {
         JCFieldAccess methodSelectFieldAccess = (JCFieldAccess) expressionTree;
         if ("*".equals(methodName) || methodName.equals(methodSelectFieldAccess.sym.toString())) {
           Type accessedReferenceType = ((MethodSymbol) methodSelectFieldAccess.sym).owner.type;
-
-          ClassSymbol classSymbol = state.getSymtab().classes.get(state.getName(fullClassName));
-          if (classSymbol == null) {
-            return false;
+          Type collectionType = state.getTypeFromString(fullClassName);
+          if (collectionType != null) {
+            return state.getTypes().isSubtype(accessedReferenceType,
+                state.getTypes().erasure(collectionType));
           }
-          Type collectionType = classSymbol.type;
-          return state.getTypes().isCastable(accessedReferenceType, collectionType);
         }
         return false;
       }
