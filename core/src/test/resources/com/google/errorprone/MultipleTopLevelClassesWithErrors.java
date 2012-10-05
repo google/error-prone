@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-public class MultipleTopLevelClassesExtended {}
+public class MultipleTopLevelClassesWithErrors {}
 
 final class Foo1 {
   public void foo() {

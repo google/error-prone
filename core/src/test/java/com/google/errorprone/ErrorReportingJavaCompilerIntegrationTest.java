@@ -17,7 +17,6 @@
 package com.google.errorprone;
 
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
-import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -44,21 +43,22 @@ public class ErrorReportingJavaCompilerIntegrationTest {
   private DiagnosticTestHelper diagnosticHelper;
   private PrintWriter printWriter;
   private ByteArrayOutputStream outputStream;
+  ErrorProneCompiler compiler;
 
   @Before
   public void setUp() {
     diagnosticHelper = new DiagnosticTestHelper();
     outputStream = new ByteArrayOutputStream();
     printWriter = new PrintWriter(new OutputStreamWriter(outputStream));
+    compiler = new ErrorProneCompiler.Builder()
+    .named("test")
+    .redirectOutputTo(printWriter)
+    .listenToDiagnostics(diagnosticHelper.collector)
+    .build();
   }
 
   @Test
-  public void testShouldFailToCompileSourceFileWithError() throws Exception {
-    ErrorProneCompiler compiler = new ErrorProneCompiler.Builder()
-        .named("test")
-        .redirectOutputTo(printWriter)
-        .listenToDiagnostics(diagnosticHelper.collector)
-        .build();
+  public void fileWithError() throws Exception {
     int exitCode = compiler.compile(sources(
         "com/google/errorprone/bugpatterns/EmptyIfStatementPositiveCases.java"));
     outputStream.flush();
@@ -71,14 +71,18 @@ public class ErrorReportingJavaCompilerIntegrationTest {
   }
 
   @Test
-  public void testShouldSucceedCompileSourceFileWithMultipleTopLevelClasses() throws Exception {
-    ErrorProneCompiler compiler = new ErrorProneCompiler.Builder()
-        .named("test")
-        .redirectOutputTo(printWriter)
-        .listenToDiagnostics(diagnosticHelper.collector)
-        .build();
+  public void fileWithMultipleTopLevelClasses() throws Exception {
     int exitCode = compiler.compile(
         sources("com/google/errorprone/MultipleTopLevelClassesWithNoErrors.java"));
+    outputStream.flush();
+    assertThat(outputStream.toString(), exitCode, is(0));
+  }
+
+  @Test
+  public void fileWithMultipleTopLevelClassesExtends() throws Exception {
+    int exitCode = compiler.compile(
+        sources("com/google/errorprone/MultipleTopLevelClassesWithNoErrors.java",
+            "com/google/errorprone/ExtendedMultipleTopLevelClassesWithNoErrors.java"));
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(0));
   }
@@ -88,16 +92,11 @@ public class ErrorReportingJavaCompilerIntegrationTest {
    * NullPointerExceptions in the matchers.
    */
   @Test
-  public void testShouldFailCompileSourceFileWithMultipleTopLevelClassesExtends()
+  public void fileWithMultipleTopLevelClassesExtendsWithError()
       throws Exception {
-    ErrorProneCompiler compiler = new ErrorProneCompiler.Builder()
-        .named("test")
-        .redirectOutputTo(printWriter)
-        .listenToDiagnostics(diagnosticHelper.collector)
-        .build();
     int exitCode = compiler.compile(
-        sources("com/google/errorprone/MultipleTopLevelClassesExtender.java",
-            "com/google/errorprone/MultipleTopLevelClassesExtended.java"));
+        sources("com/google/errorprone/MultipleTopLevelClassesWithErrors.java",
+            "com/google/errorprone/ExtendedMultipleTopLevelClassesWithErrors.java"));
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(1));
 
