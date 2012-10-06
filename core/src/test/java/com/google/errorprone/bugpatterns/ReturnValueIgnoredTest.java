@@ -36,7 +36,6 @@ public class ReturnValueIgnoredTest {
     compilationHelper = new CompilationTestHelper(new ReturnValueIgnored.Scanner());
   }
 
-  /*
   @Test
   public void testPositiveCase1() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
@@ -48,7 +47,6 @@ public class ReturnValueIgnoredTest {
     compilationHelper.assertCompileFailsWithMessages(
         new File(this.getClass().getResource("ReturnValueIgnoredPositiveCase2.java").toURI()));
   }
-  */
 
   @Test
   public void testNegativeCase() throws Exception {

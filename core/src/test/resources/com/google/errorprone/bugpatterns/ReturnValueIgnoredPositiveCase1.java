@@ -54,10 +54,6 @@ public class ReturnValueIgnoredPositiveCase1 {
     a.substring(0);
     //BUG: Suggestion includes "ReturnValueIgnored"
     a.substring(0, 1);
-    //BUG: Suggestion includes "ReturnValueIgnored"
-    a.split("b");
-    //BUG: Suggestion includes "ReturnValueIgnored"
-    a.split("b", 1);
   }
 
   BigInteger b = new BigInteger("123456789");

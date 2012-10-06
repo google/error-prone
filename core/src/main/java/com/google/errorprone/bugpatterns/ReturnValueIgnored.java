@@ -21,7 +21,6 @@ import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.isDescendantOfMethod;
 import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.matchers.Matchers.methodHasAnnotation;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
@@ -33,15 +32,19 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.MethodInvocationMethodSelect;
 
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.Type.MethodType;
+import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -55,10 +58,12 @@ import java.util.List;
 public class ReturnValueIgnored extends DescribingMatcher<MethodInvocationTree> {
 
   /**
-   * A list of types which this checker should examine method calls on.
+   * A set of types which this checker should examine method calls on.
    */
-  private static final List<String> typesToCheck = Arrays.asList("java.lang.String",
-      "java.math.BigInteger", "java.math.BigDecimal");
+  //TODO(eaftan): Flesh out this list. Get immutable types from IntelliJ source, immutable Guava
+  // types, FindBugs, list on StackOverflow
+  private static final Set<String> typesToCheck = new HashSet<String>(Arrays.asList(
+      "java.lang.String", "java.math.BigInteger", "java.math.BigDecimal"));
 
   /**
    * Matches if the method being called is a statement (rather than an expression), and the method
@@ -73,9 +78,7 @@ public class ReturnValueIgnored extends DescribingMatcher<MethodInvocationTree> 
         parentNode(kindIs(Kind.EXPRESSION_STATEMENT, MethodInvocationTree.class)),
         methodSelect(anyOf(ExpressionTree.class,
             methodHasAnnotation("javax.annotation.CheckReturnValue"),
-            allOf(isDescendantOfMethod("java.lang.String", "*"),
-                isDescendantOfMethod("java.math.BigDecimal", "*"),
-                isDescendantOfMethod("java.math.BigInteger", "*"))))
+            allOf(methodReceiverHasType(typesToCheck), methodReturnsSameTypeAsReceiver())))
     ).matches(methodInvocationTree, state);
   }
 
@@ -98,5 +101,42 @@ public class ReturnValueIgnored extends DescribingMatcher<MethodInvocationTree> 
       evaluateMatch(node, visitorState, matcher);
       return super.visitMethodInvocation(node, visitorState);
     }
+  }
+
+  /**
+   * Matches method invocations that return the same type as the receiver object.
+   */
+  private static Matcher<ExpressionTree> methodReturnsSameTypeAsReceiver() {
+    return new Matcher<ExpressionTree>() {
+      @Override
+      public boolean matches(ExpressionTree expressionTree, VisitorState state) {
+        if (!(expressionTree instanceof JCFieldAccess)) {
+          return false;
+        }
+
+        JCFieldAccess methodSelectFieldAccess = (JCFieldAccess) expressionTree;
+        Type receiverType = ((MethodSymbol) methodSelectFieldAccess.sym).owner.type;
+        Type returnType = ((MethodType) methodSelectFieldAccess.type).getReturnType();
+        return state.getTypes().isSameType(receiverType, returnType);
+      }
+    };
+  }
+
+  /**
+   * Matches method invocations that return the same type as the receiver object.
+   */
+  private static Matcher<ExpressionTree> methodReceiverHasType(final Set<String> typeSet) {
+    return new Matcher<ExpressionTree>() {
+      @Override
+      public boolean matches(ExpressionTree expressionTree, VisitorState state) {
+        if (!(expressionTree instanceof JCFieldAccess)) {
+          return false;
+        }
+
+        JCFieldAccess methodSelectFieldAccess = (JCFieldAccess) expressionTree;
+        Type receiverType = ((MethodSymbol) methodSelectFieldAccess.sym).owner.type;
+        return typeSet.contains(receiverType.toString());
+      }
+    };
   }
 }

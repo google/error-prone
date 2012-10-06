@@ -378,6 +378,7 @@ public class Matchers {
     };
   }
 
+  // TODO(eaftan): Add JavaDoc
   public static Matcher<ExpressionTree> isDescendantOfMethod(final String fullClassName,
       final String methodName) {
     return new Matcher<ExpressionTree>() {
