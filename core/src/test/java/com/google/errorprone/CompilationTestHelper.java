@@ -16,12 +16,12 @@
 
 package com.google.errorprone;
 
-import static com.google.errorprone.DiagnosticTestHelper.hasDiagnosticOnAllMatchingLines;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-
 import java.io.File;
 import java.io.IOException;
+
+import static com.google.errorprone.DiagnosticTestHelper.assertHasDiagnosticOnAllMatchingLines;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * Utility class for tests that need to build using error-prone.
@@ -51,8 +51,7 @@ public class CompilationTestHelper {
   public void assertCompileFailsWithMessages(File source) throws IOException {
     assertThat("Compiler returned an unexpected error code",
         compiler.compile(new String[]{"-Xjcov", source.getAbsolutePath()}), is(1));
-    assertThat("Compiler returned unexpected diagnostics", diagnosticHelper.getDiagnostics(),
-        hasDiagnosticOnAllMatchingLines(source));
+    assertHasDiagnosticOnAllMatchingLines(diagnosticHelper.getDiagnostics(), source);
   }
 
 }

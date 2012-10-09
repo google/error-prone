@@ -16,27 +16,24 @@
 
 package com.google.errorprone;
 
-import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.CoreMatchers.not;
-import static org.junit.internal.matchers.StringContains.containsString;
-
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
+import javax.tools.Diagnostic;
+import javax.tools.DiagnosticCollector;
+import javax.tools.JavaFileObject;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-import javax.tools.Diagnostic;
-import javax.tools.DiagnosticCollector;
-import javax.tools.JavaFileObject;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
+import static org.junit.internal.matchers.StringContains.containsString;
 
 /**
  * Utility class for tests which need to assert on the diagnostics produced during compilation.
@@ -164,19 +161,17 @@ public class DiagnosticTestHelper {
   private static final Pattern BUG_MARKER_PATTERN =
       Pattern.compile(".*//BUG: Suggestion includes \"(.*)\"\\s*$");
 
+
   /**
-   * Matches an Iterable of diagnostics if it contains a diagnostic on each line of the source file
+   * Asserts that the List of diagnostics contains a diagnostic on each line of the source file
    * that matches our bug marker pattern.  Parses the bug marker pattern for the specific string
    * to look for in the diagnostic.
-   *
+   * @param diagnostics               the diagnostics output by the compiler
    * @param source                    file to find matching lines
-   * @return a Hamcrest matcher
    */
-  public static Matcher<Iterable<Diagnostic<? extends JavaFileObject>>>
-  hasDiagnosticOnAllMatchingLines(final File source) throws IOException {
-    List<Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>>> matchers =
-        new ArrayList<Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>>>();
-
+  @SuppressWarnings("unchecked")
+  public static void assertHasDiagnosticOnAllMatchingLines(
+      List<Diagnostic<? extends JavaFileObject>> diagnostics, File source) throws IOException {
     final LineNumberReader reader = new LineNumberReader(new FileReader(source));
     do {
       String line = reader.readLine();
@@ -193,10 +188,9 @@ public class DiagnosticTestHelper {
         // Cast is unnecessary, but javac throws an error because of poor type inference.
         matcher = (Matcher) not(hasItem(diagnosticOnLine(reader.getLineNumber())));
       }
-      matchers.add(matcher);
+      assertThat("Compiler returned unexpected diagnostics", diagnostics, matcher);
+
     } while (true);
     reader.close();
-
-    return allOf(matchers);
   }
 }
