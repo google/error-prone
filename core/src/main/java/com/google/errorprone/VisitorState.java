@@ -17,7 +17,6 @@
 package com.google.errorprone;
 
 import com.google.errorprone.matchers.Description;
-
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol;
@@ -27,7 +26,6 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ArrayType;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.Types;
-import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.List;
@@ -87,14 +85,6 @@ public class VisitorState {
 
   public Symtab getSymtab() {
     return Symtab.instance(context);
-  }
-
-  public JavacElements getElements() {
-    return JavacElements.instance(context);
-  }
-
-  public Name.Table getNames() {
-    return Name.Table.instance(context);
   }
 
   public DescriptionListener getDescriptionListener() {

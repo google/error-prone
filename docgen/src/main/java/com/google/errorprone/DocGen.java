@@ -105,15 +105,15 @@ public class DocGen extends AbstractProcessor {
       Joiner.on("\n").join(
           "#summary {6}",
           "#labels BugPattern",
-          "=Bug pattern: {1}=",
+          "=Bug pattern: !{1}=",
           "  * Category: {3}",
           "  * Severity: {4}",
           "  * Maturity: {5}",
           "==The problem==",
           "{7}",
           "==Suppression==",
-          "Suppress false positives by adding an ''@SuppressWarnings(\"{1}\")'' annotation to the "
-          + "enclosing element.",
+          "Suppress false positives by adding an @!SuppressWarnings(\"!{1}\") annotation "
+          + "to the enclosing element.",
           ""
       ),
       Locale.ENGLISH);
@@ -122,7 +122,7 @@ public class DocGen extends AbstractProcessor {
       Joiner.on("\n").join(
           "#summary {6}",
           "#labels BugPattern",
-          "=Bug pattern: {1}=",
+          "=Bug pattern: !{1}=",
           "  * Alternate names: {2}",
           "  * Category: {3}",
           "  * Severity: {4}",
@@ -130,8 +130,8 @@ public class DocGen extends AbstractProcessor {
           "==The problem==",
           "{7}",
           "==Suppression==",
-          "Suppress false positives by adding an ''@SuppressWarnings(\"{1}\")'' annotation to the "
-          + "enclosing element.",
+          "Suppress false positives by adding an @!SuppressWarnings(\"!{1}\") annotation "
+          + "to the enclosing element.",
           ""
       ),
       Locale.ENGLISH);

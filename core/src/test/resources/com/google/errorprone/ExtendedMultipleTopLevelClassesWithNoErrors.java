@@ -14,4 +14,9 @@
  * limitations under the License.
  */
 
-public class MultipleTopLevelClassesExtender extends MultipleTopLevelClassesExtended {}
+public class ExtendedMultipleTopLevelClassesWithNoErrors 
+    extends MultipleTopLevelClassesWithNoErrors {
+  ExtendedMultipleTopLevelClassesWithNoErrors() {
+    super(0,0);
+  }
+}
