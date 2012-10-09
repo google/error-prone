@@ -24,7 +24,7 @@ import java.util.HashMap;
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class ReturnValueIgnoredNegativeCases {
-  /*
+  
   String a = "thing";
   {
     String b = a.trim();
@@ -33,9 +33,10 @@ public class ReturnValueIgnoredNegativeCases {
   }
   
   String run() {
+    a.trim().hashCode();
     return a.trim();
   }
-  */
+  
   
   public void methodDoesntMatch() {
     Map<String, Integer> map = new HashMap<String, Integer>();
