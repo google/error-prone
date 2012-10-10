@@ -16,6 +16,7 @@
 
 package com.google.errorprone;
 
+import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Env;
@@ -35,20 +36,20 @@ public class ErrorProneAnalyzer {
   private final Scanner errorProneScanner;
 
   /**
-   * Which trees error-prone has encountered.
+   * Which classes error-prone has encountered.
    */
-  private final Set<Tree> treesEncountered;
+  private final Set<Tree> classesEncountered;
 
   /**
    * Which compilation units have been scanned.
    */
-  private final Set<Env<AttrContext>> compilationUnitsScanned;
+  private final Set<CompilationUnitTree> compilationUnitsScanned;
 
   public ErrorProneAnalyzer(Log log, Context context) {
     this.log = log;
     this.context = context;
-    this.treesEncountered = new HashSet<Tree>();
-    this.compilationUnitsScanned = new HashSet<Env<AttrContext>>();
+    this.classesEncountered = new HashSet<Tree>();
+    this.compilationUnitsScanned = new HashSet<CompilationUnitTree>();
     this.errorProneScanner = context.get(Scanner.class);
     if (this.errorProneScanner == null) {
       throw new IllegalStateException(
@@ -63,17 +64,17 @@ public class ErrorProneAnalyzer {
    * analysis will only occur when all classes in a compilation unit (a file) have been seen.
    */
   public void reportReadyForAnalysis(Env<AttrContext> env) {
-    if (!compilationUnitsScanned.contains(env)) {
+    if (!compilationUnitsScanned.contains(env.toplevel)) {
       // TODO(eaftan): This check for size == 1 is an optimization for the common case of 1 class
       // per file. We should benchmark to see if it actually helps.
       if (env.toplevel.getTypeDecls().size() == 1) {
         errorProneScanner.scan(env.toplevel, createVisitorState(env));
-        compilationUnitsScanned.add(env);
+        compilationUnitsScanned.add(env.toplevel);
       } else {
-        treesEncountered.add(env.tree);
+        classesEncountered.add(env.tree);
         if (allClassesSeen(env)) {
           errorProneScanner.scan(env.toplevel, createVisitorState(env));
-          compilationUnitsScanned.add(env);
+          compilationUnitsScanned.add(env.toplevel);
         }
       }
     }
@@ -97,7 +98,7 @@ public class ErrorProneAnalyzer {
    */
   private boolean allClassesSeen(Env<AttrContext> env) {
     for (Tree tree : env.toplevel.getTypeDecls()) {
-      if (!treesEncountered.contains(tree)) {
+      if (!classesEncountered.contains(tree)) {
         return false;
       }
     }
