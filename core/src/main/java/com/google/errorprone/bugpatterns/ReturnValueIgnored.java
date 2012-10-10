@@ -37,6 +37,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.MethodType;
@@ -110,7 +111,7 @@ public class ReturnValueIgnored extends DescribingMatcher<MethodInvocationTree> 
 
     SuggestedFix fix;
     if (identifierStr != null && !"this".equals(identifierStr) && returnType != null &&
-        state.getTypes().isSameType(returnType, identifierType)) {
+        state.getTypes().isAssignable(returnType, identifierType)) {
       // Fix by assigning the assigning the result of the call to the root receiver reference.
       fix = new SuggestedFix().prefixWith(methodInvocationTree, identifierStr + " = ");
     } else {
@@ -203,7 +204,7 @@ public class ReturnValueIgnored extends DescribingMatcher<MethodInvocationTree> 
 
   /**
    * Find the "root" identifier of a chain of field accesses.  If there is no root (i.e, a bare
-   * method call), return null.
+   * method call or a static method call), return null.
    *
    * Examples:
    *    a.trim().intern() ==> a
@@ -211,6 +212,7 @@ public class ReturnValueIgnored extends DescribingMatcher<MethodInvocationTree> 
    *    this.intValue.foo() ==> this.intValue
    *    this.foo() ==> this
    *    intern() ==> null
+   *    String.format() == > null
    */
   private ExpressionTree getRootIdentifier(MethodInvocationTree methodInvocationTree) {
     if (!(methodInvocationTree instanceof JCMethodInvocation)) {
@@ -229,6 +231,11 @@ public class ReturnValueIgnored extends DescribingMatcher<MethodInvocationTree> 
         expr = ((JCFieldAccess) expr).getExpression();
       }
     }
+
+    if (expr instanceof JCIdent && ((JCIdent) expr).sym instanceof ClassSymbol) {
+      return null;
+    }
+
     return expr;
   }
 }

@@ -26,6 +26,10 @@ import java.util.Locale;
 public class ReturnValueIgnoredPositiveCase1 {
   String a = "thing";
   { // String methods
+    //BUG: Suggestion includes "remove this line"
+    String.format("%d", 10);
+    //BUG: Suggestion includes "remove this line"
+    String.format("%d", 10).trim();
     //BUG: Suggestion includes "a = a.intern()"
     a.intern();
     //BUG: Suggestion includes "a = a.trim()"
