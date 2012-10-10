@@ -51,10 +51,10 @@ public class ErrorReportingJavaCompilerIntegrationTest {
     outputStream = new ByteArrayOutputStream();
     printWriter = new PrintWriter(new OutputStreamWriter(outputStream));
     compiler = new ErrorProneCompiler.Builder()
-    .named("test")
-    .redirectOutputTo(printWriter)
-    .listenToDiagnostics(diagnosticHelper.collector)
-    .build();
+        .named("test")
+        .redirectOutputTo(printWriter)
+        .listenToDiagnostics(diagnosticHelper.collector)
+        .build();
   }
 
   @Test
