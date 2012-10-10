@@ -24,7 +24,6 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.matchers.Matchers.methodHasAnnotation;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
-import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.parentNode;
 
 import com.google.errorprone.BugPattern;
@@ -92,34 +91,38 @@ public class ReturnValueIgnored extends DescribingMatcher<MethodInvocationTree> 
    */
   @Override
   public Description describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
+    // Find the root of the field access chain, i.e. a.intern().trim() ==> a.
     ExpressionTree identifierExpr = getRootIdentifier(methodInvocationTree);
-    Type identifierType;
-    String identifierStr = identifierExpr.toString();
-    if (identifierExpr instanceof JCIdent) {
-      identifierType = ((JCIdent) identifierExpr).sym.type;
-    } else if (identifierExpr instanceof JCFieldAccess) {
-      identifierType = ((JCFieldAccess) identifierExpr).sym.type;
-    } else {
-      throw new IllegalStateException("Expected a JCIdent or a JCFieldAccess");
+    String identifierStr = null;
+    Type identifierType = null;
+    if (identifierExpr != null) {
+      identifierStr = identifierExpr.toString();
+      if (identifierExpr instanceof JCIdent) {
+        identifierType = ((JCIdent) identifierExpr).sym.type;
+      } else if (identifierExpr instanceof JCFieldAccess) {
+        identifierType = ((JCFieldAccess) identifierExpr).sym.type;
+      } else {
+        throw new IllegalStateException("Expected a JCIdent or a JCFieldAccess");
+      }
     }
 
     Type returnType = getReturnType(((JCMethodInvocation) methodInvocationTree).getMethodSelect());
 
     SuggestedFix fix;
-    if (!"this".equals(identifierStr) && returnType != null &&
+    if (identifierStr != null && !"this".equals(identifierStr) && returnType != null &&
         state.getTypes().isSameType(returnType, identifierType)) {
+      // Fix by assigning the assigning the result of the call to the root receiver reference.
       fix = new SuggestedFix().prefixWith(methodInvocationTree, identifierStr + " = ");
     } else {
-      // Not clear what the best fix is. Should be safe to delete without changing behaviour since
-      // we expect the method not to have side effects (Note: the method has a CheckReturnValue
-      // annotation).
+      // Unclear what the programmer intended.  Should be safe to delete without changing behavior
+      // since we expect the method not to have side effects .
       Tree parent = state.getPath().getParentPath().getLeaf();
       fix = new SuggestedFix().delete(parent);
     }
     return new Description(methodInvocationTree, diagnosticMessage, fix);
   }
 
-    public static class Scanner extends com.google.errorprone.Scanner {
+  public static class Scanner extends com.google.errorprone.Scanner {
     private ReturnValueIgnored matcher = new ReturnValueIgnored();
 
     @Override
@@ -182,9 +185,10 @@ public class ReturnValueIgnored extends DescribingMatcher<MethodInvocationTree> 
    * Returns the type of a receiver of a method call expression.
    * Precondition: the expressionTree corresponds to a method call.
    *
-   * a.b.foo() ==> type of a.b
-   * a.bar().foo() ==> type of a.bar()
-   * this.foo() ==> type of this
+   * Examples:
+   *    a.b.foo() ==> type of a.b
+   *    a.bar().foo() ==> type of a.bar()
+   *    this.foo() ==> type of this
    */
   private static Type getReceiverType(ExpressionTree expressionTree) {
     if (expressionTree instanceof JCFieldAccess) {
@@ -198,14 +202,26 @@ public class ReturnValueIgnored extends DescribingMatcher<MethodInvocationTree> 
   }
 
   /**
-   * Find the "root" identifier of a chain of field accesses, e.g.
-   * a.trim().intern() ==> a
-   * a.b.trim().intern() ==> a.b
-   * this.intValue.foo() ==> this.intValue
-   * this.foo() ==> this
-   * intern() ==> intern  // TODO(eaftan): Is this really what we want to return in this case?
+   * Find the "root" identifier of a chain of field accesses.  If there is no root (i.e, a bare
+   * method call), return null.
+   *
+   * Examples:
+   *    a.trim().intern() ==> a
+   *    a.b.trim().intern() ==> a.b
+   *    this.intValue.foo() ==> this.intValue
+   *    this.foo() ==> this
+   *    intern() ==> null
    */
   private ExpressionTree getRootIdentifier(MethodInvocationTree methodInvocationTree) {
+    if (!(methodInvocationTree instanceof JCMethodInvocation)) {
+      throw new IllegalArgumentException("Expected type to be JCMethodInvocation");
+    }
+
+    // Check for bare method call, e.g. intern().
+    if (((JCMethodInvocation) methodInvocationTree).getMethodSelect() instanceof JCIdent) {
+      return null;
+    }
+
     ExpressionTree expr = methodInvocationTree;
     while (expr instanceof JCMethodInvocation) {
       expr = ((JCMethodInvocation) expr).getMethodSelect();
