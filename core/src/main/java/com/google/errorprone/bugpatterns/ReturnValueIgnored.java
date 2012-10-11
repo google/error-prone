@@ -64,10 +64,14 @@ public class ReturnValueIgnored extends DescribingMatcher<MethodInvocationTree> 
   /**
    * A set of types which this checker should examine method calls on.
    */
-  //TODO(eaftan): Flesh out this list. Get immutable types from IntelliJ source, immutable Guava
-  // types, FindBugs, list on StackOverflow
+  // There are also some high-priority return value ignored checks in FindBugs for various
+  // threading constructs which do not return the same type as the receiver.
+  // This check does not deal with them, since the fix is less straightforward.
+  // See a list of the FindBugs checks here:
+  // http://code.google.com/searchframe#Fccnll6ERQ0/trunk/findbugs/src/java/edu/umd/cs/findbugs/ba/CheckReturnAnnotationDatabase.java
   private static final Set<String> typesToCheck = new HashSet<String>(Arrays.asList(
-      "java.lang.String", "java.math.BigInteger", "java.math.BigDecimal"));
+      "java.lang.String", "java.math.BigInteger", "java.math.BigDecimal", "java.awt.Color",
+      "java.awt.Font", "java.net.URI"));
 
   /**
    * Matches if the method being called is a statement (rather than an expression), and the method

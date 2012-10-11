@@ -16,8 +16,11 @@
 
 package com.google.errorprone.bugpatterns;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.URI;
 import java.util.Locale;
 
 /**
@@ -87,4 +90,28 @@ public class ReturnValueIgnoredPositiveCase1 {
     //BUG: Suggestion includes "c = c.divide(new BigDecimal("4.5"))"
     c.divide(new BigDecimal("4.5"));
   }
+
+  public void testURI () {
+    try {
+      URI uri = new URI("uristring");
+      //BUG: Suggestion includes "uri = uri.normalize()"
+      uri.normalize();
+    } catch (Exception e) {
+    }
+  }
+  
+  Font f = new Font("helvetica", 1, 1);
+  {
+    //BUG: Suggestion includes "f = f.deriveFont(2)"  
+    f.deriveFont(2);
+  }  
+  
+  Color color = new Color(345);
+  {
+    //BUG: Suggestion includes "color = color.darker()"
+    color.darker();
+    //BUG: Suggestion includes "color = color.brighter()"
+    color.brighter();
+  }
+  
 }
