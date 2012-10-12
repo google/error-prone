@@ -36,10 +36,10 @@ import static com.google.errorprone.matchers.Matchers.*;
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
-@BugPattern(name = "ObjectsEqualsSelfComparison",
-    summary = "Objects.equals() used to compare object to itself",
+@BugPattern(name = "ObjectsEqualSelfComparison",
+    summary = "Objects.equal() used to compare object to itself",
     explanation =
-        "The two arguments to Objects.equals() are the same object, so this call " +
+        "The two arguments to Objects.equal() are the same object, so this call " +
         "always returns true.",
     category = GUAVA, severity = ERROR, maturity = ON_BY_DEFAULT)
 public class ObjectsEqualSelfComparison extends DescribingMatcher<MethodInvocationTree> {
