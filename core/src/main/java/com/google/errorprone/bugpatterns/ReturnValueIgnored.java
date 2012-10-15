@@ -37,8 +37,9 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
-import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.MethodType;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
@@ -70,8 +71,7 @@ public class ReturnValueIgnored extends DescribingMatcher<MethodInvocationTree> 
   // See a list of the FindBugs checks here:
   // http://code.google.com/searchframe#Fccnll6ERQ0/trunk/findbugs/src/java/edu/umd/cs/findbugs/ba/CheckReturnAnnotationDatabase.java
   private static final Set<String> typesToCheck = new HashSet<String>(Arrays.asList(
-      "java.lang.String", "java.math.BigInteger", "java.math.BigDecimal", "java.awt.Color",
-      "java.awt.Font", "java.net.URI"));
+      "java.lang.String", "java.math.BigInteger", "java.math.BigDecimal"));
 
   /**
    * Matches if the method being called is a statement (rather than an expression), and the method
@@ -207,8 +207,8 @@ public class ReturnValueIgnored extends DescribingMatcher<MethodInvocationTree> 
   }
 
   /**
-   * Find the "root" identifier of a chain of field accesses.  If there is no root (i.e, a bare
-   * method call or a static method call), return null.
+   * Find the "root" assignable identifier of a chain of field accesses.  If there is no root
+   * (i.e, a bare method call or a static method call), return null.
    *
    * Examples:
    *    a.trim().intern() ==> a
@@ -216,7 +216,8 @@ public class ReturnValueIgnored extends DescribingMatcher<MethodInvocationTree> 
    *    this.intValue.foo() ==> this.intValue
    *    this.foo() ==> this
    *    intern() ==> null
-   *    String.format() == > null
+   *    String.format() ==> null
+   *    java.lang.String.format() ==> null
    */
   private ExpressionTree getRootIdentifier(MethodInvocationTree methodInvocationTree) {
     if (!(methodInvocationTree instanceof JCMethodInvocation)) {
@@ -228,6 +229,7 @@ public class ReturnValueIgnored extends DescribingMatcher<MethodInvocationTree> 
       return null;
     }
 
+    // Unwrap the field accesses until you get to an identifier.
     ExpressionTree expr = methodInvocationTree;
     while (expr instanceof JCMethodInvocation) {
       expr = ((JCMethodInvocation) expr).getMethodSelect();
@@ -235,11 +237,24 @@ public class ReturnValueIgnored extends DescribingMatcher<MethodInvocationTree> 
         expr = ((JCFieldAccess) expr).getExpression();
       }
     }
-
-    if (expr instanceof JCIdent && ((JCIdent) expr).sym instanceof ClassSymbol) {
-      return null;
+    if (!(expr instanceof JCIdent || expr instanceof JCFieldAccess)) {
+      throw new IllegalStateException("Expected either JCIdent or JCFieldAccess");
     }
 
-    return expr;
+    // Find the symbol for the identifier.
+    Symbol sym = null;
+    if (expr instanceof JCIdent) {
+      sym = ((JCIdent) expr).sym;
+    } else if (expr instanceof JCFieldAccess) {
+      sym = ((JCFieldAccess) expr).sym;
+    } else {
+      throw new IllegalStateException();
+    }
+
+    // We only want assignable identifiers.
+    if (sym instanceof VarSymbol) {
+      return expr;
+    }
+    return null;
   }
 }
