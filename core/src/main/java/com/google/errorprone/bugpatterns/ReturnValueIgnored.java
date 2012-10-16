@@ -237,9 +237,6 @@ public class ReturnValueIgnored extends DescribingMatcher<MethodInvocationTree> 
         expr = ((JCFieldAccess) expr).getExpression();
       }
     }
-    if (!(expr instanceof JCIdent || expr instanceof JCFieldAccess)) {
-      throw new IllegalStateException("Expected either JCIdent or JCFieldAccess");
-    }
 
     // Find the symbol for the identifier.
     Symbol sym = null;
@@ -247,12 +244,10 @@ public class ReturnValueIgnored extends DescribingMatcher<MethodInvocationTree> 
       sym = ((JCIdent) expr).sym;
     } else if (expr instanceof JCFieldAccess) {
       sym = ((JCFieldAccess) expr).sym;
-    } else {
-      throw new IllegalStateException();
     }
 
     // We only want assignable identifiers.
-    if (sym instanceof VarSymbol) {
+    if (sym != null && sym instanceof VarSymbol) {
       return expr;
     }
     return null;

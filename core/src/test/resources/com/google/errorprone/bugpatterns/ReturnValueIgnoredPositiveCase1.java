@@ -91,6 +91,8 @@ public class ReturnValueIgnoredPositiveCase1 {
     c.abs();
     //BUG: Suggestion includes "c = c.divide(new BigDecimal("4.5"))"
     c.divide(new BigDecimal("4.5"));
+    //BUG: Suggestion includes "remove this line"
+    new BigDecimal("10").add(c);
   }
   
 }
