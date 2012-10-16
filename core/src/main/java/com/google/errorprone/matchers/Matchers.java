@@ -19,17 +19,30 @@ package com.google.errorprone.matchers;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.MethodVisibility.Visibility;
 import com.google.errorprone.suppliers.Supplier;
-import com.sun.source.tree.*;
+
+import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.JCTree.*;
+import com.sun.tools.javac.tree.JCTree.JCArrayTypeTree;
+import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
+import com.sun.tools.javac.tree.JCTree.JCIdent;
+import com.sun.tools.javac.tree.JCTree.JCPrimitiveTypeTree;
+import com.sun.tools.javac.tree.JCTree.JCTypeApply;
+
+import java.util.List;
 
 import javax.lang.model.element.Modifier;
-import java.util.List;
 
 /**
  * Static factory methods which make the DSL read better.
@@ -378,7 +391,9 @@ public class Matchers {
     };
   }
 
-  public static Matcher<ExpressionTree> isDescendantOfMethod(final String fullClassName, final String methodName) {
+  // TODO(eaftan): Add JavaDoc
+  public static Matcher<ExpressionTree> isDescendantOfMethod(final String fullClassName,
+      final String methodName) {
     return new Matcher<ExpressionTree>() {
       @Override
       public boolean matches(ExpressionTree expressionTree, VisitorState state) {
@@ -389,13 +404,11 @@ public class Matchers {
         JCFieldAccess methodSelectFieldAccess = (JCFieldAccess) expressionTree;
         if ("*".equals(methodName) || methodName.equals(methodSelectFieldAccess.sym.toString())) {
           Type accessedReferenceType = ((MethodSymbol) methodSelectFieldAccess.sym).owner.type;
-
-          ClassSymbol classSymbol = state.getSymtab().classes.get(state.getName(fullClassName));
-          if (classSymbol == null) {
-            return false;
+          Type collectionType = state.getTypeFromString(fullClassName);
+          if (collectionType != null) {
+            return state.getTypes().isSubtype(accessedReferenceType,
+                state.getTypes().erasure(collectionType));
           }
-          Type collectionType = classSymbol.type;
-          return state.getTypes().isCastable(accessedReferenceType, collectionType);
         }
         return false;
       }

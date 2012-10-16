@@ -48,7 +48,6 @@ public class ReturnValueIgnoredTest {
         new File(this.getClass().getResource("ReturnValueIgnoredPositiveCase2.java").toURI()));
   }
 
-
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(

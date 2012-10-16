@@ -33,4 +33,14 @@ public class CollectionIncompatibleTypeNegativeCases {
   public boolean ok2() {
     return new ArrayList<Date>().contains(new B());
   }
+  
+  public boolean ok3() {
+    return new OtherCollection<String>().contains(new B());
+  }
+  
+  private class OtherCollection<E> {
+    public boolean contains(Object o) {
+      return true;
+    }
+  }
 }
