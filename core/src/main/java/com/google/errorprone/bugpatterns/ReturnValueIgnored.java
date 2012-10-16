@@ -52,13 +52,16 @@ import java.util.Set;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
+ * TODO(eaftan): Think about whether we want to allow multiple summaries for separate paths
+ * inside checks (e.g. String.trim() vs. @CheckReturnValue).
  */
 @BugPattern(name = "ReturnValueIgnored",
     altNames = {"ResultOfMethodCallIgnored"},
-    summary = "Ignored return value of method which has no side-effect",
+    summary = "Ignored return value of method that has no side-effect or is annotated with "
+        + "@CheckReturnValue",
     explanation = "Method calls that have no side-effect are pointless if you ignore the value "
         + "returned. Also, this error is triggered if the return value of a method that has been "
-        + "annotated with checkReturnValue is ignored.",
+        + "annotated with @CheckReturnValue is ignored.",
     category = JDK, severity = ERROR, maturity = ON_BY_DEFAULT)
 public class ReturnValueIgnored extends DescribingMatcher<MethodInvocationTree> {
 
