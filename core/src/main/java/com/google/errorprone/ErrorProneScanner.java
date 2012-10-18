@@ -32,6 +32,7 @@ import com.google.errorprone.bugpatterns.PreconditionsExpensiveString;
 import com.google.errorprone.bugpatterns.ReturnValueIgnored;
 import com.google.errorprone.bugpatterns.SelfAssignment;
 import com.google.errorprone.bugpatterns.SuppressWarningsDeprecated;
+import com.google.errorprone.bugpatterns.UnneededConditionalOperator;
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.sun.source.tree.*;
 
@@ -69,6 +70,7 @@ public class ErrorProneScanner extends Scanner {
   private final Iterable<DescribingMatcher<AssignmentTree>> assignmentMatchers;
   private final Iterable<DescribingMatcher<MethodTree>> methodMatchers;
   private final Iterable<DescribingMatcher<LiteralTree>> literalMatchers;
+  private final Iterable<DescribingMatcher<ConditionalExpressionTree>> conditionalExpressionMatchers;
 
   @SuppressWarnings("unchecked")
   public ErrorProneScanner(EnabledPredicate enabled) {
@@ -95,6 +97,7 @@ public class ErrorProneScanner extends Scanner {
       this.assignmentMatchers = createChecks(enabled, SelfAssignment.class);
       this.methodMatchers = createChecks(enabled, CovariantEquals.class);
       this.literalMatchers = createChecks(enabled, LongLiteralLowerCaseSuffix.class);
+      this.conditionalExpressionMatchers = createChecks(enabled, UnneededConditionalOperator.class);
     } catch (Exception e) {
       throw new RuntimeException("Could not reflectively create error prone matchers", e);
     }
@@ -167,5 +170,14 @@ public class ErrorProneScanner extends Scanner {
       evaluateMatch(literalTree, visitorState, matcher);
     }
     return super.visitLiteral(literalTree, visitorState);
+  }
+
+  @Override
+  public Void visitConditionalExpression(
+      ConditionalExpressionTree conditionalExpressionTree, VisitorState visitorState) {
+    for (DescribingMatcher<ConditionalExpressionTree> matcher : conditionalExpressionMatchers) {
+      evaluateMatch(conditionalExpressionTree, visitorState, matcher);
+    }
+    return super.visitConditionalExpression(conditionalExpressionTree, visitorState);
   }
 }
