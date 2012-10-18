@@ -27,9 +27,20 @@ import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 
+import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ConditionalExpressionTree;
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.ParenthesizedTree;
+import com.sun.source.tree.TreeVisitor;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.tools.javac.code.Symbol.OperatorSymbol;
+import com.sun.tools.javac.tree.JCTree.JCBinary;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
+import com.sun.tools.javac.tree.JCTree.JCUnary;
+import com.sun.tools.javac.util.Name;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Fix unnecessary uses of the conditional operator ?: when the true and false expressions are
@@ -53,6 +64,17 @@ public class UnneededConditionalOperator extends DescribingMatcher<ConditionalEx
         }
       };
 
+  private static Map<String, String> OPERATOR_OPPOSITES = new HashMap<String, String>();
+  
+  static {
+    OPERATOR_OPPOSITES.put("<", ">=");
+    OPERATOR_OPPOSITES.put("<=", ">");
+    OPERATOR_OPPOSITES.put(">", "<=");
+    OPERATOR_OPPOSITES.put(">=", "<");
+    OPERATOR_OPPOSITES.put("==", "!=");
+    OPERATOR_OPPOSITES.put("!=", "==");
+  }
+      
   @Override
   public boolean matches(ConditionalExpressionTree t, VisitorState state) {
     return matcher.matches(t, state);
@@ -68,17 +90,50 @@ public class UnneededConditionalOperator extends DescribingMatcher<ConditionalEx
     if (trueExprValue && !falseExprValue) {
       fix = new SuggestedFix().replace(t, t.getCondition().toString());
     } else if (!trueExprValue && falseExprValue) {
-      // TODO(sjnickerson): More elegant negation here would be nice.
-      // e.g. (isFoo()) -> (!isFoo()) rather than !((isFoo())
-      //      a > b     ->  a <= b    rather than !(a > b)
-      //      !a && b   ->  a || !b   rather than !(!a && b)
-      fix = new SuggestedFix().replace(t, "!(" + t.getCondition().toString() + ")" + ")");
+      fix = new SuggestedFix().replace(t, negate(t.getCondition()));
     } else {
       // trueExprValue == falseExprValue
       // Our suggested fix ignores any possible side-effects of the condition.
       fix = new SuggestedFix().replace(t, Boolean.toString(trueExprValue));
     }
     return new Description(t, diagnosticMessage, fix);
+  }
+
+  /**
+   * Provides a string representation of the negation of a conditional expression, trying to
+   * simplify as much as possible.
+   *
+   * We have special handling for parenthesised expressions (final expression will be parenthesised
+   * too), binary expressions (signs are swapped for simple comparisons, de Morgan's laws are used
+   * for && and ||) and unary expressions (!x becomes x rather than !(!x)).
+   */
+  private String negate(ExpressionTree cond) {
+    if (cond instanceof ParenthesizedTree) {
+      return "(" + negate(((ParenthesizedTree) cond).getExpression()) + ")";
+    } else if (cond instanceof JCBinary) {
+      JCBinary binary = (JCBinary) cond;
+      String operator = binary.getOperator().getSimpleName().toString();
+      String opposite = OPERATOR_OPPOSITES.get(operator);
+      if (opposite != null) {
+        return String.format("%s %s %s", binary.lhs.toString(), opposite, binary.rhs.toString());
+      } else if (operator.equals("&&")) {
+        return String.format("%s || %s", negate(binary.lhs), negate(binary.rhs));
+      } else if (operator.equals("||")) {
+        return String.format("%s && %s", negate(binary.lhs), negate(binary.rhs));
+      } else {
+        return "!(" + cond.toString() + ")";
+      }
+    } else if (cond instanceof JCUnary) {
+      JCUnary unary = (JCUnary) cond;
+      String operator = unary.getOperator().getSimpleName().toString();
+      if (operator.equals("!")) {
+        return unary.getExpression().toString();
+      } else {
+        return "!(" + cond.toString() + ")";
+      }
+    } else {
+      return "!" + cond.toString();
+    }
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {
