@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.bugpatterns.ObjectsEqualSelfComparison;
+import com.google.errorprone.bugpatterns.SelfEquals;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,27 +27,34 @@ import java.io.File;
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class ObjectsEqualSelfComparisonTest {
+public class SelfEqualsTest {
 
   private CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(new ObjectsEqualSelfComparison.Scanner());
+    compilationHelper = new CompilationTestHelper(new SelfEquals.Scanner());
   }
 
   @Test
-  public void testPositiveCase() throws Exception {
+  public void testPositiveCase1() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
         new File(this.getClass().getResource(
-            "ObjectsEqualSelfComparisonPositiveCases.java").toURI()));
+            "SelfEqualsPositiveCase1.java").toURI()));
+  }
+
+  @Test
+  public void testPositiveCase2() throws Exception {
+    compilationHelper.assertCompileFailsWithMessages(
+        new File(this.getClass().getResource(
+            "SelfEqualsPositiveCase2.java").toURI()));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(
         new File(this.getClass().getResource(
-            "ObjectsEqualSelfComparisonNegativeCases.java").toURI()));
+            "SelfEqualsNegativeCases.java").toURI()));
   }
 
 }

@@ -21,7 +21,7 @@ import com.google.common.base.Objects;
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class ObjectsEqualSelfComparisonNegativeCases {
+public class SelfEqualsNegativeCases {
   private String field;
 
   @Override
@@ -33,7 +33,7 @@ public class ObjectsEqualSelfComparisonNegativeCases {
       return false;
     }
 
-    ObjectsEqualSelfComparisonNegativeCases other = ((ObjectsEqualSelfComparisonNegativeCases)o);
+    SelfEqualsNegativeCases other = ((SelfEqualsNegativeCases) o);
     return Objects.equal(field, other.field);
   }
 

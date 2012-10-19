@@ -16,29 +16,25 @@
 
 package com.google.errorprone.bugpatterns;
 
-import com.google.common.base.Objects;
-
 /**
- * @author alexeagle@google.com (Alex Eagle)
+ * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class ObjectsEqualSelfComparisonPositiveCases {
-  private String field = "";
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    ObjectsEqualSelfComparisonPositiveCases other = (ObjectsEqualSelfComparisonPositiveCases)o;
-    //BUG: Suggestion includes "Objects.equal(field, other.field)"
-    return Objects.equal(field, field);
+public class SelfEqualsPositiveCase2 {
+  
+  public boolean test1() {
+    Object obj = new Object();
+    //BUG: Suggestion includes "true"
+    return obj.equals(obj);
   }
-
-  @Override
-  public int hashCode() {
-    return Objects.hashCode(field);
+  
+  private Object obj = new Object();
+  public boolean test2() {
+    //BUG: Suggestion includes "true"
+    return obj.equals(this.obj);
+  }
+  
+  public boolean test3() {
+    //BUG: Suggestion includes "true"
+    return equals(this);
   }
 }

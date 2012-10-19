@@ -19,7 +19,9 @@ package com.google.errorprone.matchers;
 import com.google.errorprone.VisitorState;
 
 import com.sun.source.tree.ExpressionTree;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
+import com.sun.tools.javac.tree.JCTree.JCIdent;
 
 /**
  * Matches an instance method expression.
@@ -38,17 +40,26 @@ public class InstanceMethod implements Matcher<ExpressionTree> {
 
   @Override
   public boolean matches(ExpressionTree item, VisitorState state) {
-    if (!(item instanceof JCFieldAccess)) {
+    Symbol sym = Matchers.getSymbol(item);
+    if (sym == null || sym.isStatic() ||
+        !sym.getQualifiedName().equals(state.getName(methodName))) {
       return false;
     }
-    JCFieldAccess memberSelectTree = (JCFieldAccess) item;
-    if (memberSelectTree.sym == null) {
-      return false;
+
+    if (item instanceof JCFieldAccess) {
+      JCFieldAccess fieldAccess = (JCFieldAccess) item;
+      return receiverMatcher.matches(fieldAccess.getExpression(), state);
+    } else if (item instanceof JCIdent) {
+      // There's no explicit receiver in this case, so try the receiverMatcher against null. If it
+      // throws a NullPointerException (i.e., it cares about the input), then return false.
+      try {
+        return receiverMatcher.matches(null, state);
+      } catch (NullPointerException e) {
+        return false;
+      }
+    } else {
+      throw new IllegalStateException("Unexpected type in InstanceMethod matcher: "
+          + item.getClass().getName());
     }
-    if (memberSelectTree.sym.isStatic()) {
-      return false;
-    }
-    return memberSelectTree.sym.getQualifiedName().equals(state.getName(methodName))
-        && receiverMatcher.matches(memberSelectTree.getExpression(), state);
   }
 }

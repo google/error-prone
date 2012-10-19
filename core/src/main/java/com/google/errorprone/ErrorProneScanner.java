@@ -24,7 +24,7 @@ import com.google.errorprone.bugpatterns.EmptyIfStatement;
 import com.google.errorprone.bugpatterns.EmptyStatement;
 import com.google.errorprone.bugpatterns.FallThroughSuppression;
 import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
-import com.google.errorprone.bugpatterns.ObjectsEqualSelfComparison;
+import com.google.errorprone.bugpatterns.SelfEquals;
 import com.google.errorprone.bugpatterns.OrderingFrom;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNull;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNullPrimitive1stArg;
@@ -76,13 +76,12 @@ public class ErrorProneScanner extends Scanner {
   public ErrorProneScanner(EnabledPredicate enabled) {
     try {
       this.methodInvocationMatchers = createChecks(enabled,
-          ObjectsEqualSelfComparison.class,
+          SelfEquals.class,
           OrderingFrom.class,
           PreconditionsCheckNotNull.class,
           PreconditionsExpensiveString.class,
           PreconditionsCheckNotNullPrimitive1stArg.class,
           CollectionIncompatibleType.class,
-          ObjectsEqualSelfComparison.class,
           ArrayEquals.class,
           ReturnValueIgnored.class
       );
