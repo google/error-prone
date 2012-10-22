@@ -80,20 +80,40 @@ public class SelfEquals extends DescribingMatcher<MethodInvocationTree> {
       methodSelect(Matchers.instanceMethod(Matchers.<ExpressionTree>anything(), "equals")),
       receiverSameAsArgument(0));
 
+  /**
+   * The state of the matcher.  Caches the result of matches() for use in describe().
+   */
+  private MatchState matchState = MatchState.NONE;
+
+  private enum MatchState {
+    NONE,
+    OBJECTS_EQUAL,
+    EQUALS
+  }
+
   @Override
   public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
-    return guavaMatcher.matches(methodInvocationTree, state) ||
-        equalMatcher.matches(methodInvocationTree, state);
+    if (guavaMatcher.matches(methodInvocationTree, state)) {
+      matchState = MatchState.OBJECTS_EQUAL;
+      return true;
+    } else if (equalMatcher.matches(methodInvocationTree, state)) {
+      matchState = MatchState.EQUALS;
+      return true;
+    } else {
+      return false;
+    }
   }
 
   @Override
   public Description describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
+    if (matchState == MatchState.NONE) {
+      throw new IllegalStateException("describe() called without a match");
+    }
+
     // If we don't find a good field to use, then just replace with "true"
     SuggestedFix fix = new SuggestedFix().replace(methodInvocationTree, "true");
 
-    // TODO(eaftan): Could cache which matcher matched so that we don't have to recheck it here.
-    if (guavaMatcher.matches(methodInvocationTree, state)) {
-
+    if (matchState == MatchState.OBJECTS_EQUAL) {
       JCExpression toReplace = (JCExpression) methodInvocationTree.getArguments().get(1);
       // Find containing block
       TreePath path = state.getPath();
