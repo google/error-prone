@@ -17,6 +17,7 @@
 package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Symbol;
@@ -40,7 +41,7 @@ public class InstanceMethod implements Matcher<ExpressionTree> {
 
   @Override
   public boolean matches(ExpressionTree item, VisitorState state) {
-    Symbol sym = Matchers.getSymbol(item);
+    Symbol sym = ASTHelpers.getSymbol(item);
     if (sym == null || sym.isStatic() ||
         !sym.getQualifiedName().equals(state.getName(methodName))) {
       return false;

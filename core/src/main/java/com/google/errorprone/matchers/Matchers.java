@@ -19,6 +19,7 @@ package com.google.errorprone.matchers;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.MethodVisibility.Visibility;
 import com.google.errorprone.suppliers.Supplier;
+import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.BlockTree;
@@ -35,14 +36,11 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCArrayTypeTree;
-import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
-import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCPrimitiveTypeTree;
 import com.sun.tools.javac.tree.JCTree.JCTypeApply;
-import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 
 import java.util.List;
 
@@ -154,7 +152,7 @@ public class Matchers {
    *
    * @param argNum The number of the argument to compare against.
    */
-  public static Matcher<MethodInvocationTree> receiverSameAsArgument(final int argNum) {
+  public static Matcher<? super MethodInvocationTree> receiverSameAsArgument(final int argNum) {
     return new Matcher<MethodInvocationTree>() {
       @Override
       public boolean matches(MethodInvocationTree t, VisitorState state) {
@@ -167,7 +165,7 @@ public class Matchers {
         JCExpression methodSelect = (JCExpression) t.getMethodSelect();
         if (methodSelect instanceof JCFieldAccess) {
           JCFieldAccess fieldAccess = (JCFieldAccess) methodSelect;
-          return getSymbol(fieldAccess.getExpression()) == getSymbol(arg);
+          return ASTHelpers.getSymbol(fieldAccess.getExpression()) == ASTHelpers.getSymbol(arg);
         } else if (methodSelect instanceof JCIdent) {
           // A bare method call: "equals(foo)".  Receiver is implicitly "this".
           return "this".equals(arg.toString());
@@ -447,28 +445,6 @@ public class Matchers {
         return false;
       }
     };
-  }
-
-  /**
-   * Gets the symbol for a tree. Returns null if this tree does not have a symbol because it is
-   * of the wrong type.
-   */
-  // TODO(eaftan): refactor other code that accesses symbols to use this method
-  public static Symbol getSymbol(Tree tree) {
-    switch (tree.getKind()) {
-      case CLASS:
-        return ((JCClassDecl) tree).sym;
-      case METHOD:
-        return ((JCMethodDecl) tree).sym;
-      case VARIABLE:
-        return ((JCVariableDecl) tree).sym;
-      case MEMBER_SELECT:
-        return ((JCFieldAccess) tree).sym;
-      case IDENTIFIER:
-        return ((JCIdent) tree).sym;
-      default:
-        return null;
-    }
   }
 }
 

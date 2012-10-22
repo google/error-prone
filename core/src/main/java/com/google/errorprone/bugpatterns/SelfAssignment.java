@@ -16,14 +16,23 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.BugPattern.Category.JDK;
+import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.sun.source.tree.Tree.Kind.CLASS;
+import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
+import static com.sun.source.tree.Tree.Kind.MEMBER_SELECT;
+import static com.sun.source.tree.Tree.Kind.METHOD;
+import static com.sun.source.tree.Tree.Kind.VARIABLE;
+
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.SelfAssignmentMatcher;
+import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.EditDistance;
+
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree;
@@ -31,12 +40,11 @@ import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.JCTree.*;
-
-import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.sun.source.tree.Tree.Kind.*;
+import com.sun.tools.javac.tree.JCTree.JCClassDecl;
+import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
+import com.sun.tools.javac.tree.JCTree.JCIdent;
+import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
+import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 
 /**
  * TODO(eaftan): doesn't seem to be visiting assignments in declarations:
@@ -58,11 +66,9 @@ import static com.sun.source.tree.Tree.Kind.*;
     category = JDK, severity = ERROR, maturity = ON_BY_DEFAULT)
 public class SelfAssignment extends DescribingMatcher<AssignmentTree> {
 
-  private static final Matcher<AssignmentTree> matcher = new SelfAssignmentMatcher();
-
   @Override
-  public boolean matches(AssignmentTree t, VisitorState state) {
-    return matcher.matches(t, state);
+  public boolean matches(AssignmentTree assignmentTree, VisitorState state) {
+    return ASTHelpers.sameVariable(assignmentTree.getVariable(), assignmentTree.getExpression());
   }
 
   /**
@@ -82,7 +88,7 @@ public class SelfAssignment extends DescribingMatcher<AssignmentTree> {
    * Case 4: Otherwise suggest deleting the assignment.
    */
   @Override
-  public Description describe(AssignmentTree t,
+  public Description describe(AssignmentTree assignmentTree,
                               VisitorState state) {
 
     // the statement that is the parent of the self-assignment expression
@@ -91,8 +97,8 @@ public class SelfAssignment extends DescribingMatcher<AssignmentTree> {
     // default fix is to delete assignment
     SuggestedFix fix = new SuggestedFix().delete(parent);
 
-    ExpressionTree lhs = t.getVariable();
-    ExpressionTree rhs = t.getExpression();
+    ExpressionTree lhs = assignmentTree.getVariable();
+    ExpressionTree rhs = assignmentTree.getExpression();
 
     if ((lhs.getKind() == MEMBER_SELECT && rhs.getKind() == IDENTIFIER) ||
         (lhs.getKind() == MEMBER_SELECT && rhs.getKind() != IDENTIFIER)) {
@@ -170,7 +176,7 @@ public class SelfAssignment extends DescribingMatcher<AssignmentTree> {
       }
     }
 
-    return new Description(t, diagnosticMessage, fix);
+    return new Description(assignmentTree, diagnosticMessage, fix);
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {
