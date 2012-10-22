@@ -165,7 +165,7 @@ public class Matchers {
         JCExpression methodSelect = (JCExpression) t.getMethodSelect();
         if (methodSelect instanceof JCFieldAccess) {
           JCFieldAccess fieldAccess = (JCFieldAccess) methodSelect;
-          return ASTHelpers.getSymbol(fieldAccess.getExpression()) == ASTHelpers.getSymbol(arg);
+          return ASTHelpers.sameVariable(fieldAccess.getExpression(), arg);
         } else if (methodSelect instanceof JCIdent) {
           // A bare method call: "equals(foo)".  Receiver is implicitly "this".
           return "this".equals(arg.toString());
@@ -296,13 +296,8 @@ public class Matchers {
     return new Matcher<MethodInvocationTree>() {
       @Override
       public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
-        List<? extends ExpressionTree> arguments = methodInvocationTree.getArguments();
-        if (arguments.get(index1).getKind() == Kind.IDENTIFIER &&
-            arguments.get(index2).getKind() == Kind.IDENTIFIER) {
-          return ((JCIdent) arguments.get(index1)).sym == ((JCIdent) arguments.get(index2)).sym;
-        }
-
-        return false;
+        List<? extends ExpressionTree> args = methodInvocationTree.getArguments();
+        return ASTHelpers.sameVariable(args.get(index1), args.get(index2));
       }
     };
   }

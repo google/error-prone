@@ -41,4 +41,9 @@ public class SelfEqualsPositiveCase1 {
   public int hashCode() {
     return Objects.hashCode(field);
   }
+  
+  public void test() {
+    //BUG: Suggestion includes "true"
+    Objects.equal(field, this.field);
+  }
 }

@@ -41,4 +41,8 @@ public class SelfEqualsNegativeCases {
   public int hashCode() {
     return field != null ? field.hashCode() : 0;
   }
+  
+  public void test() {
+    Boolean.TRUE.toString().equals(Boolean.FALSE.toString());
+  }
 }

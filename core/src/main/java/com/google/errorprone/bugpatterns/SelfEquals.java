@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
+import static com.google.errorprone.matchers.Matchers.receiverSameAsArgument;
 import static com.google.errorprone.matchers.Matchers.sameArgument;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 
@@ -77,7 +78,7 @@ public class SelfEquals extends DescribingMatcher<MethodInvocationTree> {
   @SuppressWarnings("unchecked")
   private static final Matcher<MethodInvocationTree> equalMatcher = allOf(
       methodSelect(Matchers.instanceMethod(Matchers.<ExpressionTree>anything(), "equals")),
-      Matchers.receiverSameAsArgument(0));
+      receiverSameAsArgument(0));
 
   @Override
   public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
@@ -90,6 +91,7 @@ public class SelfEquals extends DescribingMatcher<MethodInvocationTree> {
     // If we don't find a good field to use, then just replace with "true"
     SuggestedFix fix = new SuggestedFix().replace(methodInvocationTree, "true");
 
+    // TODO(eaftan): Could cache which matcher matched so that we don't have to recheck it here.
     if (guavaMatcher.matches(methodInvocationTree, state)) {
 
       JCExpression toReplace = (JCExpression) methodInvocationTree.getArguments().get(1);
