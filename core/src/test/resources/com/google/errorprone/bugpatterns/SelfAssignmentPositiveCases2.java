@@ -19,9 +19,6 @@ package com.google.errorprone.bugpatterns;
 /**
  * Tests for self assignment
  * 
- * TODO(eaftan): I think I'm hitting a limit on the number of errors in one file.
- * Refactor this into multiple files.
- *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public class SelfAssignmentPositiveCases2 {
