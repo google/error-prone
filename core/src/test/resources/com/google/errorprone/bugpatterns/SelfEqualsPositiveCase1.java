@@ -33,8 +33,17 @@ public class SelfEqualsPositiveCase1 {
       return false;
     }
     SelfEqualsPositiveCase1 other = (SelfEqualsPositiveCase1) o;
+    boolean retVal;
     //BUG: Suggestion includes "Objects.equal(field, other.field)"
-    return Objects.equal(field, field);
+    retVal = Objects.equal(field, field);
+    //BUG: Suggestion includes "Objects.equal(other.field, this.field)"
+    retVal &= Objects.equal(field, this.field);
+    //BUG: Suggestion includes "Objects.equal(this.field, other.field)"
+    retVal &= Objects.equal(this.field, field);
+    //BUG: Suggestion includes "Objects.equal(this.field, other.field)"
+    retVal &= Objects.equal(this.field, this.field);
+    
+    return retVal;
   }
 
   @Override
@@ -42,8 +51,14 @@ public class SelfEqualsPositiveCase1 {
     return Objects.hashCode(field);
   }
   
-  public void test() {
-    //BUG: Suggestion includes "true"
-    Objects.equal(field, this.field);
+  public static void test() {
+    ForTesting tester = new ForTesting();
+    //BUG: Suggestion includes "Objects.equal(tester.testing.testing, tester.testing)"
+    Objects.equal(tester.testing.testing, tester.testing.testing);
+  }
+  
+  private static class ForTesting {
+    public ForTesting testing;
+    public String string;
   }
 }
