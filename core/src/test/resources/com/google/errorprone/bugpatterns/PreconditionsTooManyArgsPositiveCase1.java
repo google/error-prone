@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Google Inc. All Rights Reserved.
+ * Copyright 2012 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,20 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkArgument;
 
 import com.google.common.base.Preconditions;
 
-public class PreconditionsCheckNotNullPositiveCase1 {
-  public void error() {
-    //BUG: Suggestion includes "remove this line"
-    Preconditions.checkNotNull("string literal");
-    String thing = null;
-    //BUG: Suggestion includes "(thing, "
-    checkNotNull("thing is null", thing);
-    //BUG: Suggestion includes ""
-    Preconditions.checkNotNull("a string literal " + "that's got two parts", thing);
+public class PreconditionsTooManyArgsPositiveCase1 {
+  int foo;
+  
+  public void checkPositive(int x) {
+    //BUG: Suggestion includes "%s > 0"
+    checkArgument(x > 0, "%d > 0", x);
+  }
+  
+  public void checkFoo() {
+    //BUG: Suggestion includes "foo must be equal to 0 but was %s"
+    Preconditions.checkState(foo == 0, "foo must be equal to 0 but was {0}", foo);
   }
 }
