@@ -51,6 +51,14 @@ public class PreconditionsCheckNotNullTest {
   }
 
   @Test
+  public void testPositiveCase3() throws Exception {
+    compilationHelper.assertCompileFailsWithMessages(
+        new File(this.getClass().getResource(
+            "PreconditionsCheckNotNullPositiveCase3.java").toURI()));
+  }
+
+
+  @Test
   public void testNegativeCase1() throws Exception {
     compilationHelper.assertCompileSucceeds(
         new File(this.getClass().getResource(

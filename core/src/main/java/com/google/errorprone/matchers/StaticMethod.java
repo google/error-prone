@@ -17,7 +17,11 @@
 package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.util.ASTHelpers;
+
 import com.sun.source.tree.ExpressionTree;
+import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.util.Name;
@@ -38,27 +42,16 @@ public class StaticMethod implements Matcher<ExpressionTree> {
 
   @Override
   public boolean matches(ExpressionTree item, VisitorState state) {
-    if (!(item instanceof JCFieldAccess)) {
-      return false;
+    Symbol sym = ASTHelpers.getSymbol(item);
+    if (sym == null || !(sym instanceof MethodSymbol)) {
+      throw new IllegalArgumentException("staticMethod not passed a method call");
     }
-    JCFieldAccess memberSelectTree = (JCFieldAccess) item;
-
-    // Is method static?
-    if (memberSelectTree.sym == null || !memberSelectTree.sym.isStatic()) {
+    if (!sym.isStatic()) {
       return false;
     }
 
-    Name fullClassName = state.getName(fullClass);
-    boolean methodSame = memberSelectTree.sym.getQualifiedName().equals(state.getName(methodName));
-    if (methodSame &&
-        memberSelectTree.sym.owner.getQualifiedName().equals(fullClassName)) {
-      return true;
-    }
-
-    if (!(memberSelectTree.getExpression() instanceof JCIdent)) {
-      return false;
-    }
-    JCIdent expressionTree = (JCIdent) memberSelectTree.getExpression();
-    return methodSame && expressionTree.sym.getQualifiedName().equals(fullClassName);
+    boolean methodSame = sym.getQualifiedName().toString().equals(methodName);
+    boolean classSame = sym.owner.getQualifiedName().toString().equals(fullClass);
+    return methodSame && classSame;
   }
 }
