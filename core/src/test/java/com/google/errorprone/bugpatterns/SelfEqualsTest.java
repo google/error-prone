@@ -16,45 +16,75 @@
 
 package com.google.errorprone.bugpatterns;
 
-import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.bugpatterns.SelfEquals;
+import java.io.File;
 
-import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
+import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.Scanner;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public class SelfEqualsTest {
 
-  private CompilationTestHelper compilationHelper;
+  File positiveCase1;
+  File positiveCase2;
+  File negativeCases;
 
-  @Before
-  public void setUp() {
-    compilationHelper = new CompilationTestHelper(new SelfEquals.Scanner());
+  public SelfEqualsTest() throws Exception {
+    positiveCase1 = new File(this.getClass().getResource("SelfEqualsPositiveCase1.java").toURI());
+    positiveCase2 = new File(this.getClass().getResource("SelfEqualsPositiveCase2.java").toURI());
+    negativeCases = new File(this.getClass().getResource("SelfEqualsNegativeCases.java").toURI());
   }
 
   @Test
   public void testPositiveCase1() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource(
-            "SelfEqualsPositiveCase1.java").toURI()));
+    CompilationTestHelper compilationHelper = new CompilationTestHelper(new SelfEquals.Scanner());
+    compilationHelper.assertCompileFailsWithMessages(positiveCase1);
   }
 
   @Test
   public void testPositiveCase2() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource(
-            "SelfEqualsPositiveCase2.java").toURI()));
+    CompilationTestHelper compilationHelper = new CompilationTestHelper(new SelfEquals.Scanner());
+    compilationHelper.assertCompileFailsWithMessages(positiveCase2);
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource(
-            "SelfEqualsNegativeCases.java").toURI()));
+    CompilationTestHelper compilationHelper = new CompilationTestHelper(new SelfEquals.Scanner());
+    compilationHelper.assertCompileSucceeds(negativeCases);
+  }
+
+  @Test
+  public void testFlags() throws Exception {
+    // Both checks off.
+    Scanner scanner = new SelfEquals.Scanner(false, false);
+    CompilationTestHelper compilationHelper = new CompilationTestHelper(scanner);
+    compilationHelper.assertCompileSucceeds(positiveCase1);
+    compilationHelper = new CompilationTestHelper(scanner);
+    compilationHelper.assertCompileSucceeds(positiveCase2);
+
+    // Both checks on.
+    scanner = new SelfEquals.Scanner(true, true);
+    compilationHelper = new CompilationTestHelper(scanner);
+    compilationHelper.assertCompileFailsWithMessages(positiveCase1);
+    compilationHelper = new CompilationTestHelper(scanner);
+    compilationHelper.assertCompileFailsWithMessages(positiveCase2);
+
+    // Guava on, Eauals off.
+    scanner = new SelfEquals.Scanner(true, false);
+    compilationHelper = new CompilationTestHelper(scanner);
+    compilationHelper.assertCompileFailsWithMessages(positiveCase1);
+    compilationHelper = new CompilationTestHelper(scanner);
+    compilationHelper.assertCompileSucceeds(positiveCase2);
+
+    // Equals on, Guava off.
+    scanner = new SelfEquals.Scanner(false, true);
+    compilationHelper = new CompilationTestHelper(scanner);
+    compilationHelper.assertCompileSucceeds(positiveCase1);
+    compilationHelper = new CompilationTestHelper(scanner);
+    compilationHelper.assertCompileFailsWithMessages(positiveCase2);
   }
 
 }

@@ -33,7 +33,7 @@ public class SelfEqualsNegativeCases {
       return false;
     }
 
-    SelfEqualsNegativeCases other = ((SelfEqualsNegativeCases) o);
+    SelfEqualsNegativeCases other = (SelfEqualsNegativeCases) o;
     return Objects.equal(field, other.field);
   }
 
@@ -42,7 +42,16 @@ public class SelfEqualsNegativeCases {
     return field != null ? field.hashCode() : 0;
   }
   
-  public void test() {
-    Boolean.TRUE.toString().equals(Boolean.FALSE.toString());
+  public boolean equals2(Object o) {
+    if (!(o instanceof SelfEqualsNegativeCases)) {
+      return false;
+    }
+    
+    SelfEqualsNegativeCases other = (SelfEqualsNegativeCases) o;
+    return field.equals(other.field);
+  }
+  
+  public boolean test() {
+    return Boolean.TRUE.toString().equals(Boolean.FALSE.toString());
   }
 }

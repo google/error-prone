@@ -78,7 +78,7 @@ public class SelfEquals extends DescribingMatcher<MethodInvocationTree> {
    * don't really mean equals.
    */
   @SuppressWarnings("unchecked")
-  private static final Matcher<MethodInvocationTree> equalMatcher = allOf(
+  private static final Matcher<MethodInvocationTree> equalsMatcher = allOf(
       methodSelect(Matchers.instanceMethod(Matchers.<ExpressionTree>anything(), "equals")),
       receiverSameAsArgument(0));
 
@@ -93,12 +93,37 @@ public class SelfEquals extends DescribingMatcher<MethodInvocationTree> {
     EQUALS
   }
 
+  /**
+   * Should this matcher check for Objects.equal(foo, foo)?
+   */
+  private boolean checkGuava;
+
+  /**
+   * Should this matcher check for foo.equals(foo)?
+   */
+  private boolean checkEquals;
+
+  public SelfEquals() {
+    this(true, true);
+  }
+
+  /**
+   * Construct a new SelfEquals matcher.
+   *
+   * @param checkGuava Check for Guava Objects.equal(foo, foo) pattern?
+   * @param checkEquals Check for foo.equals(foo) pattern?
+   */
+  public SelfEquals(boolean checkGuava, boolean checkEquals) {
+    this.checkGuava = checkGuava;
+    this.checkEquals = checkEquals;
+  }
+
   @Override
   public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
-    if (guavaMatcher.matches(methodInvocationTree, state)) {
+    if (checkGuava && guavaMatcher.matches(methodInvocationTree, state)) {
       matchState = MatchState.OBJECTS_EQUAL;
       return true;
-    } else if (equalMatcher.matches(methodInvocationTree, state)) {
+    } else if (checkEquals && equalsMatcher.matches(methodInvocationTree, state)) {
       matchState = MatchState.EQUALS;
       return true;
     } else {
@@ -173,8 +198,15 @@ public class SelfEquals extends DescribingMatcher<MethodInvocationTree> {
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {
-    private final DescribingMatcher<MethodInvocationTree> matcher =
-        new SelfEquals();
+    private final DescribingMatcher<MethodInvocationTree> matcher;
+
+    public Scanner() {
+      matcher = new SelfEquals();
+    }
+
+    public Scanner(boolean checkGuava, boolean checkEquals) {
+      matcher = new SelfEquals(checkGuava, checkEquals);
+    }
 
     @Override
     public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {

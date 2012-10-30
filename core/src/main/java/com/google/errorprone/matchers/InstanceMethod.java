@@ -42,8 +42,12 @@ public class InstanceMethod implements Matcher<ExpressionTree> {
   @Override
   public boolean matches(ExpressionTree item, VisitorState state) {
     Symbol sym = ASTHelpers.getSymbol(item);
+    // Don't match if:
+    // 1) symbol is null (item is of the wrong type),
+    // 2) symbol is static (not an instance method), or
+    // 3) the method names don't match.
     if (sym == null || sym.isStatic() ||
-        !sym.getQualifiedName().equals(state.getName(methodName))) {
+        !sym.getQualifiedName().equals(state.getName(methodName))) {  // methodName doesn't match
       return false;
     }
 
