@@ -1,3 +1,19 @@
+/*
+ * Copyright 2012 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.GUAVA;
@@ -22,14 +38,12 @@ import com.sun.tools.javac.util.List;
  * @author Louis Wasserman
  */
 @BugPattern(name = "PreconditionsTooManyArgs",
-    summary = "Precondition check format string expects fewer arguments", explanation =
-        "The Guava Preconditions checks expect error messages to use %s as a "
+    summary = "Precondition check format string expects fewer arguments",
+    explanation = "The Guava Preconditions checks expect error messages to use %s as a "
         + "placeholder, and to take the corresponding number of arguments.  This bug can indicate "
         + "an improper format string, or simply forgetting to add all the arguments.",
     category = GUAVA, maturity = PROPOSED, severity = ERROR)
 public class PreconditionsTooManyArgs extends DescribingMatcher<MethodInvocationTree> {
-
-  // TODO(lowasser): deal with static imports?
 
   @SuppressWarnings("unchecked")
   private static final
@@ -61,7 +75,14 @@ public class PreconditionsTooManyArgs extends DescribingMatcher<MethodInvocation
     return false;
   }
 
-  private static final String BAD_PLACEHOLDER_REGEX = "%(?:\\d+\\$)??[dbBhHsScCdoxXeEfgGaAtTn]|\\{\\d+\\}";
+  /**
+   * Matches most {@code java.util.Formatter} and {@code java.text.MessageFormat}
+   * format placeholders, other than %s itself.
+   *
+   * This does not need to be completely exhaustive, since it is only used to suggest fixes.
+   */
+  private static final String BAD_PLACEHOLDER_REGEX = "%(?:\\d+\\$)??[dbBhHScCdoxXeEfgGaAtTn]|" +
+      "\\{\\d+\\}";
 
   @Override
   public Description describe(MethodInvocationTree t, VisitorState state) {
