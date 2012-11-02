@@ -47,6 +47,7 @@ public class SuggestedFix {
   private Collection<Pair<Tree, String>> nodeReplacements = new ArrayList<Pair<Tree, String>>();
   private Collection<Pair<Tree, Tree>> nodeSwaps = new ArrayList<Pair<Tree, Tree>>();
   private Collection<Pair<Tree, String>> prefixInsertions = new ArrayList<Pair<Tree, String>>();
+  private Collection<Pair<Tree, String>> postfixInsertions = new ArrayList<Pair<Tree, String>>();
   private Collection<String> importsToAdd = new ArrayList<String>();
   private Collection<String> importsToRemove = new ArrayList<String>();
 
@@ -71,6 +72,13 @@ public class SuggestedFix {
           pos.getStartPosition(),
           pos.getStartPosition(),
           prefixInsertion.snd));
+    }
+    for (Pair<Tree, String> postfixInsertion : postfixInsertions) {
+      DiagnosticPosition pos = (JCTree) postfixInsertion.fst;
+      replacements.add(new Replacement(
+          pos.getEndPosition(endPositions),
+          pos.getEndPosition(endPositions),
+          postfixInsertion.snd));
     }
     for (Pair<Tree, String> nodeReplacement : nodeReplacements) {
       DiagnosticPosition pos = (JCTree) nodeReplacement.fst;
@@ -101,6 +109,11 @@ public class SuggestedFix {
 
   public SuggestedFix prefixWith(Tree node, String prefix) {
     prefixInsertions.add(new Pair<Tree, String>(node, prefix));
+    return this;
+  }
+
+  public SuggestedFix postfixWith(Tree node, String postfix) {
+    postfixInsertions.add(new Pair<Tree, String>(node, postfix));
     return this;
   }
 

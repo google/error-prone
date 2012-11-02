@@ -65,7 +65,7 @@ public class AppliedFixTest {
         "public class Foo {\n" +
         "  int 3;\n" +
         "}", endPositions)
-        .apply(new SuggestedFix().prefixWith(node, "three"));
-    assertThat(fix.getNewCodeSnippet().toString(), equalTo("int three3;"));
+        .apply(new SuggestedFix().prefixWith(node, "three").postfixWith(node, "tres"));
+    assertThat(fix.getNewCodeSnippet().toString(), equalTo("int three3tres;"));
   }
 }
