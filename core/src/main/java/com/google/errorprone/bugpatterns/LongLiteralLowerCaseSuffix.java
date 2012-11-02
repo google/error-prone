@@ -29,6 +29,7 @@ import com.google.errorprone.matchers.Matcher;
 
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
 
 /**
@@ -68,24 +69,10 @@ public class LongLiteralLowerCaseSuffix extends DescribingMatcher<LiteralTree> {
     if (sourceFile == null) {
       return null;
     }
+    JCCompilationUnit compilationUnit = (JCCompilationUnit)state.getPath().getCompilationUnit();
     int start = longLiteral.getStartPosition();
-    for (int pos = start; pos < sourceFile.length(); pos++) {
-      char literalChar = sourceFile.charAt(pos);
-      if ((literalChar >= '0' && literalChar <= '9')
-          || (literalChar >= 'a' && literalChar <= 'f') // hex digits
-          || (literalChar >= 'A' && literalChar <= 'F') 
-          || literalChar == 'x' || literalChar == 'X' // hex literal: 0x...
-          // No need to add test for Java 7 binary literals 0b... 'b' has already been checked
-          || literalChar == '_' /* Java 7 allows '_' within literals */) {
-        continue;
-      }
-      if (literalChar == 'l' || literalChar == 'L') {
-        return sourceFile.subSequence(start, pos + 1).toString();
-      } else {
-        return sourceFile.subSequence(start, pos).toString();
-      }
-    }
-    return null;
+    int end = longLiteral.getEndPosition(compilationUnit.endPositions);
+    return sourceFile.subSequence(start, end).toString();
   }
   
   @Override
