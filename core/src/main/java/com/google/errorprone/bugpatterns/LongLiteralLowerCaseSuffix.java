@@ -70,6 +70,9 @@ public class LongLiteralLowerCaseSuffix extends DescribingMatcher<LiteralTree> {
       return null;
     }
     JCCompilationUnit compilationUnit = (JCCompilationUnit)state.getPath().getCompilationUnit();
+    if (compilationUnit.endPositions == null) {
+      return null;
+    }
     int start = longLiteral.getStartPosition();
     int end = longLiteral.getEndPosition(compilationUnit.endPositions);
     return sourceFile.subSequence(start, end).toString();
