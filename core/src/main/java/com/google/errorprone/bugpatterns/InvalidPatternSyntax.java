@@ -22,17 +22,19 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.argument;
+import static com.google.errorprone.matchers.Matchers.isDescendantOfMethod;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
-import static com.google.errorprone.matchers.Matchers.isDescendantOfMethod;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 
@@ -58,6 +60,10 @@ public class InvalidPatternSyntax extends DescribingMatcher<MethodInvocationTree
     }
 
     private boolean isValidSyntax(String regex) {
+      // Actually valid, but useless.
+      if (".".equals(regex)) {
+        return false;
+      }
       try {
         Pattern.compile(regex);
         return true;
@@ -72,9 +78,13 @@ public class InvalidPatternSyntax extends DescribingMatcher<MethodInvocationTree
   private static final Matcher<MethodInvocationTree> BAD_REGEX_USAGE =
       allOf(
           anyOf(
+              methodSelect(isDescendantOfMethod("java.lang.String", "matches(java.lang.String)")),
+              methodSelect(isDescendantOfMethod("java.lang.String", "replaceAll(java.lang.String,java.lang.String)")),
+              methodSelect(isDescendantOfMethod("java.lang.String", "replaceFirst(java.lang.String,java.lang.String)")),
               methodSelect(isDescendantOfMethod("java.lang.String", "split(java.lang.String)")),
               methodSelect(isDescendantOfMethod("java.lang.String", "split(java.lang.String,int)")),
-              methodSelect(staticMethod("java.util.regex.Pattern", "compile"))),
+              methodSelect(staticMethod("java.util.regex.Pattern", "compile")),
+              methodSelect(staticMethod("java.util.regex.Pattern", "matches"))),
           argument(0, BAD_REGEX_LITERAL));
 
   @Override
@@ -84,8 +94,12 @@ public class InvalidPatternSyntax extends DescribingMatcher<MethodInvocationTree
 
   @Override
   public Description describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
-    // TODO: Make a suggested fix?
-    return new Description(methodInvocationTree, diagnosticMessage, null);
+    SuggestedFix fix = null;
+    ExpressionTree arg = methodInvocationTree.getArguments().get(0);
+    if ((arg instanceof LiteralTree) && ".".equals(((LiteralTree)arg).getValue())) {
+      fix = new SuggestedFix().replace(arg, "\"\\\\.\"");
+    }
+    return new Description(methodInvocationTree, diagnosticMessage, fix);
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {
