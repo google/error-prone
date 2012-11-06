@@ -418,28 +418,13 @@ public class Matchers {
     };
   }
 
-  // TODO(eaftan): Add JavaDoc
-  public static Matcher<ExpressionTree> isDescendantOfMethod(final String fullClassName,
-      final String methodName) {
-    return new Matcher<ExpressionTree>() {
-      @Override
-      public boolean matches(ExpressionTree expressionTree, VisitorState state) {
-        if (!(expressionTree instanceof JCFieldAccess)) {
-          return false;
-        }
-
-        JCFieldAccess methodSelectFieldAccess = (JCFieldAccess) expressionTree;
-        if ("*".equals(methodName) || methodName.equals(methodSelectFieldAccess.sym.toString())) {
-          Type accessedReferenceType = ((MethodSymbol) methodSelectFieldAccess.sym).owner.type;
-          Type collectionType = state.getTypeFromString(fullClassName);
-          if (collectionType != null) {
-            return state.getTypes().isSubtype(accessedReferenceType,
-                state.getTypes().erasure(collectionType));
-          }
-        }
-        return false;
-      }
-    };
+  /**
+   * Matches an instance method that is a descendant of the instance method specified by the
+   * class name and method name.
+   */
+  public static Matcher<ExpressionTree> isDescendantOfMethod(String fullClassName,
+      String methodName) {
+    return new DescendantOf(fullClassName, methodName);
   }
 }
 
