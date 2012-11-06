@@ -91,4 +91,9 @@ public class LongLiteralLowerCaseSuffixPositiveCases {
     //BUG: Suggestion includes "value = -  06543L"
     long value = -  06543l;
   }
+
+  public void underscoredLowerCase() {
+    //BUG: Suggestion includes "value = 0_1__2L"
+    long value = 0_1__2l;
+  }
 }
