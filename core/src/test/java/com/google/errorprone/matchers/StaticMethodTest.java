@@ -101,6 +101,19 @@ public class StaticMethodTest extends CompilerBasedTest {
     assertCompiles(memberSelectMatches(false, new StaticMethod("com.google.A", "instanceCount")));
   }
 
+  @Test
+  public void shouldMatchStaticImport() throws IOException {
+    writeFile("B.java",
+        "import static com.google.A.count;",
+        "public class B {",
+        "  public int count() {",
+        "    return count();",
+        "  }",
+        "}"
+    );
+    assertCompiles(memberSelectMatches(true, new StaticMethod("com.google.A", "instanceCount")));
+  }
+
   private Scanner memberSelectMatches(final boolean shouldMatch, final StaticMethod toMatch) {
     return new Scanner() {
       @Override
