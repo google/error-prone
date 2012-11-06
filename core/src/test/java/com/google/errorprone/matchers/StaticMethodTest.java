@@ -16,16 +16,18 @@
 
 package com.google.errorprone.matchers;
 
+import static org.junit.Assert.assertTrue;
+
 import com.google.errorprone.Scanner;
 import com.google.errorprone.VisitorState;
-import com.sun.source.tree.MemberSelectTree;
-import com.sun.source.tree.Tree.Kind;
+
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MethodInvocationTree;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -57,7 +59,7 @@ public class StaticMethodTest extends CompilerBasedTest {
       "  }",
       "}"
     );
-    assertCompiles(memberSelectMatches(true, new StaticMethod("com.google.A", "count")));
+    assertCompiles(methodInvocationMatches(true, new StaticMethod("com.google.A", "count")));
   }
 
   @Test
@@ -69,7 +71,7 @@ public class StaticMethodTest extends CompilerBasedTest {
       "  }",
       "}"
     );
-    assertCompiles(memberSelectMatches(true, new StaticMethod("com.google.A", "count")));
+    assertCompiles(methodInvocationMatches(true, new StaticMethod("com.google.A", "count")));
   }
 
   @Test
@@ -84,7 +86,7 @@ public class StaticMethodTest extends CompilerBasedTest {
         "  }",
         "}"
     );
-    assertCompiles(memberSelectMatches(false, new StaticMethod("com.google.A", "count")));
+    assertCompiles(methodInvocationMatches(false, new StaticMethod("com.google.A", "count")));
   }
 
   @Test
@@ -98,7 +100,8 @@ public class StaticMethodTest extends CompilerBasedTest {
         "  }",
         "}"
     );
-    assertCompiles(memberSelectMatches(false, new StaticMethod("com.google.A", "instanceCount")));
+    assertCompiles(methodInvocationMatches(false,
+        new StaticMethod("com.google.A", "instanceCount")));
   }
 
   @Test
@@ -106,23 +109,24 @@ public class StaticMethodTest extends CompilerBasedTest {
     writeFile("B.java",
         "import static com.google.A.count;",
         "public class B {",
-        "  public int count() {",
+        "  public int bCount() {",
         "    return count();",
         "  }",
         "}"
     );
-    assertCompiles(memberSelectMatches(true, new StaticMethod("com.google.A", "instanceCount")));
+    assertCompiles(methodInvocationMatches(true, new StaticMethod("com.google.A", "count")));
   }
 
-  private Scanner memberSelectMatches(final boolean shouldMatch, final StaticMethod toMatch) {
+  private Scanner methodInvocationMatches(final boolean shouldMatch, final StaticMethod toMatch) {
     return new Scanner() {
       @Override
-      public Void visitMemberSelect(MemberSelectTree node, VisitorState visitorState) {
-        if (getCurrentPath().getParentPath().getLeaf().getKind() == Kind.METHOD_INVOCATION) {
-          assertTrue(node.toString(),
-              !shouldMatch ^ toMatch.matches(node, visitorState));
+      public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {
+        ExpressionTree methodSelect = node.getMethodSelect();
+        if (!methodSelect.toString().equals("super")) {
+          assertTrue(methodSelect.toString(),
+                !shouldMatch ^ toMatch.matches(methodSelect, visitorState));
         }
-        return super.visitMemberSelect(node, visitorState);
+        return super.visitMethodInvocation(node, visitorState);
       }
     };
   }
