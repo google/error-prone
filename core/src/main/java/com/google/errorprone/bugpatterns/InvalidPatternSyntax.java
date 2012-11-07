@@ -94,6 +94,7 @@ public class InvalidPatternSyntax extends DescribingMatcher<MethodInvocationTree
 
   @Override
   public Description describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
+    // TODO: Suggest fixes for more situations.
     SuggestedFix fix = null;
     ExpressionTree arg = methodInvocationTree.getArguments().get(0);
     if ((arg instanceof LiteralTree) && ".".equals(((LiteralTree)arg).getValue())) {
