@@ -29,13 +29,14 @@ import com.google.errorprone.matchers.Matcher;
 
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.Tree.Kind;
-import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
+
+import java.util.regex.Pattern;
 
 /**
  * Matcher for a <code>long</code> literal with a lower-case ell for a suffix (e.g.
  * <code>234l</code>) rather than the more readable upper-case ell (e.g. <code>234L</code>).
- * 
+ *
  * @author Simon Nickerson (sjnickerson@google.com)
  */
 @BugPattern(name = "LongLiteralLowerCaseSuffix",
@@ -59,6 +60,11 @@ public class LongLiteralLowerCaseSuffix extends DescribingMatcher<LiteralTree> {
     }
   };
 
+  // Doesn't need to be strict, just shouldn't read past the end
+  // of the literal.
+  private static final Pattern LONG_LITERAL_PATTERN =
+      Pattern.compile("-? *(0[bBxX]?)?[0-9a-fA-F_]+[lL]?");
+
   /**
    * Extracts the long literal corresponding to a given {@link LiteralTree} node from the source
    * code as a string. Returns null if the source code is not available.
@@ -69,20 +75,20 @@ public class LongLiteralLowerCaseSuffix extends DescribingMatcher<LiteralTree> {
     if (sourceFile == null) {
       return null;
     }
-    JCCompilationUnit compilationUnit = (JCCompilationUnit)state.getPath().getCompilationUnit();
-    if (compilationUnit.endPositions == null) {
-      return null;
-    }
     int start = longLiteral.getStartPosition();
-    int end = longLiteral.getEndPosition(compilationUnit.endPositions);
-    return sourceFile.subSequence(start, end).toString();
+    java.util.regex.Matcher matcher = LONG_LITERAL_PATTERN.matcher(
+        sourceFile.subSequence(start, sourceFile.length()));
+    if (matcher.lookingAt()) {
+      return matcher.group();
+    }
+    return null;
   }
-  
+
   @Override
   public boolean matches(LiteralTree literalTree, VisitorState state) {
     return matcher.matches(literalTree, state);
   }
-  
+
   @Override
   public Description describe(LiteralTree literalTree, VisitorState state) {
     StringBuilder longLiteral = new StringBuilder(getLongLiteral(literalTree, state));
@@ -90,10 +96,10 @@ public class LongLiteralLowerCaseSuffix extends DescribingMatcher<LiteralTree> {
     SuggestedFix fix = new SuggestedFix().replace(literalTree, longLiteral.toString());
     return new Description(literalTree, diagnosticMessage, fix);
   }
-  
+
   public static class Scanner extends com.google.errorprone.Scanner {
     private final DescribingMatcher<LiteralTree> scannerMatcher = new LongLiteralLowerCaseSuffix();
-    
+
     @Override
     public Void visitLiteral(LiteralTree node, VisitorState visitorState) {
       evaluateMatch(node, visitorState, scannerMatcher);
