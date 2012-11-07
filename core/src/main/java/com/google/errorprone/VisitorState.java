@@ -166,7 +166,7 @@ public class VisitorState {
     if (typeSymbol == null) {
       JavaCompiler compiler = JavaCompiler.instance(context);
       Symbol sym = compiler.resolveIdent(typeStr);
-      if (sym != null && !(sym instanceof ClassSymbol)) {
+      if (!(sym instanceof ClassSymbol)) {
         return null;
       }
       typeSymbol = (ClassSymbol) sym;
