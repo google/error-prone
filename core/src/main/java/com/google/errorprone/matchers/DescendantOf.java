@@ -23,10 +23,6 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.Types;
-
-import java.util.LinkedList;
-import java.util.Queue;
 
 /**
  * Matches an instance method that is a descendant of a method with the given class and
@@ -54,36 +50,14 @@ public class DescendantOf implements Matcher<ExpressionTree> {
     }
 
     if (methodName.equals("*") || methodName.equals(sym.toString())) {
-      return isSubtype(state, sym.owner.type);
+      Type accessedReferenceType = sym.owner.type;
+      Type collectionType = state.getTypeFromString(fullClassName);
+      if (collectionType != null) {
+        return state.getTypes().isSubtype(accessedReferenceType,
+            state.getTypes().erasure(collectionType));
+      }
     }
 
     return false;
-  }
-
-  private boolean isSubtype(VisitorState state, Type maybeSubtype) {
-    Type collectionType = state.getTypeFromString(fullClassName);
-    if (collectionType == null) {
-      walkSupers(state, maybeSubtype);
-      collectionType = state.getTypeFromString(fullClassName);
-      if (collectionType == null) {
-        return false;
-      }
-    }
-    return state.getTypes().isSubtype(maybeSubtype,
-        state.getTypes().erasure(collectionType));
-  }
-
-  private void walkSupers(VisitorState state, Type type) {
-    Types types = state.getTypes();
-    Queue<Type> q = new LinkedList<Type>();
-    q.add(type);
-    while (!q.isEmpty()) {
-      type = q.remove();
-      if (type == null) {
-        continue;
-      }
-      q.add(types.supertype(type));
-      q.addAll(types.interfaces(type));
-    }
   }
 }

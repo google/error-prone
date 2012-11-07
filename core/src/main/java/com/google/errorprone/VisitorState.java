@@ -17,6 +17,7 @@
 package com.google.errorprone;
 
 import com.google.errorprone.matchers.Description;
+
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol;
@@ -26,6 +27,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ArrayType;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.Types;
+import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.List;
@@ -146,10 +148,10 @@ public class VisitorState {
    * Given the string representation of a simple (non-array, non-generic) type, return the
    * matching Type.
    *
-   * <p>If this method returns null, the compiler has not seen this type yet, which means that if
-   * you are comparing other types to this for equality or the subtype relation, your result would
-   * always be false even if it could create the type.  Thus it might be best to bail out early in
-   * your matcher if this method returns null on your type of interest.
+   * <p>If this method returns null, the compiler doesn't have access to this type, which means
+   * that if you are comparing other types to this for equality or the subtype relation, your
+   * result would always be false even if it could create the type.  Thus it might be best to bail
+   * out early in your matcher if this method returns null on your type of interest.
    *
    * @param typeStr The canonical string representation of a simple type (e.g., "java.lang.Object")
    * @return The Type that corresponds to the string, or null if it cannot be found
@@ -161,10 +163,15 @@ public class VisitorState {
     }
     Name typeName = getName(typeStr);
     ClassSymbol typeSymbol = getSymtab().classes.get(typeName);
-    if (typeSymbol != null) {
-      return typeSymbol.asType();
+    if (typeSymbol == null) {
+      JavaCompiler compiler = JavaCompiler.instance(context);
+      Symbol sym = compiler.resolveIdent(typeStr);
+      if (sym != null && !(sym instanceof ClassSymbol)) {
+        return null;
+      }
+      typeSymbol = (ClassSymbol) sym;
     }
-    return null;
+    return typeSymbol.asType();
   }
 
   /**
@@ -217,7 +224,7 @@ public class VisitorState {
 
   /**
    * Gets the current source file.
-   * 
+   *
    * @return the source file as a sequence of characters, or null if it is not available
    */
   public CharSequence getSourceCode() {
@@ -227,7 +234,7 @@ public class VisitorState {
       return null;
     }
   }
-  
+
   /**
    * Validates a type string, ensuring it is not generic and not an array type.
    */
