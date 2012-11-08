@@ -25,7 +25,7 @@ import java.io.File;
 
 /**
  * Test cases for {@link LongLiteralLowerCaseSuffix}.
- * 
+ *
  * @author Simon Nickerson (sjnickerson@google.com)
  */
 public class LongLiteralLowerCaseSuffixTest {
@@ -41,7 +41,20 @@ public class LongLiteralLowerCaseSuffixTest {
   public void testPositiveCase() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
         new File(
-            this.getClass().getResource("LongLiteralLowerCaseSuffixPositiveCases.java").toURI()));
+            this.getClass().getResource("LongLiteralLowerCaseSuffixPositiveCase1.java").toURI()));
+  }
+
+  /**
+   * Test for Java 7 integer literals that include underscores.
+   */
+  @Test
+  public void testJava7PositiveCase() throws Exception {
+    String[] javaVersion = System.getProperty("java.version").split("\\.");
+    if (Integer.parseInt(javaVersion[1]) >= 7) {
+      compilationHelper.assertCompileFailsWithMessages(
+          new File(
+              this.getClass().getResource("LongLiteralLowerCaseSuffixPositiveCase2.java").toURI()));
+    }
   }
 
   @Test
