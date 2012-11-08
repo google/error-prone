@@ -50,7 +50,7 @@ public class CompilationTestHelper {
    */
   public void assertCompileFailsWithMessages(File source) throws IOException {
     assertThat("Compiler returned an unexpected error code",
-        compiler.compile(new String[]{"-Xjcov", source.getAbsolutePath()}), is(1));
+        compiler.compile(new String[]{"-Xjcov", "-encoding", "UTF-8", source.getAbsolutePath()}), is(1));
     assertHasDiagnosticOnAllMatchingLines(diagnosticHelper.getDiagnostics(), source);
   }
 

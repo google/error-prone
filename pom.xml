@@ -30,6 +30,10 @@
   <version>0.9.8-SNAPSHOT</version>
   <packaging>pom</packaging>
 
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
   <distributionManagement>
     <!-- Override the setting in the parent Google POM, per instruction from Sonatype,
          see https://issues.sonatype.org/browse/OSSRH-3462 -->
