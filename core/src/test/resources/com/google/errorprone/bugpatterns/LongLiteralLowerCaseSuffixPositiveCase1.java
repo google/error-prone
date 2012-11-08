@@ -19,7 +19,7 @@ package com.google.errorprone.bugpatterns;
 /**
  * Positive cases for {@link LongLiteralLowerCaseSuffix}.
  */
-public class LongLiteralLowerCaseSuffixPositiveCases {
+public class LongLiteralLowerCaseSuffixPositiveCase1 {
   
   // This constant string includes non-ASCII characters to make sure that we're not confusing
   // bytes and chars:
@@ -92,8 +92,4 @@ public class LongLiteralLowerCaseSuffixPositiveCases {
     long value = -  06543l;
   }
 
-  public void underscoredLowerCase() {
-    //BUG: Suggestion includes "value = 0_1__2L"
-    long value = 0_1__2l;
-  }
 }
