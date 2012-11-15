@@ -96,15 +96,14 @@ public class SelfEquals extends DescribingMatcher<MethodInvocationTree> {
   /**
    * Should this matcher check for Objects.equal(foo, foo)?
    */
-  private boolean checkGuava;
+  private boolean checkGuava = true;
 
   /**
    * Should this matcher check for foo.equals(foo)?
    */
-  private boolean checkEquals;
+  private boolean checkEquals = false;
 
   public SelfEquals() {
-    this(true, true);
   }
 
   /**
@@ -114,6 +113,9 @@ public class SelfEquals extends DescribingMatcher<MethodInvocationTree> {
    * @param checkEquals Check for foo.equals(foo) pattern?
    */
   public SelfEquals(boolean checkGuava, boolean checkEquals) {
+    if (!checkGuava && !checkEquals) {
+      throw new IllegalArgumentException("SelfEquals should check something");
+    }
     this.checkGuava = checkGuava;
     this.checkEquals = checkEquals;
   }

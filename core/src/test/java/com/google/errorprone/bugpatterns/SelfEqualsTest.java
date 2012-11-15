@@ -16,9 +16,12 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static org.junit.Assert.fail;
+
 import java.io.File;
 
 import org.junit.Test;
+import org.junit.Assert;
 
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.Scanner;
@@ -40,30 +43,36 @@ public class SelfEqualsTest {
 
   @Test
   public void testPositiveCase1() throws Exception {
-    CompilationTestHelper compilationHelper = new CompilationTestHelper(new SelfEquals.Scanner());
+    CompilationTestHelper compilationHelper = new CompilationTestHelper(
+        new SelfEquals.Scanner(true, true));
     compilationHelper.assertCompileFailsWithMessages(positiveCase1);
   }
 
   @Test
   public void testPositiveCase2() throws Exception {
-    CompilationTestHelper compilationHelper = new CompilationTestHelper(new SelfEquals.Scanner());
+    CompilationTestHelper compilationHelper = new CompilationTestHelper(
+        new SelfEquals.Scanner(true, true));
     compilationHelper.assertCompileFailsWithMessages(positiveCase2);
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    CompilationTestHelper compilationHelper = new CompilationTestHelper(new SelfEquals.Scanner());
+    CompilationTestHelper compilationHelper = new CompilationTestHelper(
+        new SelfEquals.Scanner(true, true));
     compilationHelper.assertCompileSucceeds(negativeCases);
   }
 
   @Test
   public void testFlags() throws Exception {
+    Scanner scanner;
+    CompilationTestHelper compilationHelper;
     // Both checks off.
-    Scanner scanner = new SelfEquals.Scanner(false, false);
-    CompilationTestHelper compilationHelper = new CompilationTestHelper(scanner);
-    compilationHelper.assertCompileSucceeds(positiveCase1);
-    compilationHelper = new CompilationTestHelper(scanner);
-    compilationHelper.assertCompileSucceeds(positiveCase2);
+    try {
+      scanner = new SelfEquals.Scanner(false, false);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // Expected to get an exception.
+    }
 
     // Both checks on.
     scanner = new SelfEquals.Scanner(true, true);
