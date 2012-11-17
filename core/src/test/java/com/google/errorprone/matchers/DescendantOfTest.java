@@ -16,24 +16,32 @@
 
 package com.google.errorprone.matchers;
 
+import static org.junit.Assert.assertTrue;
+
 import com.google.errorprone.Scanner;
 import com.google.errorprone.VisitorState;
-import com.sun.source.tree.MemberSelectTree;
-import com.sun.source.tree.Tree.Kind;
+
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MethodInvocationTree;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-
-import static org.junit.Assert.assertTrue;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public class DescendantOfTest extends CompilerBasedTest {
 
+  final List<ScannerTest> tests = new ArrayList<ScannerTest>();
+
   @Before
   public void setUp() throws IOException {
+    tests.clear();
     writeFile("A.java",
         "package com.google;",
         "public class A { ",
@@ -45,6 +53,13 @@ public class DescendantOfTest extends CompilerBasedTest {
         "  }",
         "}"
     );
+  }
+
+  @After
+  public void tearDown() {
+    for (ScannerTest test : tests) {
+      test.assertDone();
+    }
   }
 
   @Test
@@ -119,17 +134,62 @@ public class DescendantOfTest extends CompilerBasedTest {
     assertCompiles(memberSelectMatches(false, new DescendantOf("com.google.A", "count()")));
   }
 
+  @Test
+  public void shouldMatchTransitively() throws Exception {
+    writeFile("I1.java",
+      "package i;",
+      "public interface I1 {",
+      "  void count();",
+      "}"
+    );
+    writeFile("I2.java",
+      "package i;",
+      "public interface I2 extends I1 {",
+      "}"
+    );
+    writeFile("B.java",
+      "package b;",
+      "public class B implements i.I2 {",
+      "  public void count() {",
+      "  }",
+      "}"
+    );
+    assertCompiles(new Scanner());
+    clearSourceFiles();
+    writeFile("C.java",
+        "public class C {",
+        "  public void test(b.B b) {",
+        "    b.count();",
+        "  }",
+        "}"
+      );
+    assertCompiles(memberSelectMatches(true, new DescendantOf("i.I1", "count()")));
+  }
+
+  private abstract class ScannerTest extends Scanner {
+    public abstract void assertDone();
+  }
+
   private Scanner memberSelectMatches(final boolean shouldMatch, final DescendantOf toMatch) {
-    return new Scanner() {
+    ScannerTest test = new ScannerTest() {
+      private boolean matched = false;
+
       @Override
-      public Void visitMemberSelect(MemberSelectTree node, VisitorState visitorState) {
-        if (getCurrentPath().getParentPath().getLeaf().getKind() == Kind.METHOD_INVOCATION) {
-          assertTrue(node.toString(),
-              !shouldMatch ^ toMatch.matches(node, visitorState));
+      public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {
+        ExpressionTree methodSelect = node.getMethodSelect();
+        if (toMatch.matches(methodSelect, visitorState)) {
+          matched = true;
         }
-        return super.visitMemberSelect(node, visitorState);
+        return super.visitMethodInvocation(node, visitorState);
+      }
+
+      @Override
+      public void assertDone() {
+        assertTrue(shouldMatch == matched);
       }
     };
+    tests.add(test);
+    return test;
   }
 
 }

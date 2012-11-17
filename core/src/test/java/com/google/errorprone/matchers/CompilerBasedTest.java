@@ -16,18 +16,24 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.common.io.Files.deleteRecursively;
+import static org.hamcrest.CoreMatchers.is;
+
 import com.google.errorprone.ErrorProneCompiler;
 import com.google.errorprone.Scanner;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TestName;
 
-import java.io.*;
-
-import static com.google.common.io.Files.deleteRecursively;
-import static org.hamcrest.CoreMatchers.is;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -35,6 +41,7 @@ import static org.hamcrest.CoreMatchers.is;
 public class CompilerBasedTest {
   @Rule public TestName name = new TestName();
   protected File tempDir;
+  List<String> filesToCompile = new ArrayList<String>();
 
   @Before
   public void createTempDir() throws IOException {
@@ -55,23 +62,24 @@ public class CompilerBasedTest {
       writer.println(line);
     }
     writer.close();
+    filesToCompile.add(source.getAbsolutePath());
   }
 
   protected void assertCompiles(Scanner scanner) throws IOException {
+    List<String> args = new ArrayList<String>();
+    args.add("-cp");
+    args.add(tempDir.getAbsolutePath());
+    args.add("-d");
+    args.add(tempDir.getAbsolutePath());
+    args.addAll(filesToCompile);
+
     ErrorProneCompiler compiler = new ErrorProneCompiler.Builder()
         .report(scanner)
         .build();
+    Assert.assertThat(compiler.compile(args.toArray(new String[0])), is(0));
+  }
 
-    File[] files = tempDir.listFiles(new FilenameFilter() {
-      @Override
-      public boolean accept(File dir, String name) {
-        return !name.endsWith(".class");
-      }
-    });
-    String[] args = new String[files.length];
-    for (int i = 0; i < args.length; i++) {
-      args[i] = files[i].getAbsolutePath();
-    }
-    Assert.assertThat(compiler.compile(args), is(0));
+  protected void clearSourceFiles() {
+    filesToCompile.clear();
   }
 }

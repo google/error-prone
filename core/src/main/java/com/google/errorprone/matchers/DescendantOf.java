@@ -43,13 +43,13 @@ public class DescendantOf implements Matcher<ExpressionTree> {
   public boolean matches(ExpressionTree expressionTree, VisitorState state) {
     Symbol sym = ASTHelpers.getSymbol(expressionTree);
     if (sym == null || !(sym instanceof MethodSymbol)) {
-      throw new IllegalArgumentException("staticMethod not passed a method call");
+      throw new IllegalArgumentException("DescendantOf matcher expects a method call");
     }
     if (sym.isStatic()) {
       return false;
     }
 
-    if (methodName.equals("*") || methodName.equals(sym.toString())) {
+    if (methodName.equals(sym.toString())) {
       Type accessedReferenceType = sym.owner.type;
       Type collectionType = state.getTypeFromString(fullClassName);
       if (collectionType != null) {
