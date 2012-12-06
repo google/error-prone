@@ -28,6 +28,8 @@ import com.sun.tools.javac.code.Type.ArrayType;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.main.JavaCompiler;
+import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.List;
@@ -233,6 +235,26 @@ public class VisitorState {
     } catch (IOException e) {
       return null;
     }
+  }
+
+  /**
+   * Gets the original source code that represents the given node.  The source is only available
+   * if the compiler was invoked with the -Xjcov option.
+   *
+   * <p>Note that this may be different from what is returned by calling .toString() on the node.
+   * This returns exactly what is in the source code, whereas .toString() pretty-prints the node
+   * from its AST representation.
+   *
+   * @return the source code that represents the node, or null if it is not available
+   */
+  public CharSequence getSourceForNode(JCTree node) {
+    JCCompilationUnit compilationUnit = (JCCompilationUnit) getPath().getCompilationUnit();
+    if (compilationUnit.endPositions == null) {
+      return null;
+    }
+    int start = node.getStartPosition();
+    int end = node.getEndPosition(compilationUnit.endPositions);
+    return getSourceCode().subSequence(start, end);
   }
 
   /**
