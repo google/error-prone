@@ -28,7 +28,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.*;
 
@@ -41,7 +41,7 @@ import static com.google.errorprone.matchers.Matchers.*;
         "The equals method on an array compares for reference equality. If reference equality " +
         "is needed, == should be used instead for clarity. Otherwise, use Arrays.equals to " +
         "compare the contents of the arrays.",
-    category = JDK, severity = ERROR, maturity = ON_BY_DEFAULT)
+    category = JDK, severity = ERROR, maturity = MATURE)
 public class ArrayEquals extends DescribingMatcher<MethodInvocationTree> {
 
   @SuppressWarnings("unchecked")

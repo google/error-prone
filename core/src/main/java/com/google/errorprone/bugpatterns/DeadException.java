@@ -25,8 +25,8 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.StatementTree;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.*;
 import static com.sun.source.tree.Tree.Kind.EXPRESSION_STATEMENT;
 import static com.sun.source.tree.Tree.Kind.IF;
@@ -38,7 +38,7 @@ import static com.sun.source.tree.Tree.Kind.IF;
     summary = "Exception created but not thrown",
     explanation =
         "The exception is created with new, but is not thrown, and the reference is lost.",
-    category = JDK, severity = ERROR, maturity = ON_BY_DEFAULT)
+    category = JDK, severity = WARNING, maturity = EXPERIMENTAL)
 public class DeadException extends DescribingMatcher<NewClassTree> {
 
   @SuppressWarnings("unchecked")

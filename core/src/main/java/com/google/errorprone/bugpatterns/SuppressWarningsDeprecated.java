@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.hasElementWithValue;
@@ -45,7 +45,7 @@ import java.util.List;
     "{{{@SuppressWarnings(\"deprecation\")}}}\n" +
     "and not\n" +
     "{{{@SuppressWarnings(\"deprecated\")}}}",
-  category = JDK, severity = ERROR, maturity = ON_BY_DEFAULT)
+  category = JDK, severity = ERROR, maturity = MATURE)
 public class SuppressWarningsDeprecated extends AbstractSuppressWarningsMatcher {
 
   @SuppressWarnings({"varargs", "unchecked"})

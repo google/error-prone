@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.EnclosingClass.findEnclosingClass;
 import static com.google.errorprone.matchers.Matchers.allOf;
@@ -62,7 +62,7 @@ import java.util.List;
         "which has a single parameter of type `java.lang.Object`. " +
         "Defining a method which looks like `equals` but doesn't have the same signature is dangerous, " +
         "since comparisons will have different results depending on which `equals` is called.",
-    category = JDK, maturity = ON_BY_DEFAULT, severity = ERROR)
+    category = JDK, maturity = MATURE, severity = ERROR)
 public class CovariantEquals extends DescribingMatcher<MethodTree> {
 
   /**

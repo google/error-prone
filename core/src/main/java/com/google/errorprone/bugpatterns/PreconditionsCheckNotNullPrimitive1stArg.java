@@ -31,7 +31,7 @@ import com.sun.tools.javac.tree.JCTree.JCBinary;
 import java.util.List;
 
 import static com.google.errorprone.BugPattern.Category.GUAVA;
-import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.*;
 
@@ -63,7 +63,7 @@ import static com.google.errorprone.matchers.Matchers.*;
         "will be autoboxed into a boxed Boolean, which is non-null, causing the check to " +
         "always pass without the condition being evaluated. This check ensures that the " +
         "first argument to Preconditions.checkNotNull() is not a primitive boolean.",
-    category = GUAVA, severity = ERROR, maturity = ON_BY_DEFAULT)
+    category = GUAVA, severity = ERROR, maturity = EXPERIMENTAL)
 public class PreconditionsCheckNotNullPrimitive1stArg
     extends DescribingMatcher<MethodInvocationTree> {
 

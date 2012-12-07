@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
@@ -43,7 +43,7 @@ import java.util.regex.Pattern;
     summary = "Prefer 'L' to 'l' for the suffix to long literals",
     explanation = "A long literal can have a suffix of 'L' or 'l', but the former is less " +
     "likely to be confused with a '1' in most fonts.",
-    category = JDK, severity = ERROR, maturity = ON_BY_DEFAULT)
+    category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
 public class LongLiteralLowerCaseSuffix extends DescribingMatcher<LiteralTree> {
 
   private static final Matcher<LiteralTree> matcher = new Matcher<LiteralTree>() {

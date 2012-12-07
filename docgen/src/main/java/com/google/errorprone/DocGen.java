@@ -24,6 +24,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.io.Files;
 import com.google.common.io.LineProcessor;
 import com.google.errorprone.BugPattern.MaturityLevel;
+import com.google.errorprone.BugPattern.SeverityLevel;
 import org.kohsuke.MetaInfServices;
 
 import javax.annotation.processing.*;
@@ -168,8 +169,9 @@ public class DocGen extends AbstractProcessor {
           if (!bugPatterns.isEmpty()) {
             result.append("==").append(level.name().toLowerCase().replace("_", " ")).append("==\n");
             for (BugPattern.Instance bugPattern : bugPatterns) {
-              result.append(String.format("  * [%s]: %s\n",
-                  bugPattern.name.replace(' ', '_'), bugPattern.summary));
+              result.append(String.format("  * [%s]: %s (%s)\n",
+                  bugPattern.name.replace(' ', '_'), bugPattern.summary,
+                  bugPattern.severity.name().toLowerCase().replace("_", " ")));
             }
           }
         }
@@ -184,6 +186,7 @@ public class DocGen extends AbstractProcessor {
         pattern.altNames = parts[2];
         pattern.maturity = MaturityLevel.valueOf(parts[5]);
         pattern.summary = parts[6];
+        pattern.severity = SeverityLevel.valueOf(parts[4]);
         index.put(pattern.maturity, pattern);
         // replace spaces in filename with underscores
         Writer writer = new FileWriter(new File(wikiDir, pattern.name.replace(' ', '_') + ".wiki"));

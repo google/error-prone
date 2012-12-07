@@ -28,7 +28,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import java.util.List;
 
 import static com.google.errorprone.BugPattern.Category.GUAVA;
-import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.*;
 import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
@@ -44,7 +44,7 @@ import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
         "literal). Often the order of the two arguments is swapped, and the reference is " +
         "never actually checked for nullity. This check ensures that the first argument to " +
         "Preconditions.checkNotNull() is not a literal.",
-    category = GUAVA, severity = ERROR, maturity = ON_BY_DEFAULT)
+    category = GUAVA, severity = ERROR, maturity = MATURE)
 public class PreconditionsCheckNotNull extends DescribingMatcher<MethodInvocationTree> {
 
   @SuppressWarnings({"unchecked"})

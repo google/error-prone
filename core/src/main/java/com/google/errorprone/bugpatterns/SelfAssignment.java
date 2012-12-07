@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.sun.source.tree.Tree.Kind.CLASS;
 import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
@@ -63,7 +63,7 @@ import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
     summary = "Variable assigned to itself",
     explanation = "The left-hand side and right-hand side of this assignment are the same. " +
     		"It has no effect.",
-    category = JDK, severity = ERROR, maturity = ON_BY_DEFAULT)
+    category = JDK, severity = ERROR, maturity = MATURE)
 public class SelfAssignment extends DescribingMatcher<AssignmentTree> {
 
   @Override

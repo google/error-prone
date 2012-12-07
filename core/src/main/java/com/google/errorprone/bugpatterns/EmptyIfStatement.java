@@ -28,7 +28,7 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.*;
 import static com.sun.source.tree.Tree.Kind.IF;
@@ -49,7 +49,7 @@ import static com.sun.source.tree.Tree.Kind.IF;
     explanation =
         "An if statement contains an empty statement as the then clause. A semicolon may " +
         "have been inserted by accident.",
-    category = JDK, severity = ERROR, maturity = ON_BY_DEFAULT)
+    category = JDK, severity = ERROR, maturity = MATURE)
 public class EmptyIfStatement extends DescribingMatcher<EmptyStatementTree> {
   
   /**

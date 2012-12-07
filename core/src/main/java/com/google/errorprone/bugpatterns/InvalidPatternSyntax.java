@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -48,7 +48,7 @@ import java.util.regex.PatternSyntaxException;
     summary = "Invalid syntax used for a regular expression",
     explanation = "This error is triggered by calls to Pattern.compile() and String.split() "
         + "that are called with invalid syntax.",
-    category = JDK, severity = ERROR, maturity = ON_BY_DEFAULT)
+    category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
 public class InvalidPatternSyntax extends DescribingMatcher<MethodInvocationTree> {
 
   /* Match string literals that are not valid syntax for regular expressions. */

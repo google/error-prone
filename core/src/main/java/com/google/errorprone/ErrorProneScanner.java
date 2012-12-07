@@ -39,7 +39,7 @@ import com.sun.source.tree.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 
 /**
  * Scans the parsed AST, looking for violations of any of the enabled checks.
@@ -58,7 +58,7 @@ public class ErrorProneScanner extends Scanner {
      */
     public static final EnabledPredicate DEFAULT_CHECKS = new EnabledPredicate() {
       @Override public boolean isEnabled(Class<? extends DescribingMatcher<?>> check, BugPattern annotation) {
-        return annotation.maturity() == ON_BY_DEFAULT;
+        return annotation.maturity() == MATURE;
       }
     };
   }
