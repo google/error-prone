@@ -56,7 +56,7 @@ public class DeadException extends DescribingMatcher<NewClassTree> {
     StatementTree parent = (StatementTree) state.getPath().getParentPath().getLeaf();
 
     boolean isLastStatement = anyOf(
-        enclosingBlock(lastStatement(same(parent))),
+        enclosingBlock(lastStatement(isSame(parent, StatementTree.class))),
         // it could also be a bare if statement with no braces
         parentNode(parentNode(kindIs(IF))))
         .matches(newClassTree, state);

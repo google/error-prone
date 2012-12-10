@@ -308,18 +308,6 @@ public class Matchers {
   }
 
   /**
-   * Matches an AST node which is equal to the given one.
-   */
-  public static <T extends Tree> Matcher<T> same(final T tree) {
-    return new Matcher<T>() {
-      @Override
-      public boolean matches(T t, VisitorState state) {
-        return t.equals(tree);
-      }
-    };
-  }
-
-  /**
    * Matches an AST node iff it does not match the given matcher.
    */
   public static <T extends Tree> Matcher<T> not(final Matcher<T> matcher) {
@@ -345,7 +333,7 @@ public class Matchers {
    * For example, {@code hasArgumentWithValue("value", stringLiteral("one"))} matches {@code @Thing("one")}
    * or {@code @Thing({"one", "two"})} or {@code @Thing(value = "one")}
    */
-  public static Matcher<AnnotationTree> hasElementWithValue(
+  public static Matcher<AnnotationTree> hasArgumentWithValue(
       String argumentName, Matcher<ExpressionTree> valueMatcher) {
     return new AnnotationHasArgumentWithValue(argumentName, valueMatcher);
   }
@@ -354,6 +342,9 @@ public class Matchers {
     return new AnnotationType(annotationClassName);
   }
 
+  /**
+   * Matches a MethodInvocation AST node when the arguments at the two given indices are both the same identifier.
+   */
   public static Matcher<? super MethodInvocationTree> sameArgument(
       final int index1, final int index2) {
     return new Matcher<MethodInvocationTree>() {

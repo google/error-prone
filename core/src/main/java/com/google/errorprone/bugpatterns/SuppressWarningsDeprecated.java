@@ -20,7 +20,7 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.hasElementWithValue;
+import static com.google.errorprone.matchers.Matchers.hasArgumentWithValue;
 import static com.google.errorprone.matchers.Matchers.isType;
 import static com.google.errorprone.matchers.Matchers.stringLiteral;
 
@@ -51,7 +51,7 @@ public class SuppressWarningsDeprecated extends AbstractSuppressWarningsMatcher 
   @SuppressWarnings({"varargs", "unchecked"})
   private static final Matcher<AnnotationTree> matcher = allOf(
       isType("java.lang.SuppressWarnings"),
-      hasElementWithValue("value", stringLiteral("deprecated")));
+      hasArgumentWithValue("value", stringLiteral("deprecated")));
 
   @Override
   public final boolean matches(AnnotationTree annotationTree, VisitorState state) {

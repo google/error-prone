@@ -18,18 +18,10 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.DescribingMatcher;
-import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.AnnotationTree;
-import com.sun.source.tree.AssignmentTree;
-import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.NewArrayTree;
-import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.util.ListBuffer;
 
-import java.util.Collection;
 import java.util.List;
 
 import static com.google.errorprone.BugPattern.Category.ONE_OFF;
@@ -55,7 +47,7 @@ public class FallThroughSuppression extends AbstractSuppressWarningsMatcher {
   @SuppressWarnings({"varargs", "unchecked"})
   private static final Matcher<AnnotationTree> matcher = allOf(
       isType("java.lang.SuppressWarnings"),
-      hasElementWithValue("value", stringLiteral("fallthrough")));
+      hasArgumentWithValue("value", stringLiteral("fallthrough")));
 
   @Override
   public final boolean matches(AnnotationTree annotationTree, VisitorState state) {
