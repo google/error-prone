@@ -19,7 +19,8 @@ package com.google.errorprone.matchers;
 import com.google.errorprone.VisitorState;
 
 /**
- * An embedded predicate DSL for matching Java source code.
+ * Define a predicate on any type, which also accesses the state of AST traversal.
+ * @param <T> typically a javac AST node
  * @author alexeagle@google.com (Alex Eagle)
  */
 public interface Matcher<T> {

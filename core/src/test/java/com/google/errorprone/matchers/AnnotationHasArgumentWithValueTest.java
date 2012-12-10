@@ -30,7 +30,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class AnnotationHasElementWithValueTest extends CompilerBasedTest {
+public class AnnotationHasArgumentWithValueTest extends CompilerBasedTest {
   @Before public void setUp() throws IOException {
     writeFile("Thing.java",
         "public @interface Thing {",
@@ -43,25 +43,25 @@ public class AnnotationHasElementWithValueTest extends CompilerBasedTest {
     writeFile("A.java",
         "@Thing(stuff=\"y\")",
         "public class A {}");
-    assertCompiles(annotationMatches(true, new AnnotationHasElementWithValue("stuff", stringLiteral("y"))));
+    assertCompiles(annotationMatches(true, new AnnotationHasArgumentWithValue("stuff", stringLiteral("y"))));
   }
   
   @Test public void notMatches() throws IOException {
     writeFile("A.java",
         "@Thing(stuff=\"n\")",
         "public class A{}");
-    assertCompiles(annotationMatches(false, new AnnotationHasElementWithValue("stuff", stringLiteral("y"))));
-    assertCompiles(annotationMatches(false, new AnnotationHasElementWithValue("other", stringLiteral("n"))));
+    assertCompiles(annotationMatches(false, new AnnotationHasArgumentWithValue("stuff", stringLiteral("y"))));
+    assertCompiles(annotationMatches(false, new AnnotationHasArgumentWithValue("other", stringLiteral("n"))));
   }
   
   @Test public void arrayValuedElement() throws IOException {
     writeFile("A.java",
         "@SuppressWarnings({\"unchecked\",\"fallthrough\"})",
         "public class A{}");
-    assertCompiles(annotationMatches(true, new AnnotationHasElementWithValue("value", stringLiteral("unchecked"))));
+    assertCompiles(annotationMatches(true, new AnnotationHasArgumentWithValue("value", stringLiteral("unchecked"))));
   }
 
-  private Scanner annotationMatches(final boolean shouldMatch, final AnnotationHasElementWithValue toMatch) {
+  private Scanner annotationMatches(final boolean shouldMatch, final AnnotationHasArgumentWithValue toMatch) {
     return new Scanner() {
       @Override
       public Void visitAnnotation(AnnotationTree node, VisitorState visitorState) {

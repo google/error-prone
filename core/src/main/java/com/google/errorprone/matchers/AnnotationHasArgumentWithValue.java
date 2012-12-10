@@ -28,12 +28,12 @@ import com.sun.source.tree.Tree;
  * @author eaftan@google.com (Eddie Aftandilian)
  * @author pepstein@google.com (Peter Epstein)
  */
-public class AnnotationHasElementWithValue implements Matcher<AnnotationTree> {
+public class AnnotationHasArgumentWithValue implements Matcher<AnnotationTree> {
 
   private final String element;
   private final Matcher<ExpressionTree> valueMatcher;
 
-  public AnnotationHasElementWithValue(String element, Matcher<ExpressionTree> valueMatcher) {
+  public AnnotationHasArgumentWithValue(String element, Matcher<ExpressionTree> valueMatcher) {
     this.element = element;
     this.valueMatcher = valueMatcher;
   }
