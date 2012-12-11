@@ -32,7 +32,6 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCArrayTypeTree;
@@ -226,6 +225,14 @@ public class Matchers {
     return new Matcher<T>() {
       @Override public boolean matches(Tree t, VisitorState state) {
         return state.getTypes().isArray(((JCTree) t).type);
+      }
+    };
+  }
+
+  public static <T extends Tree> Matcher<T> isPrimitiveType() {
+    return new Matcher<T>() {
+      @Override public boolean matches(Tree t, VisitorState state) {
+        return ((JCTree) t).type.isPrimitive();
       }
     };
   }

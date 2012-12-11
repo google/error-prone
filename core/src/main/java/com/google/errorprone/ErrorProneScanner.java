@@ -27,7 +27,7 @@ import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
 import com.google.errorprone.bugpatterns.SelfEquals;
 import com.google.errorprone.bugpatterns.OrderingFrom;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNull;
-import com.google.errorprone.bugpatterns.PreconditionsCheckNotNullPrimitive1stArg;
+import com.google.errorprone.bugpatterns.PreconditionsCheckNotNullPrimitive;
 import com.google.errorprone.bugpatterns.PreconditionsExpensiveString;
 import com.google.errorprone.bugpatterns.ReturnValueIgnored;
 import com.google.errorprone.bugpatterns.SelfAssignment;
@@ -80,7 +80,7 @@ public class ErrorProneScanner extends Scanner {
           OrderingFrom.class,
           PreconditionsCheckNotNull.class,
           PreconditionsExpensiveString.class,
-          PreconditionsCheckNotNullPrimitive1stArg.class,
+          PreconditionsCheckNotNullPrimitive.class,
           CollectionIncompatibleType.class,
           ArrayEquals.class,
           ReturnValueIgnored.class
