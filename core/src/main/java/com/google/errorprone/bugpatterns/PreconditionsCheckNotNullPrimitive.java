@@ -41,6 +41,7 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.tree.JCTree.JCExpression;
 
 /**
  * Checks that the 1st argument to Preconditions.checkNotNull() isn't a primitive.
@@ -79,7 +80,8 @@ public class PreconditionsCheckNotNullPrimitive
   }
 
   /**
-   * If argument is a method call, change it to a checkArgument/checkState. E.g.:
+   * If argument is a method call and its return type is boolean, change it to a
+   * checkArgument/checkState. E.g.:
    *   Preconditions.checkNotNull(foo.hasFoo()) ==> Preconditions.checkArgument(foo.hasFoo())
    * If method call is a statement, delete it. E.g.:
    *   Preconditions.checkNotNull(foo); ==> [delete the line]
@@ -92,7 +94,8 @@ public class PreconditionsCheckNotNullPrimitive
     ExpressionTree arg1 = methodInvocationTree.getArguments().get(0);
     Tree parent = state.getPath().getParentPath().getLeaf();
 
-    if (arg1.getKind() == Kind.METHOD_INVOCATION) {
+    if (arg1.getKind() == Kind.METHOD_INVOCATION &&
+        ((JCExpression) arg1).type == state.getSymtab().booleanType) {
 
       String replacementMethod;
       if (isMethodParameter(state.getPath(), (MethodInvocationTree) arg1)) {
@@ -133,11 +136,13 @@ public class PreconditionsCheckNotNullPrimitive
    * Determines whether the root identifier of the tree node is a parameter to the enclosing
    * method.
    *
+   * TODO(eaftan): Extract this to ASTHelpers.
+   *
    * @param path the path to the current tree node
    * @param tree the node to compare against the parameters
    * @return whether the argument is a parameter to the enclosing method
    */
-  private boolean isMethodParameter(TreePath path, MethodInvocationTree tree) {
+  private static boolean isMethodParameter(TreePath path, MethodInvocationTree tree) {
 
     // Extract the identifier from the method select.
     ExpressionTree expr = tree.getMethodSelect();
