@@ -39,7 +39,7 @@ import java.util.List;
  * @author sjnickerson@google.com (Simon Nickerson)
  */
 @BugPattern(name = "SuppressWarningsDeprecated",
-  summary = "Suppressing \"deprecated\" is probably a typo",
+  summary = "Suppressing \"deprecated\" is probably a typo for \"deprecation\"",
   explanation =
     "To suppress warnings to deprecated methods, you should add the annotation\n" +
     "{{{@SuppressWarnings(\"deprecation\")}}}\n" +
