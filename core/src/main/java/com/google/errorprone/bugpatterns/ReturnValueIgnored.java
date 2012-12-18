@@ -68,7 +68,8 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
   @SuppressWarnings("unchecked")
   @Override
   public Matcher<MethodInvocationTree> specializedMatcher() {
-    return methodSelect(allOf(methodReceiverHasType(typesToCheck),
+    return methodSelect(allOf(ExpressionTree.class,
+        methodReceiverHasType(typesToCheck),
         methodReturnsSameTypeAsReceiver()));
   }
 
