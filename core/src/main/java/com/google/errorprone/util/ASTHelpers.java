@@ -21,8 +21,9 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
+import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.MethodType;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
@@ -161,4 +162,23 @@ public class ASTHelpers {
     throw new IllegalArgumentException("Expected a JCFieldAccess or JCIdent");
   }
 
+  /**
+   * Returns the type of a receiver of a method call expression.
+   * Precondition: the expressionTree corresponds to a method call.
+   *
+   * Examples:
+   *    a.b.foo() ==> type of a.b
+   *    a.bar().foo() ==> type of a.bar()
+   *    this.foo() ==> type of this
+   */
+  public static Type getReceiverType(ExpressionTree expressionTree) {
+    if (expressionTree instanceof JCFieldAccess) {
+      JCFieldAccess methodSelectFieldAccess = (JCFieldAccess) expressionTree;
+      return ((MethodSymbol) methodSelectFieldAccess.sym).owner.type;
+    } else if (expressionTree instanceof JCIdent) {
+      JCIdent methodCall = (JCIdent) expressionTree;
+      return ((MethodSymbol) methodCall.sym).owner.type;
+    }
+    return null;
+  }
 }

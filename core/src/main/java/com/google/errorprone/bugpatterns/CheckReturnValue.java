@@ -19,92 +19,34 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.matchers.Matchers.methodHasAnnotation;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
-import static com.google.errorprone.matchers.Matchers.parentNode;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
-import com.google.errorprone.matchers.Description;
-import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.matchers.Matcher;
 
-import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
-import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
-import com.sun.tools.javac.tree.JCTree.JCIdent;
-import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
- *
- * TODO(eaftan): This is very similar to the ReturnValueIgnored checker but has a different
- * error message.  Think about a way to allow different paths within a check to have different
- * error messages, wiki pages, etc.
  */
 @BugPattern(name = "CheckReturnValue",
-    altNames = {"ResultOfMethodCallIgnored"},
+    altNames = {"ResultOfMethodCallIgnored", "ReturnValueIgnored"},
     summary = "Ignored return value of method that is annotated with @CheckReturnValue",
     explanation = "The JSR 305 @CheckReturnValue annotation marks methods whose return values "
         + "should be checked.  This error is triggered when one of these methods is called but "
         + "the result is not used.",
     category = JDK, severity = ERROR, maturity = MATURE)
-public class CheckReturnValue extends DescribingMatcher<MethodInvocationTree> {
+public class CheckReturnValue extends AbstractReturnValueIgnored {
 
   /**
-   * Matches if the method being called is a statement (rather than an expression) and the method
-   * has been annotated with @CheckReturnValue.
-   */
-  @SuppressWarnings("unchecked")
-  @Override
-  public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
-    return allOf(
-        parentNode(kindIs(Kind.EXPRESSION_STATEMENT, MethodInvocationTree.class)),
-        methodSelect(methodHasAnnotation("javax.annotation.CheckReturnValue"))
-    ).matches(methodInvocationTree, state);
-  }
-
-  /**
-   * Fixes the error by assigning the result of the call to the receiver reference, or deleting
-   * the method call.
+   * Return a matcher for method invocations in which the method being called has the
+   * @CheckReturnValue annotation.
    */
   @Override
-  public Description describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
-    // Find the root of the field access chain, i.e. a.intern().trim() ==> a.
-    ExpressionTree identifierExpr = ASTHelpers.getRootIdentifier(methodInvocationTree);
-    String identifierStr = null;
-    Type identifierType = null;
-    if (identifierExpr != null) {
-      identifierStr = identifierExpr.toString();
-      if (identifierExpr instanceof JCIdent) {
-        identifierType = ((JCIdent) identifierExpr).sym.type;
-      } else if (identifierExpr instanceof JCFieldAccess) {
-        identifierType = ((JCFieldAccess) identifierExpr).sym.type;
-      } else {
-        throw new IllegalStateException("Expected a JCIdent or a JCFieldAccess");
-      }
-    }
-
-    Type returnType = ASTHelpers.getReturnType(
-        ((JCMethodInvocation) methodInvocationTree).getMethodSelect());
-
-    SuggestedFix fix;
-    if (identifierStr != null && !"this".equals(identifierStr) && returnType != null &&
-        state.getTypes().isAssignable(returnType, identifierType)) {
-      // Fix by assigning the assigning the result of the call to the root receiver reference.
-      fix = new SuggestedFix().prefixWith(methodInvocationTree, identifierStr + " = ");
-    } else {
-      // Unclear what the programmer intended.  Delete since we're not sure what else to do.
-      Tree parent = state.getPath().getParentPath().getLeaf();
-      fix = new SuggestedFix().delete(parent);
-    }
-    return new Description(methodInvocationTree, diagnosticMessage, fix);
+  public Matcher<MethodInvocationTree> specializedMatcher() {
+    return methodSelect(methodHasAnnotation("javax.annotation.CheckReturnValue"));
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {
@@ -116,4 +58,6 @@ public class CheckReturnValue extends DescribingMatcher<MethodInvocationTree> {
       return super.visitMethodInvocation(node, visitorState);
     }
   }
+
+
 }
