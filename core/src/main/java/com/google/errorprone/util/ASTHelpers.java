@@ -179,6 +179,6 @@ public class ASTHelpers {
       JCIdent methodCall = (JCIdent) expressionTree;
       return ((MethodSymbol) methodCall.sym).owner.type;
     }
-    return null;
+    throw new IllegalArgumentException("Expected a JCFieldAccess or JCIdent");
   }
 }

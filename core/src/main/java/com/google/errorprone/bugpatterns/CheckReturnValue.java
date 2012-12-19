@@ -58,6 +58,4 @@ public class CheckReturnValue extends AbstractReturnValueIgnored {
       return super.visitMethodInvocation(node, visitorState);
     }
   }
-
-
 }

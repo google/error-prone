@@ -92,9 +92,6 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
       public boolean matches(ExpressionTree expressionTree, VisitorState state) {
         Type receiverType = ASTHelpers.getReceiverType(expressionTree);
         Type returnType = ASTHelpers.getReturnType(expressionTree);
-        if (receiverType == null || returnType == null) {
-          return false;
-        }
         return state.getTypes().isSameType(ASTHelpers.getReceiverType(expressionTree),
             ASTHelpers.getReturnType(expressionTree));
       }
@@ -109,9 +106,6 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
       @Override
       public boolean matches(ExpressionTree expressionTree, VisitorState state) {
         Type receiverType = ASTHelpers.getReceiverType(expressionTree);
-        if (receiverType == null) {
-          return false;
-        }
         return typeSet.contains(receiverType.toString());
       }
     };
