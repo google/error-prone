@@ -68,6 +68,18 @@ public class Matchers {
   }
 
   /**
+   * Matches an AST node iff it does not match the given matcher.
+   */
+  public static <T extends Tree> Matcher<T> not(final Matcher<T> matcher) {
+    return new Matcher<T>() {
+      @Override
+      public boolean matches(T t, VisitorState state) {
+        return !matcher.matches(t, state);
+      }
+    };
+  }
+
+  /**
    * Compose several matchers together, such that the composite matches an AST node iff all the given matchers do.
    * @param typeInfer a type token for the generic type. Unused, but allows the returned matcher to be composed.
    */
@@ -293,30 +305,18 @@ public class Matchers {
   }
 
   /**
-   * Matches a block AST node, and whose last statement matches the given matcher.
+   * Matches a block AST node if the last statement in the block matches the given matcher.
    */
   public static Matcher<BlockTree> lastStatement(Matcher<StatementTree> matcher) {
     return new LastStatement(matcher);
   }
 
   /**
-   * Matches a statement AST node, where the following statement in the enclosing block matches the given matcher.
+   * Matches a statement AST node if the following statement in the enclosing block matches the given matcher.
    */
   public static <T extends StatementTree> NextStatement<T> nextStatement(
       Matcher<StatementTree> matcher) {
     return new NextStatement<T>(matcher);
-  }
-
-  /**
-   * Matches an AST node iff it does not match the given matcher.
-   */
-  public static <T extends Tree> Matcher<T> not(final Matcher<T> matcher) {
-    return new Matcher<T>() {
-      @Override
-      public boolean matches(T t, VisitorState state) {
-        return !matcher.matches(t, state);
-      }
-    };
   }
 
   /**

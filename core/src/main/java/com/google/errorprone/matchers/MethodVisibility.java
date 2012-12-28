@@ -55,13 +55,13 @@ public class MethodVisibility implements Matcher<MethodTree> {
     DEFAULT   (null),
     PRIVATE   (Modifier.PRIVATE);
 
-    private Modifier correspondongModifier;
+    private Modifier correspondingModifier;
     Visibility(Modifier correspondingModifier) {
-      this.correspondongModifier = correspondingModifier;
+      this.correspondingModifier = correspondingModifier;
     }
 
     public Modifier toModifier() {
-      return correspondongModifier;
+      return correspondingModifier;
     }
   }
 }
