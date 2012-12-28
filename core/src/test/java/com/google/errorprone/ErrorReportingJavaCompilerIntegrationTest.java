@@ -27,10 +27,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.net.URISyntaxException;
 
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
@@ -38,7 +36,7 @@ import javax.tools.JavaFileObject;
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class ErrorReportingJavaCompilerIntegrationTest {
+public class ErrorReportingJavaCompilerIntegrationTest extends IntegrationTest {
 
   private DiagnosticTestHelper diagnosticHelper;
   private PrintWriter printWriter;
@@ -104,13 +102,5 @@ public class ErrorReportingJavaCompilerIntegrationTest {
         diagnosticMessage(containsString("[SelfAssignment]")));
     assertThat("Warning should be found. " + diagnosticHelper.describe(),
         diagnosticHelper.getDiagnostics(), matcher);
-  }
-
-  private String[] sources(String... files) throws URISyntaxException {
-    String[] result = new String[files.length];
-    for (int i = 0; i < result.length; i++) {
-      result[i] = new File(getClass().getResource("/" + files[i]).toURI()).getAbsolutePath();
-    }
-    return result;
   }
 }

@@ -88,7 +88,8 @@ public class ErrorProneAnalyzer {
         env.toplevel.endPositions,
         env.enclClass.sym.sourcefile != null
             ? env.enclClass.sym.sourcefile
-            : env.toplevel.sourcefile);
+            : env.toplevel.sourcefile,
+        context);
     VisitorState visitorState = new VisitorState(context, logReporter);
     return visitorState;
   }
