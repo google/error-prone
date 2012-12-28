@@ -146,10 +146,19 @@ public class SuggestedFix {
 
   /**
    * Remove an import statement as part of this SuggestedFix.
-   * Import string should be of the form "import [static] foo.bar.baz".
+   * Import string should be of the form "foo.bar.baz".
    */
   public SuggestedFix removeImport(String importString) {
-    importsToRemove.add(importString);
+    importsToRemove.add("import " + importString);
+    return this;
+  }
+
+  /**
+   * Remove a static import statement as part of this SuggestedFix.
+   * Import string should be of the form "foo.bar.baz".
+   */
+  public SuggestedFix removeStaticImport(String importString) {
+    importsToRemove.add("import static " + importString);
     return this;
   }
 

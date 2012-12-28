@@ -24,7 +24,7 @@ import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.EmptyStatementTree;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 /**
@@ -38,7 +38,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
     summary = "Empty statement",
     explanation =
         "An empty statement has no effect on the program. Consider removing it.",
-    category = JDK, severity = WARNING, maturity = ON_BY_DEFAULT)
+    category = JDK, severity = WARNING, maturity = MATURE)
 public class EmptyStatement extends DescribingMatcher<EmptyStatementTree> {
 
   @Override

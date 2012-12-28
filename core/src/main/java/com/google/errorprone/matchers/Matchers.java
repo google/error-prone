@@ -272,6 +272,14 @@ public class Matchers {
     };
   }
 
+  public static <T extends Tree> Matcher<T> isPrimitiveType() {
+    return new Matcher<T>() {
+      @Override public boolean matches(Tree t, VisitorState state) {
+        return ((JCTree) t).type.isPrimitive();
+      }
+    };
+  }
+
   public static <T extends Tree> Matcher<T> isSameType(Tree tree) {
     return isSameType(((JCTree) tree).type);
   }

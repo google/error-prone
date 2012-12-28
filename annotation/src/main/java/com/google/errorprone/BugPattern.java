@@ -97,15 +97,14 @@ public @interface BugPattern {
     /**
      * should not be used for general code
      */
-    OFF
+    NOT_A_PROBLEM
   }
 
   MaturityLevel maturity();
 
   public enum MaturityLevel {
-    ON_BY_DEFAULT,
-    EXPERIMENTAL,
-    PROPOSED,
+    MATURE,
+    EXPERIMENTAL
   }
 
   public class Instance {
@@ -113,5 +112,6 @@ public @interface BugPattern {
     public String summary;
     public String altNames;
     public MaturityLevel maturity;
+    public SeverityLevel severity;
   }
 }

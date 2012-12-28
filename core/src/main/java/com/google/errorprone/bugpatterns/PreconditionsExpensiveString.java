@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import static com.google.errorprone.BugPattern.Category.GUAVA;
-import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.*;
 
@@ -53,7 +53,7 @@ import static com.google.errorprone.matchers.Matchers.*;
         "The error message is rarely needed, so it should either be cheap to construct " +
         "or constructed only when needed. This check ensures that these error messages " +
         "are not constructed using expensive methods that are evaluated eagerly.",
-    category = GUAVA, severity = WARNING, maturity = ON_BY_DEFAULT)
+    category = GUAVA, severity = WARNING, maturity = MATURE)
 public class PreconditionsExpensiveString
     extends DescribingMatcher<MethodInvocationTree> {
 

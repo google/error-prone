@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.GUAVA;
-import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.argument;
@@ -71,7 +71,7 @@ import java.util.ArrayList;
         "can be unwrapped to a new anonymous subclass of Ordering\n" +
         "{{{new Ordering<T>() { ... }}}}\n" +
         "which is shorter and cleaner (and potentially more efficient).",
-    category = GUAVA, severity = WARNING, maturity = ON_BY_DEFAULT)
+    category = GUAVA, severity = WARNING, maturity = MATURE)
 public class OrderingFrom extends DescribingMatcher<MethodInvocationTree> {
 
   @SuppressWarnings({"unchecked", "varargs"})

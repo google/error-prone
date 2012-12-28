@@ -16,18 +16,22 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.BugPattern.Category.ONE_OFF;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
+import static com.google.errorprone.BugPattern.SeverityLevel.NOT_A_PROBLEM;
+import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.hasElementWithValue;
+import static com.google.errorprone.matchers.Matchers.isType;
+import static com.google.errorprone.matchers.Matchers.stringLiteral;
+
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Matcher;
+
 import com.sun.source.tree.AnnotationTree;
 
 import java.util.List;
-
-import static com.google.errorprone.BugPattern.Category.ONE_OFF;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
-import static com.google.errorprone.BugPattern.SeverityLevel.OFF;
-import static com.google.errorprone.matchers.Matchers.*;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
@@ -41,7 +45,7 @@ import static com.google.errorprone.matchers.Matchers.*;
         "@SuppressWarnings annotation, remove the whole annotation.\n\n" +
         "Note: This checker was specific to a refactoring we performed and should not be " +
         "used as a general error or warning.",
-    category = ONE_OFF, severity = OFF, maturity = EXPERIMENTAL)
+    category = ONE_OFF, severity = NOT_A_PROBLEM, maturity = MATURE)
 public class FallThroughSuppression extends AbstractSuppressWarningsMatcher {
 
   @SuppressWarnings({"varargs", "unchecked"})
@@ -53,12 +57,12 @@ public class FallThroughSuppression extends AbstractSuppressWarningsMatcher {
   public final boolean matches(AnnotationTree annotationTree, VisitorState state) {
     return matcher.matches(annotationTree, state);
   }
-  
+
   @Override
   protected void processSuppressWarningsValues(List<String> values) {
     values.remove("fallthrough");
   }
-  
+
   public static class Scanner extends com.google.errorprone.Scanner {
     public DescribingMatcher<AnnotationTree> annotationMatcher = new FallThroughSuppression();
 

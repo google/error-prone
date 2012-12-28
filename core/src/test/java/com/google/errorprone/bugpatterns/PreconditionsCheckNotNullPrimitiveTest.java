@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.bugpatterns.ReturnValueIgnored;
+import com.google.errorprone.bugpatterns.PreconditionsCheckNotNullPrimitive;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,28 +25,27 @@ import org.junit.Test;
 import java.io.File;
 
 /**
- * @author alexeagle@google.com (Alex Eagle)
+ * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class ReturnValueIgnoredTest {
-
+public class PreconditionsCheckNotNullPrimitiveTest {
   private CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(new ReturnValueIgnored.Scanner());
+    compilationHelper = new CompilationTestHelper(new PreconditionsCheckNotNullPrimitive.Scanner());
   }
 
   @Test
   public void testPositiveCases() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("ReturnValueIgnoredPositiveCases.java").toURI()));
+        new File(this.getClass().getResource(
+            "PreconditionsCheckNotNullPrimitivePositiveCases.java").toURI()));
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase1() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("ReturnValueIgnoredNegativeCases.java").toURI()));
+        new File(this.getClass().getResource(
+            "PreconditionsCheckNotNullPrimitiveNegativeCases.java").toURI()));
   }
-
 }
-

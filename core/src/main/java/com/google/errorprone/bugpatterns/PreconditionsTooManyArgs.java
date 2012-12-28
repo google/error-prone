@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.GUAVA;
-import static com.google.errorprone.BugPattern.MaturityLevel.PROPOSED;
+import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
@@ -42,7 +42,7 @@ import com.sun.tools.javac.util.List;
     explanation = "The Guava Preconditions checks expect error messages to use %s as a "
         + "placeholder, and to take the corresponding number of arguments.  This bug can indicate "
         + "an improper format string, or simply forgetting to add all the arguments.",
-    category = GUAVA, maturity = PROPOSED, severity = ERROR)
+    category = GUAVA, maturity = EXPERIMENTAL, severity = ERROR)
 public class PreconditionsTooManyArgs extends DescribingMatcher<MethodInvocationTree> {
 
   @SuppressWarnings("unchecked")

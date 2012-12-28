@@ -27,7 +27,7 @@ import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
 import com.google.errorprone.bugpatterns.SelfEquals;
 import com.google.errorprone.bugpatterns.OrderingFrom;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNull;
-import com.google.errorprone.bugpatterns.PreconditionsCheckNotNullPrimitive1stArg;
+import com.google.errorprone.bugpatterns.PreconditionsCheckNotNullPrimitive;
 import com.google.errorprone.bugpatterns.PreconditionsExpensiveString;
 import com.google.errorprone.bugpatterns.ReturnValueIgnored;
 import com.google.errorprone.bugpatterns.SelfAssignment;
@@ -39,7 +39,7 @@ import com.sun.source.tree.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 
 /**
  * Scans the parsed AST, looking for violations of any of the enabled checks.
@@ -58,7 +58,7 @@ public class ErrorProneScanner extends Scanner {
      */
     public static final EnabledPredicate DEFAULT_CHECKS = new EnabledPredicate() {
       @Override public boolean isEnabled(Class<? extends DescribingMatcher<?>> check, BugPattern annotation) {
-        return annotation.maturity() == ON_BY_DEFAULT;
+        return annotation.maturity() == MATURE;
       }
     };
   }
@@ -80,7 +80,7 @@ public class ErrorProneScanner extends Scanner {
           OrderingFrom.class,
           PreconditionsCheckNotNull.class,
           PreconditionsExpensiveString.class,
-          PreconditionsCheckNotNullPrimitive1stArg.class,
+          PreconditionsCheckNotNullPrimitive.class,
           CollectionIncompatibleType.class,
           ArrayEquals.class,
           ReturnValueIgnored.class

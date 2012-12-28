@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.GUAVA;
-import static com.google.errorprone.BugPattern.MaturityLevel.ON_BY_DEFAULT;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
@@ -54,7 +54,7 @@ import java.util.List;
     explanation =
         "The arguments to this equal method are the same object, so it always returns " +
         "true.  Either change the arguments to point to different objects or substitute true.",
-    category = GUAVA, severity = ERROR, maturity = ON_BY_DEFAULT)
+    category = GUAVA, severity = ERROR, maturity = MATURE)
 public class SelfEquals extends DescribingMatcher<MethodInvocationTree> {
 
   /**
