@@ -16,6 +16,7 @@
 
 package com.google.errorprone;
 
+import static com.google.errorprone.CompilationTestHelper.sources;
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
@@ -36,7 +37,7 @@ import javax.tools.JavaFileObject;
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class ErrorReportingJavaCompilerIntegrationTest extends IntegrationTest {
+public class ErrorReportingJavaCompilerIntegrationTest {
 
   private DiagnosticTestHelper diagnosticHelper;
   private PrintWriter printWriter;
@@ -57,7 +58,7 @@ public class ErrorReportingJavaCompilerIntegrationTest extends IntegrationTest {
 
   @Test
   public void fileWithError() throws Exception {
-    int exitCode = compiler.compile(sources(
+    int exitCode = compiler.compile(sources(getClass(),
         "com/google/errorprone/bugpatterns/EmptyIfStatementPositiveCases.java"));
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(1));
@@ -71,7 +72,7 @@ public class ErrorReportingJavaCompilerIntegrationTest extends IntegrationTest {
   @Test
   public void fileWithMultipleTopLevelClasses() throws Exception {
     int exitCode = compiler.compile(
-        sources("com/google/errorprone/MultipleTopLevelClassesWithNoErrors.java"));
+        sources(getClass(), "com/google/errorprone/MultipleTopLevelClassesWithNoErrors.java"));
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(0));
   }
@@ -79,7 +80,7 @@ public class ErrorReportingJavaCompilerIntegrationTest extends IntegrationTest {
   @Test
   public void fileWithMultipleTopLevelClassesExtends() throws Exception {
     int exitCode = compiler.compile(
-        sources("com/google/errorprone/MultipleTopLevelClassesWithNoErrors.java",
+        sources(getClass(), "com/google/errorprone/MultipleTopLevelClassesWithNoErrors.java",
             "com/google/errorprone/ExtendedMultipleTopLevelClassesWithNoErrors.java"));
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(0));
@@ -93,7 +94,7 @@ public class ErrorReportingJavaCompilerIntegrationTest extends IntegrationTest {
   public void fileWithMultipleTopLevelClassesExtendsWithError()
       throws Exception {
     int exitCode = compiler.compile(
-        sources("com/google/errorprone/MultipleTopLevelClassesWithErrors.java",
+        sources(getClass(), "com/google/errorprone/MultipleTopLevelClassesWithErrors.java",
             "com/google/errorprone/ExtendedMultipleTopLevelClassesWithErrors.java"));
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(1));

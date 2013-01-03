@@ -18,6 +18,7 @@ package com.google.errorprone;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 import static com.google.errorprone.DiagnosticTestHelper.assertHasDiagnosticOnAllMatchingLines;
 import static org.hamcrest.core.Is.is;
@@ -52,6 +53,18 @@ public class CompilationTestHelper {
     assertThat("Compiler returned an unexpected error code",
         compiler.compile(new String[]{"-Xjcov", "-encoding", "UTF-8", source.getAbsolutePath()}), is(1));
     assertHasDiagnosticOnAllMatchingLines(diagnosticHelper.getDiagnostics(), source);
+  }
+
+  /**
+   * Constructs the absolute paths to the given files, so they can be passed as arguments to the
+   * compiler.
+   */
+  public static String[] sources(Class<?> klass, String... files) throws URISyntaxException {
+    String[] result = new String[files.length];
+    for (int i = 0; i < result.length; i++) {
+      result[i] = new File(klass.getResource("/" + files[i]).toURI()).getAbsolutePath();
+    }
+    return result;
   }
 
 }

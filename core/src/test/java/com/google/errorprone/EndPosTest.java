@@ -16,6 +16,7 @@
 
 package com.google.errorprone;
 
+import static com.google.errorprone.CompilationTestHelper.sources;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -33,7 +34,7 @@ import java.io.PrintWriter;
  *
  * @author Eddie Aftandilian (eaftan@google.com)
  */
-public class EndPosTest extends IntegrationTest {
+public class EndPosTest {
 
   private PrintWriter printWriter;
   private ByteArrayOutputStream outputStream;
@@ -51,7 +52,7 @@ public class EndPosTest extends IntegrationTest {
 
   @Test
   public void fileWithError() throws Exception {
-    int exitCode = compiler.compile(sources(
+    int exitCode = compiler.compile(sources(getClass(),
         "com/google/errorprone/bugpatterns/SelfAssignmentPositiveCases1.java"));
     outputStream.flush();
     assertThat("Compiler should have exited with exit code 1", exitCode, is(1));
