@@ -18,13 +18,17 @@ package com.google.errorprone;
 
 import com.google.errorprone.fixes.AppliedFix;
 import com.google.errorprone.matchers.Description;
+
+import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Log;
 
-import javax.tools.JavaFileObject;
 import java.io.IOException;
 import java.util.Map;
+
+import javax.tools.JavaFileObject;
 
 /**
  * Making our errors appear to the user and break their build.
@@ -32,17 +36,19 @@ import java.util.Map;
  */
 public class JavacErrorDescriptionListener implements DescriptionListener {
   private final Log log;
-  private final Map<JCTree, Integer> endPositions;
+  private Map<JCTree, Integer> endPositions;
   private final JavaFileObject sourceFile;
+  private final JavaCompiler compiler;
 
   // The suffix for properties in src/main/resources/com/google/errorprone/errors.properties
   private static final String MESSAGE_BUNDLE_KEY = "error.prone";
 
   public JavacErrorDescriptionListener(Log log, Map<JCTree, Integer> endPositions,
-                                       JavaFileObject sourceFile) {
+                                       JavaFileObject sourceFile, Context context) {
     this.log = log;
     this.endPositions = endPositions;
     this.sourceFile = sourceFile;
+    this.compiler = JavaCompiler.instance(context);
   }
 
   @Override
@@ -52,7 +58,18 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
     originalSource = log.useSource(sourceFile);
     try {
       CharSequence content = sourceFile.getCharContent(true);
-      if (description.suggestedFix == null || endPositions == null) {
+
+      // If endPositions were not computed (-Xjcov option was not passed), reparse the file
+      // and compute the end positions so we can generate suggested fixes.
+      if (endPositions == null) {
+        boolean prevGenEndPos = compiler.genEndPos;
+        compiler.genEndPos = true;
+        Map<JCTree, Integer> endPosMap = compiler.parse(sourceFile).endPositions;
+        compiler.genEndPos = prevGenEndPos;
+        endPositions = new WrappedTreeMap(endPosMap);
+      }
+
+      if (description.suggestedFix == null) {
         log.error((DiagnosticPosition) description.node, MESSAGE_BUNDLE_KEY, description.message);
       } else {
         AppliedFix fix = AppliedFix.fromSource(content, endPositions).apply(description.suggestedFix);
