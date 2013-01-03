@@ -4,7 +4,6 @@ import com.sun.tools.javac.tree.JCTree;
 
 import java.util.AbstractMap;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -17,28 +16,21 @@ import java.util.Set;
  */
 class WrappedTreeMap extends AbstractMap<JCTree, Integer> {
 
-  /**
-   * A set of the entries in the map.
-   */
-  private final Set<Map.Entry<JCTree, Integer>> entrySet;
-
-  /**
+   /**
    * A map from wrapped tree nodes to tree end positions.
    */
   private final Map<WrappedTreeNode, Integer> wrappedMap;
 
   public WrappedTreeMap(Map<JCTree, Integer> map) {
     wrappedMap = new HashMap<WrappedTreeNode, Integer>();
-    entrySet = new HashSet<Map.Entry<JCTree, Integer>>();
     for (Map.Entry<JCTree, Integer> entry : map.entrySet()) {
       wrappedMap.put(new WrappedTreeNode(entry.getKey()), entry.getValue());
-      entrySet.add(entry);
     }
   }
 
   @Override
   public Set<Map.Entry<JCTree, Integer>> entrySet() {
-    return entrySet;
+    throw new UnsupportedOperationException("entrySet() not implemented on WrappedTreeMap");
   }
 
   @Override

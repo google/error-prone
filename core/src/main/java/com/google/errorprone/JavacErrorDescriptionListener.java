@@ -89,5 +89,4 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
       }
     }
   }
-
 }
