@@ -46,12 +46,12 @@ public class InvalidStringEquality extends DescribingMatcher<BinaryTree> {
   @Override  
   public boolean matches(BinaryTree tree, VisitorState state) {
     if (tree.getKind() == Tree.Kind.EQUAL_TO || tree.getKind() == Tree.Kind.NOT_EQUAL_TO) {
-      Type stringType = state.getTypeFromString("java.lang.String"); 
+      Type stringType = state.getTypeFromString(String.class.getName()); 
       ExpressionTree leftOperand = tree.getLeftOperand();
-      Type leftHandType = ((JCTree.JCExpression) leftOperand).type;
+      Type leftType = ((JCTree.JCExpression) leftOperand).type;
       ExpressionTree rightOperand = tree.getRightOperand();
-      Type rightHandType = ((JCTree.JCExpression) rightOperand).type;
-      if (leftHandType.equals(stringType) && rightHandType.equals(stringType)) {
+      Type rightType = ((JCTree.JCExpression) rightOperand).type;
+      if (leftType.equals(stringType) && rightType.equals(stringType)) {
         return true;
       }
     }
