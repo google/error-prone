@@ -32,7 +32,6 @@ import static com.google.errorprone.matchers.Matchers.kindIs;
 
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.Tree;
 import static com.sun.source.tree.Tree.Kind.EQUAL_TO;
 import static com.sun.source.tree.Tree.Kind.NOT_EQUAL_TO;
@@ -50,6 +49,11 @@ import java.lang.StringBuilder;
     category = JDK, severity = WARNING, maturity = EXPERIMENTAL)
 public class InvalidStringEquality extends DescribingMatcher<BinaryTree> {
 
+  /**
+   *  A {@link Matcher} that matches whether the operands in a {@link BinaryTree} are
+   *  strictly String operands.  For Example, if either operand is {@code null} the matcher
+   *  will return {@code false}  
+   */
   private static final Matcher<BinaryTree> STRING_OPERANDS = new Matcher<BinaryTree>() {
     @Override
     public boolean matches(BinaryTree tree, VisitorState state) {
