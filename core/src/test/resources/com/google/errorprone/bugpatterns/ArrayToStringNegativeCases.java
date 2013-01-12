@@ -21,7 +21,7 @@ import java.util.*;
 /**
  * @author adgar@google.com (Mike Edgar)
  */
-public class ArrayEqualsNegativeCases {
+public class ArrayToStringNegativeCases {
   public void objectEquals() {
     Object a = new Object();
 

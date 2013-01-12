@@ -21,7 +21,7 @@ import java.util.*;
 /**
  * @author adgar@google.com (Mike Edgar)
  */
-public class ArrayEqualsPositiveCases {
+public class ArrayToStringPositiveCases {
 
   public void intArray() {
     int[] a = {1, 2, 3};
