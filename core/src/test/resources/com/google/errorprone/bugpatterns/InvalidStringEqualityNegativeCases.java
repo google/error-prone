@@ -27,8 +27,17 @@ public class InvalidStringEqualityNegativeCases {
     retVal = (x != null);
     retVal = (null == x);
     retVal = (null != x);
-   
+ 
     return retVal;
   }
+
+  @SuppressWarnings("StringEquality")
+  public boolean testSuppressWarnings(String x, String y) {
+    boolean retVal;
+    retVal = (x == y);
+
+    return retVal;
+  
+  } 
  
 }

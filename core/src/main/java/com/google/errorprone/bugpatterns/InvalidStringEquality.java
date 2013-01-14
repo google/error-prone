@@ -87,7 +87,6 @@ public class InvalidStringEquality extends DescribingMatcher<BinaryTree> {
   
   @Override
   public Description describe(BinaryTree tree, VisitorState state) {
-    // TODO: Suggest fixes for more situations.
     ExpressionTree leftOperand = tree.getLeftOperand();
     Type leftType = ((JCTree.JCExpression) leftOperand).type;
     ExpressionTree rightOperand = tree.getRightOperand();
