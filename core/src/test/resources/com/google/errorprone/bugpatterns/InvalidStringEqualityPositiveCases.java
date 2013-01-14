@@ -23,6 +23,7 @@ public class InvalidStringEqualityPositiveCases {
 
   public boolean testEquality(String x, String y) {
     boolean retVal;
+
     //BUG: Suggestion includes "x.equals(y)" 
     retVal = (x == y);
     //BUG: Suggestion includes "!x.equals(y)"

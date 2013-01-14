@@ -19,6 +19,11 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.kindIs;
+import static com.sun.source.tree.Tree.Kind.EQUAL_TO;
+import static com.sun.source.tree.Tree.Kind.NOT_EQUAL_TO;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -26,19 +31,15 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.kindIs;
 
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree;
-import static com.sun.source.tree.Tree.Kind.EQUAL_TO;
-import static com.sun.source.tree.Tree.Kind.NOT_EQUAL_TO;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 
 import java.lang.StringBuilder;
+
 /**
  * @author ptoomey@google.com (Patrick Toomey)
  */
@@ -122,4 +123,5 @@ public class InvalidStringEquality extends DescribingMatcher<BinaryTree> {
       return super.visitBinary(tree, visitorState);
     }
   }
+
 }
