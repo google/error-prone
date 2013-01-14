@@ -36,7 +36,7 @@ import static com.google.errorprone.matchers.Matchers.*;
  * @author adgar@google.com (Mike Edgar)
  */
 @BugPattern(name = "ArrayToString",
-    summary = "toString used on arrays",
+    summary = "toString used on an array",
     explanation =
         "The toString method on an array will print its identity, such as [I@4488aabb. This " +
         "is almost never needed. Use Arrays.toString to print a human-readable array summary.",
