@@ -17,6 +17,7 @@
 package com.google.errorprone;
 
 import com.google.errorprone.bugpatterns.ArrayEquals;
+import com.google.errorprone.bugpatterns.ArrayToString;
 import com.google.errorprone.bugpatterns.CollectionIncompatibleType;
 import com.google.errorprone.bugpatterns.CovariantEquals;
 import com.google.errorprone.bugpatterns.DeadException;
@@ -83,6 +84,7 @@ public class ErrorProneScanner extends Scanner {
           PreconditionsCheckNotNullPrimitive.class,
           CollectionIncompatibleType.class,
           ArrayEquals.class,
+          ArrayToString.class,
           ReturnValueIgnored.class
       );
       this.newClassMatchers = createChecks(enabled, DeadException.class);
