@@ -179,6 +179,7 @@ public class Matchers {
   /**
    * Matches an AST node which is an expression yielding the indicated non-static method.
    * @param receiverMatcher Used to determine if the part of the expression before the dot matches.
+   * @param methodName The name of the method to match, e.g., "equals"
    */
   public static InstanceMethod instanceMethod(Matcher<ExpressionTree> receiverMatcher, String methodName) {
     return new InstanceMethod(receiverMatcher, methodName);
@@ -414,6 +415,12 @@ public class Matchers {
     };
   }
 
+
+  /**
+   * Match a method declaration with a specific name.
+   *
+   * @param methodName The name of the method to match, e.g., "equals"
+   */
   public static Matcher<MethodTree> methodIsNamed(final String methodName) {
     return new Matcher<MethodTree>() {
       @Override
@@ -483,6 +490,11 @@ public class Matchers {
   /**
    * Matches an instance method that is a descendant of the instance method specified by the
    * class name and method name.
+   *
+   * @param fullClassName The name of the class whose instance method to match, e.g.,
+   * "java.util.Map"
+   * @param methodName The name of the method to match, including arguments, e.g.,
+   * "get(java.lang.Object)"
    */
   public static Matcher<ExpressionTree> isDescendantOfMethod(String fullClassName, String methodName) {
     return new DescendantOf(fullClassName, methodName);
