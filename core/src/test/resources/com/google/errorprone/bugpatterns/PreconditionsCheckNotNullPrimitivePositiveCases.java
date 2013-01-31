@@ -100,6 +100,11 @@ public class PreconditionsCheckNotNullPrimitivePositiveCases {
     checkNotNull(field.hasId());
     //BUG: Suggestion includes "checkState(local.hasId())"
     checkNotNull(local.hasId());
+    //BUG: Suggestion includes "checkState(!local.hasId())"
+    checkNotNull(!local.hasId());
+
+    //BUG: Suggestion includes "checkState(!(arg instanceof Tester))"
+    checkNotNull(!(arg instanceof Tester));
     
     //BUG: Suggestion includes "remove this line"
     checkNotNull(arg.getId());

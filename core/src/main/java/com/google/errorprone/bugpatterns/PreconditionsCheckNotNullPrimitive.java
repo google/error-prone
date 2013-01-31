@@ -117,7 +117,8 @@ public class PreconditionsCheckNotNullPrimitive
       }
     }
 
-    if ((arg1 instanceof BinaryTree || arg1.getKind() == Kind.METHOD_INVOCATION) &&
+    if ((arg1 instanceof BinaryTree || arg1.getKind() == Kind.METHOD_INVOCATION ||
+         arg1.getKind() == Kind.LOGICAL_COMPLEMENT) &&
         ((JCExpression) arg1).type == state.getSymtab().booleanType) {
       return new Description(arg1, diagnosticMessage,
           createCheckArgumentOrStateCall(methodInvocationTree, state, arg1));
