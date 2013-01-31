@@ -32,6 +32,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 
+import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -80,56 +81,83 @@ public class PreconditionsCheckNotNullPrimitive
   }
 
   /**
-   * If argument is a method call and its return type is boolean, change it to a
+   * If the call to Preconditions.checkNotNull is part of an expression (assignment, return, etc.),
+   * we substitute the argument for the method call. E.g.:
+   *   bar = Preconditions.checkNotNull(foo); ==> bar = foo;
+   * If the argument to Preconditions.checkNotNull is a comparison using == or != and one of the
+   * operands is null, we call checkNotNull on the non-null operand. E.g.:
+   *   checkNotNull(a == null); ==> checkNotNull(a);
+   * If the argument is a method call or binary tree and its return type is boolean, change it to a
    * checkArgument/checkState. E.g.:
    *   Preconditions.checkNotNull(foo.hasFoo()) ==> Preconditions.checkArgument(foo.hasFoo())
-   * If method call is a statement, delete it. E.g.:
+   * Otherwise, delete the checkNotNull call. E.g.:
    *   Preconditions.checkNotNull(foo); ==> [delete the line]
-   * If method call is not a statement, substitute the argument for the method call. E.g.:
-   *   bar = Preconditions.checkNotNull(foo); ==> bar = foo;
    */
   @Override
   public Description describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
-    SuggestedFix fix = new SuggestedFix();
     ExpressionTree arg1 = methodInvocationTree.getArguments().get(0);
     Tree parent = state.getPath().getParentPath().getLeaf();
 
-    if (arg1.getKind() == Kind.METHOD_INVOCATION &&
-        ((JCExpression) arg1).type == state.getSymtab().booleanType) {
-
-      String replacementMethod;
-      if (isMethodParameter(state.getPath(), (MethodInvocationTree) arg1)) {
-        replacementMethod = "checkArgument";
-      } else {
-        replacementMethod = "checkState";
-      }
-
-      StringBuilder replacement = new StringBuilder();
-
-      // Was the original call to Preconditions.checkNotNull a static import or not?
-      if (methodInvocationTree.getMethodSelect().getKind() == Kind.IDENTIFIER) {
-        replacement.append(replacementMethod + "(");
-        fix.addStaticImport("com.google.common.base.Preconditions." + replacementMethod);
-      } else {
-        replacement.append("Preconditions." + replacementMethod + "(");
-      }
-
-      // Create argument list.
-      for (ExpressionTree arg : methodInvocationTree.getArguments()) {
-        replacement.append(arg.toString());
-        replacement.append(", ");
-      }
-      replacement.delete(replacement.length() - 2, replacement.length());
-      replacement.append(")");
-      fix.replace(methodInvocationTree, replacement.toString());
-
-    } else if (parent.getKind() == Kind.EXPRESSION_STATEMENT) {
-      fix.delete(parent);
-    } else {
-      fix.replace(methodInvocationTree, arg1.toString());
+    // Assignment, return, etc.
+    if (parent.getKind() != Kind.EXPRESSION_STATEMENT) {
+      return new Description(arg1, diagnosticMessage,
+          new SuggestedFix().replace(methodInvocationTree, arg1.toString()));
     }
 
-    return new Description(arg1, diagnosticMessage, fix);
+    // Comparison to null
+    if (arg1.getKind() == Kind.EQUAL_TO || arg1.getKind() == Kind.NOT_EQUAL_TO) {
+      BinaryTree binaryExpr = (BinaryTree) arg1;
+      if (binaryExpr.getLeftOperand().getKind() == Kind.NULL_LITERAL) {
+        return new Description(arg1, diagnosticMessage,
+            new SuggestedFix().replace(arg1, binaryExpr.getRightOperand().toString()));
+      }
+      if (binaryExpr.getRightOperand().getKind() == Kind.NULL_LITERAL) {
+        return new Description(arg1, diagnosticMessage,
+            new SuggestedFix().replace(arg1, binaryExpr.getLeftOperand().toString()));
+      }
+    }
+
+    if ((arg1 instanceof BinaryTree || arg1.getKind() == Kind.METHOD_INVOCATION) &&
+        ((JCExpression) arg1).type == state.getSymtab().booleanType) {
+      return new Description(arg1, diagnosticMessage,
+          createCheckArgumentOrStateCall(methodInvocationTree, state, arg1));
+    }
+
+    return new Description(arg1, diagnosticMessage, new SuggestedFix().delete(parent));
+  }
+
+  /**
+   * Creates a SuggestedFix that replaces the checkNotNull call with a checkArgument or checkState
+   * call.
+   */
+  private SuggestedFix createCheckArgumentOrStateCall(MethodInvocationTree methodInvocationTree,
+      VisitorState state, ExpressionTree arg1) {
+    SuggestedFix fix = new SuggestedFix();
+    String replacementMethod = "checkState";
+    if (arg1.getKind() == Kind.METHOD_INVOCATION && isMethodParameter(
+        state.getPath(), (MethodInvocationTree) arg1)) {
+      replacementMethod = "checkArgument";
+    }
+
+    StringBuilder replacement = new StringBuilder();
+
+    // Was the original call to Preconditions.checkNotNull a static import or not?
+    if (methodInvocationTree.getMethodSelect().getKind() == Kind.IDENTIFIER) {
+      replacement.append(replacementMethod + "(");
+      fix.addStaticImport("com.google.common.base.Preconditions." + replacementMethod);
+    } else {
+      replacement.append("Preconditions." + replacementMethod + "(");
+    }
+
+    // Create argument list.
+    for (ExpressionTree arg : methodInvocationTree.getArguments()) {
+      replacement.append(arg.toString());
+      replacement.append(", ");
+    }
+    replacement.delete(replacement.length() - 2, replacement.length());
+    replacement.append(")");
+    fix.replace(methodInvocationTree, replacement.toString());
+    return fix;
   }
 
   /**

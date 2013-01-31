@@ -71,9 +71,13 @@ public class PreconditionsCheckNotNullPrimitivePositiveCases {
     
     // Do we handle arguments that evaluate to a primitive type?
     
-    //BUG: Suggestion includes "remove this line"
+    //BUG: Suggestion includes "Preconditions.checkNotNull(a)"
     Preconditions.checkNotNull(a != null);
-    //BUG: Suggestion includes "remove this line"
+    //BUG: Suggestion includes "Preconditions.checkNotNull(a)"
+    Preconditions.checkNotNull(a == null);
+    //BUG: Suggestion includes "Preconditions.checkState(int1 == int2)"
+    Preconditions.checkNotNull(int1 == int2);
+    //BUG: Suggestion includes "Preconditions.checkState(int1 > int2)"
     Preconditions.checkNotNull(int1 > int2);
     //BUG: Suggestion includes "remove this line"
     Preconditions.checkNotNull(boolean1 ? int1 : int2);
@@ -101,6 +105,9 @@ public class PreconditionsCheckNotNullPrimitivePositiveCases {
     checkNotNull(arg.getId());
     //BUG: Suggestion includes "id = arg.getId()"
     int id = checkNotNull(arg.getId());
+    
+    //BUG: Suggestion includes "boolean b = arg.hasId();"
+    boolean b = checkNotNull(arg.hasId());
   }
   
   private static class Tester {

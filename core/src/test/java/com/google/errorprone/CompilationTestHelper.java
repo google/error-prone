@@ -42,7 +42,8 @@ public class CompilationTestHelper {
   }
 
   public void assertCompileSucceeds(File source) {
-    assertThat(compiler.compile(new String[]{"-Xjcov", source.getAbsolutePath()}), is(0));
+    int exitCode = compiler.compile(new String[]{"-Xjcov", source.getAbsolutePath()});
+    assertThat(exitCode, is(0));
   }
 
   /**
@@ -50,8 +51,8 @@ public class CompilationTestHelper {
    * the pattern //BUG("foo"), the diagnostic at that line contains "foo".
    */
   public void assertCompileFailsWithMessages(File source) throws IOException {
-    assertThat("Compiler returned an unexpected error code",
-        compiler.compile(new String[]{"-Xjcov", "-encoding", "UTF-8", source.getAbsolutePath()}), is(1));
+    int exitCode = compiler.compile(new String[]{"-Xjcov", "-encoding", "UTF-8", source.getAbsolutePath()});
+    assertThat("Compiler returned an unexpected error code", exitCode, is(1));
     assertHasDiagnosticOnAllMatchingLines(diagnosticHelper.getDiagnostics(), source);
   }
 
