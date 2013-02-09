@@ -54,8 +54,17 @@ class WrappedTreeMap extends AbstractMap<JCTree, Integer> {
     }
 
     /**
-     * equals compares start position, kind of node, tag, and string representation. Note that
-     * this is an approximation and may not actually distinguish between unequal tree nodes.
+     * equals compares start position, kind of node, and tag. This is an approximation and may not
+     * actually distinguish between unequal tree nodes.
+     *
+     * Note: Do not include node.toString() as part of the hash or the equals.  We generate
+     * the WrappedTreeMap after the parse phase, but we compare after the flow phase.  The
+     * attribute phase may alter the structure of the AST nodes such that their string
+     * representations no longer match.  For example, annotation nodes after the parse phase look
+     * like:
+     * @SuppressWarnings("foo")
+     * But after the flow phase, they look like:
+     * @SuppressWarnings(value = "foo")
      */
     @Override
     public boolean equals(Object o) {
@@ -66,17 +75,25 @@ class WrappedTreeMap extends AbstractMap<JCTree, Integer> {
 
       return node.getStartPosition() == other.node.getStartPosition() &&
           node.getKind() == other.node.getKind() &&
-          node.getTag() == other.node.getTag() &&
-          node.toString().equals(other.node.toString());
+          node.getTag() == other.node.getTag();
     }
 
+    /**
+     * Note: Do not include node.toString() as part of the hash or the equals.  We generate
+     * the WrappedTreeMap after the parse phase, but we compare after the flow phase.  The
+     * attribute phase may alter the structure of the AST nodes such that their string
+     * representations no longer match.  For example, annotation nodes after the parse phase look
+     * like:
+     * @SuppressWarnings("foo")
+     * But after the flow phase, they look like:
+     * @SuppressWarnings(value = "foo")
+     */
     @Override
     public int hashCode() {
       int result = 17;
       result = 31 * result + node.getStartPosition();
       result = 31 * result + node.getKind().ordinal();
       result = 31 * result + node.getTag();
-      result = 31 * result + node.toString().hashCode();
       return result;
     }
   }
