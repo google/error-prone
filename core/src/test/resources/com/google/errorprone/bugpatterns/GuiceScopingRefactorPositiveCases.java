@@ -17,6 +17,7 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.servlet.RequestScoped;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -27,8 +28,21 @@ public class GuiceScopingRefactorPositiveCases {
   //BUG: Suggestion includes "remove this line"
   @Singleton
   public class TestClass {
-    @Inject
     public TestClass(@Assisted String assistedParam) {
+    }
+  }
+  
+  //BUG: Suggestion includes "remove this line"
+  @RequestScoped
+  public class TestClass2 {
+    public TestClass2(@Assisted String assistedParam) {
+    }
+  }
+  
+  //BUG: Suggestion includes "remove this line"
+  @Singleton
+  public class TestClass3 {
+    public TestClass3(String unassistedParam, @Assisted String assistedParam) {
     }
   }
 

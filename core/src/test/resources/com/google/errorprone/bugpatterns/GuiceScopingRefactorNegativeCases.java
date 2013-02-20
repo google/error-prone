@@ -18,16 +18,32 @@ package com.google.errorprone.bugpatterns;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.servlet.RequestScoped;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public class GuiceScopingRefactorNegativeCases {
   
-  @Singleton
   public class TestClass {
-    @Inject
-    public TestClass(@Assisted String assistedParam) {
+    public TestClass(String unassistedParam1, String unassistedParam2) {
+    }
+  }
+  
+  @Singleton
+  public class TestClass2 {
+    public TestClass2(String unassistedParam1, String unassistedParam2) {
+    }
+  }
+    
+  public class TestClass3 {
+    public TestClass3(@Assisted String assistedParam) {
+    }
+  }
+
+  @SuppressWarnings("foo")
+  public class TestClass4 {
+    public TestClass4(String unassistedParam, @Assisted String assistedParam) {
     }
   }
 

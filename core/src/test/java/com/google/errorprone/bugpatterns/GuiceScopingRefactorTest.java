@@ -41,12 +41,10 @@ public class GuiceScopingRefactorTest {
         new File(this.getClass().getResource("GuiceScopingRefactorPositiveCases.java").toURI()));
   }
 
-  /*
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(
         new File(this.getClass().getResource("GuiceScopingRefactorNegativeCases.java").toURI()));
   }
-  */
 
 }
