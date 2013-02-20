@@ -232,6 +232,13 @@ public class Matchers {
     return new Constructor(className, parameterTypes);
   }
 
+  /**
+   * Applies the given matcher to the constructor(s) of the class.
+   */
+  public static Matcher<ClassTree> constructor(boolean anyOf, Matcher<MethodTree> constructorMatcher) {
+    return new ConstructorOfClass(anyOf, constructorMatcher);
+  }
+
   public static Matcher<MethodInvocationTree> methodSelect(Matcher<ExpressionTree> methodSelectMatcher) {
     return new MethodInvocationMethodSelect(methodSelectMatcher);
   }
@@ -460,6 +467,14 @@ public class Matchers {
         return true;
       }
     };
+  }
+
+  /**
+   * Matches if the given matcher matches all of/any of the parameters to this method.
+   */
+  public static Matcher<MethodTree> methodHasParameters(boolean anyOf,
+      Matcher<VariableTree> parameterMatcher) {
+    return new MethodHasParameters(anyOf, parameterMatcher);
   }
 
   public static Matcher<MethodTree> methodHasVisibility(final Visibility visibility) {

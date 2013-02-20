@@ -19,6 +19,9 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.ONE_OFF;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.NOT_A_PROBLEM;
+import static com.google.errorprone.matchers.Matchers.annotations;
+import static com.google.errorprone.matchers.Matchers.hasAnnotation;
+import static com.google.errorprone.matchers.Matchers.methodHasParameters;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -27,15 +30,10 @@ import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
-import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
-import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.JCTree.JCClassDecl;
-import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
-import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
+import com.sun.source.tree.VariableTree;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
@@ -57,36 +55,18 @@ public class GuiceAssistedInjectScopingRefactor extends DescribingMatcher<ClassT
     @SuppressWarnings("unchecked")
     @Override
     public boolean matches(ClassTree classTree, VisitorState state) {
-      return Matchers.annotations(true,
-          Matchers.hasAnnotation(SCOPE_ANNOTATION_STRING, AnnotationTree.class))
+      return annotations(true, hasAnnotation(SCOPE_ANNOTATION_STRING, AnnotationTree.class))
           .matches(classTree, state);
     }
   };
 
   private Matcher<ClassTree> constructorHasAssistedParams = new Matcher<ClassTree>() {
+    @SuppressWarnings("unchecked")
     @Override
     public boolean matches(ClassTree classTree, VisitorState state) {
-      Symbol assistedAnnotation = state.getSymbolFromString(ASSISTED_ANNOTATION_STRING);
-      if (assistedAnnotation == null) {
-        return false;
-      }
-
-      JCClassDecl classDecl = (JCClassDecl) classTree;
-      // Iterate over members of class (methods and fields).
-      for (JCTree member : classDecl.getMembers()) {
-        Symbol sym = ASTHelpers.getSymbol(member);
-        // If this member is a constructor...
-        if (sym.isConstructor()) {
-          // Iterate over its parameters.
-          for (JCVariableDecl param : ((JCMethodDecl) member).getParameters()) {
-            // Does this param have the @Assisted annotation?
-            if (Matchers.hasAnnotation(ASSISTED_ANNOTATION_STRING).matches(param, state)) {
-              return true;
-            }
-          }
-        }
-      }
-      return false;
+      return Matchers.constructor(true, methodHasParameters(true,
+          hasAnnotation(ASSISTED_ANNOTATION_STRING, VariableTree.class)))
+          .matches(classTree, state);
     }
   };
 
