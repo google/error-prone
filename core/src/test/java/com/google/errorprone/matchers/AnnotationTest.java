@@ -21,8 +21,10 @@ import static org.junit.Assert.assertTrue;
 import com.google.errorprone.Scanner;
 import com.google.errorprone.VisitorState;
 
-import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
+import com.sun.source.util.TreePath;
 
 import org.junit.After;
 import org.junit.Before;
@@ -42,16 +44,13 @@ public class AnnotationTest extends CompilerBasedTest {
   @Before
   public void setUp() throws IOException {
     tests.clear();
-    writeFile("A.java",
+    writeFile("SampleAnnotation1.java",
         "package com.google;",
-        "public class A { ",
-        "  public int count() {",
-        "    return 1;",
-        "  }",
-        "  public static int staticCount() {",
-        "    return 2;",
-        "  }",
-        "}"
+        "public @interface SampleAnnotation1 {}"
+    );
+    writeFile("SampleAnnotation2.java",
+        "package com.google;",
+        "public @interface SampleAnnotation2 {}"
     );
   }
 
@@ -62,127 +61,222 @@ public class AnnotationTest extends CompilerBasedTest {
     }
   }
 
-  /*
   @Test
-  public void shouldMatchExactMethod() throws IOException {
-    writeFile("B.java",
-      "import com.google.A;",
-      "public class B {",
-      "  public int count() {",
-      "    A a = new A();",
-      "    return a.count();",
-      "  }",
-      "}"
-    );
-    assertCompiles(memberSelectMatches(true, new Annotation("com.google.A", "count()")));
+  public void shouldNotMatchNoAnnotations() throws IOException {
+    writeFile("A.java",
+        "package com.google;",
+        "public class A {}"
+      );
+      assertCompiles(nodeWithAnnotationMatches(false, new Annotation<Tree>(true,
+          Matchers.isType("com.google.SampleAnnotation1"))));
+      assertCompiles(nodeWithAnnotationMatches(false, new Annotation<Tree>(false,
+          Matchers.isType("com.google.SampleAnnotation1"))));
   }
 
   @Test
-  public void shouldMatchOverriddenMethod() throws IOException {
-    writeFile("B.java",
-      "import com.google.A;",
-      "public class B extends A {",
-      "  public int count() {",
-      "    B b = new B();",
-      "    return b.count();",
-      "  }",
-      "}"
+  public void shouldMatchSingleAnnotationOnClass() throws IOException {
+    writeFile("A.java",
+      "package com.google;",
+      "@SampleAnnotation1",
+      "public class A {}"
     );
-    assertCompiles(memberSelectMatches(true, new Annotation("com.google.A", "count()")));
+    assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(true,
+        Matchers.isType("com.google.SampleAnnotation1"))));
+    assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(false,
+        Matchers.isType("com.google.SampleAnnotation1"))));
   }
 
   @Test
-  public void shouldMatchBareOverriddenMethod() throws IOException {
-    writeFile("B.java",
-      "import com.google.A;",
-      "public class B extends A {",
-      "  public int count() {",
-      "    return 2;",
-      "  }",
-      "  public int testCount() {",
-      "    return count();",
-      "  }",
-      "}"
+  public void shouldNotMatchNonmatchingSingleAnnotationOnClass() throws IOException {
+    writeFile("A.java",
+      "package com.google;",
+      "@SampleAnnotation1",
+      "public class A {}"
     );
-    assertCompiles(memberSelectMatches(true, new Annotation("com.google.A", "count()")));
+    assertCompiles(nodeWithAnnotationMatches(false, new Annotation<Tree>(true,
+        Matchers.isType("com.google.WrongAnnotation"))));
+    assertCompiles(nodeWithAnnotationMatches(false, new Annotation<Tree>(false,
+        Matchers.isType("com.google.WrongAnnotation"))));
+  }
+
+  @SuppressWarnings("unchecked")
+  @Test
+  public void shouldMatchAllAnnotationsOnClass() throws IOException {
+    writeFile("A.java",
+        "package com.google;",
+        "@SampleAnnotation1 @SampleAnnotation2",
+        "public class A {}"
+      );
+      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(true,
+          Matchers.anyOf(Matchers.isType("com.google.SampleAnnotation1"),
+              Matchers.isType("com.google.SampleAnnotation2")))));
+      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(false,
+          Matchers.anyOf(Matchers.isType("com.google.SampleAnnotation1"),
+              Matchers.isType("com.google.SampleAnnotation2")))));
   }
 
   @Test
-  public void shouldNotMatchDifferentMethod() throws IOException {
-    writeFile("B.java",
-      "import com.google.A;",
-      "public class B {",
-      "  public int count() {",
-      "    A a = new A();",
-      "    return a.count();",
-      "  }",
-      "}"
-    );
-    assertCompiles(memberSelectMatches(false,
-        new DescendantOf("com.google.A", "count(java.lang.Object)")));
+  public void matchOneAnnotationsOnClass() throws IOException {
+    writeFile("A.java",
+        "package com.google;",
+        "@SampleAnnotation1 @SampleAnnotation2",
+        "public class A {}"
+      );
+      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(true,
+          Matchers.isType("com.google.SampleAnnotation1"))));
+      assertCompiles(nodeWithAnnotationMatches(false, new Annotation<Tree>(false,
+          Matchers.isType("com.google.SampleAnnotation1"))));
   }
 
   @Test
-  public void shouldNotMatchStaticMethod() throws IOException {
-    writeFile("B.java",
-      "import com.google.A;",
-      "public class B {",
-      "  public int count() {",
-      "    return A.staticCount();",
-      "  }",
-      "}"
-    );
-    assertCompiles(memberSelectMatches(false, new DescendantOf("com.google.A", "count()")));
+  public void shouldMatchAnnotationOnInterface() throws IOException {
+    writeFile("A.java",
+        "package com.google;",
+        "@SampleAnnotation1",
+        "public interface A {}"
+      );
+      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(true,
+          Matchers.isType("com.google.SampleAnnotation1"))));
+      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(false,
+          Matchers.isType("com.google.SampleAnnotation1"))));
   }
 
   @Test
-  public void shouldMatchTransitively() throws Exception {
-    writeFile("I1.java",
-      "package i;",
-      "public interface I1 {",
-      "  void count();",
-      "}"
-    );
-    writeFile("I2.java",
-      "package i;",
-      "public interface I2 extends I1 {",
-      "}"
-    );
-    writeFile("B.java",
-      "package b;",
-      "public class B implements i.I2 {",
-      "  public void count() {",
-      "  }",
-      "}"
-    );
-    assertCompiles(new Scanner());
-    clearSourceFiles();
-    writeFile("C.java",
-        "public class C {",
-        "  public void test(b.B b) {",
-        "    b.count();",
+  public void shouldMatchAnnotationOnEnum() throws IOException {
+    writeFile("A.java",
+        "package com.google;",
+        "@SampleAnnotation1",
+        "public enum A {}"
+      );
+      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(true,
+          Matchers.isType("com.google.SampleAnnotation1"))));
+      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(false,
+          Matchers.isType("com.google.SampleAnnotation1"))));
+  }
+
+  @Test
+  public void shouldMatchAnnotationOnField() throws IOException {
+    writeFile("A.java",
+        "package com.google;",
+        "public class A {",
+        "  @SampleAnnotation1",
+        "  public int i;",
+        "}"
+      );
+      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(true,
+          Matchers.isType("com.google.SampleAnnotation1"))));
+      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(false,
+          Matchers.isType("com.google.SampleAnnotation1"))));
+  }
+
+  @Test
+  public void shouldMatchAnnotationOnMethod() throws IOException {
+    writeFile("A.java",
+        "package com.google;",
+        "public class A {",
+        "  @SampleAnnotation1",
+        "  public void foo() {}",
+        "}"
+      );
+      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(true,
+          Matchers.isType("com.google.SampleAnnotation1"))));
+      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(false,
+          Matchers.isType("com.google.SampleAnnotation1"))));
+  }
+
+  @Test
+  public void shouldMatchAnnotationOnParameter() throws IOException {
+    writeFile("A.java",
+        "package com.google;",
+        "public class A {",
+        "  public void foo(@SampleAnnotation1 int i) {}",
+        "}"
+      );
+      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(true,
+          Matchers.isType("com.google.SampleAnnotation1"))));
+      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(false,
+          Matchers.isType("com.google.SampleAnnotation1"))));
+  }
+
+  @Test
+  public void shouldMatchAnnotationOnConstructor() throws IOException {
+    writeFile("A.java",
+        "package com.google;",
+        "public class A {",
+        "  @SampleAnnotation1",
+        "  public A() {}",
+        "}"
+      );
+      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(true,
+          Matchers.isType("com.google.SampleAnnotation1"))));
+      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(false,
+          Matchers.isType("com.google.SampleAnnotation1"))));
+  }
+
+  @Test
+  public void shouldMatchAnnotationOnLocalVariable() throws IOException {
+    writeFile("A.java",
+        "package com.google;",
+        "public class A {",
+        "  public void foo() {",
+        "    @SampleAnnotation1",
+        "    int i = 0;",
         "  }",
         "}"
       );
-    assertCompiles(memberSelectMatches(true, new DescendantOf("i.I1", "count()")));
+      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(true,
+          Matchers.isType("com.google.SampleAnnotation1"))));
+      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(false,
+          Matchers.isType("com.google.SampleAnnotation1"))));
   }
-  */
+
+  @Test
+  public void shouldMatchAnnotationOnAnnotation() throws IOException {
+    writeFile("A.java",
+        "package com.google;",
+        "@SampleAnnotation1",
+        "public @interface A {}"
+      );
+      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(true,
+          Matchers.isType("com.google.SampleAnnotation1"))));
+      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(false,
+          Matchers.isType("com.google.SampleAnnotation1"))));
+  }
+
+  @Test
+  public void shouldMatchAnnotationOnPackage() throws IOException {
+    writeFile("package-info.java",
+        "@SampleAnnotation1",
+        "package com.google;"
+      );
+      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(true,
+          Matchers.isType("com.google.SampleAnnotation1"))));
+      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(false,
+          Matchers.isType("com.google.SampleAnnotation1"))));
+  }
+
 
   private abstract class ScannerTest extends Scanner {
     public abstract void assertDone();
   }
 
-  private Scanner memberSelectMatches(final boolean shouldMatch, final DescendantOf toMatch) {
+  private Scanner nodeWithAnnotationMatches(final boolean shouldMatch,
+      final Annotation<Tree> toMatch) {
     ScannerTest test = new ScannerTest() {
       private boolean matched = false;
 
       @Override
-      public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {
-        ExpressionTree methodSelect = node.getMethodSelect();
-        if (toMatch.matches(methodSelect, visitorState)) {
+      public Void visitAnnotation(AnnotationTree node, VisitorState visitorState) {
+        TreePath currPath = getCurrentPath().getParentPath();
+        Tree parent = currPath.getLeaf();
+        if (parent.getKind() == Kind.MODIFIERS) {
+          currPath = currPath.getParentPath();
+          parent = currPath.getLeaf();
+        }
+        if (toMatch.matches(parent, visitorState)) {
           matched = true;
         }
-        return super.visitMethodInvocation(node, visitorState);
+        return super.visitAnnotation(node, visitorState);
       }
 
       @Override

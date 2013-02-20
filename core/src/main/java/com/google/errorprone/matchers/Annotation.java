@@ -20,11 +20,17 @@ import com.google.errorprone.VisitorState;
 
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 
 import java.util.List;
 
 /**
+ * Matches if the given annotation matcher matches all of or any of the annotations on the tree
+ * node.
+ *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public class Annotation<T extends Tree> implements Matcher<T> {
@@ -41,11 +47,18 @@ public class Annotation<T extends Tree> implements Matcher<T> {
   public boolean matches(T tree, VisitorState state) {
 
     List<? extends AnnotationTree> annotations;
-
-    // TODO(eaftan): fill in other cases
     switch (tree.getKind()) {
       case CLASS:
         annotations = ((ClassTree) tree).getModifiers().getAnnotations();
+        break;
+      case VARIABLE:
+        annotations = ((VariableTree) tree).getModifiers().getAnnotations();
+        break;
+      case METHOD:
+        annotations = ((MethodTree) tree).getModifiers().getAnnotations();
+        break;
+      case COMPILATION_UNIT:
+        annotations = ((CompilationUnitTree) tree).getPackageAnnotations();
         break;
       default:
         throw new IllegalArgumentException("Cannot access annotations from tree of kind "
@@ -61,6 +74,11 @@ public class Annotation<T extends Tree> implements Matcher<T> {
         return false;
       }
     }
-    return !anyOf;
+    if (anyOf) {
+      return false;
+    } else {
+      // In allOf case, return true only if there was at least one annotation.
+      return annotations.size() >= 1;
+    }
   }
 }
