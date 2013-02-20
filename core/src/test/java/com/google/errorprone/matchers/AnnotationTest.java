@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Google Inc. All Rights Reserved.
+ * Copyright 2013 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.errorprone.matchers.Matchers.isType;
 import static org.junit.Assert.assertTrue;
 
 import com.google.errorprone.Scanner;
@@ -46,12 +47,10 @@ public class AnnotationTest extends CompilerBasedTest {
     tests.clear();
     writeFile("SampleAnnotation1.java",
         "package com.google;",
-        "public @interface SampleAnnotation1 {}"
-    );
+        "public @interface SampleAnnotation1 {}");
     writeFile("SampleAnnotation2.java",
         "package com.google;",
-        "public @interface SampleAnnotation2 {}"
-    );
+        "public @interface SampleAnnotation2 {}");
   }
 
   @After
@@ -65,12 +64,11 @@ public class AnnotationTest extends CompilerBasedTest {
   public void shouldNotMatchNoAnnotations() throws IOException {
     writeFile("A.java",
         "package com.google;",
-        "public class A {}"
-      );
+        "public class A {}");
       assertCompiles(nodeWithAnnotationMatches(false, new Annotation<Tree>(true,
-          Matchers.isType("com.google.SampleAnnotation1"))));
+          isType("com.google.SampleAnnotation1"))));
       assertCompiles(nodeWithAnnotationMatches(false, new Annotation<Tree>(false,
-          Matchers.isType("com.google.SampleAnnotation1"))));
+          isType("com.google.SampleAnnotation1"))));
   }
 
   @Test
@@ -78,12 +76,11 @@ public class AnnotationTest extends CompilerBasedTest {
     writeFile("A.java",
       "package com.google;",
       "@SampleAnnotation1",
-      "public class A {}"
-    );
+      "public class A {}");
     assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(true,
-        Matchers.isType("com.google.SampleAnnotation1"))));
+        isType("com.google.SampleAnnotation1"))));
     assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(false,
-        Matchers.isType("com.google.SampleAnnotation1"))));
+        isType("com.google.SampleAnnotation1"))));
   }
 
   @Test
@@ -91,12 +88,11 @@ public class AnnotationTest extends CompilerBasedTest {
     writeFile("A.java",
       "package com.google;",
       "@SampleAnnotation1",
-      "public class A {}"
-    );
+      "public class A {}");
     assertCompiles(nodeWithAnnotationMatches(false, new Annotation<Tree>(true,
-        Matchers.isType("com.google.WrongAnnotation"))));
+        isType("com.google.WrongAnnotation"))));
     assertCompiles(nodeWithAnnotationMatches(false, new Annotation<Tree>(false,
-        Matchers.isType("com.google.WrongAnnotation"))));
+        isType("com.google.WrongAnnotation"))));
   }
 
   @SuppressWarnings("unchecked")
@@ -105,14 +101,13 @@ public class AnnotationTest extends CompilerBasedTest {
     writeFile("A.java",
         "package com.google;",
         "@SampleAnnotation1 @SampleAnnotation2",
-        "public class A {}"
-      );
+        "public class A {}");
       assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(true,
-          Matchers.anyOf(Matchers.isType("com.google.SampleAnnotation1"),
-              Matchers.isType("com.google.SampleAnnotation2")))));
+          Matchers.anyOf(isType("com.google.SampleAnnotation1"),
+              isType("com.google.SampleAnnotation2")))));
       assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(false,
-          Matchers.anyOf(Matchers.isType("com.google.SampleAnnotation1"),
-              Matchers.isType("com.google.SampleAnnotation2")))));
+          Matchers.anyOf(isType("com.google.SampleAnnotation1"),
+              isType("com.google.SampleAnnotation2")))));
   }
 
   @Test
@@ -120,12 +115,11 @@ public class AnnotationTest extends CompilerBasedTest {
     writeFile("A.java",
         "package com.google;",
         "@SampleAnnotation1 @SampleAnnotation2",
-        "public class A {}"
-      );
+        "public class A {}");
       assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(true,
-          Matchers.isType("com.google.SampleAnnotation1"))));
+          isType("com.google.SampleAnnotation1"))));
       assertCompiles(nodeWithAnnotationMatches(false, new Annotation<Tree>(false,
-          Matchers.isType("com.google.SampleAnnotation1"))));
+          isType("com.google.SampleAnnotation1"))));
   }
 
   @Test
@@ -133,12 +127,11 @@ public class AnnotationTest extends CompilerBasedTest {
     writeFile("A.java",
         "package com.google;",
         "@SampleAnnotation1",
-        "public interface A {}"
-      );
+        "public interface A {}");
       assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(true,
-          Matchers.isType("com.google.SampleAnnotation1"))));
+          isType("com.google.SampleAnnotation1"))));
       assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(false,
-          Matchers.isType("com.google.SampleAnnotation1"))));
+          isType("com.google.SampleAnnotation1"))));
   }
 
   @Test
@@ -146,12 +139,11 @@ public class AnnotationTest extends CompilerBasedTest {
     writeFile("A.java",
         "package com.google;",
         "@SampleAnnotation1",
-        "public enum A {}"
-      );
+        "public enum A {}");
       assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(true,
-          Matchers.isType("com.google.SampleAnnotation1"))));
+          isType("com.google.SampleAnnotation1"))));
       assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(false,
-          Matchers.isType("com.google.SampleAnnotation1"))));
+          isType("com.google.SampleAnnotation1"))));
   }
 
   @Test
@@ -161,12 +153,11 @@ public class AnnotationTest extends CompilerBasedTest {
         "public class A {",
         "  @SampleAnnotation1",
         "  public int i;",
-        "}"
-      );
+        "}");
       assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(true,
-          Matchers.isType("com.google.SampleAnnotation1"))));
+          isType("com.google.SampleAnnotation1"))));
       assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(false,
-          Matchers.isType("com.google.SampleAnnotation1"))));
+          isType("com.google.SampleAnnotation1"))));
   }
 
   @Test
@@ -176,12 +167,11 @@ public class AnnotationTest extends CompilerBasedTest {
         "public class A {",
         "  @SampleAnnotation1",
         "  public void foo() {}",
-        "}"
-      );
+        "}");
       assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(true,
-          Matchers.isType("com.google.SampleAnnotation1"))));
+          isType("com.google.SampleAnnotation1"))));
       assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(false,
-          Matchers.isType("com.google.SampleAnnotation1"))));
+          isType("com.google.SampleAnnotation1"))));
   }
 
   @Test
@@ -190,12 +180,11 @@ public class AnnotationTest extends CompilerBasedTest {
         "package com.google;",
         "public class A {",
         "  public void foo(@SampleAnnotation1 int i) {}",
-        "}"
-      );
+        "}");
       assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(true,
-          Matchers.isType("com.google.SampleAnnotation1"))));
+          isType("com.google.SampleAnnotation1"))));
       assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(false,
-          Matchers.isType("com.google.SampleAnnotation1"))));
+          isType("com.google.SampleAnnotation1"))));
   }
 
   @Test
@@ -205,12 +194,11 @@ public class AnnotationTest extends CompilerBasedTest {
         "public class A {",
         "  @SampleAnnotation1",
         "  public A() {}",
-        "}"
-      );
+        "}");
       assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(true,
-          Matchers.isType("com.google.SampleAnnotation1"))));
+          isType("com.google.SampleAnnotation1"))));
       assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(false,
-          Matchers.isType("com.google.SampleAnnotation1"))));
+          isType("com.google.SampleAnnotation1"))));
   }
 
   @Test
@@ -222,12 +210,11 @@ public class AnnotationTest extends CompilerBasedTest {
         "    @SampleAnnotation1",
         "    int i = 0;",
         "  }",
-        "}"
-      );
+        "}");
       assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(true,
-          Matchers.isType("com.google.SampleAnnotation1"))));
+          isType("com.google.SampleAnnotation1"))));
       assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(false,
-          Matchers.isType("com.google.SampleAnnotation1"))));
+          isType("com.google.SampleAnnotation1"))));
   }
 
   @Test
@@ -235,24 +222,22 @@ public class AnnotationTest extends CompilerBasedTest {
     writeFile("A.java",
         "package com.google;",
         "@SampleAnnotation1",
-        "public @interface A {}"
-      );
+        "public @interface A {}");
       assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(true,
-          Matchers.isType("com.google.SampleAnnotation1"))));
+          isType("com.google.SampleAnnotation1"))));
       assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(false,
-          Matchers.isType("com.google.SampleAnnotation1"))));
+          isType("com.google.SampleAnnotation1"))));
   }
 
   @Test
   public void shouldMatchAnnotationOnPackage() throws IOException {
     writeFile("package-info.java",
         "@SampleAnnotation1",
-        "package com.google;"
-      );
+        "package com.google;");
       assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(true,
-          Matchers.isType("com.google.SampleAnnotation1"))));
+          isType("com.google.SampleAnnotation1"))));
       assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(false,
-          Matchers.isType("com.google.SampleAnnotation1"))));
+          isType("com.google.SampleAnnotation1"))));
   }
 
 
