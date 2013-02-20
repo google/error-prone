@@ -32,6 +32,10 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
+<<<<<<< HEAD
+=======
+import com.sun.tools.javac.code.Symbol.VarSymbol;
+>>>>>>> First cut at Guice refactoring
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCArrayTypeTree;
@@ -366,27 +370,28 @@ public class Matchers {
   }
 
   /**
-   * Determines whether a method has an annotation of the given type.
+   * Determines whether an expression has an annotation of the given type.
+   *
+   * @param annotationType The type of the annotation to look for (e.g, "javax.annotation.Nullable")
+   * @param typeInfer a type token for the generic type. Unused, but allows the returned matcher to be composed.
+   */
+  public static <T extends Tree> Matcher<T> hasAnnotation(final String annotationType,
+      Class<T> typeInfer) {
+    return hasAnnotation(annotationType);
+  }
+
+  /**
+   * Determines whether an expression has an annotation of the given type.
    *
    * @param annotationType The type of the annotation to look for (e.g, "javax.annotation.Nullable")
    */
-  public static Matcher<ExpressionTree> methodHasAnnotation(final String annotationType) {
-    return new Matcher<ExpressionTree>() {
+  public static <T extends Tree> Matcher<T> hasAnnotation(final String annotationType) {
+    return new Matcher<T>() {
       @Override
-      public boolean matches (ExpressionTree methodTree, VisitorState state) {
-        Symbol methodSym;
-        switch (methodTree.getKind()) {
-          case IDENTIFIER:
-            methodSym = ((JCIdent) methodTree).sym;
-            break;
-          case MEMBER_SELECT:
-            methodSym = ((JCFieldAccess) methodTree).sym;
-            break;
-          default:
-            return false;
-        }
+      public boolean matches (T tree, VisitorState state) {
+        Symbol sym = ASTHelpers.getSymbol(tree);
         Symbol annotationSym = state.getSymbolFromString(annotationType);
-        return (annotationSym != null) && (methodSym.attribute(annotationSym) != null);
+        return (sym != null) && (annotationSym != null) && (sym.attribute(annotationSym) != null);
       }
     };
   }
