@@ -26,25 +26,27 @@ import java.io.File;
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class GuiceScopingRefactorTest {
+public class GuiceAssistedInjectScopingRefactorTest {
 
   private CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(new GuiceScopingRefactor.Scanner());
+    compilationHelper = new CompilationTestHelper(new GuiceAssistedInjectScopingRefactor.Scanner());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("GuiceScopingRefactorPositiveCases.java").toURI()));
+        new File(this.getClass().getResource("GuiceAssistedInjectScopingRefactorPositiveCases.java")
+            .toURI()));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("GuiceScopingRefactorNegativeCases.java").toURI()));
+        new File(this.getClass().getResource("GuiceAssistedInjectScopingRefactorNegativeCases.java")
+            .toURI()));
   }
 
 }

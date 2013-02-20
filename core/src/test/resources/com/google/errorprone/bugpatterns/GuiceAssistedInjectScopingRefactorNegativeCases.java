@@ -17,32 +17,33 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.servlet.RequestScoped;
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.servlet.RequestScoped;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class GuiceScopingRefactorPositiveCases {
-
-  //BUG: Suggestion includes "remove this line"
-  @Singleton
+public class GuiceAssistedInjectScopingRefactorNegativeCases {
+  
   public class TestClass {
-    public TestClass(@Assisted String assistedParam) {
+    public TestClass(String unassistedParam1, String unassistedParam2) {
     }
   }
   
-  //BUG: Suggestion includes "remove this line"
-  @RequestScoped
-  public class TestClass2 {
-    public TestClass2(@Assisted String assistedParam) {
-    }
-  }
-  
-  //BUG: Suggestion includes "remove this line"
   @Singleton
+  public class TestClass2 {
+    public TestClass2(String unassistedParam1, String unassistedParam2) {
+    }
+  }
+    
   public class TestClass3 {
-    public TestClass3(String unassistedParam, @Assisted String assistedParam) {
+    public TestClass3(@Assisted String assistedParam) {
+    }
+  }
+
+  @SuppressWarnings("foo")
+  public class TestClass4 {
+    public TestClass4(String unassistedParam, @Assisted String assistedParam) {
     }
   }
 
