@@ -62,6 +62,7 @@ public class AnnotationTest extends CompilerBasedTest {
     }
   }
 
+  /*
   @Test
   public void shouldMatchExactMethod() throws IOException {
     writeFile("B.java",
@@ -165,6 +166,7 @@ public class AnnotationTest extends CompilerBasedTest {
       );
     assertCompiles(memberSelectMatches(true, new DescendantOf("i.I1", "count()")));
   }
+  */
 
   private abstract class ScannerTest extends Scanner {
     public abstract void assertDone();

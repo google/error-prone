@@ -32,10 +32,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
-<<<<<<< HEAD
-=======
 import com.sun.tools.javac.code.Symbol.VarSymbol;
->>>>>>> First cut at Guice refactoring
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCArrayTypeTree;
