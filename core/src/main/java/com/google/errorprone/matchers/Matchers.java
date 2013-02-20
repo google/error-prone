@@ -45,6 +45,7 @@ import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCPrimitiveTypeTree;
 import com.sun.tools.javac.tree.JCTree.JCTypeApply;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.lang.model.element.Modifier;
@@ -217,6 +218,19 @@ public class Matchers {
         return false;
       }
     };
+  }
+
+  /**
+   * Matches if the given annotation matcher matches all of or any of the annotations on this tree
+   * node.
+   *
+   * @param anyOf Whether to match if the matchers match any of or all of the annotations on this
+   * tree.
+   * @param annotationMatcher The annotation matcher to use.
+   */
+  public static <T extends Tree> Matcher<T> annotations(boolean anyOf,
+      Matcher<AnnotationTree> annotationMatcher) {
+    return new Annotation<T>(anyOf, annotationMatcher);
   }
 
   public static Constructor constructor(String className, List<String> parameterTypes) {

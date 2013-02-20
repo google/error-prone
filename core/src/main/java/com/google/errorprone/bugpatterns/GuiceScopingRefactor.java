@@ -54,15 +54,12 @@ public class GuiceScopingRefactor extends DescribingMatcher<ClassTree> {
       "com.google.inject.assistedinject.Assisted";
 
   private Matcher<ClassTree> classAnnotationMatcher = new Matcher<ClassTree>() {
+    @SuppressWarnings("unchecked")
     @Override
     public boolean matches(ClassTree classTree, VisitorState state) {
-      // TODO(eaftan): Refactor this into library matchers.
-      for (AnnotationTree annotationTree : classTree.getModifiers().getAnnotations()) {
-        if (Matchers.hasAnnotation(SCOPE_ANNOTATION_STRING).matches(annotationTree, state)) {
-          return true;
-        }
-      }
-      return false;
+      return Matchers.annotations(true,
+          Matchers.hasAnnotation(SCOPE_ANNOTATION_STRING, AnnotationTree.class))
+          .matches(classTree, state);
     }
   };
 
@@ -102,6 +99,9 @@ public class GuiceScopingRefactor extends DescribingMatcher<ClassTree> {
 
   @Override
   public Description describe(ClassTree classTree, VisitorState state) {
+    // TODO(eaftan): This recreates logic in the annotation matcher in matches() above.
+    // We need a better way to do this.  Perhaps the matcher should keep track of the node that
+    // matched/didn't match.
     for (AnnotationTree annotationTree : classTree.getModifiers().getAnnotations()) {
       if (Matchers.hasAnnotation(SCOPE_ANNOTATION_STRING).matches(annotationTree, state)) {
         return new Description(
