@@ -38,14 +38,14 @@ import com.sun.source.tree.VariableTree;
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-@BugPattern(name = "GuiceAssistedInjectScopingRefactor",
+@BugPattern(name = "GuiceAssistedInjectScoping",
     summary = "Refactor uses of the Guice @ScopeAnnotation",
     explanation =
         "If a class is annotated with an annotation that itself is annotated with " +
         "@ScopeAnnotation, and any of the parameters of its constructor are annotated with " +
         "@Assisted, remove the annotation on the class.",
     category = ONE_OFF, severity = NOT_A_PROBLEM, maturity = EXPERIMENTAL)
-public class GuiceAssistedInjectScopingRefactor extends DescribingMatcher<ClassTree> {
+public class GuiceAssistedInjectScoping extends DescribingMatcher<ClassTree> {
 
   private static final String SCOPE_ANNOTATION_STRING = "com.google.inject.ScopeAnnotation";
   private static final String ASSISTED_ANNOTATION_STRING =
@@ -97,7 +97,7 @@ public class GuiceAssistedInjectScopingRefactor extends DescribingMatcher<ClassT
 
 
   public static class Scanner extends com.google.errorprone.Scanner {
-    public DescribingMatcher<ClassTree> classMatcher = new GuiceAssistedInjectScopingRefactor();
+    public DescribingMatcher<ClassTree> classMatcher = new GuiceAssistedInjectScoping();
 
     @Override
     public Void visitClass(ClassTree classTree, VisitorState visitorState) {

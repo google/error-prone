@@ -26,26 +26,26 @@ import java.io.File;
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class GuiceAssistedInjectScopingRefactorTest {
+public class GuiceAssistedInjectScopingTest {
 
   private CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(new GuiceAssistedInjectScopingRefactor.Scanner());
+    compilationHelper = new CompilationTestHelper(new GuiceAssistedInjectScoping.Scanner());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("GuiceAssistedInjectScopingRefactorPositiveCases.java")
+        new File(this.getClass().getResource("GuiceAssistedInjectScopingPositiveCases.java")
             .toURI()));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("GuiceAssistedInjectScopingRefactorNegativeCases.java")
+        new File(this.getClass().getResource("GuiceAssistedInjectScopingNegativeCases.java")
             .toURI()));
   }
 

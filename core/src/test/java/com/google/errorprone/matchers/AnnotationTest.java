@@ -16,6 +16,7 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.isType;
 import static org.junit.Assert.assertTrue;
 
@@ -103,10 +104,10 @@ public class AnnotationTest extends CompilerBasedTest {
         "@SampleAnnotation1 @SampleAnnotation2",
         "public class A {}");
       assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(true,
-          Matchers.anyOf(isType("com.google.SampleAnnotation1"),
+          anyOf(AnnotationTree.class, isType("com.google.SampleAnnotation1"),
               isType("com.google.SampleAnnotation2")))));
       assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(false,
-          Matchers.anyOf(isType("com.google.SampleAnnotation1"),
+          anyOf(AnnotationTree.class, isType("com.google.SampleAnnotation1"),
               isType("com.google.SampleAnnotation2")))));
   }
 
