@@ -30,10 +30,16 @@ import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
+import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
@@ -50,6 +56,7 @@ public class GuiceAssistedInjectScoping extends DescribingMatcher<ClassTree> {
   private static final String SCOPE_ANNOTATION_STRING = "com.google.inject.ScopeAnnotation";
   private static final String ASSISTED_ANNOTATION_STRING =
       "com.google.inject.assistedinject.Assisted";
+  private static final String INJECT_ANNOTATION_STRING = "com.google.inject.Inject";
 
   private Matcher<ClassTree> classAnnotationMatcher = new Matcher<ClassTree>() {
     @SuppressWarnings("unchecked")
@@ -60,13 +67,43 @@ public class GuiceAssistedInjectScoping extends DescribingMatcher<ClassTree> {
     }
   };
 
+  /**
+   * Assume there is <= 1 @Inject constructor.  If there are no @Inject constructors, then any
+   * constructor may match.  If there is 1 @Inject constructor, then the @Inject constructor
+   * must match.
+   */
   private Matcher<ClassTree> constructorHasAssistedParams = new Matcher<ClassTree>() {
     @SuppressWarnings("unchecked")
     @Override
     public boolean matches(ClassTree classTree, VisitorState state) {
+      /*
       return Matchers.constructor(true, methodHasParameters(true,
           hasAnnotation(ASSISTED_ANNOTATION_STRING, VariableTree.class)))
           .matches(classTree, state);
+      */
+      List<MethodTree> nonInjectConstructors = new ArrayList<MethodTree>();
+      final Matcher<MethodTree> constructorMatcher = methodHasParameters(true,
+          hasAnnotation(ASSISTED_ANNOTATION_STRING, VariableTree.class));
+
+      // Iterate over members of class (methods and fields).
+      for (Tree member : classTree.getMembers()) {
+        // If this member is a constructor...
+        if (member instanceof MethodTree && ASTHelpers.getSymbol(member).isConstructor()) {
+          // If this constructor is annotated with @Inject...
+          if (hasAnnotation(INJECT_ANNOTATION_STRING).matches(member, state)) {
+            return constructorMatcher.matches((MethodTree) member, state);
+          } else {
+            nonInjectConstructors.add((MethodTree) member);
+          }
+        }
+      }
+
+      for (MethodTree constructor : nonInjectConstructors) {
+        if (constructorMatcher.matches(constructor, state)) {
+          return true;
+        }
+      }
+      return false;
     }
   };
 

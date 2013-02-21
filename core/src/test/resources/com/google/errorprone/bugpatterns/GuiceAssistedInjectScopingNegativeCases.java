@@ -46,5 +46,33 @@ public class GuiceAssistedInjectScopingNegativeCases {
     public TestClass4(String unassistedParam, @Assisted String assistedParam) {
     }
   }
+  
+  @Singleton
+  public class TestClass5 {
+    public TestClass5(String unassistedParam, String unassistedParam2) {
+    }
+    
+    public TestClass5(String unassistedParam, int i) {
+    }
+    
+    public TestClass5(int i, String unassistedParam) {
+    }
+  }
+    
+  /**
+   * Multiple constructors, one with @Inject, non-@Inject ones match.
+   */
+  @Singleton
+  public class TestClass6 {
+    @Inject
+    public TestClass6(String unassistedParam, String unassistedParam2) {
+    }
+    
+    public TestClass6(@Assisted String assistedParam, int i) {
+    }
+    
+    public TestClass6(int i, @Assisted String assistedParam) {
+    }
+  }
 
 }
