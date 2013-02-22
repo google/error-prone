@@ -19,7 +19,9 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.ONE_OFF;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.NOT_A_PROBLEM;
+import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.annotations;
+import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.methodHasParameters;
 
@@ -30,16 +32,11 @@ import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
-import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
@@ -68,42 +65,26 @@ public class GuiceAssistedInjectScoping extends DescribingMatcher<ClassTree> {
   };
 
   /**
-   * Assume there is <= 1 @Inject constructor.  If there are no @Inject constructors, then any
-   * constructor may match.  If there is 1 @Inject constructor, then the @Inject constructor
-   * must match.
+   * Assume there is <= 1 @Inject constructor.  If there is an @Inject constructor, then the
+   * @Inject constructor must match.  Otherwise, any constructor may match.
    */
   private Matcher<ClassTree> constructorHasAssistedParams = new Matcher<ClassTree>() {
     @SuppressWarnings("unchecked")
     @Override
     public boolean matches(ClassTree classTree, VisitorState state) {
-      /*
-      return Matchers.constructor(true, methodHasParameters(true,
+      // TODO(eaftan): We're repeating a lot of work here.  Perhaps the Matcher interface should
+      // give access to the tree node that matched?
+      if (constructor(true, hasAnnotation(INJECT_ANNOTATION_STRING, MethodTree.class))
+          .matches(classTree, state)) {
+        return constructor(true, allOf(
+            hasAnnotation(INJECT_ANNOTATION_STRING, MethodTree.class),
+            methodHasParameters(true, hasAnnotation(ASSISTED_ANNOTATION_STRING, VariableTree.class))))
+            .matches(classTree, state);
+      }
+
+      return constructor(true, methodHasParameters(true,
           hasAnnotation(ASSISTED_ANNOTATION_STRING, VariableTree.class)))
           .matches(classTree, state);
-      */
-      List<MethodTree> nonInjectConstructors = new ArrayList<MethodTree>();
-      final Matcher<MethodTree> constructorMatcher = methodHasParameters(true,
-          hasAnnotation(ASSISTED_ANNOTATION_STRING, VariableTree.class));
-
-      // Iterate over members of class (methods and fields).
-      for (Tree member : classTree.getMembers()) {
-        // If this member is a constructor...
-        if (member instanceof MethodTree && ASTHelpers.getSymbol(member).isConstructor()) {
-          // If this constructor is annotated with @Inject...
-          if (hasAnnotation(INJECT_ANNOTATION_STRING).matches(member, state)) {
-            return constructorMatcher.matches((MethodTree) member, state);
-          } else {
-            nonInjectConstructors.add((MethodTree) member);
-          }
-        }
-      }
-
-      for (MethodTree constructor : nonInjectConstructors) {
-        if (constructorMatcher.matches(constructor, state)) {
-          return true;
-        }
-      }
-      return false;
     }
   };
 
