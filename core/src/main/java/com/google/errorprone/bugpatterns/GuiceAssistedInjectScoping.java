@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.Matchers.annotations;
 import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.methodHasParameters;
+import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -59,7 +60,7 @@ public class GuiceAssistedInjectScoping extends DescribingMatcher<ClassTree> {
     @SuppressWarnings("unchecked")
     @Override
     public boolean matches(ClassTree classTree, VisitorState state) {
-      return annotations(true, hasAnnotation(SCOPE_ANNOTATION_STRING, AnnotationTree.class))
+      return annotations(ANY, hasAnnotation(SCOPE_ANNOTATION_STRING, AnnotationTree.class))
           .matches(classTree, state);
     }
   };
@@ -74,15 +75,15 @@ public class GuiceAssistedInjectScoping extends DescribingMatcher<ClassTree> {
     public boolean matches(ClassTree classTree, VisitorState state) {
       // TODO(eaftan): We're repeating a lot of work here.  Perhaps the Matcher interface should
       // give access to the tree node that matched?
-      if (constructor(true, hasAnnotation(INJECT_ANNOTATION_STRING, MethodTree.class))
+      if (constructor(ANY, hasAnnotation(INJECT_ANNOTATION_STRING, MethodTree.class))
           .matches(classTree, state)) {
-        return constructor(true, allOf(
+        return constructor(ANY, allOf(
             hasAnnotation(INJECT_ANNOTATION_STRING, MethodTree.class),
             methodHasParameters(true, hasAnnotation(ASSISTED_ANNOTATION_STRING, VariableTree.class))))
             .matches(classTree, state);
       }
 
-      return constructor(true, methodHasParameters(true,
+      return constructor(ANY, methodHasParameters(true,
           hasAnnotation(ASSISTED_ANNOTATION_STRING, VariableTree.class)))
           .matches(classTree, state);
     }

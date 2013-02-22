@@ -17,6 +17,8 @@
 package com.google.errorprone.matchers;
 
 import static com.google.errorprone.matchers.Matchers.methodHasVisibility;
+import static com.google.errorprone.matchers.MultiMatcher.MatchType.ALL;
+import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
 import static org.junit.Assert.assertTrue;
 
 import com.google.errorprone.Scanner;
@@ -35,6 +37,8 @@ import java.util.List;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
+ *
+ * TODO(eaftan): Add test for correct matching of nodes.
  */
 public class ConstructorOfClassTest extends CompilerBasedTest {
 
@@ -59,9 +63,9 @@ public class ConstructorOfClassTest extends CompilerBasedTest {
         "public class A {",
         "  private A() {}",
         "}");
-    assertCompiles(classMatches(true, new ConstructorOfClass(true,
+    assertCompiles(classMatches(true, new ConstructorOfClass(ANY,
         methodHasVisibility(Visibility.PRIVATE))));
-    assertCompiles(classMatches(true, new ConstructorOfClass(false,
+    assertCompiles(classMatches(true, new ConstructorOfClass(ALL,
         methodHasVisibility(Visibility.PRIVATE))));
   }
 
@@ -71,9 +75,9 @@ public class ConstructorOfClassTest extends CompilerBasedTest {
         "package com.google;",
         "public class A {",
         "}");
-    assertCompiles(classMatches(false, new ConstructorOfClass(true,
+    assertCompiles(classMatches(false, new ConstructorOfClass(ANY,
         methodHasVisibility(Visibility.PRIVATE))));
-    assertCompiles(classMatches(false, new ConstructorOfClass(false,
+    assertCompiles(classMatches(false, new ConstructorOfClass(ALL,
         methodHasVisibility(Visibility.PRIVATE))));
   }
 
@@ -84,9 +88,9 @@ public class ConstructorOfClassTest extends CompilerBasedTest {
         "public class A {",
         "  public A() {}",
         "}");
-    assertCompiles(classMatches(false, new ConstructorOfClass(true,
+    assertCompiles(classMatches(false, new ConstructorOfClass(ANY,
         methodHasVisibility(Visibility.PRIVATE))));
-    assertCompiles(classMatches(false, new ConstructorOfClass(false,
+    assertCompiles(classMatches(false, new ConstructorOfClass(ALL,
         methodHasVisibility(Visibility.PRIVATE))));
   }
 
@@ -98,9 +102,9 @@ public class ConstructorOfClassTest extends CompilerBasedTest {
         "  private A() {}",
         "  public A(int i) {}",
         "}");
-    assertCompiles(classMatches(true, new ConstructorOfClass(true,
+    assertCompiles(classMatches(true, new ConstructorOfClass(ANY,
         methodHasVisibility(Visibility.PRIVATE))));
-    assertCompiles(classMatches(false, new ConstructorOfClass(false,
+    assertCompiles(classMatches(false, new ConstructorOfClass(ALL,
         methodHasVisibility(Visibility.PRIVATE))));
   }
 

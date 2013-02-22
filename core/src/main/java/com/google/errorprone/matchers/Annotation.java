@@ -16,6 +16,9 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.errorprone.matchers.MultiMatcher.MatchType.ALL;
+import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
+
 import com.google.errorprone.VisitorState;
 
 import com.sun.source.tree.AnnotationTree;
@@ -33,14 +36,10 @@ import java.util.List;
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class Annotation<T extends Tree> implements Matcher<T> {
+public class Annotation<T extends Tree> extends MultiMatcher<T, AnnotationTree> {
 
-  private final boolean anyOf;
-  private final Matcher<AnnotationTree> annotationMatcher;
-
-  public Annotation(boolean anyOf, Matcher<AnnotationTree> annotationMatcher) {
-    this.annotationMatcher = annotationMatcher;
-    this.anyOf = anyOf;
+  public Annotation(MatchType matchType, Matcher<AnnotationTree> nodeMatcher) {
+    super(matchType, nodeMatcher);
   }
 
   @Override
@@ -66,15 +65,16 @@ public class Annotation<T extends Tree> implements Matcher<T> {
     }
 
     for (AnnotationTree annotation : annotations) {
-      boolean matches = annotationMatcher.matches(annotation, state);
-      if (anyOf && matches) {
+      boolean matches = nodeMatcher.matches(annotation, state);
+      if (matchType == ANY && matches) {
+        matchingNode = annotation;
         return true;
       }
-      if (!anyOf && !matches) {
+      if (matchType == ALL && !matches) {
         return false;
       }
     }
-    if (anyOf) {
+    if (matchType == ANY) {
       return false;
     } else {
       // In allOf case, return true only if there was at least one annotation.

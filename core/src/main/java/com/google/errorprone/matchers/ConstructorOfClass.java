@@ -16,6 +16,9 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.errorprone.matchers.MultiMatcher.MatchType.ALL;
+import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
+
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
 
@@ -28,14 +31,10 @@ import com.sun.source.tree.Tree;
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class ConstructorOfClass implements Matcher<ClassTree> {
+public class ConstructorOfClass extends MultiMatcher<ClassTree, MethodTree> {
 
-  private final boolean anyOf;
-  private final Matcher<MethodTree> constructorMatcher;
-
-  public ConstructorOfClass(boolean anyOf, Matcher<MethodTree> constructorMatcher) {
-    this.anyOf = anyOf;
-    this.constructorMatcher = constructorMatcher;
+  public ConstructorOfClass(MatchType matchType, Matcher<MethodTree> nodeMatcher) {
+    super(matchType, nodeMatcher);
   }
 
   @Override
@@ -46,16 +45,17 @@ public class ConstructorOfClass implements Matcher<ClassTree> {
       // If this member is a constructor...
       if (member instanceof MethodTree && ASTHelpers.getSymbol(member).isConstructor()) {
         constructorCount++;
-        boolean matches = constructorMatcher.matches((MethodTree) member, state);
-        if (anyOf && matches) {
+        boolean matches = nodeMatcher.matches((MethodTree) member, state);
+        if (matchType == ANY && matches) {
+          matchingNode = (MethodTree) member;
           return true;
         }
-        if (!anyOf && !matches) {
+        if (matchType == ALL && !matches) {
           return false;
         }
       }
     }
-    if (anyOf) {
+    if (matchType == ANY) {
       return false;
     } else {
       // In allOf case, return true only if there was at least one constructor.

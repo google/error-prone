@@ -18,6 +18,7 @@ package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.MethodVisibility.Visibility;
+import com.google.errorprone.matchers.MultiMatcher.MatchType;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 
@@ -219,13 +220,13 @@ public class Matchers {
    * Matches if the given annotation matcher matches all of or any of the annotations on this tree
    * node.
    *
-   * @param anyOf Whether to match if the matchers match any of or all of the annotations on this
-   * tree.
+   * @param matchType Whether to match if the matchers match any of or all of the annotations on
+   * this tree.
    * @param annotationMatcher The annotation matcher to use.
    */
-  public static <T extends Tree> Matcher<T> annotations(boolean anyOf,
+  public static <T extends Tree> Matcher<T> annotations(MatchType matchType,
       Matcher<AnnotationTree> annotationMatcher) {
-    return new Annotation<T>(anyOf, annotationMatcher);
+    return new Annotation<T>(matchType, annotationMatcher);
   }
 
   public static Constructor constructor(String className, List<String> parameterTypes) {
@@ -235,8 +236,9 @@ public class Matchers {
   /**
    * Applies the given matcher to the constructor(s) of the class.
    */
-  public static Matcher<ClassTree> constructor(boolean anyOf, Matcher<MethodTree> constructorMatcher) {
-    return new ConstructorOfClass(anyOf, constructorMatcher);
+  public static Matcher<ClassTree> constructor(MatchType matchType,
+      Matcher<MethodTree> constructorMatcher) {
+    return new ConstructorOfClass(matchType, constructorMatcher);
   }
 
   public static Matcher<MethodInvocationTree> methodSelect(Matcher<ExpressionTree> methodSelectMatcher) {
