@@ -16,6 +16,9 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.errorprone.matchers.MultiMatcher.MatchType.ALL;
+import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
+
 import com.google.errorprone.VisitorState;
 
 import com.sun.source.tree.MethodTree;
@@ -26,29 +29,26 @@ import com.sun.source.tree.VariableTree;
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class MethodHasParameters implements Matcher<MethodTree> {
+public class MethodHasParameters extends MultiMatcher<MethodTree, VariableTree> {
 
-  private final boolean anyOf;
-  private final Matcher<VariableTree> parameterMatcher;
-
-  public MethodHasParameters(boolean anyOf, Matcher<VariableTree> parameterMatcher) {
-    this.anyOf = anyOf;
-    this.parameterMatcher = parameterMatcher;
+  public MethodHasParameters(MatchType matchType, Matcher<VariableTree> nodeMatcher) {
+    super(matchType, nodeMatcher);
   }
 
   @Override
   public boolean matches(MethodTree methodTree, VisitorState state) {
     // Iterate over members of class (methods and fields).
     for (VariableTree member : methodTree.getParameters()) {
-      boolean matches = parameterMatcher.matches(member, state);
-      if (anyOf && matches) {
+      boolean matches = nodeMatcher.matches(member, state);
+      if (matchType == ANY && matches) {
+        matchingNode = member;
         return true;
       }
-      if (!anyOf && !matches) {
+      if (matchType == ALL && !matches) {
         return false;
       }
     }
-    if (anyOf) {
+    if (matchType == ANY) {
       return false;
     } else {
       // In allOf case, return true only if there was at least one parameter.

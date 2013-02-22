@@ -18,6 +18,8 @@ package com.google.errorprone.matchers;
 
 import static com.google.errorprone.matchers.Matchers.isPrimitiveType;
 import static com.google.errorprone.matchers.Matchers.variableType;
+import static com.google.errorprone.matchers.MultiMatcher.MatchType.ALL;
+import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
 import static org.junit.Assert.assertTrue;
 
 import com.google.errorprone.Scanner;
@@ -67,9 +69,9 @@ public class MethodHasParametersTest extends CompilerBasedTest {
         "public class A {",
         "  public void A(int i) {}",
         "}");
-    assertCompiles(methodMatches(true, new MethodHasParameters(true, variableType(
+    assertCompiles(methodMatches(true, new MethodHasParameters(ANY, variableType(
         isPrimitiveType()))));
-    assertCompiles(methodMatches(true, new MethodHasParameters(false, variableType(
+    assertCompiles(methodMatches(true, new MethodHasParameters(ALL, variableType(
         isPrimitiveType()))));
   }
 
@@ -80,9 +82,9 @@ public class MethodHasParametersTest extends CompilerBasedTest {
         "public class A {",
         "  public void A() {}",
         "}");
-    assertCompiles(methodMatches(false, new MethodHasParameters(true, variableType(
+    assertCompiles(methodMatches(false, new MethodHasParameters(ANY, variableType(
         isPrimitiveType()))));
-    assertCompiles(methodMatches(false, new MethodHasParameters(false, variableType(
+    assertCompiles(methodMatches(false, new MethodHasParameters(ALL, variableType(
         isPrimitiveType()))));
   }
 
@@ -93,9 +95,9 @@ public class MethodHasParametersTest extends CompilerBasedTest {
         "public class A {",
         "  public void A(Object obj) {}",
         "}");
-    assertCompiles(methodMatches(false, new MethodHasParameters(true, variableType(
+    assertCompiles(methodMatches(false, new MethodHasParameters(ANY, variableType(
         isPrimitiveType()))));
-    assertCompiles(methodMatches(false, new MethodHasParameters(false, variableType(
+    assertCompiles(methodMatches(false, new MethodHasParameters(ALL, variableType(
         isPrimitiveType()))));
   }
 
@@ -107,9 +109,9 @@ public class MethodHasParametersTest extends CompilerBasedTest {
         "  private A() {}",
         "  public void A(int i, Object obj) {}",
         "}");
-    assertCompiles(methodMatches(true, new MethodHasParameters(true, variableType(
+    assertCompiles(methodMatches(true, new MethodHasParameters(ANY, variableType(
         isPrimitiveType()))));
-    assertCompiles(methodMatches(false, new MethodHasParameters(false, variableType(
+    assertCompiles(methodMatches(false, new MethodHasParameters(ALL, variableType(
         isPrimitiveType()))));
   }
 

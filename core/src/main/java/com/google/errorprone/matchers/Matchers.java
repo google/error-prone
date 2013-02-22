@@ -224,7 +224,7 @@ public class Matchers {
    * this tree.
    * @param annotationMatcher The annotation matcher to use.
    */
-  public static <T extends Tree> Matcher<T> annotations(MatchType matchType,
+  public static <T extends Tree> MultiMatcher<T, AnnotationTree> annotations(MatchType matchType,
       Matcher<AnnotationTree> annotationMatcher) {
     return new Annotation<T>(matchType, annotationMatcher);
   }
@@ -236,7 +236,7 @@ public class Matchers {
   /**
    * Applies the given matcher to the constructor(s) of the class.
    */
-  public static Matcher<ClassTree> constructor(MatchType matchType,
+  public static MultiMatcher<ClassTree, MethodTree> constructor(MatchType matchType,
       Matcher<MethodTree> constructorMatcher) {
     return new ConstructorOfClass(matchType, constructorMatcher);
   }
@@ -474,9 +474,9 @@ public class Matchers {
   /**
    * Matches if the given matcher matches all of/any of the parameters to this method.
    */
-  public static Matcher<MethodTree> methodHasParameters(boolean anyOf,
+  public static MultiMatcher<MethodTree, VariableTree> methodHasParameters(MatchType matchType,
       Matcher<VariableTree> parameterMatcher) {
-    return new MethodHasParameters(anyOf, parameterMatcher);
+    return new MethodHasParameters(matchType, parameterMatcher);
   }
 
   public static Matcher<MethodTree> methodHasVisibility(final Visibility visibility) {
