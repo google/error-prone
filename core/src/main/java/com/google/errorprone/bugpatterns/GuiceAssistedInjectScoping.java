@@ -16,9 +16,9 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.ONE_OFF;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
-import static com.google.errorprone.BugPattern.SeverityLevel.NOT_A_PROBLEM;
+import static com.google.errorprone.BugPattern.Category.GUICE;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.annotations;
 import static com.google.errorprone.matchers.Matchers.constructor;
@@ -47,7 +47,7 @@ import com.sun.source.tree.VariableTree;
         "If a class is annotated with an annotation that itself is annotated with " +
         "@ScopeAnnotation, and any of the parameters of its constructor are annotated with " +
         "@Assisted, remove the annotation on the class.",
-    category = ONE_OFF, severity = NOT_A_PROBLEM, maturity = EXPERIMENTAL)
+    category = GUICE, severity = ERROR, maturity = MATURE)
 public class GuiceAssistedInjectScoping extends DescribingMatcher<ClassTree> {
 
   private static final String SCOPE_ANNOTATION_STRING = "com.google.inject.ScopeAnnotation";
