@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.GUICE;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.annotations;
 import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
@@ -33,6 +32,7 @@ import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
+import com.google.errorprone.matchers.MultiMatcher;
 
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
@@ -56,35 +56,33 @@ public class GuiceAssistedInjectScoping extends DescribingMatcher<ClassTree> {
       "com.google.inject.assistedinject.Assisted";
   private static final String INJECT_ANNOTATION_STRING = "com.google.inject.Inject";
 
-  private Matcher<ClassTree> classAnnotationMatcher = new Matcher<ClassTree>() {
-    @SuppressWarnings("unchecked")
-    @Override
-    public boolean matches(ClassTree classTree, VisitorState state) {
-      return annotations(ANY, hasAnnotation(SCOPE_ANNOTATION_STRING, AnnotationTree.class))
-          .matches(classTree, state);
-    }
-  };
+  /**
+   * Matches classes that have an annotation that itself is annotated with @ScopeAnnotation.
+   */
+  private MultiMatcher<ClassTree, AnnotationTree> classAnnotationMatcher =
+     annotations(ANY, hasAnnotation(SCOPE_ANNOTATION_STRING, AnnotationTree.class));
 
   /**
-   * Assume there is <= 1 @Inject constructor.  If there is an @Inject constructor, then the
-   * @Inject constructor must match.  Otherwise, any constructor may match.
+   * Matches a class that has a constructor with at least one parameter that has been annotated
+   * with @AssistedInject.  Assumes there is <= 1 @Inject constructor.  If there is an @Inject
+   * constructor, then the @Inject constructor must have the parameter.  Otherwise, any constructor
+   * may have the parameter.
    */
   private Matcher<ClassTree> constructorHasAssistedParams = new Matcher<ClassTree>() {
     @SuppressWarnings("unchecked")
     @Override
     public boolean matches(ClassTree classTree, VisitorState state) {
-      // TODO(eaftan): We're repeating a lot of work here.  Perhaps the Matcher interface should
-      // give access to the tree node that matched?
-      if (constructor(ANY, hasAnnotation(INJECT_ANNOTATION_STRING, MethodTree.class))
-          .matches(classTree, state)) {
-        return constructor(ANY, allOf(
-            hasAnnotation(INJECT_ANNOTATION_STRING, MethodTree.class),
-            methodHasParameters(true, hasAnnotation(ASSISTED_ANNOTATION_STRING, VariableTree.class))))
-            .matches(classTree, state);
+      MultiMatcher<MethodTree, VariableTree> paramWithAssistedInjectMatcher =
+          methodHasParameters(ANY, hasAnnotation(ASSISTED_ANNOTATION_STRING, VariableTree.class));
+      MultiMatcher<ClassTree, MethodTree> constructorWithInjectMatcher =
+          constructor(ANY, hasAnnotation(INJECT_ANNOTATION_STRING, MethodTree.class));
+      if (constructorWithInjectMatcher.matches(classTree, state)) {
+        // Check constructor with @Inject annotation for parameter with @AssistedInject annotation.
+        return paramWithAssistedInjectMatcher.matches(
+            constructorWithInjectMatcher.getMatchingNode(), state);
       }
 
-      return constructor(ANY, methodHasParameters(true,
-          hasAnnotation(ASSISTED_ANNOTATION_STRING, VariableTree.class)))
+      return constructor(ANY, paramWithAssistedInjectMatcher)
           .matches(classTree, state);
     }
   };
@@ -98,20 +96,16 @@ public class GuiceAssistedInjectScoping extends DescribingMatcher<ClassTree> {
 
   @Override
   public Description describe(ClassTree classTree, VisitorState state) {
-    // TODO(eaftan): This recreates logic in the annotation matcher in matches() above.
-    // We need a better way to do this.  Perhaps the matcher should keep track of the node that
-    // matched/didn't match.
-    for (AnnotationTree annotationTree : classTree.getModifiers().getAnnotations()) {
-      if (Matchers.hasAnnotation(SCOPE_ANNOTATION_STRING).matches(annotationTree, state)) {
-        return new Description(
-            annotationTree,
-            diagnosticMessage,
-            new SuggestedFix().delete(annotationTree));
-      }
+    AnnotationTree annotationWithScopeAnnotation = classAnnotationMatcher.getMatchingNode();
+    if (annotationWithScopeAnnotation == null) {
+      throw new IllegalStateException("Expected to find an annotation that was annotated " +
+          "with @ScopeAnnotation");
     }
 
-    throw new IllegalStateException("Expected to find an annotation that was annotated " +
-        "with @ScopeAnnotation");
+    return new Description(
+        annotationWithScopeAnnotation,
+        diagnosticMessage,
+        new SuggestedFix().delete(annotationWithScopeAnnotation));
   }
 
 
