@@ -52,11 +52,10 @@ import com.sun.source.tree.VariableTree;
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 @BugPattern(name = "GuiceAssistedInjectScoping",
-    summary = "Refactor uses of the Guice @ScopeAnnotation",
+    summary = "Scope annotation on implementation class of AssistedInject factory is not allowed",
     explanation =
-        "If a class is annotated with an annotation that itself is annotated with " +
-        "@ScopeAnnotation, and any of the parameters of its constructor are annotated with " +
-        "@Assisted, remove the annotation on the class.",
+        "Classes that implement AssistedInject factories may not be annotated with scope " +
+        "annotations, such as @Singleton.  This will cause a Guice error at runtime.",
     category = GUICE, severity = ERROR, maturity = MATURE)
 public class GuiceAssistedInjectScoping extends DescribingMatcher<ClassTree> {
 
