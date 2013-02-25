@@ -18,44 +18,81 @@ package com.google.errorprone.bugpatterns;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 import com.google.inject.servlet.RequestScoped;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
+ * 
+ * TODO(eaftan): rename params
  */
 public class GuiceAssistedInjectScopingNegativeCases {
   
-  public class TestClass {
-    public TestClass(String unassistedParam1, String unassistedParam2) {
+  /**
+   * Class is not assisted and has no scoping annotation. 
+   */
+  public class TestClass1 {
+    public TestClass1(String unassistedParam1, String unassistedParam2) {
     }
   }
   
-  @Singleton
-  public class TestClass2 {
-    public TestClass2(String unassistedParam1, String unassistedParam2) {
-    }
-  }
-    
-  public class TestClass3 {
-    public TestClass3(@Assisted String assistedParam) {
-    }
-  }
-
+  /**
+   * Class is not assisted and has no scoping annotation, but has an unrelated annotation.
+   */
   @SuppressWarnings("foo")
-  public class TestClass4 {
-    public TestClass4(String unassistedParam, @Assisted String assistedParam) {
+  public class TestClass2 {
+    public TestClass2(String unassistedParam, @Assisted String assistedParam) {
     }
   }
   
+  /**
+   * Class is not assisted but has scoping annotation.
+   */
   @Singleton
+  public class TestClass3 {
+    public TestClass3(String unassistedParam1, String unassistedParam2) {
+    }
+  }
+    
+  /**
+   * Class is assisted via @Assisted param but has no scoping annotation.
+   */
+  public class TestClass4 {
+    @Inject
+    public TestClass4(@Assisted String assistedParam) {
+    }
+  }
+  
+  /**
+   * Class is assisted via @AssistedInject constructor but has no scoping annotation.
+   */
   public class TestClass5 {
-    public TestClass5(String unassistedParam, String unassistedParam2) {
+    @AssistedInject
+    public TestClass5(String assistedParam) {
+    }
+  }
+  
+  /**
+   * Class is not assisted -- constructor with @Assisted param does not have @Inject.
+   */
+  @Singleton
+  public class TestClass6 {
+    public TestClass6(@Assisted String assistedParam) {
+    }
+  }
+  
+  /**
+   * Multiple constructors but not assisted.
+   */
+  @Singleton
+  public class TestClass7 {
+    public TestClass7(String unassistedParam, String unassistedParam2) {
     }
     
-    public TestClass5(String unassistedParam, int i) {
+    public TestClass7(String unassistedParam, int i) {
     }
     
-    public TestClass5(int i, String unassistedParam) {
+    public TestClass7(int i, String unassistedParam) {
     }
   }
     
@@ -63,15 +100,47 @@ public class GuiceAssistedInjectScopingNegativeCases {
    * Multiple constructors, one with @Inject, non-@Inject ones match.
    */
   @Singleton
-  public class TestClass6 {
+  public class TestClass8 {
     @Inject
-    public TestClass6(String unassistedParam, String unassistedParam2) {
+    public TestClass8(String unassistedParam, String unassistedParam2) {
     }
     
-    public TestClass6(@Assisted String assistedParam, int i) {
+    @AssistedInject
+    public TestClass8(String param, int i) {
     }
     
-    public TestClass6(int i, @Assisted String assistedParam) {
+    @AssistedInject
+    public TestClass8(int i, String param) {
+    }
+  }
+  
+  /**
+   * Multiple constructors, one with @Inject, non-@Inject ones match.
+   */
+  @Singleton
+  public class TestClass9 {
+    @Inject
+    public TestClass9(String unassistedParam, String unassistedParam2) {
+    }
+    
+    @AssistedInject
+    public TestClass9(String param, int i) {
+    }
+    
+    @AssistedInject
+    public TestClass9(int i, String param) {
+    }
+  }
+  
+  @Singleton
+  public class TestClass10 {
+    public TestClass10(@Assisted String assisted, String unassisted) {
+    }
+    
+    public TestClass10(@Assisted String assisted, int i) {
+    }
+    
+    public TestClass10(int i, @Assisted String assisted) {
     }
   }
 

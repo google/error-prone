@@ -17,35 +17,41 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.servlet.RequestScoped;
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
+import com.google.inject.servlet.RequestScoped;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
+ * 
+ * TODO(eaftan): rename params
  */
 public class GuiceAssistedInjectScopingPositiveCases {
 
   //BUG: Suggestion includes "remove this line"
   @Singleton
   public class TestClass {
-    public TestClass(@Assisted String assistedParam) {
+    @Inject
+    public TestClass(String unassisted, @Assisted String assisted) {
     }
   }
   
   //BUG: Suggestion includes "remove this line"
   @RequestScoped
   public class TestClass2 {
-    public TestClass2(@Assisted String assistedParam) {
+    @Inject
+    public TestClass2(String unassisted, @Assisted String assisted) {
     }
   }
   
   //BUG: Suggestion includes "remove this line"
   @Singleton
   public class TestClass3 {
-    public TestClass3(String unassistedParam, @Assisted String assistedParam) {
+    @AssistedInject
+    public TestClass3(String param) {
     }
   }
-  
+    
   /**
    * Multiple constructors, but only one with @Inject, and that one matches.
    */
@@ -75,7 +81,8 @@ public class GuiceAssistedInjectScopingPositiveCases {
     public TestClass5(String unassistedParam, int i) {
     }
     
-    public TestClass5(int i, @Assisted String assistedParam) {
+    @AssistedInject
+    public TestClass5(int i, String assistedParam) {
     }
     
   }

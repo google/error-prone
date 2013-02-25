@@ -40,6 +40,15 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
 
 /**
+ * This checker matches iff *both* of the following conditions are true:
+ * 1) The class is assisted:
+ *   a) If there is a constructor that is annotated with @Inject and that constructor has at least
+ *      one parameter that is annotated with @Assisted.
+ *   b) If there is no @Inject constructor and at least one constructor is annotated with
+ *      @AssistedInject.
+ * 2) There is an annotation on the class, and the annotation is itself annotated with
+ *    @ScopeAnnotation.
+ *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 @BugPattern(name = "GuiceAssistedInjectScoping",
@@ -55,6 +64,8 @@ public class GuiceAssistedInjectScoping extends DescribingMatcher<ClassTree> {
   private static final String ASSISTED_ANNOTATION_STRING =
       "com.google.inject.assistedinject.Assisted";
   private static final String INJECT_ANNOTATION_STRING = "com.google.inject.Inject";
+  private static final String ASSISTED_INJECT_ANNOTATION_STRING =
+      "com.google.inject.assistedinject.AssistedInject";
 
   /**
    * Matches classes that have an annotation that itself is annotated with @ScopeAnnotation.
@@ -63,26 +74,27 @@ public class GuiceAssistedInjectScoping extends DescribingMatcher<ClassTree> {
      annotations(ANY, hasAnnotation(SCOPE_ANNOTATION_STRING, AnnotationTree.class));
 
   /**
-   * Matches a class that has a constructor with at least one parameter that has been annotated
-   * with @AssistedInject.  Assumes there is <= 1 @Inject constructor.  If there is an @Inject
-   * constructor, then the @Inject constructor must have the parameter.  Otherwise, any constructor
-   * may have the parameter.
+   * Matches if:
+   * 1) If there is a constructor that is annotated with @Inject and that constructor has at least
+   *    one parameter that is annotated with @Assisted.
+   * 2) If there is no @Inject constructor and at least one constructor is annotated with
+   *    @AssistedInject.
    */
-  private Matcher<ClassTree> constructorHasAssistedParams = new Matcher<ClassTree>() {
+  private Matcher<ClassTree> assistedMatcher = new Matcher<ClassTree>() {
     @SuppressWarnings("unchecked")
     @Override
     public boolean matches(ClassTree classTree, VisitorState state) {
-      MultiMatcher<MethodTree, VariableTree> paramWithAssistedInjectMatcher =
-          methodHasParameters(ANY, hasAnnotation(ASSISTED_ANNOTATION_STRING, VariableTree.class));
       MultiMatcher<ClassTree, MethodTree> constructorWithInjectMatcher =
           constructor(ANY, hasAnnotation(INJECT_ANNOTATION_STRING, MethodTree.class));
+
       if (constructorWithInjectMatcher.matches(classTree, state)) {
-        // Check constructor with @Inject annotation for parameter with @AssistedInject annotation.
-        return paramWithAssistedInjectMatcher.matches(
-            constructorWithInjectMatcher.getMatchingNode(), state);
+        // Check constructor with @Inject annotation for parameter with @Assisted annotation.
+        return methodHasParameters(ANY,
+            hasAnnotation(ASSISTED_ANNOTATION_STRING, VariableTree.class))
+            .matches(constructorWithInjectMatcher.getMatchingNode(), state);
       }
 
-      return constructor(ANY, paramWithAssistedInjectMatcher)
+      return constructor(ANY, hasAnnotation(ASSISTED_INJECT_ANNOTATION_STRING, MethodTree.class))
           .matches(classTree, state);
     }
   };
@@ -90,7 +102,7 @@ public class GuiceAssistedInjectScoping extends DescribingMatcher<ClassTree> {
   @Override
   @SuppressWarnings("unchecked")
   public final boolean matches(ClassTree classTree, VisitorState state) {
-    return Matchers.allOf(classAnnotationMatcher, constructorHasAssistedParams)
+    return Matchers.allOf(classAnnotationMatcher, assistedMatcher)
         .matches(classTree, state);
   }
 
