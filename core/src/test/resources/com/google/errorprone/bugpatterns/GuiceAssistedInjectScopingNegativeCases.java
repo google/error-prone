@@ -23,8 +23,6 @@ import com.google.inject.servlet.RequestScoped;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
- * 
- * TODO(eaftan): rename params
  */
 public class GuiceAssistedInjectScopingNegativeCases {
   
@@ -32,7 +30,7 @@ public class GuiceAssistedInjectScopingNegativeCases {
    * Class is not assisted and has no scoping annotation. 
    */
   public class TestClass1 {
-    public TestClass1(String unassistedParam1, String unassistedParam2) {
+    public TestClass1(String unassisted1, String unassisted2) {
     }
   }
   
@@ -41,7 +39,7 @@ public class GuiceAssistedInjectScopingNegativeCases {
    */
   @SuppressWarnings("foo")
   public class TestClass2 {
-    public TestClass2(String unassistedParam, @Assisted String assistedParam) {
+    public TestClass2(String unassisted, @Assisted String assisted) {
     }
   }
   
@@ -50,7 +48,7 @@ public class GuiceAssistedInjectScopingNegativeCases {
    */
   @Singleton
   public class TestClass3 {
-    public TestClass3(String unassistedParam1, String unassistedParam2) {
+    public TestClass3(String unassisted1, String unassisted2) {
     }
   }
     
@@ -59,7 +57,7 @@ public class GuiceAssistedInjectScopingNegativeCases {
    */
   public class TestClass4 {
     @Inject
-    public TestClass4(@Assisted String assistedParam) {
+    public TestClass4(@Assisted String assisted) {
     }
   }
   
@@ -68,7 +66,7 @@ public class GuiceAssistedInjectScopingNegativeCases {
    */
   public class TestClass5 {
     @AssistedInject
-    public TestClass5(String assistedParam) {
+    public TestClass5(String unassisted) {
     }
   }
   
@@ -77,7 +75,7 @@ public class GuiceAssistedInjectScopingNegativeCases {
    */
   @Singleton
   public class TestClass6 {
-    public TestClass6(@Assisted String assistedParam) {
+    public TestClass6(@Assisted String assisted) {
     }
   }
   
@@ -86,13 +84,13 @@ public class GuiceAssistedInjectScopingNegativeCases {
    */
   @Singleton
   public class TestClass7 {
-    public TestClass7(String unassistedParam, String unassistedParam2) {
+    public TestClass7(String unassisted1, String unassisted2) {
     }
     
-    public TestClass7(String unassistedParam, int i) {
+    public TestClass7(String unassisted, int i) {
     }
     
-    public TestClass7(int i, String unassistedParam) {
+    public TestClass7(int i, String unassisted) {
     }
   }
     
@@ -102,7 +100,7 @@ public class GuiceAssistedInjectScopingNegativeCases {
   @Singleton
   public class TestClass8 {
     @Inject
-    public TestClass8(String unassistedParam, String unassistedParam2) {
+    public TestClass8(String unassisted1, String unassisted2) {
     }
     
     @AssistedInject
@@ -120,7 +118,7 @@ public class GuiceAssistedInjectScopingNegativeCases {
   @Singleton
   public class TestClass9 {
     @Inject
-    public TestClass9(String unassistedParam, String unassistedParam2) {
+    public TestClass9(String unassisted1, String unassisted2) {
     }
     
     @AssistedInject

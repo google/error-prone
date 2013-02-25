@@ -23,8 +23,6 @@ import com.google.inject.servlet.RequestScoped;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
- * 
- * TODO(eaftan): rename params
  */
 public class GuiceAssistedInjectScopingPositiveCases {
 
@@ -59,13 +57,13 @@ public class GuiceAssistedInjectScopingPositiveCases {
   @Singleton
   public class TestClass4 {
     @Inject
-    public TestClass4(String unassistedParam, @Assisted String assistedParam) {
+    public TestClass4(String unassisted, @Assisted String assisted) {
     }
     
-    public TestClass4(String unassistedParam, int i) {
+    public TestClass4(String unassisted, int i) {
     }
     
-    public TestClass4(int i, String assistedParam) {
+    public TestClass4(int i, String unassisted) {
     }
   }
     
@@ -75,14 +73,14 @@ public class GuiceAssistedInjectScopingPositiveCases {
   //BUG: Suggestion includes "remove this line"
   @Singleton
   public class TestClass5 {
-    public TestClass5(String unassistedParam, String unassistedParam2) {
+    public TestClass5(String unassisted1, String unassisted2) {
     }
     
-    public TestClass5(String unassistedParam, int i) {
+    public TestClass5(String unassisted, int i) {
     }
     
     @AssistedInject
-    public TestClass5(int i, String assistedParam) {
+    public TestClass5(int i, String unassisted) {
     }
     
   }
