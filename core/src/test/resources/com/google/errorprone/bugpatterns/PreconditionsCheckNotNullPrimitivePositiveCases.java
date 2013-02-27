@@ -113,6 +113,11 @@ public class PreconditionsCheckNotNullPrimitivePositiveCases {
     
     //BUG: Suggestion includes "boolean b = arg.hasId();"
     boolean b = checkNotNull(arg.hasId());
+    
+    // Do we handle long chains of method calls? 
+    
+    //BUG: Suggestion includes "checkArgument(arg.getTester().getTester().hasId())"
+    checkNotNull(arg.getTester().getTester().hasId());
   }
   
   private static class Tester {
@@ -122,6 +127,10 @@ public class PreconditionsCheckNotNullPrimitivePositiveCases {
     
     public int getId() {
       return 10;
+    }
+    
+    public Tester getTester() {
+      return null;
     }
   }
 }

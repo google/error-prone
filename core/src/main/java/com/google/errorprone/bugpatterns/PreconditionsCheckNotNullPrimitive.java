@@ -34,7 +34,6 @@ import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
@@ -172,16 +171,11 @@ public class PreconditionsCheckNotNullPrimitive
    * @return whether the argument is a parameter to the enclosing method
    */
   private static boolean isMethodParameter(TreePath path, MethodInvocationTree tree) {
-
-    // Extract the identifier from the method select.
-    ExpressionTree expr = tree.getMethodSelect();
-    while (expr.getKind() == Kind.MEMBER_SELECT) {
-      expr = ((MemberSelectTree) expr).getExpression();
+    ExpressionTree rootIdentifier = ASTHelpers.getRootIdentifier(tree);
+    if (rootIdentifier == null || rootIdentifier.getKind() != Kind.IDENTIFIER) {
+      throw new IllegalStateException("Could not find root identifier of expression " + tree);
     }
-    if (expr.getKind() != Kind.IDENTIFIER) {
-      throw new IllegalStateException("Expected an identifier");
-    }
-    Symbol sym = ASTHelpers.getSymbol(expr);
+    Symbol sym = ASTHelpers.getSymbol(rootIdentifier);
 
     if (sym.isLocal()) {
       // Check against parameters of enclosing method declaration.
