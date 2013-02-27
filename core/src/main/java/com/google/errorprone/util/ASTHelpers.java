@@ -17,6 +17,7 @@
 package com.google.errorprone.util;
 
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
@@ -100,7 +101,47 @@ public class ASTHelpers {
   }
 
   /**
-   * Find the "root" assignable identifier of a chain of field accesses.  If there is no root
+   * Find the root identifier of a chain of field accesses.  If there is no root identifier
+   * (i.e, a bare method call or a static method call), return null.
+   *
+   * Examples:
+   *    a.trim().intern() ==> a
+   *    a.b.trim().intern() ==> a
+   *    this.intValue.foo() ==> this.intValue
+   *    this.foo() ==> this
+   *    intern() ==> null
+   *    String.format() ==> null
+   *    java.lang.String.format() ==> null
+
+   */
+  public static IdentifierTree getRootIdentifier(MethodInvocationTree methodInvocationTree) {
+    if (!(methodInvocationTree instanceof JCMethodInvocation)) {
+      throw new IllegalArgumentException("Expected type to be JCMethodInvocation, but was "
+          + methodInvocationTree.getClass());
+    }
+
+    // Check for bare method call, e.g. intern().
+    if (((JCMethodInvocation) methodInvocationTree).getMethodSelect() instanceof JCIdent) {
+      return null;
+    }
+
+    // Unwrap the field accesses until you get to an identifier.
+    ExpressionTree expr = methodInvocationTree;
+    while (!(expr instanceof JCIdent)) {
+      if (expr instanceof JCMethodInvocation) {
+        expr = ((JCMethodInvocation) expr).getMethodSelect();
+      } else if (expr instanceof JCFieldAccess) {
+        expr = ((JCFieldAccess) expr).getExpression();
+      } else {
+        throw new IllegalStateException("Expected expression to be a method invocation or "
+            + "field access, but was " + expr.getKind());
+      }
+    }
+    return (IdentifierTree) expr;
+  }
+
+  /**
+   * Find the root assignable expression of a chain of field accesses.  If there is no root
    * (i.e, a bare method call or a static method call), return null.
    *
    * Examples:
@@ -112,9 +153,10 @@ public class ASTHelpers {
    *    String.format() ==> null
    *    java.lang.String.format() ==> null
    */
-  public static ExpressionTree getRootIdentifier(MethodInvocationTree methodInvocationTree) {
+  public static ExpressionTree getRootAssignable(MethodInvocationTree methodInvocationTree) {
     if (!(methodInvocationTree instanceof JCMethodInvocation)) {
-      throw new IllegalArgumentException("Expected type to be JCMethodInvocation");
+      throw new IllegalArgumentException("Expected type to be JCMethodInvocation, but was "
+          + methodInvocationTree.getClass());
     }
 
     // Check for bare method call, e.g. intern().
@@ -131,15 +173,8 @@ public class ASTHelpers {
       }
     }
 
-    // Find the symbol for the identifier.
-    Symbol sym = null;
-    if (expr instanceof JCIdent) {
-      sym = ((JCIdent) expr).sym;
-    } else if (expr instanceof JCFieldAccess) {
-      sym = ((JCFieldAccess) expr).sym;
-    }
-
     // We only want assignable identifiers.
+    Symbol sym = getSymbol(expr);
     if (sym != null && sym instanceof VarSymbol) {
       return expr;
     }

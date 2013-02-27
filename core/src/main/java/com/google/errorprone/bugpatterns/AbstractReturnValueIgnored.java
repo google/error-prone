@@ -65,7 +65,7 @@ abstract class AbstractReturnValueIgnored extends DescribingMatcher<MethodInvoca
   @Override
   public Description describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
     // Find the root of the field access chain, i.e. a.intern().trim() ==> a.
-    ExpressionTree identifierExpr = ASTHelpers.getRootIdentifier(methodInvocationTree);
+    ExpressionTree identifierExpr = ASTHelpers.getRootAssignable(methodInvocationTree);
     String identifierStr = null;
     Type identifierType = null;
     if (identifierExpr != null) {

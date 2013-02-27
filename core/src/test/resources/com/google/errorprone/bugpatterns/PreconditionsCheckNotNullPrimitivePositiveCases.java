@@ -118,9 +118,14 @@ public class PreconditionsCheckNotNullPrimitivePositiveCases {
     
     //BUG: Suggestion includes "checkArgument(arg.getTester().getTester().hasId())"
     checkNotNull(arg.getTester().getTester().hasId());
+    
+    //BUG: Suggestion includes "checkArgument(arg.tester.getTester().hasId())"
+    checkNotNull(arg.tester.getTester().hasId());
   }
   
   private static class Tester {
+    public Tester tester;
+    
     public boolean hasId() {
       return true;
     }
@@ -130,7 +135,7 @@ public class PreconditionsCheckNotNullPrimitivePositiveCases {
     }
     
     public Tester getTester() {
-      return null;
+      return tester;
     }
   }
 }
