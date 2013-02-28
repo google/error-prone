@@ -44,24 +44,18 @@ public class Annotation<T extends Tree> extends MultiMatcher<T, AnnotationTree> 
 
   @Override
   public boolean matches(T tree, VisitorState state) {
-
     List<? extends AnnotationTree> annotations;
-    switch (tree.getKind()) {
-      case CLASS:
-        annotations = ((ClassTree) tree).getModifiers().getAnnotations();
-        break;
-      case VARIABLE:
-        annotations = ((VariableTree) tree).getModifiers().getAnnotations();
-        break;
-      case METHOD:
-        annotations = ((MethodTree) tree).getModifiers().getAnnotations();
-        break;
-      case COMPILATION_UNIT:
-        annotations = ((CompilationUnitTree) tree).getPackageAnnotations();
-        break;
-      default:
-        throw new IllegalArgumentException("Cannot access annotations from tree of kind "
-            + tree.getKind());
+    if (tree instanceof ClassTree) {
+      annotations = ((ClassTree) tree).getModifiers().getAnnotations();
+    } else if (tree instanceof VariableTree) {
+      annotations = ((VariableTree) tree).getModifiers().getAnnotations();
+    } else if (tree instanceof MethodTree) {
+      annotations = ((MethodTree) tree).getModifiers().getAnnotations();
+    } else if (tree instanceof CompilationUnitTree) {
+      annotations = ((CompilationUnitTree) tree).getPackageAnnotations();
+    } else {
+      throw new IllegalArgumentException("Cannot access annotations from tree of type "
+          + tree.getClass());
     }
 
     for (AnnotationTree annotation : annotations) {
