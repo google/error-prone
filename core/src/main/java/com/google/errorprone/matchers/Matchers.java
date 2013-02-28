@@ -229,12 +229,15 @@ public class Matchers {
     return new Annotation<T>(matchType, annotationMatcher);
   }
 
+  /**
+   * Matches a constructor with the given class name and parameter types.
+   */
   public static Constructor constructor(String className, List<String> parameterTypes) {
     return new Constructor(className, parameterTypes);
   }
 
   /**
-   * Applies the given matcher to the constructor(s) of the class.
+   * Matches a class in which any of/all of its constructors match the given constructorMatcher.
    */
   public static MultiMatcher<ClassTree, MethodTree> constructor(MatchType matchType,
       Matcher<MethodTree> constructorMatcher) {

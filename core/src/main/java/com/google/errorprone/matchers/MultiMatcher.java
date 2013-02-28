@@ -49,7 +49,7 @@ public abstract class MultiMatcher<T, N> implements Matcher<T> {
   final Matcher<N> nodeMatcher;
 
   /**
-   * The matching node.
+   * The matching node.  Only set when MatchType is ANY.
    */
   N matchingNode;
 

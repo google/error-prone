@@ -74,11 +74,6 @@ public class Annotation<T extends Tree> extends MultiMatcher<T, AnnotationTree> 
         return false;
       }
     }
-    if (matchType == ANY) {
-      return false;
-    } else {
-      // In allOf case, return true only if there was at least one annotation.
-      return annotations.size() >= 1;
-    }
+    return matchType == ALL && annotations.size() >= 1;
   }
 }

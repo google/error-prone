@@ -27,6 +27,10 @@ import com.sun.source.tree.VariableTree;
 /**
  * Matches if the given matcher matches all of/any of the parameters to this method.
  *
+ * TODO(eaftan): All MultiMatchers seem to have a similar looping structure, applying a given
+ * matcher to a set of nodes.  Consider refactoring this code into the base class for better
+ * reuse.
+ *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public class MethodHasParameters extends MultiMatcher<MethodTree, VariableTree> {
@@ -48,11 +52,6 @@ public class MethodHasParameters extends MultiMatcher<MethodTree, VariableTree> 
         return false;
       }
     }
-    if (matchType == ANY) {
-      return false;
-    } else {
-      // In allOf case, return true only if there was at least one parameter.
-      return methodTree.getParameters().size() >= 1;
-    }
+    return matchType == ALL && methodTree.getParameters().size() >= 1;
   }
 }

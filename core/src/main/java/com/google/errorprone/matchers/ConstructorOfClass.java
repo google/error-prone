@@ -39,12 +39,12 @@ public class ConstructorOfClass extends MultiMatcher<ClassTree, MethodTree> {
 
   @Override
   public boolean matches(ClassTree classTree, VisitorState state) {
-    int constructorCount = 0;
+    boolean hasConstructor = false;
     // Iterate over members of class (methods and fields).
     for (Tree member : classTree.getMembers()) {
       // If this member is a constructor...
       if (member instanceof MethodTree && ASTHelpers.getSymbol(member).isConstructor()) {
-        constructorCount++;
+        hasConstructor = true;
         boolean matches = nodeMatcher.matches((MethodTree) member, state);
         if (matchType == ANY && matches) {
           matchingNode = (MethodTree) member;
@@ -55,11 +55,6 @@ public class ConstructorOfClass extends MultiMatcher<ClassTree, MethodTree> {
         }
       }
     }
-    if (matchType == ANY) {
-      return false;
-    } else {
-      // In allOf case, return true only if there was at least one constructor.
-      return constructorCount >= 1;
-    }
+    return matchType == ALL && hasConstructor;
   }
 }

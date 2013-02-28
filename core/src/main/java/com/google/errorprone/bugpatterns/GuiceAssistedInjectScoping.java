@@ -56,7 +56,9 @@ import com.sun.source.tree.VariableTree;
     summary = "Scope annotation on implementation class of AssistedInject factory is not allowed",
     explanation =
         "Classes that AssistedInject factories create may not be annotated with scope " +
-        "annotations, such as @Singleton.  This will cause a Guice error at runtime.",
+        "annotations, such as @Singleton.  This will cause a Guice error at runtime.\n\n" +
+        "See [https://code.google.com/p/google-guice/issues/detail?id=742 this bug report] for " +
+        "details.",
     category = GUICE, severity = ERROR, maturity = MATURE)
 public class GuiceAssistedInjectScoping extends DescribingMatcher<ClassTree> {
 
@@ -77,6 +79,14 @@ public class GuiceAssistedInjectScoping extends DescribingMatcher<ClassTree> {
          hasAnnotation(JAVAX_SCOPE_ANNOTATION)));
 
   /**
+   * Matches if any constructor of a class is annotated with an @Inject annotation.
+   */
+  @SuppressWarnings("unchecked")
+  private MultiMatcher<ClassTree, MethodTree> constructorWithInjectMatcher =
+      constructor(ANY, anyOf(hasAnnotation(GUICE_INJECT_ANNOTATION, MethodTree.class),
+          hasAnnotation(JAVAX_INJECT_ANNOTATION)));
+
+  /**
    * Matches if:
    * 1) If there is a constructor that is annotated with @Inject and that constructor has at least
    *    one parameter that is annotated with @Assisted.
@@ -84,13 +94,8 @@ public class GuiceAssistedInjectScoping extends DescribingMatcher<ClassTree> {
    *    @AssistedInject.
    */
   private Matcher<ClassTree> assistedMatcher = new Matcher<ClassTree>() {
-    @SuppressWarnings("unchecked")
     @Override
     public boolean matches(ClassTree classTree, VisitorState state) {
-      MultiMatcher<ClassTree, MethodTree> constructorWithInjectMatcher =
-          constructor(ANY, anyOf(hasAnnotation(GUICE_INJECT_ANNOTATION, MethodTree.class),
-              hasAnnotation(JAVAX_INJECT_ANNOTATION)));
-
       if (constructorWithInjectMatcher.matches(classTree, state)) {
         // Check constructor with @Inject annotation for parameter with @Assisted annotation.
         return methodHasParameters(ANY,
