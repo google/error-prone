@@ -59,6 +59,9 @@ public class AnnotationHasArgumentWithValue implements Matcher<AnnotationTree> {
                 }
               }
               break;
+            default:
+              throw new IllegalStateException("Matcher cannot handle value of kind "
+                  + expressionTree.getKind());
           }
         }
       }

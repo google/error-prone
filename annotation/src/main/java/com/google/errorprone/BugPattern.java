@@ -74,6 +74,10 @@ public @interface BugPattern {
      */
     GUAVA,
     /**
+     * errors specific to Guice
+     */
+    GUICE,
+    /**
      * one-off refactorings that are not general errors
      */
     ONE_OFF

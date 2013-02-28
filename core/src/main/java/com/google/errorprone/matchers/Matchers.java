@@ -18,6 +18,7 @@ package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.MethodVisibility.Visibility;
+import com.google.errorprone.matchers.MultiMatcher.MatchType;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 
@@ -215,8 +216,32 @@ public class Matchers {
     };
   }
 
+  /**
+   * Matches if the given annotation matcher matches all of or any of the annotations on this tree
+   * node.
+   *
+   * @param matchType Whether to match if the matchers match any of or all of the annotations on
+   * this tree.
+   * @param annotationMatcher The annotation matcher to use.
+   */
+  public static <T extends Tree> MultiMatcher<T, AnnotationTree> annotations(MatchType matchType,
+      Matcher<AnnotationTree> annotationMatcher) {
+    return new Annotation<T>(matchType, annotationMatcher);
+  }
+
+  /**
+   * Matches a constructor with the given class name and parameter types.
+   */
   public static Constructor constructor(String className, List<String> parameterTypes) {
     return new Constructor(className, parameterTypes);
+  }
+
+  /**
+   * Matches a class in which any of/all of its constructors match the given constructorMatcher.
+   */
+  public static MultiMatcher<ClassTree, MethodTree> constructor(MatchType matchType,
+      Matcher<MethodTree> constructorMatcher) {
+    return new ConstructorOfClass(matchType, constructorMatcher);
   }
 
   public static Matcher<MethodInvocationTree> methodSelect(Matcher<ExpressionTree> methodSelectMatcher) {
@@ -366,27 +391,28 @@ public class Matchers {
   }
 
   /**
-   * Determines whether a method has an annotation of the given type.
+   * Determines whether an expression has an annotation of the given type.
+   *
+   * @param annotationType The type of the annotation to look for (e.g, "javax.annotation.Nullable")
+   * @param typeInfer a type token for the generic type. Unused, but allows the returned matcher to be composed.
+   */
+  public static <T extends Tree> Matcher<T> hasAnnotation(final String annotationType,
+      Class<T> typeInfer) {
+    return hasAnnotation(annotationType);
+  }
+
+  /**
+   * Determines whether an expression has an annotation of the given type.
    *
    * @param annotationType The type of the annotation to look for (e.g, "javax.annotation.Nullable")
    */
-  public static Matcher<ExpressionTree> methodHasAnnotation(final String annotationType) {
-    return new Matcher<ExpressionTree>() {
+  public static <T extends Tree> Matcher<T> hasAnnotation(final String annotationType) {
+    return new Matcher<T>() {
       @Override
-      public boolean matches (ExpressionTree methodTree, VisitorState state) {
-        Symbol methodSym;
-        switch (methodTree.getKind()) {
-          case IDENTIFIER:
-            methodSym = ((JCIdent) methodTree).sym;
-            break;
-          case MEMBER_SELECT:
-            methodSym = ((JCFieldAccess) methodTree).sym;
-            break;
-          default:
-            return false;
-        }
+      public boolean matches (T tree, VisitorState state) {
+        Symbol sym = ASTHelpers.getSymbol(tree);
         Symbol annotationSym = state.getSymbolFromString(annotationType);
-        return (annotationSym != null) && (methodSym.attribute(annotationSym) != null);
+        return (sym != null) && (annotationSym != null) && (sym.attribute(annotationSym) != null);
       }
     };
   }
@@ -446,6 +472,14 @@ public class Matchers {
         return true;
       }
     };
+  }
+
+  /**
+   * Matches if the given matcher matches all of/any of the parameters to this method.
+   */
+  public static MultiMatcher<MethodTree, VariableTree> methodHasParameters(MatchType matchType,
+      Matcher<VariableTree> parameterMatcher) {
+    return new MethodHasParameters(matchType, parameterMatcher);
   }
 
   public static Matcher<MethodTree> methodHasVisibility(final Visibility visibility) {

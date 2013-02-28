@@ -16,6 +16,7 @@
 
 package com.google.errorprone.util;
 
+import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -95,6 +96,8 @@ public class ASTHelpers {
         return ((JCFieldAccess) tree).sym;
       case IDENTIFIER:
         return ((JCIdent) tree).sym;
+      case ANNOTATION:
+        return getSymbol(((AnnotationTree) tree).getAnnotationType());
       default:
         return null;
     }

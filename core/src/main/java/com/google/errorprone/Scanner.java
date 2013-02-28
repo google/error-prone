@@ -36,16 +36,16 @@ import java.util.Set;
  * TODO(eaftan): I'm worried about this performance of this code,
  * specifically the part that handles SuppressWarnings.  We should
  * profile it and see where the hotspots are.
- * 
+ *
  * @author alexeagle@google.com (Alex Eagle)
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public class Scanner extends TreePathScanner<Void, VisitorState> {
 
-  private Set<String> suppressions = new HashSet<String>(); 
+  private Set<String> suppressions = new HashSet<String>();
 
   /**
-   * Scan a tree from a position identified by a TreePath. 
+   * Scan a tree from a position identified by a TreePath.
    */
   @Override
   public Void scan(TreePath path, VisitorState state) {
@@ -54,15 +54,15 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
      * explore a new node, we have to extend the suppression set with any new
      * suppressed warnings.  We also have to retain the previous suppression set
      * so that we can reinstate it when we move up the tree.
-     * 
+     *
      * We avoid copying the suppression set if the next node to explore does not
-     * have any suppressed warnings.  This is the common case. 
+     * have any suppressed warnings.  This is the common case.
      */
     Set<String> newSuppressions = null;
     Set<String> prevSuppressions = suppressions;
     Symbol sym = getSymbol(path.getLeaf());
     if (sym != null) {
-      newSuppressions = extendSuppressionSet(sym, state.getSymtab().suppressWarningsType, 
+      newSuppressions = extendSuppressionSet(sym, state.getSymtab().suppressWarningsType,
           suppressions);
       if (newSuppressions != null) {
         suppressions = newSuppressions;
@@ -91,65 +91,59 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
      * explore a new node, we have to extend the suppression set with any new
      * suppressed warnings.  We also have to retain the previous suppression set
      * so that we can reinstate it when we move up the tree.
-     * 
+     *
      * We avoid copying the suppression set if the next node to explore does not
-     * have any suppressed warnings.  This is the common case. 
+     * have any suppressed warnings.  This is the common case.
      */
     Set<String> newSuppressions = null;
     Set<String> prevSuppressions = suppressions;
     Symbol sym = getSymbol(tree);
     if (sym != null) {
-      newSuppressions = extendSuppressionSet(sym, state.getSymtab().suppressWarningsType, 
+      newSuppressions = extendSuppressionSet(sym, state.getSymtab().suppressWarningsType,
           suppressions);
       if (newSuppressions != null) {
         suppressions = newSuppressions;
       }
     }
 
-    try {    
+    try {
       return super.scan(tree, state);
     } finally {
       suppressions = prevSuppressions;
     }
 
   }
-    
+
   /**
    * Given an AST node, returns its symbol.  Only certain AST nodes have
    * symbols, so if there is no symbol for this node, returns null.
-   * 
+   *
    * @param tree The AST node for which to get the symbol
    * @return The symbol if it exists, null otherwise
    */
   private Symbol getSymbol(Tree tree) {
-    Symbol sym = null;
     switch (tree.getKind()) {
       case CLASS:
-        sym = ((JCClassDecl) tree).sym;
-        break;
+        return ((JCClassDecl) tree).sym;
       case METHOD:
-        sym = ((JCMethodDecl) tree).sym; 
-        break;
+        return ((JCMethodDecl) tree).sym;
       case VARIABLE:
-        sym = ((JCVariableDecl) tree).sym;
-        break;
+        return ((JCVariableDecl) tree).sym;
       case MEMBER_SELECT:
-        sym = ((JCFieldAccess) tree).sym;
-        break;
+        return ((JCFieldAccess) tree).sym;
       case IDENTIFIER:
-        sym = ((JCIdent) tree).sym;
-        break;
+        return ((JCIdent) tree).sym;
+      default:
+        return null;
     }
-
-    return sym;
   }
 
   /**
    * Extends a set of suppressed warnings with the contents of any SuppressWarnings annotations
    * on the given symbol.  Does not mutate the passed-in set of suppressions.  If there were
    * additional warnings to suppress, it returns a copy of the passed-in set with the new warnings
-   * added.  If there were no additional warnings to suppress, it returns null. 
-   * 
+   * added.  If there were no additional warnings to suppress, it returns null.
+   *
    * @param sym The possibly-annotated symbol
    * @param suppressWarningsType The type of the SuppressWarnings annotation
    * @param suppressions The set of currently-suppressed warnings
