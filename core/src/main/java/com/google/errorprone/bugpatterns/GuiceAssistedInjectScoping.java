@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.Category.GUICE;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.annotations;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.methodHasParameters;
@@ -59,18 +60,21 @@ import com.sun.source.tree.VariableTree;
     category = GUICE, severity = ERROR, maturity = MATURE)
 public class GuiceAssistedInjectScoping extends DescribingMatcher<ClassTree> {
 
-  private static final String SCOPE_ANNOTATION_STRING = "com.google.inject.ScopeAnnotation";
-  private static final String ASSISTED_ANNOTATION_STRING =
-      "com.google.inject.assistedinject.Assisted";
-  private static final String INJECT_ANNOTATION_STRING = "com.google.inject.Inject";
-  private static final String ASSISTED_INJECT_ANNOTATION_STRING =
+  private static final String GUICE_SCOPE_ANNOTATION = "com.google.inject.ScopeAnnotation";
+  private static final String JAVAX_SCOPE_ANNOTATION = "javax.inject.Scope";
+  private static final String ASSISTED_ANNOTATION = "com.google.inject.assistedinject.Assisted";
+  private static final String GUICE_INJECT_ANNOTATION = "com.google.inject.Inject";
+  private static final String JAVAX_INJECT_ANNOTATION = "javax.inject.Inject";
+  private static final String ASSISTED_INJECT_ANNOTATION =
       "com.google.inject.assistedinject.AssistedInject";
 
   /**
    * Matches classes that have an annotation that itself is annotated with @ScopeAnnotation.
    */
+  @SuppressWarnings("unchecked")
   private MultiMatcher<ClassTree, AnnotationTree> classAnnotationMatcher =
-     annotations(ANY, hasAnnotation(SCOPE_ANNOTATION_STRING, AnnotationTree.class));
+     annotations(ANY, anyOf(hasAnnotation(GUICE_SCOPE_ANNOTATION, AnnotationTree.class),
+         hasAnnotation(JAVAX_SCOPE_ANNOTATION)));
 
   /**
    * Matches if:
@@ -84,16 +88,17 @@ public class GuiceAssistedInjectScoping extends DescribingMatcher<ClassTree> {
     @Override
     public boolean matches(ClassTree classTree, VisitorState state) {
       MultiMatcher<ClassTree, MethodTree> constructorWithInjectMatcher =
-          constructor(ANY, hasAnnotation(INJECT_ANNOTATION_STRING, MethodTree.class));
+          constructor(ANY, anyOf(hasAnnotation(GUICE_INJECT_ANNOTATION, MethodTree.class),
+              hasAnnotation(JAVAX_INJECT_ANNOTATION)));
 
       if (constructorWithInjectMatcher.matches(classTree, state)) {
         // Check constructor with @Inject annotation for parameter with @Assisted annotation.
         return methodHasParameters(ANY,
-            hasAnnotation(ASSISTED_ANNOTATION_STRING, VariableTree.class))
+            hasAnnotation(ASSISTED_ANNOTATION, VariableTree.class))
             .matches(constructorWithInjectMatcher.getMatchingNode(), state);
       }
 
-      return constructor(ANY, hasAnnotation(ASSISTED_INJECT_ANNOTATION_STRING, MethodTree.class))
+      return constructor(ANY, hasAnnotation(ASSISTED_INJECT_ANNOTATION, MethodTree.class))
           .matches(classTree, state);
     }
   };

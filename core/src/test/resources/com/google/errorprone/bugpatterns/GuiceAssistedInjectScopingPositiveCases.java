@@ -82,8 +82,16 @@ public class GuiceAssistedInjectScopingPositiveCases {
     @AssistedInject
     public TestClass5(int i, String unassisted) {
     }
-    
   }
-
-
+  
+  /**
+   * JSR330 annotations.
+   */
+  //BUG: Suggestion includes "remove this line"
+  @javax.inject.Singleton
+  public class TestClass6 {
+    @javax.inject.Inject
+    public TestClass6(String unassisted, @Assisted String assisted) {
+    }
+  }
 }
