@@ -1,5 +1,6 @@
 package com.google.errorprone;
 
+import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.JCTree;
 
 import java.util.AbstractMap;
@@ -73,8 +74,23 @@ class WrappedTreeMap extends AbstractMap<JCTree, Integer> {
       }
       WrappedTreeNode other = (WrappedTreeNode) o;
 
+      // LetExpr and TypeBoundKind throw an AssertionError on getKind(). Ignore them for computing
+      // equality.
+      Kind thisKind;
+      Kind otherKind;
+      try {
+        thisKind = node.getKind();
+      } catch (AssertionError e) {
+        thisKind = null;
+      }
+      try {
+        otherKind = other.node.getKind();
+      } catch (AssertionError e) {
+        otherKind = null;
+      }
+
       return node.getStartPosition() == other.node.getStartPosition() &&
-          node.getKind() == other.node.getKind() &&
+          thisKind == otherKind &&
           node.getTag() == other.node.getTag();
     }
 
@@ -92,7 +108,12 @@ class WrappedTreeMap extends AbstractMap<JCTree, Integer> {
     public int hashCode() {
       int result = 17;
       result = 31 * result + node.getStartPosition();
-      result = 31 * result + node.getKind().ordinal();
+      try {
+        result = 31 * result + node.getKind().ordinal();
+      } catch (AssertionError e) {
+        // getKind() throws an AssertionError for LetExpr and TypeBoundKind. Ignore it for 
+        // calculating the hash code.
+      }
       result = 31 * result + node.getTag();
       return result;
     }
