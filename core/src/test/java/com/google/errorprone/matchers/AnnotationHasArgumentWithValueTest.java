@@ -45,7 +45,19 @@ public class AnnotationHasArgumentWithValueTest extends CompilerBasedTest {
         "public class A {}");
     assertCompiles(annotationMatches(true, new AnnotationHasArgumentWithValue("stuff", stringLiteral("y"))));
   }
-  
+
+  @Test
+  public void testMatchesExtraParentheses() throws IOException {
+    writeFile("Thing2.java",
+        "public @interface Thing2 {",
+        "  String value();",
+        "}");
+    writeFile("A.java",
+        "@Thing2((\"y\"))",
+        "public class A {}");
+    assertCompiles(annotationMatches(true, new AnnotationHasArgumentWithValue("value", stringLiteral("y"))));
+  }
+
   @Test public void notMatches() throws IOException {
     writeFile("A.java",
         "@Thing(stuff=\"n\")",
@@ -53,7 +65,7 @@ public class AnnotationHasArgumentWithValueTest extends CompilerBasedTest {
     assertCompiles(annotationMatches(false, new AnnotationHasArgumentWithValue("stuff", stringLiteral("y"))));
     assertCompiles(annotationMatches(false, new AnnotationHasArgumentWithValue("other", stringLiteral("n"))));
   }
-  
+
   @Test public void arrayValuedElement() throws IOException {
     writeFile("A.java",
         "@SuppressWarnings({\"unchecked\",\"fallthrough\"})",

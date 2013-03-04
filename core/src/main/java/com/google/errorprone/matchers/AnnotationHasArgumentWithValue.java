@@ -22,6 +22,7 @@ import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.NewArrayTree;
+import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
 
 /**
@@ -45,6 +46,9 @@ public class AnnotationHasArgumentWithValue implements Matcher<AnnotationTree> {
         AssignmentTree assignmentTree = (AssignmentTree) argumentTree;
         if (assignmentTree.getVariable().toString().equals(element)) {
           ExpressionTree expressionTree = assignmentTree.getExpression();
+          while (expressionTree instanceof ParenthesizedTree) {
+            expressionTree = ((ParenthesizedTree) expressionTree).getExpression();
+          }
           switch (expressionTree.getKind()) {
             case STRING_LITERAL:
               if (valueMatcher.matches(expressionTree, state)) {
