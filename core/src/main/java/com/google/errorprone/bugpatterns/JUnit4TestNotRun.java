@@ -75,6 +75,7 @@ public class JUnit4TestNotRun extends DescribingMatcher<MethodTree> {
         methodHasParameters(),
         methodHasModifier(Modifier.PUBLIC),
         not(hasAnnotation(JUNIT_TEST_ANNOTATION)),
+        // use annotations matcher here with hasArgumentWithValue
         enclosingClass(hasAnnotation("org.junit.runner.RunWith", ClassTree.class)))
         .matches(methodTree, state);
   }

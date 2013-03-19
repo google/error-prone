@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
@@ -23,10 +24,17 @@ import org.junit.runners.JUnit4;
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 @RunWith(JUnit4.class)
-public class JUnit4TestNotRunPositiveCases {
-  //BUG: Suggestion includes "@Test"
-  public void testThisIsATest() {}
+public class JUnit4TestNotRunNegativeCase3 {
+  // Doesn't begin with "test".
+  public void thisIsATest() {}
   
-  //BUG: Suggestion includes "@Test"
-  public static void testThisIsAStaticTest() {}
+  // Isn't public.
+  void testTest1() {}
+  
+  // Has @Test annotation.
+  @Test
+  public void testTest2() {}
+  
+  // Has parameters.
+  public void testTest3(int foo) {} 
 }

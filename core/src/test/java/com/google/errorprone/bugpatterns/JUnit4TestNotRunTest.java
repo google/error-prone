@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -37,18 +36,33 @@ public class JUnit4TestNotRunTest {
   }
 
   @Test
-  public void testPositiveCases() throws Exception {
+  public void testPositiveCase1() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("JUnit4TestNotRunPositiveCases.java").toURI()));
+        new File(this.getClass().getResource("JUnit4TestNotRunPositiveCase1.java").toURI()));
   }
 
-  @Test public void testNegativeCase1() throws Exception {
+  @Test
+  public void testPositiveCase2() throws Exception {
+    compilationHelper.assertCompileFailsWithMessages(
+        new File(this.getClass().getResource("JUnit4TestNotRunPositiveCase2.java").toURI()));
+  }
+
+  @Test
+  public void testNegativeCase1() throws Exception {
     compilationHelper.assertCompileSucceeds(
         new File(this.getClass().getResource("JUnit4TestNotRunNegativeCase1.java").toURI()));
   }
 
-  @Test public void testNegativeCase2() throws Exception {
+  @Test
+  public void testNegativeCase2() throws Exception {
     compilationHelper.assertCompileSucceeds(
         new File(this.getClass().getResource("JUnit4TestNotRunNegativeCase2.java").toURI()));
   }
+
+  @Test
+  public void testNegativeCase3() throws Exception {
+    compilationHelper.assertCompileSucceeds(
+        new File(this.getClass().getResource("JUnit4TestNotRunNegativeCase3.java").toURI()));
+  }
+
 }

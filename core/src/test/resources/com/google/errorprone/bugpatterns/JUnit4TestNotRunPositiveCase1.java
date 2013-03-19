@@ -17,14 +17,16 @@
 package com.google.errorprone.bugpatterns;
 
 import org.junit.runner.RunWith;
-import org.junit.internal.runners.JUnit38ClassRunner;
+import org.junit.runners.JUnit4;
 
 /**
- * Not a JUnit 4 test (run with a JUnit3 test runner).
- * 
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-@RunWith(JUnit38ClassRunner.class)
-public class JUnit4TestNotRunNegativeCase2 {
+@RunWith(JUnit4.class)
+public class JUnit4TestNotRunPositiveCase1 {
+  //BUG: Suggestion includes "@Test"
   public void testThisIsATest() {}
+  
+  //BUG: Suggestion includes "@Test"
+  public static void testThisIsAStaticTest() {}
 }
