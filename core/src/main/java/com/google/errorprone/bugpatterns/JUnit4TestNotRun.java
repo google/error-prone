@@ -35,11 +35,13 @@ import com.google.errorprone.matchers.Description;
 
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
+
 
 import javax.lang.model.element.Modifier;
 
 /**
- * TODO(eaftan): Similar ones for setUp() and tearDown().
+ * TODO(eaftan): Similar checkers for setUp() and tearDown().
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
@@ -62,7 +64,7 @@ public class JUnit4TestNotRun extends DescribingMatcher<MethodTree> {
    * 5) The enclosing class has an @RunWith annotation.  This marks that the test is intended
    *    to run with JUnit 4.
    *
-   * TODO(eaftan): Checking the class for @RunWith annotation is sufficient for google3, but not
+   * TODO(eaftan): Checking the class for @RunWith annotation is sufficient for Google, but not
    * externally.  Look at https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/internal/builders/AllDefaultPossibilitiesBuilder.java
    * to see all the ways to determine if the test is a JUnit 4 test.
    */
@@ -80,20 +82,26 @@ public class JUnit4TestNotRun extends DescribingMatcher<MethodTree> {
   /**
    * Add the @Test annotation.  If the method is static, also make the method non-static.
    *
-   * TODO(eaftan): Add static case.
+   * TODO(eaftan): The static case here relies on having tree end positions available.  Come up
+   * with a better way of doing this that doesn't require tree end positions.  Maybe we should
+   * just not provide suggested fixes for these few cases when the javac infrastructure gets in the
+   * way.
    */
   @Override
   public Description describe(MethodTree methodTree, VisitorState state) {
-    SuggestedFix fix = new SuggestedFix()
-    .addImport(JUNIT_TEST_ANNOTATION)
-    .prefixWith(methodTree, "@Test\n");
     if (methodHasModifier(Modifier.STATIC).matches(methodTree, state)) {
-      // We don't want to pretty print the whole method here.  This is hacky but the best way
-      // I can think of.
-      // Get the first line, go in and remove "static".
-      String declaration = methodTree.toString().split("\\r?\\n")[0];
-      System.out.println(declaration);
+      CharSequence methodSource = state.getSourceForNode((JCMethodDecl) methodTree);
+      if (methodSource != null) {
+        String methodString = "@Test\n" + methodSource.toString().replaceFirst(" static ", " ");
+        SuggestedFix fix = new SuggestedFix()
+            .addImport(JUNIT_TEST_ANNOTATION)
+            .replace(methodTree, methodString);
+        return new Description(methodTree, diagnosticMessage, fix);
+      }
     }
+    SuggestedFix fix = new SuggestedFix()
+        .addImport(JUNIT_TEST_ANNOTATION)
+        .prefixWith(methodTree, "@Test\n");
     return new Description(methodTree, diagnosticMessage, fix);
   }
 
