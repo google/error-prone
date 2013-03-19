@@ -78,6 +78,10 @@ public @interface BugPattern {
      */
     GUICE,
     /**
+     * errors specific to JUnit
+     */
+    JUNIT,
+    /**
      * one-off refactorings that are not general errors
      */
     ONE_OFF

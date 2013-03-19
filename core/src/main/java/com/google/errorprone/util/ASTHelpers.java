@@ -22,6 +22,7 @@ import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
@@ -85,21 +86,39 @@ public class ASTHelpers {
    */
   // TODO(eaftan): refactor other code that accesses symbols to use this method
   public static Symbol getSymbol(Tree tree) {
-    switch (tree.getKind()) {
-      case CLASS:
-        return ((JCClassDecl) tree).sym;
-      case METHOD:
-        return ((JCMethodDecl) tree).sym;
-      case VARIABLE:
-        return ((JCVariableDecl) tree).sym;
-      case MEMBER_SELECT:
-        return ((JCFieldAccess) tree).sym;
-      case IDENTIFIER:
-        return ((JCIdent) tree).sym;
-      case ANNOTATION:
-        return getSymbol(((AnnotationTree) tree).getAnnotationType());
-      default:
-        return null;
+    if (tree instanceof JCClassDecl) {
+      return ((JCClassDecl) tree).sym;
+    }
+    if (tree instanceof JCMethodDecl) {
+      return ((JCMethodDecl) tree).sym;
+    }
+    if (tree instanceof JCVariableDecl) {
+      return ((JCVariableDecl) tree).sym;
+    }
+    if (tree instanceof JCFieldAccess) {
+      return ((JCFieldAccess) tree).sym;
+    }
+    if (tree instanceof JCIdent) {
+      return ((JCIdent) tree).sym;
+    }
+    if (tree instanceof AnnotationTree) {
+      return getSymbol(((AnnotationTree) tree).getAnnotationType());
+    }
+    return null;
+  }
+
+  /**
+   * Given a TreePath, walks up the tree until it finds a node of the given type.
+   */
+  @SuppressWarnings("unchecked")
+  public static <T> T findEnclosingNode(TreePath path, Class<T> klass) {
+    while (path != null && !(klass.isInstance(path.getLeaf()))) {
+      path = path.getParentPath();
+    }
+    if (path == null) {
+      return null;
+    } else {
+      return (T) path.getLeaf();
     }
   }
 

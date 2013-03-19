@@ -456,6 +456,20 @@ public class Matchers {
     };
   }
 
+  /**
+   * Match a method declaration that starts with a given string.
+   *
+   * @param prefix The prefix.
+   */
+  public static Matcher<MethodTree> methodNameStartsWith(final String prefix) {
+    return new Matcher<MethodTree>() {
+      @Override
+      public boolean matches(MethodTree methodTree, VisitorState state) {
+        return methodTree.getName().toString().startsWith(prefix);
+      }
+    };
+  }
+
   public static Matcher<MethodTree> methodHasParameters(final Matcher<VariableTree>... variableMatcher) {
     return new Matcher<MethodTree>() {
       @Override
