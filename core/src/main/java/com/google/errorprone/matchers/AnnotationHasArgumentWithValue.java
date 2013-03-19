@@ -49,24 +49,18 @@ public class AnnotationHasArgumentWithValue implements Matcher<AnnotationTree> {
           while (expressionTree instanceof ParenthesizedTree) {
             expressionTree = ((ParenthesizedTree) expressionTree).getExpression();
           }
-          switch (expressionTree.getKind()) {
-            case STRING_LITERAL:
-              if (valueMatcher.matches(expressionTree, state)) {
+
+          if (expressionTree instanceof NewArrayTree) {
+            NewArrayTree arrayTree = (NewArrayTree) expressionTree;
+            for (ExpressionTree elementTree : arrayTree.getInitializers()) {
+              if (valueMatcher.matches(elementTree, state)) {
                 return true;
               }
-              break;
-            case NEW_ARRAY:
-              NewArrayTree arrayTree = (NewArrayTree) expressionTree;
-              for (ExpressionTree elementTree : arrayTree.getInitializers()) {
-                if (valueMatcher.matches(elementTree, state)) {
-                  return true;
-                }
-              }
-              break;
-            default:
-              throw new IllegalStateException("Matcher cannot handle value of kind "
-                  + expressionTree.getKind());
+            }
+            return false;
           }
+
+          return valueMatcher.matches(expressionTree, state);
         }
       }
     }

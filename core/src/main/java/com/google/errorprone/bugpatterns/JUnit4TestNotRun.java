@@ -20,25 +20,32 @@ import static com.google.errorprone.BugPattern.Category.JUNIT;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.annotations;
 import static com.google.errorprone.matchers.Matchers.enclosingClass;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
+import static com.google.errorprone.matchers.Matchers.hasArgumentWithValue;
+import static com.google.errorprone.matchers.Matchers.isCastableTo;
 import static com.google.errorprone.matchers.Matchers.methodHasModifier;
 import static com.google.errorprone.matchers.Matchers.methodHasParameters;
 import static com.google.errorprone.matchers.Matchers.methodNameStartsWith;
 import static com.google.errorprone.matchers.Matchers.not;
+import static com.google.errorprone.matchers.MultiMatcher.MatchType.ALL;
+
+import javax.lang.model.element.Modifier;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
-
+import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Matchers;
+import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
-
-
-import javax.lang.model.element.Modifier;
 
 /**
  * TODO(eaftan): Similar checkers for setUp() and tearDown().
@@ -53,7 +60,13 @@ import javax.lang.model.element.Modifier;
     category = JUNIT, maturity = MATURE, severity = ERROR)
 public class JUnit4TestNotRun extends DescribingMatcher<MethodTree> {
 
-  private static final String JUNIT_TEST_ANNOTATION = "org.junit.Test";
+  private static final String JUNIT4_TEST_ANNOTATION = "org.junit.Test";
+  private static final String JUNIT4_CLASS_RUNNER = "org.junit.runners.BlockJUnit4ClassRunner";
+
+  private static final Matcher<ExpressionTree> isCastableToJUnit4TestRunner =
+      isCastableTo(JUNIT4_CLASS_RUNNER);
+  private static final Matcher<ClassTree> isJUnit4TestClass =
+      annotations(ALL, hasArgumentWithValue("value", isCastableToJUnit4TestRunner));
 
   /**
    * Matches if:
@@ -74,9 +87,8 @@ public class JUnit4TestNotRun extends DescribingMatcher<MethodTree> {
     return allOf(methodNameStartsWith("test"),
         methodHasParameters(),
         methodHasModifier(Modifier.PUBLIC),
-        not(hasAnnotation(JUNIT_TEST_ANNOTATION)),
-        // use annotations matcher here with hasArgumentWithValue
-        enclosingClass(hasAnnotation("org.junit.runner.RunWith", ClassTree.class)))
+        not(hasAnnotation(JUNIT4_TEST_ANNOTATION)),
+        enclosingClass(isJUnit4TestClass))
         .matches(methodTree, state);
   }
 
@@ -95,13 +107,13 @@ public class JUnit4TestNotRun extends DescribingMatcher<MethodTree> {
       if (methodSource != null) {
         String methodString = "@Test\n" + methodSource.toString().replaceFirst(" static ", " ");
         SuggestedFix fix = new SuggestedFix()
-            .addImport(JUNIT_TEST_ANNOTATION)
+            .addImport(JUNIT4_TEST_ANNOTATION)
             .replace(methodTree, methodString);
         return new Description(methodTree, diagnosticMessage, fix);
       }
     }
     SuggestedFix fix = new SuggestedFix()
-        .addImport(JUNIT_TEST_ANNOTATION)
+        .addImport(JUNIT4_TEST_ANNOTATION)
         .prefixWith(methodTree, "@Test\n");
     return new Description(methodTree, diagnosticMessage, fix);
   }

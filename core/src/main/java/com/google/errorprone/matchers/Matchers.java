@@ -274,6 +274,24 @@ public class Matchers {
     };
   }
 
+  /**
+   * Matches if the type of the AST node is castable to the given type.
+   * @param typeString The string representation of the type, e.g., "java.util.Set"
+   *
+   * TODO(eaftan): Share code with other isCastableTo method
+   */
+  public static <T extends Tree> Matcher<T> isCastableTo(final String typeString) {
+    return new Matcher<T>() {
+      @Override public boolean matches(T t, VisitorState state) {
+        Type toType = state.getTypeFromString(typeString);
+        if (toType == null) {
+          return false;
+        }
+        return state.getTypes().isCastable(((JCTree)t).type, state.getTypes().erasure(toType));
+      }
+    };
+  }
+
   public static <T extends Tree> Matcher<T> isCastableTo(final Supplier<Type> type) {
     return new Matcher<T>() {
       @Override public boolean matches(T t, VisitorState state) {
