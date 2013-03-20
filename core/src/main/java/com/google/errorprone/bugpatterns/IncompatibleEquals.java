@@ -144,6 +144,7 @@ public class IncompatibleEquals extends DescribingMatcher<MethodInvocationTree> 
         return boxedClass.type;
     }
 
+
     private boolean incompatible(Type left, Type right, VisitorState state) {
         leftType = boxedTypeOrType(left, state);
         rightType = boxedTypeOrType(right, state);
@@ -153,17 +154,17 @@ public class IncompatibleEquals extends DescribingMatcher<MethodInvocationTree> 
                 && rightType instanceof Type.ArrayType)
             return false;
         
-        if (leftType instanceof Type.ArrayType
-                && !rightType.isInterface())
-            return true;
-        if (rightType instanceof Type.ArrayType
-                && !leftType.isInterface())
-            return true;
-        if (leftType.isInterface() && !rightType.isFinal())
-            return false;
-
-        if (rightType.isInterface() && !leftType.isFinal())
-            return false;
+//        if (leftType instanceof Type.ArrayType
+//                && !rightType.isInterface())
+//            return true;
+//        if (rightType instanceof Type.ArrayType
+//                && !leftType.isInterface())
+//            return true;
+//        if (leftType.isInterface() && !rightType.isFinal())
+//            return false;
+//
+//        if (rightType.isInterface() && !leftType.isFinal())
+//            return false;
         leftType = state.getTypes().erasure(leftType);
         rightType = state.getTypes().erasure(rightType);
 
