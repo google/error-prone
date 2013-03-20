@@ -18,6 +18,15 @@ package com.google.errorprone.bugpatterns;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
+import org.junit.runners.model.InitializationError;
+
+// Note: Because the ErrorProneCompiler that the test harness uses doesn't handle multiple
+// top-level classes properly, this class must be before the test case class.
+class MyJUnit4TestRunner extends BlockJUnit4ClassRunner {
+  public MyJUnit4TestRunner(Class<?> klass) throws InitializationError {
+    super(klass);
+  }
+}
 
 /**
  * Custom test runner that uses JUnit 4.
@@ -32,5 +41,3 @@ public class JUnit4TestNotRunPositiveCase2 {
   //BUG: Suggestion includes "@Test"
   public static void testThisIsAStaticTest() {}
 }
-
-private class MyJUnit4TestRunner extends BlockJUnit4ClassRunner {}

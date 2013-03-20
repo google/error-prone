@@ -41,11 +41,18 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.suppliers.Supplier;
+import com.google.errorprone.util.ASTHelpers;
+
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.Type.ClassType;
+import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
+import com.sun.tools.javac.util.List;
+import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 
 /**
  * TODO(eaftan): Similar checkers for setUp() and tearDown().
@@ -63,8 +70,23 @@ public class JUnit4TestNotRun extends DescribingMatcher<MethodTree> {
   private static final String JUNIT4_TEST_ANNOTATION = "org.junit.Test";
   private static final String JUNIT4_CLASS_RUNNER = "org.junit.runners.BlockJUnit4ClassRunner";
 
-  private static final Matcher<ExpressionTree> isCastableToJUnit4TestRunner =
-      isCastableTo(JUNIT4_CLASS_RUNNER);
+  private static final Matcher<ExpressionTree> isCastableToJUnit4TestRunner = new Matcher<ExpressionTree>() {
+    @Override
+    public boolean matches(ExpressionTree t, VisitorState state) {
+      Type type = ((JCTree) t).type;
+      if (!(type instanceof ClassType)) {
+        return false;
+      }
+      List<Type> typeArgs = ((ClassType) type).getTypeArguments();
+      if (typeArgs.size() != 1) {
+        return false;
+      }
+      Type argType = typeArgs.get(0);
+      Type jUnit4ClassRunnerType = state.getTypeFromString(JUNIT4_CLASS_RUNNER);
+      return jUnit4ClassRunnerType != null &&
+          state.getTypes().isCastable(argType, jUnit4ClassRunnerType);
+    }
+  };
   private static final Matcher<ClassTree> isJUnit4TestClass =
       annotations(ALL, hasArgumentWithValue("value", isCastableToJUnit4TestRunner));
 
