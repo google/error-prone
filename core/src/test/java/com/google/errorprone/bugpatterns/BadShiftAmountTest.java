@@ -27,25 +27,22 @@ import java.io.File;
 /**
  * @author Bill Pugh (bill.pugh@gmail.com)
  */
-public class BadShiftAmountTest {
+public class BadShiftAmountTest extends BugPatternUnitTest {
 
-  private CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(new BadShiftAmount.Scanner());
+   setScanner(new BadShiftAmount.Scanner());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("BadShiftAmountPositiveCases.java").toURI()));
+    super.testPositiveCase();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("BadShiftAmountNegativeCases.java").toURI()));
+      super.testNegativeCase();
   }
 
 }

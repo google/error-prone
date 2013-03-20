@@ -65,7 +65,7 @@ public class InvalidSignedByteComparison extends DescribingMatcher<BinaryTree> {
         if (!(value instanceof Number))
             return false;
         int intValue = ((Number) value).intValue() ;
-        return intValue > 127 || intValue < -128;
+        return intValue < Byte.MIN_VALUE || intValue > Byte.MAX_VALUE;
       }
   /**
    *  A {@link Matcher} that matches whether the operands in a {@link BinaryTree} are

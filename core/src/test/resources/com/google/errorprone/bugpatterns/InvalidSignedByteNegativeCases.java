@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 /**
- * @author ptoomey@google.com (Patrick Toomey)
+ * @author Bill Pugh (bill.pugh@gmail.com)
  */
 public class InvalidSignedByteNegativeCases {
 

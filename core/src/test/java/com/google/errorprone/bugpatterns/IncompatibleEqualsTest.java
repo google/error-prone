@@ -16,36 +16,27 @@
 
 package com.google.errorprone.bugpatterns;
 
-import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.bugpatterns.InvalidStringEquality;
-
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
 
 /**
  * @author Bill Pugh (bill.pugh@gmail.com)
  */
-public class IncompatibleEqualsTest {
+public class IncompatibleEqualsTest extends BugPatternUnitTest {
 
-  private CompilationTestHelper compilationHelper;
+    @Before
+    public void setUp() {
+        setScanner(new BadShiftAmount.Scanner());
+    }
 
-  @Before
-  public void setUp() {
-    compilationHelper = new CompilationTestHelper(new IncompatibleEquals.Scanner());
-  }
+    @Test
+    public void testPositiveCase() throws Exception {
+        super.testPositiveCase();
+    }
 
-  @Test
-  public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("IncompatibleEqualsPositiveCases.java").toURI()));
-  }
-
-  @Test
-  public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("IncompatibleEqualsNegativeCases.java").toURI()));
-  }
+    @Test
+    public void testNegativeCase() throws Exception {
+        super.testNegativeCase();
+    }
 
 }

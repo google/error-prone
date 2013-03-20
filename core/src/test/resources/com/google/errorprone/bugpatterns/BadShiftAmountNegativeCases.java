@@ -23,9 +23,9 @@ public class BadShiftAmountNegativeCases {
 
     public long testEquality(int x) {
 
-        int result = 0;
+        long result = 0;
 
-        result += x >> 3;
+        result += (long) x >> 3;
         result += x << 3;
         result += x >>> 3;
 

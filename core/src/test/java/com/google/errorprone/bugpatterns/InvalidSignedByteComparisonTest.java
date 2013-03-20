@@ -16,36 +16,27 @@
 
 package com.google.errorprone.bugpatterns;
 
-import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.bugpatterns.InvalidStringEquality;
-
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
-
 /**
- * @author ptoomey@google.com (Patrick Toomey)
+ * @author Bill Pugh (bill.pugh@gmail.com)
  */
-public class InvalidSignedByteComparisonTest {
+public class InvalidSignedByteComparisonTest  extends BugPatternUnitTest {
 
-  private CompilationTestHelper compilationHelper;
+    @Before
+    public void setUp() {
+        setScanner(new BadShiftAmount.Scanner());
+    }
 
-  @Before
-  public void setUp() {
-    compilationHelper = new CompilationTestHelper(new InvalidSignedByteComparison.Scanner());
-  }
+    @Test
+    public void testPositiveCase() throws Exception {
+        super.testPositiveCase();
+    }
 
-  @Test
-  public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("InvalidSignedBytePositiveCases.java").toURI()));
-  }
-
-  @Test
-  public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("InvalidSignedByteNegativeCases.java").toURI()));
-  }
+    @Test
+    public void testNegativeCase() throws Exception {
+        super.testNegativeCase();
+    }
 
 }

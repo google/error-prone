@@ -34,6 +34,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 
@@ -75,6 +76,8 @@ public class BadShiftAmount extends DescribingMatcher<BinaryTree> {
              
     }
   };
+  
+
 
   /* Match string that are compared with == and != */
   @Override  
@@ -91,14 +94,25 @@ public class BadShiftAmount extends DescribingMatcher<BinaryTree> {
   @Override
   public Description describe(BinaryTree tree, VisitorState state) {
 
-    ExpressionTree leftOperand = tree.getLeftOperand();
-    
-    
-    SuggestedFix fix = new SuggestedFix().replace(tree, leftOperand.toString());
+  
+    String replacement = String.format("(long)%s %s %s",  tree.getLeftOperand(), getOperator(tree.getKind()), tree.getRightOperand());
+    SuggestedFix fix = new SuggestedFix().replace(tree, replacement);
     return new Description(tree, diagnosticMessage, fix); 
   }
 
   
+  public String getOperator(Tree.Kind kind) {
+      switch(kind) {
+      case RIGHT_SHIFT:
+          return ">>";
+      case UNSIGNED_RIGHT_SHIFT:
+          return ">>>";
+      case LEFT_SHIFT:
+          return "<<";
+          default:
+              throw new IllegalArgumentException("Bad kind: " + kind);
+      }
+  }
 public static class Scanner extends com.google.errorprone.Scanner {
     private BadShiftAmount matcher = new BadShiftAmount();
 
