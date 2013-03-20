@@ -35,6 +35,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree;
 
 /**
@@ -114,25 +115,38 @@ public class IncompatibleEquals extends DescribingMatcher<MethodInvocationTree> 
       
     if (checkGuava && guavaMatcher.matches(methodInvocationTree, state)) {
       matchState = MatchState.OBJECTS_EQUAL;
-      return incompatible(args.get(0), args.get(1));
+      return incompatible(args.get(0), args.get(1), state);
     } else if (checkEquals && equalsMatcher.matches(methodInvocationTree, state)) {
       matchState = MatchState.EQUALS;
       MemberSelectTree memberSelect = (MemberSelectTree)  methodInvocationTree.getMethodSelect();
-    return  incompatible(memberSelect.getExpression(), args.get(0));
+    return  incompatible(memberSelect.getExpression(), args.get(0), state);
     } else {
       return false;
     }
   }
 
-  private boolean incompatible(ExpressionTree left,
-        ExpressionTree right) {
+
+private boolean incompatible(ExpressionTree left,
+        ExpressionTree right, VisitorState state) {
       Type leftType = ((JCTree.JCExpression) left).type;
       Type rightType = ((JCTree.JCExpression) right).type;
       if (leftType.equals(rightType))
           return false;
       if (leftType instanceof Type.ArrayType && rightType instanceof Type.ArrayType)
           return false;
-      return isCoreType(leftType) && isCoreType(rightType);
+      if (leftType.isInterface() && !rightType.isFinal())
+          return false;
+      
+      if (rightType.isInterface() && !leftType.isFinal())
+              return false;
+      leftType = state.getTypes().erasure(leftType);
+      rightType = state.getTypes().erasure(rightType);
+     
+      if (state.getTypes().isAssignable(leftType, rightType))
+          return false;
+      if (state.getTypes().isAssignable(rightType, leftType))
+          return false;
+      return true;
 }
   
   private boolean isCoreType(Type type) {
