@@ -16,17 +16,32 @@
 
 package com.google.errorprone.bugpatterns;
 
+import java.util.HashSet;
+import java.util.Collection;
+
 /**
  * @author Bill Pugh (bill.pugh@gmail.com)
  */
 public class  IncompatibleEqualsNegativeCases {
 
 
-    public boolean testEquality(String s1, String s2) {
+    public boolean testEquality(String s1, String s2, Integer i) {
 
         if (s1.equals(s1))
             return true;
+        if (i.equals(17))
+            return true;
        
+        return false;
+    }
+    
+    public boolean testCollection(Collection<String> c, HashSet<String> s, Object o) {
+        if (c.equals(s))
+            return true;
+        if (s.equals(c))
+            return true;
+        if (o.equals(c))
+            return true;
         return false;
     }
 

@@ -24,8 +24,26 @@ public class IncompatibleEqualsPositiveCases {
     public boolean testEquality(String s, Integer i, Double d, Object a[]) {
 
         //BUG: Suggestion includes "false"
+        if (i.equals(17L))
+            return true;
+       
+        //BUG: Suggestion includes "false"
+        if (s.equals(a))
+            return true;
+      
+        
+        //BUG: Suggestion includes "false"
+        if (a.equals(s))
+            return true;
+        
+        //BUG: Suggestion includes "false"
+        if (i.equals((byte)17))
+            return true;
+        
+        //BUG: Suggestion includes "false"
         if (s.equals(i))
             return true;
+        
         //BUG: Suggestion includes "false"
         if (i.equals(d))
             return true;

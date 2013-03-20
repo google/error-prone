@@ -1,4 +1,4 @@
-/*
+ /*
  * Copyright 2012 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -36,7 +36,6 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree;
 
 /**
@@ -121,9 +120,16 @@ public class IncompatibleEquals extends DescribingMatcher<MethodInvocationTree> 
         } else if (checkEquals
                 && equalsMatcher.matches(methodInvocationTree, state)) {
             matchState = MatchState.EQUALS;
-            MemberSelectTree memberSelect = (MemberSelectTree) methodInvocationTree
+
+            ExpressionTree methodSelect = methodInvocationTree
                     .getMethodSelect();
-            Type t = ASTHelpers.getReceiverType(memberSelect);
+            
+            Type t;
+            if (methodSelect instanceof  MemberSelectTree) {
+                ExpressionTree invokedOn =  ((MemberSelectTree)methodSelect).getExpression();
+                t =  ((JCTree.JCExpression) invokedOn).type;;
+            }
+            else t  = ASTHelpers.getReceiverType( methodSelect);
             return incompatible(t, ((JCTree.JCExpression)  args.get(0)).type ,
                     state);
         } else {
@@ -132,8 +138,8 @@ public class IncompatibleEquals extends DescribingMatcher<MethodInvocationTree> 
     }
 
     private boolean incompatible(Type left, Type right, VisitorState state) {
-        leftType = left;
-        rightType = right;
+        leftType = state.getTypes().boxedTypeOrType(left);
+        rightType = state.getTypes().boxedTypeOrType(right);
         if (leftType.equals(rightType))
             return false;
         if (leftType instanceof Type.ArrayType
@@ -154,9 +160,9 @@ public class IncompatibleEquals extends DescribingMatcher<MethodInvocationTree> 
         leftType = state.getTypes().erasure(leftType);
         rightType = state.getTypes().erasure(rightType);
 
-        if (state.getTypes().isAssignable(leftType, rightType))
+        if (state.getTypes().isCastable(leftType, rightType))
             return false;
-        if (state.getTypes().isAssignable(rightType, leftType))
+        if (state.getTypes().isCastable(rightType, leftType))
             return false;
         return true;
     }
@@ -186,12 +192,11 @@ public class IncompatibleEquals extends DescribingMatcher<MethodInvocationTree> 
         }
 
         SuggestedFix fix = new SuggestedFix().replace(methodInvocationTree,
-                "false");
+                String.format("false /* equals comparison of %s and %s */", leftType, rightType));
 
         String explanation = String
                 .format("Comparing %s and %s for equality, which are incompatible and should never be equal",
                         leftType, rightType);
-        System.out.println(explanation);
         return new Description(methodInvocationTree,
                 getCustomDiagnosticMessage(explanation), fix);
     }
