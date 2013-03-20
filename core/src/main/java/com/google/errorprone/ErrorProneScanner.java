@@ -18,12 +18,16 @@ package com.google.errorprone;
 
 import com.google.errorprone.bugpatterns.ArrayEquals;
 import com.google.errorprone.bugpatterns.ArrayToString;
+import com.google.errorprone.bugpatterns.BadShiftAmount;
 import com.google.errorprone.bugpatterns.CollectionIncompatibleType;
 import com.google.errorprone.bugpatterns.CovariantEquals;
 import com.google.errorprone.bugpatterns.DeadException;
 import com.google.errorprone.bugpatterns.EmptyIfStatement;
 import com.google.errorprone.bugpatterns.EmptyStatement;
 import com.google.errorprone.bugpatterns.FallThroughSuppression;
+import com.google.errorprone.bugpatterns.IncompatibleEquals;
+import com.google.errorprone.bugpatterns.InvalidCharComparison;
+import com.google.errorprone.bugpatterns.InvalidSignedByteComparison;
 import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
 import com.google.errorprone.bugpatterns.SelfEquals;
 import com.google.errorprone.bugpatterns.OrderingFrom;
@@ -72,6 +76,7 @@ public class ErrorProneScanner extends Scanner {
   private final Iterable<DescribingMatcher<MethodTree>> methodMatchers;
   private final Iterable<DescribingMatcher<LiteralTree>> literalMatchers;
   private final Iterable<DescribingMatcher<ConditionalExpressionTree>> conditionalExpressionMatchers;
+  private final Iterable<DescribingMatcher<BinaryTree>> binaryExpressionMatchers;
 
   @SuppressWarnings("unchecked")
   public ErrorProneScanner(EnabledPredicate enabled) {
@@ -85,7 +90,8 @@ public class ErrorProneScanner extends Scanner {
           CollectionIncompatibleType.class,
           ArrayEquals.class,
           ArrayToString.class,
-          ReturnValueIgnored.class
+          ReturnValueIgnored.class,
+          IncompatibleEquals.class
       );
       this.newClassMatchers = createChecks(enabled, DeadException.class);
       this.annotationMatchers = createChecks(enabled,
@@ -95,6 +101,8 @@ public class ErrorProneScanner extends Scanner {
           EmptyIfStatement.class,
           EmptyStatement.class
       );
+      this.binaryExpressionMatchers = createChecks(enabled, BadShiftAmount.class, 
+              InvalidSignedByteComparison.class, InvalidCharComparison.class);
       this.assignmentMatchers = createChecks(enabled, SelfAssignment.class);
       this.methodMatchers = createChecks(enabled, CovariantEquals.class);
       this.literalMatchers = createChecks(enabled, LongLiteralLowerCaseSuffix.class);
@@ -123,6 +131,14 @@ public class ErrorProneScanner extends Scanner {
       evaluateMatch(methodInvocationTree, state, matcher);
     }
     return super.visitMethodInvocation(methodInvocationTree, state);
+  }
+  
+  @Override
+  public Void visitBinary(BinaryTree binaryExpressionTree,  VisitorState state) {
+      for (DescribingMatcher<BinaryTree> matcher : binaryExpressionMatchers) {
+          evaluateMatch(binaryExpressionTree, state, matcher);
+        }
+      return super.visitBinary(binaryExpressionTree, state);
   }
 
   @Override
