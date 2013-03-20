@@ -35,6 +35,7 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 
@@ -137,9 +138,15 @@ public class IncompatibleEquals extends DescribingMatcher<MethodInvocationTree> 
         }
     }
 
+    Type boxedTypeOrType(Type t,  VisitorState state) {
+        if (!t.isPrimitive()) return t;
+        ClassSymbol boxedClass = state.getTypes().boxedClass(t);
+        return boxedClass.type;
+    }
+
     private boolean incompatible(Type left, Type right, VisitorState state) {
-        leftType = state.getTypes().boxedTypeOrType(left);
-        rightType = state.getTypes().boxedTypeOrType(right);
+        leftType = boxedTypeOrType(left, state);
+        rightType = boxedTypeOrType(right, state);
         if (leftType.equals(rightType))
             return false;
         if (leftType instanceof Type.ArrayType
