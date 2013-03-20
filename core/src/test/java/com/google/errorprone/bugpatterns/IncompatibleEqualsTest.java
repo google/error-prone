@@ -26,7 +26,7 @@ public class IncompatibleEqualsTest extends BugPatternUnitTest {
 
     @Before
     public void setUp() {
-        setScanner(new BadShiftAmount.Scanner());
+        setScanner(new IncompatibleEquals.Scanner());
     }
 
     @Test

@@ -36,9 +36,10 @@ public abstract class DescribingMatcher<T extends Tree> implements Matcher<T> {
    */
   protected final Collection<String> names;
   protected final String diagnosticMessage;
+  protected final BugPattern annotation;
 
   public DescribingMatcher() {
-    BugPattern annotation = this.getClass().getAnnotation(BugPattern.class);
+    annotation = this.getClass().getAnnotation(BugPattern.class);
     if (annotation == null) {
       throw new IllegalStateException("Class " + this.getClass().getCanonicalName()
           + " not annotated with @BugPattern");
@@ -47,29 +48,33 @@ public abstract class DescribingMatcher<T extends Tree> implements Matcher<T> {
     names = new ArrayList<String>(annotation.altNames().length + 1);
     names.add(name);
     names.addAll(Arrays.asList(annotation.altNames()));
-    switch (annotation.linkType()) {
+    this.diagnosticMessage = getCustomDiagnosticMessage(annotation.summary());
+   
+  }
+
+  public String getCustomDiagnosticMessage(String customSummary) {
+      return "[" + annotation.name() + "] " + customSummary + getLink();
+  }
+  public String getLink() {
+      switch (annotation.linkType()) {
       case WIKI:
-        diagnosticMessage = "[" + annotation.name() + "] " + annotation.summary()
-            + "\n  (see http://code.google.com/p/error-prone/wiki/" + annotation.name() + ")";
-        break;
+        return "\n  (see http://code.google.com/p/error-prone/wiki/" + annotation.name() + ")";
+
       case CUSTOM:
         // annotation.link() must be provided.
         if (annotation.link().isEmpty()) {
           throw new IllegalStateException("If linkType element of @BugPattern is CUSTOM, "
               + "a link element must also be provided.");
         }
-        diagnosticMessage = "[" + annotation.name() + "] " + annotation.summary()
-            + "\n  (see " + annotation.link() + ")";
-        break;
+        return  "\n  (see " + annotation.link() + ")";
       case NONE:
-        diagnosticMessage = "[" + annotation.name() + "] " + annotation.summary();
-        break;
+       return "";
       default:
         throw new IllegalStateException("Unexpected value for linkType element of @BugPattern: "
             + annotation.linkType());
     }
   }
-
+  
   public String getName() {
     return name;
   }

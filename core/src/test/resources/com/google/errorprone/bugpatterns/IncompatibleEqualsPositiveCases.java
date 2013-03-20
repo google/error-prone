@@ -32,9 +32,7 @@ public class IncompatibleEqualsPositiveCases {
         //BUG: Suggestion includes "false"
         if (d.equals(a))
             return true;
-        //BUG: Suggestion includes "false"
-        if (a.equals(s))
-            return true;
+
 
         return false;
     }

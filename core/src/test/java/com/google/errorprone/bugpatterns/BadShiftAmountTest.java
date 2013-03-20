@@ -16,13 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
-import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.bugpatterns.InvalidStringEquality;
-
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
 
 /**
  * @author Bill Pugh (bill.pugh@gmail.com)
