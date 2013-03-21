@@ -266,30 +266,72 @@ public class Matchers {
     return new ParentNode<T>(treeMatcher);
   }
 
-  public static <T extends Tree> Matcher<T> isSubtypeOf(final Type type) {
-    return new Matcher<T>() {
-      @Override public boolean matches(Tree t, VisitorState state) {
-        return state.getTypes().isSubtype(((JCTree) t).type, type);
-      }
-    };
+  /**
+   * Matches an AST node if its type is a subtype of the given type.
+   *
+   * @param typeStr a string representation of the type, e.g., "java.util.AbstractList"
+   */
+  public static <T extends Tree> Matcher<T> isSubtypeOf(String typeStr) {
+    return new IsSubtypeOf<T>(typeStr);
   }
 
-  public static <T extends Tree> Matcher<T> isCastableTo(final Supplier<Type> type) {
-    return new Matcher<T>() {
-      @Override public boolean matches(T t, VisitorState state) {
-        return state.getTypes().isCastable(((JCTree)t).type, type.get(state));
-      }
-    };
+  /**
+   * Matches an AST node if its type is a subtype of the given type.
+   *
+   * @param type the type to check against
+   */
+  public static <T extends Tree> Matcher<T> isSubtypeOf(Type type) {
+    return new IsSubtypeOf<T>(type);
   }
 
-  public static <T extends Tree> Matcher<T> isSameType(final Type type) {
-    return new Matcher<T>() {
-      @Override public boolean matches(Tree t, VisitorState state) {
-        return state.getTypes().isSameType(((JCTree) t).type, type);
-      }
-    };
+  /**
+   * Matches an AST node if its type is castable to the given type.
+   *
+   * @param typeString a string representation of the type, e.g., "java.util.Set"
+   */
+  public static <T extends Tree> Matcher<T> isCastableTo(String typeString) {
+    return new IsCastableTo<T>(typeString);
   }
 
+  /**
+   * Matches an AST node if its type is castable to the given type.
+   *
+   * @param typeSupplier a supplier of the type to check against
+   */
+  public static <T extends Tree> Matcher<T> isCastableTo(Supplier<Type> typeSupplier) {
+    return new IsCastableTo<T>(typeSupplier);
+  }
+
+  /**
+   * Matches an AST node if its type is the same as the given type.
+   *
+   * @param type the type to check against
+   */
+  public static <T extends Tree> Matcher<T> isSameType(Type type) {
+    return new IsSameType<T>(type);
+  }
+
+  /**
+   * Matches an AST node if its type is the same as the given type.
+   *
+   * @param typeString the type to check against
+   */
+  public static <T extends Tree> Matcher<T> isSameType(String typeString) {
+    return new IsSameType<T>(typeString);
+  }
+
+  /**
+   * Matches an AST node if its type is the same as the type of the given tree.
+   *
+   * @param tree an AST node whose type to check against
+   */
+  public static <T extends Tree> Matcher<T> isSameType(Tree tree) {
+    return new IsSameType<T>(tree);
+  }
+
+  /**
+   * Matches an AST node if its type is an array type.
+   */
   public static <T extends Tree> Matcher<T> isArrayType() {
     return new Matcher<T>() {
       @Override public boolean matches(Tree t, VisitorState state) {
@@ -298,28 +340,13 @@ public class Matchers {
     };
   }
 
+  /**
+   * Matches an AST node if its type is a primitive type.
+   */
   public static <T extends Tree> Matcher<T> isPrimitiveType() {
     return new Matcher<T>() {
       @Override public boolean matches(Tree t, VisitorState state) {
         return ((JCTree) t).type.isPrimitive();
-      }
-    };
-  }
-
-  public static <T extends Tree> Matcher<T> isSameType(Tree tree) {
-    return isSameType(((JCTree) tree).type);
-  }
-
-  /**
-   * Matches a type based on the name of the type.
-   *
-   * @param type A string representation of the type (e.g., "java.lang.Object")
-   * @return true if the type of the tree matches the string
-   */
-  public static <T extends Tree> Matcher<T> isSameType(final String type) {
-    return new Matcher<T>() {
-      @Override public boolean matches(Tree t, VisitorState state) {
-        return type.equals(((JCTree) t).type.toString());
       }
     };
   }
