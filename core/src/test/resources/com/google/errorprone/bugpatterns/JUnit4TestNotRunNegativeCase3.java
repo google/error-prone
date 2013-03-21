@@ -16,7 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
@@ -31,9 +31,21 @@ public class JUnit4TestNotRunNegativeCase3 {
   // Isn't public.
   void testTest1() {}
   
-  // Has @Test annotation.
+  // Have checked annotation.
   @Test
   public void testTest2() {}
+    
+  @Before
+  public void testBefore() {}
+  
+  @After
+  public void testAfter() {}
+  
+  @BeforeClass
+  public void testBeforeClass() {}
+  
+  @AfterClass
+  public void testAfterClass() {}
   
   // Has parameters.
   public void testTest3(int foo) {} 

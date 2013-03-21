@@ -21,17 +21,15 @@ import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.annotations;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.enclosingClass;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.hasArgumentWithValue;
-import static com.google.errorprone.matchers.Matchers.isCastableTo;
 import static com.google.errorprone.matchers.Matchers.methodHasModifier;
 import static com.google.errorprone.matchers.Matchers.methodHasParameters;
 import static com.google.errorprone.matchers.Matchers.methodNameStartsWith;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.MultiMatcher.MatchType.ALL;
-
-import javax.lang.model.element.Modifier;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -40,8 +38,6 @@ import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
-import com.google.errorprone.suppliers.Supplier;
-import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
@@ -51,11 +47,15 @@ import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.util.List;
-import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Symbol.ClassSymbol;
+
+import java.util.Arrays;
+
+import javax.lang.model.element.Modifier;
 
 /**
  * TODO(eaftan): Similar checkers for setUp() and tearDown().
+ * TODO(eaftan): Don't flag methods that are tagged with @Before, @After, @BeforeClass, and
+ * @AfterClass.
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
@@ -63,12 +63,18 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
     summary = "Test method will not be run",
     explanation = "JUnit 4 requires that test methods be annotated with @Test to be run. " +
     		"This checker matches JUnit 4 test methods that would be run in JUnit 3 but are not " +
-    		"annotated with @Test.",
+    		"annotated with @Test.\n\n" +
+    		"If you intend for this test method not to run, please add both an @Test and an " +
+    		"@Ignore annotation to make it clear that you are purposely disabling this test.",
     category = JUNIT, maturity = MATURE, severity = ERROR)
 public class JUnit4TestNotRun extends DescribingMatcher<MethodTree> {
 
-  private static final String JUNIT4_TEST_ANNOTATION = "org.junit.Test";
   private static final String JUNIT4_CLASS_RUNNER = "org.junit.runners.BlockJUnit4ClassRunner";
+  private static final String JUNIT4_TEST_ANNOTATION = "org.junit.Test";
+  private static final String JUNIT_BEFORE_ANNOTATION = "org.junit.Before";
+  private static final String JUNIT_AFTER_ANNOTATION = "org.junit.After";
+  private static final String JUNIT_BEFORE_CLASS_ANNOTATION = "org.junit.BeforeClass";
+  private static final String JUNIT_AFTER_CLASS_ANNOTATION = "org.junit.AfterClass";
 
   private static final Matcher<ExpressionTree> isCastableToJUnit4TestRunner = new Matcher<ExpressionTree>() {
     @Override
@@ -87,15 +93,24 @@ public class JUnit4TestNotRun extends DescribingMatcher<MethodTree> {
           state.getTypes().isCastable(argType, jUnit4ClassRunnerType);
     }
   };
+
   private static final Matcher<ClassTree> isJUnit4TestClass =
       annotations(ALL, hasArgumentWithValue("value", isCastableToJUnit4TestRunner));
+
+  @SuppressWarnings("unchecked")
+  private static final Matcher<MethodTree> hasJUnitAnnotation = anyOf(
+      hasAnnotation(JUNIT4_TEST_ANNOTATION),
+      hasAnnotation(JUNIT_BEFORE_ANNOTATION),
+      hasAnnotation(JUNIT_AFTER_ANNOTATION),
+      hasAnnotation(JUNIT_BEFORE_CLASS_ANNOTATION),
+      hasAnnotation(JUNIT_AFTER_CLASS_ANNOTATION));
 
   /**
    * Matches if:
    * 1) The method's name begins with "test".
    * 2) The method has no parameters.
    * 3) The method is public.
-   * 4) The method is not annotated with @Test.
+   * 4) The method is not annotated with @Test, @Before, @After, @BeforeClass, or @AfterClass.
    * 5) The enclosing class has an @RunWith annotation.  This marks that the test is intended
    *    to run with JUnit 4.
    *
@@ -109,7 +124,7 @@ public class JUnit4TestNotRun extends DescribingMatcher<MethodTree> {
     return allOf(methodNameStartsWith("test"),
         methodHasParameters(),
         methodHasModifier(Modifier.PUBLIC),
-        not(hasAnnotation(JUNIT4_TEST_ANNOTATION)),
+        not(hasJUnitAnnotation),
         enclosingClass(isJUnit4TestClass))
         .matches(methodTree, state);
   }
