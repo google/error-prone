@@ -24,6 +24,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import javax.tools.Diagnostic;
+import javax.tools.JavaFileObject;
+
 import junit.framework.Assert;
 
 /**
@@ -45,6 +48,14 @@ public class CompilationTestHelper {
 
   public void assertCompileSucceeds(File source) {
     int exitCode = compiler.compile(new String[]{"-Xjcov", source.getAbsolutePath()});
+    if (exitCode != 0) {
+        for(Diagnostic<? extends JavaFileObject> d : diagnosticHelper.getDiagnostics()) {
+            System.out.println(d);
+            if (d.getKind() == Diagnostic.Kind.ERROR)
+                throw new AssertionError("Unexpected error: " + d);
+        }
+        
+    }
     assertThat(exitCode, is(0));
   }
 
