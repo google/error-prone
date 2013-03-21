@@ -52,18 +52,17 @@ import javax.lang.model.element.Modifier;
 
 /**
  * TODO(eaftan): Similar checkers for setUp() and tearDown().
- * TODO(eaftan): Inverse check -- JUnit 3 test that uses @Test annotation on a method that would
- * not be run.
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 @BugPattern(name = "JUnit4TestNotRun",
     summary = "Test method will not be run",
-    explanation = "JUnit 4 requires that test methods be annotated with @Test to be run. " +
-    		"This checker matches JUnit 4 test methods that would be run in JUnit 3 but are not " +
-    		"annotated with @Test.\n\n" +
-    		"If you intend for this test method not to run, please add both an @Test and an " +
-    		"@Ignore annotation to make it clear that you are purposely disabling this test.",
+    explanation = "JUnit 3 required that test methods be named in a special way to be run as " +
+        "part of a test case. JUnit 4 requires that test methods be annotated with @Test. " +
+        "The test method that triggered this error is named like a JUnit 3 test, but is in a " +
+        "JUnit 4 test class.  Thus, it will not be run unless you annotate it with @Test.\n\n" +
+        "If you intend for this test method not to run, please add both an @Test and an " +
+    	"@Ignore annotation to make it clear that you are purposely disabling it.",
     category = JUNIT, maturity = MATURE, severity = ERROR)
 public class JUnit4TestNotRun extends DescribingMatcher<MethodTree> {
 
@@ -75,22 +74,23 @@ public class JUnit4TestNotRun extends DescribingMatcher<MethodTree> {
   private static final String JUNIT_BEFORE_CLASS_ANNOTATION = "org.junit.BeforeClass";
   private static final String JUNIT_AFTER_CLASS_ANNOTATION = "org.junit.AfterClass";
 
-  private static final Matcher<ExpressionTree> isCastableToJUnit4TestRunner = new Matcher<ExpressionTree>() {
-    @Override
-    public boolean matches(ExpressionTree t, VisitorState state) {
-      Type type = ((JCTree) t).type;
-      if (!(type instanceof ClassType)) {
-        return false;
-      }
-      List<Type> typeArgs = ((ClassType) type).getTypeArguments();
-      if (typeArgs.size() != 1) {
-        return false;
-      }
-      Type argType = typeArgs.get(0);
-      Type jUnit4ClassRunnerType = state.getTypeFromString(JUNIT4_CLASS_RUNNER);
-      return jUnit4ClassRunnerType != null &&
-          state.getTypes().isCastable(argType, jUnit4ClassRunnerType);
-    }
+  private static final Matcher<ExpressionTree> isCastableToJUnit4TestRunner =
+      new Matcher<ExpressionTree>() {
+        @Override
+        public boolean matches(ExpressionTree t, VisitorState state) {
+          Type type = ((JCTree) t).type;
+          if (!(type instanceof ClassType)) {
+            return false;
+          }
+          List<Type> typeArgs = ((ClassType) type).getTypeArguments();
+          if (typeArgs.size() != 1) {
+            return false;
+          }
+          Type argType = typeArgs.get(0);
+          Type jUnit4ClassRunnerType = state.getTypeFromString(JUNIT4_CLASS_RUNNER);
+          return jUnit4ClassRunnerType != null &&
+              state.getTypes().isCastable(argType, jUnit4ClassRunnerType);
+        }
   };
 
   @SuppressWarnings("unchecked")
@@ -112,12 +112,8 @@ public class JUnit4TestNotRun extends DescribingMatcher<MethodTree> {
    * 2) The method has no parameters.
    * 3) The method is public.
    * 4) The method is not annotated with @Test, @Before, @After, @BeforeClass, or @AfterClass.
-   * 5) The enclosing class has an @RunWith annotation.  This marks that the test is intended
-   *    to run with JUnit 4.
-   *
-   * TODO(eaftan): Checking the class for @RunWith annotation is sufficient for Google, but not
-   * externally.  Look at https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/internal/builders/AllDefaultPossibilitiesBuilder.java
-   * to see all the ways to determine if the test is a JUnit 4 test.
+   * 5) The enclosing class has an @RunWith annotation and does not extend TestCase. This marks
+   *    that the test is intended to run with JUnit 4.
    */
   @SuppressWarnings("unchecked")
   @Override
