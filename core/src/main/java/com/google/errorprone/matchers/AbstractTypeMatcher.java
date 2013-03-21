@@ -16,40 +16,40 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.errorprone.suppliers.Suppliers.identitySupplier;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
+
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.suppliers.Supplier;
 
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree;
 
 /**
- * @author eaftan@google.com (Eddie Aftandilian)
+ * Base class for type matchers.
  */
-public class IsSubtypeOf<T extends Tree> extends AbstractTypeMatcher<T> {
+public abstract class AbstractTypeMatcher<T extends Tree> implements Matcher<T> {
 
-  public IsSubtypeOf(Supplier<Type> typeToCompareSupplier) {
-    super(typeToCompareSupplier);
+  protected Supplier<Type> typeToCompareSupplier;
+
+  public AbstractTypeMatcher(Supplier<Type> typeToCompareSupplier) {
+    this.typeToCompareSupplier = typeToCompareSupplier;
   }
 
-  public IsSubtypeOf(String typeString) {
-    super(typeString);
+  public AbstractTypeMatcher(Type typeToCompare) {
+    this(identitySupplier(typeToCompare));
   }
 
-  public IsSubtypeOf(Tree tree) {
-    super(tree);
+  public AbstractTypeMatcher(Tree tree) {
+    this(((JCTree) tree).type);
   }
 
-  public IsSubtypeOf(Type typeToCompare) {
-    super(typeToCompare);
+  public AbstractTypeMatcher(String typeString) {
+    this(typeFromString(typeString));
   }
 
   @Override
-  public boolean matches(T tree, VisitorState state) {
-    Types types = state.getTypes();
-    Type typeToCompare = typeToCompareSupplier.get(state);
-    return (typeToCompare != null &&
-        types.isSubtype(((JCTree) tree).type, types.erasure(typeToCompare)));
-  }
+  public abstract boolean matches(T tree, VisitorState state);
+
 }

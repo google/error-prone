@@ -61,4 +61,32 @@ public class Suppliers {
       }
     };
   }
+
+  /**
+   * Given the string representation of a type, supplies the corresponding type.
+   *
+   * @param typeString a string representation of a type, e.g., "java.util.List"
+   */
+  public static Supplier<Type> typeFromString(final String typeString) {
+    return new Supplier<Type>() {
+      @Override
+      public Type get(VisitorState state) {
+        return state.getTypeFromString(typeString);
+      }
+    };
+  }
+
+  /**
+   * Supplies what was given. Useful for adapting to methods that require a supplier.
+   *
+   * @param toSupply the item to supply
+   */
+  public static <T> Supplier<T> identitySupplier(final T toSupply) {
+    return new Supplier<T>() {
+      @Override
+      public T get(VisitorState state) {
+        return toSupply;
+      }
+    };
+  }
 }

@@ -27,21 +27,21 @@ import com.sun.tools.javac.tree.JCTree;
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class IsSubtypeOf<T extends Tree> extends AbstractTypeMatcher<T> {
+public class IsSameType<T extends Tree> extends AbstractTypeMatcher<T> {
 
-  public IsSubtypeOf(Supplier<Type> typeToCompareSupplier) {
+  public IsSameType(Supplier<Type> typeToCompareSupplier) {
     super(typeToCompareSupplier);
   }
 
-  public IsSubtypeOf(String typeString) {
+  public IsSameType(String typeString) {
     super(typeString);
   }
 
-  public IsSubtypeOf(Tree tree) {
+  public IsSameType(Tree tree) {
     super(tree);
   }
 
-  public IsSubtypeOf(Type typeToCompare) {
+  public IsSameType(Type typeToCompare) {
     super(typeToCompare);
   }
 
@@ -50,6 +50,6 @@ public class IsSubtypeOf<T extends Tree> extends AbstractTypeMatcher<T> {
     Types types = state.getTypes();
     Type typeToCompare = typeToCompareSupplier.get(state);
     return (typeToCompare != null &&
-        types.isSubtype(((JCTree) tree).type, types.erasure(typeToCompare)));
+        types.isSameType(((JCTree) tree).type, typeToCompare));
   }
 }
