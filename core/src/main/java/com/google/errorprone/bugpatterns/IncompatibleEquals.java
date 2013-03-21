@@ -35,7 +35,9 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 
@@ -172,6 +174,14 @@ public class IncompatibleEquals extends DescribingMatcher<MethodInvocationTree> 
             return false;
         if (state.getTypes().isCastable(rightType, leftType))
             return false;
+        Tree parent = state.getPath().getParentPath().getLeaf();
+        if (parent instanceof MethodInvocationTree) {
+            MethodInvocationTree p = (MethodInvocationTree) parent;
+            Symbol sym = ASTHelpers.getSymbol(p.getMethodSelect());
+            if (sym.name.contentEquals("assertFalse"))
+                return false;
+            
+        }
         return true;
     }
 

@@ -35,6 +35,10 @@ public class  IncompatibleEqualsNegativeCases {
         return false;
     }
     
+    public void testAssertFalse(String s, Integer i) {
+        assertFalse(s.equals(i));
+    }
+    
     public boolean testCollection(Collection<String> c, HashSet<String> s, Object o) {
         if (c.equals(s))
             return true;
@@ -43,6 +47,39 @@ public class  IncompatibleEqualsNegativeCases {
         if (o.equals(c))
             return true;
         return false;
+    }
+    
+    public void assertFalse(boolean b) {
+        if (b) throw new AssertionError();
+    }
+    
+    public static class DifferentClassesButMightBeEqual {
+        int value;
+
+        @Override
+        public int hashCode() {
+            return value;
+        }
+
+        @Override
+        public boolean equals(Object x) {
+            if (!(x instanceof DifferentClassesButMightBeEqual))
+                return false;
+            return value == ((DifferentClassesButMightBeEqual) x).value;
+        }
+
+        static class One extends DifferentClassesButMightBeEqual {
+        };
+
+        static class Two extends DifferentClassesButMightBeEqual {
+        };
+
+        public static void foobar() {
+            One one = new One();
+            Two two = new Two();
+//            System.out.println(one.equals(two));
+        }
+
     }
 
 }
