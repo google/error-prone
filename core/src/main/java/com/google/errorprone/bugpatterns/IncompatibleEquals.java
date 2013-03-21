@@ -182,7 +182,14 @@ public class IncompatibleEquals extends DescribingMatcher<MethodInvocationTree> 
                 return false;
             
         }
-        return true;
+        if (isCoreType(leftType) || isCoreType(rightType))
+            return true;
+        String lCollection = collectionType(leftType);
+        String rCollection = collectionType(rightType);
+        if (lCollection != null && rCollection != null && !lCollection.equals(rCollection))
+            return true;
+        
+        return false;
     }
 
     private boolean incompatible(ExpressionTree left, ExpressionTree right,
@@ -192,14 +199,28 @@ public class IncompatibleEquals extends DescribingMatcher<MethodInvocationTree> 
 
     }
 
+    private String collectionType(Type t) {
+        String name = t.toString();
+        if (name.endsWith("Map"))
+            return "Map";
+        if (name.endsWith("List"))
+            return "List";
+        if (name.endsWith("Set"))
+            return "Set";
+        return null;
+    }
+    
+    
     private boolean isCoreType(Type type) {
         if (type instanceof Type.ArrayType)
             return true;
         if (!(type instanceof Type.ClassType))
             return false;
+        if (type.isInterface())
+            return false;
         Type.ClassType cType = (Type.ClassType) type;
         String name = cType.toString();
-        return name.startsWith("java.lang") && cType.isFinal();
+        return name.startsWith("java.lang");
     }
 
     @Override

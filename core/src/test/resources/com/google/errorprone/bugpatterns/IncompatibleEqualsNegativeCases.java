@@ -77,7 +77,7 @@ public class  IncompatibleEqualsNegativeCases {
         public static void foobar() {
             One one = new One();
             Two two = new Two();
-//            System.out.println(one.equals(two));
+            System.out.println(one.equals(two));
         }
 
     }
