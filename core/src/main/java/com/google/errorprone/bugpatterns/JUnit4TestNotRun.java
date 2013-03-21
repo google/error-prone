@@ -25,11 +25,12 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.enclosingClass;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.hasArgumentWithValue;
+import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.methodHasModifier;
 import static com.google.errorprone.matchers.Matchers.methodHasParameters;
 import static com.google.errorprone.matchers.Matchers.methodNameStartsWith;
 import static com.google.errorprone.matchers.Matchers.not;
-import static com.google.errorprone.matchers.MultiMatcher.MatchType.ALL;
+import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -37,7 +38,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
 
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
@@ -48,14 +48,12 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.util.List;
 
-import java.util.Arrays;
-
 import javax.lang.model.element.Modifier;
 
 /**
  * TODO(eaftan): Similar checkers for setUp() and tearDown().
- * TODO(eaftan): Don't flag methods that are tagged with @Before, @After, @BeforeClass, and
- * @AfterClass.
+ * TODO(eaftan): Inverse check -- JUnit 3 test that uses @Test annotation on a method that would
+ * not be run.
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
@@ -70,6 +68,7 @@ import javax.lang.model.element.Modifier;
 public class JUnit4TestNotRun extends DescribingMatcher<MethodTree> {
 
   private static final String JUNIT4_CLASS_RUNNER = "org.junit.runners.BlockJUnit4ClassRunner";
+  private static final String JUNIT3_TEST_CASE_CLASS = "junit.framework.TestCase";
   private static final String JUNIT4_TEST_ANNOTATION = "org.junit.Test";
   private static final String JUNIT_BEFORE_ANNOTATION = "org.junit.Before";
   private static final String JUNIT_AFTER_ANNOTATION = "org.junit.After";
@@ -94,8 +93,10 @@ public class JUnit4TestNotRun extends DescribingMatcher<MethodTree> {
     }
   };
 
-  private static final Matcher<ClassTree> isJUnit4TestClass =
-      annotations(ALL, hasArgumentWithValue("value", isCastableToJUnit4TestRunner));
+  @SuppressWarnings("unchecked")
+  private static final Matcher<ClassTree> isJUnit4TestClass = allOf(
+      not(isSubtypeOf(JUNIT3_TEST_CASE_CLASS)),
+      annotations(ANY, hasArgumentWithValue("value", isCastableToJUnit4TestRunner)));
 
   @SuppressWarnings("unchecked")
   private static final Matcher<MethodTree> hasJUnitAnnotation = anyOf(

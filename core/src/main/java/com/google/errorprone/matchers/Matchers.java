@@ -266,10 +266,22 @@ public class Matchers {
     return new ParentNode<T>(treeMatcher);
   }
 
+  /**
+   * Matches an AST node if its type is a subtype of the given type.
+   * @param typeStr a string representation of the type, e.g., "java.util.AbstractList"
+   */
+  public static <T extends Tree> Matcher<T> isSubtypeOf(final String typeStr) {
+    return new Matcher<T>() {
+      @Override public boolean matches(Tree t, VisitorState state) {
+        return IsSubtypeOf.isSubtypeOf(t, state.getTypeFromString(typeStr), state);
+      }
+    };
+  }
+
   public static <T extends Tree> Matcher<T> isSubtypeOf(final Type type) {
     return new Matcher<T>() {
       @Override public boolean matches(Tree t, VisitorState state) {
-        return state.getTypes().isSubtype(((JCTree) t).type, type);
+        return IsSubtypeOf.isSubtypeOf(t, type, state);
       }
     };
   }

@@ -65,4 +65,10 @@ public class JUnit4TestNotRunTest {
         new File(this.getClass().getResource("JUnit4TestNotRunNegativeCase3.java").toURI()));
   }
 
+  @Test
+  public void testNegativeCase4() throws Exception {
+    compilationHelper.assertCompileSucceeds(
+        new File(this.getClass().getResource("JUnit4TestNotRunNegativeCase4.java").toURI()));
+  }
+
 }
