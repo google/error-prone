@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.common.base.Objects;
+
 /**
  * @author Bill Pugh (bill.pugh@gmail.com)
  */
@@ -54,5 +56,73 @@ public class IncompatibleEqualsPositiveCases {
 
         return false;
     }
+    
+    public boolean testObjectsEquals(String s, Integer i, Double d, Object a[]) {
+
+        //BUG: Suggestion includes "false"
+        if (java.util.Objects.equals(i, 17L))
+            return true;
+       
+        //BUG: Suggestion includes "false"
+        if (java.util.Objects.equals(s, a))
+            return true;
+      
+        
+        //BUG: Suggestion includes "false"
+        if (java.util.Objects.equals(a, s))
+            return true;
+        
+        //BUG: Suggestion includes "false"
+        if (java.util.Objects.equals(i, (byte)17))
+            return true;
+        
+        //BUG: Suggestion includes "false"
+        if (java.util.Objects.equals(s, i))
+            return true;
+        
+        //BUG: Suggestion includes "false"
+        if (java.util.Objects.equals(i, d))
+            return true;
+        //BUG: Suggestion includes "false"
+        if (java.util.Objects.equals(d, a))
+            return true;
+
+        return false;
+    }
+
+    
+    public boolean testGuavaEquals(String s, Integer i, Double d, Object a[]) {
+
+        //BUG: Suggestion includes "false"
+        if (Objects.equal(i, 17L))
+            return true;
+       
+        //BUG: Suggestion includes "false"
+        if (Objects.equal(s, a))
+            return true;
+      
+        
+        //BUG: Suggestion includes "false"
+        if (Objects.equal(a, s))
+            return true;
+        
+        //BUG: Suggestion includes "false"
+        if (Objects.equal(i, (byte)17))
+            return true;
+        
+        //BUG: Suggestion includes "false"
+        if (Objects.equal(s, i))
+            return true;
+        
+        //BUG: Suggestion includes "false"
+        if (Objects.equal(i, d))
+            return true;
+        //BUG: Suggestion includes "false"
+        if (Objects.equal(d, a))
+            return true;
+
+        return false;
+    }
+
 
 }

@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.Matchers.staticMethod;
 
 import java.util.List;
 
+import com.google.common.base.Objects;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -47,25 +48,15 @@ import com.sun.tools.javac.tree.JCTree;
 @BugPattern(name = "IncompatibleEquals", summary = "Call to equals() comparing different typesf", explanation = "The arguments to this equal method of distinct types, and thus should always evaluate to false.", category = JDK, severity = ERROR, maturity = MATURE)
 public class IncompatibleEquals extends DescribingMatcher<MethodInvocationTree> {
 
-    /**
-     * Matches calls to the Guava method Objects.equal() in which the two
-     * arguments are the same reference.
-     * 
-     * Example: Objects.equal(foo, foo)
-     */
+
     @SuppressWarnings({ "unchecked" })
     private static final Matcher<MethodInvocationTree> guavaMatcher = methodSelect(staticMethod(
             "com.google.common.base.Objects", "equal"));
 
-    /**
-     * Matches calls to any instance method called "equals" with exactly one
-     * argument in which the receiver is the same reference as the argument.
-     * 
-     * Example: foo.equals(foo)
-     * 
-     * TODO(eaftan): This may match too many things, if people are calling
-     * methods "equals" that don't really mean equals.
-     */
+    @SuppressWarnings({ "unchecked" })
+    private static final Matcher<MethodInvocationTree> objectsMatcher = methodSelect(staticMethod(
+            "java.util.Objects", "equals"));
+
     @SuppressWarnings("unchecked")
     private static final Matcher<MethodInvocationTree> equalsMatcher = methodSelect(Matchers
             .instanceMethod(Matchers.<ExpressionTree> anything(), "equals"));
@@ -77,51 +68,28 @@ public class IncompatibleEquals extends DescribingMatcher<MethodInvocationTree> 
     private MatchState matchState = MatchState.NONE;
 
     private enum MatchState {
-        NONE, OBJECTS_EQUAL, EQUALS
+        NONE, GUAVA_EQUAL, OBJECTS_EQUALS, EQUALS
     }
 
     Type leftType, rightType;
-    /**
-     * Should this matcher check for Objects.equal(foo, foo)?
-     */
-    private boolean checkGuava = true;
-
-    /**
-     * Should this matcher check for foo.equals(foo)?
-     */
-    private boolean checkEquals = true;
 
     public IncompatibleEquals() {
     }
 
-    /**
-     * Construct a new SelfEquals matcher.
-     * 
-     * @param checkGuava
-     *            Check for Guava Objects.equal(foo, foo) pattern?
-     * @param checkEquals
-     *            Check for foo.equals(foo) pattern?
-     */
-    public IncompatibleEquals(boolean checkGuava, boolean checkEquals) {
-        if (!checkGuava && !checkEquals) {
-            throw new IllegalArgumentException(
-                    "SelfEquals should check something");
-        }
-        this.checkGuava = checkGuava;
-        this.checkEquals = checkEquals;
-    }
-
+    
     @Override
     public boolean matches(MethodInvocationTree methodInvocationTree,
             VisitorState state) {
         List<? extends ExpressionTree> args = methodInvocationTree
                 .getArguments();
 
-        if (checkGuava && guavaMatcher.matches(methodInvocationTree, state)) {
-            matchState = MatchState.OBJECTS_EQUAL;
+        if ( guavaMatcher.matches(methodInvocationTree, state)) {
+            matchState = MatchState.GUAVA_EQUAL;
             return incompatible(args.get(0), args.get(1), state);
-        } else if (checkEquals
-                && equalsMatcher.matches(methodInvocationTree, state)) {
+        } else if ( objectsMatcher.matches(methodInvocationTree, state)) {
+            matchState = MatchState.OBJECTS_EQUALS;
+            return incompatible(args.get(0), args.get(1), state);
+        } else if (equalsMatcher.matches(methodInvocationTree, state)) {
             matchState = MatchState.EQUALS;
 
             ExpressionTree methodSelect = methodInvocationTree
@@ -130,10 +98,10 @@ public class IncompatibleEquals extends DescribingMatcher<MethodInvocationTree> 
             Type t;
             if (methodSelect instanceof  MemberSelectTree) {
                 ExpressionTree invokedOn =  ((MemberSelectTree)methodSelect).getExpression();
-                t =  ((JCTree.JCExpression) invokedOn).type;;
+                t =  ((JCTree.JCExpression) invokedOn).type;
             }
             else t  = ASTHelpers.getReceiverType( methodSelect);
-            return incompatible(t, ((JCTree.JCExpression)  args.get(0)).type ,
+            return incompatible(t, ((JCTree.JCExpression)  args.get(0)).type,
                     state);
         } else {
             return false;
@@ -155,20 +123,22 @@ public class IncompatibleEquals extends DescribingMatcher<MethodInvocationTree> 
         if (leftType instanceof Type.ArrayType
                 && rightType instanceof Type.ArrayType)
             return false;
-        
-//        if (leftType instanceof Type.ArrayType
-//                && !rightType.isInterface())
-//            return true;
-//        if (rightType instanceof Type.ArrayType
-//                && !leftType.isInterface())
-//            return true;
+        if (leftType instanceof Type.ArrayType
+                && !rightType.isInterface())
+            return true;
+        if (rightType instanceof Type.ArrayType
+                && !leftType.isInterface())
+            return true;
 //        if (leftType.isInterface() && !rightType.isFinal())
 //            return false;
 //
 //        if (rightType.isInterface() && !leftType.isFinal())
 //            return false;
+        if (!state.getTypes().disjointType(leftType, rightType))
+            return false;
         leftType = state.getTypes().erasure(leftType);
         rightType = state.getTypes().erasure(rightType);
+
 
         if (state.getTypes().isCastable(leftType, rightType))
             return false;
@@ -247,9 +217,6 @@ public class IncompatibleEquals extends DescribingMatcher<MethodInvocationTree> 
             matcher = new IncompatibleEquals();
         }
 
-        public Scanner(boolean checkGuava, boolean checkEquals) {
-            matcher = new IncompatibleEquals(checkGuava, checkEquals);
-        }
 
         @Override
         public Void visitMethodInvocation(MethodInvocationTree node,

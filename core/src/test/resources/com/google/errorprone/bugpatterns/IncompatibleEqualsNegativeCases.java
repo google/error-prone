@@ -16,8 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
-import java.util.HashSet;
-import java.util.Collection;
+import java.util.*;
+import com.google.common.base.Objects;
 
 /**
  * @author Bill Pugh (bill.pugh@gmail.com)
@@ -25,8 +25,12 @@ import java.util.Collection;
 public class  IncompatibleEqualsNegativeCases {
 
 
-    public boolean testEquality(String s1, String s2, Integer i) {
+    public boolean testEquality(Object o, String s1, String s2, Integer i) {
 
+        if (o.equals(s1)) 
+            return true;
+        if (s1.equals(o)) 
+            return true;
         if (s1.equals(s1))
             return true;
         if (i.equals(17))
@@ -35,17 +39,50 @@ public class  IncompatibleEqualsNegativeCases {
         return false;
     }
     
+    public boolean testGuavaEqual(Object o, String s1, String s2, Integer i) {
+
+        if (Objects.equal(o, s1)) 
+            return true;
+        if (Objects.equal(s1, o)) 
+            return true;
+        if (Objects.equal(s1, s1))
+            return true;
+        if (Objects.equal(i, 17))
+            return true;
+       
+        return false;
+    }
+ 
     public void testAssertFalse(String s, Integer i) {
         assertFalse(s.equals(i));
     }
     
-    public boolean testCollection(Collection<String> c, HashSet<String> s, Object o) {
+    public boolean testCollection(Collection<String> c, HashSet<String> s, TreeSet<String> s2, Set<String> s3,  Object o) {
         if (c.equals(s))
             return true;
         if (s.equals(c))
             return true;
         if (o.equals(c))
             return true;
+        if (s.equals(s2))
+            return true;
+        if (s2.equals(s3))
+            return true;
+        
+        return false;
+    }
+    public boolean testCollectionWithGuava(Collection<String> c, HashSet<String> s, TreeSet<String> s2, Set<String> s3,  Object o) {
+        if (Objects.equal(c, s))
+            return true;
+        if (Objects.equal(s, c))
+            return true;
+        if (Objects.equal(o, c))
+            return true;
+        if (Objects.equal(s, s2))
+            return true;
+        if (Objects.equal(s2, s3))
+            return true;
+        
         return false;
     }
     
