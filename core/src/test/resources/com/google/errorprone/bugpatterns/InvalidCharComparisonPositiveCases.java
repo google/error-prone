@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import java.io.IOException;
 import java.io.Reader;
 
 /**
@@ -23,7 +24,7 @@ import java.io.Reader;
  */
 public class InvalidCharComparisonPositiveCases {
 
-    public boolean testEquality(char c, Reader r) {
+    public boolean testEquality(char c, Reader r) throws IOException {
 
         //BUG: Suggestion includes "false"
         if (c == -1)
