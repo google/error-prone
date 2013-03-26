@@ -52,11 +52,13 @@ import javax.lang.model.element.Modifier;
 
 /**
  * TODO(eaftan): Similar checkers for setUp() and tearDown().
+ * TODO(eaftan): Inverse check -- JUnit 3 test that has @Test annotation but whose name doesn't
+ * match JUnit 3 criteria.
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 @BugPattern(name = "JUnit4TestNotRun",
-    summary = "Test method will not be run",
+    summary = "Test method will not be run; please add @Test annotation",
     explanation = "JUnit 3 required that test methods be named in a special way to be run as " +
         "part of a test case. JUnit 4 requires that test methods be annotated with @Test. " +
         "The test method that triggered this error is named like a JUnit 3 test, but is in a " +
@@ -74,22 +76,28 @@ public class JUnit4TestNotRun extends DescribingMatcher<MethodTree> {
   private static final String JUNIT_BEFORE_CLASS_ANNOTATION = "org.junit.BeforeClass";
   private static final String JUNIT_AFTER_CLASS_ANNOTATION = "org.junit.AfterClass";
 
+  /**
+   * Matches an argument of type Class<T>, where T is a subtype of JUNIT4_CLASS_RUNNER.
+   */
   private static final Matcher<ExpressionTree> isCastableToJUnit4TestRunner =
       new Matcher<ExpressionTree>() {
         @Override
         public boolean matches(ExpressionTree t, VisitorState state) {
           Type type = ((JCTree) t).type;
+          // Expect a class type.
           if (!(type instanceof ClassType)) {
             return false;
           }
+          // Expect one type argument, the type of the JUnit class runner to use.
           List<Type> typeArgs = ((ClassType) type).getTypeArguments();
           if (typeArgs.size() != 1) {
             return false;
           }
           Type argType = typeArgs.get(0);
+          // Check whether the type argument extends the JUnit 4 class runner type.
           Type jUnit4ClassRunnerType = state.getTypeFromString(JUNIT4_CLASS_RUNNER);
           return jUnit4ClassRunnerType != null &&
-              state.getTypes().isCastable(argType, jUnit4ClassRunnerType);
+              state.getTypes().isSubtype(argType, jUnit4ClassRunnerType);
         }
   };
 

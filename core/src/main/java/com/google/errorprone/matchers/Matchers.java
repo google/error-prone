@@ -497,6 +497,16 @@ public class Matchers {
     };
   }
 
+  /**
+   * Matches an AST node that represents a method declaration, based on the list of
+   * variableMatchers.  Applies the variableMatcher at index n to the parameter at index n
+   * and returns true iff they all match.  Returns false if the number of variableMatchers provided
+   * does not match the number of parameters.
+   *
+   * <p>If you pass no variableMatchers, this will match methods with no parameters.
+   *
+   * @param variableMatcher an array of matchers to apply to the parameters of the method
+   */
   public static Matcher<MethodTree> methodHasParameters(final Matcher<VariableTree>... variableMatcher) {
     return new Matcher<MethodTree>() {
       @Override
