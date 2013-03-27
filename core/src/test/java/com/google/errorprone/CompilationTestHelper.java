@@ -16,13 +16,18 @@
 
 package com.google.errorprone;
 
+import static com.google.errorprone.DiagnosticTestHelper.assertHasDiagnosticOnAllMatchingLines;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import static com.google.errorprone.DiagnosticTestHelper.assertHasDiagnosticOnAllMatchingLines;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import javax.tools.Diagnostic;
+import javax.tools.JavaFileObject;
+
+import junit.framework.Assert;
 
 /**
  * Utility class for tests that need to build using error-prone.
@@ -43,6 +48,14 @@ public class CompilationTestHelper {
 
   public void assertCompileSucceeds(File source) {
     int exitCode = compiler.compile(new String[]{"-Xjcov", source.getAbsolutePath()});
+    if (exitCode != 0) {
+        for(Diagnostic<? extends JavaFileObject> d : diagnosticHelper.getDiagnostics()) {
+            System.out.println(d);
+            if (d.getKind() == Diagnostic.Kind.ERROR)
+                throw new AssertionError("Unexpected error: " + d);
+        }
+        
+    }
     assertThat(exitCode, is(0));
   }
 
@@ -52,6 +65,8 @@ public class CompilationTestHelper {
    */
   public void assertCompileFailsWithMessages(File source) throws IOException {
     int exitCode = compiler.compile(new String[]{"-Xjcov", "-encoding", "UTF-8", source.getAbsolutePath()});
+    if (exitCode == 0)
+        Assert.fail("No errors generated for " + source);
     assertThat("Compiler returned an unexpected error code", exitCode, is(1));
     assertHasDiagnosticOnAllMatchingLines(diagnosticHelper.getDiagnostics(), source);
   }

@@ -44,16 +44,16 @@ public class InvalidStringEqualityPositiveCases {
     retVal = ("str2" == "str");    
     final String constValue = "str";
     //BUG: Suggestion includes "constValue.equals(x)"
-    retval = (x == constValue);
+    retVal = (x == constValue);
     //BUG: Suggestion includes "!constValue.equals(x)"
-    retval = (x != constValue);
+    retVal = (x != constValue);
     //BUG: Suggestion includes "(x + y + constValue).equals(x + y)"
-    retval = (x + y + constValue == x + y);
+    retVal = (x + y + constValue == x + y);
     final String constValue2 = "str2";
     //BUG: Suggestion includes "(constValue + constValue2).equals(x)"
-    retval = (constValue + constValue2 == x);
+    retVal = (constValue + constValue2 == x);
     //BUG: Suggestion includes "(constValue + constValue2).equals(x)"
-    retval = (x == constValue + constValue2);
+    retVal = (x == constValue + constValue2);
 
     return retVal;
   }

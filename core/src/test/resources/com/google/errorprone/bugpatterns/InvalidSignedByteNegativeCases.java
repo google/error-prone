@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Google Inc. All Rights Reserved.
+ * Copyright 2012 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,28 +17,29 @@
 package com.google.errorprone.bugpatterns;
 
 /**
- *
- * @author eaftan@google.com (Eddie Aftandilian)
+ * @author Bill Pugh (bill.pugh@gmail.com)
  */
-public class EmptyStatementNegativeCases {
+public class InvalidSignedByteNegativeCases {
 
-  public static void negativeCase1() {
-    int i = 10;
-    if (i == 10) {
-      System.out.println("foo");
-    }
-    i++;
+  public boolean testEquality(byte [] b, byte x) {
+    
+     if (x == 1)
+         return true;
+     if (x == -2)
+         return true;
+     if (x == 127)
+         return true;
+     if (x != 1) 
+         return true;
+     
+     if (b[0] == 1)
+         return true;
+     if (b[0] == -2)
+         return true;
+     if (b[0] == -127)
+         return true;
+
+    return false;
   }
-
-  public static void negativeCase2() {
-    int i = 0;
-    for (;;) {
-      if (i > 10) {
-        break;
-      }
-      i++;
-    }
-  }
-
 
 }

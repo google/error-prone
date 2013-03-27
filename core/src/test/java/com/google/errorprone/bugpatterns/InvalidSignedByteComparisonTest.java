@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Google Inc. All Rights Reserved.
+ * Copyright 2012 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,29 +16,27 @@
 
 package com.google.errorprone.bugpatterns;
 
+import org.junit.Before;
+import org.junit.Test;
+
 /**
- *
- * @author eaftan@google.com (Eddie Aftandilian)
+ * @author Bill Pugh (bill.pugh@gmail.com)
  */
-public class EmptyStatementNegativeCases {
+public class InvalidSignedByteComparisonTest  extends BugPatternUnitTest {
 
-  public static void negativeCase1() {
-    int i = 10;
-    if (i == 10) {
-      System.out.println("foo");
+    @Before
+    public void setUp() {
+        setScanner(new BadShiftAmount.Scanner());
     }
-    i++;
-  }
 
-  public static void negativeCase2() {
-    int i = 0;
-    for (;;) {
-      if (i > 10) {
-        break;
-      }
-      i++;
+    @Test
+    public void testPositiveCase() throws Exception {
+        super.testPositiveCase();
     }
-  }
 
+    @Test
+    public void testNegativeCase() throws Exception {
+        super.testNegativeCase();
+    }
 
 }

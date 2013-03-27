@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Google Inc. All Rights Reserved.
+ * Copyright 2012 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,29 +16,27 @@
 
 package com.google.errorprone.bugpatterns;
 
+import java.io.IOException;
+import java.io.Reader;
+
 /**
- *
- * @author eaftan@google.com (Eddie Aftandilian)
+ * @author Bill Pugh (bill.pugh@gmail.com)
  */
-public class EmptyStatementNegativeCases {
+public class InvalidCharComparisonPositiveCases {
 
-  public static void negativeCase1() {
-    int i = 10;
-    if (i == 10) {
-      System.out.println("foo");
+    public boolean testEquality(char c, Reader r) throws IOException {
+
+        //BUG: Suggestion includes "false"
+        if (c == -1)
+            return true;
+        
+        char d;
+        //BUG: Suggestion includes "false"
+        if ( (d = (char) r.read()) == -1)
+            return true;
+        
+
+        return false;
     }
-    i++;
-  }
-
-  public static void negativeCase2() {
-    int i = 0;
-    for (;;) {
-      if (i > 10) {
-        break;
-      }
-      i++;
-    }
-  }
-
 
 }
