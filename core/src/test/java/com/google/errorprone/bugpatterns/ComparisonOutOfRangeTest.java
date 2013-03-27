@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Google Inc. All Rights Reserved.
+ * Copyright 2013 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.bugpatterns.InvalidStringEquality;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,21 +26,26 @@ import java.io.File;
 /**
  * @author Bill Pugh (bill.pugh@gmail.com)
  */
-public class InvalidCharComparisonTest extends BugPatternUnitTest {
+public class ComparisonOutOfRangeTest {
+
+  private CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() {
-      setScanner(new InvalidCharComparison.Scanner());
+    compilationHelper = new CompilationTestHelper(new ComparisonOutOfRange.Scanner());
   }
 
   @Test
-  public void testPositiveCase() throws Exception {
-      super.testPositiveCase();
+  public void testPositiveCases() throws Exception {
+    compilationHelper.assertCompileFailsWithMessages(
+        new File(this.getClass().getResource(
+            "ComparisonOutOfRangePositiveCases.java").toURI()));
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
-      super.testNegativeCase();
+  public void testNegativeCases() throws Exception {
+    compilationHelper.assertCompileSucceeds(
+        new File(this.getClass().getResource(
+            "ComparisonOutOfRangeNegativeCases.java").toURI()));
   }
-
 }

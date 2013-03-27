@@ -47,14 +47,14 @@ import java.lang.StringBuilder;
  */
 @BugPattern(name = "CharComparison",
     summary = "Bad comparison of char",
-    explanation = "Signed bytes can only have a value in the range " + Character.MIN_VALUE  + " to " 
+    explanation = "Signed bytes can only have a value in the range " + Character.MIN_VALUE  + " to "
     + Character.MAX_VALUE + ". Comparing "
  + " a char with a value outside that range is vacuous and likely to be incorrect.",
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
 public class InvalidCharComparison extends DescribingMatcher<BinaryTree> {
 
     private static  boolean match(ExpressionTree leftOperand,   ExpressionTree rightOperand,  VisitorState state) {
-        Type byteType = state.getSymtab().charType; 
+        Type byteType = state.getSymtab().charType;
         Type leftType = ((JCTree.JCExpression) leftOperand).type;
         if (!state.getTypes().isSameType(leftType, byteType)) {
           return false;
@@ -71,21 +71,21 @@ public class InvalidCharComparison extends DescribingMatcher<BinaryTree> {
   /**
    *  A {@link Matcher} that matches whether the operands in a {@link BinaryTree} are
    *  strictly String operands.  For Example, if either operand is {@code null} the matcher
-   *  will return {@code false}  
+   *  will return {@code false}
    */
   private static final Matcher<BinaryTree> BAD_CHAR_COMPARISON = new Matcher<BinaryTree>() {
 
-      
+
     @Override
     public boolean matches(BinaryTree tree, VisitorState state) {
-      
+
       return match(tree.getLeftOperand(), tree.getRightOperand(), state)
               ||  match(tree.getRightOperand(), tree.getLeftOperand(), state);
     }
   };
 
   /* Match string that are compared with == and != */
-  @Override  
+  @Override
   public boolean matches(BinaryTree tree, VisitorState state) {
     return allOf(
         anyOf(
@@ -94,28 +94,28 @@ public class InvalidCharComparison extends DescribingMatcher<BinaryTree> {
         BAD_CHAR_COMPARISON
     ).matches(tree, state);
   }
-  
+
   @Override
   public Description describe(BinaryTree tree, VisitorState state) {
 
     ExpressionTree leftOperand = tree.getLeftOperand();
     ExpressionTree rightOperand = tree.getRightOperand();
     String fixedExpression;
-    
+
     if (rightOperand instanceof LiteralTree)
         fixedExpression = fix(leftOperand, tree.getKind(), (LiteralTree) rightOperand);
     else     if (leftOperand instanceof LiteralTree)
         fixedExpression = fix(rightOperand, tree.getKind(), (LiteralTree) leftOperand);
     else throw new IllegalStateException();
-    
+
     SuggestedFix fix = new SuggestedFix().replace(tree, fixedExpression.toString());
-    return new Description(tree, diagnosticMessage, fix); 
+    return new Description(tree, diagnosticMessage, fix);
   }
 
   private String fix(ExpressionTree leftOperand, Kind kind,
           LiteralTree rightLiteral) {
       return "false";
-}
+  }
 
 public static class Scanner extends com.google.errorprone.Scanner {
     private InvalidCharComparison matcher = new InvalidCharComparison();
