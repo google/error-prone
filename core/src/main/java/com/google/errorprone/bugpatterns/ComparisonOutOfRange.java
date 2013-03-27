@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -30,45 +31,44 @@ import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
 
 /**
  * @author bill.pugh@gmail.com (Bill Pugh)
+ *
+ * TODO(eaftan): Support other types of comparisons?  Are there likely to be errors in those?
+ * short might be a reasonable one to do since it will be widened to integer.
  */
 @BugPattern(name = "ComparisonOutOfRange",
+    // TODO(eaftan): Would be nice if error message gave the types being compared.
     summary = "Comparison of a value to another value that is out of range",
-    // TODO(eaftan): Better explanation
-    explanation = "Signed bytes can only have a value in the range " + Character.MIN_VALUE  +
-        " to " + Character.MAX_VALUE + ". Comparing a char with a value outside that range is " +
-        "vacuous and likely to be incorrect.",
+    explanation = "This checker looks for equality comparisons to values that are out of " +
+        "range for the compared type.  For example, bytes can only have a value in the range " +
+        Byte.MIN_VALUE + " to " + Byte.MAX_VALUE + ". Comparing a byte with a value outside " +
+        "that range will always return false and usually indicates an error in the code.\n\n" +
+        "This checker currently supports checking for bad byte and character comparisons.",
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
 public class ComparisonOutOfRange extends DescribingMatcher<BinaryTree> {
-
-  /**
-   * The state of the matcher.  Caches the result of matches() for use in describe().
-   */
-  private MatchState matchState = MatchState.NONE;
-
-  private enum MatchState {
-    NONE,
-    BYTE,
-    CHAR
-  }
 
   /**
    * Matches comparisons that are out of range for the given type.  Parameterized based on the
    * type of comparison (byte or char).
    *
-   * TODO(eaftan): Can any of this be extracted to matchers?
+   * TODO(eaftan): Can any of this be extracted to matchers library?
    */
   private static class BadComparisonMatcher implements Matcher<BinaryTree> {
-
     /**
      * The type of bad comparison matcher to create. Must be either Byte.TYPE or Character.TYPE.
      */
     private Class<?> type;
+
+    private boolean initialized = false;
+    private Type comparisonType;
+    private int maxValue;
+    private int minValue;
 
     public BadComparisonMatcher(Class<?> type) {
       if (type != Byte.TYPE && type != Character.TYPE) {
@@ -78,25 +78,33 @@ public class ComparisonOutOfRange extends DescribingMatcher<BinaryTree> {
       this.type = type;
     }
 
-    @Override
-    public boolean matches(BinaryTree tree, VisitorState state) {
-      // Must be an == or != comparison.
-      if (tree.getKind() != Kind.EQUAL_TO && tree.getKind() != Kind.NOT_EQUAL_TO) {
-        return false;
+    private void init(Symtab symbolTable) {
+      if (initialized) {
+        throw new IllegalStateException("Do not try to initialize twice!");
       }
 
       // Specialize matcher based on type.
-      Type comparisonType;
-      int maxValue;
-      int minValue;
       if (type == Byte.TYPE) {
-        comparisonType = state.getSymtab().byteType;
+        comparisonType = symbolTable.byteType;
         maxValue = Byte.MAX_VALUE;
         minValue = Byte.MIN_VALUE;
       } else {
-        comparisonType = state.getSymtab().charType;
+        comparisonType = symbolTable.charType;
         maxValue = Character.MAX_VALUE;
         minValue = Character.MIN_VALUE;
+      }
+      initialized = true;
+    }
+
+    @Override
+    public boolean matches(BinaryTree tree, VisitorState state) {
+      if (!initialized) {
+        init(state.getSymtab());
+      }
+
+      // Must be an == or != comparison.
+      if (tree.getKind() != Kind.EQUAL_TO && tree.getKind() != Kind.NOT_EQUAL_TO) {
+        return false;
       }
 
       // Match trees that have one operand of the specified type, and the other as a literal.
@@ -141,19 +149,20 @@ public class ComparisonOutOfRange extends DescribingMatcher<BinaryTree> {
   private static final Matcher<BinaryTree> BYTE_MATCHER = new BadComparisonMatcher(Byte.TYPE);
   private static final Matcher<BinaryTree> CHAR_MATCHER = new BadComparisonMatcher(Character.TYPE);
 
+  @SuppressWarnings("unchecked")
   @Override
   public boolean matches(BinaryTree tree, VisitorState state) {
-    if (BYTE_MATCHER.matches(tree, state)) {
-      matchState = MatchState.BYTE;
-      return true;
-    }
-    if (CHAR_MATCHER.matches(tree, state)) {
-      matchState = MatchState.CHAR;
-      return true;
-    }
-    return false;
+    return anyOf(BYTE_MATCHER, CHAR_MATCHER).matches(tree, state);
   }
 
+  /**
+   * Suggested fixes are as follows.  For the byte case, convert the literal to its byte
+   * representation. For example, "255" becomes "-1.  For the character case, replace the
+   * comparison with "false" since it's not clear what was intended.
+   *
+   * TODO(eaftan): Evaluate the suggested fix for the character case.  Can we do better than
+   * "false"?
+   */
   @Override
   public Description describe(BinaryTree tree, VisitorState state) {
 
@@ -172,7 +181,6 @@ public class ComparisonOutOfRange extends DescribingMatcher<BinaryTree> {
     }
 
     SuggestedFix fix = new SuggestedFix();
-    // TODO(eaftan): We can reconstruct matchState from the above with the literal.
     if (byteMatch) {
       fix.replace(literal, Byte.toString(((Number) literal.getValue()).byteValue()));
     } else {
