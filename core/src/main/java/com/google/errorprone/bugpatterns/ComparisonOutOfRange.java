@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 
@@ -38,26 +38,25 @@ import com.sun.tools.javac.tree.JCTree.JCLiteral;
 
 /**
  * @author bill.pugh@gmail.com (Bill Pugh)
+ * @author eaftan@google.com (Eddie Aftandilian)
  *
  * TODO(eaftan): Support other types of comparisons?  Are there likely to be errors in those?
- * short might be a reasonable one to do since it will be widened to integer.
  */
 @BugPattern(name = "ComparisonOutOfRange",
-    // TODO(eaftan): Would be nice if error message gave the types being compared.
-    summary = "Comparison of a value to another value that is out of range",
+    summary = "%ss may have a value in the range %d to %d; therefore, this comparison to " +
+    	"%s will always evaluate to %s",
     explanation = "This checker looks for equality comparisons to values that are out of " +
-        "range for the compared type.  For example, bytes can only have a value in the range " +
-        Byte.MIN_VALUE + " to " + Byte.MAX_VALUE + ". Comparing a byte with a value outside " +
-        "that range will always return false and usually indicates an error in the code.\n\n" +
+        "range for the compared type.  For example, bytes may have a value in the range " +
+        Byte.MIN_VALUE + " to " + Byte.MAX_VALUE + ". Comparing a byte for equality with a value " +
+        "outside that range will always evaluate to false and usually indicates an error in the " +
+        "code.\n\n" +
         "This checker currently supports checking for bad byte and character comparisons.",
-    category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
+    category = JDK, severity = ERROR, maturity = MATURE)
 public class ComparisonOutOfRange extends DescribingMatcher<BinaryTree> {
 
   /**
    * Matches comparisons that are out of range for the given type.  Parameterized based on the
    * type of comparison (byte or char).
-   *
-   * TODO(eaftan): Can any of this be extracted to matchers library?
    */
   private static class BadComparisonMatcher implements Matcher<BinaryTree> {
     /**
@@ -161,33 +160,49 @@ public class ComparisonOutOfRange extends DescribingMatcher<BinaryTree> {
    * comparison with "false" since it's not clear what was intended.
    *
    * TODO(eaftan): Evaluate the suggested fix for the character case.  Can we do better than
-   * "false"?
+   * "true" or "false"?
    */
   @Override
   public Description describe(BinaryTree tree, VisitorState state) {
 
-    JCLiteral literal = null;
+    JCLiteral literal;
+    JCTree nonLiteralOperand;
     boolean byteMatch;
     if (tree.getRightOperand() instanceof JCLiteral) {
       literal = (JCLiteral) tree.getRightOperand();
-      byteMatch = state.getTypes().isSameType(((JCTree) tree.getLeftOperand()).type,
-          state.getSymtab().byteType);
+      nonLiteralOperand = (JCTree) tree.getLeftOperand();
+      byteMatch = state.getTypes().isSameType(nonLiteralOperand.type, state.getSymtab().byteType);
     } else if (tree.getLeftOperand() instanceof JCLiteral) {
       literal = (JCLiteral) tree.getLeftOperand();
-      byteMatch = state.getTypes().isSameType(((JCTree) tree.getRightOperand()).type,
-          state.getSymtab().byteType);
+      nonLiteralOperand = (JCTree) tree.getRightOperand();
+      byteMatch = state.getTypes().isSameType(nonLiteralOperand.type, state.getSymtab().byteType);
     } else {
       throw new IllegalStateException("Expected one of the operands to be a literal");
+    }
+
+    boolean willEvaluateTo;
+    if (tree.getKind() == Kind.EQUAL_TO) {
+      willEvaluateTo = false;
+    } else {
+      willEvaluateTo = true;
     }
 
     SuggestedFix fix = new SuggestedFix();
     if (byteMatch) {
       fix.replace(literal, Byte.toString(((Number) literal.getValue()).byteValue()));
     } else {
-      fix.replace(tree, "false");
+      fix.replace(tree, Boolean.toString(willEvaluateTo));
     }
 
-    return new Description(tree, diagnosticMessage, fix);
+    String customDiagnosticMessage;
+    if (byteMatch) {
+      customDiagnosticMessage = getCustomDiagnosticMessage("byte", (int) Byte.MIN_VALUE,
+          (int) Byte.MAX_VALUE, literal.toString(), Boolean.toString(willEvaluateTo));
+    } else {
+      customDiagnosticMessage = getCustomDiagnosticMessage("char", (int) Character.MIN_VALUE,
+          (int) Character.MAX_VALUE, literal.toString(), Boolean.toString(willEvaluateTo));
+    }
+    return new Description(tree, customDiagnosticMessage, fix);
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {

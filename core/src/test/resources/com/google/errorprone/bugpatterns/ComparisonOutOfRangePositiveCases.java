@@ -64,6 +64,12 @@ public class ComparisonOutOfRangePositiveCases {
     if (c == -1) {
       return true;
     }
+    
+    //BUG: Suggestion includes "true"
+    if (c != -1) {
+      return true;
+    }
+
 
     char d;
     //BUG: Suggestion includes "false"

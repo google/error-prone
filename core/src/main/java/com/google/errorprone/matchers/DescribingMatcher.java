@@ -48,18 +48,30 @@ public abstract class DescribingMatcher<T extends Tree> implements Matcher<T> {
     names = new ArrayList<String>(annotation.altNames().length + 1);
     names.add(name);
     names.addAll(Arrays.asList(annotation.altNames()));
-    this.diagnosticMessage = getCustomDiagnosticMessage(annotation.summary());
-   
+    diagnosticMessage = getCustomDiagnosticMessage();
   }
 
-  public String getCustomDiagnosticMessage(String customSummary) {
-      return "[" + annotation.name() + "] " + customSummary + getLink();
+  /**
+   * Create a custom diagnostic message by using format string substitution on the summary
+   * field in the BugPattern.
+   *
+   * @param args Arguments referenced by the format specifiers in the annotation summary string.
+   * @return The custom diagnostic string
+   */
+  public String getCustomDiagnosticMessage(Object... args) {
+    String summary;
+    if (args.length == 0) {
+      summary = annotation.summary();
+    } else {
+      summary = String.format(annotation.summary(), args);
+    }
+    return "[" + annotation.name() + "] " + summary + getLink();
   }
-  public String getLink() {
-      switch (annotation.linkType()) {
+
+  private String getLink() {
+    switch (annotation.linkType()) {
       case WIKI:
         return "\n  (see http://code.google.com/p/error-prone/wiki/" + annotation.name() + ")";
-
       case CUSTOM:
         // annotation.link() must be provided.
         if (annotation.link().isEmpty()) {
@@ -68,13 +80,13 @@ public abstract class DescribingMatcher<T extends Tree> implements Matcher<T> {
         }
         return  "\n  (see " + annotation.link() + ")";
       case NONE:
-       return "";
+        return "";
       default:
         throw new IllegalStateException("Unexpected value for linkType element of @BugPattern: "
             + annotation.linkType());
     }
   }
-  
+
   public String getName() {
     return name;
   }
