@@ -145,7 +145,19 @@ public class ComparisonOutOfRange extends DescribingMatcher<BinaryTree> {
           long longValue = ((Long) literal.getValue()).longValue();
           return longValue < minValue || longValue > maxValue;
         default:
-          int intValue = ((Integer) literal.getValue()).intValue();
+          // JCLiteral.getValue() can return Integer, Character, or Boolean.
+          Object literalValue = literal.getValue();
+          int intValue;
+          if (literalValue instanceof Integer) {
+            intValue = ((Integer) literalValue).intValue();
+          } else if (literalValue instanceof Character) {
+            intValue = ((Character) literalValue).charValue();
+          } else if (literalValue instanceof Boolean) {
+            throw new IllegalStateException("Cannot compare " + comparisonType
+                + " to boolean literal");
+          } else {
+            throw new IllegalStateException("Unexpected literal type: " + literal);
+          }
           return intValue < minValue || intValue > maxValue;
       }
     }
@@ -165,13 +177,9 @@ public class ComparisonOutOfRange extends DescribingMatcher<BinaryTree> {
    * representation. For example, "255" becomes "-1.  For the character case, replace the
    * comparison with "true"/"false" since it's not clear what was intended and that is
    * semantically equivalent.
-   *
-   * TODO(eaftan): Evaluate the suggested fix for the character case.  Can we do better than
-   * "true" or "false"?
    */
   @Override
   public Description describe(BinaryTree tree, VisitorState state) {
-
     JCLiteral literal;
     JCTree nonLiteralOperand;
     boolean byteMatch;

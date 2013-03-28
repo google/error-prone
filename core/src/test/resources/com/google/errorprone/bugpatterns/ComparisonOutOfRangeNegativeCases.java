@@ -24,40 +24,52 @@ import java.io.Reader;
 public class ComparisonOutOfRangeNegativeCases {
 
   public boolean testByteEquality(byte [] b, byte x) {
-
-    if (x == 1)
+    if (x == 1) {
       return true;
-    if (x == -2)
+    }
+    if (x == -2) {
       return true;
-    if (x == 127)
+    }
+    if (x == 127) {
       return true;
-    if (x != 1) 
+    }
+    if (x != 1) {
       return true;
-
-    if (b[0] == 1)
+    }
+    
+    if (b[0] == 1) {
       return true;
-    if (b[0] == -2)
+    }
+    if (b[0] == -2) {
       return true;
-    if (b[0] == -127)
+    }
+    if (b[0] == -127) {
       return true;
+    }
+    
+    if (x == 'a') {
+      return true;
+    }
 
     return false;
   }
-  
+
   public boolean testCharEquality(char c, Reader r) throws Exception {
 
-    if (c == 0)
-        return true;
+    if (c == 0) {
+      return true;
+    }
+
+    if (c == 0xffff) {
+      return true;
+    }
     
-    if (c == 0xffff)
-        return true;
-  
     int d;
-    if ( (d = r.read()) == -1)
-        return true;
-    
+    if ( (d = r.read()) == -1) {
+      return true;
+    }
 
     return false;
-}
+  }
 
 }
