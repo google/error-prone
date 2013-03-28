@@ -77,6 +77,12 @@ public class ComparisonOutOfRange extends DescribingMatcher<BinaryTree> {
       this.type = type;
     }
 
+    /**
+     * Initialize matcher for the specific type.  We can't do this in the constructor because
+     * we need the symbol table, which isn't available at that time.
+     *
+     * @param symbolTable The compiler's symbol table
+     */
     private void init(Symtab symbolTable) {
       if (initialized) {
         throw new IllegalStateException("Do not try to initialize twice!");
@@ -116,8 +122,8 @@ public class ComparisonOutOfRange extends DescribingMatcher<BinaryTree> {
           rightOperand instanceof JCLiteral) {
         literal = (JCLiteral) rightOperand;
       } else if (leftOperand instanceof JCLiteral &&
-            state.getTypes().isSameType(rightType, comparisonType)) {
-          literal = (JCLiteral) leftOperand;
+          state.getTypes().isSameType(rightType, comparisonType)) {
+        literal = (JCLiteral) leftOperand;
       } else {
         return false;
       }
@@ -157,7 +163,8 @@ public class ComparisonOutOfRange extends DescribingMatcher<BinaryTree> {
   /**
    * Suggested fixes are as follows.  For the byte case, convert the literal to its byte
    * representation. For example, "255" becomes "-1.  For the character case, replace the
-   * comparison with "false" since it's not clear what was intended.
+   * comparison with "true"/"false" since it's not clear what was intended and that is
+   * semantically equivalent.
    *
    * TODO(eaftan): Evaluate the suggested fix for the character case.  Can we do better than
    * "true" or "false"?
