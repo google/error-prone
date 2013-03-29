@@ -18,6 +18,8 @@ package com.google.errorprone;
 
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.util.ASTHelpers;
+
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
@@ -60,7 +62,7 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
      */
     Set<String> newSuppressions = null;
     Set<String> prevSuppressions = suppressions;
-    Symbol sym = getSymbol(path.getLeaf());
+    Symbol sym = ASTHelpers.getSymbol(path.getLeaf());
     if (sym != null) {
       newSuppressions = extendSuppressionSet(sym, state.getSymtab().suppressWarningsType,
           suppressions);
@@ -97,7 +99,7 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
      */
     Set<String> newSuppressions = null;
     Set<String> prevSuppressions = suppressions;
-    Symbol sym = getSymbol(tree);
+    Symbol sym = ASTHelpers.getSymbol(tree);
     if (sym != null) {
       newSuppressions = extendSuppressionSet(sym, state.getSymtab().suppressWarningsType,
           suppressions);
@@ -112,30 +114,6 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
       suppressions = prevSuppressions;
     }
 
-  }
-
-  /**
-   * Given an AST node, returns its symbol.  Only certain AST nodes have
-   * symbols, so if there is no symbol for this node, returns null.
-   *
-   * @param tree The AST node for which to get the symbol
-   * @return The symbol if it exists, null otherwise
-   */
-  private Symbol getSymbol(Tree tree) {
-    switch (tree.getKind()) {
-      case CLASS:
-        return ((JCClassDecl) tree).sym;
-      case METHOD:
-        return ((JCMethodDecl) tree).sym;
-      case VARIABLE:
-        return ((JCVariableDecl) tree).sym;
-      case MEMBER_SELECT:
-        return ((JCFieldAccess) tree).sym;
-      case IDENTIFIER:
-        return ((JCIdent) tree).sym;
-      default:
-        return null;
-    }
   }
 
   /**
