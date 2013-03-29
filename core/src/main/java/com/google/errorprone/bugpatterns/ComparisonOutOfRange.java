@@ -129,7 +129,7 @@ public class ComparisonOutOfRange extends DescribingMatcher<BinaryTree> {
       }
 
       // Check whether literal is out of range for the specified type.  Logic is based on
-      // JLS 5.6.2 - Binary Numeric Promotion:
+      // JLS 5.6.2 - Binary Numeric Promotion:NN
       // If either is double, other is converted to double.
       // If either is float, other is converted to float.
       // If either is long, other is converted to long.
