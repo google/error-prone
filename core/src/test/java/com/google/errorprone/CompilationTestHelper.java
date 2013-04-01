@@ -16,13 +16,13 @@
 
 package com.google.errorprone;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-
 import static com.google.errorprone.DiagnosticTestHelper.assertHasDiagnosticOnAllMatchingLines;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 
 /**
  * Utility class for tests that need to build using error-prone.

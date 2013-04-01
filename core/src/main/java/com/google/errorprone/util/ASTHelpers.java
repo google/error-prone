@@ -16,7 +16,11 @@
 
 package com.google.errorprone.util;
 
+import com.google.errorprone.VisitorState;
+import com.google.errorprone.matchers.Matcher;
+
 import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -34,6 +38,9 @@ import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * This class contains utility methods to work with the javac AST.
@@ -238,4 +245,29 @@ public class ASTHelpers {
     }
     throw new IllegalArgumentException("Expected a JCFieldAccess or JCIdent");
   }
+
+  /**
+   * Given a BinaryTree to match against and a list of two matchers, compares the first matcher
+   * against the left operand and the second matcher against the right operand.  If they both
+   * match, returns a list with the operand that matched each matcher in the corresponding
+   * position.
+   *
+   * @param tree a BinaryTree AST node
+   * @param matchers a list of matchers
+   * @param state the VisitorState
+   * @return a list of matched operands, or null if at least one did not match
+   */
+  public static List<ExpressionTree> matchBinaryTree(BinaryTree tree,
+      List<Matcher<ExpressionTree>> matchers, VisitorState state) {
+    ExpressionTree leftOperand = tree.getLeftOperand();
+    ExpressionTree rightOperand = tree.getRightOperand();
+    if (matchers.get(0).matches(leftOperand, state) && matchers.get(1).matches(rightOperand, state)) {
+      return Arrays.asList(leftOperand, rightOperand);
+    } else if (matchers.get(0).matches(rightOperand, state) && matchers.get(1).matches(leftOperand, state)) {
+      return Arrays.asList(rightOperand, leftOperand);
+    } else {
+      return null;
+    }
+  }
+
 }

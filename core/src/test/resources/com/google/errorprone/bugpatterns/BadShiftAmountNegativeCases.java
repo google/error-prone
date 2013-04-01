@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Google Inc. All Rights Reserved.
+ * Copyright 2012 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,28 +17,19 @@
 package com.google.errorprone.bugpatterns;
 
 /**
- *
- * @author eaftan@google.com (Eddie Aftandilian)
+ * @author Bill Pugh (bill.pugh@gmail.com)
  */
-public class EmptyStatementNegativeCases {
+public class BadShiftAmountNegativeCases {
 
-  public static void negativeCase1() {
-    int i = 10;
-    if (i == 10) {
-      System.out.println("foo");
+    public long testEquality(int x) {
+
+        long result = 0;
+
+        result += (long) x >> 3;
+        result += x << 3;
+        result += x >>> 3;
+
+        return result;
     }
-    i++;
-  }
-
-  public static void negativeCase2() {
-    int i = 0;
-    for (;;) {
-      if (i > 10) {
-        break;
-      }
-      i++;
-    }
-  }
-
 
 }

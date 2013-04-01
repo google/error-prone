@@ -132,10 +132,23 @@ public class Matchers {
 
   /**
    * Matches an AST node of a given kind, for example, an Annotation or a switch block.
-   * @param typeInfer a type token for the generic type. Unused, but allows the returned matcher to be composed.
+   * @param typeInfer a type token for the generic type. Unused, but allows the returned matcher to
+   * be composed.
    */
   public static <T extends Tree> Matcher<T> kindIs(final Kind kind, Class<T> typeInfer) {
     return kindIs(kind);
+  }
+
+  /**
+   * Matches if an AST node is an instance of the given class.
+   */
+  public static <T extends Tree> Matcher<T> isInstance(final Class<?> klass) {
+    return new Matcher<T>() {
+      @Override
+      public boolean matches(T t, VisitorState state) {
+        return klass.isInstance(t);
+      }
+    };
   }
 
   /**

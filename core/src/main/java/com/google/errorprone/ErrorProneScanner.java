@@ -16,31 +16,44 @@
 
 package com.google.errorprone;
 
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
+
 import com.google.errorprone.bugpatterns.ArrayEquals;
 import com.google.errorprone.bugpatterns.ArrayToString;
+import com.google.errorprone.bugpatterns.BadShiftAmount;
 import com.google.errorprone.bugpatterns.CollectionIncompatibleType;
+import com.google.errorprone.bugpatterns.ComparisonOutOfRange;
 import com.google.errorprone.bugpatterns.CovariantEquals;
 import com.google.errorprone.bugpatterns.DeadException;
 import com.google.errorprone.bugpatterns.EmptyIfStatement;
 import com.google.errorprone.bugpatterns.EmptyStatement;
 import com.google.errorprone.bugpatterns.FallThroughSuppression;
+import com.google.errorprone.bugpatterns.IncompatibleEquals;
 import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
-import com.google.errorprone.bugpatterns.SelfEquals;
 import com.google.errorprone.bugpatterns.OrderingFrom;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNull;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNullPrimitive;
 import com.google.errorprone.bugpatterns.PreconditionsExpensiveString;
 import com.google.errorprone.bugpatterns.ReturnValueIgnored;
 import com.google.errorprone.bugpatterns.SelfAssignment;
+import com.google.errorprone.bugpatterns.SelfEquals;
 import com.google.errorprone.bugpatterns.SuppressWarningsDeprecated;
 import com.google.errorprone.bugpatterns.UnneededConditionalOperator;
 import com.google.errorprone.matchers.DescribingMatcher;
-import com.sun.source.tree.*;
+
+import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.AssignmentTree;
+import com.sun.source.tree.BinaryTree;
+import com.sun.source.tree.ConditionalExpressionTree;
+import com.sun.source.tree.EmptyStatementTree;
+import com.sun.source.tree.LiteralTree;
+import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.Tree;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 
 /**
  * Scans the parsed AST, looking for violations of any of the enabled checks.
@@ -72,6 +85,7 @@ public class ErrorProneScanner extends Scanner {
   private final Iterable<DescribingMatcher<MethodTree>> methodMatchers;
   private final Iterable<DescribingMatcher<LiteralTree>> literalMatchers;
   private final Iterable<DescribingMatcher<ConditionalExpressionTree>> conditionalExpressionMatchers;
+  private final Iterable<DescribingMatcher<BinaryTree>> binaryExpressionMatchers;
 
   @SuppressWarnings("unchecked")
   public ErrorProneScanner(EnabledPredicate enabled) {
@@ -85,16 +99,18 @@ public class ErrorProneScanner extends Scanner {
           CollectionIncompatibleType.class,
           ArrayEquals.class,
           ArrayToString.class,
-          ReturnValueIgnored.class
-      );
+          ReturnValueIgnored.class,
+          IncompatibleEquals.class);
       this.newClassMatchers = createChecks(enabled, DeadException.class);
       this.annotationMatchers = createChecks(enabled,
           FallThroughSuppression.class,
           SuppressWarningsDeprecated.class);
       this.emptyStatementMatchers = createChecks(enabled,
           EmptyIfStatement.class,
-          EmptyStatement.class
-      );
+          EmptyStatement.class);
+      this.binaryExpressionMatchers = createChecks(enabled,
+          BadShiftAmount.class,
+          ComparisonOutOfRange.class);
       this.assignmentMatchers = createChecks(enabled, SelfAssignment.class);
       this.methodMatchers = createChecks(enabled, CovariantEquals.class);
       this.literalMatchers = createChecks(enabled, LongLiteralLowerCaseSuffix.class);
@@ -123,6 +139,14 @@ public class ErrorProneScanner extends Scanner {
       evaluateMatch(methodInvocationTree, state, matcher);
     }
     return super.visitMethodInvocation(methodInvocationTree, state);
+  }
+
+  @Override
+  public Void visitBinary(BinaryTree binaryExpressionTree,  VisitorState state) {
+    for (DescribingMatcher<BinaryTree> matcher : binaryExpressionMatchers) {
+      evaluateMatch(binaryExpressionTree, state, matcher);
+    }
+    return super.visitBinary(binaryExpressionTree, state);
   }
 
   @Override
