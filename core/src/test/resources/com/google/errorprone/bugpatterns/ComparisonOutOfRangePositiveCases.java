@@ -24,60 +24,41 @@ import java.io.Reader;
  */
 public class ComparisonOutOfRangePositiveCases {
 
-  public boolean testByteEquality(byte[] b, byte x) {
+  public void testByteEquality() {
+    boolean result;
+    byte b = 0;
+    byte[] barr = {1, 2, 3};
 
-    //BUG: Suggestion includes "x == -1"
-    if (x == 255) {
-      return true;
-    }
-    //BUG: Suggestion includes "x == 1"
-    if (x == -255) {
-      return true;
-    }
-    //BUG: Suggestion includes "x == -128"
-    if (x == 128) {
-      return true;
-    }
-    //BUG: Suggestion includes "x != -1"
-    if (x != 255) {
-      return true;
-    }
+    //BUG: Suggestion includes "b == -1"
+    result = b == 255;
+    //BUG: Suggestion includes "b == 1"
+    result = b == -255;
+    //BUG: Suggestion includes "b == -128"
+    result = b == 128;
+    //BUG: Suggestion includes "b != -1"
+    result = b != 255;
 
-    //BUG: Suggestion includes "b[0] == -1"
-    if (b[0] == 255) {
-      return true;
-    }
-    //BUG: Suggestion includes "b[0] == -128"
-    if (b[0] == 128) {
-      return true;
-    }
-    //BUG: Suggestion includes "b[0] == 1"
-    if (b[0] == -255) {
-      return true;
-    }
-
-    return false;
+    //BUG: Suggestion includes "barr[0] == -1"
+    result = barr[0] == 255;
+    //BUG: Suggestion includes "barr[0] == -128"
+    result = barr[0] == 128;
+    //BUG: Suggestion includes "barr[0] == 1"
+    result = barr[0] == -255;
   }
   
-  public boolean testCharEquality(char c, Reader r) throws IOException {
-    //BUG: Suggestion includes "false"
-    if (c == -1) {
-      return true;
-    }
-    
-    //BUG: Suggestion includes "true"
-    if (c != -1) {
-      return true;
-    }
+  public void testCharEquality() throws IOException {
+    boolean result;
+    char c = 'A';
+    Reader reader = null;
 
+    //BUG: Suggestion includes "false"
+    result = c == -1;
+    //BUG: Suggestion includes "true"
+    result = c != -1;
 
     char d;
     //BUG: Suggestion includes "false"
-    if ((d = (char) r.read()) == -1) {
-      return true;
-    }
-
-    return false;
+    result = (d = (char) reader.read()) == -1;
   }
 }
 

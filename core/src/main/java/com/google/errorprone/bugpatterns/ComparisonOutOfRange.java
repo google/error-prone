@@ -27,6 +27,8 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Matchers;
+import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
@@ -35,6 +37,9 @@ import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author bill.pugh@gmail.com (Bill Pugh)
@@ -112,41 +117,36 @@ public class ComparisonOutOfRange extends DescribingMatcher<BinaryTree> {
         return false;
       }
 
-      // Match trees that have one operand of the specified type, and the other as a literal.
-      ExpressionTree leftOperand = tree.getLeftOperand();
-      Type leftType = ((JCTree) leftOperand).type;
-      ExpressionTree rightOperand = tree.getRightOperand();
-      Type rightType = ((JCTree) rightOperand).type;
-      JCLiteral literal = null;
-      if (state.getTypes().isSameType(leftType, comparisonType) &&
-          rightOperand instanceof JCLiteral) {
-        literal = (JCLiteral) rightOperand;
-      } else if (leftOperand instanceof JCLiteral &&
-          state.getTypes().isSameType(rightType, comparisonType)) {
-        literal = (JCLiteral) leftOperand;
-      } else {
+      // Match trees that have one literal operand and another of the specified type.
+      @SuppressWarnings("unchecked")
+      List<ExpressionTree> binaryTreeMatches = ASTHelpers.matchBinaryTree(tree,
+          Arrays.asList(Matchers.<ExpressionTree>isInstance(JCLiteral.class),
+              Matchers.<ExpressionTree>isSameType(comparisonType)),
+          state);
+      if (binaryTreeMatches == null) {
         return false;
       }
+      JCLiteral literal = (JCLiteral) binaryTreeMatches.get(0);
 
       // Check whether literal is out of range for the specified type.  Logic is based on
-      // JLS 5.6.2 - Binary Numeric Promotion:NN
+      // JLS 5.6.2 - Binary Numeric Promotion:
       // If either is double, other is converted to double.
       // If either is float, other is converted to float.
       // If either is long, other is converted to long.
       // Otherwise, both are converted to int.
+      Object literalValue = literal.getValue();
       switch (literal.getKind()) {
         case DOUBLE_LITERAL:
-          double doubleValue = ((Double) literal.getValue()).doubleValue();
+          double doubleValue = ((Double) literalValue).doubleValue();
           return doubleValue < minValue || doubleValue > maxValue;
         case FLOAT_LITERAL:
-          float floatValue = ((Float) literal.getValue()).floatValue();
+          float floatValue = ((Float) literalValue).floatValue();
           return floatValue < minValue || floatValue > maxValue;
         case LONG_LITERAL:
-          long longValue = ((Long) literal.getValue()).longValue();
+          long longValue = ((Long) literalValue).longValue();
           return longValue < minValue || longValue > maxValue;
         default:
           // JCLiteral.getValue() can return Integer, Character, or Boolean.
-          Object literalValue = literal.getValue();
           int intValue;
           if (literalValue instanceof Integer) {
             intValue = ((Integer) literalValue).intValue();
@@ -177,43 +177,34 @@ public class ComparisonOutOfRange extends DescribingMatcher<BinaryTree> {
    * representation. For example, "255" becomes "-1.  For the character case, replace the
    * comparison with "true"/"false" since it's not clear what was intended and that is
    * semantically equivalent.
+   *
+   * TODO(eaftan): Suggested fixes don't handle side-effecting expressions, such as
+   * (d = reader.read()) == -1.  Maybe add special case handling for assignments.
    */
   @Override
   public Description describe(BinaryTree tree, VisitorState state) {
-    JCLiteral literal;
-    JCTree nonLiteralOperand;
-    boolean byteMatch;
-    if (tree.getRightOperand() instanceof JCLiteral) {
-      literal = (JCLiteral) tree.getRightOperand();
-      nonLiteralOperand = (JCTree) tree.getLeftOperand();
-      byteMatch = state.getTypes().isSameType(nonLiteralOperand.type, state.getSymtab().byteType);
-    } else if (tree.getLeftOperand() instanceof JCLiteral) {
-      literal = (JCLiteral) tree.getLeftOperand();
-      nonLiteralOperand = (JCTree) tree.getRightOperand();
-      byteMatch = state.getTypes().isSameType(nonLiteralOperand.type, state.getSymtab().byteType);
-    } else {
+    @SuppressWarnings("unchecked")
+    List<ExpressionTree> binaryTreeMatches = ASTHelpers.matchBinaryTree(tree,
+        Arrays.asList(Matchers.<ExpressionTree>isInstance(JCLiteral.class),
+            Matchers.<ExpressionTree>anything()),
+        state);
+    if (binaryTreeMatches == null) {
       throw new IllegalStateException("Expected one of the operands to be a literal");
     }
+    JCLiteral literal = (JCLiteral) binaryTreeMatches.get(0);
+    JCTree nonLiteralOperand = (JCTree) binaryTreeMatches.get(1);
+    boolean byteMatch = state.getTypes().isSameType(nonLiteralOperand.type,
+        state.getSymtab().byteType);
 
-    boolean willEvaluateTo;
-    if (tree.getKind() == Kind.EQUAL_TO) {
-      willEvaluateTo = false;
-    } else {
-      willEvaluateTo = true;
-    }
-
+    boolean willEvaluateTo = (tree.getKind() != Kind.EQUAL_TO);
     SuggestedFix fix = new SuggestedFix();
-    if (byteMatch) {
-      fix.replace(literal, Byte.toString(((Number) literal.getValue()).byteValue()));
-    } else {
-      fix.replace(tree, Boolean.toString(willEvaluateTo));
-    }
-
     String customDiagnosticMessage;
     if (byteMatch) {
+      fix.replace(literal, Byte.toString(((Number) literal.getValue()).byteValue()));
       customDiagnosticMessage = getCustomDiagnosticMessage("byte", (int) Byte.MIN_VALUE,
           (int) Byte.MAX_VALUE, literal.toString(), Boolean.toString(willEvaluateTo));
     } else {
+      fix.replace(tree, Boolean.toString(willEvaluateTo));
       customDiagnosticMessage = getCustomDiagnosticMessage("char", (int) Character.MIN_VALUE,
           (int) Character.MAX_VALUE, literal.toString(), Boolean.toString(willEvaluateTo));
     }

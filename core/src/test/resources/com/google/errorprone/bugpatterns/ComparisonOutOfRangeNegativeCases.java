@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import java.io.IOException;
 import java.io.Reader;
 
 /**
@@ -23,53 +24,42 @@ import java.io.Reader;
  */
 public class ComparisonOutOfRangeNegativeCases {
 
-  public boolean testByteEquality(byte [] b, byte x) {
-    if (x == 1) {
-      return true;
-    }
-    if (x == -2) {
-      return true;
-    }
-    if (x == 127) {
-      return true;
-    }
-    if (x != 1) {
-      return true;
-    }
+  public void testByteEquality() {
+    boolean result;
+    byte b = 0;
+    byte[] barr = {1, 2, 3};
     
-    if (b[0] == 1) {
-      return true;
-    }
-    if (b[0] == -2) {
-      return true;
-    }
-    if (b[0] == -127) {
-      return true;
-    }
+    result = b == 1;
+    result = b == -2;
+    result = b == 127;
+    result = b != 1;
     
-    if (x == 'a') {
-      return true;
-    }
-
-    return false;
+    result = b == (byte) 255;
+    
+    result = b == 'a';    // char
+    result = b == 1L;     // long
+    result = b == 1.123f; // float
+    result = b == 1.123;  // double
+    
+    result = barr[0] == 1;
+    result = barr[0] == -2;
+    result = barr[0] == -128;
   }
 
-  public boolean testCharEquality(char c, Reader r) throws Exception {
+  public void testCharEquality() throws IOException {
+    boolean result;
+    char c = 'A';
+    Reader reader = null;
 
-    if (c == 0) {
-      return true;
-    }
-
-    if (c == 0xffff) {
-      return true;
-    }
+    result = c == 0;
+    result = c == 0xffff;
+    
+    result = c == 1L;     // long
+    result = c == 1.123f; // float
+    result = c == 1.123;  // double
     
     int d;
-    if ( (d = r.read()) == -1) {
-      return true;
-    }
-
-    return false;
+    result = (d = reader.read()) == -1; 
   }
 
 }

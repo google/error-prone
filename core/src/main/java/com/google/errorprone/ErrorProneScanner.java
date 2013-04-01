@@ -143,10 +143,10 @@ public class ErrorProneScanner extends Scanner {
 
   @Override
   public Void visitBinary(BinaryTree binaryExpressionTree,  VisitorState state) {
-      for (DescribingMatcher<BinaryTree> matcher : binaryExpressionMatchers) {
-          evaluateMatch(binaryExpressionTree, state, matcher);
-        }
-      return super.visitBinary(binaryExpressionTree, state);
+    for (DescribingMatcher<BinaryTree> matcher : binaryExpressionMatchers) {
+      evaluateMatch(binaryExpressionTree, state, matcher);
+    }
+    return super.visitBinary(binaryExpressionTree, state);
   }
 
   @Override

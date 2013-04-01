@@ -183,13 +183,15 @@ public class DiagnosticTestHelper {
       int lineNumber = reader.getLineNumber();
       if (patternMatcher.matches()) {
         String patternToMatch = patternMatcher.group(1);
+        // patternMatcher matches the //BUG comment, so we expect a diagnostic on the following
+        // line.
         lineNumber++;
         matcher = hasItem(diagnosticOnLine(lineNumber, patternToMatch));
         reader.readLine(); // skip next line -- we know it has an error
         assertThat("Did not see expected error on line " + lineNumber, diagnostics, matcher);
       } else {
         // Cast is unnecessary, but javac throws an error because of poor type inference.
-        matcher = not(hasItem(diagnosticOnLine(lineNumber)));
+        matcher = (Matcher) not(hasItem(diagnosticOnLine(lineNumber)));
         assertThat("Saw unexpected error on line " + lineNumber, diagnostics, matcher);
       }
     } while (true);
