@@ -28,7 +28,6 @@ import com.google.errorprone.bugpatterns.DeadException;
 import com.google.errorprone.bugpatterns.EmptyIfStatement;
 import com.google.errorprone.bugpatterns.EmptyStatement;
 import com.google.errorprone.bugpatterns.FallThroughSuppression;
-import com.google.errorprone.bugpatterns.IncompatibleEquals;
 import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
 import com.google.errorprone.bugpatterns.OrderingFrom;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNull;
@@ -99,8 +98,7 @@ public class ErrorProneScanner extends Scanner {
           CollectionIncompatibleType.class,
           ArrayEquals.class,
           ArrayToString.class,
-          ReturnValueIgnored.class,
-          IncompatibleEquals.class);
+          ReturnValueIgnored.class);
       this.newClassMatchers = createChecks(enabled, DeadException.class);
       this.annotationMatchers = createChecks(enabled,
           FallThroughSuppression.class,
