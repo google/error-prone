@@ -39,6 +39,7 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -166,6 +167,11 @@ public class ComparisonOutOfRange extends DescribingMatcher<BinaryTree> {
   private static final Matcher<BinaryTree> BYTE_MATCHER = new BadComparisonMatcher(Byte.TYPE);
   private static final Matcher<BinaryTree> CHAR_MATCHER = new BadComparisonMatcher(Character.TYPE);
 
+  // JLS 3.6 defines white space characters as space, horizontal tab, form feed, newline, and
+  // return.
+  private static final Collection<Character> WHITESPACE_CHARS = Arrays.asList(' ', '\t', '\f',
+      '\n', '\r');
+
   @SuppressWarnings("unchecked")
   @Override
   public boolean matches(BinaryTree tree, VisitorState state) {
@@ -200,7 +206,23 @@ public class ComparisonOutOfRange extends DescribingMatcher<BinaryTree> {
     SuggestedFix fix = new SuggestedFix();
     String customDiagnosticMessage;
     if (byteMatch) {
-      fix.replace(literal, Byte.toString(((Number) literal.getValue()).byteValue()));
+      String replacement = Byte.toString(((Number) literal.getValue()).byteValue());
+
+      // Hacky fix for poor javac 6 literal parsing.  javac 6 doesn't set the AST node start
+      // position correctly when a numeric literal is preceded by -. So we scan the source
+      // backwards starting at the provided start position, looking for whitespace, until we find
+      // the true start position.  javac 7 gets this right.
+      CharSequence source = state.getSourceCode();
+      int start = literal.getStartPosition() - 1;
+      while (WHITESPACE_CHARS.contains(source.charAt(start))) {
+        start--;
+      }
+      int startAdjustment = start - literal.getStartPosition();
+      if (startAdjustment < 0 && source.charAt(start) == '-') {
+        fix.replace(literal, startAdjustment, 0, replacement);
+      } else {
+        fix.replace(literal, replacement);
+      }
       customDiagnosticMessage = getCustomDiagnosticMessage("byte", (int) Byte.MIN_VALUE,
           (int) Byte.MAX_VALUE, literal.toString(), Boolean.toString(willEvaluateTo));
     } else {

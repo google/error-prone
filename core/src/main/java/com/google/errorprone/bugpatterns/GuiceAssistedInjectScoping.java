@@ -75,7 +75,7 @@ public class GuiceAssistedInjectScoping extends DescribingMatcher<ClassTree> {
    */
   @SuppressWarnings("unchecked")
   private MultiMatcher<ClassTree, AnnotationTree> classAnnotationMatcher =
-     annotations(ANY, anyOf(hasAnnotation(GUICE_SCOPE_ANNOTATION, AnnotationTree.class),
+     annotations(ANY, Matchers.<AnnotationTree>anyOf(hasAnnotation(GUICE_SCOPE_ANNOTATION),
          hasAnnotation(JAVAX_SCOPE_ANNOTATION)));
 
   /**
@@ -83,7 +83,7 @@ public class GuiceAssistedInjectScoping extends DescribingMatcher<ClassTree> {
    */
   @SuppressWarnings("unchecked")
   private MultiMatcher<ClassTree, MethodTree> constructorWithInjectMatcher =
-      constructor(ANY, anyOf(hasAnnotation(GUICE_INJECT_ANNOTATION, MethodTree.class),
+      constructor(ANY, Matchers.<MethodTree>anyOf(hasAnnotation(GUICE_INJECT_ANNOTATION),
           hasAnnotation(JAVAX_INJECT_ANNOTATION)));
 
   /**

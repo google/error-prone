@@ -45,6 +45,8 @@ public class SuggestedFix {
   }
 
   private Collection<Pair<Tree, String>> nodeReplacements = new ArrayList<Pair<Tree, String>>();
+  private Collection<Pair<AdjustedTreePosition, String>> adjustedNodeReplacements =
+      new ArrayList<Pair<AdjustedTreePosition, String>>();
   private Collection<Pair<Tree, Tree>> nodeSwaps = new ArrayList<Pair<Tree, Tree>>();
   private Collection<Pair<Tree, String>> prefixInsertions = new ArrayList<Pair<Tree, String>>();
   private Collection<Pair<Tree, String>> postfixInsertions = new ArrayList<Pair<Tree, String>>();
@@ -87,6 +89,13 @@ public class SuggestedFix {
           pos.getEndPosition(endPositions),
           nodeReplacement.snd));
     }
+    for (Pair<AdjustedTreePosition, String> adjustedNodeReplacement : adjustedNodeReplacements) {
+      AdjustedTreePosition adjustedPos = adjustedNodeReplacement.fst;
+      replacements.add(new Replacement(
+          adjustedPos.getStartPosition(),
+          adjustedPos.getEndPosition(endPositions),
+          adjustedNodeReplacement.snd));
+    }
     for (Pair<Tree, Tree> nodeSwap : nodeSwaps) {
       DiagnosticPosition pos1 = (JCTree) nodeSwap.fst;
       DiagnosticPosition pos2 = (JCTree) nodeSwap.snd;
@@ -104,6 +113,23 @@ public class SuggestedFix {
 
   public SuggestedFix replace(Tree node, String replaceWith) {
     nodeReplacements.add(new Pair<Tree, String>(node, replaceWith));
+    return this;
+  }
+
+  /**
+   * Replace a tree node with a string, but adjust the start and end positions as well.
+   *
+   * @param node The tree node to replace
+   * @param startPositionAdjustment The adjustment to apply to the start position
+   * @param endPositionAdjustment The adjustment to apply to the end position
+   * @param replaceWith The string to replace with
+   */
+  public SuggestedFix replace(Tree node, int startPositionAdjustment, int endPositionAdjustment,
+      String replaceWith) {
+    adjustedNodeReplacements.add(new Pair<AdjustedTreePosition, String>(
+        new AdjustedTreePosition((DiagnosticPosition) node, startPositionAdjustment,
+            endPositionAdjustment),
+        replaceWith));
     return this;
   }
 
@@ -168,5 +194,29 @@ public class SuggestedFix {
 
   public Collection<String> getImportsToRemove() {
     return importsToRemove;
+  }
+
+  /**
+   * Describes a tree position with adjustments to the start and end indices.
+   */
+  private static class AdjustedTreePosition {
+    private final DiagnosticPosition position;
+    private final int startPositionAdjustment;
+    private final int endPositionAdjustment;
+
+    public AdjustedTreePosition(DiagnosticPosition position, int startPositionAdjustment,
+        int endPositionAdjustment) {
+      this.position = position;
+      this.startPositionAdjustment = startPositionAdjustment;
+      this.endPositionAdjustment = endPositionAdjustment;
+    }
+
+    public int getStartPosition() {
+      return position.getStartPosition() + startPositionAdjustment;
+    }
+
+    public int getEndPosition(Map<JCTree, Integer> endPositions) {
+      return position.getEndPosition(endPositions) + endPositionAdjustment;
+    }
   }
 }

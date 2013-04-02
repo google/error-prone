@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.io.Reader;
 
 /**
- * @author  Bill Pugh (bill.pugh@gmail.com)
+ * @author Bill Pugh (bill.pugh@gmail.com)
  */
 public class ComparisonOutOfRangePositiveCases {
 
@@ -37,6 +37,8 @@ public class ComparisonOutOfRangePositiveCases {
     result = b == 128;
     //BUG: Suggestion includes "b != -1"
     result = b != 255;
+    //BUG: Suggestion includes "b == 1"
+    result = b == - 255;
 
     //BUG: Suggestion includes "barr[0] == -1"
     result = barr[0] == 255;
