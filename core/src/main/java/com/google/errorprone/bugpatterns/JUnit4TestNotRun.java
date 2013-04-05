@@ -48,6 +48,10 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.util.List;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+
 import javax.lang.model.element.Modifier;
 
 /**
@@ -68,7 +72,9 @@ import javax.lang.model.element.Modifier;
     category = JUNIT, maturity = MATURE, severity = ERROR)
 public class JUnit4TestNotRun extends DescribingMatcher<MethodTree> {
 
-  private static final String JUNIT4_CLASS_RUNNER = "org.junit.runners.BlockJUnit4ClassRunner";
+  private static final Collection<String> DEFAULT_TEST_RUNNERS = Arrays.asList(
+      "org.junit.runners.JUnit4", "org.mockito.runners.MockitoJUnitRunner");
+
   private static final String JUNIT3_TEST_CASE_CLASS = "junit.framework.TestCase";
   private static final String JUNIT4_TEST_ANNOTATION = "org.junit.Test";
   private static final String JUNIT_BEFORE_ANNOTATION = "org.junit.Before";
@@ -77,34 +83,52 @@ public class JUnit4TestNotRun extends DescribingMatcher<MethodTree> {
   private static final String JUNIT_AFTER_CLASS_ANNOTATION = "org.junit.AfterClass";
 
   /**
-   * Matches an argument of type Class<T>, where T is a subtype of JUNIT4_CLASS_RUNNER.
+   * A list of valid test runners that this matcher should look for in the @RunWith annotation.
    */
-  private static final Matcher<ExpressionTree> isCastableToJUnit4TestRunner =
-      new Matcher<ExpressionTree>() {
-        @Override
-        public boolean matches(ExpressionTree t, VisitorState state) {
-          Type type = ((JCTree) t).type;
-          // Expect a class type.
-          if (!(type instanceof ClassType)) {
-            return false;
-          }
-          // Expect one type argument, the type of the JUnit class runner to use.
-          List<Type> typeArgs = ((ClassType) type).getTypeArguments();
-          if (typeArgs.size() != 1) {
-            return false;
-          }
-          Type argType = typeArgs.get(0);
-          // Check whether the type argument extends the JUnit 4 class runner type.
-          Type jUnit4ClassRunnerType = state.getTypeFromString(JUNIT4_CLASS_RUNNER);
-          return jUnit4ClassRunnerType != null &&
-              state.getTypes().isSubtype(argType, jUnit4ClassRunnerType);
-        }
+  private Collection<String> testRunners;
+
+  public JUnit4TestNotRun() {
+    this.testRunners = new ArrayList<String>(DEFAULT_TEST_RUNNERS);
+  }
+
+  /**
+   * Construct a matcher with additional acceptable test runners.
+   *
+   * @param testRunners Additional test runner classes to check for in the @RunWith annotation,
+   * e.g., "org.junit.runners.BlockJUnit4ClassRunner"
+   */
+  public JUnit4TestNotRun(String... testRunners) {
+    this();
+    this.testRunners.addAll(Arrays.asList(testRunners));
+  }
+
+  /**
+   * Matches an argument of type Class<T>, where T is a type listed in the testRunners field.
+   *
+   * TODO(eaftan): Support checking for an annotation that tells us whether this test runner
+   * expects tests to be annotated with @Test.
+   */
+  private final Matcher<ExpressionTree> isJUnit4TestRunner = new Matcher<ExpressionTree>() {
+    @Override
+    public boolean matches(ExpressionTree t, VisitorState state) {
+      Type type = ((JCTree) t).type;
+      // Expect a class type.
+      if (!(type instanceof ClassType)) {
+        return false;
+      }
+      // Expect one type argument, the type of the JUnit class runner to use.
+      List<Type> typeArgs = ((ClassType) type).getTypeArguments();
+      if (typeArgs.size() != 1) {
+        return false;
+      }
+      return testRunners.contains(typeArgs.get(0).toString());
+    }
   };
 
   @SuppressWarnings("unchecked")
-  private static final Matcher<ClassTree> isJUnit4TestClass = allOf(
+  private final Matcher<ClassTree> isJUnit4TestClass = allOf(
       not(isSubtypeOf(JUNIT3_TEST_CASE_CLASS)),
-      annotations(ANY, hasArgumentWithValue("value", isCastableToJUnit4TestRunner)));
+      annotations(ANY, hasArgumentWithValue("value", isJUnit4TestRunner)));
 
   @SuppressWarnings("unchecked")
   private static final Matcher<MethodTree> hasJUnitAnnotation = anyOf(
@@ -161,7 +185,21 @@ public class JUnit4TestNotRun extends DescribingMatcher<MethodTree> {
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {
-    private JUnit4TestNotRun matcher = new JUnit4TestNotRun();
+    private JUnit4TestNotRun matcher;
+
+    public Scanner() {
+      matcher = new JUnit4TestNotRun();
+    }
+
+    /**
+     * Construct a scanner with additional acceptable test runners.
+     *
+     * @param testRunners Additional test runner classes to check for in the @RunWith annotation,
+     * e.g., "org.junit.runners.BlockJUnit4ClassRunner"
+     */
+    public Scanner(String... testRunners) {
+      matcher = new JUnit4TestNotRun(testRunners);
+    }
 
     @Override
     public Void visitMethod(MethodTree node, VisitorState visitorState) {

@@ -17,15 +17,15 @@
 package com.google.errorprone.bugpatterns;
 
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.junit.runners.Parameterized;
 
 /**
- * Mockito test runner that uses JUnit 4.
+ * Custom test runner.
  * 
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-@RunWith(MockitoJUnitRunner.class)
-public class JUnit4TestNotRunPositiveCase2 {
+@RunWith(Parameterized.class)
+public class JUnit4TestNotRunPositiveCase3 {
   //BUG: Suggestion includes "@Test"
   public void testThisIsATest() {}
   

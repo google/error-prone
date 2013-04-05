@@ -47,6 +47,17 @@ public class JUnit4TestNotRunTest {
         new File(this.getClass().getResource("JUnit4TestNotRunPositiveCase2.java").toURI()));
   }
 
+  /**
+   * Test custom test runner class.
+   */
+  @Test
+  public void testPositiveCase3() throws Exception {
+    compilationHelper = new CompilationTestHelper(
+        new JUnit4TestNotRun.Scanner("org.junit.runners.Parameterized"));
+    compilationHelper.assertCompileFailsWithMessages(
+        new File(this.getClass().getResource("JUnit4TestNotRunPositiveCase3.java").toURI()));
+  }
+
   @Test
   public void testNegativeCase1() throws Exception {
     compilationHelper.assertCompileSucceeds(
