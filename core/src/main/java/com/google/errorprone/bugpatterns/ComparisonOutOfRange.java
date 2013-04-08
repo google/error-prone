@@ -217,9 +217,8 @@ public class ComparisonOutOfRange extends DescribingMatcher<BinaryTree> {
       while (WHITESPACE_CHARS.contains(source.charAt(start))) {
         start--;
       }
-      int startAdjustment = start - literal.getStartPosition();
-      if (startAdjustment < 0 && source.charAt(start) == '-') {
-        fix.replace(literal, startAdjustment, 0, replacement);
+      if (source.charAt(start) == '-') {
+        fix.replace(literal, replacement, start - literal.getStartPosition(), 0);
       } else {
         fix.replace(literal, replacement);
       }

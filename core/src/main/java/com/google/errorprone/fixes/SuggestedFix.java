@@ -68,6 +68,8 @@ public class SuggestedFix {
           return (a < b) ? -1 : ((a > b) ? 1 : 0);
         }
       });
+    // TODO(eaftan): The next four for-loops are all doing the same thing.  Collapse them
+    // into a single one.  Will need to make AdjustedTreePosition implement DiagnosticPosition.
     for (Pair<Tree, String> prefixInsertion : prefixInsertions) {
       DiagnosticPosition pos = (JCTree) prefixInsertion.fst;
       replacements.add(new Replacement(
@@ -118,14 +120,19 @@ public class SuggestedFix {
 
   /**
    * Replace a tree node with a string, but adjust the start and end positions as well.
+   * For example, if the tree node begins at index 10 and ends at index 30, this call will
+   * replace the characters at index 15 through 25 with "replacement":
+   * <pre>
+   * {@code fix.replace(node, "replacement", 5, -5)}
+   * </pre>
    *
    * @param node The tree node to replace
-   * @param startPositionAdjustment The adjustment to apply to the start position
-   * @param endPositionAdjustment The adjustment to apply to the end position
    * @param replaceWith The string to replace with
+   * @param startPositionAdjustment The adjustment to add to the start position (negative is OK)
+   * @param endPositionAdjustment The adjustment to add to the end position (negative is OK)
    */
-  public SuggestedFix replace(Tree node, int startPositionAdjustment, int endPositionAdjustment,
-      String replaceWith) {
+  public SuggestedFix replace(Tree node, String replaceWith, int startPositionAdjustment,
+      int endPositionAdjustment) {
     adjustedNodeReplacements.add(new Pair<AdjustedTreePosition, String>(
         new AdjustedTreePosition((DiagnosticPosition) node, startPositionAdjustment,
             endPositionAdjustment),
