@@ -94,12 +94,12 @@ public class JUnit4TestNotRun extends DescribingMatcher<MethodTree> {
   /**
    * Construct a matcher with additional acceptable test runners.
    *
-   * @param testRunners Additional test runner classes to check for in the @RunWith annotation,
+   * @param additionalTestRunners Additional test runner classes to check for in the @RunWith annotation,
    * e.g., "org.junit.runners.BlockJUnit4ClassRunner"
    */
-  public JUnit4TestNotRun(String... testRunners) {
+  public JUnit4TestNotRun(String... additionalTestRunners) {
     this();
-    this.testRunners.addAll(Arrays.asList(testRunners));
+    this.testRunners.addAll(Arrays.asList(additionalTestRunners));
   }
 
   /**
