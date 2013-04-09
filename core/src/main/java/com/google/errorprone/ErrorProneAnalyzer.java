@@ -66,18 +66,26 @@ public class ErrorProneAnalyzer {
    * Reports that a class (represented by the env) is ready for error-prone to analyze. The
    * analysis will only occur when all classes in a compilation unit (a file) have been seen.
    */
-  public void reportReadyForAnalysis(Env<AttrContext> env) {
+  public void reportReadyForAnalysis(Env<AttrContext> env, int errorCount) {
     if (!compilationUnitsScanned.contains(env.toplevel)) {
-      // TODO(eaftan): This check for size == 1 is an optimization for the common case of 1 class
-      // per file. We should benchmark to see if it actually helps.
-      if (env.toplevel.getTypeDecls().size() == 1) {
-        errorProneScanner.scan(env.toplevel, createVisitorState(env));
-        compilationUnitsScanned.add(env.toplevel);
-      } else {
-        classesEncountered.add(env.tree);
-        if (allClassesSeen(env)) {
+      try {
+        // TODO(eaftan): This check for size == 1 is an optimization for the common case of 1 class
+        // per file. We should benchmark to see if it actually helps.
+        if (env.toplevel.getTypeDecls().size() == 1) {
           errorProneScanner.scan(env.toplevel, createVisitorState(env));
           compilationUnitsScanned.add(env.toplevel);
+        } else {
+          classesEncountered.add(env.tree);
+          if (allClassesSeen(env)) {
+            errorProneScanner.scan(env.toplevel, createVisitorState(env));
+            compilationUnitsScanned.add(env.toplevel);
+          }
+        }
+      } catch (RuntimeException e) {
+        // If there is a RuntimeException in an analyzer, swallow it if there are other compiler
+        // errors.  This prevents javac from exiting with code 4, Abnormal Termination.
+        if (errorCount <= 0) {
+          throw e;
         }
       }
     }
