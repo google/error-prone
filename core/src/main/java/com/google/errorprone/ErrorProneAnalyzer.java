@@ -66,7 +66,7 @@ public class ErrorProneAnalyzer {
    * Reports that a class (represented by the env) is ready for error-prone to analyze. The
    * analysis will only occur when all classes in a compilation unit (a file) have been seen.
    */
-  public void reportReadyForAnalysis(Env<AttrContext> env, int errorCount) {
+  public void reportReadyForAnalysis(Env<AttrContext> env, boolean hasErrors) {
     if (!compilationUnitsScanned.contains(env.toplevel)) {
       try {
         // TODO(eaftan): This check for size == 1 is an optimization for the common case of 1 class
@@ -84,7 +84,7 @@ public class ErrorProneAnalyzer {
       } catch (RuntimeException e) {
         // If there is a RuntimeException in an analyzer, swallow it if there are other compiler
         // errors.  This prevents javac from exiting with code 4, Abnormal Termination.
-        if (errorCount <= 0) {
+        if (!hasErrors) {
           throw e;
         }
       }
