@@ -23,9 +23,11 @@ import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
@@ -268,6 +270,20 @@ public class Matchers {
   public static Matcher<MethodInvocationTree> argument(
       final int position, final Matcher<ExpressionTree> argumentMatcher) {
     return new MethodInvocationArgument(position, argumentMatcher);
+  }
+
+  /**
+   * Matches a BinaryTree node by applying the given matchers to each operand.
+   */
+  public static Matcher<BinaryTree> binaryTree(final Matcher<ExpressionTree> leftMatcher,
+      final Matcher<ExpressionTree> rightMatcher) {
+    return new Matcher<BinaryTree>() {
+      @Override
+      public boolean matches(BinaryTree tree, VisitorState state) {
+        return leftMatcher.matches(tree.getLeftOperand(), state) &&
+            rightMatcher.matches(tree.getRightOperand(), state);
+      }
+    };
   }
 
   /**

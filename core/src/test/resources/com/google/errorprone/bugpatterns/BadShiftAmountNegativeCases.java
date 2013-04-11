@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Google Inc. All Rights Reserved.
+ * Copyright 2013 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,15 +21,15 @@ package com.google.errorprone.bugpatterns;
  */
 public class BadShiftAmountNegativeCases {
 
-    public long testEquality(int x) {
+  public long testEquality(int x) {
 
-        long result = 0;
+    long result = 0;
 
-        result += (long) x >> 3;
-        result += x << 3;
-        result += x >>> 3;
+    result += (long) x >> 3;
+    result += x << 3;
+    result += x >>> 3;
 
-        return result;
-    }
+    return result;
+  }
 
 }

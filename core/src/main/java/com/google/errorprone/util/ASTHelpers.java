@@ -247,10 +247,9 @@ public class ASTHelpers {
   }
 
   /**
-   * Given a BinaryTree to match against and a list of two matchers, compares the first matcher
-   * against the left operand and the second matcher against the right operand.  If they both
-   * match, returns a list with the operand that matched each matcher in the corresponding
-   * position.
+   * Given a BinaryTree to match against and a list of two matchers, applies the matchers to the
+   * operands in both orders.  If both matchers match, returns a list with the operand that
+   * matched each matcher in the corresponding position.
    *
    * @param tree a BinaryTree AST node
    * @param matchers a list of matchers
@@ -265,9 +264,8 @@ public class ASTHelpers {
       return Arrays.asList(leftOperand, rightOperand);
     } else if (matchers.get(0).matches(rightOperand, state) && matchers.get(1).matches(leftOperand, state)) {
       return Arrays.asList(rightOperand, leftOperand);
-    } else {
-      return null;
     }
+    return null;
   }
 
 }
