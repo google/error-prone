@@ -21,7 +21,7 @@ import javax.annotation.CheckReturnValue;
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class ReturnValueIgnoredPositiveCase2 {
+public class CheckReturnValuePositiveCases {
   
   IntValue intValue = new IntValue(0);
   

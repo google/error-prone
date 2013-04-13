@@ -18,13 +18,12 @@ package com.google.errorprone.bugpatterns;
 
 import static org.junit.Assert.fail;
 
-import java.io.File;
-
-import org.junit.Test;
-import org.junit.Assert;
-
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.Scanner;
+
+import org.junit.Test;
+
+import java.io.File;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)

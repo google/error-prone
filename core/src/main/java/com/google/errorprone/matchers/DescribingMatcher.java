@@ -36,9 +36,10 @@ public abstract class DescribingMatcher<T extends Tree> implements Matcher<T> {
    */
   protected final Collection<String> names;
   protected final String diagnosticMessage;
+  protected final BugPattern annotation;
 
   public DescribingMatcher() {
-    BugPattern annotation = this.getClass().getAnnotation(BugPattern.class);
+    annotation = this.getClass().getAnnotation(BugPattern.class);
     if (annotation == null) {
       throw new IllegalStateException("Class " + this.getClass().getCanonicalName()
           + " not annotated with @BugPattern");
@@ -47,23 +48,39 @@ public abstract class DescribingMatcher<T extends Tree> implements Matcher<T> {
     names = new ArrayList<String>(annotation.altNames().length + 1);
     names.add(name);
     names.addAll(Arrays.asList(annotation.altNames()));
+    diagnosticMessage = getCustomDiagnosticMessage();
+  }
+
+  /**
+   * Create a custom diagnostic message by using format string substitution on the summary
+   * field in the BugPattern.
+   *
+   * @param args Arguments referenced by the format specifiers in the annotation summary string.
+   * @return The custom diagnostic string
+   */
+  public String getCustomDiagnosticMessage(Object... args) {
+    String summary;
+    if (args.length == 0) {
+      summary = annotation.summary();
+    } else {
+      summary = String.format(annotation.summary(), args);
+    }
+    return "[" + annotation.name() + "] " + summary + getLink();
+  }
+
+  private String getLink() {
     switch (annotation.linkType()) {
       case WIKI:
-        diagnosticMessage = "[" + annotation.name() + "] " + annotation.summary()
-            + "\n  (see http://code.google.com/p/error-prone/wiki/" + annotation.name() + ")";
-        break;
+        return "\n  (see http://code.google.com/p/error-prone/wiki/" + annotation.name() + ")";
       case CUSTOM:
         // annotation.link() must be provided.
         if (annotation.link().isEmpty()) {
           throw new IllegalStateException("If linkType element of @BugPattern is CUSTOM, "
               + "a link element must also be provided.");
         }
-        diagnosticMessage = "[" + annotation.name() + "] " + annotation.summary()
-            + "\n  (see " + annotation.link() + ")";
-        break;
+        return  "\n  (see " + annotation.link() + ")";
       case NONE:
-        diagnosticMessage = "[" + annotation.name() + "] " + annotation.summary();
-        break;
+        return "";
       default:
         throw new IllegalStateException("Unexpected value for linkType element of @BugPattern: "
             + annotation.linkType());

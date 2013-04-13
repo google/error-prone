@@ -77,12 +77,12 @@ public class AppliedFix {
         }
       }
 
-      // TODO: Not sure this is really the right behaviour, but otherwise we can end up with an
-      // infinite loop below.
+      // Not sure this is really the right behavior, but otherwise we can end up with an infinite
+      // loop below.
       if (modifiedLines.isEmpty()) {
         return null;
       }
-      
+
       LineNumberReader lineNumberReader =
               new LineNumberReader(new StringReader(replaced.toString()));
       String snippet = null;

@@ -22,18 +22,19 @@ import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.NewArrayTree;
+import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  * @author pepstein@google.com (Peter Epstein)
  */
-public class AnnotationHasElementWithValue implements Matcher<AnnotationTree> {
+public class AnnotationHasArgumentWithValue implements Matcher<AnnotationTree> {
 
   private final String element;
   private final Matcher<ExpressionTree> valueMatcher;
 
-  public AnnotationHasElementWithValue(String element, Matcher<ExpressionTree> valueMatcher) {
+  public AnnotationHasArgumentWithValue(String element, Matcher<ExpressionTree> valueMatcher) {
     this.element = element;
     this.valueMatcher = valueMatcher;
   }
@@ -45,21 +46,21 @@ public class AnnotationHasElementWithValue implements Matcher<AnnotationTree> {
         AssignmentTree assignmentTree = (AssignmentTree) argumentTree;
         if (assignmentTree.getVariable().toString().equals(element)) {
           ExpressionTree expressionTree = assignmentTree.getExpression();
-          switch (expressionTree.getKind()) {
-            case STRING_LITERAL:
-              if (valueMatcher.matches(expressionTree, state)) {
+          while (expressionTree instanceof ParenthesizedTree) {
+            expressionTree = ((ParenthesizedTree) expressionTree).getExpression();
+          }
+
+          if (expressionTree instanceof NewArrayTree) {
+            NewArrayTree arrayTree = (NewArrayTree) expressionTree;
+            for (ExpressionTree elementTree : arrayTree.getInitializers()) {
+              if (valueMatcher.matches(elementTree, state)) {
                 return true;
               }
-              break;
-            case NEW_ARRAY:
-              NewArrayTree arrayTree = (NewArrayTree) expressionTree;
-              for (ExpressionTree elementTree : arrayTree.getInitializers()) {
-                if (valueMatcher.matches(elementTree, state)) {
-                  return true;
-                }
-              }
-              break;
+            }
+            return false;
           }
+
+          return valueMatcher.matches(expressionTree, state);
         }
       }
     }

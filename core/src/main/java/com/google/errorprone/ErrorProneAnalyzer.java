@@ -23,8 +23,11 @@ import com.sun.tools.javac.comp.Env;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Log;
 
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Set;
+
+import static java.util.Calendar.*;
 
 /**
  * Used to run an error-prone analysis as a phase in the javac compiler.
@@ -63,18 +66,26 @@ public class ErrorProneAnalyzer {
    * Reports that a class (represented by the env) is ready for error-prone to analyze. The
    * analysis will only occur when all classes in a compilation unit (a file) have been seen.
    */
-  public void reportReadyForAnalysis(Env<AttrContext> env) {
+  public void reportReadyForAnalysis(Env<AttrContext> env, boolean hasErrors) {
     if (!compilationUnitsScanned.contains(env.toplevel)) {
-      // TODO(eaftan): This check for size == 1 is an optimization for the common case of 1 class
-      // per file. We should benchmark to see if it actually helps.
-      if (env.toplevel.getTypeDecls().size() == 1) {
-        errorProneScanner.scan(env.toplevel, createVisitorState(env));
-        compilationUnitsScanned.add(env.toplevel);
-      } else {
-        classesEncountered.add(env.tree);
-        if (allClassesSeen(env)) {
+      try {
+        // TODO(eaftan): This check for size == 1 is an optimization for the common case of 1 class
+        // per file. We should benchmark to see if it actually helps.
+        if (env.toplevel.getTypeDecls().size() == 1) {
           errorProneScanner.scan(env.toplevel, createVisitorState(env));
           compilationUnitsScanned.add(env.toplevel);
+        } else {
+          classesEncountered.add(env.tree);
+          if (allClassesSeen(env)) {
+            errorProneScanner.scan(env.toplevel, createVisitorState(env));
+            compilationUnitsScanned.add(env.toplevel);
+          }
+        }
+      } catch (RuntimeException e) {
+        // If there is a RuntimeException in an analyzer, swallow it if there are other compiler
+        // errors.  This prevents javac from exiting with code 4, Abnormal Termination.
+        if (!hasErrors) {
+          throw e;
         }
       }
     }
@@ -84,11 +95,16 @@ public class ErrorProneAnalyzer {
    * Create a VisitorState object from an environment.
    */
   private VisitorState createVisitorState(Env<AttrContext> env) {
-    DescriptionListener logReporter = new JavacErrorDescriptionListener(log,
+    JavacErrorDescriptionListener logReporter = new JavacErrorDescriptionListener(log,
         env.toplevel.endPositions,
         env.enclClass.sym.sourcefile != null
             ? env.enclClass.sym.sourcefile
-            : env.toplevel.sourcefile);
+            : env.toplevel.sourcefile,
+        context);
+    GregorianCalendar calendar = new GregorianCalendar();
+    if (calendar.get(MONTH) == APRIL && calendar.get(DAY_OF_MONTH) == 1) {
+      logReporter.MESSAGE_BUNDLE_KEY = "specialcase";
+    }
     VisitorState visitorState = new VisitorState(context, logReporter);
     return visitorState;
   }

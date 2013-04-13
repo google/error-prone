@@ -21,7 +21,7 @@ import java.util.*;
 /**
  * @author adgar@google.com (Mike Edgar)
  */
-public class ArrayEqualsPositiveCases {
+public class ArrayToStringPositiveCases {
 
   public void intArray() {
     int[] a = {1, 2, 3};
@@ -66,4 +66,8 @@ public class ArrayEqualsPositiveCases {
       System.out.println("array string is nonempty!");
     }
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> a90b6a7ce9d496a4ebc5c83e29c32c557a19a67d

@@ -22,6 +22,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Symbol.CompletionFailure;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ArrayType;
@@ -173,7 +174,17 @@ public class VisitorState {
       }
       typeSymbol = (ClassSymbol) sym;
     }
-    return typeSymbol.asType();
+    Type type = typeSymbol.asType();
+    try {
+      // Throws CompletionFailure if the source/class file for this type is not available.
+      // This is hacky but the best way I can think of to handle this case.
+      if (type.isErroneous()) {
+        return null;
+      }
+    } catch (CompletionFailure failure) {
+      return null;
+    }
+    return type;
   }
 
   /**
