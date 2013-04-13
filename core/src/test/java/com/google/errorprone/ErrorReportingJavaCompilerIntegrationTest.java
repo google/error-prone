@@ -16,6 +16,7 @@
 
 package com.google.errorprone;
 
+import static com.google.errorprone.CompilationTestHelper.sources;
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
@@ -27,10 +28,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.net.URISyntaxException;
 
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
@@ -59,7 +58,7 @@ public class ErrorReportingJavaCompilerIntegrationTest {
 
   @Test
   public void fileWithError() throws Exception {
-    int exitCode = compiler.compile(sources(
+    int exitCode = compiler.compile(sources(getClass(),
         "com/google/errorprone/bugpatterns/EmptyIfStatementPositiveCases.java"));
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(1));
@@ -73,7 +72,7 @@ public class ErrorReportingJavaCompilerIntegrationTest {
   @Test
   public void fileWithMultipleTopLevelClasses() throws Exception {
     int exitCode = compiler.compile(
-        sources("com/google/errorprone/MultipleTopLevelClassesWithNoErrors.java"));
+        sources(getClass(), "com/google/errorprone/MultipleTopLevelClassesWithNoErrors.java"));
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(0));
   }
@@ -81,7 +80,7 @@ public class ErrorReportingJavaCompilerIntegrationTest {
   @Test
   public void fileWithMultipleTopLevelClassesExtends() throws Exception {
     int exitCode = compiler.compile(
-        sources("com/google/errorprone/MultipleTopLevelClassesWithNoErrors.java",
+        sources(getClass(), "com/google/errorprone/MultipleTopLevelClassesWithNoErrors.java",
             "com/google/errorprone/ExtendedMultipleTopLevelClassesWithNoErrors.java"));
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(0));
@@ -95,7 +94,7 @@ public class ErrorReportingJavaCompilerIntegrationTest {
   public void fileWithMultipleTopLevelClassesExtendsWithError()
       throws Exception {
     int exitCode = compiler.compile(
-        sources("com/google/errorprone/MultipleTopLevelClassesWithErrors.java",
+        sources(getClass(), "com/google/errorprone/MultipleTopLevelClassesWithErrors.java",
             "com/google/errorprone/ExtendedMultipleTopLevelClassesWithErrors.java"));
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(1));
@@ -104,13 +103,5 @@ public class ErrorReportingJavaCompilerIntegrationTest {
         diagnosticMessage(containsString("[SelfAssignment]")));
     assertThat("Warning should be found. " + diagnosticHelper.describe(),
         diagnosticHelper.getDiagnostics(), matcher);
-  }
-
-  private String[] sources(String... files) throws URISyntaxException {
-    String[] result = new String[files.length];
-    for (int i = 0; i < result.length; i++) {
-      result[i] = new File(getClass().getResource("/" + files[i]).toURI()).getAbsolutePath();
-    }
-    return result;
   }
 }

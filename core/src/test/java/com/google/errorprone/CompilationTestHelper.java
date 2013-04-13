@@ -16,12 +16,13 @@
 
 package com.google.errorprone;
 
-import java.io.File;
-import java.io.IOException;
-
 import static com.google.errorprone.DiagnosticTestHelper.assertHasDiagnosticOnAllMatchingLines;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 
 /**
  * Utility class for tests that need to build using error-prone.
@@ -41,7 +42,8 @@ public class CompilationTestHelper {
   }
 
   public void assertCompileSucceeds(File source) {
-    assertThat(compiler.compile(new String[]{"-Xjcov", source.getAbsolutePath()}), is(0));
+    int exitCode = compiler.compile(new String[]{"-Xjcov", source.getAbsolutePath()});
+    assertThat(exitCode, is(0));
   }
 
   /**
@@ -49,9 +51,21 @@ public class CompilationTestHelper {
    * the pattern //BUG("foo"), the diagnostic at that line contains "foo".
    */
   public void assertCompileFailsWithMessages(File source) throws IOException {
-    assertThat("Compiler returned an unexpected error code",
-        compiler.compile(new String[]{"-Xjcov", "-encoding", "UTF-8", source.getAbsolutePath()}), is(1));
+    int exitCode = compiler.compile(new String[]{"-Xjcov", "-encoding", "UTF-8", source.getAbsolutePath()});
+    assertThat("Compiler returned an unexpected error code", exitCode, is(1));
     assertHasDiagnosticOnAllMatchingLines(diagnosticHelper.getDiagnostics(), source);
+  }
+
+  /**
+   * Constructs the absolute paths to the given files, so they can be passed as arguments to the
+   * compiler.
+   */
+  public static String[] sources(Class<?> klass, String... files) throws URISyntaxException {
+    String[] result = new String[files.length];
+    for (int i = 0; i < result.length; i++) {
+      result[i] = new File(klass.getResource("/" + files[i]).toURI()).getAbsolutePath();
+    }
+    return result;
   }
 
 }

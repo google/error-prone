@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns.emptystatement;
+package com.google.errorprone.bugpatterns;
 
 /**
  *

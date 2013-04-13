@@ -16,7 +16,6 @@
 
 package com.google.errorprone;
 
-import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Env;
 import com.sun.tools.javac.main.JavaCompiler;

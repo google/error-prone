@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Google Inc. All Rights Reserved.
+ * Copyright 2013 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,18 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.matchers;
+package com.google.errorprone.bugpatterns;
 
-import com.google.errorprone.VisitorState;
-
-import com.sun.source.tree.Tree;
+import junit.framework.TestCase;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
- * Whether the given Tree is the same as the one we match against.
- * @author alexeagle@google.com (Alex Eagle)
+ * May be a JUnit 3 test -- has @RunWith annotation on the class but also extends TestCase.
+ * 
+ * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class Same<T extends Tree> implements Matcher<T> {
-  private final T tree;
-
-  public Same(T tree) {
-    this.tree = tree;
-  }
-
-  @Override
-  public boolean matches(T tree, VisitorState state) {
-    return this.tree.equals(tree);
-  }
+@RunWith(JUnit4.class)
+public class JUnit4TestNotRunNegativeCase4 extends TestCase {
+  public void testThisIsATest() {}
 }

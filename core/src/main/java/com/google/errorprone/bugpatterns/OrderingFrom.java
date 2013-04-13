@@ -53,13 +53,13 @@ import java.util.ArrayList;
  * <pre>
  * Ordering.from(new Comparator<T>() { ... })
  * </pre>
- * 
+ *
  * <p>This can be unwrapped to a new anonymous subclass of Ordering:
  * <pre>
  * new Ordering<T>() { ... }
  * </pre>
  * which is shorter and cleaner (and potentially more efficient).
- * 
+ *
  * @author sjnickerson@google.com (Simon Nickerson)
  *
  */
@@ -83,7 +83,7 @@ public class OrderingFrom extends DescribingMatcher<MethodInvocationTree> {
   public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
     return matcher.matches(methodInvocationTree, state);
   }
-  
+
   @Override
   public Description describe(MethodInvocationTree methodInvocation,
                               VisitorState state) {
@@ -98,10 +98,10 @@ public class OrderingFrom extends DescribingMatcher<MethodInvocationTree> {
     // e.g. Ordering<String>
     JCTypeApply newOrderingType = state.getTreeMaker().TypeApply(orderingIdent,
         ((JCTypeApply) newComparatorInvocation.clazz).arguments);
-    
+
     // Find the class definition and remove the default constructor (it confuses the pretty printer)
     JCClassDecl def = newComparatorInvocation.def;
-    
+
     // Note that List is not java.util.List, and it's not very nice to deal with.
     ArrayList<JCTree> allDefsExceptConstructor = new ArrayList<JCTree>();
     for (JCTree individualDef : def.defs) {
@@ -114,16 +114,16 @@ public class OrderingFrom extends DescribingMatcher<MethodInvocationTree> {
         allDefsExceptConstructor.add(individualDef);
       }
     }
-    
+
     // e.g. new Ordering<String>() { ... }
     JCNewClass newClass = state.getTreeMaker().NewClass(
         newComparatorInvocation.encl, newComparatorInvocation.typeargs, newOrderingType,
         newComparatorInvocation.args,
         state.getTreeMaker().ClassDef(
             def.mods, def.name, def.typarams, def.extending, def.implementing,
-            List.from((JCTree[]) allDefsExceptConstructor.toArray(
+            List.from(allDefsExceptConstructor.toArray(
                 new JCTree[allDefsExceptConstructor.size()]))));
-    
+
     StringWriter sw = new StringWriter();
     try {
       Pretty pretty = new Pretty(sw, true);
@@ -131,14 +131,14 @@ public class OrderingFrom extends DescribingMatcher<MethodInvocationTree> {
     } catch (IOException impossible) {
       throw new AssertionError("Impossible IOException");
     }
-    
+
     String replacement = sw.toString().replace("@Override()", "@Override");
-    
+
     SuggestedFix fix = new SuggestedFix().replace(methodInvocation, replacement);
-    
+
     return new Description(methodInvocation, diagnosticMessage, fix);
   }
-  
+
   public static class Scanner extends com.google.errorprone.Scanner {
     private final DescribingMatcher<MethodInvocationTree> matcher = new OrderingFrom();
 

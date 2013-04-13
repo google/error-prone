@@ -180,16 +180,20 @@ public class DiagnosticTestHelper {
       }
       java.util.regex.Matcher patternMatcher = BUG_MARKER_PATTERN.matcher(line);
       Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher;
+      int lineNumber = reader.getLineNumber();
       if (patternMatcher.matches()) {
         String patternToMatch = patternMatcher.group(1);
-        matcher = hasItem(diagnosticOnLine(reader.getLineNumber() + 1, patternToMatch));
+        // patternMatcher matches the //BUG comment, so we expect a diagnostic on the following
+        // line.
+        lineNumber++;
+        matcher = hasItem(diagnosticOnLine(lineNumber, patternToMatch));
         reader.readLine(); // skip next line -- we know it has an error
+        assertThat("Did not see expected error on line " + lineNumber, diagnostics, matcher);
       } else {
         // Cast is unnecessary, but javac throws an error because of poor type inference.
-        matcher = (Matcher) not(hasItem(diagnosticOnLine(reader.getLineNumber())));
+        matcher = (Matcher) not(hasItem(diagnosticOnLine(lineNumber)));
+        assertThat("Saw unexpected error on line " + lineNumber, diagnostics, matcher);
       }
-      assertThat("Compiler returned unexpected diagnostics", diagnostics, matcher);
-
     } while (true);
     reader.close();
   }

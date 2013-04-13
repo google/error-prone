@@ -20,31 +20,16 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.kindIs;
-import static com.google.errorprone.matchers.Matchers.methodHasAnnotation;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
-import static com.google.errorprone.matchers.Matchers.parentNode;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
-import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
-import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.Type.MethodType;
-import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
-import com.sun.tools.javac.tree.JCTree.JCIdent;
-import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -52,18 +37,17 @@ import java.util.Set;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
- * TODO(eaftan): Think about whether we want to allow multiple summaries for separate paths
- * inside checks (e.g. String.trim() vs. @CheckReturnValue).
  */
 @BugPattern(name = "ReturnValueIgnored",
     altNames = {"ResultOfMethodCallIgnored"},
-    summary = "Ignored return value of method that has no side-effect or is annotated with "
-        + "@CheckReturnValue",
-    explanation = "Method calls that have no side-effect are pointless if you ignore the value "
-        + "returned. Also, this error is triggered if the return value of a method that has been "
-        + "annotated with @CheckReturnValue is ignored.",
+    summary = "Return value of this method must be used",
+    explanation = "Certain library methods do nothing useful if their return value is ignored. " +
+    		"For example, String.trim() has no side effects, and you must store the return value " +
+    		"of String.intern() to access the interned string.  This check encodes a list of " +
+    		"methods in the JDK whose return value must be used and issues an error if they " +
+    		"are not.",
     category = JDK, severity = ERROR, maturity = MATURE)
-public class ReturnValueIgnored extends DescribingMatcher<MethodInvocationTree> {
+public class ReturnValueIgnored extends AbstractReturnValueIgnored {
 
   /**
    * A set of types which this checker should examine method calls on.
@@ -77,57 +61,16 @@ public class ReturnValueIgnored extends DescribingMatcher<MethodInvocationTree> 
       "java.lang.String", "java.math.BigInteger", "java.math.BigDecimal"));
 
   /**
-   * Matches if the method being called is a statement (rather than an expression), and the method
-   *    1) Has been annotated with @CheckReturnValue, or
-   *    2) Is being called on an instance of the specified types, and the method returns the same
-   *       type (e.g. String.trim()).
+   * Return a matcher for method invocations in which the method being called is on an instance of
+   * a type in the typesToCheck set and returns the same type (e.g. String.trim() returns a
+   * String).
    */
   @SuppressWarnings("unchecked")
   @Override
-  public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
-    return allOf(
-        parentNode(kindIs(Kind.EXPRESSION_STATEMENT, MethodInvocationTree.class)),
-        methodSelect(anyOf(ExpressionTree.class,
-            methodHasAnnotation("javax.annotation.CheckReturnValue"),
-            allOf(methodReceiverHasType(typesToCheck), methodReturnsSameTypeAsReceiver())))
-    ).matches(methodInvocationTree, state);
-  }
-
-  /**
-   * Fixes the error by assigning the result of the call to the receiver reference, or deleting
-   * the method call.
-   */
-  @Override
-  public Description describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
-    // Find the root of the field access chain, i.e. a.intern().trim() ==> a.
-    ExpressionTree identifierExpr = getRootIdentifier(methodInvocationTree);
-    String identifierStr = null;
-    Type identifierType = null;
-    if (identifierExpr != null) {
-      identifierStr = identifierExpr.toString();
-      if (identifierExpr instanceof JCIdent) {
-        identifierType = ((JCIdent) identifierExpr).sym.type;
-      } else if (identifierExpr instanceof JCFieldAccess) {
-        identifierType = ((JCFieldAccess) identifierExpr).sym.type;
-      } else {
-        throw new IllegalStateException("Expected a JCIdent or a JCFieldAccess");
-      }
-    }
-
-    Type returnType = getReturnType(((JCMethodInvocation) methodInvocationTree).getMethodSelect());
-
-    SuggestedFix fix;
-    if (identifierStr != null && !"this".equals(identifierStr) && returnType != null &&
-        state.getTypes().isAssignable(returnType, identifierType)) {
-      // Fix by assigning the assigning the result of the call to the root receiver reference.
-      fix = new SuggestedFix().prefixWith(methodInvocationTree, identifierStr + " = ");
-    } else {
-      // Unclear what the programmer intended.  Should be safe to delete without changing behavior
-      // since we expect the method not to have side effects .
-      Tree parent = state.getPath().getParentPath().getLeaf();
-      fix = new SuggestedFix().delete(parent);
-    }
-    return new Description(methodInvocationTree, diagnosticMessage, fix);
+  public Matcher<MethodInvocationTree> specializedMatcher() {
+    return methodSelect(allOf(ExpressionTree.class,
+        methodReceiverHasType(typesToCheck),
+        methodReturnsSameTypeAsReceiver()));
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {
@@ -147,13 +90,10 @@ public class ReturnValueIgnored extends DescribingMatcher<MethodInvocationTree> 
     return new Matcher<ExpressionTree>() {
       @Override
       public boolean matches(ExpressionTree expressionTree, VisitorState state) {
-        Type receiverType = getReceiverType(expressionTree);
-        Type returnType = getReturnType(expressionTree);
-        if (receiverType == null || returnType == null) {
-          return false;
-        }
-        return state.getTypes().isSameType(getReceiverType(expressionTree),
-            getReturnType(expressionTree));
+        Type receiverType = ASTHelpers.getReceiverType(expressionTree);
+        Type returnType = ASTHelpers.getReturnType(expressionTree);
+        return state.getTypes().isSameType(ASTHelpers.getReceiverType(expressionTree),
+            ASTHelpers.getReturnType(expressionTree));
       }
     };
   }
@@ -165,94 +105,10 @@ public class ReturnValueIgnored extends DescribingMatcher<MethodInvocationTree> 
     return new Matcher<ExpressionTree>() {
       @Override
       public boolean matches(ExpressionTree expressionTree, VisitorState state) {
-        Type receiverType = getReceiverType(expressionTree);
-        if (receiverType == null) {
-          return false;
-        }
+        Type receiverType = ASTHelpers.getReceiverType(expressionTree);
         return typeSet.contains(receiverType.toString());
       }
     };
   }
 
-  /**
-   * Returns the return type of a method call expression.
-   * Precondition: the expressionTree corresponds to a method call
-   */
-  private static Type getReturnType(ExpressionTree expressionTree) {
-    if (expressionTree instanceof JCFieldAccess) {
-      JCFieldAccess methodCall = (JCFieldAccess) expressionTree;
-      return ((MethodType) methodCall.type).getReturnType();
-    } else if (expressionTree instanceof JCIdent) {
-      JCIdent methodCall = (JCIdent) expressionTree;
-      return ((MethodType) methodCall.type).getReturnType();
-    }
-    return null;
-  }
-
-  /**
-   * Returns the type of a receiver of a method call expression.
-   * Precondition: the expressionTree corresponds to a method call.
-   *
-   * Examples:
-   *    a.b.foo() ==> type of a.b
-   *    a.bar().foo() ==> type of a.bar()
-   *    this.foo() ==> type of this
-   */
-  private static Type getReceiverType(ExpressionTree expressionTree) {
-    if (expressionTree instanceof JCFieldAccess) {
-      JCFieldAccess methodSelectFieldAccess = (JCFieldAccess) expressionTree;
-      return ((MethodSymbol) methodSelectFieldAccess.sym).owner.type;
-    } else if (expressionTree instanceof JCIdent) {
-      JCIdent methodCall = (JCIdent) expressionTree;
-      return ((MethodSymbol) methodCall.sym).owner.type;
-    }
-    return null;
-  }
-
-  /**
-   * Find the "root" assignable identifier of a chain of field accesses.  If there is no root
-   * (i.e, a bare method call or a static method call), return null.
-   *
-   * Examples:
-   *    a.trim().intern() ==> a
-   *    a.b.trim().intern() ==> a.b
-   *    this.intValue.foo() ==> this.intValue
-   *    this.foo() ==> this
-   *    intern() ==> null
-   *    String.format() ==> null
-   *    java.lang.String.format() ==> null
-   */
-  private ExpressionTree getRootIdentifier(MethodInvocationTree methodInvocationTree) {
-    if (!(methodInvocationTree instanceof JCMethodInvocation)) {
-      throw new IllegalArgumentException("Expected type to be JCMethodInvocation");
-    }
-
-    // Check for bare method call, e.g. intern().
-    if (((JCMethodInvocation) methodInvocationTree).getMethodSelect() instanceof JCIdent) {
-      return null;
-    }
-
-    // Unwrap the field accesses until you get to an identifier.
-    ExpressionTree expr = methodInvocationTree;
-    while (expr instanceof JCMethodInvocation) {
-      expr = ((JCMethodInvocation) expr).getMethodSelect();
-      if (expr instanceof JCFieldAccess) {
-        expr = ((JCFieldAccess) expr).getExpression();
-      }
-    }
-
-    // Find the symbol for the identifier.
-    Symbol sym = null;
-    if (expr instanceof JCIdent) {
-      sym = ((JCIdent) expr).sym;
-    } else if (expr instanceof JCFieldAccess) {
-      sym = ((JCFieldAccess) expr).sym;
-    }
-
-    // We only want assignable identifiers.
-    if (sym != null && sym instanceof VarSymbol) {
-      return expr;
-    }
-    return null;
-  }
 }

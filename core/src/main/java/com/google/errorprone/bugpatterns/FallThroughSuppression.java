@@ -20,7 +20,7 @@ import static com.google.errorprone.BugPattern.Category.ONE_OFF;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.NOT_A_PROBLEM;
 import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.hasElementWithValue;
+import static com.google.errorprone.matchers.Matchers.hasArgumentWithValue;
 import static com.google.errorprone.matchers.Matchers.isType;
 import static com.google.errorprone.matchers.Matchers.stringLiteral;
 
@@ -51,7 +51,7 @@ public class FallThroughSuppression extends AbstractSuppressWarningsMatcher {
   @SuppressWarnings({"varargs", "unchecked"})
   private static final Matcher<AnnotationTree> matcher = allOf(
       isType("java.lang.SuppressWarnings"),
-      hasElementWithValue("value", stringLiteral("fallthrough")));
+      hasArgumentWithValue("value", stringLiteral("fallthrough")));
 
   @Override
   public final boolean matches(AnnotationTree annotationTree, VisitorState state) {

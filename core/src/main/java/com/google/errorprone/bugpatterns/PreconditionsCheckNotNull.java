@@ -37,7 +37,7 @@ import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
  * @author alexeagle@google.com (Alex Eagle)
  */
 @BugPattern(name = "PreconditionsCheckNotNull",
-    summary = "Literal passed as first argument to Preconditions.checkNotNull()",
+    summary = "Literal passed as first argument to Preconditions.checkNotNull() can never be null",
     explanation =
         "Preconditions.checkNotNull() takes two arguments. The first is the reference " +
         "that should be non-null. The second is the error message to print (usually a string " +

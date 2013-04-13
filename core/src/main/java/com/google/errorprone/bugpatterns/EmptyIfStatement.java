@@ -79,7 +79,7 @@ public class EmptyIfStatement extends DescribingMatcher<EmptyStatementTree> {
    */
   @Override
   public Description describe(EmptyStatementTree tree, VisitorState state) {
-    boolean nextStmtIsNull = parentNode(nextStatement(isNull(StatementTree.class)))
+    boolean nextStmtIsNull = parentNode(nextStatement(isSame(null, StatementTree.class)))
         .matches(tree, state);
 
     assert(state.getPath().getParentPath().getLeaf().getKind() == IF);

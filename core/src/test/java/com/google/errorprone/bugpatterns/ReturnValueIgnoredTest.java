@@ -37,15 +37,9 @@ public class ReturnValueIgnoredTest {
   }
 
   @Test
-  public void testPositiveCase1() throws Exception {
+  public void testPositiveCases() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("ReturnValueIgnoredPositiveCase1.java").toURI()));
-  }
-
-  @Test
-  public void testPositiveCase2() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("ReturnValueIgnoredPositiveCase2.java").toURI()));
+        new File(this.getClass().getResource("ReturnValueIgnoredPositiveCases.java").toURI()));
   }
 
   @Test
