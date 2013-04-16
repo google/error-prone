@@ -50,7 +50,7 @@ public class AppliedFixTest {
   public void shouldApplySingleFixOnALine() {
     when(node.getStartPosition()).thenReturn(11);
     when(node.getEndPosition(same(endPositions))).thenReturn(14);
-    
+
     AppliedFix fix = AppliedFix.fromSource("import org.me.B;", endPositions)
         .apply(new SuggestedFix().delete(node));
     assertThat(fix.getNewCodeSnippet().toString(), equalTo("import org.B;"));
@@ -67,5 +67,25 @@ public class AppliedFixTest {
         "}", endPositions)
         .apply(new SuggestedFix().prefixWith(node, "three").postfixWith(node, "tres"));
     assertThat(fix.getNewCodeSnippet().toString(), equalTo("int three3tres;"));
+  }
+
+  @Test
+  public void shouldAllowEmptyFix() {
+    AppliedFix fix = AppliedFix.fromSource(
+        "public class Foo {\n" +
+        "   int 3;\n" +
+        "}", endPositions)
+        .apply(new SuggestedFix());
+    assertThat(fix.getNewCodeSnippet().toString(), equalTo(""));
+  }
+
+  @Test
+  public void shouldAllowImportOnlyFix() {
+    AppliedFix fix = AppliedFix.fromSource(
+        "public class Foo {\n" +
+        "   int 3;\n" +
+        "}", endPositions)
+        .apply(new SuggestedFix().addImport("foo.bar.Baz"));
+    assertThat(fix.getNewCodeSnippet().toString(), equalTo(""));
   }
 }
