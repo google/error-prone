@@ -28,6 +28,7 @@ public class BadShiftAmountNegativeCases {
     result += (long) x >> 3;
     result += x << 3;
     result += x >>> 3;
+    result += (long) (x & 0xff) >> 40;
 
     return result;
   }

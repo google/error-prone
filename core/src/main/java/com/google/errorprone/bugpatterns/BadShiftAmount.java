@@ -85,6 +85,9 @@ public class BadShiftAmount extends DescribingMatcher<BinaryTree> {
   /**
    * Matches if the left operand is a long and the right operand is a literal that is not in the
    * range 0-63 inclusive.
+   *
+   * TODO(eaftan): Consider removing long case since none of those matched in Google code, and
+   * there is no clear suggested fix.
    */
   private static final Matcher<BinaryTree> BAD_SHIFT_AMOUNT_LONG = new Matcher<BinaryTree>() {
     @Override

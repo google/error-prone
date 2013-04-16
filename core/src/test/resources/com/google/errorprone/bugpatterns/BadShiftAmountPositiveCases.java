@@ -31,6 +31,8 @@ public class BadShiftAmountPositiveCases {
     result += x << 32;
     //BUG: Suggestion includes "(long) x >>> 32"
     result += x >>> 32;
+    //BUG: Suggestion includes "(long) (x & 255) >> 40"
+    result += (x & 255) >> 40;
 
     return result;
   }
