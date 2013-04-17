@@ -103,13 +103,16 @@ public class BadShiftAmount extends DescribingMatcher<BinaryTree> {
   public Description describe(BinaryTree tree, VisitorState state) {
     int intValue = ((Number) ((LiteralTree) tree.getRightOperand()).getValue()).intValue();
 
-    SuggestedFix fix;
+    SuggestedFix fix = new SuggestedFix();
     if (intValue >= 32 && intValue <= 63) {
-      fix = new SuggestedFix().prefixWith(tree, "(long) ");
+      if (tree.getLeftOperand().getKind() == Kind.INT_LITERAL) {
+        fix = fix.postfixWith(tree.getLeftOperand(), "L");
+      } else {
+        fix = fix.prefixWith(tree, "(long) ");
+      }
     } else {
       int actualShiftDistance = intValue & 0x1f;    // This is equivalent according to JLS 15.19.
-      fix = new SuggestedFix().replace(tree.getRightOperand(),
-          Integer.toString(actualShiftDistance));
+      fix = fix.replace(tree.getRightOperand(), Integer.toString(actualShiftDistance));
     }
     return new Description(tree, diagnosticMessage, fix);
   }
