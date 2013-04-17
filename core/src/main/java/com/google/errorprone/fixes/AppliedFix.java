@@ -26,17 +26,16 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Represents the corrected source which we think was intended, by
- * applying a SuggestedFix.
+ * Represents the corrected source which we think was intended, by applying a SuggestedFix. This
+ * is used to generate the "Did you mean?" snippet in the error message.
+ *
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class AppliedFix {
-  private final CharSequence newSource;
   private final String snippet;
   private final boolean isRemoveLine;
 
-  private AppliedFix(CharSequence newSource, String snippet, boolean isRemoveLine) {
-    this.newSource = newSource;
+  private AppliedFix(String snippet, boolean isRemoveLine) {
     this.snippet = snippet;
     this.isRemoveLine = isRemoveLine;
   }
@@ -58,6 +57,10 @@ public class AppliedFix {
       this.endPositions = endPositions;
     }
 
+    /**
+     * Applies the suggestedFix to the source. Returns null if applying the fix results in no
+     * change to the source, or a change only to imports.
+     */
     public AppliedFix apply(SuggestedFix suggestedFix) {
       StringBuilder replaced = new StringBuilder(source);
 
@@ -104,7 +107,7 @@ public class AppliedFix {
       } catch (IOException e) {
         // impossible since source is in-memory
       }
-      return new AppliedFix(replaced, snippet, isRemoveLine);
+      return new AppliedFix(snippet, isRemoveLine);
     }
   }
 

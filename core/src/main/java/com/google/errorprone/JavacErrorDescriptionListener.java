@@ -69,10 +69,13 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
         endPositions = new WrappedTreeMap(endPosMap);
       }
 
-      if (description.suggestedFix == null) {
+      AppliedFix fix = null;
+      if (description.suggestedFix != null) {
+        fix = AppliedFix.fromSource(content, endPositions).apply(description.suggestedFix);
+      }
+      if (description.suggestedFix == null || fix == null) {
         log.error((DiagnosticPosition) description.node, MESSAGE_BUNDLE_KEY, description.message);
       } else {
-        AppliedFix fix = AppliedFix.fromSource(content, endPositions).apply(description.suggestedFix);
         if (fix.isRemoveLine()) {
           log.error((DiagnosticPosition) description.node, MESSAGE_BUNDLE_KEY, description.message
               + "\nDid you mean to remove this line?");

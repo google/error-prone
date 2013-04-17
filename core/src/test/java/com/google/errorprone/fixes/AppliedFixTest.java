@@ -17,6 +17,7 @@
 package com.google.errorprone.fixes;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.when;
@@ -70,22 +71,18 @@ public class AppliedFixTest {
   }
 
   @Test
-  public void shouldAllowEmptyFix() {
+  public void shouldReturnNullOnEmptyFix() {
     AppliedFix fix = AppliedFix.fromSource(
-        "public class Foo {\n" +
-        "   int 3;\n" +
-        "}", endPositions)
+        "public class Foo {}", endPositions)
         .apply(new SuggestedFix());
-    assertThat(fix.getNewCodeSnippet().toString(), equalTo(""));
+    assertNull(fix);
   }
 
   @Test
-  public void shouldAllowImportOnlyFix() {
+  public void shouldReturnNullOnImportOnlyFix() {
     AppliedFix fix = AppliedFix.fromSource(
-        "public class Foo {\n" +
-        "   int 3;\n" +
-        "}", endPositions)
+        "public class Foo {}", endPositions)
         .apply(new SuggestedFix().addImport("foo.bar.Baz"));
-    assertThat(fix.getNewCodeSnippet().toString(), equalTo(""));
+    assertNull(fix);
   }
 }
