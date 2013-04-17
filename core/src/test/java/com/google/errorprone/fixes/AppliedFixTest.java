@@ -17,6 +17,7 @@
 package com.google.errorprone.fixes;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.when;
@@ -50,7 +51,7 @@ public class AppliedFixTest {
   public void shouldApplySingleFixOnALine() {
     when(node.getStartPosition()).thenReturn(11);
     when(node.getEndPosition(same(endPositions))).thenReturn(14);
-    
+
     AppliedFix fix = AppliedFix.fromSource("import org.me.B;", endPositions)
         .apply(new SuggestedFix().delete(node));
     assertThat(fix.getNewCodeSnippet().toString(), equalTo("import org.B;"));
@@ -67,5 +68,21 @@ public class AppliedFixTest {
         "}", endPositions)
         .apply(new SuggestedFix().prefixWith(node, "three").postfixWith(node, "tres"));
     assertThat(fix.getNewCodeSnippet().toString(), equalTo("int three3tres;"));
+  }
+
+  @Test
+  public void shouldReturnNullOnEmptyFix() {
+    AppliedFix fix = AppliedFix.fromSource(
+        "public class Foo {}", endPositions)
+        .apply(new SuggestedFix());
+    assertNull(fix);
+  }
+
+  @Test
+  public void shouldReturnNullOnImportOnlyFix() {
+    AppliedFix fix = AppliedFix.fromSource(
+        "public class Foo {}", endPositions)
+        .apply(new SuggestedFix().addImport("foo.bar.Baz"));
+    assertNull(fix);
   }
 }
