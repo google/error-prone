@@ -273,20 +273,6 @@ public class Matchers {
   }
 
   /**
-   * Matches a BinaryTree node by applying the given matchers to each operand.
-   */
-  public static Matcher<BinaryTree> binaryTree(final Matcher<ExpressionTree> leftMatcher,
-      final Matcher<ExpressionTree> rightMatcher) {
-    return new Matcher<BinaryTree>() {
-      @Override
-      public boolean matches(BinaryTree tree, VisitorState state) {
-        return leftMatcher.matches(tree.getLeftOperand(), state) &&
-            rightMatcher.matches(tree.getRightOperand(), state);
-      }
-    };
-  }
-
-  /**
    * Matches an AST node if its parent node is matched by the given matcher.
    * For example, {@code parentNode(kindIs(Kind.RETURN))}
    * would match the {@code this} expression in {@code return this;}

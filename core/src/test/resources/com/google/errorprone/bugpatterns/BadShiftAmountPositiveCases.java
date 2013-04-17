@@ -20,9 +20,9 @@ package com.google.errorprone.bugpatterns;
  * @author Bill Pugh (bill.pugh@gmail.com)
  */
 public class BadShiftAmountPositiveCases {
-
-  public long testEquality(int x) {
-
+  
+  public void foo() {
+    int x = 0;
     long result = 0;
 
     //BUG: Suggestion includes "(long) x >> 32"
@@ -31,10 +31,15 @@ public class BadShiftAmountPositiveCases {
     result += x << 32;
     //BUG: Suggestion includes "(long) x >>> 32"
     result += x >>> 32;
+    //BUG: Suggestion includes "(long) x >> 40"
+    result += x >> 40;
     //BUG: Suggestion includes "(long) (x & 255) >> 40"
     result += (x & 255) >> 40;
-
-    return result;
+    
+    //BUG: Suggestion includes "x >> 4"
+    result += x >> 100;
+    //BUG: Suggestion includes "x >> 31"
+    result += x >> -1;
   }
-
+  
 }

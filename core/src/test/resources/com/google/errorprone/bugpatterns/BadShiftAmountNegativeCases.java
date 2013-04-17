@@ -21,16 +21,14 @@ package com.google.errorprone.bugpatterns;
  */
 public class BadShiftAmountNegativeCases {
 
-  public long testEquality(int x) {
-
+  public void foo() {
+    int x = 0;
     long result = 0;
 
     result += (long) x >> 3;
     result += x << 3;
     result += x >>> 3;
     result += (long) (x & 0xff) >> 40;
-
-    return result;
   }
 
 }

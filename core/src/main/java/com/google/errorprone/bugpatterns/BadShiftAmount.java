@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -45,11 +45,12 @@ import com.sun.tools.javac.tree.JCTree;
  */
 @BugPattern(name = "BadShiftAmount",
     summary = "Shift by an amount that is out of range",
-    // TODO(eaftan): Better explanation
-    explanation = "A 32-bit integer is shifted by the constant value 32. Since the shift "
-        + "operator only uses the low 5 bits of the shift amount, shifting by 32 is a no-op.\n\n"
-        + "See Java Language Specification 15.19 for more details.",
-    category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
+    explanation = "For shift operations on int types, only the five lowest-order bits of the "
+        + "shift amount are used as the shift distance.  This means that shift amounts that are "
+        + "not in the range 0 to 31, inclusive, are silently mapped to values in that range."
+        + "For example, a shift of an int by 32 is equivalent to shifting by 0, i.e., a no-op.\n\n"
+        + "See JLS 15.19, \"Shift Operators\", for more details.",
+    category = JDK, severity = ERROR, maturity = MATURE)
 public class BadShiftAmount extends DescribingMatcher<BinaryTree> {
 
   /**
@@ -82,31 +83,6 @@ public class BadShiftAmount extends DescribingMatcher<BinaryTree> {
     }
   };
 
-  /**
-   * Matches if the left operand is a long and the right operand is a literal that is not in the
-   * range 0-63 inclusive.
-   *
-   * TODO(eaftan): Consider removing long case since none of those matched in Google code, and
-   * there is no clear suggested fix.
-   */
-  private static final Matcher<BinaryTree> BAD_SHIFT_AMOUNT_LONG = new Matcher<BinaryTree>() {
-    @Override
-    public boolean matches(BinaryTree tree, VisitorState state) {
-      Type leftType = ((JCTree) tree.getLeftOperand()).type;
-      if (!(state.getTypes().isSameType(leftType, state.getSymtab().longType))) {
-        return false;
-      }
-
-      ExpressionTree rightOperand = tree.getRightOperand();
-      Object rightValue = ((LiteralTree) rightOperand).getValue();
-      if (!(rightOperand instanceof LiteralTree) || !(rightValue instanceof Number)) {
-        return false;
-      }
-      int intValue = ((Number) rightValue).intValue();
-      return intValue < 0 || intValue > 63;
-    }
-  };
-
   @SuppressWarnings("unchecked")
   @Override
   public boolean matches(BinaryTree tree, VisitorState state) {
@@ -115,31 +91,29 @@ public class BadShiftAmount extends DescribingMatcher<BinaryTree> {
             kindIs(Kind.LEFT_SHIFT),
             kindIs(Kind.RIGHT_SHIFT),
             kindIs(Kind.UNSIGNED_RIGHT_SHIFT)),
-        anyOf(
-            BAD_SHIFT_AMOUNT_INT,
-            BAD_SHIFT_AMOUNT_LONG)
+        BAD_SHIFT_AMOUNT_INT
         ).matches(tree, state);
   }
 
+  /**
+   * For shift amounts in [32, 63], cast the left operand to long.  Otherwise change the shift
+   * amount to whatever would actually be used.
+   */
   @Override
   public Description describe(BinaryTree tree, VisitorState state) {
-    String replacement = String.format("(long) %s %s %s",  tree.getLeftOperand(), getOperator(tree.getKind()), tree.getRightOperand());
-    SuggestedFix fix = new SuggestedFix().replace(tree, replacement);
+    int intValue = ((Number) ((LiteralTree) tree.getRightOperand()).getValue()).intValue();
+
+    SuggestedFix fix;
+    if (intValue >= 32 && intValue <= 63) {
+      fix = new SuggestedFix().prefixWith(tree, "(long) ");
+    } else {
+      int actualShiftDistance = intValue & 0x1f;    // This is equivalent according to JLS 15.19.
+      fix = new SuggestedFix().replace(tree.getRightOperand(),
+          Integer.toString(actualShiftDistance));
+    }
     return new Description(tree, diagnosticMessage, fix);
   }
 
-  public String getOperator(Kind kind) {
-    switch (kind) {
-      case RIGHT_SHIFT:
-        return ">>";
-      case UNSIGNED_RIGHT_SHIFT:
-        return ">>>";
-      case LEFT_SHIFT:
-        return "<<";
-      default:
-        throw new IllegalArgumentException("Bad kind: " + kind);
-    }
-  }
   public static class Scanner extends com.google.errorprone.Scanner {
     private BadShiftAmount matcher = new BadShiftAmount();
 
