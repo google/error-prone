@@ -41,7 +41,7 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
   private final JavaCompiler compiler;
 
   // The suffix for properties in src/main/resources/com/google/errorprone/errors.properties
-  String MESSAGE_BUNDLE_KEY = "error.prone";
+  private static final String MESSAGE_BUNDLE_KEY = "error.prone";
 
   public JavacErrorDescriptionListener(Log log, Map<JCTree, Integer> endPositions,
                                        JavaFileObject sourceFile, Context context) {
