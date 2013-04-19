@@ -260,9 +260,11 @@ public class ASTHelpers {
       List<Matcher<ExpressionTree>> matchers, VisitorState state) {
     ExpressionTree leftOperand = tree.getLeftOperand();
     ExpressionTree rightOperand = tree.getRightOperand();
-    if (matchers.get(0).matches(leftOperand, state) && matchers.get(1).matches(rightOperand, state)) {
+    if (matchers.get(0).matches(leftOperand, state) &&
+        matchers.get(1).matches(rightOperand, state)) {
       return Arrays.asList(leftOperand, rightOperand);
-    } else if (matchers.get(0).matches(rightOperand, state) && matchers.get(1).matches(leftOperand, state)) {
+    } else if (matchers.get(0).matches(rightOperand, state) &&
+        matchers.get(1).matches(leftOperand, state)) {
       return Arrays.asList(rightOperand, leftOperand);
     }
     return null;

@@ -43,6 +43,18 @@ public class BadShiftAmountPositiveCases {
     result += x >> 100;
     //BUG: Suggestion includes "x >> 31"
     result += x >> -1;
+    
+    byte b = 0;
+    char c = 'a';
+    
+    //BUG: Suggestion includes "(long) b >> 32"
+    result += b >> 32;
+    //BUG: Suggestion includes "(long) b << 32"
+    result += b << 32;
+    //BUG: Suggestion includes "(long) c >> 32"
+    result += c >> 32;
+    //BUG: Suggestion includes "(long) c >>> 32"
+    result += c >>> 32;
   }
   
 }
