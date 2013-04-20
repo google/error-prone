@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.bugpatterns.StringArrayConcatenateCompoundAssignment;
+import com.google.errorprone.bugpatterns.ArrayToStringCompoundAssignment;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +34,7 @@ public class StringArrayConcatenateCompoundAssignmentTest {
   @Before
   public void setUp() {
     compilationHelper = new CompilationTestHelper(
-        new StringArrayConcatenateCompoundAssignment.Scanner());
+        new ArrayToStringCompoundAssignment.Scanner());
   }
 
   @Test

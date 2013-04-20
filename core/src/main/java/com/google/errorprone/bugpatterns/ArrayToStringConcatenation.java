@@ -19,9 +19,9 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.binaryOperator;
+import static com.google.errorprone.matchers.Matchers.allOf;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -29,6 +29,7 @@ import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
+import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
@@ -37,27 +38,28 @@ import com.sun.source.tree.Tree.Kind;
 /**
  * @author adgar@google.com (Mike Edgar)
  */
-@BugPattern(name = "ArrayStringConcatenation",
-    summary = "toString used on an array",
+@BugPattern(name = "ArrayToStringConcatenation",
+    summary = "Implicit toString used on an array (String + Array)",
     explanation = "When concatenating an array to a string, the toString method on an array will " +
         "yield its identity, such as [I@4488aabb. This is almost never needed. Use " +
         "Arrays.toString to obtain a human-readable array summary.",
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
-public class ArrayStringConcatenation extends DescribingMatcher<BinaryTree> {
+public class ArrayToStringConcatenation extends DescribingMatcher<BinaryTree> {
 
-  private static final Matcher<ExpressionTree> isArrayMatcher =
+  private static final Matcher<ExpressionTree> arrayMatcher =
       Matchers.<ExpressionTree>isArrayType();
 
   @SuppressWarnings("unchecked")
-  private static final Matcher<BinaryTree> concatenationMatcher = anyOf(
-      binaryOperator(
-          Kind.PLUS,
-          isArrayMatcher,
-          Matchers.<ExpressionTree>isSameType("java.lang.String")),
-      binaryOperator(
-          Kind.PLUS,
-          Matchers.<ExpressionTree>isSameType("java.lang.String"),
-          isArrayMatcher));
+  private static final Matcher<BinaryTree> concatenationMatcher = allOf(
+      Matchers.kindIs(Kind.PLUS),
+      new Matcher<BinaryTree>() {
+        @Override
+        public boolean matches(BinaryTree t, VisitorState state) {
+          return null != ASTHelpers.matchBinaryTree(t, ImmutableList.of(
+              arrayMatcher,
+              Matchers.<ExpressionTree>isSameType("java.lang.String")), state);
+        }
+      });
 
   /**
    * Matches strings added with arrays.
@@ -76,7 +78,7 @@ public class ArrayStringConcatenation extends DescribingMatcher<BinaryTree> {
     final String replacement;
     String leftOperand = t.getLeftOperand().toString();
     String rightOperand = t.getRightOperand().toString();
-    if (isArrayMatcher.matches(t.getLeftOperand(), state)) {
+    if (arrayMatcher.matches(t.getLeftOperand(), state)) {
       replacement = "Arrays.toString(" + leftOperand + ") + " + rightOperand;
     } else {
       replacement = leftOperand + " + Arrays.toString(" + rightOperand + ")";
@@ -88,7 +90,7 @@ public class ArrayStringConcatenation extends DescribingMatcher<BinaryTree> {
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {
-    public DescribingMatcher<BinaryTree> scannerMatcher = new ArrayStringConcatenation();
+    public DescribingMatcher<BinaryTree> scannerMatcher = new ArrayToStringConcatenation();
 
     @Override
     public Void visitBinary(BinaryTree node, VisitorState visitorState) {

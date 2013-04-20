@@ -202,40 +202,6 @@ public class Matchers {
   }
 
   /**
-   * Matches a binary operator AST node which matches a given left-operand matcher, a given
-   * right-operand matcher, and a specific binary operator. Does not match compound assignment
-   * operators.
-   *
-   * @param operator Which binary operator to match against.
-   * @param leftOperandMatcher The matcher to apply to the left operand.
-   * @param rightOperandMatcher The matcher to apply to the right operand.
-   */
-  public static BinaryOperator binaryOperator(
-      Kind operator,
-      Matcher<ExpressionTree> leftOperandMatcher,
-      Matcher<ExpressionTree> rightOperandMatcher) {
-    Set<Kind> operators = new HashSet<Kind>(1);
-    operators.add(operator);
-    return new BinaryOperator(operators, leftOperandMatcher, rightOperandMatcher);
-  }
-
-  /**
-   * Matches a binary operator AST node which matches a given left-operand matcher, a given
-   * right-operand matcher, and is one of a set of binary operators. Does not match compound
-   * assignment operators.
-   *
-   * @param operators Which binary operators to match against.
-   * @param leftOperandMatcher The matcher to apply to the left operand.
-   * @param rightOperandMatcher The matcher to apply to the right operand.
-   */
-  public static BinaryOperator binaryOperator(
-      Set<Kind> operators,
-      Matcher<ExpressionTree> leftOperandMatcher,
-      Matcher<ExpressionTree> rightOperandMatcher) {
-    return new BinaryOperator(operators, leftOperandMatcher, rightOperandMatcher);
-  }
-
-  /**
    * Matches a compound assignment operator AST node which matches a given left-operand matcher, a
    * given right-operand matcher, and a specific compound assignment operator.
    *

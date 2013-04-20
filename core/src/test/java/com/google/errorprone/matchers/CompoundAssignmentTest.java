@@ -48,7 +48,7 @@ public class CompoundAssignmentTest extends CompilerBasedTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void cannotConstructWithCompoundAssignment() throws IOException {
+  public void cannotConstructWithBinaryOperator() throws IOException {
     Set<Kind> operators = new HashSet<Kind>();
     operators.add(Kind.PLUS);
     operators.add(Kind.PLUS_ASSIGNMENT);
@@ -78,7 +78,7 @@ public class CompoundAssignmentTest extends CompilerBasedTest {
   }
 
   @Test
-  public void shouldNotMatchWhenOperatorDiffer() throws IOException {
+  public void shouldNotMatchWhenOperatorDiffers() throws IOException {
     writeFile("A.java",
         "public class A {",
         "  public void getHash(int a, long b) {",

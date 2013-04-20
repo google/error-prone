@@ -36,14 +36,14 @@ import com.sun.source.tree.Tree.Kind;
 /**
  * @author adgar@google.com (Mike Edgar)
  */
-@BugPattern(name = "StringArrayConcatenateCompoundAssignment",
-    summary = "toString used on an array",
+@BugPattern(name = "ArrayToStringCompoundAssignment",
+    summary = "IMlpicit toString used on an array (String += Array)",
     explanation =
         "When concatenating-and-assigning an array to a string, the implicit toString call on " +
         "the array will yield its identity, such as [I@4488aabb. This is almost never needed. " +
         "Use Arrays.toString to obtain a human-readable array summary.",
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
-public class StringArrayConcatenateCompoundAssignment
+public class ArrayToStringCompoundAssignment
     extends DescribingMatcher<CompoundAssignmentTree> {
 
   private static final Matcher<CompoundAssignmentTree> assignmentMatcher =
@@ -78,7 +78,7 @@ public class StringArrayConcatenateCompoundAssignment
 
   public static class Scanner extends com.google.errorprone.Scanner {
     public DescribingMatcher<CompoundAssignmentTree> scannerMatcher =
-        new StringArrayConcatenateCompoundAssignment();
+        new ArrayToStringCompoundAssignment();
 
     @Override
     public Void visitCompoundAssignment(CompoundAssignmentTree node, VisitorState visitorState) {

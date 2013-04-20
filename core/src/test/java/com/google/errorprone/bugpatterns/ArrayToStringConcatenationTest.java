@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.bugpatterns.ArrayStringConcatenation;
+import com.google.errorprone.bugpatterns.ArrayToStringConcatenation;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,13 +27,13 @@ import java.io.File;
 /**
  * @author adgar@google.com (Mike Edgar)
  */
-public class ArrayStringConcatenationTest {
+public class ArrayToStringConcatenationTest {
 
   private CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(new ArrayStringConcatenation.Scanner());
+    compilationHelper = new CompilationTestHelper(new ArrayToStringConcatenation.Scanner());
   }
 
   @Test
