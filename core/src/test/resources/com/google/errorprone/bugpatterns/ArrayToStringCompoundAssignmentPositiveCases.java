@@ -21,7 +21,7 @@ import java.util.*;
 /**
  * @author adgar@google.com (Mike Edgar)
  */
-public class StringArrayConcatenateCompoundAssignmentPositiveCases {
+public class ArrayToStringCompoundAssignmentPositiveCases {
 
   private static final int[] a = {1, 2, 3};
 

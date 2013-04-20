@@ -37,7 +37,7 @@ import com.sun.source.tree.Tree.Kind;
  * @author adgar@google.com (Mike Edgar)
  */
 @BugPattern(name = "ArrayToStringCompoundAssignment",
-    summary = "IMlpicit toString used on an array (String += Array)",
+    summary = "Imlpicit toString used on an array (String += Array)",
     explanation =
         "When concatenating-and-assigning an array to a string, the implicit toString call on " +
         "the array will yield its identity, such as [I@4488aabb. This is almost never needed. " +

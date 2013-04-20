@@ -19,7 +19,7 @@ package com.google.errorprone.bugpatterns;
 /**
  * @author adgar@google.com (Mike Edgar)
  */
-public class StringArrayConcatenateCompoundAssignmentNegativeCases {
+public class ArrayToStringCompoundAssignmentNegativeCases {
   public void concatenateCompoundAssign_object() {
     Object a = new Object();
     String b = " a string";

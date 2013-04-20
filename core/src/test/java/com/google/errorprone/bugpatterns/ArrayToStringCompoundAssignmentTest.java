@@ -27,7 +27,7 @@ import java.io.File;
 /**
  * @author adgar@google.com (Mike Edgar)
  */
-public class StringArrayConcatenateCompoundAssignmentTest {
+public class ArrayToStringCompoundAssignmentTest {
 
   private CompilationTestHelper compilationHelper;
 
