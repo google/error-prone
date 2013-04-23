@@ -16,15 +16,12 @@
 
 package com.google.errorprone.matchers;
 
-import java.util.List;
-
-import javax.lang.model.element.Modifier;
-
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.MethodVisibility.Visibility;
 import com.google.errorprone.matchers.MultiMatcher.MatchType;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
+
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
@@ -44,6 +41,12 @@ import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCPrimitiveTypeTree;
 import com.sun.tools.javac.tree.JCTree.JCTypeApply;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.lang.model.element.Modifier;
 
 /**
  * Static factory methods which make the DSL read more fluently.
@@ -196,6 +199,39 @@ public class Matchers {
    */
   public static InstanceMethod instanceMethod(Matcher<ExpressionTree> receiverMatcher, String methodName) {
     return new InstanceMethod(receiverMatcher, methodName);
+  }
+
+  /**
+   * Matches a compound assignment operator AST node which matches a given left-operand matcher, a
+   * given right-operand matcher, and a specific compound assignment operator.
+   *
+   * @param operator Which compound assignment operator to match against.
+   * @param leftOperandMatcher The matcher to apply to the left operand.
+   * @param rightOperandMatcher The matcher to apply to the right operand.
+   */
+  public static CompoundAssignment compoundAssignment(
+      Kind operator,
+      Matcher<ExpressionTree> leftOperandMatcher,
+      Matcher<ExpressionTree> rightOperandMatcher) {
+    Set<Kind> operators = new HashSet<Kind>(1);
+    operators.add(operator);
+    return new CompoundAssignment(operators, leftOperandMatcher, rightOperandMatcher);
+  }
+
+  /**
+   * Matches a compound assignment operator AST node which matches a given left-operand matcher, a
+   * given right-operand matcher, and is one of a set of compound assignment operators. Does not
+   * match compound assignment operators.
+   *
+   * @param operators Which compound assignment operators to match against.
+   * @param receiverMatcher The matcher to apply to the receiver.
+   * @param expressionMatcher The matcher to apply to the expression.
+   */
+  public static CompoundAssignment compoundAssignment(
+      Set<Kind> operators,
+      Matcher<ExpressionTree> receiverMatcher,
+      Matcher<ExpressionTree> expressionMatcher) {
+    return new CompoundAssignment(operators, receiverMatcher, expressionMatcher);
   }
 
   /**
