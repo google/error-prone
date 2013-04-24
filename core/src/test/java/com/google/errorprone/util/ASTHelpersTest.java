@@ -7,8 +7,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.CompilerBasedTest;
 import com.google.errorprone.matchers.Matcher;
 
-import com.sun.source.tree.AssignmentTree;
-import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
 
@@ -28,7 +27,7 @@ public class ASTHelpersTest extends CompilerBasedTest {
         "  }",
         "}"
     );
-    assertCompiles(assignmentExpressionMatches(true, literalHasActualStartPosition(59)));
+    assertCompiles(literalExpressionMatches(literalHasActualStartPosition(59)));
   }
 
   @Test
@@ -41,36 +40,31 @@ public class ASTHelpersTest extends CompilerBasedTest {
         "  }",
         "}"
     );
-    assertCompiles(assignmentExpressionMatches(true, literalHasActualStartPosition(59)));
+    assertCompiles(literalExpressionMatches(literalHasActualStartPosition(59)));
   }
 
-
-  private Matcher<ExpressionTree> literalHasActualStartPosition(final int startPosition) {
-    return new Matcher<ExpressionTree>() {
+  private Matcher<LiteralTree> literalHasActualStartPosition(final int startPosition) {
+    return new Matcher<LiteralTree>() {
       @Override
-      public boolean matches(ExpressionTree tree, VisitorState state) {
-        if (!(tree instanceof JCLiteral)) {
-          return false;
-        }
+      public boolean matches(LiteralTree tree, VisitorState state) {
         JCLiteral literal = (JCLiteral) tree;
         return ASTHelpers.getActualStartPosition(literal, state.getSourceCode()) == startPosition;
       }
     };
   }
 
-  private Scanner assignmentExpressionMatches(final boolean shouldMatch,
-      final Matcher<ExpressionTree> matcher) {
+  private Scanner literalExpressionMatches(final Matcher<LiteralTree> matcher) {
     return new Scanner() {
       @Override
-      public Void visitAssignment(AssignmentTree node, VisitorState state) {
-        assertMatch(shouldMatch, node.getExpression(), state, matcher);
-        return super.visitAssignment(node, state);
+      public Void visitLiteral(LiteralTree node, VisitorState state) {
+        assertMatch(node, state, matcher);
+        return super.visitLiteral(node, state);
       }
 
-      private <T extends Tree> void assertMatch(boolean shouldMatch, T node,
-          VisitorState visitorState, Matcher<T> matcher) {
+      private <T extends Tree> void assertMatch(T node, VisitorState visitorState,
+          Matcher<T> matcher) {
         VisitorState state = visitorState.withPath(getCurrentPath());
-        assertTrue(!shouldMatch ^ matcher.matches(node, state));
+        assertTrue(matcher.matches(node, state));
       }
     };
   }

@@ -114,13 +114,14 @@ public class BadShiftAmount extends DescribingMatcher<BinaryTree> {
       }
     } else {
       JCLiteral jcLiteral = (JCLiteral) tree.getRightOperand();
-      int actualShiftDistance = intValue & 0x1f;    // This is equivalent according to JLS 15.19.
+      // This is the equivalent shift distance according to JLS 15.19.
+      String actualShiftDistance = Integer.toString(intValue & 0x1f);
       int actualStart = ASTHelpers.getActualStartPosition(jcLiteral, state.getSourceCode());
       if (actualStart != jcLiteral.getStartPosition()) {
-        fix = fix.replace(tree.getRightOperand(), Integer.toString(actualShiftDistance),
+        fix = fix.replace(tree.getRightOperand(), actualShiftDistance,
             actualStart - jcLiteral.getStartPosition(), 0);
       } else {
-        fix = fix.replace(tree.getRightOperand(), Integer.toString(actualShiftDistance));
+        fix = fix.replace(tree.getRightOperand(), actualShiftDistance);
       }
     }
     return new Description(tree, diagnosticMessage, fix);

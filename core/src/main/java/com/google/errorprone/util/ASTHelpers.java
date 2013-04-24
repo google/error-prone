@@ -290,15 +290,13 @@ public class ASTHelpers {
   public static int getActualStartPosition(JCLiteral tree, CharSequence source) {
     // This only applies to negative numeric literals.
     Object value = tree.getValue();
-    if (value instanceof Number) {
-      if (((Number) value).doubleValue() < 0) {
-        int start = tree.getStartPosition() - 1;
-        while (WHITESPACE_CHARS.contains(source.charAt(start))) {
-          start--;
-        }
-        if (source.charAt(start) == '-') {
-          return start;
-        }
+    if ((value instanceof Number) && (((Number) value).doubleValue() < 0)) {
+      int start = tree.getStartPosition() - 1;
+      while (WHITESPACE_CHARS.contains(source.charAt(start))) {
+        start--;
+      }
+      if (source.charAt(start) == '-') {
+        return start;
       }
     }
     return tree.getStartPosition();
