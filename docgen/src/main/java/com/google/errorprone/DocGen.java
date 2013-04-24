@@ -39,6 +39,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.collect.Iterables.limit;
@@ -203,8 +204,8 @@ public class DocGen extends AbstractProcessor {
         if (!exampleDir.exists()) {
           System.err.println("Warning: cannot find path " + exampleDir);
         } else {
-          // Example filename must contain name of check class.
-          File[] examples = exampleDir.listFiles(new FilenameContainsFilter(
+          // Example filename must match example pattern.
+          File[] examples = exampleDir.listFiles(new ExampleFilter(
               parts[0].substring(parts[0].lastIndexOf('.') + 1)));
           Arrays.sort(examples);
           if (examples.length > 0) {
@@ -226,16 +227,16 @@ public class DocGen extends AbstractProcessor {
     indexWriter.close();
   }
 
-  private static class FilenameContainsFilter implements FilenameFilter {
-    private String mustContain;
+  private static class ExampleFilter implements FilenameFilter {
+    private Pattern matchPattern;
 
-    public FilenameContainsFilter(String mustContain) {
-      this.mustContain = mustContain;
+    public ExampleFilter(String checkerName) {
+      this.matchPattern = Pattern.compile(checkerName + "(Positive|Negative)Case.*");
     }
 
     @Override
     public boolean accept(File dir, String name) {
-      return name.contains(mustContain);
+      return matchPattern.matcher(name).matches();
     }
   }
 }
