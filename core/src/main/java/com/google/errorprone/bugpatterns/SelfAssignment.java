@@ -176,7 +176,7 @@ public class SelfAssignment extends DescribingMatcher<AssignmentTree> {
       }
     }
 
-    return new Description(assignmentTree, diagnosticMessage, fix);
+    return new Description(assignmentTree, getDiagnosticMessage(), fix);
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {

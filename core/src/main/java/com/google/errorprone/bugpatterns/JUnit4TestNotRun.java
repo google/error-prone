@@ -175,13 +175,13 @@ public class JUnit4TestNotRun extends DescribingMatcher<MethodTree> {
         SuggestedFix fix = new SuggestedFix()
             .addImport(JUNIT4_TEST_ANNOTATION)
             .replace(methodTree, methodString);
-        return new Description(methodTree, diagnosticMessage, fix);
+        return new Description(methodTree, getDiagnosticMessage(), fix);
       }
     }
     SuggestedFix fix = new SuggestedFix()
         .addImport(JUNIT4_TEST_ANNOTATION)
         .prefixWith(methodTree, "@Test\n");
-    return new Description(methodTree, diagnosticMessage, fix);
+    return new Description(methodTree, getDiagnosticMessage(), fix);
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {

@@ -31,7 +31,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
  * This checker finds and fixes empty statements, for example:
  * if (foo == 10);
  * ;
- * 
+ *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 @BugPattern(name = "EmptyStatement",
@@ -51,7 +51,7 @@ public class EmptyStatement extends DescribingMatcher<EmptyStatementTree> {
       EmptyStatementTree emptyStatementTree, VisitorState state) {
     return new Description(
         emptyStatementTree,
-        diagnosticMessage,
+        getDiagnosticMessage(),
         new SuggestedFix().delete(emptyStatementTree));
   }
 

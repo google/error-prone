@@ -67,7 +67,7 @@ public class PreconditionsCheckNotNull extends DescribingMatcher<MethodInvocatio
     } else {
       fix.delete(state.getPath().getParentPath().getLeaf());
     }
-    return new Description(stringLiteralValue, diagnosticMessage, fix);
+    return new Description(stringLiteralValue, getDiagnosticMessage(), fix);
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {

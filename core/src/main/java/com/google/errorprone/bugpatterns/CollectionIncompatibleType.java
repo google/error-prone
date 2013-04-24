@@ -68,7 +68,7 @@ public class CollectionIncompatibleType extends DescribingMatcher<MethodInvocati
 
   @Override
   public Description describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
-    return new Description(methodInvocationTree, diagnosticMessage,
+    return new Description(methodInvocationTree, getDiagnosticMessage(),
         new SuggestedFix().replace(methodInvocationTree, "false"));
   }
 

@@ -94,7 +94,7 @@ public class LongLiteralLowerCaseSuffix extends DescribingMatcher<LiteralTree> {
     StringBuilder longLiteral = new StringBuilder(getLongLiteral(literalTree, state));
     longLiteral.setCharAt(longLiteral.length() - 1, 'L');
     SuggestedFix fix = new SuggestedFix().replace(literalTree, longLiteral.toString());
-    return new Description(literalTree, diagnosticMessage, fix);
+    return new Description(literalTree, getDiagnosticMessage(), fix);
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {

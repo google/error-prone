@@ -48,7 +48,8 @@ import java.util.List;
  * TODO(eaftan): Support other types of comparisons?  Are there likely to be errors in those?
  */
 @BugPattern(name = "ComparisonOutOfRange",
-    summary = "%ss may have a value in the range %d to %d; therefore, this comparison to " +
+    summary = "Comparison to value that is out of range for the compared type",
+    formatSummary = "%ss may have a value in the range %d to %d; therefore, this comparison to " +
     	"%s will always evaluate to %s",
     explanation = "This checker looks for equality comparisons to values that are out of " +
         "range for the compared type.  For example, bytes may have a value in the range " +
@@ -209,11 +210,11 @@ public class ComparisonOutOfRange extends DescribingMatcher<BinaryTree> {
       } else {
         fix.replace(literal, replacement);
       }
-      customDiagnosticMessage = getCustomDiagnosticMessage("byte", (int) Byte.MIN_VALUE,
+      customDiagnosticMessage = getDiagnosticMessage("byte", (int) Byte.MIN_VALUE,
           (int) Byte.MAX_VALUE, literal.toString(), Boolean.toString(willEvaluateTo));
     } else {
       fix.replace(tree, Boolean.toString(willEvaluateTo));
-      customDiagnosticMessage = getCustomDiagnosticMessage("char", (int) Character.MIN_VALUE,
+      customDiagnosticMessage = getDiagnosticMessage("char", (int) Character.MIN_VALUE,
           (int) Character.MAX_VALUE, literal.toString(), Boolean.toString(willEvaluateTo));
     }
     return new Description(tree, customDiagnosticMessage, fix);

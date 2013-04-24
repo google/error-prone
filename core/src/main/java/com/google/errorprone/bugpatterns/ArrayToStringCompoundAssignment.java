@@ -73,7 +73,7 @@ public class ArrayToStringCompoundAssignment
     SuggestedFix fix = new SuggestedFix()
         .replace(t, receiver + " += Arrays.toString(" + expression + ")")
         .addImport("java.util.Arrays");
-    return new Description(t, diagnosticMessage, fix);
+    return new Description(t, getDiagnosticMessage(), fix);
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {

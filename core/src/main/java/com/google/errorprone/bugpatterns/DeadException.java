@@ -67,7 +67,7 @@ public class DeadException extends DescribingMatcher<NewClassTree> {
     } else {
       suggestedFix.delete(parent);
     }
-    return new Description(newClassTree, diagnosticMessage, suggestedFix);
+    return new Description(newClassTree, getDiagnosticMessage(), suggestedFix);
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {

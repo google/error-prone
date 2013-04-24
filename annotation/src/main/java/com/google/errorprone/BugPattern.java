@@ -94,11 +94,20 @@ public @interface BugPattern {
 
   /**
    * A short summary of the problem that this checker detects.  Used for the compiler error
-   * message and for the wiki.
+   * message and for the wiki.  Must not contain format specifiers.
    *
    * <p>Wiki syntax is not allowed for this element.
    */
   String summary();
+
+  /**
+   * A short summary of the problem that this checker detects, used for the compiler error
+   * message only.  May contain format specifiers and use format string interpolation when
+   * generating the compiler error message.
+   *
+   * <p>Wiki syntax is not allowed for this element.
+   */
+  String formatSummary() default "";
 
   /**
    * A longer explanation of the problem that this checker detects.  Used as the main content

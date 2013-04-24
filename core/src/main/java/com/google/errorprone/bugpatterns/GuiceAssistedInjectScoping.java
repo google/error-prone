@@ -20,7 +20,6 @@ import static com.google.errorprone.BugPattern.Category.GUICE;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.annotations;
-import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.methodHasParameters;
@@ -125,7 +124,7 @@ public class GuiceAssistedInjectScoping extends DescribingMatcher<ClassTree> {
 
     return new Description(
         annotationWithScopeAnnotation,
-        diagnosticMessage,
+        getDiagnosticMessage(),
         new SuggestedFix().delete(annotationWithScopeAnnotation));
   }
 

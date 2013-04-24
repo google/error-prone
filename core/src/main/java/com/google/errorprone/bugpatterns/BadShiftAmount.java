@@ -124,7 +124,7 @@ public class BadShiftAmount extends DescribingMatcher<BinaryTree> {
         fix = fix.replace(tree.getRightOperand(), actualShiftDistance);
       }
     }
-    return new Description(tree, diagnosticMessage, fix);
+    return new Description(tree, getDiagnosticMessage(), fix);
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {

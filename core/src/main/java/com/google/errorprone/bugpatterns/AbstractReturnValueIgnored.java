@@ -92,6 +92,6 @@ abstract class AbstractReturnValueIgnored extends DescribingMatcher<MethodInvoca
       Tree parent = state.getPath().getParentPath().getLeaf();
       fix = new SuggestedFix().delete(parent);
     }
-    return new Description(methodInvocationTree, diagnosticMessage, fix);
+    return new Description(methodInvocationTree, getDiagnosticMessage(), fix);
   }
 }

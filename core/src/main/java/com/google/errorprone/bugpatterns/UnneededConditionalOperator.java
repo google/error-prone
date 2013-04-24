@@ -61,7 +61,7 @@ public class UnneededConditionalOperator extends DescribingMatcher<ConditionalEx
       };
 
   private static Map<String, String> OPERATOR_OPPOSITES = new HashMap<String, String>();
-  
+
   static {
     OPERATOR_OPPOSITES.put("<", ">=");
     OPERATOR_OPPOSITES.put("<=", ">");
@@ -70,7 +70,7 @@ public class UnneededConditionalOperator extends DescribingMatcher<ConditionalEx
     OPERATOR_OPPOSITES.put("==", "!=");
     OPERATOR_OPPOSITES.put("!=", "==");
   }
-      
+
   @Override
   public boolean matches(ConditionalExpressionTree t, VisitorState state) {
     return matcher.matches(t, state);
@@ -92,7 +92,7 @@ public class UnneededConditionalOperator extends DescribingMatcher<ConditionalEx
       // Our suggested fix ignores any possible side-effects of the condition.
       fix = new SuggestedFix().replace(t, Boolean.toString(trueExprValue));
     }
-    return new Description(t, diagnosticMessage, fix);
+    return new Description(t, getDiagnosticMessage(), fix);
   }
 
   /**

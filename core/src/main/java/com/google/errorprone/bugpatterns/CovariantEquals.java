@@ -132,7 +132,7 @@ public class CovariantEquals extends DescribingMatcher<MethodTree> {
       }
     }
 
-    return new Description(methodTree, diagnosticMessage, fix);
+    return new Description(methodTree, getDiagnosticMessage(), fix);
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {

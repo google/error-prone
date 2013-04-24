@@ -100,7 +100,7 @@ public class InvalidPatternSyntax extends DescribingMatcher<MethodInvocationTree
     if ((arg instanceof LiteralTree) && ".".equals(((LiteralTree)arg).getValue())) {
       fix = new SuggestedFix().replace(arg, "\"\\\\.\"");
     }
-    return new Description(methodInvocationTree, diagnosticMessage, fix);
+    return new Description(methodInvocationTree, getDiagnosticMessage(), fix);
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {
