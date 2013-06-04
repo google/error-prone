@@ -16,21 +16,24 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.BugPattern.Category.JDK;
+import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Matchers.instanceMethod;
+import static com.google.errorprone.matchers.Matchers.methodSelect;
+
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
+
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
-
-import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.*;
+import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 
 /**
  * @author adgar@google.com (Mike Edgar)
@@ -43,29 +46,51 @@ import static com.google.errorprone.matchers.Matchers.*;
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
 public class ArrayToString extends DescribingMatcher<MethodInvocationTree> {
 
-  @SuppressWarnings("unchecked")
-  private static final Matcher<MethodInvocationTree> matcher =
-      methodSelect(instanceMethod(Matchers.<ExpressionTree>isArrayType(), "toString"));
-
   /**
    * Matches calls to a toString instance method in which the receiver is an array type.
    */
   @Override
   public boolean matches(MethodInvocationTree t, VisitorState state) {
-    return matcher.matches(t, state);
+    return methodSelect(instanceMethod(Matchers.<ExpressionTree>isArrayType(), "toString"))
+        .matches(t, state);
   }
 
   /**
-   * Replaces instances of a.toString() with Arrays.toString(a). Also adds
-   * the necessary import statement for java.util.Arrays.
+   * Fixes instances of calling toString() on an array.  If the array is the result of calling
+   * e.getStackTrace(), replaces e.getStackTrace().toString() with Guava's
+   * Throwables.getStackTraceAsString(e).  Otherwise, replaces a.toString() with Arrays.toString(a).
    */
   @Override
   public Description describe(MethodInvocationTree t, VisitorState state) {
-    String receiver = ((JCFieldAccess) t.getMethodSelect()).getExpression().toString();
-    SuggestedFix fix = new SuggestedFix()
-        .replace(t, "Arrays.toString(" + receiver + ")")
-        .addImport("java.util.Arrays");
+    SuggestedFix fix = new SuggestedFix();
+
+    ExpressionTree receiverTree = getReceiver(t);
+    if (receiverTree instanceof MethodInvocationTree &&
+        instanceMethod(Matchers.<ExpressionTree>isSubtypeOf("java.lang.Throwable"), "getStackTrace")
+        .matches(((MethodInvocationTree) receiverTree).getMethodSelect(), state)) {
+      String throwable = getReceiver(receiverTree).toString();
+      fix = fix.replace(t, "Throwables.getStackTraceAsString(" + throwable + ")")
+          .addImport("com.google.common.base.Throwables");
+    } else {
+      String receiver = ((JCFieldAccess) t.getMethodSelect()).getExpression().toString();
+      fix = fix.replace(t, "Arrays.toString(" + receiver + ")")
+          .addImport("java.util.Arrays");
+    }
     return new Description(t, getDiagnosticMessage(), fix);
+  }
+
+  /**
+   * TODO(eaftan): Extract to ASTHelpers.
+   */
+  private static ExpressionTree getReceiver(ExpressionTree expr) {
+    if (expr instanceof MethodInvocationTree) {
+      return getReceiver(((MethodInvocationTree) expr).getMethodSelect());
+    } else if (expr instanceof MemberSelectTree) {
+      return ((MemberSelectTree) expr).getExpression();
+    } else {
+      throw new IllegalStateException("Expected expression to be a method invocation or "
+          + "field access, but was " + expr.getKind());
+    }
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {
