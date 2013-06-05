@@ -23,6 +23,7 @@ import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
@@ -246,6 +247,25 @@ public class ASTHelpers {
       return ((MethodSymbol) methodCall.sym).owner.type;
     }
     throw new IllegalArgumentException("Expected a JCFieldAccess or JCIdent");
+  }
+
+  /**
+   * Returns the receiver of an expression.
+   *
+   * Examples:
+   *    a.foo() ==> a
+   *    a.b.foo() ==> a.b
+   *    a.bar().foo() ==> a.bar()
+   */
+  public static ExpressionTree getReceiver(ExpressionTree expressionTree) {
+    if (expressionTree instanceof MethodInvocationTree) {
+      return getReceiver(((MethodInvocationTree) expressionTree).getMethodSelect());
+    } else if (expressionTree instanceof MemberSelectTree) {
+      return ((MemberSelectTree) expressionTree).getExpression();
+    } else {
+      throw new IllegalStateException("Expected expression to be a method invocation or "
+          + "field access, but was " + expressionTree.getKind());
+    }
   }
 
   /**
