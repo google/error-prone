@@ -27,12 +27,12 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 
 /**
  * @author adgar@google.com (Mike Edgar)
@@ -46,12 +46,18 @@ import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 public class ArrayToString extends DescribingMatcher<MethodInvocationTree> {
 
   /**
+   * Matches calls to Throwable.getStackTrace().
+   */
+  private static final Matcher<MethodInvocationTree> getStackTraceMatcher = methodSelect(
+      instanceMethod(Matchers.<ExpressionTree>isSubtypeOf("java.lang.Throwable"), "getStackTrace"));
+
+  /**
    * Matches calls to a toString instance method in which the receiver is an array type.
    */
   @Override
-  public boolean matches(MethodInvocationTree t, VisitorState state) {
+  public boolean matches(MethodInvocationTree methodTree, VisitorState state) {
     return methodSelect(instanceMethod(Matchers.<ExpressionTree>isArrayType(), "toString"))
-        .matches(t, state);
+        .matches(methodTree, state);
   }
 
   /**
@@ -60,22 +66,20 @@ public class ArrayToString extends DescribingMatcher<MethodInvocationTree> {
    * Throwables.getStackTraceAsString(e).  Otherwise, replaces a.toString() with Arrays.toString(a).
    */
   @Override
-  public Description describe(MethodInvocationTree t, VisitorState state) {
+  public Description describe(MethodInvocationTree methodTree, VisitorState state) {
     SuggestedFix fix = new SuggestedFix();
 
-    ExpressionTree receiverTree = ASTHelpers.getReceiver(t);
+    ExpressionTree receiverTree = ASTHelpers.getReceiver(methodTree);
     if (receiverTree instanceof MethodInvocationTree &&
-        instanceMethod(Matchers.<ExpressionTree>isSubtypeOf("java.lang.Throwable"), "getStackTrace")
-        .matches(((MethodInvocationTree) receiverTree).getMethodSelect(), state)) {
+        getStackTraceMatcher.matches((MethodInvocationTree) receiverTree, state)) {
       String throwable = ASTHelpers.getReceiver(receiverTree).toString();
-      fix = fix.replace(t, "Throwables.getStackTraceAsString(" + throwable + ")")
+      fix = fix.replace(methodTree, "Throwables.getStackTraceAsString(" + throwable + ")")
           .addImport("com.google.common.base.Throwables");
     } else {
-      String receiver = ((JCFieldAccess) t.getMethodSelect()).getExpression().toString();
-      fix = fix.replace(t, "Arrays.toString(" + receiver + ")")
+      fix = fix.replace(methodTree, "Arrays.toString(" + receiverTree + ")")
           .addImport("java.util.Arrays");
     }
-    return new Description(t, getDiagnosticMessage(), fix);
+    return new Description(methodTree, getDiagnosticMessage(), fix);
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {

@@ -256,6 +256,8 @@ public class ASTHelpers {
    *    a.foo() ==> a
    *    a.b.foo() ==> a.b
    *    a.bar().foo() ==> a.bar()
+   *    a.b.c ==> a.b
+   *    a.b().c ==> a.b()
    */
   public static ExpressionTree getReceiver(ExpressionTree expressionTree) {
     if (expressionTree instanceof MethodInvocationTree) {
