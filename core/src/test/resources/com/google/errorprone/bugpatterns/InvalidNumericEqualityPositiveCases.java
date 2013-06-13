@@ -24,13 +24,16 @@ public class InvalidNumericEqualityPositiveCases {
   public boolean testEquality(Integer x, Integer y) {
     boolean retVal;
 
-    //BUG: Suggestion includes "Objects.equal(x,y)" 
+    //BUG: Suggestion includes "Objects.equal(x,y)"
     retVal = (x == y);
+    
     //BUG: Suggestion includes "!Objects.equal(x,y)"
     retVal = (x != y);
     final Integer constValue = new Integer(1000);
+    
     //BUG: Suggestion includes "Objects.equal(x,constValue)"
     retVal = (x == constValue);
+    
     //BUG: Suggestion includes "!Objects.equal(x,constValue)"
     retVal = (x != constValue);
 

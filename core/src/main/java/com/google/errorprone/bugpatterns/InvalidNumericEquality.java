@@ -45,13 +45,12 @@ import java.lang.StringBuilder;
  * @author scottjohnson@google.com (Scott Johnson)
  */
 @BugPattern(name = "NumericEquality",
-    summary = "Numeric comparison using reference equality instead of value equality", 
+    summary = "Numeric comparison using reference equality instead of value equality",
     explanation = "Numbers are compared for reference equality/inequality using == or !="
-        + "instead of for value equality using .equals()", 
+        + "instead of for value equality using .equals()",
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
 public class InvalidNumericEquality extends DescribingMatcher<BinaryTree> {
 
-  /* Match subclasses of java.lang.Number that are compared with == and != */
   @SuppressWarnings("unchecked")
   @Override
   public boolean matches(BinaryTree tree, VisitorState state) {
@@ -59,7 +58,7 @@ public class InvalidNumericEquality extends DescribingMatcher<BinaryTree> {
     ExpressionTree rightOperand = tree.getRightOperand();
     Symbol left = ASTHelpers.getSymbol(leftOperand);
     Symbol right = ASTHelpers.getSymbol(rightOperand);
-    if (left == null || right == null){
+    if (left == null || right == null) {
       return false;
     }
     // Using a static final object as a sentinel is OK
@@ -67,16 +66,17 @@ public class InvalidNumericEquality extends DescribingMatcher<BinaryTree> {
       return false;
     }
     // Match left and right operand to subclasses of java.lang.Number and not null
-    return anyOf(kindIs(EQUAL_TO), kindIs(NOT_EQUAL_TO))
-        .matches(tree, state) 
-        && allOf(isSubtypeOf("java.lang.Number"), not(kindIs(Tree.Kind.NULL_LITERAL)))
+    return anyOf(kindIs(EQUAL_TO), kindIs(NOT_EQUAL_TO)).matches(tree, state) 
+        && allOf(
+        isSubtypeOf("java.lang.Number"), not(kindIs(Tree.Kind.NULL_LITERAL)))
         .matches(leftOperand, state) 
-        && allOf(isSubtypeOf("java.lang.Number"), not(kindIs(Tree.Kind.NULL_LITERAL)))
+        && allOf(
+        isSubtypeOf("java.lang.Number"), not(kindIs(Tree.Kind.NULL_LITERAL)))
         .matches(rightOperand, state);
   }
-  
-  public static boolean isFinal(Symbol s){
-    return (s.flags() & Flags.FINAL)!=0;
+
+  public static boolean isFinal(Symbol s) {
+    return (s.flags() & Flags.FINAL) != 0;
   }
 
   @Override
@@ -84,7 +84,7 @@ public class InvalidNumericEquality extends DescribingMatcher<BinaryTree> {
     ExpressionTree leftOperand = tree.getLeftOperand();
     ExpressionTree rightOperand = tree.getRightOperand();
     StringBuilder fixedExpression = new StringBuilder();
-   
+
     if (tree.getKind() == Tree.Kind.NOT_EQUAL_TO) {
       fixedExpression.append("!");
     }

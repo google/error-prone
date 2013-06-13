@@ -22,7 +22,7 @@ package com.google.errorprone.bugpatterns;
 public class InvalidNumericEqualityNegativeCases {
 
   public static final Integer NULLINT = null;
-  
+
   public boolean testEquality(Integer x, Integer y) {
     boolean retVal;
 
