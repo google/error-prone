@@ -27,6 +27,9 @@ public class SelfAssignmentPositiveCases2 {
   
   private int a;
   private Foo foo;
+  
+  //BUG: Suggestion includes "remove this line"
+  private static final Object obj = SelfAssignmentPositiveCases2.obj;
     
   public void test6() {
     Foo foo = new Foo();

@@ -50,6 +50,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +81,8 @@ public class ErrorProneScanner extends Scanner {
   private final Iterable<DescribingMatcher<NewClassTree>> newClassMatchers;
   private final Iterable<DescribingMatcher<AnnotationTree>> annotationMatchers;
   private final Iterable<DescribingMatcher<EmptyStatementTree>> emptyStatementMatchers;
-  private final Iterable<DescribingMatcher<AssignmentTree>> assignmentMatchers;
+  private final Iterable<DescribingMatcher<Tree>> assignmentMatchers;
+  private final Iterable<DescribingMatcher<Tree>> variableMatchers;
   private final Iterable<DescribingMatcher<MethodTree>> methodMatchers;
   private final Iterable<DescribingMatcher<LiteralTree>> literalMatchers;
   private final Iterable<DescribingMatcher<ConditionalExpressionTree>> conditionalExpressionMatchers;
@@ -110,6 +112,7 @@ public class ErrorProneScanner extends Scanner {
           BadShiftAmount.class,
           ComparisonOutOfRange.class);
       this.assignmentMatchers = createChecks(enabled, SelfAssignment.class);
+      this.variableMatchers = createChecks(enabled, SelfAssignment.class);
       this.methodMatchers = createChecks(enabled, CovariantEquals.class);
       this.literalMatchers = createChecks(enabled, LongLiteralLowerCaseSuffix.class);
       this.conditionalExpressionMatchers = createChecks(enabled, UnneededConditionalOperator.class);
@@ -173,10 +176,18 @@ public class ErrorProneScanner extends Scanner {
 
   @Override
   public Void visitAssignment(AssignmentTree assignmentTree, VisitorState visitorState) {
-    for (DescribingMatcher<AssignmentTree> matcher : assignmentMatchers) {
+    for (DescribingMatcher<Tree> matcher : assignmentMatchers) {
       evaluateMatch(assignmentTree, visitorState, matcher);
     }
     return super.visitAssignment(assignmentTree, visitorState);
+  }
+  
+  @Override
+  public Void visitVariable(VariableTree variableTree, VisitorState visitorState) {
+    for (DescribingMatcher<Tree> matcher : variableMatchers) {
+      evaluateMatch(variableTree, visitorState, matcher);
+    }
+    return super.visitVariable(variableTree, visitorState);
   }
 
   @Override

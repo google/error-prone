@@ -24,7 +24,11 @@ package com.google.errorprone.bugpatterns;
 public class SelfAssignmentNegativeCases {
   private int a;
   
+  private static int b = StaticClass.b;
+  private static int c = SelfAssignmentNegativeCases.b;
+  
   public void test1(int a) {
+    int b = SelfAssignmentNegativeCases.b;
     this.a = a;
   }
   
@@ -75,6 +79,10 @@ public class SelfAssignmentNegativeCases {
   private static class Foobar {
     Foo foo;
     Bar bar;
+  }
+  
+  private static class StaticClass {
+    static int b;
   }
   
 }
