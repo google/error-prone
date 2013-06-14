@@ -71,7 +71,8 @@ public class ErrorProneScanner extends Scanner {
      * Selects all checks which are annotated with maturity = ON_BY_DEFAULT.
      */
     public static final EnabledPredicate DEFAULT_CHECKS = new EnabledPredicate() {
-      @Override public boolean isEnabled(Class<? extends DescribingMatcher<?>> check, BugPattern annotation) {
+      @Override
+      public boolean isEnabled(Class<? extends DescribingMatcher<?>> check, BugPattern annotation) {
         return annotation.maturity() == MATURE;
       }
     };
@@ -85,7 +86,8 @@ public class ErrorProneScanner extends Scanner {
   private final Iterable<DescribingMatcher<Tree>> variableMatchers;
   private final Iterable<DescribingMatcher<MethodTree>> methodMatchers;
   private final Iterable<DescribingMatcher<LiteralTree>> literalMatchers;
-  private final Iterable<DescribingMatcher<ConditionalExpressionTree>> conditionalExpressionMatchers;
+  private final Iterable<DescribingMatcher<ConditionalExpressionTree>>
+      conditionalExpressionMatchers;
   private final Iterable<DescribingMatcher<BinaryTree>> binaryExpressionMatchers;
 
   @SuppressWarnings("unchecked")
@@ -167,7 +169,8 @@ public class ErrorProneScanner extends Scanner {
   }
 
   @Override
-  public Void visitEmptyStatement(EmptyStatementTree emptyStatementTree, VisitorState visitorState) {
+  public Void visitEmptyStatement(
+      EmptyStatementTree emptyStatementTree, VisitorState visitorState) {
     for (DescribingMatcher<EmptyStatementTree> matcher : emptyStatementMatchers) {
       evaluateMatch(emptyStatementTree, visitorState, matcher);
     }

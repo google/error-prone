@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Tests for self assignment
  * 
@@ -30,12 +32,16 @@ public class SelfAssignmentPositiveCases2 {
   
   //BUG: Suggestion includes "remove this line"
   private static final Object obj = SelfAssignmentPositiveCases2.obj;
+  //BUG: Suggestion includes "remove this line"
+  private static final Object obj2 = checkNotNull(SelfAssignmentPositiveCases2.obj2);
     
   public void test6() {
     Foo foo = new Foo();
     foo.a = 2;
     //BUG: Suggestion includes "remove this line"
     foo.a = foo.a;
+    //BUG: Suggestion includes "checkNotNull(foo.a)"
+    foo.a = checkNotNull(foo.a);
   }
   
   public void test7() {
@@ -44,22 +50,30 @@ public class SelfAssignmentPositiveCases2 {
     f.foo.a = 10;
     //BUG: Suggestion includes "remove this line"
     f.foo.a = f.foo.a;
+    //BUG: Suggestion includes "checkNotNull(f.foo.a)"
+    f.foo.a = checkNotNull(f.foo.a);
   }
   
   public void test8() {
     foo = new Foo();
     //BUG: Suggestion includes "remove this line"
     this.foo.a = foo.a;
+    //BUG: Suggestion includes "checkNotNull(foo.a)"
+    this.foo.a = checkNotNull(foo.a);
   }
   
   public void test9(Foo fao, Foo bar) {
     //BUG: Suggestion includes "this.foo = fao"
     this.foo = foo;
+    //BUG: Suggestion includes "this.foo = checkNotNull(fao)"
+    this.foo = checkNotNull(foo);
   }
   
   public void test10(Foo foo) {
     //BUG: Suggestion includes "this.foo = foo"
     foo = foo;
+    //BUG: Suggestion includes "this.foo = checkNotNull(foo)"
+    foo = checkNotNull(foo);
   }
      
   private static class Foo {

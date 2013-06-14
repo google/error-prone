@@ -19,11 +19,14 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Matchers.methodSelect;
+import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.sun.source.tree.Tree.Kind.ASSIGNMENT;
 import static com.sun.source.tree.Tree.Kind.CLASS;
 import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
 import static com.sun.source.tree.Tree.Kind.MEMBER_SELECT;
 import static com.sun.source.tree.Tree.Kind.METHOD;
+import static com.sun.source.tree.Tree.Kind.METHOD_INVOCATION;
 import static com.sun.source.tree.Tree.Kind.VARIABLE;
 import static javax.lang.model.element.Modifier.STATIC;
 
@@ -38,8 +41,9 @@ import com.google.errorprone.util.EditDistance;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
-import com.sun.source.tree.VariableTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
@@ -53,25 +57,20 @@ import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 
 
 /**
- * fixed -> doesn't seem to be visiting assignments in declarations:
- * int i = 10;  // this can't be an error, but why aren't we visiting it?
- * 
- * TODO(eaftan):
- * or incrementing assignments:
+ * TODO(eaftan): doesn't seem to be visiting incrementing assignments:
  * i += 10; // maybe this becomes i = i + 10 by this compiler phase?
- *
  *
  * Also consider cases where the parent is not a statement or there is
  * no parent?
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  * @author scottjohnson@google.com (Scott Johnson)
- *
  */
 @BugPattern(name = "SelfAssignment",
     summary = "Variable assigned to itself",
     explanation = "The left-hand side and right-hand side of this assignment are the same. " +
-    		"It has no effect.",
+        "It has no effect. This also handles assignments where the right side is a call to " +
+        "Preconditions.checkNotNull().",
     category = JDK, severity = ERROR, maturity = MATURE)
 public class SelfAssignment extends DescribingMatcher<Tree> {
 
@@ -79,32 +78,39 @@ public class SelfAssignment extends DescribingMatcher<Tree> {
   public boolean matches(Tree tree, VisitorState state) {
     if (tree.getKind() == ASSIGNMENT) {
       AssignmentTree assignmentTree = (AssignmentTree) tree;
-      return ASTHelpers.sameVariable(assignmentTree.getVariable(), assignmentTree.getExpression());
+      ExpressionTree expression = stripCheckNotNull(assignmentTree.getExpression(), state);
+      return ASTHelpers.sameVariable(assignmentTree.getVariable(), expression);
     } else if (tree.getKind() == VARIABLE) {
       VariableTree variableTree = (VariableTree) tree;
-
-      // variable initializer must be a MemberSelectTree (if it was an identifier tree referencing 
-      // itself, this would already throw an error for accessing an uninitialized field)
-      if (variableTree.getInitializer() == null
-          || variableTree.getInitializer().getKind() != MEMBER_SELECT) {
-        return false;
-      }
-
-      // must be a static class variable 
+      ExpressionTree initializer = stripCheckNotNull(variableTree.getInitializer(), state);
       Tree parent = state.getPath().getParentPath().getLeaf();
-      if (parent.getKind() != CLASS || !variableTree.getModifiers().getFlags().contains(STATIC)){
+
+      // must be a static class variable with member select initializer
+      if (initializer == null || initializer.getKind() != MEMBER_SELECT || parent.getKind() != CLASS
+          || !variableTree.getModifiers().getFlags().contains(STATIC)) {
         return false;
       }
       
-      MemberSelectTree rhs = (MemberSelectTree) variableTree.getInitializer();
+      MemberSelectTree rhs = (MemberSelectTree) initializer;
       Symbol rhsClass = ASTHelpers.getSymbol(rhs.getExpression());
       Symbol lhsClass = ASTHelpers.getSymbol(parent);
-      return rhsClass.getQualifiedName().equals(lhsClass.getQualifiedName()) 
-          && rhs.getIdentifier().equals(variableTree.getName());
+      return rhsClass.equals(lhsClass) && rhs.getIdentifier().contentEquals(variableTree.getName());
     }
     return false;
   }
 
+  /**
+   * If the given expression is a call to checkNotNull(x), returns x. 
+   * Otherwise, returns the given expression.
+   */
+  private ExpressionTree stripCheckNotNull(ExpressionTree expression, VisitorState state) {
+    if (expression != null && expression.getKind() == METHOD_INVOCATION && methodSelect(
+        staticMethod("com.google.common.base.Preconditions", "checkNotNull"))
+        .matches((MethodInvocationTree) expression, state)) {
+      return ((MethodInvocationTree) expression).getArguments().get(0);
+    }
+    return expression;
+  }
   /**
    * We expect that the lhs is a field and the rhs is an identifier, specifically
    * a parameter to the method.  We base our suggested fixes on this expectation.
@@ -140,6 +146,15 @@ public class SelfAssignment extends DescribingMatcher<Tree> {
 
     ExpressionTree lhs = assignmentTree.getVariable();
     ExpressionTree rhs = assignmentTree.getExpression();
+    
+    // if this is a method invocation, they must be calling checkNotNull()
+    if (assignmentTree.getExpression().getKind() == METHOD_INVOCATION) {
+      // change the default fix to be "checkNotNull(x)" instead of "x = checkNotNull(x)"
+      fix = new SuggestedFix().replace(tree, rhs.toString());
+      // new rhs is first argument to checkNotNull()
+      rhs = stripCheckNotNull(rhs, state);
+    }
+    
 
     if (lhs.getKind() == MEMBER_SELECT) {
       // find a method parameter of the same type and similar name and suggest it
@@ -151,18 +166,18 @@ public class SelfAssignment extends DescribingMatcher<Tree> {
       // get current name of rhs
       String rhsName = null;
       if (rhs.getKind() == IDENTIFIER) {
-        rhsName = ((JCIdent)rhs).name.toString();
+        rhsName = ((JCIdent) rhs).name.toString();
       } else if (rhs.getKind() == MEMBER_SELECT) {
-        rhsName = ((JCFieldAccess)rhs).name.toString();
+        rhsName = ((JCFieldAccess) rhs).name.toString();
       }
 
       // find method parameters of the same type
-      Type type = ((JCFieldAccess)lhs).type;
+      Type type = ((JCFieldAccess) lhs).type;
       TreePath path = state.getPath();
       while (path != null && path.getLeaf().getKind() != METHOD) {
         path = path.getParentPath();
       }
-      JCMethodDecl method = (JCMethodDecl)path.getLeaf();
+      JCMethodDecl method = (JCMethodDecl) path.getLeaf();
       int minEditDistance = Integer.MAX_VALUE;
       String replacement = null;
       for (JCVariableDecl var : method.params) {
@@ -186,20 +201,20 @@ public class SelfAssignment extends DescribingMatcher<Tree> {
       assert(lhs.getKind() == IDENTIFIER);
 
       // get current name of lhs
-      String lhsName = ((JCIdent)rhs).name.toString();
+      String lhsName = ((JCIdent) rhs).name.toString();
 
       // find class instance fields of the same type
-      Type type = ((JCIdent)lhs).type;
+      Type type = ((JCIdent) lhs).type;
       TreePath path = state.getPath();
       while (path != null && path.getLeaf().getKind() != CLASS) {
         path = path.getParentPath();
       }
-      JCClassDecl klass = (JCClassDecl)path.getLeaf();
+      JCClassDecl klass = (JCClassDecl) path.getLeaf();
       int minEditDistance = Integer.MAX_VALUE;
       String replacement = null;
       for (JCTree member : klass.getMembers()) {
         if (member.getKind() == VARIABLE) {
-          JCVariableDecl var = (JCVariableDecl)member;
+          JCVariableDecl var = (JCVariableDecl) member;
           if (!Flags.isStatic(var.sym) && var.type == type) {
             int editDistance = EditDistance.getEditDistance(lhsName, var.name.toString());
             if (editDistance < minEditDistance) {
@@ -219,6 +234,11 @@ public class SelfAssignment extends DescribingMatcher<Tree> {
     return new Description(assignmentTree, getDiagnosticMessage(), fix);
   }
 
+  /**
+   * Scanner for SelfAssignment
+   * 
+   * @author scottjohnson@google.com (Scott Johnson)
+   */
   public static class Scanner extends com.google.errorprone.Scanner {
     public DescribingMatcher<Tree> selfAssignmentMatcher = new SelfAssignment();
     
