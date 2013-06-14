@@ -23,6 +23,7 @@ import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
@@ -42,6 +43,7 @@ import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCPrimitiveTypeTree;
 import com.sun.tools.javac.tree.JCTree.JCTypeApply;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -631,6 +633,24 @@ public class Matchers {
    */
   public static Matcher<ExpressionTree> isDescendantOfMethod(String fullClassName, String methodName) {
     return new DescendantOf(fullClassName, methodName);
+  }
+
+  /**
+   * Matches a binary tree if the given matchers match the operands in either order.  That is,
+   * returns true if either:
+   *   matcher1 matches the left operand and matcher2 matches the right operand
+   * or
+   *   matcher2 matches the left operand and matcher1 matches the right operand
+   */
+  public static Matcher<BinaryTree> binaryTree(final Matcher<ExpressionTree> matcher1,
+      final Matcher<ExpressionTree> matcher2) {
+    return new Matcher<BinaryTree>() {
+      @SuppressWarnings("unchecked")
+      @Override
+      public boolean matches(BinaryTree t, VisitorState state) {
+        return null != ASTHelpers.matchBinaryTree(t, Arrays.asList(matcher1, matcher2), state);
+      }
+    };
   }
 }
 
