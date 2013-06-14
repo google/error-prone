@@ -19,6 +19,7 @@ import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.binaryTree;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.matchers.Matchers.not;
@@ -31,6 +32,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.BinaryTree;
@@ -46,11 +48,15 @@ import java.lang.StringBuilder;
  */
 @BugPattern(name = "NumericEquality",
     summary = "Numeric comparison using reference equality instead of value equality",
-    explanation = "Numbers are compared for reference equality/inequality using == or !="
+    explanation = "Numbers are compared for reference equality/inequality using == or != "
         + "instead of for value equality using .equals()",
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
 public class InvalidNumericEquality extends DescribingMatcher<BinaryTree> {
 
+  @SuppressWarnings("unchecked")
+  public static final Matcher<ExpressionTree> SUBCLASS_OF_NUMBER =
+      allOf(isSubtypeOf("java.lang.Number"), not(kindIs(Tree.Kind.NULL_LITERAL)));
+  
   @SuppressWarnings("unchecked")
   @Override
   public boolean matches(BinaryTree tree, VisitorState state) {
@@ -66,13 +72,9 @@ public class InvalidNumericEquality extends DescribingMatcher<BinaryTree> {
       return false;
     }
     // Match left and right operand to subclasses of java.lang.Number and not null
-    return anyOf(kindIs(EQUAL_TO), kindIs(NOT_EQUAL_TO)).matches(tree, state) 
-        && allOf(
-        isSubtypeOf("java.lang.Number"), not(kindIs(Tree.Kind.NULL_LITERAL)))
-        .matches(leftOperand, state) 
-        && allOf(
-        isSubtypeOf("java.lang.Number"), not(kindIs(Tree.Kind.NULL_LITERAL)))
-        .matches(rightOperand, state);
+    return allOf(anyOf(kindIs(EQUAL_TO), kindIs(NOT_EQUAL_TO)),
+        binaryTree(SUBCLASS_OF_NUMBER, SUBCLASS_OF_NUMBER)).matches(tree, state);
+
   }
 
   public static boolean isFinal(Symbol s) {
@@ -89,7 +91,7 @@ public class InvalidNumericEquality extends DescribingMatcher<BinaryTree> {
       fixedExpression.append("!");
     }
     fixedExpression.append(
-        "Objects.equal(" + leftOperand.toString() + "," + rightOperand.toString() + ")");
+        "Objects.equal(" + leftOperand.toString() + ", " + rightOperand.toString() + ")");
 
     SuggestedFix fix = new SuggestedFix().replace(tree, fixedExpression.toString())
         .addImport("com.google.common.base.Objects");
