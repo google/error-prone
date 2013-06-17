@@ -26,25 +26,25 @@ import java.io.File;
 /**
  * @author scottjohnson@google.com (Scott Johnson)
  */
-public class InvalidNumericEqualityTest {
+public class WrongParameterPackageTest {
 
   private CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(new InvalidNumericEquality.Scanner());
+    compilationHelper = new CompilationTestHelper(new WrongParameterPackage.Scanner());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("InvalidNumericEqualityPositiveCases.java").toURI()));
+        new File(this.getClass().getResource("WrongParameterPackagePositiveCases.java").toURI()));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("InvalidNumericEqualityNegativeCases.java").toURI()));
+        new File(this.getClass().getResource("WrongParameterPackageNegativeCases.java").toURI()));
   }
 
 }
