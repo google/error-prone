@@ -19,13 +19,15 @@ package com.google.errorprone.bugpatterns;
 import com.google.inject.Singleton;
 
 /**
- * @author sgoldfeder@google.com(Steven Goldfeder)
+ * Positive test cases in which a scoping annotation is put on an interface or anabstract class.
+ * The suggested fix is to remove the scoping annotation.
+ * 
+ * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-
 public class InjectScopeAnnotationOnInterfaceOrAbstractClassPositiveCases {
 
   /**
-   * abstract class has scoping annotation
+   * An abstract class that has scoping annotation.
    */
   //BUG: Suggestion includes "remove"
   @Singleton
@@ -33,7 +35,7 @@ public class InjectScopeAnnotationOnInterfaceOrAbstractClassPositiveCases {
   }
 
   /**
-   * interface has scoping annotation
+   * An interface interface has scoping annotation.
    */
   //BUG: Suggestion includes "remove"
   @Singleton

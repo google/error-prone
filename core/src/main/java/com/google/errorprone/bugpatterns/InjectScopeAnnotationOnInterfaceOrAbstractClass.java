@@ -36,6 +36,7 @@ import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Flags;
+
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
@@ -54,24 +55,25 @@ public class InjectScopeAnnotationOnInterfaceOrAbstractClass
    * @Scope(Javax).
    */
   @SuppressWarnings("unchecked")
-  private Matcher<AnnotationTree> scopeAnnotationMatcher = Matchers.<AnnotationTree>anyOf(
-      hasAnnotation(GUICE_SCOPE_ANNOTATION), hasAnnotation(JAVAX_SCOPE_ANNOTATION));
+  private static final Matcher<AnnotationTree> SCOPE_ANNOTATION_MATCHER =
+      Matchers.<AnnotationTree>anyOf(
+          hasAnnotation(GUICE_SCOPE_ANNOTATION), hasAnnotation(JAVAX_SCOPE_ANNOTATION));
 
-
-  private Matcher<ClassTree> interfaceAndAbstractClassMatcher = new Matcher<ClassTree>() {
-    @Override
-    public boolean matches(ClassTree classTree, VisitorState state) {
-      return classTree.getModifiers().getFlags().contains(ABSTRACT)
-          || (ASTHelpers.getSymbol(classTree).flags() & Flags.INTERFACE) != 0;
-    }
-  };
+  private static final Matcher<ClassTree> INTERFACE_AND_ABSTRACT_TYPE_MATCHER =
+      new Matcher<ClassTree>() {
+        @Override
+        public boolean matches(ClassTree classTree, VisitorState state) {
+          return classTree.getModifiers().getFlags().contains(ABSTRACT)
+              || (ASTHelpers.getSymbol(classTree).flags() & Flags.INTERFACE) != 0;
+        }
+      };
 
   @Override
   @SuppressWarnings("unchecked")
   public final boolean matches(AnnotationTree annotationTree, VisitorState state) {
-    Tree modified = state.getPath().getParentPath().getParentPath().getLeaf();
-    return (scopeAnnotationMatcher.matches(annotationTree, state) && modified instanceof ClassTree
-        && interfaceAndAbstractClassMatcher.matches((ClassTree) modified, state));
+    Tree modified = getCurrentlyAnnotatedNode(state);
+    return (SCOPE_ANNOTATION_MATCHER.matches(annotationTree, state) && modified instanceof ClassTree
+        && INTERFACE_AND_ABSTRACT_TYPE_MATCHER.matches((ClassTree) modified, state));
   }
 
   @Override
@@ -79,7 +81,10 @@ public class InjectScopeAnnotationOnInterfaceOrAbstractClass
     return new Description(
         annotationTree, getDiagnosticMessage(), new SuggestedFix().delete(annotationTree));
   }
-
+  
+  private Tree getCurrentlyAnnotatedNode(VisitorState state){
+    return state.getPath().getParentPath().getParentPath().getLeaf();
+  }
 
   public static class Scanner extends com.google.errorprone.Scanner {
     public DescribingMatcher<AnnotationTree> annotationMatcher =
