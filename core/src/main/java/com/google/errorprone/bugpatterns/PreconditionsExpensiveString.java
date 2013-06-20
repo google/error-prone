@@ -67,7 +67,7 @@ public class PreconditionsExpensiveString
           methodSelect(staticMethod(
               "com.google.common.base.Preconditions", "checkArgument"))),
       argument(1, Matchers.<ExpressionTree>allOf(
-          kindIs(Kind.METHOD_INVOCATION, ExpressionTree.class),
+          Matchers.<ExpressionTree>kindIs(Kind.METHOD_INVOCATION),
           expressionMethodSelect(staticMethod("java.lang.String", "format")),
           new StringFormatCallContainsNoSpecialFormattingMatcher(
               Pattern.compile("%[^%s]"))

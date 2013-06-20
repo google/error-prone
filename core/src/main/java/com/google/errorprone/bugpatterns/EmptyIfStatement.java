@@ -22,6 +22,8 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matchers;
+
 import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.StatementTree;
@@ -79,7 +81,7 @@ public class EmptyIfStatement extends DescribingMatcher<EmptyStatementTree> {
    */
   @Override
   public Description describe(EmptyStatementTree tree, VisitorState state) {
-    boolean nextStmtIsNull = parentNode(nextStatement(isSame(null, StatementTree.class)))
+    boolean nextStmtIsNull = parentNode(nextStatement(Matchers.<StatementTree>isSame(null)))
         .matches(tree, state);
 
     assert(state.getPath().getParentPath().getLeaf().getKind() == IF);

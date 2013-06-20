@@ -19,12 +19,12 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.ExpressionTree;
@@ -68,7 +68,7 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
   @SuppressWarnings("unchecked")
   @Override
   public Matcher<MethodInvocationTree> specializedMatcher() {
-    return methodSelect(allOf(ExpressionTree.class,
+    return methodSelect(Matchers.<ExpressionTree>allOf(
         methodReceiverHasType(typesToCheck),
         methodReturnsSameTypeAsReceiver()));
   }

@@ -86,15 +86,6 @@ public class Matchers {
 
   /**
    * Compose several matchers together, such that the composite matches an AST node iff all the given matchers do.
-   * @param typeInfer a type token for the generic type. Unused, but allows the returned matcher to be composed.
-   */
-  public static <T extends Tree> Matcher<T> allOf(
-      Class<T> typeInfer, final Matcher<? super T>... matchers) {
-    return allOf(matchers);
-  }
-
-  /**
-   * Compose several matchers together, such that the composite matches an AST node iff all the given matchers do.
    */
   public static <T extends Tree> Matcher<T> allOf(final Matcher<? super T>... matchers) {
     return new Matcher<T>() {
@@ -111,15 +102,6 @@ public class Matchers {
 
   /**
    * Compose several matchers together, such that the composite matches an AST node if any of the given matchers do.
-   * @param typeInfer a type token for the generic type. Unused, but allows the returned matcher to be composed.
-   */
-  public static <T extends Tree> Matcher<T> anyOf(
-      Class<T> typeInfer, final Matcher<? super T>... matchers) {
-    return anyOf(matchers);
-  }
-
-  /**
-   * Compose several matchers together, such that the composite matches an AST node if any of the given matchers do.
    */
   public static <T extends Tree> Matcher<T> anyOf(final Matcher<? super T>... matchers) {
     return new Matcher<T>() {
@@ -132,15 +114,6 @@ public class Matchers {
         return false;
       }
     };
-  }
-
-  /**
-   * Matches an AST node of a given kind, for example, an Annotation or a switch block.
-   * @param typeInfer a type token for the generic type. Unused, but allows the returned matcher to
-   * be composed.
-   */
-  public static <T extends Tree> Matcher<T> kindIs(final Kind kind, Class<T> typeInfer) {
-    return kindIs(kind);
   }
 
   /**
@@ -164,14 +137,6 @@ public class Matchers {
         return tree.getKind() == kind;
       }
     };
-  }
-
-  /**
-   * Matches an AST node which is the same object reference as the given node.
-   * @param typeInfer a type token for the generic type. Unused, but allows the returned matcher to be composed.
-   */
-  public static <T extends Tree> Matcher<T> isSame(final Tree t, Class<T> typeInfer) {
-    return isSame(t);
   }
 
   /**
@@ -465,17 +430,6 @@ public class Matchers {
         return ASTHelpers.sameVariable(args.get(index1), args.get(index2));
       }
     };
-  }
-
-  /**
-   * Determines whether an expression has an annotation of the given type.
-   *
-   * @param annotationType The type of the annotation to look for (e.g, "javax.annotation.Nullable")
-   * @param typeInfer a type token for the generic type. Unused, but allows the returned matcher to be composed.
-   */
-  public static <T extends Tree> Matcher<T> hasAnnotation(final String annotationType,
-      Class<T> typeInfer) {
-    return hasAnnotation(annotationType);
   }
 
   /**
