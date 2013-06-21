@@ -60,10 +60,8 @@ public class WrongParameterPackage extends DescribingMatcher<MethodTree> {
     ClassSymbol classSym = method.enclClass();
     TypeSymbol superClass = classSym.getSuperclass().tsym;
 
-    for (Scope.Entry scopeEntry = superClass.members().lookup(method.name);
-         scopeEntry != null; scopeEntry = scopeEntry.next()) {
-      Symbol s = scopeEntry.sym;
-      if (s != null && s.getKind() == ElementKind.METHOD) {
+    for (Symbol s : superClass.members().getElements()) {
+      if (s.name.contentEquals(method.name) && s.getKind() == ElementKind.METHOD) {
         MethodSymbol supermethod = (MethodSymbol) s;
 
         // if this method actually overrides the supermethod, then it's correct and not a match.
