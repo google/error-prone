@@ -22,6 +22,8 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Matchers;
+
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
@@ -50,7 +52,7 @@ public class PreconditionsCheckNotNull extends DescribingMatcher<MethodInvocatio
   @SuppressWarnings({"unchecked"})
   private static final Matcher<MethodInvocationTree> matcher = allOf(
       methodSelect(staticMethod("com.google.common.base.Preconditions", "checkNotNull")),
-      argument(0, kindIs(STRING_LITERAL, ExpressionTree.class)));
+      argument(0, Matchers.<ExpressionTree>kindIs(STRING_LITERAL)));
 
   @Override
   public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {

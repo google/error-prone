@@ -20,6 +20,8 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.binaryTree;
+import static com.google.errorprone.matchers.Matchers.kindIs;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -28,13 +30,10 @@ import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
-import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree.Kind;
-
-import java.util.Arrays;
 
 /**
  * @author adgar@google.com (Mike Edgar)
@@ -52,15 +51,8 @@ public class ArrayToStringConcatenation extends DescribingMatcher<BinaryTree> {
 
   @SuppressWarnings("unchecked")
   private static final Matcher<BinaryTree> concatenationMatcher = allOf(
-      Matchers.kindIs(Kind.PLUS),
-      new Matcher<BinaryTree>() {
-        @Override
-        public boolean matches(BinaryTree t, VisitorState state) {
-          return null != ASTHelpers.matchBinaryTree(t, Arrays.asList(
-              arrayMatcher,
-              Matchers.<ExpressionTree>isSameType("java.lang.String")), state);
-        }
-      });
+      kindIs(Kind.PLUS),
+      binaryTree(arrayMatcher, Matchers.<ExpressionTree>isSameType("java.lang.String")));
 
   /**
    * Matches strings added with arrays.

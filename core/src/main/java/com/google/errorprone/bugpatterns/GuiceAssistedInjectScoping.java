@@ -98,11 +98,11 @@ public class GuiceAssistedInjectScoping extends DescribingMatcher<ClassTree> {
       if (constructorWithInjectMatcher.matches(classTree, state)) {
         // Check constructor with @Inject annotation for parameter with @Assisted annotation.
         return methodHasParameters(ANY,
-            hasAnnotation(ASSISTED_ANNOTATION, VariableTree.class))
+            Matchers.<VariableTree>hasAnnotation(ASSISTED_ANNOTATION))
             .matches(constructorWithInjectMatcher.getMatchingNode(), state);
       }
 
-      return constructor(ANY, hasAnnotation(ASSISTED_INJECT_ANNOTATION, MethodTree.class))
+      return constructor(ANY, Matchers.<MethodTree>hasAnnotation(ASSISTED_INJECT_ANNOTATION))
           .matches(classTree, state);
     }
   };

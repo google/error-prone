@@ -38,6 +38,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.EnclosingClass;
+import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.matchers.MethodVisibility.Visibility;
 
 import com.sun.source.tree.IdentifierTree;
@@ -80,7 +81,7 @@ public class CovariantEquals extends DescribingMatcher<MethodTree> {
         methodIsNamed("equals"),
         methodReturns(state.getSymtab().booleanType),
         methodHasParameters(variableType(isSameType(findEnclosingClass(state)))),
-        enclosingClass(not(hasMethod(allOf(MethodTree.class,
+        enclosingClass(not(hasMethod(Matchers.<MethodTree>allOf(
             methodIsNamed("equals"),
             methodReturns(state.getSymtab().booleanType),
             methodHasParameters(variableType(isSameType(state.getSymtab().objectType)))))))
