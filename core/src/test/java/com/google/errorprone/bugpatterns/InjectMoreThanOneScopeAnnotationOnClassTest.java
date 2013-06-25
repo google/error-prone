@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Google Inc. All Rights Reserved.
+ * Copyright 2013 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,27 +24,26 @@ import org.junit.Test;
 import java.io.File;
 
 /**
- * @author scottjohnson@google.com (Scott Johnson)
+ * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-public class InvalidNumericEqualityTest {
-
+public class InjectMoreThanOneScopeAnnotationOnClassTest {
   private CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(new InvalidNumericEquality.Scanner());
+    compilationHelper =
+        new CompilationTestHelper(new InjectMoreThanOneScopeAnnotationOnClass.Scanner());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("InvalidNumericEqualityPositiveCases.java").toURI()));
+    compilationHelper.assertCompileFailsWithMessages(new File(this.getClass()
+        .getResource("InjectMoreThanOneScopeAnnotationOnClassPositiveCases.java").toURI()));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("InvalidNumericEqualityNegativeCases.java").toURI()));
+    compilationHelper.assertCompileSucceeds(new File(this.getClass()
+        .getResource("InjectMoreThanOneScopeAnnotationOnClassNegativeCases.java").toURI()));
   }
-
 }

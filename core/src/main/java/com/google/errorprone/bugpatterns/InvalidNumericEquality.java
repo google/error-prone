@@ -15,7 +15,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -41,8 +41,6 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 
-import java.lang.StringBuilder;
-
 /**
  * @author scottjohnson@google.com (Scott Johnson)
  */
@@ -50,7 +48,7 @@ import java.lang.StringBuilder;
     summary = "Numeric comparison using reference equality instead of value equality",
     explanation = "Numbers are compared for reference equality/inequality using == or != "
         + "instead of for value equality using .equals()",
-    category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
+    category = JDK, severity = ERROR, maturity = MATURE)
 public class InvalidNumericEquality extends DescribingMatcher<BinaryTree> {
 
   @SuppressWarnings("unchecked")
@@ -98,6 +96,10 @@ public class InvalidNumericEquality extends DescribingMatcher<BinaryTree> {
     return new Description(tree, getDiagnosticMessage(), fix);
   }
 
+  /**
+   * Scanner for InvalidNumericEquality bugfix
+   * @author scottjohnson@google.com (Scott Johnson)
+   */
   public static class Scanner extends com.google.errorprone.Scanner {
     private InvalidNumericEquality matcher = new InvalidNumericEquality();
 
