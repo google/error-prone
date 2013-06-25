@@ -90,7 +90,7 @@ public class SelfAssignment extends DescribingMatcher<Tree> {
           || !variableTree.getModifiers().getFlags().contains(STATIC)) {
         return false;
       }
-      
+
       MemberSelectTree rhs = (MemberSelectTree) initializer;
       Symbol rhsClass = ASTHelpers.getSymbol(rhs.getExpression());
       Symbol lhsClass = ASTHelpers.getSymbol(parent);
@@ -100,8 +100,10 @@ public class SelfAssignment extends DescribingMatcher<Tree> {
   }
 
   /**
-   * If the given expression is a call to checkNotNull(x), returns x. 
+   * If the given expression is a call to checkNotNull(x), returns x.
    * Otherwise, returns the given expression.
+   *
+   * TODO(eaftan): Also match calls to Java 7's Objects.requireNonNull() method.
    */
   private ExpressionTree stripCheckNotNull(ExpressionTree expression, VisitorState state) {
     if (expression != null && expression.getKind() == METHOD_INVOCATION && methodSelect(
@@ -146,7 +148,7 @@ public class SelfAssignment extends DescribingMatcher<Tree> {
 
     ExpressionTree lhs = assignmentTree.getVariable();
     ExpressionTree rhs = assignmentTree.getExpression();
-    
+
     // if this is a method invocation, they must be calling checkNotNull()
     if (assignmentTree.getExpression().getKind() == METHOD_INVOCATION) {
       // change the default fix to be "checkNotNull(x)" instead of "x = checkNotNull(x)"
@@ -154,7 +156,7 @@ public class SelfAssignment extends DescribingMatcher<Tree> {
       // new rhs is first argument to checkNotNull()
       rhs = stripCheckNotNull(rhs, state);
     }
-    
+
 
     if (lhs.getKind() == MEMBER_SELECT) {
       // find a method parameter of the same type and similar name and suggest it
@@ -236,18 +238,18 @@ public class SelfAssignment extends DescribingMatcher<Tree> {
 
   /**
    * Scanner for SelfAssignment
-   * 
+   *
    * @author scottjohnson@google.com (Scott Johnson)
    */
   public static class Scanner extends com.google.errorprone.Scanner {
     public DescribingMatcher<Tree> selfAssignmentMatcher = new SelfAssignment();
-    
+
     @Override
     public Void visitAssignment(AssignmentTree node, VisitorState visitorState) {
       evaluateMatch(node, visitorState, selfAssignmentMatcher);
       return super.visitAssignment(node, visitorState);
     }
-    
+
     @Override
     public Void visitVariable(VariableTree node, VisitorState visitorState) {
       evaluateMatch(node, visitorState, selfAssignmentMatcher);
