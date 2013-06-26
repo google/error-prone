@@ -33,7 +33,8 @@ public class ArrayToStringTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(new ArrayToString.Scanner());
+    //compilationHelper = new CompilationTestHelper(new ArrayToString.Scanner());
+    compilationHelper = new CompilationTestHelper(new ArrayToStringChecker().createScanner());
   }
 
   @Test

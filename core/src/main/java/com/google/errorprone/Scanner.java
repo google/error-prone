@@ -16,7 +16,9 @@
 
 package com.google.errorprone;
 
+import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.matchers.DescribingMatcher;
+import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 
@@ -30,6 +32,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Pair;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -43,7 +46,7 @@ import java.util.Set;
  */
 public class Scanner extends TreePathScanner<Void, VisitorState> {
 
-  private Set<String> suppressions = new HashSet<String>();
+  public Set<String> suppressions = new HashSet<String>();
 
   /**
    * Scan a tree from a position identified by a TreePath.
@@ -157,8 +160,22 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
     return newSuppressions;
   }
 
-  public boolean isSuppressed(String warningId) {
+  /**
+   * Returns true if the given warning ID is in the set of current suppressions from scanning
+   * down the AST.
+   */
+  protected boolean isSuppressed(String warningId) {
     return suppressions.contains(warningId);
+  }
+
+  /**
+   * Returns true if any of the warning IDs in the collection are in the set of current
+   * suppressions from scanning down the AST.
+   *
+   * @param warningIds a collection of warning IDs
+   */
+  protected boolean isSuppressed(Set<String> warningIds) {
+    return !Collections.disjoint(warningIds, suppressions);
   }
 
   protected <T extends Tree> void reportMatch(Matcher<T> matcher, T match, VisitorState state) {

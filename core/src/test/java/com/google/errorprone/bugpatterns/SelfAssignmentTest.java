@@ -32,7 +32,7 @@ public class SelfAssignmentTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(new SelfAssignment.Scanner());
+    compilationHelper = new CompilationTestHelper(new SelfAssignmentChecker.Scanner());
   }
 
   @Test

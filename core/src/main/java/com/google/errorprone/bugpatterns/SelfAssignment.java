@@ -113,6 +113,7 @@ public class SelfAssignment extends DescribingMatcher<Tree> {
     }
     return expression;
   }
+
   /**
    * We expect that the lhs is a field and the rhs is an identifier, specifically
    * a parameter to the method.  We base our suggested fixes on this expectation.
