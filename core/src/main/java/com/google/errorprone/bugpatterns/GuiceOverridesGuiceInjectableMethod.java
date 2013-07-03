@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.GUICE;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 
 import com.google.errorprone.BugPattern;
@@ -39,20 +39,26 @@ import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import javax.lang.model.element.TypeElement;
 
 /**
- * This checker matches methods that
+ * This checker matches methods that 
  *   1) are not themselves annotated with @Inject
- *   2) descend from a method that is annotated with @javax.inject.Inject
- *   3) do not descent from a method that is annotated with @com.google.inject.Inject
+ *     (neither javax.inject.Inject nor com.google.inject.Inject)
+ *   2) descend from a method that is annotated with @com.google.inject.Inject
  *
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-@BugPattern(name = "GuiceOverridesJavaxInjectableMethod", summary =
+@BugPattern(name = "GuiceOverridesGuiceInjectableMethod", summary =
     "This method is not annotated with @Inject, but it overrides a "
-    + "method that is annotated with @javax.inject.Inject.", explanation =
-    "According to the JSR-330 spec, a method that overrides a method annotated "
-    + "with javax.inject.Inject will not be injected unless it iself is annotated with "
-    + " @Inject", category = GUICE, severity = ERROR, maturity = EXPERIMENTAL)
-public class GuiceOverridesJavaxInjectableMethod extends DescribingMatcher<MethodTree> {
+    + "method that is annotated with @com.googleinject.Inject. Guice will inject this method,"
+    + "and it is recommended to annotate it explicitly.",
+    explanation =
+        "Unlike with @javax.inject.Inject, if a method overrides a method annoatated with " +
+        "@com.google.inject.Inject, Guice will inject it even if it itself is not annotated. " +
+        "This differs from the behavior of methods that override @javax.inject.Inject methods " +
+        "since according to the JSR-330 spec, a method that overrides a method annotated with " +
+        "javax.inject.Inject will not be injected unless it iself is annotated with @Inject. " +
+        "Because of this difference, it is recommended that you annotate this method explicitly.",
+         category = GUICE, severity = WARNING, maturity = EXPERIMENTAL)
+public class GuiceOverridesGuiceInjectableMethod extends DescribingMatcher<MethodTree> {
 
   private static final String OVERRIDE_ANNOTATION = "java.lang.Override";
   private static final String GUICE_INJECT_ANNOTATION = "com.google.inject.Inject";
@@ -70,21 +76,15 @@ public class GuiceOverridesJavaxInjectableMethod extends DescribingMatcher<Metho
     // if method is itself annotated with @Inject or it has no ancestor methods, return false;
     if (!INJECTABLE_METHOD_MATCHER.matches(methodTree, state)
         && OVERRIDE_METHOD_MATCHER.matches(methodTree, state)) {
-      boolean foundJavaxInject = false;
       MethodSymbol method = (MethodSymbol) ASTHelpers.getSymbol(methodTree);
       MethodSymbol superMethod = null;
       for (boolean checkSuperClass = true; checkSuperClass; method = superMethod) {
         superMethod = findSuperMethod(method, state);
         if (containsAnnotation(superMethod, GUICE_INJECT_ANNOTATION)) {
-          return false;
+          return true;
         }
-        // cannot return true even if we found javaxInject is true
-        // since a higher up ancestor may have @com.google.inject.Inject
-        foundJavaxInject = containsAnnotation(superMethod, JAVAX_INJECT_ANNOTATION);
-        // check if there are ancestor methods
         checkSuperClass = containsAnnotation(superMethod, OVERRIDE_ANNOTATION);
       }
-      return foundJavaxInject;
     }
     return false;
   }
@@ -117,7 +117,7 @@ public class GuiceOverridesJavaxInjectableMethod extends DescribingMatcher<Metho
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {
-    public DescribingMatcher<MethodTree> methodMatcher = new GuiceOverridesJavaxInjectableMethod();
+    public DescribingMatcher<MethodTree> methodMatcher = new GuiceOverridesGuiceInjectableMethod();
 
     @Override
     public Void visitMethod(MethodTree methodTree, VisitorState visitorState) {

@@ -22,8 +22,8 @@ package com.google.errorprone.bugpatterns;
 public class GuiceOverridesJavaxInjectableMethodPositiveCases {
 
   /**
-   * Class with a method foo() that is annotated with @javax.inject.Inject. We will extend this
-   * class in other test classes.
+   * Class with a method foo() that is annotated with @javax.inject.Inject. Other test classes will
+   * extend this class.
    */
   public class TestClass1 {
     @javax.inject.Inject

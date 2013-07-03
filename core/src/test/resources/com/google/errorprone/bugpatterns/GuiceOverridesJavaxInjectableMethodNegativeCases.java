@@ -45,7 +45,7 @@ public class GuiceOverridesJavaxInjectableMethodNegativeCases {
 
   /**
    * Class with a method foo() that is not annotated with @Inject, but overrides a method that is
-   * annotated with @com.google.inject.Inject
+   * annotated with @com.google.inject.Inject.
    */
   public class TestClass4 extends TestClass2 {
     @Override
@@ -54,7 +54,7 @@ public class GuiceOverridesJavaxInjectableMethodNegativeCases {
 
   /**
    * Class with a method foo() annotated with @com.google.inject.Inject that overrides a method
-   * annoted with @javax.inject.Inject
+   * annotated with @javax.inject.Inject.
    */
   public class TestClass5 extends TestClass3 {
     @com.google.inject.Inject
@@ -62,8 +62,8 @@ public class GuiceOverridesJavaxInjectableMethodNegativeCases {
   }
 
   /**
-   * Class with a method foo() annotated with @javax.inject.Inject that overrides a method annoted
-   * with @com.google.inject.Inject
+   * Class with a method foo() annotated with @javax.inject.Inject that overrides a method 
+   * annotated with @com.google.inject.Inject.
    */
   public class TestClass6 extends TestClass2 {
     @javax.inject.Inject
@@ -72,7 +72,7 @@ public class GuiceOverridesJavaxInjectableMethodNegativeCases {
 
   /**
    * Class with a method foo() that is not annotated, but overrides a method that is annotated with
-   * @javax.inject.Inject, and that method in turn overrides a method annoted with
+   * @javax.inject.Inject, and that method in turn overrides a method annotated with
    * @com.google.inject.Inject
    */
   public class TestClass8 extends TestClass6 {
@@ -81,7 +81,7 @@ public class GuiceOverridesJavaxInjectableMethodNegativeCases {
 
   /**
    * Class with a method foo() that is not annotated, but overrides a method that is annotated with
-   * @com.google.inject.Inject, and that method in turn overrides a method annoted with
+   * @com.google.inject.Inject, and that method in turn overrides a method annotated with
    * @javax.inject.Inject
    */
   public class TestClass7 extends TestClass5 {
