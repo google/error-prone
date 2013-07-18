@@ -27,6 +27,7 @@ import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
@@ -472,7 +473,6 @@ public class Matchers {
     };
   }
 
-
   /**
    * Match a method declaration with a specific name.
    *
@@ -545,6 +545,10 @@ public class Matchers {
     return new MethodModifier(modifier);
   }
 
+  public static Matcher<ClassTree> classHasModifier(final Modifier modifier) {
+ return new ClassModifier(modifier);
+  }
+
   /**
    * Matches a class in which at least one method matches the given methodMatcher.
    *
@@ -605,6 +609,10 @@ public class Matchers {
         return null != ASTHelpers.matchBinaryTree(t, Arrays.asList(matcher1, matcher2), state);
       }
     };
+  }
+
+  public static MultiMatcher<Tree, IdentifierTree> hasIdentifier(MatchType matchType, Matcher<IdentifierTree> nodeMatcher) {
+ return new HasIdentifier(matchType, nodeMatcher);
   }
 }
 

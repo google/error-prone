@@ -117,7 +117,8 @@ public class ErrorProneScanner extends Scanner {
       this.classMatchers = createChecks(enabled,
           InjectScopeOrQualifierAnnotationRetention.class,
           InjectInvalidTargetingOnScopingAnnotation.class,
-          GuiceAssistedInjectScoping.class);
+          GuiceAssistedInjectScoping.class,
+          NonStaticInnerClass.class);
     } catch (Exception e) {
       throw new RuntimeException("Could not reflectively create error prone matchers", e);
     }
