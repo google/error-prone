@@ -5,7 +5,7 @@
   <vendor>YourCompany</vendor>
 
   <!-- please see http://confluence.jetbrains.net/display/IDEADEV/Build+Number+Ranges for description -->
-  <idea-version since-build="107.105"/>
+  <idea-version since-build="129.105"/>
 
   <application-components>
     <!-- Add your application components here -->
