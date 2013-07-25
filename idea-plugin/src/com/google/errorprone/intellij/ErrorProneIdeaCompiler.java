@@ -1,6 +1,6 @@
 package com.google.errorprone.intellij;
 
-import com.google.errorprone.ErrorProneCompiler;
+import com.google.errorprone.matchers.Matcher;
 import com.intellij.compiler.CompilerConfiguration;
 import com.intellij.compiler.CompilerConfigurationImpl;
 import com.intellij.compiler.OutputParser;
@@ -206,9 +206,9 @@ public class ErrorProneIdeaCompiler extends ExternalCompiler {
 
     commandLine.add("-classpath");
 
-    commandLine.add(sdkType.getToolsPath(jdk) + File.pathSeparator + PathUtil.getJarPathForClass(ErrorProneCompiler.class));
+    commandLine.add(sdkType.getToolsPath(jdk) + File.pathSeparator + PathUtil.getJarPathForClass(Matcher.class));
 
-    commandLine.add(ErrorProneCompiler.class.getName());
+    commandLine.add("com.google.errorprone.ErrorProneCompiler");
 
     addCommandLineOptions(chunk, commandLine, outputPath, jdk, myAnnotationProcessorMode);
 
