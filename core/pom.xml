@@ -46,25 +46,6 @@
       <version>${project.version}</version>
       <scope>compile</scope>
     </dependency>
-
-    <!-- tools.jar is in the classpath by default on Apple-provided JDK
-         but not OpenJDK. We don't compile with Apple's JDK right now, so this
-         dependency is always included. If we ever need to run on the Apple JDK,
-         we could use a profile to exclude this dep, like:
-         <profile>
-          <id>tools-jar</id>
-           <activation>
-            <os>
-             <family>!mac</family>
-            </os>
-    -->
-    <dependency>
-      <groupId>openjdk</groupId>
-      <artifactId>tools</artifactId>
-      <version>1.6</version>
-      <scope>system</scope>
-      <systemPath>${java.home}/../lib/tools.jar</systemPath>
-    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit-dep</artifactId>
@@ -136,6 +117,33 @@
   </build>
 
   <profiles>
+    <!-- tools.jar is in the classpath by default on Apple-provided JDK
+         but not OpenJDK. We don't compile with Apple's JDK right now, so this
+         dependency is always included. If we ever need to run on the Apple JDK,
+         we could use activation like this
+         <profile>
+          <id>tools-jar</id>
+           <activation>
+            <os>
+             <family>!mac</family>
+            </os>
+    -->
+    <profile>
+      <id>tools.jar</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>openjdk</groupId>
+          <artifactId>tools</artifactId>
+          <version>1.6</version>
+          <scope>system</scope>
+          <systemPath>${java.home}/../lib/tools.jar</systemPath>
+        </dependency>
+      </dependencies>
+    </profile>
+
     <!-- run annotation processor -->
     <profile>
       <id>run-annotation-processor</id>
