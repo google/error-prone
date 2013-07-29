@@ -19,7 +19,7 @@
   <parent>
     <artifactId>error_prone_parent</artifactId>
     <groupId>com.google.errorprone</groupId>
-    <version>v1.0_alpha</version>
+    <version>1.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
