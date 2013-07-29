@@ -27,7 +27,7 @@
   <name>Maven parent POM</name>
   <groupId>com.google.errorprone</groupId>
   <artifactId>error_prone_parent</artifactId>
-  <version>0.9.16-SNAPSHOT</version>
+  <version>v1.0_alpha</version>
   <packaging>pom</packaging>
 
   <properties>
@@ -56,6 +56,7 @@
     <connection>scm:git:http://code.google.com/p/error-prone</connection>
     <developerConnection>scm:git:https://code.google.com/p/error-prone</developerConnection>
     <url>http://code.google.com/p/error-prone/source/browse/</url>
+    <tag>v1.0_alpha</tag>
   </scm>
 
   <build>
