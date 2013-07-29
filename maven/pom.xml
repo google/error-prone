@@ -34,7 +34,7 @@
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-compiler-javac</artifactId>
-      <version>1.8.1</version>
+      <version>2.2</version>
     </dependency>
     <dependency>
       <!-- This one is in scope "provided" for plexus-compiler-javac -->

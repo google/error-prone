@@ -20,7 +20,7 @@
     <component>
       <role>org.codehaus.plexus.compiler.Compiler</role>
       <role-hint>error-prone</role-hint>
-      <implementation>com.google.errorprone.PlexusErrorProneCompiler</implementation>
+      <implementation>org.codehaus.plexus.compiler.javac.PlexusErrorProneCompiler</implementation>
       <description>Compile with javac and error-prone static checks</description>
       <isolated-realm>false</isolated-realm>
     </component>
