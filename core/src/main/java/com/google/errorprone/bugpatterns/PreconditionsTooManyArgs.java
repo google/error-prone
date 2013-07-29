@@ -93,12 +93,12 @@ public class PreconditionsTooManyArgs extends DescribingMatcher<MethodInvocation
     SuggestedFix fix = new SuggestedFix();
     if (expectedArguments(fixedFormatString) == t.getArguments().size() - 2) {
       fix.replace(formatTree, "\"" + fixedFormatString + "\"");
-      return new Description(formatTree, diagnosticMessage, fix);
+      return new Description(formatTree, getDiagnosticMessage(), fix);
     } else {
       fix.replace(t, state.getTreeMaker()
           .App((JCExpression) t.getMethodSelect(), List.of((JCExpression) t.getArguments().get(0)))
           .toString());
-      return new Description(t, diagnosticMessage, fix);
+      return new Description(t, getDiagnosticMessage(), fix);
     }
   }
 

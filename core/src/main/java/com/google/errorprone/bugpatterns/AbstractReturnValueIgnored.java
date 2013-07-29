@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.matchers.Matchers.parentNode;
 
 import com.google.errorprone.VisitorState;
@@ -25,6 +24,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.ExpressionTree;
@@ -47,7 +47,7 @@ abstract class AbstractReturnValueIgnored extends DescribingMatcher<MethodInvoca
   @Override
   public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
     return allOf(
-        parentNode(kindIs(Kind.EXPRESSION_STATEMENT, MethodInvocationTree.class)),
+        parentNode(Matchers.<MethodInvocationTree>kindIs(Kind.EXPRESSION_STATEMENT)),
         specializedMatcher())
     .matches(methodInvocationTree, state);
   }
@@ -92,6 +92,6 @@ abstract class AbstractReturnValueIgnored extends DescribingMatcher<MethodInvoca
       Tree parent = state.getPath().getParentPath().getLeaf();
       fix = new SuggestedFix().delete(parent);
     }
-    return new Description(methodInvocationTree, diagnosticMessage, fix);
+    return new Description(methodInvocationTree, getDiagnosticMessage(), fix);
   }
 }

@@ -53,21 +53,21 @@ public class InvalidStringEquality extends DescribingMatcher<BinaryTree> {
   /**
    *  A {@link Matcher} that matches whether the operands in a {@link BinaryTree} are
    *  strictly String operands.  For Example, if either operand is {@code null} the matcher
-   *  will return {@code false}  
+   *  will return {@code false}
    */
   private static final Matcher<BinaryTree> STRING_OPERANDS = new Matcher<BinaryTree>() {
     @Override
     public boolean matches(BinaryTree tree, VisitorState state) {
-      Type stringType = state.getSymtab().stringType; 
+      Type stringType = state.getSymtab().stringType;
       ExpressionTree leftOperand = tree.getLeftOperand();
       Type leftType = ((JCTree.JCExpression) leftOperand).type;
-      // The left operand is not a String (ex. null) so no match 
+      // The left operand is not a String (ex. null) so no match
       if (!state.getTypes().isSameType(leftType, stringType)) {
         return false;
       }
       ExpressionTree rightOperand = tree.getRightOperand();
       Type rightType = ((JCTree.JCExpression) rightOperand).type;
-      // We know that both operands are String objects 
+      // We know that both operands are String objects
       if (state.getTypes().isSameType(rightType, stringType)) {
         return true;
       }
@@ -76,7 +76,7 @@ public class InvalidStringEquality extends DescribingMatcher<BinaryTree> {
   };
 
   /* Match string that are compared with == and != */
-  @Override  
+  @Override
   public boolean matches(BinaryTree tree, VisitorState state) {
     return allOf(
         anyOf(
@@ -85,7 +85,7 @@ public class InvalidStringEquality extends DescribingMatcher<BinaryTree> {
         STRING_OPERANDS
     ).matches(tree, state);
   }
-  
+
   @Override
   public Description describe(BinaryTree tree, VisitorState state) {
     ExpressionTree leftOperand = tree.getLeftOperand();
@@ -101,17 +101,17 @@ public class InvalidStringEquality extends DescribingMatcher<BinaryTree> {
       rightOperand = tempOperand;
     }
     if (tree.getKind() == Tree.Kind.NOT_EQUAL_TO) {
-      fixedExpression.append("!"); 
+      fixedExpression.append("!");
     }
     if (leftOperand instanceof BinaryTree) {
-      fixedExpression.append("(" + leftOperand.toString() + ")"); 
+      fixedExpression.append("(" + leftOperand.toString() + ")");
     } else {
       fixedExpression.append(leftOperand.toString());
     }
     fixedExpression.append(".equals(" + rightOperand.toString() + ")");
-    
+
     SuggestedFix fix = new SuggestedFix().replace(tree, fixedExpression.toString());
-    return new Description(tree, diagnosticMessage, fix); 
+    return new Description(tree, getDiagnosticMessage(), fix);
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {

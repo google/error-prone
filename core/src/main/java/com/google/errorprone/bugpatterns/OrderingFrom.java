@@ -136,7 +136,7 @@ public class OrderingFrom extends DescribingMatcher<MethodInvocationTree> {
 
     SuggestedFix fix = new SuggestedFix().replace(methodInvocation, replacement);
 
-    return new Description(methodInvocation, diagnosticMessage, fix);
+    return new Description(methodInvocation, getDiagnosticMessage(), fix);
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {

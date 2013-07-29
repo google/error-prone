@@ -100,7 +100,7 @@ public class PreconditionsCheckNotNullPrimitive
 
     // Assignment, return, etc.
     if (parent.getKind() != Kind.EXPRESSION_STATEMENT) {
-      return new Description(arg1, diagnosticMessage,
+      return new Description(arg1, getDiagnosticMessage(),
           new SuggestedFix().replace(methodInvocationTree, arg1.toString()));
     }
 
@@ -108,11 +108,11 @@ public class PreconditionsCheckNotNullPrimitive
     if (arg1.getKind() == Kind.EQUAL_TO || arg1.getKind() == Kind.NOT_EQUAL_TO) {
       BinaryTree binaryExpr = (BinaryTree) arg1;
       if (binaryExpr.getLeftOperand().getKind() == Kind.NULL_LITERAL) {
-        return new Description(arg1, diagnosticMessage,
+        return new Description(arg1, getDiagnosticMessage(),
             new SuggestedFix().replace(arg1, binaryExpr.getRightOperand().toString()));
       }
       if (binaryExpr.getRightOperand().getKind() == Kind.NULL_LITERAL) {
-        return new Description(arg1, diagnosticMessage,
+        return new Description(arg1, getDiagnosticMessage(),
             new SuggestedFix().replace(arg1, binaryExpr.getLeftOperand().toString()));
       }
     }
@@ -120,11 +120,11 @@ public class PreconditionsCheckNotNullPrimitive
     if ((arg1 instanceof BinaryTree || arg1.getKind() == Kind.METHOD_INVOCATION ||
          arg1.getKind() == Kind.LOGICAL_COMPLEMENT) &&
         ((JCExpression) arg1).type == state.getSymtab().booleanType) {
-      return new Description(arg1, diagnosticMessage,
+      return new Description(arg1, getDiagnosticMessage(),
           createCheckArgumentOrStateCall(methodInvocationTree, state, arg1));
     }
 
-    return new Description(arg1, diagnosticMessage, new SuggestedFix().delete(parent));
+    return new Description(arg1, getDiagnosticMessage(), new SuggestedFix().delete(parent));
   }
 
   /**

@@ -196,7 +196,7 @@ public class SelfEquals extends DescribingMatcher<MethodInvocationTree> {
       }
     }
 
-    return new Description(methodInvocationTree, diagnosticMessage, fix);
+    return new Description(methodInvocationTree, getDiagnosticMessage(), fix);
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {

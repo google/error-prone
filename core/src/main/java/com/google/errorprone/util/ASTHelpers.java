@@ -23,6 +23,7 @@ import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
@@ -35,11 +36,13 @@ import com.sun.tools.javac.code.Type.MethodType;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
+import com.sun.tools.javac.tree.JCTree.JCLiteral;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -247,6 +250,27 @@ public class ASTHelpers {
   }
 
   /**
+   * Returns the receiver of an expression.
+   *
+   * Examples:
+   *    a.foo() ==> a
+   *    a.b.foo() ==> a.b
+   *    a.bar().foo() ==> a.bar()
+   *    a.b.c ==> a.b
+   *    a.b().c ==> a.b()
+   */
+  public static ExpressionTree getReceiver(ExpressionTree expressionTree) {
+    if (expressionTree instanceof MethodInvocationTree) {
+      return getReceiver(((MethodInvocationTree) expressionTree).getMethodSelect());
+    } else if (expressionTree instanceof MemberSelectTree) {
+      return ((MemberSelectTree) expressionTree).getExpression();
+    } else {
+      throw new IllegalStateException("Expected expression to be a method invocation or "
+          + "field access, but was " + expressionTree.getKind());
+    }
+  }
+
+  /**
    * Given a BinaryTree to match against and a list of two matchers, applies the matchers to the
    * operands in both orders.  If both matchers match, returns a list with the operand that
    * matched each matcher in the corresponding position.
@@ -268,6 +292,36 @@ public class ASTHelpers {
       return Arrays.asList(rightOperand, leftOperand);
     }
     return null;
+  }
+
+  /**
+   * A collection of Java whitespace characters, as defined by JLS 3.6.
+   */
+  private static final Collection<Character> WHITESPACE_CHARS = Arrays.asList(' ', '\t', '\f',
+      '\n', '\r');
+
+  /**
+   * Hacky fix for poor javac 6 literal parsing.  javac 6 doesn't set the AST node start
+   * position correctly when a numeric literal is preceded by -. So we scan the source
+   * backwards starting at the provided start position, looking for whitespace, until we find
+   * the true start position.  javac 7 gets this right.
+   *
+   * @return The actual start position of the literal. May be the same as the start position
+   * given by the tree node itself.
+   */
+  public static int getActualStartPosition(JCLiteral tree, CharSequence source) {
+    // This only applies to negative numeric literals.
+    Object value = tree.getValue();
+    if ((value instanceof Number) && (((Number) value).doubleValue() < 0)) {
+      int start = tree.getStartPosition() - 1;
+      while (WHITESPACE_CHARS.contains(source.charAt(start))) {
+        start--;
+      }
+      if (source.charAt(start) == '-') {
+        return start;
+      }
+    }
+    return tree.getStartPosition();
   }
 
 }

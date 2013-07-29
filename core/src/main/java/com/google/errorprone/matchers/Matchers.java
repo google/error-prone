@@ -16,16 +16,14 @@
 
 package com.google.errorprone.matchers;
 
-import java.util.List;
-
-import javax.lang.model.element.Modifier;
-
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.MethodVisibility.Visibility;
 import com.google.errorprone.matchers.MultiMatcher.MatchType;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
+
 import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
@@ -44,6 +42,13 @@ import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCPrimitiveTypeTree;
 import com.sun.tools.javac.tree.JCTree.JCTypeApply;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.lang.model.element.Modifier;
 
 /**
  * Static factory methods which make the DSL read more fluently.
@@ -81,15 +86,6 @@ public class Matchers {
 
   /**
    * Compose several matchers together, such that the composite matches an AST node iff all the given matchers do.
-   * @param typeInfer a type token for the generic type. Unused, but allows the returned matcher to be composed.
-   */
-  public static <T extends Tree> Matcher<T> allOf(
-      Class<T> typeInfer, final Matcher<? super T>... matchers) {
-    return allOf(matchers);
-  }
-
-  /**
-   * Compose several matchers together, such that the composite matches an AST node iff all the given matchers do.
    */
   public static <T extends Tree> Matcher<T> allOf(final Matcher<? super T>... matchers) {
     return new Matcher<T>() {
@@ -106,15 +102,6 @@ public class Matchers {
 
   /**
    * Compose several matchers together, such that the composite matches an AST node if any of the given matchers do.
-   * @param typeInfer a type token for the generic type. Unused, but allows the returned matcher to be composed.
-   */
-  public static <T extends Tree> Matcher<T> anyOf(
-      Class<T> typeInfer, final Matcher<? super T>... matchers) {
-    return anyOf(matchers);
-  }
-
-  /**
-   * Compose several matchers together, such that the composite matches an AST node if any of the given matchers do.
    */
   public static <T extends Tree> Matcher<T> anyOf(final Matcher<? super T>... matchers) {
     return new Matcher<T>() {
@@ -127,15 +114,6 @@ public class Matchers {
         return false;
       }
     };
-  }
-
-  /**
-   * Matches an AST node of a given kind, for example, an Annotation or a switch block.
-   * @param typeInfer a type token for the generic type. Unused, but allows the returned matcher to
-   * be composed.
-   */
-  public static <T extends Tree> Matcher<T> kindIs(final Kind kind, Class<T> typeInfer) {
-    return kindIs(kind);
   }
 
   /**
@@ -159,14 +137,6 @@ public class Matchers {
         return tree.getKind() == kind;
       }
     };
-  }
-
-  /**
-   * Matches an AST node which is the same object reference as the given node.
-   * @param typeInfer a type token for the generic type. Unused, but allows the returned matcher to be composed.
-   */
-  public static <T extends Tree> Matcher<T> isSame(final Tree t, Class<T> typeInfer) {
-    return isSame(t);
   }
 
   /**
@@ -196,6 +166,39 @@ public class Matchers {
    */
   public static InstanceMethod instanceMethod(Matcher<ExpressionTree> receiverMatcher, String methodName) {
     return new InstanceMethod(receiverMatcher, methodName);
+  }
+
+  /**
+   * Matches a compound assignment operator AST node which matches a given left-operand matcher, a
+   * given right-operand matcher, and a specific compound assignment operator.
+   *
+   * @param operator Which compound assignment operator to match against.
+   * @param leftOperandMatcher The matcher to apply to the left operand.
+   * @param rightOperandMatcher The matcher to apply to the right operand.
+   */
+  public static CompoundAssignment compoundAssignment(
+      Kind operator,
+      Matcher<ExpressionTree> leftOperandMatcher,
+      Matcher<ExpressionTree> rightOperandMatcher) {
+    Set<Kind> operators = new HashSet<Kind>(1);
+    operators.add(operator);
+    return new CompoundAssignment(operators, leftOperandMatcher, rightOperandMatcher);
+  }
+
+  /**
+   * Matches a compound assignment operator AST node which matches a given left-operand matcher, a
+   * given right-operand matcher, and is one of a set of compound assignment operators. Does not
+   * match compound assignment operators.
+   *
+   * @param operators Which compound assignment operators to match against.
+   * @param receiverMatcher The matcher to apply to the receiver.
+   * @param expressionMatcher The matcher to apply to the expression.
+   */
+  public static CompoundAssignment compoundAssignment(
+      Set<Kind> operators,
+      Matcher<ExpressionTree> receiverMatcher,
+      Matcher<ExpressionTree> expressionMatcher) {
+    return new CompoundAssignment(operators, receiverMatcher, expressionMatcher);
   }
 
   /**
@@ -433,17 +436,6 @@ public class Matchers {
    * Determines whether an expression has an annotation of the given type.
    *
    * @param annotationType The type of the annotation to look for (e.g, "javax.annotation.Nullable")
-   * @param typeInfer a type token for the generic type. Unused, but allows the returned matcher to be composed.
-   */
-  public static <T extends Tree> Matcher<T> hasAnnotation(final String annotationType,
-      Class<T> typeInfer) {
-    return hasAnnotation(annotationType);
-  }
-
-  /**
-   * Determines whether an expression has an annotation of the given type.
-   *
-   * @param annotationType The type of the annotation to look for (e.g, "javax.annotation.Nullable")
    */
   public static <T extends Tree> Matcher<T> hasAnnotation(final String annotationType) {
     return new Matcher<T>() {
@@ -595,6 +587,24 @@ public class Matchers {
    */
   public static Matcher<ExpressionTree> isDescendantOfMethod(String fullClassName, String methodName) {
     return new DescendantOf(fullClassName, methodName);
+  }
+
+  /**
+   * Matches a binary tree if the given matchers match the operands in either order.  That is,
+   * returns true if either:
+   *   matcher1 matches the left operand and matcher2 matches the right operand
+   * or
+   *   matcher2 matches the left operand and matcher1 matches the right operand
+   */
+  public static Matcher<BinaryTree> binaryTree(final Matcher<ExpressionTree> matcher1,
+      final Matcher<ExpressionTree> matcher2) {
+    return new Matcher<BinaryTree>() {
+      @SuppressWarnings("unchecked")
+      @Override
+      public boolean matches(BinaryTree t, VisitorState state) {
+        return null != ASTHelpers.matchBinaryTree(t, Arrays.asList(matcher1, matcher2), state);
+      }
+    };
   }
 }
 

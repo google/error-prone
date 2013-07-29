@@ -21,6 +21,8 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matchers;
+
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.StatementTree;
 
@@ -56,7 +58,7 @@ public class DeadException extends DescribingMatcher<NewClassTree> {
     StatementTree parent = (StatementTree) state.getPath().getParentPath().getLeaf();
 
     boolean isLastStatement = anyOf(
-        enclosingBlock(lastStatement(isSame(parent, StatementTree.class))),
+        enclosingBlock(lastStatement(Matchers.<StatementTree>isSame(parent))),
         // it could also be a bare if statement with no braces
         parentNode(parentNode(kindIs(IF))))
         .matches(newClassTree, state);
@@ -67,7 +69,7 @@ public class DeadException extends DescribingMatcher<NewClassTree> {
     } else {
       suggestedFix.delete(parent);
     }
-    return new Description(newClassTree, diagnosticMessage, suggestedFix);
+    return new Description(newClassTree, getDiagnosticMessage(), suggestedFix);
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {

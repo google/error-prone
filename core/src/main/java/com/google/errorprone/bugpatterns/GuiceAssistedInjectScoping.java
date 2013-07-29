@@ -20,7 +20,6 @@ import static com.google.errorprone.BugPattern.Category.GUICE;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.annotations;
-import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.methodHasParameters;
@@ -99,11 +98,11 @@ public class GuiceAssistedInjectScoping extends DescribingMatcher<ClassTree> {
       if (constructorWithInjectMatcher.matches(classTree, state)) {
         // Check constructor with @Inject annotation for parameter with @Assisted annotation.
         return methodHasParameters(ANY,
-            hasAnnotation(ASSISTED_ANNOTATION, VariableTree.class))
+            Matchers.<VariableTree>hasAnnotation(ASSISTED_ANNOTATION))
             .matches(constructorWithInjectMatcher.getMatchingNode(), state);
       }
 
-      return constructor(ANY, hasAnnotation(ASSISTED_INJECT_ANNOTATION, MethodTree.class))
+      return constructor(ANY, Matchers.<MethodTree>hasAnnotation(ASSISTED_INJECT_ANNOTATION))
           .matches(classTree, state);
     }
   };
@@ -125,7 +124,7 @@ public class GuiceAssistedInjectScoping extends DescribingMatcher<ClassTree> {
 
     return new Description(
         annotationWithScopeAnnotation,
-        diagnosticMessage,
+        getDiagnosticMessage(),
         new SuggestedFix().delete(annotationWithScopeAnnotation));
   }
 

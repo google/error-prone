@@ -42,7 +42,7 @@ import static com.google.errorprone.matchers.Matchers.*;
  * 'expensive' methods of producing the error string. In most cases, users are
  * better off using the equivalent methods which defer the computation of the
  * string until the test actually fails.
- * 
+ *
  * @author sjnickerson@google.com (Simon Nickerson)
  */
 @BugPattern(name = "PreconditionsErrorMessageEagerEvaluation",
@@ -67,7 +67,7 @@ public class PreconditionsExpensiveString
           methodSelect(staticMethod(
               "com.google.common.base.Preconditions", "checkArgument"))),
       argument(1, Matchers.<ExpressionTree>allOf(
-          kindIs(Kind.METHOD_INVOCATION, ExpressionTree.class),
+          Matchers.<ExpressionTree>kindIs(Kind.METHOD_INVOCATION),
           expressionMethodSelect(staticMethod("java.lang.String", "format")),
           new StringFormatCallContainsNoSpecialFormattingMatcher(
               Pattern.compile("%[^%s]"))
@@ -78,35 +78,35 @@ public class PreconditionsExpensiveString
   public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
     return matcher.matches(methodInvocationTree, state);
   }
-  
+
   @Override
   public Description describe(MethodInvocationTree methodInvocationTree,
                               VisitorState state) {
     MemberSelectTree method =
         (MemberSelectTree) methodInvocationTree.getMethodSelect();
-    
+
     List<? extends ExpressionTree> arguments =
         methodInvocationTree.getArguments();
     MethodInvocationTree stringFormat = (MethodInvocationTree) arguments.get(1);
-    
+
     // TODO(sjnickerson): Figure out how to get a suggested fix. Basically we
     // remove the String.format() wrapper, but I don't know how to express
     // this. This current one is not correct!
     SuggestedFix fix = null;
-    
-    return new Description(arguments.get(1), diagnosticMessage, fix);
+
+    return new Description(arguments.get(1), getDiagnosticMessage(), fix);
   }
 
   private static class StringFormatCallContainsNoSpecialFormattingMatcher
       implements Matcher<ExpressionTree> {
-    
+
     private final Pattern invalidFormatCharacters;
-    
+
     StringFormatCallContainsNoSpecialFormattingMatcher(
         Pattern invalidFormatCharacters) {
       this.invalidFormatCharacters = invalidFormatCharacters;
     }
-    
+
     @Override
     public boolean matches(ExpressionTree t, VisitorState state) {
       if (!(t instanceof MethodInvocationTree)) {

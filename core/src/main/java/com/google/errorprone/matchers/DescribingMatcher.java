@@ -35,7 +35,6 @@ public abstract class DescribingMatcher<T extends Tree> implements Matcher<T> {
    * A collection of IDs for this check, to be checked for in @SuppressWarnings annotations.
    */
   protected final Collection<String> names;
-  protected final String diagnosticMessage;
   protected final BugPattern annotation;
 
   public DescribingMatcher() {
@@ -48,22 +47,28 @@ public abstract class DescribingMatcher<T extends Tree> implements Matcher<T> {
     names = new ArrayList<String>(annotation.altNames().length + 1);
     names.add(name);
     names.addAll(Arrays.asList(annotation.altNames()));
-    diagnosticMessage = getCustomDiagnosticMessage();
   }
 
   /**
-   * Create a custom diagnostic message by using format string substitution on the summary
-   * field in the BugPattern.
+   * Generate the compiler diagnostic message based on information in the @BugPattern annotation.
    *
-   * @param args Arguments referenced by the format specifiers in the annotation summary string.
-   * @return The custom diagnostic string
+   * <p>If the formatSummary element of the annotation has been set, then use format string
+   * substitution to generate the message.  Otherwise, just use the summary element directly.
+   *
+   * @param args Arguments referenced by the format specifiers in the annotation's formatSummary
+   *     element
+   * @return The compiler diagnostic message.
    */
-  public String getCustomDiagnosticMessage(Object... args) {
+  protected String getDiagnosticMessage(Object... args) {
     String summary;
-    if (args.length == 0) {
-      summary = annotation.summary();
+    if (!annotation.formatSummary().isEmpty()) {
+      if (args.length == 0) {
+        throw new IllegalStateException("Compiler error message expects a format string, but "
+            + "no arguments were provided");
+      }
+      summary = String.format(annotation.formatSummary(), args);
     } else {
-      summary = String.format(annotation.summary(), args);
+      summary = annotation.summary();
     }
     return "[" + annotation.name() + "] " + summary + getLink();
   }

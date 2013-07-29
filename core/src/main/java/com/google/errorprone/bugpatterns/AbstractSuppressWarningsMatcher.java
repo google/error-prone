@@ -40,7 +40,7 @@ abstract class AbstractSuppressWarningsMatcher extends DescribingMatcher<Annotat
    * Processes the list of SuppressWarnings values in-place when creating a {@link SuggestedFix}.
    * Items may be added, removed or re-ordered as necessary. The initial input are the values
    * in the order specified in the code being processed.
-   * 
+   *
    * @param values list of suppressed warnings in the order in which they appear in the code
    */
   abstract protected void processSuppressWarningsValues(List<String> values);
@@ -49,10 +49,10 @@ abstract class AbstractSuppressWarningsMatcher extends DescribingMatcher<Annotat
   public final Description describe(AnnotationTree annotationTree, VisitorState state) {
     return new Description(
         annotationTree,
-        diagnosticMessage,
+        getDiagnosticMessage(),
         getSuggestedFix(annotationTree, state));
   }
-  
+
   protected final SuggestedFix getSuggestedFix(AnnotationTree annotationTree, VisitorState state) {
     ListBuffer<JCTree.JCExpression> arguments = new ListBuffer<JCTree.JCExpression>();
     List<String> values = new ArrayList<String>();
@@ -75,11 +75,11 @@ abstract class AbstractSuppressWarningsMatcher extends DescribingMatcher<Annotat
             throw new AssertionError("Unknown kind: " + expressionTree.getKind());
         }
         processSuppressWarningsValues(values);
-      } else { 
+      } else {
         throw new AssertionError("SuppressWarnings has an element other than value=");
       }
     }
-    
+
     if (values.size() == 0) {
       return new SuggestedFix().delete(annotationTree);
     } else if (values.size() == 1) {

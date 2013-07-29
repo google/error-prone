@@ -29,6 +29,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
@@ -38,6 +39,7 @@ import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCLiteral;
 
 /**
  * @author bill.pugh@gmail.com (Bill Pugh)
@@ -47,7 +49,7 @@ import com.sun.tools.javac.tree.JCTree;
     summary = "Shift by an amount that is out of range",
     explanation = "For shift operations on int types, only the five lowest-order bits of the "
         + "shift amount are used as the shift distance.  This means that shift amounts that are "
-        + "not in the range 0 to 31, inclusive, are silently mapped to values in that range."
+        + "not in the range 0 to 31, inclusive, are silently mapped to values in that range. "
         + "For example, a shift of an int by 32 is equivalent to shifting by 0, i.e., a no-op.\n\n"
         + "See JLS 15.19, \"Shift Operators\", for more details.",
     category = JDK, severity = ERROR, maturity = MATURE)
@@ -74,12 +76,15 @@ public class BadShiftAmount extends DescribingMatcher<BinaryTree> {
       }
 
       ExpressionTree rightOperand = tree.getRightOperand();
-      Object rightValue = ((LiteralTree) rightOperand).getValue();
-      if (!(rightOperand instanceof LiteralTree) || !(rightValue instanceof Number)) {
-        return false;
+      if (rightOperand instanceof LiteralTree) {
+        Object rightValue = ((LiteralTree) rightOperand).getValue();
+        if (rightValue instanceof Number) {
+          int intValue = ((Number) rightValue).intValue();
+          return intValue < 0 || intValue > 31;
+        }
       }
-      int intValue = ((Number) rightValue).intValue();
-      return intValue < 0 || intValue > 31;
+
+      return false;
     }
   };
 
@@ -111,10 +116,18 @@ public class BadShiftAmount extends DescribingMatcher<BinaryTree> {
         fix = fix.prefixWith(tree, "(long) ");
       }
     } else {
-      int actualShiftDistance = intValue & 0x1f;    // This is equivalent according to JLS 15.19.
-      fix = fix.replace(tree.getRightOperand(), Integer.toString(actualShiftDistance));
+      JCLiteral jcLiteral = (JCLiteral) tree.getRightOperand();
+      // This is the equivalent shift distance according to JLS 15.19.
+      String actualShiftDistance = Integer.toString(intValue & 0x1f);
+      int actualStart = ASTHelpers.getActualStartPosition(jcLiteral, state.getSourceCode());
+      if (actualStart != jcLiteral.getStartPosition()) {
+        fix = fix.replace(tree.getRightOperand(), actualShiftDistance,
+            actualStart - jcLiteral.getStartPosition(), 0);
+      } else {
+        fix = fix.replace(tree.getRightOperand(), actualShiftDistance);
+      }
     }
-    return new Description(tree, diagnosticMessage, fix);
+    return new Description(tree, getDiagnosticMessage(), fix);
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {

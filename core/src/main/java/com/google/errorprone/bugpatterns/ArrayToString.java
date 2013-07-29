@@ -16,6 +16,12 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.BugPattern.Category.JDK;
+import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Matchers.instanceMethod;
+import static com.google.errorprone.matchers.Matchers.methodSelect;
+
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -23,49 +29,57 @@ import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
+import com.google.errorprone.util.ASTHelpers;
+
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
-
-import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.*;
 
 /**
  * @author adgar@google.com (Mike Edgar)
  */
 @BugPattern(name = "ArrayToString",
-    summary = "toString used on an array",
+    summary = "Calling toString on an array does not provide useful information",
     explanation =
         "The toString method on an array will print its identity, such as [I@4488aabb. This " +
         "is almost never needed. Use Arrays.toString to print a human-readable array summary.",
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
 public class ArrayToString extends DescribingMatcher<MethodInvocationTree> {
 
-  @SuppressWarnings("unchecked")
-  private static final Matcher<MethodInvocationTree> matcher =
-      methodSelect(instanceMethod(Matchers.<ExpressionTree>isArrayType(), "toString"));
+  /**
+   * Matches calls to Throwable.getStackTrace().
+   */
+  private static final Matcher<MethodInvocationTree> getStackTraceMatcher = methodSelect(
+      instanceMethod(Matchers.<ExpressionTree>isSubtypeOf("java.lang.Throwable"), "getStackTrace"));
 
   /**
    * Matches calls to a toString instance method in which the receiver is an array type.
    */
   @Override
-  public boolean matches(MethodInvocationTree t, VisitorState state) {
-    return matcher.matches(t, state);
+  public boolean matches(MethodInvocationTree methodTree, VisitorState state) {
+    return methodSelect(instanceMethod(Matchers.<ExpressionTree>isArrayType(), "toString"))
+        .matches(methodTree, state);
   }
 
   /**
-   * Replaces instances of a.toString() with Arrays.toString(a). Also adds
-   * the necessary import statement for java.util.Arrays.
+   * Fixes instances of calling toString() on an array.  If the array is the result of calling
+   * e.getStackTrace(), replaces e.getStackTrace().toString() with Guava's
+   * Throwables.getStackTraceAsString(e).  Otherwise, replaces a.toString() with Arrays.toString(a).
    */
   @Override
-  public Description describe(MethodInvocationTree t, VisitorState state) {
-    String receiver = ((JCFieldAccess) t.getMethodSelect()).getExpression().toString();
-    SuggestedFix fix = new SuggestedFix()
-        .replace(t, "Arrays.toString(" + receiver + ")")
-        .addImport("java.util.Arrays");
-    return new Description(t, diagnosticMessage, fix);
+  public Description describe(MethodInvocationTree methodTree, VisitorState state) {
+    SuggestedFix fix = new SuggestedFix();
+
+    ExpressionTree receiverTree = ASTHelpers.getReceiver(methodTree);
+    if (receiverTree instanceof MethodInvocationTree &&
+        getStackTraceMatcher.matches((MethodInvocationTree) receiverTree, state)) {
+      String throwable = ASTHelpers.getReceiver(receiverTree).toString();
+      fix = fix.replace(methodTree, "Throwables.getStackTraceAsString(" + throwable + ")")
+          .addImport("com.google.common.base.Throwables");
+    } else {
+      fix = fix.replace(methodTree, "Arrays.toString(" + receiverTree + ")")
+          .addImport("java.util.Arrays");
+    }
+    return new Description(methodTree, getDiagnosticMessage(), fix);
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {

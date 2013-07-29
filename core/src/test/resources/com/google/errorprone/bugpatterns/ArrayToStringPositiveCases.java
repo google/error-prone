@@ -66,4 +66,10 @@ public class ArrayToStringPositiveCases {
       System.out.println("array string is nonempty!");
     }
   }
+  
+  public void throwable() {
+    Exception e = new RuntimeException();
+    //BUG: Suggestion includes "Throwables.getStackTraceAsString(e)"
+    System.out.println(e.getStackTrace().toString());
+  }
 }

@@ -24,7 +24,7 @@ import org.junit.Test;
  */
 public class BadShiftAmountTest extends BugPatternUnitTest {
 
-
+  // TODO(eaftan): Convert this to be like the other tests.
   @Before
   public void setUp() {
    setScanner(new BadShiftAmount.Scanner());

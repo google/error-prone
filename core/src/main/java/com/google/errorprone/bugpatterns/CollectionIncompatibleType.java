@@ -16,21 +16,28 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.BugPattern.Category.JDK;
+import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.argument;
+import static com.google.errorprone.matchers.Matchers.isCastableTo;
+import static com.google.errorprone.matchers.Matchers.isDescendantOfMethod;
+import static com.google.errorprone.matchers.Matchers.methodSelect;
+import static com.google.errorprone.matchers.Matchers.not;
+import static com.google.errorprone.suppliers.Suppliers.genericTypeOf;
+import static com.google.errorprone.suppliers.Suppliers.receiverInstance;
+
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Matchers;
+
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-
-import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.*;
-import static com.google.errorprone.suppliers.Suppliers.genericTypeOf;
-import static com.google.errorprone.suppliers.Suppliers.receiverInstance;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -47,7 +54,7 @@ public class CollectionIncompatibleType extends DescribingMatcher<MethodInvocati
 
   @SuppressWarnings("unchecked")
   private static final Matcher<MethodInvocationTree> isGenericCollectionsMethod =
-      methodSelect(anyOf(ExpressionTree.class,
+      methodSelect(Matchers.<ExpressionTree>anyOf(
           isDescendantOfMethod("java.util.Map", "get(java.lang.Object)"),
           isDescendantOfMethod("java.util.Collection", "contains(java.lang.Object)"),
           isDescendantOfMethod("java.util.Collection", "remove(java.lang.Object)")));
@@ -68,7 +75,7 @@ public class CollectionIncompatibleType extends DescribingMatcher<MethodInvocati
 
   @Override
   public Description describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
-    return new Description(methodInvocationTree, diagnosticMessage,
+    return new Description(methodInvocationTree, getDiagnosticMessage(),
         new SuggestedFix().replace(methodInvocationTree, "false"));
   }
 
