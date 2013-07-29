@@ -27,7 +27,7 @@
   <name>Maven parent POM</name>
   <groupId>com.google.errorprone</groupId>
   <artifactId>error_prone_parent</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0a2</version>
   <packaging>pom</packaging>
 
   <properties>
