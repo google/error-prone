@@ -16,8 +16,8 @@
 
 public class MultipleTopLevelClassesWithErrors {}
 
-final class Foo1 {
-  public void foo() {
+final class Poo {
+  public void poo() {
     int i = 10;
     i = i;
   }

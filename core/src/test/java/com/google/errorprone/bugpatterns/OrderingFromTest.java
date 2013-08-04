@@ -38,7 +38,7 @@ public class OrderingFromTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
+    compilationHelper.assertCompileSucceedsWithMessages(
         new File(this.getClass().getResource("OrderingFromPositiveCases.java").toURI()));
   }
 

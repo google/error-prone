@@ -39,12 +39,12 @@ public class ErrorProneScanner extends Scanner {
     boolean isEnabled(Class<? extends DescribingMatcher<?>> check, BugPattern annotation);
 
     /**
-     * Selects all checks which are annotated with maturity = MATURE and severity = ERROR.
+     * Selects all checks which are annotated with maturity = MATURE.
      */
     public static final EnabledPredicate DEFAULT_CHECKS = new EnabledPredicate() {
       @Override
       public boolean isEnabled(Class<? extends DescribingMatcher<?>> check, BugPattern annotation) {
-        return annotation.maturity() == MATURE && annotation.severity() == ERROR;
+        return annotation.maturity() == MATURE;
       }
     };
   }

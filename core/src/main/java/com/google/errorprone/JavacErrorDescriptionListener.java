@@ -73,16 +73,25 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
       if (description.suggestedFix != null) {
         fix = AppliedFix.fromSource(content, endPositions).apply(description.suggestedFix);
       }
+      final String message;
       if (description.suggestedFix == null || fix == null) {
-        log.error((DiagnosticPosition) description.node, MESSAGE_BUNDLE_KEY, description.message);
+        message = description.message;
       } else {
         if (fix.isRemoveLine()) {
-          log.error((DiagnosticPosition) description.node, MESSAGE_BUNDLE_KEY, description.message
-              + "\nDid you mean to remove this line?");
+          message = description.message + "\nDid you mean to remove this line?";
         } else {
-          log.error((DiagnosticPosition) description.node, MESSAGE_BUNDLE_KEY, description.message
-              + "\nDid you mean '" + fix.getNewCodeSnippet() + "'?");
+          message = description.message + "\nDid you mean '" + fix.getNewCodeSnippet() + "'?";
         }
+      }
+      switch (description.severity) {
+        case ERROR:
+          log.error((DiagnosticPosition) description.node, MESSAGE_BUNDLE_KEY, message);
+          break;
+        case WARNING:
+          log.warning((DiagnosticPosition) description.node, MESSAGE_BUNDLE_KEY, message);
+          break;
+        default:
+          break;
       }
     } catch (IOException e) {
       throw new RuntimeException(e);

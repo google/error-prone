@@ -16,6 +16,7 @@
 
 package com.google.errorprone.matchers;
 
+import com.google.errorprone.BugPattern;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.sun.source.tree.Tree;
 
@@ -40,6 +41,11 @@ public class Description {
    * Replacements to suggest in an error message or use in automated refactoring
    */
   public SuggestedFix suggestedFix;
+
+  /**
+   * Is this a warning, error, etc.
+   */
+  public BugPattern.SeverityLevel severity;
 
   public Description(Tree node, String message, SuggestedFix suggestedFix) {
     this.message = message;

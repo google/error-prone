@@ -17,6 +17,7 @@
 package com.google.errorprone;
 
 import com.google.errorprone.matchers.DescribingMatcher;
+import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 
@@ -165,7 +166,9 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
     state.getMatchListener().onMatch(match);
     if (matcher instanceof DescribingMatcher) {
       DescribingMatcher<T> describingMatcher = (DescribingMatcher<T>) matcher;
-      state.getDescriptionListener().onDescribed(describingMatcher.describe(match, state));
+      Description description = describingMatcher.describe(match, state);
+      description.severity = matcher.getClass().getAnnotation(BugPattern.class).severity();
+      state.getDescriptionListener().onDescribed(description);
     }
   }
 

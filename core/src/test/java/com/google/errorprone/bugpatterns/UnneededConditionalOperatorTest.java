@@ -38,7 +38,7 @@ public class UnneededConditionalOperatorTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
+    compilationHelper.assertCompileSucceedsWithMessages(
         new File(
             this.getClass().getResource("UnneededConditionalOperatorPositiveCases.java").toURI()));
   }
