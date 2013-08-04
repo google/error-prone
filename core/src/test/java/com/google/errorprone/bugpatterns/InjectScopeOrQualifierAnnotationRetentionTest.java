@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,8 +33,7 @@ public class InjectScopeOrQualifierAnnotationRetentionTest {
 
   @Before
   public void setUp() {
-    compilationHelper =
-        new CompilationTestHelper(new InjectScopeOrQualifierAnnotationRetention.Scanner());
+    compilationHelper = new CompilationTestHelper(InjectScopeOrQualifierAnnotationRetention.class);
   }
 
   @Test

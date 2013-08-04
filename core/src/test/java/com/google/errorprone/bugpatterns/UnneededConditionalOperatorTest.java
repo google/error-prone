@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,7 +33,7 @@ public class UnneededConditionalOperatorTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(new UnneededConditionalOperator.Scanner());
+    compilationHelper = new CompilationTestHelper(UnneededConditionalOperator.class);
   }
 
   @Test

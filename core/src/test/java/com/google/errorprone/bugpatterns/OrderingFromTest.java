@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,7 +33,7 @@ public class OrderingFromTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(new OrderingFrom.Scanner());
+    compilationHelper = new CompilationTestHelper(OrderingFrom.class);
   }
 
   @Test

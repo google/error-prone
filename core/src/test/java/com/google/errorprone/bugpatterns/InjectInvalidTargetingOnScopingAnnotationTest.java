@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,8 +34,7 @@ public class InjectInvalidTargetingOnScopingAnnotationTest {
 
   @Before
   public void setUp() {
-    compilationHelper =
-        new CompilationTestHelper(new InjectInvalidTargetingOnScopingAnnotation.Scanner());
+    compilationHelper = new CompilationTestHelper(InjectInvalidTargetingOnScopingAnnotation.class);
   }
 
   @Test

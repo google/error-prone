@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,7 +31,7 @@ public class GuiceAssistedInjectScopingTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(new GuiceAssistedInjectScoping.Scanner());
+    compilationHelper = new CompilationTestHelper(GuiceAssistedInjectScoping.class);
   }
 
   @Test

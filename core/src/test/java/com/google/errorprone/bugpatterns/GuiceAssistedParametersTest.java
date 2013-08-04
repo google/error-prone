@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,7 +34,7 @@ public class GuiceAssistedParametersTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(new GuiceAssistedParameters.Scanner());
+    compilationHelper = new CompilationTestHelper(GuiceAssistedParameters.class);
   }
 
   @Test

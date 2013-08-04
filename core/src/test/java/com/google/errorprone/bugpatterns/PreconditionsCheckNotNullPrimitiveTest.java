@@ -17,8 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.bugpatterns.PreconditionsCheckNotNullPrimitive;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,7 +30,7 @@ public class PreconditionsCheckNotNullPrimitiveTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(new PreconditionsCheckNotNullPrimitive.Scanner());
+    compilationHelper = new CompilationTestHelper(PreconditionsCheckNotNullPrimitive.class);
   }
 
   @Test

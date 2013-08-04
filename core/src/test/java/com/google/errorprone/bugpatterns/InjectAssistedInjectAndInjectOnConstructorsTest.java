@@ -1,7 +1,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,7 +16,7 @@ public class InjectAssistedInjectAndInjectOnConstructorsTest {
   @Before
   public void setUp() {
     compilationHelper =
-        new CompilationTestHelper(new InjectAssistedInjectAndInjectOnConstructors.Scanner());
+        new CompilationTestHelper(InjectAssistedInjectAndInjectOnConstructors.class);
   }
 
   @Test
