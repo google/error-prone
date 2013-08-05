@@ -49,7 +49,6 @@
     <module>annotation</module>
     <module>docgen</module>
     <module>ant</module>
-    <module>maven</module>
   </modules>
 
   <scm>
