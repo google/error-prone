@@ -9,6 +9,8 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 
 import java.util.Set;
@@ -24,8 +26,10 @@ import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 
 @BugPattern(name = "InvalidProtoFieldNullComparison", category = Category.ONE_OFF,
     severity = SeverityLevel.ERROR, maturity = MaturityLevel.EXPERIMENTAL,
-    summary = "Protocol Buffers fields cannot be null.",
-    explanation = "This checker looks for invalid proto field null comparisons.")
+    summary = "Protocol Buffers fields cannot be null",
+    explanation = "This checker looks for invalid comparisons of Proto fields with null." +
+    		" These comparisons are always true or false since Proto field accessors never " +
+    		"return null.")
 public class InvalidProtoFieldNullComparison extends DescribingMatcher<BinaryTree> {
 
   private static final String PROTO_SUPER_CLASS = "com.google.protobuf.GeneratedMessage";
@@ -46,27 +50,27 @@ public class InvalidProtoFieldNullComparison extends DescribingMatcher<BinaryTre
         || (isNull(leftOperand) && isProtoMessageGetInvocation(rightOperand, state));
   }
 
-  boolean isNull(ExpressionTree tree) {
+  private boolean isNull(ExpressionTree tree) {
     return tree.getKind() == Kind.NULL_LITERAL;
   }
 
-  boolean isProtoMessageGetInvocation(ExpressionTree tree, VisitorState state) {
+  private boolean isProtoMessageGetInvocation(ExpressionTree tree, VisitorState state) {
     return (isGetMethodInvocation(tree, state) || isGetListMethodInvocation(tree, state))
         && isProtoMessage(tree, state);
   }
 
-  boolean isFieldGetMethod(String methodName) {
+  private boolean isFieldGetMethod(String methodName) {
     return methodName.startsWith("get");
   }
 
-  String getMethodName(ExpressionTree tree) {
+  private String getMethodName(ExpressionTree tree) {
     MethodInvocationTree method = (MethodInvocationTree) tree;
     ExpressionTree expressionTree = method.getMethodSelect();
     JCFieldAccess access = (JCFieldAccess) expressionTree;
     return access.sym.getQualifiedName().toString();
   }
 
-  boolean isGetListMethodInvocation(ExpressionTree tree, VisitorState state) {
+  private boolean isGetListMethodInvocation(ExpressionTree tree, VisitorState state) {
     if (tree.getKind() == Tree.Kind.METHOD_INVOCATION) {
       MethodInvocationTree method = (MethodInvocationTree) tree;
       if (!method.getArguments().isEmpty()) {
@@ -87,7 +91,7 @@ public class InvalidProtoFieldNullComparison extends DescribingMatcher<BinaryTre
     return false;
   }
 
-  boolean isGetMethodInvocation(ExpressionTree tree, VisitorState state) {
+  private boolean isGetMethodInvocation(ExpressionTree tree, VisitorState state) {
     if (tree.getKind() == Tree.Kind.METHOD_INVOCATION) {
       MethodInvocationTree method = (MethodInvocationTree) tree;
       if (!method.getArguments().isEmpty()) {
@@ -140,6 +144,16 @@ public class InvalidProtoFieldNullComparison extends DescribingMatcher<BinaryTre
     return builder.replace(lastIndexOf, lastIndexOf + pattern.length(), replacement).toString();
   }
 
+  /**
+   * Creates replacements for the following comparisons:
+   * <pre>
+   * proto.getField() == null --> !proto.hasField()
+   * proto.getField() != null --> proto.hasField()
+   * proto.getList() == null  --> proto.getList().isEmpty()
+   * proto.getList() != null  --> !proto.getList().isEmpty()
+   * <pre>
+   * Also creates replacements for the Yoda style version of them.
+   */
   private String createReplacement(BinaryTree tree, VisitorState state) {
     ExpressionTree leftOperand = tree.getLeftOperand();
     ExpressionTree rightOperand = tree.getRightOperand();
