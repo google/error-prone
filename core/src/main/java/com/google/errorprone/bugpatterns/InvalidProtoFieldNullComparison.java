@@ -112,7 +112,7 @@ public class InvalidProtoFieldNullComparison extends DescribingMatcher<BinaryTre
     return false;
   }
 
-  boolean isList(Type type, VisitorState state) {
+  private boolean isList(Type type, VisitorState state) {
     Type listInterface = state.getTypeFromString(LIST_INTERFACE);
     if (listInterface == null) {
       return false;
@@ -126,7 +126,7 @@ public class InvalidProtoFieldNullComparison extends DescribingMatcher<BinaryTre
     return false;
   }
 
-  boolean isProtoMessage(ExpressionTree tree, VisitorState state) {
+  private boolean isProtoMessage(ExpressionTree tree, VisitorState state) {
     Type type = ASTHelpers.getReceiverType(((MethodInvocationTree) tree).getMethodSelect());
     Type protoSuperClass = state.getTypeFromString(PROTO_SUPER_CLASS);
     if (protoSuperClass == null) {
