@@ -33,6 +33,7 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
@@ -378,6 +379,30 @@ public class Matchers {
    */
   public static <T extends Tree> EnclosingClass<T> enclosingClass(Matcher<ClassTree> matcher) {
     return new EnclosingClass<T>(matcher);
+  }
+
+  /**
+   * Matches an AST node that is enclosed by some node that matches the given matcher.
+   *
+   * TODO(eaftan): This could be used instead of enclosingBlock and enclosingClass.
+   */
+  public static <T extends Tree> Matcher<Tree> enclosingNode(final Matcher<T> matcher) {
+    return new Matcher<Tree>() {
+      @SuppressWarnings("unchecked")
+      @Override
+      public boolean matches(Tree t, VisitorState state) {
+        TreePath path = state.getPath().getParentPath();
+        while (path != null) {
+          Tree node = path.getLeaf();
+          if (matcher.matches((T) node, state)) {
+            return true;
+          }
+          path = path.getParentPath();
+        }
+        return false;
+      }
+
+    };
   }
 
   /**

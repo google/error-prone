@@ -16,15 +16,67 @@
 
 package com.google.errorprone;
 
-import com.google.errorprone.bugpatterns.*;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
+
+import com.google.errorprone.bugpatterns.ArrayEquals;
+import com.google.errorprone.bugpatterns.ArrayToString;
+import com.google.errorprone.bugpatterns.ArrayToStringCompoundAssignment;
+import com.google.errorprone.bugpatterns.ArrayToStringConcatenation;
+import com.google.errorprone.bugpatterns.BadShiftAmount;
+import com.google.errorprone.bugpatterns.CheckReturnValue;
+import com.google.errorprone.bugpatterns.CollectionIncompatibleType;
+import com.google.errorprone.bugpatterns.ComparisonOutOfRange;
+import com.google.errorprone.bugpatterns.CovariantEquals;
+import com.google.errorprone.bugpatterns.DeadException;
+import com.google.errorprone.bugpatterns.EmptyIfStatement;
+import com.google.errorprone.bugpatterns.EmptyStatement;
+import com.google.errorprone.bugpatterns.FallThroughSuppression;
+import com.google.errorprone.bugpatterns.GuiceAssistedInjectScoping;
+import com.google.errorprone.bugpatterns.GuiceAssistedParameters;
+import com.google.errorprone.bugpatterns.InjectAssistedInjectAndInjectOnConstructors;
+import com.google.errorprone.bugpatterns.InjectInvalidTargetingOnScopingAnnotation;
+import com.google.errorprone.bugpatterns.InjectMoreThanOneQualifier;
+import com.google.errorprone.bugpatterns.InjectMoreThanOneScopeAnnotationOnClass;
+import com.google.errorprone.bugpatterns.InjectScopeAnnotationOnInterfaceOrAbstractClass;
+import com.google.errorprone.bugpatterns.InjectScopeOrQualifierAnnotationRetention;
+import com.google.errorprone.bugpatterns.InvalidNumericEquality;
+import com.google.errorprone.bugpatterns.InvalidPatternSyntax;
+import com.google.errorprone.bugpatterns.InvalidStringEquality;
+import com.google.errorprone.bugpatterns.JUnit4TestNotRun;
+import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
+import com.google.errorprone.bugpatterns.ModifyingCollectionWithItself;
+import com.google.errorprone.bugpatterns.NonRuntimeAnnotation;
+import com.google.errorprone.bugpatterns.OrderingFrom;
+import com.google.errorprone.bugpatterns.PreconditionsCheckNotNull;
+import com.google.errorprone.bugpatterns.PreconditionsCheckNotNullPrimitive;
+import com.google.errorprone.bugpatterns.PreconditionsExpensiveString;
+import com.google.errorprone.bugpatterns.PreconditionsTooManyArgs;
+import com.google.errorprone.bugpatterns.ReturnValueIgnored;
+import com.google.errorprone.bugpatterns.SelfAssignment;
+import com.google.errorprone.bugpatterns.SelfEquality;
+import com.google.errorprone.bugpatterns.SelfEquals;
+import com.google.errorprone.bugpatterns.SuppressWarningsDeprecated;
+import com.google.errorprone.bugpatterns.UnneededConditionalOperator;
+import com.google.errorprone.bugpatterns.WaitNotInLoop;
+import com.google.errorprone.bugpatterns.WrongParameterPackage;
 import com.google.errorprone.matchers.DescribingMatcher;
-import com.sun.source.tree.*;
+
+import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.AssignmentTree;
+import com.sun.source.tree.BinaryTree;
+import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.CompoundAssignmentTree;
+import com.sun.source.tree.ConditionalExpressionTree;
+import com.sun.source.tree.EmptyStatementTree;
+import com.sun.source.tree.LiteralTree;
+import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 /**
  * Scans the parsed AST, looking for violations of any of the enabled checks.
@@ -84,7 +136,8 @@ public class ErrorProneScanner extends Scanner {
           InvalidPatternSyntax.class,
           ModifyingCollectionWithItself.class,
           PreconditionsTooManyArgs.class,
-          CheckReturnValue.class);
+          CheckReturnValue.class,
+          WaitNotInLoop.class);
       this.newClassMatchers = createChecks(enabled, DeadException.class);
       this.annotationMatchers = createChecks(enabled,
           InjectAssistedInjectAndInjectOnConstructors.class,
@@ -199,7 +252,7 @@ public class ErrorProneScanner extends Scanner {
     }
     return super.visitAssignment(assignmentTree, visitorState);
   }
-  
+
   @Override
   public Void visitVariable(VariableTree variableTree, VisitorState visitorState) {
     for (DescribingMatcher<VariableTree> matcher : variableMatchers) {
