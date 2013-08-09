@@ -44,12 +44,14 @@ public class SuggestedFix {
     return result.toString();
   }
 
-  private Collection<Pair<Tree, String>> nodeReplacements = new ArrayList<Pair<Tree, String>>();
-  private Collection<Pair<AdjustedTreePosition, String>> adjustedNodeReplacements =
-      new ArrayList<Pair<AdjustedTreePosition, String>>();
-  private Collection<Pair<Tree, Tree>> nodeSwaps = new ArrayList<Pair<Tree, Tree>>();
-  private Collection<Pair<Tree, String>> prefixInsertions = new ArrayList<Pair<Tree, String>>();
-  private Collection<Pair<Tree, String>> postfixInsertions = new ArrayList<Pair<Tree, String>>();
+  private Collection<Pair<DiagnosticPosition, String>> nodeReplacements =
+      new ArrayList<Pair<DiagnosticPosition, String>>();
+  private Collection<Pair<DiagnosticPosition, DiagnosticPosition>> nodeSwaps =
+      new ArrayList<Pair<DiagnosticPosition, DiagnosticPosition>>();
+  private Collection<Pair<DiagnosticPosition, String>> prefixInsertions =
+      new ArrayList<Pair<DiagnosticPosition, String>>();
+  private Collection<Pair<DiagnosticPosition, String>> postfixInsertions =
+      new ArrayList<Pair<DiagnosticPosition, String>>();
   private Collection<String> importsToAdd = new ArrayList<String>();
   private Collection<String> importsToRemove = new ArrayList<String>();
 
@@ -70,37 +72,30 @@ public class SuggestedFix {
       });
     // TODO(eaftan): The next four for-loops are all doing the same thing.  Collapse them
     // into a single one.  Will need to make AdjustedTreePosition implement DiagnosticPosition.
-    for (Pair<Tree, String> prefixInsertion : prefixInsertions) {
-      DiagnosticPosition pos = (JCTree) prefixInsertion.fst;
+    for (Pair<DiagnosticPosition, String> prefixInsertion : prefixInsertions) {
+      DiagnosticPosition pos = prefixInsertion.fst;
       replacements.add(new Replacement(
           pos.getStartPosition(),
           pos.getStartPosition(),
           prefixInsertion.snd));
     }
-    for (Pair<Tree, String> postfixInsertion : postfixInsertions) {
-      DiagnosticPosition pos = (JCTree) postfixInsertion.fst;
+    for (Pair<DiagnosticPosition, String> postfixInsertion : postfixInsertions) {
+      DiagnosticPosition pos = postfixInsertion.fst;
       replacements.add(new Replacement(
           pos.getEndPosition(endPositions),
           pos.getEndPosition(endPositions),
           postfixInsertion.snd));
     }
-    for (Pair<Tree, String> nodeReplacement : nodeReplacements) {
-      DiagnosticPosition pos = (JCTree) nodeReplacement.fst;
+    for (Pair<DiagnosticPosition, String> nodeReplacement : nodeReplacements) {
+      DiagnosticPosition pos = nodeReplacement.fst;
       replacements.add(new Replacement(
           pos.getStartPosition(),
           pos.getEndPosition(endPositions),
           nodeReplacement.snd));
     }
-    for (Pair<AdjustedTreePosition, String> adjustedNodeReplacement : adjustedNodeReplacements) {
-      AdjustedTreePosition adjustedPos = adjustedNodeReplacement.fst;
-      replacements.add(new Replacement(
-          adjustedPos.getStartPosition(),
-          adjustedPos.getEndPosition(endPositions),
-          adjustedNodeReplacement.snd));
-    }
-    for (Pair<Tree, Tree> nodeSwap : nodeSwaps) {
-      DiagnosticPosition pos1 = (JCTree) nodeSwap.fst;
-      DiagnosticPosition pos2 = (JCTree) nodeSwap.snd;
+    for (Pair<DiagnosticPosition, DiagnosticPosition> nodeSwap : nodeSwaps) {
+      DiagnosticPosition pos1 = nodeSwap.fst;
+      DiagnosticPosition pos2 = nodeSwap.snd;
       replacements.add(new Replacement(
           pos1.getStartPosition(),
           pos1.getEndPosition(endPositions),
@@ -114,7 +109,22 @@ public class SuggestedFix {
   }
 
   public SuggestedFix replace(Tree node, String replaceWith) {
-    nodeReplacements.add(new Pair<Tree, String>(node, replaceWith));
+    nodeReplacements.add(
+        new Pair<DiagnosticPosition, String>((DiagnosticPosition) node, replaceWith));
+    return this;
+  }
+
+  /**
+   * Replace the characters from startPos, inclusive, until endPos, exclusive, with the
+   * given string.
+   *
+   * @param startPos The position from which to start replacing, inclusive
+   * @param endPos The position at which to end replacing, exclusive
+   * @param replaceWith The string to replace with
+   */
+  public SuggestedFix replace(int startPos, int endPos, String replaceWith) {
+    nodeReplacements.add(new Pair<DiagnosticPosition, String>(
+        new IndexedPosition(startPos, endPos), replaceWith));
     return this;
   }
 
@@ -128,25 +138,24 @@ public class SuggestedFix {
    *
    * @param node The tree node to replace
    * @param replaceWith The string to replace with
-   * @param startPositionAdjustment The adjustment to add to the start position (negative is OK)
-   * @param endPositionAdjustment The adjustment to add to the end position (negative is OK)
+   * @param startPosAdjustment The adjustment to add to the start position (negative is OK)
+   * @param endPosAdjustment The adjustment to add to the end position (negative is OK)
    */
-  public SuggestedFix replace(Tree node, String replaceWith, int startPositionAdjustment,
-      int endPositionAdjustment) {
-    adjustedNodeReplacements.add(new Pair<AdjustedTreePosition, String>(
-        new AdjustedTreePosition((DiagnosticPosition) node, startPositionAdjustment,
-            endPositionAdjustment),
+  public SuggestedFix replace(Tree node, String replaceWith, int startPosAdjustment,
+      int endPosAdjustment) {
+    nodeReplacements.add(new Pair<DiagnosticPosition, String>(
+        new AdjustedPosition((JCTree) node, startPosAdjustment, endPosAdjustment),
         replaceWith));
     return this;
   }
 
   public SuggestedFix prefixWith(Tree node, String prefix) {
-    prefixInsertions.add(new Pair<Tree, String>(node, prefix));
+    prefixInsertions.add(new Pair<DiagnosticPosition, String>((DiagnosticPosition) node, prefix));
     return this;
   }
 
   public SuggestedFix postfixWith(Tree node, String postfix) {
-    postfixInsertions.add(new Pair<Tree, String>(node, postfix));
+    postfixInsertions.add(new Pair<DiagnosticPosition, String>((DiagnosticPosition) node, postfix));
     return this;
   }
 
@@ -155,7 +164,7 @@ public class SuggestedFix {
   }
 
   public SuggestedFix swap(Tree node1, Tree node2) {
-    nodeSwaps.add(new Pair<Tree, Tree>(node1, node2));
+    nodeSwaps.add(new Pair<DiagnosticPosition, DiagnosticPosition>((DiagnosticPosition) node1, (DiagnosticPosition) node2));
     return this;
   }
 
@@ -206,24 +215,69 @@ public class SuggestedFix {
   /**
    * Describes a tree position with adjustments to the start and end indices.
    */
-  private static class AdjustedTreePosition {
-    private final DiagnosticPosition position;
+  private static class AdjustedPosition implements DiagnosticPosition {
+    private final JCTree position;
     private final int startPositionAdjustment;
     private final int endPositionAdjustment;
 
-    public AdjustedTreePosition(DiagnosticPosition position, int startPositionAdjustment,
-        int endPositionAdjustment) {
+    public AdjustedPosition(JCTree position, int startPosAdjustment, int endPosAdjustment) {
       this.position = position;
-      this.startPositionAdjustment = startPositionAdjustment;
-      this.endPositionAdjustment = endPositionAdjustment;
+      this.startPositionAdjustment = startPosAdjustment;
+      this.endPositionAdjustment = endPosAdjustment;
     }
 
+    @Override
     public int getStartPosition() {
       return position.getStartPosition() + startPositionAdjustment;
     }
 
+    @Override
     public int getEndPosition(Map<JCTree, Integer> endPositions) {
       return position.getEndPosition(endPositions) + endPositionAdjustment;
+    }
+
+    @Override
+    public JCTree getTree() {
+      return position;
+    }
+
+    @Override
+    public int getPreferredPosition() {
+      throw new UnsupportedOperationException();
+    }
+  }
+
+  /**
+   * Describes a position that only has a start and end index.
+   */
+  private static class IndexedPosition implements DiagnosticPosition {
+
+    final int startPos;
+    final int endPos;
+
+    public IndexedPosition(int startPos, int endPos) {
+      this.startPos = startPos;
+      this.endPos = endPos;
+    }
+
+    @Override
+    public JCTree getTree() {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public int getStartPosition() {
+      return startPos;
+    }
+
+    @Override
+    public int getPreferredPosition() {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public int getEndPosition(Map<JCTree, Integer> endPosTable) {
+      return endPos;
     }
   }
 }
