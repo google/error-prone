@@ -31,7 +31,9 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.util.ASTHelpers;
 
+import com.sun.source.tree.IfTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
@@ -95,12 +97,18 @@ public class WaitNotInLoop extends DescribingMatcher<MethodInvocationTree> {
     }
   };
 
-  /**
-   * TODO(eaftan): Proper fix.  My guess is that you want to look for an enclosing if statement
-   * and replace it with a while.
-   */
   @Override
   public Description describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
+    SuggestedFix fix = new SuggestedFix();
+
+    // Handle if -> while case
+    IfTree enclosingIf =
+        ASTHelpers.findEnclosingNode(state.getPath().getParentPath(), IfTree.class);
+    if (enclosingIf != null && enclosingIf.getElseStatement() == null) {
+      //fix.replace()
+
+    }
+
     return new Description(methodInvocationTree, getDiagnosticMessage(), new SuggestedFix().delete(methodInvocationTree));
   }
 
