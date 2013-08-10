@@ -17,8 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.bugpatterns.CovariantEquals;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,7 +31,7 @@ public class CovariantEqualsTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(new CovariantEquals.Scanner());
+    compilationHelper = new CompilationTestHelper(CovariantEquals.class);
   }
 
   @Test

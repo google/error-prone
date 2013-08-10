@@ -41,9 +41,12 @@ public class CompilationTestHelper {
         .build();
   }
 
+  public CompilationTestHelper(Class<?> matcherClass) {
+    this(ErrorProneScanner.forMatcher(matcherClass));
+  }
+
   public void assertCompileSucceeds(File source) {
-    int exitCode = compiler.compile(new String[]{"-Xjcov", source.getAbsolutePath()});
-    assertThat(exitCode, is(0));
+    assertThat(compileFileExitCode(source), is(0));
   }
 
   /**
@@ -51,9 +54,22 @@ public class CompilationTestHelper {
    * the pattern //BUG("foo"), the diagnostic at that line contains "foo".
    */
   public void assertCompileFailsWithMessages(File source) throws IOException {
-    int exitCode = compiler.compile(new String[]{"-Xjcov", "-encoding", "UTF-8", source.getAbsolutePath()});
-    assertThat("Compiler returned an unexpected error code", exitCode, is(1));
+    assertThat("Compile should fail (exit with code 1)", compileFileExitCode(source), is(1));
     assertHasDiagnosticOnAllMatchingLines(diagnosticHelper.getDiagnostics(), source);
+  }
+
+  /**
+   * Assert that the compile succeeds, and that for each line of the test file that contains
+   * the pattern //BUG("foo"), the diagnostic at that line contains "foo".
+   */
+  public void assertCompileSucceedsWithMessages(File source) throws IOException {
+    assertCompileSucceeds(source);
+    assertHasDiagnosticOnAllMatchingLines(diagnosticHelper.getDiagnostics(), source);
+  }
+
+  private int compileFileExitCode(File source) {
+    return compiler.compile(
+        new String[]{"-Xjcov",  "-encoding", "UTF-8", source.getAbsolutePath()});
   }
 
   /**

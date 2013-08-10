@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,7 +31,7 @@ public class CheckReturnValueTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(new CheckReturnValue.Scanner());
+    compilationHelper = new CompilationTestHelper(CheckReturnValue.class);
   }
 
   @Test

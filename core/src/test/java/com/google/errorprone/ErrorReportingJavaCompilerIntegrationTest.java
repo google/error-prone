@@ -23,6 +23,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.internal.matchers.StringContains.containsString;
 
+import com.google.errorprone.bugpatterns.DeadException;
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,6 +43,7 @@ public class ErrorReportingJavaCompilerIntegrationTest {
   private DiagnosticTestHelper diagnosticHelper;
   private PrintWriter printWriter;
   private ByteArrayOutputStream outputStream;
+  private ErrorProneCompiler.Builder compilerBuilder;
   ErrorProneCompiler compiler;
 
   @Before
@@ -49,11 +51,11 @@ public class ErrorReportingJavaCompilerIntegrationTest {
     diagnosticHelper = new DiagnosticTestHelper();
     outputStream = new ByteArrayOutputStream();
     printWriter = new PrintWriter(new OutputStreamWriter(outputStream));
-    compiler = new ErrorProneCompiler.Builder()
+    compilerBuilder = new ErrorProneCompiler.Builder()
         .named("test")
         .redirectOutputTo(printWriter)
-        .listenToDiagnostics(diagnosticHelper.collector)
-        .build();
+        .listenToDiagnostics(diagnosticHelper.collector);
+    compiler = compilerBuilder.build();
   }
 
   @Test
@@ -65,6 +67,21 @@ public class ErrorReportingJavaCompilerIntegrationTest {
 
     Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher = hasItem(
         diagnosticMessage(containsString("[EmptyIf]")));
+    assertThat("Error should be found. " + diagnosticHelper.describe(),
+        diagnosticHelper.getDiagnostics(), matcher);
+  }
+
+  @Test
+  public void fileWithWarning() throws Exception {
+    compiler = compilerBuilder.report(ErrorProneScanner.forMatcher(DeadException.class))
+        .build();
+    int exitCode = compiler.compile(sources(getClass(),
+        "com/google/errorprone/bugpatterns/DeadExceptionPositiveCases.java"));
+    outputStream.flush();
+    assertThat(outputStream.toString(), exitCode, is(0));
+
+    Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher = hasItem(
+        diagnosticMessage(containsString("[DeadException]")));
     assertThat("Warning should be found. " + diagnosticHelper.describe(),
         diagnosticHelper.getDiagnostics(), matcher);
   }

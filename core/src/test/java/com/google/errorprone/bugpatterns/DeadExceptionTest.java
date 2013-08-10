@@ -17,8 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.bugpatterns.DeadException;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,12 +31,12 @@ public class DeadExceptionTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(new DeadException.Scanner());
+    compilationHelper = new CompilationTestHelper(DeadException.class);
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
+    compilationHelper.assertCompileSucceedsWithMessages(
         new File(this.getClass().getResource("DeadExceptionPositiveCases.java").toURI()));
   }
 

@@ -16,44 +16,15 @@
 
 package com.google.errorprone;
 
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
-
-import com.google.errorprone.bugpatterns.ArrayEquals;
-import com.google.errorprone.bugpatterns.ArrayToString;
-import com.google.errorprone.bugpatterns.BadShiftAmount;
-import com.google.errorprone.bugpatterns.CollectionIncompatibleType;
-import com.google.errorprone.bugpatterns.ComparisonOutOfRange;
-import com.google.errorprone.bugpatterns.CovariantEquals;
-import com.google.errorprone.bugpatterns.DeadException;
-import com.google.errorprone.bugpatterns.EmptyIfStatement;
-import com.google.errorprone.bugpatterns.EmptyStatement;
-import com.google.errorprone.bugpatterns.FallThroughSuppression;
-import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
-import com.google.errorprone.bugpatterns.OrderingFrom;
-import com.google.errorprone.bugpatterns.PreconditionsCheckNotNull;
-import com.google.errorprone.bugpatterns.PreconditionsCheckNotNullPrimitive;
-import com.google.errorprone.bugpatterns.PreconditionsExpensiveString;
-import com.google.errorprone.bugpatterns.ReturnValueIgnored;
-import com.google.errorprone.bugpatterns.SelfAssignment;
-import com.google.errorprone.bugpatterns.SelfEquals;
-import com.google.errorprone.bugpatterns.SuppressWarningsDeprecated;
-import com.google.errorprone.bugpatterns.UnneededConditionalOperator;
+import com.google.errorprone.bugpatterns.*;
 import com.google.errorprone.matchers.DescribingMatcher;
-
-import com.sun.source.tree.AnnotationTree;
-import com.sun.source.tree.AssignmentTree;
-import com.sun.source.tree.BinaryTree;
-import com.sun.source.tree.ConditionalExpressionTree;
-import com.sun.source.tree.EmptyStatementTree;
-import com.sun.source.tree.LiteralTree;
-import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.NewClassTree;
-import com.sun.source.tree.Tree;
-import com.sun.source.tree.VariableTree;
+import com.sun.source.tree.*;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 /**
  * Scans the parsed AST, looking for violations of any of the enabled checks.
@@ -68,7 +39,7 @@ public class ErrorProneScanner extends Scanner {
     boolean isEnabled(Class<? extends DescribingMatcher<?>> check, BugPattern annotation);
 
     /**
-     * Selects all checks which are annotated with maturity = ON_BY_DEFAULT.
+     * Selects all checks which are annotated with maturity = MATURE.
      */
     public static final EnabledPredicate DEFAULT_CHECKS = new EnabledPredicate() {
       @Override
@@ -78,17 +49,23 @@ public class ErrorProneScanner extends Scanner {
     };
   }
 
+  // Special case, needed until Eddie's refactoring to allow a single @BugPattern class to
+  // match multiple tree nodes.
+  private final Iterable<DescribingMatcher<Tree>> selfAssignmentMatchers;
+
   private final Iterable<DescribingMatcher<MethodInvocationTree>> methodInvocationMatchers;
   private final Iterable<DescribingMatcher<NewClassTree>> newClassMatchers;
   private final Iterable<DescribingMatcher<AnnotationTree>> annotationMatchers;
   private final Iterable<DescribingMatcher<EmptyStatementTree>> emptyStatementMatchers;
-  private final Iterable<DescribingMatcher<Tree>> assignmentMatchers;
-  private final Iterable<DescribingMatcher<Tree>> variableMatchers;
+  private final Iterable<DescribingMatcher<AssignmentTree>> assignmentMatchers;
+  private final Iterable<DescribingMatcher<VariableTree>> variableMatchers;
   private final Iterable<DescribingMatcher<MethodTree>> methodMatchers;
   private final Iterable<DescribingMatcher<LiteralTree>> literalMatchers;
   private final Iterable<DescribingMatcher<ConditionalExpressionTree>>
       conditionalExpressionMatchers;
   private final Iterable<DescribingMatcher<BinaryTree>> binaryExpressionMatchers;
+  private final Iterable<DescribingMatcher<CompoundAssignmentTree>> compoundAssignmentMatchers;
+  private final Iterable<DescribingMatcher<ClassTree>> classMatchers;
 
   @SuppressWarnings("unchecked")
   public ErrorProneScanner(EnabledPredicate enabled) {
@@ -102,25 +79,60 @@ public class ErrorProneScanner extends Scanner {
           CollectionIncompatibleType.class,
           ArrayEquals.class,
           ArrayToString.class,
-          ReturnValueIgnored.class);
+          ReturnValueIgnored.class,
+          NonRuntimeAnnotation.class,
+          InvalidPatternSyntax.class,
+          ModifyingCollectionWithItself.class,
+          PreconditionsTooManyArgs.class,
+          CheckReturnValue.class);
       this.newClassMatchers = createChecks(enabled, DeadException.class);
       this.annotationMatchers = createChecks(enabled,
+          InjectAssistedInjectAndInjectOnConstructors.class,
+          InjectMoreThanOneQualifier.class,
+          InjectMoreThanOneScopeAnnotationOnClass.class,
+          InjectScopeAnnotationOnInterfaceOrAbstractClass.class,
           FallThroughSuppression.class,
           SuppressWarningsDeprecated.class);
       this.emptyStatementMatchers = createChecks(enabled,
           EmptyIfStatement.class,
           EmptyStatement.class);
       this.binaryExpressionMatchers = createChecks(enabled,
+          InvalidNumericEquality.class,
+          InvalidStringEquality.class,
+          SelfEquality.class,
           BadShiftAmount.class,
+          ArrayToStringConcatenation.class,
           ComparisonOutOfRange.class);
-      this.assignmentMatchers = createChecks(enabled, SelfAssignment.class);
-      this.variableMatchers = createChecks(enabled, SelfAssignment.class);
-      this.methodMatchers = createChecks(enabled, CovariantEquals.class);
+      this.selfAssignmentMatchers = createChecks(enabled, SelfAssignment.class);
+      this.assignmentMatchers = createChecks(enabled);
+      this.variableMatchers = createChecks(enabled,
+          GuiceAssistedParameters.class);
+      this.methodMatchers = createChecks(enabled,
+          CovariantEquals.class,
+          JUnit4TestNotRun.class,
+          WrongParameterPackage.class);
       this.literalMatchers = createChecks(enabled, LongLiteralLowerCaseSuffix.class);
       this.conditionalExpressionMatchers = createChecks(enabled, UnneededConditionalOperator.class);
+      this.compoundAssignmentMatchers = createChecks(enabled, ArrayToStringCompoundAssignment.class);
+      this.classMatchers = createChecks(enabled,
+          InjectScopeOrQualifierAnnotationRetention.class,
+          InjectInvalidTargetingOnScopingAnnotation.class,
+          GuiceAssistedInjectScoping.class);
     } catch (Exception e) {
       throw new RuntimeException("Could not reflectively create error prone matchers", e);
     }
+  }
+
+  /**
+   * Create a scanner that only enables a single matcher. Useful for testing.
+   */
+  public static Scanner forMatcher(final Class<?> matcherClass) {
+    return new ErrorProneScanner(new EnabledPredicate() {
+      @Override
+      public boolean isEnabled(Class<? extends DescribingMatcher<?>> check, BugPattern unused) {
+        return check.equals(matcherClass);
+      }
+    });
   }
 
   private static <T extends Tree> Iterable<DescribingMatcher<T>> createChecks(
@@ -179,16 +191,22 @@ public class ErrorProneScanner extends Scanner {
 
   @Override
   public Void visitAssignment(AssignmentTree assignmentTree, VisitorState visitorState) {
-    for (DescribingMatcher<Tree> matcher : assignmentMatchers) {
+    for (DescribingMatcher<AssignmentTree> matcher : assignmentMatchers) {
       evaluateMatch(assignmentTree, visitorState, matcher);
+    }
+    for (DescribingMatcher<Tree> selfAssignmentMatcher : selfAssignmentMatchers) {
+      evaluateMatch(assignmentTree, visitorState, selfAssignmentMatcher);
     }
     return super.visitAssignment(assignmentTree, visitorState);
   }
   
   @Override
   public Void visitVariable(VariableTree variableTree, VisitorState visitorState) {
-    for (DescribingMatcher<Tree> matcher : variableMatchers) {
+    for (DescribingMatcher<VariableTree> matcher : variableMatchers) {
       evaluateMatch(variableTree, visitorState, matcher);
+    }
+    for (DescribingMatcher<Tree> selfAssignmentMatcher : selfAssignmentMatchers) {
+      evaluateMatch(variableTree, visitorState, selfAssignmentMatcher);
     }
     return super.visitVariable(variableTree, visitorState);
   }
@@ -216,5 +234,21 @@ public class ErrorProneScanner extends Scanner {
       evaluateMatch(conditionalExpressionTree, visitorState, matcher);
     }
     return super.visitConditionalExpression(conditionalExpressionTree, visitorState);
+  }
+
+  @Override
+  public Void visitCompoundAssignment(CompoundAssignmentTree node, VisitorState visitorState) {
+    for (DescribingMatcher<CompoundAssignmentTree> compoundAssignmentMatcher : compoundAssignmentMatchers) {
+      evaluateMatch(node, visitorState, compoundAssignmentMatcher);
+    }
+    return super.visitCompoundAssignment(node, visitorState);
+  }
+
+  @Override
+  public Void visitClass(ClassTree node, VisitorState visitorState) {
+    for (DescribingMatcher<ClassTree> classMatcher : classMatchers) {
+      evaluateMatch(node, visitorState, classMatcher);
+    }
+    return super.visitClass(node, visitorState);
   }
 }

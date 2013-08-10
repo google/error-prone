@@ -182,7 +182,9 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
     state.getMatchListener().onMatch(match);
     if (matcher instanceof DescribingMatcher) {
       DescribingMatcher<T> describingMatcher = (DescribingMatcher<T>) matcher;
-      state.getDescriptionListener().onDescribed(describingMatcher.describe(match, state));
+      Description description = describingMatcher.describe(match, state);
+      description.severity = matcher.getClass().getAnnotation(BugPattern.class).severity();
+      state.getDescriptionListener().onDescribed(description);
     }
   }
 

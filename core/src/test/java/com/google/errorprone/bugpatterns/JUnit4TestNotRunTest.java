@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,7 +31,7 @@ public class JUnit4TestNotRunTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(new JUnit4TestNotRun.Scanner());
+    compilationHelper = new CompilationTestHelper(JUnit4TestNotRun.class);
   }
 
   @Test

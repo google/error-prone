@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.bugpatterns.ArrayEquals;
-import com.google.errorprone.bugpatterns.ArrayEqualsChecker;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,8 +33,7 @@ public class ArrayEqualsTest {
 
   @Before
   public void setUp() {
-    //compilationHelper = new CompilationTestHelper(new ArrayEquals.Scanner());
-    compilationHelper = new CompilationTestHelper(new ArrayEqualsChecker().createScanner());
+    compilationHelper = new CompilationTestHelper(new ArrayEquals.Scanner());
   }
 
   @Test

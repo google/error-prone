@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,8 +30,7 @@ public class InjectMoreThanOneScopeAnnotationOnClassTest {
 
   @Before
   public void setUp() {
-    compilationHelper =
-        new CompilationTestHelper(new InjectMoreThanOneScopeAnnotationOnClass.Scanner());
+    compilationHelper = new CompilationTestHelper(InjectMoreThanOneScopeAnnotationOnClass.class);
   }
 
   @Test

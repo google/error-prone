@@ -16,14 +16,13 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static org.junit.Assume.assumeTrue;
-
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+
+import static org.junit.Assume.assumeTrue;
 
 /**
  * Test cases for {@link LongLiteralLowerCaseSuffix}.
@@ -36,7 +35,7 @@ public class LongLiteralLowerCaseSuffixTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(new LongLiteralLowerCaseSuffix.Scanner());
+    compilationHelper = new CompilationTestHelper(LongLiteralLowerCaseSuffix.class);
   }
 
   @Test

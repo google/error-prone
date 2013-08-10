@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,12 +33,12 @@ public class UnneededConditionalOperatorTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(new UnneededConditionalOperator.Scanner());
+    compilationHelper = new CompilationTestHelper(UnneededConditionalOperator.class);
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
+    compilationHelper.assertCompileSucceedsWithMessages(
         new File(
             this.getClass().getResource("UnneededConditionalOperatorPositiveCases.java").toURI()));
   }

@@ -20,6 +20,14 @@
   <groupId>com.example</groupId>
   <artifactId>maven-plugin-example</artifactId>
   <version>1.0-SNAPSHOT</version>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>temp</id>
+      <layout>default</layout>
+      <url>file:///tmp/repo</url>
+      <snapshots><enabled>true</enabled></snapshots>
+    </pluginRepository>
+  </pluginRepositories>
 
   <build>
     <plugins>
@@ -27,16 +35,21 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.4</version>
+        <version>3.1</version>
         <configuration>
-          <compilerId>error-prone</compilerId>
+          <compilerId>javac-with-errorprone</compilerId>
+          <forceJavacCompilerUse>true</forceJavacCompilerUse>
         </configuration>
         <dependencies>
           <dependency>
-            <groupId>com.google.errorprone</groupId>
-            <artifactId>error_prone_maven</artifactId>
-            <!-- Please don't depend on this snapshot version in your project -->
-            <version>0.9-SNAPSHOT</version>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-compiler-javac-errorprone</artifactId>
+            <version>2.3-SNAPSHOT</version>
+          </dependency>
+          <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-compiler-javac</artifactId>
+            <version>2.3-SNAPSHOT</version>
           </dependency>
         </dependencies>
       </plugin>

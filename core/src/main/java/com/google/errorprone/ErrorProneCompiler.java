@@ -43,6 +43,16 @@ public class ErrorProneCompiler extends Main {
     System.exit(new ErrorProneCompiler.Builder().build().compile(args));
   }
 
+  /**
+   * Convenient helper method for compiling in-process, using reflection.
+   * @param listener
+   * @param args
+   * @return
+   */
+  public static int compile(DiagnosticListener<JavaFileObject> listener, String[] args) {
+    return new ErrorProneCompiler.Builder().listenToDiagnostics(listener).build().compile(args);
+  }
+
   private final DiagnosticListener<? super JavaFileObject> diagnosticListener;
   private final Scanner errorProneScanner;
   private final Class<? extends JavaCompiler> compilerClass;
