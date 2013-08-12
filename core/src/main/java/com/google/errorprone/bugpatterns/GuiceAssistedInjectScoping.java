@@ -19,21 +19,16 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.GUICE;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.annotations;
-import static com.google.errorprone.matchers.Matchers.constructor;
-import static com.google.errorprone.matchers.Matchers.hasAnnotation;
-import static com.google.errorprone.matchers.Matchers.methodHasParameters;
+import static com.google.errorprone.matchers.Matchers.*;
 import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.matchers.MultiMatcher;
-
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
@@ -59,7 +54,7 @@ import com.sun.source.tree.VariableTree;
         "See [https://code.google.com/p/google-guice/issues/detail?id=742 this bug report] for " +
         "details.",
     category = GUICE, severity = ERROR, maturity = MATURE)
-public class GuiceAssistedInjectScoping extends DescribingMatcher<ClassTree> {
+public class GuiceAssistedInjectScoping extends BugChecker implements ClassTreeMatcher {
 
   private static final String GUICE_SCOPE_ANNOTATION = "com.google.inject.ScopeAnnotation";
   private static final String JAVAX_SCOPE_ANNOTATION = "javax.inject.Scope";
@@ -109,33 +104,18 @@ public class GuiceAssistedInjectScoping extends DescribingMatcher<ClassTree> {
 
   @Override
   @SuppressWarnings("unchecked")
-  public final boolean matches(ClassTree classTree, VisitorState state) {
-    return Matchers.allOf(classAnnotationMatcher, assistedMatcher)
-        .matches(classTree, state);
-  }
+  public final Description matchClass(ClassTree classTree, VisitorState state) {
+    if (!allOf(classAnnotationMatcher, assistedMatcher).matches(classTree, state)) {
+      return Description.NO_MATCH;
+    }
 
-  @Override
-  public Description describe(ClassTree classTree, VisitorState state) {
     AnnotationTree annotationWithScopeAnnotation = classAnnotationMatcher.getMatchingNode();
     if (annotationWithScopeAnnotation == null) {
       throw new IllegalStateException("Expected to find an annotation that was annotated " +
           "with @ScopeAnnotation");
     }
 
-    return new Description(
-        annotationWithScopeAnnotation,
-        getDiagnosticMessage(),
+    return describeMatch(annotationWithScopeAnnotation,
         new SuggestedFix().delete(annotationWithScopeAnnotation));
-  }
-
-
-  public static class Scanner extends com.google.errorprone.Scanner {
-    public DescribingMatcher<ClassTree> classMatcher = new GuiceAssistedInjectScoping();
-
-    @Override
-    public Void visitClass(ClassTree classTree, VisitorState visitorState) {
-      evaluateMatch(classTree, visitorState, classMatcher);
-      return super.visitClass(classTree, visitorState);
-    }
   }
 }

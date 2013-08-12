@@ -16,22 +16,20 @@
 
 package com.google.errorprone.bugpatterns;
 
-import com.google.errorprone.BugPattern;
-import com.google.errorprone.VisitorState;
-import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
-import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matchers;
-
-import com.sun.source.tree.NewClassTree;
-import com.sun.source.tree.StatementTree;
-
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.*;
 import static com.sun.source.tree.Tree.Kind.EXPRESSION_STATEMENT;
 import static com.sun.source.tree.Tree.Kind.IF;
+
+import com.google.errorprone.BugPattern;
+import com.google.errorprone.VisitorState;
+import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matchers;
+import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.StatementTree;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -41,20 +39,18 @@ import static com.sun.source.tree.Tree.Kind.IF;
     explanation =
         "The exception is created with new, but is not thrown, and the reference is lost.",
     category = JDK, severity = WARNING, maturity = EXPERIMENTAL)
-public class DeadException extends DescribingMatcher<NewClassTree> {
+public class DeadException extends BugChecker implements NewClassTreeMatcher {
 
   @SuppressWarnings("unchecked")
   @Override
-  public boolean matches(NewClassTree newClassTree, VisitorState state) {
-    return allOf(
+  public Description matchNewClass(NewClassTree newClassTree, VisitorState state) {
+    if (!allOf(
         parentNode(kindIs(EXPRESSION_STATEMENT)),
         isSubtypeOf(state.getSymtab().exceptionType)
-    ).matches(newClassTree, state);
-  }
+    ).matches(newClassTree, state)) {
+      return Description.NO_MATCH;
+    }
 
-  @SuppressWarnings("unchecked")
-  @Override
-  public Description describe(NewClassTree newClassTree, VisitorState state) {
     StatementTree parent = (StatementTree) state.getPath().getParentPath().getLeaf();
 
     boolean isLastStatement = anyOf(
@@ -69,17 +65,6 @@ public class DeadException extends DescribingMatcher<NewClassTree> {
     } else {
       suggestedFix.delete(parent);
     }
-    return new Description(newClassTree, getDiagnosticMessage(), suggestedFix);
+    return describeMatch(newClassTree, suggestedFix);
   }
-
-  public static class Scanner extends com.google.errorprone.Scanner {
-    private DeadException matcher = new DeadException();
-
-    @Override
-    public Void visitNewClass(NewClassTree node, VisitorState visitorState) {
-      evaluateMatch(node, visitorState, matcher);
-      return super.visitNewClass(node, visitorState);
-    }
-  }
-
 }

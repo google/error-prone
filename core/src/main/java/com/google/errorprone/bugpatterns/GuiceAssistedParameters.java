@@ -21,18 +21,16 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Attribute.Compound;
-import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
 import javax.lang.model.element.TypeElement;
 
@@ -44,7 +42,7 @@ import javax.lang.model.element.TypeElement;
     + "disambiguated with named @Assisted annotations. ",
     explanation = "See http://google-guice.googlecode.com/git/javadoc/com/google/inject/assistedinject/FactoryModuleBuilder.html",
     category = GUICE, severity = ERROR, maturity = EXPERIMENTAL)
-public class GuiceAssistedParameters extends DescribingMatcher<VariableTree> {
+public class GuiceAssistedParameters extends BugChecker implements Matchers.VariableTreeMatcher {
 
   private static final String ASSISTED_ANNOTATION = "com.google.inject.assistedinject.Assisted";
 
@@ -59,7 +57,7 @@ public class GuiceAssistedParameters extends DescribingMatcher<VariableTree> {
 
   @Override
   @SuppressWarnings("unchecked")
-  public final boolean matches(VariableTree variableTree, VisitorState state) {
+  public final Description matchVariable(VariableTree variableTree, VisitorState state) {
     if (constructorAssistedParameterMatcher.matches(variableTree, state)) {
       Compound thisParamsAssisted = null;
       for (Compound c : ASTHelpers.getSymbol(variableTree).getAnnotationMirrors()) {
@@ -97,33 +95,21 @@ public class GuiceAssistedParameters extends DescribingMatcher<VariableTree> {
               }
           }
           if (numIdentical > 1) {
-            return true;
+            return describe(variableTree, state);
           }
         }
       }
     }
-    return false;
+    return Description.NO_MATCH;
   }
 
-  @Override
   public Description describe(VariableTree variableTree, VisitorState state) {
     // find the @Assisted annotation to put the error on
     for (AnnotationTree annotation : variableTree.getModifiers().getAnnotations()) {
       if (ASTHelpers.getSymbol(annotation).equals(state.getSymbolFromString(ASSISTED_ANNOTATION))) {
-        return new Description(
-            annotation, getDiagnosticMessage(), new SuggestedFix().delete(annotation));
+        return describeMatch(annotation, new SuggestedFix().delete(annotation));
       }
     }
     throw new IllegalStateException("Expected to find @Assisted on this parameter");
-  }
-
-  public static class Scanner extends com.google.errorprone.Scanner {
-    public DescribingMatcher<VariableTree> variableMatcher = new GuiceAssistedParameters();
-
-    @Override
-    public Void visitVariable(VariableTree variableTree, VisitorState visitorState) {
-      evaluateMatch(variableTree, visitorState, variableMatcher);
-      return super.visitVariable(variableTree, visitorState);
-    }
   }
 }

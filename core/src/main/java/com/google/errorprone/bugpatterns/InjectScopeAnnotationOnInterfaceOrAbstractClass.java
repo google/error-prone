@@ -20,18 +20,15 @@ import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
-
 import static javax.lang.model.element.Modifier.ABSTRACT;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
@@ -45,7 +42,7 @@ import com.sun.tools.javac.code.Flags;
     explanation = "Scoping annotations are not allowed on abstract types.", category = INJECT,
     severity = ERROR, maturity = EXPERIMENTAL)
 public class InjectScopeAnnotationOnInterfaceOrAbstractClass
-    extends DescribingMatcher<AnnotationTree> {
+    extends BugChecker implements Matchers.AnnotationTreeMatcher {
 
   private static final String GUICE_SCOPE_ANNOTATION = "com.google.inject.ScopeAnnotation";
   private static final String JAVAX_SCOPE_ANNOTATION = "javax.inject.Scope";
@@ -70,30 +67,17 @@ public class InjectScopeAnnotationOnInterfaceOrAbstractClass
 
   @Override
   @SuppressWarnings("unchecked")
-  public final boolean matches(AnnotationTree annotationTree, VisitorState state) {
+  public final Description matchAnnotation(AnnotationTree annotationTree, VisitorState state) {
     Tree modified = getCurrentlyAnnotatedNode(state);
-    return (SCOPE_ANNOTATION_MATCHER.matches(annotationTree, state) && modified instanceof ClassTree
-        && INTERFACE_AND_ABSTRACT_TYPE_MATCHER.matches((ClassTree) modified, state));
-  }
-
-  @Override
-  public Description describe(AnnotationTree annotationTree, VisitorState state) {
-    return new Description(
-        annotationTree, getDiagnosticMessage(), new SuggestedFix().delete(annotationTree));
+    if (SCOPE_ANNOTATION_MATCHER.matches(annotationTree, state) &&
+        modified instanceof ClassTree &&
+        INTERFACE_AND_ABSTRACT_TYPE_MATCHER.matches((ClassTree) modified, state)) {
+      return describeMatch(annotationTree, new SuggestedFix().delete(annotationTree));
+    }
+    return Description.NO_MATCH;
   }
   
   private Tree getCurrentlyAnnotatedNode(VisitorState state){
     return state.getPath().getParentPath().getParentPath().getLeaf();
-  }
-
-  public static class Scanner extends com.google.errorprone.Scanner {
-    public DescribingMatcher<AnnotationTree> annotationMatcher =
-        new InjectScopeAnnotationOnInterfaceOrAbstractClass();
-
-    @Override
-    public Void visitAnnotation(AnnotationTree annotationTree, VisitorState visitorState) {
-      evaluateMatch(annotationTree, visitorState, annotationMatcher);
-      return super.visitAnnotation(annotationTree, visitorState);
-    }
   }
 }

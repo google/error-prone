@@ -19,39 +19,23 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.instanceMethod;
-import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
-import static com.google.errorprone.matchers.Matchers.receiverSameAsArgument;
-import static com.google.errorprone.matchers.Matchers.variableType;
-import static com.sun.source.tree.Tree.Kind.CLASS;
-import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
-import static com.sun.source.tree.Tree.Kind.MEMBER_SELECT;
-import static com.sun.source.tree.Tree.Kind.METHOD;
-import static com.sun.source.tree.Tree.Kind.VARIABLE;
+import static com.google.errorprone.matchers.Matchers.*;
+import static com.sun.source.tree.Tree.Kind.*;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.EditDistance;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.JCTree.JCClassDecl;
-import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
-import com.sun.tools.javac.tree.JCTree.JCIdent;
-import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
-import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
+import com.sun.tools.javac.tree.JCTree.*;
 
 /**
  * @author scottjohnson@google.com (Scott Johnson)
@@ -62,15 +46,15 @@ import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
         "collection.addAll(collection) and collection.retainAll(collection) are both no-ops, " +
         "and collection.removeAll(collection) is equivalent to collection.clear().",
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
-public class ModifyingCollectionWithItself extends DescribingMatcher<MethodInvocationTree> {
+public class ModifyingCollectionWithItself extends BugChecker implements MethodInvocationTreeMatcher {
 
   /**
    * Matches calls to addAll, containsAll, removeAll, and retainAll on itself
    */
   @SuppressWarnings("unchecked")
   @Override
-  public boolean matches(MethodInvocationTree t, VisitorState state) {
-    return allOf(anyOf(
+  public Description matchMethodInvocation(MethodInvocationTree t, VisitorState state) {
+    if(allOf(anyOf(
         methodSelect(instanceMethod(
             Matchers.<ExpressionTree>isSubtypeOf("java.util.Collection"), "addAll")),
         methodSelect(instanceMethod(
@@ -79,7 +63,10 @@ public class ModifyingCollectionWithItself extends DescribingMatcher<MethodInvoc
             Matchers.<ExpressionTree>isSubtypeOf("java.util.Collection"), "containsAll")),
         methodSelect(instanceMethod(
             Matchers.<ExpressionTree>isSubtypeOf("java.util.Collection"), "retainAll"))),
-        receiverSameAsArgument(0)).matches(t, state);
+        receiverSameAsArgument(0)).matches(t, state)) {
+      return describe(t, state);
+    }
+    return Description.NO_MATCH;
   }
 
   /**
@@ -98,7 +85,6 @@ public class ModifyingCollectionWithItself extends DescribingMatcher<MethodInvoc
    *
    * Case 4: Otherwise replace with literal meaning of functionality
    */
-  @Override
   public Description describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
 
     // the statement that is the parent of the self-assignment expression
@@ -188,23 +174,6 @@ public class ModifyingCollectionWithItself extends DescribingMatcher<MethodInvoc
       }
     }
 
-    return new Description(methodInvocationTree, getDiagnosticMessage(), fix);
+    return describeMatch(methodInvocationTree, fix);
   }
-
-  /**
-   * Scanner for ModifyingCollectionWithItself
-   * 
-   * @author scottjohnson@google.com (Scott Johnson)
-   */
-  public static class Scanner extends com.google.errorprone.Scanner {
-    public DescribingMatcher<MethodInvocationTree> modifyingCollectionWithItselfMatcher =
-        new ModifyingCollectionWithItself();
-
-    @Override
-    public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {
-      evaluateMatch(node, visitorState, modifyingCollectionWithItselfMatcher);
-      return super.visitMethodInvocation(node, visitorState);
-    }
-  }
-
 }

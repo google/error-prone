@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,7 +31,7 @@ public class BadShiftAmountTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(new BadShiftAmountChecker().createScanner());
+    compilationHelper = new CompilationTestHelper(new BadShiftAmount().createScanner());
   }
 
   @Test

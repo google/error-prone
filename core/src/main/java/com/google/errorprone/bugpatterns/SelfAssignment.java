@@ -19,49 +19,27 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
-import static com.google.errorprone.matchers.Matchers.staticMethod;
-import static com.sun.source.tree.Tree.Kind.ASSIGNMENT;
-import static com.sun.source.tree.Tree.Kind.CLASS;
-import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
-import static com.sun.source.tree.Tree.Kind.MEMBER_SELECT;
-import static com.sun.source.tree.Tree.Kind.METHOD;
-import static com.sun.source.tree.Tree.Kind.METHOD_INVOCATION;
-import static com.sun.source.tree.Tree.Kind.VARIABLE;
+import static com.google.errorprone.matchers.Matchers.*;
+import static com.sun.source.tree.Tree.Kind.*;
 import static javax.lang.model.element.Modifier.STATIC;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.EditDistance;
-
-import com.sun.source.tree.AssignmentTree;
-import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.MemberSelectTree;
-import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.Tree;
-import com.sun.source.tree.VariableTree;
+import com.sun.source.tree.*;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.JCTree.JCClassDecl;
-import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
-import com.sun.tools.javac.tree.JCTree.JCIdent;
-import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
-import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
+import com.sun.tools.javac.tree.JCTree.*;
 
 
 /**
- * TODO(eaftan): doesn't seem to be visiting incrementing assignments:
- * i += 10; // maybe this becomes i = i + 10 by this compiler phase?
- *
- * Also consider cases where the parent is not a statement or there is
- * no parent?
+ * TODO(eaftan): Consider cases where the parent is not a statement or there is no parent?
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  * @author scottjohnson@google.com (Scott Johnson)
@@ -69,34 +47,44 @@ import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 @BugPattern(name = "SelfAssignment",
     summary = "Variable assigned to itself",
     explanation = "The left-hand side and right-hand side of this assignment are the same. " +
-        "It has no effect. This also handles assignments where the right side is a call to " +
-        "Preconditions.checkNotNull().",
+        "It has no effect.\n\n" +
+        "This also handles assignments in which the right-hand side is a call to " +
+        "Preconditions.checkNotNull(), which returns the variable that was checked for " +
+        "non-nullity.  If you just intended to check that the variable is non-null, please " +
+        "don't assign the result to the checked variable; just call Preconditions.checkNotNull() " +
+        "as a bare statement.",
     category = JDK, severity = ERROR, maturity = MATURE)
-public class SelfAssignment extends DescribingMatcher<Tree> {
+public class SelfAssignment extends BugChecker
+    implements AssignmentTreeMatcher, VariableTreeMatcher {
 
   @Override
-  public boolean matches(Tree tree, VisitorState state) {
-    if (tree.getKind() == ASSIGNMENT) {
-      AssignmentTree assignmentTree = (AssignmentTree) tree;
-      ExpressionTree expression = stripCheckNotNull(assignmentTree.getExpression(), state);
-      return ASTHelpers.sameVariable(assignmentTree.getVariable(), expression);
-    } else if (tree.getKind() == VARIABLE) {
-      VariableTree variableTree = (VariableTree) tree;
-      ExpressionTree initializer = stripCheckNotNull(variableTree.getInitializer(), state);
-      Tree parent = state.getPath().getParentPath().getLeaf();
-
-      // must be a static class variable with member select initializer
-      if (initializer == null || initializer.getKind() != MEMBER_SELECT || parent.getKind() != CLASS
-          || !variableTree.getModifiers().getFlags().contains(STATIC)) {
-        return false;
-      }
-
-      MemberSelectTree rhs = (MemberSelectTree) initializer;
-      Symbol rhsClass = ASTHelpers.getSymbol(rhs.getExpression());
-      Symbol lhsClass = ASTHelpers.getSymbol(parent);
-      return rhsClass.equals(lhsClass) && rhs.getIdentifier().contentEquals(variableTree.getName());
+  public Description matchAssignment(AssignmentTree tree, VisitorState state) {
+    ExpressionTree expression = stripCheckNotNull(tree.getExpression(), state);
+    if (ASTHelpers.sameVariable(tree.getVariable(), expression)) {
+      return describe(tree, state);
     }
-    return false;
+    return Description.NO_MATCH;
+  }
+
+  @Override
+  public Description matchVariable(VariableTree tree, VisitorState state) {
+    ExpressionTree initializer = stripCheckNotNull(tree.getInitializer(), state);
+    Tree parent = state.getPath().getParentPath().getLeaf();
+
+    // must be a static class variable with member select initializer
+    if (initializer == null || initializer.getKind() != MEMBER_SELECT || parent.getKind() != CLASS
+        || !tree.getModifiers().getFlags().contains(STATIC)) {
+      return Description.NO_MATCH;
+    }
+
+    MemberSelectTree rhs = (MemberSelectTree) initializer;
+    Symbol rhsClass = ASTHelpers.getSymbol(rhs.getExpression());
+    Symbol lhsClass = ASTHelpers.getSymbol(parent);
+    // TODO(eaftan): WTF?
+    if (rhsClass.equals(lhsClass) && rhs.getIdentifier().contentEquals(tree.getName())) {
+      return describe(tree, state);
+    }
+    return Description.NO_MATCH;
   }
 
   /**
@@ -130,7 +118,6 @@ public class SelfAssignment extends DescribingMatcher<Tree> {
    *
    * Case 4: Otherwise suggest deleting the assignment.
    */
-  @Override
   public Description describe(Tree tree, VisitorState state) {
     assert (tree.getKind() == VARIABLE || tree.getKind() == ASSIGNMENT);
 
@@ -142,7 +129,7 @@ public class SelfAssignment extends DescribingMatcher<Tree> {
 
     // for now, don't know how to fix - just delete.
     if (tree.getKind() == VARIABLE) {
-      return new Description(tree, getDiagnosticMessage(), fix);
+      return describeMatch(tree, fix);
     }
 
     AssignmentTree assignmentTree = (AssignmentTree) tree;
@@ -234,28 +221,6 @@ public class SelfAssignment extends DescribingMatcher<Tree> {
       }
     }
 
-    return new Description(assignmentTree, getDiagnosticMessage(), fix);
+    return describeMatch(assignmentTree, fix);
   }
-
-  /**
-   * Scanner for SelfAssignment
-   *
-   * @author scottjohnson@google.com (Scott Johnson)
-   */
-  public static class Scanner extends com.google.errorprone.Scanner {
-    public DescribingMatcher<Tree> selfAssignmentMatcher = new SelfAssignment();
-
-    @Override
-    public Void visitAssignment(AssignmentTree node, VisitorState visitorState) {
-      evaluateMatch(node, visitorState, selfAssignmentMatcher);
-      return super.visitAssignment(node, visitorState);
-    }
-
-    @Override
-    public Void visitVariable(VariableTree node, VisitorState visitorState) {
-      evaluateMatch(node, visitorState, selfAssignmentMatcher);
-      return super.visitVariable(node, visitorState);
-    }
-  }
-
 }

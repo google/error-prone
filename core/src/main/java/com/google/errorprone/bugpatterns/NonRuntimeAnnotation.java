@@ -26,11 +26,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -46,41 +44,24 @@ import java.lang.annotation.Retention;
     explanation = "Calling getAnnotation on an annotation that does not have its Retention set to "
         + "RetentionPolicy.RUNTIME will always return null.", 
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
-public class NonRuntimeAnnotation extends DescribingMatcher<MethodInvocationTree> {
+public class NonRuntimeAnnotation extends BugChecker implements Matchers.MethodInvocationTreeMatcher {
 
   @SuppressWarnings("deprecation")
   @Override
-  public boolean matches(MethodInvocationTree tree, VisitorState state) {
+  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (!methodSelect(
         instanceMethod(Matchers.<ExpressionTree>isSubtypeOf("java.lang.Class"), "getAnnotation"))
         .matches(tree, state)) {
-      return false;
+      return Description.NO_MATCH;
     }
     MemberSelectTree memTree = (MemberSelectTree) tree.getArguments().get(0);
     TypeSymbol annotation = ASTHelpers.getSymbol(memTree.getExpression()).type.tsym;
 
     Retention retention = annotation.getAnnotation(Retention.class);
-    return retention == null || !retention.value().equals(RUNTIME);
-  }
-
-  @Override
-  public Description describe(MethodInvocationTree tree, VisitorState state) {
-    return new Description(tree, getDiagnosticMessage(), new SuggestedFix().replace(tree, "null"));
-  }
-
-  /**
-   * Scanner for {@link NonRuntimeAnnotation}.
-   *
-   * @author scottjohnson@google.com (Scott Johnson)
-   */
-  public static class Scanner extends com.google.errorprone.Scanner {
-    public DescribingMatcher<MethodInvocationTree> nonRuntimeAnnotation =
-        new NonRuntimeAnnotation();
-
-    @Override
-    public Void visitMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-      evaluateMatch(tree, state, nonRuntimeAnnotation);
-      return super.visitMethodInvocation(tree, state);
+    if (retention != null && retention.value().equals(RUNTIME)) {
+      return Description.NO_MATCH;
     }
+
+    return describeMatch(tree, new SuggestedFix().replace(tree, "null"));
   }
 }

@@ -16,24 +16,22 @@
 
 package com.google.errorprone.bugpatterns;
 
-import com.google.errorprone.BugPattern;
-import com.google.errorprone.VisitorState;
-import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
-import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
-
-import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.MethodInvocationTree;
-
-import java.util.List;
-
 import static com.google.errorprone.BugPattern.Category.GUAVA;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.*;
 import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
+
+import com.google.errorprone.BugPattern;
+import com.google.errorprone.VisitorState;
+import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Matchers;
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MethodInvocationTree;
+
+import java.util.List;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -47,7 +45,7 @@ import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
         "never actually checked for nullity. This check ensures that the first argument to " +
         "Preconditions.checkNotNull() is not a literal.",
     category = GUAVA, severity = ERROR, maturity = MATURE)
-public class PreconditionsCheckNotNull extends DescribingMatcher<MethodInvocationTree> {
+public class PreconditionsCheckNotNull extends BugChecker implements MethodInvocationTreeMatcher {
 
   @SuppressWarnings({"unchecked"})
   private static final Matcher<MethodInvocationTree> matcher = allOf(
@@ -55,12 +53,11 @@ public class PreconditionsCheckNotNull extends DescribingMatcher<MethodInvocatio
       argument(0, Matchers.<ExpressionTree>kindIs(STRING_LITERAL)));
 
   @Override
-  public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
-    return matcher.matches(methodInvocationTree, state);
-  }
+  public Description matchMethodInvocation(MethodInvocationTree methodInvocationTree, VisitorState state) {
+    if (!matcher.matches(methodInvocationTree, state)) {
+      return Description.NO_MATCH;
+    }
 
-  @Override
-  public Description describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
     List<? extends ExpressionTree> arguments = methodInvocationTree.getArguments();
     ExpressionTree stringLiteralValue = arguments.get(0);
     SuggestedFix fix = new SuggestedFix();
@@ -69,17 +66,6 @@ public class PreconditionsCheckNotNull extends DescribingMatcher<MethodInvocatio
     } else {
       fix.delete(state.getPath().getParentPath().getLeaf());
     }
-    return new Description(stringLiteralValue, getDiagnosticMessage(), fix);
+    return describeMatch(stringLiteralValue, fix);
   }
-
-  public static class Scanner extends com.google.errorprone.Scanner {
-    public DescribingMatcher<MethodInvocationTree> matcher = new PreconditionsCheckNotNull();
-
-    @Override
-    public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {
-      evaluateMatch(node, visitorState, matcher);
-      return super.visitMethodInvocation(node, visitorState);
-    }
-  }
-
 }

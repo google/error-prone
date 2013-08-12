@@ -19,18 +19,14 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.binaryTree;
-import static com.google.errorprone.matchers.Matchers.kindIs;
+import static com.google.errorprone.matchers.Matchers.*;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
-
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree.Kind;
@@ -44,7 +40,7 @@ import com.sun.source.tree.Tree.Kind;
         "yield its identity, such as [I@4488aabb. This is almost never needed. Use " +
         "Arrays.toString to obtain a human-readable array summary.",
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
-public class ArrayToStringConcatenation extends DescribingMatcher<BinaryTree> {
+public class ArrayToStringConcatenation extends BugChecker implements BinaryTreeMatcher {
 
   private static final Matcher<ExpressionTree> arrayMatcher =
       Matchers.<ExpressionTree>isArrayType();
@@ -58,16 +54,15 @@ public class ArrayToStringConcatenation extends DescribingMatcher<BinaryTree> {
    * Matches strings added with arrays.
    */
   @Override
-  public boolean matches(BinaryTree t, VisitorState state) {
-    return concatenationMatcher.matches(t, state);
-  }
+  public Description matchBinary(BinaryTree t, VisitorState state) {
+    if (!concatenationMatcher.matches(t, state)) {
+      return Description.NO_MATCH;
+    }
 
-  /**
-   * Replaces instances of implicit array toString() calls due to string concatenation with
-   * Arrays.toString(array). Also adds the necessary import statement for java.util.Arrays.
-   */
-  @Override
-  public Description describe(BinaryTree t, VisitorState state) {
+    /*
+     * Replace instances of implicit array toString() calls due to string concatenation with
+     * Arrays.toString(array). Also adds the necessary import statement for java.util.Arrays.
+     */
     final String replacement;
     String leftOperand = t.getLeftOperand().toString();
     String rightOperand = t.getRightOperand().toString();
@@ -79,16 +74,6 @@ public class ArrayToStringConcatenation extends DescribingMatcher<BinaryTree> {
     SuggestedFix fix = new SuggestedFix()
         .replace(t, replacement)
         .addImport("java.util.Arrays");
-    return new Description(t, getDiagnosticMessage(), fix);
-  }
-
-  public static class Scanner extends com.google.errorprone.Scanner {
-    public DescribingMatcher<BinaryTree> scannerMatcher = new ArrayToStringConcatenation();
-
-    @Override
-    public Void visitBinary(BinaryTree node, VisitorState visitorState) {
-      evaluateMatch(node, visitorState, scannerMatcher);
-      return super.visitBinary(node, visitorState);
-    }
+    return describeMatch(t, fix);
   }
 }

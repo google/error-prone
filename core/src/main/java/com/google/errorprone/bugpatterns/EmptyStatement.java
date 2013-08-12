@@ -16,16 +16,16 @@
 
 package com.google.errorprone.bugpatterns;
 
-import com.google.errorprone.BugPattern;
-import com.google.errorprone.VisitorState;
-import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
-import com.google.errorprone.matchers.Description;
-import com.sun.source.tree.EmptyStatementTree;
-
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+
+import com.google.errorprone.BugPattern;
+import com.google.errorprone.VisitorState;
+import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matchers;
+import com.sun.source.tree.EmptyStatementTree;
 
 /**
  * This checker finds and fixes empty statements, for example:
@@ -39,20 +39,11 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
     explanation =
         "An empty statement has no effect on the program. Consider removing it.",
     category = JDK, severity = WARNING, maturity = MATURE)
-public class EmptyStatement extends DescribingMatcher<EmptyStatementTree> {
+public class EmptyStatement extends BugChecker implements Matchers.EmptyStatementTreeMatcher {
 
   @Override
-  public boolean matches(EmptyStatementTree emptyStatementTree, VisitorState state) {
-    return true;
+  public Description matchEmptyStatement(EmptyStatementTree emptyStatementTree, VisitorState state)
+  {
+    return describeMatch(emptyStatementTree, new SuggestedFix().delete(emptyStatementTree));
   }
-
-  @Override
-  public Description describe(
-      EmptyStatementTree emptyStatementTree, VisitorState state) {
-    return new Description(
-        emptyStatementTree,
-        getDiagnosticMessage(),
-        new SuggestedFix().delete(emptyStatementTree));
-  }
-
 }

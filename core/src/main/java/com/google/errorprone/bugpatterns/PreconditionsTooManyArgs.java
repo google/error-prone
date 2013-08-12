@@ -23,11 +23,9 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -43,7 +41,7 @@ import com.sun.tools.javac.util.List;
         + "placeholder, and to take the corresponding number of arguments.  This bug can indicate "
         + "an improper format string, or simply forgetting to add all the arguments.",
     category = GUAVA, maturity = EXPERIMENTAL, severity = ERROR)
-public class PreconditionsTooManyArgs extends DescribingMatcher<MethodInvocationTree> {
+public class PreconditionsTooManyArgs extends BugChecker implements Matchers.MethodInvocationTreeMatcher {
 
   @SuppressWarnings("unchecked")
   private static final
@@ -62,17 +60,19 @@ public class PreconditionsTooManyArgs extends DescribingMatcher<MethodInvocation
   }
 
   @Override
-  public boolean matches(MethodInvocationTree t, VisitorState state) {
+  public Description matchMethodInvocation(MethodInvocationTree t, VisitorState state) {
     if (PRECONDITIONS_CHECK.matches(t, state) && t.getArguments().size() >= 2
         && t.getArguments().get(1) instanceof LiteralTree) {
       LiteralTree formatStringTree = (LiteralTree) t.getArguments().get(1);
       if (formatStringTree.getValue() instanceof String) {
         String formatString = (String) formatStringTree.getValue();
         int expectedArgs = expectedArguments(formatString);
-        return expectedArgs < t.getArguments().size() - 2;
+        if (expectedArgs < t.getArguments().size() - 2) {
+          return describe(t, state);
+        }
       }
     }
-    return false;
+    return Description.NO_MATCH;
   }
 
   /**
@@ -84,7 +84,6 @@ public class PreconditionsTooManyArgs extends DescribingMatcher<MethodInvocation
   private static final String BAD_PLACEHOLDER_REGEX = "%(?:\\d+\\$)??[dbBhHScCdoxXeEfgGaAtTn]|" +
       "\\{\\d+\\}";
 
-  @Override
   public Description describe(MethodInvocationTree t, VisitorState state) {
     LiteralTree formatTree = (LiteralTree) t.getArguments().get(1);
     String formatString = (String) formatTree.getValue();
@@ -93,22 +92,12 @@ public class PreconditionsTooManyArgs extends DescribingMatcher<MethodInvocation
     SuggestedFix fix = new SuggestedFix();
     if (expectedArguments(fixedFormatString) == t.getArguments().size() - 2) {
       fix.replace(formatTree, "\"" + fixedFormatString + "\"");
-      return new Description(formatTree, getDiagnosticMessage(), fix);
+      return describeMatch(formatTree, fix);
     } else {
       fix.replace(t, state.getTreeMaker()
           .App((JCExpression) t.getMethodSelect(), List.of((JCExpression) t.getArguments().get(0)))
           .toString());
-      return new Description(t, getDiagnosticMessage(), fix);
-    }
-  }
-
-  public static class Scanner extends com.google.errorprone.Scanner {
-    public DescribingMatcher<MethodInvocationTree> matcher = new PreconditionsTooManyArgs();
-
-    @Override
-    public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {
-      evaluateMatch(node, visitorState, matcher);
-      return super.visitMethodInvocation(node, visitorState);
+      return describeMatch(t, fix);
     }
   }
 }

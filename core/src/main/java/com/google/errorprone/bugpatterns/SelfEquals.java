@@ -19,21 +19,15 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.GUAVA;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
-import static com.google.errorprone.matchers.Matchers.receiverSameAsArgument;
-import static com.google.errorprone.matchers.Matchers.sameArgument;
-import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.matchers.Matchers.*;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree.Kind;
@@ -55,7 +49,7 @@ import java.util.List;
         "The arguments to this equal method are the same object, so it always returns " +
         "true.  Either change the arguments to point to different objects or substitute true.",
     category = GUAVA, severity = ERROR, maturity = MATURE)
-public class SelfEquals extends DescribingMatcher<MethodInvocationTree> {
+public class SelfEquals extends BugChecker implements MethodInvocationTreeMatcher {
 
   /**
    * Matches calls to the Guava method Objects.equal() in which the two arguments are
@@ -112,6 +106,7 @@ public class SelfEquals extends DescribingMatcher<MethodInvocationTree> {
    * @param checkGuava Check for Guava Objects.equal(foo, foo) pattern?
    * @param checkEquals Check for foo.equals(foo) pattern?
    */
+  // TODO(alexeagle): looks like this wants to be two different checks
   public SelfEquals(boolean checkGuava, boolean checkEquals) {
     if (!checkGuava && !checkEquals) {
       throw new IllegalArgumentException("SelfEquals should check something");
@@ -121,19 +116,18 @@ public class SelfEquals extends DescribingMatcher<MethodInvocationTree> {
   }
 
   @Override
-  public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
+  public Description matchMethodInvocation(MethodInvocationTree methodInvocationTree, VisitorState state) {
     if (checkGuava && guavaMatcher.matches(methodInvocationTree, state)) {
       matchState = MatchState.OBJECTS_EQUAL;
-      return true;
+      return describe(methodInvocationTree, state);
     } else if (checkEquals && equalsMatcher.matches(methodInvocationTree, state)) {
       matchState = MatchState.EQUALS;
-      return true;
+      return describe(methodInvocationTree, state);
     } else {
-      return false;
+      return Description.NO_MATCH;
     }
   }
 
-  @Override
   public Description describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
     if (matchState == MatchState.NONE) {
       throw new IllegalStateException("describe() called without a match");
@@ -196,11 +190,11 @@ public class SelfEquals extends DescribingMatcher<MethodInvocationTree> {
       }
     }
 
-    return new Description(methodInvocationTree, getDiagnosticMessage(), fix);
+    return describeMatch(methodInvocationTree, fix);
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {
-    private final DescribingMatcher<MethodInvocationTree> matcher;
+    private final MethodInvocationTreeMatcher matcher;
 
     public Scanner() {
       matcher = new SelfEquals();
@@ -212,7 +206,8 @@ public class SelfEquals extends DescribingMatcher<MethodInvocationTree> {
 
     @Override
     public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {
-      evaluateMatch(node, visitorState, matcher);
+      VisitorState state = visitorState.withPath(getCurrentPath());
+      reportMatch(matcher.matchMethodInvocation(node, state), node, state);
       return super.visitMethodInvocation(node, visitorState);
     }
   }

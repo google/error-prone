@@ -19,20 +19,13 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.argument;
-import static com.google.errorprone.matchers.Matchers.isDescendantOfMethod;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
-import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.matchers.Matchers.*;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -49,7 +42,7 @@ import java.util.regex.PatternSyntaxException;
     explanation = "This error is triggered by calls to Pattern.compile() and String.split() "
         + "that are called with invalid syntax.",
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
-public class InvalidPatternSyntax extends DescribingMatcher<MethodInvocationTree> {
+public class InvalidPatternSyntax extends BugChecker implements MethodInvocationTreeMatcher {
 
   /* Match string literals that are not valid syntax for regular expressions. */
   private static final Matcher<ExpressionTree> BAD_REGEX_LITERAL = new Matcher<ExpressionTree>() {
@@ -88,28 +81,18 @@ public class InvalidPatternSyntax extends DescribingMatcher<MethodInvocationTree
           argument(0, BAD_REGEX_LITERAL));
 
   @Override
-  public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
-    return BAD_REGEX_USAGE.matches(methodInvocationTree, state);
-  }
+  public Description matchMethodInvocation(
+      MethodInvocationTree methodInvocationTree, VisitorState state) {
+    if (!BAD_REGEX_USAGE.matches(methodInvocationTree, state)) {
+      return Description.NO_MATCH;
+    }
 
-  @Override
-  public Description describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
     // TODO: Suggest fixes for more situations.
     SuggestedFix fix = null;
     ExpressionTree arg = methodInvocationTree.getArguments().get(0);
     if ((arg instanceof LiteralTree) && ".".equals(((LiteralTree)arg).getValue())) {
       fix = new SuggestedFix().replace(arg, "\"\\\\.\"");
     }
-    return new Description(methodInvocationTree, getDiagnosticMessage(), fix);
-  }
-
-  public static class Scanner extends com.google.errorprone.Scanner {
-    private InvalidPatternSyntax matcher = new InvalidPatternSyntax();
-
-    @Override
-    public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {
-      evaluateMatch(node, visitorState, matcher);
-      return super.visitMethodInvocation(node, visitorState);
-    }
+    return describeMatch(methodInvocationTree, fix);
   }
 }

@@ -16,12 +16,9 @@
 
 package com.google.errorprone;
 
-import com.google.errorprone.bugpatterns.BugChecker;
-import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Suppressable;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
@@ -161,42 +158,20 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
   }
 
   /**
-   * Returns true if the given warning ID is in the set of current suppressions from scanning
-   * down the AST.
-   */
-  protected boolean isSuppressed(String warningId) {
-    return suppressions.contains(warningId);
-  }
-
-  /**
    * Returns true if any of the warning IDs in the collection are in the set of current
    * suppressions from scanning down the AST.
    *
-   * @param warningIds a collection of warning IDs
+   * @param suppressable holds a collection of warning IDs
    */
-  protected boolean isSuppressed(Set<String> warningIds) {
-    return !Collections.disjoint(warningIds, suppressions);
+  protected boolean isSuppressed(Suppressable suppressable) {
+    return !Collections.disjoint(suppressable.getAllNames(), suppressions);
   }
 
-  protected <T extends Tree> void reportMatch(Matcher<T> matcher, T match, VisitorState state) {
+  protected <T extends Tree> void reportMatch(Description description, T match, VisitorState state) {
+    if (description == null || description == Description.NO_MATCH) {
+      return;
+    }
     state.getMatchListener().onMatch(match);
-    if (matcher instanceof DescribingMatcher) {
-      DescribingMatcher<T> describingMatcher = (DescribingMatcher<T>) matcher;
-      Description description = describingMatcher.describe(match, state);
-      description.severity = matcher.getClass().getAnnotation(BugPattern.class).severity();
-      state.getDescriptionListener().onDescribed(description);
-    }
-  }
-
-  protected <T extends Tree> void evaluateMatch(T node, VisitorState visitorState, DescribingMatcher<T> matcher) {
-    VisitorState state = visitorState.withPath(getCurrentPath());
-    for (String warningId : matcher.getNames()) {
-      if (isSuppressed(warningId)) {
-        return;
-      }
-    }
-    if (matcher.matches(node, state)) {
-      reportMatch(matcher, node, state);
-    }
+    state.getDescriptionListener().onDescribed(description);
   }
 }

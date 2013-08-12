@@ -25,12 +25,10 @@ import static com.google.errorprone.matchers.Matchers.methodSelect;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
@@ -43,7 +41,7 @@ import com.sun.source.tree.MethodInvocationTree;
         "The toString method on an array will print its identity, such as [I@4488aabb. This " +
         "is almost never needed. Use Arrays.toString to print a human-readable array summary.",
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
-public class ArrayToString extends DescribingMatcher<MethodInvocationTree> {
+public class ArrayToString extends BugChecker implements Matchers.MethodInvocationTreeMatcher {
 
   /**
    * Matches calls to Throwable.getStackTrace().
@@ -55,18 +53,18 @@ public class ArrayToString extends DescribingMatcher<MethodInvocationTree> {
    * Matches calls to a toString instance method in which the receiver is an array type.
    */
   @Override
-  public boolean matches(MethodInvocationTree methodTree, VisitorState state) {
-    return methodSelect(instanceMethod(Matchers.<ExpressionTree>isArrayType(), "toString"))
-        .matches(methodTree, state);
-  }
+  public Description matchMethodInvocation(MethodInvocationTree methodTree, VisitorState state) {
+    if (!methodSelect(instanceMethod(Matchers.<ExpressionTree>isArrayType(), "toString"))
+        .matches(methodTree, state)) {
+      return Description.NO_MATCH;
+    }
 
-  /**
-   * Fixes instances of calling toString() on an array.  If the array is the result of calling
-   * e.getStackTrace(), replaces e.getStackTrace().toString() with Guava's
-   * Throwables.getStackTraceAsString(e).  Otherwise, replaces a.toString() with Arrays.toString(a).
-   */
-  @Override
-  public Description describe(MethodInvocationTree methodTree, VisitorState state) {
+    /*
+     * Fixes instances of calling toString() on an array.  If the array is the result of calling
+     * e.getStackTrace(), replaces e.getStackTrace().toString() with Guava's
+     * Throwables.getStackTraceAsString(e).
+     * Otherwise, replaces a.toString() with Arrays.toString(a).
+     */
     SuggestedFix fix = new SuggestedFix();
 
     ExpressionTree receiverTree = ASTHelpers.getReceiver(methodTree);
@@ -79,16 +77,6 @@ public class ArrayToString extends DescribingMatcher<MethodInvocationTree> {
       fix = fix.replace(methodTree, "Arrays.toString(" + receiverTree + ")")
           .addImport("java.util.Arrays");
     }
-    return new Description(methodTree, getDiagnosticMessage(), fix);
-  }
-
-  public static class Scanner extends com.google.errorprone.Scanner {
-    public DescribingMatcher<MethodInvocationTree> scannerMatcher = new ArrayToString();
-
-    @Override
-    public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {
-      evaluateMatch(node, visitorState, scannerMatcher);
-      return super.visitMethodInvocation(node, visitorState);
-    }
+    return describeMatch(methodTree, fix);
   }
 }
