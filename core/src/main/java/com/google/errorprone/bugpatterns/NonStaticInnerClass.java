@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.classHasModifier;
@@ -53,7 +53,7 @@ import com.sun.tools.javac.code.Types;
     explanation = "An inner class should be static unless it references members" +
         "of its enclosing class. An inner class that is made non-static unnecessarily" +
         "uses more memory and does not make the intent of the class clear.",
-    category = JDK, maturity = EXPERIMENTAL, severity = WARNING)
+    category = JDK, maturity = EXPERIMENTAL, severity = ERROR)
 public class NonStaticInnerClass extends DescribingMatcher<ClassTree> {
 
   /**
