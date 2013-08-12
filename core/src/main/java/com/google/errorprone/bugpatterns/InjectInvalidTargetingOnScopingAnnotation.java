@@ -17,6 +17,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
@@ -44,7 +45,8 @@ import java.lang.annotation.Target;
     explanation = "Scoping annotations are only appropriate for provision and therefore are only " +
     		"appropriate on @Provides methods and classes that will be provided just-in-time.",
     category = INJECT, severity = ERROR, maturity = EXPERIMENTAL)
-public class InjectInvalidTargetingOnScopingAnnotation extends BugChecker implements Matchers.ClassTreeMatcher {
+public class InjectInvalidTargetingOnScopingAnnotation extends BugChecker
+    implements ClassTreeMatcher {
 
   private static final String GUICE_SCOPE_ANNOTATION = "com.google.inject.ScopeAnnotation";
   private static final String JAVAX_SCOPE_ANNOTATION = "javax.inject.Scope";

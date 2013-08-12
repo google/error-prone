@@ -19,13 +19,13 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.bugpatterns.BugChecker.ConditionalExpressionTreeMatcher;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ParenthesizedTree;
@@ -48,7 +48,7 @@ import java.util.Map;
     explanation = "An expression of the form isFoo() ? true : false is needlessly wordy. You can "
         + "skip the conditional operator entirely",
     category = JDK, severity = WARNING, maturity = EXPERIMENTAL)
-public class UnneededConditionalOperator extends BugChecker implements Matchers.ConditionalExpressionTreeMatcher {
+public class UnneededConditionalOperator extends BugChecker implements ConditionalExpressionTreeMatcher {
 
   private static final Matcher<ConditionalExpressionTree> matcher =
       new Matcher<ConditionalExpressionTree>() {

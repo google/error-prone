@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 
 import com.google.errorprone.BugPattern;
@@ -39,7 +40,7 @@ import java.util.List;
     summary = "Using more than one qualifier annotation on the same element is not allowed.",
     explanation = "An element can be qualified by at most one qualifier.", category = INJECT,
     severity = ERROR, maturity = EXPERIMENTAL)
-public class InjectMoreThanOneQualifier extends BugChecker implements Matchers.AnnotationTreeMatcher {
+public class InjectMoreThanOneQualifier extends BugChecker implements AnnotationTreeMatcher {
 
 
   private static final String GUICE_BINDING_ANNOTATION = "com.google.inject.BindingAnnotation";

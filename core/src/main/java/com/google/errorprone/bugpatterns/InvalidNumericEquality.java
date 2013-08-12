@@ -17,6 +17,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.*;
 import static com.sun.source.tree.Tree.Kind.EQUAL_TO;
 import static com.sun.source.tree.Tree.Kind.NOT_EQUAL_TO;
@@ -46,7 +47,10 @@ public class InvalidNumericEquality extends BugChecker implements BinaryTreeMatc
   @SuppressWarnings("unchecked")
   public static final Matcher<ExpressionTree> SUBCLASS_OF_NUMBER =
       allOf(isSubtypeOf("java.lang.Number"), not(kindIs(Tree.Kind.NULL_LITERAL)));
-  
+  public static final Matcher<BinaryTree> MATCHER = allOf(
+      anyOf(kindIs(EQUAL_TO), kindIs(NOT_EQUAL_TO)),
+      binaryTree(SUBCLASS_OF_NUMBER, SUBCLASS_OF_NUMBER));
+
   @SuppressWarnings("unchecked")
   @Override
   public Description matchBinary(BinaryTree tree, VisitorState state) {
@@ -62,8 +66,7 @@ public class InvalidNumericEquality extends BugChecker implements BinaryTreeMatc
       return Description.NO_MATCH;
     }
     // Match left and right operand to subclasses of java.lang.Number and not null
-    if (!allOf(anyOf(kindIs(EQUAL_TO), kindIs(NOT_EQUAL_TO)),
-        binaryTree(SUBCLASS_OF_NUMBER, SUBCLASS_OF_NUMBER)).matches(tree, state)) {
+    if (!MATCHER.matches(tree, state)) {
       return Description.NO_MATCH;
     }
 

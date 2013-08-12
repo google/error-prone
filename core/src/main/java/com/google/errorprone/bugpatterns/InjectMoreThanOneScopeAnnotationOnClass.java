@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 
 import com.google.errorprone.BugPattern;
@@ -43,7 +44,8 @@ import com.sun.source.tree.ModifiersTree;
     explanation = "Annotating a class with more than one scope annotation is "
         + "invalid according to the JSR-330 specification. ", category = INJECT, severity = ERROR,
     maturity = EXPERIMENTAL)
-public class InjectMoreThanOneScopeAnnotationOnClass extends BugChecker implements Matchers.AnnotationTreeMatcher {
+public class InjectMoreThanOneScopeAnnotationOnClass extends BugChecker
+    implements AnnotationTreeMatcher {
 
   private static final String GUICE_SCOPE_ANNOTATION = "com.google.inject.ScopeAnnotation";
   private static final String JAVAX_SCOPE_ANNOTATION = "javax.inject.Scope";

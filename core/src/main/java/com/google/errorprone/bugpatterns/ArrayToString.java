@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
 
@@ -41,7 +42,7 @@ import com.sun.source.tree.MethodInvocationTree;
         "The toString method on an array will print its identity, such as [I@4488aabb. This " +
         "is almost never needed. Use Arrays.toString to print a human-readable array summary.",
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
-public class ArrayToString extends BugChecker implements Matchers.MethodInvocationTreeMatcher {
+public class ArrayToString extends BugChecker implements MethodInvocationTreeMatcher {
 
   /**
    * Matches calls to Throwable.getStackTrace().

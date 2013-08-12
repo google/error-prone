@@ -19,13 +19,13 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.BugChecker.LiteralTreeMatcher;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
@@ -43,7 +43,7 @@ import java.util.regex.Pattern;
     explanation = "A long literal can have a suffix of 'L' or 'l', but the former is less " +
     "likely to be confused with a '1' in most fonts.",
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
-public class LongLiteralLowerCaseSuffix extends BugChecker implements Matchers.LiteralTreeMatcher {
+public class LongLiteralLowerCaseSuffix extends BugChecker implements LiteralTreeMatcher {
 
   private static final Matcher<LiteralTree> matcher = new Matcher<LiteralTree>() {
     @Override

@@ -167,7 +167,8 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
     return !Collections.disjoint(suppressable.getAllNames(), suppressions);
   }
 
-  protected <T extends Tree> void reportMatch(Description description, T match, VisitorState state) {
+  protected <T extends Tree> void reportMatch(Description description, T match, VisitorState state)
+  {
     if (description == null || description == Description.NO_MATCH) {
       return;
     }

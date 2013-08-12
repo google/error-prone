@@ -28,7 +28,6 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.EditDistance;
 import com.sun.source.tree.*;
@@ -59,7 +58,7 @@ import java.util.Set;
         "as a bare statement.",
     category = JDK, severity = ERROR, maturity = MATURE)
 public class SelfAssignmentChecker extends BugChecker
-    implements Matchers.VariableTreeMatcher, Matchers.AssignmentTreeMatcher {
+    implements BugChecker.VariableTreeMatcher, BugChecker.AssignmentTreeMatcher {
 
   @Override
   public Description matchAssignment(AssignmentTree tree, VisitorState state) {
@@ -94,7 +93,7 @@ public class SelfAssignmentChecker extends BugChecker
   /**
    * Matcher for assignments, e.g. foo = bar.
    */
-  private class AssignmentTreeMatcher implements Matchers.AssignmentTreeMatcher {
+  private class AssignmentTreeMatcher implements BugChecker.AssignmentTreeMatcher {
     @Override
     public Description matchAssignment(AssignmentTree tree, VisitorState state) {
       ExpressionTree expression = stripCheckNotNull(tree.getExpression(), state);
@@ -228,7 +227,7 @@ public class SelfAssignmentChecker extends BugChecker
    * Matcher for variable declaration and initialization in the same line, e.g.
    * public static final Object obj = Foo.obj;
    */
-  private class VariableTreeMatcher implements Matchers.VariableTreeMatcher {
+  private class VariableTreeMatcher implements BugChecker.VariableTreeMatcher {
 
     @Override
     public Description matchVariable(VariableTree tree, VisitorState state) {

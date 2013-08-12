@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 
 import com.google.errorprone.BugPattern;
@@ -56,7 +57,7 @@ import java.util.List;
         "code.\n\n" +
         "This checker currently supports checking for bad byte and character comparisons.",
     category = JDK, severity = ERROR, maturity = MATURE)
-public class ComparisonOutOfRange extends BugChecker implements Matchers.BinaryTreeMatcher {
+public class ComparisonOutOfRange extends BugChecker implements BinaryTreeMatcher {
 
   /**
    * Matches comparisons that are out of range for the given type.  Parameterized based on the

@@ -17,6 +17,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.GUICE;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -42,7 +43,7 @@ import javax.lang.model.element.TypeElement;
     + "disambiguated with named @Assisted annotations. ",
     explanation = "See http://google-guice.googlecode.com/git/javadoc/com/google/inject/assistedinject/FactoryModuleBuilder.html",
     category = GUICE, severity = ERROR, maturity = EXPERIMENTAL)
-public class GuiceAssistedParameters extends BugChecker implements Matchers.VariableTreeMatcher {
+public class GuiceAssistedParameters extends BugChecker implements VariableTreeMatcher {
 
   private static final String ASSISTED_ANNOTATION = "com.google.inject.assistedinject.Assisted";
 

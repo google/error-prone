@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.BugChecker.EmptyStatementTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.nextStatement;
 import static com.google.errorprone.matchers.Matchers.parentNode;
 import static com.sun.source.tree.Tree.Kind.IF;
@@ -52,7 +53,7 @@ import com.sun.source.tree.Tree;
         "An if statement contains an empty statement as the then clause. A semicolon may " +
         "have been inserted by accident.",
     category = JDK, severity = ERROR, maturity = MATURE)
-public class EmptyIfStatement extends BugChecker implements Matchers.EmptyStatementTreeMatcher {
+public class EmptyIfStatement extends BugChecker implements EmptyStatementTreeMatcher {
 
   /**
    * Match empty statement if:

@@ -19,12 +19,12 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
@@ -49,7 +49,7 @@ import javax.lang.model.element.ElementKind;
     category = JDK, 
     severity = ERROR, 
     maturity = EXPERIMENTAL)
-public class WrongParameterPackage extends BugChecker implements Matchers.MethodTreeMatcher {
+public class WrongParameterPackage extends BugChecker implements MethodTreeMatcher {
 
   private MethodSymbol supermethod;
   

@@ -17,7 +17,7 @@
 package com.google.errorprone;
 
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
-import static com.google.errorprone.matchers.Matchers.*;
+import static com.google.errorprone.bugpatterns.BugChecker.*;
 
 import com.google.errorprone.bugpatterns.*;
 import com.sun.source.tree.*;
@@ -106,29 +106,29 @@ public class ErrorProneScanner extends Scanner {
   );
 
   private final List<MethodInvocationTreeMatcher> methodInvocationMatchers =
-      new ArrayList<MethodInvocationTreeMatcher>();
+       new ArrayList<MethodInvocationTreeMatcher>();
   private final List<NewClassTreeMatcher> newClassMatchers =
-      new ArrayList<NewClassTreeMatcher>();
+       new ArrayList<NewClassTreeMatcher>();
   private final List<AnnotationTreeMatcher> annotationMatchers =
-      new ArrayList<AnnotationTreeMatcher>();
+       new ArrayList<AnnotationTreeMatcher>();
   private final List<EmptyStatementTreeMatcher> emptyStatementMatchers =
-      new ArrayList<EmptyStatementTreeMatcher>();
+       new ArrayList<EmptyStatementTreeMatcher>();
   private final List<AssignmentTreeMatcher> assignmentMatchers =
-      new ArrayList<AssignmentTreeMatcher>();
+       new ArrayList<AssignmentTreeMatcher>();
   private final List<VariableTreeMatcher> variableMatchers =
-      new ArrayList<VariableTreeMatcher>();
+       new ArrayList<VariableTreeMatcher>();
   private final List<MethodTreeMatcher> methodMatchers =
-      new ArrayList<MethodTreeMatcher>();
+       new ArrayList<MethodTreeMatcher>();
   private final List<LiteralTreeMatcher> literalMatchers =
-      new ArrayList<LiteralTreeMatcher>();
+       new ArrayList<LiteralTreeMatcher>();
   private final List<ConditionalExpressionTreeMatcher> conditionalExpressionMatchers =
-      new ArrayList<ConditionalExpressionTreeMatcher>();
+       new ArrayList<ConditionalExpressionTreeMatcher>();
   private final List<BinaryTreeMatcher> binaryExpressionMatchers =
-      new ArrayList<BinaryTreeMatcher>();
+       new ArrayList<BinaryTreeMatcher>();
   private final List<CompoundAssignmentTreeMatcher> compoundAssignmentMatchers =
-      new ArrayList<CompoundAssignmentTreeMatcher>();
+       new ArrayList<CompoundAssignmentTreeMatcher>();
   private final List<ClassTreeMatcher> classMatchers =
-      new ArrayList<ClassTreeMatcher>();
+       new ArrayList<ClassTreeMatcher>();
 
   @SuppressWarnings("unchecked")
   public ErrorProneScanner(EnabledPredicate predicate) {

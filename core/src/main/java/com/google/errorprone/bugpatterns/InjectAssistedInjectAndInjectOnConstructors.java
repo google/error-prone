@@ -3,6 +3,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
@@ -29,7 +30,8 @@ import com.sun.tools.javac.code.Symbol;
     explanation = 
     "http://google-guice.googlecode.com/git/javadoc/com/google/inject/assistedinject/AssistedInject.html",
     category = INJECT, severity = ERROR, maturity = EXPERIMENTAL)
-public class InjectAssistedInjectAndInjectOnConstructors extends BugChecker implements Matchers.AnnotationTreeMatcher {
+public class InjectAssistedInjectAndInjectOnConstructors extends BugChecker
+    implements AnnotationTreeMatcher {
 
   private static final String GUICE_INJECT_ANNOTATION = "com.google.inject.Inject";
   private static final String JAVAX_INJECT_ANNOTATION = "javax.inject.Inject";

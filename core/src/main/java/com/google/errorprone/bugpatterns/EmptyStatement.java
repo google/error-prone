@@ -19,12 +19,12 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.bugpatterns.BugChecker.EmptyStatementTreeMatcher;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.EmptyStatementTree;
 
 /**
@@ -39,7 +39,7 @@ import com.sun.source.tree.EmptyStatementTree;
     explanation =
         "An empty statement has no effect on the program. Consider removing it.",
     category = JDK, severity = WARNING, maturity = MATURE)
-public class EmptyStatement extends BugChecker implements Matchers.EmptyStatementTreeMatcher {
+public class EmptyStatement extends BugChecker implements EmptyStatementTreeMatcher {
 
   @Override
   public Description matchEmptyStatement(EmptyStatementTree emptyStatementTree, VisitorState state)

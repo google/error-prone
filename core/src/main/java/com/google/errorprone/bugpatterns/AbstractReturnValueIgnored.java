@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.parentNode;
 
@@ -40,7 +41,7 @@ import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 abstract class AbstractReturnValueIgnored extends BugChecker
-    implements Matchers.MethodInvocationTreeMatcher {
+    implements MethodInvocationTreeMatcher {
 
   @SuppressWarnings("unchecked")
   public Description matchMethodInvocation(

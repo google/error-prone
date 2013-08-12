@@ -16,8 +16,9 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
+
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
@@ -31,7 +32,7 @@ import java.util.List;
  * Abstract matcher which can process changes to a SuppressWarnings annotation.
  */
 abstract class AbstractSuppressWarningsMatcher extends BugChecker
-    implements Matchers.AnnotationTreeMatcher {
+    implements AnnotationTreeMatcher {
 
   /**
    * Processes the list of SuppressWarnings values in-place when creating a {@link SuggestedFix}.

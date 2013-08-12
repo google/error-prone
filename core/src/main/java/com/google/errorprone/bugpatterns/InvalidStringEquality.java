@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.*;
 import static com.sun.source.tree.Tree.Kind.EQUAL_TO;
 import static com.sun.source.tree.Tree.Kind.NOT_EQUAL_TO;
@@ -69,12 +70,14 @@ public class InvalidStringEquality extends BugChecker implements BinaryTreeMatch
     }
   };
 
+  public static final Matcher<BinaryTree> MATCHER = allOf(
+      anyOf(kindIs(EQUAL_TO), kindIs(NOT_EQUAL_TO)),
+      STRING_OPERANDS);
+
   /* Match string that are compared with == and != */
   @Override
   public Description matchBinary(BinaryTree tree, VisitorState state) {
-    if (!allOf(
-        anyOf(kindIs(EQUAL_TO), kindIs(NOT_EQUAL_TO)),
-        STRING_OPERANDS).matches(tree, state)) {
+    if (!MATCHER.matches(tree, state)) {
       return Description.NO_MATCH;
     }
 

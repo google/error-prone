@@ -19,8 +19,9 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.EnclosingClass.findEnclosingClass;
+import static com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.*;
+import static com.google.errorprone.suppliers.Suppliers.*;
 import static com.sun.tools.javac.code.Flags.ENUM;
 
 import com.google.errorprone.BugPattern;
@@ -28,8 +29,8 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.EnclosingClass;
+import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
-import com.google.errorprone.matchers.MethodVisibility;
 import com.google.errorprone.matchers.MethodVisibility.Visibility;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodTree;
@@ -56,6 +57,17 @@ import java.util.List;
     category = JDK, maturity = MATURE, severity = ERROR)
 public class CovariantEquals extends BugChecker implements MethodTreeMatcher {
 
+  public static final Matcher<MethodTree> MATCHER = allOf(
+      methodHasVisibility(Visibility.PUBLIC),
+      methodIsNamed("equals"),
+      methodReturns(BOOLEAN_TYPE),
+      methodHasParameters(variableType(isSameType(ENCLOSING_CLASS))),
+      enclosingClass(not(hasMethod(Matchers.<MethodTree>allOf(
+          methodIsNamed("equals"),
+          methodReturns(BOOLEAN_TYPE),
+          methodHasParameters(variableType(isSameType(OBJECT_TYPE)))))))
+  );
+
   /**
    * Matches any method definitions that fit the following:
    * 1) Defined method is named "equals."
@@ -66,16 +78,7 @@ public class CovariantEquals extends BugChecker implements MethodTreeMatcher {
   @Override
   @SuppressWarnings("unchecked")    // matchers + varargs cause this
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
-    if (!allOf(
-        methodHasVisibility(Visibility.PUBLIC),
-        methodIsNamed("equals"),
-        methodReturns(state.getSymtab().booleanType),
-        methodHasParameters(variableType(isSameType(findEnclosingClass(state)))),
-        enclosingClass(not(hasMethod(Matchers.<MethodTree>allOf(
-            methodIsNamed("equals"),
-            methodReturns(state.getSymtab().booleanType),
-            methodHasParameters(variableType(isSameType(state.getSymtab().objectType)))))))
-    ).matches(methodTree, state)) {
+    if (!MATCHER.matches(methodTree, state)) {
       return Description.NO_MATCH;
     }
 

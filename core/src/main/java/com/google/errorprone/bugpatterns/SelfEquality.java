@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.sun.source.tree.Tree.Kind.EQUAL_TO;
@@ -28,7 +29,6 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
@@ -55,7 +55,7 @@ import java.util.List;
     explanation = "There is no good reason to test a primitive value or reference for equality " +
           "with itself.",
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
-public class SelfEquality extends BugChecker implements Matchers.BinaryTreeMatcher {
+public class SelfEquality extends BugChecker implements BinaryTreeMatcher {
 
   @SuppressWarnings("unchecked")
   @Override

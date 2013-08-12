@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.*;
 
 import com.google.errorprone.BugPattern;
@@ -84,16 +85,18 @@ public class BadShiftAmount extends BugChecker implements BinaryTreeMatcher {
     }
   };
 
+  public static final Matcher<BinaryTree> BINARY_TREE_MATCHER = allOf(
+      anyOf(
+          kindIs(Kind.LEFT_SHIFT),
+          kindIs(Kind.RIGHT_SHIFT),
+          kindIs(Kind.UNSIGNED_RIGHT_SHIFT)),
+      BAD_SHIFT_AMOUNT_INT
+  );
+
   @SuppressWarnings("unchecked")
   @Override
   public Description matchBinary(BinaryTree tree, VisitorState state) {
-    if (!allOf(
-        anyOf(
-            kindIs(Kind.LEFT_SHIFT),
-            kindIs(Kind.RIGHT_SHIFT),
-            kindIs(Kind.UNSIGNED_RIGHT_SHIFT)),
-        BAD_SHIFT_AMOUNT_INT
-    ).matches(tree, state)) {
+    if (!BINARY_TREE_MATCHER.matches(tree, state)) {
       return Description.NO_MATCH;
     }
 

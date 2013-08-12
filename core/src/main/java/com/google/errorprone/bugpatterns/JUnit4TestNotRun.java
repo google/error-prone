@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JUNIT;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.*;
 import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
 
@@ -27,7 +28,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
@@ -58,7 +58,7 @@ import java.util.Collection;
         "If you intend for this test method not to run, please add both an @Test and an " +
     	"@Ignore annotation to make it clear that you are purposely disabling it.",
     category = JUNIT, maturity = MATURE, severity = ERROR)
-public class JUnit4TestNotRun extends BugChecker implements Matchers.MethodTreeMatcher {
+public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
 
   private static final Collection<String> DEFAULT_TEST_RUNNERS = Arrays.asList(
       "org.junit.runners.JUnit4", "org.mockito.runners.MockitoJUnitRunner");
@@ -138,12 +138,14 @@ public class JUnit4TestNotRun extends BugChecker implements Matchers.MethodTreeM
   @Override
   @SuppressWarnings("unchecked")
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
-    if (!allOf(methodNameStartsWith("test"),
+    boolean matches = allOf(
+        methodNameStartsWith("test"),
         methodHasParameters(),
         methodHasModifier(Modifier.PUBLIC),
         not(hasJUnitAnnotation),
         enclosingClass(isJUnit4TestClass))
-        .matches(methodTree, state)) {
+        .matches(methodTree, state);
+    if (!matches) {
       return Description.NO_MATCH;
     }
 

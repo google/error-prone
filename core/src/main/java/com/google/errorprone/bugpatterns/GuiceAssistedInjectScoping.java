@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.GUICE;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.*;
 import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
 
@@ -68,7 +69,7 @@ public class GuiceAssistedInjectScoping extends BugChecker implements ClassTreeM
    * Matches classes that have an annotation that itself is annotated with @ScopeAnnotation.
    */
   @SuppressWarnings("unchecked")
-  private MultiMatcher<ClassTree, AnnotationTree> classAnnotationMatcher =
+  private static MultiMatcher<ClassTree, AnnotationTree> classAnnotationMatcher =
      annotations(ANY, Matchers.<AnnotationTree>anyOf(hasAnnotation(GUICE_SCOPE_ANNOTATION),
          hasAnnotation(JAVAX_SCOPE_ANNOTATION)));
 
@@ -76,7 +77,7 @@ public class GuiceAssistedInjectScoping extends BugChecker implements ClassTreeM
    * Matches if any constructor of a class is annotated with an @Inject annotation.
    */
   @SuppressWarnings("unchecked")
-  private MultiMatcher<ClassTree, MethodTree> constructorWithInjectMatcher =
+  private static MultiMatcher<ClassTree, MethodTree> constructorWithInjectMatcher =
       constructor(ANY, Matchers.<MethodTree>anyOf(hasAnnotation(GUICE_INJECT_ANNOTATION),
           hasAnnotation(JAVAX_INJECT_ANNOTATION)));
 
@@ -87,7 +88,7 @@ public class GuiceAssistedInjectScoping extends BugChecker implements ClassTreeM
    * 2) If there is no @Inject constructor and at least one constructor is annotated with
    *    @AssistedInject.
    */
-  private Matcher<ClassTree> assistedMatcher = new Matcher<ClassTree>() {
+  private static Matcher<ClassTree> assistedMatcher = new Matcher<ClassTree>() {
     @Override
     public boolean matches(ClassTree classTree, VisitorState state) {
       if (constructorWithInjectMatcher.matches(classTree, state)) {
@@ -101,11 +102,12 @@ public class GuiceAssistedInjectScoping extends BugChecker implements ClassTreeM
           .matches(classTree, state);
     }
   };
+  public static final Matcher<ClassTree> MATCHER = allOf(classAnnotationMatcher, assistedMatcher);
 
   @Override
   @SuppressWarnings("unchecked")
   public final Description matchClass(ClassTree classTree, VisitorState state) {
-    if (!allOf(classAnnotationMatcher, assistedMatcher).matches(classTree, state)) {
+    if (!MATCHER.matches(classTree, state)) {
       return Description.NO_MATCH;
     }
 

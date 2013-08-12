@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.*;
 import static com.sun.source.tree.Tree.Kind.*;
 
@@ -46,7 +47,8 @@ import com.sun.tools.javac.tree.JCTree.*;
         "collection.addAll(collection) and collection.retainAll(collection) are both no-ops, " +
         "and collection.removeAll(collection) is equivalent to collection.clear().",
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
-public class ModifyingCollectionWithItself extends BugChecker implements MethodInvocationTreeMatcher {
+public class ModifyingCollectionWithItself extends BugChecker
+    implements MethodInvocationTreeMatcher {
 
   /**
    * Matches calls to addAll, containsAll, removeAll, and retainAll on itself

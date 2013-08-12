@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -44,7 +45,7 @@ import java.lang.annotation.Retention;
     explanation = "Calling getAnnotation on an annotation that does not have its Retention set to "
         + "RetentionPolicy.RUNTIME will always return null.", 
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
-public class NonRuntimeAnnotation extends BugChecker implements Matchers.MethodInvocationTreeMatcher {
+public class NonRuntimeAnnotation extends BugChecker implements MethodInvocationTreeMatcher {
 
   @SuppressWarnings("deprecation")
   @Override

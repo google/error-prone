@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.BugChecker.CompoundAssignmentTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.compoundAssignment;
 
 import com.google.errorprone.BugPattern;
@@ -42,7 +43,7 @@ import com.sun.source.tree.Tree.Kind;
         "Use Arrays.toString to obtain a human-readable array summary.",
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
 public class ArrayToStringCompoundAssignment
-    extends BugChecker implements Matchers.CompoundAssignmentTreeMatcher {
+    extends BugChecker implements CompoundAssignmentTreeMatcher {
 
   private static final Matcher<CompoundAssignmentTree> assignmentMatcher =
       compoundAssignment(
