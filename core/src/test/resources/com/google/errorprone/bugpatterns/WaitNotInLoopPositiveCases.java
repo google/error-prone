@@ -27,7 +27,7 @@ public class WaitNotInLoopPositiveCases {
     synchronized (this) {
       if (!flag) {
         try {
-          //BUG: Suggestion includes ""
+          //BUG: Suggestion includes "while (!flag)"
           wait();
         } catch (InterruptedException e) {
         }
@@ -39,7 +39,7 @@ public class WaitNotInLoopPositiveCases {
     synchronized (this) {
       if (!flag) {
         try {
-          //BUG: Suggestion includes ""
+          //BUG: Suggestion includes "while (!flag)"
           wait(1000);
         } catch (InterruptedException e) {
         }
@@ -51,7 +51,7 @@ public class WaitNotInLoopPositiveCases {
     synchronized (this) {
       if (!flag) {
         try {
-          //BUG: Suggestion includes ""
+          //BUG: Suggestion includes "while (!flag) {"
           wait(1000, 1000);
         } catch (InterruptedException e) {
         }
@@ -62,8 +62,9 @@ public class WaitNotInLoopPositiveCases {
   public void testLoopNotInSynchronized() {
     while (!flag) {
       synchronized (this) {
+        System.out.println("foo");
         try {
-          //BUG: Suggestion includes ""
+          //BUG: Suggestion includes "synchronized (this) {"
           wait(1000, 1000);
         } catch (InterruptedException e) {
         }

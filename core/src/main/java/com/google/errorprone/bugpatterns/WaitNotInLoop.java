@@ -33,11 +33,22 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 
-import com.sun.source.tree.IfTree;
+import com.sun.source.tree.DoWhileLoopTree;
+import com.sun.source.tree.EnhancedForLoopTree;
+import com.sun.source.tree.SynchronizedTree;
+import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.WhileLoopTree;
+import com.sun.source.tree.StatementTree;
 import com.sun.source.util.TreePath;
+import com.sun.tools.javac.tree.JCTree.JCIf;
+import com.sun.tools.javac.tree.JCTree.JCLiteral;
+import com.sun.tools.javac.tree.TreeMaker;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
@@ -101,15 +112,56 @@ public class WaitNotInLoop extends DescribingMatcher<MethodInvocationTree> {
   public Description describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
     SuggestedFix fix = new SuggestedFix();
 
-    // Handle if -> while case
-    IfTree enclosingIf =
-        ASTHelpers.findEnclosingNode(state.getPath().getParentPath(), IfTree.class);
+    // if -> while case
+    JCIf enclosingIf =
+        ASTHelpers.findEnclosingNode(state.getPath().getParentPath(), JCIf.class);
     if (enclosingIf != null && enclosingIf.getElseStatement() == null) {
-      //fix.replace()
-
+      // Assume first 2 characters of the IfTree are "if", replace with while.
+      fix.replace(enclosingIf.getStartPosition(), enclosingIf.getStartPosition() + 2, "while");
+      return new Description(methodInvocationTree, getDiagnosticMessage(), fix);
     }
 
-    return new Description(methodInvocationTree, getDiagnosticMessage(), new SuggestedFix().delete(methodInvocationTree));
+    // loop outside synchronized block -> move synchronized outside
+    @SuppressWarnings("unchecked")
+    List<Class<? extends StatementTree>> loopClasses = Arrays.asList(WhileLoopTree.class, ForLoopTree.class,
+        EnhancedForLoopTree.class, DoWhileLoopTree.class);
+    StatementTree enclosingLoop = null;
+    for (Class<? extends StatementTree> loopClass : loopClasses) {
+      enclosingLoop = ASTHelpers.findEnclosingNode(state.getPath().getParentPath(), loopClass);
+      if (enclosingLoop != null) {
+        break;
+      }
+    }
+    if (enclosingLoop != null) {
+      SynchronizedTree enclosingSynchronized = ASTHelpers.findEnclosingNode(
+          state.getPath().getParentPath(), SynchronizedTree.class);
+      if (enclosingSynchronized != null) {
+        String blockStatements = enclosingSynchronized.getBlock().toString();
+        int openBracketIndex = blockStatements.indexOf('{');
+        int closeBracketIndex = blockStatements.lastIndexOf('}');
+        blockStatements = blockStatements.substring(openBracketIndex + 1, closeBracketIndex).trim();
+        fix.replace(enclosingSynchronized, blockStatements);
+        fix.prefixWith(enclosingLoop, "synchronized " + enclosingSynchronized.getExpression() + " {\n");
+        fix.postfixWith(enclosingLoop, "\n}");
+        return new Description(methodInvocationTree, getDiagnosticMessage(), fix);
+      }
+    }
+
+    // Intent is to wait forever -> wrap in while (true)
+    // Heuristic: this is the last statement in a method called main, inside a synchronized block.
+    /*
+    if (enclosingIf == null
+        && (ASTHelpers.findEnclosingNode(state.getPath().getParentPath(), WhileLoopTree.class) == null)
+        && (ASTHelpers.findEnclosingNode(state.getPath().getParentPath(), ForLoopTree.class) == null)
+        && (ASTHelpers.findEnclosingNode(state.getPath().getParentPath(), EnhancedForLoopTree.class) == null)
+        && (ASTHelpers.findEnclosingNode(state.getPath().getParentPath(), DoWhileLoopTree.class) == null)) {
+      TreeMaker treeMaker = TreeMaker.instance(state.context);
+      JCLiteral trueLiteral = treeMaker.Literal(true);
+      treeMaker.WhileLoop(trueLiteral,
+    }
+    */
+
+    return new Description(methodInvocationTree, getDiagnosticMessage(), fix);
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {
