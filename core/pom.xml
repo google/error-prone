@@ -131,7 +131,7 @@
     <profile>
       <id>tools.jar</id>
       <activation>
-        <activeByDefault>true</activeByDefault>
+        <activeByDefault>false</activeByDefault>
       </activation>
       <dependencies>
         <dependency>
@@ -139,6 +139,10 @@
           <artifactId>tools</artifactId>
           <version>1.6</version>
           <scope>system</scope>
+          <!-- don't make this dependency appear downstream, since
+               maven doesn't distribute the JDK.
+            -->
+          <optional>true</optional>
           <systemPath>${java.home}/../lib/tools.jar</systemPath>
         </dependency>
       </dependencies>
