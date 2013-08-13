@@ -105,66 +105,74 @@ public class ErrorProneScanner extends Scanner {
       GuiceAssistedInjectScoping.class
   );
 
-  private final List<MethodInvocationTreeMatcher> methodInvocationMatchers =
-       new ArrayList<MethodInvocationTreeMatcher>();
-  private final List<NewClassTreeMatcher> newClassMatchers =
-       new ArrayList<NewClassTreeMatcher>();
-  private final List<AnnotationTreeMatcher> annotationMatchers =
-       new ArrayList<AnnotationTreeMatcher>();
-  private final List<EmptyStatementTreeMatcher> emptyStatementMatchers =
-       new ArrayList<EmptyStatementTreeMatcher>();
-  private final List<AssignmentTreeMatcher> assignmentMatchers =
-       new ArrayList<AssignmentTreeMatcher>();
-  private final List<VariableTreeMatcher> variableMatchers =
-       new ArrayList<VariableTreeMatcher>();
-  private final List<MethodTreeMatcher> methodMatchers =
-       new ArrayList<MethodTreeMatcher>();
-  private final List<LiteralTreeMatcher> literalMatchers =
-       new ArrayList<LiteralTreeMatcher>();
-  private final List<ConditionalExpressionTreeMatcher> conditionalExpressionMatchers =
-       new ArrayList<ConditionalExpressionTreeMatcher>();
-  private final List<BinaryTreeMatcher> binaryExpressionMatchers =
-       new ArrayList<BinaryTreeMatcher>();
-  private final List<CompoundAssignmentTreeMatcher> compoundAssignmentMatchers =
-       new ArrayList<CompoundAssignmentTreeMatcher>();
-  private final List<ClassTreeMatcher> classMatchers =
-       new ArrayList<ClassTreeMatcher>();
-
   @SuppressWarnings("unchecked")
   public ErrorProneScanner(EnabledPredicate predicate) {
     try {
       for (final Class<? extends BugChecker> checkerClass: ALL_CHECKERS) {
         if (predicate.isEnabled(checkerClass, checkerClass.getAnnotation(BugPattern.class))) {
           BugChecker checker = checkerClass.newInstance();
-          if (checker instanceof MethodInvocationTreeMatcher)
-            this.methodInvocationMatchers.add((MethodInvocationTreeMatcher) checker);
-          if (checker instanceof NewClassTreeMatcher)
-            this.newClassMatchers.add((NewClassTreeMatcher) checker);
-          if (checker instanceof AnnotationTreeMatcher)
-            this.annotationMatchers.add((AnnotationTreeMatcher) checker);
-          if (checker instanceof EmptyStatementTreeMatcher)
-            this.emptyStatementMatchers.add((EmptyStatementTreeMatcher) checker);
-          if (checker instanceof AssignmentTreeMatcher)
-            this.assignmentMatchers.add((AssignmentTreeMatcher) checker);
-          if (checker instanceof VariableTreeMatcher)
-            this.variableMatchers.add((VariableTreeMatcher) checker);
-          if (checker instanceof MethodTreeMatcher)
-            this.methodMatchers.add((MethodTreeMatcher) checker);
-          if (checker instanceof LiteralTreeMatcher)
-            this.literalMatchers.add((LiteralTreeMatcher) checker);
-          if (checker instanceof ConditionalExpressionTreeMatcher)
-            this.conditionalExpressionMatchers.add((ConditionalExpressionTreeMatcher) checker);
-          if (checker instanceof BinaryTreeMatcher)
-            this.binaryExpressionMatchers.add((BinaryTreeMatcher) checker);
-          if (checker instanceof CompoundAssignmentTreeMatcher)
-            this.compoundAssignmentMatchers.add((CompoundAssignmentTreeMatcher) checker);
-          if (checker instanceof ClassTreeMatcher)
-            this.classMatchers.add((ClassTreeMatcher) checker);
+          registerNodeTypes(checker);
         }
       }
     } catch (Exception e) {
       throw new RuntimeException("Could not reflectively create error prone matchers", e);
     }
+  }
+
+  public ErrorProneScanner(BugChecker checker) {
+    registerNodeTypes(checker);
+  }
+
+  private final List<MethodInvocationTreeMatcher> methodInvocationMatchers =
+      new ArrayList<MethodInvocationTreeMatcher>();
+  private final List<NewClassTreeMatcher> newClassMatchers =
+      new ArrayList<NewClassTreeMatcher>();
+  private final List<AnnotationTreeMatcher> annotationMatchers =
+      new ArrayList<AnnotationTreeMatcher>();
+  private final List<EmptyStatementTreeMatcher> emptyStatementMatchers =
+      new ArrayList<EmptyStatementTreeMatcher>();
+  private final List<AssignmentTreeMatcher> assignmentMatchers =
+      new ArrayList<AssignmentTreeMatcher>();
+  private final List<VariableTreeMatcher> variableMatchers =
+      new ArrayList<VariableTreeMatcher>();
+  private final List<MethodTreeMatcher> methodMatchers =
+      new ArrayList<MethodTreeMatcher>();
+  private final List<LiteralTreeMatcher> literalMatchers =
+      new ArrayList<LiteralTreeMatcher>();
+  private final List<ConditionalExpressionTreeMatcher> conditionalExpressionMatchers =
+      new ArrayList<ConditionalExpressionTreeMatcher>();
+  private final List<BinaryTreeMatcher> binaryExpressionMatchers =
+      new ArrayList<BinaryTreeMatcher>();
+  private final List<CompoundAssignmentTreeMatcher> compoundAssignmentMatchers =
+      new ArrayList<CompoundAssignmentTreeMatcher>();
+  private final List<ClassTreeMatcher> classMatchers =
+      new ArrayList<ClassTreeMatcher>();
+
+  private void registerNodeTypes(BugChecker checker) {
+    if (checker instanceof MethodInvocationTreeMatcher)
+      this.methodInvocationMatchers.add((MethodInvocationTreeMatcher) checker);
+    if (checker instanceof NewClassTreeMatcher)
+      this.newClassMatchers.add((NewClassTreeMatcher) checker);
+    if (checker instanceof AnnotationTreeMatcher)
+      this.annotationMatchers.add((AnnotationTreeMatcher) checker);
+    if (checker instanceof EmptyStatementTreeMatcher)
+      this.emptyStatementMatchers.add((EmptyStatementTreeMatcher) checker);
+    if (checker instanceof AssignmentTreeMatcher)
+      this.assignmentMatchers.add((AssignmentTreeMatcher) checker);
+    if (checker instanceof VariableTreeMatcher)
+      this.variableMatchers.add((VariableTreeMatcher) checker);
+    if (checker instanceof MethodTreeMatcher)
+      this.methodMatchers.add((MethodTreeMatcher) checker);
+    if (checker instanceof LiteralTreeMatcher)
+      this.literalMatchers.add((LiteralTreeMatcher) checker);
+    if (checker instanceof ConditionalExpressionTreeMatcher)
+      this.conditionalExpressionMatchers.add((ConditionalExpressionTreeMatcher) checker);
+    if (checker instanceof BinaryTreeMatcher)
+      this.binaryExpressionMatchers.add((BinaryTreeMatcher) checker);
+    if (checker instanceof CompoundAssignmentTreeMatcher)
+      this.compoundAssignmentMatchers.add((CompoundAssignmentTreeMatcher) checker);
+    if (checker instanceof ClassTreeMatcher)
+      this.classMatchers.add((ClassTreeMatcher) checker);
   }
 
   @Override

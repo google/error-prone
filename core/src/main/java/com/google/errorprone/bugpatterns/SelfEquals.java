@@ -193,23 +193,4 @@ public class SelfEquals extends BugChecker implements MethodInvocationTreeMatche
 
     return describeMatch(methodInvocationTree, fix);
   }
-
-  public static class Scanner extends com.google.errorprone.Scanner {
-    private final MethodInvocationTreeMatcher matcher;
-
-    public Scanner() {
-      matcher = new SelfEquals();
-    }
-
-    public Scanner(boolean checkGuava, boolean checkEquals) {
-      matcher = new SelfEquals(checkGuava, checkEquals);
-    }
-
-    @Override
-    public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {
-      VisitorState state = visitorState.withPath(getCurrentPath());
-      reportMatch(matcher.matchMethodInvocation(node, state), node, state);
-      return super.visitMethodInvocation(node, visitorState);
-    }
-  }
 }

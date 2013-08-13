@@ -172,29 +172,4 @@ public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
         .prefixWith(methodTree, "@Test\n");
     return describeMatch(methodTree, fix);
   }
-
-  public static class Scanner extends com.google.errorprone.Scanner {
-    private JUnit4TestNotRun matcher;
-
-    public Scanner() {
-      matcher = new JUnit4TestNotRun();
-    }
-
-    /**
-     * Construct a scanner with additional acceptable test runners.
-     *
-     * @param testRunners Additional test runner classes to check for in the @RunWith annotation,
-     * e.g., "org.junit.runners.BlockJUnit4ClassRunner"
-     */
-    public Scanner(String... testRunners) {
-      matcher = new JUnit4TestNotRun(testRunners);
-    }
-
-    @Override
-    public Void visitMethod(MethodTree node, VisitorState visitorState) {
-      VisitorState state = visitorState.withPath(getCurrentPath());
-      reportMatch(matcher.matchMethod(node, state), node, state);
-      return super.visitMethod(node, visitorState);
-    }
-  }
 }

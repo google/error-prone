@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.ErrorProneScanner;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -52,7 +53,7 @@ public class JUnit4TestNotRunTest {
   @Test
   public void testPositiveCase3() throws Exception {
     compilationHelper = new CompilationTestHelper(
-        new JUnit4TestNotRun.Scanner("org.junit.runners.Parameterized"));
+        new JUnit4TestNotRun("org.junit.runners.Parameterized"));
     compilationHelper.assertCompileFailsWithMessages(
         new File(this.getClass().getResource("JUnit4TestNotRunPositiveCase3.java").toURI()));
   }
