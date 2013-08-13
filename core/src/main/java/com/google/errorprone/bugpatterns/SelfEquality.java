@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.sun.source.tree.Tree.Kind.EQUAL_TO;
@@ -27,10 +28,8 @@ import static com.sun.source.tree.Tree.Kind.NOT_EQUAL_TO;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree;
@@ -56,17 +55,16 @@ import java.util.List;
     explanation = "There is no good reason to test a primitive value or reference for equality " +
           "with itself.",
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
-public class SelfEquality extends DescribingMatcher<BinaryTree> {
+public class SelfEquality extends BugChecker implements BinaryTreeMatcher {
 
   @SuppressWarnings("unchecked")
   @Override
-  public boolean matches(BinaryTree tree, VisitorState state) {
-    return anyOf(kindIs(EQUAL_TO), kindIs(NOT_EQUAL_TO)).matches(tree, state)
-        && ASTHelpers.sameVariable(tree.getLeftOperand(), tree.getRightOperand());
-  }
+  public Description matchBinary(BinaryTree tree, VisitorState state) {
+    if (!(anyOf(kindIs(EQUAL_TO), kindIs(NOT_EQUAL_TO)).matches(tree, state)
+        && ASTHelpers.sameVariable(tree.getLeftOperand(), tree.getRightOperand()))) {
+      return Description.NO_MATCH;
+    }
 
-  @Override
-  public Description describe(BinaryTree tree, VisitorState state) {
     StringBuilder fixedExpression = new StringBuilder();
     SuggestedFix fix = null;
 
@@ -152,22 +150,6 @@ public class SelfEquality extends DescribingMatcher<BinaryTree> {
       }
     }
 
-    return new Description(tree, getDiagnosticMessage(), fix);
+    return describeMatch(tree, fix);
   }
-
-  /**
-   * Scanner for SelfEquality
-   * 
-   * @author scottjohnson@google.com (Scott Johnson)
-   */
-  public static class Scanner extends com.google.errorprone.Scanner {
-    public DescribingMatcher<BinaryTree> selfEquality = new SelfEquality();
-
-    @Override
-    public Void visitBinary(BinaryTree node, VisitorState visitorState) {
-      evaluateMatch(node, visitorState, selfEquality);
-      return super.visitBinary(node, visitorState);
-    }
-  }
-
 }

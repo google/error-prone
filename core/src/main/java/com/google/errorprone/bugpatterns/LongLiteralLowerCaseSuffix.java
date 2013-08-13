@@ -19,14 +19,13 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.BugChecker.LiteralTreeMatcher;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
@@ -44,7 +43,7 @@ import java.util.regex.Pattern;
     explanation = "A long literal can have a suffix of 'L' or 'l', but the former is less " +
     "likely to be confused with a '1' in most fonts.",
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
-public class LongLiteralLowerCaseSuffix extends DescribingMatcher<LiteralTree> {
+public class LongLiteralLowerCaseSuffix extends BugChecker implements LiteralTreeMatcher {
 
   private static final Matcher<LiteralTree> matcher = new Matcher<LiteralTree>() {
     @Override
@@ -85,25 +84,13 @@ public class LongLiteralLowerCaseSuffix extends DescribingMatcher<LiteralTree> {
   }
 
   @Override
-  public boolean matches(LiteralTree literalTree, VisitorState state) {
-    return matcher.matches(literalTree, state);
-  }
-
-  @Override
-  public Description describe(LiteralTree literalTree, VisitorState state) {
+  public Description matchLiteral(LiteralTree literalTree, VisitorState state) {
+    if (!matcher.matches(literalTree, state)) {
+      return Description.NO_MATCH;
+    }
     StringBuilder longLiteral = new StringBuilder(getLongLiteral(literalTree, state));
     longLiteral.setCharAt(longLiteral.length() - 1, 'L');
     SuggestedFix fix = new SuggestedFix().replace(literalTree, longLiteral.toString());
-    return new Description(literalTree, getDiagnosticMessage(), fix);
-  }
-
-  public static class Scanner extends com.google.errorprone.Scanner {
-    private final DescribingMatcher<LiteralTree> scannerMatcher = new LongLiteralLowerCaseSuffix();
-
-    @Override
-    public Void visitLiteral(LiteralTree node, VisitorState visitorState) {
-      evaluateMatch(node, visitorState, scannerMatcher);
-      return super.visitLiteral(node, visitorState);
-    }
+    return describeMatch(literalTree, fix);
   }
 }

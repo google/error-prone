@@ -26,7 +26,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
@@ -71,16 +70,6 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
     return methodSelect(Matchers.<ExpressionTree>allOf(
         methodReceiverHasType(typesToCheck),
         methodReturnsSameTypeAsReceiver()));
-  }
-
-  public static class Scanner extends com.google.errorprone.Scanner {
-    private ReturnValueIgnored matcher = new ReturnValueIgnored();
-
-    @Override
-    public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {
-      evaluateMatch(node, visitorState, matcher);
-      return super.visitMethodInvocation(node, visitorState);
-    }
   }
 
   /**

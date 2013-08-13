@@ -16,21 +16,22 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.BugPattern.Category.JDK;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.Matchers.*;
+
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
-
-import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.*;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
@@ -42,43 +43,29 @@ import static com.google.errorprone.matchers.Matchers.*;
         "is needed, == should be used instead for clarity. Otherwise, use Arrays.equals to " +
         "compare the contents of the arrays.",
     category = JDK, severity = ERROR, maturity = MATURE)
-public class ArrayEquals extends DescribingMatcher<MethodInvocationTree> {
+public class ArrayEquals extends BugChecker implements MethodInvocationTreeMatcher {
 
   @SuppressWarnings("unchecked")
-  private static final Matcher<MethodInvocationTree> matcher = Matchers.allOf(
+  private static final Matcher<MethodInvocationTree> arrayEqualsMatcher = Matchers.allOf(
       methodSelect(instanceMethod(Matchers.<ExpressionTree>isArrayType(), "equals")),
       argument(0, Matchers.<ExpressionTree>isArrayType()));
 
   /**
    * Matches calls to an equals instance method in which both the receiver and the argument are
    * of an array type.
-   */
-  @Override
-  public boolean matches(MethodInvocationTree t, VisitorState state) {
-    return matcher.matches(t, state);
-  }
-
-  /**
+   *
    * Replaces instances of a.equals(b) with Arrays.equals(a, b). Also adds
    * the necessary import statement for java.util.Arrays.
    */
-  @Override
-  public Description describe(MethodInvocationTree t, VisitorState state) {
+  public Description matchMethodInvocation(MethodInvocationTree t, VisitorState state) {
+    if (!arrayEqualsMatcher.matches(t, state)) {
+      return NO_MATCH;
+    }
     String receiver = ((JCFieldAccess) t.getMethodSelect()).getExpression().toString();
     String arg = t.getArguments().get(0).toString();
     SuggestedFix fix = new SuggestedFix()
         .replace(t, "Arrays.equals(" + receiver + ", " + arg + ")")
         .addImport("java.util.Arrays");
-    return new Description(t, getDiagnosticMessage(), fix);
-  }
-
-  public static class Scanner extends com.google.errorprone.Scanner {
-    public DescribingMatcher<MethodInvocationTree> scannerMatcher = new ArrayEquals();
-
-    @Override
-    public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {
-      evaluateMatch(node, visitorState, scannerMatcher);
-      return super.visitMethodInvocation(node, visitorState);
-    }
+    return describeMatch(t, fix);
   }
 }

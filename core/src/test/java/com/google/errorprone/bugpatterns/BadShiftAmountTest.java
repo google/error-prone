@@ -16,28 +16,34 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.errorprone.CompilationTestHelper;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.File;
 
 /**
  * @author Bill Pugh (bill.pugh@gmail.com)
  */
-public class BadShiftAmountTest extends BugPatternUnitTest {
+public class BadShiftAmountTest {
 
-  // TODO(eaftan): Convert this to be like the other tests.
+  private CompilationTestHelper compilationHelper;
+
   @Before
   public void setUp() {
-   setScanner(new BadShiftAmount.Scanner());
+    compilationHelper = new CompilationTestHelper(new BadShiftAmount().createScanner());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    super.testPositiveCase();
+    compilationHelper.assertCompileFailsWithMessages(
+        new File(this.getClass().getResource("BadShiftAmountPositiveCases.java").toURI()));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-      super.testNegativeCase();
+    compilationHelper.assertCompileSucceeds(
+        new File(this.getClass().getResource("BadShiftAmountNegativeCases.java").toURI()));
   }
 
 }

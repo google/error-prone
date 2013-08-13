@@ -19,16 +19,12 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.hasArgumentWithValue;
-import static com.google.errorprone.matchers.Matchers.isType;
-import static com.google.errorprone.matchers.Matchers.stringLiteral;
+import static com.google.errorprone.matchers.Matchers.*;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.matchers.DescribingMatcher;
+import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-
 import com.sun.source.tree.AnnotationTree;
 
 import java.util.List;
@@ -54,8 +50,11 @@ public class SuppressWarningsDeprecated extends AbstractSuppressWarningsMatcher 
       hasArgumentWithValue("value", stringLiteral("deprecated")));
 
   @Override
-  public final boolean matches(AnnotationTree annotationTree, VisitorState state) {
-    return matcher.matches(annotationTree, state);
+  public final Description matchAnnotation(AnnotationTree annotationTree, VisitorState state) {
+    if (matcher.matches(annotationTree, state)) {
+      return describeMatch(annotationTree, getSuggestedFix(annotationTree));
+    }
+    return Description.NO_MATCH;
   }
   
   @Override
@@ -64,16 +63,6 @@ public class SuppressWarningsDeprecated extends AbstractSuppressWarningsMatcher 
       if (values.get(i).equals("deprecated")) {
         values.set(i, "deprecation");
       }
-    }
-  }
-  
-  public static class Scanner extends com.google.errorprone.Scanner {
-    private final DescribingMatcher<AnnotationTree> matcher = new SuppressWarningsDeprecated();
-
-    @Override
-    public Void visitAnnotation(AnnotationTree node, VisitorState visitorState) {
-      evaluateMatch(node, visitorState, matcher);
-      return super.visitAnnotation(node, visitorState);
     }
   }
 }

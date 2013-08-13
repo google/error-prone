@@ -17,18 +17,17 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.tools.javac.code.Flags;
@@ -45,7 +44,8 @@ import java.lang.annotation.Retention;
         + "retention on scoping or qualifer annotations will cause unexpected "
         + "behavior in frameworks that use reflection.", category = INJECT, severity = ERROR,
     maturity = EXPERIMENTAL)
-public class InjectScopeOrQualifierAnnotationRetention extends DescribingMatcher<ClassTree> {
+public class InjectScopeOrQualifierAnnotationRetention extends BugChecker
+    implements ClassTreeMatcher {
 
   private static final String GUICE_SCOPE_ANNOTATION = "com.google.inject.ScopeAnnotation";
   private static final String JAVAX_SCOPE_ANNOTATION = "javax.inject.Scope";
@@ -63,27 +63,26 @@ public class InjectScopeOrQualifierAnnotationRetention extends DescribingMatcher
 
   @Override
   @SuppressWarnings("unchecked")
-  public final boolean matches(ClassTree classTree, VisitorState state) {
+  public final Description matchClass(ClassTree classTree, VisitorState state) {
     if ((ASTHelpers.getSymbol(classTree).flags() & Flags.ANNOTATION) != 0) {
       if (SCOPE_OR_QUALIFIER_ANNOTATION_MATCHER.matches(classTree, state)) {
         Retention retention =
             JavacElements.getAnnotation(ASTHelpers.getSymbol(classTree), Retention.class);
-        if (retention != null) {
-          return (!retention.value().equals(RUNTIME));
-
+        if (retention != null && retention.value().equals(RUNTIME)) {
+          return Description.NO_MATCH;
         }
-        return true;//Default retention is CLASS, not RUNTIME, so return true if retention == null
+        //Default retention is CLASS, not RUNTIME, so return true if retention == null
+        return describe(classTree, state);
       }
     }
-    return false;
+    return Description.NO_MATCH;
   }
 
-  @Override
   public Description describe(ClassTree classTree, VisitorState state) {
     Retention retention =
         JavacElements.getAnnotation(ASTHelpers.getSymbol(classTree), Retention.class);
     if (retention == null) {
-      return new Description(classTree, getDiagnosticMessage(), new SuggestedFix().addImport(
+      return describeMatch(classTree, new SuggestedFix().addImport(
           "java.lang.annotation.Retention")
           .addStaticImport("java.lang.annotation.RetentionPolicy.RUNTIME")
           .prefixWith(classTree, "@Retention(RUNTIME)\n"));
@@ -95,20 +94,9 @@ public class InjectScopeOrQualifierAnnotationRetention extends DescribingMatcher
         retentionNode = annotation;
       }
     }
-    return new Description(retentionNode, getDiagnosticMessage(), new SuggestedFix().addImport(
+    return describeMatch(retentionNode, new SuggestedFix().addImport(
         "java.lang.annotation.Retention")
         .addStaticImport("java.lang.annotation.RetentionPolicy.RUNTIME")
         .replace(retentionNode, "@Retention(RUNTIME)"));
-  }
-
-  public static class Scanner extends com.google.errorprone.Scanner {
-    public DescribingMatcher<ClassTree> classMatcher =
-        new InjectScopeOrQualifierAnnotationRetention();
-
-    @Override
-    public Void visitClass(ClassTree classTree, VisitorState visitorState) {
-      evaluateMatch(classTree, visitorState, classMatcher);
-      return super.visitClass(classTree, visitorState);
-    }
   }
 }

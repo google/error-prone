@@ -19,17 +19,16 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree.Kind;
@@ -58,7 +57,7 @@ import java.util.List;
         "code.\n\n" +
         "This checker currently supports checking for bad byte and character comparisons.",
     category = JDK, severity = ERROR, maturity = MATURE)
-public class ComparisonOutOfRange extends DescribingMatcher<BinaryTree> {
+public class ComparisonOutOfRange extends BugChecker implements BinaryTreeMatcher {
 
   /**
    * Matches comparisons that are out of range for the given type.  Parameterized based on the
@@ -169,8 +168,11 @@ public class ComparisonOutOfRange extends DescribingMatcher<BinaryTree> {
 
   @SuppressWarnings("unchecked")
   @Override
-  public boolean matches(BinaryTree tree, VisitorState state) {
-    return anyOf(BYTE_MATCHER, CHAR_MATCHER).matches(tree, state);
+  public Description matchBinary(BinaryTree tree, VisitorState state) {
+    if(anyOf(BYTE_MATCHER, CHAR_MATCHER).matches(tree, state)) {
+      return describe(tree, state);
+    }
+    return Description.NO_MATCH;
   }
 
   /**
@@ -182,7 +184,6 @@ public class ComparisonOutOfRange extends DescribingMatcher<BinaryTree> {
    * TODO(eaftan): Suggested fixes don't handle side-effecting expressions, such as
    * (d = reader.read()) == -1.  Maybe add special case handling for assignments.
    */
-  @Override
   public Description describe(BinaryTree tree, VisitorState state) {
     @SuppressWarnings("unchecked")
     List<ExpressionTree> binaryTreeMatches = ASTHelpers.matchBinaryTree(tree,
@@ -217,17 +218,6 @@ public class ComparisonOutOfRange extends DescribingMatcher<BinaryTree> {
       customDiagnosticMessage = getDiagnosticMessage("char", (int) Character.MIN_VALUE,
           (int) Character.MAX_VALUE, literal.toString(), Boolean.toString(willEvaluateTo));
     }
-    return new Description(tree, customDiagnosticMessage, fix);
+    return new Description(tree, customDiagnosticMessage, fix, pattern.severity());
   }
-
-  public static class Scanner extends com.google.errorprone.Scanner {
-    private ComparisonOutOfRange matcher = new ComparisonOutOfRange();
-
-    @Override
-    public Void visitBinary(BinaryTree tree, VisitorState visitorState) {
-      evaluateMatch(tree, visitorState, matcher);
-      return super.visitBinary(tree, visitorState);
-    }
-  }
-
 }
