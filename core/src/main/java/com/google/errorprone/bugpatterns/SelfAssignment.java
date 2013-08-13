@@ -19,8 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.bugpatterns.BugChecker.AssignmentTreeMatcher;
-import static com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.sun.source.tree.Tree.Kind.*;
@@ -28,6 +26,8 @@ import static javax.lang.model.element.Modifier.STATIC;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.AssignmentTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
@@ -42,7 +42,11 @@ import com.sun.tools.javac.tree.JCTree.*;
 
 
 /**
- * TODO(eaftan): Consider cases where the parent is not a statement or there is no parent?
+ * TODO(eaftan): doesn't seem to be visiting incrementing assignments:
+ * i += 10; // maybe this becomes i = i + 10 by this compiler phase?
+ *
+ * Also consider cases where the parent is not a statement or there is
+ * no parent?
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  * @author scottjohnson@google.com (Scott Johnson)
@@ -50,12 +54,8 @@ import com.sun.tools.javac.tree.JCTree.*;
 @BugPattern(name = "SelfAssignment",
     summary = "Variable assigned to itself",
     explanation = "The left-hand side and right-hand side of this assignment are the same. " +
-        "It has no effect.\n\n" +
-        "This also handles assignments in which the right-hand side is a call to " +
-        "Preconditions.checkNotNull(), which returns the variable that was checked for " +
-        "non-nullity.  If you just intended to check that the variable is non-null, please " +
-        "don't assign the result to the checked variable; just call Preconditions.checkNotNull() " +
-        "as a bare statement.",
+        "It has no effect. This also handles assignments where the right side is a call to " +
+        "Preconditions.checkNotNull().",
     category = JDK, severity = ERROR, maturity = MATURE)
 public class SelfAssignment extends BugChecker
     implements AssignmentTreeMatcher, VariableTreeMatcher {
@@ -63,7 +63,7 @@ public class SelfAssignment extends BugChecker
   @Override
   public Description matchAssignment(AssignmentTree tree, VisitorState state) {
     ExpressionTree expression = stripCheckNotNull(tree.getExpression(), state);
-    if (ASTHelpers.sameVariable(tree.getVariable(), expression)) {
+    if(ASTHelpers.sameVariable(tree.getVariable(), expression)) {
       return describe(tree, state);
     }
     return Description.NO_MATCH;
@@ -83,7 +83,6 @@ public class SelfAssignment extends BugChecker
     MemberSelectTree rhs = (MemberSelectTree) initializer;
     Symbol rhsClass = ASTHelpers.getSymbol(rhs.getExpression());
     Symbol lhsClass = ASTHelpers.getSymbol(parent);
-    // TODO(eaftan): WTF?
     if (rhsClass.equals(lhsClass) && rhs.getIdentifier().contentEquals(tree.getName())) {
       return describe(tree, state);
     }
@@ -105,6 +104,17 @@ public class SelfAssignment extends BugChecker
     return expression;
   }
 
+  public Description describe(VariableTree tree, VisitorState state) {
+    // the statement that is the parent of the self-assignment expression
+    Tree parent = state.getPath().getParentPath().getLeaf();
+
+    // default fix is to delete assignment
+    SuggestedFix fix = new SuggestedFix().delete(parent);
+
+    // for now, don't know how to fix - just delete.
+    return describeMatch(tree, fix);
+  }
+
   /**
    * We expect that the lhs is a field and the rhs is an identifier, specifically
    * a parameter to the method.  We base our suggested fixes on this expectation.
@@ -121,8 +131,7 @@ public class SelfAssignment extends BugChecker
    *
    * Case 4: Otherwise suggest deleting the assignment.
    */
-  public Description describe(Tree tree, VisitorState state) {
-    assert (tree.getKind() == VARIABLE || tree.getKind() == ASSIGNMENT);
+  public Description describe(AssignmentTree assignmentTree, VisitorState state) {
 
     // the statement that is the parent of the self-assignment expression
     Tree parent = state.getPath().getParentPath().getLeaf();
@@ -130,20 +139,13 @@ public class SelfAssignment extends BugChecker
     // default fix is to delete assignment
     SuggestedFix fix = new SuggestedFix().delete(parent);
 
-    // for now, don't know how to fix - just delete.
-    if (tree.getKind() == VARIABLE) {
-      return describeMatch(tree, fix);
-    }
-
-    AssignmentTree assignmentTree = (AssignmentTree) tree;
-
     ExpressionTree lhs = assignmentTree.getVariable();
     ExpressionTree rhs = assignmentTree.getExpression();
 
     // if this is a method invocation, they must be calling checkNotNull()
     if (assignmentTree.getExpression().getKind() == METHOD_INVOCATION) {
       // change the default fix to be "checkNotNull(x)" instead of "x = checkNotNull(x)"
-      fix = new SuggestedFix().replace(tree, rhs.toString());
+      fix = new SuggestedFix().replace(assignmentTree, rhs.toString());
       // new rhs is first argument to checkNotNull()
       rhs = stripCheckNotNull(rhs, state);
     }
