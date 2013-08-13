@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.GUAVA;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
+import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.*;
@@ -53,7 +53,7 @@ import java.util.regex.Pattern;
         "The error message is rarely needed, so it should either be cheap to construct " +
         "or constructed only when needed. This check ensures that these error messages " +
         "are not constructed using expensive methods that are evaluated eagerly.",
-    category = GUAVA, severity = WARNING, maturity = MATURE)
+    category = GUAVA, severity = WARNING, maturity = EXPERIMENTAL)
 public class PreconditionsExpensiveString
     extends BugChecker implements MethodInvocationTreeMatcher {
 
