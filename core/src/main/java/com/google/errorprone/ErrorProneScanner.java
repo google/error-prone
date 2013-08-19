@@ -62,6 +62,7 @@ public class ErrorProneScanner extends Scanner {
   }
 
   // TODO: discover all @BugPattern-annotated classes
+  @SuppressWarnings("unchecked")
   private static final List<? extends Class<? extends BugChecker>> ALL_CHECKERS = Arrays.asList(
       SelfEquals.class,
       OrderingFrom.class,
@@ -84,6 +85,7 @@ public class ErrorProneScanner extends Scanner {
       InjectScopeAnnotationOnInterfaceOrAbstractClass.class,
       FallThroughSuppression.class,
       SuppressWarningsDeprecated.class,
+      InjectJavaxInjectOnAbstractMethod.class,
       EmptyIfStatement.class,
       EmptyStatement.class,
       InvalidNumericEquality.class,

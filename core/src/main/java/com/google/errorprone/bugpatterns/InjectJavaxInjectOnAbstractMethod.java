@@ -24,8 +24,8 @@ import static javax.lang.model.element.Modifier.ABSTRACT;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
@@ -46,7 +46,8 @@ import com.sun.source.tree.Tree;
         + "See http://docs.oracle.com/javaee/6/api/javax/inject/Inject.html\n"
         + "and https://code.google.com/p/google-guice/wiki/JSR330" + " ", category = INJECT,
     severity = ERROR, maturity = EXPERIMENTAL)
-public class InjectJavaxInjectOnAbstractMethod extends DescribingMatcher<AnnotationTree> {
+public class InjectJavaxInjectOnAbstractMethod extends BugChecker
+    implements AnnotationTreeMatcher {
 
   private static final String JAVAX_INJECT_ANNOTATION = "javax.inject.Inject";
 
@@ -60,19 +61,17 @@ public class InjectJavaxInjectOnAbstractMethod extends DescribingMatcher<Annotat
 
   @Override
   @SuppressWarnings("unchecked")
-  public final boolean matches(AnnotationTree annotationTree, VisitorState state) {
+  public Description matchAnnotation(AnnotationTree annotationTree, VisitorState state) {
     if (!javaxInjectAnnotationMatcher.matches(annotationTree, state)) {
-      return false;
+      return Description.NO_MATCH;
     }
     Tree annotatedNode = state.getPath().getParentPath().getParentPath().getLeaf();
-    return isMethod(annotatedNode) && isAbstract(annotatedNode);
+    if (isMethod(annotatedNode) && isAbstract(annotatedNode)) {
+      return describeMatch(annotationTree, new SuggestedFix().delete(annotationTree));
+    }
+    return Description.NO_MATCH;
   }
 
-  @Override
-  public Description describe(AnnotationTree annotationTree, VisitorState state) {
-    return new Description(
-        annotationTree, getDiagnosticMessage(), new SuggestedFix().delete(annotationTree));
-  }
 
   private static boolean isMethod(Tree tree) {
     return tree.getKind().equals(METHOD);
@@ -80,16 +79,5 @@ public class InjectJavaxInjectOnAbstractMethod extends DescribingMatcher<Annotat
 
   private static boolean isAbstract(Tree tree) {
     return ((MethodTree) tree).getModifiers().getFlags().contains(ABSTRACT);
-  }
-
-  public static class Scanner extends com.google.errorprone.Scanner {
-    public DescribingMatcher<AnnotationTree> annotationMatcher =
-        new InjectJavaxInjectOnAbstractMethod();
-
-    @Override
-    public Void visitAnnotation(AnnotationTree annotationTree, VisitorState visitorState) {
-      evaluateMatch(annotationTree, visitorState, annotationMatcher);
-      return super.visitAnnotation(annotationTree, visitorState);
-    }
   }
 }
