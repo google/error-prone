@@ -82,6 +82,7 @@ public class ErrorProneScanner extends Scanner {
       InjectMoreThanOneQualifier.class,
       InjectMoreThanOneScopeAnnotationOnClass.class,
       InjectScopeAnnotationOnInterfaceOrAbstractClass.class,
+      InjectBothQualifierAndScope.class,
       FallThroughSuppression.class,
       SuppressWarningsDeprecated.class,
       EmptyIfStatement.class,

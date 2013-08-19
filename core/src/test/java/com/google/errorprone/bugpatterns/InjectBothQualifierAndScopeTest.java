@@ -17,7 +17,7 @@ public class InjectBothQualifierAndScopeTest {
   @Before
   public void setUp() {
     compilationHelper =
-        new CompilationTestHelper(new InjectBothQualifierAndScope.Scanner());
+        new CompilationTestHelper(InjectBothQualifierAndScope.class);
   }
 
   @Test

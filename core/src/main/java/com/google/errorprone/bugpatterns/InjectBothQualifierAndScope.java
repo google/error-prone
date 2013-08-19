@@ -8,8 +8,8 @@ import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
@@ -23,10 +23,10 @@ import com.sun.tools.javac.code.Symbol;
  */
 @BugPattern(name = "InjectBothQualifierAndScope",
     summary = "Annotations cannot be both Qualifiers/BindingAnnotations and Scopes",
-    explanation = "Qualifiers and Scoping annotations have different semantic meanings and a " +
-    		"single annotation should not be both a qualifier and a scoping annotation",
+    explanation = "Qualifiers and Scoping annotations have different semantic meanings and a "
+    		+ "single annotation should not be both a qualifier and a scoping annotation",
     category = INJECT, severity = ERROR, maturity = EXPERIMENTAL)
-public class InjectBothQualifierAndScope extends DescribingMatcher<AnnotationTree> {
+public class InjectBothQualifierAndScope extends BugChecker implements AnnotationTreeMatcher {
 
   private static final String GUICE_SCOPE_ANNOTATION = "com.google.inject.ScopeAnnotation";
   private static final String JAVAX_SCOPE_ANNOTATION = "javax.inject.Scope";
@@ -68,31 +68,15 @@ public class InjectBothQualifierAndScope extends DescribingMatcher<AnnotationTre
       
   @Override
   @SuppressWarnings("unchecked")
-  public final boolean matches(AnnotationTree annotationTree, VisitorState state) {
+  public final Description matchAnnotation(AnnotationTree annotationTree, VisitorState state) {
     if (QUALIFIER_OR_SCOPE_MATCHER.matches(annotationTree, state)) {
       ClassTree annotationType =
           (ClassTree) state.getPath().getParentPath().getParentPath().getLeaf();
-      return HAS_QUALIFIER_ANNOTATION_MATCHER.matches(annotationType, state)
-          && HAS_SCOPE_ANNOTATION_MATCHER.matches(annotationType, state);
+      if (HAS_QUALIFIER_ANNOTATION_MATCHER.matches(annotationType, state)
+          && HAS_SCOPE_ANNOTATION_MATCHER.matches(annotationType, state)) {
+        return describeMatch(annotationTree, new SuggestedFix().delete(annotationTree));
+      }
     }
-    return false;
-  }
-
-  @Override
-  public Description describe(AnnotationTree annotationTree, VisitorState state) {
-    return new Description(
-        annotationTree, getDiagnosticMessage(), new SuggestedFix().delete(annotationTree));
-  }
-
-
-  public static class Scanner extends com.google.errorprone.Scanner {
-    public DescribingMatcher<AnnotationTree> annotationMatcher =
-        new InjectBothQualifierAndScope();
-
-    @Override
-    public Void visitAnnotation(AnnotationTree annotationTree, VisitorState visitorState) {
-      evaluateMatch(annotationTree, visitorState, annotationMatcher);
-      return super.visitAnnotation(annotationTree, visitorState);
-    }
+    return Description.NO_MATCH;
   }
 }
