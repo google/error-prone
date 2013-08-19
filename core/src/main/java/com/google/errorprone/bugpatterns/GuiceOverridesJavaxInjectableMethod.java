@@ -23,8 +23,8 @@ import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
@@ -46,13 +46,14 @@ import javax.lang.model.element.TypeElement;
  *
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-@BugPattern(name = "GuiceOverridesJavaxInjectableMethod", summary =
-    "This method is not annotated with @Inject, but it overrides a "
-    + "method that is annotated with @javax.inject.Inject.", explanation =
-    "According to the JSR-330 spec, a method that overrides a method annotated "
+@BugPattern(name = "GuiceOverridesJavaxInjectableMethod",
+    summary = "This method is not annotated with @Inject, but it overrides a  method that is "
+    + " annotated with @javax.inject.Inject.", 
+    explanation = "According to the JSR-330 spec, a method that overrides a method annotated "
     + "with javax.inject.Inject will not be injected unless it iself is annotated with "
-    + " @Inject", category = GUICE, severity = ERROR, maturity = EXPERIMENTAL)
-public class GuiceOverridesJavaxInjectableMethod extends DescribingMatcher<MethodTree> {
+    + " @Inject", 
+    category = GUICE, severity = ERROR, maturity = EXPERIMENTAL)
+public class GuiceOverridesJavaxInjectableMethod extends BugChecker implements MethodTreeMatcher {
 
   private static final String OVERRIDE_ANNOTATION = "java.lang.Override";
   private static final String GUICE_INJECT_ANNOTATION = "com.google.inject.Inject";
@@ -66,33 +67,31 @@ public class GuiceOverridesJavaxInjectableMethod extends DescribingMatcher<Metho
       Matchers.<MethodTree>hasAnnotation(OVERRIDE_ANNOTATION);
 
   @Override
-  public boolean matches(MethodTree methodTree, VisitorState state) {
-    // if method is itself annotated with @Inject or it has no ancestor methods, return false;
-    if (!INJECTABLE_METHOD_MATCHER.matches(methodTree, state)
-        && OVERRIDE_METHOD_MATCHER.matches(methodTree, state)) {
-      boolean foundJavaxInject = false;
-      MethodSymbol method = (MethodSymbol) ASTHelpers.getSymbol(methodTree);
-      MethodSymbol superMethod = null;
-      for (boolean checkSuperClass = true; checkSuperClass; method = superMethod) {
-        superMethod = findSuperMethod(method, state);
-        if (containsAnnotation(superMethod, GUICE_INJECT_ANNOTATION)) {
-          return false;
-        }
-        // cannot return true even if we found javaxInject is true
-        // since a higher up ancestor may have @com.google.inject.Inject
-        foundJavaxInject = containsAnnotation(superMethod, JAVAX_INJECT_ANNOTATION);
-        // check if there are ancestor methods
-        checkSuperClass = containsAnnotation(superMethod, OVERRIDE_ANNOTATION);
-      }
-      return foundJavaxInject;
+  public Description matchMethod(MethodTree methodTree, VisitorState state) {
+    // if method is itself annotated with @Inject or it has no ancestor methods, return NO_MATCH;
+    if (INJECTABLE_METHOD_MATCHER.matches(methodTree, state)
+        || !OVERRIDE_METHOD_MATCHER.matches(methodTree, state)) {
+      return Description.NO_MATCH;
     }
-    return false;
-  }
-
-  @Override
-  public Description describe(MethodTree methodTree, VisitorState state) {
-    return new Description(methodTree, getDiagnosticMessage(),
-        new SuggestedFix().addImport("javax.inject.Inject").prefixWith(methodTree, "@Inject\n"));
+    boolean foundJavaxInject = false;
+    MethodSymbol method = (MethodSymbol) ASTHelpers.getSymbol(methodTree);
+    MethodSymbol superMethod = null;
+    for (boolean checkSuperClass = true; checkSuperClass; method = superMethod) {
+      superMethod = findSuperMethod(method, state);
+      if (isAnnotatedWith(superMethod, GUICE_INJECT_ANNOTATION)) {
+        return Description.NO_MATCH;
+      }
+      // is not necessarily a match even if we find javax Inject on an ancestor
+      // since a higher up ancestor may have @com.google.inject.Inject
+      foundJavaxInject = isAnnotatedWith(superMethod, JAVAX_INJECT_ANNOTATION);
+      // check if there are ancestor methods
+      checkSuperClass = isAnnotatedWith(superMethod, OVERRIDE_ANNOTATION);
+    }
+    if (foundJavaxInject) {
+      return describeMatch(methodTree,
+          new SuggestedFix().addImport("javax.inject.Inject").prefixWith(methodTree, "@Inject\n"));
+    }
+    return Description.NO_MATCH;
   }
 
   private MethodSymbol findSuperMethod(MethodSymbol method, VisitorState state) {
@@ -106,7 +105,8 @@ public class GuiceOverridesJavaxInjectableMethod extends DescribingMatcher<Metho
     return null;
   }
 
-  private static boolean containsAnnotation(MethodSymbol method, String annotation) {
+  // better to use matchers?
+  private static boolean isAnnotatedWith(MethodSymbol method, String annotation) {
     for (Compound c : method.getAnnotationMirrors()) {
       if (((TypeElement) c.getAnnotationType().asElement()).getQualifiedName()
           .contentEquals(annotation)) {
@@ -114,15 +114,5 @@ public class GuiceOverridesJavaxInjectableMethod extends DescribingMatcher<Metho
       }
     }
     return false;
-  }
-
-  public static class Scanner extends com.google.errorprone.Scanner {
-    public DescribingMatcher<MethodTree> methodMatcher = new GuiceOverridesJavaxInjectableMethod();
-
-    @Override
-    public Void visitMethod(MethodTree methodTree, VisitorState visitorState) {
-      evaluateMatch(methodTree, visitorState, methodMatcher);
-      return super.visitMethod(methodTree, visitorState);
-    }
   }
 }

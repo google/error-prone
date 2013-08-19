@@ -23,8 +23,8 @@ import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
@@ -51,14 +51,14 @@ import javax.lang.model.element.TypeElement;
     + "method that is annotated with @com.googleinject.Inject. Guice will inject this method,"
     + "and it is recommended to annotate it explicitly.",
     explanation =
-        "Unlike with @javax.inject.Inject, if a method overrides a method annoatated with " +
-        "@com.google.inject.Inject, Guice will inject it even if it itself is not annotated. " +
-        "This differs from the behavior of methods that override @javax.inject.Inject methods " +
-        "since according to the JSR-330 spec, a method that overrides a method annotated with " +
-        "javax.inject.Inject will not be injected unless it iself is annotated with @Inject. " +
-        "Because of this difference, it is recommended that you annotate this method explicitly.",
+        "Unlike with @javax.inject.Inject, if a method overrides a method annoatated with "
+        + "@com.google.inject.Inject, Guice will inject it even if it itself is not annotated. "
+        + "This differs from the behavior of methods that override @javax.inject.Inject methods "
+        + "since according to the JSR-330 spec, a method that overrides a method annotated with "
+        + "javax.inject.Inject will not be injected unless it iself is annotated with @Inject. " 
+        + "Because of this difference, it is recommended that you annotate this method explicitly.",
          category = GUICE, severity = WARNING, maturity = EXPERIMENTAL)
-public class GuiceOverridesGuiceInjectableMethod extends DescribingMatcher<MethodTree> {
+public class GuiceOverridesGuiceInjectableMethod extends BugChecker implements MethodTreeMatcher {
 
   private static final String OVERRIDE_ANNOTATION = "java.lang.Override";
   private static final String GUICE_INJECT_ANNOTATION = "com.google.inject.Inject";
@@ -72,27 +72,22 @@ public class GuiceOverridesGuiceInjectableMethod extends DescribingMatcher<Metho
       Matchers.<MethodTree>hasAnnotation(OVERRIDE_ANNOTATION);
 
   @Override
-  public boolean matches(MethodTree methodTree, VisitorState state) {
-    // if method is itself annotated with @Inject or it has no ancestor methods, return false;
+  public Description matchMethod(MethodTree methodTree, VisitorState state) {
+    // if method is itself annotated with @Inject or it has no ancestor methods, return No_MATCH;
     if (!INJECTABLE_METHOD_MATCHER.matches(methodTree, state)
         && OVERRIDE_METHOD_MATCHER.matches(methodTree, state)) {
       MethodSymbol method = (MethodSymbol) ASTHelpers.getSymbol(methodTree);
       MethodSymbol superMethod = null;
       for (boolean checkSuperClass = true; checkSuperClass; method = superMethod) {
         superMethod = findSuperMethod(method, state);
-        if (containsAnnotation(superMethod, GUICE_INJECT_ANNOTATION)) {
-          return true;
+        if (isAnnotatedWtih(superMethod, GUICE_INJECT_ANNOTATION)) {
+          return describeMatch(methodTree, new SuggestedFix().addImport("javax.inject.Inject")
+              .prefixWith(methodTree, "@Inject\n"));
         }
-        checkSuperClass = containsAnnotation(superMethod, OVERRIDE_ANNOTATION);
+        checkSuperClass = isAnnotatedWtih(superMethod, OVERRIDE_ANNOTATION);
       }
     }
-    return false;
-  }
-
-  @Override
-  public Description describe(MethodTree methodTree, VisitorState state) {
-    return new Description(methodTree, getDiagnosticMessage(),
-        new SuggestedFix().addImport("javax.inject.Inject").prefixWith(methodTree, "@Inject\n"));
+    return Description.NO_MATCH;
   }
 
   private MethodSymbol findSuperMethod(MethodSymbol method, VisitorState state) {
@@ -106,7 +101,7 @@ public class GuiceOverridesGuiceInjectableMethod extends DescribingMatcher<Metho
     return null;
   }
 
-  private static boolean containsAnnotation(MethodSymbol method, String annotation) {
+  private static boolean isAnnotatedWtih(MethodSymbol method, String annotation) {
     for (Compound c : method.getAnnotationMirrors()) {
       if (((TypeElement) c.getAnnotationType().asElement()).getQualifiedName()
           .contentEquals(annotation)) {
@@ -114,15 +109,5 @@ public class GuiceOverridesGuiceInjectableMethod extends DescribingMatcher<Metho
       }
     }
     return false;
-  }
-
-  public static class Scanner extends com.google.errorprone.Scanner {
-    public DescribingMatcher<MethodTree> methodMatcher = new GuiceOverridesGuiceInjectableMethod();
-
-    @Override
-    public Void visitMethod(MethodTree methodTree, VisitorState visitorState) {
-      evaluateMatch(methodTree, visitorState, methodMatcher);
-      return super.visitMethod(methodTree, visitorState);
-    }
   }
 }

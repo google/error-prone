@@ -35,12 +35,12 @@ public class GuiceOverridesGuiceInjectableMethodTest {
   @Before
   public void setUp() {
     compilationHelper =
-        new CompilationTestHelper(new GuiceOverridesGuiceInjectableMethod.Scanner());
+        new CompilationTestHelper(GuiceOverridesGuiceInjectableMethod.class);
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(new File(this.getClass()
+    compilationHelper.assertCompileSucceedsWithMessages(new File(this.getClass()
         .getResource("GuiceOverridesGuiceInjectableMethodPositiveCases.java").toURI()));
   }
 
