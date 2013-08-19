@@ -26,8 +26,7 @@ public class GuiceInjectOnFinalFieldNegativeCases {
   /**
    * Class has no final fields or @Inject annotations.
    */
-  public class TestClass1 {
-  }
+  public class TestClass1 {}
 
   /**
    * Class has a final field that is not injectable.
@@ -40,8 +39,7 @@ public class GuiceInjectOnFinalFieldNegativeCases {
    * Class has an injectable(com.google.inject.Inject) field that is not final.
    */
   public class TestClass3 {
-    @Inject
-    public int n;
+    @Inject public int n;
   }
   
   /**
@@ -49,8 +47,6 @@ public class GuiceInjectOnFinalFieldNegativeCases {
    */
   public class TestClass4 {
     @Inject
-    final String providesString() {
-      return "";
-    }
+    final void method() {}
   }
 }

@@ -35,12 +35,12 @@ public class GuiceInjectOnFinalFieldTest {
   @Before
   public void setUp() {
     compilationHelper =
-        new CompilationTestHelper(new GuiceInjectOnFinalField.Scanner());
+        new CompilationTestHelper(GuiceInjectOnFinalField.class);
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(new File(this.getClass()
+    compilationHelper.assertCompileSucceedsWithMessages(new File(this.getClass()
         .getResource("GuiceInjectOnFinalFieldPositiveCases.java").toURI()));
   }
   

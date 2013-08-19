@@ -22,8 +22,9 @@ import static javax.lang.model.element.Modifier.FINAL;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
+import com.google.errorprone.matchers.AnnotationType;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
@@ -41,7 +42,7 @@ import com.sun.source.tree.VariableTree;
     + "recommended because the injected value may not be visible to other threads.",
     explanation = "See https://code.google.com/p/google-guice/wiki/InjectionPoints",
     category = GUICE, severity = WARNING, maturity = EXPERIMENTAL)
-public class GuiceInjectOnFinalField extends DescribingMatcher<AnnotationTree> {
+public class GuiceInjectOnFinalField extends BugChecker implements AnnotationTreeMatcher {
 
   private static final String GUICE_INJECT_ANNOTATION = "com.google.inject.Inject";
 
@@ -53,25 +54,16 @@ public class GuiceInjectOnFinalField extends DescribingMatcher<AnnotationTree> {
   };
 
   private static final Matcher<AnnotationTree> GUICE_INJECT_ANNOTATION_MATCHER =
-      new Matcher<AnnotationTree>() {
-        @Override
-        public boolean matches(AnnotationTree t, VisitorState state) {
-          return ASTHelpers.getSymbol(t)
-              .equals(state.getSymbolFromString(GUICE_INJECT_ANNOTATION));
-        }
-      };
+      new AnnotationType(GUICE_INJECT_ANNOTATION);
 
   @Override
   @SuppressWarnings("unchecked")
-  public final boolean matches(AnnotationTree annotationTree, VisitorState state) {
-    return GUICE_INJECT_ANNOTATION_MATCHER.matches(annotationTree, state)
-        && FINAL_FIELD_MATCHER.matches(getAnnotatedNode(state), state);
-  }
-
-  @Override
-  public Description describe(AnnotationTree annotationTree, VisitorState state) {
-    return new Description(
-        annotationTree, getDiagnosticMessage(), new SuggestedFix().delete(annotationTree));
+  public final Description matchAnnotation(AnnotationTree annotationTree, VisitorState state) {
+    if (GUICE_INJECT_ANNOTATION_MATCHER.matches(annotationTree, state)
+        && FINAL_FIELD_MATCHER.matches(getAnnotatedNode(state), state)) {
+      return describeMatch(annotationTree, new SuggestedFix().delete(annotationTree));
+    }
+    return Description.NO_MATCH;
   }
 
   private static Tree getAnnotatedNode(VisitorState state) {
@@ -82,15 +74,5 @@ public class GuiceInjectOnFinalField extends DescribingMatcher<AnnotationTree> {
     return tree.getKind().equals(VARIABLE)
         && ASTHelpers.findEnclosingNode(state.getPath(), ClassTree.class)
             .getMembers().contains(tree);
-  }
-
-  public static class Scanner extends com.google.errorprone.Scanner {
-    public DescribingMatcher<AnnotationTree> annotationMatcher = new GuiceInjectOnFinalField();
-
-    @Override
-    public Void visitAnnotation(AnnotationTree annotationTree, VisitorState visitorState) {
-      evaluateMatch(annotationTree, visitorState, annotationMatcher);
-      return super.visitAnnotation(annotationTree, visitorState);
-    }
   }
 }

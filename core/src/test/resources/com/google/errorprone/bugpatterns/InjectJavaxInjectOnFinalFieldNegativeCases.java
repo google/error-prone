@@ -49,8 +49,6 @@ public class InjectJavaxInjectOnFinalFieldNegativeCases {
    */
   public class TestClass4 {
     @Inject
-    final String providesString() {
-      return "";
-    }
+    final void method() {}
   }
 }

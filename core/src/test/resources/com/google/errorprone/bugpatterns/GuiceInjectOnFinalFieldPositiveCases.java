@@ -27,7 +27,7 @@ public class GuiceInjectOnFinalFieldPositiveCases {
    */
   public class TestClass1 {
     //BUG: Suggestion includes "remove"
-    @Inject
+    @Inject 
     public final int n = 0;
   }
 }
