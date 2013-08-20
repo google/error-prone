@@ -22,7 +22,7 @@ public class InjectAssistedInjectAndInjectOnConstructorsNegativeCases {
   }
   
   /**
-   * Class has a constructor with a @com.google.injectInject annotation.
+   * Class has a constructor with a @com.google.inject.Inject annotation.
    */
   public class TestClass3 {
     @com.google.inject.Inject

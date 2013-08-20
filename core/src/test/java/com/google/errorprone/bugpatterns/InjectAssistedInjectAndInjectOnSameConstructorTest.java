@@ -17,7 +17,7 @@ public class InjectAssistedInjectAndInjectOnSameConstructorTest {
   @Before
   public void setUp() {
     compilationHelper =
-        new CompilationTestHelper(new InjectAssistedInjectAndInjectOnSameConstructor.Scanner());
+        new CompilationTestHelper(InjectAssistedInjectAndInjectOnSameConstructor.class);
   }
 
   @Test

@@ -102,7 +102,8 @@ public class ErrorProneScanner extends Scanner {
       ArrayToStringCompoundAssignment.class,
       InjectScopeOrQualifierAnnotationRetention.class,
       InjectInvalidTargetingOnScopingAnnotation.class,
-      GuiceAssistedInjectScoping.class
+      GuiceAssistedInjectScoping.class,
+      InjectAssistedInjectAndInjectOnSameConstructor.class
   );
 
   @SuppressWarnings("unchecked")

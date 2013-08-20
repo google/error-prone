@@ -7,8 +7,8 @@ import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
@@ -26,7 +26,8 @@ import com.sun.tools.javac.code.Symbol;
     summary = "@AssistedInject and @Inject cannot be used on the same constructor.",
     explanation = "",
     category = INJECT, severity = ERROR, maturity = EXPERIMENTAL)
-public class InjectAssistedInjectAndInjectOnSameConstructor extends DescribingMatcher<AnnotationTree> {
+public class InjectAssistedInjectAndInjectOnSameConstructor extends BugChecker
+    implements AnnotationTreeMatcher {
 
   private static final String GUICE_INJECT_ANNOTATION = "com.google.inject.Inject";
   private static final String JAVAX_INJECT_ANNOTATION = "javax.inject.Inject";
@@ -47,6 +48,9 @@ public class InjectAssistedInjectAndInjectOnSameConstructor extends DescribingMa
   private Matcher<MethodTree> constructorWithAssistedInjectMatcher =
       Matchers.<MethodTree>hasAnnotation(ASSISTED_INJECT_ANNOTATION);
   
+  /**
+   * Matches the @Inject and @Assisted inject annotations.
+   */
   private Matcher<AnnotationTree> injectOrAssistedInjectMatcher = new Matcher<AnnotationTree>() {
     @Override public boolean matches(AnnotationTree annotationTree, VisitorState state) {
       Symbol annotationSymbol = ASTHelpers.getSymbol(annotationTree);
@@ -58,33 +62,15 @@ public class InjectAssistedInjectAndInjectOnSameConstructor extends DescribingMa
       
   @Override
   @SuppressWarnings("unchecked")
-  public final boolean matches(AnnotationTree annotationTree, VisitorState state) {
+  public Description matchAnnotation(AnnotationTree annotationTree, VisitorState state) {
     if (injectOrAssistedInjectMatcher.matches(annotationTree, state)) {
       Tree treeWithAnnotation = state.getPath().getParentPath().getParentPath().getLeaf();
       if (ASTHelpers.getSymbol(treeWithAnnotation).isConstructor()
           && constructorWithInjectMatcher.matches((MethodTree) treeWithAnnotation, state)
           && constructorWithAssistedInjectMatcher.matches((MethodTree) treeWithAnnotation, state)) {
-        return true;
+        return describeMatch(annotationTree, new SuggestedFix().delete(annotationTree));
       }
     }
-    return false;
-  }
-
-  @Override
-  public Description describe(AnnotationTree annotationTree, VisitorState state) {
-    return new Description(
-        annotationTree, getDiagnosticMessage(), new SuggestedFix().delete(annotationTree));
-  }
-
-
-  public static class Scanner extends com.google.errorprone.Scanner {
-    public DescribingMatcher<AnnotationTree> annotationMatcher =
-        new InjectAssistedInjectAndInjectOnSameConstructor();
-
-    @Override
-    public Void visitAnnotation(AnnotationTree annotationTree, VisitorState visitorState) {
-      evaluateMatch(annotationTree, visitorState, annotationMatcher);
-      return super.visitAnnotation(annotationTree, visitorState);
-    }
+    return Description.NO_MATCH;
   }
 }
