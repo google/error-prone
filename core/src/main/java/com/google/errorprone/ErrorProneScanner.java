@@ -119,8 +119,15 @@ public class ErrorProneScanner extends Scanner {
     }
   }
 
-  public ErrorProneScanner(BugChecker checker) {
-    registerNodeTypes(checker);
+  /**
+   * Create an error-prone scanner for a non-hardcoded set of checkers.
+   *
+   * @param checkers The checkers that this scanner should use.
+   */
+  public ErrorProneScanner(BugChecker... checkers) {
+    for (BugChecker checker : checkers) {
+      registerNodeTypes(checker);
+    }
   }
 
   private final List<MethodInvocationTreeMatcher> methodInvocationMatchers =
