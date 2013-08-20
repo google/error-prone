@@ -36,7 +36,7 @@ public class InjectMoreThanOneInjectableConstructorTest {
   @Before
   public void setUp() {
     compilationHelper =
-        new CompilationTestHelper(new InjectMoreThanOneInjectableConstructor.Scanner());
+        new CompilationTestHelper(InjectMoreThanOneInjectableConstructor.class);
   }
 
   @Test
