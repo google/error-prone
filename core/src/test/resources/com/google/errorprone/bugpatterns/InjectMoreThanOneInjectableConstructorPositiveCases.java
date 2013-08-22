@@ -24,7 +24,6 @@ import java.beans.ConstructorProperties;
  */
 public class InjectMoreThanOneInjectableConstructorPositiveCases {
 
-
   /**
    * Class has 2 constructors, both are injectable
    */

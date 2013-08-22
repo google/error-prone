@@ -62,4 +62,17 @@ public class InjectMoreThanOneInjectableConstructorNegativeCases {
 
     public TestClass4(int n) {}
   }
+  
+  /**
+   * Class has 2 constructors, both are injectable. Error is suppressed.
+   */
+  @SuppressWarnings("MoreThanOneInjectableConstructor")
+  public class TestClass5 {
+    @Inject
+    public TestClass5() {}
+
+    @Inject
+    public TestClass5(int n) {}
+  }
+
 }
