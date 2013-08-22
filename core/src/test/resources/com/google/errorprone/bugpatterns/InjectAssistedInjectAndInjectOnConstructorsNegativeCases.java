@@ -47,4 +47,17 @@ public class InjectAssistedInjectAndInjectOnConstructorsNegativeCases {
     @AssistedInject
     public TestClass5() {}
   }
+  
+  /**
+   * Class has a constructor annotated with @javax.inject.Inject and another constructor annotated
+   * with @AssistedInject. The warning is suppressed.
+   */
+  @SuppressWarnings("AssistedInjectAndInjectOnConstructors")
+  public class TestClass6 {
+    @javax.inject.Inject
+    public TestClass6() {}
+
+    @AssistedInject
+    public TestClass6(int n) {}
+  }
 }
