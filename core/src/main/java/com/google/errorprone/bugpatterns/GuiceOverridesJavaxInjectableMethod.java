@@ -46,7 +46,7 @@ import javax.lang.model.element.TypeElement;
  *
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-@BugPattern(name = "GuiceOverridesJavaxInjectableMethod",
+@BugPattern(name = "OverridesJavaxInjectableMethod",
     summary = "This method is not annotated with @Inject, but it overrides a  method that is "
     + " annotated with @javax.inject.Inject.", 
     explanation = "According to the JSR-330 spec, a method that overrides a method annotated "

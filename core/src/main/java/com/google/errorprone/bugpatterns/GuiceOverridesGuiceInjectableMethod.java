@@ -46,9 +46,9 @@ import javax.lang.model.element.TypeElement;
  *
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-@BugPattern(name = "GuiceOverridesGuiceInjectableMethod", summary =
+@BugPattern(name = "OverridesGuiceInjectableMethod", summary =
     "This method is not annotated with @Inject, but it overrides a "
-    + "method that is annotated with @com.googleinject.Inject. Guice will inject this method,"
+    + "method that is annotated with @com.google.inject.Inject. Guice will inject this method,"
     + "and it is recommended to annotate it explicitly.",
     explanation =
         "Unlike with @javax.inject.Inject, if a method overrides a method annoatated with "
@@ -80,11 +80,11 @@ public class GuiceOverridesGuiceInjectableMethod extends BugChecker implements M
       MethodSymbol superMethod = null;
       for (boolean checkSuperClass = true; checkSuperClass; method = superMethod) {
         superMethod = findSuperMethod(method, state);
-        if (isAnnotatedWtih(superMethod, GUICE_INJECT_ANNOTATION)) {
+        if (isAnnotatedWith(superMethod, GUICE_INJECT_ANNOTATION)) {
           return describeMatch(methodTree, new SuggestedFix().addImport("javax.inject.Inject")
               .prefixWith(methodTree, "@Inject\n"));
         }
-        checkSuperClass = isAnnotatedWtih(superMethod, OVERRIDE_ANNOTATION);
+        checkSuperClass = isAnnotatedWith(superMethod, OVERRIDE_ANNOTATION);
       }
     }
     return Description.NO_MATCH;
@@ -101,7 +101,7 @@ public class GuiceOverridesGuiceInjectableMethod extends BugChecker implements M
     return null;
   }
 
-  private static boolean isAnnotatedWtih(MethodSymbol method, String annotation) {
+  private static boolean isAnnotatedWith(MethodSymbol method, String annotation) {
     for (Compound c : method.getAnnotationMirrors()) {
       if (((TypeElement) c.getAnnotationType().asElement()).getQualifiedName()
           .contentEquals(annotation)) {

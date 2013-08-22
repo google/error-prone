@@ -75,7 +75,7 @@ public class GuiceOverridesJavaxInjectableMethodNegativeCases {
    * @javax.inject.Inject, and that method in turn overrides a method annotated with
    * @com.google.inject.Inject
    */
-  public class TestClass8 extends TestClass6 {
+  public class TestClass7 extends TestClass6 {
     public void foo() {}
   }
 
@@ -84,7 +84,18 @@ public class GuiceOverridesJavaxInjectableMethodNegativeCases {
    * @com.google.inject.Inject, and that method in turn overrides a method annotated with
    * @javax.inject.Inject
    */
-  public class TestClass7 extends TestClass5 {
+  public class TestClass8 extends TestClass5 {
     public void foo() {}
   }
+  
+  /**
+   * Class with a method foo() that is not annotated, but overrides a method annotated with
+   * @javax.inject.Inject. Error is suppressed.
+   */
+  public class TestClass9 extends TestClass3 {
+    @Override 
+    @SuppressWarnings("OverridesJavaxInjectableMethod")
+    public void foo() {}
+  }
+  
 }

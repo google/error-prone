@@ -40,8 +40,6 @@ public class GuiceOverridesGuiceInjectableMethodNegativeCases {
   }
  
   /**
-   * QUESTION SHOULD THIS BE A POSITIVE OR NEGATIVE TEST CASE?
-   * 
    * Class with a method foo() annotated with @javax.inject.Inject that overrides a method
    * annotated with @com.google.inject.Inject
    */
@@ -49,4 +47,15 @@ public class GuiceOverridesGuiceInjectableMethodNegativeCases {
     @javax.inject.Inject
     public void foo() {}
   }
+  
+  /**
+   * Class with a method foo() that is not annotated with @Inject, but overrides a method that is
+   * annotated with @com.google.inject.Inject. Warning is suppressed.
+   */
+  public class TestClass6 extends TestClass1 {
+    @SuppressWarnings("GuiceOverridesGuiceInjectableMethod")
+    @Override 
+    public void foo() {}
+  }
+  
 }
