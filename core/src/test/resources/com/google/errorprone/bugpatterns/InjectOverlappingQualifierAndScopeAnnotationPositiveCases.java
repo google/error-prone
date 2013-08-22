@@ -3,7 +3,7 @@ package com.google.errorprone.bugpatterns;
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-public class InjectBothQualifierAndScopePositiveCases {
+public class InjectOverlappingQualifierAndScopeAnnotationPositiveCases {
  
   //BUG: Suggestion includes "remove"
   @javax.inject.Scope

@@ -10,25 +10,25 @@ import java.io.File;
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-public class InjectBothQualifierAndScopeTest {
+public class InjectOverlappingQualifierAndScopeAnnotationTest {
   
   private CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() {
     compilationHelper =
-        new CompilationTestHelper(InjectBothQualifierAndScope.class);
+        new CompilationTestHelper(InjectOverlappingQualifierAndScopeAnnotation.class);
   }
 
   @Test
   public void testPositiveCase() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(new File(this.getClass()
-        .getResource("InjectBothQualifierAndScopePositiveCases.java").toURI()));
+        .getResource("InjectOverlappingQualifierAndScopeAnnotationPositiveCases.java").toURI()));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(new File(this.getClass()
-        .getResource("InjectBothQualifierAndScopeNegativeCases.java").toURI()));
+        .getResource("InjectOverlappingQualifierAndScopeAnnotationNegativeCases.java").toURI()));
   }
 }

@@ -21,12 +21,12 @@ import com.sun.tools.javac.code.Symbol;
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-@BugPattern(name = "InjectBothQualifierAndScope",
+@BugPattern(name = "OverlappingQualifierAndScopeAnnotation",
     summary = "Annotations cannot be both Qualifiers/BindingAnnotations and Scopes",
     explanation = "Qualifiers and Scoping annotations have different semantic meanings and a "
     		+ "single annotation should not be both a qualifier and a scoping annotation",
     category = INJECT, severity = ERROR, maturity = EXPERIMENTAL)
-public class InjectBothQualifierAndScope extends BugChecker implements AnnotationTreeMatcher {
+public class InjectOverlappingQualifierAndScopeAnnotation extends BugChecker implements AnnotationTreeMatcher {
 
   private static final String GUICE_SCOPE_ANNOTATION = "com.google.inject.ScopeAnnotation";
   private static final String JAVAX_SCOPE_ANNOTATION = "javax.inject.Scope";
@@ -70,13 +70,16 @@ public class InjectBothQualifierAndScope extends BugChecker implements Annotatio
   @SuppressWarnings("unchecked")
   public final Description matchAnnotation(AnnotationTree annotationTree, VisitorState state) {
     if (QUALIFIER_OR_SCOPE_MATCHER.matches(annotationTree, state)) {
-      ClassTree annotationType =
-          (ClassTree) state.getPath().getParentPath().getParentPath().getLeaf();
+      ClassTree annotationType = getAnnotationTypeFromMetaAnnotation(state);
       if (HAS_QUALIFIER_ANNOTATION_MATCHER.matches(annotationType, state)
           && HAS_SCOPE_ANNOTATION_MATCHER.matches(annotationType, state)) {
         return describeMatch(annotationTree, new SuggestedFix().delete(annotationTree));
       }
     }
     return Description.NO_MATCH;
+  }
+
+  private static ClassTree getAnnotationTypeFromMetaAnnotation(VisitorState state) {
+    return (ClassTree) state.getPath().getParentPath().getParentPath().getLeaf();
   }
 }
