@@ -27,5 +27,4 @@ public class InjectAssistedInjectAndInjectOnSameConstructorPositiveCases {
     @AssistedInject
     public TestClass2() {}
   }
-
 }

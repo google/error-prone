@@ -22,9 +22,10 @@ import com.sun.tools.javac.code.Symbol;
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-@BugPattern(name = "InjectAssistedInjectAndInjectOnSameConstructor",
+@BugPattern(name = "AssistedInjectAndInjectOnSameConstructor",
     summary = "@AssistedInject and @Inject cannot be used on the same constructor.",
-    explanation = "",
+    explanation = "Using @AssistedInject and @Inject on the same constructor is a runtime"
+    + "error in Guice.",
     category = INJECT, severity = ERROR, maturity = EXPERIMENTAL)
 public class InjectAssistedInjectAndInjectOnSameConstructor extends BugChecker
     implements AnnotationTreeMatcher {

@@ -58,4 +58,26 @@ public class InjectAssistedInjectAndInjectOnSameConstructorNegativeCases {
     @AssistedInject
     public TestClass6() {}
   }
+  
+  /**
+   * Class has a constructor annotated with @javax.inject.Inject and @AssistedInject.
+   * Error is suppressed.
+   */
+  @SuppressWarnings("AssistedInjectAndInjectOnSameConstructor")
+  public class TestClass7 {
+    @javax.inject.Inject
+    @AssistedInject
+    public TestClass7() {}
+  }
+  
+  /**
+   * Class has a constructor annotated with @com.google.inject.Inject and @AssistedInject.
+   * Error is suppressed.
+   */
+  @SuppressWarnings("AssistedInjectAndInjectOnSameConstructor")
+  public class TestClass8 {
+    @com.google.inject.Inject
+    @AssistedInject
+    public TestClass8() {}
+  }
 }
