@@ -37,7 +37,7 @@ import com.sun.source.tree.Tree;
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-@BugPattern(name = "InjectJavaxInjectOnAbstractMethod",
+@BugPattern(name = "JavaxInjectOnAbstractMethod",
     summary = "Abstract methods are not injectable with javax.inject.Inject.", explanation =
         "The javax.inject.Inject annotation cannot go on an abstract method as per "
         + "the JSR-330 spec. This is in line with the fact that if a class overrides a "

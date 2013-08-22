@@ -62,4 +62,13 @@ public class InjectJavaxInjectOnAbstractMethodNegativeCases {
     @com.google.inject.Inject    
     abstract void abstractMethod();
   }
+  
+  /**
+   * Abstract class has an injectable(javax.inject.Inject) abstract method. Error is suppressed.
+   */
+  public abstract class TestClass6 {
+    @SuppressWarnings("JavaxInjectOnAbstractMethod")  
+    @javax.inject.Inject
+    abstract void abstractMethod();
+  }
 }
