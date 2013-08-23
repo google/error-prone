@@ -62,6 +62,7 @@ public class ErrorProneScanner extends Scanner {
   }
 
   // TODO: discover all @BugPattern-annotated classes
+  @SuppressWarnings("unchecked")
   private static final List<? extends Class<? extends BugChecker>> ALL_CHECKERS = Arrays.asList(
       SelfEquals.class,
       OrderingFrom.class,
@@ -82,8 +83,10 @@ public class ErrorProneScanner extends Scanner {
       InjectMoreThanOneQualifier.class,
       InjectMoreThanOneScopeAnnotationOnClass.class,
       InjectScopeAnnotationOnInterfaceOrAbstractClass.class,
+      InjectOverlappingQualifierAndScopeAnnotation.class,
       FallThroughSuppression.class,
       SuppressWarningsDeprecated.class,
+      InjectJavaxInjectOnAbstractMethod.class,
       EmptyIfStatement.class,
       EmptyStatement.class,
       InvalidNumericEquality.class,
@@ -104,7 +107,11 @@ public class ErrorProneScanner extends Scanner {
       InjectInvalidTargetingOnScopingAnnotation.class,
       GuiceAssistedInjectScoping.class,
       GuiceOverridesGuiceInjectableMethod.class,
-      GuiceOverridesJavaxInjectableMethod.class
+      GuiceOverridesJavaxInjectableMethod.class,
+      InjectAssistedInjectAndInjectOnSameConstructor.class,
+      InjectMoreThanOneInjectableConstructor.class,
+      InjectJavaxInjectOnFinalField.class,
+      GuiceInjectOnFinalField.class
   );
 
   @SuppressWarnings("unchecked")
@@ -121,8 +128,15 @@ public class ErrorProneScanner extends Scanner {
     }
   }
 
-  public ErrorProneScanner(BugChecker checker) {
-    registerNodeTypes(checker);
+  /**
+   * Create an error-prone scanner for a non-hardcoded set of checkers.
+   *
+   * @param checkers The checkers that this scanner should use.
+   */
+  public ErrorProneScanner(BugChecker... checkers) {
+    for (BugChecker checker : checkers) {
+      registerNodeTypes(checker);
+    }
   }
 
   private final List<MethodInvocationTreeMatcher> methodInvocationMatchers =

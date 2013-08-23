@@ -19,6 +19,7 @@ public class InjectAssistedInjectAndInjectOnConstructorsPositiveCases {
     @AssistedInject
     public TestClass1(int n) {}
   }
+  
   /**
    * Class has a constructor annotated with @com.google.inject.Inject and another constructor
    * annotated with @AssistedInject.
@@ -32,6 +33,7 @@ public class InjectAssistedInjectAndInjectOnConstructorsPositiveCases {
     @AssistedInject
     public TestClass2(int n) {}
   }
+  
   /**
    * Class has a constructor annotated with @com.google.inject.Inject, another constructor
    * annotated with @AssistedInject, and a third constructor with no annotation.
