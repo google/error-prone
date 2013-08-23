@@ -103,7 +103,10 @@ public class ErrorProneScanner extends Scanner {
       ArrayToStringCompoundAssignment.class,
       InjectScopeOrQualifierAnnotationRetention.class,
       InjectInvalidTargetingOnScopingAnnotation.class,
-      GuiceAssistedInjectScoping.class
+      GuiceAssistedInjectScoping.class,
+      InjectMoreThanOneInjectableConstructor.class,
+      InjectJavaxInjectOnFinalField.class,
+      GuiceInjectOnFinalField.class
   );
 
   @SuppressWarnings("unchecked")
@@ -120,8 +123,15 @@ public class ErrorProneScanner extends Scanner {
     }
   }
 
-  public ErrorProneScanner(BugChecker checker) {
-    registerNodeTypes(checker);
+  /**
+   * Create an error-prone scanner for a non-hardcoded set of checkers.
+   *
+   * @param checkers The checkers that this scanner should use.
+   */
+  public ErrorProneScanner(BugChecker... checkers) {
+    for (BugChecker checker : checkers) {
+      registerNodeTypes(checker);
+    }
   }
 
   private final List<MethodInvocationTreeMatcher> methodInvocationMatchers =

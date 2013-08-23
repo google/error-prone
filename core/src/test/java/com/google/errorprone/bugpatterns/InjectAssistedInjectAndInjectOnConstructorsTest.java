@@ -21,7 +21,7 @@ public class InjectAssistedInjectAndInjectOnConstructorsTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(new File(this.getClass()
+    compilationHelper.assertCompileSucceedsWithMessages(new File(this.getClass()
         .getResource("InjectAssistedInjectAndInjectOnConstructorsPositiveCases.java").toURI()));
   }
 
