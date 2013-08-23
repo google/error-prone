@@ -46,7 +46,7 @@ public class CompilationTestHelper {
         .build();
   }
 
-  public void assertCompileSucceeds(File source, File...dependencies) {
+  public void assertCompileSucceeds(File source, File... dependencies) {
     List<String> arguments = Lists.newArrayList("-Xjcov", source.getAbsolutePath());
     for (File file : dependencies) {
       arguments.add(file.getAbsolutePath());
@@ -59,8 +59,9 @@ public class CompilationTestHelper {
    * Assert that the compile fails, and that for each line of the test file that contains
    * the pattern //BUG("foo"), the diagnostic at that line contains "foo".
    */
-  public void assertCompileFailsWithMessages(File source, File...dependencies) throws IOException {
-    List<String> arguments = Lists.newArrayList("-Xjcov", "-encoding", "UTF-8", source.getAbsolutePath());
+  public void assertCompileFailsWithMessages(File source, File... dependencies) throws IOException {
+    List<String> arguments =
+        Lists.newArrayList("-Xjcov", "-encoding", "UTF-8", source.getAbsolutePath());
     for (File file : dependencies) {
       arguments.add(file.getAbsolutePath());
     }
