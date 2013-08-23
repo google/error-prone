@@ -2,7 +2,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
@@ -25,11 +25,13 @@ import com.sun.tools.javac.code.Symbol;
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-@BugPattern(name = "InjectAssistedInjectAndInjectOnConstructors",
-    summary = "@AssistedInject and @Inject cannot be used on constructors in the same class.",
-    explanation = 
-    "http://google-guice.googlecode.com/git/javadoc/com/google/inject/assistedinject/AssistedInject.html",
-    category = INJECT, severity = ERROR, maturity = EXPERIMENTAL)
+@BugPattern(name = "AssistedInjectAndInjectOnConstructors",
+    summary = "@AssistedInject and @Inject should not be used on different constructors "
+    		+ "in the same class.",
+    explanation = "Mixing @Inject and @AssistedInject leads to confusing code and the "
+    + "documentation specifies not to do it. See " 
+    + "http://google-guice.googlecode.com/git/javadoc/com/google/inject/assistedinject/AssistedInject.html",
+    category = INJECT, severity = WARNING, maturity = EXPERIMENTAL)
 public class InjectAssistedInjectAndInjectOnConstructors extends BugChecker
     implements AnnotationTreeMatcher {
 

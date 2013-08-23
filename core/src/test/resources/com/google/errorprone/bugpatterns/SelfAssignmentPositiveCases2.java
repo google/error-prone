@@ -24,15 +24,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public class SelfAssignmentPositiveCases2 {
-  // TODO(eaftan): what happens with a static field that has the same name 
-  // as a local field? 
-  
   private int a;
   private Foo foo;
   
-  //BUG: Suggestion includes "remove this line"
+  //BUG: Suggestion includes "private static final Object obj"
   private static final Object obj = SelfAssignmentPositiveCases2.obj;
-  //BUG: Suggestion includes "remove this line"
+  //BUG: Suggestion includes "private static final Object obj2"
   private static final Object obj2 = checkNotNull(SelfAssignmentPositiveCases2.obj2);
     
   public void test6() {

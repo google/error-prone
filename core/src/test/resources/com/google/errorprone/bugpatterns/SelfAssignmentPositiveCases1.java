@@ -22,9 +22,6 @@ package com.google.errorprone.bugpatterns;
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public class SelfAssignmentPositiveCases1 {
-  // TODO(eaftan): what happens with a static field that has the same name 
-  // as a local field? 
-  
   private int a;
   
   public void test1(int b) {
