@@ -38,15 +38,11 @@ import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.tree.JCTree.*;
 
-
 /**
- * TODO(eaftan): doesn't seem to be visiting incrementing assignments:
- * i += 10; // maybe this becomes i = i + 10 by this compiler phase?
- *
- * Also consider cases where the parent is not a statement or there is
- * no parent?
+ * TODO(eaftan): Consider cases where the parent is not a statement or there is no parent?
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  * @author scottjohnson@google.com (Scott Johnson)
@@ -54,8 +50,12 @@ import com.sun.tools.javac.tree.JCTree.*;
 @BugPattern(name = "SelfAssignment",
     summary = "Variable assigned to itself",
     explanation = "The left-hand side and right-hand side of this assignment are the same. " +
-        "It has no effect. This also handles assignments where the right side is a call to " +
-        "Preconditions.checkNotNull().",
+        "It has no effect.\n\n" +
+        "This also handles assignments in which the right-hand side is a call to " +
+        "Preconditions.checkNotNull(), which returns the variable that was checked for " +
+        "non-nullity.  If you just intended to check that the variable is non-null, please " +
+        "don't assign the result to the checked variable; just call Preconditions.checkNotNull() " +
+        "as a bare statement.",
     category = JDK, severity = ERROR, maturity = MATURE)
 public class SelfAssignment extends BugChecker
     implements AssignmentTreeMatcher, VariableTreeMatcher {
@@ -64,7 +64,7 @@ public class SelfAssignment extends BugChecker
   public Description matchAssignment(AssignmentTree tree, VisitorState state) {
     ExpressionTree expression = stripCheckNotNull(tree.getExpression(), state);
     if(ASTHelpers.sameVariable(tree.getVariable(), expression)) {
-      return describe(tree, state);
+      return describeForAssignment(tree, state);
     }
     return Description.NO_MATCH;
   }
@@ -84,7 +84,7 @@ public class SelfAssignment extends BugChecker
     Symbol rhsClass = ASTHelpers.getSymbol(rhs.getExpression());
     Symbol lhsClass = ASTHelpers.getSymbol(parent);
     if (rhsClass.equals(lhsClass) && rhs.getIdentifier().contentEquals(tree.getName())) {
-      return describe(tree, state);
+      return describeForVarDecl(tree, state);
     }
     return Description.NO_MATCH;
   }
@@ -104,15 +104,17 @@ public class SelfAssignment extends BugChecker
     return expression;
   }
 
-  public Description describe(VariableTree tree, VisitorState state) {
-    // the statement that is the parent of the self-assignment expression
-    Tree parent = state.getPath().getParentPath().getLeaf();
+  public Description describeForVarDecl(VariableTree tree, VisitorState state) {
+    String varDeclStr = tree.toString();
+    int equalsIndex = varDeclStr.indexOf('=');
+    if (equalsIndex < 0) {
+      throw new IllegalStateException("Expected variable declaration to have an initializer: "
+          + tree.toString());
+    }
+    varDeclStr = varDeclStr.substring(0, equalsIndex - 1) + ";";
 
-    // default fix is to delete assignment
-    SuggestedFix fix = new SuggestedFix().delete(parent);
-
-    // for now, don't know how to fix - just delete.
-    return describeMatch(tree, fix);
+    // Delete the initializer but still declare the variable.
+    return describeMatch(tree, new SuggestedFix().replace(tree, varDeclStr));
   }
 
   /**
@@ -131,7 +133,7 @@ public class SelfAssignment extends BugChecker
    *
    * Case 4: Otherwise suggest deleting the assignment.
    */
-  public Description describe(AssignmentTree assignmentTree, VisitorState state) {
+  public Description describeForAssignment(AssignmentTree assignmentTree, VisitorState state) {
 
     // the statement that is the parent of the self-assignment expression
     Tree parent = state.getPath().getParentPath().getLeaf();
