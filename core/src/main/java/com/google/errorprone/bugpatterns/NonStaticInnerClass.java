@@ -28,10 +28,6 @@ import static com.google.errorprone.matchers.Matchers.nestingKind;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.parentNode;
 import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
-import static com.sun.source.tree.Tree.Kind.CLASS;
-import static javax.lang.model.element.Modifier.STATIC;
-import static javax.lang.model.element.NestingKind.MEMBER;
-import static javax.lang.model.element.NestingKind.TOP_LEVEL;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -44,9 +40,13 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.ModifiersTree;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Types;
+
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.NestingKind;
 
 /**
  * @author alexloh@google.com (Alex Loh)
@@ -69,11 +69,11 @@ public class NonStaticInnerClass extends DescribingMatcher<ClassTree> {
   @Override
   public boolean matches(ClassTree classTree, VisitorState state) {
     return allOf(
-      not(classHasModifier(STATIC)),
-      kindIs(CLASS),
-      nestingKind(MEMBER),
-      parentNode(kindIs(CLASS)),
-      anyOf(parentNode(nestingKind(TOP_LEVEL)), parentNode(classHasModifier(STATIC))),
+      not(classHasModifier(Modifier.STATIC)),
+      kindIs(Kind.CLASS),
+      nestingKind(NestingKind.MEMBER),
+      parentNode(kindIs(Kind.CLASS)),
+      anyOf(parentNode(nestingKind(NestingKind.TOP_LEVEL)), parentNode(classHasModifier(Modifier.STATIC))),
       not(hasIdentifier(ANY, referenceEnclosing(classTree, state.getTypes())))
     ).matches(classTree, state);
   }
@@ -89,6 +89,10 @@ public class NonStaticInnerClass extends DescribingMatcher<ClassTree> {
     if (mods.getFlags().isEmpty()) {
       fix.prefixWith(classTree, "static ");
     } else {
+      // Note that the use of .toString() here effectively destroys any special
+      // formatting, eg if the modifiers previously had multiple spaces or a 
+      // comment between them, after this fix they will all have exactly one
+      // space between each modifier.
       String newmods = mods.toString();
       int ind = newmods.indexOf("final");
       if (ind < 0) {

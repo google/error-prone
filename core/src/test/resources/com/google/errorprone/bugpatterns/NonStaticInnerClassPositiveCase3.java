@@ -23,7 +23,7 @@ public class NonStaticInnerClassPositiveCase3 {
 
   static int outerVar;
 
-  //Nested non-static inner class inside a static inner class
+  // Nested non-static inner class inside a static inner class
   static class NonStaticOuter {
     int nonStaticVar = outerVar;
     //BUG: Suggestion includes "public static class Inner3"

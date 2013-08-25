@@ -547,8 +547,13 @@ public class Matchers {
     return new MethodModifier(modifier);
   }
 
+  /**
+   * Matches a class with the specified modifier
+   *
+   * @param modifier The modifier to match against, eg PUBLIC, STATIC, FINAL, etc
+   */
   public static Matcher<ClassTree> classHasModifier(final Modifier modifier) {
- return new ClassModifier(modifier);
+    return new ClassModifier(modifier);
   }
 
   /**
@@ -582,6 +587,11 @@ public class Matchers {
     };
   }
 
+  /**
+   * Matches an class based on whether it is nested in another class or method.
+   *
+   * @param kind The kind of nesting to match, eg ANONYMOUS, LOCAL, MEMBER, TOP_LEVEL
+   */
   public static Matcher<ClassTree> nestingKind(final NestingKind kind) {
     return new Matcher<ClassTree>() {
       @Override
@@ -623,9 +633,17 @@ public class Matchers {
     };
   }
 
-  public static MultiMatcher<Tree, IdentifierTree> hasIdentifier(MatchType matchType, Matcher<IdentifierTree> nodeMatcher) {
- return new HasIdentifier(matchType, nodeMatcher);
+  /**
+   * Matches any AST that contains an identifier with a certain property. This matcher can be used,
+   * for instance, to locate identifiers with a certain name or which is defined in a certain class.
+   *
+   * @param matchType Whether to match if the matchers match any of or all of the identifiers on
+   * this tree.
+   * @param nodeMatcher Which identifiers to look for 
+   */
+  public static MultiMatcher<Tree, IdentifierTree> hasIdentifier(MatchType matchType, 
+      Matcher<IdentifierTree> nodeMatcher) {
+    return new HasIdentifier(matchType, nodeMatcher);
   }
 }
-
 

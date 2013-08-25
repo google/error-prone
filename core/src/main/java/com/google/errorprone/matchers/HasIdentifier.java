@@ -39,7 +39,7 @@ public class HasIdentifier extends MultiMatcher<Tree, IdentifierTree> {
 
   @Override
   public boolean matches(Tree tree, VisitorState state) {
-   return tree.accept(new HasIdentifierScanner(matchType, nodeMatcher), null);
+    return tree.accept(new HasIdentifierScanner(matchType, nodeMatcher), null);
   }
 
   /**
@@ -47,44 +47,46 @@ public class HasIdentifier extends MultiMatcher<Tree, IdentifierTree> {
    */
   private static class HasIdentifierScanner extends TreeScanner<Boolean, Void> {
 
-   private Matcher<IdentifierTree> idMatcher;
-   private MatchType matchType;
+    private Matcher<IdentifierTree> idMatcher;
+    private MatchType matchType;
 
-   public HasIdentifierScanner(MatchType matchType, Matcher<IdentifierTree> idMatcher) {
-     this.matchType = matchType;
-     this.idMatcher = idMatcher; 
-   }
+    public HasIdentifierScanner(MatchType matchType, Matcher<IdentifierTree> idMatcher) {
+      this.matchType = matchType;
+      this.idMatcher = idMatcher; 
+    }
 
-     @Override
-   public Boolean visitIdentifier(IdentifierTree node, Void v) {
-     return idMatcher.matches(node, null);
-   }
+    @Override
+    public Boolean visitIdentifier(IdentifierTree node, Void v) {
+      return idMatcher.matches(node, null);
+    }
 
-   @Override
-   public Boolean reduce(Boolean r1, Boolean r2) {
-     if (r1==null) return r2;
-     else if (r2==null) return r1;
-     else { 
-            if (matchType == ANY) {
-	    return r1 || r2;
-           } else if (matchType == ALL) { 
-	  return r1 && r2;
-           }
-     }
-     return null;
-   }
+    @Override
+    public Boolean reduce(Boolean r1, Boolean r2) {
+      if (r1 == null) {
+        return r2;
+      } else if (r2 == null) {
+        return r1;
+      } else { 
+        if (matchType == ANY) {
+          return r1 || r2;
+        } else if (matchType == ALL) { 
+          return r1 && r2;
+        }
+      }
+      return null;
+    }
 
-     @Override
-   public Boolean visitClass(ClassTree node, Void v) {
-     Boolean res = super.visitClass(node, v);
-     if (res==null) {
-         if (matchType == ANY) {
-	  return false;
-         } else if (matchType == ALL) { 
-	return true;
-         }
-     }
-     return res;
-     }
+    @Override
+    public Boolean visitClass(ClassTree node, Void v) {
+      Boolean res = super.visitClass(node, v);
+      if (res == null) {
+        if (matchType == ANY) {
+          return false;
+        } else if (matchType == ALL) { 
+          return true;
+        }
+      }
+      return res;
+    }
   }
 }

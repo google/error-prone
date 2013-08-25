@@ -24,9 +24,9 @@ public class NonStaticInnerClassPositiveCase2 {
   int outerVar1;
   int outerVar2;
 
-  //Outer variable overridden
+  // Outer variable overridden
   //BUG: Suggestion includes "private static final class Inner2"
-  private final class Inner2 {
+  private   final class Inner2 {
     int outerVar1;
     int innerVar = outerVar1;
     int localMethod(int outerVar2) {
