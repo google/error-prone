@@ -71,6 +71,15 @@ public class NonStaticInnerClassNegativeCases {
     VIOLET,
   }
 
+  //outer class is a nested but non-static, and thus cannot have a static class
+  void baz() {
+    class NonStaticOuter2 {
+      int nonStaticVar = outerVar;
+      class Inner8 {
+      }
+    }
+  }
+
   //inner class references a method from inheritance
   public static interface OuterInter {
     int outerInterMethod();

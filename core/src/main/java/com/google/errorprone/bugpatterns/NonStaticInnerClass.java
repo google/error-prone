@@ -24,11 +24,14 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.classHasModifier;
 import static com.google.errorprone.matchers.Matchers.hasIdentifier;
 import static com.google.errorprone.matchers.Matchers.kindIs;
+import static com.google.errorprone.matchers.Matchers.nestingKind;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.parentNode;
 import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
 import static com.sun.source.tree.Tree.Kind.CLASS;
 import static javax.lang.model.element.Modifier.STATIC;
+import static javax.lang.model.element.NestingKind.MEMBER;
+import static javax.lang.model.element.NestingKind.TOP_LEVEL;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -67,9 +70,10 @@ public class NonStaticInnerClass extends DescribingMatcher<ClassTree> {
   public boolean matches(ClassTree classTree, VisitorState state) {
     return allOf(
       not(classHasModifier(STATIC)),
-      parentNode(kindIs(CLASS)),
-      anyOf(not(parentNode(parentNode(kindIs(CLASS)))), parentNode(classHasModifier(STATIC))),
       kindIs(CLASS),
+      nestingKind(MEMBER),
+      parentNode(kindIs(CLASS)),
+      anyOf(parentNode(nestingKind(TOP_LEVEL)), parentNode(classHasModifier(STATIC))),
       not(hasIdentifier(ANY, referenceEnclosing(classTree, state.getTypes())))
     ).matches(classTree, state);
   }
@@ -122,7 +126,6 @@ public class NonStaticInnerClass extends DescribingMatcher<ClassTree> {
 
     @Override
     public boolean matches(IdentifierTree node, VisitorState state) {
-
       Symbol sym = ASTHelpers.getSymbol(node);
       ClassSymbol nodeOwner = sym.enclClass();
       return !sym.isLocal() && !sym.isMemberOf(currentClass, types);

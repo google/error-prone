@@ -35,6 +35,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCArrayTypeTree;
@@ -50,6 +51,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.NestingKind;
 
 /**
  * Static factory methods which make the DSL read more fluently.
@@ -576,6 +578,16 @@ public class Matchers {
       @Override
       public boolean matches(VariableTree variableTree, VisitorState state) {
         return treeMatcher.matches(variableTree.getType(), state);
+      }
+    };
+  }
+
+  public static Matcher<ClassTree> nestingKind(final NestingKind kind) {
+    return new Matcher<ClassTree>() {
+      @Override
+      public boolean matches(ClassTree classTree, VisitorState state) {
+        ClassSymbol sym = (ClassSymbol) ASTHelpers.getSymbol(classTree);
+        return sym.getNestingKind() == kind;
       }
     };
   }
