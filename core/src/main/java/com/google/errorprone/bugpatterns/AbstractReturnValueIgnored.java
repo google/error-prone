@@ -18,6 +18,9 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.kindIs;
+import static com.google.errorprone.matchers.Matchers.not;
+import static com.google.errorprone.matchers.Matchers.methodSelect;
 import static com.google.errorprone.matchers.Matchers.parentNode;
 
 import com.google.errorprone.VisitorState;
@@ -27,6 +30,7 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
@@ -48,6 +52,7 @@ abstract class AbstractReturnValueIgnored extends BugChecker
       MethodInvocationTree methodInvocationTree, VisitorState state) {
     if (allOf(
         parentNode(Matchers.<MethodInvocationTree>kindIs(Kind.EXPRESSION_STATEMENT)),
+        not(methodSelect(allOf(kindIs(Kind.IDENTIFIER), identifierHasName("super")))),
         specializedMatcher())
         .matches(methodInvocationTree, state)) {
       return describe(methodInvocationTree, state);
@@ -60,6 +65,15 @@ abstract class AbstractReturnValueIgnored extends BugChecker
    * side-effect-free methods, has a @CheckReturnValue annotation, etc.).
    */
   public abstract Matcher<MethodInvocationTree> specializedMatcher();
+
+  private static Matcher<ExpressionTree> identifierHasName(final String name) {
+    return new Matcher<ExpressionTree>() {
+      @Override
+      public boolean matches(ExpressionTree item, VisitorState state) {
+        return ((IdentifierTree) item).getName().contentEquals(name);
+      }
+    };
+  }
 
   /**
    * Fixes the error by assigning the result of the call to the receiver reference, or deleting
