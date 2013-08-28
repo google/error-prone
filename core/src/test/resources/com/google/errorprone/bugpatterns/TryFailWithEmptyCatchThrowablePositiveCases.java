@@ -16,11 +16,15 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import junit.framework.TestCase;
 
 import org.junit.Assert;
+
+import java.util.LinkedList;
 
 /**
  * @author adamwos@google.com (Adam Wos)
@@ -31,58 +35,104 @@ public class TryFailWithEmptyCatchThrowablePositiveCases {
     try {
       dummyMethod();
       Assert.fail();
+    //BUG: Suggestion includes "catch (Exception t)"
     } catch (Throwable t) {
     }
   }
 
-//  public static void commentCatch_failNoMessage() {
-//    try {
-//      dummyMethod();
-//      Assert.fail();
-//    } catch (Throwable t123) {
-//      // expected!
-//      ;
-//      /* that's an empty comment */
-//    }
-//  }
-//
-//  public static void codeCatch_failNoMessage() {
-//    try {
-//      dummyMethod();
-//      Assert.fail();
-//    } catch (Throwable t) {
-//      dummyRecover();
-//    }
-//  }
-//
-//  public static void emptyCatch_failWithMessage() {
-//    try {
-//      dummyMethod();
-//      Assert.fail("Faaail!");
-//    } catch (Throwable t) {
-//    }
-//  }
-//
-//
-//  public static void commentCatch_failWithMessage() {
-//    try {
-//      dummyMethod();
-//      Assert.fail("Faaail!");
-//    } catch (Throwable t) {
-//      // expected!
-//    }
-//  }
-//
-//  static final class SomeTest extends TestCase {
-//    public void testInTestCase() {
-//      try {
-//        dummyMethod();
-//        fail("message");
-//      } catch (Throwable codeCatch_oldAssertFailWithMessage) {
-//        // comment
-//      }
-//    }
-//  }
+  public static void commentCatch_failNoMessage() {
+    try {
+      dummyMethod();
+      Assert.fail();
+    //BUG: Suggestion includes "catch (Exception t123)"
+    } catch (Throwable t123) {
+      // expected!
+      ;
+      /* that's an empty comment */
+    }
+  }
+
+  public static void commentCatch_failWithMessage() {
+    try {
+      dummyMethod();
+      Assert.fail("Faaail!");
+    //BUG: Suggestion includes "catch (Exception t)"
+    } catch (Throwable t) {
+      // expected!
+    }
+  }
+
+  public static void commentCatch_failNotLast() {
+    try {
+      dummyMethod();
+      fail("Faaail!");
+      dummyMethod();
+    //BUG: Suggestion includes "catch (Exception t)"
+    } catch (Throwable t) {
+      // expected!
+    }
+  }
+
+  public static void commentCatch_assert() {
+    try {
+      dummyMethod();
+      assertEquals(1, 2);
+    //BUG: Suggestion includes "catch (Exception t)"
+    } catch (Throwable t) {
+      // expected!
+    }
+  }
+
+  public static void commentCatch_assertNotLast() {
+    try {
+      dummyMethod();
+      assertTrue("foobar!", true);
+      dummyRecover();
+    //BUG: Suggestion includes "catch (Exception t)"
+    } catch (Throwable t) {
+      // expected!
+    }
+  }
+
+  public static void customMoreAsserts() {
+    try {
+      dummyMethod();
+      CustomMoreAsserts.assertFoobar();
+      dummyMethod();
+    //BUG: Suggestion includes "catch (Exception t)"
+    } catch (Throwable t) {
+      // expected!
+    }
+  }
+
+  public static void customMoreAsserts_fail() {
+    try {
+      dummyMethod();
+      CustomMoreAsserts.fail("param", 0x42);
+      dummyMethod();
+    //BUG: Suggestion includes "catch (Exception t)"
+    } catch (Throwable t) {
+      // expected!
+    }
+  }
+
+  static final class SomeTest extends TestCase {
+    public void testInTestCase() {
+      try {
+        dummyMethod();
+        fail("message");
+      //BUG: Suggestion includes "catch (Exception codeCatch_oldAssertFailWithMessage)"
+      } catch (Throwable codeCatch_oldAssertFailWithMessage) {
+        // comment
+        /* another */
+      }
+    }
+  }
+
+  static final class CustomMoreAsserts {
+    static void assertFoobar() {}
+    static void fail(String param1, int param2) {}
+  }
 
   private static void dummyRecover() {}
 
