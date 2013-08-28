@@ -13,8 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.google.errorprone.bugpatterns;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import junit.framework.TestCase;
 
 import org.junit.Assert;
 
@@ -73,20 +78,29 @@ public class TryFailWithEmptyCatchThrowableNegativeCases {
     }
   }
 
-  public static void ownFail() {
+  public static void catchException() {
     try {
       dummyMethod();
-      fail();
-    } catch (Throwable t) {
+      Assert.fail();
+    } catch (Exception t) {
       dummyRecover();
     }
   }
 
-  public static void codeCatch_FQFail() {
+  public static void catchException_failWithMessage() {
     try {
       dummyMethod();
-      org.junit.Assert.fail("Faaail!");
-    } catch (Throwable t444) {
+      Assert.fail("message");
+    } catch (Exception t) {
+      dummyRecover();
+    }
+  }
+
+  public static void codeCatch_failNoMessage() {
+    try {
+      dummyMethod();
+      Assert.fail();
+    } catch (Throwable t) {
       dummyRecover();
     }
   }
@@ -95,6 +109,15 @@ public class TryFailWithEmptyCatchThrowableNegativeCases {
     try {
       dummyMethod();
       Assert.fail("Faaail!");
+    } catch (Throwable t444) {
+      dummyRecover();
+    }
+  }
+
+  public static void codeCatch_staticImportedFail() {
+    try {
+      dummyMethod();
+      fail();
     } catch (Throwable t444) {
       dummyRecover();
     }
@@ -118,20 +141,43 @@ public class TryFailWithEmptyCatchThrowableNegativeCases {
     }
   }
 
-  public static void catchException() {
+  public static void codeCatch_FQFail() {
     try {
       dummyMethod();
-      Assert.fail();
-    } catch (Exception t) {
+      org.junit.Assert.fail("Faaail!");
+    } catch (Throwable t444) {
+      dummyRecover();
     }
   }
 
-  public static void catchException_failWithMessage() {
+
+  public static void codeCatch_assert() {
     try {
       dummyMethod();
-      Assert.fail("message");
-    } catch (Exception t) {
+      assertEquals(1, 2);
+    } catch (Throwable t) {
+      dummyMethod();
+    }
+  }
+
+  public static void commentCatch_assertNotLast() {
+    try {
+      dummyMethod();
+      assertTrue("foobar!", true);
       dummyRecover();
+    } catch (Throwable t) {
+      dummyMethod();
+    }
+  }
+
+  static final class SomeTest extends TestCase {
+    public void testInTestCase() {
+      try {
+        dummyMethod();
+        fail("message");
+      } catch (Throwable codeCatch_oldAssertFailWithMessage) {
+        dummyRecover();
+      }
     }
   }
 
@@ -139,5 +185,4 @@ public class TryFailWithEmptyCatchThrowableNegativeCases {
 
   private static void dummyMethod() {}
 
-  private static void fail() {}
 }
