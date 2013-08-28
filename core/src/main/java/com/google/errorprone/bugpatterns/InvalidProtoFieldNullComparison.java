@@ -35,6 +35,9 @@ public class InvalidProtoFieldNullComparison extends DescribingMatcher<BinaryTre
   private static final String PROTO_SUPER_CLASS = "com.google.protobuf.GeneratedMessage";
 
   private static final String LIST_INTERFACE = "java.util.List";
+  
+  private static final Matcher<Tree> listMatcher =
+      Matchers.isCastableTo(LIST_INTERFACE);
 
   private static final Set<Kind> COMPARISON_OPERATORS =
       ImmutableSet.of(Kind.EQUAL_TO, Kind.NOT_EQUAL_TO);
@@ -76,8 +79,7 @@ public class InvalidProtoFieldNullComparison extends DescribingMatcher<BinaryTre
       if (!method.getArguments().isEmpty()) {
         return false;
       }
-      Type returnType = ASTHelpers.getReturnType(method.getMethodSelect());
-      if (!isList(returnType, state)) {
+      if (!listMatcher.matches(method.getMethodSelect(), state)) {
         return false;
       }
       ExpressionTree expressionTree = method.getMethodSelect();
@@ -97,8 +99,7 @@ public class InvalidProtoFieldNullComparison extends DescribingMatcher<BinaryTre
       if (!method.getArguments().isEmpty()) {
         return false;
       }
-      Type returnType = ASTHelpers.getReturnType(method.getMethodSelect());
-      if (isList(returnType, state)) {
+      if (listMatcher.matches(method.getMethodSelect(), state)) {
         return false;
       }
       ExpressionTree expressionTree = method.getMethodSelect();
