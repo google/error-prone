@@ -12,6 +12,3 @@ message TestProtoMessage {
   optional TestFieldProtoMessage message = 1;
   repeated TestFieldProtoMessage multi_field = 2;
 }
-
-
-
