@@ -19,7 +19,7 @@ package com.google.errorprone.bugpatterns;
 /**
  * @author alexloh@google.com (Alex Loh)
  */
-public class NonStaticInnerClassNegativeCases {
+public class ClassCanBeStaticNegativeCases {
   int outerVar;
   public int outerMethod() {
     return 0;

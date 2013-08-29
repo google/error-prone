@@ -19,15 +19,13 @@ package com.google.errorprone.bugpatterns;
 /**
  * @author alexloh@google.com (Alex Loh)
  */
-public class NonStaticInnerClassPositiveCase3 {
+public class ClassCanBeStaticPositiveCase1 {
+  
+  int outerVar;
 
-  static int outerVar;
-
-  // Nested non-static inner class inside a static inner class
-  static class NonStaticOuter {
-    int nonStaticVar = outerVar;
-    //BUG: Suggestion includes "public static class Inner3"
-    public class Inner3 {
-    }
+  // Non-static inner class that does not use outer scope
+  //BUG: Suggestion includes "static class Inner1"
+  class Inner1 {
+    int innerVar;
   }
 }

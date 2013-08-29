@@ -19,13 +19,18 @@ package com.google.errorprone.bugpatterns;
 /**
  * @author alexloh@google.com (Alex Loh)
  */
-public class NonStaticInnerClassPositiveCase1 {
-  
-  int outerVar;
+public class ClassCanBeStaticPositiveCase2 {
 
-  // Non-static inner class that does not use outer scope
-  //BUG: Suggestion includes "static class Inner1"
-  class Inner1 {
-    int innerVar;
+  int outerVar1;
+  int outerVar2;
+
+  // Outer variable overridden
+  //BUG: Suggestion includes "private static final class Inner2"
+  private   final class Inner2 {
+    int outerVar1;
+    int innerVar = outerVar1;
+    int localMethod(int outerVar2) {
+      return outerVar2;
+    }
   }
 }

@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.bugpatterns.NonStaticInnerClass;
+import com.google.errorprone.bugpatterns.ClassCanBeStatic;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,35 +27,35 @@ import java.io.File;
 /**
  * @author alexloh@google.com (Alex Loh)
  */
-public class NonStaticInnerClassTest {
+public class ClassCanBeStaticTest {
 
   private CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(NonStaticInnerClass.class);
+    compilationHelper = new CompilationTestHelper(ClassCanBeStatic.class);
   }
 
   @Test public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("NonStaticInnerClassNegativeCases.java").toURI()));
+        new File(this.getClass().getResource("ClassCanBeStaticNegativeCases.java").toURI()));
   }
 
   @Test
   public void testPositiveCase1() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("NonStaticInnerClassPositiveCase1.java").toURI()));
+        new File(this.getClass().getResource("ClassCanBeStaticPositiveCase1.java").toURI()));
   }
 
   @Test
   public void testPositiveCase2() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("NonStaticInnerClassPositiveCase2.java").toURI()));
+        new File(this.getClass().getResource("ClassCanBeStaticPositiveCase2.java").toURI()));
   }
 
   @Test
   public void testPositiveCase3() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("NonStaticInnerClassPositiveCase3.java").toURI()));
+        new File(this.getClass().getResource("ClassCanBeStaticPositiveCase3.java").toURI()));
   }
 }
