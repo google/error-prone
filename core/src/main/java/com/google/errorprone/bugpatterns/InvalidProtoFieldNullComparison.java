@@ -11,9 +11,6 @@ import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
-import com.google.errorprone.util.ASTHelpers;
-
-import java.util.Set;
 
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
@@ -23,6 +20,8 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol.CompletionFailure;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
+
+import java.util.Set;
 
 @BugPattern(name = "InvalidProtoFieldNullComparison", category = Category.ONE_OFF,
     severity = SeverityLevel.ERROR, maturity = MaturityLevel.EXPERIMENTAL,
@@ -34,9 +33,12 @@ public class InvalidProtoFieldNullComparison extends DescribingMatcher<BinaryTre
 
   private static final String PROTO_SUPER_CLASS = "com.google.protobuf.GeneratedMessage";
 
+  private static final Matcher<ExpressionTree> protoMessageReceiverMatcher =
+      Matchers.instanceMethod(Matchers.isSubtypeOf(PROTO_SUPER_CLASS), "*");
+
   private static final String LIST_INTERFACE = "java.util.List";
-  
-  private static final Matcher<Tree> listMatcher =
+
+  private static final Matcher<Tree> returnsListMatcher =
       Matchers.isCastableTo(LIST_INTERFACE);
 
   private static final Set<Kind> COMPARISON_OPERATORS =
@@ -79,7 +81,7 @@ public class InvalidProtoFieldNullComparison extends DescribingMatcher<BinaryTre
       if (!method.getArguments().isEmpty()) {
         return false;
       }
-      if (!listMatcher.matches(method.getMethodSelect(), state)) {
+      if (!returnsListMatcher.matches(method, state)) {
         return false;
       }
       ExpressionTree expressionTree = method.getMethodSelect();
@@ -99,7 +101,7 @@ public class InvalidProtoFieldNullComparison extends DescribingMatcher<BinaryTre
       if (!method.getArguments().isEmpty()) {
         return false;
       }
-      if (listMatcher.matches(method.getMethodSelect(), state)) {
+      if (returnsListMatcher.matches(method, state)) {
         return false;
       }
       ExpressionTree expressionTree = method.getMethodSelect();
@@ -128,15 +130,7 @@ public class InvalidProtoFieldNullComparison extends DescribingMatcher<BinaryTre
   }
 
   private boolean isProtoMessage(ExpressionTree tree, VisitorState state) {
-    Type type = ASTHelpers.getReceiverType(((MethodInvocationTree) tree).getMethodSelect());
-    Type protoSuperClass = state.getTypeFromString(PROTO_SUPER_CLASS);
-    if (protoSuperClass == null) {
-      return false;
-    }
-    if (state.getTypes().isSubtype(type, state.getTypes().erasure(protoSuperClass))) {
-      return true;
-    }
-    return false;
+    return protoMessageReceiverMatcher.matches(((MethodInvocationTree) tree).getMethodSelect(), state);
   }
 
   private static String replaceLast(String text, String pattern, String replacement) {

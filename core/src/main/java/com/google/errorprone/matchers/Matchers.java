@@ -164,7 +164,7 @@ public class Matchers {
    * @param receiverMatcher Used to determine if the part of the expression before the dot matches.
    * @param methodName The name of the method to match, e.g., "equals" or "*" to match any method name
    */
-  public static InstanceMethod instanceMethod(Matcher<ExpressionTree> receiverMatcher, String methodName) {
+  public static InstanceMethod instanceMethod(Matcher<? super ExpressionTree> receiverMatcher, String methodName) {
     return new InstanceMethod(receiverMatcher, methodName);
   }
 

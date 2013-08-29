@@ -31,14 +31,14 @@ import com.sun.tools.javac.tree.JCTree.JCIdent;
  */
 public class InstanceMethod implements Matcher<ExpressionTree> {
 
-  private final Matcher<ExpressionTree> receiverMatcher;
+  private final Matcher<? super ExpressionTree> receiverMatcher;
   private final String methodName;
   private final boolean isWildCard;
 
   /**
    * @param methodName name of the method or "*" to match any method name
    */
-  public InstanceMethod(Matcher<ExpressionTree> receiverMatcher, String methodName) {
+  public InstanceMethod(Matcher<? super ExpressionTree> receiverMatcher, String methodName) {
     this.receiverMatcher = receiverMatcher;
     this.methodName = methodName;
     this.isWildCard = methodName.equals("*");
