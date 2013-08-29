@@ -162,7 +162,7 @@ public class Matchers {
   /**
    * Matches an AST node which is an expression yielding the indicated non-static method.
    * @param receiverMatcher Used to determine if the part of the expression before the dot matches.
-   * @param methodName The name of the method to match, e.g., "equals"
+   * @param methodName The name of the method to match, e.g., "equals" or "*" to match any method name
    */
   public static InstanceMethod instanceMethod(Matcher<ExpressionTree> receiverMatcher, String methodName) {
     return new InstanceMethod(receiverMatcher, methodName);

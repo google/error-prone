@@ -33,10 +33,15 @@ public class InstanceMethod implements Matcher<ExpressionTree> {
 
   private final Matcher<ExpressionTree> receiverMatcher;
   private final String methodName;
+  private final boolean isWildCard;
 
+  /**
+   * @param methodName name of the method or "*" to match any method name
+   */
   public InstanceMethod(Matcher<ExpressionTree> receiverMatcher, String methodName) {
     this.receiverMatcher = receiverMatcher;
     this.methodName = methodName;
+    this.isWildCard = methodName.equals("*");
   }
 
   @Override
@@ -47,7 +52,7 @@ public class InstanceMethod implements Matcher<ExpressionTree> {
     // 2) symbol is static (not an instance method), or
     // 3) the method names don't match.
     if (sym == null || sym.isStatic() ||
-        !sym.getQualifiedName().equals(state.getName(methodName))) {  // methodName doesn't match
+        (!isWildCard && !sym.getQualifiedName().equals(state.getName(methodName)))) {  // methodName doesn't match
       return false;
     }
 
