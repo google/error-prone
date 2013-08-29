@@ -1,6 +1,5 @@
 package com.google.errorprone.bugpatterns;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.MaturityLevel;
@@ -21,6 +20,7 @@ import com.sun.tools.javac.code.Symbol.CompletionFailure;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 
+import java.util.EnumSet;
 import java.util.Set;
 
 @BugPattern(name = "InvalidProtoFieldNullComparison", category = Category.ONE_OFF,
@@ -42,7 +42,7 @@ public class InvalidProtoFieldNullComparison extends DescribingMatcher<BinaryTre
       Matchers.isCastableTo(LIST_INTERFACE);
 
   private static final Set<Kind> COMPARISON_OPERATORS =
-      ImmutableSet.of(Kind.EQUAL_TO, Kind.NOT_EQUAL_TO);
+      EnumSet.of(Kind.EQUAL_TO, Kind.NOT_EQUAL_TO);
 
   @Override
   public boolean matches(BinaryTree tree, VisitorState state) {

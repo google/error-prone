@@ -32,7 +32,7 @@ public class InvalidProtoFieldNullComparisonTest {
   @Before
   public void setUp() throws Exception {
     compilationHelper = new CompilationTestHelper(new InvalidProtoFieldNullComparison.Scanner());
-    protoFile = new File(this.getClass().getResource("Test.java").toURI());
+    protoFile = new File(this.getClass().getResource("../proto/ProtoTest.java").toURI());
   }
 
   @Test

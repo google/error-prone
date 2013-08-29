@@ -1,5 +1,5 @@
-import com.google.errorprone.bugpatterns.Test.TestFieldProtoMessage;
-import com.google.errorprone.bugpatterns.Test.TestProtoMessage;
+import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 
 /**
  * Positive examples for invalid null comparison of a proto message field.
