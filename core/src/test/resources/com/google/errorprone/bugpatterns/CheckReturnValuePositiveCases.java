@@ -47,6 +47,43 @@ public class CheckReturnValuePositiveCases {
     //BUG: Suggestion includes "value = value.increment()"
     value.increment();
   }
+
+  public void constructor() {
+    /*
+     * We may or may not want to treat this as a bug. On the one hand, the
+     * subclass might be "using" the superclass, so it might not be being
+     * "ignored." (Plus, it would be a pain to produce a valid suggested fix
+     * that incorporates any subclass constructor body, which might even contain
+     * calls to methods in the class.) On the other hand, the more likely
+     * scenario may be a class like IteratorTester, which requires (a) that the
+     * user subclass it to implement a method and (b) that the user call test()
+     * on the constructed object. There, it would be nice if IteratorTester
+     * could be annotated with @CheckReturnValue to mean "anyone who creates an
+     * anonymous subclasses of this should still do something with that
+     * subclass." But perhaps that's an abuse of @CheckForNull.
+     *
+     * Anyway, these tests are here to ensure that subclasses don't don't crash
+     * the compiler.
+     */
+    new MyObject() {};
+
+    class MySubObject1 extends MyObject {
+    }
+
+    class MySubObject2 extends MyObject {
+      MySubObject2() {
+      }
+    }
+
+    class MySubObject3 extends MyObject {
+      MySubObject3() {
+        super();
+      }
+    }
+
+    // TODO(cpovirk): This one probably ought to be treated as a bug:
+    new MyObject();
+  }
   
   private class IntValue {
     final int i;
@@ -69,5 +106,10 @@ public class CheckReturnValuePositiveCases {
       //BUG: Suggestion includes "remove this line"
      increment();
     }
+  }
+
+  private static class MyObject {
+    @CheckReturnValue
+    MyObject() {}
   }
 }
