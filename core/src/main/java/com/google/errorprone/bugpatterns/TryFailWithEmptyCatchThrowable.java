@@ -17,13 +17,13 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JUNIT;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.expressionMethodSelect;
 import static com.google.errorprone.matchers.Matchers.isSameType;
+import static com.sun.source.tree.Tree.Kind.EMPTY_STATEMENT;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.TryTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -38,7 +38,6 @@ import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
@@ -79,12 +78,12 @@ import java.util.List;
  * @author adamwos@google.com (Adam Wos)
  */
 @BugPattern(name = "TryFailsWithEmptyCatchThrowable",
-    summary = "Failures from fail/assert will be ignored. Don't catch (Throwable).",
+    summary = "Catching Throwable will mask failures from fail() or assert() in the try block",
     explanation = "A common pattern for testing for expected exceptions is to execute code in a "
         + "try block, with a fail() or assert*() in the try, catching an expected exception. "
         + "However, if the catch clause catches Throwable, and doesn't do any verification "
         + "(e.g. instanceof) of the caught object, such a test always passes.",
-    category = JUNIT, maturity = EXPERIMENTAL, severity = ERROR)
+    category = JUNIT, maturity = MATURE, severity = ERROR)
 public class TryFailWithEmptyCatchThrowable extends BugChecker implements TryTreeMatcher {
 
   private static final Matcher<VariableTree> javaLangThrowable = isSameType("java.lang.Throwable");
@@ -109,25 +108,19 @@ public class TryFailWithEmptyCatchThrowable extends BugChecker implements TryTre
         }
       });
 
-  private static final Matcher<Tree> emptyStatement = Matchers.kindIs(Kind.EMPTY_STATEMENT);
-
   @Override
   public Description matchTry(TryTree tree, VisitorState state) {
     if (tryTreeMatches(tree, state)) {
       CatchTree firstCatch = tree.getCatches().get(0);
       VariableTree catchParameter = firstCatch.getParameter();
-      return new Description(
-          firstCatch,
-          "This catch will mask any failures from fail() or assert() in the try block.",
-          new SuggestedFix().replace(catchParameter, "Exception " + catchParameter.getName()),
-          SeverityLevel.ERROR);
+      return describeMatch(firstCatch,
+          new SuggestedFix().replace(catchParameter, "Exception " + catchParameter.getName()));
     } else {
       return Description.NO_MATCH;
     }
   }
 
   private boolean tryTreeMatches(TryTree tryTree, VisitorState state) {
-    // Get the last statement of a non-empty try block.
     BlockTree tryBlock = tryTree.getBlock();
     List<? extends StatementTree> statements = tryBlock.getStatements();
     if (statements.isEmpty()) {
@@ -171,7 +164,7 @@ public class TryFailWithEmptyCatchThrowable extends BugChecker implements TryTre
       // Comments are not a part of the AST. Therefore, we should either get
       // an empty list of statements (regardless of the number of comments),
       // or a list of empty statements.
-      if (!emptyStatement.matches(catchStatement, state)) {
+      if (!Matchers.<Tree>kindIs(EMPTY_STATEMENT).matches(catchStatement, state)) {
         return false;
       }
     }
