@@ -21,30 +21,15 @@ import com.google.errorprone.matchers.MethodVisibility.Visibility;
 import com.google.errorprone.matchers.MultiMatcher.MatchType;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
-
-import com.sun.source.tree.AnnotationTree;
-import com.sun.source.tree.BinaryTree;
-import com.sun.source.tree.BlockTree;
-import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.IdentifierTree;
-import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.StatementTree;
-import com.sun.source.tree.Tree;
+import com.sun.source.tree.*;
 import com.sun.source.tree.Tree.Kind;
-import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.JCTree.JCArrayTypeTree;
-import com.sun.tools.javac.tree.JCTree.JCExpression;
-import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
-import com.sun.tools.javac.tree.JCTree.JCIdent;
-import com.sun.tools.javac.tree.JCTree.JCPrimitiveTypeTree;
-import com.sun.tools.javac.tree.JCTree.JCTypeApply;
+import com.sun.tools.javac.tree.JCTree.*;
 
+import javax.lang.model.element.Modifier;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -303,6 +288,15 @@ public class Matchers {
   }
 
   /**
+   * Matches an AST node if its type is a subtype of the given type.
+   *
+   * @param type the type to check against
+   */
+  public static <T extends Tree> Matcher<T> isSubtypeOf(Supplier<Type> type) {
+    return new IsSubtypeOf<T>(type);
+  }
+
+  /**
    * Matches an AST node if its type is castable to the given type.
    *
    * @param typeString a string representation of the type, e.g., "java.util.Set"
@@ -326,6 +320,15 @@ public class Matchers {
    * @param type the type to check against
    */
   public static <T extends Tree> Matcher<T> isSameType(Type type) {
+    return new IsSameType<T>(type);
+  }
+
+  /**
+   * Matches an AST node if its type is the same as the given type.
+   *
+   * @param type the type to check against
+   */
+  public static <T extends Tree> Matcher<T> isSameType(Supplier<Type> type) {
     return new IsSameType<T>(type);
   }
 
@@ -471,6 +474,15 @@ public class Matchers {
             return false;
         }
         return state.getTypes().isSameType(methodReturnType, returnType);
+      }
+    };
+  }
+
+  public static Matcher<MethodTree> methodReturns(final Supplier<Type> returnType) {
+    return new Matcher<MethodTree>() {
+      @Override
+      public boolean matches(MethodTree methodTree, VisitorState state) {
+        return methodReturns(returnType.get(state)).matches(methodTree, state);
       }
     };
   }
@@ -646,4 +658,3 @@ public class Matchers {
     return new HasIdentifier(matchType, nodeMatcher);
   }
 }
-

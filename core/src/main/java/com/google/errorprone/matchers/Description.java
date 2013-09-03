@@ -16,6 +16,8 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.errorprone.BugPattern.SeverityLevel.NOT_A_PROBLEM;
+
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.sun.source.tree.Tree;
@@ -26,6 +28,9 @@ import com.sun.source.tree.Tree;
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class Description {
+  /** Describes the sentinel value of the case where the match failed. */
+  public static final Description NO_MATCH =
+      new Description(null, "<No match>", null, NOT_A_PROBLEM);
 
   /**
    * The AST node which matched
@@ -47,9 +52,11 @@ public class Description {
    */
   public BugPattern.SeverityLevel severity;
 
-  public Description(Tree node, String message, SuggestedFix suggestedFix) {
+  public Description(Tree node, String message, SuggestedFix suggestedFix,
+                     BugPattern.SeverityLevel severity) {
     this.message = message;
     this.suggestedFix = suggestedFix;
     this.node = node;
+    this.severity = severity;
   }
 }

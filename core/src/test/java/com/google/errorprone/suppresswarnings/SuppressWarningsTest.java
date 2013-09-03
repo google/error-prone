@@ -16,22 +16,22 @@
 
 package com.google.errorprone.suppresswarnings;
 
+import static java.util.Arrays.asList;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneCompiler;
 import com.google.errorprone.ErrorProneScanner;
 import com.google.errorprone.ErrorProneScanner.EnabledPredicate;
+import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.DeadException;
 import com.google.errorprone.bugpatterns.EmptyIfStatement;
 import com.google.errorprone.bugpatterns.SelfAssignment;
-import com.google.errorprone.matchers.DescribingMatcher;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-
-import static java.util.Arrays.asList;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -45,7 +45,7 @@ public class SuppressWarningsTest {
         .report(new ErrorProneScanner(new EnabledPredicate() {
           @SuppressWarnings("unchecked")
           @Override
-          public boolean isEnabled(Class<? extends DescribingMatcher<?>> check, BugPattern annotation) {
+          public boolean isEnabled(Class<? extends BugChecker> check, BugPattern annotation) {
             return asList(DeadException.class, EmptyIfStatement.class, SelfAssignment.class)
                 .contains(check);
           }

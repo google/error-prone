@@ -16,10 +16,15 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.BugPattern.Category.GUAVA;
+import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import static com.google.errorprone.matchers.Matchers.*;
+
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
@@ -31,11 +36,6 @@ import com.sun.source.tree.Tree.Kind;
 
 import java.util.List;
 import java.util.regex.Pattern;
-
-import static com.google.errorprone.BugPattern.Category.GUAVA;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.matchers.Matchers.*;
 
 /**
  * Error checker for calls to the Preconditions class in Guava which use
@@ -53,9 +53,9 @@ import static com.google.errorprone.matchers.Matchers.*;
         "The error message is rarely needed, so it should either be cheap to construct " +
         "or constructed only when needed. This check ensures that these error messages " +
         "are not constructed using expensive methods that are evaluated eagerly.",
-    category = GUAVA, severity = WARNING, maturity = MATURE)
+    category = GUAVA, severity = WARNING, maturity = EXPERIMENTAL)
 public class PreconditionsExpensiveString
-    extends DescribingMatcher<MethodInvocationTree> {
+    extends BugChecker implements MethodInvocationTreeMatcher {
 
   @SuppressWarnings({"vararg", "unchecked"})
   private static final Matcher<MethodInvocationTree> matcher = allOf(
@@ -75,13 +75,11 @@ public class PreconditionsExpensiveString
   );
 
   @Override
-  public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
-    return matcher.matches(methodInvocationTree, state);
-  }
+  public Description matchMethodInvocation(MethodInvocationTree methodInvocationTree, VisitorState state) {
+    if (!matcher.matches(methodInvocationTree, state)) {
+      return Description.NO_MATCH;
+    }
 
-  @Override
-  public Description describe(MethodInvocationTree methodInvocationTree,
-                              VisitorState state) {
     MemberSelectTree method =
         (MemberSelectTree) methodInvocationTree.getMethodSelect();
 
@@ -94,7 +92,7 @@ public class PreconditionsExpensiveString
     // this. This current one is not correct!
     SuggestedFix fix = null;
 
-    return new Description(arguments.get(1), getDiagnosticMessage(), fix);
+    return describeMatch(arguments.get(1), fix);
   }
 
   private static class StringFormatCallContainsNoSpecialFormattingMatcher
@@ -123,15 +121,4 @@ public class PreconditionsExpensiveString
       return !invalidFormatCharacters.matcher(literal).find();
     }
   }
-
-  public static class Scanner extends com.google.errorprone.Scanner {
-    public DescribingMatcher<MethodInvocationTree> matcher = new PreconditionsExpensiveString();
-
-    @Override
-    public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {
-      evaluateMatch(node, visitorState, matcher);
-      return super.visitMethodInvocation(node, visitorState);
-    }
-  }
-
 }

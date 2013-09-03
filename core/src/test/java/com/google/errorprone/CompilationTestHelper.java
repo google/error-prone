@@ -20,6 +20,9 @@ import static com.google.errorprone.DiagnosticTestHelper.assertHasDiagnosticOnAl
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
+import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.SelfEquals;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -33,6 +36,7 @@ public class CompilationTestHelper {
   private DiagnosticTestHelper diagnosticHelper;
   private ErrorProneCompiler compiler;
 
+
   public CompilationTestHelper(Scanner scanner) {
     diagnosticHelper = new DiagnosticTestHelper();
     compiler = new ErrorProneCompiler.Builder()
@@ -43,6 +47,10 @@ public class CompilationTestHelper {
 
   public CompilationTestHelper(Class<?> matcherClass) {
     this(ErrorProneScanner.forMatcher(matcherClass));
+  }
+
+  public CompilationTestHelper(BugChecker checker) {
+    this(new ErrorProneScanner(checker));
   }
 
   public void assertCompileSucceeds(File source) {

@@ -19,26 +19,15 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JUNIT;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.annotations;
-import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.enclosingClass;
-import static com.google.errorprone.matchers.Matchers.hasAnnotation;
-import static com.google.errorprone.matchers.Matchers.hasArgumentWithValue;
-import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
-import static com.google.errorprone.matchers.Matchers.methodHasModifier;
-import static com.google.errorprone.matchers.Matchers.methodHasParameters;
-import static com.google.errorprone.matchers.Matchers.methodNameStartsWith;
-import static com.google.errorprone.matchers.Matchers.not;
+import static com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
+import static com.google.errorprone.matchers.Matchers.*;
 import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
@@ -48,11 +37,10 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.util.List;
 
+import javax.lang.model.element.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-
-import javax.lang.model.element.Modifier;
 
 /**
  * TODO(eaftan): Similar checkers for setUp() and tearDown().
@@ -70,7 +58,7 @@ import javax.lang.model.element.Modifier;
         "If you intend for this test method not to run, please add both an @Test and an " +
     	"@Ignore annotation to make it clear that you are purposely disabling it.",
     category = JUNIT, maturity = MATURE, severity = ERROR)
-public class JUnit4TestNotRun extends DescribingMatcher<MethodTree> {
+public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
 
   private static final Collection<String> DEFAULT_TEST_RUNNERS = Arrays.asList(
       "org.junit.runners.JUnit4", "org.mockito.runners.MockitoJUnitRunner");
@@ -147,27 +135,28 @@ public class JUnit4TestNotRun extends DescribingMatcher<MethodTree> {
    * 5) The enclosing class has an @RunWith annotation and does not extend TestCase. This marks
    *    that the test is intended to run with JUnit 4.
    */
-  @SuppressWarnings("unchecked")
   @Override
-  public boolean matches(MethodTree methodTree, VisitorState state) {
-    return allOf(methodNameStartsWith("test"),
+  @SuppressWarnings("unchecked")
+  public Description matchMethod(MethodTree methodTree, VisitorState state) {
+    boolean matches = allOf(
+        methodNameStartsWith("test"),
         methodHasParameters(),
         methodHasModifier(Modifier.PUBLIC),
         not(hasJUnitAnnotation),
         enclosingClass(isJUnit4TestClass))
         .matches(methodTree, state);
-  }
+    if (!matches) {
+      return Description.NO_MATCH;
+    }
 
-  /**
-   * Add the @Test annotation.  If the method is static, also make the method non-static.
-   *
-   * TODO(eaftan): The static case here relies on having tree end positions available.  Come up
-   * with a better way of doing this that doesn't require tree end positions.  Maybe we should
-   * just not provide suggested fixes for these few cases when the javac infrastructure gets in the
-   * way.
-   */
-  @Override
-  public Description describe(MethodTree methodTree, VisitorState state) {
+    /*
+     * Add the @Test annotation.  If the method is static, also make the method non-static.
+     *
+     * TODO(eaftan): The static case here relies on having tree end positions available.  Come up
+     * with a better way of doing this that doesn't require tree end positions.  Maybe we should
+     * just not provide suggested fixes for these few cases when the javac infrastructure gets in
+     * the way.
+     */
     if (methodHasModifier(Modifier.STATIC).matches(methodTree, state)) {
       CharSequence methodSource = state.getSourceForNode((JCMethodDecl) methodTree);
       if (methodSource != null) {
@@ -175,36 +164,12 @@ public class JUnit4TestNotRun extends DescribingMatcher<MethodTree> {
         SuggestedFix fix = new SuggestedFix()
             .addImport(JUNIT4_TEST_ANNOTATION)
             .replace(methodTree, methodString);
-        return new Description(methodTree, getDiagnosticMessage(), fix);
+        return describeMatch(methodTree, fix);
       }
     }
     SuggestedFix fix = new SuggestedFix()
         .addImport(JUNIT4_TEST_ANNOTATION)
         .prefixWith(methodTree, "@Test\n");
-    return new Description(methodTree, getDiagnosticMessage(), fix);
-  }
-
-  public static class Scanner extends com.google.errorprone.Scanner {
-    private JUnit4TestNotRun matcher;
-
-    public Scanner() {
-      matcher = new JUnit4TestNotRun();
-    }
-
-    /**
-     * Construct a scanner with additional acceptable test runners.
-     *
-     * @param testRunners Additional test runner classes to check for in the @RunWith annotation,
-     * e.g., "org.junit.runners.BlockJUnit4ClassRunner"
-     */
-    public Scanner(String... testRunners) {
-      matcher = new JUnit4TestNotRun(testRunners);
-    }
-
-    @Override
-    public Void visitMethod(MethodTree node, VisitorState visitorState) {
-      evaluateMatch(node, visitorState, matcher);
-      return super.visitMethod(node, visitorState);
-    }
+    return describeMatch(methodTree, fix);
   }
 }

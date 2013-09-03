@@ -22,10 +22,8 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
@@ -49,15 +47,5 @@ public class CheckReturnValue extends AbstractReturnValueIgnored {
   public Matcher<MethodInvocationTree> specializedMatcher() {
     return methodSelect(
         Matchers.<ExpressionTree>hasAnnotation("javax.annotation.CheckReturnValue"));
-  }
-
-  public static class Scanner extends com.google.errorprone.Scanner {
-    private CheckReturnValue matcher = new CheckReturnValue();
-
-    @Override
-    public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {
-      evaluateMatch(node, visitorState, matcher);
-      return super.visitMethodInvocation(node, visitorState);
-    }
   }
 }

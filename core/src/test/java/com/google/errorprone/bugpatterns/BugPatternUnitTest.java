@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.Scanner;
-import com.google.errorprone.matchers.DescribingMatcher;
 
 import java.io.File;
 import java.net.URL;
@@ -38,7 +37,7 @@ public abstract class BugPatternUnitTest {
     if (c == null) {
       throw new IllegalArgumentException("Scanner must be an inner class");
     }
-    if (!DescribingMatcher.class.isAssignableFrom(c)) {
+    if (!BugChecker.class.isAssignableFrom(c)) {
       throw new IllegalArgumentException("Bad outer class for scanner: " + c);
     }
     testname = c.getSimpleName();

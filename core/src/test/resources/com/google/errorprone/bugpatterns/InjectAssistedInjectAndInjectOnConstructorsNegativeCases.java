@@ -22,7 +22,7 @@ public class InjectAssistedInjectAndInjectOnConstructorsNegativeCases {
   }
   
   /**
-   * Class has a constructor with a @com.google.injectInject annotation.
+   * Class has a constructor with a @com.google.inject.Inject annotation.
    */
   public class TestClass3 {
     @com.google.inject.Inject
@@ -46,5 +46,18 @@ public class InjectAssistedInjectAndInjectOnConstructorsNegativeCases {
 
     @AssistedInject
     public TestClass5() {}
+  }
+  
+  /**
+   * Class has a constructor annotated with @javax.inject.Inject and another constructor annotated
+   * with @AssistedInject. The warning is suppressed.
+   */
+  @SuppressWarnings("AssistedInjectAndInjectOnConstructors")
+  public class TestClass6 {
+    @javax.inject.Inject
+    public TestClass6() {}
+
+    @AssistedInject
+    public TestClass6(int n) {}
   }
 }

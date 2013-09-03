@@ -16,18 +16,21 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.kindIs;
+import static com.google.errorprone.matchers.Matchers.not;
+import static com.google.errorprone.matchers.Matchers.methodSelect;
 import static com.google.errorprone.matchers.Matchers.parentNode;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
@@ -41,15 +44,20 @@ import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-abstract class AbstractReturnValueIgnored extends DescribingMatcher<MethodInvocationTree> {
+abstract class AbstractReturnValueIgnored extends BugChecker
+    implements MethodInvocationTreeMatcher {
 
   @SuppressWarnings("unchecked")
-  @Override
-  public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
-    return allOf(
+  public Description matchMethodInvocation(
+      MethodInvocationTree methodInvocationTree, VisitorState state) {
+    if (allOf(
         parentNode(Matchers.<MethodInvocationTree>kindIs(Kind.EXPRESSION_STATEMENT)),
+        not(methodSelect(allOf(kindIs(Kind.IDENTIFIER), identifierHasName("super")))),
         specializedMatcher())
-    .matches(methodInvocationTree, state);
+        .matches(methodInvocationTree, state)) {
+      return describe(methodInvocationTree, state);
+    }
+    return Description.NO_MATCH;
   }
 
   /**
@@ -58,11 +66,19 @@ abstract class AbstractReturnValueIgnored extends DescribingMatcher<MethodInvoca
    */
   public abstract Matcher<MethodInvocationTree> specializedMatcher();
 
+  private static Matcher<ExpressionTree> identifierHasName(final String name) {
+    return new Matcher<ExpressionTree>() {
+      @Override
+      public boolean matches(ExpressionTree item, VisitorState state) {
+        return ((IdentifierTree) item).getName().contentEquals(name);
+      }
+    };
+  }
+
   /**
    * Fixes the error by assigning the result of the call to the receiver reference, or deleting
    * the method call.
    */
-  @Override
   public Description describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
     // Find the root of the field access chain, i.e. a.intern().trim() ==> a.
     ExpressionTree identifierExpr = ASTHelpers.getRootAssignable(methodInvocationTree);
@@ -92,6 +108,6 @@ abstract class AbstractReturnValueIgnored extends DescribingMatcher<MethodInvoca
       Tree parent = state.getPath().getParentPath().getLeaf();
       fix = new SuggestedFix().delete(parent);
     }
-    return new Description(methodInvocationTree, getDiagnosticMessage(), fix);
+    return describeMatch(methodInvocationTree, fix);
   }
 }
