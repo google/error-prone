@@ -99,6 +99,7 @@ public class ErrorProneScanner extends Scanner {
       GuiceAssistedParameters.class,
       CovariantEquals.class,
       JUnit4TestNotRun.class,
+      TryFailWithEmptyCatchThrowable.class,
       WrongParameterPackage.class,
       LongLiteralLowerCaseSuffix.class,
       UnneededConditionalOperator.class,
