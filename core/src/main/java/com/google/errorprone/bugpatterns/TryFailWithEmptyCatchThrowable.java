@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JUNIT;
+import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.expressionMethodSelect;
@@ -80,10 +81,10 @@ import java.util.List;
 @BugPattern(name = "TryFailsWithEmptyCatchThrowable",
     summary = "Catching Throwable will mask failures from fail() or assert() in the try block",
     explanation = "A common pattern for testing for expected exceptions is to execute code in a "
-        + "try block, with a fail() or assert*() in the try, catching an expected exception. "
+        + "try block, with a `fail()` or `assert*()` in the try, catching an expected exception. "
         + "However, if the catch clause catches Throwable, and doesn't do any verification "
         + "(e.g. instanceof) of the caught object, such a test always passes.",
-    category = JUNIT, maturity = MATURE, severity = ERROR)
+    category = JUNIT, maturity = EXPERIMENTAL, severity = ERROR)
 public class TryFailWithEmptyCatchThrowable extends BugChecker implements TryTreeMatcher {
 
   private static final Matcher<VariableTree> javaLangThrowable = isSameType("java.lang.Throwable");

@@ -15,6 +15,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
+import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
@@ -41,7 +42,7 @@ import com.sun.tools.javac.code.Symbol;
     summary = "Numeric comparison using reference equality instead of value equality",
     explanation = "Numbers are compared for reference equality/inequality using == or != "
         + "instead of for value equality using .equals()",
-    category = JDK, severity = ERROR, maturity = MATURE)
+    category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
 public class InvalidNumericEquality extends BugChecker implements BinaryTreeMatcher {
 
   @SuppressWarnings("unchecked")
