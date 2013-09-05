@@ -21,8 +21,11 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Ordering;
+import com.google.common.collect.Sets;
 import com.google.common.io.Files;
 import com.google.common.io.LineProcessor;
+import com.google.errorprone.BugPattern.Instance;
 import com.google.errorprone.BugPattern.MaturityLevel;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import org.kohsuke.MetaInfServices;
@@ -35,16 +38,15 @@ import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 import java.io.*;
 import java.text.MessageFormat;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.collect.Iterables.limit;
 import static com.google.common.collect.Iterables.size;
 import static com.google.common.io.Files.readLines;
+import static com.google.errorprone.BugPattern.Instance.BY_NAME;
+import static com.google.errorprone.BugPattern.Instance.BY_SEVERITY;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
@@ -166,11 +168,15 @@ public class DocGen extends AbstractProcessor {
         StringBuilder result = new StringBuilder("#summary Bugs caught by error-prone\n");
         // enum.values() returns all the values of the enum in declared order
         for (MaturityLevel level : MaturityLevel.values()) {
-          Collection<BugPattern.Instance> bugPatterns = index.get(level);
+          Set<BugPattern.Instance> bugPatterns = Sets.newTreeSet(
+              Ordering.from(BY_SEVERITY).compound(BY_NAME));
+          bugPatterns.addAll(index.get(level));
           if (!bugPatterns.isEmpty()) {
-            result.append("==").append(level.name().toLowerCase().replace("_", " ")).append("==\n");
+            result.append("==")
+                .append(level.description.replace("_", " "))
+                .append("==\n");
             for (BugPattern.Instance bugPattern : bugPatterns) {
-              result.append(String.format("  * [%s]: %s (%s)\n",
+              result.append(String.format("  * [%s]: {{{%s}}} _(%s)_\n",
                   bugPattern.name.replace(' ', '_'), bugPattern.summary,
                   bugPattern.severity.name().toLowerCase().replace("_", " ")));
             }
