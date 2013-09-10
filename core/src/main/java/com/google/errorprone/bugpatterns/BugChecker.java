@@ -9,6 +9,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Suppressable;
 import com.sun.source.tree.*;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,7 +23,7 @@ import java.util.Set;
  * @author Colin Decker
  * @author Eddie Aftandilian (eaftan@google.com)
  */
-public abstract class BugChecker implements Suppressable {
+public abstract class BugChecker implements Suppressable, Serializable {
 
   protected final String canonicalName;
   /**
