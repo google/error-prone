@@ -119,11 +119,16 @@ public class ErrorProneScanner extends Scanner {
   @SuppressWarnings("unchecked")
   public ErrorProneScanner(EnabledPredicate predicate) {
     try {
+      int enabledCount = 0;
       for (final Class<? extends BugChecker> checkerClass: ALL_CHECKERS) {
         if (predicate.isEnabled(checkerClass, checkerClass.getAnnotation(BugPattern.class))) {
           BugChecker checker = checkerClass.newInstance();
           registerNodeTypes(checker);
+          enabledCount++;
         }
+      }
+      if (enabledCount <= 0) {
+        throw new IllegalStateException("ErrorProneScanner created with no enabled checks");
       }
     } catch (Exception e) {
       throw new RuntimeException("Could not reflectively create error prone matchers", e);
