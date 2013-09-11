@@ -98,6 +98,7 @@ public class ErrorProneScanner extends Scanner {
       SelfAssignment.class,
       GuiceAssistedParameters.class,
       CovariantEquals.class,
+      JUnit3TestNotRun.class,
       JUnit4TestNotRun.class,
       TryFailThrowable.class,
       WrongParameterPackage.class,
