@@ -58,4 +58,16 @@ public class JUnit3TestNotRunTest {
     compilationHelper.assertCompileSucceeds(
         new File(this.getClass().getResource("JUnit3TestNotRunNegativeCase3.java").toURI()));
   }
+
+  @Test
+  public void testNegativeCase4() throws Exception {
+    compilationHelper.assertCompileSucceeds(
+        new File(this.getClass().getResource("JUnit3TestNotRunNegativeCase4.java").toURI()));
+  }
+
+  @Test
+  public void testNegativeCase5() throws Exception {
+    compilationHelper.assertCompileFailsWithMessages(
+        new File(this.getClass().getResource("JUnit3TestNotRunNegativeCase5.java").toURI()));
+  }
 }

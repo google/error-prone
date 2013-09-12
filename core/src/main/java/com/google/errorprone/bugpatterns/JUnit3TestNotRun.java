@@ -46,7 +46,7 @@ import java.util.regex.Pattern;
         " misspells the required prefix, or has @Test annotation, but no prefix." +
         " As a consequence, JUnit 3 will ignore it.\n\n" +
         "If you want to disable test on purpose, change the name to something more descriptive," +
-        "like \"disabledTestSomething()\". You don't need @Test annotation, but if you want to"
+        "like \"disabledTestSomething()\". You don't need @Test annotation, but if you want to" +
         "keep it, add @Ignore too.",
     category = JUNIT, maturity = EXPERIMENTAL, severity = ERROR)
 public class JUnit3TestNotRun extends BugChecker implements MethodTreeMatcher {
@@ -74,7 +74,8 @@ public class JUnit3TestNotRun extends BugChecker implements MethodTreeMatcher {
 
   private static final Matcher<ClassTree> isJUnit3TestClass = allOf(
       isSubtypeOf(JUNIT3_TEST_CASE_CLASS),
-      not(annotations(ANY, isType(JUNIT4_RUN_WITH_ANNOTATION))));
+      not(annotations(ANY, isType(JUNIT4_RUN_WITH_ANNOTATION))),
+      not(classHasModifier(Modifier.ABSTRACT)));
 
   private static final Matcher<MethodTree> wouldRunInJUnit4 = allOf(
       hasAnnotation(JUNIT4_TEST_ANNOTATION),
@@ -84,7 +85,8 @@ public class JUnit3TestNotRun extends BugChecker implements MethodTreeMatcher {
    * Matches if:
    * 1) Method's name begins with misspelled variation of "test".
    * 2) Method is public, returns void, and has no parameters.
-   * 3) Enclosing class is JUnit3 test (extends TestCase and has no RunWith annotation).
+   * 3) Enclosing class is JUnit3 test (extends TestCase, has no RunWith annotation,
+   *    and is not abstract).
    */
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
@@ -110,7 +112,9 @@ public class JUnit3TestNotRun extends BugChecker implements MethodTreeMatcher {
       return Description.NO_MATCH;
     }
     CharSequence methodSource = state.getSourceForNode((JCMethodDecl) methodTree);
-    // TODO(rburny): can methodSource be null? If so, how to provide suggestion?
+    if (methodSource == null) {
+      return null;  // we cannot provide suggestion without source
+    }
     String methodString = methodSource.toString().replaceFirst(name, fixedName);
     SuggestedFix fix = new SuggestedFix().replace(methodTree, methodString);
     return describeMatch(methodTree, fix);
