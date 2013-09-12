@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JUNIT;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.expressionMethodSelect;
 import static com.google.errorprone.matchers.Matchers.isSameType;
@@ -87,8 +87,11 @@ import java.util.List;
         + "`fail()` and `assert*()` throw AssertionErrors, which are a subtype of Throwable. "
         + "That means that if if the catch block catches Throwable, then execution will "
         + "always jump to the catch block, and the test will always pass.\n\n"
-        + "To fix this, catch Exception rather than Throwable.",
-    category = JUNIT, maturity = EXPERIMENTAL, severity = ERROR)
+        + "To fix this, you usually want to catch Exception rather than Throwable. If you need "
+        + "to catch throwable (e.g., the expected exception is an AssertionError), then add logic "
+        + "in your catch block to ensure that the AssertionError that was caught is not the same "
+        + "one thrown by the call to `fail()` or `assert*()`.",
+    category = JUNIT, maturity = MATURE, severity = ERROR)
 public class TryFailThrowable extends BugChecker implements TryTreeMatcher {
 
   private static final Matcher<VariableTree> javaLangThrowable = isSameType("java.lang.Throwable");
