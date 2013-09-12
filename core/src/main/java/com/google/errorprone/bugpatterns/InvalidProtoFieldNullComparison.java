@@ -33,8 +33,8 @@ public class InvalidProtoFieldNullComparison extends DescribingMatcher<BinaryTre
 
   private static final String PROTO_SUPER_CLASS = "com.google.protobuf.GeneratedMessage";
 
-  private static final Matcher<ExpressionTree> protoMessageReceiverMatcher =
-      Matchers.instanceMethod(Matchers.isSubtypeOf(PROTO_SUPER_CLASS), "*");
+  private static final Matcher<MethodInvocationTree> protoMessageReceiverMatcher =
+      Matchers.methodSelect(Matchers.instanceMethod(Matchers.isSubtypeOf(PROTO_SUPER_CLASS), "*"));
 
   private static final String LIST_INTERFACE = "java.util.List";
 
@@ -61,7 +61,7 @@ public class InvalidProtoFieldNullComparison extends DescribingMatcher<BinaryTre
 
   private boolean isProtoMessageGetInvocation(ExpressionTree tree, VisitorState state) {
     return (isGetMethodInvocation(tree, state) || isGetListMethodInvocation(tree, state))
-        && isProtoMessage(tree, state);
+        && receiverIsProtoMessage(tree, state);
   }
 
   private boolean isFieldGetMethod(String methodName) {
@@ -129,8 +129,8 @@ public class InvalidProtoFieldNullComparison extends DescribingMatcher<BinaryTre
     return false;
   }
 
-  private boolean isProtoMessage(ExpressionTree tree, VisitorState state) {
-    return protoMessageReceiverMatcher.matches(((MethodInvocationTree) tree).getMethodSelect(), state);
+  private boolean receiverIsProtoMessage(ExpressionTree tree, VisitorState state) {
+    return protoMessageReceiverMatcher.matches(((MethodInvocationTree) tree), state);
   }
 
   private static String replaceLast(String text, String pattern, String replacement) {
