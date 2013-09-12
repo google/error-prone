@@ -78,6 +78,13 @@ public class Suppliers {
     };
   }
 
+  public static final Supplier<Type> VOID_TYPE = new Supplier<Type>() {
+      @Override
+      public Type get(VisitorState state) {
+        return state.getSymtab().voidType;
+      }
+    };
+
   public static final Supplier<Type> BOOLEAN_TYPE = new Supplier<Type>() {
       @Override
       public Type get(VisitorState state) {

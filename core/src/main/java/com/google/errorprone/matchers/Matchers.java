@@ -460,6 +460,10 @@ public class Matchers {
       public boolean matches(MethodTree methodTree, VisitorState state) {
         Tree returnTree = methodTree.getReturnType();
         Type methodReturnType = null;
+        if (returnTree == null) {
+          // This is a constructor, it has no return type.
+          return false;
+        }
         switch (returnTree.getKind()) {
           case ARRAY_TYPE:
             methodReturnType = ((JCArrayTypeTree)returnTree).type;
