@@ -39,6 +39,7 @@ import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
+import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 
 import java.util.Arrays;
@@ -110,6 +111,9 @@ public class ASTHelpers {
     }
     if (tree instanceof JCIdent) {
       return ((JCIdent) tree).sym;
+    }
+    if (tree instanceof JCNewClass) {
+      return ((JCNewClass) tree).constructor;
     }
     if (tree instanceof AnnotationTree) {
       return getSymbol(((AnnotationTree) tree).getAnnotationType());
