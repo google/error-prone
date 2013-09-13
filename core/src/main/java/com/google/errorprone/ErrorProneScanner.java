@@ -89,7 +89,7 @@ public class ErrorProneScanner extends Scanner {
       InjectJavaxInjectOnAbstractMethod.class,
       EmptyIfStatement.class,
       EmptyStatement.class,
-      InvalidNumericEquality.class,
+      NumericEquality.class,
       InvalidStringEquality.class,
       SelfEquality.class,
       BadShiftAmount.class,

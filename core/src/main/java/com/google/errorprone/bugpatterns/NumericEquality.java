@@ -43,7 +43,7 @@ import com.sun.tools.javac.code.Symbol;
     explanation = "Numbers are compared for reference equality/inequality using == or != "
         + "instead of for value equality using .equals()",
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
-public class InvalidNumericEquality extends BugChecker implements BinaryTreeMatcher {
+public class NumericEquality extends BugChecker implements BinaryTreeMatcher {
 
   @SuppressWarnings("unchecked")
   public static final Matcher<ExpressionTree> SUBCLASS_OF_NUMBER =
