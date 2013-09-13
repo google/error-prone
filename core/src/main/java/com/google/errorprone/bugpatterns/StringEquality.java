@@ -43,7 +43,7 @@ import com.sun.tools.javac.tree.JCTree;
     explanation = "Strings are compared for reference equality/inequality using == or !="
         + "instead of for value equality using .equals()",
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
-public class InvalidStringEquality extends BugChecker implements BinaryTreeMatcher {
+public class StringEquality extends BugChecker implements BinaryTreeMatcher {
 
   /**
    *  A {@link Matcher} that matches whether the operands in a {@link BinaryTree} are
@@ -70,6 +70,7 @@ public class InvalidStringEquality extends BugChecker implements BinaryTreeMatch
     }
   };
 
+  @SuppressWarnings("unchecked")
   public static final Matcher<BinaryTree> MATCHER = allOf(
       anyOf(kindIs(EQUAL_TO), kindIs(NOT_EQUAL_TO)),
       STRING_OPERANDS);

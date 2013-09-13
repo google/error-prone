@@ -90,7 +90,7 @@ public class ErrorProneScanner extends Scanner {
       EmptyIfStatement.class,
       EmptyStatement.class,
       NumericEquality.class,
-      InvalidStringEquality.class,
+      StringEquality.class,
       SelfEquality.class,
       BadShiftAmount.class,
       ArrayToStringConcatenation.class,
