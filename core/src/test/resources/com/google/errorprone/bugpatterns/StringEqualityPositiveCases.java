@@ -19,7 +19,7 @@ package com.google.errorprone.bugpatterns;
 /**
  * @author ptoomey@google.com (Patrick Toomey)
  */
-public class InvalidStringEqualityPositiveCases {
+public class StringEqualityPositiveCases {
 
   public boolean testEquality(String x, String y) {
     boolean retVal;

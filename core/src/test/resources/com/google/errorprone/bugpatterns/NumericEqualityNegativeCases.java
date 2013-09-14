@@ -17,25 +17,34 @@
 package com.google.errorprone.bugpatterns;
 
 /**
- * @author scottjohnson@google.com (Scott Johnson)
+ * @author scottjohnson@google.com (Scott Johnsson)
  */
-public class InvalidNumericEqualityPositiveCases {
+public class NumericEqualityNegativeCases {
+
+  public static final Integer NULLINT = null;
 
   public boolean testEquality(Integer x, Integer y) {
     boolean retVal;
 
-    //BUG: Suggestion includes "Objects.equal(x, y)"
-    retVal = (x == y);
-    
-    //BUG: Suggestion includes "!Objects.equal(x, y)"
+    retVal = x.equals(y);
+    retVal = (x == null);
+    retVal = (x != null);
+    retVal = (null == x);
+    retVal = (null != x);
+    retVal = x == 1000;
+    retVal = x + y == y + x;
+    retVal = x == NULLINT;
+    retVal = NULLINT == x;
+
+    return retVal;
+  }
+
+  @SuppressWarnings("NumericEquality")
+  public boolean testSuppressWarnings(Integer x, Integer y) {
+    boolean retVal;
+
     retVal = (x != y);
-    final Integer constValue = new Integer(1000);
-    
-    //BUG: Suggestion includes "Objects.equal(x, constValue)"
-    retVal = (x == constValue);
-    
-    //BUG: Suggestion includes "!Objects.equal(x, constValue)"
-    retVal = (x != constValue);
+    retVal = (x == y);
 
     return retVal;
   }

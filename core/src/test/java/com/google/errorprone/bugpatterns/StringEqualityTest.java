@@ -25,25 +25,25 @@ import java.io.File;
 /**
  * @author ptoomey@google.com (Patrick Toomey)
  */
-public class InvalidStringEqualityTest {
+public class StringEqualityTest {
 
   private CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(InvalidStringEquality.class);
+    compilationHelper = new CompilationTestHelper(StringEquality.class);
   }
 
   @Test
   public void testPositiveCase() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("InvalidStringEqualityPositiveCases.java").toURI()));
+        new File(this.getClass().getResource("StringEqualityPositiveCases.java").toURI()));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("InvalidStringEqualityNegativeCases.java").toURI()));
+        new File(this.getClass().getResource("StringEqualityNegativeCases.java").toURI()));
   }
 
 }
