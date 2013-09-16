@@ -35,13 +35,23 @@ public class InstanceMethod implements Matcher<ExpressionTree> {
   private final String methodName;
   private final boolean isWildCard;
 
-  /**
-   * @param methodName name of the method or "*" to match any method name
-   */
   public InstanceMethod(Matcher<? super ExpressionTree> receiverMatcher, String methodName) {
+    this(receiverMatcher, methodName, false);
+  }
+
+  private InstanceMethod(
+      Matcher<? super ExpressionTree> receiverMatcher, String methodName, boolean isWildCard) {
     this.receiverMatcher = receiverMatcher;
     this.methodName = methodName;
-    this.isWildCard = methodName.equals("*");
+    this.isWildCard = isWildCard;
+  }
+
+  /**
+   * @return an InstanceMethod matcher that only matches the method receiver.
+   */
+  public static InstanceMethod methodReceiverMatcher(
+      Matcher<? super ExpressionTree> receiverMatcher) {
+    return new InstanceMethod(receiverMatcher, "", true);
   }
 
   @Override

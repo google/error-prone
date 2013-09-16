@@ -58,8 +58,8 @@ public class InstanceMethodTest extends CompilerBasedTest {
         "  }",
         "}"
       );
-      assertCompiles(memberSelectMatches(true, new InstanceMethod(
-          Matchers.<ExpressionTree>isArrayType(), "*")));
+    assertCompiles(memberSelectMatches(
+        true, InstanceMethod.methodReceiverMatcher(Matchers.<ExpressionTree>isArrayType())));
   }
 
   @Test
