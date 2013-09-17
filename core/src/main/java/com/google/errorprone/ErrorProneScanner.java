@@ -114,7 +114,8 @@ public class ErrorProneScanner extends Scanner {
       InjectMoreThanOneInjectableConstructor.class,
       InjectJavaxInjectOnFinalField.class,
       GuiceInjectOnFinalField.class,
-      ClassCanBeStatic.class
+      ClassCanBeStatic.class,
+      IterablesSize.class
   );
 
   @SuppressWarnings("unchecked")

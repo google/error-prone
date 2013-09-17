@@ -21,7 +21,6 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 import com.google.errorprone.bugpatterns.BugChecker;
-import com.google.errorprone.bugpatterns.SelfEquals;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,7 +53,9 @@ public class CompilationTestHelper {
   }
 
   public void assertCompileSucceeds(File source) {
-    assertThat(compileFileExitCode(source), is(0));
+    int exitCode = compileFileExitCode(source);
+    assertThat(exitCode, is(0));
+    // TODO(eaftan): complain if there are any diagnostics
   }
 
   /**
