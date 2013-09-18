@@ -83,7 +83,8 @@ public class SelfAssignment extends BugChecker
     MemberSelectTree rhs = (MemberSelectTree) initializer;
     Symbol rhsClass = ASTHelpers.getSymbol(rhs.getExpression());
     Symbol lhsClass = ASTHelpers.getSymbol(parent);
-    if (rhsClass.equals(lhsClass) && rhs.getIdentifier().contentEquals(tree.getName())) {
+    if (rhsClass != null && lhsClass != null
+        && rhsClass.equals(lhsClass) && rhs.getIdentifier().contentEquals(tree.getName())) {
       return describeForVarDecl(tree, state);
     }
     return Description.NO_MATCH;

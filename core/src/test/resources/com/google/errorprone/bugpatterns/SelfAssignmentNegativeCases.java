@@ -29,6 +29,7 @@ public class SelfAssignmentNegativeCases {
   private static int b = StaticClass.b;
   private static final int C = SelfAssignmentNegativeCases.b;
   private static final int D = checkNotNull(SelfAssignmentNegativeCases.C);
+  private static final int E = StaticClass.getIntArr().length;
   
   public void test1(int a) {
     int b = SelfAssignmentNegativeCases.b;
@@ -90,6 +91,9 @@ public class SelfAssignmentNegativeCases {
   
   private static class StaticClass {
     static int b;
+    public static int[] getIntArr() {
+      return new int[10];
+    }
   }
   
 }

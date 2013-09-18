@@ -112,6 +112,9 @@ public class ASTHelpers {
     if (tree instanceof JCIdent) {
       return ((JCIdent) tree).sym;
     }
+    if (tree instanceof JCMethodInvocation) {
+      return ASTHelpers.getSymbol(((JCMethodInvocation) tree).getMethodSelect());
+    }
     if (tree instanceof JCNewClass) {
       return ((JCNewClass) tree).constructor;
     }
