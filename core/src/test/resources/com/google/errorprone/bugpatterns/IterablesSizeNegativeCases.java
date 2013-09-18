@@ -25,6 +25,8 @@ import java.util.*;
 public class IterablesSizeNegativeCases {
   public int testEnhancedFor(List<Object> iterable) {
     int count = 0;
+    // The following cases are considered negative because they are incrementing the counter by more 
+    // than 1.
     for (Object item : iterable) {
       count += 2;
     }
@@ -40,9 +42,11 @@ public class IterablesSizeNegativeCases {
   public int testEnhancedWhileLoop(List<Object> iterable) {
     Iterator<Object> it = iterable.iterator();
     int count = 0;
+    // The following case is considered negative because it is incrementing the counter by 2.
     while (it.hasNext()) {
       count += 2;
     }
+    // 'this' is not an Iterable type.
     while (this.hasNext()) {
       count += 1;
     }
@@ -55,6 +59,8 @@ public class IterablesSizeNegativeCases {
   
   public double testEnhancedForFloats(List<Object> iterable) {
     double count = 0;
+    // The following cases are considered negative because they are incrementing the counter by a
+    // float value which is not 1.
     for (Object item : iterable) {
       count += 2.0;
     }

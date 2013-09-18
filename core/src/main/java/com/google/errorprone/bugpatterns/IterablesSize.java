@@ -63,9 +63,9 @@ public class IterablesSize extends BugChecker implements EnhancedForLoopTreeMatc
   public Description matchWhileLoop(WhileLoopTree tree, VisitorState state) {
     JCWhileLoop whileLoop = (JCWhileLoop) tree;
     boolean iterablesPattern = false;
-    if (((JCParens) whileLoop.getCondition()).getExpression() instanceof MethodInvocationTree) {
-      MethodInvocationTree methodInvocation =
-          (MethodInvocationTree) ((JCParens) whileLoop.getCondition()).getExpression();
+    JCExpression whileExpression = ((JCParens) whileLoop.getCondition()).getExpression();
+    if (whileExpression instanceof MethodInvocationTree) {
+      MethodInvocationTree methodInvocation = (MethodInvocationTree) whileExpression;
       if (methodSelect(isDescendantOfMethod("java.util.Iterator", "hasNext()"))
           .matches(methodInvocation, state)) {
         return describeMatch(tree, new SuggestedFix());
