@@ -33,6 +33,8 @@ public class JUnit3TestNotRunNegativeCase1 extends TestCase {
   public void bestNameEver() {}
   public void destroy() {}
   public void restore() {}
+  public void establish() {}
+  public void estimate() {}
 
   // different signature
   private void tesPrivateHelper() {}

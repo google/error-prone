@@ -46,8 +46,8 @@ import java.util.regex.Pattern;
         " misspells the required prefix, or has @Test annotation, but no prefix." +
         " As a consequence, JUnit 3 will ignore it.\n\n" +
         "If you want to disable test on purpose, change the name to something more descriptive," +
-        "like \"disabledTestSomething()\". You don't need @Test annotation, but if you want to" +
-        "keep it, add @Ignore too.",
+        " like \"disabledTestSomething()\". You don't need @Test annotation, but if you want to" +
+        " keep it, add @Ignore too.",
     category = JUNIT, maturity = EXPERIMENTAL, severity = ERROR)
 public class JUnit3TestNotRun extends BugChecker implements MethodTreeMatcher {
 
@@ -57,19 +57,20 @@ public class JUnit3TestNotRun extends BugChecker implements MethodTreeMatcher {
   private static final String JUNIT4_IGNORE_ANNOTATION = "org.junit.Ignore";
   /*
    * Regular expression for test method name that is misspelled and should be replaced with "test".
-   * ".est" is omitted, because it catches real words like "restore", "destroy", "best". ".test" is
-   * omitted, because many people use it on purpose, to disable the test. Otherwise, I haven't found
-   * any false positives; "tes" was most common typo. There are some ambiguities in this regex that
-   * lead to bad corrections (i.e. tets -> tests, tesst -> testst), but the error is still found
+   * ".est" and "est"  are omitted, because they catch real words like "restore", "destroy", "best",
+   * "establish". ".test" is omitted, because people use it on purpose, to disable the test.
+   * Otherwise, I haven't found any false positives; "tes" was most common typo.
+   * There are some ambiguities in this regex that lead to bad corrections
+   * (i.e. tets -> tests, tesst -> testst), but the error is still found
    * (those could be improved with regex lookahead, but I prefer simpler regex).
-   *  TODO(rburny): see if we can cleanup intended ".test" misspellings
+   *  TODO(rburny): see if we can cleanup intentional ".test" misspellings
    */
   private static final Pattern MISSPELLED_NAME = Pattern.compile(
-      "t.est|te.st|"        +  // letter inserted
-      "est|tst|tet|tes|"    +  // letter removed
-      "etst|tset|tets|"     +  // letters swapped
-      "t.st|te.t|"          +  // letter changed
-      "[tT][eE][sS][tT]"       // miscapitalized
+      "t.est|te.st|"    +  // letter inserted
+      "tst|tet|tes|"    +  // letter removed
+      "etst|tset|tets|" +  // letters swapped
+      "t.st|te.t|"      +  // letter changed
+      "[tT][eE][sS][tT]"   // miscapitalized
       );
 
   private static final Matcher<ClassTree> isJUnit3TestClass = allOf(
