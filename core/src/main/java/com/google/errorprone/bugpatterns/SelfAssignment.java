@@ -204,8 +204,11 @@ public class SelfAssignment extends BugChecker
       // find class instance fields of the same type
       Type type = ((JCIdent) lhs).type;
       TreePath path = state.getPath();
-      while (path != null && path.getLeaf().getKind() != CLASS) {
+      while (path != null && !(path.getLeaf() instanceof JCClassDecl)) {
         path = path.getParentPath();
+      }
+      if (path == null) {
+        throw new IllegalStateException("Expected to find an enclosing class declaration");
       }
       JCClassDecl klass = (JCClassDecl) path.getLeaf();
       int minEditDistance = Integer.MAX_VALUE;
