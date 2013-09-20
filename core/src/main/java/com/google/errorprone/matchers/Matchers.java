@@ -152,8 +152,16 @@ public class Matchers {
    * @param receiverMatcher Used to determine if the part of the expression before the dot matches.
    * @param methodName The name of the method to match, e.g., "equals"
    */
-  public static InstanceMethod instanceMethod(Matcher<ExpressionTree> receiverMatcher, String methodName) {
+  public static InstanceMethod instanceMethod(Matcher<? super ExpressionTree> receiverMatcher, String methodName) {
     return new InstanceMethod(receiverMatcher, methodName);
+  }
+
+  /**
+   * Matches an AST node which is an expression yielding the indicated non-static method.
+   * @param receiverMatcher Used to determine if the part of the expression before the dot matches.
+   */
+  public static InstanceMethod methodReceiver(Matcher<? super ExpressionTree> receiverMatcher) {
+    return InstanceMethod.methodReceiverMatcher(receiverMatcher);
   }
 
   /**

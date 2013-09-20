@@ -1,0 +1,14 @@
+syntax = "proto2";
+
+package com.google.errorprone.bugpatterns;
+
+option java_package = "com.google.errorprone.bugpatterns.proto";
+
+message TestFieldProtoMessage {
+  optional TestFieldProtoMessage field = 1;
+}
+
+message TestProtoMessage {
+  optional TestFieldProtoMessage message = 1;
+  repeated TestFieldProtoMessage multi_field = 2;
+}

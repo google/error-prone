@@ -21,10 +21,12 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.common.collect.Lists;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.List;
 
 /**
  * Utility class for tests that need to build using error-prone.
@@ -52,9 +54,13 @@ public class CompilationTestHelper {
     this(new ErrorProneScanner(checker));
   }
 
-  public void assertCompileSucceeds(File source) {
-    int exitCode = compileFileExitCode(source);
-    assertThat(exitCode, is(0));
+  public void assertCompileSucceeds(File source, File... dependencies) {
+    List<String> arguments = Lists.newArrayList("-Xjcov", source.getAbsolutePath());
+    for (File file : dependencies) {
+      arguments.add(file.getAbsolutePath());
+    }
+    int exitCode = compiler.compile(arguments.toArray(new String[0]));
+    assertThat(diagnosticHelper.getDiagnostics().toString(), exitCode, is(0));
     // TODO(eaftan): complain if there are any diagnostics
   }
 
@@ -62,8 +68,14 @@ public class CompilationTestHelper {
    * Assert that the compile fails, and that for each line of the test file that contains
    * the pattern //BUG("foo"), the diagnostic at that line contains "foo".
    */
-  public void assertCompileFailsWithMessages(File source) throws IOException {
-    assertThat("Compile should fail (exit with code 1)", compileFileExitCode(source), is(1));
+  public void assertCompileFailsWithMessages(File source, File... dependencies) throws IOException {
+    List<String> arguments =
+        Lists.newArrayList("-Xjcov", "-encoding", "UTF-8", source.getAbsolutePath());
+    for (File file : dependencies) {
+      arguments.add(file.getAbsolutePath());
+    }
+    int exitCode = compiler.compile(arguments.toArray(new String[0]));
+    assertThat("Compiler returned an unexpected error code", exitCode, is(1));
     assertHasDiagnosticOnAllMatchingLines(diagnosticHelper.getDiagnostics(), source);
   }
 

@@ -49,6 +49,20 @@ public class InstanceMethodTest extends CompilerBasedTest {
   }
 
   @Test
+  public void shouldMatchWildCard() throws IOException {
+    writeFile("A.java",
+        "public class A {",
+        "  public int getHash() {",
+        "    int[] arr = new int[10];",
+        "    return arr.hashCode();",
+        "  }",
+        "}"
+      );
+    assertCompiles(memberSelectMatches(
+        true, InstanceMethod.methodReceiverMatcher(Matchers.<ExpressionTree>isArrayType())));
+  }
+
+  @Test
   public void shouldNotMatchWhenMethodNamesDiffer() throws IOException {
     writeFile("A.java",
       "public class A {",
