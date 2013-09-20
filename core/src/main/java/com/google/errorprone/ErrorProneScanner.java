@@ -116,7 +116,7 @@ public class ErrorProneScanner extends Scanner {
       GuiceInjectOnFinalField.class,
       ClassCanBeStatic.class,
       IterablesSize.class,
-      InvalidProtoFieldNullComparison.class
+      ProtoFieldNullComparison.class
   );
 
   @SuppressWarnings("unchecked")
