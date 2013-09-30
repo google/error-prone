@@ -68,7 +68,11 @@ public class IterablesSize extends BugChecker implements EnhancedForLoopTreeMatc
       MethodInvocationTree methodInvocation = (MethodInvocationTree) whileExpression;
       if (methodSelect(isDescendantOfMethod("java.util.Iterator", "hasNext()"))
           .matches(methodInvocation, state)) {
-        return describeMatch(tree, new SuggestedFix());
+        IdentifierTree identifier =
+            getIncrementedIdentifer(extractSingleStatement(whileLoop.body));
+        if (identifier != null) {
+          return describeMatch(tree, new SuggestedFix());
+        }
       }
     }
     return Description.NO_MATCH;

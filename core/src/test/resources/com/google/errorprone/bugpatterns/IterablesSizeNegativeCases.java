@@ -50,6 +50,11 @@ public class IterablesSizeNegativeCases {
     while (this.hasNext()) {
       count += 1;
     }
+    // Complicated while body.
+    while (it.hasNext()) {
+      System.err.println("Not so simple body");
+      count++;
+    }
     return count;
   }
 
