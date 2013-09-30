@@ -1,0 +1,3 @@
+[submodule "safevarargs"]
+	path = safevarargs
+	url = https://github.com/google/safevarargs
