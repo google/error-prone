@@ -49,6 +49,7 @@
     <module>annotation</module>
     <module>docgen</module>
     <module>ant</module>
+    <module>safevarargs</module>
   </modules>
 
   <scm>
