@@ -52,7 +52,8 @@ abstract class AbstractReturnValueIgnored extends BugChecker
       MethodInvocationTree methodInvocationTree, VisitorState state) {
     if (allOf(
         parentNode(Matchers.<MethodInvocationTree>kindIs(Kind.EXPRESSION_STATEMENT)),
-        not(methodSelect(allOf(kindIs(Kind.IDENTIFIER), identifierHasName("super")))),
+        not(methodSelect(
+            Matchers.<ExpressionTree>allOf(kindIs(Kind.IDENTIFIER), identifierHasName("super")))),
         specializedMatcher())
         .matches(methodInvocationTree, state)) {
       return describe(methodInvocationTree, state);
