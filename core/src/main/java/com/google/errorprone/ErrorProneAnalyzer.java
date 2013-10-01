@@ -34,6 +34,8 @@ public class ErrorProneAnalyzer {
   private final Log log;
   private final Context context;
   private final Scanner errorProneScanner;
+  // If matchListener != null, then we are in search mode.
+  private final SearchResultsPrinter resultsPrinter;
 
   /**
    * Which classes error-prone has encountered.
@@ -46,8 +48,13 @@ public class ErrorProneAnalyzer {
   private final Set<CompilationUnitTree> compilationUnitsScanned;
 
   public ErrorProneAnalyzer(Log log, Context context) {
+    this(log, context, null);
+  }
+
+  public ErrorProneAnalyzer(Log log, Context context, SearchResultsPrinter resultsPrinter) {
     this.log = log;
     this.context = context;
+    this.resultsPrinter = resultsPrinter;
     this.classesEncountered = new HashSet<Tree>();
     this.compilationUnitsScanned = new HashSet<CompilationUnitTree>();
     this.errorProneScanner = context.get(Scanner.class);
@@ -92,14 +99,18 @@ public class ErrorProneAnalyzer {
    * Create a VisitorState object from an environment.
    */
   private VisitorState createVisitorState(Env<AttrContext> env) {
-    DescriptionListener logReporter = new JavacErrorDescriptionListener(log,
-        env.toplevel.endPositions,
-        env.enclClass.sym.sourcefile != null
-            ? env.enclClass.sym.sourcefile
-            : env.toplevel.sourcefile,
-        context);
-    VisitorState visitorState = new VisitorState(context, logReporter);
-    return visitorState;
+    if (resultsPrinter != null) {
+      resultsPrinter.setCompilationUnit(env.toplevel.sourcefile);
+      return new VisitorState(context, resultsPrinter);
+    } else {
+      DescriptionListener logReporter = new JavacErrorDescriptionListener(log,
+          env.toplevel.endPositions,
+          env.enclClass.sym.sourcefile != null
+          ? env.enclClass.sym.sourcefile
+              : env.toplevel.sourcefile,
+              context);
+      return new VisitorState(context, logReporter);
+    }
   }
 
   /**

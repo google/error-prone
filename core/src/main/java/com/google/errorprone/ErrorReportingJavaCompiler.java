@@ -79,8 +79,8 @@ public class ErrorReportingJavaCompiler extends JavaCompiler {
   }
 
   /**
-  * Run Error Prone analysis after performing dataflow checks.
-  */
+   * Run Error Prone analysis after performing dataflow checks.
+   */
   public void postFlow(Env<AttrContext> env) {
     errorProneAnalyzer.reportReadyForAnalysis(env, errorCount() > 0);
   }
