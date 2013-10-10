@@ -17,7 +17,7 @@ import java.util.Set;
  */
 class WrappedTreeMap extends AbstractMap<JCTree, Integer> {
 
-   /**
+  /**
    * A map from wrapped tree nodes to tree end positions.
    */
   private final Map<WrappedTreeNode, Integer> wrappedMap;
@@ -25,7 +25,9 @@ class WrappedTreeMap extends AbstractMap<JCTree, Integer> {
   public WrappedTreeMap(Map<JCTree, Integer> map) {
     wrappedMap = new HashMap<WrappedTreeNode, Integer>();
     for (Map.Entry<JCTree, Integer> entry : map.entrySet()) {
-      wrappedMap.put(new WrappedTreeNode(entry.getKey()), entry.getValue());
+      if (wrappedMap.put(new WrappedTreeNode(entry.getKey()), entry.getValue()) != null) {
+        throw new AssertionError("Node collision in WrappedTreeMap");
+      }
     }
   }
 
@@ -55,8 +57,8 @@ class WrappedTreeMap extends AbstractMap<JCTree, Integer> {
     }
 
     /**
-     * equals compares start position, kind of node, and tag. This is an approximation and may not
-     * actually distinguish between unequal tree nodes.
+     * equals compares start and preferred positions, kind of node, and tag. This is an
+     * approximation and may not actually distinguish between unequal tree nodes.
      *
      * Note: Do not include node.toString() as part of the hash or the equals.  We generate
      * the WrappedTreeMap after the parse phase, but we compare after the flow phase.  The
@@ -90,6 +92,7 @@ class WrappedTreeMap extends AbstractMap<JCTree, Integer> {
       }
 
       return node.getStartPosition() == other.node.getStartPosition() &&
+          node.getPreferredPosition() == other.node.getPreferredPosition() &&
           thisKind == otherKind &&
           node.getTag() == other.node.getTag();
     }
@@ -108,6 +111,7 @@ class WrappedTreeMap extends AbstractMap<JCTree, Integer> {
     public int hashCode() {
       int result = 17;
       result = 31 * result + node.getStartPosition();
+      result = 31 * result + node.getPreferredPosition();
       try {
         result = 31 * result + node.getKind().ordinal();
       } catch (AssertionError e) {
