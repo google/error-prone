@@ -140,46 +140,6 @@ public class ASTHelpers {
   }
 
   /**
-   * Find the root identifier of a chain of field accesses.  If there is no root identifier
-   * (i.e, a bare method call or a static method call), return null.
-   *
-   * Examples:
-   *    a.trim().intern() ==> a
-   *    a.b.trim().intern() ==> a
-   *    this.intValue.foo() ==> this.intValue
-   *    this.foo() ==> this
-   *    intern() ==> null
-   *    String.format() ==> null
-   *    java.lang.String.format() ==> null
-
-   */
-  public static IdentifierTree getRootIdentifier(MethodInvocationTree methodInvocationTree) {
-    if (!(methodInvocationTree instanceof JCMethodInvocation)) {
-      throw new IllegalArgumentException("Expected type to be JCMethodInvocation, but was "
-          + methodInvocationTree.getClass());
-    }
-
-    // Check for bare method call, e.g. intern().
-    if (((JCMethodInvocation) methodInvocationTree).getMethodSelect() instanceof JCIdent) {
-      return null;
-    }
-
-    // Unwrap the field accesses until you get to an identifier.
-    ExpressionTree expr = methodInvocationTree;
-    while (!(expr instanceof JCIdent)) {
-      if (expr instanceof JCMethodInvocation) {
-        expr = ((JCMethodInvocation) expr).getMethodSelect();
-      } else if (expr instanceof JCFieldAccess) {
-        expr = ((JCFieldAccess) expr).getExpression();
-      } else {
-        throw new IllegalStateException("Expected expression to be a method invocation or "
-            + "field access, but was " + expr.getKind());
-      }
-    }
-    return (IdentifierTree) expr;
-  }
-
-  /**
    * Find the root assignable expression of a chain of field accesses.  If there is no root
    * (i.e, a bare method call or a static method call), return null.
    *
