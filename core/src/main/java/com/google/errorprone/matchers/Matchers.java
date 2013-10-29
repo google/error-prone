@@ -87,7 +87,6 @@ public class Matchers {
   /**
    * Compose several matchers together, such that the composite matches an AST node iff all the given matchers do.
    */
-  @SafeVarargs
   public static <T extends Tree> Matcher<T> allOf(final Matcher<? super T>... matchers) {
     return new Matcher<T>() {
       @Override public boolean matches(T t, VisitorState state) {
@@ -104,7 +103,6 @@ public class Matchers {
   /**
    * Compose several matchers together, such that the composite matches an AST node if any of the given matchers do.
    */
-  @SafeVarargs
   public static <T extends Tree> Matcher<T> anyOf(final Matcher<? super T>... matchers) {
     return new Matcher<T>() {
       @Override public boolean matches(T t, VisitorState state) {
