@@ -24,7 +24,7 @@ import java.util.*;
  */
 public class IterablesSizePositiveCases {
     
-  public int testEnhancedFor(List<Object> iterable) {
+  public int testEnhancedFor(Iterable<Object> iterable, HashSet<Object> set, Object... array) {
     int count = 0;
     //BUG: Suggestion includes "count += Iterables.size(iterable)"
     for (Object item : iterable) {
@@ -48,6 +48,14 @@ public class IterablesSizePositiveCases {
     }
     //BUG: Suggestion includes "count += Iterables.size(iterable)"
     for (Object item : iterable) {
+      count  = 1 + count;
+    }
+    //BUG: Suggestion includes "count += set.size()"
+    for (Object item : set) {
+      count  = 1 + count;
+    }
+    //BUG: Suggestion includes "count += array.length"
+    for (Object item : array) {
       count  = 1 + count;
     }
     return count;

@@ -19,6 +19,8 @@ import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.isDescendantOfMethod;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
+import com.google.errorprone.matchers.Matchers;
+import com.google.errorprone.matchers.Matchers;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -62,7 +64,6 @@ public class IterablesSize extends BugChecker implements EnhancedForLoopTreeMatc
   @Override
   public Description matchWhileLoop(WhileLoopTree tree, VisitorState state) {
     JCWhileLoop whileLoop = (JCWhileLoop) tree;
-    boolean iterablesPattern = false;
     JCExpression whileExpression = ((JCParens) whileLoop.getCondition()).getExpression();
     if (whileExpression instanceof MethodInvocationTree) {
       MethodInvocationTree methodInvocation = (MethodInvocationTree) whileExpression;
@@ -84,11 +85,21 @@ public class IterablesSize extends BugChecker implements EnhancedForLoopTreeMatc
     IdentifierTree identifier =
         getIncrementedIdentifer(extractSingleStatement(enhancedForLoop.body));
     if (identifier != null) {
-      String replacement = identifier + " += Iterables.size(" + tree.getExpression() + ");";
-      SuggestedFix fix = new SuggestedFix()
-          .replace(tree, replacement)
-          .addImport("com.google.common.collect.Iterables");
-      return describeMatch(tree, fix);
+      if (Matchers.isSubtypeOf("java.util.Collection").matches(tree.getExpression(), state)) {
+        String replacement = identifier + " += " + tree.getExpression() + ".size();";
+        SuggestedFix fix = new SuggestedFix().replace(tree, replacement);
+        return describeMatch(tree, fix);
+      } else if (Matchers.isArrayType().matches(tree.getExpression(), state)) {
+        String replacement = identifier + " += " + tree.getExpression() + ".length;";
+        SuggestedFix fix = new SuggestedFix().replace(tree, replacement);
+        return describeMatch(tree, fix);
+      } else {
+        String replacement = identifier + " += Iterables.size(" + tree.getExpression() + ");";
+        SuggestedFix fix = new SuggestedFix()
+            .replace(tree, replacement)
+            .addImport("com.google.common.collect.Iterables");
+        return describeMatch(tree, fix);
+      }
     }
     return Description.NO_MATCH;
   }
