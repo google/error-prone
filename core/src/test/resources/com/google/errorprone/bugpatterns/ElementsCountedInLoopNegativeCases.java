@@ -22,7 +22,7 @@ import java.util.*;
  * @author amshali@google.com (Amin Shali)
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class IterablesSizeNegativeCases {
+public class ElementsCountedInLoopNegativeCases {
   public int testEnhancedFor(List<Object> iterable) {
     int count = 0;
     // The following cases are considered negative because they are incrementing the counter by more 

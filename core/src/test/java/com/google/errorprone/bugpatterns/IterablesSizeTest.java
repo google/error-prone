@@ -32,19 +32,19 @@ public class IterablesSizeTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(IterablesSize.class);
+    compilationHelper = new CompilationTestHelper(ElementsCountedInLoop.class);
   }
 
   @Test
   public void testPositiveCase() throws Exception {
     compilationHelper.assertCompileSucceedsWithMessages(
-        new File(this.getClass().getResource("IterablesSizePositiveCases.java").toURI()));
+        new File(this.getClass().getResource("ElementsCountedInLoopPositiveCases.java").toURI()));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("IterablesSizeNegativeCases.java").toURI()));
+        new File(this.getClass().getResource("ElementsCountedInLoopNegativeCases.java").toURI()));
   }
 
 }

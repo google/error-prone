@@ -22,7 +22,7 @@ import java.util.*;
  * @author amshali@google.com (Amin Shali)
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class IterablesSizePositiveCases {
+public class ElementsCountedInLoopPositiveCases {
     
   public int testEnhancedFor(Iterable<Object> iterable, HashSet<Object> set, Object... array) {
     int count = 0;
