@@ -26,7 +26,7 @@ import java.io.File;
  * @author amshali@google.com (Amin Shali)
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class IterablesSizeTest {
+public class ElementsCountedInLoopTest {
 
   private CompilationTestHelper compilationHelper;
 

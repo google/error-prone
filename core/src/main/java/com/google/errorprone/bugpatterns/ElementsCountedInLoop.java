@@ -54,14 +54,15 @@ import com.sun.tools.javac.tree.JCTree.JCWhileLoop;
  * @author amshali@google.com (Amin Shali)
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-@BugPattern(name = "IterablesSize",
+@BugPattern(name = "ElementsCountedInLoop",
     summary = "This code, which counts elements using a loop, can be replaced by a simpler library "
         + "method",
     explanation = "This code counts elements using a loop.  You can use various library methods "
-    + "(Guava's Iterables.size(), Collection.size(), array.length) to achieve the same thing "
-    + "in a cleaner way.", category = JDK, severity = WARNING, maturity = EXPERIMENTAL)
-public class ElementsCountedInLoop extends BugChecker implements EnhancedForLoopTreeMatcher,
-    WhileLoopTreeMatcher {
+        + "(Guava's Iterables.size(), Collection.size(), array.length) to achieve the same thing "
+        + "in a cleaner way.",
+    category = JDK, severity = WARNING, maturity = EXPERIMENTAL)
+public class ElementsCountedInLoop extends BugChecker
+    implements EnhancedForLoopTreeMatcher, WhileLoopTreeMatcher {
 
   @Override
   public Description matchWhileLoop(WhileLoopTree tree, VisitorState state) {
