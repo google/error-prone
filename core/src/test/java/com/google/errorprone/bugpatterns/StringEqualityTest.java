@@ -23,27 +23,27 @@ import org.junit.Test;
 import java.io.File;
 
 /**
- * @author scottjohnson@google.com (Scott Johnson)
+ * @author ptoomey@google.com (Patrick Toomey)
  */
-public class InvalidNumericEqualityTest {
+public class StringEqualityTest {
 
   private CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(InvalidNumericEquality.class);
+    compilationHelper = new CompilationTestHelper(StringEquality.class);
   }
 
   @Test
   public void testPositiveCase() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("InvalidNumericEqualityPositiveCases.java").toURI()));
+        new File(this.getClass().getResource("StringEqualityPositiveCases.java").toURI()));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("InvalidNumericEqualityNegativeCases.java").toURI()));
+        new File(this.getClass().getResource("StringEqualityNegativeCases.java").toURI()));
   }
 
 }

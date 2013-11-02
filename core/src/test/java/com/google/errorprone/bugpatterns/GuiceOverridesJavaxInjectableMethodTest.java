@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Google Inc. All Rights Reserved.
+ * Copyright 2013 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,33 +17,36 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.io.File;
 
 /**
- * @author ptoomey@google.com (Patrick Toomey)
+ * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-public class InvalidStringEqualityTest {
-
+@RunWith(JUnit4.class)
+public class GuiceOverridesJavaxInjectableMethodTest {
   private CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(InvalidStringEquality.class);
+    compilationHelper =
+        new CompilationTestHelper(GuiceOverridesJavaxInjectableMethod.class);
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("InvalidStringEqualityPositiveCases.java").toURI()));
+    compilationHelper.assertCompileFailsWithMessages(new File(this.getClass()
+        .getResource("GuiceOverridesJavaxInjectableMethodPositiveCases.java").toURI()));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("InvalidStringEqualityNegativeCases.java").toURI()));
+    compilationHelper.assertCompileSucceeds(new File(this.getClass()
+        .getResource("GuiceOverridesJavaxInjectableMethodNegativeCases.java").toURI()));
   }
-
 }

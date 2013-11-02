@@ -17,6 +17,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
@@ -24,12 +25,10 @@ import static java.lang.annotation.ElementType.TYPE;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.tools.javac.code.Flags;
@@ -46,7 +45,8 @@ import java.lang.annotation.Target;
     explanation = "Scoping annotations are only appropriate for provision and therefore are only " +
     		"appropriate on @Provides methods and classes that will be provided just-in-time.",
     category = INJECT, severity = ERROR, maturity = EXPERIMENTAL)
-public class InjectInvalidTargetingOnScopingAnnotation extends DescribingMatcher<ClassTree> {
+public class InjectInvalidTargetingOnScopingAnnotation extends BugChecker
+    implements ClassTreeMatcher {
 
   private static final String GUICE_SCOPE_ANNOTATION = "com.google.inject.ScopeAnnotation";
   private static final String JAVAX_SCOPE_ANNOTATION = "javax.inject.Scope";
@@ -61,7 +61,7 @@ public class InjectInvalidTargetingOnScopingAnnotation extends DescribingMatcher
 
   @Override
   @SuppressWarnings("unchecked")
-  public final boolean matches(ClassTree classTree, VisitorState state) {
+  public final Description matchClass(ClassTree classTree, VisitorState state) {
     if ((ASTHelpers.getSymbol(classTree).flags() & Flags.ANNOTATION) != 0
         && SCOPE_ANNOTATION_MATCHER.matches(classTree, state)) {
       Target target = JavacElements.getAnnotation(ASTHelpers.getSymbol(classTree), Target.class);
@@ -69,22 +69,23 @@ public class InjectInvalidTargetingOnScopingAnnotation extends DescribingMatcher
       if (target != null) {
         for (ElementType elementType : target.value()) {
           if (elementType != METHOD && elementType != TYPE) {
-            return true;
+            return describe(classTree, state);
           } else if (elementType == METHOD || elementType == TYPE) {
             hasExclusivelyTypeAndOrMethodTargeting = true;
           }
         }
       }
-      return !hasExclusivelyTypeAndOrMethodTargeting; // true for no target set and for @Target({}) 
+      if(!hasExclusivelyTypeAndOrMethodTargeting) { // true for no target set and for @Target({})
+        return describe(classTree, state);
+      }
     }
-    return false;
+    return Description.NO_MATCH;
   }
 
-  @Override
   public Description describe(ClassTree classTree, VisitorState state) {
     Target target = JavacElements.getAnnotation(ASTHelpers.getSymbol(classTree), Target.class);
     if (target == null) {
-      return new Description(classTree, getDiagnosticMessage(), new SuggestedFix()
+      return describeMatch(classTree, new SuggestedFix()
           .addImport("java.lang.annotation.Target")
           .addStaticImport("java.lang.annotation.ElementType.TYPE")
           .addStaticImport("java.lang.annotation.ElementType.METHOD")
@@ -96,21 +97,10 @@ public class InjectInvalidTargetingOnScopingAnnotation extends DescribingMatcher
         targetNode = annotation;
       }
     }
-    return new Description(targetNode, getDiagnosticMessage(), new SuggestedFix()
+    return describeMatch(targetNode, new SuggestedFix()
         .addImport("java.lang.annotation.Target")
         .addStaticImport("java.lang.annotation.ElementType.TYPE")
         .addStaticImport("java.lang.annotation.ElementType.METHOD")
         .replace(targetNode, "@Target({TYPE, METHOD})"));
-  }
-
-  public static class Scanner extends com.google.errorprone.Scanner {
-    public DescribingMatcher<ClassTree> classMatcher =
-        new InjectInvalidTargetingOnScopingAnnotation();
-
-    @Override
-    public Void visitClass(ClassTree classTree, VisitorState visitorState) {
-      evaluateMatch(classTree, visitorState, classMatcher);
-      return super.visitClass(classTree, visitorState);
-    }
   }
 }

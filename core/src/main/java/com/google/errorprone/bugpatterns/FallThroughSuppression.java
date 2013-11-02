@@ -19,16 +19,12 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.ONE_OFF;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.NOT_A_PROBLEM;
-import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.hasArgumentWithValue;
-import static com.google.errorprone.matchers.Matchers.isType;
-import static com.google.errorprone.matchers.Matchers.stringLiteral;
+import static com.google.errorprone.matchers.Matchers.*;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.matchers.DescribingMatcher;
+import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-
 import com.sun.source.tree.AnnotationTree;
 
 import java.util.List;
@@ -54,22 +50,15 @@ public class FallThroughSuppression extends AbstractSuppressWarningsMatcher {
       hasArgumentWithValue("value", stringLiteral("fallthrough")));
 
   @Override
-  public final boolean matches(AnnotationTree annotationTree, VisitorState state) {
-    return matcher.matches(annotationTree, state);
+  public final Description matchAnnotation(AnnotationTree annotationTree, VisitorState state) {
+    if (matcher.matches(annotationTree, state)) {
+      return describeMatch(annotationTree, getSuggestedFix(annotationTree));
+    }
+    return Description.NO_MATCH;
   }
 
   @Override
   protected void processSuppressWarningsValues(List<String> values) {
     values.remove("fallthrough");
-  }
-
-  public static class Scanner extends com.google.errorprone.Scanner {
-    public DescribingMatcher<AnnotationTree> annotationMatcher = new FallThroughSuppression();
-
-    @Override
-    public Void visitAnnotation(AnnotationTree annotationTree, VisitorState visitorState) {
-      evaluateMatch(annotationTree, visitorState, annotationMatcher);
-      return super.visitAnnotation(annotationTree, visitorState);
-    }
   }
 }

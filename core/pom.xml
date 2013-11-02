@@ -31,7 +31,7 @@
   <parent>
     <groupId>com.google.errorprone</groupId>
     <artifactId>error_prone_parent</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.5-SNAPSHOT</version>
   </parent>
 
   <name>error-prone library</name>
@@ -94,6 +94,12 @@
       <version>1.8.5</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.google.protobuf</groupId>
+      <artifactId>protobuf-java</artifactId>
+      <version>2.5.0</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -103,13 +109,15 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>1.2.2</version>
         <executions>
           <execution>
             <phase>package</phase>
             <goals>
               <goal>shade</goal>
             </goals>
+            <configuration>
+              <createDependencyReducedPom>false</createDependencyReducedPom>
+            </configuration>
           </execution>
         </executions>
       </plugin>
@@ -131,7 +139,12 @@
     <profile>
       <id>tools.jar</id>
       <activation>
-        <activeByDefault>true</activeByDefault>
+        <!-- Our release turns the systemPath into an absolute path, which doesn't resolve
+             for downstream dependent projects. So just drop this dep in that case.
+             See issue #18 -->
+        <file>
+          <exists>${java.home}/../lib/tools.jar</exists>
+        </file>
       </activation>
       <dependencies>
         <dependency>

@@ -17,10 +17,12 @@
 package com.google.errorprone.suppliers;
 
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.matchers.EnclosingClass;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ClassType;
+import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 
@@ -76,6 +78,34 @@ public class Suppliers {
     };
   }
 
+  public static final Supplier<Type> VOID_TYPE = new Supplier<Type>() {
+      @Override
+      public Type get(VisitorState state) {
+        return state.getSymtab().voidType;
+      }
+    };
+
+  public static final Supplier<Type> BOOLEAN_TYPE = new Supplier<Type>() {
+      @Override
+      public Type get(VisitorState state) {
+        return state.getSymtab().booleanType;
+      }
+    };
+
+  public static final Supplier<Type> OBJECT_TYPE = new Supplier<Type>() {
+      @Override
+      public Type get(VisitorState state) {
+        return state.getSymtab().objectType;
+      }
+    };
+
+  public static final Supplier<Type> EXCEPTION_TYPE = new Supplier<Type>() {
+      @Override
+      public Type get(VisitorState state) {
+        return state.getSymtab().exceptionType;
+      }
+    };
+
   /**
    * Supplies what was given. Useful for adapting to methods that require a supplier.
    *
@@ -89,4 +119,11 @@ public class Suppliers {
       }
     };
   }
+
+  public static Supplier<Type> ENCLOSING_CLASS = new Supplier<Type>() {
+      @Override
+      public Type get(VisitorState state) {
+        return ((JCTree) EnclosingClass.findEnclosingClass(state)).type;
+      }
+    };
 }

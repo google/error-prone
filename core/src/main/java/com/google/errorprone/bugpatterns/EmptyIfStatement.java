@@ -16,24 +16,25 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.BugPattern.Category.JDK;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.BugChecker.EmptyStatementTreeMatcher;
+import static com.google.errorprone.matchers.Matchers.nextStatement;
+import static com.google.errorprone.matchers.Matchers.parentNode;
+import static com.sun.source.tree.Tree.Kind.IF;
+
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneCompiler;
+import com.google.errorprone.ErrorProneScanner;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matchers;
-
 import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
-
-import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.*;
-import static com.sun.source.tree.Tree.Kind.IF;
 
 /**
  * This checker finds and fixes empty statements after an if, with no else
@@ -52,7 +53,7 @@ import static com.sun.source.tree.Tree.Kind.IF;
         "An if statement contains an empty statement as the then clause. A semicolon may " +
         "have been inserted by accident.",
     category = JDK, severity = ERROR, maturity = MATURE)
-public class EmptyIfStatement extends DescribingMatcher<EmptyStatementTree> {
+public class EmptyIfStatement extends BugChecker implements EmptyStatementTreeMatcher {
 
   /**
    * Match empty statement if:
@@ -61,56 +62,45 @@ public class EmptyIfStatement extends DescribingMatcher<EmptyStatementTree> {
    * - The else part of the parent if does not exist
    */
   @Override
-  public boolean matches(EmptyStatementTree emptyStatementTree, VisitorState state) {
-    boolean result = false;
+  public Description matchEmptyStatement(EmptyStatementTree tree, VisitorState state) {
+    boolean matches = false;
     Tree parent = state.getPath().getParentPath().getLeaf();
     if (parent.getKind() == IF) {
       IfTree parentAsIf = (IfTree)parent;
-      result = (parentAsIf.getThenStatement() instanceof EmptyStatementTree) &&
+      matches = (parentAsIf.getThenStatement() instanceof EmptyStatementTree) &&
           (parentAsIf.getElseStatement() == null);
     }
-    return result;
-  }
+    if (!matches) {
+      return Description.NO_MATCH;
+    }
 
-  /**
-   * We suggest different fixes depending on what follows the parent if statement.
-   * If there is no statement following the if, then suggest deleting the whole
-   * if statement. If the next statement is a block, then suggest deleting the
-   * empty then part of the if.  If the next statement is not a block, then also
-   * suggest deleting the empty then part of the if.
-   */
-  @Override
-  public Description describe(EmptyStatementTree tree, VisitorState state) {
+    /*
+     * We suggest different fixes depending on what follows the parent if statement.
+     * If there is no statement following the if, then suggest deleting the whole
+     * if statement. If the next statement is a block, then suggest deleting the
+     * empty then part of the if.  If the next statement is not a block, then also
+     * suggest deleting the empty then part of the if.
+     */
     boolean nextStmtIsNull = parentNode(nextStatement(Matchers.<StatementTree>isSame(null)))
         .matches(tree, state);
 
     assert(state.getPath().getParentPath().getLeaf().getKind() == IF);
-    IfTree parent = (IfTree)state.getPath().getParentPath().getLeaf();
+    IfTree ifParent = (IfTree)state.getPath().getParentPath().getLeaf();
     SuggestedFix fix = new SuggestedFix();
     if (nextStmtIsNull) {
       // No following statements. Delete whole if.
       fix.delete(parent);
-      return new Description(parent, getDiagnosticMessage(), fix);
+      return describeMatch(parent, fix);
     } else {
       // There are more statements. Delete the empty then part of the if.
-      fix.delete(parent.getThenStatement());
-      return new Description(parent.getThenStatement(), getDiagnosticMessage(), fix);
-    }
-  }
-
-  public static class Scanner extends com.google.errorprone.Scanner {
-    public DescribingMatcher<EmptyStatementTree> emptyIfMatcher = new EmptyIfStatement();
-
-    @Override
-    public Void visitEmptyStatement(EmptyStatementTree node, VisitorState visitorState) {
-      evaluateMatch(node, visitorState, emptyIfMatcher);
-      return super.visitEmptyStatement(node, visitorState);
+      fix.delete(ifParent.getThenStatement());
+      return describeMatch(ifParent.getThenStatement(), fix);
     }
   }
 
   public static void main(String[] args) {
     System.exit(new ErrorProneCompiler.Builder()
-        .search(new Scanner())
+        .search(ErrorProneScanner.forMatcher(EmptyIfStatement.class))
         .build()
         .compile(args));
   }

@@ -17,6 +17,7 @@
 package com.google.errorprone;
 
 import java.lang.annotation.Retention;
+import java.util.Comparator;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
@@ -135,8 +136,13 @@ public @interface BugPattern {
   MaturityLevel maturity();
 
   public enum MaturityLevel {
-    MATURE,
-    EXPERIMENTAL
+    MATURE("On by default"),
+    EXPERIMENTAL("Experimental");
+
+    final String description;
+    MaturityLevel(String description) {
+      this.description = description;
+    }
   }
 
   public class Instance {
@@ -145,5 +151,19 @@ public @interface BugPattern {
     public String altNames;
     public MaturityLevel maturity;
     public SeverityLevel severity;
+
+    public static final Comparator<Instance> BY_SEVERITY = new Comparator<Instance>() {
+      @Override
+      public int compare(Instance o1, Instance o2) {
+        return o1.severity.compareTo(o2.severity);
+      }
+    };
+
+    public static final Comparator<Instance> BY_NAME = new Comparator<Instance>() {
+      @Override
+      public int compare(Instance o1, Instance o2) {
+        return o1.name.compareTo(o2.name);
+      }
+    };
   }
 }

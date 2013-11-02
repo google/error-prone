@@ -31,12 +31,27 @@ import com.sun.tools.javac.tree.JCTree.JCIdent;
  */
 public class InstanceMethod implements Matcher<ExpressionTree> {
 
-  private final Matcher<ExpressionTree> receiverMatcher;
+  private final Matcher<? super ExpressionTree> receiverMatcher;
   private final String methodName;
+  private final boolean isWildCard;
 
-  public InstanceMethod(Matcher<ExpressionTree> receiverMatcher, String methodName) {
+  public InstanceMethod(Matcher<? super ExpressionTree> receiverMatcher, String methodName) {
+    this(receiverMatcher, methodName, false);
+  }
+
+  private InstanceMethod(
+      Matcher<? super ExpressionTree> receiverMatcher, String methodName, boolean isWildCard) {
     this.receiverMatcher = receiverMatcher;
     this.methodName = methodName;
+    this.isWildCard = isWildCard;
+  }
+
+  /**
+   * @return an InstanceMethod matcher that only matches the method receiver.
+   */
+  public static InstanceMethod methodReceiverMatcher(
+      Matcher<? super ExpressionTree> receiverMatcher) {
+    return new InstanceMethod(receiverMatcher, "", true);
   }
 
   @Override
@@ -47,7 +62,7 @@ public class InstanceMethod implements Matcher<ExpressionTree> {
     // 2) symbol is static (not an instance method), or
     // 3) the method names don't match.
     if (sym == null || sym.isStatic() ||
-        !sym.getQualifiedName().equals(state.getName(methodName))) {  // methodName doesn't match
+        (!isWildCard && !sym.getQualifiedName().equals(state.getName(methodName)))) {  // methodName doesn't match
       return false;
     }
 

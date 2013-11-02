@@ -16,17 +16,14 @@
 
 package com.google.errorprone.bugpatterns;
 
-import com.google.errorprone.VisitorState;
-import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
-import com.google.errorprone.matchers.Description;
+import static com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 
+import com.google.errorprone.fixes.SuggestedFix;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.NewArrayTree;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.util.ListBuffer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +31,8 @@ import java.util.List;
 /**
  * Abstract matcher which can process changes to a SuppressWarnings annotation.
  */
-abstract class AbstractSuppressWarningsMatcher extends DescribingMatcher<AnnotationTree> {
+abstract class AbstractSuppressWarningsMatcher extends BugChecker
+    implements AnnotationTreeMatcher {
 
   /**
    * Processes the list of SuppressWarnings values in-place when creating a {@link SuggestedFix}.
@@ -45,16 +43,7 @@ abstract class AbstractSuppressWarningsMatcher extends DescribingMatcher<Annotat
    */
   abstract protected void processSuppressWarningsValues(List<String> values);
 
-  @Override
-  public final Description describe(AnnotationTree annotationTree, VisitorState state) {
-    return new Description(
-        annotationTree,
-        getDiagnosticMessage(),
-        getSuggestedFix(annotationTree, state));
-  }
-
-  protected final SuggestedFix getSuggestedFix(AnnotationTree annotationTree, VisitorState state) {
-    ListBuffer<JCTree.JCExpression> arguments = new ListBuffer<JCTree.JCExpression>();
+  protected final SuggestedFix getSuggestedFix(AnnotationTree annotationTree) {
     List<String> values = new ArrayList<String>();
     for (ExpressionTree argumentTree : annotationTree.getArguments()) {
       AssignmentTree assignmentTree = (AssignmentTree) argumentTree;
@@ -65,7 +54,6 @@ abstract class AbstractSuppressWarningsMatcher extends DescribingMatcher<Annotat
             values.add(((String) ((JCTree.JCLiteral) expressionTree).value));
             break;
           case NEW_ARRAY:
-            ListBuffer<JCTree.JCExpression> dimensions = new ListBuffer<JCTree.JCExpression>();
             NewArrayTree newArrayTree = (NewArrayTree) expressionTree;
             for (ExpressionTree elementTree : newArrayTree.getInitializers()) {
               values.add((String) ((JCTree.JCLiteral) elementTree).value);
@@ -83,7 +71,8 @@ abstract class AbstractSuppressWarningsMatcher extends DescribingMatcher<Annotat
     if (values.size() == 0) {
       return new SuggestedFix().delete(annotationTree);
     } else if (values.size() == 1) {
-      return new SuggestedFix().replace(annotationTree, "@SuppressWarnings(\"" + values.get(0) + "\")");
+      return new SuggestedFix()
+          .replace(annotationTree, "@SuppressWarnings(\"" + values.get(0) + "\")");
     } else {
       StringBuilder sb = new StringBuilder("@SuppressWarnings({\"" + values.get(0) + "\"");
       for (int i = 1; i < values.size(); i++) {

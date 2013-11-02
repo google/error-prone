@@ -19,23 +19,17 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.argument;
-import static com.google.errorprone.matchers.Matchers.isCastableTo;
-import static com.google.errorprone.matchers.Matchers.isDescendantOfMethod;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
-import static com.google.errorprone.matchers.Matchers.not;
+import static com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import static com.google.errorprone.matchers.Matchers.*;
 import static com.google.errorprone.suppliers.Suppliers.genericTypeOf;
 import static com.google.errorprone.suppliers.Suppliers.receiverInstance;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
@@ -50,7 +44,7 @@ import com.sun.source.tree.MethodInvocationTree;
         "and the developer relies on the Java compiler to detect callsites where the collection access " +
         "needs to be updated.",
     category = JDK, maturity = EXPERIMENTAL, severity = ERROR)
-public class CollectionIncompatibleType extends DescribingMatcher<MethodInvocationTree> {
+public class CollectionIncompatibleType extends BugChecker implements MethodInvocationTreeMatcher {
 
   @SuppressWarnings("unchecked")
   private static final Matcher<MethodInvocationTree> isGenericCollectionsMethod =
@@ -69,23 +63,10 @@ public class CollectionIncompatibleType extends DescribingMatcher<MethodInvocati
   );
 
   @Override
-  public boolean matches(final MethodInvocationTree methodInvocationTree, VisitorState state) {
-    return matcher.matches(methodInvocationTree, state);
-  }
-
-  @Override
-  public Description describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
-    return new Description(methodInvocationTree, getDiagnosticMessage(),
-        new SuggestedFix().replace(methodInvocationTree, "false"));
-  }
-
-  public static class Scanner extends com.google.errorprone.Scanner {
-    private CollectionIncompatibleType matcher = new CollectionIncompatibleType();
-
-    @Override
-    public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {
-      evaluateMatch(node, visitorState, matcher);
-      return super.visitMethodInvocation(node, visitorState);
+  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+    if (!matcher.matches(tree, state)) {
+      return Description.NO_MATCH;
     }
+    return describeMatch(tree, new SuggestedFix().replace(tree, "false"));
   }
 }

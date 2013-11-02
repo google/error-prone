@@ -1,0 +1,17 @@
+apply plugin: 'java'
+
+// See https://github.com/tbroyer/gradle-errorprone-plugin
+apply plugin: 'errorprone'
+
+repositories {
+    mavenCentral()
+}
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'net.ltgt.gradle:gradle-errorprone-plugin:latest.release'
+    }
+}
+

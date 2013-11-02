@@ -103,8 +103,11 @@ public class PreconditionsCheckNotNullPrimitivePositiveCases {
     //BUG: Suggestion includes "checkState(!local.hasId())"
     checkNotNull(!local.hasId());
 
-    //BUG: Suggestion includes "checkState(!(arg instanceof Tester))"
+    //BUG: Suggestion includes "checkArgument(!(arg instanceof Tester))"
     checkNotNull(!(arg instanceof Tester));
+
+    //BUG: Suggestion includes "checkState(getTrue())"
+    checkNotNull(getTrue());
     
     //BUG: Suggestion includes "remove this line"
     checkNotNull(arg.getId());
@@ -121,6 +124,10 @@ public class PreconditionsCheckNotNullPrimitivePositiveCases {
     
     //BUG: Suggestion includes "checkArgument(arg.tester.getTester().hasId())"
     checkNotNull(arg.tester.getTester().hasId());
+  }
+
+  private boolean getTrue() {
+    return true;
   }
   
   private static class Tester {

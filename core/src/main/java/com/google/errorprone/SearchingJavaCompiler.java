@@ -33,10 +33,12 @@ import java.util.Queue;
  */
 public class SearchingJavaCompiler extends JavaCompiler {
 
+  private final ErrorProneAnalyzer errorProneAnalyzer;
   private SearchResultsPrinter resultsPrinter;
 
   public SearchingJavaCompiler(Context context) {
     super(context);
+    errorProneAnalyzer = new ErrorProneAnalyzer(log, context, resultsPrinter);
     resultsPrinter = new SearchResultsPrinter();
   }
 
@@ -72,13 +74,11 @@ public class SearchingJavaCompiler extends JavaCompiler {
    * Run Error Prone analysis after performing dataflow checks.
    */
   public void postFlow(Env<AttrContext> env) {
-    resultsPrinter.setCompilationUnit(env.toplevel.sourcefile);
-    VisitorState visitorState = new VisitorState(context, resultsPrinter);
-    Scanner scanner = context.get(Scanner.class);
-    scanner.scan(env.toplevel, visitorState);
+    errorProneAnalyzer.reportReadyForAnalysis(env, errorCount() > 0);
   }
 
   private boolean printed = false;
+
   @Override
   public void close(boolean disposeNames) {
     if (!printed) {

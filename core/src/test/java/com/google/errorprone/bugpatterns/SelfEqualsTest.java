@@ -43,55 +43,55 @@ public class SelfEqualsTest {
   @Test
   public void testPositiveCase1() throws Exception {
     CompilationTestHelper compilationHelper = new CompilationTestHelper(
-        new SelfEquals.Scanner(true, true));
+        new SelfEquals(true, true));
     compilationHelper.assertCompileFailsWithMessages(positiveCase1);
   }
 
   @Test
   public void testPositiveCase2() throws Exception {
     CompilationTestHelper compilationHelper = new CompilationTestHelper(
-        new SelfEquals.Scanner(true, true));
+        new SelfEquals(true, true));
     compilationHelper.assertCompileFailsWithMessages(positiveCase2);
   }
 
   @Test
   public void testNegativeCase() throws Exception {
     CompilationTestHelper compilationHelper = new CompilationTestHelper(
-        new SelfEquals.Scanner(true, true));
+        new SelfEquals(true, true));
     compilationHelper.assertCompileSucceeds(negativeCases);
   }
 
   @Test
   public void testFlags() throws Exception {
-    Scanner scanner;
+    SelfEquals checker;
     CompilationTestHelper compilationHelper;
     // Both checks off.
     try {
-      scanner = new SelfEquals.Scanner(false, false);
+      new SelfEquals(false, false);
       fail();
     } catch (IllegalArgumentException e) {
       // Expected to get an exception.
     }
 
     // Both checks on.
-    scanner = new SelfEquals.Scanner(true, true);
-    compilationHelper = new CompilationTestHelper(scanner);
+    checker = new SelfEquals(true, true);
+    compilationHelper = new CompilationTestHelper(checker);
     compilationHelper.assertCompileFailsWithMessages(positiveCase1);
-    compilationHelper = new CompilationTestHelper(scanner);
+    compilationHelper = new CompilationTestHelper(checker);
     compilationHelper.assertCompileFailsWithMessages(positiveCase2);
 
     // Guava on, Eauals off.
-    scanner = new SelfEquals.Scanner(true, false);
-    compilationHelper = new CompilationTestHelper(scanner);
+    checker = new SelfEquals(true, false);
+    compilationHelper = new CompilationTestHelper(checker);
     compilationHelper.assertCompileFailsWithMessages(positiveCase1);
-    compilationHelper = new CompilationTestHelper(scanner);
+    compilationHelper = new CompilationTestHelper(checker);
     compilationHelper.assertCompileSucceeds(positiveCase2);
 
     // Equals on, Guava off.
-    scanner = new SelfEquals.Scanner(false, true);
-    compilationHelper = new CompilationTestHelper(scanner);
+    checker = new SelfEquals(false, true);
+    compilationHelper = new CompilationTestHelper(checker);
     compilationHelper.assertCompileSucceeds(positiveCase1);
-    compilationHelper = new CompilationTestHelper(scanner);
+    compilationHelper = new CompilationTestHelper(checker);
     compilationHelper.assertCompileFailsWithMessages(positiveCase2);
   }
 

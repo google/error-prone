@@ -17,30 +17,22 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
+import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.EnclosingClass.findEnclosingClass;
-import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.enclosingClass;
-import static com.google.errorprone.matchers.Matchers.hasMethod;
-import static com.google.errorprone.matchers.Matchers.isSameType;
-import static com.google.errorprone.matchers.Matchers.methodHasParameters;
-import static com.google.errorprone.matchers.Matchers.methodHasVisibility;
-import static com.google.errorprone.matchers.Matchers.methodIsNamed;
-import static com.google.errorprone.matchers.Matchers.methodReturns;
-import static com.google.errorprone.matchers.Matchers.not;
-import static com.google.errorprone.matchers.Matchers.variableType;
+import static com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
+import static com.google.errorprone.matchers.Matchers.*;
+import static com.google.errorprone.suppliers.Suppliers.*;
 import static com.sun.tools.javac.code.Flags.ENUM;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.EnclosingClass;
+import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.matchers.MethodVisibility.Visibility;
-
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.util.TreeScanner;
@@ -63,8 +55,19 @@ import java.util.List;
         "which has a single parameter of type `java.lang.Object`. " +
         "Defining a method which looks like `equals` but doesn't have the same signature is dangerous, " +
         "since comparisons will have different results depending on which `equals` is called.",
-    category = JDK, maturity = MATURE, severity = ERROR)
-public class CovariantEquals extends DescribingMatcher<MethodTree> {
+    category = JDK, maturity = EXPERIMENTAL, severity = ERROR)
+public class CovariantEquals extends BugChecker implements MethodTreeMatcher {
+
+  public static final Matcher<MethodTree> MATCHER = allOf(
+      methodHasVisibility(Visibility.PUBLIC),
+      methodIsNamed("equals"),
+      methodReturns(BOOLEAN_TYPE),
+      methodHasParameters(variableType(isSameType(ENCLOSING_CLASS))),
+      enclosingClass(not(hasMethod(Matchers.<MethodTree>allOf(
+          methodIsNamed("equals"),
+          methodReturns(BOOLEAN_TYPE),
+          methodHasParameters(variableType(isSameType(OBJECT_TYPE)))))))
+  );
 
   /**
    * Matches any method definitions that fit the following:
@@ -75,21 +78,11 @@ public class CovariantEquals extends DescribingMatcher<MethodTree> {
    */
   @Override
   @SuppressWarnings("unchecked")    // matchers + varargs cause this
-  public boolean matches(MethodTree methodTree, VisitorState state) {
-    return allOf(
-        methodHasVisibility(Visibility.PUBLIC),
-        methodIsNamed("equals"),
-        methodReturns(state.getSymtab().booleanType),
-        methodHasParameters(variableType(isSameType(findEnclosingClass(state)))),
-        enclosingClass(not(hasMethod(Matchers.<MethodTree>allOf(
-            methodIsNamed("equals"),
-            methodReturns(state.getSymtab().booleanType),
-            methodHasParameters(variableType(isSameType(state.getSymtab().objectType)))))))
-    ).matches(methodTree, state);
-  }
+  public Description matchMethod(MethodTree methodTree, VisitorState state) {
+    if (!MATCHER.matches(methodTree, state)) {
+      return Description.NO_MATCH;
+    }
 
-  @Override
-  public Description describe(MethodTree methodTree, VisitorState state) {
     SuggestedFix fix = new SuggestedFix();
     JCClassDecl cls = (JCClassDecl) EnclosingClass.findEnclosingClass(state);
 
@@ -133,17 +126,7 @@ public class CovariantEquals extends DescribingMatcher<MethodTree> {
       }
     }
 
-    return new Description(methodTree, getDiagnosticMessage(), fix);
-  }
-
-  public static class Scanner extends com.google.errorprone.Scanner {
-    private CovariantEquals matcher = new CovariantEquals();
-
-    @Override
-    public Void visitMethod(MethodTree node, VisitorState visitorState) {
-      evaluateMatch(node, visitorState, matcher);
-      return super.visitMethod(node, visitorState);
-    }
+    return describeMatch(methodTree, fix);
   }
 
   private static class CastState {

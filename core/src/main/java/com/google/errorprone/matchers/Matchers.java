@@ -27,6 +27,7 @@ import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
@@ -35,6 +36,7 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCArrayTypeTree;
@@ -50,6 +52,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.NestingKind;
 
 /**
  * Static factory methods which make the DSL read more fluently.
@@ -69,6 +72,18 @@ public class Matchers {
       @Override
       public boolean matches(T t, VisitorState state) {
         return true;
+      }
+    };
+  }
+
+  /**
+   * A matcher that matches no AST node.
+   */
+  public static <T extends Tree> Matcher<T> nothing() {
+    return new Matcher<T>() {
+      @Override
+      public boolean matches(T t, VisitorState state) {
+        return false;
       }
     };
   }
@@ -165,8 +180,16 @@ public class Matchers {
    * @param receiverMatcher Used to determine if the part of the expression before the dot matches.
    * @param methodName The name of the method to match, e.g., "equals"
    */
-  public static InstanceMethod instanceMethod(Matcher<ExpressionTree> receiverMatcher, String methodName) {
+  public static InstanceMethod instanceMethod(Matcher<? super ExpressionTree> receiverMatcher, String methodName) {
     return new InstanceMethod(receiverMatcher, methodName);
+  }
+
+  /**
+   * Matches an AST node which is an expression yielding the indicated non-static method.
+   * @param receiverMatcher Used to determine if the part of the expression before the dot matches.
+   */
+  public static InstanceMethod methodReceiver(Matcher<? super ExpressionTree> receiverMatcher) {
+    return InstanceMethod.methodReceiverMatcher(receiverMatcher);
   }
 
   /**
@@ -301,6 +324,15 @@ public class Matchers {
   }
 
   /**
+   * Matches an AST node if its type is a subtype of the given type.
+   *
+   * @param type the type to check against
+   */
+  public static <T extends Tree> Matcher<T> isSubtypeOf(Supplier<Type> type) {
+    return new IsSubtypeOf<T>(type);
+  }
+
+  /**
    * Matches an AST node if its type is castable to the given type.
    *
    * @param typeString a string representation of the type, e.g., "java.util.Set"
@@ -324,6 +356,15 @@ public class Matchers {
    * @param type the type to check against
    */
   public static <T extends Tree> Matcher<T> isSameType(Type type) {
+    return new IsSameType<T>(type);
+  }
+
+  /**
+   * Matches an AST node if its type is the same as the given type.
+   *
+   * @param type the type to check against
+   */
+  public static <T extends Tree> Matcher<T> isSameType(Supplier<Type> type) {
     return new IsSameType<T>(type);
   }
 
@@ -479,6 +520,10 @@ public class Matchers {
       public boolean matches(MethodTree methodTree, VisitorState state) {
         Tree returnTree = methodTree.getReturnType();
         Type methodReturnType = null;
+        if (returnTree == null) {
+          // This is a constructor, it has no return type.
+          return false;
+        }
         switch (returnTree.getKind()) {
           case ARRAY_TYPE:
             methodReturnType = ((JCArrayTypeTree)returnTree).type;
@@ -497,6 +542,14 @@ public class Matchers {
     };
   }
 
+  public static Matcher<MethodTree> methodReturns(final Supplier<Type> returnType) {
+    return new Matcher<MethodTree>() {
+      @Override
+      public boolean matches(MethodTree methodTree, VisitorState state) {
+        return methodReturns(returnType.get(state)).matches(methodTree, state);
+      }
+    };
+  }
 
   /**
    * Match a method declaration with a specific name.
@@ -571,6 +624,15 @@ public class Matchers {
   }
 
   /**
+   * Matches a class with the specified modifier
+   *
+   * @param modifier The modifier to match against, eg PUBLIC, STATIC, FINAL, etc
+   */
+  public static Matcher<ClassTree> classHasModifier(final Modifier modifier) {
+    return new ClassModifier(modifier);
+  }
+
+  /**
    * Matches a class in which at least one method matches the given methodMatcher.
    *
    * @param methodMatcher A matcher on MethodTrees to run against all methods in this class.
@@ -597,6 +659,21 @@ public class Matchers {
       @Override
       public boolean matches(VariableTree variableTree, VisitorState state) {
         return treeMatcher.matches(variableTree.getType(), state);
+      }
+    };
+  }
+
+  /**
+   * Matches an class based on whether it is nested in another class or method.
+   *
+   * @param kind The kind of nesting to match, eg ANONYMOUS, LOCAL, MEMBER, TOP_LEVEL
+   */
+  public static Matcher<ClassTree> nestingKind(final NestingKind kind) {
+    return new Matcher<ClassTree>() {
+      @Override
+      public boolean matches(ClassTree classTree, VisitorState state) {
+        ClassSymbol sym = (ClassSymbol) ASTHelpers.getSymbol(classTree);
+        return sym.getNestingKind() == kind;
       }
     };
   }
@@ -631,6 +708,17 @@ public class Matchers {
       }
     };
   }
+
+  /**
+   * Matches any AST that contains an identifier with a certain property. This matcher can be used,
+   * for instance, to locate identifiers with a certain name or which is defined in a certain class.
+   *
+   * @param matchType Whether to match if the matchers match any of or all of the identifiers on
+   * this tree.
+   * @param nodeMatcher Which identifiers to look for
+   */
+  public static MultiMatcher<Tree, IdentifierTree> hasIdentifier(MatchType matchType,
+      Matcher<IdentifierTree> nodeMatcher) {
+    return new HasIdentifier(matchType, nodeMatcher);
+  }
 }
-
-

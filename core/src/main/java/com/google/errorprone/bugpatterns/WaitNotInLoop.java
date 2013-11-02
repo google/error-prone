@@ -27,30 +27,31 @@ import static com.google.errorprone.matchers.Matchers.not;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.DoWhileLoopTree;
 import com.sun.source.tree.EnhancedForLoopTree;
-import com.sun.source.tree.SynchronizedTree;
 import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.SynchronizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.WhileLoopTree;
-import com.sun.source.tree.StatementTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.tree.JCTree.JCIf;
-import com.sun.tools.javac.tree.JCTree.JCLiteral;
-import com.sun.tools.javac.tree.TreeMaker;
 
 import java.util.Arrays;
 import java.util.List;
 
 /**
+ * TODO(eaftan): Doesn't handle the case that the enclosing method is intended to be called
+ * in a loop.
+ *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 @BugPattern(name = "WaitNotInLoop",
@@ -64,31 +65,13 @@ import java.util.List;
     		"[http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html#wait() " +
     		"the Javadoc for Object.wait()].",
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
-public class WaitNotInLoop extends DescribingMatcher<MethodInvocationTree> {
-
-  /**
-   * Matches if:
-   * 1) The method call is a call to any of Object.wait(), Object.wait(long), or
-   *    Object.wait(long, int), and
-   * 2) There is no enclosing loop before reaching a synchronized block or method declaration.
-   */
-  @SuppressWarnings("unchecked")
-  @Override
-  public boolean matches(MethodInvocationTree t, VisitorState state) {
-    return allOf(
-        methodSelect(anyOf(
-            isDescendantOfMethod("java.lang.Object", "wait()"),
-            isDescendantOfMethod("java.lang.Object", "wait(long)"),
-            isDescendantOfMethod("java.lang.Object", "wait(long,int)"))),
-        not(inLoopBeforeSynchronizedMatcher))
-        .matches(t, state);
-  }
+public class WaitNotInLoop extends BugChecker implements MethodInvocationTreeMatcher {
 
   /**
    * Matches tree nodes that are enclosed in a loop before hitting a synchronized block or
    * method definition.
    */
-  private Matcher<Tree> inLoopBeforeSynchronizedMatcher = new Matcher<Tree>() {
+  private static Matcher<Tree> inLoopBeforeSynchronizedMatcher = new Matcher<Tree>() {
     @Override
     public boolean matches(Tree t, VisitorState state) {
       TreePath path = state.getPath().getParentPath();
@@ -108,8 +91,27 @@ public class WaitNotInLoop extends DescribingMatcher<MethodInvocationTree> {
     }
   };
 
+  /**
+   * Matches if:
+   * 1) The method call is a call to any of Object.wait(), Object.wait(long), or
+   *    Object.wait(long, int), and
+   * 2) There is no enclosing loop before reaching a synchronized block or method declaration.
+   */
+  @SuppressWarnings("unchecked")
+  private static Matcher<MethodInvocationTree> waitMatcher = allOf(
+        methodSelect(anyOf(
+            isDescendantOfMethod("java.lang.Object", "wait()"),
+            isDescendantOfMethod("java.lang.Object", "wait(long)"),
+            isDescendantOfMethod("java.lang.Object", "wait(long,int)"))),
+        not(inLoopBeforeSynchronizedMatcher));
+
+  // TODO(eaftan): Better suggested fixes.
   @Override
-  public Description describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
+  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+    if (!waitMatcher.matches(tree, state)) {
+      return Description.NO_MATCH;
+    }
+
     SuggestedFix fix = new SuggestedFix();
 
     // if -> while case
@@ -118,7 +120,7 @@ public class WaitNotInLoop extends DescribingMatcher<MethodInvocationTree> {
     if (enclosingIf != null && enclosingIf.getElseStatement() == null) {
       // Assume first 2 characters of the IfTree are "if", replace with while.
       fix.replace(enclosingIf.getStartPosition(), enclosingIf.getStartPosition() + 2, "while");
-      return new Description(methodInvocationTree, getDiagnosticMessage(), fix);
+      return describeMatch(tree, fix);
     }
 
     // loop outside synchronized block -> move synchronized outside
@@ -143,7 +145,7 @@ public class WaitNotInLoop extends DescribingMatcher<MethodInvocationTree> {
         fix.replace(enclosingSynchronized, blockStatements);
         fix.prefixWith(enclosingLoop, "synchronized " + enclosingSynchronized.getExpression() + " {\n");
         fix.postfixWith(enclosingLoop, "\n}");
-        return new Description(methodInvocationTree, getDiagnosticMessage(), fix);
+        return describeMatch(tree, fix);
       }
     }
 
@@ -161,17 +163,7 @@ public class WaitNotInLoop extends DescribingMatcher<MethodInvocationTree> {
     }
     */
 
-    return new Description(methodInvocationTree, getDiagnosticMessage(), fix);
-  }
-
-  public static class Scanner extends com.google.errorprone.Scanner {
-    public DescribingMatcher<MethodInvocationTree> matcher = new WaitNotInLoop();
-
-    @Override
-    public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {
-      evaluateMatch(node, visitorState, matcher);
-      return super.visitMethodInvocation(node, visitorState);
-    }
+    return describeMatch(tree, fix);
   }
 
 }

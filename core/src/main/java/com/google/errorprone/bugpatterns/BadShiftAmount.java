@@ -19,18 +19,15 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.kindIs;
+import static com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
+import static com.google.errorprone.matchers.Matchers.*;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
@@ -53,7 +50,7 @@ import com.sun.tools.javac.tree.JCTree.JCLiteral;
         + "For example, a shift of an int by 32 is equivalent to shifting by 0, i.e., a no-op.\n\n"
         + "See JLS 15.19, \"Shift Operators\", for more details.",
     category = JDK, severity = ERROR, maturity = MATURE)
-public class BadShiftAmount extends DescribingMatcher<BinaryTree> {
+public class BadShiftAmount extends BugChecker implements BinaryTreeMatcher {
 
   /**
    * Matches if the left operand is an int, byte, short, or char, and the right operand is a
@@ -88,24 +85,25 @@ public class BadShiftAmount extends DescribingMatcher<BinaryTree> {
     }
   };
 
+  public static final Matcher<BinaryTree> BINARY_TREE_MATCHER = allOf(
+      anyOf(
+          kindIs(Kind.LEFT_SHIFT),
+          kindIs(Kind.RIGHT_SHIFT),
+          kindIs(Kind.UNSIGNED_RIGHT_SHIFT)),
+      BAD_SHIFT_AMOUNT_INT
+  );
+
   @SuppressWarnings("unchecked")
   @Override
-  public boolean matches(BinaryTree tree, VisitorState state) {
-    return allOf(
-        anyOf(
-            kindIs(Kind.LEFT_SHIFT),
-            kindIs(Kind.RIGHT_SHIFT),
-            kindIs(Kind.UNSIGNED_RIGHT_SHIFT)),
-        BAD_SHIFT_AMOUNT_INT
-        ).matches(tree, state);
-  }
+  public Description matchBinary(BinaryTree tree, VisitorState state) {
+    if (!BINARY_TREE_MATCHER.matches(tree, state)) {
+      return Description.NO_MATCH;
+    }
 
-  /**
-   * For shift amounts in [32, 63], cast the left operand to long.  Otherwise change the shift
-   * amount to whatever would actually be used.
-   */
-  @Override
-  public Description describe(BinaryTree tree, VisitorState state) {
+    /*
+     * For shift amounts in [32, 63], cast the left operand to long.  Otherwise change the shift
+     * amount to whatever would actually be used.
+     */
     int intValue = ((Number) ((LiteralTree) tree.getRightOperand()).getValue()).intValue();
 
     SuggestedFix fix = new SuggestedFix();
@@ -127,17 +125,6 @@ public class BadShiftAmount extends DescribingMatcher<BinaryTree> {
         fix = fix.replace(tree.getRightOperand(), actualShiftDistance);
       }
     }
-    return new Description(tree, getDiagnosticMessage(), fix);
+    return describeMatch(tree, fix);
   }
-
-  public static class Scanner extends com.google.errorprone.Scanner {
-    private BadShiftAmount matcher = new BadShiftAmount();
-
-    @Override
-    public Void visitBinary(BinaryTree tree, VisitorState visitorState) {
-      evaluateMatch(tree, visitorState, matcher);
-      return super.visitBinary(tree, visitorState);
-    }
-  }
-
 }

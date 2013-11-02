@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Google Inc. All Rights Reserved.
+ * Copyright 2013 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,31 +16,19 @@
 
 package com.google.errorprone.bugpatterns;
 
+import javax.inject.Inject;
+
 /**
- * @author ptoomey@google.com (Patrick Toomey)
+ * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-public class InvalidStringEqualityNegativeCases {
-
-  public boolean testEquality(String x, String y) {
-    boolean retVal;
-
-    retVal = x.equals(y);
-    retVal = (x == null);
-    retVal = (x != null);
-    retVal = (null == x);
-    retVal = (null != x);
-
-    return retVal;
+public class InjectJavaxInjectOnFinalFieldPositiveCases {
+  
+  /**
+   * Class has a final injectable(javax.inject.Inject) field.
+   */
+  public class TestClass1 {
+    //BUG: Suggestion includes "remove"
+    @Inject 
+    public final int n = 0;
   }
-
-  @SuppressWarnings("StringEquality")
-  public boolean testSuppressWarnings(String x, String y) {
-    boolean retVal;
- 
-    retVal = (x != y);
-    retVal = (x == y);
-
-    return retVal;
-  } 
-
 }

@@ -17,27 +17,15 @@
 package com.google.errorprone.bugpatterns;
 
 /**
- * @author scottjohnson@google.com (Scott Johnson)
+ * @author alexloh@google.com (Alex Loh)
  */
-public class InvalidNumericEqualityPositiveCases {
+public class ClassCanBeStaticPositiveCase1 {
+  
+  int outerVar;
 
-  public boolean testEquality(Integer x, Integer y) {
-    boolean retVal;
-
-    //BUG: Suggestion includes "Objects.equal(x, y)"
-    retVal = (x == y);
-    
-    //BUG: Suggestion includes "!Objects.equal(x, y)"
-    retVal = (x != y);
-    final Integer constValue = new Integer(1000);
-    
-    //BUG: Suggestion includes "Objects.equal(x, constValue)"
-    retVal = (x == constValue);
-    
-    //BUG: Suggestion includes "!Objects.equal(x, constValue)"
-    retVal = (x != constValue);
-
-    return retVal;
+  // Non-static inner class that does not use outer scope
+  //BUG: Suggestion includes "static class Inner1"
+  class Inner1 {
+    int innerVar;
   }
-
 }

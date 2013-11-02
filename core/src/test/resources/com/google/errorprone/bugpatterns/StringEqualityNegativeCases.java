@@ -17,13 +17,11 @@
 package com.google.errorprone.bugpatterns;
 
 /**
- * @author scottjohnson@google.com (Scott Johnsson)
+ * @author ptoomey@google.com (Patrick Toomey)
  */
-public class InvalidNumericEqualityNegativeCases {
+public class StringEqualityNegativeCases {
 
-  public static final Integer NULLINT = null;
-
-  public boolean testEquality(Integer x, Integer y) {
+  public boolean testEquality(String x, String y) {
     boolean retVal;
 
     retVal = x.equals(y);
@@ -31,22 +29,18 @@ public class InvalidNumericEqualityNegativeCases {
     retVal = (x != null);
     retVal = (null == x);
     retVal = (null != x);
-    retVal = x == 1000;
-    retVal = x + y == y + x;
-    retVal = x == NULLINT;
-    retVal = NULLINT == x;
 
     return retVal;
   }
 
-  @SuppressWarnings("NumericEquality")
-  public boolean testSuppressWarnings(Integer x, Integer y) {
+  @SuppressWarnings("StringEquality")
+  public boolean testSuppressWarnings(String x, String y) {
     boolean retVal;
-
+ 
     retVal = (x != y);
     retVal = (x == y);
 
     return retVal;
-  }
+  } 
 
 }

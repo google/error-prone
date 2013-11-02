@@ -19,29 +19,29 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.GUAVA;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.argument;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
-import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import static com.google.errorprone.matchers.Matchers.*;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 
-import com.sun.source.tree.BinaryTree;
-import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.Tree;
+import com.sun.source.tree.*;
 import com.sun.source.tree.Tree.Kind;
-import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
+import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
+import com.sun.tools.javac.tree.JCTree.JCIdent;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Checks that the 1st argument to Preconditions.checkNotNull() isn't a primitive.
@@ -68,16 +68,19 @@ import com.sun.tools.javac.tree.JCTree.JCExpression;
         "Preconditions.checkArgument() instead.",
     category = GUAVA, severity = ERROR, maturity = EXPERIMENTAL)
 public class PreconditionsCheckNotNullPrimitive
-    extends DescribingMatcher<MethodInvocationTree> {
+    extends BugChecker implements MethodInvocationTreeMatcher {
 
   @SuppressWarnings("unchecked")
   @Override
-  public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
-    return allOf(
-        methodSelect(staticMethod(
-            "com.google.common.base.Preconditions", "checkNotNull")),
-        argument(0, Matchers.<ExpressionTree>isPrimitiveType()))
-        .matches(methodInvocationTree, state);
+  public Description matchMethodInvocation(MethodInvocationTree methodInvocationTree, VisitorState state) {
+    if (allOf(
+            methodSelect(staticMethod(
+                "com.google.common.base.Preconditions", "checkNotNull")),
+            argument(0, Matchers.<ExpressionTree>isPrimitiveType()))
+            .matches(methodInvocationTree, state)) {
+      return describe(methodInvocationTree, state);
+    }
+    return Description.NO_MATCH;
   }
 
   /**
@@ -93,14 +96,13 @@ public class PreconditionsCheckNotNullPrimitive
    * Otherwise, delete the checkNotNull call. E.g.:
    *   Preconditions.checkNotNull(foo); ==> [delete the line]
    */
-  @Override
   public Description describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
     ExpressionTree arg1 = methodInvocationTree.getArguments().get(0);
     Tree parent = state.getPath().getParentPath().getLeaf();
 
     // Assignment, return, etc.
     if (parent.getKind() != Kind.EXPRESSION_STATEMENT) {
-      return new Description(arg1, getDiagnosticMessage(),
+      return describeMatch(arg1,
           new SuggestedFix().replace(methodInvocationTree, arg1.toString()));
     }
 
@@ -108,11 +110,11 @@ public class PreconditionsCheckNotNullPrimitive
     if (arg1.getKind() == Kind.EQUAL_TO || arg1.getKind() == Kind.NOT_EQUAL_TO) {
       BinaryTree binaryExpr = (BinaryTree) arg1;
       if (binaryExpr.getLeftOperand().getKind() == Kind.NULL_LITERAL) {
-        return new Description(arg1, getDiagnosticMessage(),
+        return describeMatch(arg1,
             new SuggestedFix().replace(arg1, binaryExpr.getRightOperand().toString()));
       }
       if (binaryExpr.getRightOperand().getKind() == Kind.NULL_LITERAL) {
-        return new Description(arg1, getDiagnosticMessage(),
+        return describeMatch(arg1,
             new SuggestedFix().replace(arg1, binaryExpr.getLeftOperand().toString()));
       }
     }
@@ -120,11 +122,11 @@ public class PreconditionsCheckNotNullPrimitive
     if ((arg1 instanceof BinaryTree || arg1.getKind() == Kind.METHOD_INVOCATION ||
          arg1.getKind() == Kind.LOGICAL_COMPLEMENT) &&
         ((JCExpression) arg1).type == state.getSymtab().booleanType) {
-      return new Description(arg1, getDiagnosticMessage(),
+      return describeMatch(arg1,
           createCheckArgumentOrStateCall(methodInvocationTree, state, arg1));
     }
 
-    return new Description(arg1, getDiagnosticMessage(), new SuggestedFix().delete(parent));
+    return describeMatch(arg1, new SuggestedFix().delete(parent));
   }
 
   /**
@@ -135,8 +137,7 @@ public class PreconditionsCheckNotNullPrimitive
       VisitorState state, ExpressionTree arg1) {
     SuggestedFix fix = new SuggestedFix();
     String replacementMethod = "checkState";
-    if (arg1.getKind() == Kind.METHOD_INVOCATION && isMethodParameter(
-        state.getPath(), (MethodInvocationTree) arg1)) {
+    if (hasMethodParameter(state.getPath(), arg1)) {
       replacementMethod = "checkArgument";
     }
 
@@ -162,8 +163,8 @@ public class PreconditionsCheckNotNullPrimitive
   }
 
   /**
-   * Determines whether the root identifier of the tree node is a parameter to the enclosing
-   * method.
+   * Determines whether the expression contains a reference to one of the
+   * enclosing method's parameters.
    *
    * TODO(eaftan): Extract this to ASTHelpers.
    *
@@ -171,40 +172,58 @@ public class PreconditionsCheckNotNullPrimitive
    * @param tree the node to compare against the parameters
    * @return whether the argument is a parameter to the enclosing method
    */
-  private static boolean isMethodParameter(TreePath path, MethodInvocationTree tree) {
-    ExpressionTree rootIdentifier = ASTHelpers.getRootIdentifier(tree);
-    if (rootIdentifier == null || rootIdentifier.getKind() != Kind.IDENTIFIER) {
-      throw new IllegalStateException("Could not find root identifier of expression " + tree);
+  private static boolean hasMethodParameter(TreePath path, ExpressionTree tree) {
+    Set<Symbol> symbols = new HashSet<Symbol>();
+    for (IdentifierTree ident : getVariableUses(tree)) {
+      Symbol sym = ASTHelpers.getSymbol(ident);
+      if (sym.isLocal()) {
+        symbols.add(sym);
+      }
     }
-    Symbol sym = ASTHelpers.getSymbol(rootIdentifier);
 
-    if (sym.isLocal()) {
-      // Check against parameters of enclosing method declaration.
-      while (path != null && !(path.getLeaf() instanceof MethodTree)) {
-        path = path.getParentPath();
-      }
-      if (path == null) {
-        throw new IllegalStateException("Should have an enclosing method declaration");
-      }
-      MethodTree methodDecl = (MethodTree) path.getLeaf();
-      for (VariableTree param : methodDecl.getParameters()) {
-        if (ASTHelpers.getSymbol(param) == sym) {
-          return true;
-        }
+    // Find enclosing method declaration.
+    while (path != null && !(path.getLeaf() instanceof MethodTree)) {
+      path = path.getParentPath();
+    }
+    if (path == null) {
+      throw new IllegalStateException("Should have an enclosing method declaration");
+    }
+    MethodTree methodDecl = (MethodTree) path.getLeaf();
+    for (VariableTree param : methodDecl.getParameters()) {
+      if (symbols.contains(ASTHelpers.getSymbol(param))) {
+        return true;
       }
     }
+
     return false;
   }
 
-  public static class Scanner extends com.google.errorprone.Scanner {
-    public DescribingMatcher<MethodInvocationTree> matcher =
-        new PreconditionsCheckNotNullPrimitive();
+  /**
+   * Find the root variable identifiers from an arbitrary expression.
+   *
+   * Examples:
+   *    a.trim().intern() ==> {a}
+   *    a.b.trim().intern() ==> {a}
+   *    this.intValue.foo() ==> {this}
+   *    this.foo() ==> {this}
+   *    intern() ==> {}
+   *    String.format() ==> {}
+   *    java.lang.String.format() ==> {}
+   *    x.y.z(s.t) ==> {x,s}
+   */
+  static List<IdentifierTree> getVariableUses(ExpressionTree tree) {
+    final List<IdentifierTree> freeVars = new ArrayList<IdentifierTree>();
 
-    @Override
-    public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {
-      evaluateMatch(node, visitorState, matcher);
-      return super.visitMethodInvocation(node, visitorState);
-    }
+    new TreeScanner<Void, Void>() {
+      @Override
+      public Void visitIdentifier(IdentifierTree node, Void v) {
+        if (((JCIdent) node).sym instanceof VarSymbol) {
+          freeVars.add(node);
+        }
+        return super.visitIdentifier(node, v);
+      }
+    }.scan(tree, null);
+
+    return freeVars;
   }
-
 }
