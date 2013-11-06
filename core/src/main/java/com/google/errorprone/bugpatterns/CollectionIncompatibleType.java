@@ -49,17 +49,29 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
   @SuppressWarnings("unchecked")
   private static final Matcher<MethodInvocationTree> isGenericCollectionsMethod =
       methodSelect(Matchers.<ExpressionTree>anyOf(
-          isDescendantOfMethod("java.util.Map", "get(java.lang.Object)"),
           isDescendantOfMethod("java.util.Collection", "contains(java.lang.Object)"),
-          isDescendantOfMethod("java.util.Collection", "remove(java.lang.Object)")));
+          isDescendantOfMethod("java.util.Collection", "remove(java.lang.Object)"),
+          isDescendantOfMethod("java.util.List", "indexOf(java.lang.Object)"),
+          isDescendantOfMethod("java.util.List", "lastIndexOf(java.lang.Object)")));
 
-  private static final Matcher<ExpressionTree> castableToMethodReceiverType =
-      isCastableTo(genericTypeOf(receiverInstance(), 0));
+  private static Matcher<MethodInvocationTree> argCastableToMethodReceiverTypeParam(int argNumber,
+      int typeParamNumber) {
+    return argument(argNumber, Matchers.<ExpressionTree>not(
+        Matchers.<ExpressionTree>isCastableTo(genericTypeOf(receiverInstance(), typeParamNumber))));
+  }
 
   @SuppressWarnings("unchecked")
-  private static final Matcher<MethodInvocationTree> matcher = allOf(
-      isGenericCollectionsMethod,
-      argument(0, not(castableToMethodReceiverType))
+  private static final Matcher<MethodInvocationTree> matcher = anyOf(
+      allOf(isGenericCollectionsMethod, argCastableToMethodReceiverTypeParam(0, 0)),
+      allOf(
+          anyOf(
+            isDescendantOfMethod("java.util.Map", "get(java.lang.Object)"),
+            isDescendantOfMethod("java.util.Map", "containsKey(java.lang.Object)"),
+            isDescendantOfMethod("java.util.Map", "remove(java.lang.Object)")),
+          argCastableToMethodReceiverTypeParam(0, 0)),
+      allOf(
+          isDescendantOfMethod("java.util.Map", "containsValue(java.lang.Object)"),
+          argCastableToMethodReceiverTypeParam(0, 1))
   );
 
   @Override
