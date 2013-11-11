@@ -117,7 +117,11 @@ public class ErrorProneScanner extends Scanner {
       ClassCanBeStatic.class,
       ElementsCountedInLoop.class,
       ProtoFieldNullComparison.class,
-      WaitNotInLoop.class
+      WaitNotInLoop.class,
+      DepAnn.class,
+      DivZero.class,
+      Overrides.class,
+      Finally.class
   );
 
   @SuppressWarnings("unchecked")
