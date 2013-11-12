@@ -131,4 +131,16 @@ public class FinallyPositiveCase1 {
       { { { { { { { { { { return; } } } } } } } } } }
     }
   }
+
+  // Don't assume that completion statements occur inside methods:
+  static boolean flag = false;
+  static {
+    while (flag) {
+      try {
+      } finally {
+        //BUG: Suggestion includes ""
+        break;
+      }
+    }
+  }
 }

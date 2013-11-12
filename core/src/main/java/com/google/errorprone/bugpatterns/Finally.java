@@ -123,7 +123,8 @@ public class Finally extends BugChecker
       TreePath path = state.getPath();
       Tree prevTree = path.getLeaf();
 
-      while (path != null && path.getLeaf().getKind() != Kind.METHOD) {
+      while (path != null && path.getLeaf().getKind() != Kind.METHOD
+          && path.getLeaf().getKind() != Kind.COMPILATION_UNIT) {
         prevTree = path.getLeaf();
         path = path.getParentPath();
 
