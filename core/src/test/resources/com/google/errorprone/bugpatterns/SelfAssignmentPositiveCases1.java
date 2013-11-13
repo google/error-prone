@@ -51,4 +51,10 @@ public class SelfAssignmentPositiveCases1 {
       System.out.println("foo");
     }
   }
+
+  // Check that WrappedTreeMap handles folded strings; tested by EndPosTest.
+  // See https://code.google.com/p/error-prone/issues/detail?id=209
+  public String foldableString() {
+    return "foo" + "bar";
+  }
 }
