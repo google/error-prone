@@ -22,51 +22,58 @@ import java.util.*;
  * @author amshali@google.com (Amin Shali)
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class IterablesSizePositiveCases {
-    
+public class ElementsCountedInLoopNegativeCases {
   public int testEnhancedFor(List<Object> iterable) {
     int count = 0;
-    //BUG: Suggestion includes "count += Iterables.size(iterable)"
+    // The following cases are considered negative because they are incrementing the counter by more 
+    // than 1.
     for (Object item : iterable) {
-      count ++;
+      count += 2;
     }
-    //BUG: Suggestion includes "count += Iterables.size(iterable)"
     for (Object item : iterable) {
-      count += 1;
+      count  = count + 3;
     }
-    //BUG: Suggestion includes "count += Iterables.size(iterable)"
     for (Object item : iterable) {
-      count += 1.0; // float constant 1
-    }
-    //BUG: Suggestion includes "count += Iterables.size(iterable)"
-    for (Object item : iterable) {
-      count += 1L; // long constant 1
-    }
-    //BUG: Suggestion includes "count += Iterables.size(iterable)"
-    for (Object item : iterable) {
-      count  = count + 1;
-    }
-    //BUG: Suggestion includes "count += Iterables.size(iterable)"
-    for (Object item : iterable) {
-      count  = 1 + count;
+      count  = 2 + count;
     }
     return count;
   }
-  
-  public int testWhileLoop(List<Object> iterable) {
+
+  public int testEnhancedWhileLoop(List<Object> iterable) {
     Iterator<Object> it = iterable.iterator();
     int count = 0;
-    //BUG: Suggestion includes ""
+    // The following case is considered negative because it is incrementing the counter by 2.
     while (it.hasNext()) {
+      count += 2;
+    }
+    // 'this' is not an Iterable type.
+    while (this.hasNext()) {
       count += 1;
     }
-    //BUG: Suggestion includes ""
+    // Complicated while body.
     while (it.hasNext()) {
+      System.err.println("Not so simple body");
       count++;
     }
-    //BUG: Suggestion includes ""
-    while (it.hasNext()) {
-      count = count + 1;
+    return count;
+  }
+
+  public boolean hasNext() {
+    return true;
+  }
+  
+  public double testEnhancedForFloats(List<Object> iterable) {
+    double count = 0;
+    // The following cases are considered negative because they are incrementing the counter by a
+    // float value which is not 1.
+    for (Object item : iterable) {
+      count += 2.0;
+    }
+    for (Object item : iterable) {
+      count  = count + 3.0;
+    }
+    for (Object item : iterable) {
+      count  = 0.1 + count;
     }
     return count;
   }

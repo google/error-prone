@@ -2,6 +2,9 @@ package com.google.errorprone;
 
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCLiteral;
+import com.sun.tools.javac.util.Log;
+import com.sun.tools.javac.util.Position;
 
 import java.util.AbstractMap;
 import java.util.HashMap;
@@ -16,17 +19,26 @@ import java.util.Set;
  * @author Eddie Aftandilian (eaftan@google.com)
  */
 class WrappedTreeMap extends AbstractMap<JCTree, Integer> {
-
-   /**
+  /**
    * A map from wrapped tree nodes to tree end positions.
    */
   private final Map<WrappedTreeNode, Integer> wrappedMap;
 
-  public WrappedTreeMap(Map<JCTree, Integer> map) {
+  private final Log log;
+
+  /**
+   * Boolean value that's set to true once wrappedMap has been built.
+   * Used to detect collisions during map construction.
+   */
+  private final boolean built;
+
+  public WrappedTreeMap(Log log, Map<JCTree, Integer> map) {
+    this.log = log;
     wrappedMap = new HashMap<WrappedTreeNode, Integer>();
     for (Map.Entry<JCTree, Integer> entry : map.entrySet()) {
       wrappedMap.put(new WrappedTreeNode(entry.getKey()), entry.getValue());
     }
+    built = true;
   }
 
   @Override
@@ -55,8 +67,9 @@ class WrappedTreeMap extends AbstractMap<JCTree, Integer> {
     }
 
     /**
-     * equals compares start position, kind of node, and tag. This is an approximation and may not
-     * actually distinguish between unequal tree nodes.
+     * equals compares start and preferred positions, kind of node, and tag. Additionally, literal
+     * nodes have their literal values compared.  This is an approximation and may not actually
+     * distinguish between unequal tree nodes.
      *
      * Note: Do not include node.toString() as part of the hash or the equals.  We generate
      * the WrappedTreeMap after the parse phase, but we compare after the flow phase.  The
@@ -72,8 +85,19 @@ class WrappedTreeMap extends AbstractMap<JCTree, Integer> {
       if (!(o instanceof WrappedTreeNode)) {
         return false;
       }
-      WrappedTreeNode other = (WrappedTreeNode) o;
 
+      WrappedTreeNode other = (WrappedTreeNode) o;
+      boolean res = equals(other);
+      if (!built && res && (other != this)) {
+        log.rawWarning(Position.NOPOS,
+            "error-prone WrappedTreeMap collision between " + node + " and " + other.node + ", " +
+            "suggested fixes may be wrong.  " +
+            "Please report at https://code.google.com/p/error-prone/issues/entry.");
+      }
+      return res;
+    }
+
+    private boolean equals(WrappedTreeNode other) {
       // LetExpr and TypeBoundKind throw an AssertionError on getKind(). Ignore them for computing
       // equality.
       Kind thisKind;
@@ -89,9 +113,21 @@ class WrappedTreeMap extends AbstractMap<JCTree, Integer> {
         otherKind = null;
       }
 
+      // Literal nodes with unequal values are never equal.
+      if (node.getTag() == JCTree.LITERAL && other.node.getTag() == JCTree.LITERAL
+          && !objectsEquals(((JCLiteral) node).getValue(), ((JCLiteral) other.node).getValue())) {
+        return false;
+      }
+
       return node.getStartPosition() == other.node.getStartPosition() &&
+          node.getPreferredPosition() == other.node.getPreferredPosition() &&
           thisKind == otherKind &&
           node.getTag() == other.node.getTag();
+    }
+
+    // Can't use Objects.equals() because we still support Java 6.
+    private boolean objectsEquals(Object a, Object b) {
+      return (a == b) || ((a != null) && a.equals(b));
     }
 
     /**
@@ -108,6 +144,7 @@ class WrappedTreeMap extends AbstractMap<JCTree, Integer> {
     public int hashCode() {
       int result = 17;
       result = 31 * result + node.getStartPosition();
+      result = 31 * result + node.getPreferredPosition();
       try {
         result = 31 * result + node.getKind().ordinal();
       } catch (AssertionError e) {
@@ -115,6 +152,12 @@ class WrappedTreeMap extends AbstractMap<JCTree, Integer> {
         // calculating the hash code.
       }
       result = 31 * result + node.getTag();
+      if (node.getTag() == JCTree.LITERAL) {
+        Object value = ((JCLiteral) node).getValue();
+        if (value != null) {
+          result = 31 * result + value.hashCode();
+        }
+      }
       return result;
     }
   }

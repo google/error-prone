@@ -36,12 +36,24 @@ public class CollectionIncompatibleTypePositiveCases {
 
   public boolean bug3() {
     List<String> list = new ArrayList<String>(collection);
+    //BUG: Suggestion includes "false"
+    System.out.println(list.indexOf(new Integer(0)));
+    //BUG: Suggestion includes "false"
+    System.out.println(list.lastIndexOf(new Integer(0)));
     //BUG: Suggestion includes "return false"
     return list.contains(new Exception());
   }
 
   public String bug4() {
     Map<Integer, String> map = new HashMap<Integer, String>();
+    //BUG: Suggestion includes "false"
+    System.out.println(map.containsKey("not an integer"));
+
+    Integer notAString = null;
+    //BUG: Suggestion includes "false"
+    System.out.println(map.containsValue(notAString));
+    //BUG: Suggestion includes "false"
+    System.out.println(map.remove("not an integer"));
     //BUG: Suggestion includes "return false"
     return map.get("not an integer");
   }

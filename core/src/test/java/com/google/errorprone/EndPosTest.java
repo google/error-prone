@@ -19,6 +19,7 @@ package com.google.errorprone;
 import static com.google.errorprone.CompilationTestHelper.sources;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
@@ -58,6 +59,8 @@ public class EndPosTest {
     assertThat("Compiler should have exited with exit code 1", exitCode, is(1));
     assertThat("Compiler error message should include suggested fix", outputStream.toString(),
         containsString("Did you mean 'this.a = b;'?"));
+    assertThat("Compiler should not warn about WrappedTreeMap collisions", outputStream.toString(),
+        not(containsString("WrappedTreeMap collision")));
 
   }
 }

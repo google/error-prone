@@ -66,7 +66,7 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
         compiler.genEndPos = true;
         Map<JCTree, Integer> endPosMap = compiler.parse(sourceFile).endPositions;
         compiler.genEndPos = prevGenEndPos;
-        endPositions = new WrappedTreeMap(endPosMap);
+        endPositions = new WrappedTreeMap(log, endPosMap);
       }
 
       AppliedFix fix = null;

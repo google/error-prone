@@ -21,15 +21,31 @@ import com.google.errorprone.matchers.MethodVisibility.Visibility;
 import com.google.errorprone.matchers.MultiMatcher.MatchType;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
-import com.sun.source.tree.*;
+
+import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.BinaryTree;
+import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.JCTree.*;
+import com.sun.tools.javac.tree.JCTree.JCArrayTypeTree;
+import com.sun.tools.javac.tree.JCTree.JCExpression;
+import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
+import com.sun.tools.javac.tree.JCTree.JCIdent;
+import com.sun.tools.javac.tree.JCTree.JCPrimitiveTypeTree;
+import com.sun.tools.javac.tree.JCTree.JCTypeApply;
 
-import javax.lang.model.element.Modifier;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -87,7 +103,6 @@ public class Matchers {
   /**
    * Compose several matchers together, such that the composite matches an AST node iff all the given matchers do.
    */
-  @SafeVarargs
   public static <T extends Tree> Matcher<T> allOf(final Matcher<? super T>... matchers) {
     return new Matcher<T>() {
       @Override public boolean matches(T t, VisitorState state) {
@@ -104,7 +119,6 @@ public class Matchers {
   /**
    * Compose several matchers together, such that the composite matches an AST node if any of the given matchers do.
    */
-  @SafeVarargs
   public static <T extends Tree> Matcher<T> anyOf(final Matcher<? super T>... matchers) {
     return new Matcher<T>() {
       @Override public boolean matches(T t, VisitorState state) {
@@ -409,6 +423,30 @@ public class Matchers {
   }
 
   /**
+   * Matches an AST node that is enclosed by some node that matches the given matcher.
+   *
+   * TODO(eaftan): This could be used instead of enclosingBlock and enclosingClass.
+   */
+  public static <T extends Tree> Matcher<Tree> enclosingNode(final Matcher<T> matcher) {
+    return new Matcher<Tree>() {
+      @SuppressWarnings("unchecked")
+      @Override
+      public boolean matches(Tree t, VisitorState state) {
+        TreePath path = state.getPath().getParentPath();
+        while (path != null) {
+          Tree node = path.getLeaf();
+          if (matcher.matches((T) node, state)) {
+            return true;
+          }
+          path = path.getParentPath();
+        }
+        return false;
+      }
+
+    };
+  }
+
+  /**
    * Matches a block AST node if the last statement in the block matches the given matcher.
    */
   public static Matcher<BlockTree> lastStatement(Matcher<StatementTree> matcher) {
@@ -677,9 +715,9 @@ public class Matchers {
    *
    * @param matchType Whether to match if the matchers match any of or all of the identifiers on
    * this tree.
-   * @param nodeMatcher Which identifiers to look for 
+   * @param nodeMatcher Which identifiers to look for
    */
-  public static MultiMatcher<Tree, IdentifierTree> hasIdentifier(MatchType matchType, 
+  public static MultiMatcher<Tree, IdentifierTree> hasIdentifier(MatchType matchType,
       Matcher<IdentifierTree> nodeMatcher) {
     return new HasIdentifier(matchType, nodeMatcher);
   }

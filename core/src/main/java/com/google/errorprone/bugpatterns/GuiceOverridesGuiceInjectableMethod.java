@@ -32,9 +32,7 @@ import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.code.Attribute.Compound;
-import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.code.Symbol.TypeSymbol;
 
 import javax.lang.model.element.TypeElement;
 
@@ -79,7 +77,7 @@ public class GuiceOverridesGuiceInjectableMethod extends BugChecker implements M
       MethodSymbol method = (MethodSymbol) ASTHelpers.getSymbol(methodTree);
       MethodSymbol superMethod = null;
       for (boolean checkSuperClass = true; checkSuperClass; method = superMethod) {
-        superMethod = findSuperMethod(method, state);
+        superMethod = ASTHelpers.findSuperMethod(method, state.getTypes());
         if (isAnnotatedWith(superMethod, GUICE_INJECT_ANNOTATION)) {
           return describeMatch(methodTree, new SuggestedFix().addImport("javax.inject.Inject")
               .prefixWith(methodTree, "@Inject\n"));
@@ -88,17 +86,6 @@ public class GuiceOverridesGuiceInjectableMethod extends BugChecker implements M
       }
     }
     return Description.NO_MATCH;
-  }
-
-  private MethodSymbol findSuperMethod(MethodSymbol method, VisitorState state) {
-    TypeSymbol superClass = method.enclClass().getSuperclass().tsym;
-    for (Symbol s : superClass.members().getElements()) {
-      if (s.name.contentEquals(method.name)
-          && method.overrides(s, superClass, state.getTypes(), true)) {
-        return (MethodSymbol) s;
-      }
-    }
-    return null;
   }
 
   private static boolean isAnnotatedWith(MethodSymbol method, String annotation) {

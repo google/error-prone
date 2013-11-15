@@ -115,8 +115,13 @@ public class ErrorProneScanner extends Scanner {
       InjectJavaxInjectOnFinalField.class,
       GuiceInjectOnFinalField.class,
       ClassCanBeStatic.class,
-      IterablesSize.class,
-      ProtoFieldNullComparison.class
+      ElementsCountedInLoop.class,
+      ProtoFieldNullComparison.class,
+      WaitNotInLoop.class,
+      DepAnn.class,
+      DivZero.class,
+      Overrides.class,
+      Finally.class
   );
 
   @SuppressWarnings("unchecked")

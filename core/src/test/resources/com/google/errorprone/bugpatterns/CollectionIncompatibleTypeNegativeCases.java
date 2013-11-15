@@ -18,6 +18,8 @@ package com.google.errorprone.bugpatterns;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -33,9 +35,17 @@ public class CollectionIncompatibleTypeNegativeCases {
   public boolean ok2() {
     return new ArrayList<Date>().contains(new B());
   }
-  
+
   public boolean ok3() {
     return new OtherCollection<String>().contains(new B());
+  }
+
+  public void ok4() {
+    Map<Integer, String> map = new HashMap<Integer, String>();
+    Object notAString = null;
+    System.out.println(map.containsValue(notAString));
+
+    System.out.println(map.containsKey(new Object()));
   }
   
   private class OtherCollection<E> {

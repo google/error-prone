@@ -28,11 +28,20 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
+
 import com.sun.source.tree.*;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
+import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
+import com.sun.tools.javac.tree.JCTree.JCIdent;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Checks that the 1st argument to Preconditions.checkNotNull() isn't a primitive.
@@ -128,8 +137,7 @@ public class PreconditionsCheckNotNullPrimitive
       VisitorState state, ExpressionTree arg1) {
     SuggestedFix fix = new SuggestedFix();
     String replacementMethod = "checkState";
-    if (arg1.getKind() == Kind.METHOD_INVOCATION && isMethodParameter(
-        state.getPath(), (MethodInvocationTree) arg1)) {
+    if (hasMethodParameter(state.getPath(), arg1)) {
       replacementMethod = "checkArgument";
     }
 
@@ -155,8 +163,8 @@ public class PreconditionsCheckNotNullPrimitive
   }
 
   /**
-   * Determines whether the root identifier of the tree node is a parameter to the enclosing
-   * method.
+   * Determines whether the expression contains a reference to one of the
+   * enclosing method's parameters.
    *
    * TODO(eaftan): Extract this to ASTHelpers.
    *
@@ -164,28 +172,58 @@ public class PreconditionsCheckNotNullPrimitive
    * @param tree the node to compare against the parameters
    * @return whether the argument is a parameter to the enclosing method
    */
-  private static boolean isMethodParameter(TreePath path, MethodInvocationTree tree) {
-    ExpressionTree rootIdentifier = ASTHelpers.getRootIdentifier(tree);
-    if (rootIdentifier == null || rootIdentifier.getKind() != Kind.IDENTIFIER) {
-      throw new IllegalStateException("Could not find root identifier of expression " + tree);
+  private static boolean hasMethodParameter(TreePath path, ExpressionTree tree) {
+    Set<Symbol> symbols = new HashSet<Symbol>();
+    for (IdentifierTree ident : getVariableUses(tree)) {
+      Symbol sym = ASTHelpers.getSymbol(ident);
+      if (sym.isLocal()) {
+        symbols.add(sym);
+      }
     }
-    Symbol sym = ASTHelpers.getSymbol(rootIdentifier);
 
-    if (sym.isLocal()) {
-      // Check against parameters of enclosing method declaration.
-      while (path != null && !(path.getLeaf() instanceof MethodTree)) {
-        path = path.getParentPath();
-      }
-      if (path == null) {
-        throw new IllegalStateException("Should have an enclosing method declaration");
-      }
-      MethodTree methodDecl = (MethodTree) path.getLeaf();
-      for (VariableTree param : methodDecl.getParameters()) {
-        if (ASTHelpers.getSymbol(param) == sym) {
-          return true;
-        }
+    // Find enclosing method declaration.
+    while (path != null && !(path.getLeaf() instanceof MethodTree)) {
+      path = path.getParentPath();
+    }
+    if (path == null) {
+      throw new IllegalStateException("Should have an enclosing method declaration");
+    }
+    MethodTree methodDecl = (MethodTree) path.getLeaf();
+    for (VariableTree param : methodDecl.getParameters()) {
+      if (symbols.contains(ASTHelpers.getSymbol(param))) {
+        return true;
       }
     }
+
     return false;
+  }
+
+  /**
+   * Find the root variable identifiers from an arbitrary expression.
+   *
+   * Examples:
+   *    a.trim().intern() ==> {a}
+   *    a.b.trim().intern() ==> {a}
+   *    this.intValue.foo() ==> {this}
+   *    this.foo() ==> {this}
+   *    intern() ==> {}
+   *    String.format() ==> {}
+   *    java.lang.String.format() ==> {}
+   *    x.y.z(s.t) ==> {x,s}
+   */
+  static List<IdentifierTree> getVariableUses(ExpressionTree tree) {
+    final List<IdentifierTree> freeVars = new ArrayList<IdentifierTree>();
+
+    new TreeScanner<Void, Void>() {
+      @Override
+      public Void visitIdentifier(IdentifierTree node, Void v) {
+        if (((JCIdent) node).sym instanceof VarSymbol) {
+          freeVars.add(node);
+        }
+        return super.visitIdentifier(node, v);
+      }
+    }.scan(tree, null);
+
+    return freeVars;
   }
 }

@@ -22,7 +22,6 @@ import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
@@ -30,9 +29,11 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.MethodType;
+import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
@@ -137,46 +138,6 @@ public class ASTHelpers {
     } else {
       return (T) path.getLeaf();
     }
-  }
-
-  /**
-   * Find the root identifier of a chain of field accesses.  If there is no root identifier
-   * (i.e, a bare method call or a static method call), return null.
-   *
-   * Examples:
-   *    a.trim().intern() ==> a
-   *    a.b.trim().intern() ==> a
-   *    this.intValue.foo() ==> this.intValue
-   *    this.foo() ==> this
-   *    intern() ==> null
-   *    String.format() ==> null
-   *    java.lang.String.format() ==> null
-
-   */
-  public static IdentifierTree getRootIdentifier(MethodInvocationTree methodInvocationTree) {
-    if (!(methodInvocationTree instanceof JCMethodInvocation)) {
-      throw new IllegalArgumentException("Expected type to be JCMethodInvocation, but was "
-          + methodInvocationTree.getClass());
-    }
-
-    // Check for bare method call, e.g. intern().
-    if (((JCMethodInvocation) methodInvocationTree).getMethodSelect() instanceof JCIdent) {
-      return null;
-    }
-
-    // Unwrap the field accesses until you get to an identifier.
-    ExpressionTree expr = methodInvocationTree;
-    while (!(expr instanceof JCIdent)) {
-      if (expr instanceof JCMethodInvocation) {
-        expr = ((JCMethodInvocation) expr).getMethodSelect();
-      } else if (expr instanceof JCFieldAccess) {
-        expr = ((JCFieldAccess) expr).getExpression();
-      } else {
-        throw new IllegalStateException("Expected expression to be a method invocation or "
-            + "field access, but was " + expr.getKind());
-      }
-    }
-    return (IdentifierTree) expr;
   }
 
   /**
@@ -330,5 +291,20 @@ public class ASTHelpers {
     }
     return tree.getStartPosition();
   }
-
+  
+  /**
+   * Find a method in the enclosing class's superclass that this method overrides.
+   * 
+   * @return A superclass method that is overridden by {@code method}  
+   */
+  public static MethodSymbol findSuperMethod(MethodSymbol method, Types types) {
+    TypeSymbol superClass = method.enclClass().getSuperclass().tsym;
+    for (Symbol sym : superClass.members().getElements()) {
+      if (sym.name.contentEquals(method.name)
+          && method.overrides(sym, superClass, types, true)) {
+        return (MethodSymbol) sym;
+      }
+    }
+    return null;
+  }
 }

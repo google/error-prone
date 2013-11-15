@@ -17,7 +17,9 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.matchers.Matchers.isArrayType;
 import static com.google.errorprone.matchers.Matchers.isDescendantOfMethod;
+import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
 
 import com.google.errorprone.BugPattern;
@@ -28,6 +30,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 
 import com.sun.source.tree.EnhancedForLoopTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -51,25 +54,25 @@ import com.sun.tools.javac.tree.JCTree.JCWhileLoop;
  * @author amshali@google.com (Amin Shali)
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-@BugPattern(name = "IterablesSize",
-    summary = "Iterables.size() can be used to replace this loop", explanation =
-        "This code counts elements in an Iterable using a loop.  You can use the Guava "
-        + "Iterables.size() method to achieve the same thing in a cleaner way.", category = JDK,
-    severity = WARNING, maturity = EXPERIMENTAL)
-public class IterablesSize extends BugChecker implements EnhancedForLoopTreeMatcher,
-    WhileLoopTreeMatcher {
+@BugPattern(name = "ElementsCountedInLoop",
+    summary = "This code, which counts elements using a loop, can be replaced by a simpler library "
+        + "method",
+    explanation = "This code counts elements using a loop.  You can use various library methods "
+        + "(Guava's Iterables.size(), Collection.size(), array.length) to achieve the same thing "
+        + "in a cleaner way.",
+    category = JDK, severity = WARNING, maturity = EXPERIMENTAL)
+public class ElementsCountedInLoop extends BugChecker
+    implements EnhancedForLoopTreeMatcher, WhileLoopTreeMatcher {
 
   @Override
   public Description matchWhileLoop(WhileLoopTree tree, VisitorState state) {
     JCWhileLoop whileLoop = (JCWhileLoop) tree;
-    boolean iterablesPattern = false;
     JCExpression whileExpression = ((JCParens) whileLoop.getCondition()).getExpression();
     if (whileExpression instanceof MethodInvocationTree) {
       MethodInvocationTree methodInvocation = (MethodInvocationTree) whileExpression;
-      if (methodSelect(isDescendantOfMethod("java.util.Iterator", "hasNext()"))
-          .matches(methodInvocation, state)) {
-        IdentifierTree identifier =
-            getIncrementedIdentifer(extractSingleStatement(whileLoop.body));
+      if (methodSelect(isDescendantOfMethod("java.util.Iterator", "hasNext()")).matches(
+          methodInvocation, state)) {
+        IdentifierTree identifier = getIncrementedIdentifer(extractSingleStatement(whileLoop.body));
         if (identifier != null) {
           return describeMatch(tree, new SuggestedFix());
         }
@@ -84,10 +87,19 @@ public class IterablesSize extends BugChecker implements EnhancedForLoopTreeMatc
     IdentifierTree identifier =
         getIncrementedIdentifer(extractSingleStatement(enhancedForLoop.body));
     if (identifier != null) {
-      String replacement = identifier + " += Iterables.size(" + tree.getExpression() + ");";
-      SuggestedFix fix = new SuggestedFix()
-          .replace(tree, replacement)
-          .addImport("com.google.common.collect.Iterables");
+      ExpressionTree expression = tree.getExpression();
+      SuggestedFix fix = null;
+      if (isSubtypeOf("java.util.Collection").matches(expression, state)) {
+        String replacement = identifier + " += " + expression + ".size();";
+        fix = new SuggestedFix().replace(tree, replacement);
+      } else if (isArrayType().matches(expression, state)) {
+        String replacement = identifier + " += " + expression + ".length;";
+        fix = new SuggestedFix().replace(tree, replacement);
+      } else {
+        String replacement = identifier + " += Iterables.size(" + expression + ");";
+        fix = new SuggestedFix().replace(tree, replacement).addImport(
+            "com.google.common.collect.Iterables");
+      }
       return describeMatch(tree, fix);
     }
     return Description.NO_MATCH;
@@ -110,7 +122,7 @@ public class IterablesSize extends BugChecker implements EnhancedForLoopTreeMatc
 
   /**
    * @return identifier which is being incremented by constant one. Returns null if no such
-   * identifier is found.
+   *         identifier is found.
    */
   private IdentifierTree getIncrementedIdentifer(JCStatement statement) {
     if (statement == null) {

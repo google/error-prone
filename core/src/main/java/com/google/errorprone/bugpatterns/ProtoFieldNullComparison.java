@@ -1,7 +1,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.ONE_OFF;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
@@ -30,7 +30,7 @@ import java.util.Set;
         + "comparisons like these often indicate a nearby error.\n\n"
         + "If you meant to check whether an optional field has been set, you should use the "
         + "hasField() method instead.",
-    category = ONE_OFF, severity = ERROR, maturity = EXPERIMENTAL)
+    category = ONE_OFF, severity = ERROR, maturity = MATURE)
 public class ProtoFieldNullComparison extends BugChecker implements BinaryTreeMatcher {
 
   private static final String PROTO_SUPER_CLASS = "com.google.protobuf.GeneratedMessage";

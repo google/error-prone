@@ -17,24 +17,37 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JUNIT;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
-import static com.google.errorprone.matchers.Matchers.*;
+import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.annotations;
+import static com.google.errorprone.matchers.Matchers.classHasModifier;
+import static com.google.errorprone.matchers.Matchers.enclosingClass;
+import static com.google.errorprone.matchers.Matchers.hasAnnotation;
+import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
+import static com.google.errorprone.matchers.Matchers.isType;
+import static com.google.errorprone.matchers.Matchers.methodHasModifier;
+import static com.google.errorprone.matchers.Matchers.methodHasParameters;
+import static com.google.errorprone.matchers.Matchers.methodNameStartsWith;
+import static com.google.errorprone.matchers.Matchers.methodReturns;
+import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
-import static com.google.errorprone.suppliers.Suppliers.*;
+import static com.google.errorprone.suppliers.Suppliers.VOID_TYPE;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 
-import javax.lang.model.element.Modifier;
 import java.util.regex.Pattern;
+
+import javax.lang.model.element.Modifier;
 
 /**
  * @author rburny@google.com (Radoslaw Burny)
@@ -48,7 +61,7 @@ import java.util.regex.Pattern;
         "If you want to disable test on purpose, change the name to something more descriptive," +
         " like \"disabledTestSomething()\". You don't need @Test annotation, but if you want to" +
         " keep it, add @Ignore too.",
-    category = JUNIT, maturity = EXPERIMENTAL, severity = ERROR)
+    category = JUNIT, maturity = MATURE, severity = ERROR)
 public class JUnit3TestNotRun extends BugChecker implements MethodTreeMatcher {
 
   private static final String JUNIT3_TEST_CASE_CLASS = "junit.framework.TestCase";
@@ -73,11 +86,13 @@ public class JUnit3TestNotRun extends BugChecker implements MethodTreeMatcher {
       "[tT][eE][sS][tT]"   // miscapitalized
       );
 
+  @SuppressWarnings("unchecked")
   private static final Matcher<ClassTree> isJUnit3TestClass = allOf(
       isSubtypeOf(JUNIT3_TEST_CASE_CLASS),
       not(annotations(ANY, isType(JUNIT4_RUN_WITH_ANNOTATION))),
       not(classHasModifier(Modifier.ABSTRACT)));
 
+  @SuppressWarnings("unchecked")
   private static final Matcher<MethodTree> wouldRunInJUnit4 = allOf(
       hasAnnotation(JUNIT4_TEST_ANNOTATION),
       not(hasAnnotation(JUNIT4_IGNORE_ANNOTATION)));
@@ -91,13 +106,14 @@ public class JUnit3TestNotRun extends BugChecker implements MethodTreeMatcher {
    */
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
-    if (!allOf(
-          not(methodNameStartsWith("test")),
-          methodHasModifier(Modifier.PUBLIC),
-          methodReturns(VOID_TYPE),
-          methodHasParameters(),
-          enclosingClass(isJUnit3TestClass)
-        ).matches(methodTree, state)) {
+    @SuppressWarnings("unchecked")
+    Matcher<MethodTree> methodMatcher = allOf(
+        not(methodNameStartsWith("test")),
+        methodHasModifier(Modifier.PUBLIC),
+        methodReturns(VOID_TYPE),
+        methodHasParameters(),
+        enclosingClass(isJUnit3TestClass));
+    if (!methodMatcher.matches(methodTree, state)) {
       return Description.NO_MATCH;
     }
 

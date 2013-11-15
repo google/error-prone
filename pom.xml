@@ -27,7 +27,7 @@
   <name>Maven parent POM</name>
   <groupId>com.google.errorprone</groupId>
   <artifactId>error_prone_parent</artifactId>
-  <version>1.0.4-SNAPSHOT</version>
+  <version>1.0.8-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <properties>
@@ -49,7 +49,6 @@
     <module>annotation</module>
     <module>docgen</module>
     <module>ant</module>
-    <module>safevarargs</module>
   </modules>
 
   <scm>
