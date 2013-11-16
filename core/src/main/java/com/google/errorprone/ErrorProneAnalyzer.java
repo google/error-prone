@@ -18,11 +18,14 @@ package com.google.errorprone;
 
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
+import com.sun.tools.javac.code.Symbol.CompletionFailure;
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Env;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Log;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -85,6 +88,16 @@ public class ErrorProneAnalyzer {
             compilationUnitsScanned.add(env.toplevel);
           }
         }
+      } catch (CompletionFailure e) {
+        // A CompletionFailure can be triggered when error-prone tries to complete a symbol
+        // that isn't on the compilation classpath. This can occur when a check performs an
+        // instanceof test on a symbol, which requires inspecting the transitive closure of the
+        // symbol's supertypes. If javac didn't need to check the symbol's assignability
+        // then a normal compilation would have succeeded, and no diagnostics will have been
+        // reported yet, but we don't want to crash javac.
+        StringWriter message = new StringWriter();
+        e.printStackTrace(new PrintWriter(message));
+        log.error("proc.cant.access", e.sym, e.getDetailValue(), message.toString());
       } catch (RuntimeException e) {
         // If there is a RuntimeException in an analyzer, swallow it if there are other compiler
         // errors.  This prevents javac from exiting with code 4, Abnormal Termination.
