@@ -37,9 +37,11 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCArrayTypeTree;
+import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
@@ -720,5 +722,43 @@ public class Matchers {
   public static MultiMatcher<Tree, IdentifierTree> hasIdentifier(MatchType matchType,
       Matcher<IdentifierTree> nodeMatcher) {
     return new HasIdentifier(matchType, nodeMatcher);
+  }
+
+  /** 
+   * Returns true if the expression is a member access on an instance, rather than a static type.
+   * Supports member method invocations and field accesses.
+   */
+  public static Matcher<ExpressionTree> selectedIsInstance() {
+    return new Matcher<ExpressionTree> () {
+      @Override
+      public boolean matches(ExpressionTree expr, VisitorState state) {
+        if (!(expr instanceof JCFieldAccess)) {
+          // TODO(cushon): throw IllegalArgumentException?
+          return false;
+        }   
+        JCExpression selected = ((JCFieldAccess) expr).getExpression();
+        if (selected instanceof JCNewClass) {
+          return true;
+        }
+        Symbol sym = ASTHelpers.getSymbol(selected);
+        return sym instanceof VarSymbol;
+      }
+    };
+  }
+
+  /**
+   * Matches an AST node which is an expression yielding the indicated static field access.
+   */
+  @SuppressWarnings("unchecked")
+  public static Matcher<ExpressionTree> staticFieldAccess() {
+    return allOf(isStatic(), isSymbol(VarSymbol.class));
+  }
+
+  public static Matcher<Tree> isStatic() {
+    return new IsStatic();
+  }
+  
+  static Matcher<Tree> isSymbol(Class<? extends Symbol> symbolClass) {
+    return new IsSymbol(symbolClass);
   }
 }
