@@ -16,14 +16,28 @@
 
 package com.google.errorprone;
 
+import static com.google.errorprone.BugPattern.Category.ONE_OFF;
+import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.CompilationTestHelper.sources;
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
+import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.internal.matchers.StringContains.containsString;
 
+import com.google.errorprone.BugPattern.Category;
+import com.google.errorprone.BugPattern.MaturityLevel;
+import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.BugChecker.ExpressionStatementTreeMatcher;
 import com.google.errorprone.bugpatterns.DeadException;
+import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.matchers.Description;
+import com.sun.source.tree.ExpressionStatementTree;
+import com.sun.source.tree.Tree;
+import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
@@ -119,6 +133,32 @@ public class ErrorReportingJavaCompilerIntegrationTest {
     Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher = hasItem(
         diagnosticMessage(containsString("[SelfAssignment]")));
     assertThat("Warning should be found. " + diagnosticHelper.describe(),
+        diagnosticHelper.getDiagnostics(), matcher);
+  }
+
+  @Test
+  public void unhandledExceptionsAreReportedWithoutBugParadeLink() throws Exception {
+    @BugPattern(name = "", explanation = "", summary = "",
+        maturity = EXPERIMENTAL, severity = ERROR, category = ONE_OFF)
+    class Throwing extends BugChecker implements ExpressionStatementTreeMatcher {
+      @Override
+      public Description matchExpressionStatement(ExpressionStatementTree tree, VisitorState state)
+      {
+        throw new IllegalStateException("test123");
+      }
+    }
+    compilerBuilder.report(new ErrorProneScanner(new Throwing()));
+    compiler = compilerBuilder.build();
+    int exitCode = compiler.compile(
+        sources(getClass(), "com/google/errorprone/MultipleTopLevelClassesWithErrors.java",
+            "com/google/errorprone/ExtendedMultipleTopLevelClassesWithErrors.java"));
+    outputStream.flush();
+    assertThat(outputStream.toString(), exitCode, is(1));
+    Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher = hasItem(
+        diagnosticMessage(allOf(
+            containsString("IllegalStateException: test123"),
+            containsString("unhandled exception was thrown by the Error Prone"))));
+    assertThat("Error should be reported. " + diagnosticHelper.describe(),
         diagnosticHelper.getDiagnostics(), matcher);
   }
 }

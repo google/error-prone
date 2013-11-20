@@ -22,6 +22,9 @@ import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Context.Factory;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
+import java.util.Properties;
 import java.util.Queue;
 
 /**
@@ -62,7 +65,24 @@ public class ErrorReportingJavaCompiler extends JavaCompiler {
   @Override
   protected void flow(Env<AttrContext> attrContextEnv, Queue<Env<AttrContext>> envs) {
     super.flow(attrContextEnv, envs);
-    postFlow(attrContextEnv);
+    try {
+      postFlow(attrContextEnv);
+    } catch (Throwable e) {
+      ByteArrayOutputStream stackTrace = new ByteArrayOutputStream();
+      PrintWriter writer = new PrintWriter(stackTrace);
+      e.printStackTrace(writer);
+      writer.flush();
+      Properties mavenProperties = new Properties();
+      String version;
+      try {
+        mavenProperties.load(getClass().getResourceAsStream(
+            "/META-INF/maven/com.google.errorprone/error_prone_core/pom.properties"));
+        version = mavenProperties.getProperty("version");
+      } catch (Exception e1) {
+        version = "unknown: " + e1.getClass().getSimpleName() + ": " + e1.getMessage();
+      }
+      log.error("error.prone.crash", stackTrace.toString(), version);
+    }
   }
 
   public void profilePostFlow(Env<AttrContext> attrContextEnv) {
