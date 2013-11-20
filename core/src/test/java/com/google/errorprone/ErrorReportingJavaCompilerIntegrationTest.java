@@ -155,7 +155,7 @@ public class ErrorReportingJavaCompilerIntegrationTest {
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(1));
     Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher = hasItem(
-        diagnosticMessage(allOf(
+        diagnosticMessage(CoreMatchers.<String>allOf(
             containsString("IllegalStateException: test123"),
             containsString("unhandled exception was thrown by the Error Prone"))));
     assertThat("Error should be reported. " + diagnosticHelper.describe(),

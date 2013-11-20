@@ -20,7 +20,6 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.isDescendantOfMethod;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
 import static com.google.errorprone.matchers.Matchers.not;
@@ -31,10 +30,12 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.DoWhileLoopTree;
 import com.sun.source.tree.EnhancedForLoopTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.StatementTree;
@@ -99,7 +100,7 @@ public class WaitNotInLoop extends BugChecker implements MethodInvocationTreeMat
    */
   @SuppressWarnings("unchecked")
   private static Matcher<MethodInvocationTree> waitMatcher = allOf(
-        methodSelect(anyOf(
+        methodSelect(Matchers.<ExpressionTree>anyOf(
             isDescendantOfMethod("java.lang.Object", "wait()"),
             isDescendantOfMethod("java.lang.Object", "wait(long)"),
             isDescendantOfMethod("java.lang.Object", "wait(long,int)"))),
