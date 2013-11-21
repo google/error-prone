@@ -20,22 +20,23 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
+
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.tree.JCTree;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Matches the behaviour of javac's overrides Xlint warning.
@@ -53,71 +54,55 @@ public class Overrides extends BugChecker implements MethodTreeMatcher {
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
     MethodSymbol methodSymbol = (MethodSymbol) ASTHelpers.getSymbol(methodTree);
     boolean isVarargs = (methodSymbol.flags() & Flags.VARARGS) != 0;
-    if (ASTHelpers.findSuperMethod(methodSymbol, state.getTypes()) != null
-        && isVarargs != superIsVarargs(methodSymbol, state)) {
-      List<? extends VariableTree> parameterTree = methodTree.getParameters();
-      Tree paramType = parameterTree.get(parameterTree.size() - 1).getType();
-      CharSequence paramTypeSource = state.getSourceForNode((JCTree) paramType);
-      if (paramTypeSource == null) {
-        // No fix if we don't have tree end positions.
-        return describeMatch(methodTree, null);
+    
+    Set<MethodSymbol> superMethods = ASTHelpers.findSuperMethods(methodSymbol, state.getTypes());
+    
+    // If there are no super methods, we're fine:
+    if (superMethods.isEmpty()) {
+      return Description.NO_MATCH;
+    }
+     
+    Iterator<MethodSymbol> superMethodsIterator = superMethods.iterator();
+    boolean areSupersVarargs = superMethodsIterator.next().isVarArgs();
+    while (superMethodsIterator.hasNext()) {
+      if (areSupersVarargs != superMethodsIterator.next().isVarArgs()) {
+        // The super methods are inconsistent (some are varargs, some are not varargs). Then the
+        // current method is inconsistent with some of its supermethods, so report a match.
+        return describeMatch(methodTree, new SuggestedFix().delete(methodTree));  
       }
-
-      SuggestedFix fix = null;
-      if (isVarargs) {
-        fix = new SuggestedFix().replace(paramType, "[]", paramTypeSource.length() - 3, 0);
-      } else {
-        // There may be a comment that includes a '[' character between the open and closed
-        // brackets of the array type.  If so, we don't return a fix.
-        int arrayOpenIndex = paramTypeSource.length() - 2;
-        while (paramTypeSource.charAt(arrayOpenIndex) == ' ') {
-          arrayOpenIndex--;
-        }
-        if (paramTypeSource.charAt(arrayOpenIndex) == '[') {
-          fix = new SuggestedFix().replace(paramType, "...", arrayOpenIndex, 0);
-        }
+    }
+    
+    // The current method is consistent with all of its supermethods:
+    if (isVarargs == areSupersVarargs) {
+      return Description.NO_MATCH;
+    }
+    
+    // The current method is inconsistent with all of its supermethods, so flip the varargs-ness
+    // of the current method.
+    
+    List<? extends VariableTree> parameterTree = methodTree.getParameters();
+    Tree paramType = parameterTree.get(parameterTree.size() - 1).getType();
+    CharSequence paramTypeSource = state.getSourceForNode((JCTree) paramType);
+    if (paramTypeSource == null) {
+      // No fix if we don't have tree end positions.
+      return describeMatch(methodTree, new SuggestedFix().delete(methodTree));
+    }
+    
+    SuggestedFix fix = new SuggestedFix();
+    if (isVarargs) {
+      fix = new SuggestedFix().replace(paramType, "[]", paramTypeSource.length() - 3, 0);
+    } else {
+      // There may be a comment that includes a '[' character between the open and closed
+      // brackets of the array type.  If so, we don't return a fix.
+      int arrayOpenIndex = paramTypeSource.length() - 2;
+      while (paramTypeSource.charAt(arrayOpenIndex) == ' ') {
+        arrayOpenIndex--;
       }
-
-      return describeMatch(methodTree, fix);
+      if (paramTypeSource.charAt(arrayOpenIndex) == '[') {
+        fix = new SuggestedFix().replace(paramType, "...", arrayOpenIndex, 0);
+      }
     }
 
-    return Description.NO_MATCH;
-  }
-
-  public boolean superIsVarargs(MethodSymbol method, VisitorState state) {
-    OverridesLookupState lookupCache = OverridesLookupState.instance(state);
-
-    MethodSymbol currentMethod = method;
-    Boolean result;
-    while (true) {
-      result = lookupCache.superIsVarargs.get(currentMethod);
-      if (result != null) {
-        return result;
-      }
-      MethodSymbol superMethod = ASTHelpers.findSuperMethod(currentMethod, state.getTypes());
-      if (superMethod == null) {
-        result = ((currentMethod.flags() & Flags.VARARGS) != 0);
-        lookupCache.superIsVarargs.put(currentMethod, result);
-        break;
-      }
-
-      currentMethod = superMethod;
-    }
-
-    return result;
-  }
-
-  private static class OverridesLookupState {
-    public static OverridesLookupState instance(VisitorState state) {
-      OverridesLookupState instance =
-          (OverridesLookupState) state.getInstance(OverridesLookupState.class);
-      if (instance == null) {
-        instance = new OverridesLookupState();
-        state.putInstance(OverridesLookupState.class, instance);
-      }
-      return instance;
-    }
-
-    public Map<MethodSymbol, Boolean> superIsVarargs = new HashMap<MethodSymbol, Boolean>();
+    return describeMatch(methodTree, fix);
   }
 }

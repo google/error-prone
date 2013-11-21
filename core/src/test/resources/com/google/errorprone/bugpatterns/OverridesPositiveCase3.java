@@ -18,9 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This tests that if there is a chain of method overrides where the varargs constraint is not
- * met, the suggested fixes make the entire chain of methods consistent with the root of the
- * override chain. So array -> varargs -> varargs -> array becomes all array.
+ * This tests the case where there is a chain of method overrides where the varargs constraint is
+ * not met, and the root has an array parameter.
+ * TODO(cushon): The original implementation tried to be clever and make this consistent, but
+ * didn't handle multiple interface inheritance.
  * 
  * @author cushon@google.com (Liam Miller-Cushon)
  */
@@ -31,18 +32,19 @@ public class OverridesPositiveCase3 {
 
   abstract class SubOne extends Base {
     @Override
-    //BUG: Suggestion includes "abstract void arrayMethod(Object[] newNames);"
+    //BUG: Suggestion includes ""
     abstract void arrayMethod(Object... newNames);
   }
   
   abstract class SubTwo extends SubOne {
     @Override
+    //BUG: Suggestion includes ""
     abstract void arrayMethod(Object[] xs);
   }
   
   abstract class SubThree extends SubTwo {
     @Override
-    //BUG: Suggestion includes "abstract void arrayMethod(Object[] newNames);"
+    //BUG: Suggestion includes ""
     abstract void arrayMethod(Object... newNames);
   }
 }

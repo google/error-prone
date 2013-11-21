@@ -35,4 +35,22 @@ public class OverridesNegativeCase1 {
     @Override
     abstract void arrayMethod(Object[] xs);
   }
+  
+  static class StaticClass {
+    static void staticVarargsMethod(Object... xs) {
+    }
+    
+    static void staticArrayMethod(Object[] xs) { 
+    }
+  }
+
+  interface Interface {
+    void varargsMethod(Object... xs);
+    void arrayMethod(Object[] xs);
+  }
+  
+  abstract class ImplementsInterface implements Interface {
+    public abstract void varargsMethod(Object... xs);
+    public abstract void arrayMethod(Object[] xs);
+  }
 }

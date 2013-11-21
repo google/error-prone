@@ -318,20 +318,4 @@ public class VisitorState {
   private interface NameLookupStrategy {
     Name fromString(Context context, String nameStr);
   }
-
-  /**
-   * Allow bugcheckers to cache state across matchings.
-   * For an example, see {@link com.google.errorprone.bugpatterns.Overrides} which uses this to
-   * store expensive lookups.
-   */
-  private Map<Class<?>, Object> state = new HashMap<Class<?>, Object>();
-
-  @SuppressWarnings("unchecked")
-  public <T> T getInstance(Class<T> key) {
-    return (T) state.get(key);
-  }
-
-  public <T> void putInstance(Class<T> key, T value) {
-    state.put(key,  value);
-  }
 }

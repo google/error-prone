@@ -60,4 +60,42 @@ public class OverridesPositiveCase1 {
     //BUG: Suggestion includes "Varargs"
     abstract void varargsMethod(Object[/**/                       ] xs);
   }
+  
+  interface Interface {
+    void varargsMethod(Object... xs);
+    void arrayMethod(Object[] xs);
+  }
+  
+  abstract class ImplementsInterface implements Interface {
+    @Override
+    //BUG: Suggestion includes ""
+    public abstract void varargsMethod(Object[] xs);
+    @Override
+    //BUG: Suggestion includes ""
+    public abstract void arrayMethod(Object... xs);
+  }
+ 
+  abstract class MyBase {
+    abstract void f(Object... xs);
+    abstract void g(Object[] xs);
+  }
+  
+  interface MyInterface {
+    void f(Object[] xs);
+    void g(Object... xs);
+  }
+  
+  abstract class ImplementsAndExtends extends MyBase implements MyInterface {
+    //BUG: Suggestion includes ""
+    public abstract void f(Object... xs);
+    //BUG: Suggestion includes ""
+    public abstract void g(Object[] xs);
+  }
+  
+  abstract class ImplementsAndExtends2 extends MyBase implements MyInterface {
+    //BUG: Suggestion includes ""
+    public abstract void f(Object[] xs);
+    //BUG: Suggestion includes ""
+    public abstract void g(Object... xs);
+  }
 }

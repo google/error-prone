@@ -27,6 +27,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
+import com.sun.tools.javac.code.Scope;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
@@ -45,7 +46,9 @@ import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * This class contains utility methods to work with the javac AST.
@@ -292,6 +295,31 @@ public class ASTHelpers {
     return tree.getStartPosition();
   }
   
+  public static Set<MethodSymbol> findSuperMethods(MethodSymbol methodSymbol, Types types) {
+    Set<MethodSymbol> supers = new HashSet<MethodSymbol>();
+    if (methodSymbol.isStatic()) {
+      return supers;
+    }
+    
+    TypeSymbol owner = (TypeSymbol) methodSymbol.owner;
+    // Iterates over an ordered list of all super classes and interfaces.
+    for (Type sup : types.closure(owner.type)) {
+      if (sup == owner.type) {
+        continue; // Skip the owner of the method
+      }
+      Scope scope = sup.tsym.members();
+      for (Scope.Entry e = scope.lookup(methodSymbol.name); e.scope != null; e = e.next()) {
+        if (e.sym != null
+            && !e.sym.isStatic()
+            && e.sym.name.contentEquals(methodSymbol.name)
+            && methodSymbol.overrides(e.sym, owner, types, true)) {
+          supers.add((MethodSymbol) e.sym);
+        }
+      }
+    }
+    return supers;
+  }
+  
   /**
    * Find a method in the enclosing class's superclass that this method overrides.
    * 
@@ -299,6 +327,9 @@ public class ASTHelpers {
    */
   public static MethodSymbol findSuperMethod(MethodSymbol method, Types types) {
     TypeSymbol superClass = method.enclClass().getSuperclass().tsym;
+    if (superClass == null) {
+      return null;
+    }
     for (Symbol sym : superClass.members().getElements()) {
       if (sym.name.contentEquals(method.name)
           && method.overrides(sym, superClass, types, true)) {
