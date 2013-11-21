@@ -21,33 +21,26 @@ import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.CompilationTestHelper.sources;
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
-import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.internal.matchers.StringContains.containsString;
 
-import com.google.errorprone.BugPattern.Category;
-import com.google.errorprone.BugPattern.MaturityLevel;
-import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ExpressionStatementTreeMatcher;
-import com.google.errorprone.bugpatterns.DeadException;
-import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.bugpatterns.EmptyStatement;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.ExpressionStatementTree;
-import com.sun.source.tree.Tree;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.tools.Diagnostic;
+import javax.tools.JavaFileObject;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-
-import javax.tools.Diagnostic;
-import javax.tools.JavaFileObject;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -87,15 +80,15 @@ public class ErrorReportingJavaCompilerIntegrationTest {
 
   @Test
   public void fileWithWarning() throws Exception {
-    compiler = compilerBuilder.report(ErrorProneScanner.forMatcher(DeadException.class))
+    compiler = compilerBuilder.report(ErrorProneScanner.forMatcher(EmptyStatement.class))
         .build();
     int exitCode = compiler.compile(sources(getClass(),
-        "com/google/errorprone/bugpatterns/DeadExceptionPositiveCases.java"));
+        "com/google/errorprone/bugpatterns/EmptyStatementPositiveCases.java"));
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(0));
 
     Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher = hasItem(
-        diagnosticMessage(containsString("[DeadException]")));
+        diagnosticMessage(containsString("[EmptyStatement]")));
     assertThat("Warning should be found. " + diagnosticHelper.describe(),
         diagnosticHelper.getDiagnostics(), matcher);
   }
