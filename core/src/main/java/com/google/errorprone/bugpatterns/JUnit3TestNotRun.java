@@ -19,19 +19,15 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JUNIT;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.JUnitMatchers.isJUnit3TestClass;
+import static com.google.errorprone.matchers.JUnitMatchers.wouldRunInJUnit4;
 import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.annotations;
-import static com.google.errorprone.matchers.Matchers.classHasModifier;
 import static com.google.errorprone.matchers.Matchers.enclosingClass;
-import static com.google.errorprone.matchers.Matchers.hasAnnotation;
-import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
-import static com.google.errorprone.matchers.Matchers.isType;
 import static com.google.errorprone.matchers.Matchers.methodHasModifier;
 import static com.google.errorprone.matchers.Matchers.methodHasParameters;
 import static com.google.errorprone.matchers.Matchers.methodNameStartsWith;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.Matchers.not;
-import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
 import static com.google.errorprone.suppliers.Suppliers.VOID_TYPE;
 
 import com.google.errorprone.BugPattern;
@@ -41,7 +37,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 
-import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 
@@ -64,10 +59,6 @@ import javax.lang.model.element.Modifier;
     category = JUNIT, maturity = MATURE, severity = ERROR)
 public class JUnit3TestNotRun extends BugChecker implements MethodTreeMatcher {
 
-  private static final String JUNIT3_TEST_CASE_CLASS = "junit.framework.TestCase";
-  private static final String JUNIT4_RUN_WITH_ANNOTATION = "org.junit.runner.RunWith";
-  private static final String JUNIT4_TEST_ANNOTATION = "org.junit.Test";
-  private static final String JUNIT4_IGNORE_ANNOTATION = "org.junit.Ignore";
   /*
    * Regular expression for test method name that is misspelled and should be replaced with "test".
    * ".est" and "est"  are omitted, because they catch real words like "restore", "destroy", "best",
@@ -85,17 +76,6 @@ public class JUnit3TestNotRun extends BugChecker implements MethodTreeMatcher {
       "t.st|te.t|"      +  // letter changed
       "[tT][eE][sS][tT]"   // miscapitalized
       );
-
-  @SuppressWarnings("unchecked")
-  private static final Matcher<ClassTree> isJUnit3TestClass = allOf(
-      isSubtypeOf(JUNIT3_TEST_CASE_CLASS),
-      not(annotations(ANY, isType(JUNIT4_RUN_WITH_ANNOTATION))),
-      not(classHasModifier(Modifier.ABSTRACT)));
-
-  @SuppressWarnings("unchecked")
-  private static final Matcher<MethodTree> wouldRunInJUnit4 = allOf(
-      hasAnnotation(JUNIT4_TEST_ANNOTATION),
-      not(hasAnnotation(JUNIT4_IGNORE_ANNOTATION)));
 
   /**
    * Matches if:

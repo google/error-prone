@@ -20,32 +20,23 @@ import static com.google.errorprone.BugPattern.Category.JUNIT;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
+import static com.google.errorprone.matchers.JUnitMatchers.hasJUnitAnnotation;
+import static com.google.errorprone.matchers.JUnitMatchers.isJunit3TestCase;
 import static com.google.errorprone.matchers.Matchers.*;
-import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
-import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.ExpressionTree;
+import com.google.errorprone.matchers.JUnitMatchers.JUnit4TestClassMatcher;
 import com.sun.source.tree.MethodTree;
-import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.Type.ClassType;
-import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
-import com.sun.tools.javac.util.List;
 
 import javax.lang.model.element.Modifier;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 
 /**
  * TODO(eaftan): Similar checkers for setUp() and tearDown().
- * TODO(eaftan): Inverse check -- JUnit 3 test that has @Test annotation but whose name doesn't
- * match JUnit 3 criteria.
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
@@ -60,88 +51,36 @@ import java.util.Collection;
     category = JUNIT, maturity = MATURE, severity = ERROR)
 public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
 
-  private static final Collection<String> DEFAULT_TEST_RUNNERS = Arrays.asList(
-      "org.junit.runners.JUnit4", "org.mockito.runners.MockitoJUnitRunner");
-
-  private static final String JUNIT3_TEST_CASE_CLASS = "junit.framework.TestCase";
   private static final String JUNIT4_TEST_ANNOTATION = "org.junit.Test";
-  private static final String JUNIT_BEFORE_ANNOTATION = "org.junit.Before";
-  private static final String JUNIT_AFTER_ANNOTATION = "org.junit.After";
-  private static final String JUNIT_BEFORE_CLASS_ANNOTATION = "org.junit.BeforeClass";
-  private static final String JUNIT_AFTER_CLASS_ANNOTATION = "org.junit.AfterClass";
-
-  /**
-   * A list of valid test runners that this matcher should look for in the @RunWith annotation.
-   */
-  private Collection<String> testRunners;
+  private final JUnit4TestClassMatcher isJUnit4TestClass;
 
   public JUnit4TestNotRun() {
-    this.testRunners = new ArrayList<String>(DEFAULT_TEST_RUNNERS);
+    this.isJUnit4TestClass = new JUnit4TestClassMatcher();
   }
 
   /**
    * Construct a matcher with additional acceptable test runners.
    *
-   * @param additionalTestRunners Additional test runner classes to check for in the @RunWith annotation,
-   * e.g., "org.junit.runners.BlockJUnit4ClassRunner"
+   * @param additionalTestRunners Additional test runner classes to check for in the @RunWith
+   *                              annotation, e.g., "org.junit.runners.BlockJUnit4ClassRunner"
    */
   public JUnit4TestNotRun(String... additionalTestRunners) {
     this();
-    this.testRunners.addAll(Arrays.asList(additionalTestRunners));
+    this.isJUnit4TestClass.addAdditionalTestRunners(Arrays.asList(additionalTestRunners));
   }
 
   /**
-   * Matches an argument of type Class<T>, where T is a type listed in the testRunners field.
-   *
-   * TODO(eaftan): Support checking for an annotation that tells us whether this test runner
-   * expects tests to be annotated with @Test.
-   */
-  private final Matcher<ExpressionTree> isJUnit4TestRunner = new Matcher<ExpressionTree>() {
-    @Override
-    public boolean matches(ExpressionTree t, VisitorState state) {
-      Type type = ((JCTree) t).type;
-      // Expect a class type.
-      if (!(type instanceof ClassType)) {
-        return false;
-      }
-      // Expect one type argument, the type of the JUnit class runner to use.
-      List<Type> typeArgs = ((ClassType) type).getTypeArguments();
-      if (typeArgs.size() != 1) {
-        return false;
-      }
-      return testRunners.contains(typeArgs.get(0).toString());
-    }
-  };
-
-  @SuppressWarnings("unchecked")
-  private final Matcher<ClassTree> isJUnit4TestClass = allOf(
-      not(isSubtypeOf(JUNIT3_TEST_CASE_CLASS)),
-      annotations(ANY, hasArgumentWithValue("value", isJUnit4TestRunner)));
-
-  @SuppressWarnings("unchecked")
-  private static final Matcher<MethodTree> hasJUnitAnnotation = anyOf(
-      hasAnnotation(JUNIT4_TEST_ANNOTATION),
-      hasAnnotation(JUNIT_BEFORE_ANNOTATION),
-      hasAnnotation(JUNIT_AFTER_ANNOTATION),
-      hasAnnotation(JUNIT_BEFORE_CLASS_ANNOTATION),
-      hasAnnotation(JUNIT_AFTER_CLASS_ANNOTATION));
-
-  /**
    * Matches if:
-   * 1) The method's name begins with "test".
-   * 2) The method has no parameters.
-   * 3) The method is public.
-   * 4) The method is not annotated with @Test, @Before, @After, @BeforeClass, or @AfterClass.
-   * 5) The enclosing class has an @RunWith annotation and does not extend TestCase. This marks
+   * 1) The method appears to be a JUnit 3 test case.
+   * 2) The method is not annotated with @Test, @Before, @After, @BeforeClass, or @AfterClass.
+   * 3) The enclosing class has an @RunWith annotation and does not extend TestCase. This marks
    *    that the test is intended to run with JUnit 4.
    */
   @Override
   @SuppressWarnings("unchecked")
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
     boolean matches = allOf(
-        methodNameStartsWith("test"),
-        methodHasParameters(),
-        methodHasModifier(Modifier.PUBLIC),
+        isJunit3TestCase,
         not(hasJUnitAnnotation),
         enclosingClass(isJUnit4TestClass))
         .matches(methodTree, state);
