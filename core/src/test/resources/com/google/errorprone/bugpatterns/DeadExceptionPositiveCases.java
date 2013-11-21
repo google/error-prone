@@ -40,4 +40,9 @@ public class DeadExceptionPositiveCases {
       //BUG: Suggestion includes "throw new ArithmeticException"
       new ArithmeticException("should also be thrown");
   }
+
+  public void testLooksLikeAJunitTestMethod() {
+    //BUG: Suggestion includes "throw new RuntimeException"
+    new RuntimeException("Not thrown, and reference lost");
+  }
 }

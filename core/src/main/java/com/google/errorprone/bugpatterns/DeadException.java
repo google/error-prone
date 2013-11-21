@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.*;
 import static com.google.errorprone.suppliers.Suppliers.EXCEPTION_TYPE;
@@ -28,9 +28,7 @@ import static com.sun.source.tree.Tree.Kind.IF;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
+import com.google.errorprone.matchers.*;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
@@ -38,16 +36,19 @@ import com.sun.source.tree.Tree;
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
-@BugPattern(name = "DeadException",
+@BugPattern(name = "DeadException", altNames = "ThrowableInstanceNeverThrown",
     summary = "Exception created but not thrown",
     explanation =
         "The exception is created with new, but is not thrown, and the reference is lost.",
-    category = JDK, severity = WARNING, maturity = EXPERIMENTAL)
+    category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
 public class DeadException extends BugChecker implements NewClassTreeMatcher {
 
   public static final Matcher<Tree> MATCHER = allOf(
       parentNode(kindIs(EXPRESSION_STATEMENT)),
-      isSubtypeOf(EXCEPTION_TYPE)
+      isSubtypeOf(EXCEPTION_TYPE),
+      not(enclosingMethod(JUnitMatchers.wouldRunInJUnit4)),
+      anyOf(not(enclosingMethod(JUnitMatchers.isJunit3TestCase)),
+            not(enclosingClass(JUnitMatchers.isJUnit3TestClass)))
   );
 
   @SuppressWarnings("unchecked")

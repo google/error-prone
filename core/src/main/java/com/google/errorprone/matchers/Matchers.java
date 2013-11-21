@@ -425,6 +425,13 @@ public class Matchers {
   }
 
   /**
+   * Matches an AST node which is enclosed by a method node that matches the given matcher.
+   */
+  public static <T extends Tree> EnclosingMethod<T> enclosingMethod(Matcher<MethodTree> matcher) {
+    return new EnclosingMethod<T>(matcher);
+  }
+
+  /**
    * Matches an AST node that is enclosed by some node that matches the given matcher.
    *
    * TODO(eaftan): This could be used instead of enclosingBlock and enclosingClass.

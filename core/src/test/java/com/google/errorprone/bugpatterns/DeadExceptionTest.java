@@ -36,12 +36,21 @@ public class DeadExceptionTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(
+    compilationHelper.assertCompileFailsWithMessages(
         new File(this.getClass().getResource("DeadExceptionPositiveCases.java").toURI()));
   }
 
   @Test public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(
         new File(this.getClass().getResource("DeadExceptionNegativeCases.java").toURI()));
+  }
+
+  /**
+   * It's somewhat common to test the side-effects of Exception constructors by creating one,
+   * and asserting that an exception is thrown in the constructor.
+   */
+  @Test public void testNegativeCaseWhenExceptionsUnthrownInTests() throws Exception {
+    compilationHelper.assertCompileSucceeds(
+        new File(this.getClass().getResource("DeadExceptionTestingNegativeCases.java").toURI()));
   }
 }
