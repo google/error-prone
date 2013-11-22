@@ -63,9 +63,7 @@ public class ErrorProneAnalyzer {
     this.errorProneScanner = context.get(Scanner.class);
     if (this.errorProneScanner == null) {
       throw new IllegalStateException(
-          "No error-prone scanner registered in context. Is annotation processing enabled? " +
-          "Please report bug to error-prone: " +
-          "http://code.google.com/p/error-prone/issues/entry");
+          "No error-prone scanner registered in context. Is annotation processing enabled?");
     }
   }
 

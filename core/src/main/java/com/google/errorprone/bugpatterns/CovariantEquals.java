@@ -18,9 +18,9 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
+import static com.google.errorprone.matchers.Enclosing.findEnclosing;
 import static com.google.errorprone.matchers.Matchers.*;
 import static com.google.errorprone.suppliers.Suppliers.*;
 import static com.sun.tools.javac.code.Flags.ENUM;
@@ -28,11 +28,9 @@ import static com.sun.tools.javac.code.Flags.ENUM;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.EnclosingClass;
-import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
+import com.google.errorprone.matchers.*;
 import com.google.errorprone.matchers.MethodVisibility.Visibility;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.util.TreeScanner;
@@ -84,7 +82,7 @@ public class CovariantEquals extends BugChecker implements MethodTreeMatcher {
     }
 
     SuggestedFix fix = new SuggestedFix();
-    JCClassDecl cls = (JCClassDecl) EnclosingClass.findEnclosingClass(state);
+    JCClassDecl cls = (JCClassDecl) findEnclosing(ClassTree.class, state);
 
     if ((cls.getModifiers().flags & ENUM) != 0) {
       /* If the enclosing class is an enum, then just delete the equals method since enums

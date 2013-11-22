@@ -137,7 +137,7 @@ public class Matchers {
   /**
    * Matches if an AST node is an instance of the given class.
    */
-  public static <T extends Tree> Matcher<T> isInstance(final Class<?> klass) {
+  public static <T extends Tree> Matcher<T> isInstance(final java.lang.Class klass) {
     return new Matcher<T>() {
       @Override
       public boolean matches(T t, VisitorState state) {
@@ -413,22 +413,22 @@ public class Matchers {
   /**
    * Matches an AST node which is enclosed by a block node that matches the given matcher.
    */
-  public static <T extends Tree> EnclosingBlock<T> enclosingBlock(Matcher<BlockTree> matcher) {
-    return new EnclosingBlock<T>(matcher);
+  public static <T extends Tree> Enclosing.Block<T> enclosingBlock(Matcher<BlockTree> matcher) {
+    return new Enclosing.Block<T>(matcher);
   }
 
   /**
    * Matches an AST node which is enclosed by a class node that matches the given matcher.
    */
-  public static <T extends Tree> EnclosingClass<T> enclosingClass(Matcher<ClassTree> matcher) {
-    return new EnclosingClass<T>(matcher);
+  public static <T extends Tree> Enclosing.Class<T> enclosingClass(Matcher<ClassTree> matcher) {
+    return new Enclosing.Class<T>(matcher);
   }
 
   /**
    * Matches an AST node which is enclosed by a method node that matches the given matcher.
    */
-  public static <T extends Tree> EnclosingMethod<T> enclosingMethod(Matcher<MethodTree> matcher) {
-    return new EnclosingMethod<T>(matcher);
+  public static <T extends Tree> Enclosing.Method<T> enclosingMethod(Matcher<MethodTree> matcher) {
+    return new Enclosing.Method<T>(matcher);
   }
 
   /**
@@ -765,7 +765,7 @@ public class Matchers {
     return new IsStatic();
   }
   
-  static Matcher<Tree> isSymbol(Class<? extends Symbol> symbolClass) {
+  static Matcher<Tree> isSymbol(java.lang.Class symbolClass) {
     return new IsSymbol(symbolClass);
   }
 }
