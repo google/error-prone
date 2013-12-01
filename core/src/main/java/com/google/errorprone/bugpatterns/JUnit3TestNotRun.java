@@ -108,12 +108,11 @@ public class JUnit3TestNotRun extends BugChecker implements MethodTreeMatcher {
     } else {
       return Description.NO_MATCH;
     }
-    CharSequence methodSource = state.getSourceForNode((JCMethodDecl) methodTree);
-    if (methodSource == null) {
-      return null;  // we cannot provide suggestion without source
-    }
-    String methodString = methodSource.toString().replaceFirst(name, fixedName);
-    SuggestedFix fix = new SuggestedFix().replace(methodTree, methodString);
+    // We don't have start position for a method symbol, so we replace everything between result
+    // type and body.
+    JCMethodDecl decl = (JCMethodDecl) methodTree;
+    SuggestedFix fix = new SuggestedFix().replace(
+        decl.restype.getStartPosition() + 5, decl.body.getStartPosition(), fixedName + "() ");
     return describeMatch(methodTree, fix);
   }
 }

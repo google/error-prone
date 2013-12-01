@@ -77,4 +77,12 @@ public class JUnit3TestNotRunPositiveCases extends TestCase {
   // test with @Test annotation not run by JUnit3
   //BUG: Suggestion includes "testName"
   @Test public void name() {}
+
+  // non-standard formatting - just to check that replacements are correctly located
+  //BUG: Suggestion includes "testMoreSpaces"
+  public    void    tesMoreSpaces()    {}
+
+  @Test public void
+  //BUG: Suggestion includes "testMultiline"
+      tesMultiline() {}
 }
