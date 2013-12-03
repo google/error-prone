@@ -78,11 +78,14 @@ public class JUnit3TestNotRunPositiveCases extends TestCase {
   //BUG: Suggestion includes "testName"
   @Test public void name() {}
 
-  // non-standard formatting - just to check that replacements are correctly located
-  //BUG: Suggestion includes "testMoreSpaces"
-  public    void    tesMoreSpaces()    {}
+  // a few checks to verify the substitution is well-formed
+  //BUG: Suggestion includes "void testBasic() {"
+  public void tesBasic() {}
+
+  //BUG: Suggestion includes "void testMoreSpaces() {"
+  public    void    tesMoreSpaces(  )    {}
 
   @Test public void
-  //BUG: Suggestion includes "testMultiline"
+  //BUG: Suggestion includes "void testMultiline() {"
       tesMultiline() {}
 }
