@@ -14,9 +14,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author cushon@google.com (Liam Miller-Cushon)
  */
@@ -30,17 +27,17 @@ public class OverridesNegativeCase1 {
     @Override
     abstract void varargsMethod(final Object... newNames);
   }
-  
+
   abstract class Child2 extends Base {
     @Override
     abstract void arrayMethod(Object[] xs);
   }
-  
+
   static class StaticClass {
     static void staticVarargsMethod(Object... xs) {
     }
     
-    static void staticArrayMethod(Object[] xs) { 
+    static void staticArrayMethod(Object[] xs) {
     }
   }
 
@@ -48,9 +45,41 @@ public class OverridesNegativeCase1 {
     void varargsMethod(Object... xs);
     void arrayMethod(Object[] xs);
   }
-  
+
   abstract class ImplementsInterface implements Interface {
     public abstract void varargsMethod(Object... xs);
     public abstract void arrayMethod(Object[] xs);
+  }
+}
+
+// Varargs methods might end up overriding synthetic (e.g. bridge) methods, which will have already
+// been lowered into a non-varargs form. Test that we don't report errors when a varargs method
+// overrides a synthetic non-varargs method:
+
+abstract class One {
+  static class Builder {
+    Builder varargsMethod(String... args) {
+      return this;
+    }
+  }
+}
+
+class Two extends One {
+  static class Builder extends One.Builder {
+    @Override
+    public Builder varargsMethod(String... args) {
+      super.varargsMethod(args);
+      return this;
+    }
+  }
+}
+
+class Three extends Two {
+  static class Builder extends Two.Builder {
+    @Override
+    public Builder varargsMethod(String... args) {
+      super.varargsMethod(args);
+      return this;
+    }
   }
 }

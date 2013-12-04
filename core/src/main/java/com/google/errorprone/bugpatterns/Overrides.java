@@ -68,7 +68,7 @@ public class Overrides extends BugChecker implements MethodTreeMatcher {
       if (areSupersVarargs != superMethodsIterator.next().isVarArgs()) {
         // The super methods are inconsistent (some are varargs, some are not varargs). Then the
         // current method is inconsistent with some of its supermethods, so report a match.
-        return describeMatch(methodTree, new SuggestedFix().delete(methodTree));  
+        return describeMatch(methodTree, new SuggestedFix());
       }
     }
     
@@ -85,7 +85,7 @@ public class Overrides extends BugChecker implements MethodTreeMatcher {
     CharSequence paramTypeSource = state.getSourceForNode((JCTree) paramType);
     if (paramTypeSource == null) {
       // No fix if we don't have tree end positions.
-      return describeMatch(methodTree, new SuggestedFix().delete(methodTree));
+      return describeMatch(methodTree, new SuggestedFix());
     }
     
     SuggestedFix fix = new SuggestedFix();

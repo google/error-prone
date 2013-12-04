@@ -18,7 +18,6 @@ package com.google.errorprone.util;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
-
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
@@ -27,6 +26,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
+import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Scope;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -311,6 +311,7 @@ public class ASTHelpers {
       for (Scope.Entry e = scope.lookup(methodSymbol.name); e.scope != null; e = e.next()) {
         if (e.sym != null
             && !e.sym.isStatic()
+            && ((e.sym.flags() & Flags.SYNTHETIC) == 0)
             && e.sym.name.contentEquals(methodSymbol.name)
             && methodSymbol.overrides(e.sym, owner, types, true)) {
           supers.add((MethodSymbol) e.sym);
