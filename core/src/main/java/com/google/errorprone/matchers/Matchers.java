@@ -509,6 +509,7 @@ public class Matchers {
 
   /**
    * Determines whether an expression has an annotation of the given type.
+   * This includes annotations inherited from superclasses due to @Inherited.
    *
    * @param annotationType The type of the annotation to look for (e.g, "javax.annotation.Nullable")
    */
@@ -518,7 +519,22 @@ public class Matchers {
       public boolean matches (T tree, VisitorState state) {
         Symbol sym = ASTHelpers.getSymbol(tree);
         Symbol annotationSym = state.getSymbolFromString(annotationType);
-        return (sym != null) && (annotationSym != null) && (sym.attribute(annotationSym) != null);
+        Symbol inheritedSym = state.getSymtab().inheritedType.tsym;
+
+        if ((sym == null) || (annotationSym == null)) {
+          return false;
+        }
+        if ((sym instanceof ClassSymbol) && (annotationSym.attribute(inheritedSym) != null)) {
+          while (sym != null) {
+            if (sym.attribute(annotationSym) != null) {
+              return true;
+            }
+            sym = ((ClassSymbol) sym).getSuperclass().tsym;
+          }
+          return false;
+        } else {
+          return sym.attribute(annotationSym) != null;
+        }
       }
     };
   }

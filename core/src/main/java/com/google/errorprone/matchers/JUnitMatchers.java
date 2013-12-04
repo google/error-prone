@@ -69,7 +69,7 @@ public class JUnitMatchers {
   @SuppressWarnings("unchecked")
   public static final Matcher<ClassTree> isJUnit3TestClass = allOf(
       isSubtypeOf(JUNIT3_TEST_CASE_CLASS),
-      not(annotations(ANY, isType(JUNIT4_RUN_WITH_ANNOTATION))),
+      not(hasAnnotation(JUNIT4_RUN_WITH_ANNOTATION)),
       not(classHasModifier(Modifier.ABSTRACT)));
 
   /**

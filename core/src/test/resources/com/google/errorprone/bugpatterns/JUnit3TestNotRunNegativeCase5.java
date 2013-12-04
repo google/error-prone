@@ -28,12 +28,7 @@ public class JUnit3TestNotRunNegativeCase5 extends JUnit3TestNotRunNegativeCase3
 
   public void testEasyCase() {}
 
-  /*
-   * TODO(eaftan):  enable those when errorprone understands annotation inheritance
-
   @Test public void name() {}
   public void tesMisspelled() {}
   @Test public void tesBothIssuesAtOnce() {}
-
-  */
 }
