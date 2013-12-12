@@ -17,11 +17,10 @@
 package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
-import com.sun.source.tree.BlockTree;
-import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.Tree;
+import com.sun.source.tree.*;
 import com.sun.source.util.TreePath;
+
+import java.util.List;
 
 /**
  * Adapt matchers to match against a parent node of a given type. For example, match a node if the
@@ -40,7 +39,30 @@ public class Enclosing {
 
     @Override
     public boolean matches(T unused, VisitorState state) {
-      return matcher.matches(findEnclosing(BlockTree.class, state), state);
+      return matcher.matches(state.findEnclosing(BlockTree.class), state);
+    }
+  }
+
+  public static class BlockOrCase<T extends Tree> implements Matcher<T> {
+    private final Matcher<List<? extends StatementTree>> matcher;
+
+    public BlockOrCase(Matcher<List<? extends StatementTree>> matcher) {
+      this.matcher = matcher;
+    }
+
+    @Override
+    public boolean matches(T unused, VisitorState state) {
+      Tree enclosing = state.findEnclosing(CaseTree.class, BlockTree.class);
+      final List<? extends StatementTree> statements;
+      if (enclosing instanceof BlockTree) {
+        statements = ((BlockTree)enclosing).getStatements();
+      } else if (enclosing instanceof CaseTree) {
+        statements = ((CaseTree)enclosing).getStatements();
+      } else {
+        // findEnclosing given two types must return something of one of those types
+        throw new IllegalStateException("enclosing tree not a BlockTree or CaseTree");
+      }
+      return matcher.matches(statements, state);
     }
   }
 
@@ -53,7 +75,7 @@ public class Enclosing {
 
     @Override
     public boolean matches(T unused, VisitorState state) {
-      return matcher.matches(findEnclosing(ClassTree.class, state), state);
+      return matcher.matches(state.findEnclosing(ClassTree.class), state);
     }
   }
 
@@ -65,16 +87,7 @@ public class Enclosing {
     }
     @Override
     public boolean matches(T unused, VisitorState state) {
-      return matcher.matches(findEnclosing(MethodTree.class, state), state);
+      return matcher.matches(state.findEnclosing(MethodTree.class), state);
     }
-  }
-
-  @SuppressWarnings("unchecked")
-  public static <T extends Tree> T findEnclosing(java.lang.Class<T> clazz, VisitorState state) {
-    TreePath enclosingPath = state.getPath();
-    while (!(clazz.isAssignableFrom(enclosingPath.getLeaf().getClass()))) {
-      enclosingPath = enclosingPath.getParentPath();
-    }
-    return (T) enclosingPath.getLeaf();
   }
 }

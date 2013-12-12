@@ -27,6 +27,19 @@ public class DeadExceptionPositiveCases {
     new IllegalArgumentException("why is this here?");
     int i = 1;
     System.out.println("i = " + i);
+
+    if (true) {
+      //BUG: Suggestion includes "remove this line"
+      new RuntimeException("oops");
+      System.out.println("another statement after exception");
+    }
+
+    switch(0) {
+      default:
+        //BUG: Suggestion includes "remove this line"
+        new RuntimeException("oops");
+        System.out.println("another statement after exception");
+    }
   }
 
   public void firstStatementWithNoSurroundingBlock() {
@@ -39,6 +52,15 @@ public class DeadExceptionPositiveCases {
     else
       //BUG: Suggestion includes "throw new ArithmeticException"
       new ArithmeticException("should also be thrown");
+
+    switch(4) {
+      case 4:
+        System.out.println("4");
+        break;
+      default:
+        //BUG: Suggestion includes "throw new IllegalArgumentException"
+        new IllegalArgumentException("should be thrown");
+    }
   }
 
   public void testLooksLikeAJunitTestMethod() {

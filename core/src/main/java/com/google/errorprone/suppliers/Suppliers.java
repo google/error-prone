@@ -16,10 +16,7 @@
 
 package com.google.errorprone.suppliers;
 
-import static com.google.errorprone.matchers.Enclosing.findEnclosing;
-
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.matchers.Enclosing;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -126,7 +123,7 @@ public class Suppliers {
   public static Supplier<Type> ENCLOSING_CLASS = new Supplier<Type>() {
       @Override
       public Type get(VisitorState state) {
-        return ((JCTree) findEnclosing(ClassTree.class, state)).type;
+        return ((JCTree) state.findEnclosing(ClassTree.class)).type;
       }
     };
 }
