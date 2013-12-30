@@ -71,7 +71,7 @@ public class ErrorProneCompiler extends Main {
     DiagnosticListener<? super JavaFileObject> diagnosticListener = null;
     PrintWriter out = new PrintWriter(System.err, true);
     String compilerName = "javac (with error-prone)";
-    Scanner scanner = new ErrorProneScanner(DEFAULT_CHECKS);
+    Scanner scanner;
     Class<? extends JavaCompiler> compilerClass = ErrorReportingJavaCompiler.class;
 
     public ErrorProneCompiler build() {
@@ -112,34 +112,14 @@ public class ErrorProneCompiler extends Main {
   @Override
   public int compile(String[] strings, Context context, List<JavaFileObject> javaFileObjects,
       Iterable<? extends Processor> iterable) {
+
     if (diagnosticListener != null) {
       context.put(DiagnosticListener.class, diagnosticListener);
     }
-    if (context.get(Scanner.class) == null) {
-      context.put(Scanner.class, errorProneScanner);
-    }
 
-    // Register our message bundle reflectively, so we can compile against both JDK6 and JDK7.
-    // OpenJDK6: com.sun.tools.javac.util.Messages.instance(context).add("com.google.errorprone.errors");
-    // OpenJDK7: com.sun.tools.javac.util.JavacMessages.instance(context).add("com.google.errorprone.errors");
-    if (System.getProperty("java.vm.vendor").equals("Apple Inc.")) {
-      throw new UnsupportedOperationException("error-prone doesn't work on Apple JDK's yet.\n" +
-          "Vote: http://code.google.com/p/error-prone/issues/detail?id=16");
-    }
-    try {
-      Class<?> messagesClass;
-      try {
-        messagesClass = getClass().getClassLoader().loadClass("com.sun.tools.javac.util.Messages");
-      } catch (ClassNotFoundException e) {
-        messagesClass = getClass().getClassLoader().loadClass("com.sun.tools.javac.util.JavacMessages");
-      }
-      Object instance = messagesClass.getMethod("instance", Context.class).invoke(null, context);
-      messagesClass.getMethod("add", String.class).invoke(instance, "com.google.errorprone.errors");
-    } catch (Exception e) {
-      throw new RuntimeException(String.format(
-          "Unable to register message bundle. java.vm.vendor=[%s],  java.version=[%s]",
-          System.getProperty("java.vm.vendor"), System.getProperty("java.version")),
-          e);
+    // Are we using an ErrorProneScanner with other than the default checks enabled?
+    if (errorProneScanner != null) {
+      context.put(Scanner.class, errorProneScanner);
     }
 
     try {

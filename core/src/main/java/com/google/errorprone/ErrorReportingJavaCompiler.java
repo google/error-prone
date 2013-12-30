@@ -16,6 +16,8 @@
 
 package com.google.errorprone;
 
+import static com.google.errorprone.ErrorProneScanner.EnabledPredicate.DEFAULT_CHECKS;
+
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Env;
 import com.sun.tools.javac.main.JavaCompiler;
@@ -35,8 +37,50 @@ public class ErrorReportingJavaCompiler extends JavaCompiler {
 
   private final ErrorProneAnalyzer errorProneAnalyzer;
 
+  /**
+   * Registers our message bundle reflectively, so we can compile against both JDK6 and JDK7.
+   * OpenJDK6: com.sun.tools.javac.util.Messages.instance(context)
+   *             .add("com.google.errorprone.errors");
+   * OpenJDK7: com.sun.tools.javac.util.JavacMessages.instance(context)
+   *             .add("com.google.errorprone.errors");
+   */
+  public static void setupMessageBundle(Context context) {
+    if (System.getProperty("java.vm.vendor").equals("Apple Inc.")) {
+      throw new UnsupportedOperationException("error-prone doesn't work on Apple JDK's yet.\n" +
+          "Vote: http://code.google.com/p/error-prone/issues/detail?id=16");
+    }
+
+    try {
+      Class<?> messagesClass;
+      try {
+        messagesClass = ErrorReportingJavaCompiler.class.getClassLoader()
+            .loadClass("com.sun.tools.javac.util.Messages");
+      } catch (ClassNotFoundException e) {
+        messagesClass = ErrorReportingJavaCompiler.class.getClassLoader()
+            .loadClass("com.sun.tools.javac.util.JavacMessages");
+      }
+      Object instance = messagesClass.getMethod("instance", Context.class).invoke(null, context);
+      messagesClass.getMethod("add", String.class).invoke(instance, "com.google.errorprone.errors");
+    } catch (Exception e) {
+      throw new RuntimeException(String.format(
+          "Unable to register message bundle. java.vm.vendor=[%s],  java.version=[%s]",
+          System.getProperty("java.vm.vendor"), System.getProperty("java.version")),
+          e);
+    }
+  }
+
   public ErrorReportingJavaCompiler(Context context) {
     super(context);
+
+    // Put a scanner in the context with the default set of checks.
+    if (context.get(Scanner.class) == null) {
+      context.put(Scanner.class, new ErrorProneScanner(DEFAULT_CHECKS));
+    }
+
+    // Setup message bundle.
+    setupMessageBundle(context);
+
+    // Create ErrorProneAnalyzer.
     errorProneAnalyzer = new ErrorProneAnalyzer(log, context);
   }
 

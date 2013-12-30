@@ -38,16 +38,15 @@ import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.tools.Diagnostic;
-import javax.tools.JavaFileObject;
-
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.tools.Diagnostic;
+import javax.tools.JavaFileObject;
 
 /**
  * Integration tests for {@link ErrorProneCompiler}.
