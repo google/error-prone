@@ -165,7 +165,7 @@ public class ErrorProneCompilerIntegrationTest {
   }
 
   /**
-   * Regression test for Issue 188 (https://code.google.com/p/error-prone/issues/detail?id=188).
+   * Regression test for Issue 188, error-prone doesn't work with annotation processors.
    */
   @Test
   public void annotationProcessingWorks() throws Exception {
