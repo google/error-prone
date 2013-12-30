@@ -90,7 +90,7 @@ public class CompilationTestHelper {
 
   private int compileFileExitCode(File source) {
     return compiler.compile(
-        new String[]{"-Xjcov",  "-encoding", "UTF-8", source.getAbsolutePath()});
+        new String[]{"-Xjcov", "-encoding", "UTF-8", source.getAbsolutePath()});
   }
 
   /**
