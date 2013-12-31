@@ -16,8 +16,6 @@
 
 package com.google.errorprone;
 
-import static com.google.errorprone.ErrorProneScanner.EnabledPredicate.DEFAULT_CHECKS;
-
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.main.Main;
 import com.sun.tools.javac.util.Context;
@@ -47,15 +45,20 @@ public class ErrorProneCompiler extends Main {
    * Convenient helper method for compiling in-process, using reflection.
    * @param listener
    * @param args
-   * @return
+   * @return Exit code from the compiler invocation
    */
   public static int compile(DiagnosticListener<JavaFileObject> listener, String[] args) {
     return new ErrorProneCompiler.Builder().listenToDiagnostics(listener).build().compile(args);
   }
 
   private final DiagnosticListener<? super JavaFileObject> diagnosticListener;
-  private final Scanner errorProneScanner;
   private final Class<? extends JavaCompiler> compilerClass;
+
+  /**
+   * A custom Scanner to use if we want to use a non-default set of error-prone checks, e.g.
+   * for testing.  Null if we want to use the default set of checks.
+   */
+  private final Scanner errorProneScanner;
 
   private ErrorProneCompiler(String s, PrintWriter printWriter,
       DiagnosticListener<? super JavaFileObject> diagnosticListener,
@@ -71,8 +74,13 @@ public class ErrorProneCompiler extends Main {
     DiagnosticListener<? super JavaFileObject> diagnosticListener = null;
     PrintWriter out = new PrintWriter(System.err, true);
     String compilerName = "javac (with error-prone)";
-    Scanner scanner;
     Class<? extends JavaCompiler> compilerClass = ErrorReportingJavaCompiler.class;
+
+    /**
+     * A custom Scanner to use if we want to use a non-default set of error-prone checks, e.g.
+     * for testing.  Null if we want to use the default set of checks.
+     */
+    Scanner scanner;
 
     public ErrorProneCompiler build() {
       return new ErrorProneCompiler(compilerName, out, diagnosticListener, scanner, compilerClass);
@@ -112,12 +120,10 @@ public class ErrorProneCompiler extends Main {
   @Override
   public int compile(String[] strings, Context context, List<JavaFileObject> javaFileObjects,
       Iterable<? extends Processor> iterable) {
-
     if (diagnosticListener != null) {
       context.put(DiagnosticListener.class, diagnosticListener);
     }
 
-    // Are we using an ErrorProneScanner with other than the default checks enabled?
     if (errorProneScanner != null) {
       context.put(Scanner.class, errorProneScanner);
     }
