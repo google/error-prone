@@ -241,7 +241,7 @@ public class VisitorState {
    * Find the first enclosing tree node of one of the given types.
    * @param classes
    * @param <T>
-   * @return
+   * @return the node, or null if there is no enclosing tree node of this type
    */
   @SuppressWarnings("unchecked")
   public <T extends Tree> T findEnclosing(java.lang.Class<? extends T>... classes) {

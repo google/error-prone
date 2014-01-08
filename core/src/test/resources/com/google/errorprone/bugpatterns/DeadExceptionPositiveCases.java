@@ -67,4 +67,9 @@ public class DeadExceptionPositiveCases {
     //BUG: Suggestion includes "throw new RuntimeException"
     new RuntimeException("Not thrown, and reference lost");
   }
+
+  {
+    //BUG: Suggestion includes "throw new Exception"
+    new Exception();
+  }
 }
