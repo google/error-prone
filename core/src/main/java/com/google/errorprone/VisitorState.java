@@ -238,6 +238,26 @@ public class VisitorState {
   }
 
   /**
+   * Find the first enclosing tree node of one of the given types.
+   * @param classes
+   * @param <T>
+   * @return the node, or null if there is no enclosing tree node of this type
+   */
+  @SuppressWarnings("unchecked")
+  public <T extends Tree> T findEnclosing(java.lang.Class<? extends T>... classes) {
+    TreePath enclosingPath = getPath();
+    while (enclosingPath != null) {
+      for (java.lang.Class<? extends T> aClass : classes) {
+        if (aClass.isAssignableFrom(enclosingPath.getLeaf().getClass())) {
+          return (T) enclosingPath.getLeaf();
+        }
+      }
+      enclosingPath = enclosingPath.getParentPath();
+    }
+    return null;
+  }
+
+  /**
    * Gets the current source file.
    *
    * @return the source file as a sequence of characters, or null if it is not available

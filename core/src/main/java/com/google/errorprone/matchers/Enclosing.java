@@ -17,11 +17,10 @@
 package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
-import com.sun.source.tree.BlockTree;
-import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.Tree;
+import com.sun.source.tree.*;
 import com.sun.source.util.TreePath;
+
+import java.util.List;
 
 /**
  * Adapt matchers to match against a parent node of a given type. For example, match a node if the
@@ -31,50 +30,68 @@ import com.sun.source.util.TreePath;
 public class Enclosing {
   private Enclosing() {}
 
-  public static class Block<T extends Tree> implements Matcher<T> {
-    private final Matcher<BlockTree> matcher;
+  private static abstract class EnclosingMatcher<T extends Tree, U> implements Matcher<U> {
+    protected final Matcher<T> matcher;
+    protected final java.lang.Class<T> clazz;
 
+    protected EnclosingMatcher(Matcher<T> matcher, java.lang.Class<T> clazz) {
+      this.matcher = matcher;
+      this.clazz = clazz;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public boolean matches(U unused, VisitorState state) {
+      T enclosing = state.findEnclosing(clazz);
+      // No match if there is no enclosing element to match against
+      if (enclosing == null) {
+        return false;
+      }
+      return matcher.matches(enclosing, state);
+    }
+  }
+
+  public static class Block<T extends Tree> extends EnclosingMatcher<BlockTree, T> {
     public Block(Matcher<BlockTree> matcher) {
-      this.matcher = matcher;
-    }
-
-    @Override
-    public boolean matches(T unused, VisitorState state) {
-      return matcher.matches(findEnclosing(BlockTree.class, state), state);
+      super(matcher, BlockTree.class);
     }
   }
 
-  public static class Class<T extends Tree> implements Matcher<T> {
-    private Matcher<ClassTree> matcher;
-
+  public static class Class<T extends Tree> extends EnclosingMatcher<ClassTree, T> {
     public Class(Matcher<ClassTree> matcher) {
-      this.matcher = matcher;
-    }
-
-    @Override
-    public boolean matches(T unused, VisitorState state) {
-      return matcher.matches(findEnclosing(ClassTree.class, state), state);
+      super(matcher, ClassTree.class);
     }
   }
 
-  public static class Method<T extends Tree> implements Matcher<T> {
-    private Matcher<MethodTree> matcher;
-
+  public static class Method<T extends Tree> extends EnclosingMatcher<MethodTree, T> {
     public Method(Matcher<MethodTree> matcher) {
-      this.matcher = matcher;
-    }
-    @Override
-    public boolean matches(T unused, VisitorState state) {
-      return matcher.matches(findEnclosing(MethodTree.class, state), state);
+      super(matcher, MethodTree.class);
     }
   }
 
-  @SuppressWarnings("unchecked")
-  public static <T extends Tree> T findEnclosing(java.lang.Class<T> clazz, VisitorState state) {
-    TreePath enclosingPath = state.getPath();
-    while (!(clazz.isAssignableFrom(enclosingPath.getLeaf().getClass()))) {
-      enclosingPath = enclosingPath.getParentPath();
+  public static class BlockOrCase<T extends Tree> implements Matcher<T> {
+    private final Matcher<List<? extends StatementTree>> matcher;
+
+    public BlockOrCase(Matcher<List<? extends StatementTree>> matcher) {
+      this.matcher = matcher;
     }
-    return (T) enclosingPath.getLeaf();
+
+    @Override
+    public boolean matches(T unused, VisitorState state) {
+      Tree enclosing = state.findEnclosing(CaseTree.class, BlockTree.class);
+      if (enclosing == null) {
+        return false;
+      }
+      final List<? extends StatementTree> statements;
+      if (enclosing instanceof BlockTree) {
+        statements = ((BlockTree)enclosing).getStatements();
+      } else if (enclosing instanceof CaseTree) {
+        statements = ((CaseTree)enclosing).getStatements();
+      } else {
+        // findEnclosing given two types must return something of one of those types
+        throw new IllegalStateException("enclosing tree not a BlockTree or CaseTree");
+      }
+      return matcher.matches(statements, state);
+    }
   }
 }
