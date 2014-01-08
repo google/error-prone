@@ -16,6 +16,7 @@
 
 package com.google.errorprone;
 
+import java.lang.annotation.Annotation;
 import java.lang.annotation.Retention;
 import java.util.Comparator;
 
@@ -144,6 +145,8 @@ public @interface BugPattern {
       this.description = description;
     }
   }
+
+  Class<? extends Annotation> customSuppressionAnnotation() default SuppressWarnings.class;
 
   public class Instance {
     public String name;

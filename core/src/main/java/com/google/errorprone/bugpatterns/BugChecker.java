@@ -7,9 +7,11 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Suppressable;
+
 import com.sun.source.tree.*;
 
 import java.io.Serializable;
+import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -105,6 +107,11 @@ public abstract class BugChecker implements Suppressable, Serializable {
   @Override
   public Set<String> getAllNames() {
     return allNames;
+  }
+
+  @Override
+  public Class<? extends Annotation> suppressionAnnotation() {
+    return SuppressWarnings.class;
   }
 
   public final Scanner createScanner() {

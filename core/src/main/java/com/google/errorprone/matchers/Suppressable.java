@@ -16,6 +16,7 @@
 
 package com.google.errorprone.matchers;
 
+import java.lang.annotation.Annotation;
 import java.util.Set;
 
 /**
@@ -23,4 +24,5 @@ import java.util.Set;
  */
 public interface Suppressable {
   Set<String> getAllNames();
+  Class<? extends Annotation> suppressionAnnotation();
 }
