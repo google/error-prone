@@ -23,4 +23,5 @@ import java.util.Set;
  */
 public interface Suppressable {
   Set<String> getAllNames();
+  boolean isSuppressable();
 }

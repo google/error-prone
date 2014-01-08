@@ -133,6 +133,12 @@ public @interface BugPattern {
     NOT_A_PROBLEM
   }
 
+  /**
+   * Determines if the checker can be suppressed with @SuppressWarnings.  Checkers should be
+   * suppressible unless there is a good reason otherwise (e.g., security).
+   */
+  boolean suppressable() default true;
+
   MaturityLevel maturity();
 
   public enum MaturityLevel {
