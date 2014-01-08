@@ -17,15 +17,15 @@
 package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
-
-import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.StatementTree;
 
+import java.util.List;
+
 /**
- * Adapts a matcher on a statement to check whether it matches the last statement in a block.
+ * Adapts a matcher on a statement to check whether it matches the last statement in a block or case
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class LastStatement implements Matcher<BlockTree> {
+public class LastStatement implements Matcher<List<StatementTree>> {
   private final Matcher<StatementTree> matcher;
 
   public LastStatement(Matcher<StatementTree> matcher) {
@@ -33,8 +33,8 @@ public class LastStatement implements Matcher<BlockTree> {
   }
 
   @Override
-  public boolean matches(BlockTree blockTree, VisitorState state) {
-    StatementTree last = blockTree.getStatements().get(blockTree.getStatements().size() - 1);
+  public boolean matches(List<StatementTree> statements, VisitorState state) {
+    StatementTree last = statements.get(statements.size() - 1);
     return matcher.matches(last, state);
   }
 }

@@ -31,6 +31,7 @@ public abstract class BugChecker implements Suppressible, Serializable {
    * A collection of IDs for this check, to be checked for in @SuppressWarnings annotations.
    */
   protected final Set<String> allNames;
+  protected final boolean suppressible;
   protected final BugPattern pattern;
   protected final Class<? extends Annotation> customSuppressionAnnotation;
 
@@ -49,6 +50,7 @@ public abstract class BugChecker implements Suppressible, Serializable {
     } else {
       customSuppressionAnnotation = pattern.customSuppressionAnnotation();
     }
+    suppressible = pattern.suppressible();
   }
 
   /**
@@ -112,6 +114,11 @@ public abstract class BugChecker implements Suppressible, Serializable {
   @Override
   public Set<String> getAllNames() {
     return allNames;
+  }
+
+  @Override
+  public boolean isSuppressible() {
+    return suppressible;
   }
 
   public final Scanner createScanner() {

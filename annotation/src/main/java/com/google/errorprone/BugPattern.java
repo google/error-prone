@@ -134,6 +134,12 @@ public @interface BugPattern {
     NOT_A_PROBLEM
   }
 
+  /**
+   * Determines if the checker can be suppressed with @SuppressWarnings.  Checkers should be
+   * suppressible unless there is a good reason otherwise (e.g., security).
+   */
+  boolean suppressible() default true;
+
   MaturityLevel maturity();
 
   public enum MaturityLevel {
@@ -146,6 +152,18 @@ public @interface BugPattern {
     }
   }
 
+  Suppressibility suppressibility() default Suppressibility.SUPPRESS_WARNINGS;
+
+  public enum Suppressibility {
+    SUPPRESS_WARNINGS,
+    CUSTOM_ANNOTATION,
+    UNSUPPRESSIBLE
+  }
+
+  /**
+   * A custom suppression annotation type to use if suppressibility is
+   * Suppressibility.CUSTOM_ANNOTATION.
+   */
   Class<? extends Annotation> customSuppressionAnnotation() default NoCustomSuppression.class;
 
   /**

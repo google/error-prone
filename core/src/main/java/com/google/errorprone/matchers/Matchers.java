@@ -458,7 +458,7 @@ public class Matchers {
   /**
    * Matches a block AST node if the last statement in the block matches the given matcher.
    */
-  public static Matcher<BlockTree> lastStatement(Matcher<StatementTree> matcher) {
+  public static Matcher<List<StatementTree>> lastStatement(Matcher<StatementTree> matcher) {
     return new LastStatement(matcher);
   }
 

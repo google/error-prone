@@ -22,16 +22,13 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.*;
 import static com.google.errorprone.suppliers.Suppliers.EXCEPTION_TYPE;
-import static com.sun.source.tree.Tree.Kind.EXPRESSION_STATEMENT;
-import static com.sun.source.tree.Tree.Kind.IF;
+import static com.sun.source.tree.Tree.Kind.*;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.*;
-import com.sun.source.tree.NewClassTree;
-import com.sun.source.tree.StatementTree;
-import com.sun.source.tree.Tree;
+import com.sun.source.tree.*;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -61,7 +58,7 @@ public class DeadException extends BugChecker implements NewClassTreeMatcher {
     StatementTree parent = (StatementTree) state.getPath().getParentPath().getLeaf();
 
     boolean isLastStatement = anyOf(
-        enclosingBlock(lastStatement(Matchers.<StatementTree>isSame(parent))),
+        new Enclosing.BlockOrCase(lastStatement(Matchers.<StatementTree>isSame(parent))),
         // it could also be a bare if statement with no braces
         parentNode(parentNode(kindIs(IF))))
         .matches(newClassTree, state);

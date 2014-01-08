@@ -164,7 +164,8 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
    * @param suppressible holds a collection of warning IDs
    */
   protected boolean isSuppressed(Suppressible suppressible) {
-    return !Collections.disjoint(suppressible.getAllNames(), suppressions);
+    return suppressible.isSuppressible() && !Collections.disjoint(
+        suppressible.getAllNames(), suppressions);
   }
 
   protected <T extends Tree> void reportMatch(Description description, T match, VisitorState state)
