@@ -146,7 +146,13 @@ public @interface BugPattern {
     }
   }
 
-  Class<? extends Annotation> customSuppressionAnnotation() default SuppressWarnings.class;
+  Class<? extends Annotation> customSuppressionAnnotation() default NoCustomSuppression.class;
+
+  /**
+   * A dummy annotation to use when there is no custom suppression annotation.  The JLS does not
+   * allow null as a legal element value, so we have to use a sentinel value.
+   */
+  public @interface NoCustomSuppression {}
 
   public class Instance {
     public String name;

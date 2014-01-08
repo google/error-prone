@@ -32,6 +32,7 @@ public abstract class BugChecker implements Suppressible, Serializable {
    */
   protected final Set<String> allNames;
   protected final BugPattern pattern;
+  protected final Class<? extends Annotation> customSuppressionAnnotation;
 
   public BugChecker() {
     pattern = this.getClass().getAnnotation(BugPattern.class);
@@ -43,6 +44,11 @@ public abstract class BugChecker implements Suppressible, Serializable {
     allNames = new HashSet<String>();
     allNames.add(canonicalName);
     allNames.addAll(Arrays.asList(pattern.altNames()));
+    if (pattern.customSuppressionAnnotation() == BugPattern.NoCustomSuppression.class) {
+      customSuppressionAnnotation = null;
+    } else {
+      customSuppressionAnnotation = pattern.customSuppressionAnnotation();
+    }
   }
 
   /**
@@ -106,11 +112,6 @@ public abstract class BugChecker implements Suppressible, Serializable {
   @Override
   public Set<String> getAllNames() {
     return allNames;
-  }
-
-  @Override
-  public Class<? extends Annotation> suppressionAnnotation() {
-    return SuppressWarnings.class;
   }
 
   public final Scanner createScanner() {

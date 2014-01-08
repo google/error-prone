@@ -16,13 +16,13 @@
 
 package com.google.errorprone.matchers;
 
-import java.lang.annotation.Annotation;
 import java.util.Set;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
 public interface Suppressible {
+  // FIXME(eaftan): Should customSuppressionAnnotation be here as well?  It's kind of different
+  // but still has to do with suppression.  Maybe I should refactor this?
   Set<String> getAllNames();
-  Class<? extends Annotation> suppressionAnnotation();
 }
