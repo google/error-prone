@@ -17,7 +17,7 @@
 package com.google.errorprone;
 
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Suppressable;
+import com.google.errorprone.matchers.Suppressible;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
@@ -161,10 +161,10 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
    * Returns true if any of the warning IDs in the collection are in the set of current
    * suppressions from scanning down the AST.
    *
-   * @param suppressable holds a collection of warning IDs
+   * @param suppressible holds a collection of warning IDs
    */
-  protected boolean isSuppressed(Suppressable suppressable) {
-    return !Collections.disjoint(suppressable.getAllNames(), suppressions);
+  protected boolean isSuppressed(Suppressible suppressible) {
+    return !Collections.disjoint(suppressible.getAllNames(), suppressions);
   }
 
   protected <T extends Tree> void reportMatch(Description description, T match, VisitorState state)
