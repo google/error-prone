@@ -16,6 +16,9 @@
 
 package com.google.errorprone.matchers;
 
+import com.google.errorprone.BugPattern;
+
+import java.lang.annotation.Annotation;
 import java.util.Set;
 
 /**
@@ -27,4 +30,6 @@ public interface Suppressible {
   // but still has to do with suppression.  Maybe I should refactor this?
   Set<String> getAllNames();
   boolean isSuppressible();
+  BugPattern.Suppressibility getSuppressibility();
+  Class<? extends Annotation> getCustomSuppressionAnnotation();
 }

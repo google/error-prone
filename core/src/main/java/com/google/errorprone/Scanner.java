@@ -173,14 +173,21 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
   }
 
   /**
-   * Returns true if any of the warning IDs in the collection are in the set of current
-   * suppressions from scanning down the AST.
+   * Returns true if this checker should be suppressed on the current tree path.
    *
-   * @param suppressible holds a collection of warning IDs
+   * @param suppressible holds information about the suppressibilty of a checker
    */
   protected boolean isSuppressed(Suppressible suppressible) {
-    return suppressible.isSuppressible() && !Collections.disjoint(
-        suppressible.getAllNames(), suppressions);
+    switch (suppressible.getSuppressibility()) {
+      case UNSUPPRESSIBLE:
+        return false;
+      case CUSTOM_ANNOTATION:
+        return !customSuppressions.contains(suppressible.getCustomSuppressionAnnotation());
+      case SUPPRESS_WARNINGS:
+        return !Collections.disjoint(suppressible.getAllNames(), suppressions);
+      default:
+        throw new IllegalStateException("No case for: " + suppressible.getSuppressibility());
+    }
   }
 
   /**
