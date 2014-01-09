@@ -187,6 +187,8 @@ public @interface BugPattern {
     public String altNames;
     public MaturityLevel maturity;
     public SeverityLevel severity;
+    public Suppressibility suppressibility;
+    public String customSuppressionAnnotation;
 
     public static final Comparator<Instance> BY_SEVERITY = new Comparator<Instance>() {
       @Override

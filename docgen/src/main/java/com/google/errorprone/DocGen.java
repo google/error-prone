@@ -26,6 +26,7 @@ import com.google.common.collect.Sets;
 import com.google.common.io.Files;
 import com.google.common.io.LineProcessor;
 import com.google.errorprone.BugPattern.Instance;
+import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.errorprone.BugPattern.MaturityLevel;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import org.kohsuke.MetaInfServices;
@@ -83,12 +84,14 @@ public class DocGen extends AbstractProcessor {
       pw.print(element.toString() + "\t");    //0
       BugPattern annotation = element.getAnnotation(BugPattern.class);
       pw.print(annotation.name() + "\t");     //1
-      pw.print(Joiner.on(", ").join(annotation.altNames()) + "\t");     //2
+      pw.print(Joiner.on(", ").join(annotation.altNames()) + "\t"); //2
       pw.print(annotation.category() + "\t"); //3
       pw.print(annotation.severity() + "\t"); //4
       pw.print(annotation.maturity() + "\t"); //5
-      pw.print(annotation.summary() + "\t");  //6
-      pw.println(annotation.explanation().replace("\n", "\\n"));   //6
+      pw.print(annotation.suppressibility() + "\t"); //6
+      pw.print(annotation.customSuppressionAnnotation().getCanonicalName() + "\t"); //7
+      pw.print(annotation.summary() + "\t");  //8
+      pw.println(annotation.explanation().replace("\n", "\\n")); //9
     }
 
     if (roundEnv.processingOver()) {
@@ -105,40 +108,43 @@ public class DocGen extends AbstractProcessor {
     pw.close();
   }
 
-  private static final MessageFormat wikiPageTemplate = new MessageFormat(
-      Joiner.on("\n").join(
-          "#summary {6}",
-          "#labels BugPattern",
-          "=Bug pattern: !{1}=",
-          "  * Category: {3}",
-          "  * Severity: {4}",
-          "  * Maturity: {5}",
-          "==The problem==",
-          "{7}",
-          "==Suppression==",
-          "Suppress false positives by adding an @!SuppressWarnings(\"!{1}\") annotation "
-          + "to the enclosing element.",
-          ""
-      ),
-      Locale.ENGLISH);
+  /**
+   * Construct an appropriate wiki page template for this {@code BugPattern}.  Include altNames if
+   * there are any, and explain the correct way to suppress.
+   */
+  private static MessageFormat constructWikiPageTemplate(Instance pattern) {
+    List<String> lines = new ArrayList<String>();
+    lines.addAll(Arrays.asList(
+        "#summary {8}",
+        "#labels BugPattern",
+        "=Bug pattern: !{1}="));
+    if (pattern.altNames.length() > 0) {
+      lines.add("  * Alternate names: {2}");
+    }
+    lines.addAll(Arrays.asList(
+        "  * Category: {3}",
+        "  * Severity: {4}",
+        "  * Maturity: {5}",
+        "==The problem==",
+        "{9}",
+        "==Suppression=="));
 
-  private static final MessageFormat wikiPageTemplateWithAltNames = new MessageFormat(
-      Joiner.on("\n").join(
-          "#summary {6}",
-          "#labels BugPattern",
-          "=Bug pattern: !{1}=",
-          "  * Alternate names: {2}",
-          "  * Category: {3}",
-          "  * Severity: {4}",
-          "  * Maturity: {5}",
-          "==The problem==",
-          "{7}",
-          "==Suppression==",
-          "Suppress false positives by adding an @!SuppressWarnings(\"!{1}\") annotation "
-          + "to the enclosing element.",
-          ""
-      ),
-      Locale.ENGLISH);
+    switch (pattern.suppressibility) {
+      case SUPPRESS_WARNINGS:
+        lines.add("Suppress false positives by adding an @!SuppressWarnings(\"!{1}\") annotation "
+            + "to the enclosing element.");
+        break;
+      case CUSTOM_ANNOTATION:
+        lines.add("Suppress false positives by adding the custom suppression annotation @{8} to "
+            + "the enclosing element.");
+        break;
+      case UNSUPPRESSIBLE:
+        lines.add("This check may not be suppressed.");
+        break;
+    }
+    lines.add("");
+    return new MessageFormat(Joiner.on("\n").join(lines), Locale.ENGLISH);
+  }
 
   public static void main(String[] args) throws IOException {
     if (args.length != 3) {
@@ -192,18 +198,19 @@ public class DocGen extends AbstractProcessor {
         pattern.name = parts[1];
         pattern.altNames = parts[2];
         pattern.maturity = MaturityLevel.valueOf(parts[5]);
-        pattern.summary = parts[6];
+        pattern.summary = parts[8];
         pattern.severity = SeverityLevel.valueOf(parts[4]);
+        pattern.suppressibility = Suppressibility.valueOf(parts[6]);
+        pattern.customSuppressionAnnotation = parts[7];
         index.put(pattern.maturity, pattern);
         // replace spaces in filename with underscores
         Writer writer = new FileWriter(new File(wikiDir, pattern.name.replace(' ', '_') + ".wiki"));
         // replace "\n" with a carriage return for explanation
-        parts[7] = parts[7].replace("\\n", "\n");
-        if (pattern.altNames.length() <= 0) {
-          writer.write(wikiPageTemplate.format(parts));
-        } else {
-          writer.write(wikiPageTemplateWithAltNames.format(parts));
-        }
+        parts[9] = parts[9].replace("\\n", "\n");
+
+        MessageFormat wikiPageTemplate = constructWikiPageTemplate(pattern);
+        writer.write(wikiPageTemplate.format(parts));
+
         Iterable<String> classNameParts = Splitter.on('.').split(parts[0]);
         String path = Joiner.on('/').join(limit(classNameParts, size(classNameParts) - 1));
         File exampleDir = new File(exampleDirBase, path);
