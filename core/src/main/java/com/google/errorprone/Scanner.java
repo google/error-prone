@@ -27,6 +27,7 @@ import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Pair;
 
@@ -45,37 +46,30 @@ import java.util.Set;
  */
 public class Scanner extends TreePathScanner<Void, VisitorState> {
 
-  public Set<String> suppressions = new HashSet<String>();
+  private Set<String> suppressions = new HashSet<String>();
+  private Set<Class<? extends Annotation>> customSuppressions =
+      new HashSet<Class<? extends Annotation>>();
 
   /**
    * Scan a tree from a position identified by a TreePath.
    */
   @Override
   public Void scan(TreePath path, VisitorState state) {
-    /**
-     * We maintain a list of suppressed warnings for the current node. When we
-     * explore a new node, we have to extend the suppression set with any new
-     * suppressed warnings.  We also have to retain the previous suppression set
-     * so that we can reinstate it when we move up the tree.
-     *
-     * We avoid copying the suppression set if the next node to explore does not
-     * have any suppressed warnings.  This is the common case.
-     */
-    Set<String> newSuppressions = null;
+    // Record previous suppression info so we can restore it when going up the tree.
     Set<String> prevSuppressions = suppressions;
+    Set<Class<? extends Annotation>> prevCustomSuppressions = customSuppressions;
+
     Symbol sym = ASTHelpers.getSymbol(path.getLeaf());
     if (sym != null) {
-      newSuppressions = extendSuppressionSet(sym, state.getSymtab().suppressWarningsType,
-          suppressions);
-      if (newSuppressions != null) {
-        suppressions = newSuppressions;
-      }
+      handleSuppressions(sym, state.getSymtab().suppressWarningsType);
     }
 
     try {
       return super.scan(path, state);
     } finally {
+      // Restore old suppression state.
       suppressions = prevSuppressions;
+      customSuppressions = prevCustomSuppressions;
     }
   }
 
@@ -89,52 +83,69 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
       return null;
     }
 
-    /**
-     * We maintain a list of suppressed warnings for the current node. When we
-     * explore a new node, we have to extend the suppression set with any new
-     * suppressed warnings.  We also have to retain the previous suppression set
-     * so that we can reinstate it when we move up the tree.
-     *
-     * We avoid copying the suppression set if the next node to explore does not
-     * have any suppressed warnings.  This is the common case.
-     */
-    Set<String> newSuppressions = null;
+    // Record previous suppression info so we can restore it when going up the tree.
     Set<String> prevSuppressions = suppressions;
+    Set<Class<? extends Annotation>> prevCustomSuppressions = customSuppressions;
+
     Symbol sym = ASTHelpers.getSymbol(tree);
     if (sym != null) {
-      newSuppressions = extendSuppressionSet(sym, state.getSymtab().suppressWarningsType,
-          suppressions);
-      if (newSuppressions != null) {
-        suppressions = newSuppressions;
-      }
+      handleSuppressions(sym, state.getSymtab().suppressWarningsType);
     }
 
     try {
       return super.scan(tree, state);
     } finally {
+      // Restore old suppression state.
       suppressions = prevSuppressions;
+      customSuppressions = prevCustomSuppressions;
     }
-
   }
 
   /**
-   * Extends a set of suppressed warnings with the contents of any SuppressWarnings annotations
-   * on the given symbol.  Does not mutate the passed-in set of suppressions.  If there were
-   * additional warnings to suppress, it returns a copy of the passed-in set with the new warnings
-   * added.  If there were no additional warnings to suppress, it returns null.
+   * Do all work necessary to support suppressions, both via {@code @SuppressWarnings} and via
+   * custom suppressions. To do this we have to maintains 2 sets of suppression info:
+   * 1) A set of the suppression types in all {@code @Suppresswarnings} annotations down this path
+   *    of the AST.
+   * 2) A set of all custom suppression types down this path of the AST.
    *
-   * @param sym The possibly-annotated symbol
-   * @param suppressWarningsType The type of the SuppressWarnings annotation
-   * @param suppressions The set of currently-suppressed warnings
-   * @return A new set with additional warnings added, if there were any new ones. Null otherwise.
+   * When we explore a new node, we have to extend the suppression sets with any new
+   * suppressed warnings or custom suppression annotations.  We also have to retain the previous
+   * suppression set so that we can reinstate it when we move up the tree.
+   *
+   * We do not modify the existing suppression sets, so they can be restored when moving up the
+   * tree.  We also avoid copying the suppression sets if the next node to explore does not have
+   * any suppressed warnings or custom suppression annotations.  This is the common case.
+   *
+   * @param sym The {@code Symbol} for the AST node currently being scanned
+   * @param suppressWarningsType The {@code Type} for {@code @SuppressWarnings}, as given by
+   *        javac's symbol table
    */
-  private Set<String> extendSuppressionSet(Symbol sym, Type suppressWarningsType,
-      Set<String> suppressions) {
-    boolean copied = false;
+  private void handleSuppressions(Symbol sym, Type suppressWarningsType) {
+    /**
+     * Handle custom suppression annotations.
+     */
+    Set<Class<? extends Annotation>> newCustomSuppressions = null;
+    for (Class<? extends Annotation> annotationType : getCustomAnnotationTypes()) {
+      Annotation annotation = JavacElements.getAnnotation(sym, annotationType);
+      if (annotation != null) {
+        newCustomSuppressions = new HashSet<Class<? extends Annotation>>(customSuppressions);
+        newCustomSuppressions.add(annotation.getClass());
+      }
+    }
+    if (newCustomSuppressions != null) {
+      customSuppressions = newCustomSuppressions;
+    }
+
+    /**
+     * Handle @SuppressWarnings.
+     */
+    // FIXME: is copied necessary?  can this be simplified?
     Set<String> newSuppressions = null;
+    boolean copied = false;
 
     // Iterate over annotations on this symbol, looking for SuppressWarnings
     for (Attribute.Compound attr : sym.getAnnotationMirrors()) {
+      // FIXME: use JavacElements.getAnnotation instead
       if (attr.type.tsym == suppressWarningsType.tsym) {
         for (List<Pair<MethodSymbol,Attribute>> v = attr.values;
             v.nonEmpty(); v = v.tail) {
@@ -155,8 +166,10 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
         }
       }
     }
+    if (newSuppressions != null) {
+      suppressions = newSuppressions;
+    }
 
-    return newSuppressions;
   }
 
   /**
@@ -171,8 +184,10 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
   }
 
   /**
-   * Returns a list of all the custom annotation types used by the {@code BugChecker}s in this
+   * Returns a set of all the custom annotation types used by the {@code BugChecker}s in this
    * {@code Scanner}.
+   *
+   * FIXME(eaftan): better name?
    */
   protected Set<Class<? extends Annotation>> getCustomAnnotationTypes() {
     return Collections.<Class<? extends Annotation>>emptySet();
