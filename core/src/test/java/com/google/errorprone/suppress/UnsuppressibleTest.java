@@ -21,12 +21,7 @@ import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.StringContains.containsString;
-
-import org.hamcrest.core.StringContains;
-
 import static org.junit.Assert.assertThat;
-
-import org.junit.Assert;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Suppressibility;
@@ -44,8 +39,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-
-import javax.tools.DiagnosticCollector;
 
 /**
  * Test for unsuppressible checks.

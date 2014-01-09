@@ -104,13 +104,13 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
   /**
    * Do all work necessary to support suppressions, both via {@code @SuppressWarnings} and via
    * custom suppressions. To do this we have to maintains 2 sets of suppression info:
-   * 1) A set of the suppression types in all {@code @Suppresswarnings} annotations down this path
+   * 1) A set of the suppression strings in all {@code @Suppresswarnings} annotations down this path
    *    of the AST.
-   * 2) A set of all custom suppression types down this path of the AST.
+   * 2) A set of all custom suppression annotations down this path of the AST.
    *
-   * When we explore a new node, we have to extend the suppression sets with any new
-   * suppressed warnings or custom suppression annotations.  We also have to retain the previous
-   * suppression set so that we can reinstate it when we move up the tree.
+   * When we explore a new node, we have to extend the suppression sets with any new suppressed
+   * warnings or custom suppression annotations.  We also have to retain the previous suppression
+   * set so that we can reinstate it when we move up the tree.
    *
    * We do not modify the existing suppression sets, so they can be restored when moving up the
    * tree.  We also avoid copying the suppression sets if the next node to explore does not have
@@ -125,7 +125,7 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
      * Handle custom suppression annotations.
      */
     Set<Class<? extends Annotation>> newCustomSuppressions = null;
-    for (Class<? extends Annotation> annotationType : getCustomAnnotationTypes()) {
+    for (Class<? extends Annotation> annotationType : getCustomSuppressionAnnotations()) {
       Annotation annotation = JavacElements.getAnnotation(sym, annotationType);
       if (annotation != null) {
         newCustomSuppressions = new HashSet<Class<? extends Annotation>>(customSuppressions);
@@ -139,13 +139,13 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
     /**
      * Handle @SuppressWarnings.
      */
-    // FIXME: is copied necessary?  can this be simplified?
+    // TODO(eaftan): is copied necessary?  can this be simplified?
     Set<String> newSuppressions = null;
     boolean copied = false;
 
     // Iterate over annotations on this symbol, looking for SuppressWarnings
     for (Attribute.Compound attr : sym.getAnnotationMirrors()) {
-      // FIXME: use JavacElements.getAnnotation instead
+      // TODO(eaftan): use JavacElements.getAnnotation instead
       if (attr.type.tsym == suppressWarningsType.tsym) {
         for (List<Pair<MethodSymbol,Attribute>> v = attr.values;
             v.nonEmpty(); v = v.tail) {
@@ -191,12 +191,10 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
   }
 
   /**
-   * Returns a set of all the custom annotation types used by the {@code BugChecker}s in this
-   * {@code Scanner}.
-   *
-   * FIXME(eaftan): better name?
+   * Returns a set of all the custom suppression annotation types used by the {@code BugChecker}s
+   * in this{@code Scanner}.
    */
-  protected Set<Class<? extends Annotation>> getCustomAnnotationTypes() {
+  protected Set<Class<? extends Annotation>> getCustomSuppressionAnnotations() {
     return Collections.<Class<? extends Annotation>>emptySet();
   }
 

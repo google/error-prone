@@ -37,7 +37,7 @@ import java.util.Set;
  */
 public class ErrorProneScanner extends Scanner {
 
-  private Set<Class<? extends Annotation>> customAnnotationTypes =
+  private Set<Class<? extends Annotation>> customSuppressionAnnotations =
       new HashSet<Class<? extends Annotation>>();
 
   /**
@@ -164,8 +164,8 @@ public class ErrorProneScanner extends Scanner {
   }
 
   @Override
-  protected Set<Class<? extends Annotation>> getCustomAnnotationTypes() {
-    return customAnnotationTypes;
+  protected Set<Class<? extends Annotation>> getCustomSuppressionAnnotations() {
+    return customSuppressionAnnotations;
   }
 
   private final List<AnnotationTreeMatcher> annotationMatchers =
@@ -263,7 +263,7 @@ public class ErrorProneScanner extends Scanner {
 
   private void registerNodeTypes(BugChecker checker) {
     if (checker.getSuppressibility() == Suppressibility.CUSTOM_ANNOTATION) {
-      customAnnotationTypes.add(checker.getCustomSuppressionAnnotation());
+      customSuppressionAnnotations.add(checker.getCustomSuppressionAnnotation());
     }
 
     if (checker instanceof AnnotationTreeMatcher) {

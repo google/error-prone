@@ -25,10 +25,20 @@ import java.util.Set;
  * @author alexeagle@google.com (Alex Eagle)
  */
 public interface Suppressible {
-
-  // FIXME(eaftan): Should customSuppressionAnnotation be here as well?  It's kind of different
-  // but still has to do with suppression.  Maybe I should refactor this?
+  /**
+   * Returns all of the name strings that this checker should respect as part of a
+   * {@code @SuppressWarnings} annotation.
+   */
   Set<String> getAllNames();
+
+  /**
+   * Returns how this checker can be suppressed (e.g., via {@code @SuppressWarnings} or a custom
+   * suppression annotation.
+   */
   BugPattern.Suppressibility getSuppressibility();
+
+  /**
+   * Returns the custom suppression annotation for this checker, if custom suppression is used.
+   */
   Class<? extends Annotation> getCustomSuppressionAnnotation();
 }
