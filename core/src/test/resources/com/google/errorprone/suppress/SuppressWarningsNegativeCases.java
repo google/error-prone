@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Google Inc. All Rights Reserved.
+ * Copyright 2012 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,31 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.suppresswarnings;
+package com.google.errorprone.suppress;
 
 /**
- * Test cases to ensure that checks that use custom suppression annotations are suppressible via 
- * the custom suppression annotation.
+ * Test cases to ensure SuppressWarnings annotation is respected.
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class CustomSuppressionNegativeCases {
-  @CustomSuppressionTest.SuppressMyChecker
-  public void testCustomSuppression() {
-    return;
+@SuppressWarnings("DeadException")
+public class SuppressWarningsNegativeCases {
+
+  @SuppressWarnings({"EmptyIf", "EmptyStatement"})
+  public void testEmptyIf() {
+    int i = 0;
+    if (i == 10); {
+      System.out.println("foo");
+    }
+  }
+
+  @SuppressWarnings({"bar", "SelfAssignment"})
+  public void testSelfAssignment() {
+    int i = 0;
+    i = i;
+  }
+
+  public void testDeadException() {
+    new RuntimeException("whoops");
   }
 }

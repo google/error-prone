@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.suppresswarnings;
+package com.google.errorprone.suppress;
 
 import static com.google.errorprone.BugPattern.Category.ONE_OFF;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;

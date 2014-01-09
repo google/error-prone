@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.suppresswarnings;
+package com.google.errorprone.suppress;
 
 /**
  * Test cases to ensure that unsuppressible checks really are unsuppressible.

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.suppresswarnings;
+package com.google.errorprone.suppress;
 
 /**
  * Test cases to ensure that checks that use custom suppression annotations are not suppressible

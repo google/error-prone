@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.suppresswarnings;
+package com.google.errorprone.suppress;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
