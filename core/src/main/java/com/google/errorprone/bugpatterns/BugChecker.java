@@ -1,12 +1,16 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.Suppressibility;
+import com.google.errorprone.BugPatternValidator;
 import com.google.errorprone.ErrorProneScanner;
 import com.google.errorprone.Scanner;
+import com.google.errorprone.ValidationException;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Suppressible;
+
 import com.sun.source.tree.*;
 
 import java.io.Serializable;
@@ -31,26 +35,27 @@ public abstract class BugChecker implements Suppressible, Serializable {
    * A collection of IDs for this check, to be checked for in @SuppressWarnings annotations.
    */
   protected final Set<String> allNames;
-  protected final boolean suppressible;
   protected final BugPattern pattern;
+  protected final BugPattern.Suppressibility suppressibility;
   protected final Class<? extends Annotation> customSuppressionAnnotation;
 
   public BugChecker() {
     pattern = this.getClass().getAnnotation(BugPattern.class);
-    if (pattern == null) {
-      throw new IllegalStateException("Class " + this.getClass().getCanonicalName()
-          + " not annotated with @BugPattern");
+    try {
+      BugPatternValidator.validate(pattern);
+    } catch (ValidationException e) {
+      throw new IllegalStateException(e);
     }
     canonicalName = pattern.name();
     allNames = new HashSet<String>();
     allNames.add(canonicalName);
     allNames.addAll(Arrays.asList(pattern.altNames()));
-    if (pattern.customSuppressionAnnotation() == BugPattern.NoCustomSuppression.class) {
-      customSuppressionAnnotation = null;
-    } else {
+    suppressibility = pattern.suppressibility();
+    if (suppressibility == Suppressibility.CUSTOM_ANNOTATION) {
       customSuppressionAnnotation = pattern.customSuppressionAnnotation();
+    } else {
+      customSuppressionAnnotation = null;
     }
-    suppressible = pattern.suppressible();
   }
 
   /**
@@ -116,9 +121,12 @@ public abstract class BugChecker implements Suppressible, Serializable {
     return allNames;
   }
 
-  @Override
-  public boolean isSuppressible() {
-    return suppressible;
+  public BugPattern.Suppressibility getSuppressibility() {
+    return suppressibility;
+  }
+
+  public Class<? extends Annotation> getCustomSuppressionAnnotation() {
+    return customSuppressionAnnotation;
   }
 
   public final Scanner createScanner() {

@@ -134,12 +134,6 @@ public @interface BugPattern {
     NOT_A_PROBLEM
   }
 
-  /**
-   * Determines if the checker can be suppressed with @SuppressWarnings.  Checkers should be
-   * suppressible unless there is a good reason otherwise (e.g., security).
-   */
-  boolean suppressible() default true;
-
   MaturityLevel maturity();
 
   public enum MaturityLevel {
@@ -152,11 +146,24 @@ public @interface BugPattern {
     }
   }
 
+  /**
+   * Whether this checker should be suppressible, and if so, by what means.
+   */
   Suppressibility suppressibility() default Suppressibility.SUPPRESS_WARNINGS;
 
   public enum Suppressibility {
+    /**
+     * Can be suppressed using the standard {@code SuppressWarnings("foo")} mechanism. This
+     * setting should be used unless there is a good reason otherwise, e.g. security.
+     */
     SUPPRESS_WARNINGS,
+    /**
+     * Can be suppressed with a custom annotation on a parent AST node.
+     */
     CUSTOM_ANNOTATION,
+    /**
+     * Cannot be suppressed.
+     */
     UNSUPPRESSIBLE
   }
 
@@ -172,6 +179,8 @@ public @interface BugPattern {
    */
   public @interface NoCustomSuppression {}
 
+
+  // FIXME: pipe suppressibility info through to wiki docs
   public class Instance {
     public String name;
     public String summary;

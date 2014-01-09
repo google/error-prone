@@ -19,6 +19,7 @@ package com.google.errorprone;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Suppressible;
 import com.google.errorprone.util.ASTHelpers;
+
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
@@ -29,6 +30,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Pair;
 
+import java.lang.annotation.Annotation;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -166,6 +168,14 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
   protected boolean isSuppressed(Suppressible suppressible) {
     return suppressible.isSuppressible() && !Collections.disjoint(
         suppressible.getAllNames(), suppressions);
+  }
+
+  /**
+   * Returns a list of all the custom annotation types used by the {@code BugChecker}s in this
+   * {@code Scanner}.
+   */
+  protected Set<Class<? extends Annotation>> getCustomAnnotationTypes() {
+    return Collections.<Class<? extends Annotation>>emptySet();
   }
 
   protected <T extends Tree> void reportMatch(Description description, T match, VisitorState state)

@@ -19,18 +19,26 @@ package com.google.errorprone;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.bugpatterns.BugChecker.*;
 
+import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.errorprone.bugpatterns.*;
+
 import com.sun.source.tree.*;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Scans the parsed AST, looking for violations of any of the enabled checks.
  * @author Alex Eagle (alexeagle@google.com)
  */
 public class ErrorProneScanner extends Scanner {
+
+  private Set<Class<? extends Annotation>> customAnnotationTypes =
+      new HashSet<Class<? extends Annotation>>();
 
   /**
    * Selects which checks should be enabled when the compile is run.
@@ -155,6 +163,11 @@ public class ErrorProneScanner extends Scanner {
     }
   }
 
+  @Override
+  protected Set<Class<? extends Annotation>> getCustomAnnotationTypes() {
+    return customAnnotationTypes;
+  }
+
   private final List<AnnotationTreeMatcher> annotationMatchers =
       new ArrayList<AnnotationTreeMatcher>();
   private final List<ArrayAccessTreeMatcher> arrayAccessMatchers =
@@ -249,6 +262,10 @@ public class ErrorProneScanner extends Scanner {
       new ArrayList<WildcardTreeMatcher>();
 
   private void registerNodeTypes(BugChecker checker) {
+    if (checker.getSuppressibility() == Suppressibility.CUSTOM_ANNOTATION) {
+      customAnnotationTypes.add(checker.getCustomSuppressionAnnotation());
+    }
+
     if (checker instanceof AnnotationTreeMatcher) {
       annotationMatchers.add((AnnotationTreeMatcher) checker);
     }
