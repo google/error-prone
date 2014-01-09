@@ -21,7 +21,12 @@ import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.StringContains.containsString;
+
+import org.hamcrest.core.StringContains;
+
 import static org.junit.Assert.assertThat;
+
+import org.junit.Assert;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Suppressibility;
@@ -40,21 +45,19 @@ import org.junit.Test;
 
 import java.io.File;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
-public class CustomSuppressionTest {
+import javax.tools.DiagnosticCollector;
 
-  /**
-   * Custom suppression annotation for the checker in this test.
-   */
-  public @interface SuppressMyChecker{}
+/**
+ * Test for unsuppressible checks.
+ *
+ * @author eaftan@google.com (Eddie Aftandilan)
+ */
+public class UnsuppressibleTest {
 
   @BugPattern(name = "MyChecker",
-      summary = "Test checker that uses a custom suppression annotation",
-      explanation = "Test checker that uses a custom suppression annotation",
-      suppressibility = Suppressibility.CUSTOM_ANNOTATION,
-      customSuppressionAnnotation = SuppressMyChecker.class,
+      summary = "Test checker that is unsuppressible",
+      explanation = "Test checker that that is unsuppressible",
+      suppressibility = Suppressibility.UNSUPPRESSIBLE,
       category = ONE_OFF, severity = ERROR, maturity = MATURE)
   private static class MyChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
@@ -76,18 +79,9 @@ public class CustomSuppressionTest {
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
-    File source = new File(this.getClass().getResource(
-        "CustomSuppressionNegativeCases.java").toURI());
-    assertThat(compiler.compile(new String[]{source.getAbsolutePath()}), is(0));
-  }
-
-  @Test
   public void testPositiveCase() throws Exception {
-    File source = new File(this.getClass().getResource(
-        "CustomSuppressionPositiveCases.java").toURI());
+    File source = new File(this.getClass().getResource("UnsuppressiblePositiveCases.java").toURI());
     assertThat(compiler.compile(new String[]{source.getAbsolutePath()}), is(1));
     assertThat(diagnosticHelper.getDiagnostics().toString(), containsString("[MyChecker]"));
   }
-
 }

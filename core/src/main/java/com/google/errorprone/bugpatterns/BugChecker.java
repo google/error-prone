@@ -121,16 +121,12 @@ public abstract class BugChecker implements Suppressible, Serializable {
     return allNames;
   }
 
+  @Override
   public BugPattern.Suppressibility getSuppressibility() {
     return suppressibility;
   }
 
-  // FIXME: remove this
   @Override
-  public boolean isSuppressible() {
-    return getSuppressibility() != Suppressibility.UNSUPPRESSIBLE;
-  }
-
   public Class<? extends Annotation> getCustomSuppressionAnnotation() {
     return customSuppressionAnnotation;
   }

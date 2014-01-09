@@ -34,6 +34,8 @@ import org.junit.Test;
 import java.io.File;
 
 /**
+ * Tests for standard {@code @SuppressWarnings} suppression method.
+ *
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class SuppressWarningsTest {
@@ -55,7 +57,8 @@ public class SuppressWarningsTest {
 
   @Test
   public void testNegativeCase() throws Exception {
-    File source = new File(this.getClass().getResource("NegativeCases.java").toURI());
+    File source = new File(
+        this.getClass().getResource("SuppressWarningsNegativeCases.java").toURI());
     assertThat(compiler.compile(new String[]{source.getAbsolutePath()}), is(0));
   }
 }

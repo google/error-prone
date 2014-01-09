@@ -129,7 +129,7 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
       Annotation annotation = JavacElements.getAnnotation(sym, annotationType);
       if (annotation != null) {
         newCustomSuppressions = new HashSet<Class<? extends Annotation>>(customSuppressions);
-        newCustomSuppressions.add(annotation.getClass());
+        newCustomSuppressions.add(annotationType);
       }
     }
     if (newCustomSuppressions != null) {
@@ -182,7 +182,7 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
       case UNSUPPRESSIBLE:
         return false;
       case CUSTOM_ANNOTATION:
-        return !customSuppressions.contains(suppressible.getCustomSuppressionAnnotation());
+        return customSuppressions.contains(suppressible.getCustomSuppressionAnnotation());
       case SUPPRESS_WARNINGS:
         return !Collections.disjoint(suppressible.getAllNames(), suppressions);
       default:

@@ -14,21 +14,17 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.matchers;
-
-import com.google.errorprone.BugPattern;
-
-import java.lang.annotation.Annotation;
-import java.util.Set;
+package com.google.errorprone.suppresswarnings;
 
 /**
- * @author alexeagle@google.com (Alex Eagle)
+ * Test cases to ensure that checks that use custom suppression annotations are suppressible via 
+ * the custom suppression annotation.
+ *
+ * @author eaftan@google.com (Eddie Aftandilian)
  */
-public interface Suppressible {
-
-  // FIXME(eaftan): Should customSuppressionAnnotation be here as well?  It's kind of different
-  // but still has to do with suppression.  Maybe I should refactor this?
-  Set<String> getAllNames();
-  BugPattern.Suppressibility getSuppressibility();
-  Class<? extends Annotation> getCustomSuppressionAnnotation();
+public class CustomSuppressionNegativeCases {
+  @CustomSuppressionTest.SuppressMyChecker
+  public void testCustomSuppression() {
+    return;
+  }
 }

@@ -22,7 +22,7 @@ package com.google.errorprone.suppresswarnings;
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 @SuppressWarnings("DeadException")
-public class NegativeCases {
+public class SuppressWarningsNegativeCases {
 
   @SuppressWarnings({"EmptyIf", "EmptyStatement"})
   public void testEmptyIf() {
