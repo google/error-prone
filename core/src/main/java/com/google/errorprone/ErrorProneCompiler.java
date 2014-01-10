@@ -16,6 +16,8 @@
 
 package com.google.errorprone;
 
+import static com.google.errorprone.ErrorProneScanner.EnabledPredicate.DEFAULT_CHECKS;
+
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.main.Main;
 import com.sun.tools.javac.util.Context;
@@ -124,7 +126,9 @@ public class ErrorProneCompiler extends Main {
       context.put(DiagnosticListener.class, diagnosticListener);
     }
 
-    if (errorProneScanner != null) {
+    if (context.get(Scanner.class) == null && errorProneScanner == null) {
+      context.put(Scanner.class, new ErrorProneScanner(DEFAULT_CHECKS));
+    } else if (errorProneScanner != null) {
       context.put(Scanner.class, errorProneScanner);
     }
 
