@@ -145,7 +145,7 @@ public class DocGen extends AbstractProcessor {
             + "to the enclosing element.");
         break;
       case CUSTOM_ANNOTATION:
-        lines.add("Suppress false positives by adding the custom suppression annotation @{8} to "
+        lines.add("Suppress false positives by adding the custom suppression annotation @{7} to "
             + "the enclosing element.");
         break;
       case UNSUPPRESSIBLE:
