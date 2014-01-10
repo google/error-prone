@@ -179,8 +179,6 @@ public @interface BugPattern {
    */
   public @interface NoCustomSuppression {}
 
-
-  // FIXME: pipe suppressibility info through to wiki docs
   public class Instance {
     public String name;
     public String summary;
