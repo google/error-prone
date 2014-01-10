@@ -49,6 +49,10 @@ public class BugPatternValidator {
           throw new ValidationException("Expected a custom suppression annotation but none was "
               + "provided");
         }
+        if (pattern.customSuppressionAnnotation() == SuppressWarnings.class) {
+          throw new ValidationException("Custom suppression annotation may not use "
+              + "@SuppressWarnings");
+        }
         break;
       case SUPPRESS_WARNINGS: case UNSUPPRESSIBLE:
         if (pattern.customSuppressionAnnotation() != BugPattern.NoCustomSuppression.class) {
