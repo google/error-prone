@@ -21,6 +21,7 @@ import java.util.Set;
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
-public interface Suppressable {
+public interface Suppressible {
   Set<String> getAllNames();
+  boolean isSuppressible();
 }

@@ -39,6 +39,7 @@ public class NextStatement<T extends StatementTree> implements Matcher<T> {
 
   @Override
   public boolean matches(T stmt, VisitorState state) {
+    // TODO(alexeagle): should re-use Enclosing.BlockOrCase
     // find enclosing block
     TreePath path = state.getPath();
     Tree prev = null;
