@@ -29,14 +29,17 @@ import com.google.errorprone.BugPattern.Instance;
 import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.errorprone.BugPattern.MaturityLevel;
 import com.google.errorprone.BugPattern.SeverityLevel;
+
 import org.kohsuke.MetaInfServices;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.MirroredTypeException;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
+
 import java.io.*;
 import java.text.MessageFormat;
 import java.util.*;
@@ -89,7 +92,14 @@ public class DocGen extends AbstractProcessor {
       pw.print(annotation.severity() + "\t"); //4
       pw.print(annotation.maturity() + "\t"); //5
       pw.print(annotation.suppressibility() + "\t"); //6
-      pw.print(annotation.customSuppressionAnnotation().getCanonicalName() + "\t"); //7
+      // This is ugly, but you always get a MirroredTypeException when you try to access this
+      // element.
+      try {
+        annotation.customSuppressionAnnotation();
+        throw new IllegalStateException("Expected a MirroredTypeException");
+      } catch (MirroredTypeException e) {
+        pw.print(e.getTypeMirror().toString() + "\t"); //7
+      }
       pw.print(annotation.summary() + "\t");  //8
       pw.println(annotation.explanation().replace("\n", "\\n")); //9
     }
