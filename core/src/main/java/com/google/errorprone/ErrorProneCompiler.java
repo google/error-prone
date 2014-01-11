@@ -126,10 +126,12 @@ public class ErrorProneCompiler extends Main {
       context.put(DiagnosticListener.class, diagnosticListener);
     }
 
-    if (context.get(Scanner.class) == null && errorProneScanner == null) {
-      context.put(Scanner.class, new ErrorProneScanner(DEFAULT_CHECKS));
-    } else if (errorProneScanner != null) {
-      context.put(Scanner.class, errorProneScanner);
+    if (context.get(Scanner.class) == null) {
+      if (errorProneScanner == null) {
+        context.put(Scanner.class, new ErrorProneScanner(DEFAULT_CHECKS));
+      } else {
+        context.put(Scanner.class, errorProneScanner);
+      }
     }
 
     try {
