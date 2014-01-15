@@ -35,7 +35,6 @@ public class CustomSuppressionPositiveCases {
   
   @CustomSuppressionTest.SuppressMyChecker
   public void testMyChecker2() {
-    int i;
-    i = 10;
+    ;
   }
 }

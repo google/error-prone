@@ -31,8 +31,20 @@ public class CustomSuppressionNegativeCases {
   @CustomSuppressionTest.SuppressMyChecker
   @CustomSuppressionTest.SuppressMyChecker2
   public void testMultipleCustomSuppressions() {
-    int i;
-    i = 0;
+    ;
     return;
+  }
+  
+  public interface SimpleInterface {
+    public void foo();
+  }
+  
+  public void testEnclosingScope() {
+    @CustomSuppressionTest.SuppressMyChecker
+    SimpleInterface mySimpleInterface = new SimpleInterface() {
+      public void foo() {
+        return;
+      }
+    };
   }
 }

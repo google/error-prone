@@ -20,7 +20,6 @@ import static com.google.errorprone.BugPattern.Category.ONE_OFF;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.StringContains.containsString;
 import static org.junit.Assert.assertThat;
 
 import com.google.errorprone.BugPattern;
@@ -99,7 +98,8 @@ public class CustomSuppressionTest {
   public void testNegativeCase() throws Exception {
     File source = new File(this.getClass().getResource(
         "CustomSuppressionNegativeCases.java").toURI());
-    assertThat(compiler.compile(new String[]{source.getAbsolutePath()}), is(0));
+    int exitCode = compiler.compile(new String[]{source.getAbsolutePath()});
+    assertThat(exitCode, is(0));
   }
 
   @Test
@@ -107,7 +107,10 @@ public class CustomSuppressionTest {
     File source = new File(this.getClass().getResource(
         "CustomSuppressionPositiveCases.java").toURI());
     assertThat(compiler.compile(new String[]{source.getAbsolutePath()}), is(1));
-    assertThat(diagnosticHelper.getDiagnostics().toString(), containsString("[MyChecker]"));
+    assertThat(diagnosticHelper.getDiagnostics().size(), is(3));
+    assertThat((int) diagnosticHelper.getDiagnostics().get(0).getLineNumber(), is(28));
+    assertThat((int) diagnosticHelper.getDiagnostics().get(1).getLineNumber(), is(33));
+    assertThat((int) diagnosticHelper.getDiagnostics().get(2).getLineNumber(), is(38));
   }
 
 }
