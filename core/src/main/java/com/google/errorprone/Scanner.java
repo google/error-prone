@@ -128,7 +128,9 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
     for (Class<? extends Annotation> annotationType : getCustomSuppressionAnnotations()) {
       Annotation annotation = JavacElements.getAnnotation(sym, annotationType);
       if (annotation != null) {
-        newCustomSuppressions = new HashSet<Class<? extends Annotation>>(customSuppressions);
+        if (newCustomSuppressions == null) {
+          newCustomSuppressions = new HashSet<Class<? extends Annotation>>(customSuppressions);
+        }
         newCustomSuppressions.add(annotationType);
       }
     }

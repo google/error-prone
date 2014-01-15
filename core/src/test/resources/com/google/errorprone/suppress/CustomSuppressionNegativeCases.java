@@ -35,5 +35,4 @@ public class CustomSuppressionNegativeCases {
     i = 0;
     return;
   }
-  
 }
