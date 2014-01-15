@@ -30,9 +30,11 @@ import com.google.errorprone.ErrorProneCompiler;
 import com.google.errorprone.ErrorProneScanner;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.BugChecker.EmptyStatementTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.matchers.Description;
 
+import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.ReturnTree;
 
 import org.junit.Before;
@@ -46,7 +48,7 @@ import java.io.File;
 public class CustomSuppressionTest {
 
   /**
-   * Custom suppression annotation for the checker in this test.
+   * Custom suppression annotation for the first checker in this test.
    */
   public @interface SuppressMyChecker{}
 
@@ -63,6 +65,24 @@ public class CustomSuppressionTest {
     }
   }
 
+  /**
+   * Custom suppression annotation for the second checker in this test.
+   */
+  public @interface SuppressMyChecker2{}
+
+  @BugPattern(name = "MyChecker2",
+      summary = "Test checker that uses a different custom suppression annotation",
+      explanation = "Test checker that uses a different custom suppression annotation",
+      suppressibility = Suppressibility.CUSTOM_ANNOTATION,
+      customSuppressionAnnotation = SuppressMyChecker2.class,
+      category = ONE_OFF, severity = ERROR, maturity = MATURE)
+  private static class MyChecker2 extends BugChecker implements EmptyStatementTreeMatcher {
+    @Override
+    public Description matchEmptyStatement(EmptyStatementTree tree, VisitorState state) {
+      return describeMatch(tree, null);
+    }
+  }
+
   private ErrorProneCompiler compiler;
   private DiagnosticTestHelper diagnosticHelper;
 
@@ -71,7 +91,7 @@ public class CustomSuppressionTest {
     diagnosticHelper = new DiagnosticTestHelper();
     compiler = new ErrorProneCompiler.Builder()
         .listenToDiagnostics(diagnosticHelper.collector)
-        .report(new ErrorProneScanner(new MyChecker()))
+        .report(new ErrorProneScanner(new MyChecker(), new MyChecker2()))
         .build();
   }
 

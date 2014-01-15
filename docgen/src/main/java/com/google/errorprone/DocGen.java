@@ -93,7 +93,7 @@ public class DocGen extends AbstractProcessor {
       pw.print(annotation.maturity() + "\t"); //5
       pw.print(annotation.suppressibility() + "\t"); //6
       // This is ugly, but you always get a MirroredTypeException when you try to access this
-      // element.
+      // element. See https://community.oracle.com/thread/1184190.
       try {
         annotation.customSuppressionAnnotation();
         throw new IllegalStateException("Expected a MirroredTypeException");

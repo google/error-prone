@@ -24,7 +24,16 @@ package com.google.errorprone.suppress;
  */
 public class CustomSuppressionNegativeCases {
   @CustomSuppressionTest.SuppressMyChecker
-  public void testCustomSuppression() {
+  public void testMyChecker() {
     return;
   }
+  
+  @CustomSuppressionTest.SuppressMyChecker
+  @CustomSuppressionTest.SuppressMyChecker2
+  public void testMultipleCustomSuppressions() {
+    int i;
+    i = 0;
+    return;
+  }
+  
 }

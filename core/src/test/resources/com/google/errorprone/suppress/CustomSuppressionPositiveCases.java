@@ -27,4 +27,15 @@ public class CustomSuppressionPositiveCases {
   public void testCustomSuppression() {
     return;
   }
+  
+  @CustomSuppressionTest.SuppressMyChecker2
+  public void testMyChecker() {
+    return;
+  }
+  
+  @CustomSuppressionTest.SuppressMyChecker
+  public void testMyChecker2() {
+    int i;
+    i = 10;
+  }
 }
