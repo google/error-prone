@@ -30,22 +30,30 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ExpressionStatementTreeMatcher;
 import com.google.errorprone.bugpatterns.EmptyStatement;
 import com.google.errorprone.matchers.Description;
+
 import com.sun.source.tree.ExpressionStatementTree;
+
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.tools.Diagnostic;
-import javax.tools.JavaFileObject;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.tools.Diagnostic;
+import javax.tools.JavaFileObject;
 
 /**
+ * Integration tests for {@link ErrorProneCompiler}.
+ *
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class ErrorReportingJavaCompilerIntegrationTest {
+public class ErrorProneCompilerIntegrationTest {
 
   private DiagnosticTestHelper diagnosticHelper;
   private PrintWriter printWriter;
@@ -153,5 +161,27 @@ public class ErrorReportingJavaCompilerIntegrationTest {
             containsString("unhandled exception was thrown by the Error Prone"))));
     assertThat("Error should be reported. " + diagnosticHelper.describe(),
         diagnosticHelper.getDiagnostics(), matcher);
+  }
+
+  /**
+   * Regression test for Issue 188, error-prone doesn't work with annotation processors.
+   */
+  @Test
+  public void annotationProcessingWorks() throws Exception {
+    // Compile annotation processor.
+    int exitCode = compiler.compile(
+        sources(getClass(), "com/google/errorprone/NullAnnotationProcessor.java"));
+    outputStream.flush();
+    assertThat(outputStream.toString(), exitCode, is(0));
+
+    // Compile code that uses the annotation processor.
+    List<String> args = new ArrayList<String>();
+    args.add("-processor");
+    args.add("com.google.errorprone.NullAnnotationProcessor");
+    args.addAll(Arrays.asList(
+        sources(getClass(), "com/google/errorprone/UsesAnnotationProcessor.java")));
+    exitCode = compiler.compile(args.toArray(new String[0]));
+    outputStream.flush();
+    assertThat(outputStream.toString(), exitCode, is(0));
   }
 }

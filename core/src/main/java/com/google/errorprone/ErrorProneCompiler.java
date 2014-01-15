@@ -47,15 +47,20 @@ public class ErrorProneCompiler extends Main {
    * Convenient helper method for compiling in-process, using reflection.
    * @param listener
    * @param args
-   * @return
+   * @return Exit code from the compiler invocation
    */
   public static int compile(DiagnosticListener<JavaFileObject> listener, String[] args) {
     return new ErrorProneCompiler.Builder().listenToDiagnostics(listener).build().compile(args);
   }
 
   private final DiagnosticListener<? super JavaFileObject> diagnosticListener;
-  private final Scanner errorProneScanner;
   private final Class<? extends JavaCompiler> compilerClass;
+
+  /**
+   * A custom Scanner to use if we want to use a non-default set of error-prone checks, e.g.
+   * for testing.  Null if we want to use the default set of checks.
+   */
+  private final Scanner errorProneScanner;
 
   private ErrorProneCompiler(String s, PrintWriter printWriter,
       DiagnosticListener<? super JavaFileObject> diagnosticListener,
@@ -71,8 +76,13 @@ public class ErrorProneCompiler extends Main {
     DiagnosticListener<? super JavaFileObject> diagnosticListener = null;
     PrintWriter out = new PrintWriter(System.err, true);
     String compilerName = "javac (with error-prone)";
-    Scanner scanner = new ErrorProneScanner(DEFAULT_CHECKS);
     Class<? extends JavaCompiler> compilerClass = ErrorReportingJavaCompiler.class;
+
+    /**
+     * A custom Scanner to use if we want to use a non-default set of error-prone checks, e.g.
+     * for testing.  Null if we want to use the default set of checks.
+     */
+    Scanner scanner;
 
     public ErrorProneCompiler build() {
       return new ErrorProneCompiler(compilerName, out, diagnosticListener, scanner, compilerClass);
@@ -115,31 +125,13 @@ public class ErrorProneCompiler extends Main {
     if (diagnosticListener != null) {
       context.put(DiagnosticListener.class, diagnosticListener);
     }
-    if (context.get(Scanner.class) == null) {
-      context.put(Scanner.class, errorProneScanner);
-    }
 
-    // Register our message bundle reflectively, so we can compile against both JDK6 and JDK7.
-    // OpenJDK6: com.sun.tools.javac.util.Messages.instance(context).add("com.google.errorprone.errors");
-    // OpenJDK7: com.sun.tools.javac.util.JavacMessages.instance(context).add("com.google.errorprone.errors");
-    if (System.getProperty("java.vm.vendor").equals("Apple Inc.")) {
-      throw new UnsupportedOperationException("error-prone doesn't work on Apple JDK's yet.\n" +
-          "Vote: http://code.google.com/p/error-prone/issues/detail?id=16");
-    }
-    try {
-      Class<?> messagesClass;
-      try {
-        messagesClass = getClass().getClassLoader().loadClass("com.sun.tools.javac.util.Messages");
-      } catch (ClassNotFoundException e) {
-        messagesClass = getClass().getClassLoader().loadClass("com.sun.tools.javac.util.JavacMessages");
+    if (context.get(Scanner.class) == null) {
+      if (errorProneScanner == null) {
+        context.put(Scanner.class, new ErrorProneScanner(DEFAULT_CHECKS));
+      } else {
+        context.put(Scanner.class, errorProneScanner);
       }
-      Object instance = messagesClass.getMethod("instance", Context.class).invoke(null, context);
-      messagesClass.getMethod("add", String.class).invoke(instance, "com.google.errorprone.errors");
-    } catch (Exception e) {
-      throw new RuntimeException(String.format(
-          "Unable to register message bundle. java.vm.vendor=[%s],  java.version=[%s]",
-          System.getProperty("java.vm.vendor"), System.getProperty("java.version")),
-          e);
     }
 
     try {
