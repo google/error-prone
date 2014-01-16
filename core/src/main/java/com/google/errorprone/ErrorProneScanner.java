@@ -161,7 +161,6 @@ public class ErrorProneScanner extends Scanner {
     for (BugChecker checker : checkers) {
       registerNodeTypes(checker);
     }
-    init();
   }
 
   @Override

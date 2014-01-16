@@ -43,21 +43,19 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
   private Set<String> suppressions = new HashSet<String>();
   private Set<Class<? extends Annotation>> customSuppressions =
       new HashSet<Class<? extends Annotation>>();
+  // This must be lazily initialized, because the list of custom suppression annotations will
+  // not be available until after the subclass's constructor has run.
   private SuppressionHelper suppressionHelper;
-
-
-  /**
-   * Perform any necessary initialization after the subclass constructor has completed.
-   */
-  protected void init() {
-    suppressionHelper = new SuppressionHelper(getCustomSuppressionAnnotations());
-  }
 
   /**
    * Scan a tree from a position identified by a TreePath.
    */
   @Override
   public Void scan(TreePath path, VisitorState state) {
+    if (suppressionHelper == null) {
+      suppressionHelper = new SuppressionHelper(getCustomSuppressionAnnotations());
+    }
+
     // Record previous suppression info so we can restore it when going up the tree.
     Set<String> prevSuppressions = suppressions;
     Set<Class<? extends Annotation>> prevCustomSuppressions = customSuppressions;
@@ -93,6 +91,10 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
       return null;
     }
 
+    if (suppressionHelper == null) {
+      suppressionHelper = new SuppressionHelper(getCustomSuppressionAnnotations());
+    }
+
     // Record previous suppression info so we can restore it when going up the tree.
     Set<String> prevSuppressions = suppressions;
     Set<Class<? extends Annotation>> prevCustomSuppressions = customSuppressions;
@@ -124,6 +126,10 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
    * @param suppressible holds information about the suppressibilty of a checker
    */
   protected boolean isSuppressed(Suppressible suppressible) {
+    if (suppressionHelper == null) {
+      suppressionHelper = new SuppressionHelper(getCustomSuppressionAnnotations());
+    }
+
     return SuppressionHelper.isSuppressed(suppressible, suppressions, customSuppressions);
   }
 
