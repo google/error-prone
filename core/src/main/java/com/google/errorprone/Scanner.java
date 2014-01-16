@@ -23,13 +23,7 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
-import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.model.JavacElements;
-import com.sun.tools.javac.util.List;
-import com.sun.tools.javac.util.Pair;
 
 import java.lang.annotation.Annotation;
 import java.util.Collections;
@@ -49,6 +43,15 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
   private Set<String> suppressions = new HashSet<String>();
   private Set<Class<? extends Annotation>> customSuppressions =
       new HashSet<Class<? extends Annotation>>();
+  private SuppressionHelper suppressionHelper;
+
+
+  /**
+   * Perform any necessary initialization after the subclass constructor has completed.
+   */
+  protected void init() {
+    suppressionHelper = new SuppressionHelper(getCustomSuppressionAnnotations());
+  }
 
   /**
    * Scan a tree from a position identified by a TreePath.
@@ -61,7 +64,14 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
 
     Symbol sym = ASTHelpers.getSymbol(path.getLeaf());
     if (sym != null) {
-      handleSuppressions(sym, state.getSymtab().suppressWarningsType);
+      SuppressionHelper.NewSuppressions newSuppressions = suppressionHelper.extendSuppressionSets(
+          sym, state.getSymtab().suppressWarningsType, suppressions, customSuppressions);
+      if (newSuppressions.suppressWarningsStrings != null) {
+        suppressions = newSuppressions.suppressWarningsStrings;
+      }
+      if (newSuppressions.customSuppressions != null) {
+        customSuppressions = newSuppressions.customSuppressions;
+      }
     }
 
     try {
@@ -89,7 +99,14 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
 
     Symbol sym = ASTHelpers.getSymbol(tree);
     if (sym != null) {
-      handleSuppressions(sym, state.getSymtab().suppressWarningsType);
+      SuppressionHelper.NewSuppressions newSuppressions = suppressionHelper.extendSuppressionSets(
+          sym, state.getSymtab().suppressWarningsType, suppressions, customSuppressions);
+      if (newSuppressions.suppressWarningsStrings != null) {
+        suppressions = newSuppressions.suppressWarningsStrings;
+      }
+      if (newSuppressions.customSuppressions != null) {
+        customSuppressions = newSuppressions.customSuppressions;
+      }
     }
 
     try {
@@ -102,94 +119,12 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
   }
 
   /**
-   * Do all work necessary to support suppressions, both via {@code @SuppressWarnings} and via
-   * custom suppressions. To do this we have to maintains 2 sets of suppression info:
-   * 1) A set of the suppression strings in all {@code @Suppresswarnings} annotations down this path
-   *    of the AST.
-   * 2) A set of all custom suppression annotations down this path of the AST.
-   *
-   * When we explore a new node, we have to extend the suppression sets with any new suppressed
-   * warnings or custom suppression annotations.  We also have to retain the previous suppression
-   * set so that we can reinstate it when we move up the tree.
-   *
-   * We do not modify the existing suppression sets, so they can be restored when moving up the
-   * tree.  We also avoid copying the suppression sets if the next node to explore does not have
-   * any suppressed warnings or custom suppression annotations.  This is the common case.
-   *
-   * @param sym The {@code Symbol} for the AST node currently being scanned
-   * @param suppressWarningsType The {@code Type} for {@code @SuppressWarnings}, as given by
-   *        javac's symbol table
-   */
-  private void handleSuppressions(Symbol sym, Type suppressWarningsType) {
-    /**
-     * Handle custom suppression annotations.
-     */
-    Set<Class<? extends Annotation>> newCustomSuppressions = null;
-    for (Class<? extends Annotation> annotationType : getCustomSuppressionAnnotations()) {
-      Annotation annotation = JavacElements.getAnnotation(sym, annotationType);
-      if (annotation != null) {
-        if (newCustomSuppressions == null) {
-          newCustomSuppressions = new HashSet<Class<? extends Annotation>>(customSuppressions);
-        }
-        newCustomSuppressions.add(annotationType);
-      }
-    }
-    if (newCustomSuppressions != null) {
-      customSuppressions = newCustomSuppressions;
-    }
-
-    /**
-     * Handle @SuppressWarnings.
-     */
-    // TODO(eaftan): is copied necessary?  can this be simplified?
-    Set<String> newSuppressions = null;
-    boolean copied = false;
-
-    // Iterate over annotations on this symbol, looking for SuppressWarnings
-    for (Attribute.Compound attr : sym.getAnnotationMirrors()) {
-      // TODO(eaftan): use JavacElements.getAnnotation instead
-      if (attr.type.tsym == suppressWarningsType.tsym) {
-        for (List<Pair<MethodSymbol,Attribute>> v = attr.values;
-            v.nonEmpty(); v = v.tail) {
-          Pair<MethodSymbol,Attribute> value = v.head;
-          if (value.fst.name.toString().equals("value"))
-            if (value.snd instanceof Attribute.Array) {  // SuppressWarnings takes an array
-              for (Attribute suppress : ((Attribute.Array) value.snd).values) {
-                if (!copied) {
-                  newSuppressions = new HashSet<String>(suppressions);
-                  copied = true;
-                }
-                // TODO(eaftan): check return value to see if this was a new warning?
-                newSuppressions.add((String) suppress.getValue());
-              }
-            } else {
-              throw new RuntimeException("Expected SuppressWarnings annotation to take array type");
-            }
-        }
-      }
-    }
-    if (newSuppressions != null) {
-      suppressions = newSuppressions;
-    }
-
-  }
-
-  /**
    * Returns true if this checker should be suppressed on the current tree path.
    *
    * @param suppressible holds information about the suppressibilty of a checker
    */
   protected boolean isSuppressed(Suppressible suppressible) {
-    switch (suppressible.getSuppressibility()) {
-      case UNSUPPRESSIBLE:
-        return false;
-      case CUSTOM_ANNOTATION:
-        return customSuppressions.contains(suppressible.getCustomSuppressionAnnotation());
-      case SUPPRESS_WARNINGS:
-        return !Collections.disjoint(suppressible.getAllNames(), suppressions);
-      default:
-        throw new IllegalStateException("No case for: " + suppressible.getSuppressibility());
-    }
+    return SuppressionHelper.isSuppressed(suppressible, suppressions, customSuppressions);
   }
 
   /**

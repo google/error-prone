@@ -1,0 +1,153 @@
+package com.google.errorprone;
+
+import com.google.errorprone.matchers.Suppressible;
+
+import com.sun.tools.javac.code.Attribute;
+import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.model.JavacElements;
+import com.sun.tools.javac.util.List;
+import com.sun.tools.javac.util.Pair;
+
+import java.lang.annotation.Annotation;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * Encapsulates the logic of handling suppressions, both via {@code @SuppressWarnings} and via
+ * custom suppression annotations.  To do this we have to maintains 2 sets of suppression info:
+ * 1) A set of the suppression strings in all {@code @Suppresswarnings} annotations down this path
+ *    of the AST.
+ * 2) A set of all custom suppression annotations down this path of the AST.
+ */
+public class SuppressionHelper {
+
+  /**
+   * The set of custom suppression annotations that this SuppressionHelper should look for.
+   */
+  private final Set<Class<? extends Annotation>> customSuppressionAnnotations;
+
+
+  /**
+   * @param customSuppressionAnnotations The set of custom suppression annotations that this
+   * SuppressionHelper should look for.
+   */
+  public SuppressionHelper(Set<Class<? extends Annotation>> customSuppressionAnnotations) {
+    if (customSuppressionAnnotations == null) {
+      throw new IllegalArgumentException("customSuppressionAnnotations must be non-null");
+    }
+    this.customSuppressionAnnotations = customSuppressionAnnotations;
+  }
+
+  /**
+   * Used for the return type of {@code handleSuppressions()}.  Either field may be null, which
+   * indicates that the suppression sets are unchanged.
+   */
+  public class NewSuppressions {
+    public Set<String> suppressWarningsStrings;
+    public Set<Class<? extends Annotation>> customSuppressions;
+
+    public NewSuppressions(Set<String> suppressWarningsStrings,
+        Set<Class<? extends Annotation>> customSuppressions) {
+      this.suppressWarningsStrings = suppressWarningsStrings;
+      this.customSuppressions = customSuppressions;
+    }
+
+  }
+
+  /**
+   * Extend suppression sets for both {@code @SuppressWarnings} and custom suppression annotations.
+   * When we explore a new node, we have to extend the suppression sets with any new suppressed
+   * warnings or custom suppression annotations.  We also have to retain the previous suppression
+   * set so that we can reinstate it when we move up the tree.
+   *
+   * We do not modify the existing suppression sets, so they can be restored when moving up the
+   * tree.  We also avoid copying the suppression sets if the next node to explore does not have
+   * any suppressed warnings or custom suppression annotations.  This is the common case.
+   *
+   * @param sym The {@code Symbol} for the AST node currently being scanned
+   * @param suppressWarningsType The {@code Type} for {@code @SuppressWarnings}, as given by
+   *        javac's symbol table
+   * @param suppressionsOnCurrentPath The set of strings in all {@code @SuppressWarnings}
+   *        annotations on the current path through the AST
+   * @param customSuppressionsOnCurrentPath The set of all custom suppression annotations
+   *        on the current path through the AST
+   */
+  public NewSuppressions extendSuppressionSets(Symbol sym,
+      Type suppressWarningsType,
+      Set<String> suppressionsOnCurrentPath,
+      Set<Class<? extends Annotation>> customSuppressionsOnCurrentPath) {
+
+    /**
+     * Handle custom suppression annotations.
+     */
+    Set<Class<? extends Annotation>> newCustomSuppressions = null;
+    for (Class<? extends Annotation> annotationType : customSuppressionAnnotations) {
+      Annotation annotation = JavacElements.getAnnotation(sym, annotationType);
+      if (annotation != null) {
+        if (newCustomSuppressions == null) {
+          newCustomSuppressions = new HashSet<Class<? extends Annotation>>(customSuppressionsOnCurrentPath);
+        }
+        newCustomSuppressions.add(annotationType);
+      }
+    }
+
+    /**
+     * Handle @SuppressWarnings.
+     */
+    Set<String> newSuppressions = null;
+    // Iterate over annotations on this symbol, looking for SuppressWarnings
+    for (Attribute.Compound attr : sym.getAnnotationMirrors()) {
+      // TODO(eaftan): use JavacElements.getAnnotation instead
+      if (attr.type.tsym == suppressWarningsType.tsym) {
+        for (List<Pair<MethodSymbol,Attribute>> v = attr.values;
+            v.nonEmpty(); v = v.tail) {
+          Pair<MethodSymbol,Attribute> value = v.head;
+          if (value.fst.name.toString().equals("value"))
+            if (value.snd instanceof Attribute.Array) {  // SuppressWarnings takes an array
+              for (Attribute suppress : ((Attribute.Array) value.snd).values) {
+                if (newSuppressions == null) {
+                  newSuppressions = new HashSet<String>(suppressionsOnCurrentPath);
+                }
+                // TODO(eaftan): check return value to see if this was a new warning?
+                newSuppressions.add((String) suppress.getValue());
+              }
+            } else {
+              throw new RuntimeException("Expected SuppressWarnings annotation to take array type");
+            }
+        }
+      }
+    }
+
+    return new NewSuppressions(newSuppressions, newCustomSuppressions);
+  }
+
+  /**
+   * Returns true if this checker should be suppressed on the current tree path.
+   *
+   * @param suppressible Holds information about the suppressibilty of a checker
+   * @param suppressionsOnCurrentPath The set of strings in all {@code @SuppressWarnings}
+   *        annotations on the current path through the AST
+   * @param customSuppressionsOnCurrentPath The set of all custom suppression annotations
+   *        on the current path through the AST
+   */
+  public static boolean isSuppressed(
+      Suppressible suppressible,
+      Set<String> suppressionsOnCurrentPath,
+      Set<Class<? extends Annotation>> customSuppressionsOnCurrentPath) {
+    switch (suppressible.getSuppressibility()) {
+      case UNSUPPRESSIBLE:
+        return false;
+      case CUSTOM_ANNOTATION:
+        return customSuppressionsOnCurrentPath.contains(
+            suppressible.getCustomSuppressionAnnotation());
+      case SUPPRESS_WARNINGS:
+        return !Collections.disjoint(suppressible.getAllNames(), suppressionsOnCurrentPath);
+      default:
+        throw new IllegalStateException("No case for: " + suppressible.getSuppressibility());
+    }
+  }
+
+}
