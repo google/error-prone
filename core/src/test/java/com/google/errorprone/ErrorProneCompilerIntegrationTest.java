@@ -23,6 +23,7 @@ import static com.google.errorprone.CompilationTestHelper.sources;
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.internal.matchers.StringContains.containsString;
 
@@ -135,6 +136,7 @@ public class ErrorProneCompilerIntegrationTest {
         diagnosticMessage(containsString("[SelfAssignment]")));
     assertThat("Warning should be found. " + diagnosticHelper.describe(),
         diagnosticHelper.getDiagnostics(), matcher);
+    assertEquals(3, diagnosticHelper.getDiagnostics().size());
   }
 
   @Test
