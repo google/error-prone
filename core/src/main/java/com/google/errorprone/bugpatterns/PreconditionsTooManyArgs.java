@@ -27,11 +27,11 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
+
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.tools.javac.tree.JCTree.JCExpression;
-import com.sun.tools.javac.util.List;
+import com.sun.tools.javac.tree.JCTree;
 
 /**
  * @author Louis Wasserman
@@ -82,23 +82,30 @@ public class PreconditionsTooManyArgs extends BugChecker implements MethodInvoca
    *
    * This does not need to be completely exhaustive, since it is only used to suggest fixes.
    */
-  private static final String BAD_PLACEHOLDER_REGEX = "%(?:\\d+\\$)??[dbBhHScCdoxXeEfgGaAtTn]|" +
-      "\\{\\d+\\}";
+  private static final String BAD_PLACEHOLDER_REGEX =
+      "\\$s|%(?:\\d+\\$)??[dbBhHScCdoxXeEfgGaAtTn]|\\{\\d+\\}";
 
   public Description describe(MethodInvocationTree t, VisitorState state) {
     LiteralTree formatTree = (LiteralTree) t.getArguments().get(1);
-    String formatString = (String) formatTree.getValue();
 
-    String fixedFormatString = formatString.replaceAll(BAD_PLACEHOLDER_REGEX, "%s");
+    String fixedFormatString = state.getSourceForNode((JCTree) formatTree).toString()
+        .replaceAll(BAD_PLACEHOLDER_REGEX, "%s");
     SuggestedFix fix = new SuggestedFix();
     if (expectedArguments(fixedFormatString) == t.getArguments().size() - 2) {
-      fix.replace(formatTree, "\"" + fixedFormatString + "\"");
+      fix.replace(formatTree, fixedFormatString);
       return describeMatch(formatTree, fix);
     } else {
-      fix.replace(t, state.getTreeMaker()
-          .App((JCExpression) t.getMethodSelect(), List.of((JCExpression) t.getArguments().get(0)))
-          .toString());
+      int missing = t.getArguments().size() - 2 - expectedArguments(fixedFormatString);
+      StringBuilder builder = new StringBuilder(fixedFormatString);
+      builder.deleteCharAt(builder.length() - 1);
+      builder.append(" [%s");
+      for (int i = 1; i < missing; i++) {
+        builder.append(", %s");
+      }
+      builder.append("]\"");
+      fix.replace(formatTree, builder.toString());
       return describeMatch(t, fix);
     }
   }
 }
+
