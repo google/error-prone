@@ -297,6 +297,15 @@ public class Matchers {
       final int position, final Matcher<ExpressionTree> argumentMatcher) {
     return new MethodInvocationArgument(position, argumentMatcher);
   }
+  
+  public static Matcher<MethodInvocationTree> argumentCount(final int argumentCount) {
+    return new Matcher<MethodInvocationTree>() {
+      @Override
+      public boolean matches(MethodInvocationTree t, VisitorState state) {
+        return t.getArguments().size() == argumentCount;
+      }
+    };
+  }
 
   /**
    * Matches an AST node if its parent node is matched by the given matcher.
