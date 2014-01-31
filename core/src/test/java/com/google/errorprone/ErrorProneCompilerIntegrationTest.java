@@ -186,4 +186,21 @@ public class ErrorProneCompilerIntegrationTest {
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(0));
   }
+
+  /**
+   * Test that if javac does dataflow on a class twice error-prone only analyses it once.
+   */
+  @Test
+  public void reportReadyForAnalysisOnce() throws Exception {
+    int exitCode = compiler.compile(
+        sources(getClass(),
+            "com/google/errorprone/FlowConstants.java",
+            "com/google/errorprone/FlowSub.java",
+            // This order is important: the superclass needs to occur after the subclass in the
+            // sources so it goes through flow twice (once so it can be used when the subclass
+            // is desugared, once normally).
+            "com/google/errorprone/FlowSuper.java"));
+    outputStream.flush();
+    assertThat(outputStream.toString(), exitCode, is(0));
+  }
 }

@@ -20,11 +20,15 @@ import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.CompletionFailure;
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Env;
+import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Log;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Used to run an error-prone analysis as a phase in the javac compiler.
@@ -36,6 +40,9 @@ public class ErrorProneAnalyzer {
   private final Scanner errorProneScanner;
   // If matchListener != null, then we are in search mode.
   private final SearchResultsPrinter resultsPrinter;
+
+  /** The set of trees that have already been scanned. */
+  private final Set<JCTree> seen = new HashSet<JCTree>();
 
   public ErrorProneAnalyzer(Log log, Context context) {
     this(log, context, null);
@@ -52,14 +59,44 @@ public class ErrorProneAnalyzer {
     }
   }
 
+  private static class DeclFreeCompilationUnitWrapper extends JCCompilationUnit {
+    protected DeclFreeCompilationUnitWrapper(JCCompilationUnit original) {
+      super(
+          original.packageAnnotations,
+          original.pid,
+          com.sun.tools.javac.util.List.<JCTree>nil(),
+          original.sourcefile,
+          original.packge,
+          original.namedImportScope,
+          original.starImportScope);
+    }
+  }
+
   /**
    * Reports that a class (represented by the env) is ready for error-prone to analyze.
    */
   public void reportReadyForAnalysis(Env<AttrContext> env, boolean hasErrors) {
     try {
-      TreePath path = new TreePath(env.toplevel);
+      // Javac sometimes performs the flow phase on class decls twice. If javac is desugaring some
+      // class whose superclass hasn't been desugared, the superclass gets desugared early.
+      // When the compilation reaches the point where the superclass would originally have gone
+      // through dataflow and desugaring it goes through them again. This is normally fine since
+      // those phases are (hopefully?) both idempotent. However, error-prone assumes that (1) it
+      // sees each class once, and (2) that they haven't been desugared yet.
+      if (!seen.add(env.tree)) {
+        return;
+      }
+
+      TreePath path;
       if (env.toplevel != env.tree) {
-        path = TreePath.getPath(path, env.tree);
+        // The current tree is a class decl, so construct a TreePath rooted at the enclosing
+        // compilation unit.
+        path = TreePath.getPath(env.toplevel, env.tree);
+      } else {
+        // The current tree is a compilation unit. Wrap the compilation unit to hide its class
+        // decls, since (1) we've already visited them, and (2) the bodies of all but the last class
+        // decl have been lowered out of them.
+        path = new TreePath(new DeclFreeCompilationUnitWrapper(env.toplevel));
       }
       errorProneScanner.scan(path, createVisitorState(env));
     } catch (CompletionFailure e) {

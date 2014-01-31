@@ -17,6 +17,7 @@ import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -179,8 +180,16 @@ public abstract class BugChecker implements Suppressible, Serializable {
     Description matchClass(ClassTree tree, VisitorState state);
   }
 
+  /**
+   * Error-prone does not support matching entire compilation unit trees, due to a limitation of
+   * javac. Class declarations must be inspected one at a time via {@link ClassTreeMatcher}.
+   */
   public static interface CompilationUnitTreeMatcher extends Suppressible {
-    Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state);
+    Description matchCompilationUnit(
+        List<? extends AnnotationTree> packageAnnotations,
+        ExpressionTree packageName,
+        List<? extends ImportTree> imports,
+        VisitorState state);
   }
 
   public static interface CompoundAssignmentTreeMatcher extends Suppressible {

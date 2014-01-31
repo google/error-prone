@@ -521,7 +521,11 @@ public class ErrorProneScanner extends Scanner {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (CompilationUnitTreeMatcher matcher : compilationUnitMatchers) {
       if (isSuppressed(matcher)) continue;
-      reportMatch(matcher.matchCompilationUnit(tree, state), tree, state);
+      reportMatch(matcher.matchCompilationUnit(
+          tree.getPackageAnnotations(),
+          tree.getPackageName(),
+          tree.getImports(),
+          state), tree, state);
     }
     return super.visitCompilationUnit(tree, visitorState);
   }
