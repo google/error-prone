@@ -130,7 +130,8 @@ public class ErrorProneScanner extends Scanner {
       DivZero.class,
       Overrides.class,
       Finally.class,
-      StaticAccessedFromInstance.class
+      StaticAccessedFromInstance.class,
+      ArrayHashCode.class
   );
 
   @SuppressWarnings("unchecked")

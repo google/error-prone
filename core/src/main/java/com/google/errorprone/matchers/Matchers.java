@@ -297,7 +297,7 @@ public class Matchers {
       final int position, final Matcher<ExpressionTree> argumentMatcher) {
     return new MethodInvocationArgument(position, argumentMatcher);
   }
-  
+
   public static Matcher<MethodInvocationTree> argumentCount(final int argumentCount) {
     return new Matcher<MethodInvocationTree>() {
       @Override
@@ -404,6 +404,18 @@ public class Matchers {
     return new Matcher<T>() {
       @Override public boolean matches(Tree t, VisitorState state) {
         return state.getTypes().isArray(((JCTree) t).type);
+      }
+    };
+  }
+
+  /**
+   * Matches an AST node if its type is a primitive array type.
+   */
+  public static <T extends Tree> Matcher<T> isPrimitiveArrayType() {
+    return new Matcher<T>() {
+      @Override public boolean matches(Tree t, VisitorState state) {
+        Type type = ((JCTree) t).type;
+        return state.getTypes().isArray(type) && state.getTypes().elemtype(type).isPrimitive();
       }
     };
   }
@@ -756,7 +768,7 @@ public class Matchers {
     return new HasIdentifier(matchType, nodeMatcher);
   }
 
-  /** 
+  /**
    * Returns true if the expression is a member access on an instance, rather than a static type.
    * Supports member method invocations and field accesses.
    */
@@ -767,7 +779,7 @@ public class Matchers {
         if (!(expr instanceof JCFieldAccess)) {
           // TODO(cushon): throw IllegalArgumentException?
           return false;
-        }   
+        }
         JCExpression selected = ((JCFieldAccess) expr).getExpression();
         if (selected instanceof JCNewClass) {
           return true;
@@ -789,7 +801,7 @@ public class Matchers {
   public static Matcher<Tree> isStatic() {
     return new IsStatic();
   }
-  
+
   static Matcher<Tree> isSymbol(java.lang.Class symbolClass) {
     return new IsSymbol(symbolClass);
   }
