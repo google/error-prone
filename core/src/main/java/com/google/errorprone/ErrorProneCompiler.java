@@ -122,16 +122,27 @@ public class ErrorProneCompiler extends Main {
   @Override
   public int compile(String[] strings, Context context, List<JavaFileObject> javaFileObjects,
       Iterable<? extends Processor> iterable) {
+
+    ErrorProneOptions epOptions = ErrorProneOptions.processArgs(strings);
+
     if (diagnosticListener != null) {
       context.put(DiagnosticListener.class, diagnosticListener);
     }
 
-    if (context.get(Scanner.class) == null) {
+    Scanner scannerInContext = context.get(Scanner.class);
+    if (scannerInContext == null) {
       if (errorProneScanner == null) {
-        context.put(Scanner.class, new ErrorProneScanner(DEFAULT_CHECKS));
+        scannerInContext = new ErrorProneScanner(DEFAULT_CHECKS);
       } else {
-        context.put(Scanner.class, errorProneScanner);
+        scannerInContext = errorProneScanner;
       }
+      context.put(Scanner.class, scannerInContext);
+    }
+    try {
+      scannerInContext.setDisabledChecks(epOptions.getDisabledChecks());
+    } catch (InvalidCommandLineOptionException e) {
+      System.err.println(e.getMessage());
+      return 2;     // Main.ERROR_CMDERR
     }
 
     try {
@@ -140,6 +151,6 @@ public class ErrorProneCompiler extends Main {
       throw new RuntimeException("The JavaCompiler used must have the preRegister static method. "
           + "We are very sorry.", e);
     }
-    return super.compile(strings, context, javaFileObjects, iterable);
+    return super.compile(epOptions.getRemainingArgs(), context, javaFileObjects, iterable);
   }
 }

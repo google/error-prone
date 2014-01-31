@@ -97,11 +97,4 @@ public class EmptyIfStatement extends BugChecker implements EmptyStatementTreeMa
       return describeMatch(ifParent.getThenStatement(), fix);
     }
   }
-
-  public static void main(String[] args) {
-    System.exit(new ErrorProneCompiler.Builder()
-        .search(ErrorProneScanner.forMatcher(EmptyIfStatement.class))
-        .build()
-        .compile(args));
-  }
 }

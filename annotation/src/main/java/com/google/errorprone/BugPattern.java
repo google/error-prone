@@ -147,6 +147,15 @@ public @interface BugPattern {
   }
 
   /**
+   * Whether this check should be disableable by the -Xepdisable commandline flag.
+   *
+   * <p>You are strongly encouraged to keep the default value of false since error-prone checks
+   * should have a zero false positive rate. A check should only be disabled when bugs exist in
+   * legacy code and are infeasible to fix.
+   */
+  boolean disableable() default false;
+
+  /**
    * Whether this checker should be suppressible, and if so, by what means.
    */
   Suppressibility suppressibility() default Suppressibility.SUPPRESS_WARNINGS;

@@ -17,18 +17,20 @@
 package com.google.errorprone;
 
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
-import static com.google.errorprone.bugpatterns.BugChecker.*;
 
 import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.errorprone.bugpatterns.*;
+import com.google.errorprone.bugpatterns.BugChecker.*;
 
 import com.sun.source.tree.*;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -134,6 +136,12 @@ public class ErrorProneScanner extends Scanner {
       ArrayHashCode.class
   );
 
+  /**
+   * Create an ErrorProneScanner based on a predicate that tells us which of the built-in
+   * error-prone checks to enable.
+   *
+   * @param predicate A predicate that selects which of the built-in error-prone checks to enable.
+   */
   @SuppressWarnings("unchecked")
   public ErrorProneScanner(EnabledPredicate predicate) {
     try {
@@ -163,6 +171,21 @@ public class ErrorProneScanner extends Scanner {
       registerNodeTypes(checker);
     }
   }
+
+  @Override
+  protected void setDisabledChecks(Set<String> disabledChecks)
+      throws InvalidCommandLineOptionException {
+    super.setDisabledChecks(disabledChecks);
+    for (String checkName : disabledChecks) {
+      BugChecker checker = nameToChecker.get(checkName);
+      if (checker != null && !checker.isDisableable()) {
+        throw new InvalidCommandLineOptionException("error-prone check " + checkName
+            + " may not be disabled");
+      }
+    }
+  }
+
+  private final Map<String, BugChecker> nameToChecker = new HashMap<String, BugChecker>();
 
   @Override
   protected Set<Class<? extends Annotation>> getCustomSuppressionAnnotations() {
@@ -263,6 +286,7 @@ public class ErrorProneScanner extends Scanner {
       new ArrayList<WildcardTreeMatcher>();
 
   private void registerNodeTypes(BugChecker checker) {
+    nameToChecker.put(checker.getCanonicalName(), checker);
     if (checker.getSuppressibility() == Suppressibility.CUSTOM_ANNOTATION) {
       customSuppressionAnnotations.add(checker.getCustomSuppressionAnnotation());
     }
@@ -411,7 +435,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitAnnotation(AnnotationTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (AnnotationTreeMatcher matcher : annotationMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchAnnotation(tree, state), tree, state);
     }
     return super.visitAnnotation(tree, visitorState);
@@ -421,7 +445,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitArrayAccess(ArrayAccessTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (ArrayAccessTreeMatcher matcher : arrayAccessMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchArrayAccess(tree, state), tree, state);
     }
     return super.visitArrayAccess(tree, visitorState);
@@ -431,7 +455,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitArrayType(ArrayTypeTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (ArrayTypeTreeMatcher matcher : arrayTypeMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchArrayType(tree, state), tree, state);
     }
     return super.visitArrayType(tree, visitorState);
@@ -441,7 +465,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitAssert(AssertTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (AssertTreeMatcher matcher : assertMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchAssert(tree, state), tree, state);
     }
     return super.visitAssert(tree, visitorState);
@@ -451,7 +475,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitAssignment(AssignmentTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (AssignmentTreeMatcher matcher : assignmentMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchAssignment(tree, state), tree, state);
     }
     return super.visitAssignment(tree, visitorState);
@@ -461,7 +485,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitBinary(BinaryTree tree,  VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (BinaryTreeMatcher matcher : binaryMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchBinary(tree, state), tree, state);
     }
     return super.visitBinary(tree, state);
@@ -471,7 +495,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitBlock(BlockTree tree,  VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (BlockTreeMatcher matcher : blockMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchBlock(tree, state), tree, state);
     }
     return super.visitBlock(tree, state);
@@ -481,7 +505,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitBreak(BreakTree tree,  VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (BreakTreeMatcher matcher : breakMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchBreak(tree, state), tree, state);
     }
     return super.visitBreak(tree, state);
@@ -491,7 +515,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitCase(CaseTree tree,  VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (CaseTreeMatcher matcher : caseMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchCase(tree, state), tree, state);
     }
     return super.visitCase(tree, state);
@@ -501,7 +525,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitCatch(CatchTree tree,  VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (CatchTreeMatcher matcher : catchMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchCatch(tree, state), tree, state);
     }
     return super.visitCatch(tree, state);
@@ -511,7 +535,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitClass(ClassTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (ClassTreeMatcher matcher : classMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchClass(tree, state), tree, state);
     }
     return super.visitClass(tree, visitorState);
@@ -521,7 +545,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitCompilationUnit(CompilationUnitTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (CompilationUnitTreeMatcher matcher : compilationUnitMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchCompilationUnit(
           tree.getPackageAnnotations(),
           tree.getPackageName(),
@@ -535,7 +559,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitCompoundAssignment(CompoundAssignmentTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (CompoundAssignmentTreeMatcher matcher : compoundAssignmentMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchCompoundAssignment(tree, state), tree, state);
     }
     return super.visitCompoundAssignment(tree, visitorState);
@@ -546,7 +570,7 @@ public class ErrorProneScanner extends Scanner {
       ConditionalExpressionTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (ConditionalExpressionTreeMatcher matcher : conditionalExpressionMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchConditionalExpression(tree, state), tree, state);
     }
     return super.visitConditionalExpression(tree, visitorState);
@@ -556,7 +580,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitContinue(ContinueTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (ContinueTreeMatcher matcher : continueMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchContinue(tree, state), tree, state);
     }
     return super.visitContinue(tree, visitorState);
@@ -566,7 +590,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitDoWhileLoop(DoWhileLoopTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (DoWhileLoopTreeMatcher matcher : doWhileLoopMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchDoWhileLoop(tree, state), tree, state);
     }
     return super.visitDoWhileLoop(tree, visitorState);
@@ -576,7 +600,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitEmptyStatement(EmptyStatementTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (EmptyStatementTreeMatcher matcher : emptyStatementMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchEmptyStatement(tree, state), tree, state);
     }
     return super.visitEmptyStatement(tree, visitorState);
@@ -586,7 +610,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitEnhancedForLoop(EnhancedForLoopTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (EnhancedForLoopTreeMatcher matcher : enhancedForLoopMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchEnhancedForLoop(tree, state), tree, state);
     }
     return super.visitEnhancedForLoop(tree, visitorState);
@@ -598,7 +622,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitExpressionStatement(ExpressionStatementTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (ExpressionStatementTreeMatcher matcher : expressionStatementMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchExpressionStatement(tree, state), tree, state);
     }
     return super.visitExpressionStatement(tree, visitorState);
@@ -608,7 +632,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitForLoop(ForLoopTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (ForLoopTreeMatcher matcher : forLoopMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchForLoop(tree, state), tree, state);
     }
     return super.visitForLoop(tree, visitorState);
@@ -618,7 +642,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitIdentifier(IdentifierTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (IdentifierTreeMatcher matcher : identifierMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchIdentifier(tree, state), tree, state);
     }
     return super.visitIdentifier(tree, visitorState);
@@ -628,7 +652,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitIf(IfTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (IfTreeMatcher matcher : ifMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchIf(tree, state), tree, state);
     }
     return super.visitIf(tree, visitorState);
@@ -638,7 +662,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitImport(ImportTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (ImportTreeMatcher matcher : importMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchImport(tree, state), tree, state);
     }
     return super.visitImport(tree, visitorState);
@@ -648,7 +672,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitInstanceOf(InstanceOfTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (InstanceOfTreeMatcher matcher : instanceOfMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchInstanceOf(tree, state), tree, state);
     }
     return super.visitInstanceOf(tree, visitorState);
@@ -658,7 +682,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitLabeledStatement(LabeledStatementTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (LabeledStatementTreeMatcher matcher : labeledStatementMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchLabeledStatement(tree, state), tree, state);
     }
     return super.visitLabeledStatement(tree, visitorState);
@@ -668,7 +692,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitLiteral(LiteralTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (LiteralTreeMatcher matcher : literalMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchLiteral(tree, state), tree, state);
     }
     return super.visitLiteral(tree, visitorState);
@@ -678,7 +702,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitMemberSelect(MemberSelectTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (MemberSelectTreeMatcher matcher : memberSelectMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchMemberSelect(tree, state), tree, state);
     }
     return super.visitMemberSelect(tree, visitorState);
@@ -688,7 +712,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitMethod(MethodTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (MethodTreeMatcher matcher : methodMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchMethod(tree, state), tree, state);
     }
     return super.visitMethod(tree, visitorState);
@@ -698,7 +722,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitMethodInvocation(MethodInvocationTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (MethodInvocationTreeMatcher matcher : methodInvocationMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchMethodInvocation(tree, state), tree, state);
     }
     return super.visitMethodInvocation(tree, state);
@@ -708,7 +732,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitModifiers(ModifiersTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (ModifiersTreeMatcher matcher : modifiersMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchModifiers(tree, state), tree, state);
     }
     return super.visitModifiers(tree, state);
@@ -718,7 +742,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitNewArray(NewArrayTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (NewArrayTreeMatcher matcher : newArrayMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchNewArray(tree, state), tree, state);
     }
     return super.visitNewArray(tree, state);
@@ -728,7 +752,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitNewClass(NewClassTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (NewClassTreeMatcher matcher : newClassMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchNewClass(tree, state), tree, state);
     }
     return super.visitNewClass(tree, visitorState);
@@ -741,7 +765,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitParameterizedType(ParameterizedTypeTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (ParameterizedTypeTreeMatcher matcher : parameterizedTypeMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchParameterizedType(tree, state), tree, state);
     }
     return super.visitParameterizedType(tree, visitorState);
@@ -751,7 +775,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitParenthesized(ParenthesizedTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (ParenthesizedTreeMatcher matcher : parenthesizedMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchParenthesized(tree, state), tree, state);
     }
     return super.visitParenthesized(tree, visitorState);
@@ -761,7 +785,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitPrimitiveType(PrimitiveTypeTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (PrimitiveTypeTreeMatcher matcher : primitiveTypeMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchPrimitiveType(tree, state), tree, state);
     }
     return super.visitPrimitiveType(tree, visitorState);
@@ -771,7 +795,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitReturn(ReturnTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (ReturnTreeMatcher matcher : returnMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchReturn(tree, state), tree, state);
     }
     return super.visitReturn(tree, visitorState);
@@ -781,7 +805,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitSwitch(SwitchTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (SwitchTreeMatcher matcher : switchMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchSwitch(tree, state), tree, state);
     }
     return super.visitSwitch(tree, visitorState);
@@ -791,7 +815,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitSynchronized(SynchronizedTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (SynchronizedTreeMatcher matcher : synchronizedMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchSynchronized(tree, state), tree, state);
     }
     return super.visitSynchronized(tree, visitorState);
@@ -801,7 +825,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitThrow(ThrowTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (ThrowTreeMatcher matcher : throwMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchThrow(tree, state), tree, state);
     }
     return super.visitThrow(tree, visitorState);
@@ -811,7 +835,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitTry(TryTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (TryTreeMatcher matcher : tryMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchTry(tree, state), tree, state);
     }
     return super.visitTry(tree, visitorState);
@@ -821,7 +845,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitTypeCast(TypeCastTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (TypeCastTreeMatcher matcher : typeCastMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchTypeCast(tree, state), tree, state);
     }
     return super.visitTypeCast(tree, visitorState);
@@ -831,7 +855,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitTypeParameter(TypeParameterTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (TypeParameterTreeMatcher matcher : typeParameterMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchTypeParameter(tree, state), tree, state);
     }
     return super.visitTypeParameter(tree, visitorState);
@@ -841,7 +865,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitUnary(UnaryTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (UnaryTreeMatcher matcher : unaryMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchUnary(tree, state), tree, state);
     }
     return super.visitUnary(tree, visitorState);
@@ -853,7 +877,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitVariable(VariableTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (VariableTreeMatcher matcher : variableMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchVariable(tree, state), tree, state);
     }
     return super.visitVariable(tree, visitorState);
@@ -863,7 +887,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitWhileLoop(WhileLoopTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (WhileLoopTreeMatcher matcher : whileLoopMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchWhileLoop(tree, state), tree, state);
     }
     return super.visitWhileLoop(tree, visitorState);
@@ -873,7 +897,7 @@ public class ErrorProneScanner extends Scanner {
   public Void visitWildcard(WildcardTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (WildcardTreeMatcher matcher : wildcardMatchers) {
-      if (isSuppressed(matcher)) continue;
+      if (isSuppressedOrDisabled(matcher)) continue;
       reportMatch(matcher.matchWildcard(tree, state), tree, state);
     }
     return super.visitWildcard(tree, visitorState);
