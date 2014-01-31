@@ -38,8 +38,6 @@ import com.sun.tools.javac.util.Name;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.Map;
-import java.util.HashMap;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)

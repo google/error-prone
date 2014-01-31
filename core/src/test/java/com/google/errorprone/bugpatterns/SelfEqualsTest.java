@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static org.junit.Assert.fail;
 
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.Scanner;
 
 import org.junit.Test;
 

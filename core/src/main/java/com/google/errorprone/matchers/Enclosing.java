@@ -18,7 +18,6 @@ package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.*;
-import com.sun.source.util.TreePath;
 
 import java.util.List;
 
