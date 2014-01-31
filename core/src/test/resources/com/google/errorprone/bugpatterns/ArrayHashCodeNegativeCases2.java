@@ -16,9 +16,11 @@
 
 package com.google.errorprone.bugpatterns;
 
-import com.google.common.base.Objects;
+import java.util.Objects;
 
 /**
+ * Java 7 specific tests
+ * 
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public class ArrayHashCodeNegativeCases {
@@ -29,28 +31,28 @@ public class ArrayHashCodeNegativeCases {
   private byte[] byteArray = {1, 2, 3};
   private Object obj = new Object();
   private String str = "foo";
-  
-  public void objectHashCodeOnNonArrayType() {
-    int hashCode;
-    hashCode = obj.hashCode();
-    hashCode = str.hashCode();
-  }
     
-  public void varargsHashCodeOnMoreThanOneArg() {
-    int hashCode;
-    hashCode = Objects.hashCode(objArray, intArray);
-    hashCode = Objects.hashCode(stringArray, byteArray);
-  }
-  
-  public void varagsHashCodeOnNonArrayType() {
+  public void nonVaragsHashCodeOnNonArrayType() {
     int hashCode;
     hashCode = Objects.hashCode(obj);    
     hashCode = Objects.hashCode(str);
   }
   
+  public void varargsHashCodeOnMoreThanOneArg() {
+    int hashCode;
+    hashCode = Objects.hash(objArray, intArray);
+    hashCode = Objects.hash(stringArray, byteArray);
+  }
+  
+  public void varagsHashCodeOnNonArrayType() {
+    int hashCode;
+    hashCode = Objects.hash(obj);
+    hashCode = Objects.hash(str);
+  }
+  
   public void varagsHashCodeOnObjectOrStringArray() {
     int hashCode;
-    hashCode = Objects.hashCode(objArray);
-    hashCode = Objects.hashCode(stringArray);
+    hashCode = Objects.hash(objArray);  
+    hashCode = Objects.hash(stringArray);    
   }
 }

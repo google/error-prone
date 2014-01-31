@@ -16,7 +16,10 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static org.junit.Assume.assumeTrue;
+
 import com.google.errorprone.CompilationTestHelper;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -40,10 +43,31 @@ public class ArrayHashCodeTest {
         new File(this.getClass().getResource("ArrayHashCodePositiveCases.java").toURI()));
   }
 
+  /**
+   * Tests java.util.Objects hashCode methods, which are only in JDK 7 and above.
+   */
+  @Test
+  public void testJava7PositiveCase() throws Exception {
+    String[] javaVersion = System.getProperty("java.version").split("\\.");
+    assumeTrue(Integer.parseInt(javaVersion[1]) >= 7);
+    compilationHelper.assertCompileFailsWithMessages(
+        new File(this.getClass().getResource("ArrayHashCodePositiveCases2.java").toURI()));
+  }
+
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(
         new File(this.getClass().getResource("ArrayHashCodeNegativeCases.java").toURI()));
   }
+
+  /**
+   * Tests java.util.Objects hashCode methods, which are only in JDK 7 and above.
+   */
+  @Test
+  public void testJava7NegativeCase() throws Exception {
+    compilationHelper.assertCompileSucceeds(
+        new File(this.getClass().getResource("ArrayHashCodeNegativeCases.java").toURI()));
+  }
+
 
 }

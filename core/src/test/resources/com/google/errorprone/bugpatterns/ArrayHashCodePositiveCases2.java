@@ -16,41 +16,34 @@
 
 package com.google.errorprone.bugpatterns;
 
-import com.google.common.base.Objects;
+import java.util.Objects;
 
 /**
+ * Java 7 specific tests
+ * 
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class ArrayHashCodeNegativeCases {
-  
+public class ArrayHashCodePositiveCases2 {
   private Object[] objArray = {1, 2, 3};
   private String[] stringArray = {"1", "2", "3"};
   private int[] intArray = {1, 2, 3};
   private byte[] byteArray = {1, 2, 3};
-  private Object obj = new Object();
-  private String str = "foo";
-  
-  public void objectHashCodeOnNonArrayType() {
+   
+  public void javaUtilObjectsHashCode() {
     int hashCode;
-    hashCode = obj.hashCode();
-    hashCode = str.hashCode();
-  }
-    
-  public void varargsHashCodeOnMoreThanOneArg() {
-    int hashCode;
-    hashCode = Objects.hashCode(objArray, intArray);
-    hashCode = Objects.hashCode(stringArray, byteArray);
-  }
-  
-  public void varagsHashCodeOnNonArrayType() {
-    int hashCode;
-    hashCode = Objects.hashCode(obj);    
-    hashCode = Objects.hashCode(str);
-  }
-  
-  public void varagsHashCodeOnObjectOrStringArray() {
-    int hashCode;
+    //BUG: Suggestion includes "Arrays.hashCode(objArray)"
     hashCode = Objects.hashCode(objArray);
+    //BUG: Suggestion includes "Arrays.hashCode(stringArray)"
     hashCode = Objects.hashCode(stringArray);
+    //BUG: Suggestion includes "Arrays.hashCode(intArray)"
+    hashCode = Objects.hashCode(intArray);
+  }
+  
+  public void javaUtilObjectsHash() {
+    int hashCode;
+    //BUG: Suggestion includes "Arrays.hashCode(intArray)"
+    hashCode = Objects.hash(intArray);
+    //BUG: Suggestion includes "Arrays.hashCode(byteArray)"
+    hashCode = Objects.hash(byteArray);
   }
 }

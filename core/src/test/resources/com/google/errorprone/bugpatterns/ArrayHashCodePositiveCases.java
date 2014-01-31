@@ -16,7 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import java.util.Objects;
+import com.google.common.base.Objects;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
@@ -36,30 +36,12 @@ public class ArrayHashCodePositiveCases {
     //BUG: Suggestion includes "Arrays.hashCode(intArray)"
     hashCode = intArray.hashCode();
   }
-  
-  public void javaUtilObjectsHashCode() {
-    int hashCode;
-    //BUG: Suggestion includes "Arrays.hashCode(objArray)"
-    hashCode = Objects.hashCode(objArray);
-    //BUG: Suggestion includes "Arrays.hashCode(stringArray)"
-    hashCode = Objects.hashCode(stringArray);
-    //BUG: Suggestion includes "Arrays.hashCode(intArray)"
-    hashCode = Objects.hashCode(intArray);
-  }
-  
-  public void javaUtilObjectsHash() {
-    int hashCode;
-    //BUG: Suggestion includes "Arrays.hashCode(intArray)"
-    hashCode = Objects.hash(intArray);
-    //BUG: Suggestion includes "Arrays.hashCode(byteArray)"
-    hashCode = Objects.hash(byteArray);
-  }
-  
+
   public void guavaObjectsHashCode() {
     int hashCode;
     //BUG: Suggestion includes "Arrays.hashCode(intArray)"
-    hashCode = com.google.common.base.Objects.hashCode(intArray);
+    hashCode = Objects.hashCode(intArray);
     //BUG: Suggestion includes "Arrays.hashCode(byteArray)"
-    hashCode = com.google.common.base.Objects.hashCode(byteArray);
+    hashCode = Objects.hashCode(byteArray);
   }
 }
