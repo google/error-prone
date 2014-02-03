@@ -85,6 +85,7 @@ public class ErrorProneScanner extends Scanner {
       ReturnValueIgnored.class,
       NonRuntimeAnnotation.class,
       InvalidPatternSyntax.class,
+      MalformedFormatString.class,
       ModifyingCollectionWithItself.class,
       PreconditionsTooManyArgs.class,
       CheckReturnValue.class,

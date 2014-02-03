@@ -170,8 +170,10 @@ public class Matchers {
 
   /**
    * Matches an AST node which is an expression yielding the indicated static method.
+   * You can use "*" wildcard instead of any of the arguments.
    * @param fullClassName fully-qualified name like "java.util.regex.Pattern"
-   * @param methodName name of the static method which is a member of the class, like "matches"
+   * @param methodName either name or full signature of the static method which is a member of the
+   * class, like "compile" or "compile(java.lang.String)"
    */
   public static StaticMethod staticMethod(String fullClassName, String methodName) {
     return new StaticMethod(fullClassName, methodName);

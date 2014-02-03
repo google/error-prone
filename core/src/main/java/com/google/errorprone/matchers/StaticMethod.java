@@ -44,9 +44,10 @@ public class StaticMethod implements Matcher<ExpressionTree> {
       return false;
     }
 
-    boolean methodSame = methodName.equals("*") 
-        || sym.getQualifiedName().toString().equals(methodName);
-    boolean classSame = fullClass.equals("*") 
+    boolean methodSame = methodName.equals("*")
+        || sym.getSimpleName().toString().equals(methodName)
+        || sym.toString().equals(methodName);
+    boolean classSame = fullClass.equals("*")
         || sym.owner.getQualifiedName().toString().equals(fullClass);
     return methodSame && classSame;
   }

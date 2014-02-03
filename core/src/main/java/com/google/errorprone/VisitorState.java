@@ -279,13 +279,26 @@ public class VisitorState {
    * @return the source code that represents the node, or null if it is not available
    */
   public CharSequence getSourceForNode(JCTree node) {
-    JCCompilationUnit compilationUnit = (JCCompilationUnit) getPath().getCompilationUnit();
-    if (compilationUnit.endPositions == null) {
+    int start = node.getStartPosition();
+    int end = getEndPosition(node);
+    if (end < 0) {
       return null;
     }
-    int start = node.getStartPosition();
-    int end = node.getEndPosition(compilationUnit.endPositions);
     return getSourceCode().subSequence(start, end);
+  }
+
+  /**
+   * Gets the end position of the given node.  The position is only available if the compiler was
+   * invoked with the -Xjcov option.
+   *
+   * @return the end position of the node, or -1 if it is not available
+   */
+  public int getEndPosition(JCTree node) {
+    JCCompilationUnit compilationUnit = (JCCompilationUnit) getPath().getCompilationUnit();
+    if (compilationUnit.endPositions == null) {
+      return -1;
+    }
+    return node.getEndPosition(compilationUnit.endPositions);
   }
 
   /**

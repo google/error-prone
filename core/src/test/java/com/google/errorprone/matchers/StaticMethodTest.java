@@ -45,6 +45,9 @@ public class StaticMethodTest extends CompilerBasedTest {
         "  public int instanceCount() {",
         "    return 2;",
         "  }",
+        "  public static int withArgument(String s) {",
+        "    return 3;",
+        "  }",
         "}"
     );
   }
@@ -60,6 +63,28 @@ public class StaticMethodTest extends CompilerBasedTest {
       "}"
     );
     assertCompiles(methodInvocationMatches(true, new StaticMethod("com.google.A", "count")));
+    assertCompiles(methodInvocationMatches(true, new StaticMethod("*", "count")));
+    assertCompiles(methodInvocationMatches(true, new StaticMethod("com.google.A", "*")));
+    assertCompiles(methodInvocationMatches(true, new StaticMethod("*", "*")));
+    assertCompiles(methodInvocationMatches(true, new StaticMethod("com.google.A", "count()")));
+  }
+
+  @Test
+  public void shouldOnlyMatchFullSignature() throws IOException {
+    writeFile("B.java",
+      "import com.google.A;",
+      "public class B {",
+      "  public int count() {",
+      "    return A.withArgument(\"foo\");",
+      "  }",
+      "}"
+    );
+    assertCompiles(methodInvocationMatches(true,
+          new StaticMethod("com.google.A", "withArgument(java.lang.String)")));
+    assertCompiles(methodInvocationMatches(false,
+          new StaticMethod("com.google.A", "withArgument()")));
+    assertCompiles(methodInvocationMatches(false,
+          new StaticMethod("com.google.A", "withArgument(String)")));
   }
 
   @Test
@@ -87,6 +112,7 @@ public class StaticMethodTest extends CompilerBasedTest {
         "}"
     );
     assertCompiles(methodInvocationMatches(false, new StaticMethod("com.google.A", "count")));
+    assertCompiles(methodInvocationMatches(false, new StaticMethod("com.google.A", "*")));
   }
 
   @Test
@@ -102,6 +128,7 @@ public class StaticMethodTest extends CompilerBasedTest {
     );
     assertCompiles(methodInvocationMatches(false,
         new StaticMethod("com.google.A", "instanceCount")));
+    assertCompiles(methodInvocationMatches(false, new StaticMethod("*", "*")));
   }
 
   @Test
