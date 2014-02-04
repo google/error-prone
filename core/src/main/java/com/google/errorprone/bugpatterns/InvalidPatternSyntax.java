@@ -40,10 +40,10 @@ import java.util.regex.PatternSyntaxException;
  */
 @BugPattern(name = "InvalidPatternSyntax",
     summary = "Invalid syntax used for a regular expression",
-    explanation = "This error is triggered by calls to regex-accepting methods with invalid string"
-        + " literals.  These calls would cause a PatternSyntaxException at runtime.\n\nWe"
-        + " deliberately do not check java.util.regex.Pattern#compile as many of its users"
-        + " are deliberately testing the regex compiler or using a vacuously true regex.",
+    explanation = "This error is triggered by calls to regex-accepting methods with invalid string "
+        + "literals.  These calls would cause a PatternSyntaxException at runtime.\n\n"
+        + "We deliberately do not check java.util.regex.Pattern#compile as many of its users "
+        + "are deliberately testing the regex compiler or using a vacuously true regex.",
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
 public class InvalidPatternSyntax extends BugChecker implements MethodInvocationTreeMatcher {
 
@@ -69,9 +69,9 @@ public class InvalidPatternSyntax extends BugChecker implements MethodInvocation
     }
   };
 
-  /* 
+  /*
    * Match invocations to regex-accepting methods with bad string literals.
-   * 
+   *
    * <p>We deliberately omit Pattern.compile itself, as most of its users appear to be either
    * passing e.g. LITERAL flags, deliberately testing the regex compiler, or deliberately
    * using "." as the "vacuously true regex."

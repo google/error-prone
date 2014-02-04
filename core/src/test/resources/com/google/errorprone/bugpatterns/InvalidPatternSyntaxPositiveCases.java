@@ -16,7 +16,12 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.matchers.Matchers.methodSelect;
+import static com.google.errorprone.matchers.Matchers.staticMethod;
+
 import java.util.regex.Pattern;
+
+import com.google.common.base.Splitter;
 
 /**
  * @author mdempsky@google.com (Matthew Dempsky)
@@ -25,10 +30,6 @@ public class InvalidPatternSyntaxPositiveCases {
   public static final String INVALID = "*";
   public static final String DOT = ".";
   {
-    //BUG: Suggestion includes ""
-    Pattern.compile(INVALID);
-    //BUG: Suggestion includes ""
-    Pattern.compile(INVALID, 0);
     //BUG: Suggestion includes ""
     Pattern.matches(INVALID, "");
     //BUG: Suggestion includes ""
@@ -46,5 +47,9 @@ public class InvalidPatternSyntaxPositiveCases {
     "foo.bar".split(".");
     //BUG: Suggestion includes ""
     "foo.bonk".split(DOT);
+    
+    //BUG: Suggestion includes "Splitter.onPattern("\\.")"
+    Splitter.onPattern(".");
+
   }
 }
