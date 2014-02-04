@@ -142,7 +142,7 @@ public class ErrorProneCompiler extends Main {
       scannerInContext.setDisabledChecks(epOptions.getDisabledChecks());
     } catch (InvalidCommandLineOptionException e) {
       System.err.println(e.getMessage());
-      return 2;     // Main.ERROR_CMDERR
+      return 2;     // Main.EXIT_CMDERR
     }
 
     try {
