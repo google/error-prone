@@ -47,7 +47,7 @@ import com.sun.tools.javac.code.Symbol;
     explanation = "A declaration has the @deprecated Javadoc tag but no @Deprecated annotation. "
         + "Please add an @Deprecated annotation to this declaration in addition to the @deprecated "
         + "tag in the Javadoc.",
-    category = JDK, severity = ERROR, maturity = MATURE)
+    disableable = true, category = JDK, severity = ERROR, maturity = MATURE)
 public class DepAnn extends BugChecker
     implements MethodTreeMatcher, ClassTreeMatcher, VariableTreeMatcher {
 
