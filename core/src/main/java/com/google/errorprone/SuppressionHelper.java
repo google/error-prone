@@ -6,7 +6,6 @@ import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Pair;
 
@@ -85,8 +84,7 @@ public class SuppressionHelper {
      */
     Set<Class<? extends Annotation>> newCustomSuppressions = null;
     for (Class<? extends Annotation> annotationType : customSuppressionAnnotations) {
-      Annotation annotation = JavacElements.getAnnotation(sym, annotationType);
-      if (annotation != null) {
+      if (sym.getAnnotation(annotationType) != null) {
         if (newCustomSuppressions == null) {
           newCustomSuppressions = new HashSet<Class<? extends Annotation>>(customSuppressionsOnCurrentPath);
         }

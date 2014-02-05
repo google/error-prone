@@ -31,7 +31,6 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.tools.javac.code.Flags;
-import com.sun.tools.javac.model.JavacElements;
 
 import java.lang.annotation.Retention;
 
@@ -66,8 +65,7 @@ public class InjectScopeOrQualifierAnnotationRetention extends BugChecker
   public final Description matchClass(ClassTree classTree, VisitorState state) {
     if ((ASTHelpers.getSymbol(classTree).flags() & Flags.ANNOTATION) != 0) {
       if (SCOPE_OR_QUALIFIER_ANNOTATION_MATCHER.matches(classTree, state)) {
-        Retention retention =
-            JavacElements.getAnnotation(ASTHelpers.getSymbol(classTree), Retention.class);
+        Retention retention = ASTHelpers.getSymbol(classTree).getAnnotation(Retention.class);
         if (retention != null && retention.value().equals(RUNTIME)) {
           return Description.NO_MATCH;
         }
@@ -79,8 +77,7 @@ public class InjectScopeOrQualifierAnnotationRetention extends BugChecker
   }
 
   public Description describe(ClassTree classTree, VisitorState state) {
-    Retention retention =
-        JavacElements.getAnnotation(ASTHelpers.getSymbol(classTree), Retention.class);
+    Retention retention = ASTHelpers.getSymbol(classTree).getAnnotation(Retention.class);
     if (retention == null) {
       return describeMatch(classTree, new SuggestedFix().addImport(
           "java.lang.annotation.Retention")

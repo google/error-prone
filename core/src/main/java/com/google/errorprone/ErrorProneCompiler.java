@@ -18,6 +18,7 @@ package com.google.errorprone;
 
 import static com.google.errorprone.ErrorProneScanner.EnabledPredicate.DEFAULT_CHECKS;
 
+import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.main.Main;
 import com.sun.tools.javac.util.Context;
@@ -32,7 +33,7 @@ import javax.tools.JavaFileObject;
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class ErrorProneCompiler extends Main {
+public class ErrorProneCompiler {
 
   /**
    * Entry point for compiling Java code with error-prone enabled.
@@ -55,6 +56,7 @@ public class ErrorProneCompiler extends Main {
 
   private final DiagnosticListener<? super JavaFileObject> diagnosticListener;
   private final Class<? extends JavaCompiler> compilerClass;
+  private Main main;
 
   /**
    * A custom Scanner to use if we want to use a non-default set of error-prone checks, e.g.
@@ -66,7 +68,7 @@ public class ErrorProneCompiler extends Main {
       DiagnosticListener<? super JavaFileObject> diagnosticListener,
       Scanner errorProneScanner,
       Class<? extends JavaCompiler> compilerClass) {
-    super(s, printWriter);
+    this.main = new Main(s, printWriter);
     this.diagnosticListener = diagnosticListener;
     this.errorProneScanner = errorProneScanner;
     this.compilerClass = compilerClass;
@@ -116,14 +118,16 @@ public class ErrorProneCompiler extends Main {
     }
   }
 
-  /**
-   * Hook into the compile method, to register our components with the compilation's context.
-   */
-  @Override
-  public int compile(String[] strings, Context context, List<JavaFileObject> javaFileObjects,
-      Iterable<? extends Processor> iterable) {
+  public int compile(String[] args) {
+    Context context = new Context();
+    JavacFileManager.preRegister(context);
+    return compile(args, context, List.<JavaFileObject>nil(), null);
+  }
 
-    ErrorProneOptions epOptions = ErrorProneOptions.processArgs(strings);
+  public int compile(String[] args, Context context, List<JavaFileObject> javaFileObjects,
+      Iterable<? extends Processor> processors) {
+
+    ErrorProneOptions epOptions = ErrorProneOptions.processArgs(args);
 
     if (diagnosticListener != null) {
       context.put(DiagnosticListener.class, diagnosticListener);
@@ -151,6 +155,7 @@ public class ErrorProneCompiler extends Main {
       throw new RuntimeException("The JavaCompiler used must have the preRegister static method. "
           + "We are very sorry.", e);
     }
-    return super.compile(epOptions.getRemainingArgs(), context, javaFileObjects, iterable);
+    return JDKCompatible.runCompile(
+        main, epOptions.getRemainingArgs(), context, javaFileObjects, processors);
   }
 }

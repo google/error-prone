@@ -16,13 +16,12 @@
 
 package com.google.errorprone.fixes;
 
-import com.sun.tools.javac.tree.JCTree;
+import com.google.errorprone.ErrorProneEndPosMap;
 
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.StringReader;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -50,9 +49,9 @@ public class AppliedFix {
 
   public static class Applier {
     private final CharSequence source;
-    private final Map<JCTree, Integer> endPositions;
+    private final ErrorProneEndPosMap endPositions;
 
-    public Applier(CharSequence source, Map<JCTree, Integer> endPositions) {
+    public Applier(CharSequence source, ErrorProneEndPosMap endPositions) {
       this.source = source;
       this.endPositions = endPositions;
     }
@@ -111,7 +110,7 @@ public class AppliedFix {
     }
   }
 
-  public static Applier fromSource(CharSequence source, Map<JCTree, Integer> endPositions) {
+  public static Applier fromSource(CharSequence source, ErrorProneEndPosMap endPositions) {
     return new Applier(source, endPositions);
   }
 }

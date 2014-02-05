@@ -31,8 +31,9 @@ import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
+import com.sun.tools.javac.code.Attribute.Compound;
 import com.sun.tools.javac.code.Flags;
-import com.sun.tools.javac.model.JavacElements;
+import com.sun.tools.javac.code.Symbol;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
@@ -62,9 +63,10 @@ public class InjectInvalidTargetingOnScopingAnnotation extends BugChecker
   @Override
   @SuppressWarnings("unchecked")
   public final Description matchClass(ClassTree classTree, VisitorState state) {
-    if ((ASTHelpers.getSymbol(classTree).flags() & Flags.ANNOTATION) != 0
+    Symbol classSymbol = ASTHelpers.getSymbol(classTree);
+    if ((classSymbol.flags() & Flags.ANNOTATION) != 0
         && SCOPE_ANNOTATION_MATCHER.matches(classTree, state)) {
-      Target target = JavacElements.getAnnotation(ASTHelpers.getSymbol(classTree), Target.class);
+      Target target = classSymbol.getAnnotation(Target.class);
       boolean hasExclusivelyTypeAndOrMethodTargeting = false;
       if (target != null) {
         for (ElementType elementType : target.value()) {
@@ -83,7 +85,8 @@ public class InjectInvalidTargetingOnScopingAnnotation extends BugChecker
   }
 
   public Description describe(ClassTree classTree, VisitorState state) {
-    Target target = JavacElements.getAnnotation(ASTHelpers.getSymbol(classTree), Target.class);
+    Compound target = ASTHelpers.getSymbol(classTree).attribute(
+        state.getSymbolFromString(TARGET_ANNOTATION));
     if (target == null) {
       return describeMatch(classTree, new SuggestedFix()
           .addImport("java.lang.annotation.Target")

@@ -3,10 +3,10 @@ package com.google.errorprone;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
+import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Position;
 
-import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -18,7 +18,7 @@ import java.util.Set;
  *
  * @author Eddie Aftandilian (eaftan@google.com)
  */
-class WrappedTreeMap extends AbstractMap<JCTree, Integer> {
+class WrappedTreeMap implements ErrorProneEndPosMap {
   /**
    * A map from wrapped tree nodes to tree end positions.
    */
@@ -32,7 +32,7 @@ class WrappedTreeMap extends AbstractMap<JCTree, Integer> {
    */
   private final boolean built;
 
-  public WrappedTreeMap(Log log, Map<JCTree, Integer> map) {
+  public WrappedTreeMap(Log log, ErrorProneEndPosMap map) {
     this.log = log;
     wrappedMap = new HashMap<WrappedTreeNode, Integer>();
     for (Map.Entry<JCTree, Integer> entry : map.entrySet()) {
@@ -47,11 +47,8 @@ class WrappedTreeMap extends AbstractMap<JCTree, Integer> {
   }
 
   @Override
-  public Integer get(Object key) {
-    if (!(key instanceof JCTree)) {
-      return null;
-    }
-    WrappedTreeNode wrappedNode = new WrappedTreeNode((JCTree) key);
+  public int getEndPosition(DiagnosticPosition pos) {
+    WrappedTreeNode wrappedNode = new WrappedTreeNode(pos.getTree());
     return wrappedMap.get(wrappedNode);
   }
 
@@ -114,7 +111,7 @@ class WrappedTreeMap extends AbstractMap<JCTree, Integer> {
       }
 
       // Literal nodes with unequal values are never equal.
-      if (node.getTag() == JCTree.LITERAL && other.node.getTag() == JCTree.LITERAL
+      if (node instanceof JCLiteral && other.node instanceof JCLiteral
           && !objectsEquals(((JCLiteral) node).getValue(), ((JCLiteral) other.node).getValue())) {
         return false;
       }
@@ -151,8 +148,8 @@ class WrappedTreeMap extends AbstractMap<JCTree, Integer> {
         // getKind() throws an AssertionError for LetExpr and TypeBoundKind. Ignore it for 
         // calculating the hash code.
       }
-      result = 31 * result + node.getTag();
-      if (node.getTag() == JCTree.LITERAL) {
+      result = 31 * result + JDKCompatible.getJCTreeTag(node);
+      if (node instanceof JCLiteral) {
         Object value = ((JCLiteral) node).getValue();
         if (value != null) {
           result = 31 * result + value.hashCode();

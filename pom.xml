@@ -45,6 +45,7 @@
   </distributionManagement>
 
   <modules>
+    <module>jdkcompat</module>
     <module>core</module>
     <module>annotation</module>
     <module>docgen</module>
@@ -134,4 +135,56 @@
       </plugin>
     </plugins>
   </build>
+
+  <!-- tools.jar is in the classpath by default on Apple-provided JDK
+       but not OpenJDK. We don't compile with Apple's JDK right now, so this
+       dependency is always included. If we ever need to run on the Apple JDK,
+       we could use activation like this
+       <profile>
+        <id>tools-jar</id>
+         <activation>
+          <os>
+           <family>!mac</family>
+          </os>
+  -->
+  <profiles>
+    <profile>
+      <id>tools.jar</id>
+      <activation>
+        <!-- Our release turns the systemPath into an absolute path, which doesn't resolve
+             for downstream dependent projects. So just drop this dep in that case.
+             See issue #18 -->
+        <file>
+          <exists>${java.home}/../lib/tools.jar</exists>
+        </file>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>openjdk</groupId>
+          <artifactId>tools</artifactId>
+          <version>1.6</version>
+          <scope>system</scope>
+          <systemPath>${java.home}/../lib/tools.jar</systemPath>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>jdk7</id>
+      <activation>
+        <jdk>[1.6,1.8)</jdk>
+      </activation>
+      <modules>
+        <module>jdk7</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>jdk8</id>
+      <activation>
+        <jdk>1.8</jdk>
+      </activation>
+      <modules>
+        <module>jdk8</module>
+      </modules>
+    </profile>
+  </profiles>
 </project>

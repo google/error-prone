@@ -19,38 +19,30 @@ package com.google.errorprone.fixes;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.same;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
-import com.google.common.collect.Maps;
+import com.google.errorprone.ErrorProneEndPosMap;
 
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import java.util.Map;
-
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
 @RunWith(MockitoJUnitRunner.class)
 public class AppliedFixTest {
   @Mock JCTree node;
-  private Map<JCTree, Integer> endPositions;
-
-  @Before
-  public void setUp() throws Exception {
-    endPositions = Maps.newHashMap();
-  }
+  @Mock ErrorProneEndPosMap endPositions;
 
   @Test
   public void shouldApplySingleFixOnALine() {
     when(node.getStartPosition()).thenReturn(11);
-    when(node.getEndPosition(same(endPositions))).thenReturn(14);
+    when(endPositions.getEndPosition(any(DiagnosticPosition.class))).thenReturn(14);
 
     AppliedFix fix = AppliedFix.fromSource("import org.me.B;", endPositions)
         .apply(new SuggestedFix().delete(node));
@@ -60,7 +52,7 @@ public class AppliedFixTest {
   @Test
   public void shouldReportOnlyTheChangedLineInNewSnippet() {
     when(node.getStartPosition()).thenReturn(25);
-    when(node.getEndPosition(same(endPositions))).thenReturn(26);
+    when(endPositions.getEndPosition(any(DiagnosticPosition.class))).thenReturn(26);
 
     AppliedFix fix = AppliedFix.fromSource(
         "public class Foo {\n" +

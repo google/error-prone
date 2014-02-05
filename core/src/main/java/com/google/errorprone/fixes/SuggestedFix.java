@@ -16,6 +16,9 @@
 
 package com.google.errorprone.fixes;
 
+import com.google.errorprone.ErrorProneEndPosMap;
+import com.google.errorprone.JDKCompatible;
+
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
@@ -25,7 +28,6 @@ import com.sun.tools.javac.util.Pair;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -36,7 +38,7 @@ public class SuggestedFix {
 
   public String toString(JCCompilationUnit compilationUnit) {
     StringBuilder result = new StringBuilder("replace ");
-    for (Replacement replacement : getReplacements(compilationUnit.endPositions)) {
+    for (Replacement replacement : getReplacements(JDKCompatible.getEndPosMap(compilationUnit))) {
       result
           .append("position " + replacement.startPosition + ":" + replacement.endPosition)
           .append(" with \"" + replacement.replaceWith + "\" ");
@@ -55,7 +57,7 @@ public class SuggestedFix {
   private Collection<String> importsToAdd = new ArrayList<String>();
   private Collection<String> importsToRemove = new ArrayList<String>();
 
-  public Set<Replacement> getReplacements(Map<JCTree, Integer> endPositions) {
+  public Set<Replacement> getReplacements(ErrorProneEndPosMap endPositions) {
     if (endPositions == null) {
       throw new IllegalArgumentException(
           "Cannot produce correct replacements without endPositions." +
@@ -82,15 +84,15 @@ public class SuggestedFix {
     for (Pair<DiagnosticPosition, String> postfixInsertion : postfixInsertions) {
       DiagnosticPosition pos = postfixInsertion.fst;
       replacements.add(new Replacement(
-          pos.getEndPosition(endPositions),
-          pos.getEndPosition(endPositions),
+          endPositions.getEndPosition(pos),
+          endPositions.getEndPosition(pos),
           postfixInsertion.snd));
     }
     for (Pair<DiagnosticPosition, String> nodeReplacement : nodeReplacements) {
       DiagnosticPosition pos = nodeReplacement.fst;
       replacements.add(new Replacement(
           pos.getStartPosition(),
-          pos.getEndPosition(endPositions),
+          endPositions.getEndPosition(pos),
           nodeReplacement.snd));
     }
     for (Pair<DiagnosticPosition, DiagnosticPosition> nodeSwap : nodeSwaps) {
@@ -98,11 +100,11 @@ public class SuggestedFix {
       DiagnosticPosition pos2 = nodeSwap.snd;
       replacements.add(new Replacement(
           pos1.getStartPosition(),
-          pos1.getEndPosition(endPositions),
+          endPositions.getEndPosition(pos1),
           nodeSwap.snd.toString()));
       replacements.add(new Replacement(
           pos2.getStartPosition(),
-          pos2.getEndPosition(endPositions),
+          endPositions.getEndPosition(pos2),
           nodeSwap.fst.toString()));
     }
     return replacements;
@@ -124,7 +126,7 @@ public class SuggestedFix {
    */
   public SuggestedFix replace(int startPos, int endPos, String replaceWith) {
     nodeReplacements.add(new Pair<DiagnosticPosition, String>(
-        new IndexedPosition(startPos, endPos), replaceWith));
+        JDKCompatible.getIndexedPosition(startPos, endPos), replaceWith));
     return this;
   }
 
@@ -144,7 +146,7 @@ public class SuggestedFix {
   public SuggestedFix replace(Tree node, String replaceWith, int startPosAdjustment,
       int endPosAdjustment) {
     nodeReplacements.add(new Pair<DiagnosticPosition, String>(
-        new AdjustedPosition((JCTree) node, startPosAdjustment, endPosAdjustment),
+        JDKCompatible.getAdjustedPosition((JCTree) node, startPosAdjustment, endPosAdjustment),
         replaceWith));
     return this;
   }
@@ -210,74 +212,5 @@ public class SuggestedFix {
 
   public Collection<String> getImportsToRemove() {
     return importsToRemove;
-  }
-
-  /**
-   * Describes a tree position with adjustments to the start and end indices.
-   */
-  private static class AdjustedPosition implements DiagnosticPosition {
-    private final JCTree position;
-    private final int startPositionAdjustment;
-    private final int endPositionAdjustment;
-
-    public AdjustedPosition(JCTree position, int startPosAdjustment, int endPosAdjustment) {
-      this.position = position;
-      this.startPositionAdjustment = startPosAdjustment;
-      this.endPositionAdjustment = endPosAdjustment;
-    }
-
-    @Override
-    public int getStartPosition() {
-      return position.getStartPosition() + startPositionAdjustment;
-    }
-
-    @Override
-    public int getEndPosition(Map<JCTree, Integer> endPositions) {
-      return position.getEndPosition(endPositions) + endPositionAdjustment;
-    }
-
-    @Override
-    public JCTree getTree() {
-      return position;
-    }
-
-    @Override
-    public int getPreferredPosition() {
-      throw new UnsupportedOperationException();
-    }
-  }
-
-  /**
-   * Describes a position that only has a start and end index.
-   */
-  private static class IndexedPosition implements DiagnosticPosition {
-
-    final int startPos;
-    final int endPos;
-
-    public IndexedPosition(int startPos, int endPos) {
-      this.startPos = startPos;
-      this.endPos = endPos;
-    }
-
-    @Override
-    public JCTree getTree() {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public int getStartPosition() {
-      return startPos;
-    }
-
-    @Override
-    public int getPreferredPosition() {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public int getEndPosition(Map<JCTree, Integer> endPosTable) {
-      return endPos;
-    }
   }
 }
