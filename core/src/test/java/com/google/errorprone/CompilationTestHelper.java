@@ -21,6 +21,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 
 import java.io.File;
@@ -62,6 +63,13 @@ public class CompilationTestHelper {
     int exitCode = compiler.compile(arguments.toArray(new String[0]));
     assertThat(diagnosticHelper.getDiagnostics().toString(), exitCode, is(0));
     // TODO(eaftan): complain if there are any diagnostics
+  }
+
+  public void assertCompileSucceedsWithDisabledChecks(File source, String... disabled) {
+    String disableFlag = "-Xepdisable:" + Joiner.on(',').join(disabled);
+    List<String> arguments = Lists.newArrayList("-Xjcov", disableFlag, source.getAbsolutePath());
+    int exitCode = compiler.compile(arguments.toArray(new String[0]));
+    assertThat(diagnosticHelper.getDiagnostics().toString(), exitCode, is(0));
   }
 
   /**

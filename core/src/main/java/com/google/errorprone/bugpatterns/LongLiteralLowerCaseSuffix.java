@@ -42,7 +42,7 @@ import java.util.regex.Pattern;
     summary = "Prefer 'L' to 'l' for the suffix to long literals",
     explanation = "A long literal can have a suffix of 'L' or 'l', but the former is less " +
     "likely to be confused with a '1' in most fonts.",
-    category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
+    disableable = true, category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
 public class LongLiteralLowerCaseSuffix extends BugChecker implements LiteralTreeMatcher {
 
   private static final Matcher<LiteralTree> matcher = new Matcher<LiteralTree>() {

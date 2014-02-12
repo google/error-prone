@@ -52,7 +52,6 @@ public class LongLiteralLowerCaseSuffixTest {
   public void testJava7PositiveCase() throws Exception {
     String[] javaVersion = System.getProperty("java.version").split("\\.");
     assumeTrue(Integer.parseInt(javaVersion[1]) >= 7);
-
     compilationHelper.assertCompileFailsWithMessages(
         new File(
             this.getClass().getResource("LongLiteralLowerCaseSuffixPositiveCase2.java").toURI()));
@@ -63,5 +62,13 @@ public class LongLiteralLowerCaseSuffixTest {
     compilationHelper.assertCompileSucceeds(
         new File(
             this.getClass().getResource("LongLiteralLowerCaseSuffixNegativeCases.java").toURI()));
+  }
+
+  @Test
+  public void testDisableable() throws Exception {
+    compilationHelper.assertCompileSucceedsWithDisabledChecks(
+        new File(
+            this.getClass().getResource("LongLiteralLowerCaseSuffixPositiveCase1.java").toURI()),
+        "LongLiteralLowerCaseSuffix");
   }
 }
