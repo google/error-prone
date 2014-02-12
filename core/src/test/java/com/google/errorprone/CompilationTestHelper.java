@@ -32,6 +32,8 @@ import java.util.List;
 /**
  * Utility class for tests that need to build using error-prone.
  * @author eaftan@google.com (Eddie Aftandilian)
+ *
+ * TODO(eaftan): Refactor default argument construction to make setup cleaner.
  */
 public class CompilationTestHelper {
 
@@ -56,7 +58,8 @@ public class CompilationTestHelper {
   }
 
   public void assertCompileSucceeds(File source, File... dependencies) {
-    List<String> arguments = Lists.newArrayList("-Xjcov", source.getAbsolutePath());
+    List<String> arguments = Lists.newArrayList("-Xjcov", "-encoding", "UTF-8",
+        source.getAbsolutePath());
     for (File file : dependencies) {
       arguments.add(file.getAbsolutePath());
     }
@@ -67,7 +70,8 @@ public class CompilationTestHelper {
 
   public void assertCompileSucceedsWithDisabledChecks(File source, String... disabled) {
     String disableFlag = "-Xepdisable:" + Joiner.on(',').join(disabled);
-    List<String> arguments = Lists.newArrayList("-Xjcov", disableFlag, source.getAbsolutePath());
+    List<String> arguments = Lists.newArrayList("-Xjcov", "-encoding", "UTF-8",
+        disableFlag, source.getAbsolutePath());
     int exitCode = compiler.compile(arguments.toArray(new String[0]));
     assertThat(diagnosticHelper.getDiagnostics().toString(), exitCode, is(0));
   }
