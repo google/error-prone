@@ -4,7 +4,9 @@ import com.sun.tools.javac.parser.JavacParser;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
+import com.sun.tools.javac.tree.TreeInfo;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
+import com.sun.tools.javac.util.Position;
 
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -75,13 +77,50 @@ public class EndPosMap8 implements ErrorProneEndPosMap {
     this.rawMap = rawMap;
   }
 
+  /**
+   * The JDK8 implementation of endPosMap returns NOPOS if there's no mapping for the given key.
+   */
   @Override
-  public int getEndPosition(DiagnosticPosition pos) {
-    return pos.getEndPosition(table);
+  public Integer getEndPosition(DiagnosticPosition pos) {
+    Integer result = pos.getEndPosition(table);
+    return result != null ? result : Position.NOPOS;
   }
 
   @Override
   public Set<Map.Entry<JCTree, Integer>> entrySet() {
     return rawMap.entrySet();
+  }
+
+  /**
+   * Adapt a Map<JCTree, Integer> into an EndPosTable, and return Position.NOPOS for keys that
+   * aren't present.
+   */
+  private static class EndPosTableAdapter implements EndPosTable {
+
+    private final Map<JCTree, Integer> map;
+
+    public EndPosTableAdapter(Map<JCTree, Integer> map) {
+      this.map = map;
+    }
+
+    @Override
+    public int getEndPos(JCTree tree) {
+      Integer result = map.get(tree);
+      return result != null ? result : Position.NOPOS;
+    }
+
+    @Override
+    public void storeEnd(JCTree tree, int endpos) {
+      throw new IllegalStateException();
+    }
+
+    @Override
+    public int replaceTree(JCTree oldtree, JCTree newtree) {
+      throw new IllegalStateException();
+    }
+  }
+
+  public static int getEndPos(JCTree tree, Map<JCTree, Integer> map) {
+    return TreeInfo.getEndPos(tree, new EndPosTableAdapter(map));
   }
 }

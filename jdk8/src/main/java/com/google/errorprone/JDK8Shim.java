@@ -15,6 +15,7 @@ import com.sun.tools.javac.util.List;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Map;
 
 import javax.annotation.processing.Processor;
 import javax.tools.JavaFileObject;
@@ -73,5 +74,10 @@ public class JDK8Shim implements JDKCompatibleShim {
   @Override
   public int getJCTreeTag(JCTree node) {
     return node.getTag().ordinal();
+  }
+
+  @Override
+  public Integer getEndPosition(JCTree tree, Map<JCTree, Integer> map) {
+    return EndPosMap8.getEndPos(tree, map);
   }
 }

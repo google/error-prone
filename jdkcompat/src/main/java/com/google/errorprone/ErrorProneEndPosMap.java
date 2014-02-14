@@ -11,6 +11,6 @@ import java.util.Set;
  * abstraction over those differences.
  */
 public interface ErrorProneEndPosMap {
-  public abstract int getEndPosition(DiagnosticPosition pos);
-  public abstract Set<Map.Entry<JCTree, Integer>> entrySet();
+  Integer getEndPosition(DiagnosticPosition pos);
+  Set<Map.Entry<JCTree, Integer>> entrySet();
 }

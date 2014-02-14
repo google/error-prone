@@ -1,8 +1,7 @@
 package com.google.errorprone;
 
-import com.google.errorprone.ErrorProneEndPosMap;
-
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.TreeInfo;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 
 import java.util.Map;
@@ -16,13 +15,20 @@ public class EndPosMap7 implements ErrorProneEndPosMap {
     this.map = map;
   }
 
+  /**
+   * The JDK7 implementation of endPosMap returns null if there's no mapping for the given key.
+   */
   @Override
-  public int getEndPosition(DiagnosticPosition pos) {
+  public Integer getEndPosition(DiagnosticPosition pos) {
     return pos.getEndPosition(map);
   }
 
   @Override
   public Set<Map.Entry<JCTree, Integer>> entrySet() {
     return map.entrySet();
+  }
+
+  public static int getEndPos(JCTree tree, Map<JCTree, Integer> map) {
+    return TreeInfo.getEndPos(tree, map);
   }
 }

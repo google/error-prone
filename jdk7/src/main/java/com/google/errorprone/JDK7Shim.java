@@ -8,8 +8,10 @@ import com.sun.tools.javac.main.Main;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
-import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
+import com.sun.tools.javac.util.List;
+
+import java.util.Map;
 
 import javax.annotation.processing.Processor;
 import javax.tools.JavaFileObject;
@@ -49,5 +51,10 @@ public class JDK7Shim implements JDKCompatibleShim {
   @Override
   public int getJCTreeTag(JCTree node) {
     return node.getTag();
+  }
+
+  @Override
+  public Integer getEndPosition(JCTree tree, Map<JCTree, Integer> map) {
+    return EndPosMap7.getEndPos(tree, map);
   }
 }

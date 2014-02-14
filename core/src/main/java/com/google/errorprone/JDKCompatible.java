@@ -8,6 +8,8 @@ import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.List;
 
+import java.util.Map;
+
 import javax.annotation.processing.Processor;
 import javax.tools.JavaFileObject;
 
@@ -73,5 +75,18 @@ public final class JDKCompatible {
    */
   public static int getJCTreeTag(JCTree node) {
     return backingShim.getJCTreeTag(node);
+  }
+
+  /**
+   * Provides a wrapper for javac's TreeInfo#getEndPos().
+   *
+   * End positions are only recorded once per group of nodes with the same end
+   * position (e.g. in the binop "2 + 3", the AST nodes for the literal 2 and
+   * its parent binop only get one end position.) Implementing WrappedTreeMap
+   * correctly requires calling TreeInfo#getEndPos(), which figures out which
+   * node to use as the key for the endposmap lookup.
+   */
+  public static int getEndPosition(JCTree tree, Map<JCTree, Integer> map) {
+    return backingShim.getEndPosition(tree, map);
   }
 }
