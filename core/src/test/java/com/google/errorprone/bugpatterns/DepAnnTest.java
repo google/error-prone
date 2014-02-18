@@ -22,6 +22,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 
 public class DepAnnTest {
@@ -50,5 +51,12 @@ public class DepAnnTest {
   public void testNegativeCase2() throws Exception {
     compilationHelper.assertCompileSucceeds(
         new File(this.getClass().getResource("DepAnnNegativeCase2.java").toURI()));
+  }
+
+  @Test
+  public void testDisableable() throws Exception {
+    compilationHelper.assertCompileSucceeds(
+        ImmutableList.of(new File(this.getClass().getResource("DepAnnPositiveCases.java").toURI())),
+        "-Xepdisable:DepAnn");
   }
 }

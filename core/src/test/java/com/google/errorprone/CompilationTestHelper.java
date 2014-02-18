@@ -20,13 +20,15 @@ import static com.google.errorprone.DiagnosticTestHelper.assertHasDiagnosticOnAl
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-import com.google.errorprone.bugpatterns.BugChecker;
-import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.google.errorprone.bugpatterns.BugChecker;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -36,6 +38,10 @@ import java.util.List;
  * TODO(eaftan): Refactor default argument construction to make setup cleaner.
  */
 public class CompilationTestHelper {
+
+  private static final List<String> DEFAULT_ARGS = Arrays.asList(
+    "-encoding", "UTF-8",
+    "-Xjcov");
 
   private DiagnosticTestHelper diagnosticHelper;
   private ErrorProneCompiler compiler;
@@ -57,52 +63,80 @@ public class CompilationTestHelper {
     this(new ErrorProneScanner(checker));
   }
 
-  public void assertCompileSucceeds(File source, File... dependencies) {
-    List<String> arguments = Lists.newArrayList("-Xjcov", "-encoding", "UTF-8",
-        source.getAbsolutePath());
-    for (File file : dependencies) {
-      arguments.add(file.getAbsolutePath());
+  /**
+   * Creates a list of arguments to pass to the compiler, including the list of source files
+   * to compile.  Uses DEFAULT_ARGS as the base and appends the extraArgs passed in.
+   */
+  private static List<String> buildArguments(List<File> sources, List<String> extraArgs) {
+    List<String> allArgs = Lists.newArrayList(DEFAULT_ARGS);
+    allArgs.addAll(extraArgs);
+    for (File file : sources) {
+      allArgs.add(file.getAbsolutePath());
     }
-    int exitCode = compiler.compile(arguments.toArray(new String[0]));
+    return allArgs;
+  }
+
+  /**
+   * Asserts that the compilation succeeds (exits with code 0).
+   *
+   * @param sources The list of {@code File}s to compile
+   * @param extraArgs Extra command-line arguments to pass to the compiler
+   */
+  public void assertCompileSucceeds(List<File> sources, String... extraArgs) {
+    List<String> allArgs = buildArguments(sources, Arrays.asList(extraArgs));
+    int exitCode = compiler.compile(allArgs.toArray(new String[0]));
     assertThat(diagnosticHelper.getDiagnostics().toString(), exitCode, is(0));
     // TODO(eaftan): complain if there are any diagnostics
   }
 
-  public void assertCompileSucceedsWithDisabledChecks(File source, String... disabled) {
-    String disableFlag = "-Xepdisable:" + Joiner.on(',').join(disabled);
-    List<String> arguments = Lists.newArrayList("-Xjcov", "-encoding", "UTF-8",
-        disableFlag, source.getAbsolutePath());
-    int exitCode = compiler.compile(arguments.toArray(new String[0]));
-    assertThat(diagnosticHelper.getDiagnostics().toString(), exitCode, is(0));
-  }
-
   /**
-   * Assert that the compile fails, and that for each line of the test file that contains
-   * the pattern //BUG("foo"), the diagnostic at that line contains "foo".
+   * Convenience method for the common case of one source file and no extra args.
    */
-  public void assertCompileFailsWithMessages(File source, File... dependencies) throws IOException {
-    List<String> arguments =
-        Lists.newArrayList("-Xjcov", "-encoding", "UTF-8", source.getAbsolutePath());
-    for (File file : dependencies) {
-      arguments.add(file.getAbsolutePath());
-    }
-    int exitCode = compiler.compile(arguments.toArray(new String[0]));
-    assertThat("Compiler returned an unexpected error code", exitCode, is(1));
-    assertHasDiagnosticOnAllMatchingLines(diagnosticHelper.getDiagnostics(), source);
+  public void assertCompileSucceeds(File source) {
+    assertCompileSucceeds(ImmutableList.of(source));
   }
 
   /**
    * Assert that the compile succeeds, and that for each line of the test file that contains
    * the pattern //BUG("foo"), the diagnostic at that line contains "foo".
    */
-  public void assertCompileSucceedsWithMessages(File source) throws IOException {
-    assertCompileSucceeds(source);
-    assertHasDiagnosticOnAllMatchingLines(diagnosticHelper.getDiagnostics(), source);
+  public void assertCompileSucceedsWithMessages(List<File> sources, String... extraArgs)
+      throws IOException {
+    assertCompileSucceeds(sources, extraArgs);
+    for (File source : sources) {
+      assertHasDiagnosticOnAllMatchingLines(diagnosticHelper.getDiagnostics(), source);
+    }
   }
 
-  private int compileFileExitCode(File source) {
-    return compiler.compile(
-        new String[]{"-Xjcov", "-encoding", "UTF-8", source.getAbsolutePath()});
+  /**
+   * Convenience method for the common case of one source file and no extra args.
+   */
+  public void assertCompileSucceedsWithMessages(File source) {
+    assertCompileSucceeds(ImmutableList.of(source));
+  }
+
+  /**
+   * Assert that the compile fails, and that for each line of the test file that contains
+   * the pattern //BUG("foo"), the diagnostic at that line contains "foo".
+   *
+   * @param sources The list of {@code File}s to compile
+   * @param extraArgs Extra command-line arguments to pass to the compiler
+   */
+  public void assertCompileFailsWithMessages(List<File> sources, String... extraArgs)
+      throws IOException {
+    List<String> allArgs = buildArguments(sources, Arrays.asList(extraArgs));
+    int exitCode = compiler.compile(allArgs.toArray(new String[0]));
+    assertThat("Compiler returned an unexpected error code", exitCode, is(1));
+    for (File source : sources) {
+      assertHasDiagnosticOnAllMatchingLines(diagnosticHelper.getDiagnostics(), source);
+    }
+  }
+
+  /**
+   * Convenience method for the common case of one source file and no extra args.
+   */
+  public void assertCompileFailsWithMessages(File source) throws IOException {
+    assertCompileFailsWithMessages(Collections.singletonList(source));
   }
 
   /**

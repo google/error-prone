@@ -14,12 +14,15 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.net.URISyntaxException;
+import java.util.List;
 
 /**
  * @author flx@google.com (Felix Berger)
@@ -35,18 +38,22 @@ public class ProtoFieldNullComparisonTest {
     protoFile = new File(this.getClass().getResource("proto/ProtoTest.java").toURI());
   }
 
+  private List<File> getSourceFiles(String mainFileName) throws URISyntaxException {
+    File mainFile = new File(
+        this.getClass().getResource(mainFileName).toURI());
+    return ImmutableList.of(mainFile, protoFile);
+  }
+
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(new File(
-        this.getClass().getResource("ProtoFieldNullComparisonPositiveCases.java").toURI()),
-        protoFile);
+    compilationHelper.assertCompileFailsWithMessages(
+        getSourceFiles("ProtoFieldNullComparisonPositiveCases.java"));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(new File(
-        this.getClass().getResource("ProtoFieldNullComparisonNegativeCases.java").toURI()),
-        protoFile);
+    compilationHelper.assertCompileSucceeds(
+        getSourceFiles("ProtoFieldNullComparisonNegativeCases.java"));
   }
 
 }

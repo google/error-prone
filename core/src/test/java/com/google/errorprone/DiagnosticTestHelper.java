@@ -23,10 +23,12 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
+import java.net.URI;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -44,8 +46,10 @@ public class DiagnosticTestHelper {
 
   public DiagnosticCollector<JavaFileObject> collector = new DiagnosticCollector<JavaFileObject>();
 
-  public static Matcher<Diagnostic<JavaFileObject>> suggestsRemovalOfLine(int line) {
-    return allOf(diagnosticOnLine(line), diagnosticMessage(containsString("remove this line")));
+  public static Matcher<Diagnostic<JavaFileObject>> suggestsRemovalOfLine(URI fileURI, int line) {
+    return allOf(
+        diagnosticOnLine(fileURI, line),
+        diagnosticMessage(containsString("remove this line")));
   }
 
   public List<Diagnostic<? extends JavaFileObject>> getDiagnostics() {
@@ -91,7 +95,7 @@ public class DiagnosticTestHelper {
   }
 
   public static TypeSafeDiagnosingMatcher<Diagnostic<JavaFileObject>> diagnosticOnLine(
-      final long line) {
+      final URI fileURI, final long line) {
     return new TypeSafeDiagnosingMatcher<Diagnostic<JavaFileObject>>() {
       @Override
       protected boolean matchesSafely(
@@ -99,7 +103,8 @@ public class DiagnosticTestHelper {
         mismatchDescription
             .appendText("line ")
             .appendValue(item.getLineNumber());
-        return item.getLineNumber() == line;
+        return item.getSource().toUri().equals(fileURI)
+            && item.getLineNumber() == line;
       }
 
       @Override
@@ -112,7 +117,7 @@ public class DiagnosticTestHelper {
   }
 
   public static TypeSafeDiagnosingMatcher<Diagnostic<JavaFileObject>> diagnosticOnLine(
-      final long line, final String message) {
+      final URI fileURI, final long line, final String message) {
     return new TypeSafeDiagnosingMatcher<Diagnostic<JavaFileObject>>() {
       @Override
       protected boolean matchesSafely(
@@ -120,7 +125,8 @@ public class DiagnosticTestHelper {
         mismatchDescription
             .appendText("line ")
             .appendValue(item.getLineNumber());
-        return item.getLineNumber() == line
+        return item.getSource().toUri().equals(fileURI)
+            && item.getLineNumber() == line
             && item.getMessage(Locale.getDefault()).contains(message);
       }
 
@@ -186,12 +192,12 @@ public class DiagnosticTestHelper {
         // patternMatcher matches the //BUG comment, so we expect a diagnostic on the following
         // line.
         lineNumber++;
-        matcher = hasItem(diagnosticOnLine(lineNumber, patternToMatch));
+        matcher = hasItem(diagnosticOnLine(source.toURI(), lineNumber, patternToMatch));
         reader.readLine(); // skip next line -- we know it has an error
         assertThat("Did not see expected error on line " + lineNumber, diagnostics, matcher);
       } else {
         // Cast is unnecessary, but javac throws an error because of poor type inference.
-        matcher = (Matcher) not(hasItem(diagnosticOnLine(lineNumber)));
+        matcher = (Matcher) not(hasItem(diagnosticOnLine(source.toURI(), lineNumber)));
         assertThat("Saw unexpected error on line " + lineNumber, diagnostics, matcher);
       }
     } while (true);

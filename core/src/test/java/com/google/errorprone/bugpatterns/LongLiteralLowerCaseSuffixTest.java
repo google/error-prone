@@ -16,7 +16,9 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -66,9 +68,9 @@ public class LongLiteralLowerCaseSuffixTest {
 
   @Test
   public void testDisableable() throws Exception {
-    compilationHelper.assertCompileSucceedsWithDisabledChecks(
-        new File(
-            this.getClass().getResource("LongLiteralLowerCaseSuffixPositiveCase1.java").toURI()),
-        "LongLiteralLowerCaseSuffix");
+    compilationHelper.assertCompileSucceeds(
+        ImmutableList.of(new File(
+            this.getClass().getResource("LongLiteralLowerCaseSuffixPositiveCase1.java").toURI())),
+        "-Xepdisable:LongLiteralLowerCaseSuffix");
   }
 }
