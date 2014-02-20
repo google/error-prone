@@ -47,7 +47,6 @@ import java.lang.annotation.Retention;
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
 public class NonRuntimeAnnotation extends BugChecker implements MethodInvocationTreeMatcher {
 
-  @SuppressWarnings("deprecation")
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (!methodSelect(
@@ -58,7 +57,7 @@ public class NonRuntimeAnnotation extends BugChecker implements MethodInvocation
     MemberSelectTree memTree = (MemberSelectTree) tree.getArguments().get(0);
     TypeSymbol annotation = ASTHelpers.getSymbol(memTree.getExpression()).type.tsym;
 
-    Retention retention = annotation.getAnnotation(Retention.class);
+    Retention retention = ASTHelpers.getAnnotation(annotation, Retention.class);
     if (retention != null && retention.value().equals(RUNTIME)) {
       return Description.NO_MATCH;
     }

@@ -7,6 +7,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.CompilerBasedTest;
 import com.google.errorprone.matchers.Matcher;
 
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
@@ -122,5 +123,33 @@ public class ASTHelpersTest extends CompilerBasedTest {
     }
   }
 
+  @Test
+  public void testAnnotationHelpers() throws IOException {
+    writeFile("com/google/errorprone/util/InheritedAnnotation.java",
+        "package com.google.errorprone.util;",
+        "import java.lang.annotation.Inherited;",
+        "@Inherited",
+        "public @interface InheritedAnnotation {}");
+    writeFile("B.java",
+        "import com.google.errorprone.util.InheritedAnnotation;",
+        "@InheritedAnnotation",
+        "public class B {}");
+    writeFile("C.java",
+        "public class C extends B {}");
 
+    assertCompiles(new TestScanner() {
+      @Override
+      public Void visitClass(ClassTree tree, VisitorState state) {
+        if (tree.getSimpleName().toString().equals("C")) {
+          assertMatch(tree, state, new Matcher<ClassTree>() {
+            @Override
+            public boolean matches(ClassTree t, VisitorState state) {
+              return ASTHelpers.hasAnnotation(t, InheritedAnnotation.class);
+            }
+          });
+        }
+        return super.visitClass(tree, state);
+      }
+    });
+  }
 }

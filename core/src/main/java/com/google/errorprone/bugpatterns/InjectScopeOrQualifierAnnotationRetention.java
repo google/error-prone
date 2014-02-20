@@ -65,7 +65,7 @@ public class InjectScopeOrQualifierAnnotationRetention extends BugChecker
   public final Description matchClass(ClassTree classTree, VisitorState state) {
     if ((ASTHelpers.getSymbol(classTree).flags() & Flags.ANNOTATION) != 0) {
       if (SCOPE_OR_QUALIFIER_ANNOTATION_MATCHER.matches(classTree, state)) {
-        Retention retention = ASTHelpers.getSymbol(classTree).getAnnotation(Retention.class);
+        Retention retention = ASTHelpers.getAnnotation(classTree, Retention.class);
         if (retention != null && retention.value().equals(RUNTIME)) {
           return Description.NO_MATCH;
         }
@@ -77,7 +77,7 @@ public class InjectScopeOrQualifierAnnotationRetention extends BugChecker
   }
 
   public Description describe(ClassTree classTree, VisitorState state) {
-    Retention retention = ASTHelpers.getSymbol(classTree).getAnnotation(Retention.class);
+    Retention retention = ASTHelpers.getAnnotation(classTree, Retention.class);
     if (retention == null) {
       return describeMatch(classTree, new SuggestedFix().addImport(
           "java.lang.annotation.Retention")

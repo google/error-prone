@@ -1,6 +1,7 @@
 package com.google.errorprone;
 
 import com.google.errorprone.matchers.Suppressible;
+import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol;
@@ -84,7 +85,7 @@ public class SuppressionHelper {
      */
     Set<Class<? extends Annotation>> newCustomSuppressions = null;
     for (Class<? extends Annotation> annotationType : customSuppressionAnnotations) {
-      if (sym.getAnnotation(annotationType) != null) {
+      if (ASTHelpers.hasAnnotation(sym, annotationType)) {
         if (newCustomSuppressions == null) {
           newCustomSuppressions = new HashSet<Class<? extends Annotation>>(customSuppressionsOnCurrentPath);
         }

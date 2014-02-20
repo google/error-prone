@@ -18,6 +18,7 @@ package com.google.errorprone.util;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
+
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
@@ -44,6 +45,7 @@ import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 
+import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -294,13 +296,13 @@ public class ASTHelpers {
     }
     return tree.getStartPosition();
   }
-  
+
   public static Set<MethodSymbol> findSuperMethods(MethodSymbol methodSymbol, Types types) {
     Set<MethodSymbol> supers = new HashSet<MethodSymbol>();
     if (methodSymbol.isStatic()) {
       return supers;
     }
-    
+
     TypeSymbol owner = (TypeSymbol) methodSymbol.owner;
     // Iterates over an ordered list of all super classes and interfaces.
     for (Type sup : types.closure(owner.type)) {
@@ -320,11 +322,11 @@ public class ASTHelpers {
     }
     return supers;
   }
-  
+
   /**
    * Find a method in the enclosing class's superclass that this method overrides.
-   * 
-   * @return A superclass method that is overridden by {@code method}  
+   *
+   * @return A superclass method that is overridden by {@code method}
    */
   public static MethodSymbol findSuperMethod(MethodSymbol method, Types types) {
     TypeSymbol superClass = method.enclClass().getSuperclass().tsym;
@@ -338,5 +340,45 @@ public class ASTHelpers {
       }
     }
     return null;
+  }
+
+  /**
+   * Check for the presence of an annotation, considering annotation inheritance.
+   *
+   * @return true if the symbol is annotated with given type.
+   */
+  public static boolean hasAnnotation(Symbol sym, Class<? extends Annotation> annotationType) {
+    return getAnnotation(sym, annotationType) != null;
+  }
+
+  /**
+   * Check for the presence of an annotation, considering annotation inheritance.
+   *
+   * @return true if the tree's symbol has an annotation of the given type.
+   */
+  public static boolean hasAnnotation(Tree tree, Class<? extends Annotation> annotationType) {
+    return getAnnotation(tree, annotationType) != null;
+  }
+
+  /**
+   * Retrieve an annotation, considering annotation inheritance.
+   *
+   * @return the annotation of given type on the tree's symbol, or null.
+   */
+  public static <T extends Annotation> T getAnnotation(Tree tree, Class<T> annotationType) {
+    Symbol sym = getSymbol(tree);
+    return sym == null ? null : getAnnotation(sym, annotationType);
+  }
+
+  /**
+   * Retrieve an annotation, considering annotation inheritance.
+   *
+   * @return the annotation of given type on the symbol, or null.
+   */
+  // Symbol#getAnnotation is not intended for internal javac use, but because error-prone is run
+  // after attribution it's safe to use here.
+  @SuppressWarnings("deprecation")
+  public static <T extends Annotation> T getAnnotation(Symbol sym, Class<T> annotationType) {
+    return sym.getAnnotation(annotationType);
   }
 }

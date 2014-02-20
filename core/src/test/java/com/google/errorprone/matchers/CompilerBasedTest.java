@@ -57,6 +57,7 @@ public class CompilerBasedTest {
 
   protected void writeFile(String fileName, String... lines) throws IOException {
     File source = new File(tempDir, fileName);
+    new File(source.getParent()).mkdirs();
     PrintWriter writer = new PrintWriter(new FileWriter(source));
     for (String line : lines) {
       writer.println(line);

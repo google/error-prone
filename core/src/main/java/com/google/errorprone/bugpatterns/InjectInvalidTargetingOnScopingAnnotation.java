@@ -66,7 +66,7 @@ public class InjectInvalidTargetingOnScopingAnnotation extends BugChecker
     Symbol classSymbol = ASTHelpers.getSymbol(classTree);
     if ((classSymbol.flags() & Flags.ANNOTATION) != 0
         && SCOPE_ANNOTATION_MATCHER.matches(classTree, state)) {
-      Target target = classSymbol.getAnnotation(Target.class);
+      Target target = ASTHelpers.getAnnotation(classSymbol, Target.class);
       boolean hasExclusivelyTypeAndOrMethodTargeting = false;
       if (target != null) {
         for (ElementType elementType : target.value()) {
