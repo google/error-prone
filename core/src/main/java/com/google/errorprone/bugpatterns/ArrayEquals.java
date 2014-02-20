@@ -25,10 +25,12 @@ import static com.google.errorprone.matchers.Matchers.*;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
+
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
@@ -57,13 +59,14 @@ public class ArrayEquals extends BugChecker implements MethodInvocationTreeMatch
    * Replaces instances of a.equals(b) with Arrays.equals(a, b). Also adds
    * the necessary import statement for java.util.Arrays.
    */
+  @Override
   public Description matchMethodInvocation(MethodInvocationTree t, VisitorState state) {
     if (!arrayEqualsMatcher.matches(t, state)) {
       return NO_MATCH;
     }
     String receiver = ((JCFieldAccess) t.getMethodSelect()).getExpression().toString();
     String arg = t.getArguments().get(0).toString();
-    SuggestedFix fix = new SuggestedFix()
+    Fix fix = new SuggestedFix()
         .replace(t, "Arrays.equals(" + receiver + ", " + arg + ")")
         .addImport("java.util.Arrays");
     return describeMatch(t, fix);

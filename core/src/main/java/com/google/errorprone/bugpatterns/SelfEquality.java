@@ -27,9 +27,11 @@ import static com.sun.source.tree.Tree.Kind.NOT_EQUAL_TO;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
+
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree;
@@ -50,7 +52,7 @@ import java.util.List;
 /**
  * @author scottjohnson@google.com (Scott Johnson)
  */
-@BugPattern(name = "SelfEquality", 
+@BugPattern(name = "SelfEquality",
     summary = "Variable compared to itself",
     explanation = "There is no good reason to test a primitive value or reference for equality " +
           "with itself.",
@@ -66,7 +68,7 @@ public class SelfEquality extends BugChecker implements BinaryTreeMatcher {
     }
 
     StringBuilder fixedExpression = new StringBuilder();
-    SuggestedFix fix = null;
+    Fix fix = Fix.NO_FIX;
 
     ExpressionTree leftOperand = tree.getLeftOperand();
     ExpressionTree rightOperand = tree.getRightOperand();
@@ -75,11 +77,11 @@ public class SelfEquality extends BugChecker implements BinaryTreeMatcher {
     Symtab symtab = state.getSymtab();
 
     /**
-     * Try to figure out what they were trying to do. 
-     * Cases: 
+     * Try to figure out what they were trying to do.
+     * Cases:
      * 1) (foo == foo) ==> (foo == other.foo)
-     * 2) (foo == this.foo) ==> (other.foo == this.foo) 
-     * 3) (this.foo == foo) ==> (this.foo == other.foo) 
+     * 2) (foo == this.foo) ==> (other.foo == this.foo)
+     * 3) (this.foo == foo) ==> (this.foo == other.foo)
      * 4) (this.foo == this.foo) ==> (this.foo == other.foo)
      */
 
@@ -107,12 +109,12 @@ public class SelfEquality extends BugChecker implements BinaryTreeMatcher {
         members = ((JCClassDecl) path.getLeaf()).getMembers();
       } else {
         members = ((JCBlock) path.getLeaf()).getStatements();
-      }   
+      }
       for (JCTree jcTree : members) {
         if (jcTree.getKind() == Kind.VARIABLE) {
           JCVariableDecl declaration = (JCVariableDecl) jcTree;
           TypeSymbol variableTypeSymbol = declaration.getType().type.tsym;
-  
+
           if (ASTHelpers.getSymbol(toReplace).isMemberOf(variableTypeSymbol, state.getTypes())) {
             if (toReplace.getKind() == Kind.IDENTIFIER) {
               fix =
@@ -126,7 +128,7 @@ public class SelfEquality extends BugChecker implements BinaryTreeMatcher {
       }
     }
 
-    if (fix == null) {
+    if (fix == Fix.NO_FIX) {
       // No good replacement, let's try something else!
 
       // For floats or doubles, y!=y -> isNaN(y)

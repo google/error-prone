@@ -26,6 +26,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.EnhancedForLoopTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.WhileLoopTreeMatcher;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 
@@ -88,7 +89,7 @@ public class ElementsCountedInLoop extends BugChecker
         getIncrementedIdentifer(extractSingleStatement(enhancedForLoop.body));
     if (identifier != null) {
       ExpressionTree expression = tree.getExpression();
-      SuggestedFix fix = null;
+      Fix fix;
       if (isSubtypeOf("java.util.Collection").matches(expression, state)) {
         String replacement = identifier + " += " + expression + ".size();";
         fix = new SuggestedFix().replace(tree, replacement);

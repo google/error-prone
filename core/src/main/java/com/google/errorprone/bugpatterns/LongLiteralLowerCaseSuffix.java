@@ -23,9 +23,11 @@ import static com.google.errorprone.bugpatterns.BugChecker.LiteralTreeMatcher;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
@@ -90,7 +92,7 @@ public class LongLiteralLowerCaseSuffix extends BugChecker implements LiteralTre
     }
     StringBuilder longLiteral = new StringBuilder(getLongLiteral(literalTree, state));
     longLiteral.setCharAt(longLiteral.length() - 1, 'L');
-    SuggestedFix fix = new SuggestedFix().replace(literalTree, longLiteral.toString());
+    Fix fix = new SuggestedFix().replace(literalTree, longLiteral.toString());
     return describeMatch(literalTree, fix);
   }
 }

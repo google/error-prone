@@ -18,7 +18,9 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
+
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
@@ -43,7 +45,7 @@ abstract class AbstractSuppressWarningsMatcher extends BugChecker
    */
   abstract protected void processSuppressWarningsValues(List<String> values);
 
-  protected final SuggestedFix getSuggestedFix(AnnotationTree annotationTree) {
+  protected final Fix getSuggestedFix(AnnotationTree annotationTree) {
     List<String> values = new ArrayList<String>();
     for (ExpressionTree argumentTree : annotationTree.getArguments()) {
       AssignmentTree assignmentTree = (AssignmentTree) argumentTree;

@@ -23,6 +23,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -78,9 +79,9 @@ public class ArraysAsListPrimitiveArray extends BugChecker implements MethodInvo
       Type componentType = ((ArrayType) array.type).getComponentType();
       String guavaUtils = GUAVA_UTILS.get(componentType.getKind());
       if (guavaUtils != null) {
-        SuggestedFix fix = new SuggestedFix();
-        fix.addImport("com.google.common.primitives." + guavaUtils);
-        fix.replace(tree.getMethodSelect(), guavaUtils + ".asList");
+        Fix fix = new SuggestedFix()
+            .addImport("com.google.common.primitives." + guavaUtils)
+            .replace(tree.getMethodSelect(), guavaUtils + ".asList");
         return describeMatch(tree, fix);
       }
     }

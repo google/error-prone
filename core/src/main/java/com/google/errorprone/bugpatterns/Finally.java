@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.fixes.Fix.NO_FIX;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -28,6 +29,7 @@ import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ThrowTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+
 import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.ContinueTree;
 import com.sun.source.tree.LabeledStatementTree;
@@ -72,7 +74,7 @@ public class Finally extends BugChecker
   @Override
   public Description matchContinue(ContinueTree tree, VisitorState state) {
     if (new FinallyJumpMatcher((JCContinue) tree).matches(tree, state)) {
-      return describeMatch(tree, null);
+      return describeMatch(tree, NO_FIX);
     }
     return Description.NO_MATCH;
   }
@@ -80,7 +82,7 @@ public class Finally extends BugChecker
   @Override
   public Description matchBreak(BreakTree tree, VisitorState state) {
     if (new FinallyJumpMatcher((JCBreak) tree).matches(tree, state)) {
-      return describeMatch(tree, null);
+      return describeMatch(tree, NO_FIX);
     }
     return Description.NO_MATCH;
   }
@@ -88,7 +90,7 @@ public class Finally extends BugChecker
   @Override
   public Description matchThrow(ThrowTree tree, VisitorState state) {
     if (new FinallyThrowMatcher().matches(tree, state)) {
-      return describeMatch(tree, null);
+      return describeMatch(tree, NO_FIX);
     }
     return Description.NO_MATCH;
   }
@@ -96,7 +98,7 @@ public class Finally extends BugChecker
   @Override
   public Description matchReturn(ReturnTree tree, VisitorState state) {
     if (new FinallyCompletionMatcher<ReturnTree>().matches(tree, state)) {
-      return describeMatch(tree, null);
+      return describeMatch(tree, NO_FIX);
     }
     return Description.NO_MATCH;
   }

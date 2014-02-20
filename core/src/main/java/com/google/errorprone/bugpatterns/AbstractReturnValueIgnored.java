@@ -24,11 +24,13 @@ import static com.google.errorprone.matchers.Matchers.methodSelect;
 import static com.google.errorprone.matchers.Matchers.parentNode;
 
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
+
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -47,6 +49,7 @@ import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 abstract class AbstractReturnValueIgnored extends BugChecker
     implements MethodInvocationTreeMatcher {
 
+  @Override
   @SuppressWarnings("unchecked")
   public Description matchMethodInvocation(
       MethodInvocationTree methodInvocationTree, VisitorState state) {
@@ -99,7 +102,7 @@ abstract class AbstractReturnValueIgnored extends BugChecker
     Type returnType = ASTHelpers.getReturnType(
         ((JCMethodInvocation) methodInvocationTree).getMethodSelect());
 
-    SuggestedFix fix;
+    Fix fix;
     if (identifierStr != null && !"this".equals(identifierStr) && returnType != null &&
         state.getTypes().isAssignable(returnType, identifierType)) {
       // Fix by assigning the assigning the result of the call to the root receiver reference.

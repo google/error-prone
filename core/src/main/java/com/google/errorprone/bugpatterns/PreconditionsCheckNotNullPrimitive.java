@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.Matchers.*;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matchers;
@@ -133,7 +134,7 @@ public class PreconditionsCheckNotNullPrimitive
    * Creates a SuggestedFix that replaces the checkNotNull call with a checkArgument or checkState
    * call.
    */
-  private SuggestedFix createCheckArgumentOrStateCall(MethodInvocationTree methodInvocationTree,
+  private Fix createCheckArgumentOrStateCall(MethodInvocationTree methodInvocationTree,
       VisitorState state, ExpressionTree arg1) {
     SuggestedFix fix = new SuggestedFix();
     String replacementMethod = "checkState";

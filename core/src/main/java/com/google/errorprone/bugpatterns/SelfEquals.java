@@ -24,11 +24,13 @@ import static com.google.errorprone.matchers.Matchers.*;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
+
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree.Kind;
@@ -135,7 +137,7 @@ public class SelfEquals extends BugChecker implements MethodInvocationTreeMatche
     }
 
     // If we don't find a good field to use, then just replace with "true"
-    SuggestedFix fix = new SuggestedFix().replace(methodInvocationTree, "true");
+    Fix fix = new SuggestedFix().replace(methodInvocationTree, "true");
 
     if (matchState == MatchState.OBJECTS_EQUAL) {
       /**

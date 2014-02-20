@@ -19,7 +19,6 @@ package com.google.errorprone;
 import static com.google.errorprone.BugPattern.Category.ONE_OFF;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.ErrorProneScanner.EnabledPredicate.DEFAULT_CHECKS;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.StringContains.containsString;
 import static org.hamcrest.text.IsEmptyString.isEmptyString;

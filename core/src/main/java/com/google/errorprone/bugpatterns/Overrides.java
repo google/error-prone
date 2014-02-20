@@ -23,6 +23,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
@@ -88,7 +89,7 @@ public class Overrides extends BugChecker implements MethodTreeMatcher {
       return describeMatch(methodTree, new SuggestedFix());
     }
     
-    SuggestedFix fix = new SuggestedFix();
+    Fix fix = new SuggestedFix();
     if (isVarargs) {
       fix = new SuggestedFix().replace(paramType, "[]", paramTypeSource.length() - 3, 0);
     } else {

@@ -17,9 +17,11 @@
 package com.google.errorprone.matchers;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.NOT_A_PROBLEM;
+import static com.google.errorprone.fixes.SuggestedFix.NO_FIX;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.Fix;
+
 import com.sun.source.tree.Tree;
 
 /**
@@ -30,7 +32,7 @@ import com.sun.source.tree.Tree;
 public class Description {
   /** Describes the sentinel value of the case where the match failed. */
   public static final Description NO_MATCH =
-      new Description(null, "<No match>", null, NOT_A_PROBLEM);
+      new Description(null, "<No match>", NO_FIX, NOT_A_PROBLEM);
 
   /**
    * The AST node which matched
@@ -45,16 +47,20 @@ public class Description {
   /**
    * Replacements to suggest in an error message or use in automated refactoring
    */
-  public SuggestedFix suggestedFix;
+  public Fix suggestedFix;
 
   /**
    * Is this a warning, error, etc.
    */
   public BugPattern.SeverityLevel severity;
 
-  public Description(Tree node, String message, SuggestedFix suggestedFix,
+  public Description(Tree node, String message, Fix suggestedFix,
                      BugPattern.SeverityLevel severity) {
     this.message = message;
+    if (suggestedFix == null) {
+      throw new IllegalArgumentException("suggestedFix must not be null. Use "
+          + "SuggestedFix.NO_FIX if there is no fix.");
+    }
     this.suggestedFix = suggestedFix;
     this.node = node;
     this.severity = severity;

@@ -29,6 +29,7 @@ import static com.sun.source.tree.Tree.Kind.NOT_EQUAL_TO;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -85,7 +86,7 @@ public class NumericEquality extends BugChecker implements BinaryTreeMatcher {
     fixedExpression.append(
         "Objects.equal(" + leftOperand.toString() + ", " + rightOperand.toString() + ")");
 
-    SuggestedFix fix = new SuggestedFix().replace(tree, fixedExpression.toString())
+    Fix fix = new SuggestedFix().replace(tree, fixedExpression.toString())
         .addImport("com.google.common.base.Objects");
     return describeMatch(tree, fix);
   }

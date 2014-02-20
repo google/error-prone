@@ -24,10 +24,11 @@ import static com.google.errorprone.matchers.Matchers.*;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
+
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -90,7 +91,7 @@ public class PreconditionsExpensiveString
     // TODO(sjnickerson): Figure out how to get a suggested fix. Basically we
     // remove the String.format() wrapper, but I don't know how to express
     // this. This current one is not correct!
-    SuggestedFix fix = null;
+    Fix fix = Fix.NO_FIX;
 
     return describeMatch(arguments.get(1), fix);
   }

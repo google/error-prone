@@ -23,9 +23,11 @@ import static com.google.errorprone.bugpatterns.BugChecker.ConditionalExpression
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ParenthesizedTree;
@@ -80,7 +82,7 @@ public class UnneededConditionalOperator extends BugChecker implements Condition
     JCLiteral falseExpr = (JCLiteral) t.getFalseExpression();
     boolean trueExprValue = (Boolean) trueExpr.getValue();
     boolean falseExprValue = (Boolean) falseExpr.getValue();
-    SuggestedFix fix;
+    Fix fix;
     if (trueExprValue && !falseExprValue) {
       fix = new SuggestedFix().replace(t, t.getCondition().toString());
     } else if (!trueExprValue && falseExprValue) {

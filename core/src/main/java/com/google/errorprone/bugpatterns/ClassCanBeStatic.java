@@ -29,9 +29,6 @@ import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.parentNode;
 import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
 
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.NestingKind;
-
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
@@ -39,6 +36,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
+
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.ModifiersTree;
@@ -46,6 +44,9 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Types;
+
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.NestingKind;
 
 /**
  * @author alexloh@google.com (Alex Loh)
@@ -57,7 +58,7 @@ import com.sun.tools.javac.code.Types;
         "uses more memory and does not make the intent of the class clear.",
     category = JDK, maturity = EXPERIMENTAL, severity = ERROR)
 public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
-	
+
   /**
 	   * Matches any class definitions that fit the following:
 	   * 1) Is non-static
@@ -79,7 +80,7 @@ public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
 		    ).matches(classTree, state);
 		  }
 	};
-    
+
   private static Matcher<IdentifierTree> referenceEnclosing(ClassTree classTree, Types types) {
     return new ReferenceEnclosing(classTree, types);
   }
@@ -109,7 +110,7 @@ public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
     if (!classTreeMatcher.matches(tree, state)) {
       return Description.NO_MATCH;
     }
-    
+
     // figure out where to insert the static modifier
     // if there is other modifier, prepend 'static ' in front of class
     // else insert 'static ' AFTER public/private/protected and BEFORE final
@@ -120,7 +121,7 @@ public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
       fix.prefixWith(tree, "static ");
     } else {
       // Note that the use of .toString() here effectively destroys any special
-      // formatting, eg if the modifiers previously had multiple spaces or a 
+      // formatting, eg if the modifiers previously had multiple spaces or a
       // comment between them, after this fix they will all have exactly one
       // space between each modifier.
       String newmods = mods.toString();
@@ -131,7 +132,7 @@ public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
         fix.replace(mods, newmods);
       } else {
         // insert at ind, just before 'final'
-        newmods = newmods.substring(0, ind) + "static " 
+        newmods = newmods.substring(0, ind) + "static "
                 + newmods.substring(ind, newmods.length() - 1);
         fix.replace(mods, newmods);
       }

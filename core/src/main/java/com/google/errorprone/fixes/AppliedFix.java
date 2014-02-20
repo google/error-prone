@@ -25,7 +25,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Represents the corrected source which we think was intended, by applying a SuggestedFix. This
+ * Represents the corrected source which we think was intended, by applying a Fix. This
  * is used to generate the "Did you mean?" snippet in the error message.
  *
  * @author alexeagle@google.com (Alex Eagle)
@@ -60,7 +60,7 @@ public class AppliedFix {
      * Applies the suggestedFix to the source. Returns null if applying the fix results in no
      * change to the source, or a change only to imports.
      */
-    public AppliedFix apply(SuggestedFix suggestedFix) {
+    public AppliedFix apply(Fix suggestedFix) {
       StringBuilder replaced = new StringBuilder(source);
 
       Set<Integer> modifiedLines = new HashSet<Integer>();

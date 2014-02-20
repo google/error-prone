@@ -19,16 +19,32 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
-import static com.google.errorprone.matchers.Matchers.*;
+import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.enclosingClass;
+import static com.google.errorprone.matchers.Matchers.enclosingMethod;
+import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
+import static com.google.errorprone.matchers.Matchers.kindIs;
+import static com.google.errorprone.matchers.Matchers.lastStatement;
+import static com.google.errorprone.matchers.Matchers.not;
+import static com.google.errorprone.matchers.Matchers.parentNode;
 import static com.google.errorprone.suppliers.Suppliers.EXCEPTION_TYPE;
-import static com.sun.source.tree.Tree.Kind.*;
+import static com.sun.source.tree.Tree.Kind.EXPRESSION_STATEMENT;
+import static com.sun.source.tree.Tree.Kind.IF;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.*;
-import com.sun.source.tree.*;
+import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Enclosing;
+import com.google.errorprone.matchers.JUnitMatchers;
+import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Matchers;
+
+import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.Tree;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)

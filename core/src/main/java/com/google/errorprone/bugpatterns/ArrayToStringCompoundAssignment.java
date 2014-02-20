@@ -24,10 +24,12 @@ import static com.google.errorprone.matchers.Matchers.compoundAssignment;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
+
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree.Kind;
@@ -67,7 +69,7 @@ public class ArrayToStringCompoundAssignment
      */
     String receiver = t.getVariable().toString();
     String expression = t.getExpression().toString();
-    SuggestedFix fix = new SuggestedFix()
+    Fix fix = new SuggestedFix()
         .replace(t, receiver + " += Arrays.toString(" + expression + ")")
         .addImport("java.util.Arrays");
     return describeMatch(t, fix);

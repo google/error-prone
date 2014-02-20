@@ -29,6 +29,7 @@ import static com.google.errorprone.matchers.Matchers.staticMethod;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MemberSelectTreeMatcher;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -54,7 +55,7 @@ import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
         "fact that the variable or method is static and not an instance variable or method.",
     category = JDK, severity = ERROR, maturity = MATURE, altNames = "static")
 public class StaticAccessedFromInstance extends BugChecker implements MemberSelectTreeMatcher {
-  
+
   @SuppressWarnings("unchecked")
   private static final Matcher<ExpressionTree> staticAccessedFromInstanceMatcher = allOf(
       anyOf(
@@ -62,23 +63,23 @@ public class StaticAccessedFromInstance extends BugChecker implements MemberSele
           staticFieldAccess()),
       kindIs(Kind.MEMBER_SELECT),
       selectedIsInstance());
-  
+
   @Override
   public Description matchMemberSelect(MemberSelectTree tree, VisitorState state) {
     if (!staticAccessedFromInstanceMatcher.matches(tree, state)) {
       return Description.NO_MATCH;
     }
-    
-    return describeMatch(tree, getSuggestedFix(tree, state));  
+
+    return describeMatch(tree, getSuggestedFix(tree, state));
   }
-  
-  private static SuggestedFix getSuggestedFix(MemberSelectTree tree, VisitorState state) {
+
+  private static Fix getSuggestedFix(MemberSelectTree tree, VisitorState state) {
     MethodInvocationTree methodInvocationTree = null;
     Tree parentNode = state.getPath().getParentPath().getLeaf();
     if (parentNode.getKind() == Kind.METHOD_INVOCATION) {
       methodInvocationTree = (MethodInvocationTree) parentNode;
     }
-    
+
     JCFieldAccess fieldAccess = (JCFieldAccess) tree;
 
     // Get class symbol for the owner of the variable that was accessed.
@@ -103,10 +104,10 @@ public class StaticAccessedFromInstance extends BugChecker implements MemberSele
       // this for fields, because they may share a simple name with a local in the same scope.
       fix.replace(tree, fieldAccess.getIdentifier().toString());
     } else {
-      // Replace the operand of the field access expression with the simple name of the class. 
+      // Replace the operand of the field access expression with the simple name of the class.
       Symbol packageSym = ownerSym.packge();
       fix.replace(fieldAccess.getExpression(), ownerSym.getSimpleName().toString());
-      
+
       // Don't import implicitly imported packages (java.lang.* and current package).
       // TODO(cushon): move this logic into addImport?
       if (!packageSym.toString().equals("java.lang") && !packageSym.equals(currClassSym.packge())) {

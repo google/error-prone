@@ -7,7 +7,7 @@ import com.google.errorprone.ErrorProneScanner;
 import com.google.errorprone.Scanner;
 import com.google.errorprone.ValidationException;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Disableable;
 import com.google.errorprone.matchers.Suppressible;
@@ -66,7 +66,7 @@ public abstract class BugChecker implements Suppressible, Disableable, Serializa
    * Helper to create a Description for the common case where the diagnostic message is not
    * parameterized.
    */
-  protected Description describeMatch(Tree node, SuggestedFix fix) {
+  protected Description describeMatch(Tree node, Fix fix) {
     return new Description(node, getDiagnosticMessage(), fix, pattern.severity());
   }
 

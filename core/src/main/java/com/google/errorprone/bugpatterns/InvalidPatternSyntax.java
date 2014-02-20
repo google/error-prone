@@ -24,9 +24,11 @@ import static com.google.errorprone.matchers.Matchers.*;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -97,7 +99,7 @@ public class InvalidPatternSyntax extends BugChecker implements MethodInvocation
     }
 
     // TODO: Suggest fixes for more situations.
-    SuggestedFix fix = null;
+    Fix fix = Fix.NO_FIX;
     ExpressionTree arg = methodInvocationTree.getArguments().get(0);
     if ((arg instanceof LiteralTree) && ".".equals(((LiteralTree)arg).getValue())) {
       fix = new SuggestedFix().replace(arg, "\"\\\\.\"");

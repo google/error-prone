@@ -29,6 +29,7 @@ import static com.google.errorprone.matchers.Matchers.staticMethod;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -112,7 +113,7 @@ public class ArrayHashCode extends BugChecker implements MethodInvocationTreeMat
       return NO_MATCH;
     }
 
-    SuggestedFix fix = new SuggestedFix()
+    Fix fix = new SuggestedFix()
         .replace(t, "Arrays.hashCode(" + arrayArg + ")")
         .addImport("java.util.Arrays");
     return describeMatch(t, fix);

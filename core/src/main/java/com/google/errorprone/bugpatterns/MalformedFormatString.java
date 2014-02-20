@@ -26,6 +26,7 @@ import static com.google.errorprone.matchers.Matchers.staticMethod;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -127,7 +128,7 @@ public class MalformedFormatString extends BugChecker implements MethodInvocatio
       if (end < 0) {
         return describeMatch(tree, null);
       }
-      SuggestedFix fix = new SuggestedFix().replace(begin, end - 1, "");
+      Fix fix = new SuggestedFix().replace(begin, end - 1, "");
       return describeMatch(tree, fix);
     } catch (Exception e) {
       // TODO(rburny): provide fixes for other problems

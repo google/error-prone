@@ -34,17 +34,7 @@ import java.util.TreeSet;
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class SuggestedFix {
-
-  public String toString(JCCompilationUnit compilationUnit) {
-    StringBuilder result = new StringBuilder("replace ");
-    for (Replacement replacement : getReplacements(JDKCompatible.getEndPosMap(compilationUnit))) {
-      result
-          .append("position " + replacement.startPosition + ":" + replacement.endPosition)
-          .append(" with \"" + replacement.replaceWith + "\" ");
-    }
-    return result.toString();
-  }
+public class SuggestedFix implements Fix {
 
   private Collection<Pair<DiagnosticPosition, String>> nodeReplacements =
       new ArrayList<Pair<DiagnosticPosition, String>>();
@@ -57,6 +47,28 @@ public class SuggestedFix {
   private Collection<String> importsToAdd = new ArrayList<String>();
   private Collection<String> importsToRemove = new ArrayList<String>();
 
+  @Override
+  public Collection<String> getImportsToAdd() {
+    return importsToAdd;
+  }
+
+  @Override
+  public Collection<String> getImportsToRemove() {
+    return importsToRemove;
+  }
+
+  @Override
+  public String toString(JCCompilationUnit compilationUnit) {
+    StringBuilder result = new StringBuilder("replace ");
+    for (Replacement replacement : getReplacements(JDKCompatible.getEndPosMap(compilationUnit))) {
+      result
+          .append("position " + replacement.startPosition + ":" + replacement.endPosition)
+          .append(" with \"" + replacement.replaceWith + "\" ");
+    }
+    return result.toString();
+  }
+
+  @Override
   public Set<Replacement> getReplacements(ErrorProneEndPosMap endPositions) {
     if (endPositions == null) {
       throw new IllegalArgumentException(
@@ -204,13 +216,5 @@ public class SuggestedFix {
   public SuggestedFix removeStaticImport(String importString) {
     importsToRemove.add("import static " + importString);
     return this;
-  }
-
-  public Collection<String> getImportsToAdd() {
-    return importsToAdd;
-  }
-
-  public Collection<String> getImportsToRemove() {
-    return importsToRemove;
   }
 }

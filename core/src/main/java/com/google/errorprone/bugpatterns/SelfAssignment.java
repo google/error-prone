@@ -28,10 +28,12 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.AssignmentTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.EditDistance;
+
 import com.sun.source.tree.*;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Flags;
@@ -140,7 +142,7 @@ public class SelfAssignment extends BugChecker
     Tree parent = state.getPath().getParentPath().getLeaf();
 
     // default fix is to delete assignment
-    SuggestedFix fix = new SuggestedFix().delete(parent);
+    Fix fix = new SuggestedFix().delete(parent);
 
     ExpressionTree lhs = assignmentTree.getVariable();
     ExpressionTree rhs = assignmentTree.getExpression();

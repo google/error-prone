@@ -19,13 +19,14 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
+
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
@@ -45,14 +46,14 @@ import javax.lang.model.element.ElementKind;
     "Method does not override method in superclass due to wrong package for "
     + "parameter. For example, defining a method void foo(alpha.Foo x) when the superclass "
     + "contains a method void foo(beta.Foo x). The defined method was probably meant to "
-    + "override the superclass method.", 
-    category = JDK, 
-    severity = ERROR, 
+    + "override the superclass method.",
+    category = JDK,
+    severity = ERROR,
     maturity = EXPERIMENTAL)
 public class WrongParameterPackage extends BugChecker implements MethodTreeMatcher {
 
   private MethodSymbol supermethod;
-  
+
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     MethodSymbol method = (MethodSymbol) ASTHelpers.getSymbol(tree);
@@ -92,7 +93,7 @@ public class WrongParameterPackage extends BugChecker implements MethodTreeMatch
     SuggestedFix fix = new SuggestedFix();
 
     MethodSymbol method = (MethodSymbol) ASTHelpers.getSymbol(tree);
-    
+
     if (supermethod == null){
       throw new IllegalStateException("Matching supermethod was not found");
     }

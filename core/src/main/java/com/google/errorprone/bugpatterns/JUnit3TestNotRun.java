@@ -33,6 +33,7 @@ import static com.google.errorprone.suppliers.Suppliers.VOID_TYPE;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -111,7 +112,7 @@ public class JUnit3TestNotRun extends BugChecker implements MethodTreeMatcher {
     // We don't have start position for a method symbol, so we replace everything between result
     // type and body.
     JCMethodDecl decl = (JCMethodDecl) methodTree;
-    SuggestedFix fix = new SuggestedFix().replace(
+    Fix fix = new SuggestedFix().replace(
         decl.restype.getStartPosition() + 4, decl.body.getStartPosition(), " " + fixedName + "() ");
     return describeMatch(methodTree, fix);
   }

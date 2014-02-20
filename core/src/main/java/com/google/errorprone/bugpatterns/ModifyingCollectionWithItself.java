@@ -25,11 +25,13 @@ import static com.sun.source.tree.Tree.Kind.*;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.EditDistance;
+
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
@@ -96,7 +98,7 @@ public class ModifyingCollectionWithItself extends BugChecker
     ExpressionTree rhs = methodInvocationTree.getArguments().get(0);
     
     // default fix for methods
-    SuggestedFix fix = new SuggestedFix().delete(parent);
+    Fix fix = new SuggestedFix().delete(parent);
     if (methodSelect(instanceMethod(Matchers.<ExpressionTree>anything(), "removeAll"))
         .matches(methodInvocationTree, state)) {
       fix = new SuggestedFix().replace(methodInvocationTree, lhs.toString() + ".clear()");

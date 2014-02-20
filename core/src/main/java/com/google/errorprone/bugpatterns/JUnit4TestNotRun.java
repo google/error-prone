@@ -26,13 +26,16 @@ import static com.google.errorprone.matchers.Matchers.*;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.JUnitMatchers.JUnit4TestClassMatcher;
+
 import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 
 import javax.lang.model.element.Modifier;
+
 import java.util.Arrays;
 
 /**
@@ -100,13 +103,13 @@ public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
       CharSequence methodSource = state.getSourceForNode((JCMethodDecl) methodTree);
       if (methodSource != null) {
         String methodString = "@Test\n" + methodSource.toString().replaceFirst(" static ", " ");
-        SuggestedFix fix = new SuggestedFix()
+        Fix fix = new SuggestedFix()
             .addImport(JUNIT4_TEST_ANNOTATION)
             .replace(methodTree, methodString);
         return describeMatch(methodTree, fix);
       }
     }
-    SuggestedFix fix = new SuggestedFix()
+    Fix fix = new SuggestedFix()
         .addImport(JUNIT4_TEST_ANNOTATION)
         .prefixWith(methodTree, "@Test\n");
     return describeMatch(methodTree, fix);

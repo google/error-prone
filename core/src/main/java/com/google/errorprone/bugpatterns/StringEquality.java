@@ -26,9 +26,11 @@ import static com.sun.source.tree.Tree.Kind.NOT_EQUAL_TO;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree;
@@ -104,7 +106,7 @@ public class StringEquality extends BugChecker implements BinaryTreeMatcher {
     }
     fixedExpression.append(".equals(" + rightOperand.toString() + ")");
 
-    SuggestedFix fix = new SuggestedFix().replace(tree, fixedExpression.toString());
+    Fix fix = new SuggestedFix().replace(tree, fixedExpression.toString());
     return describeMatch(tree, fix);
   }
 }
