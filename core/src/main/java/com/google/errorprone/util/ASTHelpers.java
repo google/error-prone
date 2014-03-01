@@ -21,15 +21,19 @@ import com.google.errorprone.matchers.Matcher;
 
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.BinaryTree;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Scope;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
@@ -103,14 +107,14 @@ public class ASTHelpers {
    */
   // TODO(eaftan): refactor other code that accesses symbols to use this method
   public static Symbol getSymbol(Tree tree) {
-    if (tree instanceof JCClassDecl) {
-      return ((JCClassDecl) tree).sym;
+    if (tree instanceof ClassTree) {
+      return getSymbol((ClassTree) tree);
     }
-    if (tree instanceof JCMethodDecl) {
-      return ((JCMethodDecl) tree).sym;
+    if (tree instanceof MethodTree) {
+      return getSymbol((MethodTree) tree);
     }
-    if (tree instanceof JCVariableDecl) {
-      return ((JCVariableDecl) tree).sym;
+    if (tree instanceof VariableTree) {
+      return getSymbol((VariableTree) tree);
     }
     if (tree instanceof JCFieldAccess) {
       return ((JCFieldAccess) tree).sym;
@@ -128,6 +132,21 @@ public class ASTHelpers {
       return getSymbol(((AnnotationTree) tree).getAnnotationType());
     }
     return null;
+  }
+
+  /** Gets the symbol for a class. */
+  public static ClassSymbol getSymbol(ClassTree tree) {
+    return ((JCClassDecl) tree).sym;
+  }
+
+  /** Gets the symbol for a method. */
+  public static MethodSymbol getSymbol(MethodTree tree) {
+    return ((JCMethodDecl) tree).sym;
+  }
+
+  /** Gets the symbol for a variable. */
+  public static VarSymbol getSymbol(VariableTree tree) {
+    return ((JCVariableDecl) tree).sym;
   }
 
   /**
