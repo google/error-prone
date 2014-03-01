@@ -39,35 +39,57 @@ import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 @BugPattern(name = "ArrayEquals",
-    summary = "equals used to compare arrays",
+    summary = "Reference equality used to compare arrays",
     explanation =
-        "The equals method on an array compares for reference equality. If reference equality " +
-        "is needed, == should be used instead for clarity. Otherwise, use Arrays.equals to " +
-        "compare the contents of the arrays.",
+        "Generally when comparing arrays for equality, the programmer intends to check that the "
+        + "the contents of the arrays are equal rather than that they are actually the same "
+        + "object.  But many commonly used equals methods compare arrays for reference equality "
+        + "rather than content equality. These include the instance .equals() method, Guava's "
+        + "com.google.common.base.Objects#equal(), and the JDK's java.util.Objects#equals().\n\n"
+        + "If reference equality is needed, == should be used instead for clarity. Otherwise, "
+        + "use java.util.Arrays#equals() to compare the contents of the arrays.",
     category = JDK, severity = ERROR, maturity = MATURE)
 public class ArrayEquals extends BugChecker implements MethodInvocationTreeMatcher {
-
+  /**
+   * Matches when the equals instance method is used to compare two arrays.
+   */
   @SuppressWarnings("unchecked")
-  private static final Matcher<MethodInvocationTree> arrayEqualsMatcher = Matchers.allOf(
+  private static final Matcher<MethodInvocationTree> instanceEqualsMatcher = Matchers.allOf(
       methodSelect(instanceMethod(Matchers.<ExpressionTree>isArrayType(), "equals")),
       argument(0, Matchers.<ExpressionTree>isArrayType()));
 
   /**
-   * Matches calls to an equals instance method in which both the receiver and the argument are
-   * of an array type.
-   *
-   * Replaces instances of a.equals(b) with Arrays.equals(a, b). Also adds
-   * the necessary import statement for java.util.Arrays.
+   * Matches when the Guava com.google.common.base.Objects#equal or the JDK7
+   * java.util.Objects#equals method is used to compare two arrays.
+   */
+  @SuppressWarnings("unchecked")
+  private static final Matcher<MethodInvocationTree> staticEqualsMatcher = allOf(
+      anyOf(
+        methodSelect(staticMethod("com.google.common.base.Objects", "equal")),
+        methodSelect(staticMethod("java.util.Objects", "equals"))),
+      argument(0, Matchers.<ExpressionTree>isArrayType()),
+      argument(1, Matchers.<ExpressionTree>isArrayType()));
+
+  /**
+   * Suggests replacing with Arrays.equals(a, b). Also adds the necessary import statement for
+   * java.util.Arrays.
    */
   @Override
   public Description matchMethodInvocation(MethodInvocationTree t, VisitorState state) {
-    if (!arrayEqualsMatcher.matches(t, state)) {
+    String arg1;
+    String arg2;
+    if (instanceEqualsMatcher.matches(t, state)) {
+      arg1 = ((JCFieldAccess) t.getMethodSelect()).getExpression().toString();
+      arg2 = t.getArguments().get(0).toString();
+    } else if (staticEqualsMatcher.matches(t, state)) {
+      arg1 = t.getArguments().get(0).toString();
+      arg2 = t.getArguments().get(1).toString();
+    } else {
       return NO_MATCH;
     }
-    String receiver = ((JCFieldAccess) t.getMethodSelect()).getExpression().toString();
-    String arg = t.getArguments().get(0).toString();
+
     Fix fix = new SuggestedFix()
-        .replace(t, "Arrays.equals(" + receiver + ", " + arg + ")")
+        .replace(t, "Arrays.equals(" + arg1 + ", " + arg2 + ")")
         .addImport("java.util.Arrays");
     return describeMatch(t, fix);
   }

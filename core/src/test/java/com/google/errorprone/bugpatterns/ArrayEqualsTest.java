@@ -16,7 +16,10 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static org.junit.Assume.assumeTrue;
+
 import com.google.errorprone.CompilationTestHelper;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,9 +44,25 @@ public class ArrayEqualsTest {
   }
 
   @Test
+  public void testJava7PositiveCase() throws Exception {
+    String[] javaVersion = System.getProperty("java.version").split("\\.");
+    assumeTrue(Integer.parseInt(javaVersion[1]) >= 7);
+    compilationHelper.assertCompileFailsWithMessages(
+        new File(this.getClass().getResource("ArrayEqualsPositiveCases2.java").toURI()));
+  }
+
+  @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(
         new File(this.getClass().getResource("ArrayEqualsNegativeCases.java").toURI()));
+  }
+
+  @Test
+  public void testJava7NegativeCase() throws Exception {
+    String[] javaVersion = System.getProperty("java.version").split("\\.");
+    assumeTrue(Integer.parseInt(javaVersion[1]) >= 7);
+    compilationHelper.assertCompileSucceeds(
+        new File(this.getClass().getResource("ArrayEqualsNegativeCases2.java").toURI()));
   }
 
 }

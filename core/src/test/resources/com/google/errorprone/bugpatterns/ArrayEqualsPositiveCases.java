@@ -16,7 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import java.util.*;
+import com.google.common.base.Objects;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
@@ -33,6 +33,13 @@ public class ArrayEqualsPositiveCases {
     } else {
       System.out.println("arrays are not equal!");
     }
+    
+    //BUG: Suggestion includes "Arrays.equals(a, b)"
+    if (Objects.equal(a, b)) {
+      System.out.println("arrays are equal!");
+    } else {
+      System.out.println("arrays are not equal!");
+    }
   }
   
   public void objectArray() {
@@ -41,6 +48,13 @@ public class ArrayEqualsPositiveCases {
     
     //BUG: Suggestion includes "Arrays.equals(a, b)"
     if (a.equals(b)) {
+      System.out.println("arrays are equal!");
+    } else {
+      System.out.println("arrays are not equal!");
+    }
+    
+    //BUG: Suggestion includes "Arrays.equals(a, b)"
+    if (Objects.equal(a, b)) {
       System.out.println("arrays are equal!");
     } else {
       System.out.println("arrays are not equal!");

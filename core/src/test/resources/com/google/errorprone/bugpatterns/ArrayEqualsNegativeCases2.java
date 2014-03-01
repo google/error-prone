@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Google Inc. All Rights Reserved.
+ * Copyright 2014 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +16,19 @@
 
 package com.google.errorprone.bugpatterns;
 
-import com.google.common.base.Objects;
+import java.util.Objects;
 
 /**
+ * Tests that only run with Java 7 and above.
+ * 
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class ArrayEqualsNegativeCases {
+public class ArrayEqualsNegativeCases2 {
   public void neitherArray() {
     Object a = new Object();
     Object b = new Object();
     
-    if (a.equals(b)) {
-      System.out.println("Objects are equal!");
-    } else {
-      System.out.println("Objects are not equal!");
-    }
-    
-    if (Objects.equal(a, b)) {
+    if (Objects.equals(a, b)) {
       System.out.println("Objects are equal!");
     } else {
       System.out.println("Objects are not equal!");
@@ -43,16 +39,10 @@ public class ArrayEqualsNegativeCases {
     Object[] a = new Object[3];
     Object b = new Object();
     
-    if (a.equals(b)) {
+    if (Objects.equals(a, b)) {
       System.out.println("arrays are equal!");
     } else {
       System.out.println("arrays are not equal!");
-    }
-    
-    if (Objects.equal(a, b)) {
-      System.out.println("Objects are equal!");
-    } else {
-      System.out.println("Objects are not equal!");
     }
   }
   
@@ -60,18 +50,10 @@ public class ArrayEqualsNegativeCases {
     Object a = new Object();
     Object[] b = new Object[3];
     
-    if (a.equals(b)) {
+    if (Objects.equals(a, b)) {
       System.out.println("arrays are equal!");
     } else {
       System.out.println("arrays are not equal!");
     }
-    
-    if (Objects.equal(a, b)) {
-      System.out.println("Objects are equal!");
-    } else {
-      System.out.println("Objects are not equal!");
-    }
   }
-  
-  
 }
