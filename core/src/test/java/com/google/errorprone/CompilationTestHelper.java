@@ -111,8 +111,8 @@ public class CompilationTestHelper {
   /**
    * Convenience method for the common case of one source file and no extra args.
    */
-  public void assertCompileSucceedsWithMessages(File source) {
-    assertCompileSucceeds(ImmutableList.of(source));
+  public void assertCompileSucceedsWithMessages(File source) throws IOException {
+    assertCompileSucceedsWithMessages(ImmutableList.of(source));
   }
 
   /**
