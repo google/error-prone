@@ -22,17 +22,23 @@ import static javax.lang.model.element.Modifier.FINAL;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.AnnotationType;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Matchers;
+import com.google.errorprone.matchers.MultiMatcher;
+import com.google.errorprone.matchers.MultiMatcher.MatchType;
 import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+import com.sun.tools.javac.code.Flags;
+import com.sun.tools.javac.tree.JCTree.JCModifiers;
+import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
+import com.sun.tools.javac.tree.TreeMaker;
 
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
@@ -42,9 +48,13 @@ import com.sun.source.tree.VariableTree;
     + "recommended because the injected value may not be visible to other threads.",
     explanation = "See https://code.google.com/p/google-guice/wiki/InjectionPoints",
     category = GUICE, severity = WARNING, maturity = EXPERIMENTAL)
-public class GuiceInjectOnFinalField extends BugChecker implements AnnotationTreeMatcher {
+@SuppressWarnings("serial")
+public class GuiceInjectOnFinalField extends BugChecker implements VariableTreeMatcher {
 
   private static final String GUICE_INJECT_ANNOTATION = "com.google.inject.Inject";
+
+  private static final MultiMatcher<Tree, AnnotationTree> ANNOTATED_WITH_GUICE_INJECT_MATCHER =
+      Matchers.annotations(MatchType.ANY, Matchers.isType(GUICE_INJECT_ANNOTATION));
 
   private static final Matcher<Tree> FINAL_FIELD_MATCHER = new Matcher<Tree>() {
     @Override
@@ -53,21 +63,22 @@ public class GuiceInjectOnFinalField extends BugChecker implements AnnotationTre
     }
   };
 
-  private static final Matcher<AnnotationTree> GUICE_INJECT_ANNOTATION_MATCHER =
-      new AnnotationType(GUICE_INJECT_ANNOTATION);
-
   @Override
-  @SuppressWarnings("unchecked")
-  public final Description matchAnnotation(AnnotationTree annotationTree, VisitorState state) {
-    if (GUICE_INJECT_ANNOTATION_MATCHER.matches(annotationTree, state)
-        && FINAL_FIELD_MATCHER.matches(getAnnotatedNode(state), state)) {
-      return describeMatch(annotationTree, new SuggestedFix().delete(annotationTree));
+  public Description matchVariable(VariableTree tree, VisitorState state) {
+    if (ANNOTATED_WITH_GUICE_INJECT_MATCHER.matches(tree, state)
+            && FINAL_FIELD_MATCHER.matches(tree, state)) {
+      JCModifiers modifiers = ((JCVariableDecl) tree).mods;
+      long replacementFlags = modifiers.flags ^ Flags.FINAL;
+      JCModifiers replacementModifiers = TreeMaker.instance(state.context)
+          .Modifiers(replacementFlags, modifiers.annotations);
+      /*
+       * replace new lines with strings, trim whitespace and remove empty parens to make the
+       * suggested fixes look sane
+       */
+      String string = replacementModifiers.toString().replace('\n', ' ').replace("()", "").trim();
+      return describeMatch(modifiers, new SuggestedFix().replace(modifiers, string));
     }
     return Description.NO_MATCH;
-  }
-
-  private static Tree getAnnotatedNode(VisitorState state) {
-    return state.getPath().getParentPath().getParentPath().getLeaf();
   }
 
   private static boolean isField(Tree tree, VisitorState state) {

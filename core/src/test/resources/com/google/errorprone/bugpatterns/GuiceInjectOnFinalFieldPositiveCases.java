@@ -18,6 +18,10 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.inject.Inject;
 
+import java.util.Set;
+
+import javax.annotation.Nullable;
+
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
@@ -26,8 +30,16 @@ public class GuiceInjectOnFinalFieldPositiveCases {
    * Class has a final injectable(com.google.inject.Inject) field.
    */
   public class TestClass1 {
-    //BUG: Suggestion includes "remove"
-    @Inject 
-    public final int n = 0;
+    //BUG: Suggestion includes "int a"
+    @Inject final int a = 0;
+
+    
+    //BUG: Suggestion includes "public int b"
+    @Inject
+    public final int b = 0;
+  
+    //BUG: Suggestion includes "@Nullable Object c"
+    @Inject @Nullable
+    final Object c = null;
   }
 }
