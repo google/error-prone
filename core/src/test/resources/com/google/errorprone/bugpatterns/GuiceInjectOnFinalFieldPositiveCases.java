@@ -30,15 +30,15 @@ public class GuiceInjectOnFinalFieldPositiveCases {
    * Class has a final injectable(com.google.inject.Inject) field.
    */
   public class TestClass1 {
-    //BUG: Suggestion includes "int a"
+    //BUG: Suggestion includes "@Inject int a"
     @Inject final int a = 0;
 
     
-    //BUG: Suggestion includes "public int b"
+    //BUG: Suggestion includes "@Inject public int b"
     @Inject
     public final int b = 0;
   
-    //BUG: Suggestion includes "@Nullable Object c"
+    //BUG: Suggestion includes "@Inject @Nullable Object c"
     @Inject @Nullable
     final Object c = null;
   }

@@ -17,6 +17,8 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.GUICE;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.matchers.Matchers.annotations;
+import static com.google.errorprone.matchers.Matchers.isType;
 import static com.sun.source.tree.Tree.Kind.VARIABLE;
 import static javax.lang.model.element.Modifier.FINAL;
 
@@ -26,7 +28,6 @@ import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.matchers.MultiMatcher;
 import com.google.errorprone.matchers.MultiMatcher.MatchType;
 import com.google.errorprone.util.ASTHelpers;
@@ -54,7 +55,7 @@ public class GuiceInjectOnFinalField extends BugChecker implements VariableTreeM
   private static final String GUICE_INJECT_ANNOTATION = "com.google.inject.Inject";
 
   private static final MultiMatcher<Tree, AnnotationTree> ANNOTATED_WITH_GUICE_INJECT_MATCHER =
-      Matchers.annotations(MatchType.ANY, Matchers.isType(GUICE_INJECT_ANNOTATION));
+      annotations(MatchType.ANY, isType(GUICE_INJECT_ANNOTATION));
 
   private static final Matcher<Tree> FINAL_FIELD_MATCHER = new Matcher<Tree>() {
     @Override
@@ -67,7 +68,7 @@ public class GuiceInjectOnFinalField extends BugChecker implements VariableTreeM
   public Description matchVariable(VariableTree tree, VisitorState state) {
     if (ANNOTATED_WITH_GUICE_INJECT_MATCHER.matches(tree, state)
             && FINAL_FIELD_MATCHER.matches(tree, state)) {
-      JCModifiers modifiers = ((JCVariableDecl) tree).mods;
+      JCModifiers modifiers = ((JCVariableDecl) tree).getModifiers();
       long replacementFlags = modifiers.flags ^ Flags.FINAL;
       JCModifiers replacementModifiers = TreeMaker.instance(state.context)
           .Modifiers(replacementFlags, modifiers.annotations);
@@ -75,8 +76,10 @@ public class GuiceInjectOnFinalField extends BugChecker implements VariableTreeM
        * replace new lines with strings, trim whitespace and remove empty parens to make the
        * suggested fixes look sane
        */
-      String string = replacementModifiers.toString().replace('\n', ' ').replace("()", "").trim();
-      return describeMatch(modifiers, new SuggestedFix().replace(modifiers, string));
+      String replacementModifiersString =
+          replacementModifiers.toString().replace('\n', ' ').replace("()", "").trim();
+      return describeMatch(modifiers,
+          new SuggestedFix().replace(modifiers, replacementModifiersString));
     }
     return Description.NO_MATCH;
   }
