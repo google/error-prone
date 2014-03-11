@@ -8,10 +8,9 @@ import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.List;
 
-import java.util.Map;
-
 import javax.annotation.processing.Processor;
 import javax.tools.JavaFileObject;
+import java.util.Map;
 
 /**
  * See com.google.errorprone.JDKCompatible.
@@ -24,5 +23,5 @@ interface JDKCompatibleShim {
   int runCompile(Main main, String[] args, Context context, List<JavaFileObject> files,
       Iterable<? extends Processor> processors);
   int getJCTreeTag(JCTree node);
-  Integer getEndPosition(JCTree tree, Map<JCTree, Integer> map);
+  Integer getEndPosition(DiagnosticPosition pos, Map<JCTree, Integer> map);
 }

@@ -77,7 +77,7 @@ public class JDK8Shim implements JDKCompatibleShim {
   }
 
   @Override
-  public Integer getEndPosition(JCTree tree, Map<JCTree, Integer> map) {
-    return EndPosMap8.getEndPos(tree, map);
+  public Integer getEndPosition(DiagnosticPosition pos, Map<JCTree, Integer> map) {
+    return EndPosMap8.getEndPos(pos, map);
   }
 }

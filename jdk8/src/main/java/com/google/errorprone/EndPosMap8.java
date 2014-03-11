@@ -120,7 +120,7 @@ public class EndPosMap8 implements ErrorProneEndPosMap {
     }
   }
 
-  public static int getEndPos(JCTree tree, Map<JCTree, Integer> map) {
-    return TreeInfo.getEndPos(tree, new EndPosTableAdapter(map));
+  public static int getEndPos(DiagnosticPosition pos, Map<JCTree, Integer> map) {
+    return pos.getEndPosition(new EndPosTableAdapter(map));
   }
 }

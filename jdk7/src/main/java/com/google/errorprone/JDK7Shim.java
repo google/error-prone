@@ -2,7 +2,6 @@ package com.google.errorprone;
 
 import com.google.errorprone.fixes.AdjustedPosition7;
 import com.google.errorprone.fixes.IndexedPosition7;
-
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.main.Main;
 import com.sun.tools.javac.tree.JCTree;
@@ -11,10 +10,9 @@ import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.List;
 
-import java.util.Map;
-
 import javax.annotation.processing.Processor;
 import javax.tools.JavaFileObject;
+import java.util.Map;
 
 public class JDK7Shim implements JDKCompatibleShim {
 
@@ -54,7 +52,7 @@ public class JDK7Shim implements JDKCompatibleShim {
   }
 
   @Override
-  public Integer getEndPosition(JCTree tree, Map<JCTree, Integer> map) {
-    return EndPosMap7.getEndPos(tree, map);
+  public Integer getEndPosition(DiagnosticPosition pos, Map<JCTree, Integer> map) {
+    return EndPosMap7.getEndPos(pos, map);
   }
 }

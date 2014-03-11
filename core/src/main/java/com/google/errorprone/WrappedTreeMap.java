@@ -66,7 +66,7 @@ class WrappedTreeMap extends AbstractMap<JCTree, Integer> implements ErrorProneE
     // If two nodes share an end position, there's only one entry in the table.
     // Call TreeInfo#getEndPos() to figure out which node is the key for the
     // current node's entry.
-    return JDKCompatible.getEndPosition(pos.getTree(), this);
+    return JDKCompatible.getEndPosition(pos, this);
   }
 
   /**

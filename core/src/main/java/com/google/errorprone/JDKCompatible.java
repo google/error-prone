@@ -8,10 +8,9 @@ import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.List;
 
-import java.util.Map;
-
 import javax.annotation.processing.Processor;
 import javax.tools.JavaFileObject;
+import java.util.Map;
 
 /**
  * An abstraction over JDK version-specific APIs.
@@ -86,7 +85,7 @@ public final class JDKCompatible {
    * correctly requires calling TreeInfo#getEndPos(), which figures out which
    * node to use as the key for the endposmap lookup.
    */
-  public static int getEndPosition(JCTree tree, Map<JCTree, Integer> map) {
-    return backingShim.getEndPosition(tree, map);
+  public static int getEndPosition(DiagnosticPosition pos, Map<JCTree, Integer> map) {
+    return backingShim.getEndPosition(pos, map);
   }
 }
