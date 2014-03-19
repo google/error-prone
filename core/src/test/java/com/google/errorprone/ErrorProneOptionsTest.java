@@ -22,6 +22,8 @@ import static org.junit.Assert.assertThat;
 import com.google.common.collect.Sets;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.util.Set;
 
@@ -30,6 +32,7 @@ import java.util.Set;
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
+@RunWith(JUnit4.class)
 public class ErrorProneOptionsTest {
 
   @Test

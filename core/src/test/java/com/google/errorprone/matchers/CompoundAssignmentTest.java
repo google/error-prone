@@ -26,6 +26,8 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree.Kind;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -34,7 +36,8 @@ import java.util.Set;
 /**
  * @author adgar@google.com (Mike Edgar)
  */
-public class CompoundAssignmentTest extends CompilerBasedTest {
+@RunWith(JUnit4.class)
+public class CompoundAssignmentTest extends CompilerBasedAbstractTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void cannotConstructWithInvalidKind() throws IOException {

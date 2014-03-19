@@ -14,33 +14,38 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.CompilationTestHelper.source;
+
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
-import java.io.File;
 import java.net.URISyntaxException;
 import java.util.List;
+
+import javax.tools.JavaFileObject;
 
 /**
  * @author flx@google.com (Felix Berger)
  */
+@RunWith(JUnit4.class)
 public class ProtoFieldNullComparisonTest {
 
   private CompilationTestHelper compilationHelper;
-  private File protoFile;
+  private JavaFileObject protoFile;
 
   @Before
   public void setUp() throws Exception {
     compilationHelper = new CompilationTestHelper(ProtoFieldNullComparison.class);
-    protoFile = new File(this.getClass().getResource("proto/ProtoTest.java").toURI());
+    protoFile = source(getClass(), "proto/ProtoTest.java");
   }
 
-  private List<File> getSourceFiles(String mainFileName) throws URISyntaxException {
-    File mainFile = new File(
-        this.getClass().getResource(mainFileName).toURI());
+  private List<JavaFileObject> getSourceFiles(String mainFileName) throws URISyntaxException {
+    JavaFileObject mainFile = source(getClass(), mainFileName);
     return ImmutableList.of(mainFile, protoFile);
   }
 

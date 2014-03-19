@@ -16,15 +16,19 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.CompilationTestHelper.sources;
+
 import com.google.errorprone.CompilationTestHelper;
+
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * @author scottjohnson@google.com (Scott Johnson)
  */
+@RunWith(JUnit4.class)
 public class ModifyingCollectionWithItselfTest {
 
   private CompilationTestHelper compilationHelper;
@@ -36,14 +40,14 @@ public class ModifyingCollectionWithItselfTest {
 
   @Test
   public void testPositiveCases1() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(new File(
-        this.getClass().getResource("ModifyingCollectionWithItselfPositiveCases.java").toURI()));
+    compilationHelper.assertCompileFailsWithMessages(
+        sources(getClass(), "ModifyingCollectionWithItselfPositiveCases.java"));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(new File(
-        this.getClass().getResource("ModifyingCollectionWithItselfNegativeCases.java").toURI()));
+    compilationHelper.assertCompileSucceeds(
+        sources(getClass(), "ModifyingCollectionWithItselfNegativeCases.java"));
   }
 
 }

@@ -16,15 +16,19 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.CompilationTestHelper.sources;
+
 import com.google.errorprone.CompilationTestHelper;
+
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
+@RunWith(JUnit4.class)
 public class ReturnValueIgnoredTest {
 
   private CompilationTestHelper compilationHelper;
@@ -37,13 +41,13 @@ public class ReturnValueIgnoredTest {
   @Test
   public void testPositiveCases() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("ReturnValueIgnoredPositiveCases.java").toURI()));
+        sources(getClass(), "ReturnValueIgnoredPositiveCases.java"));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("ReturnValueIgnoredNegativeCases.java").toURI()));
+        sources(getClass(), "ReturnValueIgnoredNegativeCases.java"));
   }
 
 }

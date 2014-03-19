@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.CompilationTestHelper.sources;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -26,7 +27,7 @@ import com.google.common.collect.Lists;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.Scanner;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.matchers.CompilerBasedTest;
+import com.google.errorprone.matchers.CompilerBasedAbstractTest;
 
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
@@ -34,8 +35,9 @@ import com.sun.source.tree.IdentifierTree;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +45,8 @@ import java.util.Map;
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class PreconditionsCheckNotNullPrimitiveTest extends CompilerBasedTest {
+@RunWith(JUnit4.class)
+public class PreconditionsCheckNotNullPrimitiveTest extends CompilerBasedAbstractTest {
   private CompilationTestHelper compilationHelper;
 
   @Before
@@ -54,15 +57,13 @@ public class PreconditionsCheckNotNullPrimitiveTest extends CompilerBasedTest {
   @Test
   public void testPositiveCases() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource(
-            "PreconditionsCheckNotNullPrimitivePositiveCases.java").toURI()));
+        sources(getClass(), "PreconditionsCheckNotNullPrimitivePositiveCases.java"));
   }
 
   @Test
   public void testNegativeCase1() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource(
-            "PreconditionsCheckNotNullPrimitiveNegativeCases.java").toURI()));
+        sources(getClass(), "PreconditionsCheckNotNullPrimitiveNegativeCases.java"));
   }
 
   @Test

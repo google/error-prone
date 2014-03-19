@@ -16,15 +16,19 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.CompilationTestHelper.sources;
+
 import com.google.errorprone.CompilationTestHelper;
+
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
+@RunWith(JUnit4.class)
 public class PreconditionsTooManyArgsTest {
 
   private CompilationTestHelper compilationHelper;
@@ -37,15 +41,13 @@ public class PreconditionsTooManyArgsTest {
   @Test
   public void testPositiveCase1() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource(
-            "PreconditionsTooManyArgsPositiveCase1.java").toURI()));
+        sources(getClass(), "PreconditionsTooManyArgsPositiveCase1.java"));
   }
 
   @Test
   public void testNegativeCase1() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource(
-            "PreconditionsTooManyArgsNegativeCase1.java").toURI()));
+        sources(getClass(), "PreconditionsTooManyArgsNegativeCase1.java"));
   }
 
 }

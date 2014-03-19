@@ -16,15 +16,19 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.CompilationTestHelper.sources;
+
 import com.google.errorprone.CompilationTestHelper;
+
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
+@RunWith(JUnit4.class)
 public class CovariantEqualsTest {
 
   private CompilationTestHelper compilationHelper;
@@ -37,36 +41,36 @@ public class CovariantEqualsTest {
   @Test
   public void testPositiveCase1() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("CovariantEqualsPositiveCase1.java").toURI()));
+        sources(getClass(), "CovariantEqualsPositiveCase1.java"));
   }
 
   @Test
   public void testPositiveCase2() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("CovariantEqualsPositiveCase2.java").toURI()));
+        sources(getClass(), "CovariantEqualsPositiveCase2.java"));
   }
 
   @Test
   public void testPositiveCase3() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("CovariantEqualsPositiveCase3.java").toURI()));
+        sources(getClass(), "CovariantEqualsPositiveCase3.java"));
   }
 
   @Test
   public void testPositiveCase4() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("CovariantEqualsPositiveCase4.java").toURI()));
+        sources(getClass(), "CovariantEqualsPositiveCase4.java"));
   }
 
   @Test
   public void testPositiveCase5() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("CovariantEqualsPositiveCase5.java").toURI()));
+        sources(getClass(), "CovariantEqualsPositiveCase5.java"));
   }
 
 
   @Test public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("CovariantEqualsNegativeCases.java").toURI()));
+    sources(getClass(), "CovariantEqualsNegativeCases.java"));
   }
 }

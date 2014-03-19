@@ -19,9 +19,9 @@ package com.google.errorprone;
 import static com.google.errorprone.BugPattern.Category.ONE_OFF;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.CompilationTestHelper.sources;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.StringContains.containsString;
-import static org.hamcrest.text.IsEmptyString.isEmptyString;
 import static org.junit.Assert.assertThat;
 
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -33,14 +33,19 @@ import com.sun.source.tree.ReturnTree;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.PrintStream;
+import java.util.List;
+
+import javax.tools.JavaFileObject;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
+@RunWith(JUnit4.class)
 public class CommandLineFlagDisableTest {
 
   @BugPattern(name = "DisableableChecker", altNames = "foo",
@@ -65,7 +70,7 @@ public class CommandLineFlagDisableTest {
     }
   }
 
-  private ErrorProneCompiler compiler;
+  private ErrorProneTestCompiler compiler;
   private DiagnosticTestHelper diagnosticHelper;
   private PrintStream oldStdout;
   private PrintStream oldStderr;
@@ -92,33 +97,30 @@ public class CommandLineFlagDisableTest {
 
   @Test
   public void flagWorks() throws Exception {
-    compiler = new ErrorProneCompiler.Builder()
+    compiler = new ErrorProneTestCompiler.Builder()
         .listenToDiagnostics(diagnosticHelper.collector)
         .report(new ErrorProneScanner(new DisableableChecker()))
         .build();
 
-    File source = new File(
-        this.getClass().getResource("CommandLineFlagTestFile.java").toURI());
-    int exitCode = compiler.compile(new String[]{source.getAbsolutePath()});
+    List<JavaFileObject> sources = sources(getClass(), "CommandLineFlagTestFile.java");
+    int exitCode = compiler.compile(sources);
     assertThat(exitCode, is(1));
-    exitCode = compiler.compile(new String[]{
-        "-Xepdisable:DisableableChecker", source.getAbsolutePath()});
+    exitCode = compiler.compile(new String[]{"-Xepdisable:DisableableChecker"}, sources);
     assertThat(exitCode, is(0));
   }
 
   @Test
   public void cantDisableNondisableableCheck() throws Exception {
-    compiler = new ErrorProneCompiler.Builder()
+    compiler = new ErrorProneTestCompiler.Builder()
         .listenToDiagnostics(diagnosticHelper.collector)
         .report(new ErrorProneScanner(new NondisableableChecker()))
         .build();
 
-    File source = new File(
-        this.getClass().getResource("CommandLineFlagTestFile.java").toURI());
+    List<JavaFileObject> sources = sources(getClass(), "CommandLineFlagTestFile.java");
     // This should exit with code 2, EXIT_CMDERR (not visible outside the com.sun.tools.javac.main
     // package).
     int exitCode = compiler.compile(
-        new String[]{"-Xepdisable:NondisableableChecker", source.getAbsolutePath()});
+        new String[]{"-Xepdisable:NondisableableChecker"}, sources);
     assertThat(exitCode, is(2));
     assertThat(testStderr.toString(),
         containsString("error-prone check NondisableableChecker may not be disabled"));
@@ -126,30 +128,26 @@ public class CommandLineFlagDisableTest {
 
   @Test
   public void noEffectWhenDisableNonexistentCheck() throws Exception {
-    compiler = new ErrorProneCompiler.Builder()
+    compiler =  new ErrorProneTestCompiler.Builder()
         .listenToDiagnostics(diagnosticHelper.collector)
         .report(new ErrorProneScanner(new DisableableChecker()))
         .build();
 
-    File source = new File(
-        this.getClass().getResource("CommandLineFlagTestFile.java").toURI());
-    int exitCode = compiler.compile(new String[]{"-Xepdisable:BogusChecker",
-        source.getAbsolutePath()});
+    List<JavaFileObject> sources = sources(getClass(), "CommandLineFlagTestFile.java");
+    int exitCode = compiler.compile(new String[]{"-Xepdisable:BogusChecker"}, sources);
     assertThat(exitCode, is(1));
-    assertThat(testStderr.toString(), isEmptyString());
+    assertThat(testStderr.toString(), is(""));
   }
 
   @Test
   public void cantDisableByAltname() throws Exception {
-    compiler = new ErrorProneCompiler.Builder()
+    compiler =  new ErrorProneTestCompiler.Builder()
         .listenToDiagnostics(diagnosticHelper.collector)
         .report(new ErrorProneScanner(new DisableableChecker()))
         .build();
 
-    File source = new File(
-        this.getClass().getResource("CommandLineFlagTestFile.java").toURI());
-    int exitCode = compiler.compile(new String[]{"-Xepdisable:foo",
-        source.getAbsolutePath()});
+    List<JavaFileObject> sources = sources(getClass(), "CommandLineFlagTestFile.java");
+    int exitCode = compiler.compile(new String[]{"-Xepdisable:foo"}, sources);
     assertThat(exitCode, is(1));
   }
 }

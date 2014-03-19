@@ -16,14 +16,14 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.CompilationTestHelper.sources;
+
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.io.File;
 
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
@@ -40,13 +40,13 @@ public class GuiceOverridesGuiceInjectableMethodTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(new File(this.getClass()
-        .getResource("GuiceOverridesGuiceInjectableMethodPositiveCases.java").toURI()));
+    compilationHelper.assertCompileSucceedsWithMessages(
+        sources(getClass(), "GuiceOverridesGuiceInjectableMethodPositiveCases.java"));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(new File(this.getClass()
-        .getResource("GuiceOverridesGuiceInjectableMethodNegativeCases.java").toURI()));
+    compilationHelper.assertCompileSucceeds(
+        sources(getClass(), "GuiceOverridesGuiceInjectableMethodNegativeCases.java"));
   }
 }

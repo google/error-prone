@@ -16,21 +16,26 @@
 
 package com.google.errorprone.matchers;
 
-import com.google.errorprone.Scanner;
-import com.google.errorprone.VisitorState;
-import com.sun.source.tree.AnnotationTree;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.io.IOException;
-
 import static com.google.errorprone.matchers.Matchers.stringLiteral;
 import static org.junit.Assert.assertTrue;
+
+import com.google.errorprone.Scanner;
+import com.google.errorprone.VisitorState;
+
+import com.sun.source.tree.AnnotationTree;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+
+import java.io.IOException;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class AnnotationHasArgumentWithValueTest extends CompilerBasedTest {
+@RunWith(JUnit4.class)
+public class AnnotationHasArgumentWithValueTest extends CompilerBasedAbstractTest {
   @Before public void setUp() throws IOException {
     writeFile("Thing.java",
         "public @interface Thing {",

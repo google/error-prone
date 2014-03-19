@@ -16,34 +16,41 @@
 
 package com.google.errorprone.suppress;
 
+import static com.google.errorprone.CompilationTestHelper.sources;
 import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneCompiler;
 import com.google.errorprone.ErrorProneScanner;
 import com.google.errorprone.ErrorProneScanner.EnabledPredicate;
+import com.google.errorprone.ErrorProneTestCompiler;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.DeadException;
 import com.google.errorprone.bugpatterns.EmptyIfStatement;
 import com.google.errorprone.bugpatterns.SelfAssignment;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
-import java.io.File;
+import java.util.List;
+
+import javax.tools.JavaFileObject;
 
 /**
  * Tests for standard {@code @SuppressWarnings} suppression method.
  *
  * @author alexeagle@google.com (Alex Eagle)
  */
+@RunWith(JUnit4.class)
 public class SuppressWarningsTest {
-  private ErrorProneCompiler compiler;
+  private ErrorProneTestCompiler compiler;
 
   @Before
   public void setUp() {
-    compiler = new ErrorProneCompiler.Builder()
+    compiler = new ErrorProneTestCompiler.Builder()
         .report(new ErrorProneScanner(new EnabledPredicate() {
           @SuppressWarnings("unchecked")
           @Override
@@ -57,8 +64,7 @@ public class SuppressWarningsTest {
 
   @Test
   public void testNegativeCase() throws Exception {
-    File source = new File(
-        this.getClass().getResource("SuppressWarningsNegativeCases.java").toURI());
-    assertThat(compiler.compile(new String[]{source.getAbsolutePath()}), is(0));
+    List<JavaFileObject> sources = sources(getClass(), "SuppressWarningsNegativeCases.java");
+    assertThat(compiler.compile(sources), is(0));
   }
 }

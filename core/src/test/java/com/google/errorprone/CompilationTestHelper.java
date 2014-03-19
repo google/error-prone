@@ -20,16 +20,29 @@ import static com.google.errorprone.DiagnosticTestHelper.assertHasDiagnosticOnAl
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.testing.compile.JavaFileObjects;
 
-import java.io.File;
+import com.sun.tools.javac.file.JavacFileManager;
+import com.sun.tools.javac.util.Context;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.io.PrintWriter;
+import java.lang.reflect.Constructor;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
+
+import javax.tools.DiagnosticListener;
+import javax.tools.JavaFileManager;
+import javax.tools.JavaFileObject;
+import javax.tools.ToolProvider;
 
 /**
  * Utility class for tests that need to build using error-prone.
@@ -43,16 +56,36 @@ public class CompilationTestHelper {
     "-encoding", "UTF-8",
     "-Xjcov");
 
+  private static final Joiner LINE_JOINER = Joiner.on('\n');
+
+  public static List<JavaFileObject> sources(Class<?> clazz, String... fileNames) {
+    List<JavaFileObject> result = new ArrayList<JavaFileObject>();
+    for (String fileName : fileNames) {
+      result.add(source(clazz, fileName));
+    }
+    return result;
+  }
+
+  public static JavaFileObject source(Class<?> clazz, String fileName) {
+    return JavaFileObjects.forResource(clazz.getResource(fileName));
+  }
+
+  public static JavaFileObject forSourceLines(String fileName, String... lines) {
+    return JavaFileObjects.forSourceString(fileName, LINE_JOINER.join(lines));
+  }
+
   private DiagnosticTestHelper diagnosticHelper;
   private ErrorProneCompiler compiler;
-
-
+  private ByteArrayOutputStream outputStream;
+  private JavaFileManager fileManager;
+  
   public CompilationTestHelper(Scanner scanner) {
-    diagnosticHelper = new DiagnosticTestHelper();
-    compiler = new ErrorProneCompiler.Builder()
-        .report(scanner)
-        .listenToDiagnostics(diagnosticHelper.collector)
-        .build();
+    this.diagnosticHelper = new DiagnosticTestHelper();
+    this.fileManager = getFileManager(diagnosticHelper.collector, null, null);
+    this.outputStream = new ByteArrayOutputStream();
+    this.compiler = new ErrorProneCompiler.Builder().report(scanner)
+        .redirectOutputTo(new PrintWriter(outputStream, /*autoFlush=*/true))
+        .listenToDiagnostics(diagnosticHelper.collector).build();
   }
 
   public CompilationTestHelper(Class<?> matcherClass) {
@@ -67,32 +100,52 @@ public class CompilationTestHelper {
    * Creates a list of arguments to pass to the compiler, including the list of source files
    * to compile.  Uses DEFAULT_ARGS as the base and appends the extraArgs passed in.
    */
-  private static List<String> buildArguments(List<File> sources, List<String> extraArgs) {
-    List<String> allArgs = Lists.newArrayList(DEFAULT_ARGS);
-    allArgs.addAll(extraArgs);
-    for (File file : sources) {
-      allArgs.add(file.getAbsolutePath());
+  private static List<String> buildArguments(List<String> extraArgs) {
+    return ImmutableList.<String>builder().addAll(DEFAULT_ARGS).addAll(extraArgs).build();
+  }
+
+  /**
+   * TODO(cushon): Investigate using compile_testing in a more legitimate fashion.
+   */
+  public static JavaFileManager getFileManager(DiagnosticListener<? super JavaFileObject>
+                                                   diagnosticListener,
+                                               Locale locale,
+                                               Charset charset) {
+    try {
+      JavacFileManager wrappedFileManager = (JavacFileManager) ToolProvider.getSystemJavaCompiler()
+          .getStandardFileManager
+              (diagnosticListener, locale, charset);
+      Class<?> clazz = Class.forName("com.google.testing.compile.InMemoryJavaFileManager");
+      Constructor ctor = clazz.getDeclaredConstructor(JavaFileManager.class);
+      ctor.setAccessible(true);
+      return (JavaFileManager) ctor.newInstance(wrappedFileManager);
+    } catch (Exception e) {
+      throw new LinkageError(e.getMessage());
     }
-    return allArgs;
   }
 
   /**
    * Asserts that the compilation succeeds (exits with code 0).
    *
    * @param sources The list of {@code File}s to compile
-   * @param extraArgs Extra command-line arguments to pass to the compiler
+   * @param args Extra command-line arguments to pass to the compiler
    */
-  public void assertCompileSucceeds(List<File> sources, String... extraArgs) {
-    List<String> allArgs = buildArguments(sources, Arrays.asList(extraArgs));
-    int exitCode = compiler.compile(allArgs.toArray(new String[0]));
+  public void assertCompileSucceeds(List<JavaFileObject> sources,
+                                    List<String> args) throws IOException {
+    List<String> allArgs = buildArguments(args);
+    int exitCode = compile(allArgs.toArray(new String[0]), asJavacList(sources));
     assertThat(diagnosticHelper.getDiagnostics().toString(), exitCode, is(0));
     // TODO(eaftan): complain if there are any diagnostics
+  }
+
+  public void assertCompileSucceeds(List<JavaFileObject> sources) throws IOException {
+    assertCompileSucceeds(sources, ImmutableList.<String>of());
   }
 
   /**
    * Convenience method for the common case of one source file and no extra args.
    */
-  public void assertCompileSucceeds(File source) {
+  public void assertCompileSucceeds(JavaFileObject source) throws IOException {
     assertCompileSucceeds(ImmutableList.of(source));
   }
 
@@ -100,10 +153,9 @@ public class CompilationTestHelper {
    * Assert that the compile succeeds, and that for each line of the test file that contains
    * the pattern //BUG("foo"), the diagnostic at that line contains "foo".
    */
-  public void assertCompileSucceedsWithMessages(List<File> sources, String... extraArgs)
-      throws IOException {
-    assertCompileSucceeds(sources, extraArgs);
-    for (File source : sources) {
+  public void assertCompileSucceedsWithMessages(List<JavaFileObject> sources) throws IOException {
+    assertCompileSucceeds(sources);
+    for (JavaFileObject source : sources) {
       assertHasDiagnosticOnAllMatchingLines(diagnosticHelper.getDiagnostics(), source);
     }
   }
@@ -111,7 +163,7 @@ public class CompilationTestHelper {
   /**
    * Convenience method for the common case of one source file and no extra args.
    */
-  public void assertCompileSucceedsWithMessages(File source) throws IOException {
+  public void assertCompileSucceedsWithMessages(JavaFileObject source) throws IOException {
     assertCompileSucceedsWithMessages(ImmutableList.of(source));
   }
 
@@ -120,14 +172,12 @@ public class CompilationTestHelper {
    * the pattern //BUG("foo"), the diagnostic at that line contains "foo".
    *
    * @param sources The list of {@code File}s to compile
-   * @param extraArgs Extra command-line arguments to pass to the compiler
    */
-  public void assertCompileFailsWithMessages(List<File> sources, String... extraArgs)
-      throws IOException {
-    List<String> allArgs = buildArguments(sources, Arrays.asList(extraArgs));
-    int exitCode = compiler.compile(allArgs.toArray(new String[0]));
+  public void assertCompileFailsWithMessages(List<JavaFileObject> sources) throws IOException {
+    List<String> allArgs = buildArguments(Collections.<String>emptyList());
+    int exitCode = compile(allArgs.toArray(new String[0]), asJavacList(sources));
     assertThat("Compiler returned an unexpected error code", exitCode, is(1));
-    for (File source : sources) {
+    for (JavaFileObject source : sources) {
       assertHasDiagnosticOnAllMatchingLines(diagnosticHelper.getDiagnostics(), source);
     }
   }
@@ -135,18 +185,20 @@ public class CompilationTestHelper {
   /**
    * Convenience method for the common case of one source file and no extra args.
    */
-  public void assertCompileFailsWithMessages(File source) throws IOException {
-    assertCompileFailsWithMessages(Collections.singletonList(source));
+  public void assertCompileFailsWithMessages(JavaFileObject source) throws IOException {
+    assertCompileFailsWithMessages(ImmutableList.of(source));
   }
 
-  /**
-   * Constructs the absolute paths to the given files, so they can be passed as arguments to the
-   * compiler.
-   */
-  public static String[] sources(Class<?> klass, String... files) throws URISyntaxException {
-    String[] result = new String[files.length];
-    for (int i = 0; i < result.length; i++) {
-      result[i] = new File(klass.getResource("/" + files[i]).toURI()).getAbsolutePath();
+  int compile(String[] args, Iterable<JavaFileObject> sources) {
+    Context context = new Context();
+    context.put(JavaFileManager.class, fileManager);
+    return compiler.compile(args, context, asJavacList(sources), null);
+  }
+
+  public static <T> com.sun.tools.javac.util.List<T> asJavacList(Iterable<? extends T> xs) {
+    com.sun.tools.javac.util.List<T> result = com.sun.tools.javac.util.List.nil();
+    for (T x : xs) {
+      result = result.append(x);
     }
     return result;
   }

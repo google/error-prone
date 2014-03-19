@@ -17,13 +17,15 @@
 package com.google.errorprone;
 
 import static com.google.errorprone.CompilationTestHelper.sources;
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
@@ -35,17 +37,18 @@ import java.io.PrintWriter;
  *
  * @author Eddie Aftandilian (eaftan@google.com)
  */
+@RunWith(JUnit4.class)
 public class EndPosTest {
 
   private PrintWriter printWriter;
   private ByteArrayOutputStream outputStream;
-  ErrorProneCompiler compiler;
+  ErrorProneTestCompiler compiler;
 
   @Before
   public void setUp() {
     outputStream = new ByteArrayOutputStream();
     printWriter = new PrintWriter(new OutputStreamWriter(outputStream));
-    compiler = new ErrorProneCompiler.Builder()
+    compiler = new ErrorProneTestCompiler.Builder()
         .named("test")
         .redirectOutputTo(printWriter)
         .build();
@@ -54,7 +57,7 @@ public class EndPosTest {
   @Test
   public void fileWithError() throws Exception {
     int exitCode = compiler.compile(sources(getClass(),
-        "com/google/errorprone/bugpatterns/SelfAssignmentPositiveCases1.java"));
+        "bugpatterns/SelfAssignmentPositiveCases1.java"));
     outputStream.flush();
     assertThat("Compiler should have exited with exit code 1", exitCode, is(1));
     assertThat("Compiler error message should include suggested fix", outputStream.toString(),

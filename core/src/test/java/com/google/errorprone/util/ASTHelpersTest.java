@@ -4,7 +4,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.google.errorprone.Scanner;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.matchers.CompilerBasedTest;
+import com.google.errorprone.matchers.CompilerBasedAbstractTest;
 import com.google.errorprone.matchers.Matcher;
 
 import com.sun.source.tree.ClassTree;
@@ -15,10 +15,13 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.io.IOException;
 
-public class ASTHelpersTest extends CompilerBasedTest {
+@RunWith(JUnit4.class)
+public class ASTHelpersTest extends CompilerBasedAbstractTest {
 
   @Test
   public void testGetActualStartPosition() throws IOException {

@@ -16,15 +16,19 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.CompilationTestHelper.sources;
+
 import com.google.errorprone.CompilationTestHelper;
+
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * @author Bill Pugh (bill.pugh@gmail.com)
  */
+@RunWith(JUnit4.class)
 public class ComparisonOutOfRangeTest {
 
   private CompilationTestHelper compilationHelper;
@@ -37,14 +41,12 @@ public class ComparisonOutOfRangeTest {
   @Test
   public void testPositiveCases() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource(
-            "ComparisonOutOfRangePositiveCases.java").toURI()));
+        sources(getClass(), "ComparisonOutOfRangePositiveCases.java"));
   }
 
   @Test
   public void testNegativeCases() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource(
-            "ComparisonOutOfRangeNegativeCases.java").toURI()));
+        sources(getClass(), "ComparisonOutOfRangeNegativeCases.java"));
   }
 }

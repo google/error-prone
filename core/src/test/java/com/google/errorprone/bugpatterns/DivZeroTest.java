@@ -16,15 +16,19 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.CompilationTestHelper.sources;
+
 import com.google.errorprone.CompilationTestHelper;
+
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * @author cushon@google.com (Liam Miller-Cushon)
  */
+@RunWith(JUnit4.class)
 public class DivZeroTest {
 
   private CompilationTestHelper compilationHelper;
@@ -37,13 +41,13 @@ public class DivZeroTest {
   @Test
   public void testPositiveCase() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("DivZeroPositiveCases.java").toURI()));
+        sources(getClass(), "DivZeroPositiveCases.java"));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("DivZeroNegativeCases.java").toURI()));
+        sources(getClass(), "DivZeroNegativeCases.java"));
   }
 
 }

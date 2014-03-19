@@ -16,16 +16,19 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.CompilationTestHelper.sources;
+
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
+@RunWith(JUnit4.class)
 public class JUnit4TestNotRunTest {
 
   private CompilationTestHelper compilationHelper;
@@ -38,13 +41,13 @@ public class JUnit4TestNotRunTest {
   @Test
   public void testPositiveCase1() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("JUnit4TestNotRunPositiveCase1.java").toURI()));
+        sources(getClass(), "JUnit4TestNotRunPositiveCase1.java"));
   }
 
   @Test
   public void testPositiveCase2() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("JUnit4TestNotRunPositiveCase2.java").toURI()));
+        sources(getClass(), "JUnit4TestNotRunPositiveCase2.java"));
   }
 
   /**
@@ -55,31 +58,31 @@ public class JUnit4TestNotRunTest {
     compilationHelper = new CompilationTestHelper(
         new JUnit4TestNotRun("org.junit.runners.Parameterized"));
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("JUnit4TestNotRunPositiveCase3.java").toURI()));
+        sources(getClass(), "JUnit4TestNotRunPositiveCase3.java"));
   }
 
   @Test
   public void testNegativeCase1() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("JUnit4TestNotRunNegativeCase1.java").toURI()));
+        sources(getClass(), "JUnit4TestNotRunNegativeCase1.java"));
   }
 
   @Test
   public void testNegativeCase2() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("JUnit4TestNotRunNegativeCase2.java").toURI()));
+        sources(getClass(), "JUnit4TestNotRunNegativeCase2.java"));
   }
 
   @Test
   public void testNegativeCase3() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("JUnit4TestNotRunNegativeCase3.java").toURI()));
+        sources(getClass(), "JUnit4TestNotRunNegativeCase3.java"));
   }
 
   @Test
   public void testNegativeCase4() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("JUnit4TestNotRunNegativeCase4.java").toURI()));
+        sources(getClass(), "JUnit4TestNotRunNegativeCase4.java"));
   }
 
 }

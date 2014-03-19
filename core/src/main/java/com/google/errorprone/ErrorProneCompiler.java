@@ -56,7 +56,8 @@ public class ErrorProneCompiler {
 
   private final DiagnosticListener<? super JavaFileObject> diagnosticListener;
   private final Class<? extends JavaCompiler> compilerClass;
-  private Main main;
+  private final Main main;
+  private final PrintWriter printWriter;
 
   /**
    * A custom Scanner to use if we want to use a non-default set of error-prone checks, e.g.
@@ -68,6 +69,7 @@ public class ErrorProneCompiler {
       DiagnosticListener<? super JavaFileObject> diagnosticListener,
       Scanner errorProneScanner,
       Class<? extends JavaCompiler> compilerClass) {
+    this.printWriter = printWriter;
     this.main = new Main(s, printWriter);
     this.diagnosticListener = diagnosticListener;
     this.errorProneScanner = errorProneScanner;
@@ -119,14 +121,25 @@ public class ErrorProneCompiler {
   }
 
   public int compile(String[] args) {
+    return compile(args, List.<JavaFileObject>nil());
+  }
+
+  public int compile(List<JavaFileObject> sources) {
+    return compile(new String[]{}, sources);
+  }
+
+  public int compile(String[] args, List<JavaFileObject> sources) {
     Context context = new Context();
     JavacFileManager.preRegister(context);
-    return compile(args, context, List.<JavaFileObject>nil(), null);
+    return compile(args, context, sources, null);
+  }
+
+  public int compile(Context context, List<JavaFileObject> sources) {
+    return compile(new String[]{}, context, sources, null);
   }
 
   public int compile(String[] args, Context context, List<JavaFileObject> javaFileObjects,
       Iterable<? extends Processor> processors) {
-
     ErrorProneOptions epOptions = ErrorProneOptions.processArgs(args);
 
     if (diagnosticListener != null) {
@@ -145,7 +158,7 @@ public class ErrorProneCompiler {
     try {
       scannerInContext.setDisabledChecks(epOptions.getDisabledChecks());
     } catch (InvalidCommandLineOptionException e) {
-      System.err.println(e.getMessage());
+      printWriter.println(e.getMessage());
       return 2;     // Main.EXIT_CMDERR
     }
 

@@ -32,6 +32,8 @@ import com.sun.source.util.TreePath;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,7 +44,8 @@ import java.util.List;
  *
  * TODO(eaftan): Add test for correct matching of nodes.
  */
-public class AnnotationTest extends CompilerBasedTest {
+@RunWith(JUnit4.class)
+public class AnnotationTest extends CompilerBasedAbstractTest {
 
   final List<ScannerTest> tests = new ArrayList<ScannerTest>();
 

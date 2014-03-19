@@ -16,35 +16,37 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.CompilationTestHelper.sources;
+import static org.junit.Assume.assumeTrue;
+
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
-
-import static org.junit.Assume.assumeTrue;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Test cases for {@link LongLiteralLowerCaseSuffix}.
  *
  * @author Simon Nickerson (sjnickerson@google.com)
  */
+@RunWith(JUnit4.class)
 public class LongLiteralLowerCaseSuffixTest {
 
   private CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() {
+
     compilationHelper = new CompilationTestHelper(LongLiteralLowerCaseSuffix.class);
   }
 
   @Test
   public void testPositiveCase() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(
-            this.getClass().getResource("LongLiteralLowerCaseSuffixPositiveCase1.java").toURI()));
+        sources(getClass(), "LongLiteralLowerCaseSuffixPositiveCase1.java"));
   }
 
   /**
@@ -55,22 +57,19 @@ public class LongLiteralLowerCaseSuffixTest {
     String[] javaVersion = System.getProperty("java.version").split("\\.");
     assumeTrue(Integer.parseInt(javaVersion[1]) >= 7);
     compilationHelper.assertCompileFailsWithMessages(
-        new File(
-            this.getClass().getResource("LongLiteralLowerCaseSuffixPositiveCase2.java").toURI()));
+        sources(getClass(), "LongLiteralLowerCaseSuffixPositiveCase2.java"));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(
-            this.getClass().getResource("LongLiteralLowerCaseSuffixNegativeCases.java").toURI()));
+        sources(getClass(), "LongLiteralLowerCaseSuffixNegativeCases.java"));
   }
 
   @Test
   public void testDisableable() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        ImmutableList.of(new File(
-            this.getClass().getResource("LongLiteralLowerCaseSuffixPositiveCase1.java").toURI())),
-        "-Xepdisable:LongLiteralLowerCaseSuffix");
+        sources(getClass(), "LongLiteralLowerCaseSuffixPositiveCase1.java"),
+        ImmutableList.of("-Xepdisable:LongLiteralLowerCaseSuffix"));
   }
 }

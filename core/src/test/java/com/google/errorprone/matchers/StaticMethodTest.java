@@ -26,13 +26,16 @@ import com.sun.source.tree.MethodInvocationTree;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.io.IOException;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class StaticMethodTest extends CompilerBasedTest {
+@RunWith(JUnit4.class)
+public class StaticMethodTest extends CompilerBasedAbstractTest {
 
   @Before
   public void setUp() throws IOException {

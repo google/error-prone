@@ -16,18 +16,22 @@
 
 package com.google.errorprone.matchers;
 
-import com.sun.source.tree.IdentifierTree;
-import com.sun.source.tree.LiteralTree;
-import org.junit.Test;
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.LiteralTree;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
+@RunWith(JUnit4.class)
 public class StringLiteralTest {
   @Test public void matches() {
     LiteralTree tree = mock(LiteralTree.class);

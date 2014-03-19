@@ -16,17 +16,21 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.CompilationTestHelper.sources;
+
 import com.google.errorprone.CompilationTestHelper;
+
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Unit tests for {@link SuppressWarningsDeprecated}.
  *  
  * @author sjnickerson@google.com (Simon Nickerson)
  */
+@RunWith(JUnit4.class)
 public class SuppressWarningsDeprecatedTest {
 
   private CompilationTestHelper compilationHelper;
@@ -39,14 +43,12 @@ public class SuppressWarningsDeprecatedTest {
   @Test
   public void testPositiveCase() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(
-            this.getClass().getResource("SuppressWarningsDeprecatedPositiveCases.java").toURI()));
+        sources(getClass(), "SuppressWarningsDeprecatedPositiveCases.java"));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(
-            this.getClass().getResource("SuppressWarningsDeprecatedNegativeCases.java").toURI()));
+        sources(getClass(), "SuppressWarningsDeprecatedNegativeCases.java"));
   }
 }

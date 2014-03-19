@@ -16,17 +16,21 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.CompilationTestHelper.sources;
+
 import com.google.errorprone.CompilationTestHelper;
+
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
- * Unit tests for {@link OrderingFrom}.
- *  
+ * Unit tests for {@link com.google.errorprone.bugpatterns.OrderingFrom}.
+ *
  * @author sjnickerson@google.com (Simon Nickerson)
  */
+@RunWith(JUnit4.class)
 public class OrderingFromTest {
 
   private CompilationTestHelper compilationHelper;
@@ -39,12 +43,12 @@ public class OrderingFromTest {
   @Test
   public void testPositiveCase() throws Exception {
     compilationHelper.assertCompileSucceedsWithMessages(
-        new File(this.getClass().getResource("OrderingFromPositiveCases.java").toURI()));
+        sources(getClass(), "OrderingFromPositiveCases.java"));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("OrderingFromNegativeCases.java").toURI()));
+        sources(getClass(), "OrderingFromNegativeCases.java"));
   }
 }

@@ -26,13 +26,16 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.Tree.Kind;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.io.IOException;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian
  */
-public class InstanceMethodTest extends CompilerBasedTest {
+@RunWith(JUnit4.class)
+public class InstanceMethodTest extends CompilerBasedAbstractTest {
 
   @Test
   public void shouldMatch() throws IOException {

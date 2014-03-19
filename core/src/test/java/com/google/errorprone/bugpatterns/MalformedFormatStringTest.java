@@ -16,16 +16,19 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.CompilationTestHelper.sources;
+
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * @author rburny@google.com (Radoslaw Burny)
  */
+@RunWith(JUnit4.class)
 public class MalformedFormatStringTest {
 
   private CompilationTestHelper compilationHelper;
@@ -38,12 +41,12 @@ public class MalformedFormatStringTest {
   @Test
   public void testPositiveCases() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("MalformedFormatStringPositiveCases.java").toURI()));
+        sources(getClass(), "MalformedFormatStringPositiveCases.java"));
   }
 
   @Test
   public void testNegativeCases() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("MalformedFormatStringNegativeCases.java").toURI()));
+        sources(getClass(), "MalformedFormatStringNegativeCases.java"));
   }
 }

@@ -30,6 +30,8 @@ import com.sun.source.tree.MethodTree;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,7 +40,8 @@ import java.util.List;
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class MethodHasParametersTest extends CompilerBasedTest {
+@RunWith(JUnit4.class)
+public class MethodHasParametersTest extends CompilerBasedAbstractTest {
 
   final List<ScannerTest> tests = new ArrayList<ScannerTest>();
 

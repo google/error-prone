@@ -16,16 +16,19 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.CompilationTestHelper.sources;
+
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * @author rburny@google.com (Radoslaw Burny)
  */
+@RunWith(JUnit4.class)
 public class JUnit3TestNotRunTest {
 
   private CompilationTestHelper compilationHelper;
@@ -38,36 +41,36 @@ public class JUnit3TestNotRunTest {
   @Test
   public void testPositiveCases() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("JUnit3TestNotRunPositiveCases.java").toURI()));
+        sources(getClass(), "JUnit3TestNotRunPositiveCases.java"));
   }
 
   @Test
   public void testNegativeCase1() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("JUnit3TestNotRunNegativeCase1.java").toURI()));
+        sources(getClass(), "JUnit3TestNotRunNegativeCase1.java"));
   }
 
   @Test
   public void testNegativeCase2() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("JUnit3TestNotRunNegativeCase2.java").toURI()));
+        sources(getClass(), "JUnit3TestNotRunNegativeCase2.java"));
   }
 
   @Test
   public void testNegativeCase3() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("JUnit3TestNotRunNegativeCase3.java").toURI()));
+        sources(getClass(), "JUnit3TestNotRunNegativeCase3.java"));
   }
 
   @Test
   public void testNegativeCase4() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("JUnit3TestNotRunNegativeCase4.java").toURI()));
+        sources(getClass(), "JUnit3TestNotRunNegativeCase4.java"));
   }
 
   @Test
   public void testNegativeCase5() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("JUnit3TestNotRunNegativeCase5.java").toURI()));
+        sources(getClass(), "JUnit3TestNotRunNegativeCase5.java"));
   }
 }

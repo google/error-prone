@@ -21,8 +21,9 @@ import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.CompilationTestHelper.sources;
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
-import static org.hamcrest.CoreMatchers.hasItem;
+import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.internal.matchers.StringContains.containsString;
@@ -33,18 +34,18 @@ import com.google.errorprone.bugpatterns.EmptyStatement;
 import com.google.errorprone.matchers.Description;
 
 import com.sun.source.tree.ExpressionStatementTree;
+import com.sun.tools.javac.util.List;
 
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
@@ -54,20 +55,21 @@ import javax.tools.JavaFileObject;
  *
  * @author alexeagle@google.com (Alex Eagle)
  */
+@RunWith(JUnit4.class)
 public class ErrorProneCompilerIntegrationTest {
 
   private DiagnosticTestHelper diagnosticHelper;
   private PrintWriter printWriter;
   private ByteArrayOutputStream outputStream;
-  private ErrorProneCompiler.Builder compilerBuilder;
-  ErrorProneCompiler compiler;
+  private ErrorProneTestCompiler.Builder compilerBuilder;
+  ErrorProneTestCompiler compiler;
 
   @Before
   public void setUp() {
     diagnosticHelper = new DiagnosticTestHelper();
     outputStream = new ByteArrayOutputStream();
     printWriter = new PrintWriter(new OutputStreamWriter(outputStream));
-    compilerBuilder = new ErrorProneCompiler.Builder()
+    compilerBuilder = new ErrorProneTestCompiler.Builder()
         .named("test")
         .redirectOutputTo(printWriter)
         .listenToDiagnostics(diagnosticHelper.collector);
@@ -77,35 +79,35 @@ public class ErrorProneCompilerIntegrationTest {
   @Test
   public void fileWithError() throws Exception {
     int exitCode = compiler.compile(sources(getClass(),
-        "com/google/errorprone/bugpatterns/EmptyIfStatementPositiveCases.java"));
+        "bugpatterns/EmptyIfStatementPositiveCases.java"));
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(1));
 
-    Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher = hasItem(
+    Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher = hasItem(
         diagnosticMessage(containsString("[EmptyIf]")));
-    assertThat("Error should be found. " + diagnosticHelper.describe(),
-        diagnosticHelper.getDiagnostics(), matcher);
+    assertTrue("Error should be found. " + diagnosticHelper.describe(),
+        matcher.matches(diagnosticHelper.getDiagnostics()));
   }
 
   @Test
   public void fileWithWarning() throws Exception {
-    compiler = compilerBuilder.report(ErrorProneScanner.forMatcher(EmptyStatement.class))
-        .build();
+    compilerBuilder.report(ErrorProneScanner.forMatcher(EmptyStatement.class));
+    compiler = compilerBuilder.build();
     int exitCode = compiler.compile(sources(getClass(),
-        "com/google/errorprone/bugpatterns/EmptyStatementPositiveCases.java"));
+        "bugpatterns/EmptyStatementPositiveCases.java"));
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(0));
 
-    Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher = hasItem(
+    Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher = hasItem(
         diagnosticMessage(containsString("[EmptyStatement]")));
-    assertThat("Warning should be found. " + diagnosticHelper.describe(),
-        diagnosticHelper.getDiagnostics(), matcher);
+    assertTrue("Warning should be found. " + diagnosticHelper.describe(),
+        matcher.matches(diagnosticHelper.getDiagnostics()));
   }
 
   @Test
   public void fileWithMultipleTopLevelClasses() throws Exception {
     int exitCode = compiler.compile(
-        sources(getClass(), "com/google/errorprone/MultipleTopLevelClassesWithNoErrors.java"));
+        sources(getClass(), "MultipleTopLevelClassesWithNoErrors.java"));
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(0));
   }
@@ -113,8 +115,8 @@ public class ErrorProneCompilerIntegrationTest {
   @Test
   public void fileWithMultipleTopLevelClassesExtends() throws Exception {
     int exitCode = compiler.compile(
-        sources(getClass(), "com/google/errorprone/MultipleTopLevelClassesWithNoErrors.java",
-            "com/google/errorprone/ExtendedMultipleTopLevelClassesWithNoErrors.java"));
+        sources(getClass(), "MultipleTopLevelClassesWithNoErrors.java",
+            "ExtendedMultipleTopLevelClassesWithNoErrors.java"));
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(0));
   }
@@ -127,15 +129,15 @@ public class ErrorProneCompilerIntegrationTest {
   public void fileWithMultipleTopLevelClassesExtendsWithError()
       throws Exception {
     int exitCode = compiler.compile(
-        sources(getClass(), "com/google/errorprone/MultipleTopLevelClassesWithErrors.java",
-            "com/google/errorprone/ExtendedMultipleTopLevelClassesWithErrors.java"));
+        sources(getClass(), "MultipleTopLevelClassesWithErrors.java",
+            "ExtendedMultipleTopLevelClassesWithErrors.java"));
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(1));
 
-    Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher = hasItem(
+    Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher = hasItem(
         diagnosticMessage(containsString("[SelfAssignment]")));
-    assertThat("Warning should be found. " + diagnosticHelper.describe(),
-        diagnosticHelper.getDiagnostics(), matcher);
+    assertTrue("Warning should be found. " + diagnosticHelper.describe(),
+        matcher.matches(diagnosticHelper.getDiagnostics()));
     assertEquals(3, diagnosticHelper.getDiagnostics().size());
   }
 
@@ -153,16 +155,16 @@ public class ErrorProneCompilerIntegrationTest {
     compilerBuilder.report(new ErrorProneScanner(new Throwing()));
     compiler = compilerBuilder.build();
     int exitCode = compiler.compile(
-        sources(getClass(), "com/google/errorprone/MultipleTopLevelClassesWithErrors.java",
-            "com/google/errorprone/ExtendedMultipleTopLevelClassesWithErrors.java"));
+        sources(getClass(), "MultipleTopLevelClassesWithErrors.java",
+            "ExtendedMultipleTopLevelClassesWithErrors.java"));
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(1));
-    Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher = hasItem(
+    Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher = hasItem(
         diagnosticMessage(CoreMatchers.<String>allOf(
             containsString("IllegalStateException: test123"),
             containsString("unhandled exception was thrown by the Error Prone"))));
-    assertThat("Error should be reported. " + diagnosticHelper.describe(),
-        diagnosticHelper.getDiagnostics(), matcher);
+    assertTrue("Error should be reported. " + diagnosticHelper.describe(),
+        matcher.matches(diagnosticHelper.getDiagnostics()));
   }
 
   /**
@@ -170,19 +172,9 @@ public class ErrorProneCompilerIntegrationTest {
    */
   @Test
   public void annotationProcessingWorks() throws Exception {
-    // Compile annotation processor.
     int exitCode = compiler.compile(
-        sources(getClass(), "com/google/errorprone/NullAnnotationProcessor.java"));
-    outputStream.flush();
-    assertThat(outputStream.toString(), exitCode, is(0));
-
-    // Compile code that uses the annotation processor.
-    List<String> args = new ArrayList<String>();
-    args.add("-processor");
-    args.add("com.google.errorprone.NullAnnotationProcessor");
-    args.addAll(Arrays.asList(
-        sources(getClass(), "com/google/errorprone/UsesAnnotationProcessor.java")));
-    exitCode = compiler.compile(args.toArray(new String[0]));
+        sources(getClass(), "UsesAnnotationProcessor.java"),
+        List.of(new NullAnnotationProcessor()));
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(0));
   }
@@ -194,12 +186,12 @@ public class ErrorProneCompilerIntegrationTest {
   public void reportReadyForAnalysisOnce() throws Exception {
     int exitCode = compiler.compile(
         sources(getClass(),
-            "com/google/errorprone/FlowConstants.java",
-            "com/google/errorprone/FlowSub.java",
+            "FlowConstants.java",
+            "FlowSub.java",
             // This order is important: the superclass needs to occur after the subclass in the
             // sources so it goes through flow twice (once so it can be used when the subclass
             // is desugared, once normally).
-            "com/google/errorprone/FlowSuper.java"));
+            "FlowSuper.java"));
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(0));
   }

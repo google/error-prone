@@ -16,18 +16,20 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.CompilationTestHelper.sources;
 import static org.junit.Assume.assumeTrue;
 
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
+@RunWith(JUnit4.class)
 public class ArrayHashCodeTest {
 
   private CompilationTestHelper compilationHelper;
@@ -40,7 +42,7 @@ public class ArrayHashCodeTest {
   @Test
   public void testPositiveCase() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("ArrayHashCodePositiveCases.java").toURI()));
+        sources(getClass(), "ArrayHashCodePositiveCases.java"));
   }
 
   /**
@@ -51,13 +53,13 @@ public class ArrayHashCodeTest {
     String[] javaVersion = System.getProperty("java.version").split("\\.");
     assumeTrue(Integer.parseInt(javaVersion[1]) >= 7);
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("ArrayHashCodePositiveCases2.java").toURI()));
+        sources(getClass(), "ArrayHashCodePositiveCases2.java"));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("ArrayHashCodeNegativeCases.java").toURI()));
+        sources(getClass(), "ArrayHashCodeNegativeCases.java"));
   }
 
   /**
@@ -66,7 +68,7 @@ public class ArrayHashCodeTest {
   @Test
   public void testJava7NegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("ArrayHashCodeNegativeCases.java").toURI()));
+        sources(getClass(), "ArrayHashCodeNegativeCases.java"));
   }
 
 

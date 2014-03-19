@@ -19,6 +19,7 @@ package com.google.errorprone.suppress;
 import static com.google.errorprone.BugPattern.Category.ONE_OFF;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.CompilationTestHelper.sources;
 import static com.google.errorprone.fixes.SuggestedFix.NO_FIX;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -26,8 +27,8 @@ import static org.junit.Assert.assertThat;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.errorprone.DiagnosticTestHelper;
-import com.google.errorprone.ErrorProneCompiler;
 import com.google.errorprone.ErrorProneScanner;
+import com.google.errorprone.ErrorProneTestCompiler;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.EmptyStatementTreeMatcher;
@@ -39,12 +40,17 @@ import com.sun.source.tree.ReturnTree;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
-import java.io.File;
+import java.util.List;
+
+import javax.tools.JavaFileObject;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
+@RunWith(JUnit4.class)
 public class CustomSuppressionTest {
 
   /**
@@ -83,13 +89,13 @@ public class CustomSuppressionTest {
     }
   }
 
-  private ErrorProneCompiler compiler;
+  private ErrorProneTestCompiler compiler;
   private DiagnosticTestHelper diagnosticHelper;
 
   @Before
   public void setUp() {
     diagnosticHelper = new DiagnosticTestHelper();
-    compiler = new ErrorProneCompiler.Builder()
+    compiler = new ErrorProneTestCompiler.Builder()
         .listenToDiagnostics(diagnosticHelper.collector)
         .report(new ErrorProneScanner(new MyChecker(), new MyChecker2()))
         .build();
@@ -97,17 +103,17 @@ public class CustomSuppressionTest {
 
   @Test
   public void testNegativeCase() throws Exception {
-    File source = new File(this.getClass().getResource(
-        "CustomSuppressionNegativeCases.java").toURI());
-    int exitCode = compiler.compile(new String[]{source.getAbsolutePath()});
+    List<JavaFileObject> sources = sources(getClass(),
+        "CustomSuppressionNegativeCases.java");
+    int exitCode = compiler.compile(sources);
     assertThat(exitCode, is(0));
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    File source = new File(this.getClass().getResource(
-        "CustomSuppressionPositiveCases.java").toURI());
-    assertThat(compiler.compile(new String[]{source.getAbsolutePath()}), is(1));
+    List<JavaFileObject> sources = sources(getClass(),
+        "CustomSuppressionPositiveCases.java");
+    assertThat(compiler.compile(sources), is(1));
     assertThat(diagnosticHelper.getDiagnostics().size(), is(3));
     assertThat((int) diagnosticHelper.getDiagnostics().get(0).getLineNumber(), is(28));
     assertThat((int) diagnosticHelper.getDiagnostics().get(1).getLineNumber(), is(33));

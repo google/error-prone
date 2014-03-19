@@ -16,15 +16,19 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.CompilationTestHelper.sources;
+
 import com.google.errorprone.CompilationTestHelper;
+
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * @author adgar@google.com (Mike Edgar)
  */
+@RunWith(JUnit4.class)
 public class ArrayToStringConcatenationTest {
 
   private CompilationTestHelper compilationHelper;
@@ -36,13 +40,13 @@ public class ArrayToStringConcatenationTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(new File(
-        this.getClass().getResource("ArrayStringConcatenationPositiveCases.java").toURI()));
+    compilationHelper.assertCompileFailsWithMessages(
+        sources(getClass(), "ArrayStringConcatenationPositiveCases.java"));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(new File(
-        this.getClass().getResource("ArrayStringConcatenationNegativeCases.java").toURI()));
+    compilationHelper.assertCompileSucceeds(
+        sources(getClass(), "ArrayStringConcatenationNegativeCases.java"));
   }
 }

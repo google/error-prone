@@ -16,17 +16,19 @@
 
 package com.google.errorprone.bugpatterns;
 
-import com.google.errorprone.CompilationTestHelper;
+import static com.google.errorprone.CompilationTestHelper.sources;
 
+import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * @author cushon@google.com (Liam Miller-Cushon)
  */
+@RunWith(JUnit4.class)
 public class FinallyTest {
 
   private CompilationTestHelper compilationHelper;
@@ -39,24 +41,24 @@ public class FinallyTest {
   @Test
   public void testPositiveCase1() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("FinallyPositiveCase1.java").toURI()));
+        sources(getClass(), "FinallyPositiveCase1.java"));
   }
         
   @Test
   public void testPositiveCase2() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("FinallyPositiveCase2.java").toURI()));
+        sources(getClass(), "FinallyPositiveCase2.java"));
   }
 
   @Test
   public void testNegativeCase1() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("FinallyNegativeCase1.java").toURI()));
+        sources(getClass(), "FinallyNegativeCase1.java"));
   }
   
   @Test
   public void testNegativeCase2() throws Exception {
     compilationHelper.assertCompileSucceeds(
-      new File(this.getClass().getResource("FinallyNegativeCase2.java").toURI()));
+        sources(getClass(), "FinallyNegativeCase2.java"));
   }
 }

@@ -16,27 +16,31 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.CompilationTestHelper.source;
 import static org.junit.Assert.fail;
 
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
-import java.io.File;
+import javax.tools.JavaFileObject;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
+@RunWith(JUnit4.class)
 public class SelfEqualsTest {
 
-  File positiveCase1;
-  File positiveCase2;
-  File negativeCases;
+  final JavaFileObject positiveCase1;
+  final JavaFileObject positiveCase2;
+  final JavaFileObject negativeCases;
 
   public SelfEqualsTest() throws Exception {
-    positiveCase1 = new File(this.getClass().getResource("SelfEqualsPositiveCase1.java").toURI());
-    positiveCase2 = new File(this.getClass().getResource("SelfEqualsPositiveCase2.java").toURI());
-    negativeCases = new File(this.getClass().getResource("SelfEqualsNegativeCases.java").toURI());
+    positiveCase1 = source(getClass(), "SelfEqualsPositiveCase1.java");
+    positiveCase2 = source(getClass(), "SelfEqualsPositiveCase2.java");
+    negativeCases = source(getClass(), "SelfEqualsNegativeCases.java");
   }
 
   @Test

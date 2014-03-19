@@ -16,18 +16,20 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.CompilationTestHelper.sources;
 import static org.junit.Assume.assumeTrue;
 
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
+@RunWith(JUnit4.class)
 public class ArrayEqualsTest {
 
   private CompilationTestHelper compilationHelper;
@@ -40,7 +42,7 @@ public class ArrayEqualsTest {
   @Test
   public void testPositiveCase() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("ArrayEqualsPositiveCases.java").toURI()));
+        sources(getClass(), "ArrayEqualsPositiveCases.java"));
   }
 
   @Test
@@ -48,13 +50,13 @@ public class ArrayEqualsTest {
     String[] javaVersion = System.getProperty("java.version").split("\\.");
     assumeTrue(Integer.parseInt(javaVersion[1]) >= 7);
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("ArrayEqualsPositiveCases2.java").toURI()));
+        sources(getClass(), "ArrayEqualsPositiveCases2.java"));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("ArrayEqualsNegativeCases.java").toURI()));
+        sources(getClass(), "ArrayEqualsNegativeCases.java"));
   }
 
   @Test
@@ -62,7 +64,7 @@ public class ArrayEqualsTest {
     String[] javaVersion = System.getProperty("java.version").split("\\.");
     assumeTrue(Integer.parseInt(javaVersion[1]) >= 7);
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("ArrayEqualsNegativeCases2.java").toURI()));
+        sources(getClass(), "ArrayEqualsNegativeCases2.java"));
   }
 
 }

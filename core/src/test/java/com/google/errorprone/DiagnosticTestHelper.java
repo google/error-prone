@@ -16,16 +16,18 @@
 
 package com.google.errorprone;
 
+import static junit.framework.TestCase.assertTrue;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.core.AllOf.allOf;
+import static org.junit.internal.matchers.StringContains.containsString;
+import static org.junit.matchers.JUnitMatchers.hasItem;
+
+import com.google.common.io.CharSource;
+
+import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeDiagnosingMatcher;
 
-import javax.tools.Diagnostic;
-import javax.tools.DiagnosticCollector;
-import javax.tools.JavaFileObject;
-
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.net.URI;
@@ -33,9 +35,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
-import static org.junit.internal.matchers.StringContains.containsString;
+import javax.tools.Diagnostic;
+import javax.tools.DiagnosticCollector;
+import javax.tools.JavaFileObject;
 
 /**
  * Utility class for tests which need to assert on the diagnostics produced during compilation.
@@ -69,17 +71,12 @@ public class DiagnosticTestHelper {
     return stringBuilder.toString();
   }
 
-  public static TypeSafeDiagnosingMatcher<Diagnostic<JavaFileObject>> diagnosticLineAndColumn(
+  public static BaseMatcher<Diagnostic<JavaFileObject>> diagnosticLineAndColumn(
       final long line, final long column) {
-    return new TypeSafeDiagnosingMatcher<Diagnostic<JavaFileObject>>() {
+    return new BaseMatcher<Diagnostic<JavaFileObject>>() {
       @Override
-      protected boolean matchesSafely(
-          Diagnostic<JavaFileObject> item, Description mismatchDescription) {
-        mismatchDescription
-            .appendText("line:column")
-            .appendValue(item.getLineNumber())
-            .appendText(":")
-            .appendValue(item.getColumnNumber());
+      public boolean matches(Object object) {
+        Diagnostic<JavaFileObject> item = (Diagnostic<JavaFileObject>) object;
         return item.getLineNumber() == line && item.getColumnNumber() == column;
       }
 
@@ -94,15 +91,12 @@ public class DiagnosticTestHelper {
     };
   }
 
-  public static TypeSafeDiagnosingMatcher<Diagnostic<JavaFileObject>> diagnosticOnLine(
+  public static BaseMatcher<Diagnostic<JavaFileObject>> diagnosticOnLine(
       final URI fileURI, final long line) {
-    return new TypeSafeDiagnosingMatcher<Diagnostic<JavaFileObject>>() {
+    return new BaseMatcher<Diagnostic<JavaFileObject>>() {
       @Override
-      protected boolean matchesSafely(
-          Diagnostic<JavaFileObject> item, Description mismatchDescription) {
-        mismatchDescription
-            .appendText("line ")
-            .appendValue(item.getLineNumber());
+      public boolean matches(Object object) {
+        Diagnostic<JavaFileObject> item = (Diagnostic<JavaFileObject>) object;
         return item.getSource().toUri().equals(fileURI)
             && item.getLineNumber() == line;
       }
@@ -116,15 +110,12 @@ public class DiagnosticTestHelper {
     };
   }
 
-  public static TypeSafeDiagnosingMatcher<Diagnostic<JavaFileObject>> diagnosticOnLine(
+  public static BaseMatcher<Diagnostic<JavaFileObject>> diagnosticOnLine(
       final URI fileURI, final long line, final String message) {
-    return new TypeSafeDiagnosingMatcher<Diagnostic<JavaFileObject>>() {
+    return new BaseMatcher<Diagnostic<JavaFileObject>>() {
       @Override
-      protected boolean matchesSafely(
-          Diagnostic<JavaFileObject> item, Description mismatchDescription) {
-        mismatchDescription
-            .appendText("line ")
-            .appendValue(item.getLineNumber());
+      public boolean matches(Object object) {
+        Diagnostic<JavaFileObject> item = (Diagnostic<JavaFileObject>) object;
         return item.getSource().toUri().equals(fileURI)
             && item.getLineNumber() == line
             && item.getMessage(Locale.getDefault()).contains(message);
@@ -143,12 +134,12 @@ public class DiagnosticTestHelper {
   }
 
 
-  public static TypeSafeDiagnosingMatcher<Diagnostic<JavaFileObject>> diagnosticMessage(
+  public static BaseMatcher<Diagnostic<JavaFileObject>> diagnosticMessage(
       final Matcher<String> matcher) {
-    return new TypeSafeDiagnosingMatcher<Diagnostic<JavaFileObject>>() {
+    return new BaseMatcher<Diagnostic<JavaFileObject>>() {
       @Override
-      protected boolean matchesSafely(
-          Diagnostic<JavaFileObject> item, Description mismatchDescription) {
+      public boolean matches(Object object) {
+        Diagnostic<JavaFileObject> item = (Diagnostic<JavaFileObject>) object;
         return matcher.matches(item.getMessage(Locale.getDefault()));
       }
 
@@ -177,28 +168,32 @@ public class DiagnosticTestHelper {
    */
   @SuppressWarnings("unchecked")
   public static void assertHasDiagnosticOnAllMatchingLines(
-      List<Diagnostic<? extends JavaFileObject>> diagnostics, File source) throws IOException {
-    final LineNumberReader reader = new LineNumberReader(new FileReader(source));
+      List<Diagnostic<? extends JavaFileObject>> diagnostics, JavaFileObject source)
+      throws IOException {
+    final LineNumberReader reader = new LineNumberReader(
+        CharSource.wrap(source.getCharContent(false)).openStream());
     do {
       String line = reader.readLine();
       if (line == null) {
         break;
       }
       java.util.regex.Matcher patternMatcher = BUG_MARKER_PATTERN.matcher(line);
-      Matcher<Iterable<? super Diagnostic<JavaFileObject>>> matcher;
+      Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher;
       int lineNumber = reader.getLineNumber();
       if (patternMatcher.matches()) {
         String patternToMatch = patternMatcher.group(1);
         // patternMatcher matches the //BUG comment, so we expect a diagnostic on the following
         // line.
         lineNumber++;
-        matcher = hasItem(diagnosticOnLine(source.toURI(), lineNumber, patternToMatch));
+        matcher = hasItem(diagnosticOnLine(source.toUri(), lineNumber, patternToMatch));
         reader.readLine(); // skip next line -- we know it has an error
-        assertThat("Did not see expected error on line " + lineNumber, diagnostics, matcher);
+
+        assertTrue("Did not see expected error on line " + lineNumber,
+            matcher.matches(diagnostics));
       } else {
         // Cast is unnecessary, but javac throws an error because of poor type inference.
-        matcher = (Matcher) not(hasItem(diagnosticOnLine(source.toURI(), lineNumber)));
-        assertThat("Saw unexpected error on line " + lineNumber, diagnostics, matcher);
+        matcher = (Matcher) not(hasItem(diagnosticOnLine(source.toUri(), lineNumber)));
+        assertTrue("Saw unexpected error on line " + lineNumber, matcher.matches(diagnostics));
       }
     } while (true);
     reader.close();

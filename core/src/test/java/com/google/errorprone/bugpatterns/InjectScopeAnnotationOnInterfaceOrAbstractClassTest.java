@@ -16,13 +16,14 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.CompilationTestHelper.sources;
+
 import com.google.errorprone.CompilationTestHelper;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.io.File;
 
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
@@ -40,15 +41,13 @@ public class InjectScopeAnnotationOnInterfaceOrAbstractClassTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(new File(this.getClass()
-        .getResource("InjectScopeAnnotationOnInterfaceOrAbstractClassPositiveCases.java")
-        .toURI()));
+    compilationHelper.assertCompileFailsWithMessages(
+        sources(getClass(), "InjectScopeAnnotationOnInterfaceOrAbstractClassPositiveCases.java"));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(new File(this.getClass()
-        .getResource("InjectScopeAnnotationOnInterfaceOrAbstractClassNegativeCases.java")
-        .toURI()));
+    compilationHelper.assertCompileSucceeds(
+        sources(getClass(), "InjectScopeAnnotationOnInterfaceOrAbstractClassNegativeCases.java"));
   }
 }

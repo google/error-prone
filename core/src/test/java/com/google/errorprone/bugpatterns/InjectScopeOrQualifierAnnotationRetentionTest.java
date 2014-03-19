@@ -16,13 +16,14 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.CompilationTestHelper.sources;
+
 import com.google.errorprone.CompilationTestHelper;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.io.File;
 
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
@@ -38,13 +39,13 @@ public class InjectScopeOrQualifierAnnotationRetentionTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(new File(this.getClass()
-        .getResource("InjectScopeOrQualifierAnnotationRetentionPositiveCases.java").toURI()));
+    compilationHelper.assertCompileFailsWithMessages(
+        sources(getClass(), "InjectScopeOrQualifierAnnotationRetentionPositiveCases.java"));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(new File(this.getClass()
-        .getResource("InjectScopeOrQualifierAnnotationRetentionNegativeCases.java").toURI()));
+    compilationHelper.assertCompileSucceeds(
+        sources(getClass(), "InjectScopeOrQualifierAnnotationRetentionNegativeCases.java"));
   }
 }

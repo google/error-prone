@@ -16,15 +16,18 @@
 
 package com.google.errorprone.bugpatterns;
 
-import java.io.File;
-
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import static com.google.errorprone.CompilationTestHelper.sources;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+
+@RunWith(JUnit4.class)
 public class DepAnnTest {
 
   private CompilationTestHelper compilationHelper;
@@ -37,26 +40,26 @@ public class DepAnnTest {
   @Test
   public void testPositiveCase() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("DepAnnPositiveCases.java").toURI()));
+        sources(getClass(), "DepAnnPositiveCases.java"));
   }
 
   @Test
   public void testNegativeCase1() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("DepAnnNegativeCase1.java").toURI()));
+        sources(getClass(), "DepAnnNegativeCase1.java"));
   }
 
   @Test
   @Ignore("blocked on javac7 bug")
   public void testNegativeCase2() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("DepAnnNegativeCase2.java").toURI()));
+        sources(getClass(), "DepAnnNegativeCase2.java"));
   }
 
   @Test
   public void testDisableable() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        ImmutableList.of(new File(this.getClass().getResource("DepAnnPositiveCases.java").toURI())),
-        "-Xepdisable:DepAnn");
+        sources(getClass(), "DepAnnPositiveCases.java"),
+        ImmutableList.of("-Xepdisable:DepAnn"));
   }
 }
