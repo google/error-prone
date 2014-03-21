@@ -17,11 +17,12 @@
 package com.google.errorprone.suppliers;
 
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.util.ASTHelpers;
+
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
@@ -32,8 +33,10 @@ import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 public class Suppliers {
 
   /**
-   * Supplies the n'th generic type of the given expression. For example, in {@code Map<A,B> c;} for the expression
-   * c and n=1, the result is the type of {@code B}.
+   * Supplies the n'th generic type of the given expression. For example, in {@code Map<A,B> c;} for
+   * the expression c and n=1, the result is the type of {@code B}. In case no type argument is
+   * specified this method will return the {@code java.lang.Object} type from symbol table.
+   *
    * @param expressionSupplier a supplier of the expression which has a generic type
    * @param n the position of the generic argument
    */
@@ -42,7 +45,48 @@ public class Suppliers {
       @Override
       public Type get(VisitorState state) {
         JCExpression jcExpression = (JCExpression) expressionSupplier.get(state);
-        return ((ClassType) jcExpression.type).typarams_field.get(n);
+        if (jcExpression.type.getTypeArguments().size() == 0) {
+          return state.getSymtab().objectType;
+        }
+        return jcExpression.type.getTypeArguments().get(n);
+      }
+    };
+  }
+
+  /**
+   * Supplies the n'th generic type of the given expression. For example, in {@code Map<A,B> c;} for
+   * the type of c and n=1, the result is the type of {@code B}. In case no type argument is
+   * specified this method will return the {@code java.lang.Object} type from symbol table.
+   *
+   * @param typeSupplier a supplier of the expression which has a generic type
+   * @param n the position of the generic argument
+   */
+  public static Supplier<Type> genericTypeOfType(final Supplier<Type> typeSupplier, final int n) {
+    return new Supplier<Type>() {
+      @Override
+      public Type get(VisitorState state) {
+        Type type = typeSupplier.get(state);
+        if (type.getTypeArguments().size() == 0) {
+          return state.getSymtab().objectType;
+        }
+        return type.getTypeArguments().get(n);
+      }
+    };
+  }
+
+  /**
+   * Supplies the expression which gives the instance of an object that will receive the method call.
+   * For example, in
+   * {@code a.getB().getC()}
+   * if the visitor is currently visiting the {@code getC()} method invocation, then this supplier gives the
+   * expression {@code a.getB()}.
+   */
+  public static Supplier<Type> receiverType() {
+    return new Supplier<Type>() {
+      @Override
+      public Type get(VisitorState state) {
+        MethodInvocationTree methodInvocation = (MethodInvocationTree) state.getPath().getLeaf();
+        return ASTHelpers.getReceiverType(methodInvocation.getMethodSelect());
       }
     };
   }

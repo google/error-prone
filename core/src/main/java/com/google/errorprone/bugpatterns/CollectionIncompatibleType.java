@@ -21,8 +21,8 @@ import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.*;
-import static com.google.errorprone.suppliers.Suppliers.genericTypeOf;
-import static com.google.errorprone.suppliers.Suppliers.receiverInstance;
+import static com.google.errorprone.suppliers.Suppliers.genericTypeOfType;
+import static com.google.errorprone.suppliers.Suppliers.receiverType;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -57,7 +57,7 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
   private static Matcher<MethodInvocationTree> argCastableToMethodReceiverTypeParam(int argNumber,
       int typeParamNumber) {
     return argument(argNumber, Matchers.<ExpressionTree>not(
-        Matchers.<ExpressionTree>isCastableTo(genericTypeOf(receiverInstance(), typeParamNumber))));
+        Matchers.<ExpressionTree>isCastableTo(genericTypeOfType(receiverType(), typeParamNumber))));
   }
 
   @SuppressWarnings("unchecked")

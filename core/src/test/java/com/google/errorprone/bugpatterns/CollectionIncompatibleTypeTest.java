@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.CompilationTestHelper.sources;
 
 import com.google.errorprone.CompilationTestHelper;
+import com.google.testing.compile.JavaFileObjects;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -50,4 +51,15 @@ public class CollectionIncompatibleTypeTest {
         sources(getClass(), "CollectionIncompatibleTypeNegativeCases.java"));
   }
 
+  @Test
+  public void testOutOfBounds() throws Exception {
+    compilationHelper.assertCompileSucceeds(JavaFileObjects.forResource(
+        getClass().getResource("CollectionIncompatibleTypeOutOfBounds.java")));
+  }
+
+  @Test
+  public void testClassCast() throws Exception {
+    compilationHelper.assertCompileSucceeds(JavaFileObjects.forResource(
+        getClass().getResource("CollectionIncompatibleTypeClassCast.java")));
+  }
 }

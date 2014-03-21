@@ -233,12 +233,12 @@ public class ASTHelpers {
   public static Type getReceiverType(ExpressionTree expressionTree) {
     if (expressionTree instanceof JCFieldAccess) {
       JCFieldAccess methodSelectFieldAccess = (JCFieldAccess) expressionTree;
-      return ((MethodSymbol) methodSelectFieldAccess.sym).owner.type;
+      return methodSelectFieldAccess.selected.type;
     } else if (expressionTree instanceof JCIdent) {
       JCIdent methodCall = (JCIdent) expressionTree;
-      return ((MethodSymbol) methodCall.sym).owner.type;
+      return methodCall.sym.owner.type;
     }
-    throw new IllegalArgumentException("Expected a JCFieldAccess or JCIdent");
+    throw new IllegalArgumentException("Expected a JCFieldAccess or JCIdent" + expressionTree);
   }
 
   /**
