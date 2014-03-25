@@ -238,7 +238,8 @@ public class ASTHelpers {
       JCIdent methodCall = (JCIdent) expressionTree;
       return methodCall.sym.owner.type;
     }
-    throw new IllegalArgumentException("Expected a JCFieldAccess or JCIdent" + expressionTree);
+    throw new IllegalArgumentException(
+        "Expected a JCFieldAccess or JCIdent from expression " + expressionTree);
   }
 
   /**
