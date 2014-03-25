@@ -33,6 +33,13 @@ public class ErrorProneOptions {
 
   private static final String DISABLE_FLAG_PREFIX = "-Xepdisable:";
 
+  /**
+   * see {@link javax.tools.OptionChecker#isSupportedOption(String)}
+   */
+  public static int isSupportedOption(String option) {
+    return option.startsWith(DISABLE_FLAG_PREFIX) ? 0 : -1;
+  }
+
   private Set<String> disabledChecks;
   private List<String> remainingArgs;
 
@@ -52,18 +59,26 @@ public class ErrorProneOptions {
   /**
    * Given a list of command-line arguments, produce the corresponding ErrorProneOptions instance.
    * If multiple -Xepdisable flags are passed, the last one wins.
+   *
+   * @param args compiler args, possibly {@code null}
    */
-  public static ErrorProneOptions processArgs(String[] args) {
-    List<String> outputArgs = new ArrayList<String>(args.length);
+  public static ErrorProneOptions processArgs(Iterable<String> args) {
+    List<String> outputArgs = new ArrayList<String>();
     Set<String> disabledChecks = Collections.emptySet();
-    for (String arg : args) {
-      if (arg.startsWith(DISABLE_FLAG_PREFIX)) {
-        String checksToDisable = arg.substring(DISABLE_FLAG_PREFIX.length());
-        disabledChecks = new HashSet<String>(Arrays.asList(checksToDisable.split(",")));
-      } else {
-        outputArgs.add(arg);
+    if (args != null) {
+      for (String arg : args) {
+        if (arg.startsWith(DISABLE_FLAG_PREFIX)) {
+          String checksToDisable = arg.substring(DISABLE_FLAG_PREFIX.length());
+          disabledChecks = new HashSet<String>(Arrays.asList(checksToDisable.split(",")));
+        } else {
+          outputArgs.add(arg);
+        }
       }
     }
     return new ErrorProneOptions(disabledChecks, outputArgs);
+  }
+
+  public static ErrorProneOptions processArgs(String[] args) {
+    return processArgs(Arrays.asList(args));
   }
 }

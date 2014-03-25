@@ -1,0 +1,140 @@
+/*
+ * Copyright 2014 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.google.errorprone;
+
+import com.google.errorprone.bugpatterns.DepAnnTest;
+import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+
+import javax.lang.model.SourceVersion;
+import javax.tools.Diagnostic;
+import javax.tools.DiagnosticListener;
+import javax.tools.JavaCompiler;
+import javax.tools.JavaFileObject;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Locale;
+
+import static com.google.errorprone.CompilationTestHelper.sources;
+import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.text.StringContains.containsString;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
+/**
+ * @author cushon@google.com (Liam Miller-Cushon)
+ */
+@RunWith(JUnit4.class)
+public class ErrorProneJavaCompilerTest {
+
+  @Test
+  public void testIsSupportedOption() {
+    JavaCompiler mockCompiler = mock(JavaCompiler.class);
+    ErrorProneJavaCompiler compiler = new ErrorProneJavaCompiler(mockCompiler);
+
+    // javac options should be passed through
+    compiler.isSupportedOption("-source");
+    verify(mockCompiler).isSupportedOption("-source");
+
+    // error-prone options should be handled
+    assertThat(compiler.isSupportedOption("-Xepdisable:"), is(0));
+  }
+
+  @Test
+  public void testGetStandardJavaFileManager() {
+    JavaCompiler mockCompiler = mock(JavaCompiler.class);
+    ErrorProneJavaCompiler compiler = new ErrorProneJavaCompiler(mockCompiler);
+
+    DiagnosticListener<? super JavaFileObject> listener = mock(DiagnosticListener.class);
+    Locale locale = Locale.CANADA;
+    Charset charset = StandardCharsets.UTF_8;
+
+    compiler.getStandardFileManager(listener, locale, charset);
+    verify(mockCompiler).getStandardFileManager(listener, locale, charset);
+  }
+
+  @Test
+  public void testRun() {
+    JavaCompiler mockCompiler = mock(JavaCompiler.class);
+    ErrorProneJavaCompiler compiler = new ErrorProneJavaCompiler(mockCompiler);
+
+    InputStream in = mock(InputStream.class);
+    OutputStream out = mock(OutputStream.class);
+    OutputStream err = mock(OutputStream.class);
+    String[] arguments = {"-source", "8", "-target", "8"};
+
+    compiler.run(in, out, err, arguments);
+    verify(mockCompiler).run(in, out, err, arguments);
+  }
+
+  @Test
+  public void testSourceVersion() {
+    ErrorProneJavaCompiler compiler = new ErrorProneJavaCompiler();
+    assertTrue(compiler.getSourceVersions().contains(SourceVersion.latest()));
+    assertFalse(compiler.getSourceVersions().contains(SourceVersion.RELEASE_5));
+  }
+
+  @Test
+  public void fileWithErrorIntegrationTest() throws Exception {
+    DiagnosticTestHelper diagnosticHelper = new DiagnosticTestHelper();
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(outputStream), true);
+
+    JavaCompiler.CompilationTask task = new ErrorProneJavaCompiler().getTask(
+        printWriter, null, diagnosticHelper.collector, null, null,
+        sources(DepAnnTest.class, "DepAnnPositiveCases.java"));
+
+    boolean exitCode = task.call();
+    assertFalse(outputStream.toString(), exitCode);
+    Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher = Matchers.hasItem(
+        diagnosticMessage(containsString("[DepAnn]")));
+    assertTrue("Error should be found. " + diagnosticHelper.describe(),
+        matcher.matches(diagnosticHelper.getDiagnostics()));
+  }
+
+  @Test
+  public void testWithDisabledCheck() throws Exception {
+    DiagnosticTestHelper diagnosticHelper = new DiagnosticTestHelper();
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(outputStream), true);
+
+    JavaCompiler.CompilationTask task = new ErrorProneJavaCompiler().getTask(
+        printWriter,
+        null,
+        diagnosticHelper.collector,
+        Arrays.asList("-Xepdisable:DepAnn"),
+        null,
+        sources(DepAnnTest.class, "DepAnnPositiveCases.java"));
+
+    boolean exitCode = task.call();
+    assertTrue(outputStream.toString(), exitCode);
+  }
+}
+

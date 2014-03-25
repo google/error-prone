@@ -20,7 +20,6 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Disableable;
 import com.google.errorprone.matchers.Suppressible;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
