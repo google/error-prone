@@ -33,8 +33,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Locale;
 
@@ -74,10 +72,9 @@ public class ErrorProneJavaCompilerTest {
 
     DiagnosticListener<? super JavaFileObject> listener = mock(DiagnosticListener.class);
     Locale locale = Locale.CANADA;
-    Charset charset = StandardCharsets.UTF_8;
 
-    compiler.getStandardFileManager(listener, locale, charset);
-    verify(mockCompiler).getStandardFileManager(listener, locale, charset);
+    compiler.getStandardFileManager(listener, locale, null);
+    verify(mockCompiler).getStandardFileManager(listener, locale, null);
   }
 
   @Test
