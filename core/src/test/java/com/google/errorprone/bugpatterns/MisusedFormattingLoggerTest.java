@@ -16,12 +16,12 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.CompilationTestHelper.sources;
+
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
 
 /**
  * @author vidarh@google.com (Will Holen)
@@ -38,12 +38,12 @@ public class MisusedFormattingLoggerTest {
   @Test
   public void testPositiveCases() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("MisusedFormattingLoggerPositiveCases.java").toURI()));
+        sources(getClass(), "MisusedFormattingLoggerPositiveCases.java"));
   }
 
   @Test
   public void testNegativeCases() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("MisusedFormattingLoggerNegativeCases.java").toURI()));
+        sources(getClass(), "MisusedFormattingLoggerNegativeCases.java"));
   }
 }
