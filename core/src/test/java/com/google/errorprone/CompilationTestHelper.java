@@ -78,7 +78,7 @@ public class CompilationTestHelper {
   private ErrorProneCompiler compiler;
   private ByteArrayOutputStream outputStream;
   private JavaFileManager fileManager;
-  
+
   public CompilationTestHelper(Scanner scanner) {
     this.diagnosticHelper = new DiagnosticTestHelper();
     this.fileManager = getFileManager(diagnosticHelper.collector, null, null);
@@ -116,7 +116,7 @@ public class CompilationTestHelper {
           .getStandardFileManager
               (diagnosticListener, locale, charset);
       Class<?> clazz = Class.forName("com.google.testing.compile.InMemoryJavaFileManager");
-      Constructor ctor = clazz.getDeclaredConstructor(JavaFileManager.class);
+      Constructor<?> ctor = clazz.getDeclaredConstructor(JavaFileManager.class);
       ctor.setAccessible(true);
       return (JavaFileManager) ctor.newInstance(wrappedFileManager);
     } catch (Exception e) {
@@ -130,22 +130,21 @@ public class CompilationTestHelper {
    * @param sources The list of {@code File}s to compile
    * @param args Extra command-line arguments to pass to the compiler
    */
-  public void assertCompileSucceeds(List<JavaFileObject> sources,
-                                    List<String> args) throws IOException {
+  public void assertCompileSucceeds(List<JavaFileObject> sources, List<String> args) {
     List<String> allArgs = buildArguments(args);
     int exitCode = compile(allArgs.toArray(new String[0]), asJavacList(sources));
     assertThat(diagnosticHelper.getDiagnostics().toString(), exitCode, is(0));
     // TODO(eaftan): complain if there are any diagnostics
   }
 
-  public void assertCompileSucceeds(List<JavaFileObject> sources) throws IOException {
+  public void assertCompileSucceeds(List<JavaFileObject> sources) {
     assertCompileSucceeds(sources, ImmutableList.<String>of());
   }
 
   /**
    * Convenience method for the common case of one source file and no extra args.
    */
-  public void assertCompileSucceeds(JavaFileObject source) throws IOException {
+  public void assertCompileSucceeds(JavaFileObject source) {
     assertCompileSucceeds(ImmutableList.of(source));
   }
 

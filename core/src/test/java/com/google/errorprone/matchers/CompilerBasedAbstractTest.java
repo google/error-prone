@@ -24,7 +24,6 @@ import com.google.errorprone.Scanner;
 
 import org.junit.After;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,12 +39,12 @@ public class CompilerBasedAbstractTest {
   public void clearSourceFiles() throws Exception {
     filesToCompile.clear();
   }
-  protected void writeFile(String fileName, String... lines) throws IOException {
+  protected void writeFile(String fileName, String... lines) {
     filesToCompile.add(forSourceLines(Files.getNameWithoutExtension(fileName),
         lines));
   }
 
-  protected void assertCompiles(Scanner scanner) throws IOException {
+  protected void assertCompiles(Scanner scanner) {
     new CompilationTestHelper(scanner).assertCompileSucceeds(filesToCompile);
   }
 }
