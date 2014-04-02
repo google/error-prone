@@ -19,7 +19,9 @@ package com.google.errorprone;
 import com.google.errorprone.bugpatterns.DepAnnTest;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
@@ -51,6 +53,8 @@ import static org.mockito.Mockito.verify;
  */
 @RunWith(JUnit4.class)
 public class ErrorProneJavaCompilerTest {
+
+  @Rule public TemporaryFolder tempDir = new TemporaryFolder();
 
   @Test
   public void testIsSupportedOption() {
@@ -126,7 +130,7 @@ public class ErrorProneJavaCompilerTest {
         printWriter,
         null,
         diagnosticHelper.collector,
-        Arrays.asList("-Xepdisable:DepAnn"),
+        Arrays.asList("-Xepdisable:DepAnn", "-d", tempDir.getRoot().getAbsolutePath()),
         null,
         sources(DepAnnTest.class, "DepAnnPositiveCases.java"));
 

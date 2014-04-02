@@ -22,10 +22,13 @@ import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * @author vidarh@google.com (Will Holen)
  */
+@RunWith(JUnit4.class)
 public class MisusedFormattingLoggerTest {
 
   private CompilationTestHelper compilationHelper;

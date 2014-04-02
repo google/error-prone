@@ -44,9 +44,7 @@ import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
 import com.sun.tools.javac.tree.TreeMaker;
 
-import edu.umd.cs.findbugs.formatStringChecker.FormatterNumberFormatException;
-import edu.umd.cs.findbugs.formatStringChecker.IllegalFormatConversionException;
-import edu.umd.cs.findbugs.formatStringChecker.MissingFormatArgumentException;
+import edu.umd.cs.findbugs.formatStringChecker.FormatterException;
 import edu.umd.cs.findbugs.formatStringChecker.ExtraFormatArgumentsException;
 import edu.umd.cs.findbugs.formatStringChecker.Formatter;
 
@@ -208,11 +206,7 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
       // Due to Java 1.6, we have to write these out:
       } catch (IllegalArgumentException e) {
         formatException = e;
-      } catch (IllegalFormatConversionException e) {
-        formatException = e;
-      } catch (MissingFormatArgumentException e) {
-        formatException = e;
-      } catch (FormatterNumberFormatException e) {
+      } catch (FormatterException e) {
         formatException = e;
       }
       if (formatException != null) {
@@ -320,7 +314,7 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
 
   // Run the FindBugs checker on the string, to catch anything we don't currently detect.
   private void verifyPrintf(MethodInvocationTree tree, FormatParameters parameters)
-      throws FormatFlagsConversionMismatchException, IllegalFormatException, IllegalFormatConversionException, MissingFormatArgumentException, FormatterNumberFormatException {
+      throws FormatFlagsConversionMismatchException, IllegalFormatException, FormatterException {
      List<? extends ExpressionTree> args = tree.getArguments();
 
     JCLiteral format = (JCLiteral) args.get(parameters.getFormatIndex());
