@@ -49,7 +49,8 @@ import com.sun.tools.javac.util.List;
         + "primitive array is autoboxed into a single-element Object array. This is usually "
         + "not what was intended.",
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
-public class PrimitiveArrayPassedToVarargsMethod extends BugChecker implements MethodInvocationTreeMatcher {
+public class PrimitiveArrayPassedToVarargsMethod extends BugChecker
+    implements MethodInvocationTreeMatcher {
 
   /**
    * Assuming the argument in the varargs position is a single one of type int[], here is the
@@ -60,7 +61,8 @@ public class PrimitiveArrayPassedToVarargsMethod extends BugChecker implements M
    *     T...          true              Will cause boxing
    *     Object...     true              Will cause boxing
    */
-  private static final Matcher<MethodInvocationTree> isVarargs = new Matcher<MethodInvocationTree>() {
+  private static final Matcher<MethodInvocationTree> isVarargs =
+      new Matcher<MethodInvocationTree>() {
     @Override
     public boolean matches(MethodInvocationTree t, VisitorState state) {
       Symbol symbol = ASTHelpers.getSymbol(t);

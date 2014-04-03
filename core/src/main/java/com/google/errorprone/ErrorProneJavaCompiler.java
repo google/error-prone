@@ -19,13 +19,6 @@ package com.google.errorprone;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.util.Context;
 
-import javax.lang.model.SourceVersion;
-import javax.tools.DiagnosticListener;
-import javax.tools.JavaCompiler;
-import javax.tools.JavaFileManager;
-import javax.tools.JavaFileObject;
-import javax.tools.StandardJavaFileManager;
-import javax.tools.ToolProvider;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Writer;
@@ -35,6 +28,14 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+
+import javax.lang.model.SourceVersion;
+import javax.tools.DiagnosticListener;
+import javax.tools.JavaCompiler;
+import javax.tools.JavaFileManager;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardJavaFileManager;
+import javax.tools.ToolProvider;
 
 /**
  * An error-prone compiler that implements {@link javax.tools.JavaCompiler}.
@@ -65,7 +66,7 @@ public class ErrorProneJavaCompiler implements JavaCompiler {
     List<String> remainingOptions = Arrays.asList(errorProneOptions.getRemainingArgs());
     CompilationTask task = myJavacTool.getTask(
         out, fileManager, diagnosticListener, remainingOptions, classes, compilationUnits);
-    Context context = ((JavacTaskImpl)task).getContext();
+    Context context = ((JavacTaskImpl) task).getContext();
     ErrorProneScanner scanner =
         new ErrorProneScanner(ErrorProneScanner.EnabledPredicate.DEFAULT_CHECKS);
     context.put(Scanner.class, scanner);

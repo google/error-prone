@@ -20,9 +20,9 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
-import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.isDescendantOfMethod;
+import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
+import static com.google.errorprone.matchers.Matchers.methodSelect;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -36,17 +36,17 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
 import com.sun.tools.javac.tree.TreeMaker;
 
-import edu.umd.cs.findbugs.formatStringChecker.FormatterException;
 import edu.umd.cs.findbugs.formatStringChecker.ExtraFormatArgumentsException;
 import edu.umd.cs.findbugs.formatStringChecker.Formatter;
+import edu.umd.cs.findbugs.formatStringChecker.FormatterException;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -124,7 +124,8 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
 
   /** Regex that matches printf groups, copied from
    * edu.umd.cs.findbugs.formatStringChecker.Formatter. */
-  private static final Pattern printfGroup = Pattern.compile("%(\\d+\\$)?([-#+ 0,(\\<]*)?(\\d+)?(\\.\\d+)?([tT])?([a-zA-Z%])");
+  private static final Pattern printfGroup =
+      Pattern.compile("%(\\d+\\$)?([-#+ 0,(\\<]*)?(\\d+)?(\\.\\d+)?([tT])?([a-zA-Z%])");
 
   private static final Map<TypeKind, String> BOXED_TYPE_NAMES;
 
@@ -293,7 +294,7 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
         newParameters.add(t.toString());
       }
 
-      int sourceStart = ((JCTree)args.get(0)).getStartPosition();
+      int sourceStart = ((JCTree) args.get(0)).getStartPosition();
       int sourceEnd = state.getEndPosition((JCTree) args.get(args.size() - 1));
 
       SuggestedFix fix = new SuggestedFix().replace(sourceStart, sourceEnd,
@@ -366,7 +367,7 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
     java.util.regex.Matcher matcher = printfGroup.matcher(str);
 
     Set<Integer> set = new HashSet<Integer>();
-    int i=0;
+    int i = 0;
     while (matcher.find()) {
       // %n is line break and %% is literal percent, they don't reference parameters.
       if (!matcher.group().endsWith("n") && !matcher.group().endsWith("%")) {
