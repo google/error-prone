@@ -10,6 +10,7 @@ import com.sun.tools.javac.util.List;
 
 import javax.annotation.processing.Processor;
 import javax.tools.JavaFileObject;
+
 import java.util.Map;
 
 /**
@@ -17,20 +18,28 @@ import java.util.Map;
  */
 public final class JDKCompatible {
 
-  private static JDKCompatibleShim backingShim;
-  static {
+  private static JDKCompatibleShim backingShim = tryJDK8();
+  private static JDKCompatibleShim tryJDK8() {
     try {
-      backingShim = (JDKCompatibleShim) Class.forName("com.google.errorprone.JDK8Shim").newInstance();
-    } catch (Exception e) {
+      return (JDKCompatibleShim) Class.forName("com.google.errorprone.JDK8Shim").newInstance();
+    } catch (LinkageError tryJDK7) {
+      // JDK8Shim's prerequisites couldn't be found, assume that we're running on JRE 7 and see if
+      // JDK7Shim is available.
+      return tryJDK7();
+    } catch (ClassNotFoundException tryJDK7) {
+      // JDK8Shim doesn't exist; try JDK7Shim.
+      return tryJDK7();
+    } catch (InstantiationException e) {
+      throw new LinkageError("Could not load JDKShim: " + e);
+    } catch (IllegalAccessException e) {
+      throw new LinkageError("Could not load JDKShim: " + e);
     }
-
+  }
+  private static JDKCompatibleShim tryJDK7() {
     try {
-      backingShim = (JDKCompatibleShim) Class.forName("com.google.errorprone.JDK7Shim").newInstance();
+      return (JDKCompatibleShim) Class.forName("com.google.errorprone.JDK7Shim").newInstance();
     } catch (Exception e) {
-    }
-
-    if (backingShim == null) {
-      throw new LinkageError("Could not load JDKShim.");
+      throw new LinkageError("Could not load JDKShim: " + e);
     }
   }
 

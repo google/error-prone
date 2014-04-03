@@ -60,8 +60,7 @@ public class JDK8Shim implements JDKCompatibleShim {
           ABSTRACT_LOG__GET_SOURCE.invoke(compiler.log, sourceFile);
       DIAGNOSTIC_SOURCE__END_POS_TABLE.set(diagnosticSource, null);
     } catch (Exception e) {
-      e.printStackTrace();
-      throw new RuntimeException(e);
+      throw new LinkageError(e.getMessage());
     }
   }
 
