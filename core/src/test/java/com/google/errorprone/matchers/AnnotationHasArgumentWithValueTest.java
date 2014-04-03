@@ -29,14 +29,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.io.IOException;
-
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
 @RunWith(JUnit4.class)
 public class AnnotationHasArgumentWithValueTest extends CompilerBasedAbstractTest {
-  @Before public void setUp() throws IOException {
+  @Before public void setUp() {
     writeFile("Thing.java",
         "public @interface Thing {",
         "  String stuff();",

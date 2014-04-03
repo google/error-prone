@@ -78,7 +78,7 @@ public class CompilationTestHelper {
   private ErrorProneCompiler compiler;
   private ByteArrayOutputStream outputStream;
   private JavaFileManager fileManager;
-
+  
   public CompilationTestHelper(Scanner scanner) {
     this.diagnosticHelper = new DiagnosticTestHelper();
     this.fileManager = getFileManager(diagnosticHelper.collector, null, null);
