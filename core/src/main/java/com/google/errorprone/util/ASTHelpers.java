@@ -38,7 +38,6 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.Type.MethodType;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
@@ -213,10 +212,10 @@ public class ASTHelpers {
   public static Type getReturnType(ExpressionTree expressionTree) {
     if (expressionTree instanceof JCFieldAccess) {
       JCFieldAccess methodCall = (JCFieldAccess) expressionTree;
-      return ((MethodType) methodCall.type).getReturnType();
+      return methodCall.type.getReturnType();
     } else if (expressionTree instanceof JCIdent) {
       JCIdent methodCall = (JCIdent) expressionTree;
-      return ((MethodType) methodCall.type).getReturnType();
+      return methodCall.type.getReturnType();
     }
     throw new IllegalArgumentException("Expected a JCFieldAccess or JCIdent");
   }

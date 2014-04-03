@@ -112,4 +112,19 @@ public class CheckReturnValuePositiveCases {
     @CheckReturnValue
     MyObject() {}
   }
+
+  private abstract static class LB1<A> {}
+  private static class LB2<A> extends LB1<A> {
+    
+    @CheckReturnValue
+    public static <T> LB2<T> lb1() {
+        return new LB2<T>();
+    }
+    
+    public static <T> LB2<T> lb2() {
+      //BUG: Suggestion includes "remove this line"
+      lb1();
+      return lb1();
+    }
+  }
 }
