@@ -30,26 +30,29 @@ import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 
+import edu.umd.cs.findbugs.formatStringChecker.ExtraFormatArgumentsException;
+import edu.umd.cs.findbugs.formatStringChecker.Formatter;
+
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.lang.model.type.TypeKind;
 
-import edu.umd.cs.findbugs.formatStringChecker.ExtraFormatArgumentsException;
-import edu.umd.cs.findbugs.formatStringChecker.Formatter;
 /**
  * @author rburny@google.com (Radoslaw Burny)
  */
@@ -62,18 +65,31 @@ import edu.umd.cs.findbugs.formatStringChecker.Formatter;
     category = JDK, maturity = EXPERIMENTAL, severity = ERROR)
 public class MalformedFormatString extends BugChecker implements MethodInvocationTreeMatcher {
 
+  private static final String EXTRA_ARGUMENTS_MESSAGE =
+      "Too many arguments for printf-like format string: expected %d, got %d";
+
   private static final Matcher<ExpressionTree> isPrintfLike = anyOf(
+    isDescendantOfMethod("java.io.PrintStream", "format(java.lang.String,java.lang.Object...)"),
     isDescendantOfMethod("java.io.PrintStream", "printf(java.lang.String,java.lang.Object...)"),
+    isDescendantOfMethod("java.io.PrintWriter", "format(java.lang.String,java.lang.Object...)"),
+    isDescendantOfMethod("java.io.PrintWriter", "printf(java.lang.String,java.lang.Object...)"),
     isDescendantOfMethod("java.util.Formatter", "format(java.lang.String,java.lang.Object...)"),
-    staticMethod("java.lang.String", "format(java.lang.String,java.lang.Object...)"));
+    staticMethod("java.lang.String", "format(java.lang.String,java.lang.Object...)")
+    );
   private static final Matcher<ExpressionTree> isPrintfLikeWithLocale = anyOf(
     isDescendantOfMethod("java.io.PrintStream",
+      "format(java.util.Locale,java.lang.String,java.lang.Object...)"),
+    isDescendantOfMethod("java.io.PrintStream",
         "printf(java.util.Locale,java.lang.String,java.lang.Object...)"),
+    isDescendantOfMethod("java.io.PrintWriter",
+        "printf(java.util.Locale,java.lang.String,java.lang.Object...)"),
+    isDescendantOfMethod("java.io.PrintWriter",
+      "format(java.util.Locale,java.lang.String,java.lang.Object...)"),
     isDescendantOfMethod("java.util.Formatter",
         "format(java.util.Locale,java.lang.String,java.lang.Object...)"),
     staticMethod("java.lang.String",
-        "format(java.util.Locale,java.lang.String,java.lang.Object...)"));
-
+        "format(java.util.Locale,java.lang.String,java.lang.Object...)")
+    );
   private static final Map<TypeKind, String> BOXED_TYPE_NAMES;
 
   static {
@@ -87,6 +103,9 @@ public class MalformedFormatString extends BugChecker implements MethodInvocatio
     boxedTypeNames.put(TypeKind.BOOLEAN, Boolean.class.getName());
     boxedTypeNames.put(TypeKind.CHAR, Character.class.getName());
     boxedTypeNames.put(TypeKind.NULL, Object.class.getName());
+    // Apparently, matcher is run even if typing phase failed. Hence, we replace missing/erroneous
+    // types with Object to prevent further failures.
+    boxedTypeNames.put(TypeKind.ERROR, Object.class.getName());
     BOXED_TYPE_NAMES = Collections.unmodifiableMap(boxedTypeNames);
   }
 
@@ -108,28 +127,44 @@ public class MalformedFormatString extends BugChecker implements MethodInvocatio
       return Description.NO_MATCH;
     }
 
-    List<? extends ExpressionTree> args = tree.getArguments();
-    if (args.get(formatIndex).getKind() != Kind.STRING_LITERAL) {
+    List<? extends ExpressionTree> allArgs = tree.getArguments();
+    ExpressionTree formatExpression = allArgs.get(formatIndex);
+    List<? extends ExpressionTree> formatArgs = allArgs.subList(formatIndex + 1, allArgs.size());
+    // If there's a sole argument of array type, this can be a non-varargs form call. Ignoring.
+    if (formatArgs.size() == 1
+        && ((JCExpression) formatArgs.get(0)).type.getKind() == TypeKind.ARRAY) {
+      return Description.NO_MATCH;
+    }
+    String formatString = null;
+    if (formatExpression.getKind() == Kind.STRING_LITERAL) {
+      formatString = ((JCLiteral) formatExpression).getValue().toString();
+    } else {
+      Symbol sym = ASTHelpers.getSymbol(formatExpression);
+      if (sym instanceof VarSymbol) {
+        formatString = (String) ((VarSymbol) sym).getConstValue();
+      }
+    }
+    if (formatString == null) {
       return Description.NO_MATCH;
     }
 
-    JCLiteral format = (JCLiteral) args.get(formatIndex);
     List<String> argTypes = new ArrayList<String>();
-    for (int i = formatIndex + 1; i < args.size(); ++i) {
-      Type type = ((JCExpression) args.get(i)).type;
+    for (ExpressionTree arg : formatArgs) {
+      Type type = state.getTypes().erasure(((JCExpression) arg).type);
       argTypes.add(getFormatterType(type));
     }
 
     try {
-      Formatter.check((String) format.getValue(), argTypes.toArray(new String[0]));
+      Formatter.check(formatString, argTypes.toArray(new String[0]));
     } catch (ExtraFormatArgumentsException e) {
-      int begin = state.getEndPosition((JCExpression) args.get(formatIndex + e.used));
+      int begin = state.getEndPosition((JCExpression) allArgs.get(formatIndex + e.used));
       int end = state.getEndPosition((JCMethodInvocation) tree);
       if (end < 0) {
         return describeMatch(tree, null);
       }
       Fix fix = new SuggestedFix().replace(begin, end - 1, "");
-      return describeMatch(tree, fix);
+      String message = String.format(EXTRA_ARGUMENTS_MESSAGE, e.used, e.provided);
+      return new Description(tree, message, fix, pattern.severity());
     } catch (Exception e) {
       // TODO(rburny): provide fixes for other problems
     }

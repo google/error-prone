@@ -24,6 +24,7 @@ import java.util.Locale;
 public class MalformedFormatStringPositiveCases {
   private static final Formatter formatter = new Formatter();
   private static final Locale locale = Locale.US;
+  private static final String FORMAT = "%s";
 
   public void extraArgs() {
     //BUG: Suggestion includes "System.out.printf("foo");"
@@ -32,9 +33,28 @@ public class MalformedFormatStringPositiveCases {
     formatter.format("%d", 42, 17);
     //BUG: Suggestion includes "String.format(locale, "%n %%");"
     String.format(locale, "%n %%", 1);
+    //BUG: Suggestion includes "expected 0, got 1"
+    System.out.printf("foo", "bar");
 
     // format call inside other statement
     //BUG: Suggestion includes "throw new Exception(String.format(""));"
     throw new Exception(String.format("", 42));
+  }
+
+  public void nonliteralFormats() {
+    final String formatVar = "%s";
+    //BUG: Suggestion includes "String.format(formatVar, true);"
+    String.format(formatVar, true, false);
+    //BUG: Suggestion includes "String.format(FORMAT, true);"
+    String.format(FORMAT, true, false);
+  }
+
+  public void errorType() {
+    // The real test here is that the checker does not suggest fixes with erroneous types.
+    // Apparently (at least in Maven tests) checker can be run even when typing fails.
+    //BUG: Suggestion includes "cannot find symbol"
+    UndeclaredType t;
+    // no bug here
+    String.format("%d", t);
   }
 }
