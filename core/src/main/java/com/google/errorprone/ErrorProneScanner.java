@@ -115,7 +115,6 @@ public class ErrorProneScanner extends Scanner {
       TryFailThrowable.class,
       WrongParameterPackage.class,
       LongLiteralLowerCaseSuffix.class,
-      UnneededConditionalOperator.class,
       ArrayToStringCompoundAssignment.class,
       InjectScopeOrQualifierAnnotationRetention.class,
       InjectInvalidTargetingOnScopingAnnotation.class,
