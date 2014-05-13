@@ -48,6 +48,12 @@ public class SuggestedFix implements Fix {
   private Collection<String> importsToRemove = new ArrayList<String>();
 
   @Override
+  public boolean isEmpty() {
+    return nodeReplacements.isEmpty() && nodeSwaps.isEmpty() && prefixInsertions.isEmpty()
+        && postfixInsertions.isEmpty() && importsToAdd.isEmpty() && importsToRemove.isEmpty();
+  }
+
+  @Override
   public Collection<String> getImportsToAdd() {
     return importsToAdd;
   }

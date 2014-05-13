@@ -52,4 +52,9 @@ public class NoFix implements Fix {
   public Collection<String> getImportsToRemove() {
     return Collections.emptyList();
   }
+
+  @Override
+  public boolean isEmpty() {
+    return true;
+  }
 }

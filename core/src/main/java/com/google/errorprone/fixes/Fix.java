@@ -33,14 +33,16 @@ public interface Fix {
   /**
    * An immutable value to use when there is no fix.
    */
-  public static final Fix NO_FIX = new NoFix();
+  Fix NO_FIX = new NoFix();
 
-  public String toString(JCCompilationUnit compilationUnit);
+  String toString(JCCompilationUnit compilationUnit);
 
-  public Set<Replacement> getReplacements(ErrorProneEndPosMap endPositions);
+  Set<Replacement> getReplacements(ErrorProneEndPosMap endPositions);
 
-  public Collection<String> getImportsToAdd();
+  Collection<String> getImportsToAdd();
 
-  public Collection<String> getImportsToRemove();
+  Collection<String> getImportsToRemove();
+
+  boolean isEmpty();
 
 }
