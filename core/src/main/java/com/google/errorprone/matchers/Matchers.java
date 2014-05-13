@@ -28,6 +28,7 @@ import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
@@ -501,6 +502,19 @@ public class Matchers {
     return new StringLiteral(value);
   }
 
+  public static Matcher<ExpressionTree> booleanLiteral(final boolean value) {
+    return new Matcher<ExpressionTree>() {
+      // Matcher of a boolean literal
+      @Override
+      public boolean matches(ExpressionTree expressionTree, VisitorState state) {
+        if (expressionTree.getKind() == Tree.Kind.BOOLEAN_LITERAL) {
+          return value == (boolean) (((LiteralTree) expressionTree).getValue());
+        }
+        return false;
+      }
+    };
+  }
+
   /**
    * Matches an Annotation AST node if the argument to the annotation with the given name has a value which
    * matches the given matcher.
@@ -669,6 +683,15 @@ public class Matchers {
 
   public static Matcher<MethodTree> methodHasModifier(final Modifier modifier) {
     return new MethodModifier(modifier);
+  }
+
+  public static Matcher<MethodTree> methodIsConstructor() {
+    return new Matcher<MethodTree>() {
+      @Override
+      public boolean matches(MethodTree methodTree, VisitorState state) {
+        return ASTHelpers.getSymbol(methodTree).isConstructor();
+      }
+    };
   }
 
   /**

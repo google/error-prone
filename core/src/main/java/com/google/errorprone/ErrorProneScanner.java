@@ -126,6 +126,7 @@ public class ErrorProneScanner extends Scanner {
       InjectMoreThanOneInjectableConstructor.class,
       InjectJavaxInjectOnFinalField.class,
       GuiceInjectOnFinalField.class,
+      InjectedConstructorAnnotations.class,
       ClassCanBeStatic.class,
       ElementsCountedInLoop.class,
       ProtoFieldNullComparison.class,
