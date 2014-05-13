@@ -50,7 +50,7 @@ import java.util.List;
 @BugPattern(name = "ComparisonOutOfRange",
     summary = "Comparison to value that is out of range for the compared type",
     formatSummary = "%ss may have a value in the range %d to %d; therefore, this comparison to " +
-    	"%s will always evaluate to %s",
+        "%s will always evaluate to %s",
     explanation = "This checker looks for equality comparisons to values that are out of " +
         "range for the compared type.  For example, bytes may have a value in the range " +
         Byte.MIN_VALUE + " to " + Byte.MAX_VALUE + ". Comparing a byte for equality with a value " +

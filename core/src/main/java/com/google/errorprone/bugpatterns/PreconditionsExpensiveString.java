@@ -48,7 +48,7 @@ import java.util.regex.Pattern;
  */
 @BugPattern(name = "PreconditionsErrorMessageEagerEvaluation",
     summary = "Second argument to Preconditions.* is a call to String.format(), which " +
-    		"can be unwrapped",
+        "can be unwrapped",
     explanation =
         "Preconditions checks take an error message to display if the check fails. " +
         "The error message is rarely needed, so it should either be cheap to construct " +

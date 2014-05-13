@@ -58,13 +58,13 @@ import java.util.List;
 @BugPattern(name = "WaitNotInLoop",
     summary = "Object.wait() should always be called in a loop",
     explanation = "Object.wait() can be woken up in multiple ways, none of which guarantee that " +
-    		"the condition it was waiting for has become true (spurious wakeups, for example). " +
-    		"Thus, Object.wait() should always be called in a loop that checks the condition " +
-    		"predicate.  Additionally, the loop should be inside a synchronized block or " +
-    		"method to avoid race conditions on the condition predicate.\n\n" +
-    		"See Java Concurrency in Practice section 14.2.2, \"Waking up too soon,\" and " +
-    		"[http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html#wait() " +
-    		"the Javadoc for Object.wait()].",
+        "the condition it was waiting for has become true (spurious wakeups, for example). " +
+        "Thus, Object.wait() should always be called in a loop that checks the condition " +
+        "predicate.  Additionally, the loop should be inside a synchronized block or " +
+        "method to avoid race conditions on the condition predicate.\n\n" +
+        "See Java Concurrency in Practice section 14.2.2, \"Waking up too soon,\" and " +
+        "[http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html#wait() " +
+        "the Javadoc for Object.wait()].",
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
 public class WaitNotInLoop extends BugChecker implements MethodInvocationTreeMatcher {
 

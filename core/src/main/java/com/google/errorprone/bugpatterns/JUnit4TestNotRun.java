@@ -50,7 +50,7 @@ import java.util.Arrays;
         "The test method that triggered this error is named like a JUnit 3 test, but is in a " +
         "JUnit 4 test class.  Thus, it will not be run unless you annotate it with @Test.\n\n" +
         "If you intend for this test method not to run, please add both an @Test and an " +
-    	"@Ignore annotation to make it clear that you are purposely disabling it.",
+        "@Ignore annotation to make it clear that you are purposely disabling it.",
     category = JUNIT, maturity = MATURE, severity = ERROR)
 public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
 

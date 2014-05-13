@@ -60,26 +60,30 @@ import javax.lang.model.element.NestingKind;
 public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
 
   /**
-	   * Matches any class definitions that fit the following:
-	   * 1) Is non-static
-	   * 2) Is an inner class (ie has an enclosing class)
-	   * 3) Enclosing class is non-nested or static
-	   * 4) Has no references to variables defined in enclosing class
-	   */
-	private static Matcher<ClassTree> classTreeMatcher = new Matcher<ClassTree>() {
-		  @SuppressWarnings("unchecked")
+   * Matches any class definitions that fit the following:
+   * <ol>
+   * <li> Is non-static
+   * <li> Is an inner class (ie has an enclosing class)
+   * <li> Enclosing class is non-nested or static
+   * <li> Has no references to variables defined in enclosing class
+   * </ol>
+   */
+  private static Matcher<ClassTree> classTreeMatcher = new Matcher<ClassTree>() {
+      @SuppressWarnings("unchecked")
       @Override
-		  public boolean matches(ClassTree classTree, VisitorState state) {
-		    return allOf(
-		      not(classHasModifier(Modifier.STATIC)),
-		      kindIs(Kind.CLASS),
-		      nestingKind(NestingKind.MEMBER),
-		      parentNode(kindIs(Kind.CLASS)),
-		      anyOf(parentNode(nestingKind(NestingKind.TOP_LEVEL)), parentNode(classHasModifier(Modifier.STATIC))),
-		      not(hasIdentifier(ANY, referenceEnclosing(classTree, state.getTypes())))
-		    ).matches(classTree, state);
-		  }
-	};
+      public boolean matches(ClassTree classTree, VisitorState state) {
+        return allOf(
+          not(classHasModifier(Modifier.STATIC)),
+          kindIs(Kind.CLASS),
+          nestingKind(NestingKind.MEMBER),
+          parentNode(kindIs(Kind.CLASS)),
+          anyOf(
+              parentNode(nestingKind(NestingKind.TOP_LEVEL)),
+              parentNode(classHasModifier(Modifier.STATIC))),
+          not(hasIdentifier(ANY, referenceEnclosing(classTree, state.getTypes())))
+        ).matches(classTree, state);
+      }
+    };
 
   private static Matcher<IdentifierTree> referenceEnclosing(ClassTree classTree, Types types) {
     return new ReferenceEnclosing(classTree, types);

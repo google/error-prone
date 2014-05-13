@@ -40,7 +40,7 @@ import com.sun.tools.javac.code.Symbol;
 @BugPattern(name = "OverlappingQualifierAndScopeAnnotation",
     summary = "Annotations cannot be both Qualifiers/BindingAnnotations and Scopes",
     explanation = "Qualifiers and Scoping annotations have different semantic meanings and a "
-    		+ "single annotation should not be both a qualifier and a scoping annotation",
+        + "single annotation should not be both a qualifier and a scoping annotation",
     category = INJECT, severity = ERROR, maturity = EXPERIMENTAL)
 public class InjectOverlappingQualifierAndScopeAnnotation extends BugChecker implements AnnotationTreeMatcher {
 

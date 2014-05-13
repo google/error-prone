@@ -44,7 +44,7 @@ import java.lang.annotation.Target;
 @BugPattern(name = "InjectInvalidTargetingOnScopingAnnotation",
     summary = "The target of a scoping annotation must be set to METHOD and/or TYPE.",
     explanation = "Scoping annotations are only appropriate for provision and therefore are only " +
-    		"appropriate on @Provides methods and classes that will be provided just-in-time.",
+        "appropriate on @Provides methods and classes that will be provided just-in-time.",
     category = INJECT, severity = ERROR, maturity = EXPERIMENTAL)
 public class InjectInvalidTargetingOnScopingAnnotation extends BugChecker
     implements ClassTreeMatcher {

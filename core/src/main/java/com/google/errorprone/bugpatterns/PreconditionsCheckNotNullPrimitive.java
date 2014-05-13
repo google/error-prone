@@ -57,7 +57,7 @@ import java.util.Set;
  */
 @BugPattern(name = "PreconditionsCheckNotNullPrimitive",
     summary = "First argument to Preconditions.checkNotNull() is a primitive rather " +
-    		"than an object reference",
+        "than an object reference",
     explanation =
         "Preconditions.checkNotNull() takes as an argument a reference that should be " +
         "non-null. Often a primitive is passed as the argument to check. The primitive " +

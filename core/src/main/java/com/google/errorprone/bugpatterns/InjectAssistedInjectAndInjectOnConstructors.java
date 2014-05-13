@@ -43,7 +43,7 @@ import com.sun.tools.javac.code.Symbol;
  */
 @BugPattern(name = "AssistedInjectAndInjectOnConstructors",
     summary = "@AssistedInject and @Inject should not be used on different constructors "
-    		+ "in the same class.",
+    + "in the same class.",
     explanation = "Mixing @Inject and @AssistedInject leads to confusing code and the "
     + "documentation specifies not to do it. See " 
     + "http://google-guice.googlecode.com/git/javadoc/com/google/inject/assistedinject/AssistedInject.html",

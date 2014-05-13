@@ -159,7 +159,7 @@ public class DocGen extends AbstractProcessor {
   public static void main(String[] args) throws IOException {
     if (args.length != 3) {
       System.err.println("Usage: java DocGen " +
-      		"<path to bugPatterns.txt> <path to wiki repository> <path to examples>");
+          "<path to bugPatterns.txt> <path to wiki repository> <path to examples>");
       System.exit(1);
     }
     final File bugPatterns = new File(args[0]);
