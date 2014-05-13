@@ -61,12 +61,11 @@ import com.sun.tools.javac.util.Name;
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 @BugPattern(name = "Finally", altNames = "finally",
-    summary = "Finally clause cannot complete normally",
-    explanation = "Transferring control from a finally block (via break, continue, return, or "
-        + "throw) has unintuitive behavior. Please restructure your code so that you "
-        + "don't have to transfer control flow from a finally block.\n\n"
-        + "Please see the positive cases below for examples and explanations of why this is "
-        + "dangerous.",
+    summary = "Finally block may not complete normally",
+    explanation = "Terminating a finally block abruptly preempts the outcome of the try block, "
+        + "and will cause the result of any previously executed return or throw statements to "
+        + "be ignored. This is considered extremely confusing. Please refactor this code to ensure "
+        + "that the finally block will always complete normally.",
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
 public class Finally extends BugChecker
     implements ContinueTreeMatcher, ThrowTreeMatcher, BreakTreeMatcher, ReturnTreeMatcher {
