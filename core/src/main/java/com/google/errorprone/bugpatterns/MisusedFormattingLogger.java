@@ -218,9 +218,9 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
       formatException = e;
     }
     if (formatException != null) {
-      return new Description(tree,
+      return new Description(tree, pattern,
           "Format string is invalid: " + formatException.getMessage(),
-          SuggestedFix.NO_FIX, pattern.severity());
+          SuggestedFix.NO_FIX);
     }
 
     // Are there format string references that aren't provided?
@@ -312,8 +312,8 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
       } else {
         fix = SuggestedFix.NO_FIX;
       }
-      return new Description(tree,
-          "This call " + join(", ", errors) + ".", fix, pattern.severity());
+      return new Description(tree, pattern,
+          "This call " + join(", ", errors) + ".", fix);
     }
 
     return Description.NO_MATCH;

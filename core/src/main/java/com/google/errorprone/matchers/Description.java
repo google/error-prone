@@ -34,29 +34,54 @@ public class Description {
   public static final Description NO_MATCH =
       new Description(null, "<No match>", NO_FIX, NOT_A_PROBLEM);
 
+  private static final String UNDEFINED_CHECK_NAME = "Undefined";
+
   /**
    * The AST node which matched
    */
-  public Tree node;
+  public final Tree node;
+
+  /**
+   * The name of the check that produced the match.
+   */
+  public final String checkName;
 
   /**
    * Printed by the compiler when a match is found in interactive use.
    */
-  public String message;
+  public final String message;
+
+  /**
+   * The message, not including the check name.
+   */
+  public final String rawMessage;
 
   /**
    * Replacements to suggest in an error message or use in automated refactoring
    */
-  public Fix suggestedFix;
+  public final Fix suggestedFix;
 
   /**
    * Is this a warning, error, etc.
    */
-  public BugPattern.SeverityLevel severity;
+  public final BugPattern.SeverityLevel severity;
 
+  public Description(Tree node, BugPattern pattern, String message, Fix suggestedFix) {
+    this(node, pattern.name(), String.format("[%s] %s",  pattern.name(), message), message,
+        suggestedFix, pattern.severity());
+  }
+
+  /** TODO(cushon): Remove this constructor and ensure that there's always a check name. */
   public Description(Tree node, String message, Fix suggestedFix,
                      BugPattern.SeverityLevel severity) {
+    this(node, UNDEFINED_CHECK_NAME, message, message, suggestedFix, severity);
+  }
+
+  private Description(Tree node, String checkName, String message, String rawMessage,
+      Fix suggestedFix, BugPattern.SeverityLevel severity) {
+    this.checkName = checkName;
     this.message = message;
+    this.rawMessage = rawMessage;
     if (suggestedFix == null) {
       throw new IllegalArgumentException("suggestedFix must not be null. Use "
           + "SuggestedFix.NO_FIX if there is no fix.");

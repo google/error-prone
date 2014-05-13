@@ -83,7 +83,7 @@ public abstract class BugChecker implements Suppressible, Disableable, Serializa
    * parameterized.
    */
   protected Description describeMatch(Tree node, Fix fix) {
-    return new Description(node, getDiagnosticMessage(), fix, pattern.severity());
+    return new Description(node, pattern, getDiagnosticMessage(), fix);
   }
 
   /**
@@ -107,7 +107,7 @@ public abstract class BugChecker implements Suppressible, Disableable, Serializa
     } else {
       summary = pattern.summary();
     }
-    return "[" + pattern.name() + "] " + summary + getLink();
+    return summary + getLink();
   }
 
   /**

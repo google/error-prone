@@ -164,7 +164,7 @@ public class MalformedFormatString extends BugChecker implements MethodInvocatio
       }
       Fix fix = new SuggestedFix().replace(begin, end - 1, "");
       String message = String.format(EXTRA_ARGUMENTS_MESSAGE, e.used, e.provided);
-      return new Description(tree, message, fix, pattern.severity());
+      return new Description(tree, pattern, message, fix);
     } catch (Exception e) {
       // TODO(rburny): provide fixes for other problems
     }
