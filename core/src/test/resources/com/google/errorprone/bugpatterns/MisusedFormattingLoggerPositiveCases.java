@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-import java.util.logging.Level;
 import com.google.gdata.util.common.logging.FormattingLogger;
+
+import java.util.logging.Level;
 
 /**
  * Positive test cases for MisusedFormattingLogger.
@@ -62,13 +63,13 @@ public class MisusedFormattingLoggerPositiveCases {
   }
 
   public void wrongFormatStringType() {
-    //BUG: Suggestion includes "logger.info("User {0} requested {1}", 42, "test")"
-    logger.info("User %04.4f requested %s", 42, "test");
+    //BUG: Suggestion includes "logger.infofmt("User %04.4f requested %s", 3.14, "test")"
+    logger.info("User %04.4f requested %s", 3.14, "test");
 
-    //BUG: Suggestion includes "logger.severe("Value: ''{0}''", 42)"
+    //BUG: Suggestion includes "logger.severefmt("Value: '%d'", 42)"
     logger.severe("Value: '%d'", 42);
 
-    //BUG: Suggestion includes "logger.finestfmt("User %s requested %s", 42, "test")"
+    //BUG: Suggestion includes "logger.finest("User {0,number} requested {1}", 42, "test")"
     logger.finestfmt("User {0,number} requested {1}", 42, "test");
   }
 
@@ -90,7 +91,7 @@ public class MisusedFormattingLoggerPositiveCases {
   }
 
   public void combo() {
-    //BUG: Suggestion includes "logger.warning(new RuntimeException(), "var=''{0}'' ({1})", "foo", "bar");"
+    //BUG: Suggestion includes "logger.warningfmt(new RuntimeException(), "var='%s' (%s)", "foo", "bar");"
     logger.warning("var='%s'", "foo", "bar", new RuntimeException().toString());
   }
 }

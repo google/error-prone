@@ -20,13 +20,16 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.isArrayType;
 import static com.google.errorprone.matchers.Matchers.isDescendantOfMethod;
+import static com.google.errorprone.matchers.Matchers.isPrimitiveArrayType;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -57,6 +60,7 @@ import java.util.HashSet;
 import java.util.IllegalFormatException;
 import java.util.List;
 import java.util.Map;
+import java.util.MissingFormatArgumentException;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -95,7 +99,7 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
   /**
    * A regex pattern for matching logging methods in FormattingLogger.
    *
-   * This class has a combinatorial number of methods derived from
+   * <p>This class has a combinatorial number of methods derived from
    * <ol>
    *   <li>A log level name, or generically "log"</li>
    *   <li>A format type ("fmt" for printf, nothing for MessageFormat)</li>
@@ -109,12 +113,13 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
    */
   private static final Pattern formattingLoggerMethods = Pattern.compile(
       // Due to Java 1.6 we can't use named groups, so there are constants instead
-      "^(?:severe|warning|info|config|fine|finer|finest|log)(fmt)?\\("
+      "^(severe|warning|info|config|fine|finer|finest|log)(fmt)?\\("
       + "(java\\.util\\.logging\\.Level,)?"
       + "(java\\.lang\\.Throwable,)?"
       + "java\\.lang\\.String,java\\.lang\\.Object\\.\\.\\.\\)");
 
-  private static final int FORMAT_GROUP = 1, LEVELPARAM_GROUP = 2, THROWABLEPARAM_GROUP = 3;
+  private static final int
+      BASE_GROUP = 1, FORMAT_GROUP = 2, LEVELPARAM_GROUP = 3, THROWABLEPARAM_GROUP = 4;
 
   private static final Pattern messageFormatGroup =
       Pattern.compile("\\{ *(\\d+).*?\\}");
@@ -157,6 +162,10 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
       return Description.NO_MATCH;
     }
 
+    if (!isVariadicInvocation(tree, state, parameters)) {
+      return Description.NO_MATCH;
+    }
+
     List<? extends ExpressionTree> args = tree.getArguments();
     if (args.get(parameters.getFormatIndex()).getKind() != Kind.STRING_LITERAL) {
       return Description.NO_MATCH;
@@ -189,32 +198,29 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
       }
     }
 
-    // Automatically rewrite if this is the wrong type of format string
-    String rewrite = ensureFormatStringType(parameters.getType(), formatString);
+    // Automatically switch method if this is the wrong type of format string
+    boolean rewriteMethod = changeFormatTypeIfRequired(parameters, formatString);
+    if (rewriteMethod) {
+        errors.add("uses the wrong method for the format type");
+    }
 
-    if (!rewrite.equals(formatString)) {
-        errors.add("uses the wrong format style");
-        formatString = rewrite;
-    } else {
-      // If we're using the user's string, ensure it's valid.
-      Exception formatException = null;
-      try {
-        if (parameters.getType() == FormatType.MESSAGEFORMAT) {
-          new MessageFormat(formatString);
-        } else if (parameters.getType() == FormatType.PRINTF) {
-          verifyPrintf(tree, parameters);
-        }
-      // Due to Java 1.6, we have to write these out:
-      } catch (IllegalArgumentException e) {
-        formatException = e;
-      } catch (FormatterException e) {
-        formatException = e;
+    Exception formatException = null;
+    try {
+      if (parameters.getType() == FormatType.MESSAGEFORMAT) {
+        new MessageFormat(formatString);
+      } else if (parameters.getType() == FormatType.PRINTF) {
+        verifyPrintf(tree, parameters);
       }
-      if (formatException != null) {
-        return new Description(tree,
-            "Format string is invalid: " + formatException.getMessage(),
-            SuggestedFix.NO_FIX, pattern.severity());
-      }
+    // Due to Java 1.6, we have to write these out:
+    } catch (FormatterException e) {
+      formatException = e;
+    } catch (MissingFormatArgumentException e) {
+      formatException = e;
+    }
+    if (formatException != null) {
+      return new Description(tree,
+          "Format string is invalid: " + formatException.getMessage(),
+          SuggestedFix.NO_FIX, pattern.severity());
     }
 
     // Are there format string references that aren't provided?
@@ -236,7 +242,7 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
 
         if (updatedReferences.size() > referencedArguments.size()) {
           formatString = quotedString;
-          errors.add("has arguments only referenced in literal sections");
+          errors.add("has arguments masked by single quotes");
           referencedArguments = updatedReferences;
         }
       }
@@ -294,16 +300,35 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
         newParameters.add(t.toString());
       }
 
-      int sourceStart = ((JCTree) args.get(0)).getStartPosition();
-      int sourceEnd = state.getEndPosition((JCTree) args.get(args.size() - 1));
+      // logger.method(param1, param2)
+      //       ^-- methodStart      ^-- parameterEnd
+      int methodStart = state.getEndPosition((JCTree) getInvocationTarget(tree));
+      int parameterEnd = state.getEndPosition((JCTree) args.get(args.size() - 1));
 
-      SuggestedFix fix = new SuggestedFix().replace(sourceStart, sourceEnd,
-          join(", ", newParameters));
-       return new Description(tree,
-           "This call " + join(", ", errors) + ".", fix, pattern.severity());
+      Fix fix;
+      if (methodStart >= 0 && parameterEnd >= 0) {
+        String replacement = "." + parameters.getMethodName() + "(" +  join(", ", newParameters);
+        fix = new SuggestedFix().replace(methodStart, parameterEnd, replacement);
+      } else {
+        fix = SuggestedFix.NO_FIX;
+      }
+      return new Description(tree,
+          "This call " + join(", ", errors) + ".", fix, pattern.severity());
     }
 
     return Description.NO_MATCH;
+  }
+
+  // Check whether this is call is made variadically or through a final Object array parameter
+  private boolean isVariadicInvocation(
+      MethodInvocationTree tree, VisitorState state, FormatParameters params) {
+    List<? extends ExpressionTree> arguments = tree.getArguments();
+    if (arguments.size() == params.getFormatIndex() + 2) {
+      ExpressionTree lastArgument = arguments.get(arguments.size() - 1);
+      return !isArrayType().matches(lastArgument, state)
+          || isPrimitiveArrayType().matches(lastArgument, state);
+    }
+    return true;
   }
 
   private ExpressionTree getInvocationTarget(MethodInvocationTree invocation) {
@@ -446,6 +471,7 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
           parameters.setType(FormatType.PRINTF);
         }
 
+        parameters.setMethodBase(matcher.group(BASE_GROUP));
         return parameters;
       }
     }
@@ -457,17 +483,20 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
         .replaceAll("\\\\'", "'"); // Humans wouldn't escape ' inside double quotes.
   }
 
-  private String ensureFormatStringType(FormatType type, String formatString) {
-    if (type == FormatType.MESSAGEFORMAT) {
-      if (!mayBeMessageFormat(formatString) && mayBePrintfFormat(formatString)) {
-        return printfToMessageFormat(formatString);
-      }
-    } else if (type == FormatType.PRINTF) {
-      if (!mayBePrintfFormat(formatString) && mayBeMessageFormat(formatString)) {
-        return messageFormatToPrintf(formatString);
-      }
+  /** Change the FormattingParameters to a different format type if the format string
+   * doesn't match the method's expected input. Returns true if a change was made. */
+  private boolean changeFormatTypeIfRequired(FormatParameters parameters, String formatString) {
+    if (parameters.getType() == FormatType.MESSAGEFORMAT
+        && !mayBeMessageFormat(formatString) && mayBePrintfFormat(formatString)) {
+      parameters.setType(FormatType.PRINTF);
+      return true;
     }
-    return formatString;
+    if (parameters.getType() == FormatType.PRINTF
+        && !mayBePrintfFormat(formatString) && mayBeMessageFormat(formatString)) {
+      parameters.setType(FormatType.MESSAGEFORMAT);
+      return true;
+    }
+    return false;
   }
 
   private boolean mayBePrintfFormat(String formatString) {
@@ -478,37 +507,10 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
     return messageFormatGroup.matcher(formatString).find();
   }
 
-  /** Attempt to convert a printf format string into a MessageFormat one.
-   * This is far from perfect. It doesn't handle indexed printf parameters, ignores type
-   * conversion, loses formatting, may mistrigger for escaped values and doesn't
-   * care about number of arguments.
-   *
-   * However, the fix is effective most of the time (since most formats are very basic),
-   * and in any case it will be an improvement over what the user currently does.
-   */
-  private String printfToMessageFormat(String printfString) {
-    java.util.regex.Matcher matcher = printfGroup.matcher(printfString);
-
-    StringBuilder result = new StringBuilder();
-    int parameterIndex = 0;
-    int lastPosition = 0;
-    while (matcher.find()) {
-      result.append(printfString.substring(lastPosition, matcher.start()));
-      result.append("{").append(parameterIndex).append("}");
-      lastPosition = matcher.end();
-      parameterIndex++;
-    }
-    result.append(printfString.substring(lastPosition, printfString.length()));
-    return result.toString().replaceAll("'", "''");
-  }
-
-  private String messageFormatToPrintf(String messageFormat) {
-    return messageFormatGroup.matcher(messageFormat).replaceAll("%s");
-  }
-
   private static class FormatParameters {
     private FormatType type;
     private int formatIndex;
+    private String methodBase;
 
     // If the last parameter is an exception, can we move it?
     private boolean allowExceptionReordering;
@@ -538,6 +540,19 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
     FormatParameters setType(FormatType type) {
       this.type = type;
       return this;
+    }
+
+    String getMethodBase() {
+      return methodBase;
+    }
+
+    FormatParameters setMethodBase(String methodBase) {
+      this.methodBase = methodBase;
+      return this;
+    }
+
+    String getMethodName() {
+      return getMethodBase() + (type == FormatType.PRINTF ? "fmt" : "");
     }
   }
 

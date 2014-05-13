@@ -46,5 +46,7 @@ public class MisusedFormattingLoggerNegativeCases {
     logger.finer("{0} doesn't mind masked {1} if parameters match", "error-prone");
     logger.finerfmt("%1$-3s", "doesn't break indexed printf parameters.");
     logger.finestfmt("%n %%");
+    logger.severe("Test", new Object[0]);
+    logger.severe("{0} {1}", new Object[] { "a", "b" });
   }
 }
