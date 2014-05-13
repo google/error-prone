@@ -508,7 +508,7 @@ public class Matchers {
       @Override
       public boolean matches(ExpressionTree expressionTree, VisitorState state) {
         if (expressionTree.getKind() == Tree.Kind.BOOLEAN_LITERAL) {
-          return value == (boolean) (((LiteralTree) expressionTree).getValue());
+          return value == (Boolean) (((LiteralTree) expressionTree).getValue());
         }
         return false;
       }
