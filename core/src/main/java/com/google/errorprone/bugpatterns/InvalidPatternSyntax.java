@@ -30,7 +30,6 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 
@@ -42,6 +41,7 @@ import java.util.regex.PatternSyntaxException;
  */
 @BugPattern(name = "InvalidPatternSyntax",
     summary = "Invalid syntax used for a regular expression",
+    formatSummary = "Invalid syntax used for a regular expression: %s",
     explanation = "This error is triggered by calls to regex-accepting methods with invalid string "
         + "literals.  These calls would cause a PatternSyntaxException at runtime.\n\n"
         + "We deliberately do not check java.util.regex.Pattern#compile as many of its users "
@@ -101,9 +101,20 @@ public class InvalidPatternSyntax extends BugChecker implements MethodInvocation
     // TODO: Suggest fixes for more situations.
     Fix fix = Fix.NO_FIX;
     ExpressionTree arg = methodInvocationTree.getArguments().get(0);
-    if ((arg instanceof LiteralTree) && ".".equals(((LiteralTree)arg).getValue())) {
+    String value = (String) ((JCExpression) arg).type.constValue();
+    String message = "";
+
+    if (".".equals(value)) {
       fix = new SuggestedFix().replace(arg, "\"\\\\.\"");
+      message = "\".\" is a valid but useless regex";
+    } else {
+      try {
+        Pattern.compile(value);
+      } catch (PatternSyntaxException e) {
+        message = e.getMessage();
+      }
     }
-    return describeMatch(methodInvocationTree, fix);
+    return new Description(methodInvocationTree,
+        getDiagnosticMessage(message), fix, pattern.severity());
   }
 }

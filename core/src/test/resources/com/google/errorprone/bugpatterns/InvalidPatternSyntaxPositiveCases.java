@@ -16,9 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.matchers.Matchers.methodSelect;
-import static com.google.errorprone.matchers.Matchers.staticMethod;
-
 import java.util.regex.Pattern;
 
 import com.google.common.base.Splitter;
@@ -30,6 +27,13 @@ public class InvalidPatternSyntaxPositiveCases {
   public static final String INVALID = "*";
   public static final String DOT = ".";
   {
+    //BUG: Suggestion includes "Unclosed character class"
+    Pattern.matches("[^\\]", "");
+    //BUG: Suggestion includes "Unclosed character class"
+    Pattern.matches("[a-z", "");
+    //BUG: Suggestion includes "Illegal repetition"
+    Pattern.matches("{", "");
+
     //BUG: Suggestion includes ""
     Pattern.matches(INVALID, "");
     //BUG: Suggestion includes ""

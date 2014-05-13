@@ -188,7 +188,8 @@ public class DiagnosticTestHelper {
         matcher = hasItem(diagnosticOnLine(source.toUri(), lineNumber, patternToMatch));
         reader.readLine(); // skip next line -- we know it has an error
 
-        assertTrue("Did not see expected error on line " + lineNumber,
+        assertTrue(
+            "Did not see expected error on line " + lineNumber + ". All errors:\n" + diagnostics,
             matcher.matches(diagnostics));
       } else {
         // Cast is unnecessary, but javac throws an error because of poor type inference.
