@@ -114,7 +114,6 @@ public class InvalidPatternSyntax extends BugChecker implements MethodInvocation
         message = e.getMessage();
       }
     }
-    return new Description(methodInvocationTree,
-        getDiagnosticMessage(message), fix, pattern.severity());
+    return new Description(methodInvocationTree, pattern, getDiagnosticMessage(message), fix);
   }
 }
