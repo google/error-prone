@@ -17,10 +17,10 @@
 package com.google.errorprone.matchers;
 
 import static com.google.errorprone.matchers.Matchers.*;
-import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
 
 import com.google.errorprone.VisitorState;
+
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
@@ -29,6 +29,7 @@ import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.tree.JCTree;
 
 import javax.lang.model.element.Modifier;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -70,7 +71,7 @@ public class JUnitMatchers {
   public static final Matcher<ClassTree> isJUnit3TestClass = allOf(
       isSubtypeOf(JUNIT3_TEST_CASE_CLASS),
       not(hasAnnotation(JUNIT4_RUN_WITH_ANNOTATION)),
-      not(classHasModifier(Modifier.ABSTRACT)));
+      not(Matchers.<ClassTree>hasModifier(Modifier.ABSTRACT)));
 
   /**
    * Match a method which appears to be a JUnit 3 test case.
@@ -84,7 +85,7 @@ public class JUnitMatchers {
   public static final Matcher<MethodTree> isJunit3TestCase = allOf(
       methodNameStartsWith("test"),
       methodHasParameters(),
-      methodHasModifier(Modifier.PUBLIC)
+      Matchers.<MethodTree>hasModifier(Modifier.PUBLIC)
   );
 
   /**

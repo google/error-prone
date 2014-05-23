@@ -30,13 +30,14 @@ import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.JUnitMatchers.JUnit4TestClassMatcher;
+import com.google.errorprone.matchers.Matchers;
 
 import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 
-import javax.lang.model.element.Modifier;
-
 import java.util.Arrays;
+
+import javax.lang.model.element.Modifier;
 
 /**
  * TODO(eaftan): Similar checkers for setUp() and tearDown().
@@ -99,7 +100,7 @@ public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
      * just not provide suggested fixes for these few cases when the javac infrastructure gets in
      * the way.
      */
-    if (methodHasModifier(Modifier.STATIC).matches(methodTree, state)) {
+    if (Matchers.<MethodTree>hasModifier(Modifier.STATIC).matches(methodTree, state)) {
       CharSequence methodSource = state.getSourceForNode((JCMethodDecl) methodTree);
       if (methodSource != null) {
         String methodString = "@Test\n" + methodSource.toString().replaceFirst(" static ", " ");

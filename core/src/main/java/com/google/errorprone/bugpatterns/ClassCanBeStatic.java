@@ -21,7 +21,6 @@ import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.classHasModifier;
 import static com.google.errorprone.matchers.Matchers.hasIdentifier;
 import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.matchers.Matchers.nestingKind;
@@ -35,6 +34,7 @@ import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.ClassTree;
@@ -73,13 +73,13 @@ public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
       @Override
       public boolean matches(ClassTree classTree, VisitorState state) {
         return allOf(
-          not(classHasModifier(Modifier.STATIC)),
+          not(Matchers.<ClassTree>hasModifier(Modifier.STATIC)),
           kindIs(Kind.CLASS),
           nestingKind(NestingKind.MEMBER),
           parentNode(kindIs(Kind.CLASS)),
           anyOf(
               parentNode(nestingKind(NestingKind.TOP_LEVEL)),
-              parentNode(classHasModifier(Modifier.STATIC))),
+              parentNode(Matchers.<ClassTree>hasModifier(Modifier.STATIC))),
           not(hasIdentifier(ANY, referenceEnclosing(classTree, state.getTypes())))
         ).matches(classTree, state);
       }

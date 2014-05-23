@@ -694,10 +694,6 @@ public class Matchers {
     return new MethodVisibility(visibility);
   }
 
-  public static Matcher<MethodTree> methodHasModifier(final Modifier modifier) {
-    return new MethodModifier(modifier);
-  }
-
   public static Matcher<MethodTree> methodIsConstructor() {
     return new Matcher<MethodTree>() {
       @Override
@@ -705,15 +701,6 @@ public class Matchers {
         return ASTHelpers.getSymbol(methodTree).isConstructor();
       }
     };
-  }
-
-  /**
-   * Matches a class with the specified modifier
-   *
-   * @param modifier The modifier to match against, eg PUBLIC, STATIC, FINAL, etc
-   */
-  public static Matcher<ClassTree> classHasModifier(final Modifier modifier) {
-    return new ClassModifier(modifier);
   }
 
   /**

@@ -23,7 +23,6 @@ import static com.google.errorprone.matchers.JUnitMatchers.isJUnit3TestClass;
 import static com.google.errorprone.matchers.JUnitMatchers.wouldRunInJUnit4;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.enclosingClass;
-import static com.google.errorprone.matchers.Matchers.methodHasModifier;
 import static com.google.errorprone.matchers.Matchers.methodHasParameters;
 import static com.google.errorprone.matchers.Matchers.methodNameStartsWith;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
@@ -37,6 +36,7 @@ import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Matchers;
 
 import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
@@ -90,7 +90,7 @@ public class JUnit3TestNotRun extends BugChecker implements MethodTreeMatcher {
     @SuppressWarnings("unchecked")
     Matcher<MethodTree> methodMatcher = allOf(
         not(methodNameStartsWith("test")),
-        methodHasModifier(Modifier.PUBLIC),
+        Matchers.<MethodTree>hasModifier(Modifier.PUBLIC),
         methodReturns(VOID_TYPE),
         methodHasParameters(),
         enclosingClass(isJUnit3TestClass));
