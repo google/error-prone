@@ -24,9 +24,9 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.binaryTree;
 import static com.google.errorprone.matchers.Matchers.inSynchronized;
-import static com.google.errorprone.matchers.Matchers.intLiteral;
 import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.matchers.Matchers.not;
+import static com.google.errorprone.matchers.Matchers.sameVariable;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -73,19 +73,6 @@ public class IncrementDecrementVolatile extends BugChecker
     return new Matcher<UnaryTree>() {
       @Override
       public boolean matches(UnaryTree tree, VisitorState state) {
-        return exprMatcher.matches(tree.getExpression(), state);
-      }
-    };
-  }
-
-  /**
-   * Extracts the expression from a CompoundAssignmentTree and applies a matcher to it.
-   */
-  private static Matcher<CompoundAssignmentTree> expressionFromCompoundAssignmentTree(
-      final Matcher <ExpressionTree> exprMatcher) {
-    return new Matcher<CompoundAssignmentTree>() {
-      @Override
-      public boolean matches(CompoundAssignmentTree tree, VisitorState state) {
         return exprMatcher.matches(tree.getExpression(), state);
       }
     };
@@ -166,9 +153,7 @@ public class IncrementDecrementVolatile extends BugChecker
           not(inSynchronized()),
           anyOf(
               kindIs(Kind.PLUS_ASSIGNMENT),
-              kindIs(Kind.MINUS_ASSIGNMENT)),
-          // TODO(eaftan): Consider matching any int literal, not just 1
-          expressionFromCompoundAssignmentTree(intLiteral(1)));
+              kindIs(Kind.MINUS_ASSIGNMENT)));
 
 
   @Override
@@ -195,8 +180,9 @@ public class IncrementDecrementVolatile extends BugChecker
                   anyOf(
                       kindIs(Kind.PLUS),
                       kindIs(Kind.MINUS)),
-                  // TODO(eaftan): Consider matching any int literal, not just 1
-                  binaryTree(intLiteral(1), Matchers.sameVariable(variable))))));
+                  binaryTree(
+                      sameVariable(variable),
+                      Matchers.<ExpressionTree>anything())))));
   }
 
   @Override
