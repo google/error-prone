@@ -27,6 +27,7 @@ import static com.google.errorprone.matchers.Matchers.not;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -67,6 +68,9 @@ import java.util.List;
         "the Javadoc for Object.wait()].",
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
 public class WaitNotInLoop extends BugChecker implements MethodInvocationTreeMatcher {
+
+  // Since some of the fixes have formatting problems, do not supply them unless explicitly enabled.
+  private static final boolean SUPPLY_FIX = false;
 
   /**
    * Matches tree nodes that are enclosed in a loop before hitting a synchronized block or
@@ -111,6 +115,10 @@ public class WaitNotInLoop extends BugChecker implements MethodInvocationTreeMat
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (!waitMatcher.matches(tree, state)) {
       return Description.NO_MATCH;
+    }
+    
+    if (!SUPPLY_FIX) {
+      return describeMatch(tree, Fix.NO_FIX);
     }
 
     SuggestedFix fix = new SuggestedFix();
@@ -166,5 +174,4 @@ public class WaitNotInLoop extends BugChecker implements MethodInvocationTreeMat
 
     return describeMatch(tree, fix);
   }
-
 }
