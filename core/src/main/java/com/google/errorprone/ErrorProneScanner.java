@@ -136,7 +136,8 @@ public class ErrorProneScanner extends Scanner {
       Finally.class,
       StaticAccessedFromInstance.class,
       ArrayHashCode.class,
-      PrimitiveArrayPassedToVarargsMethod.class
+      PrimitiveArrayPassedToVarargsMethod.class,
+      IncrementDecrementVolatile.class
   );
 
   /**

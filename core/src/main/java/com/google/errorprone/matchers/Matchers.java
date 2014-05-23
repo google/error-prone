@@ -32,6 +32,7 @@ import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.SynchronizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
@@ -515,6 +516,18 @@ public class Matchers {
     };
   }
 
+  public static Matcher<ExpressionTree> intLiteral(final int value) {
+    return new Matcher<ExpressionTree>() {
+      @Override
+      public boolean matches(ExpressionTree expressionTree, VisitorState state) {
+        if (expressionTree.getKind() == Kind.INT_LITERAL) {
+          return ((Integer) ((LiteralTree) expressionTree).getValue()).equals(value);
+        }
+        return false;
+      }
+    };
+  }
+
   /**
    * Matches an Annotation AST node if the argument to the annotation with the given name has a value which
    * matches the given matcher.
@@ -798,7 +811,7 @@ public class Matchers {
    * Supports member method invocations and field accesses.
    */
   public static Matcher<ExpressionTree> selectedIsInstance() {
-    return new Matcher<ExpressionTree> () {
+    return new Matcher<ExpressionTree>() {
       @Override
       public boolean matches(ExpressionTree expr, VisitorState state) {
         if (!(expr instanceof JCFieldAccess)) {
@@ -811,6 +824,19 @@ public class Matchers {
         }
         Symbol sym = ASTHelpers.getSymbol(selected);
         return sym instanceof VarSymbol;
+      }
+    };
+  }
+
+  /**
+   * Returns true if the Tree node has the expected {@code Modifier}.
+   */
+  public static <T extends Tree> Matcher<T> hasModifier(final Modifier modifier) {
+    return new Matcher<T>() {
+      @Override
+      public boolean matches(T tree, VisitorState state) {
+        Symbol sym = ASTHelpers.getSymbol(tree);
+        return sym != null && sym.getModifiers().contains(modifier);
       }
     };
   }
@@ -829,5 +855,63 @@ public class Matchers {
 
   static Matcher<Tree> isSymbol(java.lang.Class symbolClass) {
     return new IsSymbol(symbolClass);
+  }
+
+  /**
+   * Safely adapts a matcher on a subtype of Tree into a matcher on Tree.  Fails if the tree
+   * node passed in is not an instance of the subtype, or the if the matcher does not match.
+   *
+   * @param returnTypeParam Type parameter of the Matcher that will be returned
+   * @param matcherTypeParam Type parameter of the Matcher passed in
+   * @param matcher The matcher to apply to the tree node
+   */
+  public static <S extends Tree, T extends S> Matcher<S> adaptMatcherType(
+      final Class<S> returnTypeParam, final Class<T> matcherTypeParam, final Matcher<T> matcher) {
+    return new Matcher<S>() {
+      @Override
+      public boolean matches(S tree, VisitorState state) {
+        if (matcherTypeParam.isInstance(tree)) {
+          return matcher.matches(matcherTypeParam.cast(tree), state);
+        }
+        return false;
+      }
+    };
+  }
+
+  /**
+   * Matches if this Tree is enclosed by either a synchronized block or a synchronized method.
+   */
+  public static final <T extends Tree> Matcher<T> inSynchronized() {
+    return new Matcher<T>() {
+      @Override
+      public boolean matches(T tree, VisitorState state) {
+        SynchronizedTree synchronizedTree =
+            ASTHelpers.findEnclosingNode(state.getPath(), SynchronizedTree.class);
+        if (synchronizedTree != null) {
+          return true;
+        }
+
+        MethodTree methodTree = ASTHelpers.findEnclosingNode(state.getPath(), MethodTree.class);
+        if (methodTree != null
+            && methodTree.getModifiers().getFlags().contains(Modifier.SYNCHRONIZED)) {
+          return true;
+        }
+
+        return false;
+      }
+    };
+  }
+
+  /**
+   * Matches if this ExpressionTree refers to the same variable as the one passed into the
+   * matcher.
+   */
+  public static Matcher<ExpressionTree> sameVariable(final ExpressionTree expr) {
+    return new Matcher<ExpressionTree>() {
+      @Override
+      public boolean matches(ExpressionTree tree, VisitorState state) {
+        return ASTHelpers.sameVariable(tree, expr);
+      }
+    };
   }
 }
