@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns.threadsafety;
 import static org.junit.Assert.assertEquals;
 
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.tools.javac.api.JavacTaskImpl;
@@ -49,12 +50,12 @@ public class GuardedByBinderTest {
   @Test
   public void testInherited() throws Exception {
     assertEquals(
-        "(SELECT (THIS_LITERAL threadsafety.Test.Super) slock)",
+        "(SELECT (THIS) slock)",
         bind("Test", "slock",
             CompilationTestHelper.forSourceLines(
                 "threadsafety.Test",
                 "package threadsafety.Test;",
-                "class Super {", 
+                "class Super {",
                 "  final Object slock = new Object();",
                 "}",
                 "class Test extends Super {",
@@ -66,7 +67,7 @@ public class GuardedByBinderTest {
   @Test
   public void testFinal() throws Exception {
     assertEquals(
-        "(SELECT (THIS_LITERAL threadsafety.Test.Test) lock)",
+        "(SELECT (THIS) lock)",
         bind("Test", "lock",
             CompilationTestHelper.forSourceLines(
                 "threadsafety.Test",
@@ -81,7 +82,7 @@ public class GuardedByBinderTest {
   public void testMethod() throws Exception {
     assertEquals(
         "(SELECT (SELECT (SELECT (SELECT (SELECT (SELECT "
-            + "(THIS_LITERAL threadsafety.Test.Test) s) f) g()) f) g()) lock)",
+            + "(THIS) s) f) g()) f) g()) lock)",
             bind("Test", "s.f.g().f.g().lock",
                 CompilationTestHelper.forSourceLines(
                     "threadsafety.Test",
@@ -173,7 +174,7 @@ public class GuardedByBinderTest {
   @Test
   public void outer_lock() throws Exception {
     assertEquals(
-        "(SELECT (THIS_LITERAL threadsafety.Test.Outer) lock)",
+        "(SELECT (QUALIFIED_THIS threadsafety.Test.Outer) lock)",
         bind("Test", "Outer.this.lock",
             CompilationTestHelper.forSourceLines(
                 "threadsafety.Test",
@@ -188,7 +189,7 @@ public class GuardedByBinderTest {
   @Test
   public void outer_lock_simpleName() throws Exception {
     assertEquals(
-        "(SELECT (THIS_LITERAL threadsafety.Test.Outer) lock)",
+        "(SELECT (QUALIFIED_THIS threadsafety.Test.Outer) lock)",
         bind("Test", "lock",
             CompilationTestHelper.forSourceLines(
                 "threadsafety.Test",
@@ -221,7 +222,7 @@ public class GuardedByBinderTest {
   @Test
   public void simpleName() throws Exception {
     assertEquals(
-        "(SELECT (SELECT (THIS_LITERAL threadsafety.Test.Test) Other) lock)",
+        "(SELECT (TYPE_LITERAL threadsafety.Test.Other) lock)",
         bind("Test", "Other.lock",
             CompilationTestHelper.forSourceLines(
                 "threadsafety.Test",
@@ -258,7 +259,7 @@ public class GuardedByBinderTest {
   @Test
   public void simpleFieldName() throws Exception {
     assertEquals(
-        "(SELECT (THIS_LITERAL threadsafety.Test.Test) Other)",
+        "(SELECT (THIS) Other)",
         bind("Test", "Other",
             CompilationTestHelper.forSourceLines(
                 "threadsafety.Test",
@@ -340,7 +341,7 @@ public class GuardedByBinderTest {
               "}"
           ));
   }
-  
+
   //TODO(cushon): disallow non-final lock expressions
   @Ignore
   @Test
@@ -374,7 +375,7 @@ public class GuardedByBinderTest {
 
   private JavaFileManager fileManager = CompilationTestHelper.getFileManager(null, null, null);
 
-  private void bindFail(String className, String exprString, JavaFileObject fileObject) 
+  private void bindFail(String className, String exprString, JavaFileObject fileObject)
       throws IOException {
     try {
       bind(className, exprString, fileObject);
@@ -382,7 +383,7 @@ public class GuardedByBinderTest {
     }
   }
 
-  private String bind(String className, String exprString, JavaFileObject fileObject) 
+  private String bind(String className, String exprString, JavaFileObject fileObject)
       throws IOException {
     JavaCompiler javaCompiler = ToolProvider.getSystemJavaCompiler();
     JavacTaskImpl task = (JavacTaskImpl) javaCompiler.getTask(new PrintWriter(System.err, true),
@@ -394,9 +395,14 @@ public class GuardedByBinderTest {
       finder.visitTopLevel((JCTree.JCCompilationUnit) compilationUnit);
       for (JCTree.JCClassDecl classDecl : finder.decls) {
         if (classDecl.getSimpleName().contentEquals(className)) {
-          GuardedBySymbolResolver resolver = GuardedBySymbolResolver.from(
-              classDecl.sym, (JCTree.JCCompilationUnit) compilationUnit, task.getContext(), null);
-          return GuardedByBinder.bindString(exprString, resolver, task.getContext()).debugPrint();
+          GuardedByExpression guardExpression = GuardedByBinder.bindString(
+              exprString,
+              GuardedBySymbolResolver.from(
+                  ASTHelpers.getSymbol(classDecl),
+                  compilationUnit,
+                  task.getContext(),
+                  /*leaf=*/null));
+          return guardExpression.debugPrint();
         }
       }
     }

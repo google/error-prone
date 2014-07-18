@@ -21,6 +21,7 @@ import static com.google.errorprone.matchers.Matchers.isDescendantOfMethod;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
 
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Kind;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Select;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
@@ -31,6 +32,7 @@ import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.SynchronizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
@@ -38,13 +40,13 @@ import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCExpression;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 
 /**
@@ -58,10 +60,10 @@ public class HeldLockAnalyzer {
    * Listener interface for accesses to guarded members.
    */
   public interface LockEventListener {
-    
+
     /**
      * Handle a guarded member access.
-     * 
+     *
      * @param tree The member access expression.
      * @param guard The member's guard expression.
      * @param locks The set of held locks.
@@ -96,7 +98,7 @@ public class HeldLockAnalyzer {
       if (mods.contains(Modifier.SYNCHRONIZED)) {
         Symbol owner = (((JCTree.JCMethodDecl) tree).sym.owner);
         GuardedByExpression lock =
-            mods.contains(Modifier.STATIC) ? F.classLiteral(owner) : F.thisliteral(owner);
+            mods.contains(Modifier.STATIC) ? F.classLiteral(owner) : F.thisliteral();
         locks = locks.plus(lock);
       }
 
@@ -104,12 +106,10 @@ public class HeldLockAnalyzer {
       // for invocations.
       String guard = GuardedByUtils.getGuardValue(tree);
       if (guard != null) {
-        Symbol enclosingClass = ASTHelpers.getSymbol(tree).owner;
         GuardedByExpression bound;
         try {
-          bound = GuardedByBinder.bindString(guard,
-              GuardedBySymbolResolver.fromVisitorState(enclosingClass, visitorState),
-              visitorState.context);
+          bound =
+              GuardedByBinder.bindString(guard, GuardedBySymbolResolver.from(tree, visitorState));
           locks = locks.plus(bound);
         } catch (IllegalGuardedBy unused) {
           // Errors about bad @GuardedBy expressions are handled earlier.
@@ -141,7 +141,7 @@ public class HeldLockAnalyzer {
       // The synchronized expression is held in the body of the synchronized statement:
       scan(tree.getBlock(),
           locks.plus(GuardedByBinder.bindExpression(
-              ((JCTree.JCParens) tree.getExpression()).getExpression())));
+              ((JCTree.JCParens) tree.getExpression()).getExpression(), visitorState)));
       return null;
     }
 
@@ -157,6 +157,13 @@ public class HeldLockAnalyzer {
       return super.visitIdentifier(tree, p);
     }
 
+    @Override
+    public Void visitNewClass(NewClassTree tree, HeldLockSet p) {
+      // Don't visit into anonymous class declarations; their method declarations
+      // will be analyzed separately.
+      return null;
+    }
+
     private void checkMatch(ExpressionTree tree, HeldLockSet locks) {
       String guardString = GuardedByUtils.getGuardValue(tree);
       if (guardString == null) {
@@ -165,14 +172,9 @@ public class HeldLockAnalyzer {
 
       GuardedByExpression boundGuard = null;
       try {
-        GuardedBySymbolResolver context = GuardedBySymbolResolver.from(
-            ASTHelpers.getSymbol(tree).owner,
-            (JCTree.JCCompilationUnit) getCurrentPath().getCompilationUnit(),
-            visitorState.context,
-            null);
-        GuardedByExpression guard =
-            GuardedByBinder.bindString(guardString, context, visitorState.context);
-        boundGuard = ExpectedLockCalculator.from((JCTree.JCExpression) tree, guard);
+        GuardedByExpression guard = GuardedByBinder.bindString(guardString,
+            GuardedBySymbolResolver.from(tree, visitorState));
+        boundGuard = ExpectedLockCalculator.from((JCTree.JCExpression) tree, guard, visitorState);
       } catch (IllegalGuardedBy unused) {
         // Errors about bad @GuardedBy expressions are handled earlier.
       }
@@ -226,7 +228,7 @@ public class HeldLockAnalyzer {
     @Override
     public Void visitMethodInvocation(MethodInvocationTree tree, Void p) {
       if (LOCK_RELEASE_MATCHER.matches(tree, state)) {
-        GuardedByExpression node = GuardedByBinder.bindExpression((JCTree.JCExpression) tree);
+        GuardedByExpression node = GuardedByBinder.bindExpression((JCExpression) tree, state);
         GuardedByExpression receiver = ((GuardedByExpression.Select) node).base;
         locks.add(receiver);
 
@@ -237,7 +239,8 @@ public class HeldLockAnalyzer {
         // practice the write lock is frequently held while performing a mutating operation on the
         // object stored in the field (e.g. inserting into a List).
         // TODO(cushon): investigate a better way to specify the contract for ReadWriteLocks.
-        if (READ_WRITE_RELEASE_MATCHER.matches(ASTHelpers.getReceiver(tree), state)) {
+        if ((tree.getMethodSelect() instanceof MemberSelectTree)
+            && READ_WRITE_RELEASE_MATCHER.matches(ASTHelpers.getReceiver(tree), state)) {
           locks.add(((Select) receiver).base);
         }
       }
@@ -268,17 +271,53 @@ public class HeldLockAnalyzer {
      * }
      * </code>
      *
-     * To determine the lock that must be held when accessing myClass.x, 
+     * To determine the lock that must be held when accessing myClass.x,
      * from is called with "myClass.x" and "mu", and returns "myClass.mu".
      */
     static GuardedByExpression from(
-        JCTree.JCExpression guardedMemberExpression, GuardedByExpression guard) {
-      if (guard.sym().isStatic() || guard.sym().getKind() == ElementKind.CLASS) {
+        JCTree.JCExpression guardedMemberExpression, 
+        GuardedByExpression guard, 
+        VisitorState state) {
+
+      if (isGuardReferenceAbsolute(guard)) {
         return guard;
       }
 
-      GuardedByExpression guardedMember = GuardedByBinder.bindExpression(guardedMemberExpression);
-      return helper(guard, ((GuardedByExpression.Select) guardedMember).base);
+      GuardedByExpression guardedMember =
+          GuardedByBinder.bindExpression(guardedMemberExpression, state);
+      GuardedByExpression memberBase = ((GuardedByExpression.Select) guardedMember).base;
+      return helper(guard, memberBase);
+    }
+
+    /**
+     * Returns true for guard expressions that require an 'absolute' reference, i.e. where the
+     * expression to access the lock is always the same, regardless of how the guarded member
+     * is accessed.
+     *
+     * <p>E.g.:
+     * <ul><li>class object: 'TypeName.class'
+     * <li>static access: 'TypeName.member'
+     * <li>enclosing instance: 'Outer.this'
+     * <li>enclosing instance member: 'Outer.this.member'
+     * </ul>
+     */
+    private static boolean isGuardReferenceAbsolute(GuardedByExpression guard) {
+
+      GuardedByExpression instance = guard.kind() == Kind.SELECT
+          ? getSelectInstance(guard)
+          : guard;
+
+      return instance.kind() != Kind.THIS;
+    }
+
+    /**
+     * Get the base expression of a (possibly nested) member select expression.
+     */
+    private static GuardedByExpression getSelectInstance(GuardedByExpression guard) {
+      if (guard instanceof Select) {
+        return getSelectInstance(((Select) guard).base);
+      }
+      return guard;
     }
 
     private static GuardedByExpression helper(
@@ -288,7 +327,7 @@ public class HeldLockAnalyzer {
           GuardedByExpression.Select lockSelect = (GuardedByExpression.Select) lockExpression;
           return F.select(helper(lockSelect.base, memberAccess), lockSelect.sym());
         }
-        case THIS_LITERAL:
+        case THIS:
           return memberAccess;
         default:
           throw new IllegalGuardedBy(lockExpression.toString());

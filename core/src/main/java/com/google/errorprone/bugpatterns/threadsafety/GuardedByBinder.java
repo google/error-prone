@@ -16,17 +16,20 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
+import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Kind;
 import com.google.errorprone.util.ASTHelpers;
 
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.util.Context;
 
 import javax.lang.model.element.Name;
 
@@ -40,19 +43,46 @@ public class GuardedByBinder {
   /**
    * Create a {@link GuardedByExpression} from a bound AST node.
    */
-  public static GuardedByExpression bindExpression(JCTree.JCExpression exp) {
-    return bind(exp, ALREADY_BOUND_RESOLVER);
+  public static GuardedByExpression bindExpression(
+      JCTree.JCExpression exp, VisitorState visitorState) {
+    return bind(
+        exp,
+        BinderContext.of(
+            ALREADY_BOUND_RESOLVER,
+            ASTHelpers.getSymbol(visitorState.findEnclosing(ClassTree.class)),
+            visitorState.getTypes()));
   }
 
   /**
    * Create a {@link GuardedByExpression} from a string, given the resolution context.
    */
-  public static GuardedByExpression bindString(String exp, Resolver resolver, Context context) {
-    return bind(GuardedByUtils.parseString(exp, context), resolver);
+  static GuardedByExpression bindString(String string, GuardedBySymbolResolver resolver) {
+    return bind(
+        GuardedByUtils.parseString(string, resolver.context()),
+        BinderContext.of(
+            resolver,
+            resolver.enclosingClass(),
+            Types.instance(resolver.context())));
   }
 
-  private static GuardedByExpression bind(JCTree.JCExpression exp, Resolver resolver) {
-    GuardedByExpression expr = BINDER.visit(exp, resolver);
+  private static class BinderContext {
+    final Resolver resolver;
+    final ClassSymbol thisClass;
+    final Types types;
+
+    public BinderContext(Resolver resolver, ClassSymbol thisClass, Types types) {
+     this.resolver = resolver;
+     this.thisClass = thisClass;
+     this.types = types;
+    }
+
+    public static BinderContext of(Resolver resolver, ClassSymbol thisClass, Types types) {
+      return new BinderContext(resolver, thisClass, types);
+    }
+  }
+
+  private static GuardedByExpression bind(JCTree.JCExpression exp, BinderContext context) {
+    GuardedByExpression expr = BINDER.visit(exp, context);
     if (expr == null) {
       throw new IllegalGuardedBy(exp.toString());
     }
@@ -80,6 +110,8 @@ public class GuardedByBinder {
     Symbol resolveSelect(GuardedByExpression base, MemberSelectTree node);
 
     Symbol resolveTypeLiteral(ExpressionTree expression);
+
+    Symbol resolveEnclosingClass(ExpressionTree expression);
   }
 
   /**
@@ -111,16 +143,21 @@ public class GuardedByBinder {
     public Symbol resolveTypeLiteral(ExpressionTree expression) {
       return ASTHelpers.getSymbol(expression);
     }
+
+    @Override
+    public Symbol resolveEnclosingClass(ExpressionTree expression) {
+      return ASTHelpers.getSymbol(expression);
+    }
   };
 
   private static final GuardedByExpression.Factory F = new GuardedByExpression.Factory();
 
-  private static final SimpleTreeVisitor<GuardedByExpression, Resolver> BINDER =
-      new SimpleTreeVisitor<GuardedByExpression, Resolver>() {
+  private static final SimpleTreeVisitor<GuardedByExpression, BinderContext> BINDER =
+      new SimpleTreeVisitor<GuardedByExpression, BinderContext>() {
 
         @Override
         public GuardedByExpression visitMethodInvocation(MethodInvocationTree node,
-            Resolver resolver) {
+            BinderContext context) {
           if (!node.getArguments().isEmpty() || !node.getTypeArguments().isEmpty()) {
             throw new IllegalGuardedBy("Only nullary methods are allowed.");
           }
@@ -128,19 +165,18 @@ public class GuardedByBinder {
           switch (methodSelect.getKind()) {
             case IDENTIFIER: {
               IdentifierTree identifier = (IdentifierTree) methodSelect;
-              Symbol.MethodSymbol method = resolver.resolveMethod(node, identifier.getName());
-              GuardedByExpression base =
-                  method.isStatic() ? F.typeLiteral(method.owner) : F.thisliteral(method.owner);
-              return bindSelect(base, method);
+              Symbol.MethodSymbol method =
+                  context.resolver.resolveMethod(node, identifier.getName());
+              return bindSelect(computeBase(context, method), method);
             }
             case MEMBER_SELECT: {
               MemberSelectTree select = (MemberSelectTree) methodSelect;
-              GuardedByExpression base = visit(select.getExpression(), resolver);
+              GuardedByExpression base = visit(select.getExpression(), context);
               if (base == null) {
                 throw new IllegalGuardedBy(select.getExpression().toString());
               }
               Symbol.MethodSymbol method =
-                  resolver.resolveMethod(node, base, select.getIdentifier());
+                  context.resolver.resolveMethod(node, base, select.getIdentifier());
               return bindSelect(base, method);
             }
             default:
@@ -149,27 +185,30 @@ public class GuardedByBinder {
         }
 
         @Override
-        public GuardedByExpression visitMemberSelect(MemberSelectTree node, Resolver resolver) {
+        public GuardedByExpression visitMemberSelect(
+            MemberSelectTree node,
+            BinderContext context) {
+
           String name = node.getIdentifier().toString();
 
           if (name.equals("this")) {
-            Symbol base = resolver.resolveTypeLiteral(node.getExpression());
-            return F.thisliteral(base);
+            Symbol base = context.resolver.resolveEnclosingClass(node.getExpression());
+            return F.qualifiedThis(base);
           }
 
           if (name.equals("class")) {
-            Symbol base = resolver.resolveTypeLiteral(node.getExpression());
+            Symbol base = context.resolver.resolveTypeLiteral(node.getExpression());
             return F.classLiteral(base);
           }
 
-          GuardedByExpression base = visit(node.getExpression(), resolver);
+          GuardedByExpression base = visit(node.getExpression(), context);
           if (base == null) {
             throw new IllegalGuardedBy("Bad expression: " + node.getExpression());
           }
-          Symbol sym = resolver.resolveSelect(base, node);
+          Symbol sym = context.resolver.resolveSelect(base, node);
           if (sym == null) {
             throw new IllegalGuardedBy("Could not resolve: " + node);
-          } 
+          }
           if (sym instanceof Symbol.VarSymbol) {
             return bindSelect(base, sym);
           } else {
@@ -188,8 +227,8 @@ public class GuardedByBinder {
         }
 
         @Override
-        public GuardedByExpression visitIdentifier(IdentifierTree node, Resolver resolver) {
-          Symbol symbol = resolver.resolveIdentifier(node);
+        public GuardedByExpression visitIdentifier(IdentifierTree node, BinderContext context) {
+          Symbol symbol = context.resolver.resolveIdentifier(node);
           if (symbol instanceof Symbol.VarSymbol) {
             Symbol.VarSymbol varSymbol = (Symbol.VarSymbol) symbol;
             switch (varSymbol.getKind()) {
@@ -198,30 +237,61 @@ public class GuardedByBinder {
                 return F.localVariable(varSymbol);
               case FIELD: {
                 if (symbol.name.contentEquals("this")) {
-                  return F.thisliteral(symbol.owner);
+                  return F.thisliteral();
                 }
-                GuardedByExpression base = symbol.isStatic()
-                    ? F.typeLiteral(varSymbol.owner)
-                    : F.thisliteral(varSymbol.owner);
-                return F.select(base, varSymbol);
+                return F.select(computeBase(context, varSymbol), varSymbol);
               }
               default:
                 throw new IllegalGuardedBy(varSymbol.getKind().toString());
             }
           } else if (symbol instanceof Symbol.MethodSymbol) {
             Symbol.MethodSymbol methodSymbol = (Symbol.MethodSymbol) symbol;
-            GuardedByExpression base = symbol.isStatic()
-                ? F.classLiteral(methodSymbol.owner)
-                : F.thisliteral(methodSymbol.owner);
-            return F.select(base, methodSymbol);
+            return F.select(computeBase(context, symbol), methodSymbol);
           } else if (symbol instanceof Symbol.ClassSymbol) {
             if (node.getName().contentEquals("this")) {
-              return F.thisliteral(symbol);
+              return F.thisliteral();
             } else {
               return F.typeLiteral(symbol);
             }
           }
           throw new IllegalGuardedBy(symbol.getClass().toString());
+        }
+
+        /**
+         * Determine the implicit receiver of a select expression that accesses the given
+         * symbol by simple name in the given resolution context.
+         *
+         * Returns a type name (for static accesses), a qualified this access (for members
+         * of a lexically enclosing scope), or a 'simple' this access for members
+         * of the current class.
+         */
+        private GuardedByExpression computeBase(BinderContext context, Symbol symbol) {
+          if (symbol.isStatic()) {
+            return F.typeLiteral(symbol.owner);
+          }
+
+          if (symbol.isMemberOf(context.thisClass.type.tsym, context.types)) {
+            return F.thisliteral();
+          }
+
+          Symbol lexicalOwner = isEnclosedIn(context.thisClass, symbol, context.types);
+          if (lexicalOwner != null) {
+            return F.qualifiedThis(lexicalOwner);
+          }
+
+          throw new IllegalStateException();
+        }
+
+        /**
+         * Returns the owner if the given member is declared in a lexically enclosing scope.
+         */
+        private Symbol isEnclosedIn(ClassSymbol startingClass, Symbol member, Types types) {
+          for (Symbol scope = startingClass.owner; scope != null; scope = scope.owner) {
+            if (member.isMemberOf(scope.type.tsym, types)) {
+              return scope;
+            }
+          }
+          return null;
         }
       };
 }

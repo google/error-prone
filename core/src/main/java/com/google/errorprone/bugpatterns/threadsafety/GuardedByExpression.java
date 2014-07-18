@@ -29,11 +29,11 @@ import com.sun.tools.javac.code.Type;
 public abstract class GuardedByExpression {
 
   /**
-   * A 'this' literal: [ClassName.]this
+   * A qualified this expression: [ClassName.]this
    */
-  public static class ThisLiteral extends BaseNode {
-    ThisLiteral(Symbol owner) {
-      super(Kind.THIS_LITERAL, owner);
+  public static class QualifiedThis extends BaseNode {
+    QualifiedThis(Symbol owner) {
+      super(Kind.QUALIFIED_THIS, owner);
     }
   }
 
@@ -62,6 +62,31 @@ public abstract class GuardedByExpression {
     LocalVariable(Symbol.VarSymbol varSymbol) {
       super(Kind.LOCAL_VARIABLE, varSymbol);
     }
+  }
+
+  /**
+   * A simple 'this literal.
+   */
+  public static class ThisLiteral extends GuardedByExpression {
+
+    static final ThisLiteral INSTANCE = new ThisLiteral();
+
+    @Override
+    public Kind kind() {
+      return Kind.THIS;
+    }
+
+    @Override
+    public Symbol sym() {
+      return null;
+    }
+
+    @Override
+    public Type type() {
+      return null;
+    }
+
+    private ThisLiteral() {}
   }
 
   /**
@@ -128,8 +153,12 @@ public abstract class GuardedByExpression {
 
   /** Makes {@link GuardedByExpression}s. */
   public static class Factory {
-    ThisLiteral thisliteral(Symbol owner) {
-      return new ThisLiteral(owner);
+    ThisLiteral thisliteral() {
+      return ThisLiteral.INSTANCE;
+    }
+
+    QualifiedThis qualifiedThis(Symbol owner) {
+      return new QualifiedThis(owner);
     }
 
     ClassLiteral classLiteral(Symbol clazz) {
@@ -152,19 +181,27 @@ public abstract class GuardedByExpression {
     }
 
     Select select(GuardedByExpression base, Symbol.VarSymbol member) {
-      return new Select(base, member, member.type);
+      return normalizedSelect(base, member, member.type);
     }
 
     Select select(GuardedByExpression base, Symbol.MethodSymbol member) {
-      return new Select(base, member, member.getReturnType());
+      return normalizedSelect(base, member, member.getReturnType());
+    }
+
+    GuardedByExpression select(GuardedByExpression base, Select select) {
+      return normalizedSelect(base, select.sym, select.type);
+    }
+
+    /** Normalize static accesses so they are not performed on instances. */
+    private Select normalizedSelect(GuardedByExpression base, Symbol member, Type type) {
+      if (member.isStatic()) {
+        return new Select(typeLiteral(member.owner), member, type);
+      }
+      return new Select(base, member, type);
     }
 
     LocalVariable localVariable(Symbol.VarSymbol varSymbol) {
       return new LocalVariable(varSymbol);
-    }
-
-    public GuardedByExpression select(GuardedByExpression base, Select select) {
-      return new Select(base, select.sym, select.type);
     }
   }
 
@@ -176,7 +213,7 @@ public abstract class GuardedByExpression {
 
   /** {@link GuardedByExpression} kind. */
   public static enum Kind {
-    THIS_LITERAL, CLASS_LITERAL, TYPE_LITERAL, LOCAL_VARIABLE, SELECT;
+    THIS, CLASS_LITERAL, TYPE_LITERAL, LOCAL_VARIABLE, SELECT, QUALIFIED_THIS;
   }
 
   private abstract static class BaseNode extends GuardedByExpression {
@@ -242,7 +279,7 @@ public abstract class GuardedByExpression {
       return result;
     }
   }
-  
+
   @Override
   public String toString() {
     return PrettyPrinter.print(this);
@@ -264,11 +301,18 @@ public abstract class GuardedByExpression {
 
     private static void pprint(GuardedByExpression exp, StringBuilder sb) {
       switch (exp.kind()) {
-        case TYPE_LITERAL:
         case CLASS_LITERAL:
-        case THIS_LITERAL:
+          sb.append(String.format("%s.class", exp.sym().name));
+          break;
+        case THIS:
+          sb.append("this");
+          break;
+        case QUALIFIED_THIS:
+          sb.append(String.format("%s.this", exp.sym().name));
+          break;
+        case TYPE_LITERAL:
         case LOCAL_VARIABLE:
-          sb.append(exp.sym());
+          sb.append(exp.sym().name);
           break;
         case SELECT:
           pprintSelect((Select) exp, sb);
@@ -278,10 +322,10 @@ public abstract class GuardedByExpression {
 
     private static void pprintSelect(Select exp, StringBuilder sb) {
       pprint(exp.base, sb);
-      sb.append(String.format(".%s", exp.sym));
+      sb.append(String.format(".%s", exp.sym().name));
     }
   }
-  
+
   /**
    * s-exp pretty printer for lock expressions.
    */
@@ -296,9 +340,12 @@ public abstract class GuardedByExpression {
       switch (exp.kind()) {
         case TYPE_LITERAL:
         case CLASS_LITERAL:
-        case THIS_LITERAL:
+        case QUALIFIED_THIS:
         case LOCAL_VARIABLE:
           sb.append(String.format("(%s %s)", exp.kind(), exp.sym()));
+          break;
+        case THIS:
+          sb.append("(THIS)");
           break;
         case SELECT:
           pprintSelect((Select) exp, sb);

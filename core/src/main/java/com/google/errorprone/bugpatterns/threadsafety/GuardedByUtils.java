@@ -20,7 +20,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.Tree;
-import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.parser.JavacParser;
 import com.sun.tools.javac.parser.ParserFactory;
 import com.sun.tools.javac.tree.JCTree;
@@ -51,7 +50,7 @@ public class GuardedByUtils {
   }
 
   public static JCTree.JCExpression parseString(String guardedByString, Context context) {
-    @SuppressWarnings("cast")  // necessary for javac7 
+    @SuppressWarnings("cast")  // necessary for javac7
     JavacParser parser = (JavacParser)
         ParserFactory.instance(context).newParser(guardedByString, false, true, false);
     JCTree.JCExpression exp;
@@ -66,18 +65,14 @@ public class GuardedByUtils {
     }
     return exp;
   }
-  
+
   public static boolean isGuardedByValid(Tree tree, VisitorState state) {
     String guard = GuardedByUtils.getGuardValue(tree);
     if (guard == null) {
       return true;
     }
-    Symbol enclosingClass = ASTHelpers.getSymbol(tree).owner;
     try {
-      GuardedByBinder.bindString(
-          guard,
-          GuardedBySymbolResolver.fromVisitorState(enclosingClass, state),
-          state.context);
+      GuardedByBinder.bindString(guard, GuardedBySymbolResolver.from(tree, state));
     } catch (IllegalGuardedBy e) {
       return false;
     }

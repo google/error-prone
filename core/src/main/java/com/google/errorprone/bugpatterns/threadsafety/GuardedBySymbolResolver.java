@@ -15,7 +15,9 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.util.ASTHelpers;
 
+import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -25,10 +27,12 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Scope;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.comp.Attr;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Name;
@@ -41,28 +45,29 @@ import javax.lang.model.element.ElementKind;
  */
 public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
 
-  private final Symbol enclosingClass;
+  private final ClassSymbol enclosingClass;
   private final Tree decl;
   private JCTree.JCCompilationUnit compilationUnit;
   private Context context;
   private final Names names;
   private Types types;
 
-  public static GuardedBySymbolResolver fromVisitorState(Symbol enclosingClass,
-      VisitorState state) {
-    return new GuardedBySymbolResolver(enclosingClass,
-        (JCTree.JCCompilationUnit) state.getPath().getCompilationUnit(), state.context,
-        state.getPath().getLeaf());
+  public static GuardedBySymbolResolver from(Tree tree, VisitorState visitorState) {
+    return GuardedBySymbolResolver.from(
+        (ClassSymbol) ASTHelpers.getSymbol(tree).owner,
+        visitorState.getPath().getCompilationUnit(),
+        visitorState.context,
+        tree);
   }
 
-  public static GuardedBySymbolResolver from(Symbol owner,
-      JCTree.JCCompilationUnit compilationUnit, Context context, Tree leaf) {
+  public static GuardedBySymbolResolver from(ClassSymbol owner,
+      CompilationUnitTree compilationUnit, Context context, Tree leaf) {
     return new GuardedBySymbolResolver(owner, compilationUnit, context, leaf);
   }
 
-  private GuardedBySymbolResolver(Symbol enclosingClass,
-      JCTree.JCCompilationUnit compilationUnit, Context context, Tree leaf) {
-    this.compilationUnit = compilationUnit;
+  private GuardedBySymbolResolver(ClassSymbol enclosingClass,
+      CompilationUnitTree compilationUnit, Context context, Tree leaf) {
+    this.compilationUnit = (JCCompilationUnit) compilationUnit;
     this.enclosingClass = enclosingClass;
     this.context = context;
     this.types = Types.instance(context);
@@ -70,6 +75,14 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
     this.decl = leaf;
   }
 
+  public Context context() {
+    return context;
+  }
+
+  public ClassSymbol enclosingClass() {
+    return enclosingClass;
+  }
+  
   private Name getName(String name) {
     return names.fromString(name);
   }
@@ -100,7 +113,7 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
       return field;
     }
 
-    Symbol type = resolveType(name);
+    Symbol type = resolveType(name, /*searchSuperTypes=*/true);
     if (type != null) {
       return type;
     }
@@ -168,7 +181,7 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
       throw new IllegalGuardedBy("bad type literal:" + expr);
     }
     IdentifierTree ident = (IdentifierTree) expr;
-    Symbol type = resolveType(ident.getName().toString());
+    Symbol type = resolveType(ident.getName().toString(), /*searchSuperTypes=*/true);
     if (type instanceof Symbol.ClassSymbol) {
       return type;
     }
@@ -179,8 +192,11 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
    * Resolve a simple name as a type. Consider super classes, lexically enclosing classes, and then
    * arbitrary types available in the current environment.
    */
-  private Symbol resolveType(String name) {
-    Symbol type = getSuperType(enclosingClass, name);
+  private Symbol resolveType(String name, boolean searchSuperTypes) {
+    Symbol type = null;
+    if (searchSuperTypes) {
+      type = getSuperType(enclosingClass, name);
+    }
     if (type == null) {
       type = getLexicallyEnclosing(enclosingClass, name);
     }
@@ -203,18 +219,36 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
   }
 
   private Symbol getLexicallyEnclosing(Symbol cs, String name) {
-    if (cs.getSimpleName().contentEquals(name)) {
-      return cs;
+    Symbol current = cs.owner;
+    while (true) {
+      if (current == null || current.getSimpleName().contentEquals(name)) {
+        return current;
+      }
+
+      if (current != current.owner && current.owner instanceof Symbol.ClassSymbol) {
+        current = current.owner;
+      } else {
+        return null;
+      }
     }
-    if (cs.owner != null && cs != cs.owner && cs.owner instanceof Symbol.ClassSymbol) {
-      return getLexicallyEnclosing(cs.owner, name);
-    }
-    return null;
   }
 
   private Symbol attribIdent(String name) {
     Attr attr = Attr.instance(context);
     TreeMaker tm = TreeMaker.instance(context);
     return attr.attribIdent(tm.Ident(getName(name)), compilationUnit);
+  }
+
+  @Override
+  public Symbol resolveEnclosingClass(ExpressionTree expr) {
+    if (!(expr instanceof IdentifierTree)) {
+      throw new IllegalGuardedBy("bad type literal:" + expr);
+    }
+    IdentifierTree ident = (IdentifierTree) expr;
+    Symbol type = resolveType(ident.getName().toString(), /*searchSuperTypes=*/false);
+    if (type instanceof Symbol.ClassSymbol) {
+      return type;
+    }
+    return null;
   }
 }
