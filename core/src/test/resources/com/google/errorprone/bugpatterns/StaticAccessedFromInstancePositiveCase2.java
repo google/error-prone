@@ -29,7 +29,8 @@ public class StaticAccessedFromInstancePositiveCase2 {
   }
   
   public int test1() {
-    // BUG: Diagnostic contains: return TestClass.staticTestMethod()
+    // BUG: Diagnostic contains: method staticTestMethod
+    // return TestClass.staticTestMethod()
     return new TestClass().staticTestMethod();
   }
 

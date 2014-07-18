@@ -102,7 +102,7 @@ public class ASTHelpers {
 
   /**
    * Gets the symbol for a tree. Returns null if this tree does not have a symbol because it is
-   * of the wrong type.
+   * of the wrong type, or if {@code tree} is null.
    */
   // TODO(eaftan): refactor other code that accesses symbols to use this method
   public static Symbol getSymbol(Tree tree) {

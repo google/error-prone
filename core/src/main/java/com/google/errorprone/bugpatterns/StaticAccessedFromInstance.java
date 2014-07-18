@@ -29,7 +29,6 @@ import static com.google.errorprone.matchers.Matchers.staticMethod;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MemberSelectTreeMatcher;
-import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -38,21 +37,20 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
-import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
-import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 @BugPattern(name = "StaticAccessedFromInstance",
-    summary = "A static variable or method should not be accessed from an instance",
-    explanation =
-        "A static variable or method should never be accessed from an instance.  This hides the " +
-        "fact that the variable or method is static and not an instance variable or method.",
+    summary = "A static variable or method should not be accessed from an object instance",
+    formatSummary = "Static %s %s should not be accessed from an object instance; instead use %s",
+    explanation = "A static variable or method should never be accessed from an instance.  This "
+        + "hides the fact that the variable or method is static and does not depend on the value "
+        + "of the object instance on which this variable or method is being invoked.",
     category = JDK, severity = ERROR, maturity = MATURE, altNames = "static")
 public class StaticAccessedFromInstance extends BugChecker implements MemberSelectTreeMatcher {
 
@@ -70,50 +68,51 @@ public class StaticAccessedFromInstance extends BugChecker implements MemberSele
       return Description.NO_MATCH;
     }
 
-    return describeMatch(tree, getSuggestedFix(tree, state));
-  }
-
-  private static Fix getSuggestedFix(MemberSelectTree tree, VisitorState state) {
-    MethodInvocationTree methodInvocationTree = null;
-    Tree parentNode = state.getPath().getParentPath().getLeaf();
-    if (parentNode.getKind() == Kind.METHOD_INVOCATION) {
-      methodInvocationTree = (MethodInvocationTree) parentNode;
+    // Is the static member being accessed a method or a variable?
+    Symbol staticMemberSym = ASTHelpers.getSymbol(tree);
+    if (staticMemberSym == null) {
+      return Description.NO_MATCH;
     }
+    boolean isMethod = staticMemberSym instanceof MethodSymbol;
 
-    JCFieldAccess fieldAccess = (JCFieldAccess) tree;
-
-    // Get class symbol for the owner of the variable that was accessed.
-    Symbol ownerSym = ASTHelpers.getSymbol(fieldAccess).owner;
-    if (!(ownerSym instanceof ClassSymbol)) {
-      return null;
+    // Is the static member defined in this class?
+    Symbol ownerSym = staticMemberSym.owner;
+    Symbol whereAccessedSym = ASTHelpers.getSymbol(
+        ASTHelpers.findEnclosingNode(state.getPath().getParentPath(), ClassTree.class));
+    if (!(ownerSym instanceof ClassSymbol && whereAccessedSym instanceof ClassSymbol)) {
+      return Description.NO_MATCH;
     }
-
-    // Get class symbol for the class we are currently analyzing.
-    Tree classDecl = ASTHelpers.findEnclosingNode(state.getPath().getParentPath(), ClassTree.class);
-    if (classDecl == null) {
-      return null;
-    }
-    Symbol currClassSym = ASTHelpers.getSymbol(classDecl);
-    if (!(currClassSym instanceof ClassSymbol)) {
-      return null;
-    }
+    boolean staticMemberDefinedHere = whereAccessedSym.equals(ownerSym);
 
     SuggestedFix fix = new SuggestedFix();
-    if (currClassSym.equals(ownerSym) && methodInvocationTree != null) {
-      // If owner is the same as the current class, then just use the bare method name. Don't do
-      // this for fields, because they may share a simple name with a local in the same scope.
-      fix.replace(tree, fieldAccess.getIdentifier().toString());
+    String replacement;
+    if (staticMemberDefinedHere && isMethod) {
+      // If the static member is defined in the enclosing class and the member is a method, then
+      // just use the bare method name. Don't do this for fields, because they may share a simple
+      // name with a local in the same scope.
+      // TODO(eaftan): If we had access to name resolution info, we could do this in all applicable
+      // cases.  Investigate Scope.Entry for this.
+      replacement = tree.getIdentifier().toString();
     } else {
       // Replace the operand of the field access expression with the simple name of the class.
-      Symbol packageSym = ownerSym.packge();
-      fix.replace(fieldAccess.getExpression(), ownerSym.getSimpleName().toString());
+      replacement = ownerSym.getSimpleName().toString() + "." + tree.getIdentifier();
 
       // Don't import implicitly imported packages (java.lang.* and current package).
       // TODO(cushon): move this logic into addImport?
-      if (!packageSym.toString().equals("java.lang") && !packageSym.equals(currClassSym.packge())) {
+      Symbol packageSym = ownerSym.packge();
+      if (!packageSym.toString().equals("java.lang")
+          && !packageSym.equals(whereAccessedSym.packge())) {
         fix.addImport(ownerSym.toString());
       }
     }
-    return fix;
+    fix.replace(tree, replacement);
+
+    // Compute strings to interpolate into diagnostic message.
+    String memberName = staticMemberSym.getSimpleName().toString();
+    String methodOrVariable = isMethod ? "method" : "variable";
+
+    String customDiagnosticMessage = getDiagnosticMessage(
+        methodOrVariable, memberName, replacement);
+    return new Description(tree, pattern, customDiagnosticMessage, fix);
   }
 }

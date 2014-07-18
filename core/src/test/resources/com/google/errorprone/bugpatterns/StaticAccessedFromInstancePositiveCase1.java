@@ -60,55 +60,71 @@ public class StaticAccessedFromInstancePositiveCase1 {
     StaticAccessedFromInstancePositiveCase1 testObj = new StaticAccessedFromInstancePositiveCase1();
     int i;
     
-    // BUG: Diagnostic contains: i = StaticAccessedFromInstancePositiveCase1.staticVar1
+    // BUG: Diagnostic contains: variable staticVar1
+    // i = StaticAccessedFromInstancePositiveCase1.staticVar1 
     i = this.staticVar1;
-    // BUG: Diagnostic contains: i = StaticAccessedFromInstancePositiveCase1.staticVar1
+    // BUG: Diagnostic contains: variable staticVar1
+    // i = StaticAccessedFromInstancePositiveCase1.staticVar1
     i = testObj.staticVar1;
-    // BUG: Diagnostic contains: i = StaticAccessedFromInstancePositiveCase1.staticVar1
+    // BUG: Diagnostic contains: variable staticVar1 
+    // i = StaticAccessedFromInstancePositiveCase1.staticVar1
     i = testObj.next.next.next.staticVar1;
   }
   
   public void test2() {
     int i;
     Integer integer = new Integer(1);
-    // BUG: Diagnostic contains: i = Integer.MAX_VALUE
+    // BUG: Diagnostic contains: variable MAX_VALUE
+    // i = Integer.MAX_VALUE
     i = integer.MAX_VALUE;
   }
     
   public void test3() {
     String s1 = new String();
-    // BUG: Diagnostic contains: String s2 = String.valueOf(10)
+    // BUG: Diagnostic contains: method valueOf
+    // String s2 = String.valueOf(10) 
     String s2 = s1.valueOf(10);
-    // BUG: Diagnostic contains: s2 = String.valueOf(10)
+    // BUG: Diagnostic contains: method valueOf
+    // s2 = String.valueOf(10)
     s2 = new String().valueOf(10);
-    // BUG: Diagnostic contains: int i = staticTestMethod()
+    // BUG: Diagnostic contains: method staticTestMethod
+    // int i = staticTestMethod()
     int i = this.staticTestMethod();
-    // BUG: Diagnostic contains: String s3 = staticTestMethod2().toString
+    // BUG: Diagnostic contains: method staticTestMethod2
+    // String s3 = staticTestMethod2().toString 
     String s3 = this.staticTestMethod2().toString();
-    // BUG: Diagnostic contains: i = staticTestMethod()
+    // BUG: Diagnostic contains: method staticTestMethod
+    // i = staticTestMethod() 
     i = this.next.next.next.staticTestMethod();
   }
   
   public void test4() {
     BigDecimal decimal = new BigDecimal(1);
-    // BUG: Diagnostic contains: BigDecimal decimal2 = BigDecimal.valueOf(1)
+    // BUG: Diagnostic contains: method valueOf
+    // BigDecimal decimal2 = BigDecimal.valueOf(1)
     BigDecimal decimal2 = decimal.valueOf(1);
   }
 
   public static MyClass hiding; 
   
   public void test5(MyClass hiding) {
-    // BUG: Diagnostic contains: Object o = staticTestMethod3(this.toString())
+    // BUG: Diagnostic contains: method staticTestMethod3
+    // Object o = staticTestMethod3(this.toString()) 
     Object o = this.staticTestMethod3(this.toString());
-    // BUG: Diagnostic contains: x = StaticInnerClass.myClass.FIELD;    
+    // BUG: Diagnostic contains: variable myClass
+    // x = StaticInnerClass.myClass.FIELD; 
     int x = new MyClass.StaticInnerClass().myClass.FIELD;
-    // BUG: Diagnostic contains: x = MyClass.STATIC_FIELD;    
+    // BUG: Diagnostic contains: variable STATIC_FIELD
+    // x = MyClass.STATIC_FIELD; 
     x = new MyClass.StaticInnerClass().myClass.STATIC_FIELD;
-    // BUG: Diagnostic contains: StaticAccessedFromInstancePositiveCase1.hiding = hiding;
+    // BUG: Diagnostic contains: variable hiding
+    // StaticAccessedFromInstancePositiveCase1.hiding = hiding;
     this.hiding = hiding;
-    // BUG: Diagnostic contains: x = MyClass.STATIC_FIELD;
+    // BUG: Diagnostic contains: variable STATIC_FIELD
+    // x = MyClass.STATIC_FIELD; 
     x = MyStaticClass.myClass.STATIC_FIELD;
-    // BUG: Diagnostic contains: x = MyClass.staticMethod();
+    // BUG: Diagnostic contains: method staticMethod
+    // x = MyClass.staticMethod();
     x = MyStaticClass.myClass.staticMethod();
     
     x = MyStaticClass.myClass.FIELD;
@@ -126,12 +142,15 @@ public class StaticAccessedFromInstancePositiveCase1 {
   
   static void test6() {
     Foo foo = new Foo();
-    // BUG: Diagnostic contains: x = Bar.baz();
+    // BUG: Diagnostic contains: method baz
+    // x = Bar.baz();
     int x = Foo.bar.baz();
     Bar bar = Foo.bar;
-    // BUG: Diagnostic contains: bar = Foo.bar;
+    // BUG: Diagnostic contains: variable bar
+    // bar = Foo.bar;
     bar = foo.bar;
-    // BUG: Diagnostic contains: x = Bar.baz;
+    // BUG: Diagnostic contains: variable baz
+    // x = Bar.baz;
     x = Foo.bar.baz;
   }
   
@@ -142,7 +161,8 @@ public class StaticAccessedFromInstancePositiveCase1 {
   }
   
   public void test7() {
-    // BUG: Diagnostic contains: x = C.foo();
+    // BUG: Diagnostic contains: method foo
+    // x = C.foo();
     int x = new C<String>().foo();
   }
 }
