@@ -38,6 +38,9 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 
 /**
+ * TODO(eaftan): The fix suggests using .equals to compare, but it doesn't safely account for
+ * nulls.  We should provide a safer fix, e.g. the static Objects.equal() method.
+ *
  * @author ptoomey@google.com (Patrick Toomey)
  */
 @BugPattern(name = "StringEquality",
