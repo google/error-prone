@@ -150,7 +150,12 @@ public class ASTHelpers {
 
   /** Gets the symbol for a method invocation. */
   public static MethodSymbol getSymbol(MethodInvocationTree tree) {
-    return (MethodSymbol) ASTHelpers.getSymbol(tree.getMethodSelect());
+    Symbol sym = ASTHelpers.getSymbol(tree.getMethodSelect());
+    if (!(sym instanceof MethodSymbol)) {
+      // Defensive. Would only occur if there are errors in the AST.
+      return null;
+    }
+    return (MethodSymbol) sym;
   }
 
   /**
