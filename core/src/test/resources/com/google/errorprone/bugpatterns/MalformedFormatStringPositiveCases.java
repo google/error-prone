@@ -26,7 +26,7 @@ public class MalformedFormatStringPositiveCases {
   private static final Locale locale = Locale.US;
   private static final String FORMAT = "%s";
 
-  public void extraArgs() {
+  public void extraArgs() throws Exception {
     // BUG: Diagnostic contains: System.out.printf("foo");
     System.out.printf("foo", "bar");
     // BUG: Diagnostic contains: formatter.format("%d", 42);
@@ -47,14 +47,5 @@ public class MalformedFormatStringPositiveCases {
     String.format(formatVar, true, false);
     // BUG: Diagnostic contains: String.format(FORMAT, true);
     String.format(FORMAT, true, false);
-  }
-
-  public void errorType() {
-    // The real test here is that the checker does not suggest fixes with erroneous types.
-    // Apparently (at least in Maven tests) checker can be run even when typing fails.
-    // BUG: Diagnostic contains: cannot find symbol
-    UndeclaredType t;
-    // no bug here
-    String.format("%d", t);
   }
 }

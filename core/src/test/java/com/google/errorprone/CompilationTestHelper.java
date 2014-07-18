@@ -19,6 +19,7 @@ package com.google.errorprone;
 import static com.google.errorprone.DiagnosticTestHelper.assertHasDiagnosticOnAllMatchingLines;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
@@ -30,6 +31,7 @@ import com.sun.tools.javac.util.Context;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.lang.reflect.Constructor;
 import java.nio.charset.Charset;
@@ -40,6 +42,8 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.tools.DiagnosticListener;
+import javax.tools.JavaCompiler;
+import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 import javax.tools.ToolProvider;
@@ -132,7 +136,7 @@ public class CompilationTestHelper {
    */
   public void assertCompileSucceeds(List<JavaFileObject> sources, List<String> args) {
     List<String> allArgs = buildArguments(args);
-    int exitCode = compile(allArgs.toArray(new String[0]), asJavacList(sources));
+    int exitCode = compile(asJavacList(sources), allArgs.toArray(new String[0]));
     assertThat(diagnosticHelper.getDiagnostics().toString(), exitCode, is(0));
     // TODO(eaftan): complain if there are any diagnostics
   }
@@ -185,7 +189,7 @@ public class CompilationTestHelper {
   public void assertCompileFailsWithMessages(List<JavaFileObject> sources, List<String> args)
       throws IOException {
     List<String> allArgs = buildArguments(args);
-    int exitCode = compile(allArgs.toArray(new String[0]), asJavacList(sources));
+    int exitCode = compile(asJavacList(sources), allArgs.toArray(new String[0]));
     assertThat("Compiler returned an unexpected error code", exitCode, is(1));
     for (JavaFileObject source : sources) {
       assertHasDiagnosticOnAllMatchingLines(diagnosticHelper.getDiagnostics(), source);
@@ -199,10 +203,26 @@ public class CompilationTestHelper {
     assertCompileFailsWithMessages(ImmutableList.of(source));
   }
 
-  int compile(String[] args, Iterable<JavaFileObject> sources) {
+  int compile(Iterable<JavaFileObject> sources, String[] args) {
+    checkWellFormed(sources, args);
     Context context = new Context();
     context.put(JavaFileManager.class, fileManager);
     return compiler.compile(args, context, asJavacList(sources), null);
+  }
+
+  private void checkWellFormed(Iterable<JavaFileObject> sources, String[] args) {
+    JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+    OutputStream outputStream = new ByteArrayOutputStream();
+    CompilationTask task = compiler.getTask(
+        new PrintWriter(outputStream, /*autoFlush=*/true),
+        fileManager,
+        null,
+        Arrays.asList(ErrorProneOptions.processArgs(args).getRemainingArgs()),
+        null,
+        sources);
+    boolean result = task.call();
+    assertTrue(String.format("Test program failed to compile with non error-prone error: %s",
+        outputStream.toString()), result);
   }
 
   public static <T> com.sun.tools.javac.util.List<T> asJavacList(Iterable<? extends T> xs) {
