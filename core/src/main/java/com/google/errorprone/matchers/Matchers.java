@@ -496,6 +496,30 @@ public class Matchers {
   }
 
   /**
+   * Matches an AST node if it is a literal other than null.
+   */
+  public static Matcher<ExpressionTree> nonNullLiteral() {
+    return new Matcher<ExpressionTree>() {
+      @Override
+      public boolean matches(ExpressionTree tree, VisitorState state) {
+        switch (tree.getKind()) {
+          case INT_LITERAL:
+          case LONG_LITERAL:
+          case FLOAT_LITERAL:
+          case DOUBLE_LITERAL:
+          case BOOLEAN_LITERAL:
+          case CHAR_LITERAL:
+            // fall through
+          case STRING_LITERAL:
+            return true;
+          default:
+            return false;
+        }
+      }
+    };
+  }
+
+  /**
    * Matches a Literal AST node if it is a string literal with the given value.
    * For example, {@code stringLiteral("thing")} matches the literal {@code "thing"}
    */
