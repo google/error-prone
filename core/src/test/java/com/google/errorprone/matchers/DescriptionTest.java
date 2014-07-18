@@ -25,6 +25,9 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.fixes.Fix;
 
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.TreeVisitor;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -35,30 +38,49 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class DescriptionTest {
 
+  private static class MockTree implements Tree {
+    @Override
+    public <R, D> R accept(TreeVisitor<R, D> arg0, D arg1) {
+      return null;
+    }
+
+    @Override
+    public Kind getKind() {
+      return null;
+    }
+  }
+
   @BugPattern(name = "DeadException",
-    summary = "Exception created but not thrown",
-    explanation = "", category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
-   public class MyChecker extends BugChecker {
-     Description getDescription() {
-       return describeMatch(null, Fix.NO_FIX);
-     }
-   }
+      summary = "Exception created but not thrown",
+      explanation = "", category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
+  public static class MyChecker extends BugChecker {
+    Description getDescription() {
+      return describeMatch(new MockTree(), Fix.NO_FIX);
+    }
+  }
 
   @Test
   public void testDescriptionFromBugPattern() {
     Description description = new MyChecker().getDescription();
     assertEquals("DeadException", description.checkName);
     assertEquals("Exception created but not thrown\n  (see http://code.google.com/p/error-prone/wik"
-        + "i/DeadException)", description.rawMessage);
+        + "i/DeadException)", description.getMessageWithoutCheckName());
     assertEquals("[DeadException] Exception created but not thrown\n  (see http://code.google.com/p"
-        + "/error-prone/wiki/DeadException)", description.message);
+        + "/error-prone/wiki/DeadException)", description.getMessage());
   }
 
   @Test
   public void testCustomDescription() {
-    Description description = new Description(null, "message", Fix.NO_FIX, ERROR);
-    assertEquals("Undefined", description.checkName);
-    assertEquals("message", description.rawMessage);
-    assertEquals("message", description.message);
+    Description description = new Description.Builder(new MockTree(), new MyChecker().pattern)
+        .setMessage("custom message")
+        .build();
+    assertEquals("DeadException", description.checkName);
+    assertEquals(
+        "custom message\n  (see http://code.google.com/p/error-prone/wiki/DeadException)",
+        description.getMessageWithoutCheckName());
+    assertEquals(
+        "[DeadException] custom message\n"
+            + "  (see http://code.google.com/p/error-prone/wiki/DeadException)",
+        description.getMessage());
   }
 }

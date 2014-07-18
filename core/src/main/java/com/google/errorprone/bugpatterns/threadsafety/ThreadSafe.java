@@ -38,11 +38,10 @@ import com.sun.source.tree.VariableTree;
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 @BugPattern(name = "ThreadSafe",
-    summary = "Checks for unguarded accesses to fields and methods with @GuardedBy annotations.",
+    summary = "Checks for unguarded accesses to fields and methods with @GuardedBy annotations",
     explanation = "The @GuardedBy annotation is used to associate a lock with a fields or methods."
-    + " Accessing a guarded field or invoking a guarded method should only be done when the"
-    + " specified lock is held. Unguarded accesses are not thread safe.",
-    formatSummary = "Expected %s to be held, instead found %s.",
+        + " Accessing a guarded field or invoking a guarded method should only be done when the"
+        + " specified lock is held. Unguarded accesses are not thread safe.",
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
 public class ThreadSafe extends GuardedByValidator implements BugChecker.VariableTreeMatcher,
     BugChecker.MethodTreeMatcher {
@@ -87,19 +86,24 @@ public class ThreadSafe extends GuardedByValidator implements BugChecker.Variabl
     // TODO(cushon) - consolidate the checks once the clean-up is done; ThreadSafe is intended to
     // subsume GuardedByValidator.
     final String message = GuardedByValidator.class.getAnnotation(BugPattern.class).summary();
-    // TODO(cushon) - this message will be missing the wiki link (which is provided by
-    // getDiagnosticMessage). Fix this once description creation is re-worked - currently there's
-    // no good way to provide multiple format strings in the @BugPattern.
-    return new Description(tree, pattern, message, Fix.NO_FIX);
+    // TODO(cushon) - this message will have a wiki link to ThreadSafe, not GuardedByValidator.
+    // Think about the best way to present the information from GuardedByValidator's explanation
+    // field -- should it be a separate page or part of the ThreadSafe page?
+    return new Description.Builder(tree, pattern)
+        .setMessage(message)
+        .build();
   }
 
   protected Description checkGuardedAccess(Tree tree, GuardedByExpression guard,
       HeldLockSet locks) {
     if (!locks.allLocks().contains(guard)) {
-      String message = getDiagnosticMessage(guard, locks);
+      String message = String.format("Expected %s to be held, instead found %s", guard, locks);
       // TODO(cushon) - this fix is a debugging aid, remove it before productionizing the check.
       Fix fix = new SuggestedFix().prefixWith(tree, String.format("/* %s */", message));
-      return new Description(tree, pattern, message, fix);
+      return new Description.Builder(tree, pattern)
+          .setMessage(message)
+          .setFix(fix)
+          .build();
     }
     return Description.NO_MATCH;
   }

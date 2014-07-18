@@ -53,7 +53,7 @@ public abstract class BugChecker implements Suppressible, Disableable, Serializa
    * A collection of IDs for this check, to be checked for in @SuppressWarnings annotations.
    */
   protected final Set<String> allNames;
-  protected final BugPattern pattern;
+  public final BugPattern pattern;
   protected final boolean disableable;
   protected final BugPattern.Suppressibility suppressibility;
   protected final Class<? extends Annotation> customSuppressionAnnotation;
@@ -81,55 +81,13 @@ public abstract class BugChecker implements Suppressible, Disableable, Serializa
   /**
    * Helper to create a Description for the common case where the diagnostic message is not
    * parameterized.
+   *
+   * TODO(eaftan): Remove this method and inline the builder call.
    */
   protected Description describeMatch(Tree node, Fix fix) {
-    return new Description(node, pattern, getDiagnosticMessage(), fix);
-  }
-
-  /**
-   * Generate the compiler diagnostic message based on information in the @BugPattern annotation.
-   *
-   * <p>If the formatSummary element of the annotation has been set, then use format string
-   * substitution to generate the message.  Otherwise, just use the summary element directly.
-   *
-   * @param args Arguments referenced by the format specifiers in the annotation's formatSummary
-   *     element
-   * @return The compiler diagnostic message.
-   */
-  protected String getDiagnosticMessage(Object... args) {
-    String summary;
-    if (!pattern.formatSummary().isEmpty()) {
-      if (args.length == 0) {
-        throw new IllegalStateException("Compiler error message expects a format string, but "
-            + "no arguments were provided");
-      }
-      summary = String.format(pattern.formatSummary(), args);
-    } else {
-      summary = pattern.summary();
-    }
-    return summary + getLink();
-  }
-
-  /**
-   * Construct the link text to include in the compiler error message.
-   */
-  private String getLink() {
-    switch (pattern.linkType()) {
-      case WIKI:
-        return "\n  (see http://code.google.com/p/error-prone/wiki/" + pattern.name() + ")";
-      case CUSTOM:
-        // annotation.link() must be provided.
-        if (pattern.link().isEmpty()) {
-          throw new IllegalStateException("If linkType element of @BugPattern is CUSTOM, "
-              + "a link element must also be provided.");
-        }
-        return  "\n  (see " + pattern.link() + ")";
-      case NONE:
-        return "";
-      default:
-        throw new IllegalStateException("Unexpected value for linkType element of @BugPattern: "
-            + pattern.linkType());
-    }
+    return new Description.Builder(node, pattern)
+        .setFix(fix)
+        .build();
   }
 
   @Override

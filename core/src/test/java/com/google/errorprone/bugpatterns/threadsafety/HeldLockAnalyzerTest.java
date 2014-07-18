@@ -22,7 +22,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
 
 import com.sun.source.tree.Tree;
@@ -236,7 +235,9 @@ public class HeldLockAnalyzerTest {
         toSort.add(node.debugPrint());
       }
       Collections.sort(toSort);
-      return new Description(tree, pattern, "Holding: " + toSort.toString(), Fix.NO_FIX);
+      return new Description.Builder(tree, pattern)
+          .setMessage("Holding: " + toSort.toString())
+          .build();
     }
   }
-  }
+}

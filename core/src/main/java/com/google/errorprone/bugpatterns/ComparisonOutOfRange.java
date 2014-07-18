@@ -49,8 +49,6 @@ import java.util.List;
  */
 @BugPattern(name = "ComparisonOutOfRange",
     summary = "Comparison to value that is out of range for the compared type",
-    formatSummary = "%ss may have a value in the range %d to %d; therefore, this comparison to " +
-        "%s will always evaluate to %s",
     explanation = "This checker looks for equality comparisons to values that are out of " +
         "range for the compared type.  For example, bytes may have a value in the range " +
         Byte.MIN_VALUE + " to " + Byte.MAX_VALUE + ". Comparing a byte for equality with a value " +
@@ -59,6 +57,9 @@ import java.util.List;
         "This checker currently supports checking for bad byte and character comparisons.",
     category = JDK, severity = ERROR, maturity = MATURE)
 public class ComparisonOutOfRange extends BugChecker implements BinaryTreeMatcher {
+
+  private static final String MESSAGE_TEMPLATE = "%ss may have a value in the range %d to %d; "
+      + "therefore, this comparison to %s will always evaluate to %s";
 
   /**
    * Matches comparisons that are out of range for the given type.  Parameterized based on the
@@ -212,13 +213,16 @@ public class ComparisonOutOfRange extends BugChecker implements BinaryTreeMatche
       } else {
         fix.replace(literal, replacement);
       }
-      customDiagnosticMessage = getDiagnosticMessage("byte", (int) Byte.MIN_VALUE,
+      customDiagnosticMessage = String.format(MESSAGE_TEMPLATE, "byte", (int) Byte.MIN_VALUE,
           (int) Byte.MAX_VALUE, literal.toString(), Boolean.toString(willEvaluateTo));
     } else {
       fix.replace(tree, Boolean.toString(willEvaluateTo));
-      customDiagnosticMessage = getDiagnosticMessage("char", (int) Character.MIN_VALUE,
+      customDiagnosticMessage = String.format(MESSAGE_TEMPLATE, "char", (int) Character.MIN_VALUE,
           (int) Character.MAX_VALUE, literal.toString(), Boolean.toString(willEvaluateTo));
     }
-    return new Description(tree, pattern, customDiagnosticMessage, fix);
+    return new Description.Builder(tree, pattern)
+        .setFix(fix)
+        .setMessage(customDiagnosticMessage)
+        .build();
   }
 }

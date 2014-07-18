@@ -47,12 +47,14 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
  */
 @BugPattern(name = "StaticAccessedFromInstance",
     summary = "A static variable or method should not be accessed from an object instance",
-    formatSummary = "Static %s %s should not be accessed from an object instance; instead use %s",
     explanation = "A static variable or method should never be accessed from an instance.  This "
         + "hides the fact that the variable or method is static and does not depend on the value "
         + "of the object instance on which this variable or method is being invoked.",
     category = JDK, severity = ERROR, maturity = MATURE, altNames = "static")
 public class StaticAccessedFromInstance extends BugChecker implements MemberSelectTreeMatcher {
+
+  private static final String MESSAGE_TEMPLATE = "Static %s %s should not be accessed from an "
+      + "object instance; instead use %s";
 
   @SuppressWarnings("unchecked")
   private static final Matcher<ExpressionTree> staticAccessedFromInstanceMatcher = allOf(
@@ -111,8 +113,11 @@ public class StaticAccessedFromInstance extends BugChecker implements MemberSele
     String memberName = staticMemberSym.getSimpleName().toString();
     String methodOrVariable = isMethod ? "method" : "variable";
 
-    String customDiagnosticMessage = getDiagnosticMessage(
+    String customDiagnosticMessage = String.format(MESSAGE_TEMPLATE,
         methodOrVariable, memberName, replacement);
-    return new Description(tree, pattern, customDiagnosticMessage, fix);
+    return new Description.Builder(tree, pattern)
+        .setMessage(customDiagnosticMessage)
+        .setFix(fix)
+        .build();
   }
 }

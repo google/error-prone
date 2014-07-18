@@ -70,17 +70,19 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
       }
 
       AppliedFix fix = null;
+      // TODO(eaftan): description.suggestedFix cannot be null, so remove
       if (description.suggestedFix != null) {
         fix = AppliedFix.fromSource(content, endPositions).apply(description.suggestedFix);
       }
       final String message;
+      // TODO(eaftan): description.suggestedFix cannot be null, so remove
       if (description.suggestedFix == null || fix == null) {
-        message = description.message;
+        message = description.getMessage();
       } else {
         if (fix.isRemoveLine()) {
-          message = description.message + "\nDid you mean to remove this line?";
+          message = description.getMessage() + "\nDid you mean to remove this line?";
         } else {
-          message = description.message + "\nDid you mean '" + fix.getNewCodeSnippet() + "'?";
+          message = description.getMessage() + "\nDid you mean '" + fix.getNewCodeSnippet() + "'?";
         }
       }
       switch (description.severity) {

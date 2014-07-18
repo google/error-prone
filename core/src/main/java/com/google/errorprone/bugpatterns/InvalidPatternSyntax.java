@@ -19,11 +19,16 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
-import static com.google.errorprone.matchers.Matchers.*;
+import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.argument;
+import static com.google.errorprone.matchers.Matchers.isDescendantOfMethod;
+import static com.google.errorprone.matchers.Matchers.methodSelect;
+import static com.google.errorprone.matchers.Matchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
@@ -41,13 +46,14 @@ import java.util.regex.PatternSyntaxException;
  */
 @BugPattern(name = "InvalidPatternSyntax",
     summary = "Invalid syntax used for a regular expression",
-    formatSummary = "Invalid syntax used for a regular expression: %s",
     explanation = "This error is triggered by calls to regex-accepting methods with invalid string "
         + "literals.  These calls would cause a PatternSyntaxException at runtime.\n\n"
         + "We deliberately do not check java.util.regex.Pattern#compile as many of its users "
         + "are deliberately testing the regex compiler or using a vacuously true regex.",
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
 public class InvalidPatternSyntax extends BugChecker implements MethodInvocationTreeMatcher {
+
+  private static final String MESSAGE_BASE = "Invalid syntax used for a regular expression: ";
 
   /* Match string literals that are not valid syntax for regular expressions. */
   private static final Matcher<ExpressionTree> BAD_REGEX_LITERAL = new Matcher<ExpressionTree>() {
@@ -102,18 +108,22 @@ public class InvalidPatternSyntax extends BugChecker implements MethodInvocation
     Fix fix = Fix.NO_FIX;
     ExpressionTree arg = methodInvocationTree.getArguments().get(0);
     String value = (String) ((JCExpression) arg).type.constValue();
-    String message = "";
+    String reasonInvalid = "";
 
     if (".".equals(value)) {
       fix = new SuggestedFix().replace(arg, "\"\\\\.\"");
-      message = "\".\" is a valid but useless regex";
+      reasonInvalid = "\".\" is a valid but useless regex";
     } else {
       try {
         Pattern.compile(value);
       } catch (PatternSyntaxException e) {
-        message = e.getMessage();
+        reasonInvalid = e.getMessage();
       }
     }
-    return new Description(methodInvocationTree, pattern, getDiagnosticMessage(message), fix);
+
+    return new Description.Builder(methodInvocationTree, pattern)
+        .setMessage(MESSAGE_BASE + reasonInvalid)
+        .setFix(fix)
+        .build();
   }
 }

@@ -70,7 +70,6 @@ import javax.lang.model.type.TypeKind;
  * @author vidarh@google.com (Will Holen)
  */
 @BugPattern(name = "MisusedFormattingLogger",
-    formatSummary = "%s", // message is completely different depending on the errors found
     summary = "FormattingLogger uses wrong or mismatched format string",
     explanation = "FormattingLogger is easily misused. There are several similar but "
         + "incompatible methods.  Methods ending in \"fmt\" use String.format, but the "
@@ -224,9 +223,10 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
       formatException = e;
     }
     if (formatException != null) {
-      return new Description(tree, pattern,
-          getDiagnosticMessage("Format string is invalid: " + formatException.getMessage()),
-          SuggestedFix.NO_FIX);
+      String customMessage = "Format string is invalid: " + formatException.getMessage();
+      return new Description.Builder(tree, pattern)
+          .setMessage(customMessage)
+          .build();
     }
 
     // Are there format string references that aren't provided?
@@ -318,8 +318,10 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
       } else {
         fix = SuggestedFix.NO_FIX;
       }
-      return new Description(tree, pattern,
-          getDiagnosticMessage("This call " + join(", ", errors)), fix);
+      return new Description.Builder(tree, pattern)
+          .setMessage("This call " + join(", ", errors))
+          .setFix(fix)
+          .build();
     }
 
     return Description.NO_MATCH;
