@@ -26,7 +26,6 @@ import static com.sun.source.tree.Tree.Kind.NOT_EQUAL_TO;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -36,11 +35,9 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCLiteral;
 
 /**
- * TODO(eaftan): The fix suggests using .equals to compare, but it doesn't safely account for
- * nulls.  We should provide a safer fix, e.g. the static Objects.equal() method.
- *
  * @author ptoomey@google.com (Patrick Toomey)
  */
 @BugPattern(name = "StringEquality",
@@ -88,28 +85,59 @@ public class StringEquality extends BugChecker implements BinaryTreeMatcher {
     }
 
     ExpressionTree leftOperand = tree.getLeftOperand();
-    Type leftType = ((JCTree.JCExpression) leftOperand).type;
+    Object leftConstValue = getConstValue(leftOperand);
     ExpressionTree rightOperand = tree.getRightOperand();
-    Type rightType = ((JCTree.JCExpression) rightOperand).type;
+    Object rightConstValue = getConstValue(rightOperand);
     StringBuilder fixedExpression = new StringBuilder();
     // We maintain the ordering of the operands unless the leftOperand is not a constant
     // expression and the rightOperand is.
-    if (leftType.constValue() == null && rightType.constValue() != null) {
+    if (leftConstValue == null && rightConstValue != null) {
       ExpressionTree tempOperand = leftOperand;
       leftOperand = rightOperand;
       rightOperand = tempOperand;
-    }
+      
+      Object tempConstValue = leftConstValue;
+      leftConstValue = rightConstValue;
+      rightConstValue = tempConstValue;
+    }   
+   
+    SuggestedFix fix = new SuggestedFix();
     if (tree.getKind() == Tree.Kind.NOT_EQUAL_TO) {
       fixedExpression.append("!");
     }
-    if (leftOperand instanceof BinaryTree) {
-      fixedExpression.append("(" + leftOperand.toString() + ")");
+    if (leftConstValue != null) {
+      // There is at least one constant, so the x.equals(y) form is null-safe.
+      if (leftConstValue.equals("")) {
+        // Special-case the comparison to the empty string.
+        fixedExpression.append(rightOperand.toString());
+        fixedExpression.append(".isEmpty()");
+      } else {
+        boolean isBinop = leftOperand instanceof BinaryTree;
+        if (isBinop) {
+          fixedExpression.append("(");
+        }
+        fixedExpression.append(leftOperand.toString());
+        if (isBinop) {
+          fixedExpression.append(")");
+        }
+        fixedExpression.append(".equals(" + rightOperand.toString() + ")");
+      }
     } else {
-      fixedExpression.append(leftOperand.toString());
+      // Neither expression is constant, so use Objects.equals(String, String) in case one or both
+      // expressions evaluates to 'null'.
+      // NOTE: this fix only works for JDK >= 7.
+      fixedExpression.append(String.format(
+          "Objects.equals(%s, %s)", leftOperand.toString(), rightOperand.toString()));
+      fix.addImport("java.util.Objects");
     }
-    fixedExpression.append(".equals(" + rightOperand.toString() + ")");
 
-    Fix fix = new SuggestedFix().replace(tree, fixedExpression.toString());
+    fix.replace(tree, fixedExpression.toString());
     return describeMatch(tree, fix);
+  }
+
+  private static Object getConstValue(Tree tree) {
+    return (tree instanceof JCLiteral)
+        ? ((JCLiteral) tree).value
+        : ((JCTree) tree).type.constValue();
   }
 }

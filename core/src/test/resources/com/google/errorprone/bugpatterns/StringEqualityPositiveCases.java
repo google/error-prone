@@ -24,17 +24,17 @@ public class StringEqualityPositiveCases {
   public boolean testEquality(String x, String y) {
     boolean retVal;
 
-    // BUG: Diagnostic contains: x.equals(y) 
+    // BUG: Diagnostic contains: Objects.equals(x, y) 
     retVal = (x == y);
-    // BUG: Diagnostic contains: !x.equals(y)
+    // BUG: Diagnostic contains: !Objects.equals(x, y)
     retVal = (x != y);
-    // BUG: Diagnostic contains: (x + y).equals(y + x)
+    // BUG: Diagnostic contains: Objects.equals(x + y, y + x)
     retVal = (x + y == y + x);
-    // BUG: Diagnostic contains: !(x + y).equals(y + x)
+    // BUG: Diagnostic contains: !Objects.equals(x + y, y + x)
     retVal = (x + y != y + x);
-    // BUG: Diagnostic contains: (x + "str").equals(y + "str") 
+    // BUG: Diagnostic contains: Objects.equals(x + "str", y + "str") 
     retVal = (x + "str" == y + "str");
-    // BUG: Diagnostic contains: !(x + "str").equals(y + "str") 
+    // BUG: Diagnostic contains: !Objects.equals(x + "str", y + "str") 
     retVal = (x + "str" != y + "str");
     // BUG: Diagnostic contains: "str".equals(x)
     retVal = ("str" == x);
@@ -47,14 +47,22 @@ public class StringEqualityPositiveCases {
     retVal = (x == constValue);
     // BUG: Diagnostic contains: !constValue.equals(x)
     retVal = (x != constValue);
-    // BUG: Diagnostic contains: (x + y + constValue).equals(x + y)
+    // BUG: Diagnostic contains: Objects.equals(x + y + constValue, x + y)
     retVal = (x + y + constValue == x + y);
     final String constValue2 = "str2";
     // BUG: Diagnostic contains: (constValue + constValue2).equals(x)
     retVal = (constValue + constValue2 == x);
     // BUG: Diagnostic contains: (constValue + constValue2).equals(x)
     retVal = (x == constValue + constValue2);
-
+    // BUG: Diagnostic contains: (x.isEmpty())
+    retVal = (x == "");
+    // BUG: Diagnostic contains: (x.isEmpty())
+    retVal = ("" == x);
+    // BUG: Diagnostic contains: (!x.isEmpty())
+    retVal = (x != "");
+    // BUG: Diagnostic contains: (!x.isEmpty())
+    retVal = ("" != x);
+    
     return retVal;
   }
 
