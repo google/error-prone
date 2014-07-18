@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.errorprone.bugpatterns.*;
 import com.google.errorprone.bugpatterns.BugChecker.*;
+import com.google.errorprone.bugpatterns.threadsafety.GuardedByValidator;
 
 import com.sun.source.tree.*;
 
@@ -137,7 +138,8 @@ public class ErrorProneScanner extends Scanner {
       StaticAccessedFromInstance.class,
       ArrayHashCode.class,
       PrimitiveArrayPassedToVarargsMethod.class,
-      IncrementDecrementVolatile.class
+      IncrementDecrementVolatile.class,
+      GuardedByValidator.class
   );
 
   /**
