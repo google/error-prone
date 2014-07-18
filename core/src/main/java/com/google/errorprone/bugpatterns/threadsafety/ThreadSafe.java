@@ -83,10 +83,10 @@ public class ThreadSafe extends GuardedByValidator implements BugChecker.Variabl
 
   private Description describeInvalidGuardedBy(Tree tree) {
     // Re-use the validation message from {@link GuardedByValidator}.
-    // TODO(cushon) - consolidate the checks once the clean-up is done; ThreadSafe is intended to
+    // TODO(user) - consolidate the checks once the clean-up is done; ThreadSafe is intended to
     // subsume GuardedByValidator.
     final String message = GuardedByValidator.class.getAnnotation(BugPattern.class).summary();
-    // TODO(cushon) - this message will have a wiki link to ThreadSafe, not GuardedByValidator.
+    // TODO(user) - this message will have a wiki link to ThreadSafe, not GuardedByValidator.
     // Think about the best way to present the information from GuardedByValidator's explanation
     // field -- should it be a separate page or part of the ThreadSafe page?
     return new Description.Builder(tree, pattern)
@@ -98,7 +98,7 @@ public class ThreadSafe extends GuardedByValidator implements BugChecker.Variabl
       HeldLockSet locks) {
     if (!locks.allLocks().contains(guard)) {
       String message = String.format("Expected %s to be held, instead found %s", guard, locks);
-      // TODO(cushon) - this fix is a debugging aid, remove it before productionizing the check.
+      // TODO(user) - this fix is a debugging aid, remove it before productionizing the check.
       Fix fix = SuggestedFix.prefixWith(tree, String.format("/* %s */", message));
       return new Description.Builder(tree, pattern)
           .setMessage(message)
@@ -108,7 +108,7 @@ public class ThreadSafe extends GuardedByValidator implements BugChecker.Variabl
     return Description.NO_MATCH;
   }
 
-  // TODO(cushon) - this is kind of a hack. Provide an abstraction for matchers that need to do
+  // TODO(user) - this is kind of a hack. Provide an abstraction for matchers that need to do
   // stateful visiting? (e.g. a traversal that passes along a set of held locks...)
   private void report(Tree tree, Description description, VisitorState state) {
     state.getMatchListener().onMatch(tree);

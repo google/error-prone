@@ -14,15 +14,13 @@
 
 package com.google.errorprone.bugpatterns;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This tests the case where there is a chain of method overrides where the varargs constraint is
  * not met, and the root is a varargs parameter.
- * TODO(cushon): The original implementation tried to be clever and make this consistent, but
+ * TODO(user): The original implementation tried to be clever and make this consistent, but
  * didn't handle multiple interface inheritance.
- * 
+ *
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 public class OverridesPositiveCase2 {
@@ -32,19 +30,19 @@ public class OverridesPositiveCase2 {
 
   abstract class SubOne extends Base {
     @Override
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     abstract void varargsMethod(Object[] newNames);
   }
-  
+
   abstract class SubTwo extends SubOne {
     @Override
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     abstract void varargsMethod(Object... xs);
   }
-  
+
   abstract class SubThree extends SubTwo {
     @Override
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     abstract void varargsMethod(Object[] newNames);
   }
 }

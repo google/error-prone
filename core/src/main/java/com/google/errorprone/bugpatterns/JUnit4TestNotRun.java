@@ -40,7 +40,7 @@ import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import javax.lang.model.element.Modifier;
 
 /**
- * TODO(eaftan): Similar checkers for setUp() and tearDown().
+ * TODO(user): Similar checkers for setUp() and tearDown().
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
@@ -80,7 +80,7 @@ public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
     /*
      * Add the @Test annotation.  If the method is static, also make the method non-static.
      *
-     * TODO(eaftan): The static case here relies on having tree end positions available.  Come up
+     * TODO(user): The static case here relies on having tree end positions available.  Come up
      * with a better way of doing this that doesn't require tree end positions.  Maybe we should
      * just not provide suggested fixes for these few cases when the javac infrastructure gets in
      * the way.

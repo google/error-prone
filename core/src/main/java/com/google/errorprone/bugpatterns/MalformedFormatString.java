@@ -169,7 +169,7 @@ public class MalformedFormatString extends BugChecker implements MethodInvocatio
           .setFix(fix)
           .build();
     } catch (Exception e) {
-      // TODO(rburny): provide fixes for other problems
+      // TODO(user): provide fixes for other problems
     }
     return Description.NO_MATCH;
   }

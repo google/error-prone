@@ -51,7 +51,7 @@ import javax.tools.ToolProvider;
  * Utility class for tests that need to build using error-prone.
  * @author eaftan@google.com (Eddie Aftandilian)
  *
- * TODO(eaftan): Refactor default argument construction to make setup cleaner.
+ * TODO(user): Refactor default argument construction to make setup cleaner.
  */
 public class CompilationTestHelper {
 
@@ -129,7 +129,7 @@ public class CompilationTestHelper {
   }
 
   /**
-   * TODO(cushon): Investigate using compile_testing in a more legitimate fashion.
+   * TODO(user): Investigate using compile_testing in a more legitimate fashion.
    */
   public static JavaFileManager getFileManager(DiagnosticListener<? super JavaFileObject>
                                                    diagnosticListener,
@@ -158,7 +158,7 @@ public class CompilationTestHelper {
     List<String> allArgs = buildArguments(args);
     int exitCode = compile(asJavacList(sources), allArgs.toArray(new String[0]));
     assertThat(diagnosticHelper.getDiagnostics().toString(), exitCode, is(0));
-    // TODO(eaftan): complain if there are any diagnostics
+    // TODO(user): complain if there are any diagnostics
   }
 
   public void assertCompileSucceeds(List<JavaFileObject> sources) {

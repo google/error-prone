@@ -51,7 +51,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * TODO(eaftan): Doesn't handle the case that the enclosing method is intended to be called
+ * TODO(user): Doesn't handle the case that the enclosing method is intended to be called
  * in a loop.
  *
  * @author eaftan@google.com (Eddie Aftandilian)
@@ -110,13 +110,13 @@ public class WaitNotInLoop extends BugChecker implements MethodInvocationTreeMat
             isDescendantOfMethod("java.lang.Object", "wait(long,int)"))),
         not(inLoopBeforeSynchronizedMatcher));
 
-  // TODO(eaftan): Better suggested fixes.
+  // TODO(user): Better suggested fixes.
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (!waitMatcher.matches(tree, state)) {
       return Description.NO_MATCH;
     }
-    
+
     if (!SUPPLY_FIX) {
       return describeMatch(tree, Fix.NO_FIX);
     }

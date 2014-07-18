@@ -39,7 +39,7 @@ public class NextStatement<T extends StatementTree> implements Matcher<T> {
 
   @Override
   public boolean matches(T stmt, VisitorState state) {
-    // TODO(alexeagle): should re-use Enclosing.BlockOrCase
+    // TODO(user): should re-use Enclosing.BlockOrCase
     // find enclosing block
     TreePath path = state.getPath();
     Tree prev = null;
@@ -56,15 +56,15 @@ public class NextStatement<T extends StatementTree> implements Matcher<T> {
     }
     assert(found);      // should always find an enclosing block
     BlockTree block = (BlockTree)curr;
-    
+
     // find next statement
     List<? extends StatementTree> stmts = block.getStatements();
     int ifStmtIdx = stmts.indexOf(prev);
     StatementTree nextStmt = null;
-    if (ifStmtIdx < stmts.size() - 1) {  // TODO(eaftan): off by one?
+    if (ifStmtIdx < stmts.size() - 1) {  // TODO(user): off by one?
       nextStmt = stmts.get(ifStmtIdx + 1);
     }
-    
+
     return matcher.matches(nextStmt, state);
   }
 }

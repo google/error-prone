@@ -42,7 +42,7 @@ import java.util.List;
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  *
- * TODO(eaftan): Add test for correct matching of nodes.
+ * TODO(user): Add test for correct matching of nodes.
  */
 @RunWith(JUnit4.class)
 public class AnnotationTest extends CompilerBasedAbstractTest {

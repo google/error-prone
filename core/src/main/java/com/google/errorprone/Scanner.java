@@ -32,7 +32,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * TODO(eaftan): I'm worried about this performance of this code,
+ * TODO(user): I'm worried about this performance of this code,
  * specifically the part that handles SuppressWarnings.  We should
  * profile it and see where the hotspots are.
  *

@@ -75,7 +75,7 @@ public class SelfEquals extends BugChecker implements MethodInvocationTreeMatche
    *
    * Example: foo.equals(foo)
    *
-   * TODO(eaftan): This may match too many things, if people are calling methods "equals" that
+   * TODO(user): This may match too many things, if people are calling methods "equals" that
    * don't really mean equals.
    */
   @SuppressWarnings("unchecked")
@@ -113,7 +113,7 @@ public class SelfEquals extends BugChecker implements MethodInvocationTreeMatche
    * @param checkGuava Check for Guava Objects.equal(foo, foo) pattern?
    * @param checkEquals Check for foo.equals(foo) pattern?
    */
-  // TODO(alexeagle): looks like this wants to be two different checks
+  // TODO(user): looks like this wants to be two different checks
   public SelfEquals(boolean checkGuava, boolean checkEquals) {
     if (!checkGuava && !checkEquals) {
       throw new IllegalArgumentException("SelfEquals should check something");

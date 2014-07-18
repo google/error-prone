@@ -20,7 +20,6 @@ import com.sun.tools.javac.parser.JavacParser;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
-import com.sun.tools.javac.tree.TreeInfo;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Position;
 
@@ -50,7 +49,7 @@ public class EndPosMap8 implements ErrorProneEndPosMap {
     /**
      * Use reflection to bypass access restrictions on SimpleEndPosTable.endPosMap.
      * This is pretty terrible, but we need the map's entrySet to construct WrappedTreeMaps.
-     * TODO(cushon): investigate alternatives. Could we get we avoid the need to know the map's
+     * TODO(user): investigate alternatives. Could we get we avoid the need to know the map's
      * contents by building the WrappedTreeMap lazily?
      */
     private static final Field END_POS_MAP_FIELD;

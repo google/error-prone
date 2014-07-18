@@ -95,7 +95,7 @@ public class ASTHelpers {
       } else {
         selected = ((JCFieldAccess) expr1).selected;
       }
-      // TODO(eaftan): really shouldn't be relying on .toString()
+      // TODO(user): really shouldn't be relying on .toString()
       return selected.toString().equals("this") && sym1.equals(sym2);
     }
   }
@@ -104,7 +104,7 @@ public class ASTHelpers {
    * Gets the symbol for a tree. Returns null if this tree does not have a symbol because it is
    * of the wrong type, or if {@code tree} is null.
    */
-  // TODO(eaftan): refactor other code that accesses symbols to use this method
+  // TODO(user): refactor other code that accesses symbols to use this method
   public static Symbol getSymbol(Tree tree) {
     if (tree instanceof ClassTree) {
       return getSymbol((ClassTree) tree);
@@ -217,7 +217,7 @@ public class ASTHelpers {
   /**
    * Gives the return type of an ExpressionTree that represents a method select.
    *
-   * TODO(eaftan): Are there other places this could be used?
+   * TODO(user): Are there other places this could be used?
    */
   public static Type getReturnType(ExpressionTree expressionTree) {
     if (expressionTree instanceof JCFieldAccess) {

@@ -21,7 +21,7 @@ package com.google.errorprone.matchers;
  * Configurable to return true if any of or all of the tree nodes match.  In the any of case,
  * provides access to the node that matched.
  *
- * TODO(eaftan): Currently this class is used to match a single matcher against multiple elements
+ * TODO(user): Currently this class is used to match a single matcher against multiple elements
  * under some root element.  It might make sense to refactor this into matcher types with different
  * semantics -- allOf, anyOf, match the nth element, etc.  Then the matchers that currently extend
  * this would instead take one of these as a parameter and use that to define how to do the

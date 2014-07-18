@@ -70,12 +70,12 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
       }
 
       AppliedFix fix = null;
-      // TODO(eaftan): description.suggestedFix cannot be null, so remove
+      // TODO(user): description.suggestedFix cannot be null, so remove
       if (description.suggestedFix != null) {
         fix = AppliedFix.fromSource(content, endPositions).apply(description.suggestedFix);
       }
       final String message;
-      // TODO(eaftan): description.suggestedFix cannot be null, so remove
+      // TODO(user): description.suggestedFix cannot be null, so remove
       if (description.suggestedFix == null || fix == null) {
         message = description.getMessage();
       } else {

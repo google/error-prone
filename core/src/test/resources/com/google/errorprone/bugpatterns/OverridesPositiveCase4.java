@@ -14,19 +14,17 @@
 
 package com.google.errorprone.bugpatterns;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 
 /**
  * Test that the suggested fix is correct in the presence of whitespace, comments.
- * 
+ *
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 public class OverridesPositiveCase4 {
-  
+
   @interface Note { }
-  
+
   abstract class Base {
     abstract void varargsMethod(@Note final Map<Object, Object>... xs);
     abstract void arrayMethod(@Note final Map<Object, Object>[] xs);
@@ -37,10 +35,10 @@ public class OverridesPositiveCase4 {
     // BUG: Diagnostic contains: (@Note final Map<Object, Object> /* asd */ [] /* dsa */ xs);
     abstract void arrayMethod(@Note final Map<Object, Object> /* asd */ ... /* dsa */ xs);
   }
-  
+
   abstract class Child2 extends Base {
     @Override
-    //TODO(cushon): improve testing infrastructure so we can enforce that no fix is suggested.
+    //TODO(user): improve testing infrastructure so we can enforce that no fix is suggested.
     // BUG: Diagnostic contains: Varargs
     abstract void varargsMethod(@Note final Map<Object, Object>  /*dsa*/ [ /* [ */ ] /* dsa */ xs);
   }

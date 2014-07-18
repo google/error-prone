@@ -27,7 +27,7 @@ import com.sun.source.tree.VariableTree;
 /**
  * Matches if the given matcher matches all of/any of the parameters to this method.
  *
- * TODO(eaftan): All MultiMatchers seem to have a similar looping structure, applying a given
+ * TODO(user): All MultiMatchers seem to have a similar looping structure, applying a given
  * matcher to a set of nodes.  Consider refactoring this code into the base class for better
  * reuse.
  *

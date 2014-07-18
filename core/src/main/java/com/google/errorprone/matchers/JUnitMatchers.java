@@ -121,7 +121,7 @@ public class JUnitMatchers {
      * Matches an argument of type Class<T>, where T is a subtype of one of the test runners listed
      * in the TEST_RUNNERS field.
      *
-     * TODO(eaftan): Support checking for an annotation that tells us whether this test runner
+     * TODO(user): Support checking for an annotation that tells us whether this test runner
      * expects tests to be annotated with @Test.
      */
     private static final Matcher<ExpressionTree> isJUnit4TestRunner =
