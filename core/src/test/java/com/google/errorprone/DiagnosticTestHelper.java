@@ -19,7 +19,7 @@ package com.google.errorprone;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.core.AllOf.allOf;
-import static org.junit.internal.matchers.StringContains.containsString;
+import static org.junit.matchers.JUnitMatchers.containsString;
 import static org.junit.matchers.JUnitMatchers.hasItem;
 
 import com.google.common.io.CharSource;
