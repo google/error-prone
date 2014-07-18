@@ -122,7 +122,7 @@ public class ASTHelpers {
       return ((JCIdent) tree).sym;
     }
     if (tree instanceof JCMethodInvocation) {
-      return ASTHelpers.getSymbol(((JCMethodInvocation) tree).getMethodSelect());
+      return ASTHelpers.getSymbol((MethodInvocationTree) tree);
     }
     if (tree instanceof JCNewClass) {
       return ((JCNewClass) tree).constructor;
@@ -146,6 +146,11 @@ public class ASTHelpers {
   /** Gets the symbol for a variable. */
   public static VarSymbol getSymbol(VariableTree tree) {
     return ((JCVariableDecl) tree).sym;
+  }
+
+  /** Gets the symbol for a method invocation. */
+  public static MethodSymbol getSymbol(MethodInvocationTree tree) {
+    return (MethodSymbol) ASTHelpers.getSymbol(tree.getMethodSelect());
   }
 
   /**
