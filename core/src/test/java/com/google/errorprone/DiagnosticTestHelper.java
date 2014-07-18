@@ -184,6 +184,8 @@ public class DiagnosticTestHelper {
    * matches our bug marker pattern.  Parses the bug marker pattern for the specific string to
    * look for in the diagnostic.
    * @param source File in which to find matching lines
+   *
+   * TODO(eaftan): Switch to use assertThat instead of assertTrue.
    */
   @SuppressWarnings("unchecked")
   public void assertHasDiagnosticOnAllMatchingLines(JavaFileObject source)
@@ -196,27 +198,35 @@ public class DiagnosticTestHelper {
       if (line == null) {
         break;
       }
-      Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher;
+
       if (line.contains(BUG_MARKER_COMMENT)) {
+        // Diagnostic must contain all patterns from the bug marker comment.
         List<String> patterns = extractPatterns(line, reader);
         int lineNumber = reader.getLineNumber();
         for (String pattern : patterns) {
-          if (checkName == null) {
-            matcher = hasItem(diagnosticOnLine(source.toUri(), lineNumber, pattern));
-          } else {
-            matcher = hasItem(allOf(
-                // Check that diagnostic contains "[checkName]"
-                diagnosticOnLine(source.toUri(), lineNumber, "[" + checkName + "]"),
-                diagnosticOnLine(source.toUri(), lineNumber, pattern)));
-          }
+          Matcher<Iterable<Diagnostic<JavaFileObject>>> patternMatcher =
+              hasItem(diagnosticOnLine(source.toUri(), lineNumber, pattern));
           assertTrue(
-              "Did not see expected error on line " + lineNumber + ". All errors:\n" + diagnostics,
-              matcher.matches(diagnostics));
+              "Did not see an error on line " + lineNumber + " containing " + pattern
+                  + ". All errors:\n" + diagnostics,
+              patternMatcher.matches(diagnostics));
         }
+
+        if (checkName != null) {
+          // Diagnostic must contain check name.
+          Matcher<Iterable<Diagnostic<JavaFileObject>>> checkNameMatcher = hasItem(
+              diagnosticOnLine(source.toUri(), lineNumber, "[" + checkName + "]"));
+          assertTrue(
+              "Did not see an error on line " + lineNumber + " containing [" + checkName
+                  + "]. All errors:\n" + diagnostics,
+              checkNameMatcher.matches(diagnostics));
+        }
+
       } else {
         int lineNumber = reader.getLineNumber() + 1;
         // Cast is unnecessary, but javac throws an error because of poor type inference.
-        matcher = (Matcher) not(hasItem(diagnosticOnLine(source.toUri(), lineNumber)));
+        Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher =
+            (Matcher) not(hasItem(diagnosticOnLine(source.toUri(), lineNumber)));
         assertTrue("Saw unexpected error on line " + lineNumber, matcher.matches(diagnostics));
       }
     } while (true);
