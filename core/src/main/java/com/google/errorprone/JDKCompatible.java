@@ -91,7 +91,7 @@ public final class JDKCompatible {
    * In JDK 8, the EndPosTable is guarded against being set twice. Use reflection to unset it
    * so re-parsing for end positions works.
    *
-   * TODO(cushon): kill this with fire if -Xjcov ever gets turned on by default
+   * TODO(user): kill this with fire if -Xjcov ever gets turned on by default
    * (https://code.google.com/p/error-prone/issues/detail?id=228)
    */
   public static void resetEndPosMap(JavaCompiler compiler, JavaFileObject sourceFile) {

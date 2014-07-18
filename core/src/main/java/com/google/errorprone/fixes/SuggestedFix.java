@@ -39,7 +39,7 @@ public class SuggestedFix implements Fix {
   private final List<FixOperation> fixes;
   private final List<String> importsToAdd;
   private final List<String> importsToRemove;
-  
+
   private SuggestedFix(
       List<FixOperation> fixes,
       List<String> importsToAdd,
@@ -233,7 +233,7 @@ public class SuggestedFix implements Fix {
 
     public Builder swap(Tree node1, Tree node2) {
       // calling Tree.toString() is kind of cheesy, but we don't currently have a better option
-      // TODO(cushon): consider an approach that doesn't rewrite the original tokens
+      // TODO(user): consider an approach that doesn't rewrite the original tokens
       fixes.add(new ReplacementFix((DiagnosticPosition) node1, node2.toString()));
       fixes.add(new ReplacementFix((DiagnosticPosition) node2, node1.toString()));
       return this;

@@ -128,7 +128,7 @@ public abstract class BugChecker implements Suppressible, Disableable, Serializa
    * Helper to create a Description for the common case where the diagnostic message is not
    * parameterized.
    *
-   * TODO(eaftan): Remove this method and inline the builder call.
+   * TODO(user): Remove this method and inline the builder call.
    */
   protected Description describeMatch(Tree node, Fix fix) {
     return new Description.Builder(node, pattern)

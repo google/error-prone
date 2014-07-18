@@ -461,7 +461,7 @@ public class Matchers {
   /**
    * Matches an AST node that is enclosed by some node that matches the given matcher.
    *
-   * TODO(eaftan): This could be used instead of enclosingBlock and enclosingClass.
+   * TODO(user): This could be used instead of enclosingBlock and enclosingClass.
    */
   public static <T extends Tree> Matcher<Tree> enclosingNode(final Matcher<T> matcher) {
     return new Matcher<Tree>() {
@@ -503,7 +503,7 @@ public class Matchers {
   public static Matcher<ExpressionTree> nonNullLiteral() {
     return new Matcher<ExpressionTree>() {
       @Override
-      public boolean matches(ExpressionTree tree, VisitorState state) {        
+      public boolean matches(ExpressionTree tree, VisitorState state) {
         switch (tree.getKind()) {
           case MEMBER_SELECT:
             return ((MemberSelectTree) tree).getIdentifier().toString().equals("class");
@@ -616,7 +616,7 @@ public class Matchers {
       }
     };
   }
-  
+
   /**
    * Matches if a method or any method it overrides has an annotation of the given type.
    * JUnit 4's {@code @Test}, {@code @Before}, and {@code @After} annotations behave this way.
@@ -633,16 +633,16 @@ public class Matchers {
         if ((methodSym == null) || (annotationSym == null)) {
           return false;
         }
-        
+
         Set<MethodSymbol> allMethods = ASTHelpers.findSuperMethods(methodSym, state.getTypes());
         allMethods.add(methodSym);
-         
+
         for (MethodSymbol method : allMethods) {
           if (method.attribute(annotationSym) != null) {
             return true;
           }
         }
-        
+
         return false;
       }
     };
@@ -650,7 +650,7 @@ public class Matchers {
 
   /**
    * Matches a whitelisted method invocation that is known to never return null
-   */  
+   */
   @SuppressWarnings("unchecked")
   public static Matcher<ExpressionTree> methodReturnsNonNull() {
     return anyOf(
@@ -660,7 +660,7 @@ public class Matchers {
         expressionMethodSelect(instanceMethod(isSameType("java.util.StringTokenizer"), "nextToken"))
     );
   }
-  
+
   public static Matcher<MethodTree> methodReturns(final Type returnType) {
     return new Matcher<MethodTree>() {
       @Override
@@ -874,7 +874,7 @@ public class Matchers {
       @Override
       public boolean matches(ExpressionTree expr, VisitorState state) {
         if (!(expr instanceof JCFieldAccess)) {
-          // TODO(cushon): throw IllegalArgumentException?
+          // TODO(user): throw IllegalArgumentException?
           return false;
         }
         JCExpression selected = ((JCFieldAccess) expr).getExpression();

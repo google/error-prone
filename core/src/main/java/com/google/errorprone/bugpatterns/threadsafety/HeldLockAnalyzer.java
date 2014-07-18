@@ -122,7 +122,7 @@ public class HeldLockAnalyzer {
 
     @Override
     public Void visitTry(TryTree tree, HeldLockSet locks) {
-      // TODO(cushon) - recognize common try-with-resources patterns
+      // TODO(user) - recognize common try-with-resources patterns
       // Currently there is no standard implementation of an AutoCloseable lock resource to detect.
       scan(JDKCompatible.getTryTreeResources(tree), locks);
 
@@ -240,7 +240,7 @@ public class HeldLockAnalyzer {
         // to the guarded member and the read lock should be used for all other accesses, but in
         // practice the write lock is frequently held while performing a mutating operation on the
         // object stored in the field (e.g. inserting into a List).
-        // TODO(cushon): investigate a better way to specify the contract for ReadWriteLocks.
+        // TODO(user): investigate a better way to specify the contract for ReadWriteLocks.
         if ((tree.getMethodSelect() instanceof MemberSelectTree)
             && READ_WRITE_RELEASE_MATCHER.matches(ASTHelpers.getReceiver(tree), state)) {
           locks.add(((Select) receiver).base);
@@ -277,8 +277,8 @@ public class HeldLockAnalyzer {
      * from is called with "myClass.x" and "mu", and returns "myClass.mu".
      */
     static GuardedByExpression from(
-        JCTree.JCExpression guardedMemberExpression, 
-        GuardedByExpression guard, 
+        JCTree.JCExpression guardedMemberExpression,
+        GuardedByExpression guard,
         VisitorState state) {
 
       if (isGuardReferenceAbsolute(guard)) {

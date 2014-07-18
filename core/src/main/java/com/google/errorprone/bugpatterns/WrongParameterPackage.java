@@ -105,7 +105,7 @@ public class WrongParameterPackage extends BugChecker implements MethodTreeMatch
           && !state.getTypes().isSameType(methodParamType, supermethodParamType)) {
         VariableTree param = tree.getParameters().get(x);
 
-        // TODO(scottjohnson): Name is most likely more qualified than necessary.
+        // TODO(user): Name is most likely more qualified than necessary.
         Name replacement = supermethodParamType.tsym.getQualifiedName();
         if (builder == null) {
           builder = SuggestedFix.builder();

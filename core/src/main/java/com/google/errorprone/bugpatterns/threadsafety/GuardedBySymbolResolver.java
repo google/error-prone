@@ -80,7 +80,7 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
   public ClassSymbol enclosingClass() {
     return enclosingClass;
   }
-  
+
   private Name getName(String name) {
     return JDKCompatible.lookupName(context, name);
   }
@@ -93,7 +93,7 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
       return enclosingClass;
     }
 
-    // TODO(cushon): consider disallowing this? It's the only case where the lock description
+    // TODO(user): consider disallowing this? It's the only case where the lock description
     // isn't legal java.
     if (name.equals("itself")) {
       if (decl instanceof VariableTree) {

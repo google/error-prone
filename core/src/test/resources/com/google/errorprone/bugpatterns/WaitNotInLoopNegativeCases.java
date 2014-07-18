@@ -18,13 +18,13 @@ package com.google.errorprone.bugpatterns;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
- * 
- * TODO(eaftan): Add test cases for enhanced for loop, loop outside synchronized block.
+ *
+ * TODO(user): Add test cases for enhanced for loop, loop outside synchronized block.
  */
 public class WaitNotInLoopNegativeCases {
-  
+
   boolean flag = true;
-  
+
   public void test1() {
     synchronized (this) {
       while (!flag) {
@@ -79,7 +79,7 @@ public class WaitNotInLoopNegativeCases {
       }
     }
   }
-  
+
   public void testEnhancedForLoop() {
     int[] arr = new int[100];
     synchronized (this) {
@@ -91,10 +91,10 @@ public class WaitNotInLoopNegativeCases {
       }
     }
   }
-  
+
   private void wait(Object obj) {
   }
-  
+
   public void testNotObjectWait() {
     wait(new Object());
   }

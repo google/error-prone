@@ -83,7 +83,7 @@ public class Description {
         : String.format("%s", rawMessage);
   }
 
-  /** TODO(cushon): Remove this constructor and ensure that there's always a check name. */
+  /** TODO(user): Remove this constructor and ensure that there's always a check name. */
   public Description(Tree node, String message, Fix suggestedFix,
                      BugPattern.SeverityLevel severity) {
     this(node, UNDEFINED_CHECK_NAME, message, message, suggestedFix, severity);

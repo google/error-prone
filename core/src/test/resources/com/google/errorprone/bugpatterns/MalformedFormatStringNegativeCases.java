@@ -92,5 +92,5 @@ public class MalformedFormatStringNegativeCases {
     Number n = 2;
     String.format("%d %d %d", s, c, n);
   }
-  // TODO(rburny): maybe test format flags, or more advanced usage?
+  // TODO(user): maybe test format flags, or more advanced usage?
 }

@@ -27,11 +27,11 @@ import java.util.List;
 
 /**
  * Matches a call to a constructor.
- * 
+ *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public class Constructor implements Matcher<NewClassTree>{
-  
+
   private final String className;
   private final List<String> parameterTypes;
 
@@ -39,21 +39,21 @@ public class Constructor implements Matcher<NewClassTree>{
     this.className = className;
     this.parameterTypes = parameterTypes;
   }
-  
+
   @Override
   public boolean matches(NewClassTree newClassTree, VisitorState state) {
-    /* TODO(eaftan): Don't catch NullPointerException.  Need to do this right now
+    /* TODO(user): Don't catch NullPointerException.  Need to do this right now
      * for internal use, but remember to remove later. */
     try {
       JCNewClass newClass = (JCNewClass) newClassTree;
       String thisClassName = newClass.constructor.getEnclosingElement().toString();
-      com.sun.tools.javac.util.List<Type> thisParameterTypes = 
+      com.sun.tools.javac.util.List<Type> thisParameterTypes =
           newClass.constructor.type.getParameterTypes();
       List<String> thisParameterTypesAsStrings = new ArrayList<String>(thisParameterTypes.length());
       for (Type t : thisParameterTypes) {
         thisParameterTypesAsStrings.add(t.toString());
       }
-      
+
       return thisClassName.equals(className) && thisParameterTypesAsStrings.equals(parameterTypes);
     } catch (NullPointerException e) {
       return false;

@@ -342,7 +342,7 @@ public class GuardedByBinderTest {
           ));
   }
 
-  //TODO(cushon): disallow non-final lock expressions
+  //TODO(user): disallow non-final lock expressions
   @Ignore
   @Test
   public void nonFinalStatic() throws Exception {
@@ -359,7 +359,7 @@ public class GuardedByBinderTest {
         );
   }
 
-  //TODO(cushon): disallow non-final lock expressions
+  //TODO(user): disallow non-final lock expressions
   @Ignore
   @Test
   public void nonFinal() throws Exception {
