@@ -22,6 +22,7 @@ import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.errorprone.bugpatterns.*;
 import com.google.errorprone.bugpatterns.BugChecker.*;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByValidator;
+import com.google.errorprone.bugpatterns.threadsafety.ThreadSafe;
 
 import com.sun.source.tree.*;
 
@@ -139,7 +140,8 @@ public class ErrorProneScanner extends Scanner {
       ArrayHashCode.class,
       PrimitiveArrayPassedToVarargsMethod.class,
       IncrementDecrementVolatile.class,
-      GuardedByValidator.class
+      GuardedByValidator.class,
+      ThreadSafe.class
   );
 
   /**

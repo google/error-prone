@@ -27,12 +27,9 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
-import com.sun.tools.javac.code.Symbol;
 
 /**
  * @author cushon@google.com (Liam Miller-Cushon)
@@ -58,30 +55,17 @@ public class GuardedByValidator extends BugChecker implements VariableTreeMatche
 
   @Override
   public Description matchMethod(MethodTree tree, final VisitorState state) {
-    return validateGuardedBy(tree, state);
+    return GuardedByUtils.isGuardedByValid(tree, state)
+        ? Description.NO_MATCH
+        : describeMatch(tree, Fix.NO_FIX);
   }
 
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
     // We only want to check field declarations. The VariableTree might be for a local or a
     // parameter, but they won't have @GuardedBy annotations.
-    return validateGuardedBy(tree, state);
-  }
-
-  Description validateGuardedBy(Tree tree, VisitorState state) {
-    String guard = GuardedByUtils.getGuardValue(tree);
-    if (guard == null) {
-      return Description.NO_MATCH;
-    }
-    Symbol enclosingClass = ASTHelpers.getSymbol(tree).owner;
-    try {
-      GuardedByBinder.bindString(
-          guard,
-          GuardedBySymbolResolver.fromVisitorState(enclosingClass, state),
-          state.context);
-    } catch (IllegalGuardedBy e) {
-      return describeMatch(tree, Fix.NO_FIX);
-    }
-    return Description.NO_MATCH;
+    return GuardedByUtils.isGuardedByValid(tree, state)
+        ? Description.NO_MATCH
+        : describeMatch(tree, Fix.NO_FIX);
   }
 }

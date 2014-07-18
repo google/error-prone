@@ -142,14 +142,15 @@ public abstract class GuardedByExpression {
 
     Select select(GuardedByExpression base, Symbol member) {
       if (member instanceof VarSymbol) {
-        return select(base, (VarSymbol) member); 
+        return select(base, (VarSymbol) member);
       }
       if (member instanceof MethodSymbol) {
-        return select(base, (MethodSymbol) member); 
+        return select(base, (MethodSymbol) member);
       }
-      throw new IllegalStateException();
+      throw new IllegalStateException(
+          "Bad select expression: expected symbol " + member.getKind());
     }
-    
+
     Select select(GuardedByExpression base, Symbol.VarSymbol member) {
       return new Select(base, member, member.type);
     }
@@ -244,17 +245,47 @@ public abstract class GuardedByExpression {
   
   @Override
   public String toString() {
-    return prettyPrint();
+    return PrettyPrinter.print(this);
   }
 
-  public String prettyPrint() {
-    return Pretty.print(this);
+  public String debugPrint() {
+    return DebugPrinter.print(this);
   }
 
   /**
+   * Pretty printer for lock expressions.
+   */
+  private static class PrettyPrinter {
+    public static String print(GuardedByExpression exp) {
+      StringBuilder sb = new StringBuilder();
+      pprint(exp, sb);
+      return sb.toString();
+    }
+
+    private static void pprint(GuardedByExpression exp, StringBuilder sb) {
+      switch (exp.kind()) {
+        case TYPE_LITERAL:
+        case CLASS_LITERAL:
+        case THIS_LITERAL:
+        case LOCAL_VARIABLE:
+          sb.append(exp.sym());
+          break;
+        case SELECT:
+          pprintSelect((Select) exp, sb);
+          break;
+      }
+    }
+
+    private static void pprintSelect(Select exp, StringBuilder sb) {
+      pprint(exp.base, sb);
+      sb.append(String.format(".%s", exp.sym));
+    }
+  }
+  
+  /**
    * s-exp pretty printer for lock expressions.
    */
-  private static class Pretty {
+  private static class DebugPrinter {
     public static String print(GuardedByExpression exp) {
       StringBuilder sb = new StringBuilder();
       pprint(exp, sb);

@@ -396,7 +396,7 @@ public class GuardedByBinderTest {
         if (classDecl.getSimpleName().contentEquals(className)) {
           GuardedBySymbolResolver resolver = GuardedBySymbolResolver.from(
               classDecl.sym, (JCTree.JCCompilationUnit) compilationUnit, task.getContext(), null);
-          return GuardedByBinder.bindString(exprString, resolver, task.getContext()).prettyPrint();
+          return GuardedByBinder.bindString(exprString, resolver, task.getContext()).debugPrint();
         }
       }
     }
