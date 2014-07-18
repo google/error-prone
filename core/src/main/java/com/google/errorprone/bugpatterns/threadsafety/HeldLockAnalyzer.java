@@ -126,11 +126,12 @@ public class HeldLockAnalyzer {
       scan(tree.getResources(), locks);
 
       // Cheesy try/finally heuristic: assume that all locks released in the finally
-      // are held for the entire body of the try statement.
-      scan(tree.getBlock(), 
-          locks.plusAll(ReleasedLockFinder.find(tree.getFinallyBlock(), visitorState)));
+      // are held for the entirety of the try and catch statements.
+      Collection<GuardedByExpression> releasedLocks =
+          ReleasedLockFinder.find(tree.getFinallyBlock(), visitorState);
+      scan(tree.getBlock(), locks.plusAll(releasedLocks));
+      scan(tree.getCatches(), locks.plusAll(releasedLocks));
 
-      scan(tree.getCatches(), locks);
       scan(tree.getFinallyBlock(), locks);
       return null;
     }

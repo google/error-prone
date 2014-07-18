@@ -56,6 +56,8 @@ public class ThreadSafeTest {
             "    x++;",
             "    try {",
             "      x++;",
+            "    } catch (Exception e) {",
+            "      x--;",
             "    } finally {",
             "      lock.unlock();",
             "    }",
