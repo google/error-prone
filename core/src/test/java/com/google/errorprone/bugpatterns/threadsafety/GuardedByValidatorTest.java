@@ -41,9 +41,9 @@ public class GuardedByValidatorTest {
             "package threadsafety.Test;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class Test {",
-            "  //BUG: Suggestion includes \"\"",
+            "  // BUG: Diagnostic contains:",
             "  @GuardedBy(\"This thread\") int x;",
-            "  //BUG: Suggestion includes \"\"",
+            "  // BUG: Diagnostic contains:",
             "  @GuardedBy(\"This thread\") void m() {}",
             "}"
         )
@@ -90,7 +90,7 @@ public class GuardedByValidatorTest {
         )
     );
   }
-  
+
   @Test
   public void testBadInstanceAccess() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
@@ -100,7 +100,7 @@ public class GuardedByValidatorTest {
             "import javax.annotation.concurrent.GuardedBy;",
             "class Test {",
             "  final Object instanceField = new Object();",
-            "  //BUG: Suggestion includes \"\"",
+            "  // BUG: Diagnostic contains:",
             "  @GuardedBy(\"Test.instanceField\") Object s_;",
             "}"
         )

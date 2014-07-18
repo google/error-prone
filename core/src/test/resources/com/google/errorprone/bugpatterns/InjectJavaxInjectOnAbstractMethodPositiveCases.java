@@ -25,7 +25,7 @@ public class InjectJavaxInjectOnAbstractMethodPositiveCases {
    * Abstract class has an injectable(javax.inject.Inject) abstract method.
    */
   public abstract class TestClass1 {
-    //BUG: Suggestion includes "remove"  
+    // BUG: Diagnostic contains: remove  
     @javax.inject.Inject
     abstract void abstractMethod();
   }
@@ -35,7 +35,7 @@ public class InjectJavaxInjectOnAbstractMethodPositiveCases {
    * an unrelated concrete method.
    */
   public abstract class TestClass2 {
-    //BUG: Suggestion includes "remove"  
+    // BUG: Diagnostic contains: remove  
     @javax.inject.Inject
     abstract void abstractMethod();
     public void foo(){}
@@ -46,7 +46,7 @@ public class InjectJavaxInjectOnAbstractMethodPositiveCases {
    * an unrelated abstarct method.
    */
   public abstract class TestClass3 {
-    //BUG: Suggestion includes "remove"  
+    // BUG: Diagnostic contains: remove  
     @javax.inject.Inject
     abstract void abstractMethod1();
     abstract void abstarctMethod2();

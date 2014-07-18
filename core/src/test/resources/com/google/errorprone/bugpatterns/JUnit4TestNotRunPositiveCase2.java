@@ -26,9 +26,9 @@ import org.mockito.runners.MockitoJUnitRunner;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class JUnit4TestNotRunPositiveCase2 {
-  //BUG: Suggestion includes "@Test"
+  // BUG: Diagnostic contains: @Test
   public void testThisIsATest() {}
   
-  //BUG: Suggestion includes "@Test"
+  // BUG: Diagnostic contains: @Test
   public static void testThisIsAStaticTest() {}
 }

@@ -27,7 +27,7 @@ public class LongLiteralLowerCaseSuffixPositiveCase2 {
   private static final String TEST_STRING = "Îñţérñåţîöñåļîžåţîờñ";
 
   public void underscoredLowerCase() {
-    //BUG: Suggestion includes "value = 0_1__2L"
+    // BUG: Diagnostic contains: value = 0_1__2L
     long value = 0_1__2l;
   }
 }

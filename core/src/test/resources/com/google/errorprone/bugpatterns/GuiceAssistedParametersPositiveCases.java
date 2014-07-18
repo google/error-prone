@@ -33,10 +33,10 @@ public class GuiceAssistedParametersPositiveCases {
   public class TestClass1 {
     @Inject
     public TestClass1(int n,
-                      //BUG: Suggestion includes "remove"
+                      // BUG: Diagnostic contains: remove
                       @Assisted
                       String x,
-                      //BUG: Suggestion includes "remove"
+                      // BUG: Diagnostic contains: remove
                       @Assisted 
                       String y, int z) {}
   }
@@ -47,10 +47,10 @@ public class GuiceAssistedParametersPositiveCases {
   public class TestClass2 {
     @Inject
     public TestClass2(int n,
-                      //BUG: Suggestion includes "remove"
+                      // BUG: Diagnostic contains: remove
                       @Assisted("foo") 
                       int x,
-                      //BUG: Suggestion includes "remove"
+                      // BUG: Diagnostic contains: remove
                       @Assisted("foo") 
                       int y, String z) {}
   }
@@ -61,10 +61,10 @@ public class GuiceAssistedParametersPositiveCases {
   public class TestClass3 {
     @Inject
     public TestClass3(int n,
-                      //BUG: Suggestion includes "remove"
+                      // BUG: Diagnostic contains: remove
                       @Assisted("foo")
                       List<String> x,
-                      //BUG: Suggestion includes "remove"
+                      // BUG: Diagnostic contains: remove
                       @Assisted("foo")
                       List<String> y, String z) {}
   }

@@ -17,26 +17,26 @@
 /**
  * @deprecated
  */
-//BUG: Suggestion includes "@Deprecated"
+// BUG: Diagnostic contains: @Deprecated
 public class DepAnnPositiveCases {
 
   /**
    * @deprecated
    */
-  //BUG: Suggestion includes "@Deprecated"
+  // BUG: Diagnostic contains: @Deprecated
   public DepAnnPositiveCases() {
   }
   
   /**
    * @deprecated
    */
-  //BUG: Suggestion includes "@Deprecated"
+  // BUG: Diagnostic contains: @Deprecated
   int myField;
   
   /**
    * @deprecated
    */
-  //BUG: Suggestion includes "@Deprecated"
+  // BUG: Diagnostic contains: @Deprecated
   enum Enum {
     VALUE,
   }
@@ -44,14 +44,14 @@ public class DepAnnPositiveCases {
   /**
    * @deprecated
    */
-  //BUG: Suggestion includes "@Deprecated"
+  // BUG: Diagnostic contains: @Deprecated
   interface Interface {
   }
   
   /**
    * @deprecated 
    */
-  //BUG: Suggestion includes "@Deprecated"
+  // BUG: Diagnostic contains: @Deprecated
   public void deprecatedMethood() {
   }
 }

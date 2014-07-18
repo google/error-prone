@@ -27,7 +27,7 @@ public class CovariantEqualsPositiveCase3 {
   boolean isInVersion;
   String whitelist;
 
-  //BUG: Suggestion includes "Did you mean '@Override'"
+  // BUG: Diagnostic contains: Did you mean '@Override'
   public boolean equals(CovariantEqualsPositiveCase3 that) {
     return ((this.isInVersion == that.isInVersion) &&
             this.whitelist.equals(that.whitelist));

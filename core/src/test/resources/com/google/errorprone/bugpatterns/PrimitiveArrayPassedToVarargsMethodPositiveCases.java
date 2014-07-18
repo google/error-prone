@@ -34,16 +34,16 @@ public class PrimitiveArrayPassedToVarargsMethodPositiveCases {
   public void doIt() {
     int[] intArray = {1, 2, 3};
     
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     objectVarargsMethod(intArray);
     
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     genericVarargsMethod(intArray);
     
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     objectVarargsMethodWithMultipleParams(new Object(), intArray);
     
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     Arrays.asList(intArray);
   }
 }

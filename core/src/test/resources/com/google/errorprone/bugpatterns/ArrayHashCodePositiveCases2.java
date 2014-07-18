@@ -31,19 +31,19 @@ public class ArrayHashCodePositiveCases2 {
    
   public void javaUtilObjectsHashCode() {
     int hashCode;
-    //BUG: Suggestion includes "Arrays.hashCode(objArray)"
+    // BUG: Diagnostic contains: Arrays.hashCode(objArray)
     hashCode = Objects.hashCode(objArray);
-    //BUG: Suggestion includes "Arrays.hashCode(stringArray)"
+    // BUG: Diagnostic contains: Arrays.hashCode(stringArray)
     hashCode = Objects.hashCode(stringArray);
-    //BUG: Suggestion includes "Arrays.hashCode(intArray)"
+    // BUG: Diagnostic contains: Arrays.hashCode(intArray)
     hashCode = Objects.hashCode(intArray);
   }
   
   public void javaUtilObjectsHash() {
     int hashCode;
-    //BUG: Suggestion includes "Arrays.hashCode(intArray)"
+    // BUG: Diagnostic contains: Arrays.hashCode(intArray)
     hashCode = Objects.hash(intArray);
-    //BUG: Suggestion includes "Arrays.hashCode(byteArray)"
+    // BUG: Diagnostic contains: Arrays.hashCode(byteArray)
     hashCode = Objects.hash(byteArray);
   }
 }

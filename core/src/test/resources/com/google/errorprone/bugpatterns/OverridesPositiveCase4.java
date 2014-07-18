@@ -34,14 +34,14 @@ public class OverridesPositiveCase4 {
 
   abstract class Child1 extends Base {
     @Override
-    //BUG: Suggestion includes "(@Note final Map<Object, Object> /* asd */ [] /* dsa */ xs);"
+    // BUG: Diagnostic contains: (@Note final Map<Object, Object> /* asd */ [] /* dsa */ xs);
     abstract void arrayMethod(@Note final Map<Object, Object> /* asd */ ... /* dsa */ xs);
   }
   
   abstract class Child2 extends Base {
     @Override
     //TODO(cushon): improve testing infrastructure so we can enforce that no fix is suggested.
-    //BUG: Suggestion includes "Varargs"
+    // BUG: Diagnostic contains: Varargs
     abstract void varargsMethod(@Note final Map<Object, Object>  /*dsa*/ [ /* [ */ ] /* dsa */ xs);
   }
 }

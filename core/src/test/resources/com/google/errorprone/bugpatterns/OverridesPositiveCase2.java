@@ -32,19 +32,19 @@ public class OverridesPositiveCase2 {
 
   abstract class SubOne extends Base {
     @Override
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     abstract void varargsMethod(Object[] newNames);
   }
   
   abstract class SubTwo extends SubOne {
     @Override
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     abstract void varargsMethod(Object... xs);
   }
   
   abstract class SubThree extends SubTwo {
     @Override
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     abstract void varargsMethod(Object[] newNames);
   }
 }

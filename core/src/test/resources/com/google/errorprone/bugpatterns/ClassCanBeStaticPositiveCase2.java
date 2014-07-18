@@ -25,7 +25,7 @@ public class ClassCanBeStaticPositiveCase2 {
   int outerVar2;
 
   // Outer variable overridden
-  //BUG: Suggestion includes "private static final class Inner2"
+  // BUG: Diagnostic contains: private static final class Inner2
   private   final class Inner2 {
     int outerVar1;
     int innerVar = outerVar1;

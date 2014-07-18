@@ -32,66 +32,66 @@ public class MisusedFormattingLoggerPositiveCases {
   }
 
   public void messageFormatLogWouldLoseData() {
-    //BUG: Suggestion includes "logger.warning("{2} and {0} ({1})", "foo", "bar", "baz");"
+    // BUG: Diagnostic contains: logger.warning("{2} and {0} ({1})", "foo", "bar", "baz");
     logger.warning("{2} and {0}", "foo", "bar", "baz");
 
-    //BUG: Suggestion includes "logger.severe("{1} and {1} ({0}, {2})", "foo", "bar", "baz");"
+    // BUG: Diagnostic contains: logger.severe("{1} and {1} ({0}, {2})", "foo", "bar", "baz");
     logger.severe("{1} and {1}", "foo", "bar", "baz");
 
-    //BUG: Suggestion includes "logger.info("Invalid id ({0})", "id");"
+    // BUG: Diagnostic contains: logger.info("Invalid id ({0})", "id");
     logger.info("Invalid id", "id");
   }
 
   public void printfLogWouldLoseData() {
-    //BUG: Suggestion includes "logger.warningfmt("%8s and %s (%s)", "foo", "bar", "baz");"
+    // BUG: Diagnostic contains: logger.warningfmt("%8s and %s (%s)", "foo", "bar", "baz");
     logger.warningfmt("%8s and %s", "foo", "bar", "baz");
 
-    //BUG: Suggestion includes "logger.infofmt("Invalid id (%s)", "id");"
+    // BUG: Diagnostic contains: logger.infofmt("Invalid id (%s)", "id");
     logger.infofmt("Invalid id", "id");
   }
 
   public void messageFormatIsAccidentallyQuoted() {
-    //BUG: Suggestion includes "logger.info("User''s id: {0}", 123)"
+    // BUG: Diagnostic contains: logger.info("User''s id: {0}", 123)
     logger.info("User's id: {0}", 123);
 
-    //BUG: Suggestion includes "logger.info("Id: ''{0}''", 123)"
+    // BUG: Diagnostic contains: logger.info("Id: ''{0}''", 123)
     logger.info("Id: '{0}'", 123);
 
     // Make sure tests break if String literals stop unnecessarily escaping single quotes:
-    //BUG: Suggestion includes "logger.severe("User\\''s id: {0}", 123)"
+    // BUG: Diagnostic contains: logger.severe("User\\''s id: {0}", 123)
     logger.severe("User\\'s id: {0}", 123);
   }
 
   public void wrongFormatStringType() {
-    //BUG: Suggestion includes "logger.infofmt("User %04.4f requested %s", 3.14, "test")"
+    // BUG: Diagnostic contains: logger.infofmt("User %04.4f requested %s", 3.14, "test")
     logger.info("User %04.4f requested %s", 3.14, "test");
 
-    //BUG: Suggestion includes "logger.severefmt("Value: '%d'", 42)"
+    // BUG: Diagnostic contains: logger.severefmt("Value: '%d'", 42)
     logger.severe("Value: '%d'", 42);
 
-    //BUG: Suggestion includes "logger.finest("User {0,number} requested {1}", 42, "test")"
+    // BUG: Diagnostic contains: logger.finest("User {0,number} requested {1}", 42, "test")
     logger.finestfmt("User {0,number} requested {1}", 42, "test");
   }
 
   public void wrongExceptionPosition() {
-    //BUG: Suggestion includes "logger.warning(new RuntimeException("x"), "{0}", 42)"
+    // BUG: Diagnostic contains: logger.warning(new RuntimeException("x"), "{0}", 42)
     logger.warning("{0}", 42, new RuntimeException("x"));
 
-    //BUG: Suggestion includes "logger.log(Level.WARNING, new RuntimeException("x"), "{0}", 42)"
+    // BUG: Diagnostic contains: logger.log(Level.WARNING, new RuntimeException("x"), "{0}", 42)
     logger.log(Level.WARNING, "{0}", 42, new RuntimeException("x"));
 
-    //BUG: Suggestion includes "logger.severe(new RuntimeException(), "Error")"
+    // BUG: Diagnostic contains: logger.severe(new RuntimeException(), "Error")
     logger.severe("Error", new RuntimeException().toString());
 
-    //BUG: Suggestion includes "logger.severe(this.getException().getCause(), "Error")"
+    // BUG: Diagnostic contains: logger.severe(this.getException().getCause(), "Error")
     logger.severe("Error", this.getException().getCause().toString());
 
-    //BUG: Suggestion includes "logger.warningfmt(new RuntimeException("x"), "%s (%s)", 42, new RuntimeException("y"))"
+    // BUG: Diagnostic contains: logger.warningfmt(new RuntimeException("x"), "%s (%s)", 42, new RuntimeException("y"))
     logger.warningfmt(new RuntimeException("x"), "%s", 42, new RuntimeException("y"));
   }
 
   public void combo() {
-    //BUG: Suggestion includes "logger.warningfmt(new RuntimeException(), "var='%s' (%s)", "foo", "bar");"
+    // BUG: Diagnostic contains: logger.warningfmt(new RuntimeException(), "var='%s' (%s)", "foo", "bar");
     logger.warning("var='%s'", "foo", "bar", new RuntimeException().toString());
   }
 }

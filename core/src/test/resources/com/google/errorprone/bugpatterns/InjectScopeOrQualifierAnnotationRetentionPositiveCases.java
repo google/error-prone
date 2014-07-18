@@ -38,7 +38,7 @@ public class InjectScopeOrQualifierAnnotationRetentionPositiveCases {
    */
   @Scope
   @Target({TYPE, METHOD})
-  //BUG: Suggestion includes "@Retention(RUNTIME)" 
+  // BUG: Diagnostic contains: @Retention(RUNTIME) 
   @Retention(SOURCE)
   public @interface TestAnnotation1 {
   }
@@ -48,7 +48,7 @@ public class InjectScopeOrQualifierAnnotationRetentionPositiveCases {
    */
   @ScopeAnnotation
   @Target({TYPE, METHOD})
-  //BUG: Suggestion includes "@Retention(RUNTIME)" 
+  // BUG: Diagnostic contains: @Retention(RUNTIME) 
   @Retention(SOURCE)
   public @interface TestAnnotation2 {
   }
@@ -58,7 +58,7 @@ public class InjectScopeOrQualifierAnnotationRetentionPositiveCases {
    */
   @Qualifier
   @Target({TYPE, METHOD})
-  //BUG: Suggestion includes "@Retention(RUNTIME)" 
+  // BUG: Diagnostic contains: @Retention(RUNTIME) 
   @Retention(SOURCE)
   public @interface TestAnnotation3 {
   }
@@ -68,7 +68,7 @@ public class InjectScopeOrQualifierAnnotationRetentionPositiveCases {
    */
   @BindingAnnotation
   @Target({TYPE, METHOD})
-  //BUG: Suggestion includes "@Retention(RUNTIME)" 
+  // BUG: Diagnostic contains: @Retention(RUNTIME) 
   @Retention(SOURCE)
   public @interface TestAnnotation4 {
   }
@@ -78,7 +78,7 @@ public class InjectScopeOrQualifierAnnotationRetentionPositiveCases {
    */
   @BindingAnnotation
   @Target({TYPE, METHOD})
-  //BUG: Suggestion includes "@Retention(RUNTIME)" 
+  // BUG: Diagnostic contains: @Retention(RUNTIME) 
   public @interface TestAnnotation5 {
   }
 }

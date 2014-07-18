@@ -27,17 +27,17 @@ public class SelfAssignmentPositiveCases2 {
   private int a;
   private Foo foo;
   
-  //BUG: Suggestion includes "private static final Object obj"
+  // BUG: Diagnostic contains: private static final Object obj
   private static final Object obj = SelfAssignmentPositiveCases2.obj;
-  //BUG: Suggestion includes "private static final Object obj2"
+  // BUG: Diagnostic contains: private static final Object obj2
   private static final Object obj2 = checkNotNull(SelfAssignmentPositiveCases2.obj2);
     
   public void test6() {
     Foo foo = new Foo();
     foo.a = 2;
-    //BUG: Suggestion includes "remove this line"
+    // BUG: Diagnostic contains: remove this line
     foo.a = foo.a;
-    //BUG: Suggestion includes "checkNotNull(foo.a)"
+    // BUG: Diagnostic contains: checkNotNull(foo.a)
     foo.a = checkNotNull(foo.a);
   }
   
@@ -45,31 +45,31 @@ public class SelfAssignmentPositiveCases2 {
     Foobar f = new Foobar();
     f.foo = new Foo();
     f.foo.a = 10;
-    //BUG: Suggestion includes "remove this line"
+    // BUG: Diagnostic contains: remove this line
     f.foo.a = f.foo.a;
-    //BUG: Suggestion includes "checkNotNull(f.foo.a)"
+    // BUG: Diagnostic contains: checkNotNull(f.foo.a)
     f.foo.a = checkNotNull(f.foo.a);
   }
   
   public void test8() {
     foo = new Foo();
-    //BUG: Suggestion includes "remove this line"
+    // BUG: Diagnostic contains: remove this line
     this.foo.a = foo.a;
-    //BUG: Suggestion includes "checkNotNull(foo.a)"
+    // BUG: Diagnostic contains: checkNotNull(foo.a)
     this.foo.a = checkNotNull(foo.a);
   }
   
   public void test9(Foo fao, Foo bar) {
-    //BUG: Suggestion includes "this.foo = fao"
+    // BUG: Diagnostic contains: this.foo = fao
     this.foo = foo;
-    //BUG: Suggestion includes "this.foo = checkNotNull(fao)"
+    // BUG: Diagnostic contains: this.foo = checkNotNull(fao)
     this.foo = checkNotNull(foo);
   }
   
   public void test10(Foo foo) {
-    //BUG: Suggestion includes "this.foo = foo"
+    // BUG: Diagnostic contains: this.foo = foo
     foo = foo;
-    //BUG: Suggestion includes "this.foo = checkNotNull(foo)"
+    // BUG: Diagnostic contains: this.foo = checkNotNull(foo)
     foo = checkNotNull(foo);
   }
      

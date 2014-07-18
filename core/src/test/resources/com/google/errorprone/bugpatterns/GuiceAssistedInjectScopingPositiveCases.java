@@ -26,7 +26,7 @@ import com.google.inject.servlet.RequestScoped;
  */
 public class GuiceAssistedInjectScopingPositiveCases {
 
-  //BUG: Suggestion includes "remove this line"
+  // BUG: Diagnostic contains: remove this line
   @Singleton
   public class TestClass {
     @Inject
@@ -34,7 +34,7 @@ public class GuiceAssistedInjectScopingPositiveCases {
     }
   }
   
-  //BUG: Suggestion includes "remove this line"
+  // BUG: Diagnostic contains: remove this line
   @RequestScoped
   public class TestClass2 {
     @Inject
@@ -42,7 +42,7 @@ public class GuiceAssistedInjectScopingPositiveCases {
     }
   }
   
-  //BUG: Suggestion includes "remove this line"
+  // BUG: Diagnostic contains: remove this line
   @Singleton
   public class TestClass3 {
     @AssistedInject
@@ -53,7 +53,7 @@ public class GuiceAssistedInjectScopingPositiveCases {
   /**
    * Multiple constructors, but only one with @Inject, and that one matches.
    */
-  //BUG: Suggestion includes "remove this line"
+  // BUG: Diagnostic contains: remove this line
   @Singleton
   public class TestClass4 {
     @Inject
@@ -70,7 +70,7 @@ public class GuiceAssistedInjectScopingPositiveCases {
   /**
    * Multiple constructors, none with @Inject, one matches.
    */
-  //BUG: Suggestion includes "remove this line"
+  // BUG: Diagnostic contains: remove this line
   @Singleton
   public class TestClass5 {
     public TestClass5(String unassisted1, String unassisted2) {
@@ -87,7 +87,7 @@ public class GuiceAssistedInjectScopingPositiveCases {
   /**
    * JSR330 annotations.
    */
-  //BUG: Suggestion includes "remove this line"
+  // BUG: Diagnostic contains: remove this line
   @javax.inject.Singleton
   public class TestClass6 {
     @javax.inject.Inject

@@ -26,12 +26,12 @@ public class ArrayStringConcatenationPositiveCases {
   private static final int[] a = {1, 2, 3};
 
   public void stringLiteralLeftOperandIsArray() {
-    //BUG: Suggestion includes "Arrays.toString(a) + "
+    // BUG: Diagnostic contains: Arrays.toString(a) + 
     String b = a + " a string";
   }
 
   public void stringLiteralRightOperandIsArray() {
-    //BUG: Suggestion includes " + Arrays.toString(a)"
+    // BUG: Diagnostic contains: + Arrays.toString(a)
     String b = "a string" + a;
   }
 }

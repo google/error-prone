@@ -27,32 +27,32 @@ public class InvalidPatternSyntaxPositiveCases {
   public static final String INVALID = "*";
   public static final String DOT = ".";
   {
-    //BUG: Suggestion includes "Unclosed character class"
+    // BUG: Diagnostic contains: Unclosed character class
     Pattern.matches("[^\\]", "");
-    //BUG: Suggestion includes "Unclosed character class"
+    // BUG: Diagnostic contains: Unclosed character class
     Pattern.matches("[a-z", "");
-    //BUG: Suggestion includes "Illegal repetition"
+    // BUG: Diagnostic contains: Illegal repetition
     Pattern.matches("{", "");
 
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     Pattern.matches(INVALID, "");
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     "".matches(INVALID);
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     "".replaceAll(INVALID, "");
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     "".replaceFirst(INVALID, "");
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     "".split(INVALID);
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     "".split(INVALID, 0);
 
-    //BUG: Suggestion includes ""foo.bar".split("\\.")"
+    // BUG: Diagnostic contains: "foo.bar".split("\\.")
     "foo.bar".split(".");
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     "foo.bonk".split(DOT);
     
-    //BUG: Suggestion includes "Splitter.onPattern("\\.")"
+    // BUG: Diagnostic contains: Splitter.onPattern("\\.")
     Splitter.onPattern(".");
 
   }

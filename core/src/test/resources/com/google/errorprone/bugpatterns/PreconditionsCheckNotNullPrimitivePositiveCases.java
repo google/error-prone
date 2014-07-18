@@ -39,54 +39,54 @@ public class PreconditionsCheckNotNullPrimitivePositiveCases {
     
     // Do we detect all primitive types?
     
-    //BUG: Suggestion includes "remove this line"
+    // BUG: Diagnostic contains: remove this line
     Preconditions.checkNotNull(byte1);
-    //BUG: Suggestion includes "remove this line"
+    // BUG: Diagnostic contains: remove this line
     Preconditions.checkNotNull(short1);
-    //BUG: Suggestion includes "remove this line"
+    // BUG: Diagnostic contains: remove this line
     Preconditions.checkNotNull(int1);
-    //BUG: Suggestion includes "remove this line"
+    // BUG: Diagnostic contains: remove this line
     Preconditions.checkNotNull(long1);
-    //BUG: Suggestion includes "remove this line"
+    // BUG: Diagnostic contains: remove this line
     Preconditions.checkNotNull(float1);
-    //BUG: Suggestion includes "remove this line"
+    // BUG: Diagnostic contains: remove this line
     Preconditions.checkNotNull(double1);
-    //BUG: Suggestion includes "remove this line"
+    // BUG: Diagnostic contains: remove this line
     Preconditions.checkNotNull(boolean1);
-    //BUG: Suggestion includes "remove this line"
+    // BUG: Diagnostic contains: remove this line
     Preconditions.checkNotNull(char1);
     
     // Do we give the right suggested fix? 
     
-    //BUG: Suggestion includes "boolean1 = boolean2;"
+    // BUG: Diagnostic contains: boolean1 = boolean2;
     boolean1 = Preconditions.checkNotNull(boolean2);
-    //BUG: Suggestion includes "boolean1 = int1 == int2;"
+    // BUG: Diagnostic contains: boolean1 = int1 == int2;
     boolean1 = Preconditions.checkNotNull(int1 == int2);
-    //BUG: Suggestion includes "checkState(tester.hasId())"
+    // BUG: Diagnostic contains: checkState(tester.hasId())
     Preconditions.checkNotNull(tester.hasId());
-    //BUG: Suggestion includes "checkState(tester.hasId(), "Must have ID!")"
+    // BUG: Diagnostic contains: checkState(tester.hasId(), "Must have ID!")
     Preconditions.checkNotNull(tester.hasId(), "Must have ID!");
-    //BUG: Suggestion includes "checkState(tester.hasId(), "Must have %s!", "ID")"
+    // BUG: Diagnostic contains: checkState(tester.hasId(), "Must have %s!", "ID")
     Preconditions.checkNotNull(tester.hasId(), "Must have %s!", "ID");
     
     // Do we handle arguments that evaluate to a primitive type?
     
-    //BUG: Suggestion includes "Preconditions.checkNotNull(a)"
+    // BUG: Diagnostic contains: Preconditions.checkNotNull(a)
     Preconditions.checkNotNull(a != null);
-    //BUG: Suggestion includes "Preconditions.checkNotNull(a)"
+    // BUG: Diagnostic contains: Preconditions.checkNotNull(a)
     Preconditions.checkNotNull(a == null);
-    //BUG: Suggestion includes "Preconditions.checkState(int1 == int2)"
+    // BUG: Diagnostic contains: Preconditions.checkState(int1 == int2)
     Preconditions.checkNotNull(int1 == int2);
-    //BUG: Suggestion includes "Preconditions.checkState(int1 > int2)"
+    // BUG: Diagnostic contains: Preconditions.checkState(int1 > int2)
     Preconditions.checkNotNull(int1 > int2);
-    //BUG: Suggestion includes "remove this line"
+    // BUG: Diagnostic contains: remove this line
     Preconditions.checkNotNull(boolean1 ? int1 : int2);
     
     // Do we handle static imports?
     
-    //BUG: Suggestion includes "remove this line"
+    // BUG: Diagnostic contains: remove this line
     checkNotNull(byte1);
-    //BUG: Suggestion includes "'checkState(tester.hasId())"
+    // BUG: Diagnostic contains: 'checkState(tester.hasId())
     checkNotNull(tester.hasId());
   }
   
@@ -94,35 +94,35 @@ public class PreconditionsCheckNotNullPrimitivePositiveCases {
     Tester local = new Tester();
     // Do we correctly distinguish checkArgument from checkState?
     
-    //BUG: Suggestion includes "checkArgument(arg.hasId())"
+    // BUG: Diagnostic contains: checkArgument(arg.hasId())
     checkNotNull(arg.hasId());
-    //BUG: Suggestion includes "checkState(field.hasId())"
+    // BUG: Diagnostic contains: checkState(field.hasId())
     checkNotNull(field.hasId());
-    //BUG: Suggestion includes "checkState(local.hasId())"
+    // BUG: Diagnostic contains: checkState(local.hasId())
     checkNotNull(local.hasId());
-    //BUG: Suggestion includes "checkState(!local.hasId())"
+    // BUG: Diagnostic contains: checkState(!local.hasId())
     checkNotNull(!local.hasId());
 
-    //BUG: Suggestion includes "checkArgument(!(arg instanceof Tester))"
+    // BUG: Diagnostic contains: checkArgument(!(arg instanceof Tester))
     checkNotNull(!(arg instanceof Tester));
 
-    //BUG: Suggestion includes "checkState(getTrue())"
+    // BUG: Diagnostic contains: checkState(getTrue())
     checkNotNull(getTrue());
     
-    //BUG: Suggestion includes "remove this line"
+    // BUG: Diagnostic contains: remove this line
     checkNotNull(arg.getId());
-    //BUG: Suggestion includes "id = arg.getId()"
+    // BUG: Diagnostic contains: id = arg.getId()
     int id = checkNotNull(arg.getId());
     
-    //BUG: Suggestion includes "boolean b = arg.hasId();"
+    // BUG: Diagnostic contains: boolean b = arg.hasId();
     boolean b = checkNotNull(arg.hasId());
     
     // Do we handle long chains of method calls? 
     
-    //BUG: Suggestion includes "checkArgument(arg.getTester().getTester().hasId())"
+    // BUG: Diagnostic contains: checkArgument(arg.getTester().getTester().hasId())
     checkNotNull(arg.getTester().getTester().hasId());
     
-    //BUG: Suggestion includes "checkArgument(arg.tester.getTester().hasId())"
+    // BUG: Diagnostic contains: checkArgument(arg.tester.getTester().hasId())
     checkNotNull(arg.tester.getTester().hasId());
   }
 

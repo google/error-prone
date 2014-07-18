@@ -27,7 +27,7 @@ public class InjectJavaxInjectOnFinalFieldPositiveCases {
    * Class has a final injectable(javax.inject.Inject) field.
    */
   public class TestClass1 {
-    //BUG: Suggestion includes "remove"
+    // BUG: Diagnostic contains: remove
     @Inject 
     public final int n = 0;
   }

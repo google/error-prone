@@ -29,7 +29,7 @@ public class ArrayEqualsPositiveCases2 {
     int[] a = {1, 2, 3};
     int[] b = {1, 2, 3};
     
-    //BUG: Suggestion includes "Arrays.equals(a, b)"
+    // BUG: Diagnostic contains: Arrays.equals(a, b)
     if (Objects.equals(a, b)) {
       System.out.println("arrays are equal!");
     } else {
@@ -41,7 +41,7 @@ public class ArrayEqualsPositiveCases2 {
     Object[] a = new Object[3];
     Object[] b = new Object[3];
     
-    //BUG: Suggestion includes "Arrays.equals(a, b)"
+    // BUG: Diagnostic contains: Arrays.equals(a, b)
     if (Objects.equals(a, b)) {
       System.out.println("arrays are equal!");
     } else {

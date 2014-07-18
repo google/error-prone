@@ -29,19 +29,19 @@ public class ArrayHashCodePositiveCases {
   
   public void objectHashCode() {
     int hashCode;
-    //BUG: Suggestion includes "Arrays.hashCode(objArray)"
+    // BUG: Diagnostic contains: Arrays.hashCode(objArray)
     hashCode = objArray.hashCode();
-    //BUG: Suggestion includes "Arrays.hashCode(stringArray)"
+    // BUG: Diagnostic contains: Arrays.hashCode(stringArray)
     hashCode = stringArray.hashCode();
-    //BUG: Suggestion includes "Arrays.hashCode(intArray)"
+    // BUG: Diagnostic contains: Arrays.hashCode(intArray)
     hashCode = intArray.hashCode();
   }
 
   public void guavaObjectsHashCode() {
     int hashCode;
-    //BUG: Suggestion includes "Arrays.hashCode(intArray)"
+    // BUG: Diagnostic contains: Arrays.hashCode(intArray)
     hashCode = Objects.hashCode(intArray);
-    //BUG: Suggestion includes "Arrays.hashCode(byteArray)"
+    // BUG: Diagnostic contains: Arrays.hashCode(byteArray)
     hashCode = Objects.hashCode(byteArray);
   }
 }

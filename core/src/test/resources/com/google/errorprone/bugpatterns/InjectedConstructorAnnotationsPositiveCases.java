@@ -30,19 +30,19 @@ public class InjectedConstructorAnnotationsPositiveCases {
 
   /** A class with an optionally injected constructor. */
   public class TestClass1 {
-    //BUG: Suggestion includes "@Inject public TestClass1"
+    // BUG: Diagnostic contains: @Inject public TestClass1
     @Inject(optional = true) public TestClass1() {}
   }
 
   /** A class with an injected constructor that has a binding annotation. */
   public class TestClass2 {
-    //BUG: Suggestion includes "@Inject public TestClass2"
+    // BUG: Diagnostic contains: @Inject public TestClass2
     @TestBindingAnnotation @Inject public TestClass2() {}
   }
 
   /** A class whose constructor is optionally injected and has a binding annotation. */
   public class TestClass3 {
-    //BUG: Suggestion includes "@Inject public TestClass3"
+    // BUG: Diagnostic contains: @Inject public TestClass3
     @TestBindingAnnotation @Inject(optional = true) public TestClass3() {}
   }
 }

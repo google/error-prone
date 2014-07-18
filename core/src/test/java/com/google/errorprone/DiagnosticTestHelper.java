@@ -16,7 +16,7 @@
 
 package com.google.errorprone;
 
-import static junit.framework.TestCase.assertTrue;
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.junit.internal.matchers.StringContains.containsString;
@@ -28,12 +28,13 @@ import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Pattern;
 
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
@@ -151,13 +152,14 @@ public class DiagnosticTestHelper {
   }
 
   /**
-   * Pattern that marks a bug on the next line in a test file. For example,
-   * //BUG: Suggestion contains "foo.bar()", where "foo.bar()" is a string that should be in the
-   * diagnostic for the line.
+   * Comment that marks a bug on the next line in a test file.  For example,
+   * "// BUG: Diagnostic contains: foo.bar()", where "foo.bar()" is a string that should be in the
+   * diagnostic for the line.  Multiple expected strings may be separated by newlines, e.g.
+   * // BUG: Diagnostic contains: foo.bar()
+   * // bar.baz()
+   * // baz.foo()
    */
-  private static final Pattern BUG_MARKER_PATTERN =
-      Pattern.compile(".*//BUG: Suggestion includes \"(.*)\"\\s*$");
-
+  private static final String BUG_MARKER_COMMENT = "// BUG: Diagnostic contains:";
 
   /**
    * Asserts that the List of diagnostics contains a diagnostic on each line of the source file
@@ -177,26 +179,50 @@ public class DiagnosticTestHelper {
       if (line == null) {
         break;
       }
-      java.util.regex.Matcher patternMatcher = BUG_MARKER_PATTERN.matcher(line);
       Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher;
-      int lineNumber = reader.getLineNumber();
-      if (patternMatcher.matches()) {
-        String patternToMatch = patternMatcher.group(1);
-        // patternMatcher matches the //BUG comment, so we expect a diagnostic on the following
-        // line.
-        lineNumber++;
-        matcher = hasItem(diagnosticOnLine(source.toUri(), lineNumber, patternToMatch));
-        reader.readLine(); // skip next line -- we know it has an error
-
-        assertTrue(
-            "Did not see expected error on line " + lineNumber + ". All errors:\n" + diagnostics,
-            matcher.matches(diagnostics));
+      if (line.contains(BUG_MARKER_COMMENT)) {
+        List<String> patterns = extractPatterns(line, reader);
+        int lineNumber = reader.getLineNumber();
+        for (String pattern : patterns) {
+          matcher = hasItem(diagnosticOnLine(source.toUri(), lineNumber, pattern));
+          assertTrue(
+              "Did not see expected error on line " + lineNumber + ". All errors:\n" + diagnostics,
+              matcher.matches(diagnostics));
+        }
       } else {
+        int lineNumber = reader.getLineNumber() + 1;
         // Cast is unnecessary, but javac throws an error because of poor type inference.
         matcher = (Matcher) not(hasItem(diagnosticOnLine(source.toUri(), lineNumber)));
         assertTrue("Saw unexpected error on line " + lineNumber, matcher.matches(diagnostics));
       }
     } while (true);
     reader.close();
+  }
+
+  /**
+   * Extracts the patterns from a bug marker comment.
+   *
+   * @param line The first line of the bug marker comment
+   * @param reader A reader for the test file
+   * @return A list of patterns that the diagnostic is expected to contain
+   * @throws IOException
+   */
+  private static List<String> extractPatterns(String line, BufferedReader reader)
+      throws IOException {
+    int bugMarkerIndex = line.indexOf(BUG_MARKER_COMMENT);
+    if (bugMarkerIndex < 0) {
+      throw new IllegalArgumentException("Line must contain bug marker prefix");
+    }
+    List<String> result = new ArrayList<String>();
+    String restOfLine = line.substring(bugMarkerIndex + BUG_MARKER_COMMENT.length()).trim();
+    result.add(restOfLine);
+    line = reader.readLine().trim();
+    while (line.startsWith("//")) {
+      restOfLine = line.substring(2).trim();
+      result.add(restOfLine);
+      line = reader.readLine().trim();
+    }
+
+    return result;
   }
 }

@@ -28,22 +28,22 @@ public class ModifyingCollectionWithItselfPositiveCases {
   List<Integer> c = new ArrayList<Integer>();
   
   public boolean addAll(List<Integer> b) {
-    //BUG: Suggestion includes "a.addAll(b)"
+    // BUG: Diagnostic contains: a.addAll(b)
     return this.a.addAll(a);
   }
   
   public boolean removeAll(List<Integer> b) {
-    //BUG: Suggestion includes "a.containsAll(b)"
+    // BUG: Diagnostic contains: a.containsAll(b)
     return this.a.containsAll(this.a);
   }
   
   public boolean retainAll(List<Integer> a) {
-    //BUG: Suggestion includes "this.a.retainAll(a)"
+    // BUG: Diagnostic contains: this.a.retainAll(a)
     return a.retainAll(a);
   }
   
   public boolean containsAll() {
-    //BUG: Suggestion includes "a.clear()"
+    // BUG: Diagnostic contains: a.clear()
     return this.a.removeAll(a);
   }
 }

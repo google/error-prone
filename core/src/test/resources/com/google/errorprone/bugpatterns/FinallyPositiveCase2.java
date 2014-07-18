@@ -26,7 +26,7 @@ public class FinallyPositiveCase2 {
     try {
       
     } finally {
-      //BUG: Suggestion includes ""
+      // BUG: Diagnostic contains: 
       return;
     }
   }
@@ -35,7 +35,7 @@ public class FinallyPositiveCase2 {
     try {
     
     } finally {
-      //BUG: Suggestion includes ""
+      // BUG: Diagnostic contains: 
       throw new Exception();
     }
   }
@@ -45,7 +45,7 @@ public class FinallyPositiveCase2 {
     
     } finally {
       if (flag) {
-        //BUG: Suggestion includes ""
+        // BUG: Diagnostic contains: 
         throw new Exception(); 
       }
     }
@@ -62,7 +62,7 @@ public class FinallyPositiveCase2 {
             do {
               if (flag) {
               } else {
-                //BUG: Suggestion includes ""
+                // BUG: Diagnostic contains: 
                 throw new Exception();
               }
             } while (flag);
@@ -78,7 +78,7 @@ public class FinallyPositiveCase2 {
     } finally {
       try {
       } finally {
-        //BUG: Suggestion includes ""
+        // BUG: Diagnostic contains: 
         throw new IOException();
       }
     }
@@ -88,7 +88,7 @@ public class FinallyPositiveCase2 {
     try {
     } finally {
       try {
-        //BUG: Suggestion includes ""
+        // BUG: Diagnostic contains: 
         return;
       } finally {
       }
@@ -100,7 +100,7 @@ public class FinallyPositiveCase2 {
     } finally {
       try {
       } catch (Exception e) {
-        //BUG: Suggestion includes ""
+        // BUG: Diagnostic contains: 
         return;
       } finally {
       }
@@ -111,7 +111,7 @@ public class FinallyPositiveCase2 {
     try {
     } finally {
       try {
-        //BUG: Suggestion includes ""
+        // BUG: Diagnostic contains: 
         throw new Exception();
       } finally {
       }
@@ -123,7 +123,7 @@ public class FinallyPositiveCase2 {
     } finally {
       try {
       } catch (Exception e) {
-        //BUG: Suggestion includes ""
+        // BUG: Diagnostic contains: 
         throw new Exception();
       } finally {
       }

@@ -24,35 +24,35 @@ public class StringEqualityPositiveCases {
   public boolean testEquality(String x, String y) {
     boolean retVal;
 
-    //BUG: Suggestion includes "x.equals(y)" 
+    // BUG: Diagnostic contains: x.equals(y) 
     retVal = (x == y);
-    //BUG: Suggestion includes "!x.equals(y)"
+    // BUG: Diagnostic contains: !x.equals(y)
     retVal = (x != y);
-    //BUG: Suggestion includes "(x + y).equals(y + x)"
+    // BUG: Diagnostic contains: (x + y).equals(y + x)
     retVal = (x + y == y + x);
-    //BUG: Suggestion includes "!(x + y).equals(y + x)"
+    // BUG: Diagnostic contains: !(x + y).equals(y + x)
     retVal = (x + y != y + x);
-    //BUG: Suggestion includes "(x + "str").equals(y + "str")" 
+    // BUG: Diagnostic contains: (x + "str").equals(y + "str") 
     retVal = (x + "str" == y + "str");
-    //BUG: Suggestion includes "!(x + "str").equals(y + "str")" 
+    // BUG: Diagnostic contains: !(x + "str").equals(y + "str") 
     retVal = (x + "str" != y + "str");
-    //BUG: Suggestion includes ""str".equals(x)"
+    // BUG: Diagnostic contains: "str".equals(x)
     retVal = ("str" == x);
-     //BUG: Suggestion includes ""str".equals(x)"
+     // BUG: Diagnostic contains: "str".equals(x)
     retVal = (x == "str") ;
-    //BUG: Suggestion includes ""str2".equals("str")"
+    // BUG: Diagnostic contains: "str2".equals("str")
     retVal = ("str2" == "str");    
     final String constValue = "str";
-    //BUG: Suggestion includes "constValue.equals(x)"
+    // BUG: Diagnostic contains: constValue.equals(x)
     retVal = (x == constValue);
-    //BUG: Suggestion includes "!constValue.equals(x)"
+    // BUG: Diagnostic contains: !constValue.equals(x)
     retVal = (x != constValue);
-    //BUG: Suggestion includes "(x + y + constValue).equals(x + y)"
+    // BUG: Diagnostic contains: (x + y + constValue).equals(x + y)
     retVal = (x + y + constValue == x + y);
     final String constValue2 = "str2";
-    //BUG: Suggestion includes "(constValue + constValue2).equals(x)"
+    // BUG: Diagnostic contains: (constValue + constValue2).equals(x)
     retVal = (constValue + constValue2 == x);
-    //BUG: Suggestion includes "(constValue + constValue2).equals(x)"
+    // BUG: Diagnostic contains: (constValue + constValue2).equals(x)
     retVal = (x == constValue + constValue2);
 
     return retVal;

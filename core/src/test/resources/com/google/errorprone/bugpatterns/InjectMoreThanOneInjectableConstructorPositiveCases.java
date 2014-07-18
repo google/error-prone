@@ -28,11 +28,11 @@ public class InjectMoreThanOneInjectableConstructorPositiveCases {
    * Class has 2 constructors, both are injectable
    */
   public class TestClass1 {
-    //BUG: Suggestion includes "remove"
+    // BUG: Diagnostic contains: remove
     @Inject
     public TestClass1() {}
 
-    //BUG: Suggestion includes "remove"
+    // BUG: Diagnostic contains: remove
     @Inject
     public TestClass1(int n) {}
   }
@@ -41,11 +41,11 @@ public class InjectMoreThanOneInjectableConstructorPositiveCases {
    * Class has 3 constructors, two of which are injectable.
    */
   public class TestClass2 {
-    //BUG: Suggestion includes "remove"
+    // BUG: Diagnostic contains: remove
     @Inject
     public TestClass2() {}
 
-    //BUG: Suggestion includes "remove"
+    // BUG: Diagnostic contains: remove
     @Inject
     public TestClass2(int n) {}
 
@@ -57,11 +57,11 @@ public class InjectMoreThanOneInjectableConstructorPositiveCases {
    * annotations
    */
   public class TestClass3 {
-    //BUG: Suggestion includes "remove"
+    // BUG: Diagnostic contains: remove
     @Inject
     public TestClass3() {}
 
-    //BUG: Suggestion includes "remove"
+    // BUG: Diagnostic contains: remove
     @Inject
     @ConstructorProperties({"m", "n"})
     public TestClass3(int m, int n) {}
@@ -73,12 +73,12 @@ public class InjectMoreThanOneInjectableConstructorPositiveCases {
    */
   public class TestClass4 {
 
-    //BUG: Suggestion includes "remove"
+    // BUG: Diagnostic contains: remove
     @Inject
     public TestClass4() {}
 
     @ConstructorProperties({"m", "n"}) 
-    //BUG: Suggestion includes "remove"
+    // BUG: Diagnostic contains: remove
     @Inject
     public TestClass4(int m, int n) {}
   }

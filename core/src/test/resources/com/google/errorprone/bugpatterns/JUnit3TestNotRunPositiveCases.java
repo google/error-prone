@@ -24,68 +24,68 @@ import org.junit.Test;
  */
 public class JUnit3TestNotRunPositiveCases extends TestCase {
   // misspelled names
-  //BUG: Suggestion includes "testName"
+  // BUG: Diagnostic contains: testName
   public void tesName() {}
 
-  //BUG: Suggestion includes "testNameStatic"
+  // BUG: Diagnostic contains: testNameStatic
   public static void tesNameStatic() {}
 
-  //BUG: Suggestion includes "testName"
+  // BUG: Diagnostic contains: testName
   public void ttestName() {}
 
-  //BUG: Suggestion includes "testName"
+  // BUG: Diagnostic contains: testName
   public void teestName() {}
 
-  //BUG: Suggestion includes "testName"
+  // BUG: Diagnostic contains: testName
   public void tstName() {}
 
-  //BUG: Suggestion includes "testName"
+  // BUG: Diagnostic contains: testName
   public void tetName() {}
 
-  //BUG: Suggestion includes "testName"
+  // BUG: Diagnostic contains: testName
   public void etstName() {}
 
-  //BUG: Suggestion includes "testName"
+  // BUG: Diagnostic contains: testName
   public void tsetName() {}
 
-  //BUG: Suggestion includes "testName"
+  // BUG: Diagnostic contains: testName
   public void teatName() {}
 
-  //BUG: Suggestion includes "testName"
+  // BUG: Diagnostic contains: testName
   public void TestName() {}
 
-  //BUG: Suggestion includes "test_NAME"
+  // BUG: Diagnostic contains: test_NAME
   public void TEST_NAME() {}
 
   // These names are trickier to correct, but we should still indicate the bug
-  //BUG: Suggestion includes "test"
+  // BUG: Diagnostic contains: test
   public void tetsName() {}
 
-  //BUG: Suggestion includes "test"
+  // BUG: Diagnostic contains: test
   public void tesstName() {}
 
-  //BUG: Suggestion includes "test"
+  // BUG: Diagnostic contains: test
   public void tesetName() {}
 
-  //BUG: Suggestion includes "test"
+  // BUG: Diagnostic contains: test
   public void tesgName() {}
 
   // tentative - can cause false positives
-  //BUG: Suggestion includes "testName"
+  // BUG: Diagnostic contains: testName
   public void textName() {}
 
   // test with @Test annotation not run by JUnit3
-  //BUG: Suggestion includes "testName"
+  // BUG: Diagnostic contains: testName
   @Test public void name() {}
 
   // a few checks to verify the substitution is well-formed
-  //BUG: Suggestion includes "void testBasic() {"
+  // BUG: Diagnostic contains: void testBasic() {
   public void tesBasic() {}
 
-  //BUG: Suggestion includes "void testMoreSpaces() {"
+  // BUG: Diagnostic contains: void testMoreSpaces() {
   public    void    tesMoreSpaces(  )    {}
 
   @Test public void
-  //BUG: Suggestion includes "void testMultiline() {"
+  // BUG: Diagnostic contains: void testMultiline() {
       tesMultiline() {}
 }

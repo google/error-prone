@@ -24,9 +24,9 @@ import org.junit.runners.JUnit4;
  */
 @RunWith(JUnit4.class)
 public class JUnit4TestNotRunPositiveCase1 {
-  //BUG: Suggestion includes "@Test"
+  // BUG: Diagnostic contains: @Test
   public void testThisIsATest() {}
   
-  //BUG: Suggestion includes "@Test"
+  // BUG: Diagnostic contains: @Test
   public static void testThisIsAStaticTest() {}
 }

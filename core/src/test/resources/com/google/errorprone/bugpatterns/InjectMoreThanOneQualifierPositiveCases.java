@@ -32,31 +32,31 @@ public class InjectMoreThanOneQualifierPositiveCases {
    * A class in which the class, a constructor, a field, a method, and a method parameter each have
    * two com.google.inject.BindingAnnotation annotations.
    */
-  //BUG: Suggestion includes "remove"
+  // BUG: Diagnostic contains: remove
   @Foo1 
-  //BUG: Suggestion includes "remove"
+  // BUG: Diagnostic contains: remove
   @Foo2
   public class TestClass1 {
-    //BUG: Suggestion includes "remove"
+    // BUG: Diagnostic contains: remove
     @Foo1 
-    //BUG: Suggestion includes "remove"
+    // BUG: Diagnostic contains: remove
     @Foo2
     private int n;
 
-    //BUG: Suggestion includes "remove"
+    // BUG: Diagnostic contains: remove
     @Foo1 
-    //BUG: Suggestion includes "remove"
+    // BUG: Diagnostic contains: remove
     @Foo2
     public TestClass1() {}
 
-    //BUG: Suggestion includes "remove"
+    // BUG: Diagnostic contains: remove
     @Foo1 
-    //BUG: Suggestion includes "remove"
+    // BUG: Diagnostic contains: remove
     @Foo2
     public void setN(
-        //BUG: Suggestion includes "remove"
+        // BUG: Diagnostic contains: remove
         @Foo1 
-        //BUG: Suggestion includes "remove"
+        // BUG: Diagnostic contains: remove
         @Foo2 
         int n) {}
   }
@@ -66,31 +66,31 @@ public class InjectMoreThanOneQualifierPositiveCases {
    * two javax.inject.Qualifier annotations.
    */
 
-  //BUG: Suggestion includes "remove"
+  // BUG: Diagnostic contains: remove
   @Bar1 
-  //BUG: Suggestion includes "remove"
+  // BUG: Diagnostic contains: remove
   @Bar2
   public class TestClass2 {
-    //BUG: Suggestion includes "remove"
+    // BUG: Diagnostic contains: remove
     @Bar1 
-    //BUG: Suggestion includes "remove"
+    // BUG: Diagnostic contains: remove
     @Bar2
     private int n;
 
-    //BUG: Suggestion includes "remove"
+    // BUG: Diagnostic contains: remove
     @Bar1
-    //BUG: Suggestion includes "remove"
+    // BUG: Diagnostic contains: remove
     @Bar2
     public TestClass2() {}
 
-    //BUG: Suggestion includes "remove"
+    // BUG: Diagnostic contains: remove
     @Bar1 
-    //BUG: Suggestion includes "remove"
+    // BUG: Diagnostic contains: remove
     @Bar2
     public void setN(
-        //BUG: Suggestion includes "remove"
+        // BUG: Diagnostic contains: remove
         @Bar1 
-        //BUG: Suggestion includes "remove"
+        // BUG: Diagnostic contains: remove
          @Bar2
          int n) {}
   }
@@ -100,31 +100,31 @@ public class InjectMoreThanOneQualifierPositiveCases {
    * one javax.inject.Qualifier annotation and one com.google.inject.BindingAnnotation annotation.
    */
 
-  //BUG: Suggestion includes "remove"
+  // BUG: Diagnostic contains: remove
   @Foo1 
-  //BUG: Suggestion includes "remove"
+  // BUG: Diagnostic contains: remove
   @Bar1
   public class TestClass3 {
-    //BUG: Suggestion includes "remove"
+    // BUG: Diagnostic contains: remove
     @Foo1 
-    //BUG: Suggestion includes "remove"
+    // BUG: Diagnostic contains: remove
     @Bar1
     private int n;
 
-    //BUG: Suggestion includes "remove"
+    // BUG: Diagnostic contains: remove
     @Foo1 
-    //BUG: Suggestion includes "remove"
+    // BUG: Diagnostic contains: remove
     @Bar1
     public TestClass3() {}
 
-    //BUG: Suggestion includes "remove"
+    // BUG: Diagnostic contains: remove
     @Foo1 
-    //BUG: Suggestion includes "remove"
+    // BUG: Diagnostic contains: remove
     @Bar1
     public void setN(
-        //BUG: Suggestion includes "remove"
+        // BUG: Diagnostic contains: remove
         @Foo1 
-        //BUG: Suggestion includes "remove"
+        // BUG: Diagnostic contains: remove
         @Bar1 
         int n) {}
   }

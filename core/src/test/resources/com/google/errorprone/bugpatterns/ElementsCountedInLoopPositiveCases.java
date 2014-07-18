@@ -26,35 +26,35 @@ public class ElementsCountedInLoopPositiveCases {
     
   public int testEnhancedFor(Iterable<Object> iterable, HashSet<Object> set, Object... array) {
     int count = 0;
-    //BUG: Suggestion includes "count += Iterables.size(iterable)"
+    // BUG: Diagnostic contains: count += Iterables.size(iterable)
     for (Object item : iterable) {
       count ++;
     }
-    //BUG: Suggestion includes "count += Iterables.size(iterable)"
+    // BUG: Diagnostic contains: count += Iterables.size(iterable)
     for (Object item : iterable) {
       count += 1;
     }
-    //BUG: Suggestion includes "count += Iterables.size(iterable)"
+    // BUG: Diagnostic contains: count += Iterables.size(iterable)
     for (Object item : iterable) {
       count += 1.0; // float constant 1
     }
-    //BUG: Suggestion includes "count += Iterables.size(iterable)"
+    // BUG: Diagnostic contains: count += Iterables.size(iterable)
     for (Object item : iterable) {
       count += 1L; // long constant 1
     }
-    //BUG: Suggestion includes "count += Iterables.size(iterable)"
+    // BUG: Diagnostic contains: count += Iterables.size(iterable)
     for (Object item : iterable) {
       count  = count + 1;
     }
-    //BUG: Suggestion includes "count += Iterables.size(iterable)"
+    // BUG: Diagnostic contains: count += Iterables.size(iterable)
     for (Object item : iterable) {
       count  = 1 + count;
     }
-    //BUG: Suggestion includes "count += set.size()"
+    // BUG: Diagnostic contains: count += set.size()
     for (Object item : set) {
       count  = 1 + count;
     }
-    //BUG: Suggestion includes "count += array.length"
+    // BUG: Diagnostic contains: count += array.length
     for (Object item : array) {
       count  = 1 + count;
     }
@@ -64,15 +64,15 @@ public class ElementsCountedInLoopPositiveCases {
   public int testWhileLoop(List<Object> iterable) {
     Iterator<Object> it = iterable.iterator();
     int count = 0;
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     while (it.hasNext()) {
       count += 1;
     }
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     while (it.hasNext()) {
       count++;
     }
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     while (it.hasNext()) {
       count = count + 1;
     }

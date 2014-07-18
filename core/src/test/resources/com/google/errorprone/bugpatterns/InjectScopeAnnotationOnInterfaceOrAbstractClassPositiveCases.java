@@ -29,7 +29,7 @@ public class InjectScopeAnnotationOnInterfaceOrAbstractClassPositiveCases {
   /**
    * An abstract class that has scoping annotation.
    */
-  //BUG: Suggestion includes "remove"
+  // BUG: Diagnostic contains: remove
   @Singleton
   public abstract class TestClass1 {
   }
@@ -37,7 +37,7 @@ public class InjectScopeAnnotationOnInterfaceOrAbstractClassPositiveCases {
   /**
    * An interface interface has scoping annotation.
    */
-  //BUG: Suggestion includes "remove"
+  // BUG: Diagnostic contains: remove
   @Singleton
   public interface TestClass2 {
   }

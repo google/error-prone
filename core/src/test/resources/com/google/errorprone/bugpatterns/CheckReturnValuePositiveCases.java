@@ -32,19 +32,19 @@ public class CheckReturnValuePositiveCases {
   
   public void foo() {
     int i = 1;
-    //BUG: Suggestion includes "remove this line"
+    // BUG: Diagnostic contains: remove this line
     increment(i);
     System.out.println(i);
   }
   
   public void bar() {
-    //BUG: Suggestion includes "this.intValue = this.intValue.increment()"
+    // BUG: Diagnostic contains: this.intValue = this.intValue.increment()
     this.intValue.increment();
   }
   
   public void testIntValue() {
     IntValue value = new IntValue(10);
-    //BUG: Suggestion includes "value = value.increment()"
+    // BUG: Diagnostic contains: value = value.increment()
     value.increment();
   }
 
@@ -98,12 +98,12 @@ public class CheckReturnValuePositiveCases {
     }
     
     public void increment2() {
-      //BUG: Suggestion includes "remove this line"
+      // BUG: Diagnostic contains: remove this line
       this.increment();
     }
     
     public void increment3() {
-      //BUG: Suggestion includes "remove this line"
+      // BUG: Diagnostic contains: remove this line
      increment();
     }
   }
@@ -122,7 +122,7 @@ public class CheckReturnValuePositiveCases {
     }
     
     public static <T> LB2<T> lb2() {
-      //BUG: Suggestion includes "remove this line"
+      // BUG: Diagnostic contains: remove this line
       lb1();
       return lb1();
     }

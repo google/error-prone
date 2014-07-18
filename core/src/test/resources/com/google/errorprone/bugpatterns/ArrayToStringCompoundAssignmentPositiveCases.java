@@ -27,7 +27,7 @@ public class ArrayToStringCompoundAssignmentPositiveCases {
 
   public void stringVariableAddsArrayAndAssigns() {
     String b = "a string";
-    //BUG: Suggestion includes " += Arrays.toString(a)"
+    // BUG: Diagnostic contains: += Arrays.toString(a)
     b += a;
   }
 }

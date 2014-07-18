@@ -21,27 +21,27 @@ package com.google.errorprone.bugpatterns;
  */
 public class InjectOverlappingQualifierAndScopeAnnotationPositiveCases {
  
-  //BUG: Suggestion includes "remove"
+  // BUG: Diagnostic contains: remove
   @javax.inject.Scope
-  //BUG: Suggestion includes "remove"
+  // BUG: Diagnostic contains: remove
   @javax.inject.Qualifier
   @interface JavaxScopeAndJavaxQualifier {}
     
-  //BUG: Suggestion includes "remove"
+  // BUG: Diagnostic contains: remove
   @com.google.inject.ScopeAnnotation
-  //BUG: Suggestion includes "remove"
+  // BUG: Diagnostic contains: remove
   @javax.inject.Qualifier
   @interface GuiceScopeAndJavaxQualifier {}
 
-  //BUG: Suggestion includes "remove"
+  // BUG: Diagnostic contains: remove
   @com.google.inject.ScopeAnnotation
-  //BUG: Suggestion includes "remove"
+  // BUG: Diagnostic contains: remove
   @com.google.inject.BindingAnnotation
   @interface GuiceScopeAndGuiceBindingAnnotation {}
     
-  //BUG: Suggestion includes "remove"
+  // BUG: Diagnostic contains: remove
   @javax.inject.Scope
-  //BUG: Suggestion includes "remove"
+  // BUG: Diagnostic contains: remove
   @com.google.inject.BindingAnnotation
   @interface JavaxScopeAndGuiceBindingAnnotation {}
 

@@ -33,14 +33,14 @@ public class InjectInvalidTargetingOnScopingAnnotationPositiveCases {
    * A scoping annotation with no specified target.
    */
   @Scope 
-  //BUG: Suggestion includes "@Target({TYPE, METHOD})"
+  // BUG: Diagnostic contains: @Target({TYPE, METHOD})
   public @interface TestAnnotation1 {
   }
 
   /**
    * @Target is given an empty array
    */
-  //BUG: Suggestion includes "@Target({TYPE, METHOD})"
+  // BUG: Diagnostic contains: @Target({TYPE, METHOD})
   @Target({})
   @Scope 
   public @interface TestAnnotation2 {
@@ -49,7 +49,7 @@ public class InjectInvalidTargetingOnScopingAnnotationPositiveCases {
   /**
    * A scoping annotation with taeget TYPE, METHOD, and (illegal) PARAMETER.
    */
-  //BUG: Suggestion includes "@Target({TYPE, METHOD})"
+  // BUG: Diagnostic contains: @Target({TYPE, METHOD})
   @Target({TYPE, METHOD, PARAMETER})
   @Scope 
   public @interface TestAnnotation3 {
@@ -58,7 +58,7 @@ public class InjectInvalidTargetingOnScopingAnnotationPositiveCases {
   /**
    * A scoping annotation target set to PARAMETER.
    */
-  //BUG: Suggestion includes "@Target({TYPE, METHOD})"
+  // BUG: Diagnostic contains: @Target({TYPE, METHOD})
   @Target(PARAMETER)
   @Scope 
   public @interface TestAnnotation4 {

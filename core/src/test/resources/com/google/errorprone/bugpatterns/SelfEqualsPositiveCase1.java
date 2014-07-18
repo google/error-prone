@@ -34,13 +34,13 @@ public class SelfEqualsPositiveCase1 {
     }
     SelfEqualsPositiveCase1 other = (SelfEqualsPositiveCase1) o;
     boolean retVal;
-    //BUG: Suggestion includes "Objects.equal(field, other.field)"
+    // BUG: Diagnostic contains: Objects.equal(field, other.field)
     retVal = Objects.equal(field, field);
-    //BUG: Suggestion includes "Objects.equal(other.field, this.field)"
+    // BUG: Diagnostic contains: Objects.equal(other.field, this.field)
     retVal &= Objects.equal(field, this.field);
-    //BUG: Suggestion includes "Objects.equal(this.field, other.field)"
+    // BUG: Diagnostic contains: Objects.equal(this.field, other.field)
     retVal &= Objects.equal(this.field, field);
-    //BUG: Suggestion includes "Objects.equal(this.field, other.field)"
+    // BUG: Diagnostic contains: Objects.equal(this.field, other.field)
     retVal &= Objects.equal(this.field, this.field);
     
     return retVal;
@@ -53,7 +53,7 @@ public class SelfEqualsPositiveCase1 {
   
   public static void test() {
     ForTesting tester = new ForTesting();
-    //BUG: Suggestion includes "Objects.equal(tester.testing.testing, tester.testing)"
+    // BUG: Diagnostic contains: Objects.equal(tester.testing.testing, tester.testing)
     Objects.equal(tester.testing.testing, tester.testing.testing);
   }
   

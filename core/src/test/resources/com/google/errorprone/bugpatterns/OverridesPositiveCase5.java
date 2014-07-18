@@ -30,11 +30,11 @@ public class OverridesPositiveCase5 {
 
   abstract class Child1 extends Base {
     @Override
-    //BUG: Suggestion includes "Did you mean 'abstract void arrayMethod(Object[] xs, Object[] ys);'"
+    // BUG: Diagnostic contains: Did you mean 'abstract void arrayMethod(Object[] xs, Object[] ys);'
     abstract void arrayMethod(Object[] xs, Object... ys);
 
     @Override
-    //BUG: Suggestion includes "Did you mean 'abstract void varargsMethod(Object[] xs, Object... ys);'"
+    // BUG: Diagnostic contains: Did you mean 'abstract void varargsMethod(Object[] xs, Object... ys);'
     abstract void varargsMethod(Object[] xs, Object[] ys);
 
     void foo(Base base) {

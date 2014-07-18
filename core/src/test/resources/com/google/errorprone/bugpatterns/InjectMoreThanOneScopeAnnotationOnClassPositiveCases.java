@@ -27,19 +27,19 @@ public class InjectMoreThanOneScopeAnnotationOnClassPositiveCases {
   /**
    * Class has two scope annotations
    */  
-  //BUG: Suggestion includes "remove" 
+  // BUG: Diagnostic contains: remove 
   @Singleton 
-  //BUG: Suggestion includes "remove"  
+  // BUG: Diagnostic contains: remove  
   @SessionScoped
   public class TestClass1 {}
 
   /**
    * Class has three annotations, two of which are scope annotations.
    */
-  //BUG: Suggestion includes "remove" 
+  // BUG: Diagnostic contains: remove 
   @Singleton 
   @SuppressWarnings("foo")
-  //BUG: Suggestion includes "remove"  
+  // BUG: Diagnostic contains: remove  
   @SessionScoped
   public class TestClass2 {}
   

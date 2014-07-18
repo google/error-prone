@@ -27,11 +27,11 @@ public class InjectAssistedInjectAndInjectOnConstructorsPositiveCases {
    * with @AssistedInject.
    */
   public class TestClass1 {
-    //BUG: Suggestion includes "remove"
+    // BUG: Diagnostic contains: remove
     @javax.inject.Inject
     public TestClass1() {}
 
-    //BUG: Suggestion includes "remove"
+    // BUG: Diagnostic contains: remove
     @AssistedInject
     public TestClass1(int n) {}
   }
@@ -41,11 +41,11 @@ public class InjectAssistedInjectAndInjectOnConstructorsPositiveCases {
    * annotated with @AssistedInject.
    */
   public class TestClass2 {
-    //BUG: Suggestion includes "remove"
+    // BUG: Diagnostic contains: remove
     @com.google.inject.Inject
     public TestClass2() {}
 
-    //BUG: Suggestion includes "remove"
+    // BUG: Diagnostic contains: remove
     @AssistedInject
     public TestClass2(int n) {}
   }
@@ -55,11 +55,11 @@ public class InjectAssistedInjectAndInjectOnConstructorsPositiveCases {
    * annotated with @AssistedInject, and a third constructor with no annotation.
    */
   public class TestClass3 {
-    //BUG: Suggestion includes "remove"
+    // BUG: Diagnostic contains: remove
     @com.google.inject.Inject
     public TestClass3() {}
 
-    //BUG: Suggestion includes "remove"
+    // BUG: Diagnostic contains: remove
     @AssistedInject
     public TestClass3(int n) {}
 

@@ -33,31 +33,31 @@ public class OverridesPositiveCase1 {
 
   abstract class Child1 extends Base {
     @Override
-    //BUG: Suggestion includes "abstract void arrayMethod(int x, Object[] newNames);"
+    // BUG: Diagnostic contains: abstract void arrayMethod(int x, Object[] newNames);
     abstract void arrayMethod(int x, Object... newNames);
   }
   
   abstract class Child2 extends Base {
     @Override
-    //BUG: Suggestion includes "abstract void varargsMethod(Object... xs);"
+    // BUG: Diagnostic contains: abstract void varargsMethod(Object... xs);
     abstract void varargsMethod(Object[] xs);
   }
   
   abstract class Child3 extends Base {
     @Override
-    //BUG: Suggestion includes "abstract void varargsMethod(Object... xs);"
+    // BUG: Diagnostic contains: abstract void varargsMethod(Object... xs);
     abstract void varargsMethod(Object[  ] xs);
   }
 
   abstract class Child4 extends Base {
     @Override
-    //BUG: Suggestion includes "abstract void varargsMethod(Object... xs);"
+    // BUG: Diagnostic contains: abstract void varargsMethod(Object... xs);
     abstract void varargsMethod(Object[                           ] xs);
   }
 
   abstract class Child5 extends Base {
     @Override
-    //BUG: Suggestion includes "Varargs"
+    // BUG: Diagnostic contains: Varargs
     abstract void varargsMethod(Object[/**/                       ] xs);
   }
   
@@ -68,10 +68,10 @@ public class OverridesPositiveCase1 {
   
   abstract class ImplementsInterface implements Interface {
     @Override
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     public abstract void varargsMethod(Object[] xs);
     @Override
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     public abstract void arrayMethod(Object... xs);
   }
  
@@ -86,16 +86,16 @@ public class OverridesPositiveCase1 {
   }
   
   abstract class ImplementsAndExtends extends MyBase implements MyInterface {
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     public abstract void f(Object... xs);
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     public abstract void g(Object[] xs);
   }
   
   abstract class ImplementsAndExtends2 extends MyBase implements MyInterface {
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     public abstract void f(Object[] xs);
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     public abstract void g(Object... xs);
   }
 }

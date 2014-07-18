@@ -27,7 +27,7 @@ public class WaitNotInLoopPositiveCases {
     synchronized (this) {
       if (!flag) {
         try {
-          //BUG: Suggestion includes ""
+          // BUG: Diagnostic contains: 
           wait();
         } catch (InterruptedException e) {
         }
@@ -39,7 +39,7 @@ public class WaitNotInLoopPositiveCases {
     synchronized (this) {
       if (!flag) {
         try {
-          //BUG: Suggestion includes ""
+          // BUG: Diagnostic contains: 
           wait(1000);
         } catch (InterruptedException e) {
         }
@@ -51,7 +51,7 @@ public class WaitNotInLoopPositiveCases {
     synchronized (this) {
       if (!flag) {
         try {
-          //BUG: Suggestion includes ""
+          // BUG: Diagnostic contains: 
           wait(1000, 1000);
         } catch (InterruptedException e) {
         }
@@ -64,7 +64,7 @@ public class WaitNotInLoopPositiveCases {
       synchronized (this) {
         System.out.println("foo");
         try {
-          //BUG: Suggestion includes ""
+          // BUG: Diagnostic contains: 
           wait(1000, 1000);
         } catch (InterruptedException e) {
         }

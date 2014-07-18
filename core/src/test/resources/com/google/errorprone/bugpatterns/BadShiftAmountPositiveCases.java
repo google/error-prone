@@ -25,35 +25,35 @@ public class BadShiftAmountPositiveCases {
     int x = 0;
     long result = 0;
 
-    //BUG: Suggestion includes "(long) x >> 32"
+    // BUG: Diagnostic contains: (long) x >> 32
     result += x >> 32;
-    //BUG: Suggestion includes "(long) x << 32"
+    // BUG: Diagnostic contains: (long) x << 32
     result += x << 32;
-    //BUG: Suggestion includes "(long) x >>> 32"
+    // BUG: Diagnostic contains: (long) x >>> 32
     result += x >>> 32;
-    //BUG: Suggestion includes "(long) x >> 40"
+    // BUG: Diagnostic contains: (long) x >> 40
     result += x >> 40;
-    //BUG: Suggestion includes "(long) (x & 255) >> 40"
+    // BUG: Diagnostic contains: (long) (x & 255) >> 40
     result += (x & 255) >> 40;
     
-    //BUG: Suggestion includes "1L << 48"
+    // BUG: Diagnostic contains: 1L << 48
     result += 1 << 48;
     
-    //BUG: Suggestion includes "x >> 4"
+    // BUG: Diagnostic contains: x >> 4
     result += x >> 100;
-    //BUG: Suggestion includes "x >> 31"
+    // BUG: Diagnostic contains: x >> 31
     result += x >> -1;
     
     byte b = 0;
     char c = 'a';
     
-    //BUG: Suggestion includes "(long) b >> 32"
+    // BUG: Diagnostic contains: (long) b >> 32
     result += b >> 32;
-    //BUG: Suggestion includes "(long) b << 32"
+    // BUG: Diagnostic contains: (long) b << 32
     result += b << 32;
-    //BUG: Suggestion includes "(long) c >> 32"
+    // BUG: Diagnostic contains: (long) c >> 32
     result += c >> 32;
-    //BUG: Suggestion includes "(long) c >>> 32"
+    // BUG: Diagnostic contains: (long) c >>> 32
     result += c >>> 32;
   }
   

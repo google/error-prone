@@ -26,9 +26,9 @@ import org.junit.runners.Parameterized;
  */
 @RunWith(Parameterized.class)
 public class JUnit4TestNotRunPositiveCase3 {
-  //BUG: Suggestion includes "@Test"
+  // BUG: Diagnostic contains: @Test
   public void testThisIsATest() {}
   
-  //BUG: Suggestion includes "@Test"
+  // BUG: Diagnostic contains: @Test
   public static void testThisIsAStaticTest() {}
 }

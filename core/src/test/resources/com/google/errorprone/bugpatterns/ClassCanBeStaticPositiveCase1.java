@@ -24,7 +24,7 @@ public class ClassCanBeStaticPositiveCase1 {
   int outerVar;
 
   // Non-static inner class that does not use outer scope
-  //BUG: Suggestion includes "static class Inner1"
+  // BUG: Diagnostic contains: static class Inner1
   class Inner1 {
     int innerVar;
   }

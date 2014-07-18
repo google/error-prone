@@ -25,28 +25,28 @@ public class SelfAssignmentPositiveCases1 {
   private int a;
   
   public void test1(int b) {
-    //BUG: Suggestion includes "this.a = b"
+    // BUG: Diagnostic contains: this.a = b
     this.a = a;
   } 
   
   public void test2(int b) {
-    //BUG: Suggestion includes "remove this line"
+    // BUG: Diagnostic contains: remove this line
     a = this.a;
   }
   
   public void test3() {
     int a = 0;
-    //BUG: Suggestion includes "this.a = a"
+    // BUG: Diagnostic contains: this.a = a
     a = a;
   }
   
   public void test4() {
-    //BUG: Suggestion includes "remove this line"
+    // BUG: Diagnostic contains: remove this line
     this.a = this.a;
   }
 
   public void test5() {
-    //BUG: Suggestion includes "this.a = a"
+    // BUG: Diagnostic contains: this.a = a
     if ((a = a) != 10) {
       System.out.println("foo");
     }

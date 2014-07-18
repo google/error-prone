@@ -43,7 +43,7 @@ public class FinallyPositiveCase1 {
     while (true) {
       try {
       } finally {
-        //BUG: Suggestion includes ""
+        // BUG: Diagnostic contains: 
         break;
       }
     }
@@ -53,7 +53,7 @@ public class FinallyPositiveCase1 {
     while (true) {
       try {
       } finally {
-        //BUG: Suggestion includes ""
+        // BUG: Diagnostic contains: 
         continue;
       }
     }
@@ -62,7 +62,7 @@ public class FinallyPositiveCase1 {
   public static void test3() {
     try {
     } finally {
-      //BUG: Suggestion includes ""
+      // BUG: Diagnostic contains: 
       return;
     }
   }
@@ -70,7 +70,7 @@ public class FinallyPositiveCase1 {
   public static void test4() throws Exception {
     try {
     } finally {
-      //BUG: Suggestion includes ""
+      // BUG: Diagnostic contains: 
       throw new Exception();
     }
   }
@@ -84,7 +84,7 @@ public class FinallyPositiveCase1 {
       try {
       } finally {
         while (true) {
-          //BUG: Suggestion includes ""
+          // BUG: Diagnostic contains: 
           break label;
         }
       }
@@ -100,7 +100,7 @@ public class FinallyPositiveCase1 {
       try {
       } finally {
         for (;;) {
-          //BUG: Suggestion includes ""
+          // BUG: Diagnostic contains: 
           continue label;
         }
       }
@@ -117,7 +117,7 @@ public class FinallyPositiveCase1 {
       } finally {
         switch (i) {
           case 10: 
-            //BUG: Suggestion includes ""
+            // BUG: Diagnostic contains: 
             continue;
         }
       }
@@ -127,7 +127,7 @@ public class FinallyPositiveCase1 {
   public void test8() {
     try {
     } finally {
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
       { { { { { { { { { { return; } } } } } } } } } }
     }
   }
@@ -138,7 +138,7 @@ public class FinallyPositiveCase1 {
     while (flag) {
       try {
       } finally {
-        //BUG: Suggestion includes ""
+        // BUG: Diagnostic contains: 
         break;
       }
     }

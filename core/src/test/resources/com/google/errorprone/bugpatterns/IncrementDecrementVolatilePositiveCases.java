@@ -26,52 +26,52 @@ public class IncrementDecrementVolatilePositiveCases {
   private VolatileContainer container = new VolatileContainer();
  
   public void increment() {
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     myVolatileInt++;
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     ++myVolatileInt;
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     myVolatileInt += 1;
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     myVolatileInt = myVolatileInt + 1;
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     myVolatileInt = 1 + myVolatileInt;
     
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     if (myVolatileInt++ == 0) {
       System.out.println("argh");
     }
 
     
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     container.volatileInt++;
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     ++container.volatileInt;
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     container.volatileInt += 1;
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     container.volatileInt = container.volatileInt + 1;
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     container.volatileInt = 1 + container.volatileInt;
   }
   
   public void decrement() {
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     myVolatileInt--;
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     --myVolatileInt;
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     myVolatileInt -= 1;
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     myVolatileInt = myVolatileInt - 1;
     
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     container.volatileInt--;
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     --container.volatileInt;
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     container.volatileInt -= 1;
-    //BUG: Suggestion includes ""
+    // BUG: Diagnostic contains: 
     container.volatileInt = container.volatileInt - 1;
   }  
 }

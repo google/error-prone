@@ -36,7 +36,7 @@ public class GuiceOverridesJavaxInjectableMethodPositiveCases {
    */
   public class TestClass2 extends TestClass1 {
     @Override 
-    //BUG: Suggestion includes "@Inject"
+    // BUG: Diagnostic contains: @Inject
     public void foo() {}
   }
   
@@ -46,7 +46,7 @@ public class GuiceOverridesJavaxInjectableMethodPositiveCases {
    */
   public class TestClass3 extends TestClass2 {
     @Override 
-    //BUG: Suggestion includes "@Inject"
+    // BUG: Diagnostic contains: @Inject
     public void foo() {}
   }
 }

@@ -29,22 +29,22 @@ public class ComparisonOutOfRangePositiveCases {
     byte b = 0;
     byte[] barr = {1, 2, 3};
 
-    //BUG: Suggestion includes "b == -1"
+    // BUG: Diagnostic contains: b == -1
     result = b == 255;
-    //BUG: Suggestion includes "b == 1"
+    // BUG: Diagnostic contains: b == 1
     result = b == -255;
-    //BUG: Suggestion includes "b == -128"
+    // BUG: Diagnostic contains: b == -128
     result = b == 128;
-    //BUG: Suggestion includes "b != -1"
+    // BUG: Diagnostic contains: b != -1
     result = b != 255;
-    //BUG: Suggestion includes "b == 1"
+    // BUG: Diagnostic contains: b == 1
     result = b == - 255;
 
-    //BUG: Suggestion includes "barr[0] == -1"
+    // BUG: Diagnostic contains: barr[0] == -1
     result = barr[0] == 255;
-    //BUG: Suggestion includes "barr[0] == -128"
+    // BUG: Diagnostic contains: barr[0] == -128
     result = barr[0] == 128;
-    //BUG: Suggestion includes "barr[0] == 1"
+    // BUG: Diagnostic contains: barr[0] == 1
     result = barr[0] == -255;
   }
   
@@ -53,13 +53,13 @@ public class ComparisonOutOfRangePositiveCases {
     char c = 'A';
     Reader reader = null;
 
-    //BUG: Suggestion includes "false"
+    // BUG: Diagnostic contains: false
     result = c == -1;
-    //BUG: Suggestion includes "true"
+    // BUG: Diagnostic contains: true
     result = c != -1;
 
     char d;
-    //BUG: Suggestion includes "false"
+    // BUG: Diagnostic contains: false
     result = (d = (char) reader.read()) == -1;
   }
 }

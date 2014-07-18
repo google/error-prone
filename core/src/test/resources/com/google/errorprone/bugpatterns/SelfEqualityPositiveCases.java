@@ -22,28 +22,28 @@ package com.google.errorprone.bugpatterns;
 public class SelfEqualityPositiveCases {
   private double value;
   
-  //BUG: Suggestion includes "!Double.isNaN(value)"
+  // BUG: Diagnostic contains: !Double.isNaN(value)
   private boolean othervalue = value == value;
 
   public boolean testEquality(double x, float y, int z) {
     boolean retVal;
 
-    //BUG: Suggestion includes "!Double.isNaN(x)"
+    // BUG: Diagnostic contains: !Double.isNaN(x)
     retVal = x == x;
     
-    //BUG: Suggestion includes "Double.isNaN(x)"
+    // BUG: Diagnostic contains: Double.isNaN(x)
     retVal = x != x;
     
-    //BUG: Suggestion includes "!Float.isNaN(y)"
+    // BUG: Diagnostic contains: !Float.isNaN(y)
     retVal = y == y;
     
-    //BUG: Suggestion includes "Float.isNaN(y)"
+    // BUG: Diagnostic contains: Float.isNaN(y)
     retVal = y != y;
     
-    //BUG: Suggestion includes "true"
+    // BUG: Diagnostic contains: true
     retVal = z == z;
     
-    //BUG: Suggestion includes "false"
+    // BUG: Diagnostic contains: false
     retVal = z != z;
 
     return retVal;
@@ -58,16 +58,16 @@ public class SelfEqualityPositiveCases {
 
     boolean ret;
 
-    //BUG: Suggestion includes "value == other.value"
+    // BUG: Diagnostic contains: value == other.value
     ret = value == value;
     
-    //BUG: Suggestion includes "this.value == other.value"
+    // BUG: Diagnostic contains: this.value == other.value
     ret = this.value == value;
     
-    //BUG: Suggestion includes "other.value == this.value"
+    // BUG: Diagnostic contains: other.value == this.value
     ret = value == this.value;
     
-    //BUG: Suggestion includes "this.value == other.value"
+    // BUG: Diagnostic contains: this.value == other.value
     ret = this.value == this.value;
 
     return ret;

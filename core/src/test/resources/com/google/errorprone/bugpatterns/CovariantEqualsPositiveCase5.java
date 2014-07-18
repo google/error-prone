@@ -25,6 +25,6 @@ import java.lang.String;
  */
 public class CovariantEqualsPositiveCase5 {
   
-  //BUG: Suggestion includes "@Override"
+  // BUG: Diagnostic contains: @Override
   public native boolean equals(CovariantEqualsPositiveCase5 other);
 }

@@ -25,36 +25,36 @@ public class CollectionIncompatibleTypePositiveCases {
   Collection<String> collection = new ArrayList<String>();
 
   public boolean bug() {
-    //BUG: Suggestion includes "return false"
+    // BUG: Diagnostic contains: return false
     return collection.contains(this);
   }
 
   public boolean bug2() {
-    //BUG: Suggestion includes "return false"
+    // BUG: Diagnostic contains: return false
     return new ArrayList<String>().remove(new Date());
   }
 
   public boolean bug3() {
     List<String> list = new ArrayList<String>(collection);
-    //BUG: Suggestion includes "false"
+    // BUG: Diagnostic contains: false
     System.out.println(list.indexOf(new Integer(0)));
-    //BUG: Suggestion includes "false"
+    // BUG: Diagnostic contains: false
     System.out.println(list.lastIndexOf(new Integer(0)));
-    //BUG: Suggestion includes "return false"
+    // BUG: Diagnostic contains: return false
     return list.contains(new Exception());
   }
 
   public String bug4() {
     Map<Integer, String> map = new HashMap<Integer, String>();
-    //BUG: Suggestion includes "false"
+    // BUG: Diagnostic contains: false
     System.out.println(map.containsKey("not an integer"));
 
     Integer notAString = null;
-    //BUG: Suggestion includes "false"
+    // BUG: Diagnostic contains: false
     System.out.println(map.containsValue(notAString));
-    //BUG: Suggestion includes "false"
+    // BUG: Diagnostic contains: false
     System.out.println(map.remove("not an integer"));
-    //BUG: Suggestion includes "return false"
+    // BUG: Diagnostic contains: return false
     return map.get("not an integer");
   }
 }
