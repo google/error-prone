@@ -70,12 +70,18 @@ import javax.lang.model.type.TypeKind;
  * @author vidarh@google.com (Will Holen)
  */
 @BugPattern(name = "MisusedFormattingLogger",
+    formatSummary = "%s", // message is completely different depending on the errors found
     summary = "FormattingLogger uses wrong or mismatched format string",
     explanation = "FormattingLogger is easily misused. There are several similar but "
-        + "incompatible methods. Some use printf style formats, some use MessageFormat. "
-        + "Some have an optional exception first, some have it last. Failing to pick the "
-        + "right method will cause logging information to be lost, or the log call to "
-        + "fail at runtime -- often during an error condition when you need it most.",
+        + "incompatible methods.  Methods ending in \"fmt\" use String.format, but the "
+        + "corresponding methods without that suffix use MessageFormat. Some methods have an "
+        + "optional exception first, and some have it last. Failing to pick "
+        + "the right method will cause logging information to be lost or the log call to "
+        + "fail at runtime -- often during an error condition when you need it most.\n\n"
+        + "There are further gotchas.  For example, MessageFormat strings cannot "
+        + "have unbalanced single quotes (e.g., \"Don't log {0}\" will not format {0} because "
+        + "of the quote in \"Don't\"). The number of format elements must match the number of "
+        + "arguments provided, and for String.format, the types must match as well.  And so on.",
     category = JDK, maturity = MATURE, severity = ERROR)
 
 public class MisusedFormattingLogger extends BugChecker implements MethodInvocationTreeMatcher {
@@ -219,7 +225,7 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
     }
     if (formatException != null) {
       return new Description(tree, pattern,
-          "Format string is invalid: " + formatException.getMessage(),
+          getDiagnosticMessage("Format string is invalid: " + formatException.getMessage()),
           SuggestedFix.NO_FIX);
     }
 
@@ -313,7 +319,7 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
         fix = SuggestedFix.NO_FIX;
       }
       return new Description(tree, pattern,
-          "This call " + join(", ", errors) + ".", fix);
+          getDiagnosticMessage("This call " + join(", ", errors)), fix);
     }
 
     return Description.NO_MATCH;
