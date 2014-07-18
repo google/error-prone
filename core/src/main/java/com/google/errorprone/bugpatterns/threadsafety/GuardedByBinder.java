@@ -56,6 +56,9 @@ public class GuardedByBinder {
     if (expr == null) {
       throw new IllegalGuardedBy(exp.toString());
     }
+    if (expr.kind() == Kind.TYPE_LITERAL) {
+      throw new IllegalGuardedBy("Raw type literal: " + exp.toString());
+    }
     return expr;
   }
 

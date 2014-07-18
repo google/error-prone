@@ -41,9 +41,9 @@ public class GuardedByValidatorTest {
             "package threadsafety.Test;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class Test {",
-            "  // BUG: Diagnostic contains:",
+            "  // BUG: Diagnostic contains: Invalid @GuardedBy expression",
             "  @GuardedBy(\"This thread\") int x;",
-            "  // BUG: Diagnostic contains:",
+            "  // BUG: Diagnostic contains: Invalid @GuardedBy expression",
             "  @GuardedBy(\"This thread\") void m() {}",
             "}"
         )
@@ -100,8 +100,23 @@ public class GuardedByValidatorTest {
             "import javax.annotation.concurrent.GuardedBy;",
             "class Test {",
             "  final Object instanceField = new Object();",
-            "  // BUG: Diagnostic contains:",
+            "  // BUG: Diagnostic contains: Invalid @GuardedBy expression",
             "  @GuardedBy(\"Test.instanceField\") Object s_;",
+            "}"
+        )
+    );
+  }
+  
+  @Test
+  public void testClassName() throws Exception {
+    compilationHelper.assertCompileFailsWithMessages(
+        CompilationTestHelper.forSourceLines(
+            "threadsafety.Test",
+            "package threadsafety.Test;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "class Test {",
+            "  // BUG: Diagnostic contains: Invalid @GuardedBy expression",
+            "  @GuardedBy(\"Test\") Object s_;",
             "}"
         )
     );
