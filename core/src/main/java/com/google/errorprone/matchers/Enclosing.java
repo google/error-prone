@@ -17,7 +17,13 @@
 package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
-import com.sun.source.tree.*;
+
+import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.CaseTree;
+import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.Tree;
 
 import java.util.List;
 
