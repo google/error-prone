@@ -35,7 +35,7 @@ public class JUnit3TestNotRunTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(JUnit3TestNotRun.class);
+    compilationHelper = CompilationTestHelper.newInstance(JUnit3TestNotRun.class);
   }
 
   @Test

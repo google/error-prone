@@ -34,7 +34,7 @@ public class OverridesTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(Overrides.class);
+    compilationHelper = CompilationTestHelper.newInstance(Overrides.class);
   }
 
   @Test

@@ -16,8 +16,7 @@
 
 package com.google.errorprone;
 
-import static com.google.errorprone.DiagnosticTestHelper.assertHasDiagnosticOnAllMatchingLines;
-import static org.hamcrest.core.Is.is;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -82,9 +81,9 @@ public class CompilationTestHelper {
   private ErrorProneCompiler compiler;
   private ByteArrayOutputStream outputStream;
   private JavaFileManager fileManager;
-  
-  public CompilationTestHelper(Scanner scanner) {
-    this.diagnosticHelper = new DiagnosticTestHelper();
+
+  private CompilationTestHelper(Scanner scanner, String checkName) {
+    this.diagnosticHelper = new DiagnosticTestHelper(checkName);
     this.fileManager = getFileManager(diagnosticHelper.collector, null, null);
     this.outputStream = new ByteArrayOutputStream();
     this.compiler = new ErrorProneCompiler.Builder().report(scanner)
@@ -92,12 +91,33 @@ public class CompilationTestHelper {
         .listenToDiagnostics(diagnosticHelper.collector).build();
   }
 
-  public CompilationTestHelper(Class<?> matcherClass) {
-    this(ErrorProneScanner.forMatcher(matcherClass));
+  public static CompilationTestHelper newInstance(Scanner scanner) {
+    return new CompilationTestHelper(scanner, null);
   }
 
-  public CompilationTestHelper(BugChecker checker) {
-    this(new ErrorProneScanner(checker));
+  public static CompilationTestHelper newInstance(Scanner scanner, String checkName) {
+    return new CompilationTestHelper(scanner, checkName);
+  }
+
+  /**
+   * Test an error-prone {@link BugChecker} that should be part of the default {@link
+   * ErrorProneScanner}. Confirms that the check is included in the list of all checkers in
+   * {@link ErrorProneScanner}.
+   */
+  public static CompilationTestHelper newInstance(Class<? extends BugChecker> matcherClass) {
+    Scanner scanner = ErrorProneScanner.forMatcher(matcherClass);
+    String checkName = matcherClass.getAnnotation(BugPattern.class).name();
+    return new CompilationTestHelper(scanner, checkName);
+  }
+
+  /**
+   * Test a custom error-prone {@link BugChecker} that should not be included in the default
+   * {@link ErrorProneScanner}.
+   */
+  public static CompilationTestHelper newInstance(BugChecker checker) {
+    Scanner scanner = new ErrorProneScanner(checker);
+    String checkName = checker.getCanonicalName();
+    return new CompilationTestHelper(scanner, checkName);
   }
 
   /**
@@ -159,7 +179,7 @@ public class CompilationTestHelper {
   public void assertCompileSucceedsWithMessages(List<JavaFileObject> sources) throws IOException {
     assertCompileSucceeds(sources);
     for (JavaFileObject source : sources) {
-      assertHasDiagnosticOnAllMatchingLines(diagnosticHelper.getDiagnostics(), source);
+      diagnosticHelper.assertHasDiagnosticOnAllMatchingLines(source);
     }
   }
 
@@ -192,7 +212,7 @@ public class CompilationTestHelper {
     int exitCode = compile(asJavacList(sources), allArgs.toArray(new String[0]));
     assertThat("Compiler returned an unexpected error code", exitCode, is(1));
     for (JavaFileObject source : sources) {
-      assertHasDiagnosticOnAllMatchingLines(diagnosticHelper.getDiagnostics(), source);
+      diagnosticHelper.assertHasDiagnosticOnAllMatchingLines(source);
     }
   }
 

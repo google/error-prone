@@ -35,7 +35,7 @@ public class GuiceInjectOnFinalFieldTest {
   @Before
   public void setUp() {
     compilationHelper =
-        new CompilationTestHelper(GuiceInjectOnFinalField.class);
+        CompilationTestHelper.newInstance(GuiceInjectOnFinalField.class);
   }
 
   @Test

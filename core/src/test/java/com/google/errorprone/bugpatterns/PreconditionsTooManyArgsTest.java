@@ -35,7 +35,7 @@ public class PreconditionsTooManyArgsTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(PreconditionsTooManyArgs.class);
+    compilationHelper = CompilationTestHelper.newInstance(PreconditionsTooManyArgs.class);
   }
 
   @Test

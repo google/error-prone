@@ -35,7 +35,7 @@ public class GuiceAssistedParametersTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(GuiceAssistedParameters.class);
+    compilationHelper = CompilationTestHelper.newInstance(GuiceAssistedParameters.class);
   }
 
   @Test

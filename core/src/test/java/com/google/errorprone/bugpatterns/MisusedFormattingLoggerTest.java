@@ -35,7 +35,7 @@ public class MisusedFormattingLoggerTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(MisusedFormattingLogger.class);
+    compilationHelper = CompilationTestHelper.newInstance(MisusedFormattingLogger.class);
   }
 
   @Test

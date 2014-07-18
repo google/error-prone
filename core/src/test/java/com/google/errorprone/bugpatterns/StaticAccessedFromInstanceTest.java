@@ -35,7 +35,7 @@ public class StaticAccessedFromInstanceTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(StaticAccessedFromInstance.class);
+    compilationHelper = CompilationTestHelper.newInstance(StaticAccessedFromInstance.class);
   }
 
   @Test

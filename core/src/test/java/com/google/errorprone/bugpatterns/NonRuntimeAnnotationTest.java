@@ -35,7 +35,7 @@ public class NonRuntimeAnnotationTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(NonRuntimeAnnotation.class);
+    compilationHelper = CompilationTestHelper.newInstance(NonRuntimeAnnotation.class);
   }
 
   @Test

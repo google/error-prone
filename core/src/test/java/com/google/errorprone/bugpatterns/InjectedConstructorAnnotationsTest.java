@@ -34,7 +34,7 @@ public class InjectedConstructorAnnotationsTest {
   @Before
   public void setUp() {
     compilationHelper =
-        new CompilationTestHelper(InjectedConstructorAnnotations.class);
+        CompilationTestHelper.newInstance(InjectedConstructorAnnotations.class);
   }
 
   @Test

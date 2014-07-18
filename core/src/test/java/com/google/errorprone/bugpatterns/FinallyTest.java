@@ -35,7 +35,7 @@ public class FinallyTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(Finally.class);
+    compilationHelper = CompilationTestHelper.newInstance(Finally.class);
   }
 
   @Test

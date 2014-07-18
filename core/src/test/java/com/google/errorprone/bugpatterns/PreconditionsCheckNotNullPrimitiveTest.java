@@ -51,7 +51,7 @@ public class PreconditionsCheckNotNullPrimitiveTest extends CompilerBasedAbstrac
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(PreconditionsCheckNotNullPrimitive.class);
+    compilationHelper = CompilationTestHelper.newInstance(PreconditionsCheckNotNullPrimitive.class);
   }
 
   @Test

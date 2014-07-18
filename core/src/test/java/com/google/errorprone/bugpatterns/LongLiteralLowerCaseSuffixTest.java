@@ -40,7 +40,7 @@ public class LongLiteralLowerCaseSuffixTest {
   @Before
   public void setUp() {
 
-    compilationHelper = new CompilationTestHelper(LongLiteralLowerCaseSuffix.class);
+    compilationHelper = CompilationTestHelper.newInstance(LongLiteralLowerCaseSuffix.class);
   }
 
   @Test

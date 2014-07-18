@@ -34,7 +34,7 @@ public class InjectJavaxInjectOnFinalFieldTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(InjectJavaxInjectOnFinalField.class);
+    compilationHelper = CompilationTestHelper.newInstance(InjectJavaxInjectOnFinalField.class);
   }
 
   @Test

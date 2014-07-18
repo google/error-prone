@@ -35,7 +35,7 @@ public class ArrayToStringCompoundAssignmentTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(ArrayToStringCompoundAssignment.class);
+    compilationHelper = CompilationTestHelper.newInstance(ArrayToStringCompoundAssignment.class);
   }
 
   @Test

@@ -41,7 +41,7 @@ public class CompilationTestHelperTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(new ReturnTreeChecker());
+    compilationHelper = CompilationTestHelper.newInstance(new ReturnTreeChecker());
   }
 
   @Test
@@ -65,7 +65,7 @@ public class CompilationTestHelperTest {
     }
     assertTrue(failed);
   }
-  
+
   @BugPattern(name = "ReturnTreeChecker",
       summary = "Method may return normally.",
       explanation = "Consider mutating some global state instead.",

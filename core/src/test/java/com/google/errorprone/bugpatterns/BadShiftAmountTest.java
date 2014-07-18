@@ -35,7 +35,7 @@ public class BadShiftAmountTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(new BadShiftAmount().createScanner());
+    compilationHelper = CompilationTestHelper.newInstance(BadShiftAmount.class);
   }
 
   @Test

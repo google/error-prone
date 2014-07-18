@@ -34,7 +34,7 @@ public class ThreadSafeTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(ThreadSafe.class);
+    compilationHelper = CompilationTestHelper.newInstance(ThreadSafe.class);
   }
 
   @Test

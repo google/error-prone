@@ -35,7 +35,7 @@ public class WrongParameterPackageTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(WrongParameterPackage.class);
+    compilationHelper = CompilationTestHelper.newInstance(WrongParameterPackage.class);
   }
 
   @Test

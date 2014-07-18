@@ -40,7 +40,7 @@ public class ProtoFieldNullComparisonTest {
 
   @Before
   public void setUp() throws Exception {
-    compilationHelper = new CompilationTestHelper(ProtoFieldNullComparison.class);
+    compilationHelper = CompilationTestHelper.newInstance(ProtoFieldNullComparison.class);
     protoFile = source(getClass(), "proto/ProtoTest.java");
   }
 

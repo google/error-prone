@@ -35,7 +35,7 @@ public class CheckReturnValueTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(CheckReturnValue.class);
+    compilationHelper = CompilationTestHelper.newInstance(CheckReturnValue.class);
   }
 
   @Test

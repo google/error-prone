@@ -35,7 +35,7 @@ public class EmptyIfStatementTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(EmptyIfStatement.class);
+    compilationHelper = CompilationTestHelper.newInstance(EmptyIfStatement.class);
   }
 
   @Test

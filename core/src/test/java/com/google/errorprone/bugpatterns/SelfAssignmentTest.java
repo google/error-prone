@@ -35,7 +35,7 @@ public class SelfAssignmentTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(SelfAssignment.class);
+    compilationHelper = CompilationTestHelper.newInstance(SelfAssignment.class);
   }
 
   @Test

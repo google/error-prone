@@ -17,10 +17,10 @@
 package com.google.errorprone;
 
 import static junit.framework.Assert.assertTrue;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.core.AllOf.allOf;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.not;
 
 import com.google.common.io.CharSource;
 
@@ -46,6 +46,24 @@ import javax.tools.JavaFileObject;
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class DiagnosticTestHelper {
+
+  // When testing a single error-prone check, the name of the check. Used to validate diagnostics.
+  // Null if not testing a single error-prone check.
+  private final String checkName;
+
+  /**
+   * Construct a {@link DiagnosticTestHelper} not associated with a specific check.
+   */
+  public DiagnosticTestHelper() {
+    this(null);
+  }
+
+  /**
+   * Construct a {@link DiagnosticTestHelper} for a check with the given name.
+   */
+  public DiagnosticTestHelper(String checkName) {
+    this.checkName = checkName;
+  }
 
   public DiagnosticCollector<JavaFileObject> collector = new DiagnosticCollector<JavaFileObject>();
 
@@ -162,16 +180,15 @@ public class DiagnosticTestHelper {
   private static final String BUG_MARKER_COMMENT = "// BUG: Diagnostic contains:";
 
   /**
-   * Asserts that the List of diagnostics contains a diagnostic on each line of the source file
-   * that matches our bug marker pattern.  Parses the bug marker pattern for the specific string
-   * to look for in the diagnostic.
-   * @param diagnostics               the diagnostics output by the compiler
-   * @param source                    file to find matching lines
+   * Asserts that the diagnostics contain a diagnostic on each line of the source file that
+   * matches our bug marker pattern.  Parses the bug marker pattern for the specific string to
+   * look for in the diagnostic.
+   * @param source File in which to find matching lines
    */
   @SuppressWarnings("unchecked")
-  public static void assertHasDiagnosticOnAllMatchingLines(
-      List<Diagnostic<? extends JavaFileObject>> diagnostics, JavaFileObject source)
+  public void assertHasDiagnosticOnAllMatchingLines(JavaFileObject source)
       throws IOException {
+    final List<Diagnostic<? extends JavaFileObject>> diagnostics = getDiagnostics();
     final LineNumberReader reader = new LineNumberReader(
         CharSource.wrap(source.getCharContent(false)).openStream());
     do {
@@ -184,7 +201,14 @@ public class DiagnosticTestHelper {
         List<String> patterns = extractPatterns(line, reader);
         int lineNumber = reader.getLineNumber();
         for (String pattern : patterns) {
-          matcher = hasItem(diagnosticOnLine(source.toUri(), lineNumber, pattern));
+          if (checkName == null) {
+            matcher = hasItem(diagnosticOnLine(source.toUri(), lineNumber, pattern));
+          } else {
+            matcher = hasItem(allOf(
+                // Check that diagnostic contains "[checkName]"
+                diagnosticOnLine(source.toUri(), lineNumber, "[" + checkName + "]"),
+                diagnosticOnLine(source.toUri(), lineNumber, pattern)));
+          }
           assertTrue(
               "Did not see expected error on line " + lineNumber + ". All errors:\n" + diagnostics,
               matcher.matches(diagnostics));

@@ -36,7 +36,7 @@ public class ElementsCountedInLoopTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(ElementsCountedInLoop.class);
+    compilationHelper = CompilationTestHelper.newInstance(ElementsCountedInLoop.class);
   }
 
   @Test

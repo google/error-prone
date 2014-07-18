@@ -35,7 +35,7 @@ public class MalformedFormatStringTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(MalformedFormatString.class);
+    compilationHelper = CompilationTestHelper.newInstance(MalformedFormatString.class);
   }
 
   @Test

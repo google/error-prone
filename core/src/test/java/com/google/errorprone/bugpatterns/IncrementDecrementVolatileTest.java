@@ -32,7 +32,7 @@ public class IncrementDecrementVolatileTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(IncrementDecrementVolatile.class);
+    compilationHelper = CompilationTestHelper.newInstance(IncrementDecrementVolatile.class);
   }
 
   @Test

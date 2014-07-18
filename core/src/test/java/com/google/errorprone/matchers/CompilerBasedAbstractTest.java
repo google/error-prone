@@ -45,6 +45,6 @@ public class CompilerBasedAbstractTest {
   }
 
   protected void assertCompiles(Scanner scanner) {
-    new CompilationTestHelper(scanner).assertCompileSucceeds(filesToCompile);
+    CompilationTestHelper.newInstance(scanner).assertCompileSucceeds(filesToCompile);
   }
 }

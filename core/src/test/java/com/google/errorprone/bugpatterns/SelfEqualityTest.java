@@ -35,7 +35,7 @@ public class SelfEqualityTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(SelfEquality.class);
+    compilationHelper = CompilationTestHelper.newInstance(SelfEquality.class);
   }
 
   @Test

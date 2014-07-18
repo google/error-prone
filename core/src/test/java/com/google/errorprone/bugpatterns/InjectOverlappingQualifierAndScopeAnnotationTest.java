@@ -36,7 +36,7 @@ public class InjectOverlappingQualifierAndScopeAnnotationTest {
   @Before
   public void setUp() {
     compilationHelper =
-        new CompilationTestHelper(InjectOverlappingQualifierAndScopeAnnotation.class);
+        CompilationTestHelper.newInstance(InjectOverlappingQualifierAndScopeAnnotation.class);
   }
 
   @Test

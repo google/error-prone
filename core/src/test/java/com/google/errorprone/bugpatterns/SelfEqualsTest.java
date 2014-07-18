@@ -45,21 +45,21 @@ public class SelfEqualsTest {
 
   @Test
   public void testPositiveCase1() throws Exception {
-    CompilationTestHelper compilationHelper = new CompilationTestHelper(
+    CompilationTestHelper compilationHelper = CompilationTestHelper.newInstance(
         new SelfEquals(true, true));
     compilationHelper.assertCompileFailsWithMessages(positiveCase1);
   }
 
   @Test
   public void testPositiveCase2() throws Exception {
-    CompilationTestHelper compilationHelper = new CompilationTestHelper(
+    CompilationTestHelper compilationHelper = CompilationTestHelper.newInstance(
         new SelfEquals(true, true));
     compilationHelper.assertCompileFailsWithMessages(positiveCase2);
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    CompilationTestHelper compilationHelper = new CompilationTestHelper(
+    CompilationTestHelper compilationHelper = CompilationTestHelper.newInstance(
         new SelfEquals(true, true));
     compilationHelper.assertCompileSucceeds(negativeCases);
   }
@@ -78,23 +78,23 @@ public class SelfEqualsTest {
 
     // Both checks on.
     checker = new SelfEquals(true, true);
-    compilationHelper = new CompilationTestHelper(checker);
+    compilationHelper = CompilationTestHelper.newInstance(checker);
     compilationHelper.assertCompileFailsWithMessages(positiveCase1);
-    compilationHelper = new CompilationTestHelper(checker);
+    compilationHelper = CompilationTestHelper.newInstance(checker);
     compilationHelper.assertCompileFailsWithMessages(positiveCase2);
 
     // Guava on, Eauals off.
     checker = new SelfEquals(true, false);
-    compilationHelper = new CompilationTestHelper(checker);
+    compilationHelper = CompilationTestHelper.newInstance(checker);
     compilationHelper.assertCompileFailsWithMessages(positiveCase1);
-    compilationHelper = new CompilationTestHelper(checker);
+    compilationHelper = CompilationTestHelper.newInstance(checker);
     compilationHelper.assertCompileSucceeds(positiveCase2);
 
     // Equals on, Guava off.
     checker = new SelfEquals(false, true);
-    compilationHelper = new CompilationTestHelper(checker);
+    compilationHelper = CompilationTestHelper.newInstance(checker);
     compilationHelper.assertCompileSucceeds(positiveCase1);
-    compilationHelper = new CompilationTestHelper(checker);
+    compilationHelper = CompilationTestHelper.newInstance(checker);
     compilationHelper.assertCompileFailsWithMessages(positiveCase2);
   }
 

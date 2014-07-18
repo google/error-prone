@@ -36,7 +36,7 @@ public class ArrayHashCodeTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(ArrayHashCode.class);
+    compilationHelper = CompilationTestHelper.newInstance(ArrayHashCode.class);
   }
 
   @Test

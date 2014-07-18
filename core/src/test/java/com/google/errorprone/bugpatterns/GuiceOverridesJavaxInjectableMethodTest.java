@@ -35,7 +35,7 @@ public class GuiceOverridesJavaxInjectableMethodTest {
   @Before
   public void setUp() {
     compilationHelper =
-        new CompilationTestHelper(GuiceOverridesJavaxInjectableMethod.class);
+        CompilationTestHelper.newInstance(GuiceOverridesJavaxInjectableMethod.class);
   }
 
   @Test
