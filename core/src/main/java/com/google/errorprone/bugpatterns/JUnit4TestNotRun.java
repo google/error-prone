@@ -35,8 +35,6 @@ import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 
-import java.util.Arrays;
-
 import javax.lang.model.element.Modifier;
 
 /**
@@ -56,22 +54,7 @@ import javax.lang.model.element.Modifier;
 public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
 
   private static final String JUNIT4_TEST_ANNOTATION = "org.junit.Test";
-  private final JUnit4TestClassMatcher isJUnit4TestClass;
-
-  public JUnit4TestNotRun() {
-    this.isJUnit4TestClass = new JUnit4TestClassMatcher();
-  }
-
-  /**
-   * Construct a matcher with additional acceptable test runners.
-   *
-   * @param additionalTestRunners Additional test runner classes to check for in the @RunWith
-   *                              annotation, e.g., "org.junit.runners.BlockJUnit4ClassRunner"
-   */
-  public JUnit4TestNotRun(String... additionalTestRunners) {
-    this();
-    this.isJUnit4TestClass.addAdditionalTestRunners(Arrays.asList(additionalTestRunners));
-  }
+  private static final JUnit4TestClassMatcher isJUnit4TestClass = new JUnit4TestClassMatcher();
 
   /**
    * Matches if:

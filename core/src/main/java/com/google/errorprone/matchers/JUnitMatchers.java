@@ -24,16 +24,15 @@ import com.google.errorprone.VisitorState;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.tree.JCTree;
 
-import javax.lang.model.element.Modifier;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
+
+import javax.lang.model.element.Modifier;
 
 /**
  * Matchers for code patterns which appear to be JUnit-based tests.
@@ -97,29 +96,24 @@ public class JUnitMatchers {
       not(hasAnnotation(JUNIT4_IGNORE_ANNOTATION)));
 
   public static class JUnit4TestClassMatcher implements Matcher<ClassTree> {
-    private static final Collection<String> DEFAULT_TEST_RUNNERS = Arrays.asList(
-        "org.junit.runners.JUnit4", "org.mockito.runners.MockitoJUnitRunner");
 
     /**
-     * A list of valid test runners that this matcher should look for in the @RunWith annotation.
+     * A list of test runners that this matcher should look for in the @RunWith annotation.
+     * Subclasses of the test runners are also matched.
      */
-    private Collection<String> testRunners = new ArrayList<String>(DEFAULT_TEST_RUNNERS);
+    private static final Collection<String> TEST_RUNNERS = Arrays.asList(
+        "org.mockito.runners.MockitoJUnitRunner",
+        "org.junit.runners.BlockJUnit4ClassRunner");
 
     /**
-     * @param additionalTestRunners Additional test runner classes to check for in the @RunWith
-     *                              annotation, e.g., "org.junit.runners.BlockJUnit4ClassRunner"
-     */
-    public void addAdditionalTestRunners(List<String> additionalTestRunners) {
-      testRunners.addAll(additionalTestRunners);
-    }
-
-    /**
-     * Matches an argument of type Class<T>, where T is a type listed in the testRunners field.
+     * Matches an argument of type Class<T>, where T is a subtype of one of the test runners listed
+     * in the TEST_RUNNERS field.
      *
      * TODO(eaftan): Support checking for an annotation that tells us whether this test runner
      * expects tests to be annotated with @Test.
      */
-    private final Matcher<ExpressionTree> isJUnit4TestRunner = new Matcher<ExpressionTree>() {
+    private static final Matcher<ExpressionTree> isJUnit4TestRunner =
+        new Matcher<ExpressionTree>() {
       @Override
       public boolean matches(ExpressionTree t, VisitorState state) {
         Type type = ((JCTree) t).type;
@@ -132,12 +126,22 @@ public class JUnitMatchers {
         if (typeArgs.size() != 1) {
           return false;
         }
-        return testRunners.contains(typeArgs.get(0).toString());
+        Type runnerType = typeArgs.get(0);
+        for (String testRunner : TEST_RUNNERS) {
+          Symbol parent = state.getSymbolFromString(testRunner);
+          if (parent == null) {
+            continue;
+          }
+          if (runnerType.tsym.isSubClass(parent, state.getTypes())) {
+            return true;
+          }
+        }
+        return false;
       }
     };
 
     @SuppressWarnings("unchecked")
-    private final Matcher<ClassTree> isJUnit4TestClass = allOf(
+    private static final Matcher<ClassTree> isJUnit4TestClass = allOf(
         not(isSubtypeOf(JUNIT3_TEST_CASE_CLASS)),
         annotations(ANY, hasArgumentWithValue("value", isJUnit4TestRunner)));
 

@@ -25,6 +25,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
+
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
@@ -48,17 +51,6 @@ public class JUnit4TestNotRunTest {
   public void testPositiveCase2() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
         sources(getClass(), "JUnit4TestNotRunPositiveCase2.java"));
-  }
-
-  /**
-   * Test custom test runner class.
-   */
-  @Test
-  public void testPositiveCase3() throws Exception {
-    compilationHelper = new CompilationTestHelper(
-        new JUnit4TestNotRun("org.junit.runners.Parameterized"));
-    compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "JUnit4TestNotRunPositiveCase3.java"));
   }
 
   @Test
@@ -85,4 +77,9 @@ public class JUnit4TestNotRunTest {
         sources(getClass(), "JUnit4TestNotRunNegativeCase4.java"));
   }
 
+
+  @Test
+  public void testSerialization() throws Exception {
+    new ObjectOutputStream(new ByteArrayOutputStream()).writeObject(new JUnit4TestNotRun());
+  }
 }
