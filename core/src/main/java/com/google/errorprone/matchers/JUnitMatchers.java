@@ -16,7 +16,16 @@
 
 package com.google.errorprone.matchers;
 
-import static com.google.errorprone.matchers.Matchers.*;
+import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.annotations;
+import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.hasAnnotation;
+import static com.google.errorprone.matchers.Matchers.hasAnnotationOnAnyOverriddenMethod;
+import static com.google.errorprone.matchers.Matchers.hasArgumentWithValue;
+import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
+import static com.google.errorprone.matchers.Matchers.methodHasParameters;
+import static com.google.errorprone.matchers.Matchers.methodNameStartsWith;
+import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
 
 import com.google.errorprone.VisitorState;
@@ -52,9 +61,12 @@ public class JUnitMatchers {
 
   @SuppressWarnings("unchecked")
   public static final Matcher<MethodTree> hasJUnitAnnotation = anyOf(
-      hasAnnotation(JUNIT4_TEST_ANNOTATION),
-      hasAnnotation(JUNIT_BEFORE_ANNOTATION),
-      hasAnnotation(JUNIT_AFTER_ANNOTATION),
+      /* @Test, @Before, and @After are inherited by methods that override a base method with the
+       * annotation.  @BeforeClass and @AfterClass can only be applied to static methods, so they
+       * cannot be inherited. */
+      hasAnnotationOnAnyOverriddenMethod(JUNIT4_TEST_ANNOTATION),
+      hasAnnotationOnAnyOverriddenMethod(JUNIT_BEFORE_ANNOTATION),
+      hasAnnotationOnAnyOverriddenMethod(JUNIT_AFTER_ANNOTATION),
       hasAnnotation(JUNIT_BEFORE_CLASS_ANNOTATION),
       hasAnnotation(JUNIT_AFTER_CLASS_ANNOTATION));
 
@@ -92,8 +104,8 @@ public class JUnitMatchers {
    */
   @SuppressWarnings("unchecked")
   public static final Matcher<MethodTree> wouldRunInJUnit4 = allOf(
-      hasAnnotation(JUNIT4_TEST_ANNOTATION),
-      not(hasAnnotation(JUNIT4_IGNORE_ANNOTATION)));
+      hasAnnotationOnAnyOverriddenMethod(JUNIT4_TEST_ANNOTATION),
+      not(hasAnnotationOnAnyOverriddenMethod(JUNIT4_IGNORE_ANNOTATION)));
 
   public static class JUnit4TestClassMatcher implements Matcher<ClassTree> {
 

@@ -39,14 +39,15 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCArrayTypeTree;
-import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
+import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import com.sun.tools.javac.tree.JCTree.JCPrimitiveTypeTree;
 import com.sun.tools.javac.tree.JCTree.JCTypeApply;
 
@@ -609,6 +610,37 @@ public class Matchers {
         } else {
           return sym.attribute(annotationSym) != null;
         }
+      }
+    };
+  }
+  
+  /**
+   * Matches if a method or any method it overrides has an annotation of the given type.
+   * JUnit 4's {@code @Test}, {@code @Before}, and {@code @After} annotations behave this way.
+   *
+   * @param annotationType The type of the annotation to look for (e.g, "org.junit.Test")
+   */
+  public static Matcher<MethodTree> hasAnnotationOnAnyOverriddenMethod(
+      final String annotationType) {
+    return new Matcher<MethodTree>() {
+      @Override
+      public boolean matches(MethodTree tree, VisitorState state) {
+        MethodSymbol methodSym = ASTHelpers.getSymbol(tree);
+        Symbol annotationSym = state.getSymbolFromString(annotationType);
+        if ((methodSym == null) || (annotationSym == null)) {
+          return false;
+        }
+        
+        Set<MethodSymbol> allMethods = ASTHelpers.findSuperMethods(methodSym, state.getTypes());
+        allMethods.add(methodSym);
+         
+        for (MethodSymbol method : allMethods) {
+          if (method.attribute(annotationSym) != null) {
+            return true;
+          }
+        }
+        
+        return false;
       }
     };
   }

@@ -52,7 +52,7 @@ public class JUnit4TestNotRunTest {
     compilationHelper.assertCompileFailsWithMessages(
         sources(getClass(), "JUnit4TestNotRunPositiveCase2.java"));
   }
-
+  
   @Test
   public void testNegativeCase1() throws Exception {
     compilationHelper.assertCompileSucceeds(
@@ -75,6 +75,12 @@ public class JUnit4TestNotRunTest {
   public void testNegativeCase4() throws Exception {
     compilationHelper.assertCompileSucceeds(
         sources(getClass(), "JUnit4TestNotRunNegativeCase4.java"));
+  }
+
+  @Test
+  public void testNegativeCase5() throws Exception {
+    compilationHelper.assertCompileSucceeds(sources(getClass(), 
+        "JUnit4TestNotRunBaseClass.java", "JUnit4TestNotRunNegativeCase5.java"));
   }
 
 
