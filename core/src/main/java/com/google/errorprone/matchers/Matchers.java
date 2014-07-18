@@ -613,6 +613,19 @@ public class Matchers {
     };
   }
 
+  /**
+   * Matches a whitelisted method invocation that is known to never return null
+   */  
+  @SuppressWarnings("unchecked")
+  public static Matcher<ExpressionTree> methodReturnsNonNull() {
+    return anyOf(
+        expressionMethodSelect((isDescendantOfMethod("java.lang.Object", "toString()"))),
+        expressionMethodSelect(methodReceiver(isSameType("java.lang.String"))),
+        expressionMethodSelect(staticMethod("java.lang.String", "*")),
+        expressionMethodSelect(instanceMethod(isSameType("java.util.StringTokenizer"), "nextToken"))
+    );
+  }
+  
   public static Matcher<MethodTree> methodReturns(final Type returnType) {
     return new Matcher<MethodTree>() {
       @Override
