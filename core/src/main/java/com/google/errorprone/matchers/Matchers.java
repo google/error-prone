@@ -29,6 +29,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LiteralTree;
+import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
@@ -502,8 +503,10 @@ public class Matchers {
   public static Matcher<ExpressionTree> nonNullLiteral() {
     return new Matcher<ExpressionTree>() {
       @Override
-      public boolean matches(ExpressionTree tree, VisitorState state) {
+      public boolean matches(ExpressionTree tree, VisitorState state) {        
         switch (tree.getKind()) {
+          case MEMBER_SELECT:
+            return ((MemberSelectTree) tree).getIdentifier().toString().equals("class");
           case INT_LITERAL:
           case LONG_LITERAL:
           case FLOAT_LITERAL:
