@@ -69,7 +69,7 @@ public class Overrides extends BugChecker implements MethodTreeMatcher {
       if (areSupersVarargs != superMethodsIterator.next().isVarArgs()) {
         // The super methods are inconsistent (some are varargs, some are not varargs). Then the
         // current method is inconsistent with some of its supermethods, so report a match.
-        return describeMatch(methodTree, new SuggestedFix());
+        return describeMatch(methodTree, Fix.NO_FIX);
       }
     }
     
@@ -86,12 +86,12 @@ public class Overrides extends BugChecker implements MethodTreeMatcher {
     CharSequence paramTypeSource = state.getSourceForNode((JCTree) paramType);
     if (paramTypeSource == null) {
       // No fix if we don't have tree end positions.
-      return describeMatch(methodTree, new SuggestedFix());
+      return describeMatch(methodTree, Fix.NO_FIX);
     }
     
-    Fix fix = new SuggestedFix();
+    Fix fix = Fix.NO_FIX;
     if (isVarargs) {
-      fix = new SuggestedFix().replace(paramType, "[]", paramTypeSource.length() - 3, 0);
+      fix = SuggestedFix.replace(paramType, "[]", paramTypeSource.length() - 3, 0);
     } else {
       // There may be a comment that includes a '[' character between the open and closed
       // brackets of the array type.  If so, we don't return a fix.
@@ -100,7 +100,7 @@ public class Overrides extends BugChecker implements MethodTreeMatcher {
         arrayOpenIndex--;
       }
       if (paramTypeSource.charAt(arrayOpenIndex) == '[') {
-        fix = new SuggestedFix().replace(paramType, "...", arrayOpenIndex, 0);
+        fix = SuggestedFix.replace(paramType, "...", arrayOpenIndex, 0);
       }
     }
 

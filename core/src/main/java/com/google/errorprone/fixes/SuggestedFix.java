@@ -23,11 +23,11 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
-import com.sun.tools.javac.util.Pair;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -36,21 +36,22 @@ import java.util.TreeSet;
  */
 public class SuggestedFix implements Fix {
 
-  private Collection<Pair<DiagnosticPosition, String>> nodeReplacements =
-      new ArrayList<Pair<DiagnosticPosition, String>>();
-  private Collection<Pair<DiagnosticPosition, DiagnosticPosition>> nodeSwaps =
-      new ArrayList<Pair<DiagnosticPosition, DiagnosticPosition>>();
-  private Collection<Pair<DiagnosticPosition, String>> prefixInsertions =
-      new ArrayList<Pair<DiagnosticPosition, String>>();
-  private Collection<Pair<DiagnosticPosition, String>> postfixInsertions =
-      new ArrayList<Pair<DiagnosticPosition, String>>();
-  private Collection<String> importsToAdd = new ArrayList<String>();
-  private Collection<String> importsToRemove = new ArrayList<String>();
+  private final List<FixOperation> fixes;
+  private final List<String> importsToAdd;
+  private final List<String> importsToRemove;
+  
+  private SuggestedFix(
+      List<FixOperation> fixes,
+      List<String> importsToAdd,
+      List<String> importsToRemove) {
+    this.fixes = fixes;
+    this.importsToAdd = importsToAdd;
+    this.importsToRemove = importsToRemove;
+  }
 
   @Override
   public boolean isEmpty() {
-    return nodeReplacements.isEmpty() && nodeSwaps.isEmpty() && prefixInsertions.isEmpty()
-        && postfixInsertions.isEmpty() && importsToAdd.isEmpty() && importsToRemove.isEmpty();
+    return false;
   }
 
   @Override
@@ -90,48 +91,15 @@ public class SuggestedFix implements Fix {
           return (a < b) ? -1 : ((a > b) ? 1 : 0);
         }
       });
-    // TODO(eaftan): The next four for-loops are all doing the same thing.  Collapse them
-    // into a single one.  Will need to make AdjustedTreePosition implement DiagnosticPosition.
-    for (Pair<DiagnosticPosition, String> prefixInsertion : prefixInsertions) {
-      DiagnosticPosition pos = prefixInsertion.fst;
-      replacements.add(new Replacement(
-          pos.getStartPosition(),
-          pos.getStartPosition(),
-          prefixInsertion.snd));
-    }
-    for (Pair<DiagnosticPosition, String> postfixInsertion : postfixInsertions) {
-      DiagnosticPosition pos = postfixInsertion.fst;
-      replacements.add(new Replacement(
-          endPositions.getEndPosition(pos),
-          endPositions.getEndPosition(pos),
-          postfixInsertion.snd));
-    }
-    for (Pair<DiagnosticPosition, String> nodeReplacement : nodeReplacements) {
-      DiagnosticPosition pos = nodeReplacement.fst;
-      replacements.add(new Replacement(
-          pos.getStartPosition(),
-          endPositions.getEndPosition(pos),
-          nodeReplacement.snd));
-    }
-    for (Pair<DiagnosticPosition, DiagnosticPosition> nodeSwap : nodeSwaps) {
-      DiagnosticPosition pos1 = nodeSwap.fst;
-      DiagnosticPosition pos2 = nodeSwap.snd;
-      replacements.add(new Replacement(
-          pos1.getStartPosition(),
-          endPositions.getEndPosition(pos1),
-          nodeSwap.snd.toString()));
-      replacements.add(new Replacement(
-          pos2.getStartPosition(),
-          endPositions.getEndPosition(pos2),
-          nodeSwap.fst.toString()));
+    for (FixOperation fix : fixes) {
+      replacements.add(fix.getReplacement(endPositions));
     }
     return replacements;
   }
 
-  public SuggestedFix replace(Tree node, String replaceWith) {
-    nodeReplacements.add(
-        new Pair<DiagnosticPosition, String>((DiagnosticPosition) node, replaceWith));
-    return this;
+  /** {@link Builder#replace(Tree, String)} */
+  public static Fix replace(Tree tree, String replaceWith) {
+    return builder().replace(tree, replaceWith).build();
   }
 
   /**
@@ -142,10 +110,8 @@ public class SuggestedFix implements Fix {
    * @param endPos The position at which to end replacing, exclusive
    * @param replaceWith The string to replace with
    */
-  public SuggestedFix replace(int startPos, int endPos, String replaceWith) {
-    nodeReplacements.add(new Pair<DiagnosticPosition, String>(
-        JDKCompatible.getIndexedPosition(startPos, endPos), replaceWith));
-    return this;
+  public static Fix replace(int startPos, int endPos, String replaceWith) {
+    return builder().replace(startPos, endPos, replaceWith).build();
   }
 
   /**
@@ -161,66 +127,218 @@ public class SuggestedFix implements Fix {
    * @param startPosAdjustment The adjustment to add to the start position (negative is OK)
    * @param endPosAdjustment The adjustment to add to the end position (negative is OK)
    */
-  public SuggestedFix replace(Tree node, String replaceWith, int startPosAdjustment,
-      int endPosAdjustment) {
-    nodeReplacements.add(new Pair<DiagnosticPosition, String>(
-        JDKCompatible.getAdjustedPosition((JCTree) node, startPosAdjustment, endPosAdjustment),
-        replaceWith));
-    return this;
+  public static Fix replace(Tree node, String replaceWith, int startPosAdjustment,
+                                     int endPosAdjustment) {
+    return builder().replace(node, replaceWith, startPosAdjustment, endPosAdjustment).build();
   }
 
-  public SuggestedFix prefixWith(Tree node, String prefix) {
-    prefixInsertions.add(new Pair<DiagnosticPosition, String>((DiagnosticPosition) node, prefix));
-    return this;
+  /** {@link Builder#prefixWith(Tree, String)}  */
+  public static Fix prefixWith(Tree node, String prefix) {
+    return builder().prefixWith(node, prefix).build();
   }
 
-  public SuggestedFix postfixWith(Tree node, String postfix) {
-    postfixInsertions.add(new Pair<DiagnosticPosition, String>((DiagnosticPosition) node, postfix));
-    return this;
+  /** {@link Builder#postfixWith(Tree, String)} */
+  public static Fix postfixWith(Tree node, String postfix) {
+    return builder().postfixWith(node, postfix).build();
   }
 
-  public SuggestedFix delete(Tree node) {
-    return replace(node, "");
+  /** {@link Builder#delete(Tree)} */
+  public static Fix delete(Tree node) {
+    return builder().delete(node).build();
   }
 
-  public SuggestedFix swap(Tree node1, Tree node2) {
-    nodeSwaps.add(new Pair<DiagnosticPosition, DiagnosticPosition>((DiagnosticPosition) node1, (DiagnosticPosition) node2));
-    return this;
+  /** {@link Builder#swap(Tree, Tree)} */
+  public static Fix swap(Tree node1, Tree node2) {
+    return builder().swap(node1, node2).build();
   }
 
-  /**
-   * Add an import statement as part of this SuggestedFix.
-   * Import string should be of the form "foo.bar.baz".
-   */
-  public SuggestedFix addImport(String importString) {
-    importsToAdd.add("import " + importString);
-    return this;
+  public static Builder builder() {
+    return new Builder();
   }
 
-  /**
-   * Add a static import statement as part of this SuggestedFix.
-   * Import string should be of the form "foo.bar.baz".
-   */
-  public SuggestedFix addStaticImport(String importString) {
-    importsToAdd.add("import static " + importString);
-    return this;
+  /** Builds {@link SuggestedFix}s. */
+  public static class Builder {
+
+    private final List<FixOperation> fixes = new ArrayList<FixOperation>();
+    private final List<String> importsToAdd = new ArrayList<String>();
+    private final List<String> importsToRemove = new ArrayList<String>();
+
+    protected Builder() {}
+
+    public boolean isEmpty() {
+      return fixes.isEmpty() && importsToAdd.isEmpty() && importsToRemove.isEmpty();
+    }
+
+    public Fix build() {
+      if (isEmpty()) {
+        throw new IllegalStateException(
+            "Empty fixes are not supported. Use Fix.NO_FIX instead.");
+      }
+      return new SuggestedFix(fixes, importsToAdd, importsToRemove);
+    }
+
+    private Builder with(FixOperation fix) {
+      fixes.add(fix);
+      return this;
+    }
+
+    public Builder replace(Tree node, String replaceWith) {
+      return with(new ReplacementFix((DiagnosticPosition) node, replaceWith));
+    }
+
+    /**
+     * Replace the characters from startPos, inclusive, until endPos, exclusive, with the
+     * given string.
+     *
+     * @param startPos The position from which to start replacing, inclusive
+     * @param endPos The position at which to end replacing, exclusive
+     * @param replaceWith The string to replace with
+     */
+    public Builder replace(int startPos, int endPos, String replaceWith) {
+      DiagnosticPosition pos = JDKCompatible.getIndexedPosition(startPos, endPos);
+      return with(new ReplacementFix(pos, replaceWith));
+    }
+
+    /**
+     * Replace a tree node with a string, but adjust the start and end positions as well.
+     * For example, if the tree node begins at index 10 and ends at index 30, this call will
+     * replace the characters at index 15 through 25 with "replacement":
+     * <pre>
+     * {@code fix.replace(node, "replacement", 5, -5)}
+     * </pre>
+     *
+     * @param node The tree node to replace
+     * @param replaceWith The string to replace with
+     * @param startPosAdjustment The adjustment to add to the start position (negative is OK)
+     * @param endPosAdjustment The adjustment to add to the end position (negative is OK)
+     */
+    public Builder replace(Tree node, String replaceWith, int startPosAdjustment,
+                           int endPosAdjustment) {
+      return with(new ReplacementFix(
+          JDKCompatible.getAdjustedPosition((JCTree) node, startPosAdjustment, endPosAdjustment),
+          replaceWith));
+    }
+
+    public Builder prefixWith(Tree node, String prefix) {
+      return with(new PrefixInsertion((DiagnosticPosition) node, prefix));
+    }
+
+    public Builder postfixWith(Tree node, String postfix) {
+      return with(new PostfixInsertion((DiagnosticPosition) node, postfix));
+    }
+
+    public Builder delete(Tree node) {
+      return replace(node, "");
+    }
+
+    public Builder swap(Tree node1, Tree node2) {
+      // calling Tree.toString() is kind of cheesy, but we don't currently have a better option
+      // TODO(cushon): consider an approach that doesn't rewrite the original tokens
+      fixes.add(new ReplacementFix((DiagnosticPosition) node1, node2.toString()));
+      fixes.add(new ReplacementFix((DiagnosticPosition) node2, node1.toString()));
+      return this;
+    }
+
+    /**
+     * Add an import statement as part of this SuggestedFix.
+     * Import string should be of the form "foo.bar.baz".
+     */
+    public Builder addImport(String importString) {
+      importsToAdd.add("import " + importString);
+      return this;
+    }
+
+    /**
+     * Add a static import statement as part of this SuggestedFix.
+     * Import string should be of the form "foo.bar.baz".
+     */
+    public Builder addStaticImport(String importString) {
+      importsToAdd.add("import static " + importString);
+      return this;
+    }
+
+    /**
+     * Remove an import statement as part of this SuggestedFix.
+     * Import string should be of the form "foo.bar.baz".
+     */
+    public Builder removeImport(String importString) {
+      importsToRemove.add("import " + importString);
+      return this;
+    }
+
+    /**
+     * Remove a static import statement as part of this SuggestedFix.
+     * Import string should be of the form "foo.bar.baz".
+     */
+    public Builder removeStaticImport(String importString) {
+      importsToRemove.add("import static " + importString);
+      return this;
+    }
   }
 
-  /**
-   * Remove an import statement as part of this SuggestedFix.
-   * Import string should be of the form "foo.bar.baz".
-   */
-  public SuggestedFix removeImport(String importString) {
-    importsToRemove.add("import " + importString);
-    return this;
+  /** Models a single fix operation. */
+  private static interface FixOperation {
+    /** Calculate the replacement operation once end positions are available. */
+    Replacement getReplacement(ErrorProneEndPosMap endPositions);
   }
 
-  /**
-   * Remove a static import statement as part of this SuggestedFix.
-   * Import string should be of the form "foo.bar.baz".
-   */
-  public SuggestedFix removeStaticImport(String importString) {
-    importsToRemove.add("import static " + importString);
-    return this;
+  /** Inserts new text at a specific insertion point (e.g. prefix or postfix). */
+  private abstract static class InsertionFix implements FixOperation {
+    protected abstract int getInsertionIndex(ErrorProneEndPosMap endPositions);
+
+    protected final DiagnosticPosition tree;
+    protected final String insertion;
+
+    protected InsertionFix(DiagnosticPosition tree, String insertion) {
+      this.tree = tree;
+      this.insertion = insertion;
+    }
+
+    @Override
+    public Replacement getReplacement(ErrorProneEndPosMap endPositions) {
+      int insertionIndex = getInsertionIndex(endPositions);
+      return new Replacement(insertionIndex, insertionIndex, insertion);
+    }
+  }
+
+  private static class PostfixInsertion extends InsertionFix {
+    public PostfixInsertion(DiagnosticPosition tree, String insertion) {
+      super(tree, insertion);
+    }
+
+    @Override
+    protected int getInsertionIndex(ErrorProneEndPosMap endPositions) {
+      return endPositions.getEndPosition(tree);
+    }
+  }
+
+  private static class PrefixInsertion extends InsertionFix {
+    public PrefixInsertion(DiagnosticPosition tree, String insertion) {
+      super(tree, insertion);
+    }
+
+    @Override
+    protected int getInsertionIndex(ErrorProneEndPosMap endPositions) {
+      return tree.getStartPosition();
+    }
+  }
+
+  /** Replaces an entire diagnostic position (from start to end) with the given string. */
+  private static class ReplacementFix implements FixOperation {
+    private final DiagnosticPosition original;
+    private final String replacement;
+
+    public ReplacementFix(DiagnosticPosition original, String replacement) {
+      this.original = original;
+      this.replacement = replacement;
+    }
+
+    @Override
+    public Replacement getReplacement(ErrorProneEndPosMap endPositions) {
+      return new Replacement(
+          original.getStartPosition(),
+          endPositions.getEndPosition(original),
+          replacement);
+    }
   }
 }

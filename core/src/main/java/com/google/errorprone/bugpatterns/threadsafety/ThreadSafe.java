@@ -99,7 +99,7 @@ public class ThreadSafe extends GuardedByValidator implements BugChecker.Variabl
     if (!locks.allLocks().contains(guard)) {
       String message = String.format("Expected %s to be held, instead found %s", guard, locks);
       // TODO(cushon) - this fix is a debugging aid, remove it before productionizing the check.
-      Fix fix = new SuggestedFix().prefixWith(tree, String.format("/* %s */", message));
+      Fix fix = SuggestedFix.prefixWith(tree, String.format("/* %s */", message));
       return new Description.Builder(tree, pattern)
           .setMessage(message)
           .setFix(fix)

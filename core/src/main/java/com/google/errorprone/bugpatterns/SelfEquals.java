@@ -137,7 +137,7 @@ public class SelfEquals extends BugChecker implements MethodInvocationTreeMatche
     }
 
     // If we don't find a good field to use, then just replace with "true"
-    Fix fix = new SuggestedFix().replace(methodInvocationTree, "true");
+    Fix fix = SuggestedFix.replace(methodInvocationTree, "true");
 
     if (matchState == MatchState.OBJECTS_EQUAL) {
       /**
@@ -182,10 +182,10 @@ public class SelfEquals extends BugChecker implements MethodInvocationTreeMatche
 
           if (ASTHelpers.getSymbol(toReplace).isMemberOf(variableTypeSymbol, state.getTypes())) {
             if (toReplace.getKind() == Kind.IDENTIFIER) {
-              fix = new SuggestedFix().prefixWith(toReplace,
+              fix = SuggestedFix.prefixWith(toReplace,
                   declaration.getName().toString() + ".");
             } else {
-              fix = new SuggestedFix().replace(((JCFieldAccess) toReplace).getExpression(),
+              fix = SuggestedFix.replace(((JCFieldAccess) toReplace).getExpression(),
                   declaration.getName().toString());
             }
           }

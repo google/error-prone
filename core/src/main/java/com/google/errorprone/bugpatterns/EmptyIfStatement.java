@@ -85,15 +85,13 @@ public class EmptyIfStatement extends BugChecker implements EmptyStatementTreeMa
 
     assert(state.getPath().getParentPath().getLeaf().getKind() == IF);
     IfTree ifParent = (IfTree)state.getPath().getParentPath().getLeaf();
-    SuggestedFix fix = new SuggestedFix();
     if (nextStmtIsNull) {
       // No following statements. Delete whole if.
-      fix.delete(parent);
-      return describeMatch(parent, fix);
+      return describeMatch(parent, SuggestedFix.delete(parent));
     } else {
       // There are more statements. Delete the empty then part of the if.
-      fix.delete(ifParent.getThenStatement());
-      return describeMatch(ifParent.getThenStatement(), fix);
+      return describeMatch(ifParent.getThenStatement(),
+          SuggestedFix.delete(ifParent.getThenStatement()));
     }
   }
 }

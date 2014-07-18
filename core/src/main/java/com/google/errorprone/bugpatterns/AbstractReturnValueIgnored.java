@@ -19,8 +19,8 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.kindIs;
-import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
+import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.parentNode;
 
 import com.google.errorprone.VisitorState;
@@ -106,11 +106,11 @@ abstract class AbstractReturnValueIgnored extends BugChecker
     if (identifierStr != null && !"this".equals(identifierStr) && returnType != null &&
         state.getTypes().isAssignable(returnType, identifierType)) {
       // Fix by assigning the assigning the result of the call to the root receiver reference.
-      fix = new SuggestedFix().prefixWith(methodInvocationTree, identifierStr + " = ");
+      fix = SuggestedFix.prefixWith(methodInvocationTree, identifierStr + " = ");
     } else {
       // Unclear what the programmer intended.  Delete since we don't know what else to do.
       Tree parent = state.getPath().getParentPath().getLeaf();
-      fix = new SuggestedFix().delete(parent);
+      fix = SuggestedFix.delete(parent);
     }
     return describeMatch(methodInvocationTree, fix);
   }

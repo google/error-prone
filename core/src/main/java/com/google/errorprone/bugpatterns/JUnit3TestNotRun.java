@@ -112,7 +112,7 @@ public class JUnit3TestNotRun extends BugChecker implements MethodTreeMatcher {
     // We don't have start position for a method symbol, so we replace everything between result
     // type and body.
     JCMethodDecl decl = (JCMethodDecl) methodTree;
-    Fix fix = new SuggestedFix().replace(
+    Fix fix = SuggestedFix.replace(
         decl.restype.getStartPosition() + 4, decl.body.getStartPosition(), " " + fixedName + "() ");
     return describeMatch(methodTree, fix);
   }

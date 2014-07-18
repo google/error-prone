@@ -86,8 +86,10 @@ public class NumericEquality extends BugChecker implements BinaryTreeMatcher {
     fixedExpression.append(
         "Objects.equal(" + leftOperand.toString() + ", " + rightOperand.toString() + ")");
 
-    Fix fix = new SuggestedFix().replace(tree, fixedExpression.toString())
-        .addImport("com.google.common.base.Objects");
+    Fix fix = SuggestedFix.builder()
+        .replace(tree, fixedExpression.toString())
+        .addImport("com.google.common.base.Objects")
+        .build();
     return describeMatch(tree, fix);
   }
 

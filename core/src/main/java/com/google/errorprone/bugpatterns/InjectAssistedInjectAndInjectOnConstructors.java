@@ -32,6 +32,7 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.matchers.MultiMatcher;
 import com.google.errorprone.util.ASTHelpers;
+
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
@@ -91,7 +92,7 @@ public class InjectAssistedInjectAndInjectOnConstructors extends BugChecker
         ClassTree enclosingClass =
             (ClassTree) state.getPath().getParentPath().getParentPath().getParentPath().getLeaf();
         if (constructorsWithInjectAndAssistedInjectMatcher.matches(enclosingClass, state)) {
-          return describeMatch(annotationTree, new SuggestedFix().delete(annotationTree));
+          return describeMatch(annotationTree, SuggestedFix.delete(annotationTree));
         }
       }
     }

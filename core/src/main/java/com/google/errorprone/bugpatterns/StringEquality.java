@@ -101,7 +101,7 @@ public class StringEquality extends BugChecker implements BinaryTreeMatcher {
       rightConstValue = tempConstValue;
     }   
    
-    SuggestedFix fix = new SuggestedFix();
+    SuggestedFix.Builder fix = SuggestedFix.builder();
     if (tree.getKind() == Tree.Kind.NOT_EQUAL_TO) {
       fixedExpression.append("!");
     }
@@ -132,7 +132,7 @@ public class StringEquality extends BugChecker implements BinaryTreeMatcher {
     }
 
     fix.replace(tree, fixedExpression.toString());
-    return describeMatch(tree, fix);
+    return describeMatch(tree, fix.build());
   }
 
   private static Object getConstValue(Tree tree) {

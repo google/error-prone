@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -201,7 +202,7 @@ public class ComparisonOutOfRange extends BugChecker implements BinaryTreeMatche
         state.getSymtab().byteType);
 
     boolean willEvaluateTo = (tree.getKind() != Kind.EQUAL_TO);
-    SuggestedFix fix = new SuggestedFix();
+    Fix fix;
     String customDiagnosticMessage;
     if (byteMatch) {
       String replacement = Byte.toString(((Number) literal.getValue()).byteValue());
@@ -209,14 +210,15 @@ public class ComparisonOutOfRange extends BugChecker implements BinaryTreeMatche
       // Correct for poor javac 6 literal parsing.
       int actualStart = ASTHelpers.getActualStartPosition(literal, state.getSourceCode());
       if (actualStart != literal.getStartPosition()) {
-        fix.replace(literal, replacement, actualStart - literal.getStartPosition(), 0);
+        fix =
+            SuggestedFix.replace(literal, replacement, actualStart - literal.getStartPosition(), 0);
       } else {
-        fix.replace(literal, replacement);
+        fix = SuggestedFix.replace(literal, replacement);
       }
       customDiagnosticMessage = String.format(MESSAGE_TEMPLATE, "byte", (int) Byte.MIN_VALUE,
           (int) Byte.MAX_VALUE, literal.toString(), Boolean.toString(willEvaluateTo));
     } else {
-      fix.replace(tree, Boolean.toString(willEvaluateTo));
+      fix = SuggestedFix.replace(tree, Boolean.toString(willEvaluateTo));
       customDiagnosticMessage = String.format(MESSAGE_TEMPLATE, "char", (int) Character.MIN_VALUE,
           (int) Character.MAX_VALUE, literal.toString(), Boolean.toString(willEvaluateTo));
     }

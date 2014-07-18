@@ -35,6 +35,7 @@ import static com.sun.source.tree.Tree.Kind.IF;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Enclosing;
@@ -79,12 +80,13 @@ public class DeadException extends BugChecker implements NewClassTreeMatcher {
         parentNode(parentNode(kindIs(IF))))
         .matches(newClassTree, state);
 
-    SuggestedFix suggestedFix = new SuggestedFix();
+    Fix fix;
     if (isLastStatement) {
-      suggestedFix.prefixWith(newClassTree, "throw ");
+      fix = SuggestedFix.prefixWith(newClassTree, "throw ");
     } else {
-      suggestedFix.delete(parent);
+      fix = SuggestedFix.delete(parent);
     }
-    return describeMatch(newClassTree, suggestedFix);
+
+    return describeMatch(newClassTree, fix);
   }
 }

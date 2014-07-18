@@ -29,6 +29,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
+
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.tools.javac.code.Attribute.Compound;
@@ -88,11 +89,12 @@ public class InjectInvalidTargetingOnScopingAnnotation extends BugChecker
     Compound target = ASTHelpers.getSymbol(classTree).attribute(
         state.getSymbolFromString(TARGET_ANNOTATION));
     if (target == null) {
-      return describeMatch(classTree, new SuggestedFix()
+      return describeMatch(classTree, SuggestedFix.builder()
           .addImport("java.lang.annotation.Target")
           .addStaticImport("java.lang.annotation.ElementType.TYPE")
           .addStaticImport("java.lang.annotation.ElementType.METHOD")
-          .prefixWith(classTree, "@Target({TYPE, METHOD})\n"));
+          .prefixWith(classTree, "@Target({TYPE, METHOD})\n")
+          .build());
     }
     AnnotationTree targetNode = null;
     for (AnnotationTree annotation : classTree.getModifiers().getAnnotations()) {
@@ -100,10 +102,11 @@ public class InjectInvalidTargetingOnScopingAnnotation extends BugChecker
         targetNode = annotation;
       }
     }
-    return describeMatch(targetNode, new SuggestedFix()
+    return describeMatch(targetNode, SuggestedFix.builder()
         .addImport("java.lang.annotation.Target")
         .addStaticImport("java.lang.annotation.ElementType.TYPE")
         .addStaticImport("java.lang.annotation.ElementType.METHOD")
-        .replace(targetNode, "@Target({TYPE, METHOD})"));
+        .replace(targetNode, "@Target({TYPE, METHOD})")
+        .build());
   }
 }

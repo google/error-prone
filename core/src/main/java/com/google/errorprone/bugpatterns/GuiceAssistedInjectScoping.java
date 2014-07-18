@@ -30,6 +30,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.matchers.MultiMatcher;
+
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
@@ -118,6 +119,6 @@ public class GuiceAssistedInjectScoping extends BugChecker implements ClassTreeM
     }
 
     return describeMatch(annotationWithScopeAnnotation,
-        new SuggestedFix().delete(annotationWithScopeAnnotation));
+        SuggestedFix.delete(annotationWithScopeAnnotation));
   }
 }

@@ -182,6 +182,6 @@ public class ProtoFieldNullComparison extends BugChecker implements BinaryTreeMa
     if (!MATCHER.matches(tree, state)) {
       return Description.NO_MATCH;
     }
-    return describeMatch(tree, new SuggestedFix().replace(tree, createReplacement(tree, state)));
+    return describeMatch(tree, SuggestedFix.replace(tree, createReplacement(tree, state)));
   }
 }

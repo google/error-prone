@@ -67,7 +67,7 @@ public class InjectJavaxInjectOnAbstractMethod extends BugChecker
     }
     Tree annotatedNode = state.getPath().getParentPath().getParentPath().getLeaf();
     if (isMethod(annotatedNode) && isAbstract(annotatedNode)) {
-      return describeMatch(annotationTree, new SuggestedFix().delete(annotationTree));
+      return describeMatch(annotationTree, SuggestedFix.delete(annotationTree));
     }
     return Description.NO_MATCH;
   }

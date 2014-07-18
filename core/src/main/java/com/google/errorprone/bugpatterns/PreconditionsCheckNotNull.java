@@ -28,6 +28,7 @@ import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -65,11 +66,11 @@ public class PreconditionsCheckNotNull extends BugChecker implements MethodInvoc
 
     List<? extends ExpressionTree> arguments = methodInvocationTree.getArguments();
     ExpressionTree stringLiteralValue = arguments.get(0);
-    SuggestedFix fix = new SuggestedFix();
+    Fix fix;
     if (arguments.size() == 2) {
-      fix.swap(arguments.get(0), arguments.get(1));
+      fix = SuggestedFix.swap(arguments.get(0), arguments.get(1));
     } else {
-      fix.delete(state.getPath().getParentPath().getLeaf());
+      fix = SuggestedFix.delete(state.getPath().getParentPath().getLeaf());
     }
     return describeMatch(stringLiteralValue, fix);
   }

@@ -64,7 +64,7 @@ public class InjectJavaxInjectOnFinalField extends BugChecker implements Annotat
     if ( JAVAX_INJECT_ANNOTATION_MATCHER.matches(annotationTree, state)
         && FINAL_FIELD_MATCHER.matches(getAnnotatedNode(state), state)) {
       return describeMatch(
-          annotationTree, new SuggestedFix().delete(annotationTree));
+          annotationTree, SuggestedFix.delete(annotationTree));
     }
     return Description.NO_MATCH;
   }

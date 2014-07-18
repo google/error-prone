@@ -30,6 +30,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
+
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -62,6 +63,6 @@ public class NonRuntimeAnnotation extends BugChecker implements MethodInvocation
       return Description.NO_MATCH;
     }
 
-    return describeMatch(tree, new SuggestedFix().replace(tree, "null"));
+    return describeMatch(tree, SuggestedFix.replace(tree, "null"));
   }
 }

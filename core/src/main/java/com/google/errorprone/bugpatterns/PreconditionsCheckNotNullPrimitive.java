@@ -104,7 +104,7 @@ public class PreconditionsCheckNotNullPrimitive
     // Assignment, return, etc.
     if (parent.getKind() != Kind.EXPRESSION_STATEMENT) {
       return describeMatch(arg1,
-          new SuggestedFix().replace(methodInvocationTree, arg1.toString()));
+          SuggestedFix.replace(methodInvocationTree, arg1.toString()));
     }
 
     // Comparison to null
@@ -112,11 +112,11 @@ public class PreconditionsCheckNotNullPrimitive
       BinaryTree binaryExpr = (BinaryTree) arg1;
       if (binaryExpr.getLeftOperand().getKind() == Kind.NULL_LITERAL) {
         return describeMatch(arg1,
-            new SuggestedFix().replace(arg1, binaryExpr.getRightOperand().toString()));
+            SuggestedFix.replace(arg1, binaryExpr.getRightOperand().toString()));
       }
       if (binaryExpr.getRightOperand().getKind() == Kind.NULL_LITERAL) {
         return describeMatch(arg1,
-            new SuggestedFix().replace(arg1, binaryExpr.getLeftOperand().toString()));
+            SuggestedFix.replace(arg1, binaryExpr.getLeftOperand().toString()));
       }
     }
 
@@ -127,7 +127,7 @@ public class PreconditionsCheckNotNullPrimitive
           createCheckArgumentOrStateCall(methodInvocationTree, state, arg1));
     }
 
-    return describeMatch(arg1, new SuggestedFix().delete(parent));
+    return describeMatch(arg1, SuggestedFix.delete(parent));
   }
 
   /**
@@ -136,7 +136,7 @@ public class PreconditionsCheckNotNullPrimitive
    */
   private Fix createCheckArgumentOrStateCall(MethodInvocationTree methodInvocationTree,
       VisitorState state, ExpressionTree arg1) {
-    SuggestedFix fix = new SuggestedFix();
+    SuggestedFix.Builder fix = SuggestedFix.builder();
     String replacementMethod = "checkState";
     if (hasMethodParameter(state.getPath(), arg1)) {
       replacementMethod = "checkArgument";
@@ -160,7 +160,7 @@ public class PreconditionsCheckNotNullPrimitive
     replacement.delete(replacement.length() - 2, replacement.length());
     replacement.append(")");
     fix.replace(methodInvocationTree, replacement.toString());
-    return fix;
+    return fix.build();
   }
 
   /**

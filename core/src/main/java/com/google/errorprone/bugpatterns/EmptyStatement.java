@@ -25,6 +25,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+
 import com.sun.source.tree.EmptyStatementTree;
 
 /**
@@ -44,6 +45,6 @@ public class EmptyStatement extends BugChecker implements EmptyStatementTreeMatc
   @Override
   public Description matchEmptyStatement(EmptyStatementTree emptyStatementTree, VisitorState state)
   {
-    return describeMatch(emptyStatementTree, new SuggestedFix().delete(emptyStatementTree));
+    return describeMatch(emptyStatementTree, SuggestedFix.delete(emptyStatementTree));
   }
 }

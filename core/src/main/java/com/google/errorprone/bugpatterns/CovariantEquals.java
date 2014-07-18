@@ -94,7 +94,7 @@ public class CovariantEquals extends BugChecker implements MethodTreeMatcher {
       return Description.NO_MATCH;
     }
 
-    SuggestedFix fix = new SuggestedFix();
+    SuggestedFix.Builder fix = SuggestedFix.builder();
     JCClassDecl cls = (JCClassDecl) state.findEnclosing(ClassTree.class);
 
     if ((cls.getModifiers().flags & ENUM) != 0) {
@@ -137,15 +137,15 @@ public class CovariantEquals extends BugChecker implements MethodTreeMatcher {
       }
     }
 
-    return describeMatch(methodTree, fix);
+    return describeMatch(methodTree, fix.build());
   }
 
   private static class CastState {
     Name name;
     String castToType;
-    SuggestedFix fix;
+    SuggestedFix.Builder fix;
 
-    public CastState(Name name, String castToType, SuggestedFix fix) {
+    public CastState(Name name, String castToType, SuggestedFix.Builder fix) {
       this.name = name;
       this.castToType = castToType;
       this.fix = fix;

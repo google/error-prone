@@ -117,10 +117,9 @@ public class SelfEquality extends BugChecker implements BinaryTreeMatcher {
 
           if (ASTHelpers.getSymbol(toReplace).isMemberOf(variableTypeSymbol, state.getTypes())) {
             if (toReplace.getKind() == Kind.IDENTIFIER) {
-              fix =
-                  new SuggestedFix().prefixWith(toReplace, declaration.getName().toString() + ".");
+              fix = SuggestedFix.prefixWith(toReplace, declaration.getName().toString() + ".");
             } else {
-              fix = new SuggestedFix().replace(
+              fix = SuggestedFix.replace(
                   ((JCFieldAccess) toReplace).getExpression(), declaration.getName().toString());
             }
           }
@@ -137,17 +136,17 @@ public class SelfEquality extends BugChecker implements BinaryTreeMatcher {
       }
       if (types.isSameType(leftType, symtab.floatType)) {
         fixedExpression.append("Float.isNaN(" + leftOperand + ")");
-        fix = new SuggestedFix().replace(tree, fixedExpression.toString());
+        fix = SuggestedFix.replace(tree, fixedExpression.toString());
       } else if (types.isSameType(leftType, symtab.doubleType)) {
         fixedExpression.append("Double.isNaN(" + leftOperand + ")");
-        fix = new SuggestedFix().replace(tree, fixedExpression.toString());
+        fix = SuggestedFix.replace(tree, fixedExpression.toString());
       } else {
 
         // last resort, just replace with true or false
         if (tree.getKind() == Tree.Kind.EQUAL_TO) {
-          fix = new SuggestedFix().replace(tree, "true");
+          fix = SuggestedFix.replace(tree, "true");
         } else {
-          fix = new SuggestedFix().replace(tree, "false");
+          fix = SuggestedFix.replace(tree, "false");
         }
       }
     }

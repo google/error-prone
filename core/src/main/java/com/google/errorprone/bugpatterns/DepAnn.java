@@ -92,6 +92,6 @@ public class DepAnn extends BugChecker
       return Description.NO_MATCH;
     }
 
-    return describeMatch(tree, new SuggestedFix().prefixWith(tree, "@Deprecated\n"));
+    return describeMatch(tree, SuggestedFix.prefixWith(tree, "@Deprecated\n"));
   }
 }

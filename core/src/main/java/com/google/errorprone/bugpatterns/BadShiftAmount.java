@@ -26,6 +26,7 @@ import static com.google.errorprone.matchers.Matchers.kindIs;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -109,12 +110,12 @@ public class BadShiftAmount extends BugChecker implements BinaryTreeMatcher {
      */
     int intValue = ((Number) ((LiteralTree) tree.getRightOperand()).getValue()).intValue();
 
-    SuggestedFix fix = new SuggestedFix();
+    Fix fix;
     if (intValue >= 32 && intValue <= 63) {
       if (tree.getLeftOperand().getKind() == Kind.INT_LITERAL) {
-        fix = fix.postfixWith(tree.getLeftOperand(), "L");
+        fix = SuggestedFix.postfixWith(tree.getLeftOperand(), "L");
       } else {
-        fix = fix.prefixWith(tree, "(long) ");
+        fix = SuggestedFix.prefixWith(tree, "(long) ");
       }
     } else {
       JCLiteral jcLiteral = (JCLiteral) tree.getRightOperand();
@@ -122,10 +123,10 @@ public class BadShiftAmount extends BugChecker implements BinaryTreeMatcher {
       String actualShiftDistance = Integer.toString(intValue & 0x1f);
       int actualStart = ASTHelpers.getActualStartPosition(jcLiteral, state.getSourceCode());
       if (actualStart != jcLiteral.getStartPosition()) {
-        fix = fix.replace(tree.getRightOperand(), actualShiftDistance,
+        fix = SuggestedFix.replace(tree.getRightOperand(), actualShiftDistance,
             actualStart - jcLiteral.getStartPosition(), 0);
       } else {
-        fix = fix.replace(tree.getRightOperand(), actualShiftDistance);
+        fix = SuggestedFix.replace(tree.getRightOperand(), actualShiftDistance);
       }
     }
     return describeMatch(tree, fix);

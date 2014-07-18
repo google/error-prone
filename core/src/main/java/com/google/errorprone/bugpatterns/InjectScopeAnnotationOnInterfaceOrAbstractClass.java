@@ -30,6 +30,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
+
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
@@ -73,7 +74,7 @@ public class InjectScopeAnnotationOnInterfaceOrAbstractClass
     if (SCOPE_ANNOTATION_MATCHER.matches(annotationTree, state) &&
         modified instanceof ClassTree &&
         INTERFACE_AND_ABSTRACT_TYPE_MATCHER.matches((ClassTree) modified, state)) {
-      return describeMatch(annotationTree, new SuggestedFix().delete(annotationTree));
+      return describeMatch(annotationTree, SuggestedFix.delete(annotationTree));
     }
     return Description.NO_MATCH;
   }

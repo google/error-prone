@@ -26,6 +26,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
+
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
@@ -108,7 +109,7 @@ public class GuiceAssistedParameters extends BugChecker implements VariableTreeM
     // find the @Assisted annotation to put the error on
     for (AnnotationTree annotation : variableTree.getModifiers().getAnnotations()) {
       if (ASTHelpers.getSymbol(annotation).equals(state.getSymbolFromString(ASSISTED_ANNOTATION))) {
-        return describeMatch(annotation, new SuggestedFix().delete(annotation));
+        return describeMatch(annotation, SuggestedFix.delete(annotation));
       }
     }
     throw new IllegalStateException("Expected to find @Assisted on this parameter");

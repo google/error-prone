@@ -111,7 +111,7 @@ public class InvalidPatternSyntax extends BugChecker implements MethodInvocation
     String reasonInvalid = "";
 
     if (".".equals(value)) {
-      fix = new SuggestedFix().replace(arg, "\"\\\\.\"");
+      fix = SuggestedFix.replace(arg, "\"\\\\.\"");
       reasonInvalid = "\".\" is a valid but useless regex";
     } else {
       try {

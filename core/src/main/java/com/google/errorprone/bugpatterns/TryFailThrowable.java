@@ -125,7 +125,7 @@ public class TryFailThrowable extends BugChecker implements TryTreeMatcher {
       CatchTree firstCatch = tree.getCatches().get(0);
       VariableTree catchParameter = firstCatch.getParameter();
       return describeMatch(firstCatch,
-          new SuggestedFix().replace(catchParameter, "Exception " + catchParameter.getName()));
+          SuggestedFix.replace(catchParameter, "Exception " + catchParameter.getName()));
     } else {
       return Description.NO_MATCH;
     }

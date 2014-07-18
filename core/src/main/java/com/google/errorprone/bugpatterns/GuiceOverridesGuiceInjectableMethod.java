@@ -79,8 +79,10 @@ public class GuiceOverridesGuiceInjectableMethod extends BugChecker implements M
       for (boolean checkSuperClass = true; checkSuperClass; method = superMethod) {
         superMethod = ASTHelpers.findSuperMethod(method, state.getTypes());
         if (isAnnotatedWith(superMethod, GUICE_INJECT_ANNOTATION)) {
-          return describeMatch(methodTree, new SuggestedFix().addImport("javax.inject.Inject")
-              .prefixWith(methodTree, "@Inject\n"));
+          return describeMatch(methodTree, SuggestedFix.builder()
+              .addImport("javax.inject.Inject")
+              .prefixWith(methodTree, "@Inject\n")
+              .build());
         }
         checkSuperClass = isAnnotatedWith(superMethod, OVERRIDE_ANNOTATION);
       }

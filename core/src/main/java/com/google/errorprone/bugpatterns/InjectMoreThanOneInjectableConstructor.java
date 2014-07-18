@@ -83,7 +83,7 @@ public class InjectMoreThanOneInjectableConstructor extends BugChecker
       if (JAVAX_INJECT_MATCHER.matches(annotation, state)
           || GUICE_INJECT_MATCHER.matches(annotation, state)) {
         return describeMatch(
-            annotation, new SuggestedFix().delete(annotation));
+            annotation, SuggestedFix.delete(annotation));
       }
     }
     throw new IllegalStateException(

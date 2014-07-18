@@ -85,7 +85,7 @@ public class InjectAssistedInjectAndInjectOnSameConstructor extends BugChecker
       if (ASTHelpers.getSymbol(treeWithAnnotation).isConstructor()
           && constructorWithInjectMatcher.matches((MethodTree) treeWithAnnotation, state)
           && constructorWithAssistedInjectMatcher.matches((MethodTree) treeWithAnnotation, state)) {
-        return describeMatch(annotationTree, new SuggestedFix().delete(annotationTree));
+        return describeMatch(annotationTree, SuggestedFix.delete(annotationTree));
       }
     }
     return Description.NO_MATCH;

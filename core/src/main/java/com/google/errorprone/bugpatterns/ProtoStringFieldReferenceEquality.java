@@ -67,7 +67,7 @@ public class ProtoStringFieldReferenceEquality extends BugChecker implements Bin
       if (tree.getKind() == Kind.NOT_EQUAL_TO) {
         result = "!" + result;
       }
-      return describeMatch(tree, new SuggestedFix().replace(tree, result));
+      return describeMatch(tree, SuggestedFix.replace(tree, result));
     } else {
       return Description.NO_MATCH;
     }

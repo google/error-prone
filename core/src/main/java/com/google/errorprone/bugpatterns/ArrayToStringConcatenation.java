@@ -74,9 +74,10 @@ public class ArrayToStringConcatenation extends BugChecker implements BinaryTree
     } else {
       replacement = leftOperand + " + Arrays.toString(" + rightOperand + ")";
     }
-    Fix fix = new SuggestedFix()
+    Fix fix = SuggestedFix.builder()
         .replace(t, replacement)
-        .addImport("java.util.Arrays");
+        .addImport("java.util.Arrays")
+        .build();
     return describeMatch(t, fix);
   }
 }

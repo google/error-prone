@@ -162,7 +162,7 @@ public class MalformedFormatString extends BugChecker implements MethodInvocatio
       if (end < 0) {
         return describeMatch(tree, null);
       }
-      Fix fix = new SuggestedFix().replace(begin, end - 1, "");
+      Fix fix = SuggestedFix.replace(begin, end - 1, "");
       String message = String.format(EXTRA_ARGUMENTS_MESSAGE, e.used, e.provided);
       return new Description.Builder(tree, pattern)
           .setMessage(message)

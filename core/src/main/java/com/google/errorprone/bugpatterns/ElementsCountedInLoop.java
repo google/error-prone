@@ -75,7 +75,7 @@ public class ElementsCountedInLoop extends BugChecker
           methodInvocation, state)) {
         IdentifierTree identifier = getIncrementedIdentifer(extractSingleStatement(whileLoop.body));
         if (identifier != null) {
-          return describeMatch(tree, new SuggestedFix());
+          return describeMatch(tree, Fix.NO_FIX);
         }
       }
     }
@@ -92,14 +92,16 @@ public class ElementsCountedInLoop extends BugChecker
       Fix fix;
       if (isSubtypeOf("java.util.Collection").matches(expression, state)) {
         String replacement = identifier + " += " + expression + ".size();";
-        fix = new SuggestedFix().replace(tree, replacement);
+        fix = SuggestedFix.replace(tree, replacement);
       } else if (isArrayType().matches(expression, state)) {
         String replacement = identifier + " += " + expression + ".length;";
-        fix = new SuggestedFix().replace(tree, replacement);
+        fix = SuggestedFix.replace(tree, replacement);
       } else {
         String replacement = identifier + " += Iterables.size(" + expression + ");";
-        fix = new SuggestedFix().replace(tree, replacement).addImport(
-            "com.google.common.collect.Iterables");
+        fix = SuggestedFix.builder()
+            .replace(tree, replacement)
+            .addImport("com.google.common.collect.Iterables")
+            .build();
       }
       return describeMatch(tree, fix);
     }

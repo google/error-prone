@@ -89,7 +89,10 @@ public class GuiceOverridesJavaxInjectableMethod extends BugChecker implements M
     }
     if (foundJavaxInject) {
       return describeMatch(methodTree,
-          new SuggestedFix().addImport("javax.inject.Inject").prefixWith(methodTree, "@Inject\n"));
+          SuggestedFix.builder()
+              .addImport("javax.inject.Inject")
+              .prefixWith(methodTree, "@Inject\n")
+              .build());
     }
     return Description.NO_MATCH;
   }

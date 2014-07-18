@@ -71,9 +71,9 @@ abstract class AbstractSuppressWarningsMatcher extends BugChecker
     }
 
     if (values.size() == 0) {
-      return new SuggestedFix().delete(annotationTree);
+      return SuggestedFix.delete(annotationTree);
     } else if (values.size() == 1) {
-      return new SuggestedFix()
+      return SuggestedFix
           .replace(annotationTree, "@SuppressWarnings(\"" + values.get(0) + "\")");
     } else {
       StringBuilder sb = new StringBuilder("@SuppressWarnings({\"" + values.get(0) + "\"");
@@ -82,7 +82,7 @@ abstract class AbstractSuppressWarningsMatcher extends BugChecker
         sb.append("\"" + values.get(i) + "\"");
       }
       sb.append("})");
-      return new SuggestedFix().replace(annotationTree, sb.toString());
+      return SuggestedFix.replace(annotationTree, sb.toString());
     }
   }
 

@@ -90,10 +90,8 @@ public class PreconditionsTooManyArgs extends BugChecker implements MethodInvoca
 
     String fixedFormatString = state.getSourceForNode((JCTree) formatTree).toString()
         .replaceAll(BAD_PLACEHOLDER_REGEX, "%s");
-    SuggestedFix fix = new SuggestedFix();
     if (expectedArguments(fixedFormatString) == t.getArguments().size() - 2) {
-      fix.replace(formatTree, fixedFormatString);
-      return describeMatch(formatTree, fix);
+      return describeMatch(formatTree, SuggestedFix.replace(formatTree, fixedFormatString));
     } else {
       int missing = t.getArguments().size() - 2 - expectedArguments(fixedFormatString);
       StringBuilder builder = new StringBuilder(fixedFormatString);
@@ -103,8 +101,7 @@ public class PreconditionsTooManyArgs extends BugChecker implements MethodInvoca
         builder.append(", %s");
       }
       builder.append("]\"");
-      fix.replace(formatTree, builder.toString());
-      return describeMatch(t, fix);
+      return describeMatch(t, SuggestedFix.replace(formatTree, builder.toString()));
     }
   }
 }

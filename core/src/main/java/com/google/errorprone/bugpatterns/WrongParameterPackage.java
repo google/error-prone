@@ -23,6 +23,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
@@ -37,7 +38,6 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.util.Name;
 
 import javax.lang.model.element.ElementKind;
-
 
 /**
  * @author scottjohnson@google.com (Scott Johnson)
@@ -90,7 +90,7 @@ public class WrongParameterPackage extends BugChecker implements MethodTreeMatch
   }
 
   public Description describe(MethodTree tree, VisitorState state) {
-    SuggestedFix fix = new SuggestedFix();
+    SuggestedFix.Builder builder = null;
 
     MethodSymbol method = (MethodSymbol) ASTHelpers.getSymbol(tree);
 
@@ -107,10 +107,13 @@ public class WrongParameterPackage extends BugChecker implements MethodTreeMatch
 
         // TODO(scottjohnson): Name is most likely more qualified than necessary.
         Name replacement = supermethodParamType.tsym.getQualifiedName();
-        fix.replace(param, replacement.toString() + " " + param.getName().toString());
+        if (builder == null) {
+          builder = SuggestedFix.builder();
+        }
+        builder.replace(param, replacement.toString() + " " + param.getName().toString());
       }
     }
 
-    return describeMatch(tree, fix);
+    return describeMatch(tree, (builder != null) ? builder.build() : Fix.NO_FIX);
   }
 }

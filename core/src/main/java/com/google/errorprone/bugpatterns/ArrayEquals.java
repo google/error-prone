@@ -88,9 +88,10 @@ public class ArrayEquals extends BugChecker implements MethodInvocationTreeMatch
       return NO_MATCH;
     }
 
-    Fix fix = new SuggestedFix()
+    Fix fix = SuggestedFix.builder()
         .replace(t, "Arrays.equals(" + arg1 + ", " + arg2 + ")")
-        .addImport("java.util.Arrays");
+        .addImport("java.util.Arrays")
+        .build();
     return describeMatch(t, fix);
   }
 }

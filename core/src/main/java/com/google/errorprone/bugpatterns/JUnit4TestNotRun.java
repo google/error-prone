@@ -87,15 +87,17 @@ public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
       CharSequence methodSource = state.getSourceForNode((JCMethodDecl) methodTree);
       if (methodSource != null) {
         String methodString = "@Test\n" + methodSource.toString().replaceFirst(" static ", " ");
-        Fix fix = new SuggestedFix()
+        Fix fix = SuggestedFix.builder()
             .addImport(JUNIT4_TEST_ANNOTATION)
-            .replace(methodTree, methodString);
+            .replace(methodTree, methodString)
+            .build();
         return describeMatch(methodTree, fix);
       }
     }
-    Fix fix = new SuggestedFix()
+    Fix fix = SuggestedFix.builder()
         .addImport(JUNIT4_TEST_ANNOTATION)
-        .prefixWith(methodTree, "@Test\n");
+        .prefixWith(methodTree, "@Test\n")
+        .build();
     return describeMatch(methodTree, fix);
   }
 }

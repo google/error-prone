@@ -28,6 +28,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
+
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ModifiersTree;
@@ -74,7 +75,7 @@ public class InjectMoreThanOneScopeAnnotationOnClass extends BugChecker
     }
     if (numberOfScopeAnnotations > 1) {
       return describeMatch(
-        annotationTree, new SuggestedFix().delete(annotationTree));
+        annotationTree, SuggestedFix.delete(annotationTree));
     }
     return Description.NO_MATCH;
   }

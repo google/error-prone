@@ -79,7 +79,7 @@ public class GuiceInjectOnFinalField extends BugChecker implements VariableTreeM
       String replacementModifiersString =
           replacementModifiers.toString().replace('\n', ' ').replace("()", "").trim();
       return describeMatch(modifiers,
-          new SuggestedFix().replace(modifiers, replacementModifiersString));
+          SuggestedFix.replace(modifiers, replacementModifiersString));
     }
     return Description.NO_MATCH;
   }

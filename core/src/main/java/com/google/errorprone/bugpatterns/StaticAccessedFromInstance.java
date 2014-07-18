@@ -86,7 +86,7 @@ public class StaticAccessedFromInstance extends BugChecker implements MemberSele
     }
     boolean staticMemberDefinedHere = whereAccessedSym.equals(ownerSym);
 
-    SuggestedFix fix = new SuggestedFix();
+    SuggestedFix.Builder fix = SuggestedFix.builder();
     String replacement;
     if (staticMemberDefinedHere && isMethod) {
       // If the static member is defined in the enclosing class and the member is a method, then
@@ -117,7 +117,7 @@ public class StaticAccessedFromInstance extends BugChecker implements MemberSele
         methodOrVariable, memberName, replacement);
     return new Description.Builder(tree, pattern)
         .setMessage(customDiagnosticMessage)
-        .setFix(fix)
+        .setFix(fix.build())
         .build();
   }
 }

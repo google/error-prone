@@ -89,7 +89,7 @@ public class InjectOverlappingQualifierAndScopeAnnotation extends BugChecker imp
       ClassTree annotationType = getAnnotationTypeFromMetaAnnotation(state);
       if (HAS_QUALIFIER_ANNOTATION_MATCHER.matches(annotationType, state)
           && HAS_SCOPE_ANNOTATION_MATCHER.matches(annotationType, state)) {
-        return describeMatch(annotationTree, new SuggestedFix().delete(annotationTree));
+        return describeMatch(annotationTree, SuggestedFix.delete(annotationTree));
       }
     }
     return Description.NO_MATCH;

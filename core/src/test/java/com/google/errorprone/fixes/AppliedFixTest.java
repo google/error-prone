@@ -46,7 +46,7 @@ public class AppliedFixTest {
     when(endPositions.getEndPosition(any(DiagnosticPosition.class))).thenReturn(14);
 
     AppliedFix fix = AppliedFix.fromSource("import org.me.B;", endPositions)
-        .apply(new SuggestedFix().delete(node));
+        .apply(SuggestedFix.delete(node));
     assertThat(fix.getNewCodeSnippet().toString(), equalTo("import org.B;"));
   }
 
@@ -59,23 +59,25 @@ public class AppliedFixTest {
         "public class Foo {\n" +
         "  int 3;\n" +
         "}", endPositions)
-        .apply(new SuggestedFix().prefixWith(node, "three").postfixWith(node, "tres"));
+        .apply(SuggestedFix.builder()
+            .prefixWith(node, "three")
+            .postfixWith(node, "tres")
+            .build());
     assertThat(fix.getNewCodeSnippet().toString(), equalTo("int three3tres;"));
   }
 
-  @Test
-  public void shouldReturnNullOnEmptyFix() {
-    AppliedFix fix = AppliedFix.fromSource(
+  @Test(expected = IllegalStateException.class)
+  public void shouldThrowExceptionOnEmptyFix() {
+    AppliedFix.fromSource(
         "public class Foo {}", endPositions)
-        .apply(new SuggestedFix());
-    assertNull(fix);
+        .apply(SuggestedFix.builder().build());
   }
 
   @Test
   public void shouldReturnNullOnImportOnlyFix() {
     AppliedFix fix = AppliedFix.fromSource(
         "public class Foo {}", endPositions)
-        .apply(new SuggestedFix().addImport("foo.bar.Baz"));
+        .apply(SuggestedFix.builder().addImport("foo.bar.Baz").build());
     assertNull(fix);
   }
 }

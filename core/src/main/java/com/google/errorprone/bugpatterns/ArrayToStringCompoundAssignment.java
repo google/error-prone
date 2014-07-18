@@ -69,9 +69,10 @@ public class ArrayToStringCompoundAssignment
      */
     String receiver = t.getVariable().toString();
     String expression = t.getExpression().toString();
-    Fix fix = new SuggestedFix()
+    Fix fix = SuggestedFix.builder()
         .replace(t, receiver + " += Arrays.toString(" + expression + ")")
-        .addImport("java.util.Arrays");
+        .addImport("java.util.Arrays")
+        .build();
     return describeMatch(t, fix);
   }
 }

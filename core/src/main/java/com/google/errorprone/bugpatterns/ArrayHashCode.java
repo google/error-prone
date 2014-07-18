@@ -113,9 +113,10 @@ public class ArrayHashCode extends BugChecker implements MethodInvocationTreeMat
       return NO_MATCH;
     }
 
-    Fix fix = new SuggestedFix()
+    Fix fix = SuggestedFix.builder()
         .replace(t, "Arrays.hashCode(" + arrayArg + ")")
-        .addImport("java.util.Arrays");
+        .addImport("java.util.Arrays")
+        .build();
     return describeMatch(t, fix);
   }
 }

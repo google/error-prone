@@ -21,7 +21,12 @@ import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
-import static com.sun.source.tree.Tree.Kind.*;
+import static com.sun.source.tree.Tree.Kind.CLASS;
+import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
+import static com.sun.source.tree.Tree.Kind.MEMBER_SELECT;
+import static com.sun.source.tree.Tree.Kind.METHOD;
+import static com.sun.source.tree.Tree.Kind.METHOD_INVOCATION;
+import static com.sun.source.tree.Tree.Kind.VARIABLE;
 import static javax.lang.model.element.Modifier.STATIC;
 
 import com.google.errorprone.BugPattern;
@@ -34,14 +39,22 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.EditDistance;
 
-import com.sun.source.tree.*;
+import com.sun.source.tree.AssignmentTree;
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MemberSelectTree;
+import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCClassDecl;
+import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
+import com.sun.tools.javac.tree.JCTree.JCIdent;
+import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
-import com.sun.tools.javac.tree.JCTree.*;
 
 /**
  * TODO(eaftan): Consider cases where the parent is not a statement or there is no parent?
@@ -117,7 +130,7 @@ public class SelfAssignment extends BugChecker
     varDeclStr = varDeclStr.substring(0, equalsIndex - 1) + ";";
 
     // Delete the initializer but still declare the variable.
-    return describeMatch(tree, new SuggestedFix().replace(tree, varDeclStr));
+    return describeMatch(tree, SuggestedFix.replace(tree, varDeclStr));
   }
 
   /**
@@ -142,7 +155,7 @@ public class SelfAssignment extends BugChecker
     Tree parent = state.getPath().getParentPath().getLeaf();
 
     // default fix is to delete assignment
-    Fix fix = new SuggestedFix().delete(parent);
+    Fix fix = SuggestedFix.delete(parent);
 
     ExpressionTree lhs = assignmentTree.getVariable();
     ExpressionTree rhs = assignmentTree.getExpression();
@@ -150,7 +163,7 @@ public class SelfAssignment extends BugChecker
     // if this is a method invocation, they must be calling checkNotNull()
     if (assignmentTree.getExpression().getKind() == METHOD_INVOCATION) {
       // change the default fix to be "checkNotNull(x)" instead of "x = checkNotNull(x)"
-      fix = new SuggestedFix().replace(assignmentTree, rhs.toString());
+      fix = SuggestedFix.replace(assignmentTree, rhs.toString());
       // new rhs is first argument to checkNotNull()
       rhs = stripCheckNotNull(rhs, state);
     }
@@ -192,7 +205,7 @@ public class SelfAssignment extends BugChecker
       }
       if (replacement != null) {
         // suggest replacing rhs with the parameter
-        fix = new SuggestedFix().replace(rhs, replacement);
+        fix = SuggestedFix.replace(rhs, replacement);
       }
     } else if (rhs.getKind() == IDENTIFIER) {
       // find a field of the same type and similar name and suggest it as the lhs
@@ -230,7 +243,7 @@ public class SelfAssignment extends BugChecker
       }
       if (replacement != null) {
         // suggest replacing lhs with the field
-        fix = new SuggestedFix().replace(lhs, "this." + replacement);
+        fix = SuggestedFix.replace(lhs, "this." + replacement);
       }
     }
 

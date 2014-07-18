@@ -71,19 +71,19 @@ public class InjectedConstructorAnnotations extends BugChecker implements Method
    */
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
-    SuggestedFix fix = null;
+    SuggestedFix.Builder fix = null;
     if (isInjectedConstructor(methodTree, state)) {
       for (AnnotationTree annotationTree : methodTree.getModifiers().getAnnotations()) {
         if (OPTIONAL_INJECTION_MATCHER.matches(annotationTree, state)) {
           // Replace the annotation with "@Inject"
           if (fix == null) {
-            fix = new SuggestedFix();
+            fix = SuggestedFix.builder();
           }
           fix = fix.replace(annotationTree, "@Inject");
         } else if (BINDING_ANNOTATION_MATCHER.matches(annotationTree, state)) {
           // Remove the binding annotation
           if (fix == null) {
-            fix = new SuggestedFix();
+            fix = SuggestedFix.builder();
           }
           fix = fix.delete(annotationTree);
         }
@@ -92,7 +92,7 @@ public class InjectedConstructorAnnotations extends BugChecker implements Method
     if (fix == null) {
       return Description.NO_MATCH;
     } else {
-      return describeMatch(methodTree, fix);
+      return describeMatch(methodTree, fix.build());
     }
   }
 

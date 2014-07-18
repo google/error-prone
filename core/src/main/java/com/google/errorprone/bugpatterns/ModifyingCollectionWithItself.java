@@ -98,10 +98,10 @@ public class ModifyingCollectionWithItself extends BugChecker
     ExpressionTree rhs = methodInvocationTree.getArguments().get(0);
     
     // default fix for methods
-    Fix fix = new SuggestedFix().delete(parent);
+    Fix fix = SuggestedFix.delete(parent);
     if (methodSelect(instanceMethod(Matchers.<ExpressionTree>anything(), "removeAll"))
         .matches(methodInvocationTree, state)) {
-      fix = new SuggestedFix().replace(methodInvocationTree, lhs.toString() + ".clear()");
+      fix = SuggestedFix.replace(methodInvocationTree, lhs.toString() + ".clear()");
     }
 
     if (lhs.getKind() == MEMBER_SELECT) {
@@ -139,7 +139,7 @@ public class ModifyingCollectionWithItself extends BugChecker
       }
       if (replacement != null) {
         // suggest replacing rhs with the parameter
-        fix = new SuggestedFix().replace(rhs, replacement);
+        fix = SuggestedFix.replace(rhs, replacement);
       }
     } else if (rhs.getKind() == IDENTIFIER) {
       // find a field of the same type and similar name and suggest it as the lhs
@@ -174,7 +174,7 @@ public class ModifyingCollectionWithItself extends BugChecker
       }
       if (replacement != null) {
         // suggest replacing lhs with the field
-        fix = new SuggestedFix().replace(lhs, "this." + replacement);
+        fix = SuggestedFix.replace(lhs, "this." + replacement);
       }
     }
 

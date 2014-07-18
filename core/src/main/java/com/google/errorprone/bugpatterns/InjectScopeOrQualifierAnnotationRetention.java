@@ -28,6 +28,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
+
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.tools.javac.code.Flags;
@@ -79,10 +80,11 @@ public class InjectScopeOrQualifierAnnotationRetention extends BugChecker
   public Description describe(ClassTree classTree, VisitorState state) {
     Retention retention = ASTHelpers.getAnnotation(classTree, Retention.class);
     if (retention == null) {
-      return describeMatch(classTree, new SuggestedFix().addImport(
-          "java.lang.annotation.Retention")
+      return describeMatch(classTree, SuggestedFix.builder()
+          .addImport("java.lang.annotation.Retention")
           .addStaticImport("java.lang.annotation.RetentionPolicy.RUNTIME")
-          .prefixWith(classTree, "@Retention(RUNTIME)\n"));
+          .prefixWith(classTree, "@Retention(RUNTIME)\n")
+          .build());
     }
     AnnotationTree retentionNode = null;
     for (AnnotationTree annotation : classTree.getModifiers().getAnnotations()) {
@@ -91,9 +93,10 @@ public class InjectScopeOrQualifierAnnotationRetention extends BugChecker
         retentionNode = annotation;
       }
     }
-    return describeMatch(retentionNode, new SuggestedFix().addImport(
-        "java.lang.annotation.Retention")
+    return describeMatch(retentionNode, SuggestedFix.builder()
+        .addImport("java.lang.annotation.Retention")
         .addStaticImport("java.lang.annotation.RetentionPolicy.RUNTIME")
-        .replace(retentionNode, "@Retention(RUNTIME)"));
+        .replace(retentionNode, "@Retention(RUNTIME)")
+        .build());
   }
 }

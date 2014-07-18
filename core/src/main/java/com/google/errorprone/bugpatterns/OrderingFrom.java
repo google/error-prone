@@ -79,8 +79,6 @@ public class OrderingFrom extends BugChecker implements MethodInvocationTreeMatc
 
     // e.g. new Comparator<String>() { ... }
     JCNewClass newComparatorInvocation = (JCNewClass) methodInvocation.getArguments().get(0);
-    // e.g. String
-    JCTypeApply typeArgument = (JCTypeApply)newComparatorInvocation.getIdentifier();
 
     // e.g. Ordering
     JCIdent orderingIdent = (JCIdent)
@@ -124,7 +122,7 @@ public class OrderingFrom extends BugChecker implements MethodInvocationTreeMatc
 
     String replacement = sw.toString().replace("@Override()", "@Override");
 
-    Fix fix = new SuggestedFix().replace(methodInvocation, replacement);
+    Fix fix = SuggestedFix.replace(methodInvocation, replacement);
 
     return describeMatch(methodInvocation, fix);
   }

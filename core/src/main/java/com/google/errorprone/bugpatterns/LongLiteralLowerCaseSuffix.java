@@ -92,7 +92,7 @@ public class LongLiteralLowerCaseSuffix extends BugChecker implements LiteralTre
     }
     StringBuilder longLiteral = new StringBuilder(getLongLiteral(literalTree, state));
     longLiteral.setCharAt(longLiteral.length() - 1, 'L');
-    Fix fix = new SuggestedFix().replace(literalTree, longLiteral.toString());
+    Fix fix = SuggestedFix.replace(literalTree, longLiteral.toString());
     return describeMatch(literalTree, fix);
   }
 }

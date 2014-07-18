@@ -121,15 +121,13 @@ public class WaitNotInLoop extends BugChecker implements MethodInvocationTreeMat
       return describeMatch(tree, Fix.NO_FIX);
     }
 
-    SuggestedFix fix = new SuggestedFix();
-
     // if -> while case
     JCIf enclosingIf =
         ASTHelpers.findEnclosingNode(state.getPath().getParentPath(), JCIf.class);
     if (enclosingIf != null && enclosingIf.getElseStatement() == null) {
       // Assume first 2 characters of the IfTree are "if", replace with while.
-      fix.replace(enclosingIf.getStartPosition(), enclosingIf.getStartPosition() + 2, "while");
-      return describeMatch(tree, fix);
+      int startPos = enclosingIf.getStartPosition();
+      return describeMatch(tree, SuggestedFix.replace(startPos, startPos + 2, "while"));
     }
 
     // loop outside synchronized block -> move synchronized outside
@@ -151,10 +149,11 @@ public class WaitNotInLoop extends BugChecker implements MethodInvocationTreeMat
         int openBracketIndex = blockStatements.indexOf('{');
         int closeBracketIndex = blockStatements.lastIndexOf('}');
         blockStatements = blockStatements.substring(openBracketIndex + 1, closeBracketIndex).trim();
-        fix.replace(enclosingSynchronized, blockStatements);
-        fix.prefixWith(enclosingLoop, "synchronized " + enclosingSynchronized.getExpression() + " {\n");
-        fix.postfixWith(enclosingLoop, "\n}");
-        return describeMatch(tree, fix);
+        return describeMatch(tree, SuggestedFix.builder()
+            .replace(enclosingSynchronized, blockStatements)
+            .prefixWith(enclosingLoop, "synchronized " + enclosingSynchronized.getExpression() + " {\n")
+            .postfixWith(enclosingLoop, "\n}")
+            .build());
       }
     }
 
@@ -172,6 +171,6 @@ public class WaitNotInLoop extends BugChecker implements MethodInvocationTreeMat
     }
     */
 
-    return describeMatch(tree, fix);
+    return describeMatch(tree, Fix.NO_FIX);
   }
 }

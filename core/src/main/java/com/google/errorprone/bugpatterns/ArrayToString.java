@@ -25,6 +25,7 @@ import static com.google.errorprone.matchers.Matchers.methodSelect;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -67,17 +68,21 @@ public class ArrayToString extends BugChecker implements MethodInvocationTreeMat
      * Throwables.getStackTraceAsString(e).
      * Otherwise, replaces a.toString() with Arrays.toString(a).
      */
-    SuggestedFix fix = new SuggestedFix();
+    Fix fix;
 
     ExpressionTree receiverTree = ASTHelpers.getReceiver(methodTree);
     if (receiverTree instanceof MethodInvocationTree &&
         getStackTraceMatcher.matches((MethodInvocationTree) receiverTree, state)) {
       String throwable = ASTHelpers.getReceiver(receiverTree).toString();
-      fix = fix.replace(methodTree, "Throwables.getStackTraceAsString(" + throwable + ")")
-          .addImport("com.google.common.base.Throwables");
+      fix = SuggestedFix.builder()
+          .replace(methodTree, "Throwables.getStackTraceAsString(" + throwable + ")")
+          .addImport("com.google.common.base.Throwables")
+          .build();
     } else {
-      fix = fix.replace(methodTree, "Arrays.toString(" + receiverTree + ")")
-          .addImport("java.util.Arrays");
+      fix = SuggestedFix.builder()
+          .replace(methodTree, "Arrays.toString(" + receiverTree + ")")
+          .addImport("java.util.Arrays")
+          .build();
     }
     return describeMatch(methodTree, fix);
   }

@@ -28,6 +28,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
+
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ModifiersTree;
 
@@ -62,7 +63,7 @@ public class InjectMoreThanOneQualifier extends BugChecker implements Annotation
       }
     }
     if (numberOfQualifiers > 1) {
-      return describeMatch(annotationTree, new SuggestedFix().delete(annotationTree));
+      return describeMatch(annotationTree, SuggestedFix.delete(annotationTree));
     }
     return Description.NO_MATCH;
   }

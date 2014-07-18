@@ -314,7 +314,7 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
       Fix fix;
       if (methodStart >= 0 && parameterEnd >= 0) {
         String replacement = "." + parameters.getMethodName() + "(" +  join(", ", newParameters);
-        fix = new SuggestedFix().replace(methodStart, parameterEnd, replacement);
+        fix = SuggestedFix.replace(methodStart, parameterEnd, replacement);
       } else {
         fix = SuggestedFix.NO_FIX;
       }

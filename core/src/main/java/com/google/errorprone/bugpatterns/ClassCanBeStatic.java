@@ -31,6 +31,7 @@ import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -118,11 +119,11 @@ public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
     // figure out where to insert the static modifier
     // if there is other modifier, prepend 'static ' in front of class
     // else insert 'static ' AFTER public/private/protected and BEFORE final
-    SuggestedFix fix = new SuggestedFix();
+    Fix fix;
 
     ModifiersTree mods = tree.getModifiers();
     if (mods.getFlags().isEmpty()) {
-      fix.prefixWith(tree, "static ");
+      fix = SuggestedFix.prefixWith(tree, "static ");
     } else {
       // Note that the use of .toString() here effectively destroys any special
       // formatting, eg if the modifiers previously had multiple spaces or a
@@ -133,14 +134,13 @@ public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
       if (ind < 0) {
         // append if 'final' not found
         newmods += "static";
-        fix.replace(mods, newmods);
+        fix = SuggestedFix.replace(mods, newmods);
       } else {
         // insert at ind, just before 'final'
         newmods = newmods.substring(0, ind) + "static "
                 + newmods.substring(ind, newmods.length() - 1);
-        fix.replace(mods, newmods);
+        fix = SuggestedFix.replace(mods, newmods);
       }
-      fix.replace(mods, newmods);
     }
 
     return describeMatch(tree, fix);

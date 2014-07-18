@@ -79,9 +79,10 @@ public class ArraysAsListPrimitiveArray extends BugChecker implements MethodInvo
       Type componentType = ((ArrayType) array.type).getComponentType();
       String guavaUtils = GUAVA_UTILS.get(componentType.getKind());
       if (guavaUtils != null) {
-        Fix fix = new SuggestedFix()
+        Fix fix = SuggestedFix.builder()
             .addImport("com.google.common.primitives." + guavaUtils)
-            .replace(tree.getMethodSelect(), guavaUtils + ".asList");
+            .replace(tree.getMethodSelect(), guavaUtils + ".asList")
+            .build();
         return describeMatch(tree, fix);
       }
     }
