@@ -63,6 +63,8 @@ import java.util.List;
  * <ul>
  * <li>{@code org.junit.Assert},
  * <li>{@code junit.framework.Assert},
+ * <li>{@code junit.framework.TestCase} - which overrides the methods from Assert in order to
+ * deprecate them,
  * <li>{@code com.google.testing.util.MoreAsserts} and
  * <li>every class whose name ends with "MoreAsserts".
  * </ul>
@@ -112,6 +114,7 @@ public class TryFailThrowable extends BugChecker implements TryTreeMatcher {
           return (methodName.startsWith("assert") || methodName.startsWith("fail"))
               && (className.equals("org.junit.Assert")
                   || className.equals("junit.framework.Assert")
+                  || className.equals("junit.framework.TestCase")
                   || className.endsWith("MoreAsserts"));
         }
       });
