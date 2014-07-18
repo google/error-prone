@@ -17,12 +17,13 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.instanceMethod;
-import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
+import static com.google.errorprone.matchers.Matchers.isDescendantOfMethod;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
 
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Select;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.ExpressionTree;
@@ -199,12 +200,20 @@ public class HeldLockAnalyzer {
     }
 
     private static final String LOCK_CLASS = "java.util.concurrent.locks.Lock";
+    private static final String READ_WRITE_LOCK_CLASS = "java.util.concurrent.locks.ReadWriteLock";
     private static final String MONITOR_CLASS = "com.google.common.util.concurrent.Monitor";
 
     /** Matcher for methods that release lock resources. */
     private static final Matcher<MethodInvocationTree> LOCK_RELEASE_MATCHER = methodSelect(anyOf(
-        instanceMethod(isSubtypeOf(LOCK_CLASS), "unlock"),
-        instanceMethod(isSubtypeOf(MONITOR_CLASS), "leave")));
+        isDescendantOfMethod(LOCK_CLASS, "unlock()"),
+        isDescendantOfMethod(MONITOR_CLASS, "leave()")));
+
+    /** Matcher for ReadWriteLock lock accessors. */
+    private static final Matcher<ExpressionTree> READ_WRITE_RELEASE_MATCHER =
+        Matchers.expressionMethodSelect(
+            anyOf(
+                isDescendantOfMethod(READ_WRITE_LOCK_CLASS, "readLock()"),
+                isDescendantOfMethod(READ_WRITE_LOCK_CLASS, "writeLock()")));
 
     private final VisitorState state;
     private final Set<GuardedByExpression> locks = new HashSet<GuardedByExpression>();
@@ -217,7 +226,19 @@ public class HeldLockAnalyzer {
     public Void visitMethodInvocation(MethodInvocationTree tree, Void p) {
       if (LOCK_RELEASE_MATCHER.matches(tree, state)) {
         GuardedByExpression node = GuardedByBinder.bindExpression((JCTree.JCExpression) tree);
-        locks.add(((GuardedByExpression.Select) node).base);
+        GuardedByExpression receiver = ((GuardedByExpression.Select) node).base;
+        locks.add(receiver);
+
+        // The analysis interprets members guarded by {@link ReadWriteLock}s as requiring that
+        // either the read or write lock is held for all accesses, but doesn't enforce a policy
+        // for which of the two is held. Technically the write lock should be required while writing
+        // to the guarded member and the read lock should be used for all other accesses, but in
+        // practice the write lock is frequently held while performing a mutating operation on the
+        // object stored in the field (e.g. inserting into a List).
+        // TODO(cushon): investigate a better way to specify the contract for ReadWriteLocks.
+        if (READ_WRITE_RELEASE_MATCHER.matches(ASTHelpers.getReceiver(tree), state)) {
+          locks.add(((Select) receiver).base);
+        }
       }
       return null;
     }

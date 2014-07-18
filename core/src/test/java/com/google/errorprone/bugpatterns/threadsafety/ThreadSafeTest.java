@@ -320,6 +320,38 @@ public class ThreadSafeTest {
   }
 
   @Test
+  public void testReadWriteLock() throws Exception {
+    compilationHelper.assertCompileSucceeds(
+        CompilationTestHelper.forSourceLines(
+            "threadsafety.Test",
+            "package threadsafety.Test;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "import java.util.concurrent.locks.ReentrantReadWriteLock;",
+            "class Test {",
+            "  final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();",
+            "  @GuardedBy(\"lock\") boolean b = false;",
+            "  void m() {",
+            "    lock.readLock().lock();",
+            "    try {",
+            "      b = true;",
+            "    } finally {",
+            "      lock.readLock().unlock();",
+            "    }",
+            "  }",
+            "  void n() {",
+            "    lock.writeLock().lock();",
+            "    try {",
+            "      b = true;",
+            "    } finally {",
+            "      lock.writeLock().unlock();",
+            "    }",
+            "  }",
+            "}"
+        )
+    );
+  }
+
+  @Test
   public void serializable() throws IOException {
     new ObjectOutputStream(new ByteArrayOutputStream()).writeObject(new ThreadSafe());
   }
