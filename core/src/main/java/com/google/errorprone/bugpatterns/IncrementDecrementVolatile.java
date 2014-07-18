@@ -176,8 +176,8 @@ public class IncrementDecrementVolatile extends BugChecker
               Matchers.<ExpressionTree>hasModifier(Modifier.VOLATILE)),
           not(inSynchronized()),
           expressionFromAssignmentTree(adaptMatcherType(ExpressionTree.class, BinaryTree.class,
-              allOf(
-                  anyOf(
+              Matchers.<BinaryTree>allOf(
+                  Matchers.<BinaryTree>anyOf(
                       kindIs(Kind.PLUS),
                       kindIs(Kind.MINUS)),
                   binaryTree(

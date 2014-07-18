@@ -19,15 +19,21 @@ package com.google.errorprone;
 import com.google.errorprone.fixes.AdjustedPosition8;
 import com.google.errorprone.fixes.IndexedPosition8;
 
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.TryTree;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.main.Main;
+import com.sun.tools.javac.parser.JavacParser;
+import com.sun.tools.javac.parser.ParserFactory;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
+import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.util.AbstractLog;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.DiagnosticSource;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
-import com.sun.tools.javac.util.List;
+import com.sun.tools.javac.util.Name;
+import com.sun.tools.javac.util.Names;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -36,6 +42,7 @@ import java.util.Map;
 import javax.annotation.processing.Processor;
 import javax.tools.JavaFileObject;
 
+/** A JDK8 compatible {@link JDKCompatibleShim} */
 public class JDK8Shim implements JDKCompatibleShim {
 
   @Override
@@ -81,7 +88,11 @@ public class JDK8Shim implements JDKCompatibleShim {
   }
 
   @Override
-  public int runCompile(Main main, String[] args, Context context, List<JavaFileObject> files,
+  public int runCompile(
+      Main main,
+      String[] args,
+      Context context,
+      com.sun.tools.javac.util.List<JavaFileObject> files,
       Iterable<? extends Processor> processors) {
     return main.compile(args, context, files, processors).exitCode;
   }
@@ -94,5 +105,27 @@ public class JDK8Shim implements JDKCompatibleShim {
   @Override
   public Integer getEndPosition(DiagnosticPosition pos, Map<JCTree, Integer> map) {
     return EndPosMap8.getEndPos(pos, map);
+  }
+
+  @Override
+  public java.util.List<? extends Tree> getTryTreeResources(TryTree tree) {
+    return tree.getResources();
+  }
+
+  @Override
+  public Name lookupName(Context context, String name) {
+    return Names.instance(context).fromString(name);
+  }
+
+  @Override
+  public JCExpression parseString(String string, Context context) {
+    JavacParser parser =
+        ParserFactory.instance(context).newParser(string, false, true, false);
+    JCExpression result = parser.parseExpression();
+    int len = (parser.getEndPos(result) - result.getStartPosition());
+    if (len != string.length()) {
+      throw new IllegalArgumentException("Didn't parse entire string.");
+    }
+    return result;
   }
 }

@@ -37,7 +37,6 @@ import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Name;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -100,51 +99,8 @@ public class VisitorState {
     return matchListener;
   }
 
-  // Cache the name lookup strategy since it requires expensive reflection, and is used a lot
-  private static final NameLookupStrategy NAME_LOOKUP_STRATEGY = createNameLookup();
-  private static NameLookupStrategy createNameLookup() {
-    ClassLoader classLoader = VisitorState.class.getClassLoader();
-    // OpenJDK 7
-    try {
-      Class<?> namesClass = classLoader.loadClass("com.sun.tools.javac.util.Names");
-      final Method instanceMethod = namesClass.getDeclaredMethod("instance", Context.class);
-      final Method fromStringMethod = namesClass.getDeclaredMethod("fromString", String.class);
-      return new NameLookupStrategy() {
-        @Override public Name fromString(Context context, String nameStr) {
-          try {
-            Object names = instanceMethod.invoke(null, context);
-            return (Name) fromStringMethod.invoke(names, nameStr);
-          } catch (Exception e) {
-            throw new RuntimeException(e);
-          }
-        }
-      };
-    } catch (ClassNotFoundException e) {
-      // OpenJDK 6
-      try {
-        Class<?> nameTableClass = classLoader.loadClass("com.sun.tools.javac.util.Name$Table");
-        final Method instanceMethod = nameTableClass.getMethod("instance", Context.class);
-        final Method fromStringMethod = Name.class.getMethod("fromString", nameTableClass, String.class);
-        return new NameLookupStrategy() {
-          @Override public Name fromString(Context context, String nameStr) {
-            try {
-              Object nameTable = instanceMethod.invoke(null, context);
-              return (Name) fromStringMethod.invoke(null, nameTable, nameStr);
-            } catch (Exception e1) {
-              throw new RuntimeException(e1);
-            }
-          }
-        };
-      } catch (Exception e1) {
-        throw new RuntimeException("Unexpected error loading com.sun.tools.javac.util.Names", e1);
-      }
-    } catch (Exception e) {
-      throw new RuntimeException("Unexpected error loading com.sun.tools.javac.util.Names", e);
-    }
-  }
-
   public Name getName(String nameStr) {
-    return NAME_LOOKUP_STRATEGY.fromString(context, nameStr);
+    return JDKCompatible.lookupName(context, nameStr);
   }
 
   /**
@@ -344,9 +300,5 @@ public class VisitorState {
     return typeStr.equals("byte") || typeStr.equals("short") || typeStr.equals("int") ||
         typeStr.equals("long") || typeStr.equals("float") || typeStr.equals("double") ||
         typeStr.equals("boolean") || typeStr.equals("char");
-  }
-
-  private interface NameLookupStrategy {
-    Name fromString(Context context, String nameStr);
   }
 }

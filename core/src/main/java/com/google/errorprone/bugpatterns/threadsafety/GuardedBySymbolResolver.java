@@ -14,6 +14,7 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
+import com.google.errorprone.JDKCompatible;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
 
@@ -36,7 +37,6 @@ import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Name;
-import com.sun.tools.javac.util.Names;
 
 import javax.lang.model.element.ElementKind;
 
@@ -49,7 +49,6 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
   private final Tree decl;
   private JCTree.JCCompilationUnit compilationUnit;
   private Context context;
-  private final Names names;
   private Types types;
 
   public static GuardedBySymbolResolver from(Tree tree, VisitorState visitorState) {
@@ -71,7 +70,6 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
     this.enclosingClass = enclosingClass;
     this.context = context;
     this.types = Types.instance(context);
-    this.names = Names.instance(context);
     this.decl = leaf;
   }
 
@@ -84,7 +82,7 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
   }
   
   private Name getName(String name) {
-    return names.fromString(name);
+    return JDKCompatible.lookupName(context, name);
   }
 
   @Override

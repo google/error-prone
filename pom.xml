@@ -169,9 +169,18 @@
       </dependencies>
     </profile>
     <profile>
+      <id>jdk6</id>
+      <activation>
+        <jdk>1.6</jdk>
+      </activation>
+      <modules>
+        <module>jdk6</module>
+      </modules>
+    </profile>
+    <profile>
       <id>jdk7</id>
       <activation>
-        <jdk>[1.6,1.8)</jdk>
+        <jdk>1.7</jdk>
       </activation>
       <modules>
         <module>jdk7</module>

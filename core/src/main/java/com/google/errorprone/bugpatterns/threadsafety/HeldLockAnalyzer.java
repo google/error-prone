@@ -16,10 +16,11 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
-import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.expressionMethodSelect;
 import static com.google.errorprone.matchers.Matchers.isDescendantOfMethod;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
 
+import com.google.errorprone.JDKCompatible;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Kind;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Select;
@@ -123,7 +124,7 @@ public class HeldLockAnalyzer {
     public Void visitTry(TryTree tree, HeldLockSet locks) {
       // TODO(cushon) - recognize common try-with-resources patterns
       // Currently there is no standard implementation of an AutoCloseable lock resource to detect.
-      scan(tree.getResources(), locks);
+      scan(JDKCompatible.getTryTreeResources(tree), locks);
 
       // Cheesy try/finally heuristic: assume that all locks released in the finally
       // are held for the entirety of the try and catch statements.
@@ -207,14 +208,15 @@ public class HeldLockAnalyzer {
     private static final String MONITOR_CLASS = "com.google.common.util.concurrent.Monitor";
 
     /** Matcher for methods that release lock resources. */
-    private static final Matcher<MethodInvocationTree> LOCK_RELEASE_MATCHER = methodSelect(anyOf(
-        isDescendantOfMethod(LOCK_CLASS, "unlock()"),
-        isDescendantOfMethod(MONITOR_CLASS, "leave()")));
+    private static final Matcher<MethodInvocationTree> LOCK_RELEASE_MATCHER = methodSelect(
+        Matchers.<ExpressionTree>anyOf(
+            isDescendantOfMethod(LOCK_CLASS, "unlock()"),
+            isDescendantOfMethod(MONITOR_CLASS, "leave()")));
 
     /** Matcher for ReadWriteLock lock accessors. */
     private static final Matcher<ExpressionTree> READ_WRITE_RELEASE_MATCHER =
-        Matchers.expressionMethodSelect(
-            anyOf(
+        expressionMethodSelect(
+            Matchers.<ExpressionTree>anyOf(
                 isDescendantOfMethod(READ_WRITE_LOCK_CLASS, "readLock()"),
                 isDescendantOfMethod(READ_WRITE_LOCK_CLASS, "writeLock()")));
 

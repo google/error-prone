@@ -111,12 +111,6 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.google.code.findbugs</groupId>
-      <artifactId>jsr305</artifactId>
-      <version>2.0.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
       <version>1.8.5</version>
@@ -211,9 +205,23 @@
       </build>
     </profile>
     <profile>
+      <id>jdk6</id>
+      <activation>
+        <jdk>1.6</jdk>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>com.google.errorprone</groupId>
+          <artifactId>error_prone_jdk6</artifactId>
+          <version>${project.version}</version>
+          <scope>compile</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
       <id>jdk7</id>
       <activation>
-        <jdk>[1.6,1.8)</jdk>
+        <jdk>1.7</jdk>
       </activation>
       <dependencies>
         <dependency>

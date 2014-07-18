@@ -16,45 +16,57 @@
 
 package com.google.errorprone;
 
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.TryTree;
+import com.sun.tools.javac.jvm.Target;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.main.Main;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
+import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
-import com.sun.tools.javac.util.List;
+import com.sun.tools.javac.util.Name;
+
+import java.util.Map;
 
 import javax.annotation.processing.Processor;
 import javax.tools.JavaFileObject;
-
-import java.util.Map;
 
 /**
  * An abstraction over JDK version-specific APIs.
  */
 public final class JDKCompatible {
 
-  private static JDKCompatibleShim backingShim = tryJDK8();
+  private static final JDKCompatibleShim backingShim = tryJDK8();
   private static JDKCompatibleShim tryJDK8() {
+   try {
+     Target.valueOf("JDK1_8");
+   } catch (IllegalArgumentException expected) {
+     return tryJDK7();
+   }
     try {
       return (JDKCompatibleShim) Class.forName("com.google.errorprone.JDK8Shim").newInstance();
-    } catch (LinkageError tryJDK7) {
-      // JDK8Shim's prerequisites couldn't be found, assume that we're running on JRE 7 and see if
-      // JDK7Shim is available.
-      return tryJDK7();
-    } catch (ClassNotFoundException tryJDK7) {
-      // JDK8Shim doesn't exist; try JDK7Shim.
-      return tryJDK7();
-    } catch (InstantiationException e) {
-      throw new LinkageError("Could not load JDKShim: " + e);
-    } catch (IllegalAccessException e) {
+    } catch (Throwable e) {
       throw new LinkageError("Could not load JDKShim: " + e);
     }
   }
   private static JDKCompatibleShim tryJDK7() {
+   try {
+     Target.valueOf("JDK1_7");
+   } catch (IllegalArgumentException expected) {
+     return tryJDK6();
+   }
     try {
       return (JDKCompatibleShim) Class.forName("com.google.errorprone.JDK7Shim").newInstance();
-    } catch (Exception e) {
+    } catch (Throwable e) {
+      throw new LinkageError("Could not load JDKShim: " + e);
+    }
+  }
+  private static JDKCompatibleShim tryJDK6() {
+    try {
+      return (JDKCompatibleShim) Class.forName("com.google.errorprone.JDK6Shim").newInstance();
+    } catch (Throwable e) {
       throw new LinkageError("Could not load JDKShim: " + e);
     }
   }
@@ -89,7 +101,11 @@ public final class JDKCompatible {
   /**
    * Run Main.compile() and return the exit code as an integer. (It changes to an enum in JDK8).
    */
-  public static int runCompile(Main main, String[] args, Context context, List<JavaFileObject> files,
+  public static int runCompile(
+      Main main,
+      String[] args,
+      Context context,
+      com.sun.tools.javac.util.List<JavaFileObject> files,
       Iterable<? extends Processor> processors) {
     return backingShim.runCompile(main, args, context, files, processors);
   }
@@ -112,5 +128,26 @@ public final class JDKCompatible {
    */
   public static int getEndPosition(DiagnosticPosition pos, Map<JCTree, Integer> map) {
     return backingShim.getEndPosition(pos, map);
+  }
+
+  /**
+   * Wraps TryTree#getResources(), and returns an empty list for JDK < 7.
+   */
+  public static java.util.List<? extends Tree> getTryTreeResources(TryTree tree) {
+    return backingShim.getTryTreeResources(tree);
+  }
+
+  /**
+   * Lookup up a name in the context's name table.
+   */
+  public static Name lookupName(Context context, String string) {
+    return backingShim.lookupName(context, string);
+  }
+
+  /**
+   * Parse the given string as an expression.
+   */
+  public static JCExpression parseString(String string, Context context) {
+    return backingShim.parseString(string, context);
   }
 }

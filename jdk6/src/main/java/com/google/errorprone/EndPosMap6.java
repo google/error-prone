@@ -22,17 +22,17 @@ import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import java.util.Map;
 import java.util.Set;
 
-/** A JDK7 Compatible {@link ErrorProneEndPosMap} */
-public class EndPosMap7 implements ErrorProneEndPosMap {
+/** A JDK6 Compatible {@link ErrorProneEndPosMap} */
+public class EndPosMap6 implements ErrorProneEndPosMap {
 
   private Map<JCTree, Integer> map;
 
-  EndPosMap7(Map<JCTree, Integer> map) {
+  EndPosMap6(Map<JCTree, Integer> map) {
     this.map = map;
   }
 
   /**
-   * The JDK7 implementation of endPosMap returns null if there's no mapping for the given key.
+   * The JDK6 implementation of endPosMap returns null if there's no mapping for the given key.
    */
   @Override
   public Integer getEndPosition(DiagnosticPosition pos) {

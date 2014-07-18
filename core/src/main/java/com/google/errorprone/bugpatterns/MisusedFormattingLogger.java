@@ -98,7 +98,7 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
 
   @SuppressWarnings("unchecked")
   private static final Matcher<MethodInvocationTree> isThrowableMessage =
-      methodSelect(anyOf(
+      methodSelect(Matchers.<ExpressionTree>anyOf(
           isDescendantOfMethod("java.lang.Throwable", "getMessage()"),
           isDescendantOfMethod("java.lang.Throwable", "toString()")));
 

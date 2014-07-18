@@ -16,48 +16,49 @@
 
 package com.google.errorprone;
 
-import com.google.errorprone.fixes.AdjustedPosition7;
-import com.google.errorprone.fixes.IndexedPosition7;
+import com.google.errorprone.fixes.AdjustedPosition6;
+import com.google.errorprone.fixes.IndexedPosition6;
 
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.main.Main;
-import com.sun.tools.javac.parser.JavacParser;
-import com.sun.tools.javac.parser.ParserFactory;
+import com.sun.tools.javac.parser.Lexer;
+import com.sun.tools.javac.parser.Parser;
+import com.sun.tools.javac.parser.Scanner;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Name;
-import com.sun.tools.javac.util.Names;
 
+import java.util.Collections;
 import java.util.Map;
 
 import javax.annotation.processing.Processor;
 import javax.tools.JavaFileObject;
 
-/** A JDK7 compatible {@link JDKCompatibleShim} */
-public class JDK7Shim implements JDKCompatibleShim {
+/** A JDK6 compatible {@link JDKCompatibleShim} */
+public class JDK6Shim implements JDKCompatibleShim {
 
   @Override
   public DiagnosticPosition getAdjustedPosition(JCTree position, int startPosAdjustment,
       int endPosAdjustment) {
-    return new AdjustedPosition7(position, startPosAdjustment, endPosAdjustment);
+    return new AdjustedPosition6(position, startPosAdjustment, endPosAdjustment);
   }
 
   @Override
   public DiagnosticPosition getIndexedPosition(int startPos, int endPos) {
-    return new IndexedPosition7(startPos, endPos);
+    return new IndexedPosition6(startPos, endPos);
   }
 
   @Override
-  public EndPosMap7 getEndPosMap(JCCompilationUnit compilationUnit) {
+  public EndPosMap6 getEndPosMap(JCCompilationUnit compilationUnit) {
     if (compilationUnit.endPositions == null) {
       return null;
     }
-    return new EndPosMap7(compilationUnit.endPositions);
+    return new EndPosMap6(compilationUnit.endPositions);
   }
 
   @Override
@@ -82,24 +83,24 @@ public class JDK7Shim implements JDKCompatibleShim {
 
   @Override
   public Integer getEndPosition(DiagnosticPosition pos, Map<JCTree, Integer> map) {
-    return EndPosMap7.getEndPos(pos, map);
+    return EndPosMap6.getEndPos(pos, map);
   }
 
   @Override
   public java.util.List<? extends Tree> getTryTreeResources(TryTree tree) {
-    return tree.getResources();
+    return Collections.<JCTree>emptyList();
   }
 
   @Override
   public Name lookupName(Context context, String name) {
-    return Names.instance(context).fromString(name);
+    return Name.Table.instance(context).fromString(name);
   }
 
   @Override
   public JCExpression parseString(String string, Context context) {
-    JavacParser parser = (JavacParser)
-        ParserFactory.instance(context).newParser(string, false, true, false);
-    JCExpression result = parser.parseExpression();
+    Lexer lexer = Scanner.Factory.instance(context).newScanner(string);
+    Parser parser = Parser.Factory.instance(context).newParser(lexer, true, true);
+    JCExpression result = parser.expression();
     int len = (parser.getEndPos(result) - result.getStartPosition());
     if (len != string.length()) {
       throw new IllegalArgumentException("Didn't parse entire string.");
