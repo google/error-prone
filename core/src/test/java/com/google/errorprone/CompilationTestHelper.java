@@ -173,7 +173,18 @@ public class CompilationTestHelper {
    * @param sources The list of {@code File}s to compile
    */
   public void assertCompileFailsWithMessages(List<JavaFileObject> sources) throws IOException {
-    List<String> allArgs = buildArguments(Collections.<String>emptyList());
+    assertCompileFailsWithMessages(sources, Collections.<String>emptyList());
+  }
+
+  /**
+   * Assert that the compile fails, and that for each line of the test file that contains
+   * the pattern //BUG("foo"), the diagnostic at that line contains "foo".
+   * @param sources The list of {@code File}s to compile
+   * @param args The list of args to pass to the compilation
+   */
+  public void assertCompileFailsWithMessages(List<JavaFileObject> sources, List<String> args)
+      throws IOException {
+    List<String> allArgs = buildArguments(args);
     int exitCode = compile(allArgs.toArray(new String[0]), asJavacList(sources));
     assertThat("Compiler returned an unexpected error code", exitCode, is(1));
     for (JavaFileObject source : sources) {
