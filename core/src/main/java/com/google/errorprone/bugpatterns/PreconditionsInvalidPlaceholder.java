@@ -33,16 +33,21 @@ import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.tree.JCTree;
 
+import java.util.regex.Pattern;
+
 /**
  * @author Louis Wasserman
  */
-@BugPattern(name = "PreconditionsTooManyArgs",
-    summary = "Precondition check format string expects fewer arguments",
-    explanation = "The Guava Preconditions checks expect error messages to use %s as a "
-        + "placeholder, and to take the corresponding number of arguments.  This bug can indicate "
-        + "an improper format string, or simply forgetting to add all the arguments.",
+@BugPattern(name = "PreconditionsInvalidPlaceholder",
+    summary = "Preconditions only accepts the %s placeholder in error message strings",
+    explanation = "The Guava Preconditions checks take error message template strings that "
+        + "look similar to format strings but only accept %s as a placeholder. This check "
+        + "points out places where there is a non-%s placeholder in a Preconditions error "
+        + "message template string and the number of arguments does not match the number of "
+        + "%s placeholders.",
     category = GUAVA, maturity = EXPERIMENTAL, severity = ERROR)
-public class PreconditionsTooManyArgs extends BugChecker implements MethodInvocationTreeMatcher {
+public class PreconditionsInvalidPlaceholder extends BugChecker
+    implements MethodInvocationTreeMatcher {
 
   @SuppressWarnings("unchecked")
   private static final
@@ -68,7 +73,8 @@ public class PreconditionsTooManyArgs extends BugChecker implements MethodInvoca
       if (formatStringTree.getValue() instanceof String) {
         String formatString = (String) formatStringTree.getValue();
         int expectedArgs = expectedArguments(formatString);
-        if (expectedArgs < t.getArguments().size() - 2) {
+        if (expectedArgs < t.getArguments().size() - 2
+            && BAD_PLACEHOLDER_REGEX.matcher(formatString).find()) {
           return describe(t, state);
         }
       }
@@ -82,14 +88,15 @@ public class PreconditionsTooManyArgs extends BugChecker implements MethodInvoca
    *
    * This does not need to be completely exhaustive, since it is only used to suggest fixes.
    */
-  private static final String BAD_PLACEHOLDER_REGEX =
-      "\\$s|%(?:\\d+\\$)??[dbBhHScCdoxXeEfgGaAtTn]|\\{\\d+\\}";
+  private static final Pattern BAD_PLACEHOLDER_REGEX =
+      Pattern.compile("\\$s|%(?:\\d+\\$)??[dbBhHScCdoxXeEfgGaAtTn]|\\{\\d+\\}");
 
   public Description describe(MethodInvocationTree t, VisitorState state) {
     LiteralTree formatTree = (LiteralTree) t.getArguments().get(1);
 
-    String fixedFormatString = state.getSourceForNode((JCTree) formatTree).toString()
-        .replaceAll(BAD_PLACEHOLDER_REGEX, "%s");
+    String fixedFormatString =
+        BAD_PLACEHOLDER_REGEX.matcher(state.getSourceForNode((JCTree) formatTree))
+            .replaceAll("%s");
     if (expectedArguments(fixedFormatString) == t.getArguments().size() - 2) {
       return describeMatch(formatTree, SuggestedFix.replace(formatTree, fixedFormatString));
     } else {
@@ -105,4 +112,3 @@ public class PreconditionsTooManyArgs extends BugChecker implements MethodInvoca
     }
   }
 }
-
