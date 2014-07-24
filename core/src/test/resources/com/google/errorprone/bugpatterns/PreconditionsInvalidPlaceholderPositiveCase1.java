@@ -20,7 +20,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import com.google.common.base.Preconditions;
 
-public class PreconditionsTooManyArgsPositiveCase1 {
+public class PreconditionsInvalidPlaceholderPositiveCase1 {
   int foo;
   
   public void checkPositive(int x) {

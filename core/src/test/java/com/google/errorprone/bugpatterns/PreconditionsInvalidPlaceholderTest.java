@@ -29,25 +29,25 @@ import org.junit.runners.JUnit4;
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 @RunWith(JUnit4.class)
-public class PreconditionsTooManyArgsTest {
+public class PreconditionsInvalidPlaceholderTest {
 
   private CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(PreconditionsTooManyArgs.class);
+    compilationHelper = CompilationTestHelper.newInstance(PreconditionsInvalidPlaceholder.class);
   }
 
   @Test
   public void testPositiveCase1() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "PreconditionsTooManyArgsPositiveCase1.java"));
+        sources(getClass(), "PreconditionsInvalidPlaceholderPositiveCase1.java"));
   }
 
   @Test
   public void testNegativeCase1() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        sources(getClass(), "PreconditionsTooManyArgsNegativeCase1.java"));
+        sources(getClass(), "PreconditionsInvalidPlaceholderNegativeCase1.java"));
   }
 
 }

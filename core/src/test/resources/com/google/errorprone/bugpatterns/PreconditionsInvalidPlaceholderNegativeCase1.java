@@ -20,11 +20,15 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import com.google.common.base.Preconditions;
 
-public class PreconditionsTooManyArgsNegativeCase1 {
+public class PreconditionsInvalidPlaceholderNegativeCase1 {
   Integer foo;
   
   public void checkPositive(int x) {
     checkArgument(x > 0, "%s > 0", x);
+  }
+
+  public void checkTooFewArgs(int x) {
+    checkArgument(x > 0, "%s %s", x);
   }
   
   public void checkFoo() {

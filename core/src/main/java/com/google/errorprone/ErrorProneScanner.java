@@ -117,7 +117,7 @@ import com.google.errorprone.bugpatterns.Overrides;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNull;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNullPrimitive;
 import com.google.errorprone.bugpatterns.PreconditionsExpensiveString;
-import com.google.errorprone.bugpatterns.PreconditionsTooManyArgs;
+import com.google.errorprone.bugpatterns.PreconditionsInvalidPlaceholder;
 import com.google.errorprone.bugpatterns.PrimitiveArrayPassedToVarargsMethod;
 import com.google.errorprone.bugpatterns.ProtoFieldNullComparison;
 import com.google.errorprone.bugpatterns.ReturnValueIgnored;
@@ -244,7 +244,7 @@ public class ErrorProneScanner extends Scanner {
       MalformedFormatString.class,
       MisusedFormattingLogger.class,
       ModifyingCollectionWithItself.class,
-      PreconditionsTooManyArgs.class,
+      PreconditionsInvalidPlaceholder.class,
       CheckReturnValue.class,
       DeadException.class,
       InjectAssistedInjectAndInjectOnConstructors.class,
