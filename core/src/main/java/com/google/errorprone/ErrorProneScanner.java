@@ -108,6 +108,7 @@ import com.google.errorprone.bugpatterns.JUnit3TestNotRun;
 import com.google.errorprone.bugpatterns.JUnit4TestNotRun;
 import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
 import com.google.errorprone.bugpatterns.MalformedFormatString;
+import com.google.errorprone.bugpatterns.MissingCasesInEnumSwitch;
 import com.google.errorprone.bugpatterns.MisusedFormattingLogger;
 import com.google.errorprone.bugpatterns.ModifyingCollectionWithItself;
 import com.google.errorprone.bugpatterns.NonRuntimeAnnotation;
@@ -295,7 +296,8 @@ public class ErrorProneScanner extends Scanner {
       PrimitiveArrayPassedToVarargsMethod.class,
       IncrementDecrementVolatile.class,
       GuardedByValidator.class,
-      ThreadSafe.class
+      ThreadSafe.class,
+      MissingCasesInEnumSwitch.class
   );
 
   /**
