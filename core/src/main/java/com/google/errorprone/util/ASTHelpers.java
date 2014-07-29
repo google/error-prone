@@ -49,11 +49,16 @@ import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Deque;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.lang.model.element.ElementKind;
 
 /**
  * This class contains utility methods to work with the javac AST.
@@ -409,5 +414,28 @@ public class ASTHelpers {
   @SuppressWarnings("deprecation")
   public static <T extends Annotation> T getAnnotation(Symbol sym, Class<T> annotationType) {
     return sym.getAnnotation(annotationType);
+  }
+
+  /** @return all values of the given enum type, in declaration order. */
+  public static LinkedHashSet<String> enumValues(TypeSymbol enumType) {
+    if (enumType.getKind() != ElementKind.ENUM) {
+      throw new IllegalStateException();
+    }
+    Scope scope = enumType.members();
+    Deque<String> values = new ArrayDeque<String>();
+    for (Scope.Entry e = scope.elems; e != null; e = e.sibling) {
+      if (e.sym instanceof VarSymbol) {
+        VarSymbol var = (VarSymbol) e.sym;
+        if ((var.flags() & Flags.ENUM) != 0) {
+          /**
+           * Javac gives us the members backwards, apparently. It's worth making an effort to
+           * preserve declaration order because it's useful for diagnostics (e.g. in
+           * {@link MissingCasesInEnumSwitch}).
+           */
+          values.push(e.sym.name.toString());
+        }
+      }
+    }
+    return new LinkedHashSet<String>(values);
   }
 }
