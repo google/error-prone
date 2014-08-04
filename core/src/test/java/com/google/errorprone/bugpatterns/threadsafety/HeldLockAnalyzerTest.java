@@ -235,7 +235,7 @@ public class HeldLockAnalyzerTest {
         toSort.add(node.debugPrint());
       }
       Collections.sort(toSort);
-      return new Description.Builder(tree, pattern)
+      return Description.builder(tree, pattern)
           .setMessage("Holding: " + toSort.toString())
           .build();
     }

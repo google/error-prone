@@ -121,7 +121,7 @@ public class InvalidPatternSyntax extends BugChecker implements MethodInvocation
       }
     }
 
-    return new Description.Builder(methodInvocationTree, pattern)
+    return Description.builder(methodInvocationTree, pattern)
         .setMessage(MESSAGE_BASE + reasonInvalid)
         .setFix(fix)
         .build();

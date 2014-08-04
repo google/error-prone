@@ -224,7 +224,7 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
     }
     if (formatException != null) {
       String customMessage = "Format string is invalid: " + formatException.getMessage();
-      return new Description.Builder(tree, pattern)
+      return Description.builder(tree, pattern)
           .setMessage(customMessage)
           .build();
     }
@@ -318,7 +318,7 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
       } else {
         fix = SuggestedFix.NO_FIX;
       }
-      return new Description.Builder(tree, pattern)
+      return Description.builder(tree, pattern)
           .setMessage("This call " + join(", ", errors))
           .setFix(fix)
           .build();

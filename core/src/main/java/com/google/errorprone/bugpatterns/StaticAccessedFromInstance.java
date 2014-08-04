@@ -115,7 +115,7 @@ public class StaticAccessedFromInstance extends BugChecker implements MemberSele
 
     String customDiagnosticMessage = String.format(MESSAGE_TEMPLATE,
         methodOrVariable, memberName, replacement);
-    return new Description.Builder(tree, pattern)
+    return Description.builder(tree, pattern)
         .setMessage(customDiagnosticMessage)
         .setFix(fix.build())
         .build();
