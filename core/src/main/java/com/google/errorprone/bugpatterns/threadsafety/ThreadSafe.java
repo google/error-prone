@@ -89,7 +89,7 @@ public class ThreadSafe extends GuardedByValidator implements BugChecker.Variabl
     // TODO(user) - this message will have a wiki link to ThreadSafe, not GuardedByValidator.
     // Think about the best way to present the information from GuardedByValidator's explanation
     // field -- should it be a separate page or part of the ThreadSafe page?
-    return new Description.Builder(tree, pattern)
+    return Description.builder(tree, pattern)
         .setMessage(message)
         .build();
   }
@@ -100,7 +100,7 @@ public class ThreadSafe extends GuardedByValidator implements BugChecker.Variabl
       String message = String.format("Expected %s to be held, instead found %s", guard, locks);
       // TODO(user) - this fix is a debugging aid, remove it before productionizing the check.
       Fix fix = SuggestedFix.prefixWith(tree, String.format("/* %s */", message));
-      return new Description.Builder(tree, pattern)
+      return Description.builder(tree, pattern)
           .setMessage(message)
           .setFix(fix)
           .build();

@@ -131,7 +131,7 @@ public abstract class BugChecker implements Suppressible, Disableable, Serializa
    * TODO(user): Remove this method and inline the builder call.
    */
   protected Description describeMatch(Tree node, Fix fix) {
-    return new Description.Builder(node, pattern)
+    return Description.builder(node, pattern)
         .setFix(fix)
         .build();
   }

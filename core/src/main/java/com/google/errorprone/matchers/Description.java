@@ -128,6 +128,16 @@ public class Description {
   }
 
   /**
+   * Returns a new builder for {@link Description}s.
+   *
+   * @param node The node where the error is
+   * @param pattern The BugPattern annotation for this check
+   */
+  public static Builder builder(Tree node, BugPattern pattern) {
+    return new Builder(node, pattern);
+  }
+
+  /**
    * Builder for {@code Description}s.
    */
   public static class Builder {
@@ -136,13 +146,7 @@ public class Description {
     private Fix fix = Fix.NO_FIX;
     private String rawMessage;
 
-    /**
-     * Create a builder for {@code Description}s.
-     *
-     * @param node The node where the error is
-     * @param pattern The BugPattern annotation for this check
-     */
-    public Builder(Tree node, BugPattern pattern) {
+    private Builder(Tree node, BugPattern pattern) {
       if (node == null) {
         throw new IllegalArgumentException("node must not be null");
       }

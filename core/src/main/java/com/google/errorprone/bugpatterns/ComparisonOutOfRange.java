@@ -222,7 +222,7 @@ public class ComparisonOutOfRange extends BugChecker implements BinaryTreeMatche
       customDiagnosticMessage = String.format(MESSAGE_TEMPLATE, "char", (int) Character.MIN_VALUE,
           (int) Character.MAX_VALUE, literal.toString(), Boolean.toString(willEvaluateTo));
     }
-    return new Description.Builder(tree, pattern)
+    return Description.builder(tree, pattern)
         .setFix(fix)
         .setMessage(customDiagnosticMessage)
         .build();

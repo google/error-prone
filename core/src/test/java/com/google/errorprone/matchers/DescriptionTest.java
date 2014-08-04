@@ -71,7 +71,7 @@ public class DescriptionTest {
 
   @Test
   public void testCustomDescription() {
-    Description description = new Description.Builder(new MockTree(), new MyChecker().pattern)
+    Description description = Description.builder(new MockTree(), new MyChecker().pattern)
         .setMessage("custom message")
         .build();
     assertEquals("DeadException", description.checkName);
