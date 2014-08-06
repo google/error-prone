@@ -17,14 +17,12 @@
 package com.google.errorprone;
 
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
+import static java.lang.ClassLoader.getSystemClassLoader;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.reflect.ClassPath;
+import com.google.common.reflect.ClassPath.ClassInfo;
 import com.google.errorprone.BugPattern.Suppressibility;
-import com.google.errorprone.bugpatterns.ArrayEquals;
-import com.google.errorprone.bugpatterns.ArrayHashCode;
-import com.google.errorprone.bugpatterns.ArrayToString;
-import com.google.errorprone.bugpatterns.ArrayToStringCompoundAssignment;
-import com.google.errorprone.bugpatterns.ArrayToStringConcatenation;
-import com.google.errorprone.bugpatterns.BadShiftAmount;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ArrayAccessTreeMatcher;
@@ -72,67 +70,6 @@ import com.google.errorprone.bugpatterns.BugChecker.UnaryTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.WhileLoopTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.WildcardTreeMatcher;
-import com.google.errorprone.bugpatterns.CheckReturnValue;
-import com.google.errorprone.bugpatterns.ClassCanBeStatic;
-import com.google.errorprone.bugpatterns.CollectionIncompatibleType;
-import com.google.errorprone.bugpatterns.ComparisonOutOfRange;
-import com.google.errorprone.bugpatterns.CovariantEquals;
-import com.google.errorprone.bugpatterns.DeadException;
-import com.google.errorprone.bugpatterns.DepAnn;
-import com.google.errorprone.bugpatterns.DivZero;
-import com.google.errorprone.bugpatterns.ElementsCountedInLoop;
-import com.google.errorprone.bugpatterns.EmptyIfStatement;
-import com.google.errorprone.bugpatterns.EmptyStatement;
-import com.google.errorprone.bugpatterns.FallThroughSuppression;
-import com.google.errorprone.bugpatterns.Finally;
-import com.google.errorprone.bugpatterns.GuiceAssistedInjectScoping;
-import com.google.errorprone.bugpatterns.GuiceAssistedParameters;
-import com.google.errorprone.bugpatterns.GuiceInjectOnFinalField;
-import com.google.errorprone.bugpatterns.GuiceOverridesGuiceInjectableMethod;
-import com.google.errorprone.bugpatterns.GuiceOverridesJavaxInjectableMethod;
-import com.google.errorprone.bugpatterns.IncrementDecrementVolatile;
-import com.google.errorprone.bugpatterns.InjectAssistedInjectAndInjectOnConstructors;
-import com.google.errorprone.bugpatterns.InjectAssistedInjectAndInjectOnSameConstructor;
-import com.google.errorprone.bugpatterns.InjectInvalidTargetingOnScopingAnnotation;
-import com.google.errorprone.bugpatterns.InjectJavaxInjectOnAbstractMethod;
-import com.google.errorprone.bugpatterns.InjectJavaxInjectOnFinalField;
-import com.google.errorprone.bugpatterns.InjectMoreThanOneInjectableConstructor;
-import com.google.errorprone.bugpatterns.InjectMoreThanOneQualifier;
-import com.google.errorprone.bugpatterns.InjectMoreThanOneScopeAnnotationOnClass;
-import com.google.errorprone.bugpatterns.InjectOverlappingQualifierAndScopeAnnotation;
-import com.google.errorprone.bugpatterns.InjectScopeAnnotationOnInterfaceOrAbstractClass;
-import com.google.errorprone.bugpatterns.InjectScopeOrQualifierAnnotationRetention;
-import com.google.errorprone.bugpatterns.InjectedConstructorAnnotations;
-import com.google.errorprone.bugpatterns.InvalidPatternSyntax;
-import com.google.errorprone.bugpatterns.JUnit3TestNotRun;
-import com.google.errorprone.bugpatterns.JUnit4TestNotRun;
-import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
-import com.google.errorprone.bugpatterns.MalformedFormatString;
-import com.google.errorprone.bugpatterns.MissingCasesInEnumSwitch;
-import com.google.errorprone.bugpatterns.MisusedFormattingLogger;
-import com.google.errorprone.bugpatterns.ModifyingCollectionWithItself;
-import com.google.errorprone.bugpatterns.NonRuntimeAnnotation;
-import com.google.errorprone.bugpatterns.NumericEquality;
-import com.google.errorprone.bugpatterns.OrderingFrom;
-import com.google.errorprone.bugpatterns.Overrides;
-import com.google.errorprone.bugpatterns.PreconditionsCheckNotNull;
-import com.google.errorprone.bugpatterns.PreconditionsCheckNotNullPrimitive;
-import com.google.errorprone.bugpatterns.PreconditionsExpensiveString;
-import com.google.errorprone.bugpatterns.PreconditionsInvalidPlaceholder;
-import com.google.errorprone.bugpatterns.PrimitiveArrayPassedToVarargsMethod;
-import com.google.errorprone.bugpatterns.ProtoFieldNullComparison;
-import com.google.errorprone.bugpatterns.ReturnValueIgnored;
-import com.google.errorprone.bugpatterns.SelfAssignment;
-import com.google.errorprone.bugpatterns.SelfEquality;
-import com.google.errorprone.bugpatterns.SelfEquals;
-import com.google.errorprone.bugpatterns.StaticAccessedFromInstance;
-import com.google.errorprone.bugpatterns.StringEquality;
-import com.google.errorprone.bugpatterns.SuppressWarningsDeprecated;
-import com.google.errorprone.bugpatterns.TryFailThrowable;
-import com.google.errorprone.bugpatterns.WaitNotInLoop;
-import com.google.errorprone.bugpatterns.WrongParameterPackage;
-import com.google.errorprone.bugpatterns.threadsafety.GuardedByValidator;
-import com.google.errorprone.bugpatterns.threadsafety.ThreadSafe;
 
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ArrayAccessTree;
@@ -181,9 +118,9 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
 
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -228,77 +165,29 @@ public class ErrorProneScanner extends Scanner {
     });
   }
 
-  // TODO: discover all @BugPattern-annotated classes
-  @SuppressWarnings("unchecked")
-  private static final List<? extends Class<? extends BugChecker>> ALL_CHECKERS = Arrays.asList(
-      SelfEquals.class,
-      OrderingFrom.class,
-      PreconditionsCheckNotNull.class,
-      PreconditionsExpensiveString.class,
-      PreconditionsCheckNotNullPrimitive.class,
-      CollectionIncompatibleType.class,
-      ArrayEquals.class,
-      ArrayToString.class,
-      ReturnValueIgnored.class,
-      NonRuntimeAnnotation.class,
-      InvalidPatternSyntax.class,
-      MalformedFormatString.class,
-      MisusedFormattingLogger.class,
-      ModifyingCollectionWithItself.class,
-      PreconditionsInvalidPlaceholder.class,
-      CheckReturnValue.class,
-      DeadException.class,
-      InjectAssistedInjectAndInjectOnConstructors.class,
-      InjectMoreThanOneQualifier.class,
-      InjectMoreThanOneScopeAnnotationOnClass.class,
-      InjectScopeAnnotationOnInterfaceOrAbstractClass.class,
-      InjectOverlappingQualifierAndScopeAnnotation.class,
-      FallThroughSuppression.class,
-      SuppressWarningsDeprecated.class,
-      InjectJavaxInjectOnAbstractMethod.class,
-      EmptyIfStatement.class,
-      EmptyStatement.class,
-      NumericEquality.class,
-      StringEquality.class,
-      SelfEquality.class,
-      BadShiftAmount.class,
-      ArrayToStringConcatenation.class,
-      ComparisonOutOfRange.class,
-      SelfAssignment.class,
-      GuiceAssistedParameters.class,
-      CovariantEquals.class,
-      JUnit3TestNotRun.class,
-      JUnit4TestNotRun.class,
-      TryFailThrowable.class,
-      WrongParameterPackage.class,
-      LongLiteralLowerCaseSuffix.class,
-      ArrayToStringCompoundAssignment.class,
-      InjectScopeOrQualifierAnnotationRetention.class,
-      InjectInvalidTargetingOnScopingAnnotation.class,
-      GuiceAssistedInjectScoping.class,
-      GuiceOverridesGuiceInjectableMethod.class,
-      GuiceOverridesJavaxInjectableMethod.class,
-      InjectAssistedInjectAndInjectOnSameConstructor.class,
-      InjectMoreThanOneInjectableConstructor.class,
-      InjectJavaxInjectOnFinalField.class,
-      GuiceInjectOnFinalField.class,
-      InjectedConstructorAnnotations.class,
-      ClassCanBeStatic.class,
-      ElementsCountedInLoop.class,
-      ProtoFieldNullComparison.class,
-      WaitNotInLoop.class,
-      DepAnn.class,
-      DivZero.class,
-      Overrides.class,
-      Finally.class,
-      StaticAccessedFromInstance.class,
-      ArrayHashCode.class,
-      PrimitiveArrayPassedToVarargsMethod.class,
-      IncrementDecrementVolatile.class,
-      GuardedByValidator.class,
-      ThreadSafe.class,
-      MissingCasesInEnumSwitch.class
-  );
+  private static final ImmutableList<Class<? extends BugChecker>> ALL_CHECKERS;
+  static {
+    ImmutableList.Builder<Class<? extends BugChecker>> checkers = ImmutableList.builder();
+    ClassPath classPath;
+    try {
+      classPath = ClassPath.from(getSystemClassLoader());
+    } catch (IOException e) {
+      throw new LinkageError();
+    }
+    for (ClassInfo classInfo : classPath.getAllClasses()) {
+      // We could allow classes in other packages to be auto-discovered, but loading everything
+      // on the classpath is slower and requires more error handling.
+      if (!classInfo.getPackageName().startsWith("com.google.errorprone.bugpatterns")) {
+        continue;
+      }
+      Class<?> clazz = classInfo.load();
+      if (clazz.isAnnotationPresent(BugPattern.class)
+          && BugChecker.class.isAssignableFrom(clazz)) {
+        checkers.add(clazz.asSubclass(BugChecker.class));
+      }
+    }
+    ALL_CHECKERS = checkers.build();
+  }
 
   /**
    * Create an ErrorProneScanner based on a predicate that tells us which of the built-in
