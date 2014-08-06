@@ -16,16 +16,19 @@
 
 package com.google.errorprone.fixes;
 
+import com.google.common.base.Objects;
+
 /**
  * A single replaced section of a source file. When multiple replacements are to be made in a file,
  * these should be applied in reverse order of startPosition.
  * @author alexeagle@google.com (Alex Eagle)
  */
+// TODO(user): autovalue?
 public class Replacement {
   // positions are character offset from beginning of the source file
-  public int startPosition;
-  public int endPosition;
-  public String replaceWith;
+  public final int startPosition;
+  public final int endPosition;
+  public final String replaceWith;
 
   public Replacement(int startPosition, int endPosition, String replaceWith) {
     this.startPosition = startPosition;
@@ -50,11 +53,7 @@ public class Replacement {
     if (startPosition != that.startPosition) {
       return false;
     }
-    if (replaceWith != null ? !replaceWith.equals(that.replaceWith) : that.replaceWith != null) {
-      return false;
-    }
-
-    return true;
+    return Objects.equal(replaceWith, that.replaceWith);
   }
 
   @Override

@@ -66,7 +66,7 @@ public class PrimitiveArrayPassedToVarargsMethod extends BugChecker
     @Override
     public boolean matches(MethodInvocationTree t, VisitorState state) {
       Symbol symbol = ASTHelpers.getSymbol(t);
-      if (symbol == null || !(symbol instanceof MethodSymbol)) {
+      if (!(symbol instanceof MethodSymbol)) {
         return false;
       }
       MethodSymbol methodSymbol = (MethodSymbol) symbol;
@@ -95,21 +95,16 @@ public class PrimitiveArrayPassedToVarargsMethod extends BugChecker
       }
 
       // Do the param and argument types actually match? i.e. can boxing even happen?
-      if (types.isSameType(varargsParamType, varargsArgumentType)
-          || types.isSameType(varargsParamType.getComponentType(), varargsArgumentType)) {
-        return false;
-      }
+      return !(types.isSameType(varargsParamType, varargsArgumentType)
+          || types.isSameType(varargsParamType.getComponentType(), varargsArgumentType));
 
-      return true;
     }
   };
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree t, VisitorState state) {
-    if (!isVarargs.matches(t, state)) {
-      return NO_MATCH;
-    }
-
-    return describeMatch(t, Fix.NO_FIX);
+    return isVarargs.matches(t, state)
+        ? describeMatch(t, Fix.NO_FIX)
+        : NO_MATCH;
   }
 }

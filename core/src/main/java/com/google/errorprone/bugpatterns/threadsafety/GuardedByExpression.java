@@ -135,11 +135,8 @@ public abstract class GuardedByExpression {
       if (!sym.equals(select.sym)) {
         return false;
       }
-      if (!type.equals(select.type)) {
-        return false;
-      }
+      return type.equals(select.type);
 
-      return true;
     }
 
     @Override
@@ -264,11 +261,8 @@ public abstract class GuardedByExpression {
       if (!symbol.equals(that.symbol)) {
         return false;
       }
-      if (!type.equals(that.type)) {
-        return false;
-      }
+      return type.equals(that.type);
 
-      return true;
     }
 
     @Override

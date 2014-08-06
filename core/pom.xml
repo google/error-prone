@@ -38,8 +38,6 @@
   <artifactId>error_prone_core</artifactId>
 
   <dependencies>
-    <!-- We must minimise our runtime dependencies as they'll appear in
-         the javac classpath for all users! -->
     <dependency>
       <groupId>com.google.errorprone</groupId>
       <artifactId>error_prone_annotation</artifactId>
@@ -83,8 +81,7 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>16.0.1</version>
-      <scope>test</scope>
+      <version>17.0</version>
     </dependency>
     <dependency>
       <groupId>com.google.testing.compile</groupId>

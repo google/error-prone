@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.Matchers.argument;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 
+import com.google.common.base.Joiner;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -161,12 +162,8 @@ public class PreconditionsCheckNotNullPrimitive
       replacement.append("Preconditions." + replacementMethod + "(");
     }
 
-    // Create argument list.
-    for (ExpressionTree arg : methodInvocationTree.getArguments()) {
-      replacement.append(arg.toString());
-      replacement.append(", ");
-    }
-    replacement.delete(replacement.length() - 2, replacement.length());
+    Joiner.on(", ").appendTo(replacement, methodInvocationTree.getArguments());
+
     replacement.append(")");
     fix.replace(methodInvocationTree, replacement.toString());
     return fix.build();

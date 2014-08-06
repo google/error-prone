@@ -84,7 +84,7 @@ public class NumericEquality extends BugChecker implements BinaryTreeMatcher {
       fixedExpression.append("!");
     }
     fixedExpression.append(
-        "Objects.equal(" + leftOperand.toString() + ", " + rightOperand.toString() + ")");
+        "Objects.equal(" + leftOperand + ", " + rightOperand + ")");
 
     Fix fix = SuggestedFix.builder()
         .replace(tree, fixedExpression.toString())

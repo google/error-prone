@@ -26,6 +26,9 @@ import static com.google.errorprone.matchers.Matchers.isPrimitiveArrayType;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
 
+import com.google.common.base.CharMatcher;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -53,13 +56,13 @@ import edu.umd.cs.findbugs.formatStringChecker.FormatterException;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.FormatFlagsConversionMismatchException;
 import java.util.HashSet;
 import java.util.IllegalFormatException;
 import java.util.List;
-import java.util.Map;
 import java.util.MissingFormatArgumentException;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -137,10 +140,10 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
   private static final Pattern printfGroup =
       Pattern.compile("%(\\d+\\$)?([-#+ 0,(\\<]*)?(\\d+)?(\\.\\d+)?([tT])?([a-zA-Z%])");
 
-  private static final Map<TypeKind, String> BOXED_TYPE_NAMES;
+  private static final ImmutableMap<TypeKind, String> BOXED_TYPE_NAMES;
 
   static {
-    Map<TypeKind, String> boxedTypeNames = new EnumMap<TypeKind, String>(TypeKind.class);
+    EnumMap<TypeKind, String> boxedTypeNames = new EnumMap<TypeKind, String>(TypeKind.class);
     boxedTypeNames.put(TypeKind.BYTE, Byte.class.getName());
     boxedTypeNames.put(TypeKind.SHORT, Short.class.getName());
     boxedTypeNames.put(TypeKind.INT, Integer.class.getName());
@@ -150,14 +153,14 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
     boxedTypeNames.put(TypeKind.BOOLEAN, Boolean.class.getName());
     boxedTypeNames.put(TypeKind.CHAR, Character.class.getName());
     boxedTypeNames.put(TypeKind.NULL, Object.class.getName());
-    BOXED_TYPE_NAMES = Collections.unmodifiableMap(boxedTypeNames);
+    BOXED_TYPE_NAMES = Maps.immutableEnumMap(boxedTypeNames);
   }
 
   // get type name in format accepted by Formatter.check
   private static String getFormatterType(Type type) {
     String boxedTypeName = BOXED_TYPE_NAMES.get(type.getKind());
     String typeName = (boxedTypeName != null ? boxedTypeName : type.toString());
-    return ("L" + typeName.replace(".", "/") + ";");
+    return ("L" + typeName.replace('.', '/') + ";");
   }
 
   @Override
@@ -296,7 +299,7 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
       errors.add("ignores some parameters");
     }
 
-    if (errors.size() > 0) {
+    if (!errors.isEmpty()) {
       List<String> newParameters = new ArrayList<String>();
       for (ExpressionTree t : leadingArguments) {
         newParameters.add(t.toString());
@@ -427,12 +430,8 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
     return references;
   }
 
-  private int max(Set<Integer> set) {
-    int max = -1;
-    for (int i : set) {
-      max = Math.max(i, max);
-    }
-    return max;
+  private static int max(Collection<Integer> ints) {
+    return ints.isEmpty() ? -1 : Collections.max(ints);
   }
 
   private boolean hasQuotedArguments(String string) {
@@ -446,8 +445,8 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
     return false;
   }
 
-  private boolean hasUnmatchedQuotes(String string) {
-    return string.replaceAll("[^']", "").length() % 2 == 1;
+  private static boolean hasUnmatchedQuotes(String string) {
+    return CharMatcher.is('\'').countIn(string) % 2 == 1;
   }
 
   /** Given a method invocation, find whether this is a supported formatting call,

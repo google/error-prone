@@ -70,7 +70,7 @@ abstract class AbstractSuppressWarningsMatcher extends BugChecker
       }
     }
 
-    if (values.size() == 0) {
+    if (values.isEmpty()) {
       return SuggestedFix.delete(annotationTree);
     } else if (values.size() == 1) {
       return SuggestedFix

@@ -110,7 +110,7 @@ public class WrongParameterPackage extends BugChecker implements MethodTreeMatch
         if (builder == null) {
           builder = SuggestedFix.builder();
         }
-        builder.replace(param, replacement.toString() + " " + param.getName().toString());
+        builder.replace(param, replacement + " " + param.getName());
       }
     }
 

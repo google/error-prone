@@ -117,7 +117,7 @@ public class SelfEquality extends BugChecker implements BinaryTreeMatcher {
 
           if (ASTHelpers.getSymbol(toReplace).isMemberOf(variableTypeSymbol, state.getTypes())) {
             if (toReplace.getKind() == Kind.IDENTIFIER) {
-              fix = SuggestedFix.prefixWith(toReplace, declaration.getName().toString() + ".");
+              fix = SuggestedFix.prefixWith(toReplace, declaration.getName() + ".");
             } else {
               fix = SuggestedFix.replace(
                   ((JCFieldAccess) toReplace).getExpression(), declaration.getName().toString());

@@ -72,7 +72,7 @@ public class ModifyingCollectionWithItself extends BugChecker
   @SuppressWarnings("unchecked")
   @Override
   public Description matchMethodInvocation(MethodInvocationTree t, VisitorState state) {
-    if(allOf(anyOf(
+    if (allOf(anyOf(
         methodSelect(instanceMethod(
             Matchers.<ExpressionTree>isSubtypeOf("java.util.Collection"), "addAll")),
         methodSelect(instanceMethod(
@@ -115,7 +115,7 @@ public class ModifyingCollectionWithItself extends BugChecker
     Fix fix = SuggestedFix.delete(parent);
     if (methodSelect(instanceMethod(Matchers.<ExpressionTree>anything(), "removeAll"))
         .matches(methodInvocationTree, state)) {
-      fix = SuggestedFix.replace(methodInvocationTree, lhs.toString() + ".clear()");
+      fix = SuggestedFix.replace(methodInvocationTree, lhs + ".clear()");
     }
 
     if (lhs.getKind() == MEMBER_SELECT) {

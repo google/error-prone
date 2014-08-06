@@ -951,12 +951,9 @@ public class Matchers {
         }
 
         MethodTree methodTree = ASTHelpers.findEnclosingNode(state.getPath(), MethodTree.class);
-        if (methodTree != null
-            && methodTree.getModifiers().getFlags().contains(Modifier.SYNCHRONIZED)) {
-          return true;
-        }
+        return methodTree != null
+            && methodTree.getModifiers().getFlags().contains(Modifier.SYNCHRONIZED);
 
-        return false;
       }
     };
   }
