@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.base.StandardSystemProperty.JAVA_VERSION;
 import static com.google.errorprone.CompilationTestHelper.sources;
 import static org.junit.Assume.assumeTrue;
 
@@ -54,7 +55,7 @@ public class LongLiteralLowerCaseSuffixTest {
    */
   @Test
   public void testJava7PositiveCase() throws Exception {
-    String[] javaVersion = System.getProperty("java.version").split("\\.");
+    String[] javaVersion = JAVA_VERSION.value().split("\\.");
     assumeTrue(Integer.parseInt(javaVersion[1]) >= 7);
     compilationHelper.assertCompileFailsWithMessages(
         sources(getClass(), "LongLiteralLowerCaseSuffixPositiveCase2.java"));

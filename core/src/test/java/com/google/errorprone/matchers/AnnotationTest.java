@@ -19,7 +19,7 @@ package com.google.errorprone.matchers;
 import static com.google.errorprone.matchers.Matchers.isType;
 import static com.google.errorprone.matchers.MultiMatcher.MatchType.ALL;
 import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import com.google.errorprone.Scanner;
 import com.google.errorprone.VisitorState;
@@ -273,7 +273,7 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
 
       @Override
       public void assertDone() {
-        assertTrue(shouldMatch == matched);
+        assertEquals(matched, shouldMatch);
       }
     };
     tests.add(test);

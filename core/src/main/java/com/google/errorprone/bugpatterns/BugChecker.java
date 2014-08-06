@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.errorprone.BugPatternValidator;
@@ -78,8 +79,6 @@ import com.sun.source.tree.WildcardTree;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -98,7 +97,7 @@ public abstract class BugChecker implements Suppressible, Disableable, Serializa
   /**
    * A collection of IDs for this check, to be checked for in @SuppressWarnings annotations.
    */
-  protected final Set<String> allNames;
+  protected final ImmutableSet<String> allNames;
   public final BugPattern pattern;
   protected final boolean disableable;
   protected final BugPattern.Suppressibility suppressibility;
@@ -112,9 +111,10 @@ public abstract class BugChecker implements Suppressible, Disableable, Serializa
       throw new IllegalStateException(e);
     }
     canonicalName = pattern.name();
-    allNames = new HashSet<String>();
-    allNames.add(canonicalName);
-    allNames.addAll(Arrays.asList(pattern.altNames()));
+    allNames = ImmutableSet.<String>builder()
+        .add(canonicalName)
+        .add(pattern.altNames())
+        .build();
     disableable = pattern.disableable();
     suppressibility = pattern.suppressibility();
     if (suppressibility == Suppressibility.CUSTOM_ANNOTATION) {

@@ -124,8 +124,8 @@ public class SelfAssignment extends BugChecker
     String varDeclStr = tree.toString();
     int equalsIndex = varDeclStr.indexOf('=');
     if (equalsIndex < 0) {
-      throw new IllegalStateException("Expected variable declaration to have an initializer: "
-          + tree.toString());
+      throw new IllegalStateException(
+          "Expected variable declaration to have an initializer: " + tree);
     }
     varDeclStr = varDeclStr.substring(0, equalsIndex - 1) + ";";
 

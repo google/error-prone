@@ -102,7 +102,7 @@ public class TryFailThrowable extends BugChecker implements TryTreeMatcher {
       new Matcher<ExpressionTree>() {
         @Override public boolean matches(ExpressionTree item, VisitorState state) {
           Symbol sym = ASTHelpers.getSymbol(item);
-          if (sym == null || !(sym instanceof MethodSymbol)) {
+          if (!(sym instanceof MethodSymbol)) {
             throw new IllegalArgumentException("not a method call");
           }
           if (!sym.isStatic()) {

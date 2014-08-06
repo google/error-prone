@@ -97,7 +97,7 @@ public class StaticAccessedFromInstance extends BugChecker implements MemberSele
       replacement = tree.getIdentifier().toString();
     } else {
       // Replace the operand of the field access expression with the simple name of the class.
-      replacement = ownerSym.getSimpleName().toString() + "." + tree.getIdentifier();
+      replacement = ownerSym.getSimpleName() + "." + tree.getIdentifier();
 
       // Don't import implicitly imported packages (java.lang.* and current package).
       // TODO(user): move this logic into addImport?

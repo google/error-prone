@@ -20,7 +20,7 @@ import static com.google.errorprone.matchers.Matchers.isPrimitiveType;
 import static com.google.errorprone.matchers.Matchers.variableType;
 import static com.google.errorprone.matchers.MultiMatcher.MatchType.ALL;
 import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import com.google.errorprone.Scanner;
 import com.google.errorprone.VisitorState;
@@ -137,7 +137,7 @@ public class MethodHasParametersTest extends CompilerBasedAbstractTest {
 
       @Override
       public void assertDone() {
-        assertTrue(shouldMatch == matched);
+        assertEquals(matched, shouldMatch);
       }
     };
     tests.add(test);

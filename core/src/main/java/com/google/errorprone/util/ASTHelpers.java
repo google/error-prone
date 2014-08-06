@@ -16,6 +16,7 @@
 
 package com.google.errorprone.util;
 
+import com.google.common.base.CharMatcher;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
 
@@ -51,7 +52,6 @@ import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import java.lang.annotation.Annotation;
 import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -213,7 +213,7 @@ public class ASTHelpers {
 
     // We only want assignable identifiers.
     Symbol sym = getSymbol(expr);
-    if (sym != null && sym instanceof VarSymbol) {
+    if (sym instanceof VarSymbol) {
       return expr;
     }
     return null;
@@ -304,8 +304,7 @@ public class ASTHelpers {
   /**
    * A collection of Java whitespace characters, as defined by JLS 3.6.
    */
-  private static final Collection<Character> WHITESPACE_CHARS = Arrays.asList(' ', '\t', '\f',
-      '\n', '\r');
+  private static final CharMatcher WHITESPACE_CHARS = CharMatcher.anyOf(" \t\f\n\r");
 
   /**
    * Hacky fix for poor javac 6 literal parsing.  javac 6 doesn't set the AST node start
@@ -321,7 +320,7 @@ public class ASTHelpers {
     Object value = tree.getValue();
     if ((value instanceof Number) && (((Number) value).doubleValue() < 0)) {
       int start = tree.getStartPosition() - 1;
-      while (WHITESPACE_CHARS.contains(source.charAt(start))) {
+      while (WHITESPACE_CHARS.matches(source.charAt(start))) {
         start--;
       }
       if (source.charAt(start) == '-') {

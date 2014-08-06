@@ -16,6 +16,8 @@
 
 package com.google.errorprone.fixes;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.primitives.Ints;
 import com.google.errorprone.ErrorProneEndPosMap;
 import com.google.errorprone.JDKCompatible;
 
@@ -36,17 +38,17 @@ import java.util.TreeSet;
  */
 public class SuggestedFix implements Fix {
 
-  private final List<FixOperation> fixes;
-  private final List<String> importsToAdd;
-  private final List<String> importsToRemove;
+  private final ImmutableList<FixOperation> fixes;
+  private final ImmutableList<String> importsToAdd;
+  private final ImmutableList<String> importsToRemove;
 
   private SuggestedFix(
       List<FixOperation> fixes,
       List<String> importsToAdd,
       List<String> importsToRemove) {
-    this.fixes = fixes;
-    this.importsToAdd = importsToAdd;
-    this.importsToRemove = importsToRemove;
+    this.fixes = ImmutableList.copyOf(fixes);
+    this.importsToAdd = ImmutableList.copyOf(importsToAdd);
+    this.importsToRemove = ImmutableList.copyOf(importsToRemove);
   }
 
   @Override
@@ -86,9 +88,7 @@ public class SuggestedFix implements Fix {
       new Comparator<Replacement>() {
         @Override
         public int compare(Replacement o1, Replacement o2) {
-          int a = o2.startPosition;
-          int b = o1.startPosition;
-          return (a < b) ? -1 : ((a > b) ? 1 : 0);
+        return Ints.compare(o2.startPosition, o1.startPosition);
         }
       });
     for (FixOperation fix : fixes) {

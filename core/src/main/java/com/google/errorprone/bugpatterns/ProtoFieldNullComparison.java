@@ -171,17 +171,15 @@ public class ProtoFieldNullComparison extends BugChecker implements BinaryTreeMa
       replacement = tree.getKind() == Kind.EQUAL_TO ? "!" + replacement : replacement;
       return replacement;
     } else {
-      String replacement = methodInvocation.toString() + ".isEmpty()";
-      replacement = tree.getKind() == Kind.EQUAL_TO ? replacement : "!" + replacement;
-      return replacement;
+      String replacement = methodInvocation + ".isEmpty()";
+      return tree.getKind() == Kind.EQUAL_TO ? replacement : "!" + replacement;
     }
   }
 
   @Override
   public Description matchBinary(BinaryTree tree, VisitorState state) {
-    if (!MATCHER.matches(tree, state)) {
-      return Description.NO_MATCH;
-    }
-    return describeMatch(tree, SuggestedFix.replace(tree, createReplacement(tree, state)));
+    return MATCHER.matches(tree, state)
+        ? describeMatch(tree, SuggestedFix.replace(tree, createReplacement(tree, state)))
+        : Description.NO_MATCH;
   }
 }

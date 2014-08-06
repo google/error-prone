@@ -23,6 +23,8 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.isDescendantOfMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -46,10 +48,8 @@ import edu.umd.cs.findbugs.formatStringChecker.ExtraFormatArgumentsException;
 import edu.umd.cs.findbugs.formatStringChecker.Formatter;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.lang.model.type.TypeKind;
 
@@ -90,10 +90,10 @@ public class MalformedFormatString extends BugChecker implements MethodInvocatio
     staticMethod("java.lang.String",
         "format(java.util.Locale,java.lang.String,java.lang.Object...)")
     );
-  private static final Map<TypeKind, String> BOXED_TYPE_NAMES;
+  private static final ImmutableMap<TypeKind, String> BOXED_TYPE_NAMES;
 
   static {
-    Map<TypeKind, String> boxedTypeNames = new EnumMap<TypeKind, String>(TypeKind.class);
+    EnumMap<TypeKind, String> boxedTypeNames = new EnumMap<TypeKind, String>(TypeKind.class);
     boxedTypeNames.put(TypeKind.BYTE, Byte.class.getName());
     boxedTypeNames.put(TypeKind.SHORT, Short.class.getName());
     boxedTypeNames.put(TypeKind.INT, Integer.class.getName());
@@ -106,14 +106,14 @@ public class MalformedFormatString extends BugChecker implements MethodInvocatio
     // Apparently, matcher is run even if typing phase failed. Hence, we replace missing/erroneous
     // types with Object to prevent further failures.
     boxedTypeNames.put(TypeKind.ERROR, Object.class.getName());
-    BOXED_TYPE_NAMES = Collections.unmodifiableMap(boxedTypeNames);
+    BOXED_TYPE_NAMES = Maps.immutableEnumMap(boxedTypeNames);
   }
 
   // get type name in format accepted by Formatter.check
   private static String getFormatterType(Type type) {
     String boxedTypeName = BOXED_TYPE_NAMES.get(type.getKind());
     String typeName = (boxedTypeName != null ? boxedTypeName : type.toString());
-    return ("L" + typeName.replace(".", "/") + ";");
+    return ("L" + typeName.replace('.', '/') + ";");
   }
 
   @Override

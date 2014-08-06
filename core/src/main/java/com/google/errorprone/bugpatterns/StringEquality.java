@@ -67,10 +67,7 @@ public class StringEquality extends BugChecker implements BinaryTreeMatcher {
       ExpressionTree rightOperand = tree.getRightOperand();
       Type rightType = ((JCTree.JCExpression) rightOperand).type;
       // We know that both operands are String objects
-      if (state.getTypes().isSameType(rightType, stringType)) {
-        return true;
-      }
-      return false;
+      return state.getTypes().isSameType(rightType, stringType);
     }
   };
 
@@ -111,18 +108,18 @@ public class StringEquality extends BugChecker implements BinaryTreeMatcher {
       // There is at least one constant, so the x.equals(y) form is null-safe.
       if (leftConstValue.equals("")) {
         // Special-case the comparison to the empty string.
-        fixedExpression.append(rightOperand.toString());
+        fixedExpression.append(rightOperand);
         fixedExpression.append(".isEmpty()");
       } else {
         boolean isBinop = leftOperand instanceof BinaryTree;
         if (isBinop) {
           fixedExpression.append("(");
         }
-        fixedExpression.append(leftOperand.toString());
+        fixedExpression.append(leftOperand);
         if (isBinop) {
           fixedExpression.append(")");
         }
-        fixedExpression.append(".equals(" + rightOperand.toString() + ")");
+        fixedExpression.append(".equals(" + rightOperand + ")");
       }
     } else {
       // Neither expression is constant, so use Objects.equals(String, String) in case one or both
