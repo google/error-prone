@@ -24,6 +24,8 @@ import static com.google.errorprone.matchers.Matchers.hasAnnotationOnAnyOverridd
 import static com.google.errorprone.matchers.Matchers.hasArgumentWithValue;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.methodHasParameters;
+import static com.google.errorprone.matchers.Matchers.methodHasVisibility;
+import static com.google.errorprone.matchers.Matchers.methodIsNamed;
 import static com.google.errorprone.matchers.Matchers.methodNameStartsWith;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
@@ -49,11 +51,11 @@ import javax.lang.model.element.Modifier;
  * @author eaftan@google.com (Eddie Aftandillian)
  */
 public class JUnitMatchers {
-  private static final String JUNIT4_TEST_ANNOTATION = "org.junit.Test";
-  private static final String JUNIT_BEFORE_ANNOTATION = "org.junit.Before";
-  private static final String JUNIT_AFTER_ANNOTATION = "org.junit.After";
-  private static final String JUNIT_BEFORE_CLASS_ANNOTATION = "org.junit.BeforeClass";
-  private static final String JUNIT_AFTER_CLASS_ANNOTATION = "org.junit.AfterClass";
+  public static final String JUNIT4_TEST_ANNOTATION = "org.junit.Test";
+  public static final String JUNIT_BEFORE_ANNOTATION = "org.junit.Before";
+  public static final String JUNIT_AFTER_ANNOTATION = "org.junit.After";
+  public static final String JUNIT_BEFORE_CLASS_ANNOTATION = "org.junit.BeforeClass";
+  public static final String JUNIT_AFTER_CLASS_ANNOTATION = "org.junit.AfterClass";
   private static final String JUNIT3_TEST_CASE_CLASS = "junit.framework.TestCase";
   private static final String JUNIT4_RUN_WITH_ANNOTATION = "org.junit.runner.RunWith";
   private static final String JUNIT4_IGNORE_ANNOTATION = "org.junit.Ignore";
@@ -68,6 +70,16 @@ public class JUnitMatchers {
       hasAnnotationOnAnyOverriddenMethod(JUNIT_BEFORE_ANNOTATION),
       hasAnnotationOnAnyOverriddenMethod(JUNIT_AFTER_ANNOTATION),
       hasAnnotation(JUNIT_BEFORE_CLASS_ANNOTATION),
+      hasAnnotation(JUNIT_AFTER_CLASS_ANNOTATION));
+
+  @SuppressWarnings("unchecked")
+  public static final Matcher<MethodTree> hasJUnit4BeforeAnnotations = anyOf(
+      hasAnnotationOnAnyOverriddenMethod(JUNIT_BEFORE_ANNOTATION),
+      hasAnnotation(JUNIT_BEFORE_CLASS_ANNOTATION));
+
+  @SuppressWarnings("unchecked")
+  public static final Matcher<MethodTree> hasJUnit4AfterAnnotations = anyOf(
+      hasAnnotationOnAnyOverriddenMethod(JUNIT_AFTER_ANNOTATION),
       hasAnnotation(JUNIT_AFTER_CLASS_ANNOTATION));
 
   /**
@@ -97,6 +109,46 @@ public class JUnitMatchers {
       methodNameStartsWith("test"),
       methodHasParameters(),
       Matchers.<MethodTree>hasModifier(Modifier.PUBLIC)
+  );
+
+  /**
+   * Match a method which appears to be a JUnit 3 setUp method
+   *
+   * Matches if:
+   * 1) The method is named "setUp"
+   * 2) The method has no parameters
+   * 3) The method is a public or protected instance method that is not abstract
+   */
+  @SuppressWarnings("unchecked")
+  public static final Matcher<MethodTree> looksLikeJUnit3SetUp = allOf(
+      methodIsNamed("setUp"),
+      methodHasParameters(),
+      anyOf(
+          methodHasVisibility(MethodVisibility.Visibility.PUBLIC),
+          methodHasVisibility(MethodVisibility.Visibility.PROTECTED)
+      ),
+      not(Matchers.<MethodTree>hasModifier(Modifier.ABSTRACT)),
+      not(Matchers.<MethodTree>hasModifier(Modifier.STATIC))
+  );
+
+  /**
+   * Match a method which appears to be a JUnit 3 tearDown method
+   *
+   * Matches if:
+   * 1) The method is named "tearDown"
+   * 2) The method has no parameters
+   * 3) The method is a public or protected instance method that is not abstract
+   */
+  @SuppressWarnings("unchecked")
+  public static final Matcher<MethodTree> looksLikeJUnit3TearDown = allOf(
+      methodIsNamed("tearDown"),
+      methodHasParameters(),
+      anyOf(
+          methodHasVisibility(MethodVisibility.Visibility.PUBLIC),
+          methodHasVisibility(MethodVisibility.Visibility.PROTECTED)
+      ),
+      not(Matchers.<MethodTree>hasModifier(Modifier.ABSTRACT)),
+      not(Matchers.<MethodTree>hasModifier(Modifier.STATIC))
   );
 
   /**

@@ -40,8 +40,6 @@ import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import javax.lang.model.element.Modifier;
 
 /**
- * TODO(user): Similar checkers for setUp() and tearDown().
- *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 @BugPattern(name = "JUnit4TestNotRun",
