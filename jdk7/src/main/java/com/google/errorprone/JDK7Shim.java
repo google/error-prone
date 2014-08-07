@@ -21,6 +21,7 @@ import com.google.errorprone.fixes.IndexedPosition7;
 
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
+import com.sun.source.util.TreePath;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.main.Main;
 import com.sun.tools.javac.parser.JavacParser;
@@ -105,5 +106,10 @@ public class JDK7Shim implements JDKCompatibleShim {
       throw new IllegalArgumentException("Didn't parse entire string.");
     }
     return result;
+  }
+
+  @Override
+  public Number numberValue(Tree tree, TreePath path, Context context) {
+    return null;
   }
 }

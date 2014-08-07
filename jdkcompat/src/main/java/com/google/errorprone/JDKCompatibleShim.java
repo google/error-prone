@@ -18,6 +18,7 @@ package com.google.errorprone;
 
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
+import com.sun.source.util.TreePath;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.main.Main;
 import com.sun.tools.javac.tree.JCTree;
@@ -54,4 +55,5 @@ interface JDKCompatibleShim {
   java.util.List<? extends Tree> getTryTreeResources(TryTree tree);
   Name lookupName(Context context, String name);
   JCExpression parseString(String string, Context context);
+  Number numberValue(Tree tree, TreePath path, Context context);
 }

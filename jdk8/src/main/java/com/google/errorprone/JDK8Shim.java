@@ -18,9 +18,11 @@ package com.google.errorprone;
 
 import com.google.errorprone.fixes.AdjustedPosition8;
 import com.google.errorprone.fixes.IndexedPosition8;
+import com.google.errorprone.util.Constants;
 
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
+import com.sun.source.util.TreePath;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.main.Main;
 import com.sun.tools.javac.parser.JavacParser;
@@ -127,5 +129,10 @@ public class JDK8Shim implements JDKCompatibleShim {
       throw new IllegalArgumentException("Didn't parse entire string.");
     }
     return result;
+  }
+
+  @Override
+  public Number numberValue(Tree tree, TreePath path, Context context) {
+    return Constants.numberValue(tree, path, context);
   }
 }
