@@ -18,6 +18,7 @@ package com.google.errorprone;
 
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
+import com.sun.source.util.TreePath;
 import com.sun.tools.javac.jvm.Target;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.main.Main;
@@ -149,5 +150,14 @@ public final class JDKCompatible {
    */
   public static JCExpression parseString(String string, Context context) {
     return backingShim.parseString(string, context);
+  }
+
+  /**
+   * Returns the value of {@code tree} if it is determined to be a constant (always evaluates to the
+   * same numeric value), and null otherwise. Note that returning null does not necessarily mean the
+   * expression is *not* a constant.
+   */
+  public static Number numberValue(Tree tree, TreePath path, Context context) {
+    return backingShim.numberValue(tree, path, context);
   }
 }
