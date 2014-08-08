@@ -30,7 +30,7 @@ import static org.junit.Assert.assertThat;
 
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ExpressionStatementTreeMatcher;
-import com.google.errorprone.bugpatterns.EmptyStatement;
+import com.google.errorprone.bugpatterns.IncrementDecrementVolatile;
 import com.google.errorprone.matchers.Description;
 
 import com.sun.source.tree.ExpressionStatementTree;
@@ -91,15 +91,15 @@ public class ErrorProneCompilerIntegrationTest {
 
   @Test
   public void fileWithWarning() throws Exception {
-    compilerBuilder.report(new ErrorProneScanner(new EmptyStatement()));
+    compilerBuilder.report(new ErrorProneScanner(new IncrementDecrementVolatile()));
     compiler = compilerBuilder.build();
     int exitCode = compiler.compile(sources(getClass(),
-        "bugpatterns/EmptyStatementPositiveCases.java"));
+        "bugpatterns/IncrementDecrementVolatilePositiveCases.java"));
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(0));
 
     Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher = hasItem(
-        diagnosticMessage(containsString("[EmptyStatement]")));
+        diagnosticMessage(containsString("[IncrementDecrementVolatile]")));
     assertTrue("Warning should be found. " + diagnosticHelper.describe(),
         matcher.matches(diagnosticHelper.getDiagnostics()));
   }
