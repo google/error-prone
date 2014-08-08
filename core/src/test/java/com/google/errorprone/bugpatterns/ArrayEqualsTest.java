@@ -37,7 +37,7 @@ public class ArrayEqualsTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(ArrayEquals.class);
+    compilationHelper = CompilationTestHelper.newInstance(new ArrayEquals());
   }
 
   @Test

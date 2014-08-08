@@ -153,18 +153,6 @@ public class ErrorProneScanner extends Scanner {
     };
   }
 
-  /**
-   * Create a scanner that only enables a single matcher.
-   */
-  public static Scanner forMatcher(final Class<?> checkerClass) {
-    return new ErrorProneScanner(new EnabledPredicate() {
-      @Override
-      public boolean isEnabled(Class<? extends BugChecker> check, BugPattern annotation) {
-        return check.equals(checkerClass);
-      }
-    });
-  }
-
   private static final ImmutableList<Class<? extends BugChecker>> ALL_CHECKERS;
   static {
     ImmutableList.Builder<Class<? extends BugChecker>> checkers = ImmutableList.builder();

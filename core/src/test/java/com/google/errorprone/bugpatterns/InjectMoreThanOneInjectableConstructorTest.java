@@ -36,7 +36,7 @@ public class InjectMoreThanOneInjectableConstructorTest {
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(InjectMoreThanOneInjectableConstructor.class);
+        CompilationTestHelper.newInstance(new InjectMoreThanOneInjectableConstructor());
   }
 
   @Test

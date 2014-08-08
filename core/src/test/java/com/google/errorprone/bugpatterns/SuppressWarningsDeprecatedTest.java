@@ -37,7 +37,7 @@ public class SuppressWarningsDeprecatedTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(SuppressWarningsDeprecated.class);
+    compilationHelper = CompilationTestHelper.newInstance(new SuppressWarningsDeprecated());
   }
 
   @Test

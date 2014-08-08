@@ -36,7 +36,7 @@ public class InjectAssistedInjectAndInjectOnConstructorsTest {
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(InjectAssistedInjectAndInjectOnConstructors.class);
+        CompilationTestHelper.newInstance(new InjectAssistedInjectAndInjectOnConstructors());
   }
 
   @Test

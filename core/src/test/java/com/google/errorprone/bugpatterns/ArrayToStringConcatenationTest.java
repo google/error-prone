@@ -35,7 +35,7 @@ public class ArrayToStringConcatenationTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(ArrayToStringConcatenation.class);
+    compilationHelper = CompilationTestHelper.newInstance(new ArrayToStringConcatenation());
   }
 
   @Test

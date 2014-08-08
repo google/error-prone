@@ -30,7 +30,7 @@ public class GuardedByValidatorTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(GuardedByValidator.class);
+    compilationHelper = CompilationTestHelper.newInstance(new GuardedByValidator());
   }
 
   @Test
@@ -104,7 +104,7 @@ public class GuardedByValidatorTest {
         )
     );
   }
-  
+
   @Test
   public void testClassName() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(

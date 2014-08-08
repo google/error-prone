@@ -35,7 +35,7 @@ public class ModifyingCollectionWithItselfTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(ModifyingCollectionWithItself.class);
+    compilationHelper = CompilationTestHelper.newInstance(new ModifyingCollectionWithItself());
   }
 
   @Test

@@ -35,7 +35,7 @@ public class InjectMoreThanOneScopeAnnotationOnClassTest {
   @Before
   public void setUp() {
     compilationHelper = 
-     CompilationTestHelper.newInstance(InjectMoreThanOneScopeAnnotationOnClass.class);
+     CompilationTestHelper.newInstance(new InjectMoreThanOneScopeAnnotationOnClass());
   }
 
   @Test

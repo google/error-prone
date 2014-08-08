@@ -35,7 +35,7 @@ public class ClassCanBeStaticTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(ClassCanBeStatic.class);
+    compilationHelper = CompilationTestHelper.newInstance(new ClassCanBeStatic());
   }
 
   @Test public void testNegativeCase() throws Exception {

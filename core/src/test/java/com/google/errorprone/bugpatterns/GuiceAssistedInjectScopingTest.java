@@ -35,7 +35,7 @@ public class GuiceAssistedInjectScopingTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(GuiceAssistedInjectScoping.class);
+    compilationHelper = CompilationTestHelper.newInstance(new GuiceAssistedInjectScoping());
   }
 
   @Test
