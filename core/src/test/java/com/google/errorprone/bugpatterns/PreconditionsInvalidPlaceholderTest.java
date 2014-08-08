@@ -35,7 +35,7 @@ public class PreconditionsInvalidPlaceholderTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(PreconditionsInvalidPlaceholder.class);
+    compilationHelper = CompilationTestHelper.newInstance(new PreconditionsInvalidPlaceholder());
   }
 
   @Test

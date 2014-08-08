@@ -34,7 +34,7 @@ public class DepAnnTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(DepAnn.class);
+    compilationHelper = CompilationTestHelper.newInstance(new DepAnn());
   }
 
   @Test

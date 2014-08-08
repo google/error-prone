@@ -91,7 +91,7 @@ public class ErrorProneCompilerIntegrationTest {
 
   @Test
   public void fileWithWarning() throws Exception {
-    compilerBuilder.report(ErrorProneScanner.forMatcher(EmptyStatement.class));
+    compilerBuilder.report(new ErrorProneScanner(new EmptyStatement()));
     compiler = compilerBuilder.build();
     int exitCode = compiler.compile(sources(getClass(),
         "bugpatterns/EmptyStatementPositiveCases.java"));

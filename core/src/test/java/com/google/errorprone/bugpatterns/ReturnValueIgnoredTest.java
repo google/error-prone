@@ -35,7 +35,7 @@ public class ReturnValueIgnoredTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(ReturnValueIgnored.class);
+    compilationHelper = CompilationTestHelper.newInstance(new ReturnValueIgnored());
   }
 
   @Test

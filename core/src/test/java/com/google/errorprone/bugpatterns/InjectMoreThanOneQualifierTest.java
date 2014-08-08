@@ -35,7 +35,7 @@ public class InjectMoreThanOneQualifierTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(InjectMoreThanOneQualifier.class);
+    compilationHelper = CompilationTestHelper.newInstance(new InjectMoreThanOneQualifier());
   }
 
   @Test

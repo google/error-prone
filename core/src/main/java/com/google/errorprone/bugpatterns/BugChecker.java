@@ -162,7 +162,7 @@ public abstract class BugChecker implements Suppressible, Disableable, Serializa
   }
 
   public final Scanner createScanner() {
-    return ErrorProneScanner.forMatcher(this.getClass());
+    return new ErrorProneScanner(this);
   }
 
   public static interface AnnotationTreeMatcher extends Suppressible, Disableable {

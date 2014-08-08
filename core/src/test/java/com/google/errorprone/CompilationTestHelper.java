@@ -100,19 +100,7 @@ public class CompilationTestHelper {
   }
 
   /**
-   * Test an error-prone {@link BugChecker} that should be part of the default {@link
-   * ErrorProneScanner}. Confirms that the check is included in the list of all checkers in
-   * {@link ErrorProneScanner}.
-   */
-  public static CompilationTestHelper newInstance(Class<? extends BugChecker> matcherClass) {
-    Scanner scanner = ErrorProneScanner.forMatcher(matcherClass);
-    String checkName = matcherClass.getAnnotation(BugPattern.class).name();
-    return new CompilationTestHelper(scanner, checkName);
-  }
-
-  /**
-   * Test a custom error-prone {@link BugChecker} that should not be included in the default
-   * {@link ErrorProneScanner}.
+   * Test an error-prone {@link BugChecker}.
    */
   public static CompilationTestHelper newInstance(BugChecker checker) {
     Scanner scanner = new ErrorProneScanner(checker);

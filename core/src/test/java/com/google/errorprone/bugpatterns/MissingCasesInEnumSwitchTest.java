@@ -30,7 +30,7 @@ public class MissingCasesInEnumSwitchTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(MissingCasesInEnumSwitch.class);
+    compilationHelper = CompilationTestHelper.newInstance(new MissingCasesInEnumSwitch());
   }
 
   @Test

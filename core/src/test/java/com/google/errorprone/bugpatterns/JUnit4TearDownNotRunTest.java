@@ -35,7 +35,7 @@ public class JUnit4TearDownNotRunTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(JUnit4TearDownNotRun.class);
+    compilationHelper = CompilationTestHelper.newInstance(new JUnit4TearDownNotRun());
   }
 
   @Test

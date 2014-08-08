@@ -37,7 +37,7 @@ public class OrderingFromTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(OrderingFrom.class);
+    compilationHelper = CompilationTestHelper.newInstance(new OrderingFrom());
   }
 
   @Test

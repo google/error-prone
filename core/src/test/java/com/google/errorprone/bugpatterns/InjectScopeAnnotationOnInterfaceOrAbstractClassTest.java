@@ -36,7 +36,7 @@ public class InjectScopeAnnotationOnInterfaceOrAbstractClassTest {
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(InjectScopeAnnotationOnInterfaceOrAbstractClass.class);
+        CompilationTestHelper.newInstance(new InjectScopeAnnotationOnInterfaceOrAbstractClass());
   }
 
   @Test
