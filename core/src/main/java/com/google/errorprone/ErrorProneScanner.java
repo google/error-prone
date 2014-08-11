@@ -17,7 +17,6 @@
 package com.google.errorprone;
 
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
-import static java.lang.ClassLoader.getSystemClassLoader;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.ClassPath;
@@ -158,7 +157,7 @@ public class ErrorProneScanner extends Scanner {
     ImmutableList.Builder<Class<? extends BugChecker>> checkers = ImmutableList.builder();
     ClassPath classPath;
     try {
-      classPath = ClassPath.from(getSystemClassLoader());
+      classPath = ClassPath.from(ErrorProneScanner.class.getClassLoader());
     } catch (IOException e) {
       throw new LinkageError();
     }
