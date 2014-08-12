@@ -37,7 +37,7 @@ public class NullnessPropagationStore implements Store<NullnessPropagationStore>
   private final Map<Node, NullnessValue> contents;
 
   public NullnessPropagationStore() {
-    contents = new HashMap<>();
+    contents = new HashMap<Node, NullnessValue>();
   }
 
   protected NullnessPropagationStore(Map<Node, NullnessValue> contents) {
@@ -67,12 +67,12 @@ public class NullnessPropagationStore implements Store<NullnessPropagationStore>
 
   @Override
   public NullnessPropagationStore copy() {
-    return new NullnessPropagationStore(new HashMap<>(contents));
+    return new NullnessPropagationStore(new HashMap<Node, NullnessValue>(contents));
   }
 
   @Override
   public NullnessPropagationStore leastUpperBound(NullnessPropagationStore other) {
-    Map<Node, NullnessValue> newContents = new HashMap<>();
+    Map<Node, NullnessValue> newContents = new HashMap<Node, NullnessValue>();
     for (Entry<Node, NullnessValue> e : other.contents.entrySet()) {
       Node n = e.getKey();
       NullnessValue otherVal = e.getValue();
@@ -112,7 +112,7 @@ public class NullnessPropagationStore implements Store<NullnessPropagationStore>
   @Override
   public String toString() {
     // only output local variable information
-    Map<Node, NullnessValue> smallerContents = new HashMap<>();
+    Map<Node, NullnessValue> smallerContents = new HashMap<Node, NullnessValue>();
     for (Entry<Node, NullnessValue> e : contents.entrySet()) {
       if (e.getKey() instanceof LocalVariableNode) {
         smallerContents.put(e.getKey(), e.getValue());

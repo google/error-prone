@@ -80,7 +80,8 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
   @Override
   public TransferResult<NullnessValue, NullnessPropagationStore> visitNode(
       Node node, TransferInput<NullnessValue, NullnessPropagationStore> store) {
-    return new RegularTransferResult<>(null, store.getRegularStore());
+    return new RegularTransferResult<NullnessValue, NullnessPropagationStore>(
+        null, store.getRegularStore());
   }
   
   // Literals
@@ -182,7 +183,8 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
       }
     }
     
-    return new ConditionalTransferResult<>(null, thenStore, elseStore);
+    return new ConditionalTransferResult<NullnessValue, NullnessPropagationStore>(
+        null, thenStore, elseStore);
   }
   
   /**
@@ -220,7 +222,8 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
       elseStore.setInformation(rightNode, info);
     }
     
-    return new ConditionalTransferResult<>(null, thenStore, elseStore);
+    return new ConditionalTransferResult<NullnessValue, NullnessPropagationStore>(
+        null, thenStore, elseStore);
   }
   
   /**
@@ -237,7 +240,7 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
       info = after.getInformation(node.getExpression());
       after.setInformation(t, info);
     }
-    return new RegularTransferResult<>(info, after);
+    return new RegularTransferResult<NullnessValue, NullnessPropagationStore>(info, after);
   }
   
   /**
@@ -258,7 +261,7 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
     }
     after.setInformation(node, info);
     
-    return new RegularTransferResult<>(info, after);
+    return new RegularTransferResult<NullnessValue, NullnessPropagationStore>(info, after);
   }
   
   /**
@@ -327,7 +330,7 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
     NullnessPropagationStore after = before.getRegularStore();
     NullnessValue info = new NullnessValue(value);
     after.setInformation(node, info);
-    return new RegularTransferResult<>(info, after);
+    return new RegularTransferResult<NullnessValue, NullnessPropagationStore>(info, after);
   }
 }
 

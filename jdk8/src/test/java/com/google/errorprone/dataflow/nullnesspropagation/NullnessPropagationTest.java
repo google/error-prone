@@ -105,7 +105,8 @@ public class NullnessPropagationTest {
      */
     private final Map<MethodTree,
         Result<NullnessValue, NullnessPropagationStore, NullnessPropagationTransfer>> results =
-        new HashMap<>();
+        new HashMap<MethodTree, 
+                    Result<NullnessValue, NullnessPropagationStore, NullnessPropagationTransfer>>();
     
     /**
      * Uses this test class' static method {@code triggerNullnessChecker} to match and check the
