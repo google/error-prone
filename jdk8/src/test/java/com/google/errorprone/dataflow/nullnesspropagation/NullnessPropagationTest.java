@@ -96,9 +96,7 @@ public class NullnessPropagationTest {
       implements MethodInvocationTreeMatcher {
 
     private final Matcher<ExpressionTree> matcher =
-        staticMethod(
-            NullnessPropagationTest.class.getName(),
-            "triggerNullnessChecker");
+        staticMethod(NullnessPropagationTest.class.getName(), "triggerNullnessChecker");
     
     /**
      * Compute a dataflow result once per method declaration and store it in the map
@@ -120,6 +118,10 @@ public class NullnessPropagationTest {
       }
             
       MethodTree enclosingMethod = ASTHelpers.findEnclosingNode(state.getPath(), MethodTree.class);
+      if (enclosingMethod == null) {
+        return Description.NO_MATCH;
+      }
+
       Analysis<NullnessValue, NullnessPropagationStore, NullnessPropagationTransfer> analysis;
       
       if (results.containsKey(enclosingMethod)) {
