@@ -25,6 +25,15 @@ public class IllegalGuardedBy extends RuntimeException {
   public IllegalGuardedBy(String message) {
     super(message);
   }
+  
+  /**
+   * Throws an {@link IllegalGuardedBy} exception if the given condition is false.
+   */
+  public static void checkGuardedBy(boolean condition, String formatString, Object... formatArgs) {
+    if (!condition) {
+      throw new IllegalGuardedBy(String.format(formatString, formatArgs)); 
+    }
+  }
 
   @Override
   public String toString() {

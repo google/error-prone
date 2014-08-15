@@ -85,7 +85,7 @@ public class ThreadSafe extends GuardedByValidator implements BugChecker.Variabl
     // Re-use the validation message from {@link GuardedByValidator}.
     // TODO(user) - consolidate the checks once the clean-up is done; ThreadSafe is intended to
     // subsume GuardedByValidator.
-    final String message = GuardedByValidator.class.getAnnotation(BugPattern.class).summary();
+    String message = GuardedByValidator.class.getAnnotation(BugPattern.class).summary();
     // TODO(user) - this message will have a wiki link to ThreadSafe, not GuardedByValidator.
     // Think about the best way to present the information from GuardedByValidator's explanation
     // field -- should it be a separate page or part of the ThreadSafe page?

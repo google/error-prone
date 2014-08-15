@@ -26,7 +26,6 @@ import com.google.errorprone.matchers.Description;
 
 import com.sun.source.tree.Tree;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -39,12 +38,8 @@ import java.util.List;
 @RunWith(JUnit4.class)
 public class HeldLockAnalyzerTest {
 
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new GuardedByLockSetAnalyzer());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(new GuardedByLockSetAnalyzer());
 
   @Test
   public void testInstance() throws Exception {
@@ -219,7 +214,7 @@ public class HeldLockAnalyzerTest {
   }
 
   /**
-   * Modify {@link ThreadSafe} to print more test-friendly diagnostics.
+   * A customized {@link ThreadSafe} checker that prints more test-friendly diagnostics.
    */
   @BugPattern(name = "GuardedByLockSet",
       summary = "",
