@@ -16,6 +16,7 @@
 
 package com.google.errorprone;
 
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
 import com.sun.source.util.TreePath;
@@ -56,4 +57,6 @@ interface JDKCompatibleShim {
   Name lookupName(Context context, String name);
   JCExpression parseString(String string, Context context);
   Number numberValue(Tree tree, TreePath path, Context context);
+  boolean isDefinitelyNonNull(
+      Tree tree, MethodTree enclosingMethod, TreePath path, Context context);
 }
