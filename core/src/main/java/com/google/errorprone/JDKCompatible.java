@@ -16,6 +16,7 @@
 
 package com.google.errorprone;
 
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
 import com.sun.source.util.TreePath;
@@ -159,5 +160,14 @@ public final class JDKCompatible {
    */
   public static Number numberValue(Tree tree, TreePath path, Context context) {
     return backingShim.numberValue(tree, path, context);
+  }
+
+  /**
+   * Wraps DataFlow.dataflow and nullness propagation, and returns true if {@code tree} is a
+   * non-null expression.
+   */
+  public static boolean isDefinitelyNonNull(
+      Tree tree, MethodTree enclosingMethod, TreePath path, Context context) {
+    return backingShim.isDefinitelyNonNull(tree, enclosingMethod, path, context);
   }
 }

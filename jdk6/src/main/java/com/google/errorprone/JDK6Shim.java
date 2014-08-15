@@ -19,6 +19,7 @@ package com.google.errorprone;
 import com.google.errorprone.fixes.AdjustedPosition6;
 import com.google.errorprone.fixes.IndexedPosition6;
 
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
 import com.sun.source.util.TreePath;
@@ -112,5 +113,11 @@ public class JDK6Shim implements JDKCompatibleShim {
   @Override
   public Number numberValue(Tree tree, TreePath path, Context context) {
     return null;
+  }
+  
+  @Override
+  public boolean isDefinitelyNonNull(
+      Tree tree, MethodTree enclosingMethod, TreePath path, Context context) {
+    return false;
   }
 }

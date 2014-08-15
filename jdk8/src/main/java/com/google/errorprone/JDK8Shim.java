@@ -16,10 +16,15 @@
 
 package com.google.errorprone;
 
+import com.google.errorprone.dataflow.DataFlow;
+import com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationStore;
+import com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTransfer;
+import com.google.errorprone.dataflow.nullnesspropagation.NullnessValue;
 import com.google.errorprone.fixes.AdjustedPosition8;
 import com.google.errorprone.fixes.IndexedPosition8;
 import com.google.errorprone.util.Constants;
 
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
 import com.sun.source.util.TreePath;
@@ -37,6 +42,8 @@ import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 
+import org.checkerframework.dataflow.analysis.Analysis;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -46,7 +53,7 @@ import javax.tools.JavaFileObject;
 
 /** A JDK8 compatible {@link JDKCompatibleShim} */
 public class JDK8Shim implements JDKCompatibleShim {
-
+  
   @Override
   public DiagnosticPosition getAdjustedPosition(JCTree position, int startPosAdjustment,
       int endPosAdjustment) {
@@ -134,5 +141,14 @@ public class JDK8Shim implements JDKCompatibleShim {
   @Override
   public Number numberValue(Tree tree, TreePath path, Context context) {
     return Constants.numberValue(tree, path, context);
+  }
+  
+  @Override
+  public boolean isDefinitelyNonNull(
+      Tree tree, MethodTree enclosingMethod, TreePath path, Context context) {    
+    Analysis<NullnessValue, NullnessPropagationStore, NullnessPropagationTransfer> analysis =
+        DataFlow.dataflow(enclosingMethod, path, context, new NullnessPropagationTransfer())
+        .getAnalysis();
+   return analysis.getValue(tree).isNonNull(); 
   }
 }
