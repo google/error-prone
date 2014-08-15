@@ -14,6 +14,8 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
+import static com.google.errorprone.bugpatterns.threadsafety.IllegalGuardedBy.checkGuardedBy;
+
 import com.google.errorprone.JDKCompatible;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
@@ -41,15 +43,17 @@ import com.sun.tools.javac.util.Name;
 import javax.lang.model.element.ElementKind;
 
 /**
+ * A symbol resolver used while binding guardedby expressions from string literals.
+ *
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
 
   private final ClassSymbol enclosingClass;
   private final Tree decl;
-  private JCTree.JCCompilationUnit compilationUnit;
-  private Context context;
-  private Types types;
+  private final JCTree.JCCompilationUnit compilationUnit;
+  private final Context context;
+  private final Types types;
 
   public static GuardedBySymbolResolver from(Tree tree, VisitorState visitorState) {
     return GuardedBySymbolResolver.from(
@@ -81,10 +85,6 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
     return enclosingClass;
   }
 
-  private Name getName(String name) {
-    return JDKCompatible.lookupName(context, name);
-  }
-
   @Override
   public Symbol resolveIdentifier(IdentifierTree node) {
     String name = node.getName().toString();
@@ -111,7 +111,7 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
       return field;
     }
 
-    Symbol type = resolveType(name, /*searchSuperTypes=*/true);
+    Symbol type = resolveType(name, SearchSuperTypes.YES);
     if (type != null) {
       return type;
     }
@@ -175,24 +175,24 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
 
   @Override
   public Symbol resolveTypeLiteral(ExpressionTree expr) {
-    if (!(expr instanceof IdentifierTree)) {
-      throw new IllegalGuardedBy("bad type literal:" + expr);
-    }
+    checkGuardedBy(expr instanceof IdentifierTree, "bad type literal: %s", expr);
     IdentifierTree ident = (IdentifierTree) expr;
-    Symbol type = resolveType(ident.getName().toString(), /*searchSuperTypes=*/true);
+    Symbol type = resolveType(ident.getName().toString(), SearchSuperTypes.YES);
     if (type instanceof Symbol.ClassSymbol) {
       return type;
     }
     return null;
   }
 
+  private static enum SearchSuperTypes { YES, NO };
+
   /**
-   * Resolve a simple name as a type. Consider super classes, lexically enclosing classes, and then
-   * arbitrary types available in the current environment.
+   * Resolves a simple name as a type. Considers super classes, lexically enclosing classes, and
+   * then arbitrary types available in the current environment.
    */
-  private Symbol resolveType(String name, boolean searchSuperTypes) {
+  private Symbol resolveType(String name, SearchSuperTypes searchSuperTypes) {
     Symbol type = null;
-    if (searchSuperTypes) {
+    if (searchSuperTypes == SearchSuperTypes.YES) {
       type = getSuperType(enclosingClass, name);
     }
     if (type == null) {
@@ -201,9 +201,8 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
     if (type == null) {
       type = attribIdent(name);
     }
-    if (type instanceof Symbol.PackageSymbol) {
-      throw new IllegalGuardedBy("All we could find for '" + name + "' was a package symbol.");
-    }
+    checkGuardedBy(!(type instanceof Symbol.PackageSymbol),
+        "All we could find for '%s' was a package symbol.", name);
     return type;
   }
 
@@ -216,8 +215,8 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
     return null;
   }
 
-  private Symbol getLexicallyEnclosing(Symbol cs, String name) {
-    Symbol current = cs.owner;
+  private Symbol getLexicallyEnclosing(ClassSymbol symbol, String name) {
+    Symbol current = symbol.owner;
     while (true) {
       if (current == null || current.getSimpleName().contentEquals(name)) {
         return current;
@@ -237,13 +236,15 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
     return attr.attribIdent(tm.Ident(getName(name)), compilationUnit);
   }
 
+  private Name getName(String name) {
+    return JDKCompatible.lookupName(context, name);
+  }
+
   @Override
   public Symbol resolveEnclosingClass(ExpressionTree expr) {
-    if (!(expr instanceof IdentifierTree)) {
-      throw new IllegalGuardedBy("bad type literal:" + expr);
-    }
+    checkGuardedBy(expr instanceof IdentifierTree, "bad type literal: %s", expr);
     IdentifierTree ident = (IdentifierTree) expr;
-    Symbol type = resolveType(ident.getName().toString(), /*searchSuperTypes=*/false);
+    Symbol type = resolveType(ident.getName().toString(), SearchSuperTypes.NO);
     if (type instanceof Symbol.ClassSymbol) {
       return type;
     }

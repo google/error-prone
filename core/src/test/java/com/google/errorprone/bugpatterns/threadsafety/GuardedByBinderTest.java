@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.util.ASTHelpers;
@@ -379,6 +380,7 @@ public class GuardedByBinderTest {
       throws IOException {
     try {
       bind(className, exprString, fileObject);
+      fail("Expected binding to fail.");
     } catch (IllegalGuardedBy expected) {
     }
   }
@@ -401,7 +403,7 @@ public class GuardedByBinderTest {
                   ASTHelpers.getSymbol(classDecl),
                   compilationUnit,
                   task.getContext(),
-                  /*leaf=*/null));
+                  null));
           return guardExpression.debugPrint();
         }
       }
@@ -411,7 +413,7 @@ public class GuardedByBinderTest {
 
   private static class FindClass extends TreeScanner {
 
-    List<JCTree.JCClassDecl> decls = new ArrayList<JCTree.JCClassDecl>();
+    private List<JCTree.JCClassDecl> decls = new ArrayList<JCTree.JCClassDecl>();
 
     @Override
     public void visitClassDef(JCTree.JCClassDecl classDecl) {

@@ -26,7 +26,7 @@ import javax.annotation.CheckReturnValue;
 /**
  * A set of held locks.
  *
- * Wrapper around a {@link PSet} of {@Link GuardedByExpression}s. Using a persistent collection
+ * <p>Wrapper around a {@link PSet} of {@link GuardedByExpression}s. Using a persistent collection
  * makes it easy to handle adding locks to the set only while visiting the scope where those
  * locks are held, without mutating the underlying collection.
  *
@@ -37,7 +37,7 @@ class HeldLockSet {
   final PSet<GuardedByExpression> locks;
 
   private HeldLockSet() {
-    locks = Empty.set();
+    this(Empty.<GuardedByExpression>set());
   }
 
   private HeldLockSet(PSet<GuardedByExpression> locks) {
@@ -61,7 +61,7 @@ class HeldLockSet {
   public Collection<GuardedByExpression> allLocks() {
     return locks;
   }
-  
+
   @Override
   public String toString() {
     return locks.toString();

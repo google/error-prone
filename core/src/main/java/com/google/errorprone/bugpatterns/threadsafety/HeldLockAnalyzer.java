@@ -51,7 +51,8 @@ import java.util.Set;
 import javax.lang.model.element.Modifier;
 
 /**
- * Analyzes a method body, tracking the set of held locks and checking accesses to guarded members.
+ * A method body analyzer. Responsible for tracking the set of held locks, and checking accesses to
+ * guarded members.
  *
  * @author cushon@google.com (Liam Miller-Cushon)
  */
@@ -63,7 +64,7 @@ public class HeldLockAnalyzer {
   public interface LockEventListener {
 
     /**
-     * Handle a guarded member access.
+     * Handles a guarded member access.
      *
      * @param tree The member access expression.
      * @param guard The member's guard expression.
@@ -73,7 +74,8 @@ public class HeldLockAnalyzer {
   }
 
   /**
-   * Analyze a method body, tracking the set of held locks and checking accesses to guarded members.
+   * Analyzes a method body, tracking the set of held locks and checking accesses to guarded
+   * members.
    */
   public static void analyze(VisitorState state, LockEventListener listener) {
     new LockScanner(state, listener).scan(state.getPath(), HeldLockSet.empty());
@@ -147,19 +149,19 @@ public class HeldLockAnalyzer {
     }
 
     @Override
-    public Void visitMemberSelect(MemberSelectTree tree, HeldLockSet p) {
-      checkMatch(tree, p);
-      return super.visitMemberSelect(tree, p);
+    public Void visitMemberSelect(MemberSelectTree tree, HeldLockSet locks) {
+      checkMatch(tree, locks);
+      return super.visitMemberSelect(tree, locks);
     }
 
     @Override
-    public Void visitIdentifier(IdentifierTree tree, HeldLockSet p) {
-      checkMatch(tree, p);
-      return super.visitIdentifier(tree, p);
+    public Void visitIdentifier(IdentifierTree tree, HeldLockSet locks) {
+      checkMatch(tree, locks);
+      return super.visitIdentifier(tree, locks);
     }
 
     @Override
-    public Void visitNewClass(NewClassTree tree, HeldLockSet p) {
+    public Void visitNewClass(NewClassTree tree, HeldLockSet locks) {
       // Don't visit into anonymous class declarations; their method declarations
       // will be analyzed separately.
       return null;
@@ -228,7 +230,7 @@ public class HeldLockAnalyzer {
     }
 
     @Override
-    public Void visitMethodInvocation(MethodInvocationTree tree, Void p) {
+    public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
       if (LOCK_RELEASE_MATCHER.matches(tree, state)) {
         GuardedByExpression node = GuardedByBinder.bindExpression((JCExpression) tree, state);
         GuardedByExpression receiver = ((GuardedByExpression.Select) node).base;
@@ -258,11 +260,12 @@ public class HeldLockAnalyzer {
      * Determine the lock expression that needs to be held when accessing a specific guarded
      * member.
      *
-     * If the lock expression resolves to an instance member, the result will be a select
+     * <p>If the lock expression resolves to an instance member, the result will be a select
      * expression with the same base as the original guarded member access.
      *
-     * For example:
-     * <code>
+     * <p>For example:
+     * <pre>
+     * {@code
      * class MyClass {
      *   final Object mu = new Object();
      *   @GuardedBy("mu")
@@ -271,15 +274,14 @@ public class HeldLockAnalyzer {
      * void m(MyClass myClass) {
      *   myClass.x++;
      * }
-     * </code>
+     * }
+     * </pre>
      *
      * To determine the lock that must be held when accessing myClass.x,
      * from is called with "myClass.x" and "mu", and returns "myClass.mu".
      */
-    static GuardedByExpression from(
-        JCTree.JCExpression guardedMemberExpression,
-        GuardedByExpression guard,
-        VisitorState state) {
+    static GuardedByExpression from(JCTree.JCExpression guardedMemberExpression,
+        GuardedByExpression guard, VisitorState state) {
 
       if (isGuardReferenceAbsolute(guard)) {
         return guard;
@@ -297,10 +299,11 @@ public class HeldLockAnalyzer {
      * is accessed.
      *
      * <p>E.g.:
-     * <ul><li>class object: 'TypeName.class'
-     * <li>static access: 'TypeName.member'
-     * <li>enclosing instance: 'Outer.this'
-     * <li>enclosing instance member: 'Outer.this.member'
+     * <ul>
+     *   <li>class object: 'TypeName.class'
+     *   <li>static access: 'TypeName.member'
+     *   <li>enclosing instance: 'Outer.this'
+     *   <li>enclosing instance member: 'Outer.this.member'
      * </ul>
      */
     private static boolean isGuardReferenceAbsolute(GuardedByExpression guard) {
@@ -313,7 +316,7 @@ public class HeldLockAnalyzer {
     }
 
     /**
-     * Get the base expression of a (possibly nested) member select expression.
+     * Gets the base expression of a (possibly nested) member select expression.
      */
     private static GuardedByExpression getSelectInstance(GuardedByExpression guard) {
       if (guard instanceof Select) {
