@@ -121,34 +121,45 @@ public class VisitorState {
       return getPrimitiveType(typeStr);
     }
     Name typeName = getName(typeStr);
-    ClassSymbol typeSymbol = getSymtab().classes.get(typeName);
-    if (typeSymbol == null) {
-      JavaCompiler compiler = JavaCompiler.instance(context);
-      Symbol sym = compiler.resolveIdent(typeStr);
-      if (!(sym instanceof ClassSymbol)) {
-        return null;
-      }
-      typeSymbol = (ClassSymbol) sym;
-    }
-    Type type = typeSymbol.asType();
     try {
+      ClassSymbol typeSymbol = getSymtab().classes.get(typeName);
+      if (typeSymbol == null) {
+        JavaCompiler compiler = JavaCompiler.instance(context);
+        Symbol sym = compiler.resolveIdent(typeStr);
+        if (!(sym instanceof ClassSymbol)) {
+          return null;
+        }
+        typeSymbol = (ClassSymbol) sym;
+      }
+      Type type = typeSymbol.asType();
       // Throws CompletionFailure if the source/class file for this type is not available.
       // This is hacky but the best way I can think of to handle this case.
+      type.complete();
       if (type.isErroneous()) {
         return null;
       }
+      return type;
     } catch (CompletionFailure failure) {
       return null;
     }
-    return type;
   }
 
   /**
-   * Given the string representation of a symbol, returns the Symbol object.
+   * @param symStr the string representation of a symbol
+   * @return the Symbol object, or null if it cannot be found
    */
   public Symbol getSymbolFromString(String symStr) {
-    Name symName = getName(symStr);
-    return getSymtab().classes.get(symName);
+    try {
+      Name symName = getName(symStr);
+      Symbol result = getSymtab().classes.get(symName);
+      if (result != null) {
+        // Force a completion failure if the type is not available.
+        result.complete();
+      }
+      return result;
+    } catch (CompletionFailure failure) {
+      return null;
+    }
   }
 
   /**
