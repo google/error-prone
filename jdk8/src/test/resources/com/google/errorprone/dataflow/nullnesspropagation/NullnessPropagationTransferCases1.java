@@ -16,6 +16,8 @@
 
 package com.google.errorprone.dataflow.nullnesspropagation;
 
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
+
 /**
  * Dataflow analysis cases for testing transfer functions in nullness propagation
  */
@@ -27,13 +29,13 @@ public class NullnessPropagationTransferCases1 {
     String str = nullableParam;
     if (str == null) {
       // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
-      NullnessPropagationTest.triggerNullnessChecker(str);
+      triggerNullnessChecker(str);
     } else {
       // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
-      NullnessPropagationTest.triggerNullnessChecker(str);
+      triggerNullnessChecker(str);
     }
     // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
-    NullnessPropagationTest.triggerNullnessChecker(str);
+    triggerNullnessChecker(str);
   }
   
   public void equalToConvergesToNonNull() {
@@ -44,7 +46,7 @@ public class NullnessPropagationTransferCases1 {
       str = "non-null";
     }
     // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
-    NullnessPropagationTest.triggerNullnessChecker(str);
+    triggerNullnessChecker(str);
   }
   
   public void equalToConvergesToNullable() {
@@ -55,7 +57,7 @@ public class NullnessPropagationTransferCases1 {
       str = null;
     }
     // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
-    NullnessPropagationTest.triggerNullnessChecker(str);
+    triggerNullnessChecker(str);
   }
   
   public void equalToDiverges() {
@@ -66,7 +68,7 @@ public class NullnessPropagationTransferCases1 {
       str = "something else";
     }
     // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
-    NullnessPropagationTest.triggerNullnessChecker(str);
+    triggerNullnessChecker(str);
   }
     
   // Note: While it is correct to type str as a Nullable value using the least upper bound, we do
@@ -79,7 +81,7 @@ public class NullnessPropagationTransferCases1 {
       str = null;
     }
     // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
-    NullnessPropagationTest.triggerNullnessChecker(str);
+    triggerNullnessChecker(str);
   }
   
   // visitNotEqual Test Cases
@@ -88,44 +90,44 @@ public class NullnessPropagationTransferCases1 {
     String str = nullableParam;
     if (str != "rhs") {
       // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
-      NullnessPropagationTest.triggerNullnessChecker(str);
+      triggerNullnessChecker(str);
     } else {
       // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
-      NullnessPropagationTest.triggerNullnessChecker(str);
+      triggerNullnessChecker(str);
     }
     
     if ("lhs" != str) {
       // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
-      NullnessPropagationTest.triggerNullnessChecker(str);
+      triggerNullnessChecker(str);
     } else {
       // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
-      NullnessPropagationTest.triggerNullnessChecker(str);
+      triggerNullnessChecker(str);
     }
     
     // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
-    NullnessPropagationTest.triggerNullnessChecker(str);
+    triggerNullnessChecker(str);
   }
   
   public void notEqualToNull(String nullableParam) {
     String str = nullableParam;
     if (str != null) {
       // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
-      NullnessPropagationTest.triggerNullnessChecker(str);
+      triggerNullnessChecker(str);
     } else {
       // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
-      NullnessPropagationTest.triggerNullnessChecker(str);
+      triggerNullnessChecker(str);
     }
     
     if (null != str) {
       // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
-      NullnessPropagationTest.triggerNullnessChecker(str);
+      triggerNullnessChecker(str);
     } else {
       // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
-      NullnessPropagationTest.triggerNullnessChecker(str);
+      triggerNullnessChecker(str);
     }
     
     // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
-    NullnessPropagationTest.triggerNullnessChecker(str);
+    triggerNullnessChecker(str);
   }
   
   public void notEqualToLocalVariable(String nullableParam) {
@@ -133,22 +135,22 @@ public class NullnessPropagationTransferCases1 {
     String str2 = "local variable";
     if (str1 != str2) {
       // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
-      NullnessPropagationTest.triggerNullnessChecker(str1);
+      triggerNullnessChecker(str1);
     } else {
       // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
-      NullnessPropagationTest.triggerNullnessChecker(str1);
+      triggerNullnessChecker(str1);
     }
     
     if (str2 != str1) {
       // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
-      NullnessPropagationTest.triggerNullnessChecker(str1);
+      triggerNullnessChecker(str1);
     } else {
       // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
-      NullnessPropagationTest.triggerNullnessChecker(str1);
+      triggerNullnessChecker(str1);
     }
     
     // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
-    NullnessPropagationTest.triggerNullnessChecker(str1);
+    triggerNullnessChecker(str1);
   }
   
   public void notEqualToConvergesToNonNull() {
@@ -159,7 +161,7 @@ public class NullnessPropagationTransferCases1 {
       str = "non-null";
     }
     // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
-    NullnessPropagationTest.triggerNullnessChecker(str);
+    triggerNullnessChecker(str);
   }
   
   public void notEqualToConvergesToNullable() {
@@ -170,7 +172,7 @@ public class NullnessPropagationTransferCases1 {
       str = null;
     }
     // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
-    NullnessPropagationTest.triggerNullnessChecker(str);
+    triggerNullnessChecker(str);
   }
   
   public void notEqualToDiverges() {
@@ -181,6 +183,6 @@ public class NullnessPropagationTransferCases1 {
       str = null;
     }
     // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
-    NullnessPropagationTest.triggerNullnessChecker(str);
+    triggerNullnessChecker(str);
   }
 }

@@ -20,25 +20,27 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.CompilationTestHelper.sources;
+import static com.google.errorprone.dataflow.DataFlow.dataflow;
+import static com.google.errorprone.fixes.SuggestedFix.replace;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.findEnclosingNode;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
+import com.google.common.base.Joiner;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
-import com.google.errorprone.dataflow.DataFlow;
-import com.google.errorprone.dataflow.DataFlow.Result;
-import com.google.errorprone.fixes.Fix;
-import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.Tree;
+import com.sun.tools.javac.util.Name;
 
 import org.checkerframework.dataflow.analysis.Analysis;
 import org.junit.Before;
@@ -46,6 +48,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +68,7 @@ public class NullnessPropagationTest {
    */
   public static void triggerNullnessChecker(Object obj) {
   }
-  
+
   @Before
   public void setUp() {
     compilationHelper = CompilationTestHelper.newInstance(new NullnessPropagationChecker());
@@ -87,71 +90,50 @@ public class NullnessPropagationTest {
    * BugPattern to test dataflow analysis using nullness propagation
    */
   @BugPattern(name = "NullnessPropagationChecker",
-      summary = "Dataflow analysis of method definitions for testing nullness propagation",
-      explanation =
-          "This test checker runs dataflow analysis over method definitions to test nullness"
-          + "propagation and generate a control flow graph.",
+      summary = "Test checker for NullnessPropagationTest",
+      explanation = "Outputs an error for each call to triggerNullnessChecker, describing its "
+          + "argument as nullable or non-null",
       category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
-  public class NullnessPropagationChecker extends BugChecker
-      implements MethodInvocationTreeMatcher {
-
-    private final Matcher<ExpressionTree> matcher =
+  public static final class NullnessPropagationChecker
+      extends BugChecker implements MethodInvocationTreeMatcher {
+    private static final Matcher<ExpressionTree> TRIGGER_CALL_MATCHER =
         staticMethod(NullnessPropagationTest.class.getName(), "triggerNullnessChecker");
     
-    /**
-     * Compute a dataflow result once per method declaration and store it in the map
-     */
-    private final Map<MethodTree,
-        Result<NullnessValue, NullnessPropagationStore, NullnessPropagationTransfer>> results =
-        new HashMap<MethodTree, 
-                    Result<NullnessValue, NullnessPropagationStore, NullnessPropagationTransfer>>();
+    private final Map<MethodTree, Analysis<NullnessValue, ?, ?>> resultCache = new HashMap<>();
     
-    /**
-     * Uses this test class' static method {@code triggerNullnessChecker} to match and check the
-     * abstract value of a local variable
-     */
     @Override
     public Description matchMethodInvocation(
-        MethodInvocationTree methodInvocation, final VisitorState state) {
-      if (!matcher.matches(methodInvocation, state)) {
-        return Description.NO_MATCH;
-      }
-            
-      MethodTree enclosingMethod = ASTHelpers.findEnclosingNode(state.getPath(), MethodTree.class);
-      if (enclosingMethod == null) {
-        return Description.NO_MATCH;
+        MethodInvocationTree methodInvocation, VisitorState state) {
+      if (!TRIGGER_CALL_MATCHER.matches(methodInvocation, state)) {
+        return NO_MATCH;
       }
 
-      Analysis<NullnessValue, NullnessPropagationStore, NullnessPropagationTransfer> analysis;
-      
-      if (results.containsKey(enclosingMethod)) {
-        analysis = results.get(enclosingMethod).getAnalysis();
-      } else {
-        NullnessPropagationTransfer transfer = new NullnessPropagationTransfer();
-        Result<NullnessValue, NullnessPropagationStore, NullnessPropagationTransfer> result =
-            DataFlow.dataflow(enclosingMethod, state.getPath(), state.context, transfer);
-        results.put(enclosingMethod, result);
-        analysis = result.getAnalysis();
+      MethodTree enclosingMethod = findEnclosingNode(state.getPath(), MethodTree.class);
+      if (enclosingMethod == null) {
+        return NO_MATCH;
       }
-            
-      // Examine values for nodes of interest: argument(s) to the method invocation
-      List<? extends ExpressionTree> args = methodInvocation.getArguments();
-      if (methodInvocation.getMethodSelect() instanceof MemberSelectTree) {
-        MemberSelectTree methodName = (MemberSelectTree) methodInvocation.getMethodSelect();
-        String fixString = methodName.getIdentifier().toString() + "(";
-        for (int i = 0; i < args.size(); ++i) {
-          fixString += analysis.getValue(args.get(i)).toString();
-          if (i + 1 < args.size()) {
-            fixString += ", ";
-          }
-        }
-        fixString += ")";
-        
-        Fix fix = SuggestedFix.replace(methodInvocation, fixString);
-        return describeMatch(methodInvocation, fix);
+
+      Analysis<NullnessValue, ?, ?> analysis = resultCache.get(enclosingMethod);
+      if (analysis == null) {
+        analysis = dataflow(enclosingMethod, state.getPath(), state.context,
+            new NullnessPropagationTransfer()).getAnalysis();
+        resultCache.put(enclosingMethod, analysis);
       }
-      
-      return Description.NO_MATCH;
+
+      Name methodName = getSymbol(methodInvocation).getSimpleName();
+      List<?> values = getAllValues(methodInvocation.getArguments(), analysis);
+      String fixString = String.format("%s(%s)", methodName, Joiner.on(", ").join(values));
+
+      return describeMatch(methodInvocation, replace(methodInvocation, fixString));
+    }
+
+    private static List<?> getAllValues(
+        List<? extends Tree> args, Analysis<?, ?, ?> analysis) {
+      List<Object> values = new ArrayList<>();
+      for (Tree arg : args) {
+        values.add(analysis.getValue(arg));
+      }
+      return values;
     }
   }
 }
