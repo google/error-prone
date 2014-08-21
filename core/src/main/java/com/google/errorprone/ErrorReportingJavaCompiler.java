@@ -16,8 +16,6 @@
 
 package com.google.errorprone;
 
-import static com.google.errorprone.ErrorProneScanner.EnabledPredicate.DEFAULT_CHECKS;
-
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Env;
 import com.sun.tools.javac.main.JavaCompiler;
@@ -71,11 +69,7 @@ public class ErrorReportingJavaCompiler extends JavaCompiler {
 
   public ErrorReportingJavaCompiler(Context context) {
     super(context);
-
-    // Put a scanner in the context with the default set of checks.
-    if (context.get(Scanner.class) == null) {
-      context.put(Scanner.class, new ErrorProneScanner(DEFAULT_CHECKS));
-    }
+    assert context.get(Scanner.class) != null;
 
     // Setup message bundle.
     setupMessageBundle(context);
@@ -94,10 +88,13 @@ public class ErrorReportingJavaCompiler extends JavaCompiler {
    * within javac, per the documentation in {@link com.sun.tools.javac.util.Context}.
    */
   public static void preRegister(final Context context) {
+    final Scanner scanner = context.get(Scanner.class);
     context.put(compilerKey, new Factory<JavaCompiler>() {
       //@Override for OpenJDK 7 only
-      public JavaCompiler make(Context context) {
-        return new ErrorReportingJavaCompiler(context);
+      public JavaCompiler make(Context ctx) {
+        // Ensure that future processing rounds continue to use the same Scanner.
+        ctx.put(Scanner.class, scanner);
+        return new ErrorReportingJavaCompiler(ctx);
       }
       //@Override for OpenJDK 6 only
       public JavaCompiler make() {
