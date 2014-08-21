@@ -38,6 +38,8 @@ public class SearchingJavaCompiler extends JavaCompiler {
 
   public SearchingJavaCompiler(Context context) {
     super(context);
+    assert context.get(Scanner.class) != null;
+
     errorProneAnalyzer = new ErrorProneAnalyzer(log, context, resultsPrinter);
     resultsPrinter = new SearchResultsPrinter();
   }
@@ -52,10 +54,13 @@ public class SearchingJavaCompiler extends JavaCompiler {
    * within javac, per the documentation in {@link com.sun.tools.javac.util.Context}.
    */
   public static void preRegister(final Context context) {
+    final Scanner scanner = context.get(Scanner.class);
     context.put(compilerKey, new Factory<JavaCompiler>() {
       //@Override for OpenJDK 7 only
-      public JavaCompiler make(Context context) {
-        return new SearchingJavaCompiler(context);
+      public JavaCompiler make(Context ctx) {
+        // Ensure that future processing rounds continue to use the same Scanner.
+        ctx.put(Scanner.class, scanner);
+        return new SearchingJavaCompiler(ctx);
       }
       //@Override for OpenJDK 6 only
       public JavaCompiler make() {

@@ -26,6 +26,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
 
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -34,6 +35,8 @@ import com.google.errorprone.bugpatterns.IncrementDecrementVolatile;
 import com.google.errorprone.matchers.Description;
 
 import com.sun.source.tree.ExpressionStatementTree;
+import com.sun.tools.javac.processing.JavacProcessingEnvironment;
+import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.List;
 
 import org.hamcrest.CoreMatchers;
@@ -46,7 +49,14 @@ import org.junit.runners.JUnit4;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Set;
 
+import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.lang.model.SourceVersion;
+import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
@@ -194,5 +204,43 @@ public class ErrorProneCompilerIntegrationTest {
             "FlowSuper.java"));
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(0));
+  }
+
+  @Test
+  public void propagatesScannerThroughAnnotationProcessingRounds() throws Exception {
+    ErrorProneScanner scanner = new ErrorProneScanner();
+    compilerBuilder.report(scanner);
+    compiler = compilerBuilder.build();
+    int exitCode = compiler.compile(
+        sources(getClass(), "UsesAnnotationProcessor.java"),
+        Arrays.asList(new ScannerCheckingProcessor(scanner)));
+    outputStream.flush();
+    assertThat(outputStream.toString(), exitCode, is(0));
+  }
+
+  /**
+   * Annotation processor that checks that the context always has the same {@link ErrorProneScanner}
+   * instance at each stage of annotation processing.
+   */
+  @SupportedAnnotationTypes("*")
+  public static final class ScannerCheckingProcessor extends AbstractProcessor {
+
+    private final ErrorProneScanner expected;
+
+    public ScannerCheckingProcessor(ErrorProneScanner expected) {
+      this.expected = expected;
+    }
+
+    @Override
+    public SourceVersion getSupportedSourceVersion() {
+      return SourceVersion.latest();
+    }
+
+    @Override
+    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+      Context context = ((JavacProcessingEnvironment) processingEnv).getContext();
+      assertSame(expected, context.get(Scanner.class));
+      return false;
+    }
   }
 }
