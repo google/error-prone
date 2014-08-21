@@ -16,7 +16,7 @@
 
 package com.google.errorprone.dataflow.nullnesspropagation;
 
-import com.google.errorprone.dataflow.nullnesspropagation.NullnessValue.Type;
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessValue.NULLABLE;
 
 import org.checkerframework.dataflow.analysis.FlowExpressions;
 import org.checkerframework.dataflow.analysis.Store;
@@ -48,7 +48,7 @@ public class NullnessPropagationStore implements Store<NullnessPropagationStore>
     if (contents.containsKey(n)) {
       return contents.get(n);
     }
-    return new NullnessValue(Type.NULLABLE);
+    return NULLABLE;
   }
 
   public void mergeInformation(Node node, NullnessValue val) {
