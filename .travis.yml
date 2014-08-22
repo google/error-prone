@@ -1,0 +1,9 @@
+language: java
+
+jdk:
+  - openjdk6
+  - openjdk7
+  - openjdk8
+
+notifications:
+  email: cushon@google.com
