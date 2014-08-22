@@ -116,7 +116,7 @@ public class DiagnosticTestHelper {
       @Override
       public boolean matches(Object object) {
         Diagnostic<JavaFileObject> item = (Diagnostic<JavaFileObject>) object;
-        return item.getSource().toUri().equals(fileURI)
+        return item.getSource() != null && item.getSource().toUri().equals(fileURI)
             && item.getLineNumber() == line;
       }
 
@@ -135,7 +135,7 @@ public class DiagnosticTestHelper {
       @Override
       public boolean matches(Object object) {
         Diagnostic<JavaFileObject> item = (Diagnostic<JavaFileObject>) object;
-        return item.getSource().toUri().equals(fileURI)
+        return item.getSource() != null && item.getSource().toUri().equals(fileURI)
             && item.getLineNumber() == line
             && item.getMessage(Locale.getDefault()).contains(message);
       }
