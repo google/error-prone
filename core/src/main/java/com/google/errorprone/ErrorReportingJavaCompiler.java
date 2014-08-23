@@ -69,7 +69,9 @@ public class ErrorReportingJavaCompiler extends JavaCompiler {
 
   public ErrorReportingJavaCompiler(Context context) {
     super(context);
-    assert context.get(Scanner.class) != null;
+    if (context.get(Scanner.class) == null) {
+      throw new IllegalArgumentException("context must have a Scanner instance");
+    }
 
     // Setup message bundle.
     setupMessageBundle(context);

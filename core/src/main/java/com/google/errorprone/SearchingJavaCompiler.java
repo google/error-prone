@@ -38,7 +38,9 @@ public class SearchingJavaCompiler extends JavaCompiler {
 
   public SearchingJavaCompiler(Context context) {
     super(context);
-    assert context.get(Scanner.class) != null;
+    if (context.get(Scanner.class) == null) {
+      throw new IllegalArgumentException("context must have a Scanner instance");
+    }
 
     errorProneAnalyzer = new ErrorProneAnalyzer(log, context, resultsPrinter);
     resultsPrinter = new SearchResultsPrinter();
