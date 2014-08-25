@@ -31,6 +31,12 @@ import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
 
 /**
+ * An error-prone compiler that matches the interface of {@link com.sun.tools.javac.main.Main}.
+ * Used by plexus-java-compiler-errorprone.
+ *
+ * TODO(user): Currently matches the interface of javac 6.  Update to match javac 8, and make
+ * sure it doesn't break plexus-java-compiler-errorprone.
+ *
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class ErrorProneCompiler {
@@ -38,6 +44,7 @@ public class ErrorProneCompiler {
   /**
    * Entry point for compiling Java code with error-prone enabled.
    * All default checks are run, and the compile fails if they find a bug.
+   *
    * @param args the same args which could be passed to javac on the command line
    */
   public static void main(String[] args) {
@@ -45,13 +52,31 @@ public class ErrorProneCompiler {
   }
 
   /**
-   * Convenient helper method for compiling in-process, using reflection.
-   * @param listener
-   * @param args
-   * @return Exit code from the compiler invocation
+   * Compiles in-process.
+   *
+   * @param listener listens to the diagnostics produced by error-prone
+   * @param args the same args which would be passed to javac on the command line
+   * @return exit code from the compiler invocation
    */
   public static int compile(DiagnosticListener<JavaFileObject> listener, String[] args) {
-    return new ErrorProneCompiler.Builder().listenToDiagnostics(listener).build().compile(args);
+    ErrorProneCompiler compiler = new ErrorProneCompiler.Builder()
+        .listenToDiagnostics(listener)
+        .build();
+    return compiler.compile(args);
+  }
+
+  /**
+   * Programmatic interface to the error-prone Java compiler.
+   *
+   * @param args the same args which would be passed to javac on the command line
+   * @param out a {@link PrintWriter} to which to send diagnostic output
+   * @return exit code from the compiler invocation
+   */
+  public static int compile(String[] args, PrintWriter out) {
+    ErrorProneCompiler compiler = new ErrorProneCompiler.Builder()
+        .redirectOutputTo(out)
+        .build();
+    return compiler.compile(args);
   }
 
   private final DiagnosticListener<? super JavaFileObject> diagnosticListener;
