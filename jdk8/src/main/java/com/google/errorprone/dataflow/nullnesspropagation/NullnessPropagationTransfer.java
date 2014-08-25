@@ -20,7 +20,6 @@ import static com.google.errorprone.dataflow.nullnesspropagation.NullnessValue.N
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessValue.NULLABLE;
 
 import com.sun.source.tree.Tree;
-import com.sun.tools.javac.code.Type.JCPrimitiveType;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 
 import org.checkerframework.dataflow.analysis.ConditionalTransferResult;
@@ -34,7 +33,6 @@ import org.checkerframework.dataflow.cfg.node.AssignmentNode;
 import org.checkerframework.dataflow.cfg.node.EqualToNode;
 import org.checkerframework.dataflow.cfg.node.FieldAccessNode;
 import org.checkerframework.dataflow.cfg.node.LocalVariableNode;
-import org.checkerframework.dataflow.cfg.node.MethodAccessNode;
 import org.checkerframework.dataflow.cfg.node.MethodInvocationNode;
 import org.checkerframework.dataflow.cfg.node.Node;
 import org.checkerframework.dataflow.cfg.node.NotEqualNode;
@@ -193,15 +191,10 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
   @Override
   public TransferResult<NullnessValue, NullnessPropagationStore> visitLocalVariable(
       LocalVariableNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
-    NullnessValue value = before.getRegularStore().getInformation(node);
+    NullnessValue value = isPrimitiveVariable(node)
+        ? NONNULL
+        : before.getRegularStore().getInformation(node);
 
-    Tree tree = node.getTree();
-    if (tree instanceof JCIdent) {
-      JCIdent ident = (JCIdent) tree;
-      if (ident.type instanceof JCPrimitiveType) {
-        value = NONNULL;
-      }
-    }
     return update(before, node, value);
   }
 
@@ -216,21 +209,6 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
   @Override
   public TransferResult<NullnessValue, NullnessPropagationStore> visitFieldAccess(
       FieldAccessNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
-    Node receiver = node.getReceiver();
-    return update(before, receiver, NONNULL);
-  }
-
-  /*
-   * TODO(cpovirk): Eliminate this, which is redundant with visitMethodInvocation. Every
-   * MethodInvocationNode contains a MethodAccessNode, and every MethodAccessNode is contained
-   * within a MethodInvocationNode.
-   */
-  /**
-   * Refines the receiver of a method access to type non-null after a successful method access.
-   */
-  @Override
-  public TransferResult<NullnessValue, NullnessPropagationStore> visitMethodAccess(
-      MethodAccessNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
     Node receiver = node.getReceiver();
     return update(before, receiver, NONNULL);
   }
@@ -265,8 +243,6 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
     return update(before, node, NONNULL);
   }
 
-  // TODO(cpovirk): handle instanceof
-
   /** Maps the given node to the specified value in the resulting store from the node visit. */
   private static RegularTransferResult<NullnessValue, NullnessPropagationStore> update(
       TransferInput<?, NullnessPropagationStore> before, Node node, NullnessValue value) {
@@ -274,5 +250,14 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
     after.setInformation(node, value);
     // TODO(cpovirk): How is |value| used here? I see that Analysis calls getResultValue(). Hmm.
     return new RegularTransferResult<>(value, after);
+  }
+
+  private static boolean isPrimitiveVariable(LocalVariableNode node) {
+    Tree tree = node.getTree();
+    if (tree instanceof JCIdent) {
+      JCIdent ident = (JCIdent) tree;
+      return ident.type.isPrimitive();
+    }
+    return false;
   }
 }
