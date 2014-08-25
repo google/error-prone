@@ -37,13 +37,13 @@ import com.sun.source.tree.VariableTree;
 /**
  * @author cushon@google.com (Liam Miller-Cushon)
  */
-@BugPattern(name = "ThreadSafe",
+@BugPattern(name = "GuardedBy",
     summary = "Checks for unguarded accesses to fields and methods with @GuardedBy annotations",
     explanation = "The @GuardedBy annotation is used to associate a lock with a fields or methods."
         + " Accessing a guarded field or invoking a guarded method should only be done when the"
         + " specified lock is held. Unguarded accesses are not thread safe.",
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
-public class ThreadSafe extends GuardedByValidator implements BugChecker.VariableTreeMatcher,
+public class GuardedBy extends GuardedByValidator implements BugChecker.VariableTreeMatcher,
     BugChecker.MethodTreeMatcher {
 
   @Override
@@ -58,7 +58,7 @@ public class ThreadSafe extends GuardedByValidator implements BugChecker.Variabl
       @Override
       public void handleGuardedAccess(
           ExpressionTree tree, GuardedByExpression guard, HeldLockSet live) {
-        report(tree, ThreadSafe.this.checkGuardedAccess(tree, guard, live), state);
+        report(tree, GuardedBy.this.checkGuardedAccess(tree, guard, live), state);
       }
     });
 
@@ -83,12 +83,12 @@ public class ThreadSafe extends GuardedByValidator implements BugChecker.Variabl
 
   private Description describeInvalidGuardedBy(Tree tree) {
     // Re-use the validation message from {@link GuardedByValidator}.
-    // TODO(user) - consolidate the checks once the clean-up is done; ThreadSafe is intended to
+    // TODO(user) - consolidate the checks once the clean-up is done; GuardedBy is intended to
     // subsume GuardedByValidator.
     String message = GuardedByValidator.class.getAnnotation(BugPattern.class).summary();
-    // TODO(user) - this message will have a wiki link to ThreadSafe, not GuardedByValidator.
+    // TODO(user) - this message will have a wiki link to GuardedBy, not GuardedByValidator.
     // Think about the best way to present the information from GuardedByValidator's explanation
-    // field -- should it be a separate page or part of the ThreadSafe page?
+    // field -- should it be a separate page or part of the GuardedBy page?
     return Description.builder(tree, pattern)
         .setMessage(message)
         .build();

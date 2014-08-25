@@ -214,13 +214,13 @@ public class HeldLockAnalyzerTest {
   }
 
   /**
-   * A customized {@link ThreadSafe} checker that prints more test-friendly diagnostics.
+   * A customized {@link GuardedBy} checker that prints more test-friendly diagnostics.
    */
   @BugPattern(name = "GuardedByLockSet",
       summary = "",
       explanation = "",
       category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
-  private static class GuardedByLockSetAnalyzer extends ThreadSafe {
+  private static class GuardedByLockSetAnalyzer extends GuardedBy {
 
     @Override
     protected Description checkGuardedAccess(

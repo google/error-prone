@@ -26,12 +26,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
-/** {@link ThreadSafe}Test */
+/** {@link GuardedBy}Test */
 @RunWith(JUnit4.class)
-public class ThreadSafeTest {
+public class GuardedByTest {
 
   private final CompilationTestHelper compilationHelper =
-      CompilationTestHelper.newInstance(new ThreadSafe());
+      CompilationTestHelper.newInstance(new GuardedBy());
 
   @Test
   public void testLocked() throws Exception {
@@ -856,6 +856,6 @@ public class ThreadSafeTest {
 
   @Test
   public void serializable() throws IOException {
-    new ObjectOutputStream(new ByteArrayOutputStream()).writeObject(new ThreadSafe());
+    new ObjectOutputStream(new ByteArrayOutputStream()).writeObject(new GuardedBy());
   }
 }
