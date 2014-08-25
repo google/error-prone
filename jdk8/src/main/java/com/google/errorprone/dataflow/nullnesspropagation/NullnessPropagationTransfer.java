@@ -69,7 +69,7 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
   @Override
   public TransferResult<NullnessValue, NullnessPropagationStore> visitNode(
       Node node, TransferInput<NullnessValue, NullnessPropagationStore> store) {
-    return new RegularTransferResult<>(null, store.getRegularStore());
+    return new RegularTransferResult<>(NULLABLE, store.getRegularStore());
   }
   
   // Literals
@@ -129,7 +129,7 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
       }
     }
 
-    return new ConditionalTransferResult<>(null, thenStore, elseStore);
+    return new ConditionalTransferResult<>(NULLABLE, thenStore, elseStore);
   }
   
   /**
@@ -167,7 +167,7 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
       elseStore.setInformation(rightNode, value);
     }
 
-    return new ConditionalTransferResult<>(null, thenStore, elseStore);
+    return new ConditionalTransferResult<>(NULLABLE, thenStore, elseStore);
   }
   
   /**
@@ -178,7 +178,7 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
       AssignmentNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
     NullnessPropagationStore after = before.getRegularStore();
     Node target = node.getTarget();
-    NullnessValue value = null;
+    NullnessValue value = NULLABLE;
     if (target instanceof LocalVariableNode) {
       LocalVariableNode t = (LocalVariableNode) target;
       value = after.getInformation(node.getExpression());

@@ -127,9 +127,7 @@ public class NullnessPropagationTest {
 
       Name methodName = getSymbol(methodInvocation).getSimpleName();
       List<?> values = getAllValues(methodInvocation.getArguments(), analysis);
-      // TODO(cpovirk): Remove useForNull after making NULLABLE, rather than null, the default.
-      String fixString =
-          String.format("%s(%s)", methodName, Joiner.on(", ").useForNull("Nullable").join(values));
+      String fixString = String.format("%s(%s)", methodName, Joiner.on(", ").join(values));
 
       return describeMatch(methodInvocation, replace(methodInvocation, fixString));
     }
