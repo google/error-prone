@@ -23,6 +23,7 @@ import static com.google.errorprone.CompilationTestHelper.sources;
 import static com.google.errorprone.dataflow.DataFlow.dataflow;
 import static com.google.errorprone.fixes.SuggestedFix.replace;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.findEnclosingNode;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -69,6 +70,9 @@ public class NullnessPropagationTest {
   public static void triggerNullnessChecker(Object obj) {
   }
 
+  public static void triggerNullnessCheckerOnInt(int i) {
+  }
+
   @Before
   public void setUp() {
     compilationHelper = CompilationTestHelper.newInstance(new NullnessPropagationChecker());
@@ -96,8 +100,9 @@ public class NullnessPropagationTest {
       category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
   public static final class NullnessPropagationChecker
       extends BugChecker implements MethodInvocationTreeMatcher {
-    private static final Matcher<ExpressionTree> TRIGGER_CALL_MATCHER =
-        staticMethod(NullnessPropagationTest.class.getName(), "triggerNullnessChecker");
+    private static final Matcher<ExpressionTree> TRIGGER_CALL_MATCHER = anyOf(
+        staticMethod(NullnessPropagationTest.class.getName(), "triggerNullnessCheckerOnInt"),
+        staticMethod(NullnessPropagationTest.class.getName(), "triggerNullnessChecker"));
     
     private final Map<MethodTree, Analysis<NullnessValue, ?, ?>> resultCache = new HashMap<>();
     
@@ -122,7 +127,9 @@ public class NullnessPropagationTest {
 
       Name methodName = getSymbol(methodInvocation).getSimpleName();
       List<?> values = getAllValues(methodInvocation.getArguments(), analysis);
-      String fixString = String.format("%s(%s)", methodName, Joiner.on(", ").join(values));
+      // TODO(cpovirk): Remove useForNull after making NULLABLE, rather than null, the default.
+      String fixString =
+          String.format("%s(%s)", methodName, Joiner.on(", ").useForNull("Nullable").join(values));
 
       return describeMatch(methodInvocation, replace(methodInvocation, fixString));
     }

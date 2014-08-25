@@ -17,6 +17,11 @@
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessCheckerOnInt;
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTransferCases2.MyEnum.ENUM_INSTANCE;
+import static java.lang.String.valueOf;
+
+import java.math.BigInteger;
 
 /**
  * Dataflow analysis cases for testing transfer functions in nullness propagation
@@ -47,15 +52,70 @@ public class NullnessPropagationTransferCases2 {
     triggerNullnessChecker('z');
     // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
     triggerNullnessChecker("a string literal");
+    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    triggerNullnessChecker(String.class);
+    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    triggerNullnessChecker(MyEnum.ENUM_INSTANCE);
+    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    triggerNullnessChecker(ENUM_INSTANCE);
+    // TODO(cpovirk): fix!
+    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    triggerNullnessChecker(MyEnum.NOT_AN_ENUM_CONSTANT);
     // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
     triggerNullnessChecker(null);
+  }
+
+  static class MyBigInteger extends BigInteger {
+    MyBigInteger(String val) {
+      super(val);
+    }
+
+    // Has the same signature as a BigInteger method. In other words, our method hides that one.
+    public static BigInteger valueOf(long val) {
+      return null;
+    }
+  }
+
+  enum MyEnum {
+    ENUM_INSTANCE;
+
+    static MyEnum valueOf(char c) {
+      return null;
+    }
+
+    public static final MyEnum NOT_AN_ENUM_CONSTANT = ENUM_INSTANCE;
+  }
+
+  public void explicitValueOf() {
+    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    triggerNullnessChecker(String.valueOf(3));
+    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    triggerNullnessChecker(valueOf(3));
+    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    triggerNullnessChecker(Integer.valueOf(null));
+    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    triggerNullnessChecker(BigInteger.valueOf(3));
+    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    triggerNullnessChecker(Enum.valueOf(MyEnum.class, "INSTANCE"));
+
+    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    triggerNullnessChecker(MyEnum.valueOf("INSTANCE"));
+
+    // TODO(cpovirk): fix!
+    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    triggerNullnessChecker(MyBigInteger.valueOf(3));
+    // TODO(cpovirk): fix!
+    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    triggerNullnessChecker(MyEnum.valueOf('a'));
   }
 
   public void parameter(String str, int i) {
     // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
     triggerNullnessChecker(str);
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
-    triggerNullnessChecker(i);
+
+    // A call to plain triggerNullnessChecker() would implicitly call Integer.valueOf(i).
+    // BUG: Diagnostic contains: triggerNullnessCheckerOnInt(Non-null)
+    triggerNullnessCheckerOnInt(i);
   }
 
   public void assignment(String nullableParam) {
@@ -66,7 +126,7 @@ public class NullnessPropagationTransferCases2 {
     str = "a string";
     // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
     triggerNullnessChecker(str);
-    
+
     String otherStr = str;
     // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
     triggerNullnessChecker(str);
@@ -78,6 +138,16 @@ public class NullnessPropagationTransferCases2 {
     otherStr = str;
     // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
     triggerNullnessChecker(str);
+  }
+
+  public void assignmentExpressionValue() {
+    String str = "foo";
+    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    triggerNullnessChecker(str);
+    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    triggerNullnessChecker(str = null);
+    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    triggerNullnessChecker(str = "bar");
   }
   
   public void localVariable() {
@@ -98,7 +168,7 @@ public class NullnessPropagationTransferCases2 {
     // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
     triggerNullnessChecker(i);
   }
-  
+
   int i;
   String str;
   Object obj;
@@ -134,26 +204,26 @@ public class NullnessPropagationTransferCases2 {
     // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
     triggerNullnessChecker(mc);
   }
-
+  
   public void fieldValuesMayChange() {
     MyContainerClass container = new MyContainerClass();
     container.field = new MyClass();
-    /*
-     * TODO(cpovirk): fix! (IIUC, this is part of the general "all fields are non-null" problem, not
-     * a special problem relating to the assignment to container.field.)
-     */
+    // TODO(cpovirk): fix!
     // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
     triggerNullnessChecker(container.field);
 
     container.field.field = 10;
-    /*
-     * TODO(cpovirk): fix! (IIUC, this is part of the general "all fields are non-null" problem, not
-     * a special problem relating to the dereferencing to container.field.)
-     */
+    // TODO(cpovirk): fix!
     // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
     triggerNullnessChecker(container.field);
   }
-  
+
+  public void assignmentToFieldExpressionValue() {
+    MyContainerClass container = new MyContainerClass();
+    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    triggerNullnessChecker(container.field = new MyClass());
+  }
+
   public void methodInvocation() {
     // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
     triggerNullnessChecker(intReturningMethod());
@@ -176,6 +246,13 @@ public class NullnessPropagationTransferCases2 {
     str.toString();
     // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
     triggerNullnessChecker(str);
+  }
+
+  public void staticMethodInvocationIsNotDereference(String nullableParam) {
+    nullableParam.format("%s", "foo");
+    // TODO(cpovirk): fix!
+    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    triggerNullnessChecker(nullableParam);
   }
   
   public void objectCreation(Object nullableParam) {
@@ -203,5 +280,11 @@ public class NullnessPropagationTransferCases2 {
     triggerNullnessChecker(i += 5);
     // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
     triggerNullnessChecker(s += 5);
+  }
+
+  public void vanillaVisitNode() {
+    String[] a = new String[1];
+    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    triggerNullnessChecker(a[0]);
   }
 }

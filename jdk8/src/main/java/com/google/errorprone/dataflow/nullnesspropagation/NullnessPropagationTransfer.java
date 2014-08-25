@@ -128,7 +128,7 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
         thenStore.setInformation(rightNode, value);
       }
     }
-    
+
     return new ConditionalTransferResult<>(null, thenStore, elseStore);
   }
   
@@ -166,7 +166,7 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
       }
       elseStore.setInformation(rightNode, value);
     }
-    
+
     return new ConditionalTransferResult<>(null, thenStore, elseStore);
   }
   
@@ -199,13 +199,12 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
     if (tree instanceof JCIdent) {
       JCIdent ident = (JCIdent) tree;
       if (ident.type instanceof JCPrimitiveType) {
-        // TODO(cpovirk): Why does commenting this out have no effect on the tests?
         value = NONNULL;
       }
     }
     return update(before, node, value);
   }
-  
+
   /**
    * Refines the receiver of a field access to type non-null after a successful field access.
    * 
@@ -220,7 +219,7 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
     Node receiver = node.getReceiver();
     return update(before, receiver, NONNULL);
   }
-  
+
   /*
    * TODO(cpovirk): Eliminate this, which is redundant with visitMethodInvocation. Every
    * MethodInvocationNode contains a MethodAccessNode, and every MethodAccessNode is contained
