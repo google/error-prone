@@ -68,6 +68,11 @@ class J4PackageLocalSetUp {
   void setUp() {}
 }
 
+@RunWith(JUnit4.class)
+class J4SetUpNonVoidReturnType {
+  int setUp() { return 42; }
+}
+
 /**
  * setUp() has parameters
  */

@@ -57,6 +57,11 @@ class J4TearDownPackageLocal {
 }
 
 @RunWith(JUnit4.class)
+class J4TearDownNonVoidReturnType {
+  int tearDown() { return 42; }
+}
+
+@RunWith(JUnit4.class)
 class J4TearDownTearDownHasParameters {
   public void tearDown(int ignored) {}
   public void tearDown(boolean ignored) {}
