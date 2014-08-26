@@ -48,5 +48,8 @@ public class JUnit4TestNotRunNegativeCase3 {
   public void testAfterClass() {}
   
   // Has parameters.
-  public void testTest3(int foo) {} 
+  public void testTest3(int foo) {}
+
+  // Doesn't return void
+  public int testSomething() { return 42; }
 }

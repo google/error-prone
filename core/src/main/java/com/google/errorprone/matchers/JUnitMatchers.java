@@ -27,8 +27,10 @@ import static com.google.errorprone.matchers.Matchers.methodHasParameters;
 import static com.google.errorprone.matchers.Matchers.methodHasVisibility;
 import static com.google.errorprone.matchers.Matchers.methodIsNamed;
 import static com.google.errorprone.matchers.Matchers.methodNameStartsWith;
+import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
+import static com.google.errorprone.suppliers.Suppliers.VOID_TYPE;
 
 import com.google.errorprone.VisitorState;
 
@@ -128,12 +130,14 @@ public class JUnitMatchers {
    * 1) The method's name begins with "test".
    * 2) The method has no parameters.
    * 3) The method is public.
+   * 4) The method returns void
    */
   @SuppressWarnings("unchecked")
   public static final Matcher<MethodTree> isJunit3TestCase = allOf(
       methodNameStartsWith("test"),
       methodHasParameters(),
-      Matchers.<MethodTree>hasModifier(Modifier.PUBLIC)
+      Matchers.<MethodTree>hasModifier(Modifier.PUBLIC),
+      methodReturns(VOID_TYPE)
   );
 
   /**
@@ -143,6 +147,7 @@ public class JUnitMatchers {
    * 1) The method is named "setUp"
    * 2) The method has no parameters
    * 3) The method is a public or protected instance method that is not abstract
+   * 4) The method returns void
    */
   @SuppressWarnings("unchecked")
   public static final Matcher<MethodTree> looksLikeJUnit3SetUp = allOf(
@@ -153,7 +158,8 @@ public class JUnitMatchers {
           methodHasVisibility(MethodVisibility.Visibility.PROTECTED)
       ),
       not(Matchers.<MethodTree>hasModifier(Modifier.ABSTRACT)),
-      not(Matchers.<MethodTree>hasModifier(Modifier.STATIC))
+      not(Matchers.<MethodTree>hasModifier(Modifier.STATIC)),
+      methodReturns(VOID_TYPE)
   );
 
   /**
@@ -163,6 +169,7 @@ public class JUnitMatchers {
    * 1) The method is named "tearDown"
    * 2) The method has no parameters
    * 3) The method is a public or protected instance method that is not abstract
+   * 4) The method returns void
    */
   @SuppressWarnings("unchecked")
   public static final Matcher<MethodTree> looksLikeJUnit3TearDown = allOf(
@@ -173,7 +180,8 @@ public class JUnitMatchers {
           methodHasVisibility(MethodVisibility.Visibility.PROTECTED)
       ),
       not(Matchers.<MethodTree>hasModifier(Modifier.ABSTRACT)),
-      not(Matchers.<MethodTree>hasModifier(Modifier.STATIC))
+      not(Matchers.<MethodTree>hasModifier(Modifier.STATIC)),
+      methodReturns(VOID_TYPE)
   );
 
   /**
