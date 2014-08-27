@@ -36,12 +36,12 @@ import com.sun.source.tree.ClassTree;
 /**
  * @author mwacker@google.com (Mike Wacker)
  */
-@BugPattern(name = "JUnitAmbiguousTestClass",
-summary = "jUnit 4 test classes should not inherit from TestCase.",
-explanation = "The test class could execute either as a jUnit 3 class or a jUnit 4 class, "
-    + "and tests could behave differently depending on whether it runs in jUnit 3 or jUnit 4. "
-    + "Also, one of jUnit 4's principles is to prefer composition over inheritance.",
-category = JUNIT, maturity = EXPERIMENTAL, severity = WARNING)
+@BugPattern(
+    name = "JUnitAmbiguousTestClass",
+    summary = "Test class mixes JUnit 3 and JUnit 4 idioms",
+    explanation = "The test class could execute either as a JUnit 3 class or a JUnit 4 class, "
+        + "and tests could behave differently depending on whether it runs in JUnit 3 or JUnit 4. ",
+    category = JUNIT, maturity = EXPERIMENTAL, severity = WARNING)
 public class JUnitAmbiguousTestClass extends BugChecker implements ClassTreeMatcher {
 
   @SuppressWarnings("unchecked")

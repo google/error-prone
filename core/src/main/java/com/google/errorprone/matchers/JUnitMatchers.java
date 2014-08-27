@@ -89,8 +89,8 @@ public class JUnitMatchers {
    * Matches a class that inherits from test case.
    */
   @SuppressWarnings("unchecked")
-  public static final Matcher<ClassTree> isTestCaseDescendant = allOf(
-      isSubtypeOf(JUNIT3_TEST_CASE_CLASS));
+  public static final Matcher<ClassTree> isTestCaseDescendant =
+      isSubtypeOf(JUNIT3_TEST_CASE_CLASS);
 
   /**
    * Match a class which appears to be missing a @RunWith annotation.
