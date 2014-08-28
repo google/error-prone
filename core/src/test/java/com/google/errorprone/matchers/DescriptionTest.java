@@ -17,6 +17,7 @@
 package com.google.errorprone.matchers;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
+import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static org.junit.Assert.assertEquals;
@@ -81,6 +82,27 @@ public class DescriptionTest {
     assertEquals(
         "[DeadException] custom message\n"
             + "  (see http://code.google.com/p/error-prone/wiki/DeadException)",
+        description.getMessage());
+  }
+
+  @BugPattern(name = "CustomLinkChecker",
+      summary = "Exception created but not thrown",
+      explanation = "", category = JDK, severity = ERROR, maturity = EXPERIMENTAL,
+      linkType = CUSTOM,
+      link = "https://www.google.com/")
+  public static class CustomLinkChecker extends BugChecker {
+    Description getDescription() {
+      return describeMatch(new MockTree(), Fix.NO_FIX);
+    }
+  }
+
+  @Test
+  public void testCustomLink() {
+    Description description = Description.builder(new MockTree(), new CustomLinkChecker().pattern)
+        .setMessage("custom message")
+        .build();
+    assertEquals(
+        "[CustomLinkChecker] custom message\n  (see https://www.google.com/)",
         description.getMessage());
   }
 }

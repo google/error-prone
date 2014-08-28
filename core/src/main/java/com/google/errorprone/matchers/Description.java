@@ -109,16 +109,21 @@ public class Description {
    * no link.
    */
   private static String getLink(BugPattern pattern) {
+    String url = getLinkUrl(pattern);
+    return url == null ? null : "  (see " + url + ")";
+  }
+
+  private static String getLinkUrl(BugPattern pattern) {
     switch (pattern.linkType()) {
       case WIKI:
-        return "  (see http://code.google.com/p/error-prone/wiki/" + pattern.name() + ")";
+        return "http://code.google.com/p/error-prone/wiki/" + pattern.name();
       case CUSTOM:
         // annotation.link() must be provided.
         if (pattern.link().isEmpty()) {
           throw new IllegalStateException("If linkType element of @BugPattern is CUSTOM, "
               + "a link element must also be provided.");
         }
-        return  "\n  (see " + pattern.link() + ")";
+        return pattern.link();
       case NONE:
         return null;
       default:
