@@ -35,6 +35,7 @@ import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Name;
+import com.sun.tools.javac.util.Names;
 
 import java.io.IOException;
 
@@ -100,7 +101,7 @@ public class VisitorState {
   }
 
   public Name getName(String nameStr) {
-    return JDKCompatible.lookupName(context, nameStr);
+    return Names.instance(context).fromString(nameStr);
   }
 
   /**

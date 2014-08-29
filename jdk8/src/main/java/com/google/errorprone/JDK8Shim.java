@@ -26,7 +26,6 @@ import com.google.errorprone.util.Constants;
 
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.TryTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.main.Main;
@@ -39,8 +38,6 @@ import com.sun.tools.javac.util.AbstractLog;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.DiagnosticSource;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
-import com.sun.tools.javac.util.Name;
-import com.sun.tools.javac.util.Names;
 
 import org.checkerframework.dataflow.analysis.Analysis;
 
@@ -114,16 +111,6 @@ public class JDK8Shim implements JDKCompatibleShim {
   @Override
   public Integer getEndPosition(DiagnosticPosition pos, Map<JCTree, Integer> map) {
     return EndPosMap8.getEndPos(pos, map);
-  }
-
-  @Override
-  public java.util.List<? extends Tree> getTryTreeResources(TryTree tree) {
-    return tree.getResources();
-  }
-
-  @Override
-  public Name lookupName(Context context, String name) {
-    return Names.instance(context).fromString(name);
   }
 
   @Override
