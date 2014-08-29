@@ -108,8 +108,7 @@ public class ErrorProneAnalyzer {
       // reported yet, but we don't want to crash javac.
       StringWriter message = new StringWriter();
       e.printStackTrace(new PrintWriter(message));
-      // TODO(user): use CompletionFailure#getDetailValue() once we no longer care about JDK6.
-      log.error("proc.cant.access", e.sym, e.errmsg, message.toString());
+      log.error("proc.cant.access", e.sym, e.getDetailValue(), message.toString());
     } catch (RuntimeException e) {
       // If there is a RuntimeException in an analyzer, swallow it if there are other compiler
       // errors.  This prevents javac from exiting with code 4, Abnormal Termination.
