@@ -68,15 +68,11 @@ public class ErrorReportingJavaCompiler extends JavaCompiler {
   public static void preRegister(final Context context) {
     final Scanner scanner = context.get(Scanner.class);
     context.put(compilerKey, new Factory<JavaCompiler>() {
-      //@Override for OpenJDK 7 only
+      @Override
       public JavaCompiler make(Context ctx) {
         // Ensure that future processing rounds continue to use the same Scanner.
         ctx.put(Scanner.class, scanner);
         return new ErrorReportingJavaCompiler(ctx);
-      }
-      //@Override for OpenJDK 6 only
-      public JavaCompiler make() {
-        return new ErrorReportingJavaCompiler(context);
       }
     });
   }
