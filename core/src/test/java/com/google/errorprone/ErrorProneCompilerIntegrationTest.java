@@ -25,16 +25,25 @@ import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
 
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ExpressionStatementTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.IncrementDecrementVolatile;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
 
 import com.sun.source.tree.ExpressionStatementTree;
+import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.MemberSelectTree;
+import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.Tree;
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.List;
@@ -42,6 +51,7 @@ import com.sun.tools.javac.util.List;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -56,6 +66,7 @@ import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.SourceVersion;
+import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
@@ -242,5 +253,72 @@ public class ErrorProneCompilerIntegrationTest {
       assertSame(expected, context.get(Scanner.class));
       return false;
     }
+  }
+
+  @BugPattern(name = "ConstructorMatcher", explanation = "",
+      category = ONE_OFF, maturity = EXPERIMENTAL, severity = ERROR, summary = "")
+  private static class ConstructorMatcher extends BugChecker implements MethodTreeMatcher {
+    @Override
+    public Description matchMethod(MethodTree tree, VisitorState state) {
+      return describeMatch(tree, Fix.NO_FIX);
+    }
+  }
+
+  @Test
+  public void ignoreGeneratedConstructors() throws Exception {
+    compilerBuilder.report(new ErrorProneScanner(new ConstructorMatcher()));
+    compiler = compilerBuilder.build();
+    int exitCode = compiler.compile(Arrays.asList(CompilationTestHelper.forSourceLines("Test",
+        "public class Test {}")));
+    outputStream.flush();
+
+    Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher = not(hasItem(
+        diagnosticMessage(containsString("[ConstructorMatcher]"))));
+    assertTrue(
+        "Warning should be found. " + diagnosticHelper.describe(),
+        matcher.matches(diagnosticHelper.getDiagnostics()));
+
+    assertThat(outputStream.toString(), exitCode, is(0));
+  }
+
+  @BugPattern(name = "SuperCallMatcher", explanation = "",
+      category = ONE_OFF, maturity = EXPERIMENTAL, severity = ERROR, summary = "")
+  private static class SuperCallMatcher extends BugChecker implements MethodInvocationTreeMatcher {
+    @Override
+    public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+      Tree select = tree.getMethodSelect();
+      Name name;
+      if (select instanceof MemberSelectTree) {
+        name = ((MemberSelectTree) select).getIdentifier();
+      } else if (select instanceof IdentifierTree) {
+        name = ((IdentifierTree) select).getName();
+      } else {
+        return Description.NO_MATCH;
+      }
+      return name.contentEquals("super")
+          ? describeMatch(tree,  Fix.NO_FIX)
+          : Description.NO_MATCH;
+    }
+  }
+
+  // TODO(user) - how can we distinguish between synthetic super() calls and real ones?
+  @Ignore
+  @Test
+  public void ignoreGeneratedSuperInvocations() throws Exception {
+    compilerBuilder.report(new ErrorProneScanner(new SuperCallMatcher()));
+    compiler = compilerBuilder.build();
+    int exitCode = compiler.compile(Arrays.asList(CompilationTestHelper.forSourceLines("Test",
+        "public class Test {",
+        "  public Test() {}",
+        "}")));
+    outputStream.flush();
+
+    Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher = not(hasItem(
+        diagnosticMessage(containsString("[SuperCallMatcher]"))));
+    assertTrue(
+        "Warning should be found. " + diagnosticHelper.describe(),
+        matcher.matches(diagnosticHelper.getDiagnostics()));
+
+    assertThat(outputStream.toString(), exitCode, is(0));
   }
 }
