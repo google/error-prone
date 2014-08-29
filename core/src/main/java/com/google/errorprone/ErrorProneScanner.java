@@ -69,6 +69,7 @@ import com.google.errorprone.bugpatterns.BugChecker.UnaryTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.WhileLoopTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.WildcardTreeMatcher;
+import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ArrayAccessTree;
@@ -750,6 +751,11 @@ public class ErrorProneScanner extends Scanner {
 
   @Override
   public Void visitMethod(MethodTree tree, VisitorState visitorState) {
+    // Ignore synthetic constructors:
+    if (ASTHelpers.isGeneratedConstructor(tree)) {
+      return null;
+    }
+    
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (MethodTreeMatcher matcher : methodMatchers) {
       if (isSuppressedOrDisabled(matcher)) continue;
