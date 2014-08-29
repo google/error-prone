@@ -437,4 +437,13 @@ public class ASTHelpers {
     }
     return new LinkedHashSet<String>(values);
   }
+
+  /** Returns true if the given tree is a generated contructor. **/
+  public static boolean isGeneratedConstructor(MethodTree tree) {
+    if (!(tree instanceof JCMethodDecl)) {
+        return false;
+    }
+    return (((JCMethodDecl) tree).mods.flags & Flags.GENERATEDCONSTR) != 0;
+  }
+
 }
