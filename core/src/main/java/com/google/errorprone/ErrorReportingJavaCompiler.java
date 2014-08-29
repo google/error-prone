@@ -16,6 +16,8 @@
 
 package com.google.errorprone;
 
+import com.google.common.base.Optional;
+
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Env;
 import com.sun.tools.javac.main.JavaCompiler;
@@ -24,6 +26,8 @@ import com.sun.tools.javac.util.Context.Factory;
 import com.sun.tools.javac.util.JavacMessages;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Properties;
 import java.util.Queue;
@@ -87,17 +91,24 @@ public class ErrorReportingJavaCompiler extends JavaCompiler {
       PrintWriter writer = new PrintWriter(stackTrace);
       e.printStackTrace(writer);
       writer.flush();
-      Properties mavenProperties = new Properties();
-      String version;
-      try {
-        mavenProperties.load(getClass().getResourceAsStream(
-            "/META-INF/maven/com.google.errorprone/error_prone_core/pom.properties"));
-        version = mavenProperties.getProperty("version");
-      } catch (Exception e1) {
-        version = "unknown: " + e1.getClass().getSimpleName() + ": " + e1.getMessage();
-      }
+      String version = loadVersionFromPom().or("unknown version");
       log.error("error.prone.crash", stackTrace.toString(), version);
     }
+  }
+
+  private Optional<String> loadVersionFromPom() {
+    InputStream stream = getClass().getResourceAsStream(
+        "/META-INF/maven/com.google.errorprone/error_prone_core/pom.properties");
+    if (stream == null) {
+      return Optional.absent();
+    }
+    Properties mavenProperties = new Properties();
+    try {
+      mavenProperties.load(stream);
+    } catch (IOException expected) {
+      return Optional.absent();
+    }
+    return Optional.of(mavenProperties.getProperty("version"));
   }
 
   public void profilePostFlow(Env<AttrContext> attrContextEnv) {

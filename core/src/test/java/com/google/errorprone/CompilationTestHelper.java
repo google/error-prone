@@ -131,7 +131,7 @@ public class CompilationTestHelper {
       Constructor<?> ctor = clazz.getDeclaredConstructor(JavaFileManager.class);
       ctor.setAccessible(true);
       return (JavaFileManager) ctor.newInstance(wrappedFileManager);
-    } catch (Exception e) {
+    } catch (ReflectiveOperationException e) {
       throw new LinkageError(e.getMessage());
     }
   }
