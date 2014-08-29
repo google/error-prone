@@ -854,6 +854,28 @@ public class GuardedByTest {
     );
   }
 
+  // Test that the analysis doesn't crash on lock expressions it doesn't recognize.
+  // Note: there's currently no way to use @GuardedBy to specify that the guard is a specific array
+  // element.
+  @Test
+  public void complexLockExpression() throws Exception {
+    compilationHelper.assertCompileSucceeds(
+        CompilationTestHelper.forSourceLines(
+            "threadsafety.Test",
+            "package threadsafety.Test;",
+            "class ComplexLockExpression {",
+            "  final Object[] xs = {};",
+            "  final int[] ys = {};",
+            "  void m(int i) {",
+            "    synchronized (xs[i]) {",
+            "      ys[i]++;",
+            "    }",
+            "  }",
+            "}"
+        )
+    );
+  }
+
   @Test
   public void serializable() throws IOException {
     new ObjectOutputStream(new ByteArrayOutputStream()).writeObject(new GuardedBy());

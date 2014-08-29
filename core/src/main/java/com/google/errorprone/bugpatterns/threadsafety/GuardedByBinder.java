@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.bugpatterns.threadsafety.IllegalGuardedBy.checkGuardedBy;
 
+import com.google.common.base.Optional;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Kind;
 import com.google.errorprone.util.ASTHelpers;
@@ -43,16 +44,22 @@ import javax.lang.model.element.Name;
 public class GuardedByBinder {
 
   /**
-   * Creates a {@link GuardedByExpression} from a bound AST node.
+   * Creates a {@link GuardedByExpression} from a bound AST node, or returns
+   * {@code Optional.absent()} if the AST node doesn't correspond to a 'simple'
+   * lock expression.
    */
-  public static GuardedByExpression bindExpression(JCTree.JCExpression exp,
+  public static Optional<GuardedByExpression> bindExpression(JCTree.JCExpression exp,
       VisitorState visitorState) {
-    return bind(
-        exp,
-        BinderContext.of(
-            ALREADY_BOUND_RESOLVER,
-            ASTHelpers.getSymbol(visitorState.findEnclosing(ClassTree.class)),
-            visitorState.getTypes()));
+    try {
+      return Optional.of(bind(
+          exp,
+          BinderContext.of(
+              ALREADY_BOUND_RESOLVER,
+              ASTHelpers.getSymbol(visitorState.findEnclosing(ClassTree.class)),
+              visitorState.getTypes())));
+    } catch (IllegalGuardedBy expected) {
+      return Optional.absent();
+    }
   }
 
   /**
@@ -85,7 +92,7 @@ public class GuardedByBinder {
 
   private static GuardedByExpression bind(JCTree.JCExpression exp, BinderContext context) {
     GuardedByExpression expr = BINDER.visit(exp, context);
-    checkGuardedBy(expr != null, exp.toString());
+    checkGuardedBy(expr != null, String.valueOf(exp));
     checkGuardedBy(expr.kind() != Kind.TYPE_LITERAL, "Raw type literal: %s", exp);
     return expr;
   }
@@ -218,6 +225,7 @@ public class GuardedByBinder {
         @Override
         public GuardedByExpression visitIdentifier(IdentifierTree node, BinderContext context) {
           Symbol symbol = context.resolver.resolveIdentifier(node);
+          checkGuardedBy(symbol != null, "Could not resolve %s", node);
           if (symbol instanceof Symbol.VarSymbol) {
             Symbol.VarSymbol varSymbol = (Symbol.VarSymbol) symbol;
             switch (varSymbol.getKind()) {

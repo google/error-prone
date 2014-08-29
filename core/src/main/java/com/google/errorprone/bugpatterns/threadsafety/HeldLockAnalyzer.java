@@ -20,6 +20,7 @@ import static com.google.errorprone.matchers.Matchers.expressionMethodSelect;
 import static com.google.errorprone.matchers.Matchers.isDescendantOfMethod;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
 
+import com.google.common.base.Optional;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Kind;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Select;
@@ -141,9 +142,11 @@ public class HeldLockAnalyzer {
     @Override
     public Void visitSynchronized(SynchronizedTree tree, HeldLockSet locks) {
       // The synchronized expression is held in the body of the synchronized statement:
-      scan(tree.getBlock(),
-          locks.plus(GuardedByBinder.bindExpression(
-              ((JCTree.JCParens) tree.getExpression()).getExpression(), visitorState)));
+      Optional<GuardedByExpression> lockExpression = GuardedByBinder.bindExpression(
+          ((JCTree.JCParens) tree.getExpression()).getExpression(), visitorState);
+      scan(tree.getBlock(), lockExpression.isPresent()
+          ? locks.plus(lockExpression.get())
+          : locks);
       return null;
     }
 
@@ -172,17 +175,13 @@ public class HeldLockAnalyzer {
         return;
       }
 
-      GuardedByExpression boundGuard = null;
-      try {
-        GuardedByExpression guard = GuardedByBinder.bindString(guardString,
-            GuardedBySymbolResolver.from(tree, visitorState));
-        boundGuard = ExpectedLockCalculator.from((JCTree.JCExpression) tree, guard, visitorState);
-      } catch (IllegalGuardedBy unused) {
-        // Errors about bad @GuardedBy expressions are handled earlier.
-      }
+      GuardedByExpression guard = GuardedByBinder.bindString(guardString,
+          GuardedBySymbolResolver.from(tree, visitorState));
+      Optional<GuardedByExpression> boundGuard =
+          ExpectedLockCalculator.from((JCTree.JCExpression) tree, guard, visitorState);
 
-      if (boundGuard != null) {
-        listener.handleGuardedAccess(tree, boundGuard, locks);
+      if (boundGuard.isPresent()) {
+        listener.handleGuardedAccess(tree, boundGuard.get(), locks);
       }
 
       return;
@@ -231,20 +230,23 @@ public class HeldLockAnalyzer {
     @Override
     public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
       if (LOCK_RELEASE_MATCHER.matches(tree, state)) {
-        GuardedByExpression node = GuardedByBinder.bindExpression((JCExpression) tree, state);
-        GuardedByExpression receiver = ((GuardedByExpression.Select) node).base;
-        locks.add(receiver);
+        Optional<GuardedByExpression> node =
+            GuardedByBinder.bindExpression((JCExpression) tree, state);
+        if (node.isPresent()) {
+          GuardedByExpression receiver = ((GuardedByExpression.Select) node.get()).base;
+          locks.add(receiver);
 
-        // The analysis interprets members guarded by {@link ReadWriteLock}s as requiring that
-        // either the read or write lock is held for all accesses, but doesn't enforce a policy
-        // for which of the two is held. Technically the write lock should be required while writing
-        // to the guarded member and the read lock should be used for all other accesses, but in
-        // practice the write lock is frequently held while performing a mutating operation on the
-        // object stored in the field (e.g. inserting into a List).
-        // TODO(user): investigate a better way to specify the contract for ReadWriteLocks.
-        if ((tree.getMethodSelect() instanceof MemberSelectTree)
-            && READ_WRITE_RELEASE_MATCHER.matches(ASTHelpers.getReceiver(tree), state)) {
-          locks.add(((Select) receiver).base);
+          // The analysis interprets members guarded by {@link ReadWriteLock}s as requiring that
+          // either the read or write lock is held for all accesses, but doesn't enforce a policy
+          // for which of the two is held. Technically the write lock should be required while
+          // writing to the guarded member and the read lock should be used for all other accesses,
+          // but in practice the write lock is frequently held while performing a mutating operation
+          // on the object stored in the field (e.g. inserting into a List).
+          // TODO(user): investigate a better way to specify the contract for ReadWriteLocks.
+          if ((tree.getMethodSelect() instanceof MemberSelectTree)
+              && READ_WRITE_RELEASE_MATCHER.matches(ASTHelpers.getReceiver(tree), state)) {
+            locks.add(((Select) receiver).base);
+          }
         }
       }
       return null;
@@ -279,17 +281,22 @@ public class HeldLockAnalyzer {
      * To determine the lock that must be held when accessing myClass.x,
      * from is called with "myClass.x" and "mu", and returns "myClass.mu".
      */
-    static GuardedByExpression from(JCTree.JCExpression guardedMemberExpression,
+    static Optional<GuardedByExpression> from(JCTree.JCExpression guardedMemberExpression,
         GuardedByExpression guard, VisitorState state) {
 
       if (isGuardReferenceAbsolute(guard)) {
-        return guard;
+        return Optional.of(guard);
       }
 
-      GuardedByExpression guardedMember =
+      Optional<GuardedByExpression> guardedMember =
           GuardedByBinder.bindExpression(guardedMemberExpression, state);
-      GuardedByExpression memberBase = ((GuardedByExpression.Select) guardedMember).base;
-      return helper(guard, memberBase);
+
+      if (!guardedMember.isPresent()) {
+        return Optional.absent();
+      }
+
+      GuardedByExpression memberBase = ((GuardedByExpression.Select) guardedMember.get()).base;
+      return Optional.of(helper(guard, memberBase));
     }
 
     /**
