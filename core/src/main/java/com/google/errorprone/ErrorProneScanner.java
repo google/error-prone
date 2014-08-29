@@ -197,7 +197,7 @@ public class ErrorProneScanner extends Scanner {
       if (enabledCount <= 0) {
         throw new IllegalStateException("ErrorProneScanner created with no enabled checks");
       }
-    } catch (Exception e) {
+    } catch (IllegalStateException | ReflectiveOperationException e) {
       throw new RuntimeException("Could not reflectively create error prone matchers", e);
     }
   }

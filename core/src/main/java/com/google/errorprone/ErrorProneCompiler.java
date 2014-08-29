@@ -189,7 +189,7 @@ public class ErrorProneCompiler {
 
     try {
       compilerClass.getMethod("preRegister", Context.class).invoke(null, context);
-    } catch (Exception e) {
+    } catch (ReflectiveOperationException e) {
       throw new RuntimeException("The JavaCompiler used must have the preRegister static method. "
           + "We are very sorry.", e);
     }
