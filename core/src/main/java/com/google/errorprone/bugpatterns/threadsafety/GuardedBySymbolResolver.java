@@ -16,7 +16,6 @@ package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.bugpatterns.threadsafety.IllegalGuardedBy.checkGuardedBy;
 
-import com.google.errorprone.JDKCompatible;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
 
@@ -39,6 +38,7 @@ import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Name;
+import com.sun.tools.javac.util.Names;
 
 import javax.lang.model.element.ElementKind;
 
@@ -237,7 +237,7 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
   }
 
   private Name getName(String name) {
-    return JDKCompatible.lookupName(context, name);
+    return Names.instance(context).fromString(name);
   }
 
   @Override

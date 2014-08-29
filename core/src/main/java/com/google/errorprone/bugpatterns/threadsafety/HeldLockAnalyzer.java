@@ -20,7 +20,6 @@ import static com.google.errorprone.matchers.Matchers.expressionMethodSelect;
 import static com.google.errorprone.matchers.Matchers.isDescendantOfMethod;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
 
-import com.google.errorprone.JDKCompatible;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Kind;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Select;
@@ -126,7 +125,7 @@ public class HeldLockAnalyzer {
     public Void visitTry(TryTree tree, HeldLockSet locks) {
       // TODO(user) - recognize common try-with-resources patterns
       // Currently there is no standard implementation of an AutoCloseable lock resource to detect.
-      scan(JDKCompatible.getTryTreeResources(tree), locks);
+      scan(tree.getResources(), locks);
 
       // Cheesy try/finally heuristic: assume that all locks released in the finally
       // are held for the entirety of the try and catch statements.

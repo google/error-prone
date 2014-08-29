@@ -18,7 +18,6 @@ package com.google.errorprone;
 
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.TryTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.jvm.Target;
 import com.sun.tools.javac.main.JavaCompiler;
@@ -28,7 +27,6 @@ import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
-import com.sun.tools.javac.util.Name;
 
 import java.util.Map;
 
@@ -118,20 +116,6 @@ public final class JDKCompatible {
    */
   public static int getEndPosition(DiagnosticPosition pos, Map<JCTree, Integer> map) {
     return backingShim.getEndPosition(pos, map);
-  }
-
-  /**
-   * Wraps TryTree#getResources(), and returns an empty list for JDK < 7.
-   */
-  public static java.util.List<? extends Tree> getTryTreeResources(TryTree tree) {
-    return backingShim.getTryTreeResources(tree);
-  }
-
-  /**
-   * Lookup up a name in the context's name table.
-   */
-  public static Name lookupName(Context context, String string) {
-    return backingShim.lookupName(context, string);
   }
 
   /**

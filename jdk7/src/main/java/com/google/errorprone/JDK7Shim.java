@@ -21,7 +21,6 @@ import com.google.errorprone.fixes.IndexedPosition7;
 
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.TryTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.main.Main;
@@ -32,8 +31,6 @@ import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
-import com.sun.tools.javac.util.Name;
-import com.sun.tools.javac.util.Names;
 
 import java.util.Map;
 
@@ -85,16 +82,6 @@ public class JDK7Shim implements JDKCompatibleShim {
   @Override
   public Integer getEndPosition(DiagnosticPosition pos, Map<JCTree, Integer> map) {
     return EndPosMap7.getEndPos(pos, map);
-  }
-
-  @Override
-  public java.util.List<? extends Tree> getTryTreeResources(TryTree tree) {
-    return tree.getResources();
-  }
-
-  @Override
-  public Name lookupName(Context context, String name) {
-    return Names.instance(context).fromString(name);
   }
 
   @Override
