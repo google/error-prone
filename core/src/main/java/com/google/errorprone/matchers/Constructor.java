@@ -49,7 +49,7 @@ public class Constructor implements Matcher<NewClassTree>{
       String thisClassName = newClass.constructor.getEnclosingElement().toString();
       com.sun.tools.javac.util.List<Type> thisParameterTypes =
           newClass.constructor.type.getParameterTypes();
-      List<String> thisParameterTypesAsStrings = new ArrayList<String>(thisParameterTypes.length());
+      List<String> thisParameterTypesAsStrings = new ArrayList<>(thisParameterTypes.length());
       for (Type t : thisParameterTypes) {
         thisParameterTypesAsStrings.add(t.toString());
       }

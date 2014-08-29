@@ -223,7 +223,7 @@ public class HeldLockAnalyzer {
                 isDescendantOfMethod(READ_WRITE_LOCK_CLASS, "writeLock()")));
 
     private final VisitorState state;
-    private final Set<GuardedByExpression> locks = new HashSet<GuardedByExpression>();
+    private final Set<GuardedByExpression> locks = new HashSet<>();
 
     private ReleasedLockFinder(VisitorState state) {
       this.state = state;

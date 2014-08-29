@@ -51,7 +51,7 @@ class WrappedTreeMap extends AbstractMap<JCTree, Integer> implements ErrorProneE
 
   public WrappedTreeMap(Log log, ErrorProneEndPosMap map) {
     this.log = log;
-    wrappedMap = new HashMap<WrappedTreeNode, Integer>();
+    wrappedMap = new HashMap<>();
     for (Map.Entry<JCTree, Integer> entry : map.entrySet()) {
       wrappedMap.put(new WrappedTreeNode(entry.getKey()), entry.getValue());
     }

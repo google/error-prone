@@ -63,7 +63,7 @@ public class AppliedFix {
     public AppliedFix apply(Fix suggestedFix) {
       StringBuilder replaced = new StringBuilder(source);
 
-      Set<Integer> modifiedLines = new HashSet<Integer>();
+      Set<Integer> modifiedLines = new HashSet<>();
       for (Replacement repl : suggestedFix.getReplacements(endPositions)) {
         replaced.replace(repl.startPosition, repl.endPosition, repl.replaceWith);
 

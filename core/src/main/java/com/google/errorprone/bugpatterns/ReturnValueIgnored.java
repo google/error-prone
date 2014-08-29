@@ -26,6 +26,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
+
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
@@ -56,7 +57,7 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
   // This check does not deal with them, since the fix is less straightforward.
   // See a list of the FindBugs checks here:
   // http://code.google.com/searchframe#Fccnll6ERQ0/trunk/findbugs/src/java/edu/umd/cs/findbugs/ba/CheckReturnAnnotationDatabase.java
-  private static final Set<String> typesToCheck = new HashSet<String>(Arrays.asList(
+  private static final Set<String> typesToCheck = new HashSet<>(Arrays.asList(
       "java.lang.String", "java.math.BigInteger", "java.math.BigDecimal"));
 
   /**
@@ -79,8 +80,6 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
     return new Matcher<ExpressionTree>() {
       @Override
       public boolean matches(ExpressionTree expressionTree, VisitorState state) {
-        Type receiverType = ASTHelpers.getReceiverType(expressionTree);
-        Type returnType = ASTHelpers.getReturnType(expressionTree);
         return state.getTypes().isSameType(ASTHelpers.getReceiverType(expressionTree),
             ASTHelpers.getReturnType(expressionTree));
       }

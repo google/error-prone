@@ -21,8 +21,8 @@ import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Pair;
 
@@ -103,7 +103,7 @@ public class SuppressionHelper {
     for (Class<? extends Annotation> annotationType : customSuppressionAnnotations) {
       if (ASTHelpers.hasAnnotation(sym, annotationType)) {
         if (newCustomSuppressions == null) {
-          newCustomSuppressions = new HashSet<Class<? extends Annotation>>(customSuppressionsOnCurrentPath);
+          newCustomSuppressions = new HashSet<>(customSuppressionsOnCurrentPath);
         }
         newCustomSuppressions.add(annotationType);
       }
@@ -124,7 +124,7 @@ public class SuppressionHelper {
             if (value.snd instanceof Attribute.Array) {  // SuppressWarnings takes an array
               for (Attribute suppress : ((Attribute.Array) value.snd).values) {
                 if (newSuppressions == null) {
-                  newSuppressions = new HashSet<String>(suppressionsOnCurrentPath);
+                  newSuppressions = new HashSet<>(suppressionsOnCurrentPath);
                 }
                 // TODO(user): check return value to see if this was a new warning?
                 newSuppressions.add((String) suppress.getValue());

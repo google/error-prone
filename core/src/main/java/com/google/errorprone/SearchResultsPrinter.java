@@ -32,7 +32,7 @@ import javax.tools.JavaFileObject;
 class SearchResultsPrinter implements MatchListener {
 
   private final List<Pair<Tree, JavaFileObject>> matches =
-      new ArrayList<Pair<Tree, JavaFileObject>>();
+      new ArrayList<>();
   private JavaFileObject sourceFile;
 
   @Override

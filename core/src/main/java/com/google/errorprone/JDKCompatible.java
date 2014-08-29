@@ -54,20 +54,8 @@ public final class JDKCompatible {
     }
   }
   private static JDKCompatibleShim tryJDK7() {
-   try {
-     Target.valueOf("JDK1_7");
-   } catch (IllegalArgumentException expected) {
-     return tryJDK6();
-   }
     try {
       return (JDKCompatibleShim) Class.forName("com.google.errorprone.JDK7Shim").newInstance();
-    } catch (Throwable e) {
-      throw new LinkageError("Could not load JDKShim: " + e);
-    }
-  }
-  private static JDKCompatibleShim tryJDK6() {
-    try {
-      return (JDKCompatibleShim) Class.forName("com.google.errorprone.JDK6Shim").newInstance();
     } catch (Throwable e) {
       throw new LinkageError("Could not load JDKShim: " + e);
     }

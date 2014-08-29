@@ -93,7 +93,7 @@ public class MalformedFormatString extends BugChecker implements MethodInvocatio
   private static final ImmutableMap<TypeKind, String> BOXED_TYPE_NAMES;
 
   static {
-    EnumMap<TypeKind, String> boxedTypeNames = new EnumMap<TypeKind, String>(TypeKind.class);
+    EnumMap<TypeKind, String> boxedTypeNames = new EnumMap<>(TypeKind.class);
     boxedTypeNames.put(TypeKind.BYTE, Byte.class.getName());
     boxedTypeNames.put(TypeKind.SHORT, Short.class.getName());
     boxedTypeNames.put(TypeKind.INT, Integer.class.getName());
@@ -148,7 +148,7 @@ public class MalformedFormatString extends BugChecker implements MethodInvocatio
       return Description.NO_MATCH;
     }
 
-    List<String> argTypes = new ArrayList<String>();
+    List<String> argTypes = new ArrayList<>();
     for (ExpressionTree arg : formatArgs) {
       Type type = state.getTypes().erasure(((JCExpression) arg).type);
       argTypes.add(getFormatterType(type));

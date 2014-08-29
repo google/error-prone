@@ -100,7 +100,7 @@ public class OrderingFrom extends BugChecker implements MethodInvocationTreeMatc
     JCClassDecl def = newComparatorInvocation.def;
 
     // Note that List is not java.util.List, and it's not very nice to deal with.
-    ArrayList<JCTree> allDefsExceptConstructor = new ArrayList<JCTree>();
+    ArrayList<JCTree> allDefsExceptConstructor = new ArrayList<>();
     for (JCTree individualDef : def.defs) {
       if (individualDef instanceof JCMethodDecl) {
         JCMethodDecl methodDecl = (JCMethodDecl) individualDef;
