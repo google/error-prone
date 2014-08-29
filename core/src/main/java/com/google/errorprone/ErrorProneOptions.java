@@ -63,13 +63,13 @@ public class ErrorProneOptions {
    * @param args compiler args, possibly {@code null}
    */
   public static ErrorProneOptions processArgs(Iterable<String> args) {
-    List<String> outputArgs = new ArrayList<String>();
+    List<String> outputArgs = new ArrayList<>();
     Set<String> disabledChecks = Collections.emptySet();
     if (args != null) {
       for (String arg : args) {
         if (arg.startsWith(DISABLE_FLAG_PREFIX)) {
           String checksToDisable = arg.substring(DISABLE_FLAG_PREFIX.length());
-          disabledChecks = new HashSet<String>(Arrays.asList(checksToDisable.split(",")));
+          disabledChecks = new HashSet<>(Arrays.asList(checksToDisable.split(",")));
         } else {
           outputArgs.add(arg);
         }

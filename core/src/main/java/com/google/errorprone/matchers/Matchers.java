@@ -212,7 +212,7 @@ public class Matchers {
       Kind operator,
       Matcher<ExpressionTree> leftOperandMatcher,
       Matcher<ExpressionTree> rightOperandMatcher) {
-    Set<Kind> operators = new HashSet<Kind>(1);
+    Set<Kind> operators = new HashSet<>(1);
     operators.add(operator);
     return new CompoundAssignment(operators, leftOperandMatcher, rightOperandMatcher);
   }
@@ -273,7 +273,7 @@ public class Matchers {
    */
   public static <T extends Tree> MultiMatcher<T, AnnotationTree> annotations(MatchType matchType,
       Matcher<AnnotationTree> annotationMatcher) {
-    return new Annotation<T>(matchType, annotationMatcher);
+    return new Annotation<>(matchType, annotationMatcher);
   }
 
   /**
@@ -319,7 +319,7 @@ public class Matchers {
    * would match the {@code this} expression in {@code return this;}
    */
   public static <T extends Tree> Matcher<Tree> parentNode(Matcher<T> treeMatcher) {
-    return new ParentNode<T>(treeMatcher);
+    return new ParentNode<>(treeMatcher);
   }
 
   /**
@@ -328,7 +328,7 @@ public class Matchers {
    * @param typeStr a string representation of the type, e.g., "java.util.AbstractList"
    */
   public static <T extends Tree> Matcher<T> isSubtypeOf(String typeStr) {
-    return new IsSubtypeOf<T>(typeStr);
+    return new IsSubtypeOf<>(typeStr);
   }
 
   /**
@@ -337,7 +337,7 @@ public class Matchers {
    * @param type the type to check against
    */
   public static <T extends Tree> Matcher<T> isSubtypeOf(Type type) {
-    return new IsSubtypeOf<T>(type);
+    return new IsSubtypeOf<>(type);
   }
 
   /**
@@ -346,7 +346,7 @@ public class Matchers {
    * @param type the type to check against
    */
   public static <T extends Tree> Matcher<T> isSubtypeOf(Supplier<Type> type) {
-    return new IsSubtypeOf<T>(type);
+    return new IsSubtypeOf<>(type);
   }
 
   /**
@@ -355,7 +355,7 @@ public class Matchers {
    * @param typeString a string representation of the type, e.g., "java.util.Set"
    */
   public static <T extends Tree> Matcher<T> isCastableTo(String typeString) {
-    return new IsCastableTo<T>(typeString);
+    return new IsCastableTo<>(typeString);
   }
 
   /**
@@ -364,7 +364,7 @@ public class Matchers {
    * @param typeSupplier a supplier of the type to check against
    */
   public static <T extends Tree> Matcher<T> isCastableTo(Supplier<Type> typeSupplier) {
-    return new IsCastableTo<T>(typeSupplier);
+    return new IsCastableTo<>(typeSupplier);
   }
 
   /**
@@ -373,7 +373,7 @@ public class Matchers {
    * @param type the type to check against
    */
   public static <T extends Tree> Matcher<T> isSameType(Type type) {
-    return new IsSameType<T>(type);
+    return new IsSameType<>(type);
   }
 
   /**
@@ -382,7 +382,7 @@ public class Matchers {
    * @param type the type to check against
    */
   public static <T extends Tree> Matcher<T> isSameType(Supplier<Type> type) {
-    return new IsSameType<T>(type);
+    return new IsSameType<>(type);
   }
 
   /**
@@ -391,7 +391,7 @@ public class Matchers {
    * @param typeString the type to check against
    */
   public static <T extends Tree> Matcher<T> isSameType(String typeString) {
-    return new IsSameType<T>(typeString);
+    return new IsSameType<>(typeString);
   }
 
   /**
@@ -400,7 +400,7 @@ public class Matchers {
    * @param tree an AST node whose type to check against
    */
   public static <T extends Tree> Matcher<T> isSameType(Tree tree) {
-    return new IsSameType<T>(tree);
+    return new IsSameType<>(tree);
   }
 
   /**
@@ -441,21 +441,21 @@ public class Matchers {
    * Matches an AST node which is enclosed by a block node that matches the given matcher.
    */
   public static <T extends Tree> Enclosing.Block<T> enclosingBlock(Matcher<BlockTree> matcher) {
-    return new Enclosing.Block<T>(matcher);
+    return new Enclosing.Block<>(matcher);
   }
 
   /**
    * Matches an AST node which is enclosed by a class node that matches the given matcher.
    */
   public static <T extends Tree> Enclosing.Class<T> enclosingClass(Matcher<ClassTree> matcher) {
-    return new Enclosing.Class<T>(matcher);
+    return new Enclosing.Class<>(matcher);
   }
 
   /**
    * Matches an AST node which is enclosed by a method node that matches the given matcher.
    */
   public static <T extends Tree> Enclosing.Method<T> enclosingMethod(Matcher<MethodTree> matcher) {
-    return new Enclosing.Method<T>(matcher);
+    return new Enclosing.Method<>(matcher);
   }
 
   /**
@@ -494,7 +494,7 @@ public class Matchers {
    */
   public static <T extends StatementTree> NextStatement<T> nextStatement(
       Matcher<StatementTree> matcher) {
-    return new NextStatement<T>(matcher);
+    return new NextStatement<>(matcher);
   }
 
   /**

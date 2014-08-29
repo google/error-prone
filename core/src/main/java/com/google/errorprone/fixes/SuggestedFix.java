@@ -84,7 +84,7 @@ public class SuggestedFix implements Fix {
           "Cannot produce correct replacements without endPositions." +
               " Pass -Xjcov to the compiler to enable endPositions.");
     }
-    TreeSet<Replacement> replacements = new TreeSet<Replacement>(
+    TreeSet<Replacement> replacements = new TreeSet<>(
       new Comparator<Replacement>() {
         @Override
         public int compare(Replacement o1, Replacement o2) {
@@ -159,9 +159,9 @@ public class SuggestedFix implements Fix {
   /** Builds {@link SuggestedFix}s. */
   public static class Builder {
 
-    private final List<FixOperation> fixes = new ArrayList<FixOperation>();
-    private final List<String> importsToAdd = new ArrayList<String>();
-    private final List<String> importsToRemove = new ArrayList<String>();
+    private final List<FixOperation> fixes = new ArrayList<>();
+    private final List<String> importsToAdd = new ArrayList<>();
+    private final List<String> importsToRemove = new ArrayList<>();
 
     protected Builder() {}
 

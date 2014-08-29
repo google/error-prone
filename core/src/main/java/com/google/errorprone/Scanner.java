@@ -41,9 +41,9 @@ import java.util.Set;
  */
 public class Scanner extends TreePathScanner<Void, VisitorState> {
 
-  private Set<String> suppressions = new HashSet<String>();
+  private Set<String> suppressions = new HashSet<>();
   private Set<Class<? extends Annotation>> customSuppressions =
-      new HashSet<Class<? extends Annotation>>();
+      new HashSet<>();
   // This must be lazily initialized, because the list of custom suppression annotations will
   // not be available until after the subclass's constructor has run.
   private SuppressionHelper suppressionHelper;

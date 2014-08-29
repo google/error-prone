@@ -331,7 +331,7 @@ public class ASTHelpers {
   }
 
   public static Set<MethodSymbol> findSuperMethods(MethodSymbol methodSymbol, Types types) {
-    Set<MethodSymbol> supers = new HashSet<MethodSymbol>();
+    Set<MethodSymbol> supers = new HashSet<>();
     if (methodSymbol.isStatic()) {
       return supers;
     }
@@ -421,7 +421,7 @@ public class ASTHelpers {
       throw new IllegalStateException();
     }
     Scope scope = enumType.members();
-    Deque<String> values = new ArrayDeque<String>();
+    Deque<String> values = new ArrayDeque<>();
     for (Scope.Entry e = scope.elems; e != null; e = e.sibling) {
       if (e.sym instanceof VarSymbol) {
         VarSymbol var = (VarSymbol) e.sym;
@@ -435,7 +435,7 @@ public class ASTHelpers {
         }
       }
     }
-    return new LinkedHashSet<String>(values);
+    return new LinkedHashSet<>(values);
   }
 
   /** Returns true if the given tree is a generated contructor. **/

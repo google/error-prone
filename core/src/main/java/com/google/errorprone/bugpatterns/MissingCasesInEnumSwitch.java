@@ -109,7 +109,7 @@ public class MissingCasesInEnumSwitch extends BugChecker
 
   /** Return the enum values handled by the given switch statement's cases. */
   private static LinkedHashSet<String> collectEnumSwitchCases(SwitchTree tree) {
-    LinkedHashSet<String> cases = new LinkedHashSet<String>();
+    LinkedHashSet<String> cases = new LinkedHashSet<>();
     for (CaseTree caseTree : tree.getCases()) {
       ExpressionTree pat = caseTree.getExpression();
       if (pat instanceof IdentifierTree) {
@@ -121,7 +121,7 @@ public class MissingCasesInEnumSwitch extends BugChecker
 
   /** Return the difference of sets ax and bx. */
   private static <T> LinkedHashSet<T> setDifference(LinkedHashSet<T> ax, LinkedHashSet<T> bx) {
-    LinkedHashSet<T> result = new LinkedHashSet<T>(ax);
+    LinkedHashSet<T> result = new LinkedHashSet<>(ax);
     result.removeAll(bx);
     return result;
   }

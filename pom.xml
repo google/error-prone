@@ -110,8 +110,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>2.4</version>
         <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
+          <source>1.7</source>
+          <target>1.7</target>
         </configuration>
       </plugin>
       <plugin>
@@ -170,20 +170,11 @@
         <dependency>
           <groupId>openjdk</groupId>
           <artifactId>tools</artifactId>
-          <version>1.6</version>
+          <version>1.7</version>
           <scope>system</scope>
           <systemPath>${java.home}/../lib/tools.jar</systemPath>
         </dependency>
       </dependencies>
-    </profile>
-    <profile>
-      <id>jdk6</id>
-      <activation>
-        <jdk>1.6</jdk>
-      </activation>
-      <modules>
-        <module>jdk6</module>
-      </modules>
     </profile>
     <profile>
       <id>jdk7</id>

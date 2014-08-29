@@ -30,7 +30,7 @@ import java.util.Set;
  */
 public class CompoundAssignment implements Matcher<CompoundAssignmentTree> {
 
-  private static final Set<Kind> COMPOUND_ASSIGNMENT_OPERATORS = new HashSet<Kind>(11);
+  private static final Set<Kind> COMPOUND_ASSIGNMENT_OPERATORS = new HashSet<>(11);
   static {
     COMPOUND_ASSIGNMENT_OPERATORS.add(Kind.AND_ASSIGNMENT);
     COMPOUND_ASSIGNMENT_OPERATORS.add(Kind.DIVIDE_ASSIGNMENT);

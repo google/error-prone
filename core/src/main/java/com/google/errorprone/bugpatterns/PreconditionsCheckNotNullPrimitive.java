@@ -180,7 +180,7 @@ public class PreconditionsCheckNotNullPrimitive
    * @return whether the argument is a parameter to the enclosing method
    */
   private static boolean hasMethodParameter(TreePath path, ExpressionTree tree) {
-    Set<Symbol> symbols = new HashSet<Symbol>();
+    Set<Symbol> symbols = new HashSet<>();
     for (IdentifierTree ident : getVariableUses(tree)) {
       Symbol sym = ASTHelpers.getSymbol(ident);
       if (sym.isLocal()) {
@@ -219,7 +219,7 @@ public class PreconditionsCheckNotNullPrimitive
    *    x.y.z(s.t) ==> {x,s}
    */
   static List<IdentifierTree> getVariableUses(ExpressionTree tree) {
-    final List<IdentifierTree> freeVars = new ArrayList<IdentifierTree>();
+    final List<IdentifierTree> freeVars = new ArrayList<>();
 
     new TreeScanner<Void, Void>() {
       @Override

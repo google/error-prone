@@ -42,7 +42,7 @@ public class ErrorProneAnalyzer {
   private final SearchResultsPrinter resultsPrinter;
 
   /** The set of trees that have already been scanned. */
-  private final Set<JCTree> seen = new HashSet<JCTree>();
+  private final Set<JCTree> seen = new HashSet<>();
 
   public ErrorProneAnalyzer(Log log, Context context) {
     this(log, context, null);

@@ -46,7 +46,7 @@ abstract class AbstractSuppressWarningsMatcher extends BugChecker
   abstract protected void processSuppressWarningsValues(List<String> values);
 
   protected final Fix getSuggestedFix(AnnotationTree annotationTree) {
-    List<String> values = new ArrayList<String>();
+    List<String> values = new ArrayList<>();
     for (ExpressionTree argumentTree : annotationTree.getArguments()) {
       AssignmentTree assignmentTree = (AssignmentTree) argumentTree;
       if (assignmentTree.getVariable().toString().equals("value")) {

@@ -143,7 +143,7 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
   private static final ImmutableMap<TypeKind, String> BOXED_TYPE_NAMES;
 
   static {
-    EnumMap<TypeKind, String> boxedTypeNames = new EnumMap<TypeKind, String>(TypeKind.class);
+    EnumMap<TypeKind, String> boxedTypeNames = new EnumMap<>(TypeKind.class);
     boxedTypeNames.put(TypeKind.BYTE, Byte.class.getName());
     boxedTypeNames.put(TypeKind.SHORT, Short.class.getName());
     boxedTypeNames.put(TypeKind.INT, Integer.class.getName());
@@ -189,14 +189,14 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
   private Description checkFormatString(
       MethodInvocationTree tree, VisitorState state, FormatParameters parameters) {
 
-    List<String> errors = new ArrayList<String>();
+    List<String> errors = new ArrayList<>();
     int formatIndex = parameters.getFormatIndex();
     List<? extends ExpressionTree> args = tree.getArguments();
     JCLiteral format = (JCLiteral) args.get(formatIndex);
     String formatString = (String) format.getValue();
 
-    List<ExpressionTree> leadingArguments = new ArrayList<ExpressionTree>();
-    List<ExpressionTree> formatArguments = new ArrayList<ExpressionTree>();
+    List<ExpressionTree> leadingArguments = new ArrayList<>();
+    List<ExpressionTree> formatArguments = new ArrayList<>();
 
     for (int i = 0; i < args.size(); i++) {
       if (i < formatIndex) {
@@ -287,7 +287,7 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
     // After quoting and reordering, are there any more unreferenced parameters?
     if (referencedArguments.size() < formatArguments.size()) {
       // Then let's add them to the format string
-      List<String> additionalArgs = new ArrayList<String>();
+      List<String> additionalArgs = new ArrayList<>();
       for (int i = 0; i < formatArguments.size(); i++) {
         String arg = parameters.getType() == FormatType.MESSAGEFORMAT ?
             "{" + i + "}" : "%s";
@@ -300,7 +300,7 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
     }
 
     if (!errors.isEmpty()) {
-      List<String> newParameters = new ArrayList<String>();
+      List<String> newParameters = new ArrayList<>();
       for (ExpressionTree t : leadingArguments) {
         newParameters.add(t.toString());
       }
@@ -357,7 +357,7 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
     JCLiteral format = (JCLiteral) args.get(parameters.getFormatIndex());
     String formatString = (String) format.getValue();
 
-    List<String> argTypes = new ArrayList<String>();
+    List<String> argTypes = new ArrayList<>();
     for (int i = parameters.getFormatIndex() + 1; i < args.size(); ++i) {
       Type type = ((JCExpression) args.get(i)).type;
       argTypes.add(getFormatterType(type));
@@ -402,7 +402,7 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
   private Set<Integer> getReferencedArgumentsP(String str) {
     java.util.regex.Matcher matcher = printfGroup.matcher(str);
 
-    Set<Integer> set = new HashSet<Integer>();
+    Set<Integer> set = new HashSet<>();
     int i = 0;
     while (matcher.find()) {
       // %n is line break and %% is literal percent, they don't reference parameters.
@@ -423,7 +423,7 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
     str = literalRegion.matcher(str).replaceAll("");
     java.util.regex.Matcher matcher = messageFormatGroup.matcher(str);
 
-    Set<Integer> references = new HashSet<Integer>();
+    Set<Integer> references = new HashSet<>();
     while (matcher.find()) {
       references.add(Integer.parseInt(matcher.group(1)));
     }

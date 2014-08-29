@@ -133,7 +133,7 @@ import java.util.Set;
 public class ErrorProneScanner extends Scanner {
 
   private Set<Class<? extends Annotation>> customSuppressionAnnotations =
-      new HashSet<Class<? extends Annotation>>();
+      new HashSet<>();
 
   /**
    * Selects which checks should be enabled when the compile is run.
@@ -225,7 +225,7 @@ public class ErrorProneScanner extends Scanner {
     }
   }
 
-  private final Map<String, BugChecker> nameToChecker = new HashMap<String, BugChecker>();
+  private final Map<String, BugChecker> nameToChecker = new HashMap<>();
 
   @Override
   protected Set<Class<? extends Annotation>> getCustomSuppressionAnnotations() {
@@ -233,97 +233,97 @@ public class ErrorProneScanner extends Scanner {
   }
 
   private final List<AnnotationTreeMatcher> annotationMatchers =
-      new ArrayList<AnnotationTreeMatcher>();
+      new ArrayList<>();
   private final List<ArrayAccessTreeMatcher> arrayAccessMatchers =
-      new ArrayList<ArrayAccessTreeMatcher>();
+      new ArrayList<>();
   private final List<ArrayTypeTreeMatcher> arrayTypeMatchers =
-      new ArrayList<ArrayTypeTreeMatcher>();
+      new ArrayList<>();
   private final List<AssertTreeMatcher> assertMatchers =
-      new ArrayList<AssertTreeMatcher>();
+      new ArrayList<>();
   private final List<AssignmentTreeMatcher> assignmentMatchers =
-      new ArrayList<AssignmentTreeMatcher>();
+      new ArrayList<>();
   private final List<BinaryTreeMatcher> binaryMatchers =
-      new ArrayList<BinaryTreeMatcher>();
+      new ArrayList<>();
   private final List<BlockTreeMatcher> blockMatchers =
-      new ArrayList<BlockTreeMatcher>();
+      new ArrayList<>();
   private final List<BreakTreeMatcher> breakMatchers =
-      new ArrayList<BreakTreeMatcher>();
+      new ArrayList<>();
   private final List<CaseTreeMatcher> caseMatchers =
-      new ArrayList<CaseTreeMatcher>();
+      new ArrayList<>();
   private final List<CatchTreeMatcher> catchMatchers =
-      new ArrayList<CatchTreeMatcher>();
+      new ArrayList<>();
   private final List<ClassTreeMatcher> classMatchers =
-      new ArrayList<ClassTreeMatcher>();
+      new ArrayList<>();
   private final List<CompilationUnitTreeMatcher> compilationUnitMatchers =
-      new ArrayList<CompilationUnitTreeMatcher>();
+      new ArrayList<>();
   private final List<CompoundAssignmentTreeMatcher> compoundAssignmentMatchers =
-      new ArrayList<CompoundAssignmentTreeMatcher>();
+      new ArrayList<>();
   private final List<ConditionalExpressionTreeMatcher> conditionalExpressionMatchers =
-      new ArrayList<ConditionalExpressionTreeMatcher>();
+      new ArrayList<>();
   private final List<ContinueTreeMatcher> continueMatchers =
-      new ArrayList<ContinueTreeMatcher>();
+      new ArrayList<>();
   private final List<DoWhileLoopTreeMatcher> doWhileLoopMatchers =
-      new ArrayList<DoWhileLoopTreeMatcher>();
+      new ArrayList<>();
   private final List<EmptyStatementTreeMatcher> emptyStatementMatchers =
-      new ArrayList<EmptyStatementTreeMatcher>();
+      new ArrayList<>();
   private final List<EnhancedForLoopTreeMatcher> enhancedForLoopMatchers =
-      new ArrayList<EnhancedForLoopTreeMatcher>();
+      new ArrayList<>();
   private final List<ExpressionStatementTreeMatcher> expressionStatementMatchers =
-      new ArrayList<ExpressionStatementTreeMatcher>();
+      new ArrayList<>();
   private final List<ForLoopTreeMatcher> forLoopMatchers =
-      new ArrayList<ForLoopTreeMatcher>();
+      new ArrayList<>();
   private final List<IdentifierTreeMatcher> identifierMatchers =
-      new ArrayList<IdentifierTreeMatcher>();
+      new ArrayList<>();
   private final List<IfTreeMatcher> ifMatchers =
-      new ArrayList<IfTreeMatcher>();
+      new ArrayList<>();
   private final List<ImportTreeMatcher> importMatchers =
-      new ArrayList<ImportTreeMatcher>();
+      new ArrayList<>();
   private final List<InstanceOfTreeMatcher> instanceOfMatchers =
-      new ArrayList<InstanceOfTreeMatcher>();
+      new ArrayList<>();
   private final List<LabeledStatementTreeMatcher> labeledStatementMatchers =
-      new ArrayList<LabeledStatementTreeMatcher>();
+      new ArrayList<>();
   private final List<LiteralTreeMatcher> literalMatchers =
-      new ArrayList<LiteralTreeMatcher>();
+      new ArrayList<>();
   private final List<MemberSelectTreeMatcher> memberSelectMatchers =
-      new ArrayList<MemberSelectTreeMatcher>();
+      new ArrayList<>();
   private final List<MethodTreeMatcher> methodMatchers =
-      new ArrayList<MethodTreeMatcher>();
+      new ArrayList<>();
   private final List<MethodInvocationTreeMatcher> methodInvocationMatchers =
-      new ArrayList<MethodInvocationTreeMatcher>();
+      new ArrayList<>();
   private final List<ModifiersTreeMatcher> modifiersMatchers =
-      new ArrayList<ModifiersTreeMatcher>();
+      new ArrayList<>();
   private final List<NewArrayTreeMatcher> newArrayMatchers =
-      new ArrayList<NewArrayTreeMatcher>();
+      new ArrayList<>();
   private final List<NewClassTreeMatcher> newClassMatchers =
-      new ArrayList<NewClassTreeMatcher>();
+      new ArrayList<>();
   private final List<ParameterizedTypeTreeMatcher> parameterizedTypeMatchers =
-      new ArrayList<ParameterizedTypeTreeMatcher>();
+      new ArrayList<>();
   private final List<ParenthesizedTreeMatcher> parenthesizedMatchers =
-      new ArrayList<ParenthesizedTreeMatcher>();
+      new ArrayList<>();
   private final List<PrimitiveTypeTreeMatcher> primitiveTypeMatchers =
-      new ArrayList<PrimitiveTypeTreeMatcher>();
+      new ArrayList<>();
   private final List<ReturnTreeMatcher> returnMatchers =
-      new ArrayList<ReturnTreeMatcher>();
+      new ArrayList<>();
   private final List<SwitchTreeMatcher> switchMatchers =
-      new ArrayList<SwitchTreeMatcher>();
+      new ArrayList<>();
   private final List<SynchronizedTreeMatcher> synchronizedMatchers =
-      new ArrayList<SynchronizedTreeMatcher>();
+      new ArrayList<>();
   private final List<ThrowTreeMatcher> throwMatchers =
-      new ArrayList<ThrowTreeMatcher>();
+      new ArrayList<>();
   private final List<TryTreeMatcher> tryMatchers =
-      new ArrayList<TryTreeMatcher>();
+      new ArrayList<>();
   private final List<TypeCastTreeMatcher> typeCastMatchers =
-      new ArrayList<TypeCastTreeMatcher>();
+      new ArrayList<>();
   private final List<TypeParameterTreeMatcher> typeParameterMatchers =
-      new ArrayList<TypeParameterTreeMatcher>();
+      new ArrayList<>();
   private final List<UnaryTreeMatcher> unaryMatchers =
-      new ArrayList<UnaryTreeMatcher>();
+      new ArrayList<>();
   private final List<VariableTreeMatcher> variableMatchers =
-      new ArrayList<VariableTreeMatcher>();
+      new ArrayList<>();
   private final List<WhileLoopTreeMatcher> whileLoopMatchers =
-      new ArrayList<WhileLoopTreeMatcher>();
+      new ArrayList<>();
   private final List<WildcardTreeMatcher> wildcardMatchers =
-      new ArrayList<WildcardTreeMatcher>();
+      new ArrayList<>();
 
   private void registerNodeTypes(BugChecker checker) {
     nameToChecker.put(checker.getCanonicalName(), checker);

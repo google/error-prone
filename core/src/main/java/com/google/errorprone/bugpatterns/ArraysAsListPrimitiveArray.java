@@ -60,7 +60,7 @@ public class ArraysAsListPrimitiveArray extends BugChecker implements MethodInvo
   private static final Map<TypeKind, String> GUAVA_UTILS;
 
   static {
-    Map<TypeKind, String> guavaUtils = new EnumMap<TypeKind, String>(TypeKind.class);
+    Map<TypeKind, String> guavaUtils = new EnumMap<>(TypeKind.class);
     guavaUtils.put(TypeKind.BOOLEAN, "Booleans");
     guavaUtils.put(TypeKind.BYTE, "Bytes");
     guavaUtils.put(TypeKind.SHORT, "Shorts");
