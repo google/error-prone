@@ -28,11 +28,9 @@
 
   <dependencies>
     <dependency>
-      <groupId>openjdk</groupId>
-      <artifactId>tools</artifactId>
-      <version>1.7</version>
-      <scope>system</scope>
-      <systemPath>${java.home}/../lib/tools.jar</systemPath>
+      <groupId>com.google.errorprone</groupId>
+      <artifactId>javac</artifactId>
+      <version>1.8.0-beta-132</version>
     </dependency>
   </dependencies>
 

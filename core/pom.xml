@@ -88,6 +88,12 @@
       <artifactId>compile-testing</artifactId>
       <version>0.4</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>com.sun</groupId>
+          <artifactId>tools</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.google.inject</groupId>
@@ -134,6 +140,12 @@
       <groupId>com.google.code.findbugs</groupId>
       <artifactId>jsr305</artifactId>
       <version>2.0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.errorprone</groupId>
+      <artifactId>error_prone_jdk8</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
     </dependency>
   </dependencies>
 
@@ -201,33 +213,10 @@
         </plugins>
       </build>
     </profile>
-    <profile>
-      <id>jdk7</id>
-      <activation>
-        <jdk>1.7</jdk>
-      </activation>
-      <dependencies>
-        <dependency>
-          <groupId>com.google.errorprone</groupId>
-          <artifactId>error_prone_jdk7</artifactId>
-          <version>${project.version}</version>
-          <scope>compile</scope>
-        </dependency>
-      </dependencies>
-    </profile>
-    <profile>
-      <id>jdk8</id>
-      <activation>
-        <jdk>1.8</jdk>
-      </activation>
-      <dependencies>
-        <dependency>
-          <groupId>com.google.errorprone</groupId>
-          <artifactId>error_prone_jdk8</artifactId>
-          <version>${project.version}</version>
-          <scope>compile</scope>
-        </dependency>
-      </dependencies>
-    </profile>
   </profiles>
+
+  <properties>
+    <!-- put javac.jar on bootclasspath when executing tests -->
+    <argLine>-Xbootclasspath/p:${settings.localRepository}/com/google/errorprone/javac/1.8.0-beta-132/javac-1.8.0-beta-132.jar</argLine>
+  </properties>
 </project>
