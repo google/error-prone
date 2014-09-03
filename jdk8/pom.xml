@@ -53,5 +53,10 @@
       <version>${project.version}</version>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>17.0</version>
+    </dependency>
   </dependencies>
 </project>
