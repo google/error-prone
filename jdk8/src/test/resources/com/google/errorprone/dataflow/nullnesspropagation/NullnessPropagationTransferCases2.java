@@ -58,8 +58,7 @@ public class NullnessPropagationTransferCases2 {
     triggerNullnessChecker(MyEnum.ENUM_INSTANCE);
     // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
     triggerNullnessChecker(ENUM_INSTANCE);
-    // TODO(cpovirk): fix!
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
     triggerNullnessChecker(MyEnum.NOT_AN_ENUM_CONSTANT);
     // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
     triggerNullnessChecker(null);
@@ -98,14 +97,13 @@ public class NullnessPropagationTransferCases2 {
     // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
     triggerNullnessChecker(Enum.valueOf(MyEnum.class, "INSTANCE"));
 
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // We'd prefer this to be Non-null. See the TODO on CLASSES_WITH_NON_NULLABLE_VALUE_OF_METHODS.
+    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
     triggerNullnessChecker(MyEnum.valueOf("INSTANCE"));
 
-    // TODO(cpovirk): fix!
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
     triggerNullnessChecker(MyBigInteger.valueOf(3));
-    // TODO(cpovirk): fix!
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
     triggerNullnessChecker(MyEnum.valueOf('a'));
   }
 
@@ -169,6 +167,16 @@ public class NullnessPropagationTransferCases2 {
     triggerNullnessChecker(i);
   }
 
+  public void boxedPrimitives() {
+    Short s = 1000;
+    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    NullnessPropagationTest.triggerNullnessChecker(s);
+
+    Integer i = 2;
+    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    NullnessPropagationTest.triggerNullnessChecker(i);
+  }
+
   int i;
   String str;
   Object obj;
@@ -177,12 +185,10 @@ public class NullnessPropagationTransferCases2 {
     // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
     triggerNullnessChecker(i);
 
-    // TODO(cpovirk): fix!
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
     triggerNullnessChecker(str);
 
-    // TODO(cpovirk): fix!
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
     triggerNullnessChecker(obj);
   }
   
@@ -205,16 +211,33 @@ public class NullnessPropagationTransferCases2 {
     triggerNullnessChecker(mc);
   }
   
+  public void staticFieldAccessIsNotDereferenceNullableReturn(HasStaticField nullableParam) {
+    String s = nullableParam.s;
+    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    triggerNullnessChecker(nullableParam);
+  }
+  
+  public void staticFieldAccessIsNotDereferenceNonNullReturn(MyEnum nullableParam) {
+    MyEnum x = nullableParam.ENUM_INSTANCE;
+    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    triggerNullnessChecker(nullableParam);
+  }
+  
+  public void staticFieldAccessIsNotDereferenceButPreservesExistingInformation() {
+    HasStaticField container = new HasStaticField();
+    String s = container.s;
+    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    triggerNullnessChecker(container);
+  }
+  
   public void fieldValuesMayChange() {
     MyContainerClass container = new MyContainerClass();
     container.field = new MyClass();
-    // TODO(cpovirk): fix!
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
     triggerNullnessChecker(container.field);
 
     container.field.field = 10;
-    // TODO(cpovirk): fix!
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
     triggerNullnessChecker(container.field);
   }
 
@@ -228,8 +251,7 @@ public class NullnessPropagationTransferCases2 {
     // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
     triggerNullnessChecker(intReturningMethod());
 
-    // TODO(cpovirk): fix!
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
     triggerNullnessChecker(stringReturningMethod());
   }
 
@@ -248,13 +270,25 @@ public class NullnessPropagationTransferCases2 {
     triggerNullnessChecker(str);
   }
 
-  public void staticMethodInvocationIsNotDereference(String nullableParam) {
+  public void staticMethodInvocationIsNotDereferenceNullableReturn(String nullableParam) {
     nullableParam.format("%s", "foo");
-    // TODO(cpovirk): fix!
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    triggerNullnessChecker(nullableParam);
+  }
+
+  public void staticMethodInvocationIsNotDereferenceNonNullReturn(String nullableParam) {
+    nullableParam.valueOf(true);
+    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
     triggerNullnessChecker(nullableParam);
   }
   
+  public void staticMethodInvocationIsNotDereferenceButPreservesExistingInformation() {
+    String s = "foo";
+    s.format("%s", "foo");
+    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    triggerNullnessChecker(s);
+  }
+
   public void objectCreation(Object nullableParam) {
     Object obj = nullableParam;
     obj = new Object();
@@ -286,5 +320,9 @@ public class NullnessPropagationTransferCases2 {
     String[] a = new String[1];
     // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
     triggerNullnessChecker(a[0]);
+  }
+
+  public static class HasStaticField {
+    static String s;
   }
 }

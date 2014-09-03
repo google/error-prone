@@ -19,7 +19,13 @@ package com.google.errorprone.dataflow.nullnesspropagation;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessValue.NONNULL;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessValue.NULLABLE;
 
+import com.google.common.collect.ImmutableSet;
+
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
+import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 
 import org.checkerframework.dataflow.analysis.ConditionalTransferResult;
@@ -40,6 +46,8 @@ import org.checkerframework.dataflow.cfg.node.NullLiteralNode;
 import org.checkerframework.dataflow.cfg.node.ObjectCreationNode;
 import org.checkerframework.dataflow.cfg.node.ValueLiteralNode;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -187,6 +195,10 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
   
   /**
    * Variables of primitive type are always refined to non-null.
+   *
+   * <p>This case is rarely of interest to us. Either the variable is being used as a primitive, in
+   * which case we probably wouldn't have bothered to run the nullness checker on it, or it's being
+   * used as an Object, in which case its boxing triggers {@link #visitMethodInvocation}.
    */
   @Override
   public TransferResult<NullnessValue, NullnessPropagationStore> visitLocalVariable(
@@ -209,8 +221,22 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
   @Override
   public TransferResult<NullnessValue, NullnessPropagationStore> visitFieldAccess(
       FieldAccessNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
+    ClassAndField accessed = tryGetFieldSymbol(node.getTree());
+    if (accessed != null && (accessed.field.equals("class") || accessed.isEnumConstant)) {
+      // No need to mark the "receiver" as non-null, since this happens to be a static "field."
+      return update(before, node, NONNULL);
+    }
+    /*
+     * We can't conclude anything about the value of the access itself, but we can still update the
+     * value of the receiver (if there is one). To determine whether there is one, we must
+     * explicitly check isStatic, as the Checker Framework will give us a "receiver" for an access
+     * of foo.staticField.
+     */
     Node receiver = node.getReceiver();
-    return update(before, receiver, NONNULL);
+    NullnessValue receiverValue =
+        node.isStatic() ? before.getRegularStore().getInformation(receiver) : NONNULL;
+    before.getRegularStore().setInformation(receiver, receiverValue);
+    return update(before, node, NULLABLE);
   }
 
   /*
@@ -229,8 +255,23 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
   @Override
   public TransferResult<NullnessValue, NullnessPropagationStore> visitMethodInvocation(
       MethodInvocationNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
+    ClassAndMethod callee = tryGetMethodSymbol(node.getTree());
+    if (callee != null && callee.method.equals("valueOf")
+        && CLASSES_WITH_NON_NULLABLE_VALUE_OF_METHODS.contains(callee.clazz)) {
+      // No need to mark the "receiver" as non-null, since this happens to be a static method.
+      return update(before, node, NONNULL);
+    }
+    /*
+     * We can't conclude anything about the value of the invocation itself, but we can still update
+     * the value of the receiver (if there is one). To determine whether there is one, we must
+     * explicitly check isStatic, as the Checker Framework will give us a "receiver" for a call to
+     * foo.staticMethod().
+     */
     Node receiver = node.getTarget().getReceiver();
-    return update(before, receiver, NONNULL);
+    NullnessValue receiverValue =
+        callee.isStatic ? before.getRegularStore().getInformation(receiver) : NONNULL;
+    before.getRegularStore().setInformation(receiver, receiverValue);
+    return update(before, node, NULLABLE);
   }
   
   /**
@@ -243,13 +284,12 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
     return update(before, node, NONNULL);
   }
 
-  /** Maps the given node to the specified value in the resulting store from the node visit. */
   private static RegularTransferResult<NullnessValue, NullnessPropagationStore> update(
-      TransferInput<?, NullnessPropagationStore> before, Node node, NullnessValue value) {
-    NullnessPropagationStore after = before.getRegularStore();
-    after.setInformation(node, value);
-    // TODO(cpovirk): How is |value| used here? I see that Analysis calls getResultValue(). Hmm.
-    return new RegularTransferResult<>(value, after);
+      TransferInput<?, NullnessPropagationStore> before, Node visitedNode,
+      NullnessValue value) {
+    NullnessPropagationStore store = before.getRegularStore();
+    store.setInformation(visitedNode, value);
+    return new RegularTransferResult<>(value, store);
   }
 
   private static boolean isPrimitiveVariable(LocalVariableNode node) {
@@ -260,4 +300,83 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
     }
     return false;
   }
+
+  /*
+   * We can't use ASTHelpers here. It's in core, which depends on jdk8, so we can't make jdk8 depend
+   * back on core.
+   */
+
+  private static ClassAndField tryGetFieldSymbol(Tree tree) {
+    if (tree instanceof JCFieldAccess) {
+      return ClassAndField.make(((JCFieldAccess) tree).sym);
+    }
+    if (tree instanceof JCIdent) {
+      return ClassAndField.make(((JCIdent) tree).sym);
+    }
+    return null;
+  }
+
+  private static ClassAndMethod tryGetMethodSymbol(MethodInvocationTree tree) {
+    ExpressionTree methodSelect = tree.getMethodSelect();
+    if (methodSelect instanceof JCIdent) {
+      return ClassAndMethod.make(((JCIdent) methodSelect).sym);
+    }
+    if (methodSelect instanceof JCFieldAccess) {
+      return ClassAndMethod.make(((JCFieldAccess) methodSelect).sym);
+    }
+    return null;
+  }
+
+  private static final class ClassAndMethod {
+    final String clazz;
+    final String method;
+    final boolean isStatic;
+
+    private ClassAndMethod(String clazz, String method, boolean isStatic) {
+      this.clazz = clazz;
+      this.method = method;
+      this.isStatic = isStatic;
+    }
+
+    static ClassAndMethod make(Symbol symbol) {
+      return new ClassAndMethod(symbol.owner.getQualifiedName().toString(),
+          symbol.getSimpleName().toString(), symbol.isStatic());
+    }
+  }
+
+  private static final class ClassAndField {
+    final String clazz;
+    final String field;
+    final boolean isEnumConstant;
+
+    private ClassAndField(String clazz, String field, boolean isEnumConstant) {
+      this.clazz = clazz;
+      this.field = field;
+      this.isEnumConstant = isEnumConstant;
+    }
+
+    static ClassAndField make(Symbol symbol) {
+      return new ClassAndField(symbol.owner.getQualifiedName().toString(),
+          symbol.getSimpleName().toString(), symbol.isEnum());
+    }
+  }
+
+  private static final ImmutableSet<String> CLASSES_WITH_NON_NULLABLE_VALUE_OF_METHODS =
+      ImmutableSet.of(
+          // The primitive types.
+          Boolean.class.getName(),
+          Byte.class.getName(),
+          Character.class.getName(),
+          Double.class.getName(),
+          Float.class.getName(),
+          Integer.class.getName(),
+          Long.class.getName(),
+          Short.class.getName(),
+
+          // Other types.
+          BigDecimal.class.getName(),
+          BigInteger.class.getName(),
+          // TODO(cpovirk): recognize the compiler-generated valueOf() methods on Enum subclasses
+          Enum.class.getName(),
+          String.class.getName());
 }
