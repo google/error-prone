@@ -36,6 +36,9 @@ import org.checkerframework.dataflow.analysis.TransferResult;
 import org.checkerframework.dataflow.cfg.UnderlyingAST;
 import org.checkerframework.dataflow.cfg.node.AbstractNodeVisitor;
 import org.checkerframework.dataflow.cfg.node.AssignmentNode;
+import org.checkerframework.dataflow.cfg.node.ConditionalAndNode;
+import org.checkerframework.dataflow.cfg.node.ConditionalNotNode;
+import org.checkerframework.dataflow.cfg.node.ConditionalOrNode;
 import org.checkerframework.dataflow.cfg.node.EqualToNode;
 import org.checkerframework.dataflow.cfg.node.FieldAccessNode;
 import org.checkerframework.dataflow.cfg.node.LocalVariableNode;
@@ -135,11 +138,7 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
       }
     }
 
-    // The value of "x == y" is itself nonnull.
-    NullnessValue valueOfComparisonExpression = NONNULL;
-    thenStore.setInformation(node, valueOfComparisonExpression);
-    elseStore.setInformation(node, valueOfComparisonExpression);
-    return new ConditionalTransferResult<>(valueOfComparisonExpression, thenStore, elseStore);
+    return updateConditional(node, thenStore, elseStore);
   }
   
   /**
@@ -177,11 +176,7 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
       elseStore.setInformation(rightNode, value);
     }
 
-    // The value of "x != y" is itself nonnull.
-    NullnessValue valueOfComparisonExpression = NONNULL;
-    thenStore.setInformation(node, valueOfComparisonExpression);
-    elseStore.setInformation(node, valueOfComparisonExpression);
-    return new ConditionalTransferResult<>(valueOfComparisonExpression, thenStore, elseStore);
+    return updateConditional(node, thenStore, elseStore);
   }
   
   /**
@@ -291,7 +286,31 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
     before.getRegularStore().setInformation(receiver, receiverValue);
     return update(before, node, NULLABLE);
   }
-  
+
+  @Override
+  public TransferResult<NullnessValue, NullnessPropagationStore> visitConditionalAnd(
+      ConditionalAndNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
+    return updateConditional(node, before.getThenStore(), before.getElseStore());
+  }
+
+  @Override
+  public TransferResult<NullnessValue, NullnessPropagationStore> visitConditionalOr(
+      ConditionalOrNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
+    return updateConditional(node, before.getThenStore(), before.getElseStore());
+  }
+
+  /*
+   * I considered changing the vanilla visitNode method to always preserve conditional-ness.
+   * However, I was spooked by the fact that this would have done exactly the wrong thing for the !
+   * operator.
+   */
+
+  @Override
+  public TransferResult<NullnessValue, NullnessPropagationStore> visitConditionalNot(
+      ConditionalNotNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
+    return updateConditional(node, before.getElseStore(), before.getThenStore());
+  }
+
   /**
    * The node for object instantiation has a non-null type because {@code new} can never return
    * {@code null}.
@@ -308,6 +327,13 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
     NullnessPropagationStore store = before.getRegularStore();
     store.setInformation(visitedNode, value);
     return new RegularTransferResult<>(value, store);
+  }
+
+  private static TransferResult<NullnessValue, NullnessPropagationStore> updateConditional(
+      Node visitedNode, NullnessPropagationStore thenStore, NullnessPropagationStore elseStore) {
+    thenStore.setInformation(visitedNode, NONNULL);
+    elseStore.setInformation(visitedNode, NONNULL);
+    return new ConditionalTransferResult<>(NONNULL, thenStore, elseStore);
   }
 
   private static boolean isPrimitiveVariable(LocalVariableNode node) {

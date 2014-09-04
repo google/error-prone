@@ -187,6 +187,70 @@ public class NullnessPropagationTransferCases1 {
     triggerNullnessChecker(str);
   }
 
+  public void conditionalNot(String foo) {
+    if (!(foo == null)) {
+      // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+      triggerNullnessChecker(foo);
+      return;
+    }
+
+    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    triggerNullnessChecker(foo);
+  }
+
+  public void conditionalOr1(String foo, String bar) {
+    if (foo == null || bar == null) {
+      // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+      triggerNullnessChecker(foo);
+      return;
+    }
+
+    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    triggerNullnessChecker(foo);
+  }
+
+  public void conditionalOr2(String foo, String bar) {
+    if (foo != null || bar != null) {
+      // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+      triggerNullnessChecker(foo);
+    }
+
+    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    triggerNullnessChecker(foo);
+  }
+
+  public void conditionalOr3(String foo) {
+    if (foo != null || foo != null) {
+      // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+      triggerNullnessChecker(foo);
+    }
+
+    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    triggerNullnessChecker(foo);
+  }
+
+  public void conditionalAnd1(String foo, String bar) {
+    if (foo != null && bar != null) {
+      // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+      triggerNullnessChecker(foo);
+    }
+
+    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    triggerNullnessChecker(foo);
+  }
+
+  public void conditionalAnd2(String foo) {
+    if (foo == null && foo != null) {
+      // I don't really care what the checker returns here, but I don't want it to explode.
+      // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+      triggerNullnessChecker(foo);
+      return;
+    }
+
+    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    triggerNullnessChecker(foo);
+  }
+
   public void valueOfComparisonItself() {
     // BUG: Diagnostic contains: triggerNullnessCheckerOnBoolean(Non-null)
     triggerNullnessCheckerOnBoolean(1 == 1);
@@ -197,5 +261,14 @@ public class NullnessPropagationTransferCases1 {
     triggerNullnessCheckerOnBoolean(b = (1 == 1));
     // BUG: Diagnostic contains: triggerNullnessCheckerOnBoolean(Non-null)
     triggerNullnessCheckerOnBoolean(b = (1 != 1));
+
+    // BUG: Diagnostic contains: triggerNullnessCheckerOnBoolean(Non-null)
+    triggerNullnessCheckerOnBoolean(!b);
+    // BUG: Diagnostic contains: triggerNullnessCheckerOnBoolean(Non-null)
+    triggerNullnessCheckerOnBoolean(b || b);
+    // BUG: Diagnostic contains: triggerNullnessCheckerOnBoolean(Non-null)
+    triggerNullnessCheckerOnBoolean(b && b);
+    // BUG: Diagnostic contains: triggerNullnessCheckerOnBoolean(Non-null)
+    triggerNullnessCheckerOnBoolean(b = !b);
   }
 }
