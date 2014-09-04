@@ -146,6 +146,22 @@ public class NullnessPropagationTransferCases2 {
     triggerNullnessChecker(str = null);
     // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
     triggerNullnessChecker(str = "bar");
+
+    str = null;
+    String str2 = null;
+    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    triggerNullnessChecker(str = str2 = "bar");
+    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    triggerNullnessChecker(str);
+    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    triggerNullnessChecker(str2);
+
+    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    triggerNullnessChecker(str = str2 = null);
+    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    triggerNullnessChecker(str);
+    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    triggerNullnessChecker(str2);
   }
   
   public void localVariable() {
@@ -243,8 +259,14 @@ public class NullnessPropagationTransferCases2 {
 
   public void assignmentToFieldExpressionValue() {
     MyContainerClass container = new MyContainerClass();
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
     triggerNullnessChecker(container.field = new MyClass());
+  }
+
+  public void assignmentToPrimitiveFieldExpressionValue() {
+    MyClass mc = new MyClass();
+    // BUG: Diagnostic contains: triggerNullnessCheckerOnInt(Non-null)
+    triggerNullnessCheckerOnInt(mc.field = 10);
   }
 
   public void methodInvocation() {
