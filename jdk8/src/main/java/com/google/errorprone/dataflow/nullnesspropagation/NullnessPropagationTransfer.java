@@ -53,6 +53,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 
+import javax.lang.model.element.VariableElement;
+
 /**
  * This nullness propagation analysis takes on a conservative approach in which local variables
  * assume a {@code NullnessValue} of type non-null only when it is provably non-null. If not enough
@@ -92,15 +94,15 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
   @Override
   public TransferResult<NullnessValue, NullnessPropagationStore> visitValueLiteral(
       ValueLiteralNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
-    return update(before, node, NONNULL);
+    return result(before, NONNULL);
   }
 
   @Override
   public TransferResult<NullnessValue, NullnessPropagationStore> visitNullLiteral(
       NullLiteralNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
-    return update(before, node, NULLABLE);
+    return result(before, NULLABLE);
   }
-  
+
   /**
    * Refines the {@code NullnessValue} of a {@code LocalVariableNode} used in comparison. If the lhs
    * and rhs are equal, the local variable(s) receives the most refined type between the two
@@ -117,28 +119,30 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
     Node leftNode = node.getLeftOperand();
     Node rightNode = node.getRightOperand();    
    
-    NullnessValue leftVal = thenStore.getInformation(leftNode);
-    NullnessValue rightVal = thenStore.getInformation(rightNode);
+    NullnessValue leftVal = before.getValueOfSubNode(leftNode);
+    NullnessValue rightVal = before.getValueOfSubNode(rightNode);
     NullnessValue value = leftVal.greatestLowerBound(rightVal);
 
     if (leftNode instanceof LocalVariableNode) {
+      LocalVariableNode localVar = (LocalVariableNode) leftNode;
       if (rightNode instanceof NullLiteralNode) {
-        thenStore.setInformation(leftNode, NULLABLE);
-        elseStore.setInformation(leftNode, NONNULL);
+        thenStore.setInformation(localVar, NULLABLE);
+        elseStore.setInformation(localVar, NONNULL);
       } else {
-        thenStore.setInformation(leftNode, value);
+        thenStore.setInformation(localVar, value);
       }
     }
     if (rightNode instanceof LocalVariableNode) {
+      LocalVariableNode localVar = (LocalVariableNode) rightNode;
       if (leftNode instanceof NullLiteralNode) {
-        thenStore.setInformation(rightNode, NULLABLE);
-        elseStore.setInformation(rightNode, NONNULL);
+        thenStore.setInformation(localVar, NULLABLE);
+        elseStore.setInformation(localVar, NONNULL);
       } else {
-        thenStore.setInformation(rightNode, value);
+        thenStore.setInformation(localVar, value);
       }
     }
 
-    return updateConditional(node, thenStore, elseStore);
+    return conditionalResult(thenStore, elseStore);
   }
   
   /**
@@ -157,26 +161,28 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
     Node leftNode = node.getLeftOperand();
     Node rightNode = node.getRightOperand();
     
-    NullnessValue leftVal = thenStore.getInformation(leftNode);
-    NullnessValue rightVal = thenStore.getInformation(rightNode);    
+    NullnessValue leftVal = before.getValueOfSubNode(leftNode);
+    NullnessValue rightVal = before.getValueOfSubNode(rightNode);    
     NullnessValue value = leftVal.greatestLowerBound(rightVal);
     
     if (leftNode instanceof LocalVariableNode) {
+      LocalVariableNode localVar = (LocalVariableNode) leftNode;
       if (rightNode instanceof NullLiteralNode) {
-        thenStore.setInformation(leftNode, NONNULL);
-        elseStore.setInformation(leftNode, NULLABLE);
+        thenStore.setInformation(localVar, NONNULL);
+        elseStore.setInformation(localVar, NULLABLE);
       }
-      elseStore.setInformation(leftNode, value);
+      elseStore.setInformation(localVar, value);
     }
     if (rightNode instanceof LocalVariableNode) {
+      LocalVariableNode localVar = (LocalVariableNode) rightNode;
       if (leftNode instanceof NullLiteralNode) {
-        thenStore.setInformation(rightNode, NONNULL);
-        elseStore.setInformation(rightNode, NULLABLE);
+        thenStore.setInformation(localVar, NONNULL);
+        elseStore.setInformation(localVar, NULLABLE);
       }
-      elseStore.setInformation(rightNode, value);
+      elseStore.setInformation(localVar, value);
     }
 
-    return updateConditional(node, thenStore, elseStore);
+    return conditionalResult(thenStore, elseStore);
   }
   
   /**
@@ -185,10 +191,12 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
   @Override
   public TransferResult<NullnessValue, NullnessPropagationStore> visitAssignment(
       AssignmentNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
-    NullnessValue value = before.getRegularStore().getInformation(node.getExpression());
+    NullnessValue value = before.getValueOfSubNode(node.getExpression());
 
     Node target = node.getTarget();
-    before.getRegularStore().setInformation(target, value);
+    if (target instanceof LocalVariableNode) {
+      before.getRegularStore().setInformation((LocalVariableNode) target, value);
+    }
 
     if (target instanceof FieldAccessNode) {
       FieldAccessNode fieldAccess = (FieldAccessNode) target;
@@ -207,24 +215,26 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
      *
      * http://stackoverflow.com/q/12850676/28465
      */
-    return update(before, node, value);
+    return result(before, value);
   }
-  
+
   /**
-   * Variables of primitive type are always refined to non-null.
+   * Variables take their values from their past assignments (as far as they can be determined).
+   * Additionally, variables of primitive type are always refined to non-null.
    *
-   * <p>This case is rarely of interest to us. Either the variable is being used as a primitive, in
-   * which case we probably wouldn't have bothered to run the nullness checker on it, or it's being
-   * used as an Object, in which case its boxing triggers {@link #visitMethodInvocation}.
+   * <p>(This second case is rarely of interest to us. Either the variable is being used as a
+   * primitive, in which case we probably wouldn't have bothered to run the nullness checker on it,
+   * or it's being used as an Object, in which case its boxing triggers {@link
+   * #visitMethodInvocation}.)
    */
   @Override
   public TransferResult<NullnessValue, NullnessPropagationStore> visitLocalVariable(
       LocalVariableNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
-    NullnessValue value = isPrimitiveVariable(node)
+    NullnessValue value = hasPrimitiveType(node) || hasNonNullConstantValue(node)
         ? NONNULL
         : before.getRegularStore().getInformation(node);
 
-    return update(before, node, value);
+    return result(before, value);
   }
 
   /**
@@ -240,7 +250,7 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
       FieldAccessNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
     ClassAndField accessed = tryGetFieldSymbol(node.getTree());
     setReceiverNullness(before, node.getReceiver(), accessed);
-    return update(before, node, fieldNullness(accessed));
+    return result(before, fieldNullness(accessed));
   }
 
   /**
@@ -253,19 +263,19 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
       MethodInvocationNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
     ClassAndMethod callee = tryGetMethodSymbol(node.getTree());
     setReceiverNullness(before, node.getTarget().getReceiver(), callee);
-    return update(before, node, returnValueNullness(callee));
+    return result(before, returnValueNullness(callee));
   }
 
   @Override
   public TransferResult<NullnessValue, NullnessPropagationStore> visitConditionalAnd(
       ConditionalAndNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
-    return updateConditional(node, before.getThenStore(), before.getElseStore());
+    return conditionalResult(before.getThenStore(), before.getElseStore());
   }
 
   @Override
   public TransferResult<NullnessValue, NullnessPropagationStore> visitConditionalOr(
       ConditionalOrNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
-    return updateConditional(node, before.getThenStore(), before.getElseStore());
+    return conditionalResult(before.getThenStore(), before.getElseStore());
   }
 
   /*
@@ -277,7 +287,7 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
   @Override
   public TransferResult<NullnessValue, NullnessPropagationStore> visitConditionalNot(
       ConditionalNotNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
-    return updateConditional(node, before.getElseStore(), before.getThenStore());
+    return conditionalResult(before.getElseStore(), before.getThenStore());
   }
 
   /**
@@ -287,29 +297,27 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
   @Override
   public TransferResult<NullnessValue, NullnessPropagationStore> visitObjectCreation(
       ObjectCreationNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
-    return update(before, node, NONNULL);
+    return result(before, NONNULL);
   }
 
-  private static RegularTransferResult<NullnessValue, NullnessPropagationStore> update(
-      TransferInput<?, NullnessPropagationStore> before, Node visitedNode,
-      NullnessValue value) {
-    NullnessPropagationStore store = before.getRegularStore();
-    store.setInformation(visitedNode, value);
-    return new RegularTransferResult<>(value, store);
+  private static RegularTransferResult<NullnessValue, NullnessPropagationStore> result(
+      TransferInput<?, NullnessPropagationStore> before, NullnessValue value) {
+    return new RegularTransferResult<>(value, before.getRegularStore());
   }
 
-  private static TransferResult<NullnessValue, NullnessPropagationStore> updateConditional(
-      Node visitedNode, NullnessPropagationStore thenStore, NullnessPropagationStore elseStore) {
-    thenStore.setInformation(visitedNode, NONNULL);
-    elseStore.setInformation(visitedNode, NONNULL);
+  private static TransferResult<NullnessValue, NullnessPropagationStore> conditionalResult(
+      NullnessPropagationStore thenStore, NullnessPropagationStore elseStore) {
     return new ConditionalTransferResult<>(NONNULL, thenStore, elseStore);
   }
 
-  private static boolean isPrimitiveVariable(Node node) {
-    Tree tree = node.getTree();
-    if (tree instanceof JCIdent) {
-      JCIdent ident = (JCIdent) tree;
-      return ident.type.isPrimitive();
+  private static boolean hasPrimitiveType(Node node) {
+    return node.getType().getKind().isPrimitive();
+  }
+
+  private static boolean hasNonNullConstantValue(LocalVariableNode node) {
+    if (node.getElement() instanceof VariableElement) {
+      VariableElement element = (VariableElement) node.getElement();
+      return (element.getConstantValue() != null);
     }
     return false;
   }
@@ -384,8 +392,8 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
 
   private static void setReceiverNullness(
       TransferInput<NullnessValue, NullnessPropagationStore> before, Node receiver, Member member) {
-    if (!member.isStatic()) {
-      before.getRegularStore().setInformation(receiver, NONNULL);
+    if (!member.isStatic() && receiver instanceof LocalVariableNode) {
+      before.getRegularStore().setInformation((LocalVariableNode) receiver, NONNULL);
     }
   }
 

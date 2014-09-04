@@ -439,4 +439,63 @@ public class NullnessPropagationTransferCases2 {
     static String staticStringField;
     static int staticIntField;
   }
+
+  public void sameNameImmediatelyShadowed() {
+    final String s = "foo";
+
+    class Bar {
+      void method(String s) {
+        // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+        triggerNullnessChecker(s);
+      }
+    }
+  }
+
+  public void sameNameLaterShadowed() {
+    final String s = "foo";
+
+    class Bar {
+      void method() {
+        // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+        triggerNullnessChecker(s);
+
+        String s = HasStaticFields.staticStringField;
+        // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+        triggerNullnessChecker(s);
+      }
+    }
+  }
+
+  public void sameNameShadowedThenUnshadowed() {
+    final String s = HasStaticFields.staticStringField;
+
+    class Bar {
+      void method() {
+        {
+          String s = "foo";
+          // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+          triggerNullnessChecker(s);
+        }
+
+        // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+        triggerNullnessChecker(s);
+      }
+    }
+  }
+
+  public void nonCompileTimeConstantCapturedVariable() {
+    final Object nonnull = ENUM_INSTANCE;
+
+    class Bar {
+      void method() {
+        /*
+         * We'd prefer for this to be non-null, but we don't run the analysis over the enclosing
+         * class's enclosing method, so our captured-variable handling is limited to compile-time
+         * constants.
+         */
+        // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+        triggerNullnessChecker(nonnull);
+      }
+    }
+  }
 }

@@ -17,33 +17,38 @@
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.Sets.union;
+import static com.google.common.collect.Sets.intersection;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessValue.NULLABLE;
 
 import org.checkerframework.dataflow.analysis.FlowExpressions;
 import org.checkerframework.dataflow.analysis.Store;
 import org.checkerframework.dataflow.cfg.node.LocalVariableNode;
-import org.checkerframework.dataflow.cfg.node.Node;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
+
+import javax.lang.model.element.Element;
 
 /**
- * A mapping from {@link Node} to {@link NullnessValue}.
+ * Tracks the {@link NullnessValue} of each local variable. Note that, while the interface is
+ * written in terms of <b>nodes</b>, the stored data is indexed by variable <b>declaration</b>, so
+ * values persist across nodes.
  *
  * @author deminguyen@google.com (Demi Nguyen)
  */
 public final class NullnessPropagationStore implements Store<NullnessPropagationStore> {
-  private final Map<Node, NullnessValue> contents = new HashMap<>();
+  /*
+   * TODO(cpovirk): Return to LocalVariableNode keys if LocalVariableNode.equals is fixed to use the
+   * variable's declaring element instead of its name.
+   */
+  private final Map<Element, NullnessValue> contents = new HashMap<>();
 
-  public NullnessValue getInformation(Node n) {
-    checkNotNull(n);
-    return orNullable(contents.get(n));
+  public NullnessValue getInformation(LocalVariableNode node) {
+    return orNullable(contents.get(node.getElement()));
   }
 
-  public void setInformation(Node n, NullnessValue val) {
-    contents.put(checkNotNull(n), checkNotNull(val));
+  public void setInformation(LocalVariableNode node, NullnessValue value) {
+    contents.put(node.getElement(), checkNotNull(value));
   }
 
   @Override
@@ -56,8 +61,8 @@ public final class NullnessPropagationStore implements Store<NullnessPropagation
   @Override
   public NullnessPropagationStore leastUpperBound(NullnessPropagationStore other) {
     NullnessPropagationStore result = new NullnessPropagationStore();
-    for (Node n : union(contents.keySet(), other.contents.keySet())) {
-      result.contents.put(n, getInformation(n).leastUpperBound(other.getInformation(n)));
+    for (Element var : intersection(contents.keySet(), other.contents.keySet())) {
+      result.contents.put(var, contents.get(var).leastUpperBound(other.contents.get(var)));
     }
     return result;
   }
@@ -78,14 +83,7 @@ public final class NullnessPropagationStore implements Store<NullnessPropagation
 
   @Override
   public String toString() {
-    // only output local variable information
-    Map<Node, NullnessValue> smallerContents = new HashMap<Node, NullnessValue>();
-    for (Entry<Node, NullnessValue> e : contents.entrySet()) {
-      if (e.getKey() instanceof LocalVariableNode) {
-        smallerContents.put(e.getKey(), e.getValue());
-      }
-    }
-    return smallerContents.toString();
+    return contents.toString();
   }
 
   @Override
