@@ -25,6 +25,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 
@@ -324,8 +325,8 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
 
   private static ClassAndField tryGetFieldSymbol(Tree tree) {
     Symbol symbol = tryGetSymbol(tree);
-    if (symbol != null) {
-      return ClassAndField.make(symbol);
+    if (symbol instanceof VarSymbol) {
+      return ClassAndField.make((VarSymbol) symbol);
     }
     return null;
   }
@@ -365,6 +366,9 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
       return NONNULL;
     }
     if (accessed.isPrimitive) {
+      return NONNULL;
+    }
+    if (accessed.hasNonNullConstantValue) {
       return NONNULL;
     }
 
@@ -432,20 +436,22 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
     final boolean isStatic;
     final boolean isPrimitive;
     final boolean isEnumConstant;
+    final boolean hasNonNullConstantValue;
 
     private ClassAndField(String clazz, String field, boolean isStatic, boolean isPrimitive,
-        boolean isEnumConstant) {
+        boolean isEnumConstant, boolean hasNonNullConstantValue) {
       this.clazz = clazz;
       this.field = field;
       this.isStatic = isStatic;
       this.isPrimitive = isPrimitive;
       this.isEnumConstant = isEnumConstant;
+      this.hasNonNullConstantValue = hasNonNullConstantValue;
     }
 
-    static ClassAndField make(Symbol symbol) {
+    static ClassAndField make(VarSymbol symbol) {
       return new ClassAndField(symbol.owner.getQualifiedName().toString(),
           symbol.getSimpleName().toString(), symbol.isStatic(), symbol.type.isPrimitive(),
-          symbol.isEnum());
+          symbol.isEnum(), symbol.getConstantValue() != null);
     }
 
     @Override
