@@ -16,6 +16,8 @@
 
 package com.google.errorprone.dataflow.nullnesspropagation;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.Sets.union;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessValue.NULLABLE;
 
 import org.checkerframework.dataflow.analysis.FlowExpressions;
@@ -28,80 +30,45 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
- * A mapping of Nodes to Values
+ * A mapping from {@link Node} to {@link NullnessValue}.
  *
  * @author deminguyen@google.com (Demi Nguyen)
  */
-public class NullnessPropagationStore implements Store<NullnessPropagationStore> {
-
-  private final Map<Node, NullnessValue> contents;
-
-  public NullnessPropagationStore() {
-    contents = new HashMap<Node, NullnessValue>();
-  }
-
-  protected NullnessPropagationStore(Map<Node, NullnessValue> contents) {
-    this.contents = contents;
-  }
+public final class NullnessPropagationStore implements Store<NullnessPropagationStore> {
+  private final Map<Node, NullnessValue> contents = new HashMap<>();
 
   public NullnessValue getInformation(Node n) {
-    if (contents.containsKey(n)) {
-      return contents.get(n);
-    }
-    return NULLABLE;
-  }
-
-  public void mergeInformation(Node node, NullnessValue val) {
-    NullnessValue newValue;
-    if (contents.containsKey(node)) {
-      newValue = val.leastUpperBound(contents.get(node));
-    } else {
-      newValue = val;
-    }
-    contents.put(node, newValue);
+    checkNotNull(n);
+    return orNullable(contents.get(n));
   }
 
   public void setInformation(Node n, NullnessValue val) {
-    contents.put(n, val);
+    contents.put(checkNotNull(n), checkNotNull(val));
   }
 
   @Override
   public NullnessPropagationStore copy() {
-    return new NullnessPropagationStore(new HashMap<Node, NullnessValue>(contents));
+    NullnessPropagationStore copy = new NullnessPropagationStore();
+    copy.contents.putAll(contents);
+    return copy;
   }
 
   @Override
   public NullnessPropagationStore leastUpperBound(NullnessPropagationStore other) {
-    Map<Node, NullnessValue> newContents = new HashMap<Node, NullnessValue>();
-    for (Entry<Node, NullnessValue> e : other.contents.entrySet()) {
-      Node n = e.getKey();
-      NullnessValue otherVal = e.getValue();
-      if (contents.containsKey(n)) {
-        newContents.put(n, otherVal.leastUpperBound(contents.get(n)));
-      } else {
-        newContents.put(n, otherVal);
-      }
+    NullnessPropagationStore result = new NullnessPropagationStore();
+    for (Node n : union(contents.keySet(), other.contents.keySet())) {
+      result.contents.put(n, getInformation(n).leastUpperBound(other.getInformation(n)));
     }
-    for (Entry<Node, NullnessValue> e : contents.entrySet()) {
-      Node n = e.getKey();
-      NullnessValue thisVal = e.getValue();
-      if (!other.contents.containsKey(n)) {
-        newContents.put(n, thisVal);
-      }
-    }
-    return new NullnessPropagationStore(newContents);
+    return result;
   }
 
   @Override
   public boolean equals(Object o) {
-    if (o == null) {
-      return false;
-    }
     if (!(o instanceof NullnessPropagationStore)) {
       return false;
     }
     NullnessPropagationStore other = (NullnessPropagationStore) o;
-    return this.contents.equals(other.contents);
+    return contents.equals(other.contents);
   }
 
   @Override
@@ -136,5 +103,7 @@ public class NullnessPropagationStore implements Store<NullnessPropagationStore>
     throw new UnsupportedOperationException("DOT output not supported");
   }
 
+  private static NullnessValue orNullable(NullnessValue nullnessValue) {
+    return (nullnessValue != null) ? nullnessValue : NULLABLE;
+  }
 }
-
