@@ -21,6 +21,7 @@ import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropaga
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTransferCases2.HasStaticFields.staticIntField;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTransferCases2.HasStaticFields.staticStringField;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTransferCases2.MyEnum.ENUM_INSTANCE;
+import static java.lang.String.format;
 import static java.lang.String.valueOf;
 
 import java.math.BigInteger;
@@ -29,11 +30,15 @@ import java.math.BigInteger;
  * Dataflow analysis cases for testing transfer functions in nullness propagation
  */
 public class NullnessPropagationTransferCases2 {
-  private class MyClass {
+  private static class MyClass {
     public int field;
+
+    static String staticReturnNullable() {
+      return null;
+    }
   }
 
-  private class MyContainerClass {
+  private static class MyContainerClass {
     private MyClass field;
   }
 
@@ -356,8 +361,8 @@ public class NullnessPropagationTransferCases2 {
     triggerNullnessChecker(str);
   }
 
-  public void staticMethodInvocationIsNotDereferenceNullableReturn(String nullableParam) {
-    nullableParam.format("%s", "foo");
+  public void staticMethodInvocationIsNotDereferenceNullableReturn(MyClass nullableParam) {
+    nullableParam.staticReturnNullable();
     // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
     triggerNullnessChecker(nullableParam);
   }
@@ -406,6 +411,22 @@ public class NullnessPropagationTransferCases2 {
     triggerNullnessChecker(i += 5);
     // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
     triggerNullnessChecker(s += 5);
+  }
+
+  public void stringStaticMethodsReturnNonNull() {
+    String s = null;
+    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    triggerNullnessChecker(String.format("%s", "foo"));
+    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    triggerNullnessChecker(format("%s", "foo"));
+    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    triggerNullnessChecker(s.format("%s", "foo"));
+  }
+
+  public void stringInstanceMethodsReturnNonNull() {
+    String s = null;
+    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    triggerNullnessChecker(s.substring(0));
   }
 
   public void vanillaVisitNode() {
