@@ -44,10 +44,13 @@ import org.checkerframework.dataflow.cfg.node.EqualToNode;
 import org.checkerframework.dataflow.cfg.node.FieldAccessNode;
 import org.checkerframework.dataflow.cfg.node.LocalVariableNode;
 import org.checkerframework.dataflow.cfg.node.MethodInvocationNode;
+import org.checkerframework.dataflow.cfg.node.NarrowingConversionNode;
 import org.checkerframework.dataflow.cfg.node.Node;
 import org.checkerframework.dataflow.cfg.node.NotEqualNode;
 import org.checkerframework.dataflow.cfg.node.NullLiteralNode;
+import org.checkerframework.dataflow.cfg.node.NumericalAdditionNode;
 import org.checkerframework.dataflow.cfg.node.ObjectCreationNode;
+import org.checkerframework.dataflow.cfg.node.TypeCastNode;
 import org.checkerframework.dataflow.cfg.node.ValueLiteralNode;
 
 import java.math.BigDecimal;
@@ -80,8 +83,8 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
    */
   @Override
   public TransferResult<NullnessValue, NullnessPropagationStore> visitNode(
-      Node node, TransferInput<NullnessValue, NullnessPropagationStore> store) {
-    return new RegularTransferResult<>(NULLABLE, store.getRegularStore());
+      Node node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
+    return result(before, NULLABLE);
   }
   
   // Literals
@@ -102,6 +105,28 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
   public TransferResult<NullnessValue, NullnessPropagationStore> visitNullLiteral(
       NullLiteralNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
     return result(before, NULLABLE);
+  }
+
+  @Override
+  public TransferResult<NullnessValue, NullnessPropagationStore> visitTypeCast(TypeCastNode node,
+      TransferInput<NullnessValue, NullnessPropagationStore> before) {
+    NullnessValue value = hasPrimitiveType(node)
+        ? NONNULL
+        : before.getValueOfSubNode(node.getOperand());
+    return result(before, value);
+  }
+
+  @Override
+  public TransferResult<NullnessValue, NullnessPropagationStore> visitNumericalAddition(
+      NumericalAdditionNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
+    // TODO(cpovirk): Handle more numerical operations. Also, mark the inputs as dereferenced.
+    return result(before, NONNULL);
+  }
+
+  @Override
+  public TransferResult<NullnessValue, NullnessPropagationStore> visitNarrowingConversion(
+      NarrowingConversionNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
+    return result(before, NONNULL);
   }
 
   /**
@@ -171,16 +196,18 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
       if (rightNode instanceof NullLiteralNode) {
         thenStore.setInformation(localVar, NONNULL);
         elseStore.setInformation(localVar, NULLABLE);
+      } else {
+        elseStore.setInformation(localVar, value);
       }
-      elseStore.setInformation(localVar, value);
     }
     if (rightNode instanceof LocalVariableNode) {
       LocalVariableNode localVar = (LocalVariableNode) rightNode;
       if (leftNode instanceof NullLiteralNode) {
         thenStore.setInformation(localVar, NONNULL);
         elseStore.setInformation(localVar, NULLABLE);
+      } else {
+        elseStore.setInformation(localVar, value);
       }
-      elseStore.setInformation(localVar, value);
     }
 
     return conditionalResult(thenStore, elseStore);
