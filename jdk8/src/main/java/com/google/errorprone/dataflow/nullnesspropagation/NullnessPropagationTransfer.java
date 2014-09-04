@@ -135,7 +135,11 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
       }
     }
 
-    return new ConditionalTransferResult<>(NULLABLE, thenStore, elseStore);
+    // The value of "x == y" is itself nonnull.
+    NullnessValue valueOfComparisonExpression = NONNULL;
+    thenStore.setInformation(node, valueOfComparisonExpression);
+    elseStore.setInformation(node, valueOfComparisonExpression);
+    return new ConditionalTransferResult<>(valueOfComparisonExpression, thenStore, elseStore);
   }
   
   /**
@@ -173,7 +177,11 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
       elseStore.setInformation(rightNode, value);
     }
 
-    return new ConditionalTransferResult<>(NULLABLE, thenStore, elseStore);
+    // The value of "x != y" is itself nonnull.
+    NullnessValue valueOfComparisonExpression = NONNULL;
+    thenStore.setInformation(node, valueOfComparisonExpression);
+    elseStore.setInformation(node, valueOfComparisonExpression);
+    return new ConditionalTransferResult<>(valueOfComparisonExpression, thenStore, elseStore);
   }
   
   /**

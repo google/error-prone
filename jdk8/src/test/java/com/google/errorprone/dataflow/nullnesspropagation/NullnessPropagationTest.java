@@ -73,6 +73,9 @@ public class NullnessPropagationTest {
   public static void triggerNullnessCheckerOnInt(int i) {
   }
 
+  public static void triggerNullnessCheckerOnBoolean(boolean b) {
+  }
+
   @Before
   public void setUp() {
     compilationHelper = CompilationTestHelper.newInstance(new NullnessPropagationChecker());
@@ -101,6 +104,7 @@ public class NullnessPropagationTest {
   public static final class NullnessPropagationChecker
       extends BugChecker implements MethodInvocationTreeMatcher {
     private static final Matcher<ExpressionTree> TRIGGER_CALL_MATCHER = anyOf(
+        staticMethod(NullnessPropagationTest.class.getName(), "triggerNullnessCheckerOnBoolean"),
         staticMethod(NullnessPropagationTest.class.getName(), "triggerNullnessCheckerOnInt"),
         staticMethod(NullnessPropagationTest.class.getName(), "triggerNullnessChecker"));
     
