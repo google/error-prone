@@ -17,6 +17,7 @@
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessCheckerOnBoolean;
 
 /**
  * Dataflow analysis cases for testing transfer functions in nullness propagation
@@ -184,5 +185,17 @@ public class NullnessPropagationTransferCases1 {
     }
     // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
     triggerNullnessChecker(str);
+  }
+
+  public void valueOfComparisonItself() {
+    // BUG: Diagnostic contains: triggerNullnessCheckerOnBoolean(Non-null)
+    triggerNullnessCheckerOnBoolean(1 == 1);
+    // BUG: Diagnostic contains: triggerNullnessCheckerOnBoolean(Non-null)
+    triggerNullnessCheckerOnBoolean(1 != 1);
+    boolean b;
+    // BUG: Diagnostic contains: triggerNullnessCheckerOnBoolean(Non-null)
+    triggerNullnessCheckerOnBoolean(b = (1 == 1));
+    // BUG: Diagnostic contains: triggerNullnessCheckerOnBoolean(Non-null)
+    triggerNullnessCheckerOnBoolean(b = (1 != 1));
   }
 }
