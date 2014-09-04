@@ -375,6 +375,9 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
     if (callee.isPrimitive) {
       return NONNULL;
     }
+    if (CLASSES_WITH_ALL_NON_NULLABLE_RETURNS.contains(callee.clazz)) {
+      return NONNULL;
+    }
 
     return NULLABLE;
   }
@@ -442,6 +445,9 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
       return isStatic;
     }
   }
+
+  private static final ImmutableSet<String> CLASSES_WITH_ALL_NON_NULLABLE_RETURNS =
+      ImmutableSet.of(String.class.getName());
 
   private static final ImmutableSet<String> CLASSES_WITH_NON_NULLABLE_VALUE_OF_METHODS =
       ImmutableSet.of(
