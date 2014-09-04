@@ -21,10 +21,10 @@ import static com.google.errorprone.dataflow.nullnesspropagation.NullnessValue.N
 
 import com.google.common.collect.ImmutableSet;
 
-import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 
@@ -188,13 +188,17 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
     NullnessValue value = before.getRegularStore().getInformation(node.getExpression());
 
     Node target = node.getTarget();
-    if (target instanceof LocalVariableNode) {
-      LocalVariableNode localVar = (LocalVariableNode) target;
-      before.getRegularStore().setInformation(localVar, value);
+    before.getRegularStore().setInformation(target, value);
+
+    if (target instanceof FieldAccessNode) {
+      FieldAccessNode fieldAccess = (FieldAccessNode) target;
+      ClassAndField targetField = tryGetFieldSymbol(target.getTree());
+      setReceiverNullness(before, fieldAccess.getReceiver(), targetField);
     }
+
     /*
-     * We set the assignment expressions's value to the RHS's value regardless of whether the target
-     * is a local variable. For example:
+     * We propagate the value of the target to the value of the assignment expressions as a whole.
+     * We do this regardless of whether the target is a local variable. For example:
      *
      * String s = object.field = "foo"; // Now |s| is non-null.
      *
@@ -224,67 +228,32 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
   }
 
   /**
-   * Refines the receiver of a field access to type non-null after a successful field access.
-   * 
-   * Note: If the field access occurs when the node is an l-value, the analysis won't
-   * call any transfer functions for that node. For example, {@code object.field = var;} would not
-   * call {@code visitFieldAccess} for {@code object.field}. On the other hand,
-   * {@code var = object.field} would call {@code visitFieldAccess} and make a successful transfer.
+   * Refines the receiver of a field access to type non-null after a successful field access, and
+   * refines the value of the expression as a whole to non-null if applicable (e.g., if the field
+   * has a primitive type).
+   *
+   * <p>Note: If the field access occurs when the node is an l-value, the analysis won't call this
+   * method. Instead, it will call {@link #visitAssignment}.
    */
   @Override
   public TransferResult<NullnessValue, NullnessPropagationStore> visitFieldAccess(
       FieldAccessNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
     ClassAndField accessed = tryGetFieldSymbol(node.getTree());
-    if (accessed != null && (accessed.field.equals("class") || accessed.isEnumConstant)) {
-      // No need to mark the "receiver" as non-null, since this happens to be a static "field."
-      return update(before, node, NONNULL);
-    }
-    /*
-     * We can't conclude anything about the value of the access itself, but we can still update the
-     * value of the receiver (if there is one). To determine whether there is one, we must
-     * explicitly check isStatic, as the Checker Framework will give us a "receiver" for an access
-     * of foo.staticField.
-     */
-    Node receiver = node.getReceiver();
-    NullnessValue receiverValue =
-        node.isStatic() ? before.getRegularStore().getInformation(receiver) : NONNULL;
-    before.getRegularStore().setInformation(receiver, receiverValue);
-    return update(before, node, NULLABLE);
+    setReceiverNullness(before, node.getReceiver(), accessed);
+    return update(before, node, fieldNullness(accessed));
   }
 
-  /*
-   * We don't need to handle narrowing conversions. Narrowing occurs with assignments to types like
-   * |short|. But the only legal types to assign to a short are (a) the set of primitives that can
-   * be narrowed to short and (b) java.lang.Short. The first group can't be null, and the second
-   * doesn't cause a narrowing conversion.
-   *
-   * Maybe someday we will write a detector that determines whether "short s = ..." can throw a
-   * NullPointerException. If we do, we can implement visitNarrowingConversion to return NONNULL.
-   */
-
   /**
-   * Refines the receiver of a method invocation to type non-null after successful invocation.
+   * Refines the receiver of a method invocation to type non-null after successful invocation, and
+   * refines the value of the expression as a whole to non-null if applicable (e.g., if the method
+   * returns a primitive type).
    */
   @Override
   public TransferResult<NullnessValue, NullnessPropagationStore> visitMethodInvocation(
       MethodInvocationNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
     ClassAndMethod callee = tryGetMethodSymbol(node.getTree());
-    if (callee != null && callee.method.equals("valueOf")
-        && CLASSES_WITH_NON_NULLABLE_VALUE_OF_METHODS.contains(callee.clazz)) {
-      // No need to mark the "receiver" as non-null, since this happens to be a static method.
-      return update(before, node, NONNULL);
-    }
-    /*
-     * We can't conclude anything about the value of the invocation itself, but we can still update
-     * the value of the receiver (if there is one). To determine whether there is one, we must
-     * explicitly check isStatic, as the Checker Framework will give us a "receiver" for a call to
-     * foo.staticMethod().
-     */
-    Node receiver = node.getTarget().getReceiver();
-    NullnessValue receiverValue =
-        callee.isStatic ? before.getRegularStore().getInformation(receiver) : NONNULL;
-    before.getRegularStore().setInformation(receiver, receiverValue);
-    return update(before, node, NULLABLE);
+    setReceiverNullness(before, node.getTarget().getReceiver(), callee);
+    return update(before, node, returnValueNullness(callee));
   }
 
   @Override
@@ -336,7 +305,7 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
     return new ConditionalTransferResult<>(NONNULL, thenStore, elseStore);
   }
 
-  private static boolean isPrimitiveVariable(LocalVariableNode node) {
+  private static boolean isPrimitiveVariable(Node node) {
     Tree tree = node.getTree();
     if (tree instanceof JCIdent) {
       JCIdent ident = (JCIdent) tree;
@@ -345,63 +314,132 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
     return false;
   }
 
-  /*
-   * We can't use ASTHelpers here. It's in core, which depends on jdk8, so we can't make jdk8 depend
-   * back on core.
-   */
-
   private static ClassAndField tryGetFieldSymbol(Tree tree) {
-    if (tree instanceof JCFieldAccess) {
-      return ClassAndField.make(((JCFieldAccess) tree).sym);
-    }
-    if (tree instanceof JCIdent) {
-      return ClassAndField.make(((JCIdent) tree).sym);
+    Symbol symbol = tryGetSymbol(tree);
+    if (symbol != null) {
+      return ClassAndField.make(symbol);
     }
     return null;
   }
 
   private static ClassAndMethod tryGetMethodSymbol(MethodInvocationTree tree) {
-    ExpressionTree methodSelect = tree.getMethodSelect();
-    if (methodSelect instanceof JCIdent) {
-      return ClassAndMethod.make(((JCIdent) methodSelect).sym);
-    }
-    if (methodSelect instanceof JCFieldAccess) {
-      return ClassAndMethod.make(((JCFieldAccess) methodSelect).sym);
+    Symbol symbol = tryGetSymbol(tree.getMethodSelect());
+    if (symbol instanceof MethodSymbol) {
+      return ClassAndMethod.make((MethodSymbol) symbol);
     }
     return null;
   }
 
-  private static final class ClassAndMethod {
-    final String clazz;
-    final String method;
-    final boolean isStatic;
+  /*
+   * We can't use ASTHelpers here. It's in core, which depends on jdk8, so we can't make jdk8 depend
+   * back on core.
+   */
 
-    private ClassAndMethod(String clazz, String method, boolean isStatic) {
-      this.clazz = clazz;
-      this.method = method;
-      this.isStatic = isStatic;
+  private static Symbol tryGetSymbol(Tree tree) {
+    if (tree instanceof JCIdent) {
+      return ((JCIdent) tree).sym;
+    }
+    if (tree instanceof JCFieldAccess) {
+      return ((JCFieldAccess) tree).sym;
+    }
+    return null;
+  }
+
+  private static NullnessValue fieldNullness(ClassAndField accessed) {
+    if (accessed == null) {
+      return NULLABLE;
     }
 
-    static ClassAndMethod make(Symbol symbol) {
-      return new ClassAndMethod(symbol.owner.getQualifiedName().toString(),
-          symbol.getSimpleName().toString(), symbol.isStatic());
+    if (accessed.field.equals("class")) {
+      return NONNULL;
+    }
+    if (accessed.isEnumConstant) {
+      return NONNULL;
+    }
+    if (accessed.isPrimitive) {
+      return NONNULL;
+    }
+
+    return NULLABLE;
+  }
+
+  private static NullnessValue returnValueNullness(ClassAndMethod callee) {
+    if (callee == null) {
+      return NULLABLE;
+    }
+
+    if (callee.method.equals("valueOf")
+        && CLASSES_WITH_NON_NULLABLE_VALUE_OF_METHODS.contains(callee.clazz)) {
+      return NONNULL;
+    }
+    if (callee.isPrimitive) {
+      return NONNULL;
+    }
+
+    return NULLABLE;
+  }
+
+  private static void setReceiverNullness(
+      TransferInput<NullnessValue, NullnessPropagationStore> before, Node receiver, Member member) {
+    if (!member.isStatic()) {
+      before.getRegularStore().setInformation(receiver, NONNULL);
     }
   }
 
-  private static final class ClassAndField {
+  interface Member {
+    boolean isStatic();
+  }
+
+  private static final class ClassAndMethod implements Member {
+    final String clazz;
+    final String method;
+    final boolean isStatic;
+    final boolean isPrimitive;
+
+    private ClassAndMethod(String clazz, String method, boolean isStatic, boolean isPrimitive) {
+      this.clazz = clazz;
+      this.method = method;
+      this.isStatic = isStatic;
+      this.isPrimitive = isPrimitive;
+    }
+
+    static ClassAndMethod make(MethodSymbol symbol) {
+      return new ClassAndMethod(symbol.owner.getQualifiedName().toString(),
+          symbol.getSimpleName().toString(), symbol.isStatic(),
+          symbol.getReturnType().isPrimitive());
+    }
+
+    @Override
+    public boolean isStatic() {
+      return isStatic;
+    }
+  }
+
+  private static final class ClassAndField implements Member {
     final String clazz;
     final String field;
+    final boolean isStatic;
+    final boolean isPrimitive;
     final boolean isEnumConstant;
 
-    private ClassAndField(String clazz, String field, boolean isEnumConstant) {
+    private ClassAndField(String clazz, String field, boolean isStatic, boolean isPrimitive,
+        boolean isEnumConstant) {
       this.clazz = clazz;
       this.field = field;
+      this.isStatic = isStatic;
+      this.isPrimitive = isPrimitive;
       this.isEnumConstant = isEnumConstant;
     }
 
     static ClassAndField make(Symbol symbol) {
       return new ClassAndField(symbol.owner.getQualifiedName().toString(),
-          symbol.getSimpleName().toString(), symbol.isEnum());
+          symbol.getSimpleName().toString(), symbol.isStatic(), symbol.type.isPrimitive(),
+          symbol.isEnum());
+    }
+
+    @Override
+    public boolean isStatic() {
+      return isStatic;
     }
   }
 
