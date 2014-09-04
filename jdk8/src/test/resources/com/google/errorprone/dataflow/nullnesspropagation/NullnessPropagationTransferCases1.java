@@ -271,4 +271,12 @@ public class NullnessPropagationTransferCases1 {
     // BUG: Diagnostic contains: triggerNullnessCheckerOnBoolean(Non-null)
     triggerNullnessCheckerOnBoolean(b = !b);
   }
+
+  public void leastUpperBoundOfNonNullAndUnknown(String param, boolean b) {
+    if (b) {
+      param = "foo";
+    }
+    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    triggerNullnessChecker(param);
+  }
 }
