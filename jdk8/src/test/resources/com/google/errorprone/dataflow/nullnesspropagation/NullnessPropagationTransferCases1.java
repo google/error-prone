@@ -17,7 +17,7 @@
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
-import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessCheckerOnBoolean;
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessCheckerOnPrimitive;
 
 /**
  * Dataflow analysis cases for testing transfer functions in nullness propagation
@@ -29,13 +29,13 @@ public class NullnessPropagationTransferCases1 {
   public void equalToNull(String nullableParam) {
     String str = nullableParam;
     if (str == null) {
-      // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+      // BUG: Diagnostic contains: (Nullable)
       triggerNullnessChecker(str);
     } else {
-      // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+      // BUG: Diagnostic contains: (Non-null)
       triggerNullnessChecker(str);
     }
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(str);
   }
   
@@ -46,7 +46,7 @@ public class NullnessPropagationTransferCases1 {
     } else {
       str = "non-null";
     }
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(str);
   }
   
@@ -57,7 +57,7 @@ public class NullnessPropagationTransferCases1 {
     } else {
       str = null;
     }
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(str);
   }
   
@@ -68,7 +68,7 @@ public class NullnessPropagationTransferCases1 {
     } else {
       str = "something else";
     }
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(str);
   }
     
@@ -81,7 +81,7 @@ public class NullnessPropagationTransferCases1 {
     } else {
       str = null;
     }
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(str);
   }
   
@@ -90,44 +90,44 @@ public class NullnessPropagationTransferCases1 {
   public void notEqual(String nullableParam) {
     String str = nullableParam;
     if (str != "rhs") {
-      // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+      // BUG: Diagnostic contains: (Nullable)
       triggerNullnessChecker(str);
     } else {
-      // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+      // BUG: Diagnostic contains: (Non-null)
       triggerNullnessChecker(str);
     }
     
     if ("lhs" != str) {
-      // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+      // BUG: Diagnostic contains: (Nullable)
       triggerNullnessChecker(str);
     } else {
-      // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+      // BUG: Diagnostic contains: (Non-null)
       triggerNullnessChecker(str);
     }
     
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(str);
   }
   
   public void notEqualToNull(String nullableParam) {
     String str = nullableParam;
     if (str != null) {
-      // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+      // BUG: Diagnostic contains: (Non-null)
       triggerNullnessChecker(str);
     } else {
-      // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+      // BUG: Diagnostic contains: (Nullable)
       triggerNullnessChecker(str);
     }
     
     if (null != str) {
-      // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+      // BUG: Diagnostic contains: (Non-null)
       triggerNullnessChecker(str);
     } else {
-      // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+      // BUG: Diagnostic contains: (Nullable)
       triggerNullnessChecker(str);
     }
     
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(str);
   }
   
@@ -135,22 +135,22 @@ public class NullnessPropagationTransferCases1 {
     String str1 = nullableParam;
     String str2 = "local variable";
     if (str1 != str2) {
-      // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+      // BUG: Diagnostic contains: (Nullable)
       triggerNullnessChecker(str1);
     } else {
-      // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+      // BUG: Diagnostic contains: (Non-null)
       triggerNullnessChecker(str1);
     }
     
     if (str2 != str1) {
-      // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+      // BUG: Diagnostic contains: (Nullable)
       triggerNullnessChecker(str1);
     } else {
-      // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+      // BUG: Diagnostic contains: (Non-null)
       triggerNullnessChecker(str1);
     }
     
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(str1);
   }
   
@@ -161,7 +161,7 @@ public class NullnessPropagationTransferCases1 {
     } else {
       str = "non-null";
     }
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(str);
   }
   
@@ -172,7 +172,7 @@ public class NullnessPropagationTransferCases1 {
     } else {
       str = null;
     }
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(str);
   }
   
@@ -183,100 +183,100 @@ public class NullnessPropagationTransferCases1 {
     } else {
       str = null;
     }
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(str);
   }
 
   public void conditionalNot(String foo) {
     if (!(foo == null)) {
-      // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+      // BUG: Diagnostic contains: (Non-null)
       triggerNullnessChecker(foo);
       return;
     }
 
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(foo);
   }
 
   public void conditionalOr1(String foo, String bar) {
     if (foo == null || bar == null) {
-      // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+      // BUG: Diagnostic contains: (Nullable)
       triggerNullnessChecker(foo);
       return;
     }
 
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(foo);
   }
 
   public void conditionalOr2(String foo, String bar) {
     if (foo != null || bar != null) {
-      // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+      // BUG: Diagnostic contains: (Nullable)
       triggerNullnessChecker(foo);
     }
 
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(foo);
   }
 
   public void conditionalOr3(String foo) {
     if (foo != null || foo != null) {
-      // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+      // BUG: Diagnostic contains: (Non-null)
       triggerNullnessChecker(foo);
     }
 
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(foo);
   }
 
   public void conditionalAnd1(String foo, String bar) {
     if (foo != null && bar != null) {
-      // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+      // BUG: Diagnostic contains: (Non-null)
       triggerNullnessChecker(foo);
     }
 
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(foo);
   }
 
   public void conditionalAnd2(String foo) {
     if (foo == null && foo != null) {
       // I don't really care what the checker returns here, but I don't want it to explode.
-      // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+      // BUG: Diagnostic contains: (Non-null)
       triggerNullnessChecker(foo);
       return;
     }
 
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(foo);
   }
 
   public void valueOfComparisonItself() {
-    // BUG: Diagnostic contains: triggerNullnessCheckerOnBoolean(Non-null)
-    triggerNullnessCheckerOnBoolean(1 == 1);
-    // BUG: Diagnostic contains: triggerNullnessCheckerOnBoolean(Non-null)
-    triggerNullnessCheckerOnBoolean(1 != 1);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(1 == 1);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(1 != 1);
     boolean b;
-    // BUG: Diagnostic contains: triggerNullnessCheckerOnBoolean(Non-null)
-    triggerNullnessCheckerOnBoolean(b = (1 == 1));
-    // BUG: Diagnostic contains: triggerNullnessCheckerOnBoolean(Non-null)
-    triggerNullnessCheckerOnBoolean(b = (1 != 1));
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(b = (1 == 1));
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(b = (1 != 1));
 
-    // BUG: Diagnostic contains: triggerNullnessCheckerOnBoolean(Non-null)
-    triggerNullnessCheckerOnBoolean(!b);
-    // BUG: Diagnostic contains: triggerNullnessCheckerOnBoolean(Non-null)
-    triggerNullnessCheckerOnBoolean(b || b);
-    // BUG: Diagnostic contains: triggerNullnessCheckerOnBoolean(Non-null)
-    triggerNullnessCheckerOnBoolean(b && b);
-    // BUG: Diagnostic contains: triggerNullnessCheckerOnBoolean(Non-null)
-    triggerNullnessCheckerOnBoolean(b = !b);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(!b);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(b || b);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(b && b);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(b = !b);
   }
 
   public void leastUpperBoundOfNonNullAndUnknown(String param, boolean b) {
     if (b) {
       param = "foo";
     }
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(param);
   }
 }

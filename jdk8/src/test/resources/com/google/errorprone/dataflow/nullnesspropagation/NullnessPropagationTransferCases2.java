@@ -17,7 +17,8 @@
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
-import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessCheckerOnInt;
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessCheckerOnBoxed;
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessCheckerOnPrimitive;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTransferCases2.HasStaticFields.staticIntField;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTransferCases2.HasStaticFields.staticStringField;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTransferCases2.MyEnum.ENUM_INSTANCE;
@@ -42,35 +43,6 @@ public class NullnessPropagationTransferCases2 {
     private MyClass field;
   }
 
-  public void literals() {
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
-    triggerNullnessChecker((short) 1000);
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
-    triggerNullnessChecker(2);
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
-    triggerNullnessChecker(33L);
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
-    triggerNullnessChecker(0.444f);
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
-    triggerNullnessChecker(0.5555d);
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
-    triggerNullnessChecker(true);
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
-    triggerNullnessChecker('z');
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
-    triggerNullnessChecker("a string literal");
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
-    triggerNullnessChecker(String.class);
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
-    triggerNullnessChecker(MyEnum.ENUM_INSTANCE);
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
-    triggerNullnessChecker(ENUM_INSTANCE);
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
-    triggerNullnessChecker(MyEnum.NOT_AN_ENUM_CONSTANT);
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
-    triggerNullnessChecker(null);
-  }
-
   static final int CONSTANT_INT = 1;
   static final Integer CONSTANT_BOXED_INTEGER = 1;
   static final String CONSTANT_STRING = "foo";
@@ -78,15 +50,15 @@ public class NullnessPropagationTransferCases2 {
   static final MyClass CONSTANT_OTHER_CLASS = new MyClass();
 
   public void constants() {
-    // BUG: Diagnostic contains: triggerNullnessCheckerOnInt(Non-null)
-    triggerNullnessCheckerOnInt(CONSTANT_INT);
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(CONSTANT_INT);
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(CONSTANT_BOXED_INTEGER);
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(CONSTANT_STRING);
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(CONSTANT_NULL_STRING);
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(CONSTANT_OTHER_CLASS);
   }
 
@@ -112,116 +84,116 @@ public class NullnessPropagationTransferCases2 {
   }
 
   public void explicitValueOf() {
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(String.valueOf(3));
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(valueOf(3));
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(Integer.valueOf(null));
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(BigInteger.valueOf(3));
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(Enum.valueOf(MyEnum.class, "INSTANCE"));
 
     // We'd prefer this to be Non-null. See the TODO on CLASSES_WITH_NON_NULLABLE_VALUE_OF_METHODS.
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(MyEnum.valueOf("INSTANCE"));
 
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(MyBigInteger.valueOf(3));
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(MyEnum.valueOf('a'));
   }
 
   public void parameter(String str, int i) {
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(str);
 
     // A call to plain triggerNullnessChecker() would implicitly call Integer.valueOf(i).
-    // BUG: Diagnostic contains: triggerNullnessCheckerOnInt(Non-null)
-    triggerNullnessCheckerOnInt(i);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(i);
   }
 
   public void assignment(String nullableParam) {
     String str = nullableParam;
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(str);
     
     str = "a string";
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(str);
 
     String otherStr = str;
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(str);
     
     str = null;
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(str);
 
     otherStr = str;
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(str);
   }
 
   public void assignmentExpressionValue() {
     String str = "foo";
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(str);
 
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(str = null);
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(str);
 
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(str = "bar");
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(str);
 
     str = null;
     String str2 = null;
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(str = str2 = "bar");
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(str);
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(str2);
 
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(str = str2 = null);
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(str);
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(str2);
   }
   
   public void localVariable() {
     short s = 1000; // performs narrowing conversion from int literal to short
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
-    triggerNullnessChecker(s);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(s);
     int i = 2;
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
-    triggerNullnessChecker(i);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(i);
     String str = "a string literal";
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(str);
     Object obj = null;
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(obj);
 
     ++i;
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
-    triggerNullnessChecker(i);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(i);
   }
 
   public void boxedPrimitives() {
     Short s = 1000;
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: (Non-null)
     NullnessPropagationTest.triggerNullnessChecker(s);
 
     Integer i = 2;
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: (Non-null)
     NullnessPropagationTest.triggerNullnessChecker(i);
   }
 
@@ -230,51 +202,58 @@ public class NullnessPropagationTransferCases2 {
   Object obj;
 
   public void field() {
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
-    triggerNullnessChecker(i);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(i);
 
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnBoxed(i);
+
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(str);
 
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(obj);
   }
   
   public void fieldQualifiedByThis() {
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
-    triggerNullnessChecker(this.i);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(this.i);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnBoxed(this.i);
   }
 
   public void fieldQualifiedByOtherVar() {
     NullnessPropagationTransferCases2 self = this;
 
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
-    triggerNullnessChecker(self.i);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(self.i);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnBoxed(self.i);
   }
 
   public void fieldAccessIsDereference(MyClass nullableParam) {
     MyClass mc = nullableParam;
     int i = mc.field;
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(mc);
   }
   
   public void staticFieldAccessIsNotDereferenceNullableReturn(HasStaticFields nullableParam) {
     String s = nullableParam.staticStringField;
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(nullableParam);
   }
   
   public void staticFieldAccessIsNotDereferenceNonNullReturn(MyEnum nullableParam) {
     MyEnum x = nullableParam.ENUM_INSTANCE;
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(nullableParam);
   }
 
   public void fieldAssignmentIsDereference(MyClass nullableParam) {
     MyClass mc = nullableParam;
     mc.field = 0;
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(mc);
   }
 
@@ -282,19 +261,19 @@ public class NullnessPropagationTransferCases2 {
     MyClass mc = nullableParam;
     MyContainerClass container = new MyContainerClass();
     container.field.field = 0;
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(container);
   }
 
   public void staticFieldAssignmentIsNotDereferenceNullableReturn(HasStaticFields nullableParam) {
     nullableParam.staticStringField = "foo";
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(nullableParam);
   }
 
   public void staticFieldAssignmentIsNotDereferenceNonNullReturn(HasStaticFields nullableParam) {
     nullableParam.staticIntField = 0;
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(nullableParam);
   }
 
@@ -302,62 +281,62 @@ public class NullnessPropagationTransferCases2 {
   public void staticFieldAccessIsNotDereferenceButPreservesExistingInformation() {
     HasStaticFields container = new HasStaticFields();
     String s = container.staticStringField;
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(container);
   }
   
   public void fieldValuesMayChange() {
     MyContainerClass container = new MyContainerClass();
     container.field = new MyClass();
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(container.field);
 
     container.field.field = 10;
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(container.field);
   }
 
   public void assignmentToFieldExpressionValue() {
     MyContainerClass container = new MyContainerClass();
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(container.field = new MyClass());
   }
 
   public void assignmentToPrimitiveFieldExpressionValue() {
     MyClass mc = new MyClass();
-    // BUG: Diagnostic contains: triggerNullnessCheckerOnInt(Non-null)
-    triggerNullnessCheckerOnInt(mc.field = 10);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(mc.field = 10);
   }
 
   public void assignmentToStaticImportedFieldExpressionValue() {
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(staticStringField = null);
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(staticStringField = "foo");
   }
 
   public void assignmentToStaticImportedPrimitiveFieldExpressionValue() {
-    // BUG: Diagnostic contains: triggerNullnessCheckerOnInt(Non-null)
-    triggerNullnessCheckerOnInt(staticIntField = boxedIntReturningMethod());
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(staticIntField = boxedIntReturningMethod());
   }
 
   public void nullableAssignmentToPrimitiveFieldExpressionValue() {
     MyClass mc = new MyClass();
-    // BUG: Diagnostic contains: triggerNullnessCheckerOnInt(Non-null)
-    triggerNullnessCheckerOnInt(mc.field = boxedIntReturningMethod());
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(mc.field = boxedIntReturningMethod());
   }
 
   public void nullableAssignmentToPrimitiveVariableExpressionValue() {
     int i;
-    // BUG: Diagnostic contains: triggerNullnessCheckerOnInt(Non-null)
-    triggerNullnessCheckerOnInt(i = boxedIntReturningMethod());
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(i = boxedIntReturningMethod());
   }
 
   public void methodInvocation() {
-    // BUG: Diagnostic contains: triggerNullnessCheckerOnInt(Non-null)
-    triggerNullnessCheckerOnInt(intReturningMethod());
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(intReturningMethod());
 
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(stringReturningMethod());
   }
 
@@ -376,39 +355,39 @@ public class NullnessPropagationTransferCases2 {
   public void methodInvocationIsDereference(String nullableParam) {
     String str = nullableParam;
     str.toString();
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(str);
   }
 
   public void staticMethodInvocationIsNotDereferenceNullableReturn(MyClass nullableParam) {
     nullableParam.staticReturnNullable();
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(nullableParam);
   }
 
   public void staticMethodInvocationIsNotDereferenceNonNullReturn(String nullableParam) {
     nullableParam.valueOf(true);
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(nullableParam);
   }
 
   public void staticMethodInvocationIsNotDereferenceButPreservesExistingInformation() {
     String s = "foo";
     s.format("%s", "foo");
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(s);
   }
 
   public void staticMethodInvocationIsNotDereferenceButDefersToOtherNewInformation(String s) {
     s = s.valueOf(true);
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(s);
   }
 
   public void objectCreation(Object nullableParam) {
     Object obj = nullableParam;
     obj = new Object();
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(obj);
   }
 
@@ -416,41 +395,41 @@ public class NullnessPropagationTransferCases2 {
     int i = 0;
     short s = 0;
 
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
-    triggerNullnessChecker(i++);
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
-    triggerNullnessChecker(s++);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(i++);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(s++);
 
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
-    triggerNullnessChecker(++i);
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
-    triggerNullnessChecker(++s);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(++i);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(++s);
 
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
-    triggerNullnessChecker(i += 5);
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
-    triggerNullnessChecker(s += 5);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(i += 5);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(s += 5);
   }
 
   public void stringStaticMethodsReturnNonNull() {
     String s = null;
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(String.format("%s", "foo"));
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(format("%s", "foo"));
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(s.format("%s", "foo"));
   }
 
   public void stringInstanceMethodsReturnNonNull() {
     String s = null;
-    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(s.substring(0));
   }
 
   public void vanillaVisitNode() {
     String[] a = new String[1];
-    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(a[0]);
   }
 
@@ -464,7 +443,7 @@ public class NullnessPropagationTransferCases2 {
 
     class Bar {
       void method(String s) {
-        // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+        // BUG: Diagnostic contains: (Nullable)
         triggerNullnessChecker(s);
       }
     }
@@ -475,11 +454,11 @@ public class NullnessPropagationTransferCases2 {
 
     class Bar {
       void method() {
-        // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+        // BUG: Diagnostic contains: (Non-null)
         triggerNullnessChecker(s);
 
         String s = HasStaticFields.staticStringField;
-        // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+        // BUG: Diagnostic contains: (Nullable)
         triggerNullnessChecker(s);
       }
     }
@@ -492,11 +471,11 @@ public class NullnessPropagationTransferCases2 {
       void method() {
         {
           String s = "foo";
-          // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+          // BUG: Diagnostic contains: (Non-null)
           triggerNullnessChecker(s);
         }
 
-        // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+        // BUG: Diagnostic contains: (Nullable)
         triggerNullnessChecker(s);
       }
     }
@@ -512,7 +491,7 @@ public class NullnessPropagationTransferCases2 {
          * class's enclosing method, so our captured-variable handling is limited to compile-time
          * constants.
          */
-        // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+        // BUG: Diagnostic contains: (Nullable)
         triggerNullnessChecker(nonnull);
       }
     }
