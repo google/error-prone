@@ -18,6 +18,8 @@ package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessCheckerOnInt;
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTransferCases2.HasStaticFields.staticIntField;
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTransferCases2.HasStaticFields.staticStringField;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTransferCases2.MyEnum.ENUM_INSTANCE;
 import static java.lang.String.valueOf;
 
@@ -142,10 +144,16 @@ public class NullnessPropagationTransferCases2 {
     String str = "foo";
     // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
     triggerNullnessChecker(str);
+
     // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
     triggerNullnessChecker(str = null);
+    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    triggerNullnessChecker(str);
+
     // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
     triggerNullnessChecker(str = "bar");
+    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    triggerNullnessChecker(str);
 
     str = null;
     String str2 = null;
@@ -227,8 +235,8 @@ public class NullnessPropagationTransferCases2 {
     triggerNullnessChecker(mc);
   }
   
-  public void staticFieldAccessIsNotDereferenceNullableReturn(HasStaticField nullableParam) {
-    String s = nullableParam.s;
+  public void staticFieldAccessIsNotDereferenceNullableReturn(HasStaticFields nullableParam) {
+    String s = nullableParam.staticStringField;
     // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
     triggerNullnessChecker(nullableParam);
   }
@@ -238,10 +246,38 @@ public class NullnessPropagationTransferCases2 {
     // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
     triggerNullnessChecker(nullableParam);
   }
+
+  public void fieldAssignmentIsDereference(MyClass nullableParam) {
+    MyClass mc = nullableParam;
+    mc.field = 0;
+    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    triggerNullnessChecker(mc);
+  }
+
+  public void chainedFieldAssignmentIsDereference(MyClass nullableParam) {
+    MyClass mc = nullableParam;
+    MyContainerClass container = new MyContainerClass();
+    container.field.field = 0;
+    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    triggerNullnessChecker(container);
+  }
+
+  public void staticFieldAssignmentIsNotDereferenceNullableReturn(HasStaticFields nullableParam) {
+    nullableParam.staticStringField = "foo";
+    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    triggerNullnessChecker(nullableParam);
+  }
+
+  public void staticFieldAssignmentIsNotDereferenceNonNullReturn(HasStaticFields nullableParam) {
+    nullableParam.staticIntField = 0;
+    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    triggerNullnessChecker(nullableParam);
+  }
+
   
   public void staticFieldAccessIsNotDereferenceButPreservesExistingInformation() {
-    HasStaticField container = new HasStaticField();
-    String s = container.s;
+    HasStaticFields container = new HasStaticFields();
+    String s = container.staticStringField;
     // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
     triggerNullnessChecker(container);
   }
@@ -269,12 +305,40 @@ public class NullnessPropagationTransferCases2 {
     triggerNullnessCheckerOnInt(mc.field = 10);
   }
 
-  public void methodInvocation() {
+  public void assignmentToStaticImportedFieldExpressionValue() {
+    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    triggerNullnessChecker(staticStringField = null);
     // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
-    triggerNullnessChecker(intReturningMethod());
+    triggerNullnessChecker(staticStringField = "foo");
+  }
+
+  public void assignmentToStaticImportedPrimitiveFieldExpressionValue() {
+    // BUG: Diagnostic contains: triggerNullnessCheckerOnInt(Non-null)
+    triggerNullnessCheckerOnInt(staticIntField = boxedIntReturningMethod());
+  }
+
+  public void nullableAssignmentToPrimitiveFieldExpressionValue() {
+    MyClass mc = new MyClass();
+    // BUG: Diagnostic contains: triggerNullnessCheckerOnInt(Non-null)
+    triggerNullnessCheckerOnInt(mc.field = boxedIntReturningMethod());
+  }
+
+  public void nullableAssignmentToPrimitiveVariableExpressionValue() {
+    int i;
+    // BUG: Diagnostic contains: triggerNullnessCheckerOnInt(Non-null)
+    triggerNullnessCheckerOnInt(i = boxedIntReturningMethod());
+  }
+
+  public void methodInvocation() {
+    // BUG: Diagnostic contains: triggerNullnessCheckerOnInt(Non-null)
+    triggerNullnessCheckerOnInt(intReturningMethod());
 
     // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
     triggerNullnessChecker(stringReturningMethod());
+  }
+
+  Integer boxedIntReturningMethod() {
+    return null;
   }
 
   int intReturningMethod() {
@@ -303,10 +367,16 @@ public class NullnessPropagationTransferCases2 {
     // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
     triggerNullnessChecker(nullableParam);
   }
-  
+
   public void staticMethodInvocationIsNotDereferenceButPreservesExistingInformation() {
     String s = "foo";
     s.format("%s", "foo");
+    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    triggerNullnessChecker(s);
+  }
+
+  public void staticMethodInvocationIsNotDereferenceButDefersToOtherNewInformation(String s) {
+    s = s.valueOf(true);
     // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
     triggerNullnessChecker(s);
   }
@@ -344,7 +414,8 @@ public class NullnessPropagationTransferCases2 {
     triggerNullnessChecker(a[0]);
   }
 
-  public static class HasStaticField {
-    static String s;
+  public static class HasStaticFields {
+    static String staticStringField;
+    static int staticIntField;
   }
 }
