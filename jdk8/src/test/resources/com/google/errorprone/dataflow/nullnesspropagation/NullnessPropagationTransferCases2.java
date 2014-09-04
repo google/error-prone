@@ -71,6 +71,25 @@ public class NullnessPropagationTransferCases2 {
     triggerNullnessChecker(null);
   }
 
+  static final int CONSTANT_INT = 1;
+  static final Integer CONSTANT_BOXED_INTEGER = 1;
+  static final String CONSTANT_STRING = "foo";
+  static final String CONSTANT_NULL_STRING = null;
+  static final MyClass CONSTANT_OTHER_CLASS = new MyClass();
+
+  public void constants() {
+    // BUG: Diagnostic contains: triggerNullnessCheckerOnInt(Non-null)
+    triggerNullnessCheckerOnInt(CONSTANT_INT);
+    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    triggerNullnessChecker(CONSTANT_BOXED_INTEGER);
+    // BUG: Diagnostic contains: triggerNullnessChecker(Non-null)
+    triggerNullnessChecker(CONSTANT_STRING);
+    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    triggerNullnessChecker(CONSTANT_NULL_STRING);
+    // BUG: Diagnostic contains: triggerNullnessChecker(Nullable)
+    triggerNullnessChecker(CONSTANT_OTHER_CLASS);
+  }
+
   static class MyBigInteger extends BigInteger {
     MyBigInteger(String val) {
       super(val);
