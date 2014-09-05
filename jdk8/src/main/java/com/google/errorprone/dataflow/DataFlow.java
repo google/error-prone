@@ -16,6 +16,8 @@
 
 package com.google.errorprone.dataflow;
 
+import com.google.common.base.Preconditions;
+
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.MethodTree;
@@ -50,6 +52,11 @@ public final class DataFlow {
   public static <A extends AbstractValue<A>, S extends Store<S>,
       T extends TransferFunction<A, S>> Result<A, S, T> dataflow(MethodTree method, TreePath path,
       Context context, T transfer) {
+    Preconditions.checkNotNull(method.getBody(),
+        "Method to analyze must have a body. Method passed in: %s in file %s",
+        method.getName(),
+        path.getCompilationUnit().getSourceFile().getName());
+
     CompilationUnitTree root = path.getCompilationUnit();
     ProcessingEnvironment env = JavacProcessingEnvironment.instance(context);
     ClassTree classTree = null;
