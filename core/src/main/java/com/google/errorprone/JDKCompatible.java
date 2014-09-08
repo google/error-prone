@@ -19,7 +19,6 @@ package com.google.errorprone;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
-import com.sun.tools.javac.jvm.Target;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.main.Main;
 import com.sun.tools.javac.tree.JCTree;
@@ -38,26 +37,7 @@ import javax.tools.JavaFileObject;
  */
 public final class JDKCompatible {
 
-  private static final JDKCompatibleShim backingShim = tryJDK8();
-  private static JDKCompatibleShim tryJDK8() {
-   try {
-     Target.valueOf("JDK1_8");
-   } catch (IllegalArgumentException expected) {
-     return tryJDK7();
-   }
-    try {
-      return (JDKCompatibleShim) Class.forName("com.google.errorprone.JDK8Shim").newInstance();
-    } catch (Throwable e) {
-      throw new LinkageError("Could not load JDKShim: " + e);
-    }
-  }
-  private static JDKCompatibleShim tryJDK7() {
-    try {
-      return (JDKCompatibleShim) Class.forName("com.google.errorprone.JDK7Shim").newInstance();
-    } catch (Throwable e) {
-      throw new LinkageError("Could not load JDKShim: " + e);
-    }
-  }
+  private static final JDKCompatibleShim backingShim = new JDKShim();
 
   /** AdjustedPosition factory. */
   public static DiagnosticPosition getAdjustedPosition(JCTree position, int startPosAdjustment,

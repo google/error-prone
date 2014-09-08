@@ -16,13 +16,8 @@
 
 package com.google.errorprone;
 
-import com.google.errorprone.dataflow.DataFlow;
-import com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationStore;
-import com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTransfer;
-import com.google.errorprone.dataflow.nullnesspropagation.NullnessValue;
-import com.google.errorprone.fixes.AdjustedPosition8;
-import com.google.errorprone.fixes.IndexedPosition8;
-import com.google.errorprone.util.Constants;
+import com.google.errorprone.fixes.AdjustedPosition7;
+import com.google.errorprone.fixes.IndexedPosition7;
 
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
@@ -34,63 +29,39 @@ import com.sun.tools.javac.parser.ParserFactory;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
-import com.sun.tools.javac.util.AbstractLog;
 import com.sun.tools.javac.util.Context;
-import com.sun.tools.javac.util.DiagnosticSource;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 
-import org.checkerframework.dataflow.analysis.Analysis;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Map;
 
 import javax.annotation.processing.Processor;
 import javax.tools.JavaFileObject;
 
-/** A JDK8 compatible {@link JDKCompatibleShim} */
-public class JDK8Shim implements JDKCompatibleShim {
-  
+/** A JDK7 compatible {@link JDKCompatibleShim} */
+public class JDKShim implements JDKCompatibleShim {
+
   @Override
   public DiagnosticPosition getAdjustedPosition(JCTree position, int startPosAdjustment,
       int endPosAdjustment) {
-    return new AdjustedPosition8(position, startPosAdjustment, endPosAdjustment);
+    return new AdjustedPosition7(position, startPosAdjustment, endPosAdjustment);
   }
 
   @Override
   public DiagnosticPosition getIndexedPosition(int startPos, int endPos) {
-    return new IndexedPosition8(startPos, endPos);
+    return new IndexedPosition7(startPos, endPos);
   }
 
   @Override
-  public EndPosMap8 getEndPosMap(JCCompilationUnit compilationUnit) {
-    return EndPosMap8.fromCompilationUnit(compilationUnit);
-  }
-
-  private static final Method ABSTRACT_LOG__GET_SOURCE;
-  private static final Field DIAGNOSTIC_SOURCE__END_POS_TABLE;
-  static {
-    try {
-      ABSTRACT_LOG__GET_SOURCE =
-          AbstractLog.class.getDeclaredMethod("getSource", JavaFileObject.class);
-      ABSTRACT_LOG__GET_SOURCE.setAccessible(true);
-
-      DIAGNOSTIC_SOURCE__END_POS_TABLE =
-          DiagnosticSource.class.getDeclaredField("endPosTable");
-      DIAGNOSTIC_SOURCE__END_POS_TABLE.setAccessible(true);
-    } catch (Exception e) {
-      throw new LinkageError(e.getMessage());
+  public EndPosMap7 getEndPosMap(JCCompilationUnit compilationUnit) {
+    if (compilationUnit.endPositions == null) {
+      return null;
     }
+    return new EndPosMap7(compilationUnit.endPositions);
   }
+
   @Override
   public void resetEndPosMap(JavaCompiler compiler, JavaFileObject sourceFile) {
-    try {
-      DiagnosticSource diagnosticSource = (DiagnosticSource)
-          ABSTRACT_LOG__GET_SOURCE.invoke(compiler.log, sourceFile);
-      DIAGNOSTIC_SOURCE__END_POS_TABLE.set(diagnosticSource, null);
-    } catch (Exception e) {
-      throw new LinkageError(e.getMessage());
-    }
+    // Nothing required for JDK <= 7.
   }
 
   @Override
@@ -100,22 +71,22 @@ public class JDK8Shim implements JDKCompatibleShim {
       Context context,
       com.sun.tools.javac.util.List<JavaFileObject> files,
       Iterable<? extends Processor> processors) {
-    return main.compile(args, context, files, processors).exitCode;
+    return main.compile(args, context, files, processors);
   }
 
   @Override
   public int getJCTreeTag(JCTree node) {
-    return node.getTag().ordinal();
+    return node.getTag();
   }
 
   @Override
   public Integer getEndPosition(DiagnosticPosition pos, Map<JCTree, Integer> map) {
-    return EndPosMap8.getEndPos(pos, map);
+    return EndPosMap7.getEndPos(pos, map);
   }
 
   @Override
   public JCExpression parseString(String string, Context context) {
-    JavacParser parser =
+    JavacParser parser = (JavacParser)
         ParserFactory.instance(context).newParser(string, false, true, false);
     JCExpression result = parser.parseExpression();
     int len = (parser.getEndPos(result) - result.getStartPosition());
@@ -127,15 +98,12 @@ public class JDK8Shim implements JDKCompatibleShim {
 
   @Override
   public Number numberValue(Tree tree, TreePath path, Context context) {
-    return Constants.numberValue(tree, path, context);
+    return null;
   }
   
   @Override
   public boolean isDefinitelyNonNull(
-      Tree tree, MethodTree enclosingMethod, TreePath path, Context context) {    
-    Analysis<NullnessValue, NullnessPropagationStore, NullnessPropagationTransfer> analysis =
-        DataFlow.dataflow(enclosingMethod, path, context, new NullnessPropagationTransfer())
-        .getAnalysis();
-   return analysis.getValue(tree).isNonNull(); 
+      Tree tree, MethodTree enclosingMethod, TreePath path, Context context) {
+    return false;
   }
 }
