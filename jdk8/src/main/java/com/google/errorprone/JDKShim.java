@@ -136,15 +136,6 @@ public class JDKShim implements JDKCompatibleShim {
     Analysis<NullnessValue, NullnessPropagationStore, NullnessPropagationTransfer> analysis =
         DataFlow.dataflow(enclosingMethod, path, context, new NullnessPropagationTransfer())
         .getAnalysis();
-   return analysis.getValue(tree) == NullnessValue.NONNULL; 
-  }
-  
-  @Override
-  public boolean isDefinitelyNull(
-      Tree tree, MethodTree enclosingMethod, TreePath path, Context context) {    
-    Analysis<NullnessValue, NullnessPropagationStore, NullnessPropagationTransfer> analysis =
-        DataFlow.dataflow(enclosingMethod, path, context, new NullnessPropagationTransfer())
-        .getAnalysis();
-   return analysis.getValue(tree) == NullnessValue.NULL; 
+   return analysis.getValue(tree).isNonNull(); 
   }
 }

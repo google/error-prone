@@ -27,7 +27,7 @@ import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropaga
 public class NullnessPropagationTransferCases3 {
   public void casts() {
     Object o = null;
-    // BUG: Diagnostic contains: (Null)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker((String) o);
 
     // BUG: Diagnostic contains: (Non-null)
@@ -68,7 +68,7 @@ public class NullnessPropagationTransferCases3 {
     triggerNullnessChecker(ENUM_INSTANCE);
     // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(MyEnum.NOT_AN_ENUM_CONSTANT);
-    // BUG: Diagnostic contains: (Null)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(null);
   }
 
