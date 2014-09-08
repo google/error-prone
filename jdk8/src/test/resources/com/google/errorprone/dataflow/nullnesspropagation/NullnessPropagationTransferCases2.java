@@ -128,11 +128,11 @@ public class NullnessPropagationTransferCases2 {
     triggerNullnessChecker(str);
     
     str = null;
-    // BUG: Diagnostic contains: (Null)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(str);
 
     otherStr = str;
-    // BUG: Diagnostic contains: (Null)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(str);
   }
 
@@ -140,9 +140,10 @@ public class NullnessPropagationTransferCases2 {
     String str = "foo";
     // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(str);
-    // BUG: Diagnostic contains: (Null)
+
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(str = null);
-    // BUG: Diagnostic contains: (Null)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(str);
 
     // BUG: Diagnostic contains: (Non-null)
@@ -159,11 +160,11 @@ public class NullnessPropagationTransferCases2 {
     // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(str2);
 
-    // BUG: Diagnostic contains: (Null)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(str = str2 = null);
-    // BUG: Diagnostic contains: (Null)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(str);
-    // BUG: Diagnostic contains: (Null)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(str2);
   }
   
@@ -178,7 +179,7 @@ public class NullnessPropagationTransferCases2 {
     // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(str);
     Object obj = null;
-    // BUG: Diagnostic contains: (Null)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(obj);
 
     ++i;
@@ -308,7 +309,7 @@ public class NullnessPropagationTransferCases2 {
   }
 
   public void assignmentToStaticImportedFieldExpressionValue() {
-    // BUG: Diagnostic contains: (Null)
+    // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(staticStringField = null);
     // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(staticStringField = "foo");

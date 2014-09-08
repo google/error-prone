@@ -17,7 +17,6 @@
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessValue.NONNULL;
-import static com.google.errorprone.dataflow.nullnesspropagation.NullnessValue.NULL;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessValue.NULLABLE;
 
 import com.google.common.collect.ImmutableSet;
@@ -61,11 +60,10 @@ import java.util.List;
 import javax.lang.model.element.VariableElement;
 
 /**
- * The {@code TransferFunction} for our nullability analysis.  This analysis determines, for all 
- * variables and parameters, whether they are definitely null ({@link NullnessValue#NULL}), 
- * definitely non-null ({@link NullnessValue#NONNULL}), possibly null 
- * ({@link NullnessValue#NULLABLE}), or are on an infeasible path ({@link NullnessValue#BOTTOM}).  
- * This analysis depends only on the code and does not take nullness annotations into account.
+ * This nullness propagation analysis takes on a conservative approach in which local variables
+ * assume a {@code NullnessValue} of type non-null only when it is provably non-null. If not enough
+ * information is present, the value is unknown and the type defaults to
+ * {@link NullnessValue#NULLABLE}.
  * 
  * @author deminguyen@google.com (Demi Nguyen)
  */
@@ -106,7 +104,7 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
   @Override
   public TransferResult<NullnessValue, NullnessPropagationStore> visitNullLiteral(
       NullLiteralNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
-    return result(before, NULL);
+    return result(before, NULLABLE);
   }
 
   @Override
@@ -131,16 +129,88 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
     return result(before, NONNULL);
   }
 
+  /**
+   * Refines the {@code NullnessValue} of a {@code LocalVariableNode} used in comparison. If the lhs
+   * and rhs are equal, the local variable(s) receives the most refined type between the two
+   * operands. Else, the variable(s) retains its original value. A comparison against {@code null}
+   * always transfers either {@link NullnessValue#NULLABLE} or {@link NullnessValue#NONNULL} to the
+   * variable type.
+   */
   @Override
   public TransferResult<NullnessValue, NullnessPropagationStore> visitEqualTo(
       EqualToNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
-    return handleEqualityComparison(true, node.getLeftOperand(), node.getRightOperand(), before);
+    NullnessPropagationStore thenStore = before.getRegularStore();
+    NullnessPropagationStore elseStore = thenStore.copy();
+    
+    Node leftNode = node.getLeftOperand();
+    Node rightNode = node.getRightOperand();    
+   
+    NullnessValue leftVal = before.getValueOfSubNode(leftNode);
+    NullnessValue rightVal = before.getValueOfSubNode(rightNode);
+    NullnessValue value = leftVal.greatestLowerBound(rightVal);
+
+    if (leftNode instanceof LocalVariableNode) {
+      LocalVariableNode localVar = (LocalVariableNode) leftNode;
+      if (rightNode instanceof NullLiteralNode) {
+        thenStore.setInformation(localVar, NULLABLE);
+        elseStore.setInformation(localVar, NONNULL);
+      } else {
+        thenStore.setInformation(localVar, value);
+      }
+    }
+    if (rightNode instanceof LocalVariableNode) {
+      LocalVariableNode localVar = (LocalVariableNode) rightNode;
+      if (leftNode instanceof NullLiteralNode) {
+        thenStore.setInformation(localVar, NULLABLE);
+        elseStore.setInformation(localVar, NONNULL);
+      } else {
+        thenStore.setInformation(localVar, value);
+      }
+    }
+
+    return conditionalResult(thenStore, elseStore);
   }
   
+  /**
+   * Refines the {@code NullnessValue} of a {@code LocalVariableNode} used in a comparison. If the
+   * lhs and rhs are not equal, the local variable(s) retains its original value. Else, both sides
+   * are equal, and the local variable(s) receives the most refined type between the two operands.
+   * A comparison against {@code null} always transfers either {@link NullnessValue#NULLABLE} or
+   * {@link NullnessValue#NONNULL} to the variable type.
+   */
   @Override
   public TransferResult<NullnessValue, NullnessPropagationStore> visitNotEqual(
       NotEqualNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
-    return handleEqualityComparison(false, node.getLeftOperand(), node.getRightOperand(), before);
+    NullnessPropagationStore thenStore = before.getRegularStore();
+    NullnessPropagationStore elseStore = thenStore.copy();
+    
+    Node leftNode = node.getLeftOperand();
+    Node rightNode = node.getRightOperand();
+    
+    NullnessValue leftVal = before.getValueOfSubNode(leftNode);
+    NullnessValue rightVal = before.getValueOfSubNode(rightNode);    
+    NullnessValue value = leftVal.greatestLowerBound(rightVal);
+    
+    if (leftNode instanceof LocalVariableNode) {
+      LocalVariableNode localVar = (LocalVariableNode) leftNode;
+      if (rightNode instanceof NullLiteralNode) {
+        thenStore.setInformation(localVar, NONNULL);
+        elseStore.setInformation(localVar, NULLABLE);
+      } else {
+        elseStore.setInformation(localVar, value);
+      }
+    }
+    if (rightNode instanceof LocalVariableNode) {
+      LocalVariableNode localVar = (LocalVariableNode) rightNode;
+      if (leftNode instanceof NullLiteralNode) {
+        thenStore.setInformation(localVar, NONNULL);
+        elseStore.setInformation(localVar, NULLABLE);
+      } else {
+        elseStore.setInformation(localVar, value);
+      }
+    }
+
+    return conditionalResult(thenStore, elseStore);
   }
   
   /**
@@ -266,47 +336,6 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
   private static TransferResult<NullnessValue, NullnessPropagationStore> conditionalResult(
       NullnessPropagationStore thenStore, NullnessPropagationStore elseStore) {
     return new ConditionalTransferResult<>(NONNULL, thenStore, elseStore);
-  }
-  
-  /**
-   * Refines the {@code NullnessValue} of {@code LocalVariableNode}s used in an equality 
-   * comparison using the greatest lower bound.     
-   *
-   * @param equalTo whether the comparison is == (false for !=)
-   * @param leftNode the left-hand side of the comparison
-   * @param rightNode the right-hand side of the comparison
-   * @param before the input {@code TransferResult}
-   * @return the output {@code TransferResult} from this node
-   */
-  private static TransferResult<NullnessValue, NullnessPropagationStore> handleEqualityComparison(
-      boolean equalTo,
-      Node leftNode,
-      Node rightNode,
-      TransferInput<NullnessValue, NullnessPropagationStore> before) {
-    NullnessPropagationStore equalBranchStore = before.getRegularStore();
-    NullnessPropagationStore notEqualBranchStore = equalBranchStore.copy();
-       
-    NullnessValue leftVal = before.getValueOfSubNode(leftNode);
-    NullnessValue rightVal = before.getValueOfSubNode(rightNode);
-    NullnessValue equalBranchValue = leftVal.greatestLowerBound(rightVal);
-    
-    if (leftNode instanceof LocalVariableNode) {
-      LocalVariableNode localVar = (LocalVariableNode) leftNode;
-      equalBranchStore.setInformation(localVar, equalBranchValue);
-      notEqualBranchStore.setInformation(
-          localVar, leftVal.greatestLowerBound(rightVal.deducedValueWhenNotEqual()));
-    }
-      
-    if (rightNode instanceof LocalVariableNode) {
-      LocalVariableNode localVar = (LocalVariableNode) rightNode;
-      equalBranchStore.setInformation(localVar, equalBranchValue);
-      notEqualBranchStore.setInformation(
-          localVar, rightVal.greatestLowerBound(leftVal.deducedValueWhenNotEqual()));
-    }
-    
-    return equalTo 
-        ? conditionalResult(equalBranchStore, notEqualBranchStore)
-        : conditionalResult(notEqualBranchStore, equalBranchStore);
   }
 
   private static boolean hasPrimitiveType(Node node) {
