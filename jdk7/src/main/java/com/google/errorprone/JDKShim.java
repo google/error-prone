@@ -106,4 +106,10 @@ public class JDKShim implements JDKCompatibleShim {
       Tree tree, MethodTree enclosingMethod, TreePath path, Context context) {
     return false;
   }
+
+  @Override
+  public boolean isDefinitelyNull(
+      Tree tree, MethodTree enclosingMethod, TreePath path, Context context) {
+    return false;
+  }
 }
