@@ -55,4 +55,6 @@ interface JDKCompatibleShim {
   Number numberValue(Tree tree, TreePath path, Context context);
   boolean isDefinitelyNonNull(
       Tree tree, MethodTree enclosingMethod, TreePath path, Context context);
+  boolean isDefinitelyNull(
+      Tree tree, MethodTree enclosingMethod, TreePath path, Context context);
 }
