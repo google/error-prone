@@ -40,6 +40,7 @@ import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
+import com.sun.tools.javac.tree.JCTree.JCArrayTypeTree;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
@@ -47,6 +48,8 @@ import com.sun.tools.javac.tree.JCTree.JCLiteral;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
+import com.sun.tools.javac.tree.JCTree.JCPrimitiveTypeTree;
+import com.sun.tools.javac.tree.JCTree.JCTypeApply;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 
 import java.lang.annotation.Annotation;
@@ -452,4 +455,23 @@ public class ASTHelpers {
     return (((JCMethodDecl) tree).mods.flags & Flags.GENERATEDCONSTR) != 0;
   }
 
+  /**
+   * Returns the {@code Type} for the given type {@code Tree} or {@code null} if the type could not
+   * be determined. The input {@code Tree} typically comes from a method like
+   * {@link VariableTree#getType()} or {@link MethodTree#getReturnType()}.
+   */
+  public static Type getType(Tree tree) {
+    switch (tree.getKind()) {
+      case ARRAY_TYPE:
+        return ((JCArrayTypeTree) tree).type;
+      case PRIMITIVE_TYPE:
+        return ((JCPrimitiveTypeTree) tree).type;
+      case PARAMETERIZED_TYPE:
+        return ((JCTypeApply) tree).type;
+      case IDENTIFIER:
+        return ((JCIdent) tree).type;
+      default:
+        return null;
+    }
+  }
 }

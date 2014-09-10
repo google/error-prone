@@ -39,7 +39,8 @@ public class HasIdentifier extends MultiMatcher<Tree, IdentifierTree> {
 
   @Override
   public boolean matches(Tree tree, VisitorState state) {
-    return tree.accept(new HasIdentifierScanner(matchType, nodeMatcher), null);
+    Boolean matches = tree.accept(new HasIdentifierScanner(matchType, nodeMatcher), null);
+    return matches != null && matches;
   }
 
   /**
