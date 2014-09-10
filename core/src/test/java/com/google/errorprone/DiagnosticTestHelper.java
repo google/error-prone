@@ -17,6 +17,7 @@
 package com.google.errorprone;
 
 import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasItem;
@@ -227,7 +228,9 @@ public class DiagnosticTestHelper {
         // Cast is unnecessary, but javac throws an error because of poor type inference.
         Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher =
             (Matcher) not(hasItem(diagnosticOnLine(source.toUri(), lineNumber)));
-        assertTrue("Saw unexpected error on line " + lineNumber, matcher.matches(diagnostics));
+        if (!matcher.matches(diagnostics)) {
+          fail("Saw unexpected error on line " + lineNumber + ". All errors:\n" + diagnostics);
+        }
       }
     } while (true);
     reader.close();

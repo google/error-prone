@@ -44,13 +44,10 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.JCTree.JCArrayTypeTree;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
-import com.sun.tools.javac.tree.JCTree.JCPrimitiveTypeTree;
-import com.sun.tools.javac.tree.JCTree.JCTypeApply;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -666,23 +663,13 @@ public class Matchers {
       @Override
       public boolean matches(MethodTree methodTree, VisitorState state) {
         Tree returnTree = methodTree.getReturnType();
-        Type methodReturnType = null;
         if (returnTree == null) {
           // This is a constructor, it has no return type.
           return false;
         }
-        switch (returnTree.getKind()) {
-          case ARRAY_TYPE:
-            methodReturnType = ((JCArrayTypeTree)returnTree).type;
-            break;
-          case PRIMITIVE_TYPE:
-            methodReturnType = ((JCPrimitiveTypeTree)returnTree).type;
-            break;
-          case PARAMETERIZED_TYPE:
-            methodReturnType = ((JCTypeApply)returnTree).type;
-            break;
-          default:
-            return false;
+        Type methodReturnType = ASTHelpers.getType(returnTree);
+        if (methodReturnType == null) {
+          return false;
         }
         return state.getTypes().isSameType(methodReturnType, returnType);
       }
