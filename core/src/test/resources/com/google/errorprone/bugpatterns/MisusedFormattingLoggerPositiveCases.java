@@ -48,6 +48,9 @@ public class MisusedFormattingLoggerPositiveCases {
 
     // BUG: Diagnostic contains: logger.infofmt("Invalid id (%s)", "id");
     logger.infofmt("Invalid id", "id");
+
+    // BUG: Diagnostic contains: Format string is invalid: Conversion = 'p'
+    logger.infofmt("%p", 0xDEADBEEF);
   }
 
   public void messageFormatIsAccidentallyQuoted() {
