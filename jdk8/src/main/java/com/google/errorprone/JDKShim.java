@@ -17,15 +17,11 @@
 package com.google.errorprone;
 
 import com.google.errorprone.dataflow.DataFlow;
-import com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationStore;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTransfer;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessValue;
 import com.google.errorprone.fixes.AdjustedPosition8;
 import com.google.errorprone.fixes.IndexedPosition8;
-import com.google.errorprone.util.Constants;
 
-import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.main.Main;
@@ -39,7 +35,8 @@ import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.DiagnosticSource;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 
-import org.checkerframework.dataflow.analysis.Analysis;
+import org.checkerframework.dataflow.constantpropagation.Constant;
+import org.checkerframework.dataflow.constantpropagation.ConstantPropagationTransfer;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -124,27 +121,30 @@ public class JDKShim implements JDKCompatibleShim {
     }
     return result;
   }
-
+  
+  private static final ConstantPropagationTransfer CONSTANT_PROPAGATION = 
+      new ConstantPropagationTransfer();
+  private static final NullnessPropagationTransfer NULLNESS_PROPAGATION = 
+      new NullnessPropagationTransfer();
+  
   @Override
-  public Number numberValue(Tree tree, TreePath path, Context context) {
-    return Constants.numberValue(tree, path, context);
+  public Number numberValue(TreePath exprPath, Context context) {
+    Constant val = DataFlow.expressionDataflow(exprPath, context, CONSTANT_PROPAGATION);
+    if (val == null || !val.isConstant()) {
+      return null;
+    }
+    return val.getValue();
   }
   
   @Override
-  public boolean isDefinitelyNonNull(
-      Tree tree, MethodTree enclosingMethod, TreePath path, Context context) {    
-    Analysis<NullnessValue, NullnessPropagationStore, NullnessPropagationTransfer> analysis =
-        DataFlow.dataflow(enclosingMethod, path, context, new NullnessPropagationTransfer())
-        .getAnalysis();
-   return analysis.getValue(tree) == NullnessValue.NONNULL; 
+  public boolean isDefinitelyNonNull(TreePath exprPath, Context context) {
+    NullnessValue val = DataFlow.expressionDataflow(exprPath, context, NULLNESS_PROPAGATION);
+    return val != null && val == NullnessValue.NONNULL;
   }
   
   @Override
-  public boolean isDefinitelyNull(
-      Tree tree, MethodTree enclosingMethod, TreePath path, Context context) {    
-    Analysis<NullnessValue, NullnessPropagationStore, NullnessPropagationTransfer> analysis =
-        DataFlow.dataflow(enclosingMethod, path, context, new NullnessPropagationTransfer())
-        .getAnalysis();
-   return analysis.getValue(tree) == NullnessValue.NULL; 
+  public boolean isDefinitelyNull(TreePath exprPath, Context context) {
+    NullnessValue val = DataFlow.expressionDataflow(exprPath, context, NULLNESS_PROPAGATION);
+    return val != null && val == NullnessValue.NULL;
   }
 }

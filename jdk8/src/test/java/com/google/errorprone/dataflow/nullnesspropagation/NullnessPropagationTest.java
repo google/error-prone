@@ -20,12 +20,11 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.CompilationTestHelper.sources;
-import static com.google.errorprone.dataflow.DataFlow.dataflow;
+import static com.google.errorprone.dataflow.DataFlow.expressionDataflow;
 import static com.google.errorprone.fixes.SuggestedFix.replace;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
-import static com.google.errorprone.util.ASTHelpers.findEnclosingNode;
 
 import com.google.common.base.Joiner;
 import com.google.errorprone.BugPattern;
@@ -38,19 +37,16 @@ import com.google.errorprone.matchers.Matcher;
 
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.util.TreePath;
 
-import org.checkerframework.dataflow.analysis.Analysis;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author deminguyen@google.com (Demi Nguyen)
@@ -167,17 +163,21 @@ public class NullnessPropagationTest {
       category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
   public static final class NullnessPropagationChecker
       extends BugChecker implements MethodInvocationTreeMatcher {
+    private static final NullnessPropagationTransfer NULLNESS_PROPAGATION = 
+        new NullnessPropagationTransfer();
+    
     private static final String AMBIGUOUS_CALL_MESSAGE = "AMBIGUOUS CALL: use "
         + "triggerNullnessCheckerOnPrimitive if you want to test the primitive for nullness";
+    
+    @SuppressWarnings("unchecked")
     private static final Matcher<ExpressionTree> TRIGGER_CALL_MATCHER = anyOf(
         staticMethod(NullnessPropagationTest.class.getName(), "triggerNullnessCheckerOnPrimitive"),
         staticMethod(NullnessPropagationTest.class.getName(), "triggerNullnessCheckerOnBoxed"),
         staticMethod(
             NullnessPropagationTest.class.getName(), "triggerNullnessChecker(java.lang.Object)"));
+    
     private static final Matcher<ExpressionTree> AMBIGUOUS_CALL_FALLBACK_MATCHER =
         staticMethod(NullnessPropagationTest.class.getName(), "triggerNullnessChecker");
-    
-    private final Map<MethodTree, Analysis<NullnessValue, ?, ?>> resultCache = new HashMap<>();
     
     @Override
     public Description matchMethodInvocation(
@@ -190,31 +190,15 @@ public class NullnessPropagationTest {
         return NO_MATCH;
       }
 
-      MethodTree enclosingMethod = findEnclosingNode(state.getPath(), MethodTree.class);
-      if (enclosingMethod == null) {
-        return NO_MATCH;
-      }
-
-      Analysis<NullnessValue, ?, ?> analysis = resultCache.get(enclosingMethod);
-      if (analysis == null) {
-        analysis = dataflow(enclosingMethod, state.getPath(), state.context,
-            new NullnessPropagationTransfer()).getAnalysis();
-        resultCache.put(enclosingMethod, analysis);
-      }
-
-      List<?> values = getAllValues(methodInvocation.getArguments(), analysis);
-      String fixString = "(" + Joiner.on(", ").join(values) + ")";
-
-      return describeMatch(methodInvocation, replace(methodInvocation, fixString));
-    }
-
-    private static List<?> getAllValues(
-        List<? extends Tree> args, Analysis<?, ?, ?> analysis) {
+      TreePath root = state.getPath();
       List<Object> values = new ArrayList<>();
-      for (Tree arg : args) {
-        values.add(analysis.getValue(arg));
+      for (Tree arg : methodInvocation.getArguments()) {
+        TreePath argPath = new TreePath(root, arg);
+        values.add(expressionDataflow(argPath, state.context, NULLNESS_PROPAGATION));
       }
-      return values;
+
+      String fixString = "(" + Joiner.on(", ").join(values) + ")";
+      return describeMatch(methodInvocation, replace(methodInvocation, fixString));
     }
   }
 }

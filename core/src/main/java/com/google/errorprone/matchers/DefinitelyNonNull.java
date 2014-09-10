@@ -20,12 +20,10 @@ import static com.google.errorprone.matchers.Matchers.methodReturnsNonNull;
 
 import com.google.errorprone.JDKCompatible;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LiteralTree;
-import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
 
 /**
@@ -34,21 +32,16 @@ import com.sun.source.tree.VariableTree;
 public class DefinitelyNonNull implements Matcher<ExpressionTree> {
   @Override
   public boolean matches(ExpressionTree tree, VisitorState state) {
+    // TODO(user), move this into isDefinitelyNonNull
     if (methodReturnsNonNull().matches(tree, state)) {
       return true;
     }
-    
-    MethodTree enclosingMethod = ASTHelpers.findEnclosingNode(state.getPath(), MethodTree.class);
-    if (enclosingMethod == null) {
-      return false;
-    }
-    
+
+    // TODO(user), move this into isDefinitelyNonNull
     if (tree instanceof VariableTree
         || tree instanceof IdentifierTree
         || tree instanceof LiteralTree) {
-
-      return JDKCompatible.isDefinitelyNonNull(
-          tree, enclosingMethod, state.getPath(), state.context);
+      return JDKCompatible.isDefinitelyNonNull(state.getPath(), state.context);
     }
     
     return false;

@@ -16,8 +16,6 @@
 
 package com.google.errorprone;
 
-import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.main.Main;
@@ -106,20 +104,27 @@ public final class JDKCompatible {
   }
 
   /**
-   * Returns the value of {@code tree} if it is determined to be a constant (always evaluates to the
-   * same numeric value), and null otherwise. Note that returning null does not necessarily mean the
-   * expression is *not* a constant.
+   * Returns the value of the leaf of {@code exprPath}, if it is determined to be a constant
+   * (always evaluates to the same numeric value), and null otherwise.
+   * Note that returning null does not necessarily mean the expression is *not* a constant.
    */
-  public static Number numberValue(Tree tree, TreePath path, Context context) {
-    return backingShim.numberValue(tree, path, context);
+  public static Number numberValue(TreePath exprPath, Context context) {
+    return backingShim.numberValue(exprPath, context);
   }
 
   /**
-   * Wraps DataFlow.dataflow and nullness propagation, and returns true if {@code tree} is a
-   * non-null expression.
+   * Returns true if the leaf of {@code exprPath} is non-null.
+   * Note that returning false does not necessarily mean that the expression can be null.
    */
-  public static boolean isDefinitelyNonNull(
-      Tree tree, MethodTree enclosingMethod, TreePath path, Context context) {
-    return backingShim.isDefinitelyNonNull(tree, enclosingMethod, path, context);
+  public static boolean isDefinitelyNonNull(TreePath exprPath, Context context) {
+    return backingShim.isDefinitelyNonNull(exprPath, context);
+  }
+
+  /**
+   * Returns true if the leaf of {@code exprPath} is null.
+   * Note that returning false does not necessarily mean that the expression can be non-null.
+   */
+  public static boolean isDefinitelyNull(TreePath exprPath, Context context) {
+    return backingShim.isDefinitelyNull(exprPath, context);
   }
 }

@@ -16,8 +16,6 @@
 
 package com.google.errorprone;
 
-import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.main.Main;
@@ -52,9 +50,7 @@ interface JDKCompatibleShim {
   int getJCTreeTag(JCTree node);
   Integer getEndPosition(DiagnosticPosition pos, Map<JCTree, Integer> map);
   JCExpression parseString(String string, Context context);
-  Number numberValue(Tree tree, TreePath path, Context context);
-  boolean isDefinitelyNonNull(
-      Tree tree, MethodTree enclosingMethod, TreePath path, Context context);
-  boolean isDefinitelyNull(
-      Tree tree, MethodTree enclosingMethod, TreePath path, Context context);
+  Number numberValue(TreePath exprPath, Context context);
+  boolean isDefinitelyNonNull(TreePath exprPath, Context context);
+  boolean isDefinitelyNull(TreePath exprPath, Context context);
 }
