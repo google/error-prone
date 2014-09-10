@@ -63,7 +63,6 @@ import java.util.FormatFlagsConversionMismatchException;
 import java.util.HashSet;
 import java.util.IllegalFormatException;
 import java.util.List;
-import java.util.MissingFormatArgumentException;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -219,10 +218,7 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
       } else if (parameters.getType() == FormatType.PRINTF) {
         verifyPrintf(tree, parameters);
       }
-    // Due to Java 1.6, we have to write these out:
-    } catch (FormatterException e) {
-      formatException = e;
-    } catch (MissingFormatArgumentException e) {
+    } catch (FormatterException | IllegalFormatException e) {
       formatException = e;
     }
     if (formatException != null) {
