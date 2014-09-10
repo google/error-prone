@@ -19,8 +19,6 @@ package com.google.errorprone;
 import com.google.errorprone.fixes.AdjustedPosition7;
 import com.google.errorprone.fixes.IndexedPosition7;
 
-import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.main.Main;
@@ -97,19 +95,17 @@ public class JDKShim implements JDKCompatibleShim {
   }
 
   @Override
-  public Number numberValue(Tree tree, TreePath path, Context context) {
+  public Number numberValue(TreePath exprPath, Context context) {
     return null;
   }
   
   @Override
-  public boolean isDefinitelyNonNull(
-      Tree tree, MethodTree enclosingMethod, TreePath path, Context context) {
+  public boolean isDefinitelyNonNull(TreePath exprPath, Context context) {
     return false;
   }
 
   @Override
-  public boolean isDefinitelyNull(
-      Tree tree, MethodTree enclosingMethod, TreePath path, Context context) {
+  public boolean isDefinitelyNull(TreePath exprPath, Context context) {
     return false;
   }
 }
