@@ -33,6 +33,7 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.util.Names;
 
 import javax.lang.model.element.Name;
 
@@ -56,7 +57,8 @@ public class GuardedByBinder {
           BinderContext.of(
               ALREADY_BOUND_RESOLVER,
               ASTHelpers.getSymbol(visitorState.findEnclosing(ClassTree.class)),
-              visitorState.getTypes())));
+              visitorState.getTypes(),
+              Names.instance(visitorState.context))));
     } catch (IllegalGuardedBy expected) {
       return Optional.absent();
     }
@@ -71,22 +73,26 @@ public class GuardedByBinder {
         BinderContext.of(
             resolver,
             resolver.enclosingClass(),
-            Types.instance(resolver.context())));
+            Types.instance(resolver.context()),
+            Names.instance(resolver.context())));
   }
 
   private static class BinderContext {
     final Resolver resolver;
     final ClassSymbol thisClass;
     final Types types;
+    final Names names;
 
-    public BinderContext(Resolver resolver, ClassSymbol thisClass, Types types) {
+    public BinderContext(Resolver resolver, ClassSymbol thisClass, Types types, Names names) {
      this.resolver = resolver;
      this.thisClass = thisClass;
      this.types = types;
+     this.names = names;
     }
 
-    public static BinderContext of(Resolver resolver, ClassSymbol thisClass, Types types) {
-      return new BinderContext(resolver, thisClass, types);
+    public static BinderContext of(Resolver resolver, ClassSymbol thisClass, Types types,
+        Names names) {
+      return new BinderContext(resolver, thisClass, types, names);
     }
   }
 
@@ -196,7 +202,7 @@ public class GuardedByBinder {
 
           if (name.equals("this")) {
             Symbol base = context.resolver.resolveEnclosingClass(node.getExpression());
-            return F.qualifiedThis(base);
+            return F.qualifiedThis(context.names, context.thisClass, base);
           }
 
           if (name.equals("class")) {
@@ -273,7 +279,7 @@ public class GuardedByBinder {
 
           Symbol lexicalOwner = isEnclosedIn(context.thisClass, symbol, context.types);
           if (lexicalOwner != null) {
-            return F.qualifiedThis(lexicalOwner);
+            return F.qualifiedThis(context.names, context.thisClass, lexicalOwner);
           }
 
           throw new IllegalStateException("Could not find the implicit receiver.");

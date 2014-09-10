@@ -175,7 +175,7 @@ public class GuardedByBinderTest {
   @Test
   public void outer_lock() throws Exception {
     assertEquals(
-        "(SELECT (QUALIFIED_THIS threadsafety.Test.Outer) lock)",
+        "(SELECT (SELECT (THIS) outer$threadsafety.Test.Outer) lock)",
         bind("Test", "Outer.this.lock",
             CompilationTestHelper.forSourceLines(
                 "threadsafety.Test",
@@ -190,7 +190,7 @@ public class GuardedByBinderTest {
   @Test
   public void outer_lock_simpleName() throws Exception {
     assertEquals(
-        "(SELECT (QUALIFIED_THIS threadsafety.Test.Outer) lock)",
+        "(SELECT (SELECT (THIS) outer$threadsafety.Test.Outer) lock)",
         bind("Test", "lock",
             CompilationTestHelper.forSourceLines(
                 "threadsafety.Test",
