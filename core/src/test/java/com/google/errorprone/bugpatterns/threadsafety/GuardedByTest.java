@@ -876,6 +876,31 @@ public class GuardedByTest {
     );
   }
 
+  // TODO(user): make the diagnostic comprehensible...
+  @Test
+  public void wrongInnerClassInstance() throws Exception {
+    compilationHelper.assertCompileFailsWithMessages(
+        CompilationTestHelper.forSourceLines(
+            "threadsafety.Test",
+            "package threadsafety.Test;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "class WrongInnerClassInstance {",
+            "  final Object lock = new Object();",
+            "  class Inner {",
+            "    @GuardedBy(\"lock\") int x = 0;",
+            "    void m(Inner i) {",
+            "      synchronized (WrongInnerClassInstance.this.lock) {",
+            "        // BUG: Diagnostic contains: Expected WrongInnerClassInstance.this.lock to be "
+            + "held, instead found [WrongInnerClassInstance.this.lock]",
+            "        i.x++;",
+            "      }",
+            "    }",
+            "  }",
+            "}"
+        )
+    );
+  }
+
   @Test
   public void serializable() throws IOException {
     new ObjectOutputStream(new ByteArrayOutputStream()).writeObject(new GuardedBy());

@@ -16,10 +16,18 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
+import static com.google.errorprone.bugpatterns.threadsafety.IllegalGuardedBy.checkGuardedBy;
+
+import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.util.Names;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The lock expression of an {@code @GuardedBy} annotation.
@@ -28,15 +36,8 @@ import com.sun.tools.javac.code.Type;
  */
 public abstract class GuardedByExpression {
 
-  /**
-   * A qualified this expression: [ClassName.]this
-   */
-  public static class QualifiedThis extends BaseNode {
-    QualifiedThis(Symbol owner) {
-      super(Kind.QUALIFIED_THIS, owner);
-    }
-  }
-
+  private static final String ENCLOSING_INSTANCE_NAME = "outer$";
+  
   /**
    * A 'class' literal: ClassName.class
    */
@@ -154,8 +155,51 @@ public abstract class GuardedByExpression {
       return ThisLiteral.INSTANCE;
     }
 
-    QualifiedThis qualifiedThis(Symbol owner) {
-      return new QualifiedThis(owner);
+    private final Map<Symbol, VarSymbol> syntheticOuterFields = new HashMap<>();
+
+    /**
+     * Synthesizes the {@link GuardedByExpression} for an enclosing class access. The
+     * access is represented as a chain of field accesses from an instance of the current class to
+     * its enclosing ancestor. At each level, the enclosing class is accessed via a magic 'outer$'
+     * field.
+     * 
+     * <p>Example:
+     * 
+     * <pre>
+     * <code>
+     * class Outer {
+     *   final Object lock = new Object();
+     *   class Middle {
+     *     class Inner {
+     *       @GuardedBy("lock") // resolves to 'this.outer$.outer$.lock'
+     *       int x;
+     *     }
+     *   }
+     * }
+     * </code>
+     * </pre>
+     * 
+     * @param  access    the inner class where the access occurs.
+     * @param  enclosing the lexically enclosing class.
+     */
+    GuardedByExpression qualifiedThis(Names names, ClassSymbol access, Symbol enclosing) {
+      GuardedByExpression base = thisliteral();
+      Symbol curr = access;
+      do {
+        curr = curr.owner;
+        if (curr == null) {
+          break;
+        }
+        VarSymbol var = syntheticOuterFields.get(curr);
+        if (var == null) {
+          var = new VarSymbol(
+              Flags.SYNTHETIC, names.fromString(ENCLOSING_INSTANCE_NAME), curr.type, curr);
+          syntheticOuterFields.put(curr, var);
+        }   
+        base = select(base, var);
+      } while (!curr.equals(enclosing));
+      checkGuardedBy(curr != null , "Expected an enclosing class.");
+      return base;
     }
 
     ClassLiteral classLiteral(Symbol clazz) {
@@ -210,7 +254,7 @@ public abstract class GuardedByExpression {
 
   /** {@link GuardedByExpression} kind. */
   public static enum Kind {
-    THIS, CLASS_LITERAL, TYPE_LITERAL, LOCAL_VARIABLE, SELECT, QUALIFIED_THIS;
+    THIS, CLASS_LITERAL, TYPE_LITERAL, LOCAL_VARIABLE, SELECT;
   }
 
   private abstract static class BaseNode extends GuardedByExpression {
@@ -287,6 +331,7 @@ public abstract class GuardedByExpression {
    * Pretty printer for lock expressions.
    */
   private static class PrettyPrinter {
+
     public static String print(GuardedByExpression exp) {
       StringBuilder sb = new StringBuilder();
       pprint(exp, sb);
@@ -301,9 +346,6 @@ public abstract class GuardedByExpression {
         case THIS:
           sb.append("this");
           break;
-        case QUALIFIED_THIS:
-          sb.append(String.format("%s.this", exp.sym().name));
-          break;
         case TYPE_LITERAL:
         case LOCAL_VARIABLE:
           sb.append(exp.sym().name);
@@ -315,8 +357,12 @@ public abstract class GuardedByExpression {
     }
 
     private static void pprintSelect(Select exp, StringBuilder sb) {
-      pprint(exp.base, sb);
-      sb.append(String.format(".%s", exp.sym().name));
+      if (exp.sym.name.contentEquals(ENCLOSING_INSTANCE_NAME)) {
+        sb.append(String.format("%s.this", exp.sym().owner.name));
+      } else {
+        pprint(exp.base, sb);
+        sb.append(String.format(".%s", exp.sym().name)); 
+      }
     }
   }
 
@@ -334,7 +380,6 @@ public abstract class GuardedByExpression {
       switch (exp.kind()) {
         case TYPE_LITERAL:
         case CLASS_LITERAL:
-        case QUALIFIED_THIS:
         case LOCAL_VARIABLE:
           sb.append(String.format("(%s %s)", exp.kind(), exp.sym()));
           break;
@@ -350,7 +395,11 @@ public abstract class GuardedByExpression {
     private static void pprintSelect(Select exp, StringBuilder sb) {
       sb.append(String.format("(%s ", exp.kind()));
       pprint(exp.base, sb);
-      sb.append(String.format(" %s)", exp.sym));
+      if (exp.sym.name.contentEquals(ENCLOSING_INSTANCE_NAME)) {
+        sb.append(String.format(" %s%s)", ENCLOSING_INSTANCE_NAME, exp.sym().owner));
+      } else {
+        sb.append(String.format(" %s)", exp.sym)); 
+      }
     }
   }
 }
