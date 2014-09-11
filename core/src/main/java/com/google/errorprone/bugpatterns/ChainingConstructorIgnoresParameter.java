@@ -130,7 +130,16 @@ public final class ChainingConstructorIgnoresParameter extends BugChecker
       }
       Map<String, Type> availableParams = indexTypeByName(callerConstructor.getParameters());
 
-      for (int i = 0; i < paramTypes.size(); i++) {
+      /*
+       * TODO(cpovirk): Better handling of varargs: If the last parameter type is varargs and it is
+       * called as varargs (rather than by passing an array), then rewrite the parameter types to
+       * (p0, p1, ..., p[n-2], p[n-1] = element type of varargs parameter if an argument is
+       * supplied, p[n] = ditto, etc.). For now, we settle for not crashing in the face of a
+       * mismatch between the number of parameters declared and the number supplied.
+       *
+       * (Use MethodSymbol.isVarArgs.)
+       */
+      for (int i = 0; i < paramTypes.size() && i < invocation.getArguments().size(); i++) {
         VariableTree formalParam = paramTypes.get(i);
         String formalParamName = formalParam.getName().toString();
         Type formalParamType = getType(formalParam.getType());
