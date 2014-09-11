@@ -90,4 +90,28 @@ public class ChainingConstructorIgnoresParameterNegativeCases {
       }
     }
   }
+
+  class NonStaticClass {
+    NonStaticClass(String foo, boolean bar) {}
+
+    NonStaticClass(String foo) {
+      this(foo, false);
+    }
+  }
+
+  static class Varargs1 {
+    Varargs1(String foo, boolean... bar) {}
+
+    Varargs1() {
+      this("something", false, false);
+    }
+  }
+
+  static class Varargs2 {
+    Varargs2(String foo, boolean... bar) {}
+
+    Varargs2() {
+      this("something");
+    }
+  }
 }
