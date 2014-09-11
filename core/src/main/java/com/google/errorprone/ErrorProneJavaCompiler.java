@@ -17,6 +17,7 @@
 package com.google.errorprone;
 
 import com.sun.tools.javac.api.JavacTaskImpl;
+import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.util.Context;
 
 import java.io.InputStream;
@@ -35,7 +36,6 @@ import javax.tools.JavaCompiler;
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
-import javax.tools.ToolProvider;
 
 /**
  * An error-prone compiler that implements {@link javax.tools.JavaCompiler}.
@@ -46,7 +46,7 @@ public class ErrorProneJavaCompiler implements JavaCompiler {
   private final JavaCompiler myJavacTool;
 
   public ErrorProneJavaCompiler() {
-    this(ToolProvider.getSystemJavaCompiler());
+    this(JavacTool.create());
   }
 
   // package-private for testing

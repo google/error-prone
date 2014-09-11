@@ -24,6 +24,7 @@ import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.tools.javac.api.JavacTaskImpl;
+import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeScanner;
 
@@ -42,7 +43,6 @@ import java.util.List;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
-import javax.tools.ToolProvider;
 
 /** {@link GuardedByBinder}Test */
 @RunWith(JUnit4.class)
@@ -387,7 +387,7 @@ public class GuardedByBinderTest {
 
   private String bind(String className, String exprString, JavaFileObject fileObject)
       throws IOException {
-    JavaCompiler javaCompiler = ToolProvider.getSystemJavaCompiler();
+    JavaCompiler javaCompiler = JavacTool.create();
     JavacTaskImpl task = (JavacTaskImpl) javaCompiler.getTask(new PrintWriter(System.err, true),
         fileManager, null, Collections.<String>emptyList(), null, Arrays.asList(fileObject));
     Iterable<? extends CompilationUnitTree> compilationUnits = task.parse();

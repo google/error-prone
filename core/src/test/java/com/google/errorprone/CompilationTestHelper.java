@@ -25,6 +25,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.testing.compile.JavaFileObjects;
 
+import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.util.Context;
 
@@ -45,7 +46,6 @@ import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
-import javax.tools.ToolProvider;
 
 /**
  * Utility class for tests that need to build using error-prone.
@@ -124,9 +124,8 @@ public class CompilationTestHelper {
                                                Locale locale,
                                                Charset charset) {
     try {
-      JavacFileManager wrappedFileManager = (JavacFileManager) ToolProvider.getSystemJavaCompiler()
-          .getStandardFileManager
-              (diagnosticListener, locale, charset);
+      JavacFileManager wrappedFileManager = (JavacFileManager) JavacTool.create()
+          .getStandardFileManager(diagnosticListener, locale, charset);
       Class<?> clazz = Class.forName("com.google.testing.compile.InMemoryJavaFileManager");
       Constructor<?> ctor = clazz.getDeclaredConstructor(JavaFileManager.class);
       ctor.setAccessible(true);
@@ -219,7 +218,7 @@ public class CompilationTestHelper {
   }
 
   private void checkWellFormed(Iterable<JavaFileObject> sources, String[] args) {
-    JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+    JavaCompiler compiler = JavacTool.create();
     OutputStream outputStream = new ByteArrayOutputStream();
     CompilationTask task = compiler.getTask(
         new PrintWriter(outputStream, /*autoFlush=*/true),
