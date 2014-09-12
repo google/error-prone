@@ -16,10 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.CompilationTestHelper.sources;
-
 import com.google.errorprone.CompilationTestHelper;
-import com.google.testing.compile.JavaFileObjects;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -41,25 +38,25 @@ public class CollectionIncompatibleTypeTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "CollectionIncompatibleTypePositiveCases.java"));
+    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+        .sources(getClass(), "CollectionIncompatibleTypePositiveCases.java"));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        sources(getClass(), "CollectionIncompatibleTypeNegativeCases.java"));
+    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
+        .sources(getClass(), "CollectionIncompatibleTypeNegativeCases.java"));
   }
 
   @Test
   public void testOutOfBounds() throws Exception {
-    compilationHelper.assertCompileSucceeds(JavaFileObjects.forResource(
-        getClass().getResource("CollectionIncompatibleTypeOutOfBounds.java")));
+    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
+        .sources(getClass(), "CollectionIncompatibleTypeOutOfBounds.java"));
   }
 
   @Test
   public void testClassCast() throws Exception {
-    compilationHelper.assertCompileSucceeds(JavaFileObjects.forResource(
-        getClass().getResource("CollectionIncompatibleTypeClassCast.java")));
+    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
+        .sources(getClass(), "CollectionIncompatibleTypeClassCast.java"));
   }
 }

@@ -19,13 +19,13 @@ package com.google.errorprone.suppress;
 import static com.google.errorprone.BugPattern.Category.ONE_OFF;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.CompilationTestHelper.sources;
 import static com.google.errorprone.fixes.SuggestedFix.NO_FIX;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Suppressibility;
+import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.DiagnosticTestHelper;
 import com.google.errorprone.ErrorProneScanner;
 import com.google.errorprone.ErrorProneTestCompiler;
@@ -33,6 +33,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.EmptyStatementTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
+import com.google.errorprone.bugpatterns.threadsafety.GuardedBy;
 import com.google.errorprone.matchers.Description;
 
 import com.sun.source.tree.EmptyStatementTree;
@@ -53,6 +54,8 @@ import javax.tools.JavaFileObject;
 @RunWith(JUnit4.class)
 public class CustomSuppressionTest {
 
+  CompilationTestHelper compilationHelper = CompilationTestHelper.newInstance(new GuardedBy());
+  
   /**
    * Custom suppression annotation for the first checker in this test.
    */
@@ -103,16 +106,16 @@ public class CustomSuppressionTest {
 
   @Test
   public void testNegativeCase() throws Exception {
-    List<JavaFileObject> sources = sources(getClass(),
-        "CustomSuppressionNegativeCases.java");
+    List<JavaFileObject> sources = compilationHelper.fileManager()
+        .sources(getClass(), "CustomSuppressionNegativeCases.java");
     int exitCode = compiler.compile(sources);
     assertThat(exitCode, is(0));
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    List<JavaFileObject> sources = sources(getClass(),
-        "CustomSuppressionPositiveCases.java");
+    List<JavaFileObject> sources = compilationHelper.fileManager()
+        .sources(getClass(), "CustomSuppressionPositiveCases.java");
     assertThat(compiler.compile(sources), is(1));
     assertThat(diagnosticHelper.getDiagnostics().size(), is(3));
     assertThat((int) diagnosticHelper.getDiagnostics().get(0).getLineNumber(), is(28));

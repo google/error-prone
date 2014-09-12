@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.CompilationTestHelper.source;
 import static org.junit.Assert.fail;
 
 import com.google.errorprone.CompilationTestHelper;
@@ -33,34 +32,33 @@ import javax.tools.JavaFileObject;
 @RunWith(JUnit4.class)
 public class SelfEqualsTest {
 
+  CompilationTestHelper compilationHelper = CompilationTestHelper.newInstance(
+      new SelfEquals(true, true));
   final JavaFileObject positiveCase1;
   final JavaFileObject positiveCase2;
   final JavaFileObject negativeCases;
 
   public SelfEqualsTest() throws Exception {
-    positiveCase1 = source(getClass(), "SelfEqualsPositiveCase1.java");
-    positiveCase2 = source(getClass(), "SelfEqualsPositiveCase2.java");
-    negativeCases = source(getClass(), "SelfEqualsNegativeCases.java");
+    positiveCase1 =
+        compilationHelper.fileManager().source(getClass(), "SelfEqualsPositiveCase1.java");
+    positiveCase2 =
+        compilationHelper.fileManager().source(getClass(), "SelfEqualsPositiveCase2.java");
+    negativeCases =
+        compilationHelper.fileManager().source(getClass(), "SelfEqualsNegativeCases.java");
   }
 
   @Test
   public void testPositiveCase1() throws Exception {
-    CompilationTestHelper compilationHelper = CompilationTestHelper.newInstance(
-        new SelfEquals(true, true));
     compilationHelper.assertCompileFailsWithMessages(positiveCase1);
   }
 
   @Test
   public void testPositiveCase2() throws Exception {
-    CompilationTestHelper compilationHelper = CompilationTestHelper.newInstance(
-        new SelfEquals(true, true));
     compilationHelper.assertCompileFailsWithMessages(positiveCase2);
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    CompilationTestHelper compilationHelper = CompilationTestHelper.newInstance(
-        new SelfEquals(true, true));
     compilationHelper.assertCompileSucceeds(negativeCases);
   }
 

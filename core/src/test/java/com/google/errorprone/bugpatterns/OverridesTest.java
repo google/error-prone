@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.CompilationTestHelper.sources;
-
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
@@ -39,49 +37,49 @@ public class OverridesTest {
 
   @Test
   public void testPositiveCase1() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "OverridesPositiveCase1.java"));
+    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+        .sources(getClass(), "OverridesPositiveCase1.java"));
   }
 
   @Test
   public void testPositiveCase2() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "OverridesPositiveCase2.java"));
+    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+        .sources(getClass(), "OverridesPositiveCase2.java"));
   }
 
   @Test
   public void testPositiveCase3() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "OverridesPositiveCase3.java"));
+    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+        .sources(getClass(), "OverridesPositiveCase3.java"));
   }
   
   @Test
   public void testPositiveCase4() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "OverridesPositiveCase4.java"));
+    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+        .sources(getClass(), "OverridesPositiveCase4.java"));
   }
 
   @Test
   public void testPositiveCase5() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "OverridesPositiveCase5.java"));
+    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+        .sources(getClass(), "OverridesPositiveCase5.java"));
   }
 
   @Test
   public void testNegativeCase1() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        sources(getClass(), "OverridesNegativeCase1.java"));
+    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
+        .sources(getClass(), "OverridesNegativeCase1.java"));
   }
 
   @Test
   public void testNegativeCase2() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        sources(getClass(), "OverridesNegativeCase2.java"));
+    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
+        .sources(getClass(), "OverridesNegativeCase2.java"));
   }
 
   @Test
   public void testNegativeCase3() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        sources(getClass(), "OverridesNegativeCase3.java"));
+    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
+        .sources(getClass(), "OverridesNegativeCase3.java"));
   }
 }

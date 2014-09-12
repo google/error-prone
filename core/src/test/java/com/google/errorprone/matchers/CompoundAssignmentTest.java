@@ -29,7 +29,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -40,7 +39,7 @@ import java.util.Set;
 public class CompoundAssignmentTest extends CompilerBasedAbstractTest {
 
   @Test(expected = IllegalArgumentException.class)
-  public void cannotConstructWithInvalidKind() throws IOException {
+  public void cannotConstructWithInvalidKind() {
     Set<Kind> operators = new HashSet<Kind>();
     operators.add(Kind.PLUS_ASSIGNMENT);
     operators.add(Kind.IF);
@@ -51,7 +50,7 @@ public class CompoundAssignmentTest extends CompilerBasedAbstractTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void cannotConstructWithBinaryOperator() throws IOException {
+  public void cannotConstructWithBinaryOperator() {
     Set<Kind> operators = new HashSet<Kind>();
     operators.add(Kind.PLUS);
     operators.add(Kind.PLUS_ASSIGNMENT);
@@ -62,7 +61,7 @@ public class CompoundAssignmentTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void shouldMatch() throws IOException {
+  public void shouldMatch() {
     writeFile("A.java",
       "public class A {",
       "  public void getHash(int a, long b) {",
@@ -81,7 +80,7 @@ public class CompoundAssignmentTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void shouldNotMatchWhenOperatorDiffers() throws IOException {
+  public void shouldNotMatchWhenOperatorDiffers() {
     writeFile("A.java",
         "public class A {",
         "  public void getHash(int a, long b) {",
@@ -99,7 +98,7 @@ public class CompoundAssignmentTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void shouldNotMatchWhenLeftOperandMatcherFails() throws IOException {
+  public void shouldNotMatchWhenLeftOperandMatcherFails() {
     writeFile("A.java",
         "public class A {",
         "  public void getHash(int a, long b) {",
@@ -117,7 +116,7 @@ public class CompoundAssignmentTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void shouldNotMatchWhenRightOperandMatcherFails() throws IOException {
+  public void shouldNotMatchWhenRightOperandMatcherFails() {
     writeFile("A.java",
         "public class A {",
         "  public void getHash(int a, long b) {",

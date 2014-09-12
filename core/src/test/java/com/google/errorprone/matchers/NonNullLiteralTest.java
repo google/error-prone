@@ -29,8 +29,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.io.IOException;
-
 /**
  * @author deminguyen@google.com (Demi Nguyen)
  */
@@ -38,7 +36,7 @@ import java.io.IOException;
 public class NonNullLiteralTest extends CompilerBasedAbstractTest {
   
   @Test
-  public void shouldMatchPrimitiveLiterals() throws IOException {
+  public void shouldMatchPrimitiveLiterals() {
     writeFile("A.java",
         "public class A {",
         "  public int getInt() {",
@@ -68,7 +66,7 @@ public class NonNullLiteralTest extends CompilerBasedAbstractTest {
   }
   
   @Test
-  public void shouldMatchClassLiteral() throws IOException {
+  public void shouldMatchClassLiteral() {
     writeFile("A.java",
         "import java.lang.reflect.Type;",
         "public class A {",
@@ -81,7 +79,7 @@ public class NonNullLiteralTest extends CompilerBasedAbstractTest {
   }
   
   @Test
-  public void shouldNotMatchClassDeclaration() throws IOException {
+  public void shouldNotMatchClassDeclaration() {
     writeFile("A.java",
         "public class A {",
         "  protected class B {",
@@ -94,7 +92,7 @@ public class NonNullLiteralTest extends CompilerBasedAbstractTest {
   }
   
   @Test
-  public void shouldNotMatchMemberAccess() throws IOException {
+  public void shouldNotMatchMemberAccess() {
     writeFile("A.java",
         "package com.google;",
         "public class A {",

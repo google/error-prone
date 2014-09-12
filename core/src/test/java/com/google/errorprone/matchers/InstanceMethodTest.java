@@ -29,8 +29,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.io.IOException;
-
 /**
  * @author eaftan@google.com (Eddie Aftandilian
  */
@@ -38,7 +36,7 @@ import java.io.IOException;
 public class InstanceMethodTest extends CompilerBasedAbstractTest {
 
   @Test
-  public void shouldMatch() throws IOException {
+  public void shouldMatch() {
     writeFile("A.java",
       "public class A {",
       "  public int getHash() {",
@@ -52,7 +50,7 @@ public class InstanceMethodTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void shouldMatchWildCard() throws IOException {
+  public void shouldMatchWildCard() {
     writeFile("A.java",
         "public class A {",
         "  public int getHash() {",
@@ -66,7 +64,7 @@ public class InstanceMethodTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void shouldNotMatchWhenMethodNamesDiffer() throws IOException {
+  public void shouldNotMatchWhenMethodNamesDiffer() {
     writeFile("A.java",
       "public class A {",
       "  public int getHash() {",
@@ -80,7 +78,7 @@ public class InstanceMethodTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void shouldNotMatchWhenMatcherFails() throws IOException {
+  public void shouldNotMatchWhenMatcherFails() {
     writeFile("A.java",
       "public class A {",
       "  public int getHash() {",
@@ -95,7 +93,7 @@ public class InstanceMethodTest extends CompilerBasedAbstractTest {
 
   @SuppressWarnings("unchecked")
   @Test
-  public void shouldNotMatchStaticMethod() throws IOException {
+  public void shouldNotMatchStaticMethod() {
     writeFile("A.java",
         "package com.google;",
         "public class A { ",

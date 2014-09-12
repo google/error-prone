@@ -28,8 +28,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.io.IOException;
-
 /**
  * @author deminguyen@google.com (Demi Nguyen)
  */
@@ -38,7 +36,7 @@ import java.io.IOException;
 public class MethodReturnsNonNullNextTokenTest extends CompilerBasedAbstractTest {
   
   @Test
-  public void shouldMatch() throws IOException {
+  public void shouldMatch() {
     writeFile("A.java",
         "import java.util.StringTokenizer;",
         "public class A {",
@@ -52,7 +50,7 @@ public class MethodReturnsNonNullNextTokenTest extends CompilerBasedAbstractTest
   }
   
   @Test
-  public void shouldNotMatchOtherMethod() throws IOException {
+  public void shouldNotMatchOtherMethod() {
     writeFile("A.java",
         "import java.util.StringTokenizer;",
         "public class A {",
@@ -66,7 +64,7 @@ public class MethodReturnsNonNullNextTokenTest extends CompilerBasedAbstractTest
   }
   
   @Test
-  public void shouldNotMatchOverridenMethod() throws IOException {
+  public void shouldNotMatchOverridenMethod() {
     writeFile("A.java",
         "import java.util.StringTokenizer;",
         "public class A extends StringTokenizer {",

@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.CompilationTestHelper.sources;
-
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
@@ -41,13 +39,13 @@ public class InjectAssistedInjectAndInjectOnConstructorsTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(
-        sources(getClass(), "InjectAssistedInjectAndInjectOnConstructorsPositiveCases.java"));
+    compilationHelper.assertCompileSucceedsWithMessages(compilationHelper.fileManager()
+        .sources(getClass(), "InjectAssistedInjectAndInjectOnConstructorsPositiveCases.java"));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        sources(getClass(), "InjectAssistedInjectAndInjectOnConstructorsNegativeCases.java"));
+    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
+        .sources(getClass(), "InjectAssistedInjectAndInjectOnConstructorsNegativeCases.java"));
   }
 }

@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.CompilationTestHelper.sources;
-
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
@@ -40,14 +38,14 @@ public class ChainingConstructorIgnoresParameterTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(
-        sources(getClass(), "ChainingConstructorIgnoresParameterPositiveCases.java"));
+    compilationHelper.assertCompileSucceedsWithMessages(compilationHelper.fileManager()
+        .sources(getClass(), "ChainingConstructorIgnoresParameterPositiveCases.java"));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
     // It's important to not use plain assertCompileSucceeds(), which ignores unexpected messages.
-    compilationHelper.assertCompileSucceedsWithMessages(
-        sources(getClass(), "ChainingConstructorIgnoresParameterNegativeCases.java"));
+    compilationHelper.assertCompileSucceedsWithMessages(compilationHelper.fileManager()
+        .sources(getClass(), "ChainingConstructorIgnoresParameterNegativeCases.java"));
   }
 }

@@ -36,9 +36,9 @@ public class GuardedByTest {
   @Test
   public void testLocked() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "import java.util.concurrent.locks.Lock;",
             "class Test {",
@@ -72,9 +72,9 @@ public class GuardedByTest {
   @Test
   public void testStaticLocked() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "import java.util.concurrent.locks.Lock;",
             "class Test {",
@@ -92,9 +92,9 @@ public class GuardedByTest {
   @Test
   public void testMonitor() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "import com.google.common.util.concurrent.Monitor;",
             "class Test {",
@@ -123,9 +123,9 @@ public class GuardedByTest {
   @Test
   public void testWrongLock() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "import java.util.concurrent.locks.Lock;",
             "class Test {",
@@ -151,9 +151,9 @@ public class GuardedByTest {
   @Test
   public void testGuardedStaticFieldAccess_1() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class Test {",
             "  public static final Object lock = new Object();",
@@ -172,9 +172,9 @@ public class GuardedByTest {
   @Test
   public void testGuardedStaticFieldAccess_2() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class Test {",
             "  public static final Object lock = new Object();",
@@ -193,9 +193,9 @@ public class GuardedByTest {
   @Test
   public void testGuardedStaticFieldAccess_3() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class Test {",
             "  public static final Object lock = new Object();",
@@ -214,9 +214,9 @@ public class GuardedByTest {
   @Test
   public void testGuardedStaticFieldAccess_EnclosingClass() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class Test {",
             "  @GuardedBy(\"Test.class\")",
@@ -232,9 +232,9 @@ public class GuardedByTest {
   @Test
   public void testBadStaticFieldAccess() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class Test {",
             "  public static final Object lock = new Object();",
@@ -253,9 +253,9 @@ public class GuardedByTest {
   @Test
   public void testBadGuard() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class Test {",
             "  // BUG: Diagnostic contains: Invalid @GuardedBy expression",
@@ -268,9 +268,9 @@ public class GuardedByTest {
   @Test
   public void testUnheldInstanceGuard() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class Test {",
             "  final Object mu = new Object();",
@@ -289,9 +289,9 @@ public class GuardedByTest {
   @Test
   public void testCtor() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class Test {",
             "  @GuardedBy(\"this\") int x;",
@@ -306,9 +306,9 @@ public class GuardedByTest {
   @Test
   public void testBadGuardMethodAccess() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class Test {",
             "  @GuardedBy(\"this\") void x() {}",
@@ -324,9 +324,9 @@ public class GuardedByTest {
   @Test
   public void testTransitiveGuardMethodAccess() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class Test {",
             "  @GuardedBy(\"this\") void x() {}",
@@ -341,9 +341,9 @@ public class GuardedByTest {
   @Test
   public void testReadWriteLock() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "import java.util.concurrent.locks.ReentrantReadWriteLock;",
             "class Test {",
@@ -373,9 +373,9 @@ public class GuardedByTest {
   @Test
   public void testInnerClass_enclosingClassLock() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "public class Test {",
             "  final Object mu = new Object();",
@@ -400,9 +400,9 @@ public class GuardedByTest {
   @Test
   public void testInnerClass_thisLock() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "public class Test {",
             "  @GuardedBy(\"this\") boolean b = false;",
@@ -420,9 +420,9 @@ public class GuardedByTest {
   @Test
   public void testAnonymousClass() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "public class Test {",
             "  @GuardedBy(\"this\") boolean b = false;",
@@ -443,9 +443,9 @@ public class GuardedByTest {
   @Test
   public void testInheritedLock() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class A {",
             "  final Object lock = new Object();",
@@ -465,9 +465,9 @@ public class GuardedByTest {
   @Test
   public void testEnclosingSuperAccess() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class A {",
             "  final Object lock = new Object();",
@@ -490,9 +490,9 @@ public class GuardedByTest {
   @Test
   public void testSuperAccess_this() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class A {",
             "  final Object lock = new Object();",
@@ -510,9 +510,9 @@ public class GuardedByTest {
   @Test
   public void testSuperAccess_lock() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class A {",
             "  final Object lock = new Object();",
@@ -535,9 +535,9 @@ public class GuardedByTest {
   @Test
   public void testSuperAccess_staticLock() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class A {",
             "  static final Object lock = new Object();",
@@ -560,9 +560,9 @@ public class GuardedByTest {
   @Test
   public void testOtherClass_bad_staticLock() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class A {",
             "  static final Object lock = new Object();",
@@ -589,9 +589,9 @@ public class GuardedByTest {
   @Test
   public void testOtherClass_bad_staticLock_alsoSub() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class A {",
             "  static final Object lock = new Object();",
@@ -618,9 +618,9 @@ public class GuardedByTest {
   @Test
   public void testOtherClass_staticLock() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class A {",
             "  static final Object lock = new Object();",
@@ -640,9 +640,9 @@ public class GuardedByTest {
   @Test
   public void instanceAccess_instanceGuard() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class InstanceAccess_InstanceGuard {",
             "  class A {",
@@ -668,9 +668,9 @@ public class GuardedByTest {
   @Test
   public void instanceAccess_lexicalGuard() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class InstanceAccess_LexicalGuard {",
             "  class Outer {",
@@ -695,9 +695,9 @@ public class GuardedByTest {
   @Test
   public void lexicalAccess_instanceGuard() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class LexicalAccess_InstanceGuard {",
             "  class Outer {",
@@ -722,9 +722,9 @@ public class GuardedByTest {
   @Test
   public void lexicalAccess_lexicalGuard() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class LexicalAccess_LexicalGuard {",
             "  class Outer {",
@@ -751,9 +751,9 @@ public class GuardedByTest {
   @Test
   public void instanceAccess_thisGuard() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class InstanceAccess_ThisGuard {",
             "  class A {",
@@ -777,9 +777,9 @@ public class GuardedByTest {
   @Test
   public void instanceAccess_namedThisGuard() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class InstanceAccess_NamedThisGuard {",
             "  class Outer {",
@@ -803,9 +803,9 @@ public class GuardedByTest {
   @Test
   public void lexicalAccess_thisGuard() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class LexicalAccess_ThisGuard {",
             "  class Outer {",
@@ -829,9 +829,9 @@ public class GuardedByTest {
   @Test
   public void lexicalAccess_namedThisGuard() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class LexicalAccess_NamedThisGuard {",
             "  class Outer {",
@@ -860,9 +860,9 @@ public class GuardedByTest {
   @Test
   public void complexLockExpression() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "class ComplexLockExpression {",
             "  final Object[] xs = {};",
             "  final int[] ys = {};",
@@ -880,9 +880,9 @@ public class GuardedByTest {
   @Test
   public void wrongInnerClassInstance() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class WrongInnerClassInstance {",
             "  final Object lock = new Object();",

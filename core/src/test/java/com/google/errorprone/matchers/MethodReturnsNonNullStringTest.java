@@ -28,8 +28,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.io.IOException;
-
 /**
  * @author deminguyen@google.com (Demi Nguyen)
  */
@@ -38,7 +36,7 @@ import java.io.IOException;
 public class MethodReturnsNonNullStringTest extends CompilerBasedAbstractTest {
   
   @Test
-  public void shouldMatchInstanceMethod() throws IOException {
+  public void shouldMatchInstanceMethod() {
     writeFile("A.java",
         "public class A {",
         "  public void testInstanceMethods() {",
@@ -51,7 +49,7 @@ public class MethodReturnsNonNullStringTest extends CompilerBasedAbstractTest {
   }
   
   @Test
-  public void shouldMatchStaticMethod() throws IOException {
+  public void shouldMatchStaticMethod() {
     writeFile("A.java",
         "public class A {",
         "  public void testStaticMethods() {",
@@ -63,7 +61,7 @@ public class MethodReturnsNonNullStringTest extends CompilerBasedAbstractTest {
   }
   
   @Test
-  public void shouldNotMatchConstructorInvocation() throws IOException {
+  public void shouldNotMatchConstructorInvocation() {
     writeFile("A.java",
         "public class A {",
         "  public String getString() {",
@@ -76,7 +74,7 @@ public class MethodReturnsNonNullStringTest extends CompilerBasedAbstractTest {
   }
   
   @Test
-  public void shouldNotMatchOtherClasses() throws IOException {
+  public void shouldNotMatchOtherClasses() {
     writeFile("A.java",
         "public class A {",
         "  public String getString() {",

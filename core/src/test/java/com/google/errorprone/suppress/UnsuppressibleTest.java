@@ -19,7 +19,6 @@ package com.google.errorprone.suppress;
 import static com.google.errorprone.BugPattern.Category.ONE_OFF;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.CompilationTestHelper.sources;
 import static com.google.errorprone.fixes.Fix.NO_FIX;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.Is.is;
@@ -80,7 +79,8 @@ public class UnsuppressibleTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    List<JavaFileObject> sources = sources(getClass(), "UnsuppressiblePositiveCases.java");
+    List<JavaFileObject> sources =
+        compiler.fileManager().sources(getClass(), "UnsuppressiblePositiveCases.java");
     assertThat(compiler.compile(sources), is(1));
     assertThat(diagnosticHelper.getDiagnostics().toString(), containsString("[MyChecker]"));
   }

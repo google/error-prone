@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.CompilationTestHelper.sources;
-
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
@@ -43,46 +41,47 @@ public class JUnit4TestNotRunTest {
 
   @Test
   public void testPositiveCase1() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "JUnit4TestNotRunPositiveCase1.java"));
+    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+        .sources(getClass(), "JUnit4TestNotRunPositiveCase1.java"));
   }
 
   @Test
   public void testPositiveCase2() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "JUnit4TestNotRunPositiveCase2.java"));
+    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+        .sources(getClass(), "JUnit4TestNotRunPositiveCase2.java"));
   }
-  
+
   @Test
   public void testNegativeCase1() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        sources(getClass(), "JUnit4TestNotRunNegativeCase1.java"));
+    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
+        .sources(getClass(), "JUnit4TestNotRunNegativeCase1.java"));
   }
 
   @Test
   public void testNegativeCase2() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        sources(getClass(), "JUnit4TestNotRunNegativeCase2.java"));
+    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
+        .sources(getClass(), "JUnit4TestNotRunNegativeCase2.java"));
   }
 
   @Test
   public void testNegativeCase3() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        sources(getClass(), "JUnit4TestNotRunNegativeCase3.java"));
+    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
+        .sources(getClass(), "JUnit4TestNotRunNegativeCase3.java"));
   }
 
   @Test
   public void testNegativeCase4() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        sources(getClass(), "JUnit4TestNotRunNegativeCase4.java"));
+    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
+        .sources(getClass(), "JUnit4TestNotRunNegativeCase4.java"));
   }
 
   @Test
   public void testNegativeCase5() throws Exception {
-    compilationHelper.assertCompileSucceeds(sources(getClass(), 
-        "JUnit4TestNotRunBaseClass.java", "JUnit4TestNotRunNegativeCase5.java"));
+    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
+        .sources(getClass(),
+            "JUnit4TestNotRunBaseClass.java",
+            "JUnit4TestNotRunNegativeCase5.java"));
   }
-
 
   @Test
   public void testSerialization() throws Exception {

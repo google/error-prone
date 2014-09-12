@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.CompilationTestHelper.sources;
-
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
@@ -40,14 +38,14 @@ public class ModifyingCollectionWithItselfTest {
 
   @Test
   public void testPositiveCases1() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "ModifyingCollectionWithItselfPositiveCases.java"));
+    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+        .sources(getClass(), "ModifyingCollectionWithItselfPositiveCases.java"));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        sources(getClass(), "ModifyingCollectionWithItselfNegativeCases.java"));
+    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
+        .sources(getClass(), "ModifyingCollectionWithItselfNegativeCases.java"));
   }
 
 }

@@ -33,7 +33,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +59,7 @@ public class ConstructorOfClassTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void shouldMatchSingleConstructor() throws IOException {
+  public void shouldMatchSingleConstructor() {
     writeFile("A.java",
         "package com.google;",
         "public class A {",
@@ -73,7 +72,7 @@ public class ConstructorOfClassTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void shouldNotMatchNoConstructors() throws IOException {
+  public void shouldNotMatchNoConstructors() {
     writeFile("A.java",
         "package com.google;",
         "public class A {",
@@ -85,7 +84,7 @@ public class ConstructorOfClassTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void shouldNotMatchNonmatchingConstructor() throws IOException {
+  public void shouldNotMatchNonmatchingConstructor() {
     writeFile("A.java",
         "package com.google;",
         "public class A {",
@@ -98,7 +97,7 @@ public class ConstructorOfClassTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void testMultipleConstructors() throws IOException {
+  public void testMultipleConstructors() {
     writeFile("A.java",
         "package com.google;",
         "public class A {",

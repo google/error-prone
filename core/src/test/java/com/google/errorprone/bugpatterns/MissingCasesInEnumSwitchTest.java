@@ -36,7 +36,7 @@ public class MissingCasesInEnumSwitchTest {
   @Test
   public void testExhaustive() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        CompilationTestHelper.forSourceLines("Test",
+        compilationHelper.fileManager().forSourceLines("Test.java",
             "class Test {",
             "  enum Case { ONE, TWO, THREE }",
             "  void m(Case c) {",
@@ -56,7 +56,7 @@ public class MissingCasesInEnumSwitchTest {
   @Test
   public void testNonExhaustive_withDefault() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        CompilationTestHelper.forSourceLines("Test",
+        compilationHelper.fileManager().forSourceLines("Test.java",
             "class Test {",
             "  enum Case { ONE, TWO, THREE }",
             "  void m(Case c) {",
@@ -77,7 +77,7 @@ public class MissingCasesInEnumSwitchTest {
   @Test
   public void testNonExhaustive() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines("Test",
+        compilationHelper.fileManager().forSourceLines("Test.java",
             "class Test {",
             "  enum Case { ONE, TWO, THREE }",
             "  void m(Case c) {",
@@ -97,7 +97,7 @@ public class MissingCasesInEnumSwitchTest {
   @Test
   public void testNonExhaustive_manyCases() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines("Test",
+        compilationHelper.fileManager().forSourceLines("Test.java",
             "class Test {",
             "  enum Case { ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT }",
             "  void m(Case c) {",
@@ -118,7 +118,7 @@ public class MissingCasesInEnumSwitchTest {
   @Test
   public void testNonExhaustive_nonEnum() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        CompilationTestHelper.forSourceLines("Test",
+        compilationHelper.fileManager().forSourceLines("Test.java",
             "class Test {",
             "  void m(int i) {",
             "    switch (i) {",

@@ -16,7 +16,6 @@
 
 package com.google.errorprone;
 
-import static com.google.errorprone.CompilationTestHelper.sources;
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
@@ -110,9 +109,11 @@ public class ErrorProneJavaCompilerTest {
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(outputStream), true);
 
+    ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
+
     JavaCompiler.CompilationTask task = new ErrorProneJavaCompiler().getTask(
-        printWriter, null, diagnosticHelper.collector, null, null,
-        sources(DepAnnTest.class, "DepAnnPositiveCases.java"));
+        printWriter, fileManager, diagnosticHelper.collector, null, null,
+        fileManager.sources(DepAnnTest.class, "DepAnnPositiveCases.java"));
 
     boolean exitCode = task.call();
     assertFalse(outputStream.toString(), exitCode);
@@ -128,13 +129,15 @@ public class ErrorProneJavaCompilerTest {
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(outputStream), true);
 
+    ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
+    
     JavaCompiler.CompilationTask task = new ErrorProneJavaCompiler().getTask(
         printWriter,
-        null,
+        fileManager,
         diagnosticHelper.collector,
         Arrays.asList("-Xepdisable:DepAnn", "-d", tempDir.getRoot().getAbsolutePath()),
         null,
-        sources(DepAnnTest.class, "DepAnnPositiveCases.java"));
+        fileManager.sources(DepAnnTest.class, "DepAnnPositiveCases.java"));
 
     boolean exitCode = task.call();
     assertTrue(outputStream.toString(), exitCode);

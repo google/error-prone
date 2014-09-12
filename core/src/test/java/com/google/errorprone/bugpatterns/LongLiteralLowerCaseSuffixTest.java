@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.base.StandardSystemProperty.JAVA_VERSION;
-import static com.google.errorprone.CompilationTestHelper.sources;
 import static org.junit.Assume.assumeTrue;
 
 import com.google.common.collect.ImmutableList;
@@ -46,8 +45,8 @@ public class LongLiteralLowerCaseSuffixTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "LongLiteralLowerCaseSuffixPositiveCase1.java"));
+    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+        .sources(getClass(), "LongLiteralLowerCaseSuffixPositiveCase1.java"));
   }
 
   /**
@@ -57,20 +56,20 @@ public class LongLiteralLowerCaseSuffixTest {
   public void testJava7PositiveCase() throws Exception {
     String[] javaVersion = JAVA_VERSION.value().split("\\.");
     assumeTrue(Integer.parseInt(javaVersion[1]) >= 7);
-    compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "LongLiteralLowerCaseSuffixPositiveCase2.java"));
+    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+        .sources(getClass(), "LongLiteralLowerCaseSuffixPositiveCase2.java"));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        sources(getClass(), "LongLiteralLowerCaseSuffixNegativeCases.java"));
+    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
+        .sources(getClass(), "LongLiteralLowerCaseSuffixNegativeCases.java"));
   }
 
   @Test
   public void testDisableable() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        sources(getClass(), "LongLiteralLowerCaseSuffixPositiveCase1.java"),
+    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
+        .sources(getClass(), "LongLiteralLowerCaseSuffixPositiveCase1.java"),
         ImmutableList.of("-Xepdisable:LongLiteralLowerCaseSuffix"));
   }
 }

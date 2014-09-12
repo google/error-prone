@@ -32,8 +32,8 @@ public class SynchronizeOnNonFinalFieldTest {
   @Test
   public void testPositive1() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
             "package threadsafety.Test;",
             "class Test {",
             "  Object lock = new Object();",
@@ -49,8 +49,8 @@ public class SynchronizeOnNonFinalFieldTest {
   @Test
   public void testPositive2() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
             "package threadsafety.Test;",
             "class Test {",
             "  Object lock = new Object();",
@@ -67,8 +67,8 @@ public class SynchronizeOnNonFinalFieldTest {
   @Test
   public void testPositive3() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
             "package threadsafety.Test;",
             "class Test {",
             "  Object lock = new Object();",
@@ -84,8 +84,8 @@ public class SynchronizeOnNonFinalFieldTest {
   @Test
   public void testNegative() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
             "package threadsafety.Test;",
             "class Test {",
             "  final Object lock = new Object();",

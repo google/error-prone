@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.CompilationTestHelper.sources;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -38,7 +37,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -56,18 +54,18 @@ public class PreconditionsCheckNotNullPrimitiveTest extends CompilerBasedAbstrac
 
   @Test
   public void testPositiveCases() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "PreconditionsCheckNotNullPrimitivePositiveCases.java"));
+    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+        .sources(getClass(), "PreconditionsCheckNotNullPrimitivePositiveCases.java"));
   }
 
   @Test
   public void testNegativeCase1() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        sources(getClass(), "PreconditionsCheckNotNullPrimitiveNegativeCases.java"));
+    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
+        .sources(getClass(), "PreconditionsCheckNotNullPrimitiveNegativeCases.java"));
   }
 
   @Test
-  public void testGetVariableUses() throws IOException {
+  public void testGetVariableUses() {
     writeFile("A.java",
         "public class A {",
         "  public String b;",

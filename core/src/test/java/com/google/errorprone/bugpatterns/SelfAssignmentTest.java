@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.CompilationTestHelper.sources;
-
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
@@ -40,20 +38,20 @@ public class SelfAssignmentTest {
 
   @Test
   public void testPositiveCases1() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "SelfAssignmentPositiveCases1.java"));
+    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+        .sources(getClass(), "SelfAssignmentPositiveCases1.java"));
   }
 
   @Test
   public void testPositiveCases2() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "SelfAssignmentPositiveCases2.java"));
+    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+        .sources(getClass(), "SelfAssignmentPositiveCases2.java"));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        sources(getClass(), "SelfAssignmentNegativeCases.java"));
+    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
+        .sources(getClass(), "SelfAssignmentNegativeCases.java"));
   }
 
 }

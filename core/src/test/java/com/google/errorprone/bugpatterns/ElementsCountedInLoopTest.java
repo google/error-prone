@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.CompilationTestHelper.sources;
-
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
@@ -41,14 +39,14 @@ public class ElementsCountedInLoopTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(
-        sources(getClass(), "ElementsCountedInLoopPositiveCases.java"));
+    compilationHelper.assertCompileSucceedsWithMessages(compilationHelper.fileManager()
+        .sources(getClass(), "ElementsCountedInLoopPositiveCases.java"));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        sources(getClass(), "ElementsCountedInLoopNegativeCases.java"));
+    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
+        .sources(getClass(), "ElementsCountedInLoopNegativeCases.java"));
   }
 
 }
