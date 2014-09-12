@@ -16,6 +16,10 @@
 
 package com.google.errorprone;
 
+import com.google.common.base.Supplier;
+import com.google.common.collect.ImmutableList;
+import com.google.errorprone.bugpatterns.BugChecker;
+
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.util.Context;
@@ -43,15 +47,55 @@ import javax.tools.StandardJavaFileManager;
  * @author nik
  */
 public class ErrorProneJavaCompiler implements JavaCompiler {
-  private final JavaCompiler myJavacTool;
+
+  private final JavaCompiler javacTool;
+  private final Supplier<ErrorProneScanner> scannerSupplier;
+
+  /**
+   * @param checkerClasses a custom set of BugCheckers
+   */
+  public ErrorProneJavaCompiler(final Class<? extends BugChecker>... checkerClasses) {
+    this(new Supplier<ErrorProneScanner>() {
+      private final ImmutableList<Class<? extends BugChecker>> classes =
+          ImmutableList.copyOf(checkerClasses);
+
+      @Override
+      public ErrorProneScanner get() {
+        ImmutableList.Builder<BugChecker> checkers = ImmutableList.builder();
+        for (Class<? extends BugChecker> clazz : classes) {
+          try {
+            checkers.add(clazz.newInstance());
+          } catch (InstantiationException | IllegalAccessException e) {
+            throw new IllegalArgumentException(e);
+          }
+        }
+        return new ErrorProneScanner(checkers.build().toArray(new BugChecker[classes.size()]));
+      }
+    });
+  }
 
   public ErrorProneJavaCompiler() {
     this(JavacTool.create());
   }
 
   // package-private for testing
-  ErrorProneJavaCompiler(JavaCompiler myJavacTool) {
-    this.myJavacTool = myJavacTool;
+  ErrorProneJavaCompiler(JavaCompiler javacTool) {
+    this(javacTool, new Supplier<ErrorProneScanner>() {
+      @Override
+      public ErrorProneScanner get() {
+        return new ErrorProneScanner(ErrorProneScanner.EnabledPredicate.DEFAULT_CHECKS);
+      }
+    });
+  }
+
+  private ErrorProneJavaCompiler(Supplier<ErrorProneScanner> scannerSupplier) {
+    this(JavacTool.create(), scannerSupplier);
+  }
+
+  private ErrorProneJavaCompiler(JavaCompiler javacTool,
+      Supplier<ErrorProneScanner> scannerSupplier) {
+    this.javacTool = javacTool;
+    this.scannerSupplier = scannerSupplier;
   }
 
   @Override
@@ -64,11 +108,10 @@ public class ErrorProneJavaCompiler implements JavaCompiler {
       Iterable<? extends JavaFileObject> compilationUnits) {
     ErrorProneOptions errorProneOptions = ErrorProneOptions.processArgs(options);
     List<String> remainingOptions = Arrays.asList(errorProneOptions.getRemainingArgs());
-    CompilationTask task = myJavacTool.getTask(
+    CompilationTask task = javacTool.getTask(
         out, fileManager, diagnosticListener, remainingOptions, classes, compilationUnits);
     Context context = ((JavacTaskImpl) task).getContext();
-    ErrorProneScanner scanner =
-        new ErrorProneScanner(ErrorProneScanner.EnabledPredicate.DEFAULT_CHECKS);
+    ErrorProneScanner scanner = scannerSupplier.get();
     context.put(Scanner.class, scanner);
     try {
       scanner.setDisabledChecks(errorProneOptions.getDisabledChecks());
@@ -84,12 +127,12 @@ public class ErrorProneJavaCompiler implements JavaCompiler {
       DiagnosticListener<? super JavaFileObject> diagnosticListener,
       Locale locale,
       Charset charset) {
-    return myJavacTool.getStandardFileManager(diagnosticListener, locale, charset);
+    return javacTool.getStandardFileManager(diagnosticListener, locale, charset);
   }
 
   @Override
   public int isSupportedOption(String option) {
-    int numberOfArgs = myJavacTool.isSupportedOption(option);
+    int numberOfArgs = javacTool.isSupportedOption(option);
     if (numberOfArgs != -1) {
       return numberOfArgs;
     }
@@ -98,13 +141,13 @@ public class ErrorProneJavaCompiler implements JavaCompiler {
 
   @Override
   public int run(InputStream in, OutputStream out, OutputStream err, String... arguments) {
-    return myJavacTool.run(in, out, err, arguments);
+    return javacTool.run(in, out, err, arguments);
   }
 
   @Override
   public Set<SourceVersion> getSourceVersions() {
     Set<SourceVersion> filtered = EnumSet.noneOf(SourceVersion.class);
-    for (SourceVersion version : myJavacTool.getSourceVersions()) {
+    for (SourceVersion version : javacTool.getSourceVersions()) {
       if (version.compareTo(SourceVersion.RELEASE_6) >= 0) {
         filtered.add(version);
       }
