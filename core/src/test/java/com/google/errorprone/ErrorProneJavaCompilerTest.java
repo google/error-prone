@@ -26,6 +26,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import com.google.errorprone.bugpatterns.DepAnnTest;
+import com.google.errorprone.bugpatterns.Finally;
 
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
@@ -115,8 +116,8 @@ public class ErrorProneJavaCompilerTest {
         printWriter, fileManager, diagnosticHelper.collector, null, null,
         fileManager.sources(DepAnnTest.class, "DepAnnPositiveCases.java"));
 
-    boolean exitCode = task.call();
-    assertFalse(outputStream.toString(), exitCode);
+    boolean succeeded = task.call();
+    assertFalse(outputStream.toString(), succeeded);
     Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher = Matchers.hasItem(
         diagnosticMessage(containsString("[DepAnn]")));
     assertTrue("Error should be found. " + diagnosticHelper.describe(),
@@ -130,7 +131,7 @@ public class ErrorProneJavaCompilerTest {
     PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(outputStream), true);
 
     ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
-    
+
     JavaCompiler.CompilationTask task = new ErrorProneJavaCompiler().getTask(
         printWriter,
         fileManager,
@@ -139,8 +140,48 @@ public class ErrorProneJavaCompilerTest {
         null,
         fileManager.sources(DepAnnTest.class, "DepAnnPositiveCases.java"));
 
-    boolean exitCode = task.call();
-    assertTrue(outputStream.toString(), exitCode);
+    boolean succeeded = task.call();
+    assertTrue(outputStream.toString(), succeeded);
+  }
+
+  @Test
+  public void testWithCustomCheckPositive() throws Exception {
+    DiagnosticTestHelper diagnosticHelper = new DiagnosticTestHelper();
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(outputStream), true);
+
+    ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
+
+    JavaCompiler.CompilationTask task = new ErrorProneJavaCompiler(Finally.class).getTask(
+        printWriter,
+        null,
+        diagnosticHelper.collector,
+        Arrays.asList("-d", tempDir.getRoot().getAbsolutePath()),
+        null,
+        fileManager.sources(Finally.class, "FinallyPositiveCase1.java"));
+
+    boolean succeeded = task.call();
+    assertFalse(outputStream.toString(), succeeded);
+  }
+
+  @Test
+  public void testWithCustomCheckNegative() throws Exception {
+    DiagnosticTestHelper diagnosticHelper = new DiagnosticTestHelper();
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(outputStream), true);
+
+    ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
+
+    JavaCompiler.CompilationTask task = new ErrorProneJavaCompiler(Finally.class).getTask(
+        printWriter,
+        null,
+        diagnosticHelper.collector,
+        Arrays.asList("-d", tempDir.getRoot().getAbsolutePath()),
+        null,
+        fileManager.sources(DepAnnTest.class, "DepAnnPositiveCases.java"));
+
+    boolean succeeded = task.call();
+    assertTrue(outputStream.toString(), succeeded);
   }
 }
 
