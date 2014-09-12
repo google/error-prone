@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.CompilationTestHelper.sources;
-
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
@@ -40,21 +38,23 @@ public class DeadExceptionTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "DeadExceptionPositiveCases.java"));
+    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+        .sources(getClass(), "DeadExceptionPositiveCases.java"));
   }
 
-  @Test public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        sources(getClass(), "DeadExceptionNegativeCases.java"));
+  @Test
+  public void testNegativeCase() throws Exception {
+    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
+        .sources(getClass(), "DeadExceptionNegativeCases.java"));
   }
 
   /**
-   * It's somewhat common to test the side-effects of Exception constructors by creating one,
-   * and asserting that an exception is thrown in the constructor.
+   * It's somewhat common to test the side-effects of Exception constructors by creating one, and
+   * asserting that an exception is thrown in the constructor.
    */
-  @Test public void testNegativeCaseWhenExceptionsUnthrownInTests() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        sources(getClass(), "DeadExceptionTestingNegativeCases.java"));
+  @Test
+  public void testNegativeCaseWhenExceptionsUnthrownInTests() throws Exception {
+    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
+        .sources(getClass(), "DeadExceptionTestingNegativeCases.java"));
   }
 }

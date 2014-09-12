@@ -27,7 +27,6 @@ import com.sun.source.tree.MethodInvocationTree;
 import org.junit.After;
 import org.junit.Before;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,8 +35,8 @@ public class DescendantOfAbstractTest extends CompilerBasedAbstractTest {
   final List<ScannerTest> tests = new ArrayList<ScannerTest>();
 
   @Before
-  public void setUp() throws IOException {
-    writeFile("A.java",
+  public void setUp() throws Exception {
+    writeFile("com/google/A.java",
         "package com.google;",
         "public class A { ",
         "  public int count() {",

@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.CompilationTestHelper.sources;
-
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
@@ -40,13 +38,13 @@ public class StringBuilderInitWithCharTest {
 
   @Test
   public void testPositiveCases() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "StringBuilderInitWithCharPositiveCases.java"));
+    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+        .sources(getClass(), "StringBuilderInitWithCharPositiveCases.java"));
   }
 
   @Test
   public void testNegativeCases() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        sources(getClass(), "StringBuilderInitWithCharNegativeCases.java"));
+    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
+        .sources(getClass(), "StringBuilderInitWithCharNegativeCases.java"));
   }
 }

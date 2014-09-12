@@ -19,7 +19,6 @@ package com.google.errorprone.dataflow.nullnesspropagation;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.CompilationTestHelper.sources;
 import static com.google.errorprone.dataflow.DataFlow.expressionDataflow;
 import static com.google.errorprone.fixes.SuggestedFix.replace;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -125,31 +124,36 @@ public class NullnessPropagationTest {
   @Test
   public void testTransferFunctions1() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "NullnessPropagationTransferCases1.java"));
+        compilationHelper.fileManager().sources(
+            getClass(), "NullnessPropagationTransferCases1.java"));
   }
 
   @Test
   public void testTransferFunctions2() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "NullnessPropagationTransferCases2.java"));
+        compilationHelper.fileManager().sources(
+            getClass(), "NullnessPropagationTransferCases2.java"));
   }
 
   @Test
   public void testTransferFunctions3() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "NullnessPropagationTransferCases3.java"));
+        compilationHelper.fileManager().sources(
+            getClass(), "NullnessPropagationTransferCases3.java"));
   }
   
   @Test
   public void testTransferFunctions4() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "NullnessPropagationTransferCases4.java"));
+        compilationHelper.fileManager().sources(
+            getClass(), "NullnessPropagationTransferCases4.java"));
   }
   
   @Test
   public void testTransferFunctions5() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "NullnessPropagationTransferCases5.java"));
+        compilationHelper.fileManager().sources(
+            getClass(), "NullnessPropagationTransferCases5.java"));
   }
 
 

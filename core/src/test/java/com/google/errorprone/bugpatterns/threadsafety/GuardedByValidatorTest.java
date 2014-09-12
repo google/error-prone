@@ -36,8 +36,8 @@ public class GuardedByValidatorTest {
   @Test
   public void testPositive() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
             "package threadsafety.Test;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class Test {",
@@ -53,8 +53,8 @@ public class GuardedByValidatorTest {
   @Test
   public void testNegative() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
             "package threadsafety.Test;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class Test {",
@@ -78,8 +78,8 @@ public class GuardedByValidatorTest {
   @Test
   public void testItself() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
             "package threadsafety.Test;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class Test {",
@@ -92,8 +92,8 @@ public class GuardedByValidatorTest {
   @Test
   public void testBadInstanceAccess() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
             "package threadsafety.Test;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class Test {",
@@ -108,8 +108,8 @@ public class GuardedByValidatorTest {
   @Test
   public void testClassName() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
             "package threadsafety.Test;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class Test {",

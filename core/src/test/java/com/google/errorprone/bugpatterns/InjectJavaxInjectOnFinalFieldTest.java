@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.CompilationTestHelper.sources;
-
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
@@ -39,13 +37,13 @@ public class InjectJavaxInjectOnFinalFieldTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "InjectJavaxInjectOnFinalFieldPositiveCases.java"));
+    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+        .sources(getClass(), "InjectJavaxInjectOnFinalFieldPositiveCases.java"));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        sources(getClass(), "InjectJavaxInjectOnFinalFieldNegativeCases.java"));
+    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
+        .sources(getClass(), "InjectJavaxInjectOnFinalFieldNegativeCases.java"));
   }
 }

@@ -14,8 +14,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.CompilationTestHelper.source;
-
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 
@@ -41,11 +39,11 @@ public class ProtoFieldNullComparisonTest {
   @Before
   public void setUp() throws Exception {
     compilationHelper = CompilationTestHelper.newInstance(new ProtoFieldNullComparison());
-    protoFile = source(getClass(), "proto/ProtoTest.java");
+    protoFile = compilationHelper.fileManager().source(getClass(), "proto/ProtoTest.java");
   }
 
   private List<JavaFileObject> getSourceFiles(String mainFileName) throws URISyntaxException {
-    JavaFileObject mainFile = source(getClass(), mainFileName);
+    JavaFileObject mainFile = compilationHelper.fileManager().source(getClass(), mainFileName);
     return ImmutableList.of(mainFile, protoFile);
   }
 

@@ -44,9 +44,9 @@ public class HeldLockAnalyzerTest {
   @Test
   public void testInstance() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "import java.util.concurrent.locks.Lock;",
             "class Test {",
@@ -69,9 +69,9 @@ public class HeldLockAnalyzerTest {
   @Test
   public void testTwoInstances() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "import java.util.concurrent.locks.Lock;",
             "class Test {",
@@ -95,9 +95,9 @@ public class HeldLockAnalyzerTest {
   @Test
   public void testSynchronizedMethod() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "import java.util.concurrent.locks.Lock;",
             "class Test {",
@@ -115,9 +115,9 @@ public class HeldLockAnalyzerTest {
   @Test
   public void testSynchronizedThis() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "import java.util.concurrent.locks.Lock;",
             "class Test {",
@@ -137,9 +137,9 @@ public class HeldLockAnalyzerTest {
   @Test
   public void testSynchronizedField() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class Lock { final Object lock = null; }",
             "class Test {",
@@ -161,9 +161,9 @@ public class HeldLockAnalyzerTest {
   @Test
   public void testSynchronizedClass() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class Lock {}",
             "class Test {",
@@ -172,7 +172,7 @@ public class HeldLockAnalyzerTest {
             "  int x;",
             "  void m() {",
             "    synchronized (Lock.class) {",
-            "      // BUG: Diagnostic contains:  [(CLASS_LITERAL threadsafety.Test.Lock)]",
+            "      // BUG: Diagnostic contains:  [(CLASS_LITERAL threadsafety.Lock)]",
             "      x++;",
             "    }",
             "  }",
@@ -184,9 +184,9 @@ public class HeldLockAnalyzerTest {
   @Test
   public void testLocked() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "import java.util.concurrent.locks.Lock;",
             "class Test {",

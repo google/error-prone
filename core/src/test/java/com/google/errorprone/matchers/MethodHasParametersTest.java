@@ -33,7 +33,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +45,7 @@ public class MethodHasParametersTest extends CompilerBasedAbstractTest {
   final List<ScannerTest> tests = new ArrayList<ScannerTest>();
 
   @Before
-  public void setUp() throws IOException {
+  public void setUp() {
     tests.clear();
     writeFile("SampleAnnotation1.java",
         "package com.google;",
@@ -66,7 +65,7 @@ public class MethodHasParametersTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void shouldMatchSingleParameter() throws IOException {
+  public void shouldMatchSingleParameter() {
     writeFile("A.java",
         "package com.google;",
         "public class A {",
@@ -79,7 +78,7 @@ public class MethodHasParametersTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void shouldNotMatchNoParameters() throws IOException {
+  public void shouldNotMatchNoParameters() {
     writeFile("A.java",
         "package com.google;",
         "public class A {",
@@ -92,7 +91,7 @@ public class MethodHasParametersTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void shouldNotMatchNonmatchingParameter() throws IOException {
+  public void shouldNotMatchNonmatchingParameter() {
     writeFile("A.java",
         "package com.google;",
         "public class A {",
@@ -105,7 +104,7 @@ public class MethodHasParametersTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void testMultipleParameters() throws IOException {
+  public void testMultipleParameters() {
     writeFile("A.java",
         "package com.google;",
         "public class A {",

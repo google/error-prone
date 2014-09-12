@@ -35,7 +35,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +49,7 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
   final List<ScannerTest> tests = new ArrayList<ScannerTest>();
 
   @Before
-  public void setUp() throws IOException {
+  public void setUp() {
     tests.clear();
     writeFile("SampleAnnotation1.java",
         "package com.google;",
@@ -68,7 +67,7 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void shouldNotMatchNoAnnotations() throws IOException {
+  public void shouldNotMatchNoAnnotations() {
     writeFile("A.java",
         "package com.google;",
         "public class A {}");
@@ -79,7 +78,7 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void shouldMatchSingleAnnotationOnClass() throws IOException {
+  public void shouldMatchSingleAnnotationOnClass() {
     writeFile("A.java",
       "package com.google;",
       "@SampleAnnotation1",
@@ -91,7 +90,7 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void shouldNotMatchNonmatchingSingleAnnotationOnClass() throws IOException {
+  public void shouldNotMatchNonmatchingSingleAnnotationOnClass() {
     writeFile("A.java",
       "package com.google;",
       "@SampleAnnotation1",
@@ -104,7 +103,7 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
 
   @SuppressWarnings("unchecked")
   @Test
-  public void shouldMatchAllAnnotationsOnClass() throws IOException {
+  public void shouldMatchAllAnnotationsOnClass() {
     writeFile("A.java",
         "package com.google;",
         "@SampleAnnotation1 @SampleAnnotation2",
@@ -118,7 +117,7 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void matchOneAnnotationsOnClass() throws IOException {
+  public void matchOneAnnotationsOnClass() {
     writeFile("A.java",
         "package com.google;",
         "@SampleAnnotation1 @SampleAnnotation2",
@@ -130,7 +129,7 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void shouldMatchAnnotationOnInterface() throws IOException {
+  public void shouldMatchAnnotationOnInterface() {
     writeFile("A.java",
         "package com.google;",
         "@SampleAnnotation1",
@@ -142,7 +141,7 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void shouldMatchAnnotationOnEnum() throws IOException {
+  public void shouldMatchAnnotationOnEnum() {
     writeFile("A.java",
         "package com.google;",
         "@SampleAnnotation1",
@@ -154,7 +153,7 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void shouldMatchAnnotationOnField() throws IOException {
+  public void shouldMatchAnnotationOnField() {
     writeFile("A.java",
         "package com.google;",
         "public class A {",
@@ -168,7 +167,7 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void shouldMatchAnnotationOnMethod() throws IOException {
+  public void shouldMatchAnnotationOnMethod() {
     writeFile("A.java",
         "package com.google;",
         "public class A {",
@@ -182,7 +181,7 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void shouldMatchAnnotationOnParameter() throws IOException {
+  public void shouldMatchAnnotationOnParameter() {
     writeFile("A.java",
         "package com.google;",
         "public class A {",
@@ -195,7 +194,7 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void shouldMatchAnnotationOnConstructor() throws IOException {
+  public void shouldMatchAnnotationOnConstructor() {
     writeFile("A.java",
         "package com.google;",
         "public class A {",
@@ -209,7 +208,7 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void shouldMatchAnnotationOnLocalVariable() throws IOException {
+  public void shouldMatchAnnotationOnLocalVariable() {
     writeFile("A.java",
         "package com.google;",
         "public class A {",
@@ -225,7 +224,7 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void shouldMatchAnnotationOnAnnotation() throws IOException {
+  public void shouldMatchAnnotationOnAnnotation() {
     writeFile("A.java",
         "package com.google;",
         "@SampleAnnotation1",
@@ -237,7 +236,7 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void shouldMatchAnnotationOnPackage() throws IOException {
+  public void shouldMatchAnnotationOnPackage() {
     writeFile("package-info.java",
         "@SampleAnnotation1",
         "package com.google;");

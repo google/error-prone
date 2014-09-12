@@ -28,8 +28,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.io.IOException;
-
 /**
  * @author deminguyen@google.com (Demi Nguyen)
  */
@@ -38,7 +36,7 @@ import java.io.IOException;
 public class MethodReturnsNonNullToStringTest extends CompilerBasedAbstractTest {
    
   @Test
-  public void shouldMatch() throws IOException {
+  public void shouldMatch() {
     writeFile("A.java",
         "public class A {",
         "  public String testToString() {",
@@ -51,7 +49,7 @@ public class MethodReturnsNonNullToStringTest extends CompilerBasedAbstractTest 
   }
   
   @Test
-  public void shouldMatchDescendants() throws IOException {
+  public void shouldMatchDescendants() {
     writeFile("A.java",
         "public class A {",
         "  public String testThisToString() {",
@@ -71,7 +69,7 @@ public class MethodReturnsNonNullToStringTest extends CompilerBasedAbstractTest 
   }
   
   @Test
-  public void shouldMatchBareOverride() throws IOException {
+  public void shouldMatchBareOverride() {
     writeFile("A.java",
         "public class A {",
         "  public String toString() {",
@@ -86,7 +84,7 @@ public class MethodReturnsNonNullToStringTest extends CompilerBasedAbstractTest 
   }
   
   @Test
-  public void shouldNotMatchWhenMethodNameDiffers() throws IOException {
+  public void shouldNotMatchWhenMethodNameDiffers() {
     writeFile("A.java",
         "public class A {",
         "  public String ToString() {",
@@ -101,7 +99,7 @@ public class MethodReturnsNonNullToStringTest extends CompilerBasedAbstractTest 
   }
   
   @Test
-  public void shoudlNotMatchWhenMethodSignatureDiffers() throws IOException {
+  public void shoudlNotMatchWhenMethodSignatureDiffers() {
     writeFile("A.java",
         "  public String toString(int i) {",
         "    return \"toString method with param\";",

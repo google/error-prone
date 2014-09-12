@@ -16,9 +16,8 @@
 
 package com.google.errorprone.matchers;
 
-import static com.google.errorprone.CompilationTestHelper.forSourceLines;
-
-import com.google.common.io.Files;
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.Scanner;
 
@@ -33,18 +32,37 @@ import javax.tools.JavaFileObject;
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class CompilerBasedAbstractTest {
-  List<JavaFileObject> filesToCompile = new ArrayList<JavaFileObject>();
+  
+  private static class FileToCompile {
+    final String name;
+    final String[] lines;
+    
+    FileToCompile(String name, String... lines) {
+      this.name = name;
+      this.lines = lines;
+    }
+  }
+  
+  List<FileToCompile> filesToCompile = new ArrayList<>();
 
   @After
   public void clearSourceFiles() throws Exception {
     filesToCompile.clear();
   }
+
   protected void writeFile(String fileName, String... lines) {
-    filesToCompile.add(forSourceLines(Files.getNameWithoutExtension(fileName),
-        lines));
+    filesToCompile.add(new FileToCompile(fileName, lines));
   }
 
   protected void assertCompiles(Scanner scanner) {
-    CompilationTestHelper.newInstance(scanner).assertCompileSucceeds(filesToCompile);
+    final CompilationTestHelper compilationHelper = CompilationTestHelper.newInstance(scanner);
+    List<JavaFileObject> fileObjects =
+        Lists.transform(filesToCompile, new Function<FileToCompile, JavaFileObject>() {
+          @Override
+          public JavaFileObject apply(FileToCompile file) {
+            return compilationHelper.fileManager().forSourceLines(file.name, file.lines);
+          }
+        });
+    compilationHelper.assertCompileSucceeds(fileObjects);
   }
 }

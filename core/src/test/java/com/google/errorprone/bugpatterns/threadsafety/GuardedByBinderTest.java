@@ -19,7 +19,7 @@ package com.google.errorprone.bugpatterns.threadsafety;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.ErrorProneInMemoryFileManager;
 import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.CompilationUnitTree;
@@ -41,21 +41,22 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.tools.JavaCompiler;
-import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 
 /** {@link GuardedByBinder}Test */
 @RunWith(JUnit4.class)
 public class GuardedByBinderTest {
 
+  private ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
+
   @Test
   public void testInherited() throws Exception {
     assertEquals(
         "(SELECT (THIS) slock)",
         bind("Test", "slock",
-            CompilationTestHelper.forSourceLines(
-                "threadsafety.Test",
-                "package threadsafety.Test;",
+            fileManager.forSourceLines(
+                "threadsafety/Test.java",
+                "package threadsafety;",
                 "class Super {",
                 "  final Object slock = new Object();",
                 "}",
@@ -70,9 +71,9 @@ public class GuardedByBinderTest {
     assertEquals(
         "(SELECT (THIS) lock)",
         bind("Test", "lock",
-            CompilationTestHelper.forSourceLines(
-                "threadsafety.Test",
-                "package threadsafety.Test;",
+            fileManager.forSourceLines(
+                "threadsafety/Test.java",
+                "package threadsafety;",
                 "class Test {",
                 "  final Object lock = new Object();",
                 "}")
@@ -85,9 +86,9 @@ public class GuardedByBinderTest {
         "(SELECT (SELECT (SELECT (SELECT (SELECT (SELECT "
             + "(THIS) s) f) g()) f) g()) lock)",
             bind("Test", "s.f.g().f.g().lock",
-                CompilationTestHelper.forSourceLines(
-                    "threadsafety.Test",
-                    "package threadsafety.Test;",
+                fileManager.forSourceLines(
+                    "threadsafety/Test.java",
+                    "package threadsafety;",
                     "import javax.annotation.concurrent.GuardedBy;",
                     "class Super {",
                     "  final Super f = null;",
@@ -103,9 +104,9 @@ public class GuardedByBinderTest {
   @Test
   public void testBadSuperAccess() throws Exception {
     bindFail("Test", "Super.this.lock",
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        fileManager.forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class Super {}",
             "class Test extends Super {",
@@ -116,11 +117,11 @@ public class GuardedByBinderTest {
   @Test
   public void namedClass_this() throws Exception {
     assertEquals(
-        "(CLASS_LITERAL threadsafety.Test.Test)",
+        "(CLASS_LITERAL threadsafety.Test)",
         bind("Test", "Test.class",
-            CompilationTestHelper.forSourceLines(
-                "threadsafety.Test",
-                "package threadsafety.Test;",
+            fileManager.forSourceLines(
+                "threadsafety/Test.java",
+                "package threadsafety;",
                 "class Test {",
                 "}")
             ));
@@ -129,11 +130,11 @@ public class GuardedByBinderTest {
   @Test
   public void namedClass_super() throws Exception {
     assertEquals(
-        "(CLASS_LITERAL threadsafety.Test.Super)",
+        "(CLASS_LITERAL threadsafety.Super)",
         bind("Test", "Super.class",
-            CompilationTestHelper.forSourceLines(
-                "threadsafety.Test",
-                "package threadsafety.Test;",
+            fileManager.forSourceLines(
+                "threadsafety/Test.java",
+                "package threadsafety;",
                 "class Super {}",
                 "class Test extends Super {}")
             ));
@@ -142,9 +143,9 @@ public class GuardedByBinderTest {
   @Test
   public void namedClass_nonLiteral() throws Exception {
     bindFail("Test", "t.class",
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        fileManager.forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class Super {}",
             "class Test extends Super {",
@@ -155,9 +156,9 @@ public class GuardedByBinderTest {
   @Test
   public void namedClass_none() throws Exception {
     bindFail("Test", "Super.class",
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        fileManager.forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class Test {}"));
   }
@@ -165,9 +166,9 @@ public class GuardedByBinderTest {
   @Test
   public void namedThis_none() throws Exception {
     bindFail("Test", "Segment.this",
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        fileManager.forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class Test {}"));
   }
@@ -175,11 +176,11 @@ public class GuardedByBinderTest {
   @Test
   public void outer_lock() throws Exception {
     assertEquals(
-        "(SELECT (SELECT (THIS) outer$threadsafety.Test.Outer) lock)",
+        "(SELECT (SELECT (THIS) outer$threadsafety.Outer) lock)",
         bind("Test", "Outer.this.lock",
-            CompilationTestHelper.forSourceLines(
-                "threadsafety.Test",
-                "package threadsafety.Test;",
+            fileManager.forSourceLines(
+                "threadsafety/Test.java",
+                "package threadsafety;",
                 "class Outer {",
                 "  final Object lock = new Object();",
                 "  class Test {}",
@@ -190,11 +191,11 @@ public class GuardedByBinderTest {
   @Test
   public void outer_lock_simpleName() throws Exception {
     assertEquals(
-        "(SELECT (SELECT (THIS) outer$threadsafety.Test.Outer) lock)",
+        "(SELECT (SELECT (THIS) outer$threadsafety.Outer) lock)",
         bind("Test", "lock",
-            CompilationTestHelper.forSourceLines(
-                "threadsafety.Test",
-                "package threadsafety.Test;",
+            fileManager.forSourceLines(
+                "threadsafety/Test.java",
+                "package threadsafety;",
                 "import javax.annotation.concurrent.GuardedBy;",
                 "class Outer {",
                 "  final Object lock = new Object();",
@@ -206,11 +207,11 @@ public class GuardedByBinderTest {
   @Test
   public void otherClass() throws Exception {
     assertEquals(
-        "(SELECT (TYPE_LITERAL threadsafety.Test.Other) lock)",
+        "(SELECT (TYPE_LITERAL threadsafety.Other) lock)",
         bind("Test", "Other.lock",
-            CompilationTestHelper.forSourceLines(
-                "threadsafety.Test",
-                "package threadsafety.Test;",
+            fileManager.forSourceLines(
+                "threadsafety/Test.java",
+                "package threadsafety;",
                 "class Other {",
                 "  static final Object lock = new Object();",
                 "}",
@@ -223,11 +224,11 @@ public class GuardedByBinderTest {
   @Test
   public void simpleName() throws Exception {
     assertEquals(
-        "(SELECT (TYPE_LITERAL threadsafety.Test.Other) lock)",
+        "(SELECT (TYPE_LITERAL threadsafety.Other) lock)",
         bind("Test", "Other.lock",
-            CompilationTestHelper.forSourceLines(
-                "threadsafety.Test",
-                "package threadsafety.Test;",
+            fileManager.forSourceLines(
+                "threadsafety/Test.java",
+                "package threadsafety;",
                 "class Other {",
                 "  static final Object lock = new Object();",
                 "}",
@@ -241,11 +242,11 @@ public class GuardedByBinderTest {
   @Test
   public void simpleNameClass() throws Exception {
     assertEquals(
-        "(CLASS_LITERAL threadsafety.Test.Other)",
+        "(CLASS_LITERAL threadsafety.Other)",
         bind("Test", "Other.class",
-            CompilationTestHelper.forSourceLines(
-                "threadsafety.Test",
-                "package threadsafety.Test;",
+            fileManager.forSourceLines(
+                "threadsafety/Test.java",
+                "package threadsafety;",
                 "class Other {",
                 "  static final Object lock = new Object();",
                 "}",
@@ -262,9 +263,9 @@ public class GuardedByBinderTest {
     assertEquals(
         "(SELECT (THIS) Other)",
         bind("Test", "Other",
-            CompilationTestHelper.forSourceLines(
-                "threadsafety.Test",
-                "package threadsafety.Test;",
+            fileManager.forSourceLines(
+                "threadsafety/Test.java",
+                "package threadsafety;",
                 "class Other {",
                 "  static final Object lock = new Object();",
                 "}",
@@ -278,11 +279,11 @@ public class GuardedByBinderTest {
   @Test
   public void staticFieldGuard() throws Exception {
     assertEquals(
-        "(SELECT (TYPE_LITERAL threadsafety.Test.Test) lock)",
+        "(SELECT (TYPE_LITERAL threadsafety.Test) lock)",
         bind("Test", "lock",
-            CompilationTestHelper.forSourceLines(
-                "threadsafety.Test",
-                "package threadsafety.Test;",
+            fileManager.forSourceLines(
+                "threadsafety/Test.java",
+                "package threadsafety;",
                 "class Test {",
                 "  static final Object lock = new Object();",
                 "}")
@@ -293,11 +294,11 @@ public class GuardedByBinderTest {
   @Test
   public void staticMethodGuard() throws Exception {
     assertEquals(
-        "(SELECT (TYPE_LITERAL threadsafety.Test.Test) lock())",
+        "(SELECT (TYPE_LITERAL threadsafety.Test) lock())",
         bind("Test", "lock()",
-            CompilationTestHelper.forSourceLines(
-                "threadsafety.Test",
-                "package threadsafety.Test;",
+            fileManager.forSourceLines(
+                "threadsafety/Test.java",
+                "package threadsafety;",
                 "class Test {",
                 "  static Object lock() { return null; }",
                 "}")
@@ -308,11 +309,11 @@ public class GuardedByBinderTest {
   @Test
   public void staticOnStatic() throws Exception {
     assertEquals(
-        "(SELECT (TYPE_LITERAL threadsafety.Test.Test) lock)",
+        "(SELECT (TYPE_LITERAL threadsafety.Test) lock)",
         bind("Test", "Test.lock",
-            CompilationTestHelper.forSourceLines(
-                "threadsafety.Test",
-                "package threadsafety.Test;",
+            fileManager.forSourceLines(
+                "threadsafety/Test.java",
+                "package threadsafety;",
                 "class Test {",
                 "  static final Object lock = new Object();",
                 "}"
@@ -322,9 +323,9 @@ public class GuardedByBinderTest {
   @Test
   public void instanceOnStatic() throws Exception {
       bindFail("Test", "Test.lock",
-          CompilationTestHelper.forSourceLines(
-              "threadsafety.Test",
-              "package threadsafety.Test;",
+          fileManager.forSourceLines(
+              "threadsafety/Test.java",
+              "package threadsafety;",
               "class Test {",
               "  final Object lock = new Object();",
               "}"
@@ -334,9 +335,9 @@ public class GuardedByBinderTest {
   @Test
   public void instanceMethodOnStatic() throws Exception {
       bindFail("Test", "Test.lock()",
-          CompilationTestHelper.forSourceLines(
-              "threadsafety.Test",
-              "package threadsafety.Test;",
+          fileManager.forSourceLines(
+              "threadsafety/Test.java",
+              "package threadsafety;",
               "class Test {",
               "  final Object lock() { return null; }",
               "}"
@@ -348,9 +349,9 @@ public class GuardedByBinderTest {
   @Test
   public void nonFinalStatic() throws Exception {
     bindFail("Test", "Other.lock",
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        fileManager.forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "class Other {",
             "  static Object lock = new Object();",
             "}",
@@ -365,16 +366,14 @@ public class GuardedByBinderTest {
   @Test
   public void nonFinal() throws Exception {
     bindFail("Test", "lock",
-        CompilationTestHelper.forSourceLines(
-            "threadsafety.Test",
-            "package threadsafety.Test;",
+        fileManager.forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
             "class Test {",
             "  Object lock = new Object();",
             "}")
         );
   }
-
-  private JavaFileManager fileManager = CompilationTestHelper.getFileManager(null, null, null);
 
   private void bindFail(String className, String exprString, JavaFileObject fileObject)
       throws IOException {

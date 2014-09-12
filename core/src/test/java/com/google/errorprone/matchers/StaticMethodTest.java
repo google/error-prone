@@ -29,8 +29,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.io.IOException;
-
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
@@ -38,7 +36,7 @@ import java.io.IOException;
 public class StaticMethodTest extends CompilerBasedAbstractTest {
 
   @Before
-  public void setUp() throws IOException {
+  public void setUp() {
     writeFile("A.java",
         "package com.google;",
         "public class A { ",
@@ -56,7 +54,7 @@ public class StaticMethodTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void shouldMatchUsingImportStatements() throws IOException {
+  public void shouldMatchUsingImportStatements() {
     writeFile("B.java",
       "import com.google.A;",
       "public class B {",
@@ -73,7 +71,7 @@ public class StaticMethodTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void shouldOnlyMatchFullSignature() throws IOException {
+  public void shouldOnlyMatchFullSignature() {
     writeFile("B.java",
       "import com.google.A;",
       "public class B {",
@@ -91,7 +89,7 @@ public class StaticMethodTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void shouldMatchFullyQualifiedCallSite() throws IOException {
+  public void shouldMatchFullyQualifiedCallSite() {
     writeFile("B.java",
       "public class B {",
       "  public int count() {",
@@ -103,7 +101,7 @@ public class StaticMethodTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void shouldNotMatchWhenPackageDiffers() throws IOException {
+  public void shouldNotMatchWhenPackageDiffers() {
     writeFile("B.java",
         "public class B {",
         "  static class A {",
@@ -119,7 +117,7 @@ public class StaticMethodTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void shouldNotMatchInstanceMethod() throws IOException {
+  public void shouldNotMatchInstanceMethod() {
     writeFile("B.java",
         "import com.google.A;",
         "public class B {",
@@ -135,7 +133,7 @@ public class StaticMethodTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void shouldMatchStaticImport() throws IOException {
+  public void shouldMatchStaticImport() {
     writeFile("B.java",
         "import static com.google.A.count;",
         "public class B {",

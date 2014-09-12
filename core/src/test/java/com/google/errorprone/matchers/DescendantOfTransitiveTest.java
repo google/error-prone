@@ -62,7 +62,7 @@ public class DescendantOfTransitiveTest extends DescendantOfAbstractTest {
     filesToCompile.add(source.getAbsolutePath());
   }
 
-  private void assertCompilesWithLocalDisk(Scanner scanner) throws IOException {
+  private void assertCompilesWithLocalDisk(Scanner scanner) {
     List<String> args = new ArrayList<String>();
     args.add("-cp");
     args.add(tempDir.getRoot().getAbsolutePath());

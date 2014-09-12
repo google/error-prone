@@ -29,8 +29,7 @@ import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 
 /**
- * Wraps {@link com.google.errorprone.ErrorProneCompiler} and registers an
- * {@link com.google.testing.compile.InMemoryJavaFileManager}.
+ * Wraps {@link com.google.errorprone.ErrorProneCompiler}.
  */
 public class ErrorProneTestCompiler {
 
@@ -64,8 +63,13 @@ public class ErrorProneTestCompiler {
     }
   }
 
-  ErrorProneCompiler compiler;
+  private final ErrorProneCompiler compiler;
+  private final ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
 
+  public ErrorProneInMemoryFileManager fileManager() {
+    return fileManager;
+  }
+  
   private ErrorProneTestCompiler(ErrorProneCompiler compiler) {
     this.compiler = compiler;
   }
@@ -81,11 +85,9 @@ public class ErrorProneTestCompiler {
   public int compile(List<JavaFileObject> sources, List<? extends Processor> processors) {
     return compile(new String[]{}, sources, processors);
   }
-
+  
   public int compile(String[] args, List<JavaFileObject> sources, List<? extends Processor>
       processors) {
-    JavaFileManager fileManager = CompilationTestHelper.getFileManager(null, null,
-        null);
     Context context = new Context();
     context.put(JavaFileManager.class, fileManager);
     return compiler.compile(args, context, asJavacList(sources), processors);

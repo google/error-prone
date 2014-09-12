@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.CompilationTestHelper.sources;
-
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
@@ -40,19 +38,19 @@ public class JUnit4TearDownNotRunTest {
 
   @Test
   public void testPositiveCases() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "JUnit4TearDownNotRunPositiveCases.java"));
+    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+        .sources(getClass(), "JUnit4TearDownNotRunPositiveCases.java"));
   }
 
   @Test
   public void testPositiveCase_customAnnotation() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "JUnit4TearDownNotRunPositiveCaseCustomAfter.java"));
+    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+        .sources(getClass(), "JUnit4TearDownNotRunPositiveCaseCustomAfter.java"));
   }
 
   @Test
   public void testNegativeCases() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        sources(getClass(), "JUnit4TearDownNotRunNegativeCases.java"));
+    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
+        .sources(getClass(), "JUnit4TearDownNotRunNegativeCases.java"));
   }
 }

@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.CompilationTestHelper.sources;
-
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
@@ -37,13 +35,13 @@ public class IncrementDecrementVolatileTest {
 
   @Test
   public void testPositiveCases() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(
-        sources(getClass(), "IncrementDecrementVolatilePositiveCases.java"));
+    compilationHelper.assertCompileSucceedsWithMessages(compilationHelper.fileManager()
+        .sources(getClass(), "IncrementDecrementVolatilePositiveCases.java"));
   }
 
   @Test
   public void testNegativeCases() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        sources(getClass(), "IncrementDecrementVolatileNegativeCases.java"));
+    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
+        .sources(getClass(), "IncrementDecrementVolatileNegativeCases.java"));
   }
 }

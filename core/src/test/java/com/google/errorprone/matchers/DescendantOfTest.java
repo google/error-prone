@@ -20,8 +20,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.io.IOException;
-
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
@@ -29,7 +27,7 @@ import java.io.IOException;
 public class DescendantOfTest extends DescendantOfAbstractTest {
 
   @Test
-  public void shouldMatchExactMethod() throws IOException {
+  public void shouldMatchExactMethod() {
     writeFile("B.java",
       "import com.google.A;",
       "public class B {",
@@ -43,7 +41,7 @@ public class DescendantOfTest extends DescendantOfAbstractTest {
   }
 
   @Test
-  public void shouldMatchOverriddenMethod() throws IOException {
+  public void shouldMatchOverriddenMethod() {
     writeFile("B.java",
       "import com.google.A;",
       "public class B extends A {",
@@ -57,7 +55,7 @@ public class DescendantOfTest extends DescendantOfAbstractTest {
   }
 
   @Test
-  public void shouldMatchBareOverriddenMethod() throws IOException {
+  public void shouldMatchBareOverriddenMethod() {
     writeFile("B.java",
       "import com.google.A;",
       "public class B extends A {",
@@ -73,7 +71,7 @@ public class DescendantOfTest extends DescendantOfAbstractTest {
   }
 
   @Test
-  public void shouldNotMatchDifferentMethod() throws IOException {
+  public void shouldNotMatchDifferentMethod() {
     writeFile("B.java",
       "import com.google.A;",
       "public class B {",
@@ -88,7 +86,7 @@ public class DescendantOfTest extends DescendantOfAbstractTest {
   }
 
   @Test
-  public void shouldNotMatchStaticMethod() throws IOException {
+  public void shouldNotMatchStaticMethod() {
     writeFile("B.java",
       "import com.google.A;",
       "public class B {",

@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.CompilationTestHelper.sources;
-
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
@@ -41,13 +39,13 @@ public class InjectOverlappingQualifierAndScopeAnnotationTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "InjectOverlappingQualifierAndScopeAnnotationPositiveCases.java"));
+    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+        .sources(getClass(), "InjectOverlappingQualifierAndScopeAnnotationPositiveCases.java"));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        sources(getClass(), "InjectOverlappingQualifierAndScopeAnnotationNegativeCases.java"));
+    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
+        .sources(getClass(), "InjectOverlappingQualifierAndScopeAnnotationNegativeCases.java"));
   }
 }

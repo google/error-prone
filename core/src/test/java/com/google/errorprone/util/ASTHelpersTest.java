@@ -34,13 +34,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.io.IOException;
-
 @RunWith(JUnit4.class)
 public class ASTHelpersTest extends CompilerBasedAbstractTest {
 
   @Test
-  public void testGetActualStartPosition() throws IOException {
+  public void testGetActualStartPosition() {
     writeFile("A.java",
         "public class A { ",
         "  public void foo() {",
@@ -52,7 +50,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void testGetActualStartPositionWithWhitespace() throws IOException {
+  public void testGetActualStartPositionWithWhitespace() {
     writeFile("A.java",
         "public class A { ",
         "  public void foo() {",
@@ -84,7 +82,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void testGetReceiver() throws IOException {
+  public void testGetReceiver() {
     writeFile("A.java",
         "public class A { ",
         "  public B b;",
@@ -143,7 +141,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void testAnnotationHelpers() throws IOException {
+  public void testAnnotationHelpers() {
     writeFile("com/google/errorprone/util/InheritedAnnotation.java",
         "package com.google.errorprone.util;",
         "import java.lang.annotation.Inherited;",

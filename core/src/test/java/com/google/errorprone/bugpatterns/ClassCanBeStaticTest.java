@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.CompilationTestHelper.sources;
-
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
@@ -39,25 +37,25 @@ public class ClassCanBeStaticTest {
   }
 
   @Test public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        sources(getClass(), "ClassCanBeStaticNegativeCases.java"));
+    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
+        .sources(getClass(), "ClassCanBeStaticNegativeCases.java"));
   }
 
   @Test
   public void testPositiveCase1() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "ClassCanBeStaticPositiveCase1.java"));
+    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+        .sources(getClass(), "ClassCanBeStaticPositiveCase1.java"));
   }
 
   @Test
   public void testPositiveCase2() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "ClassCanBeStaticPositiveCase2.java"));
+    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+        .sources(getClass(), "ClassCanBeStaticPositiveCase2.java"));
   }
 
   @Test
   public void testPositiveCase3() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "ClassCanBeStaticPositiveCase3.java"));
+    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+        .sources(getClass(), "ClassCanBeStaticPositiveCase3.java"));
   }
 }

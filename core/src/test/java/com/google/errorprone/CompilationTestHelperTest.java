@@ -49,7 +49,7 @@ public class CompilationTestHelperTest {
     boolean failed = true;
     try {
       compilationHelper.assertCompileFailsWithMessages(
-          CompilationTestHelper.forSourceLines("Test.java",
+          compilationHelper.fileManager().forSourceLines("Test.java",
               "class Test {",
               "  void m() {",
               "    // BUG: Diagnostic contains:",

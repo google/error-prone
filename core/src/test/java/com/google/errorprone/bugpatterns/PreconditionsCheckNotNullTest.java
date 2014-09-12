@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.CompilationTestHelper.sources;
-
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
@@ -40,33 +38,32 @@ public class PreconditionsCheckNotNullTest {
 
   @Test
   public void testPositiveCase1() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "PreconditionsCheckNotNullPositiveCase1.java"));
+    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+        .sources(getClass(), "PreconditionsCheckNotNullPositiveCase1.java"));
   }
 
   @Test
   public void testPositiveCase2() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "PreconditionsCheckNotNullPositiveCase2.java"));
+    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+        .sources(getClass(), "PreconditionsCheckNotNullPositiveCase2.java"));
   }
 
   @Test
   public void testPositiveCase3() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "PreconditionsCheckNotNullPositiveCase3.java"));
+    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+        .sources(getClass(), "PreconditionsCheckNotNullPositiveCase3.java"));
   }
-
 
   @Test
   public void testNegativeCase1() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        sources(getClass(), "PreconditionsCheckNotNullNegativeCase1.java"));
+    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
+        .sources(getClass(), "PreconditionsCheckNotNullNegativeCase1.java"));
   }
 
   @Test
   public void testNegativeCase2() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        sources(getClass(), "PreconditionsCheckNotNullNegativeCase2.java"));
+    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
+        .sources(getClass(), "PreconditionsCheckNotNullNegativeCase2.java"));
   }
 
 }

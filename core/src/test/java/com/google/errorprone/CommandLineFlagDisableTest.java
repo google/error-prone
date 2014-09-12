@@ -19,7 +19,6 @@ package com.google.errorprone;
 import static com.google.errorprone.BugPattern.Category.ONE_OFF;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.CompilationTestHelper.sources;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -102,7 +101,8 @@ public class CommandLineFlagDisableTest {
         .report(new ErrorProneScanner(new DisableableChecker()))
         .build();
 
-    List<JavaFileObject> sources = sources(getClass(), "CommandLineFlagTestFile.java");
+    List<JavaFileObject> sources =
+        compiler.fileManager().sources(getClass(), "CommandLineFlagTestFile.java");
     int exitCode = compiler.compile(sources);
     assertThat(exitCode, is(1));
     exitCode = compiler.compile(new String[]{"-Xepdisable:DisableableChecker"}, sources);
@@ -116,7 +116,8 @@ public class CommandLineFlagDisableTest {
         .report(new ErrorProneScanner(new NondisableableChecker()))
         .build();
 
-    List<JavaFileObject> sources = sources(getClass(), "CommandLineFlagTestFile.java");
+    List<JavaFileObject> sources =
+        compiler.fileManager().sources(getClass(), "CommandLineFlagTestFile.java");
     // This should exit with code 2, EXIT_CMDERR (not visible outside the com.sun.tools.javac.main
     // package).
     int exitCode = compiler.compile(
@@ -133,7 +134,8 @@ public class CommandLineFlagDisableTest {
         .report(new ErrorProneScanner(new DisableableChecker()))
         .build();
 
-    List<JavaFileObject> sources = sources(getClass(), "CommandLineFlagTestFile.java");
+    List<JavaFileObject> sources =
+        compiler.fileManager().sources(getClass(), "CommandLineFlagTestFile.java");
     int exitCode = compiler.compile(new String[]{"-Xepdisable:BogusChecker"}, sources);
     assertThat(exitCode, is(1));
     assertThat(testStderr.toString(), is(""));
@@ -146,7 +148,8 @@ public class CommandLineFlagDisableTest {
         .report(new ErrorProneScanner(new DisableableChecker()))
         .build();
 
-    List<JavaFileObject> sources = sources(getClass(), "CommandLineFlagTestFile.java");
+    List<JavaFileObject> sources =
+        compiler.fileManager().sources(getClass(), "CommandLineFlagTestFile.java");
     int exitCode = compiler.compile(new String[]{"-Xepdisable:foo"}, sources);
     assertThat(exitCode, is(1));
   }

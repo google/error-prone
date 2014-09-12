@@ -16,7 +16,7 @@
 
 package com.google.errorprone.suppress;
 
-import static com.google.errorprone.CompilationTestHelper.sources;
+
 import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -64,7 +64,8 @@ public class SuppressWarningsTest {
 
   @Test
   public void testNegativeCase() throws Exception {
-    List<JavaFileObject> sources = sources(getClass(), "SuppressWarningsNegativeCases.java");
+    List<JavaFileObject> sources =
+        compiler.fileManager().sources(getClass(), "SuppressWarningsNegativeCases.java");
     assertThat(compiler.compile(sources), is(0));
   }
 }

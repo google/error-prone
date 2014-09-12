@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.CompilationTestHelper.sources;
-
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
@@ -40,14 +38,14 @@ public class PreconditionsInvalidPlaceholderTest {
 
   @Test
   public void testPositiveCase1() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "PreconditionsInvalidPlaceholderPositiveCase1.java"));
+    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+        .sources(getClass(), "PreconditionsInvalidPlaceholderPositiveCase1.java"));
   }
 
   @Test
   public void testNegativeCase1() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        sources(getClass(), "PreconditionsInvalidPlaceholderNegativeCase1.java"));
+    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
+        .sources(getClass(), "PreconditionsInvalidPlaceholderNegativeCase1.java"));
   }
 
 }
