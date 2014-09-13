@@ -65,14 +65,14 @@ public class AppliedFix {
 
       Set<Integer> modifiedLines = new HashSet<>();
       for (Replacement repl : suggestedFix.getReplacements(endPositions)) {
-        replaced.replace(repl.startPosition, repl.endPosition, repl.replaceWith);
+        replaced.replace(repl.startPosition(), repl.endPosition(), repl.replaceWith());
 
         // Find the line number(s) being modified
         // TODO: this could be more efficient
         try {
           LineNumberReader lineNumberReader =
               new LineNumberReader(new StringReader(source.toString()));
-          lineNumberReader.skip(repl.startPosition);
+          lineNumberReader.skip(repl.startPosition());
           modifiedLines.add(lineNumberReader.getLineNumber());
         } catch (IOException e) {
           // impossible since source is in-memory

@@ -16,7 +16,7 @@
 
 package com.google.errorprone.fixes;
 
-import com.google.common.base.Objects;
+import java.util.Objects;
 
 /**
  * A single replaced section of a source file. When multiple replacements are to be made in a file,
@@ -26,14 +26,30 @@ import com.google.common.base.Objects;
 // TODO(user): autovalue?
 public class Replacement {
   // positions are character offset from beginning of the source file
-  public final int startPosition;
-  public final int endPosition;
-  public final String replaceWith;
+  private final int startPosition;
+  private final int endPosition;
+  private final String replaceWith;
 
-  public Replacement(int startPosition, int endPosition, String replaceWith) {
+  public static Replacement create(int startPosition, int endPosition, String replaceWith) {
+    return new Replacement(startPosition, endPosition, replaceWith);
+  }
+
+  private Replacement(int startPosition, int endPosition, String replaceWith) {
     this.startPosition = startPosition;
     this.endPosition = endPosition;
     this.replaceWith = replaceWith;
+  }
+
+  public int startPosition() {
+    return startPosition;
+  }
+
+  public int endPosition() {
+    return endPosition;
+  }
+
+  public String replaceWith() {
+    return replaceWith;
   }
 
   @Override
@@ -53,7 +69,7 @@ public class Replacement {
     if (startPosition != that.startPosition) {
       return false;
     }
-    return Objects.equal(replaceWith, that.replaceWith);
+    return Objects.equals(replaceWith, that.replaceWith);
   }
 
   @Override
