@@ -71,8 +71,8 @@ public class SuggestedFix implements Fix {
     StringBuilder result = new StringBuilder("replace ");
     for (Replacement replacement : getReplacements(JDKCompatible.getEndPosMap(compilationUnit))) {
       result
-          .append("position " + replacement.startPosition + ":" + replacement.endPosition)
-          .append(" with \"" + replacement.replaceWith + "\" ");
+          .append("position " + replacement.startPosition() + ":" + replacement.endPosition())
+          .append(" with \"" + replacement.replaceWith() + "\" ");
     }
     return result.toString();
   }
@@ -88,7 +88,7 @@ public class SuggestedFix implements Fix {
       new Comparator<Replacement>() {
         @Override
         public int compare(Replacement o1, Replacement o2) {
-        return Ints.compare(o2.startPosition, o1.startPosition);
+        return Ints.compare(o2.startPosition(), o1.startPosition());
         }
       });
     for (FixOperation fix : fixes) {
@@ -297,7 +297,7 @@ public class SuggestedFix implements Fix {
     @Override
     public Replacement getReplacement(ErrorProneEndPosMap endPositions) {
       int insertionIndex = getInsertionIndex(endPositions);
-      return new Replacement(insertionIndex, insertionIndex, insertion);
+      return Replacement.create(insertionIndex, insertionIndex, insertion);
     }
   }
 
@@ -335,7 +335,7 @@ public class SuggestedFix implements Fix {
 
     @Override
     public Replacement getReplacement(ErrorProneEndPosMap endPositions) {
-      return new Replacement(
+      return Replacement.create(
           original.getStartPosition(),
           endPositions.getEndPosition(original),
           replacement);
