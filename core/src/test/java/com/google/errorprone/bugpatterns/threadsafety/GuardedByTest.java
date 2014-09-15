@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.threadsafety;
 
 import com.google.errorprone.CompilationTestHelper;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -894,6 +895,67 @@ public class GuardedByTest {
             + "held, instead found [WrongInnerClassInstance.this.lock]",
             "        i.x++;",
             "      }",
+            "    }",
+            "  }",
+            "}"
+        )
+    );
+  }
+
+  // TODO(user): support try-with-resources
+  // (This currently passes because the analysis ignores try-with-resources, not because it
+  // understands why this example is safe.)
+  @Ignore
+  @Test
+  public void tryWithResources() throws Exception {
+    compilationHelper.assertCompileSucceeds(
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "import java.util.concurrent.locks.Lock;",
+            "class Test {",
+            "  Lock lock;",
+            "  @GuardedBy(\"lock\")",
+            "  int x;",
+            "  static class LockCloser implements AutoCloseable {",
+            "    Lock lock;",
+            "    LockCloser(Lock lock) {",
+            "      this.lock = lock;",
+            "      this.lock.lock();",
+            "    }",
+            "    @Override",
+            "    public void close() throws Exception {",
+            "      lock.unlock();",
+            "    }",
+            "  }",
+            "  void m() throws Exception {",
+            "    try (LockCloser _ = new LockCloser(lock)) {",
+            "      x++;",
+            "    }",
+            "  }",
+            "}"
+        )
+    );
+  }
+
+  // Test that the contents of try-with-resources are ignored (for now).
+  // TODO(user): support try-with-resources
+  @Test
+  public void tryWithResourcesAreUnsupported() throws Exception {
+    compilationHelper.assertCompileSucceeds(
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "import java.util.concurrent.locks.Lock;",
+            "class Test {",
+            "  Lock lock;",
+            "  @GuardedBy(\"lock\")",
+            "  int x;",
+            "  void m(AutoCloseable c) throws Exception {",
+            "    try (AutoCloseable _ = c) {",
+            "      x++;  // should be an error!",
             "    }",
             "  }",
             "}"
