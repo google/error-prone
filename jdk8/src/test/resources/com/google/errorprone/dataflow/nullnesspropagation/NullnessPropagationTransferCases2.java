@@ -168,12 +168,16 @@ public class NullnessPropagationTransferCases2 {
   }
   
   public void localVariable() {
-    short s = 1000; // performs narrowing conversion from int literal to short
+    short s;
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(s = 1000); // narrowing conversion
     // BUG: Diagnostic contains: (Non-null)
     triggerNullnessCheckerOnPrimitive(s);
     int i = 2;
     // BUG: Diagnostic contains: (Non-null)
     triggerNullnessCheckerOnPrimitive(i);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(i = s); // widening conversion
     String str = "a string literal";
     // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(str);

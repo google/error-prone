@@ -105,6 +105,11 @@ public class NullnessPropagationTransfer extends AbstractNullnessPropagationTran
   }
 
   @Override
+  NullnessValue visitWideningConversion() {
+    return NONNULL;
+  }
+
+  @Override
   void visitEqualTo(EqualToNode node, SubNodeValues inputs, LocalVariableUpdates thenUpdates,
       LocalVariableUpdates elseUpdates) {
     handleEqualityComparison(true,
