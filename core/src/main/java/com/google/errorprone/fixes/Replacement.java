@@ -16,67 +16,21 @@
 
 package com.google.errorprone.fixes;
 
-import java.util.Objects;
+import com.google.auto.value.AutoValue;
 
 /**
  * A single replaced section of a source file. When multiple replacements are to be made in a file,
  * these should be applied in reverse order of startPosition.
  * @author alexeagle@google.com (Alex Eagle)
  */
-// TODO(user): autovalue?
-public class Replacement {
-  // positions are character offset from beginning of the source file
-  private final int startPosition;
-  private final int endPosition;
-  private final String replaceWith;
-
+@AutoValue
+public abstract class Replacement {
   public static Replacement create(int startPosition, int endPosition, String replaceWith) {
-    return new Replacement(startPosition, endPosition, replaceWith);
+    return new AutoValue_Replacement(startPosition, endPosition, replaceWith);
   }
 
-  private Replacement(int startPosition, int endPosition, String replaceWith) {
-    this.startPosition = startPosition;
-    this.endPosition = endPosition;
-    this.replaceWith = replaceWith;
-  }
-
-  public int startPosition() {
-    return startPosition;
-  }
-
-  public int endPosition() {
-    return endPosition;
-  }
-
-  public String replaceWith() {
-    return replaceWith;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    Replacement that = (Replacement) o;
-
-    if (endPosition != that.endPosition) {
-      return false;
-    }
-    if (startPosition != that.startPosition) {
-      return false;
-    }
-    return Objects.equals(replaceWith, that.replaceWith);
-  }
-
-  @Override
-  public int hashCode() {
-    int result = startPosition;
-    result = 31 * result + endPosition;
-    result = 31 * result + (replaceWith != null ? replaceWith.hashCode() : 0);
-    return result;
-  }
+  // positions are character offset from beginning of the source file
+  public abstract int startPosition();
+  public abstract int endPosition();
+  public abstract String replaceWith();
 }

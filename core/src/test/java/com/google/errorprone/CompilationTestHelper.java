@@ -81,11 +81,28 @@ public class CompilationTestHelper {
   }
 
   /**
+   * Pass -proc:none unless annotation processing is explicitly enabled, to avoid picking up
+   * annotation processors via service loading.
+   */
+  // TODO(user): test compilations should be isolated so they can't pick things up from the
+  // ambient classpath.
+  static List<String> disableImplicitProcessing(List<String> args) {
+    if (args.indexOf("-processor") != -1
+        || args.indexOf("-processorpath") != -1) {
+      return args;
+    }
+    return ImmutableList.<String>builder().addAll(args).add("-proc:none").build();
+  }
+
+  /**
    * Creates a list of arguments to pass to the compiler, including the list of source files
    * to compile.  Uses DEFAULT_ARGS as the base and appends the extraArgs passed in.
    */
   private static List<String> buildArguments(List<String> extraArgs) {
-    return ImmutableList.<String>builder().addAll(DEFAULT_ARGS).addAll(extraArgs).build();
+    return ImmutableList.<String>builder()
+        .addAll(DEFAULT_ARGS)
+        .addAll(disableImplicitProcessing(extraArgs))
+        .build();
   }
 
   /**
@@ -184,7 +201,7 @@ public class CompilationTestHelper {
         new PrintWriter(outputStream, /*autoFlush=*/true),
         fileManager,
         null,
-        Arrays.asList(ErrorProneOptions.processArgs(args).getRemainingArgs()),
+        buildArguments(Arrays.asList(ErrorProneOptions.processArgs(args).getRemainingArgs())),
         null,
         sources);
     boolean result = task.call();
