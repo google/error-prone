@@ -73,6 +73,21 @@ public class NullnessPropagationTransfer extends AbstractNullnessPropagationTran
   }
 
   @Override
+  NullnessValue visitBitwiseOperation() {
+    return NONNULL;
+  }
+
+  @Override
+  NullnessValue visitNumericalComparison() {
+    return NONNULL;
+  }
+
+  @Override
+  NullnessValue visitNumericalOperation() {
+    return NONNULL;
+  }
+
+  @Override
   NullnessValue visitTypeCast(TypeCastNode node, SubNodeValues inputs) {
     return hasPrimitiveType(node)
         ? NONNULL
