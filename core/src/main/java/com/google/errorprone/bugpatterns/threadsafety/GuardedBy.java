@@ -33,6 +33,8 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Type;
 
 /**
  * @author cushon@google.com (Liam Miller-Cushon)
@@ -46,6 +48,8 @@ import com.sun.source.tree.VariableTree;
 public class GuardedBy extends GuardedByValidator implements BugChecker.VariableTreeMatcher,
     BugChecker.MethodTreeMatcher {
 
+  private static final String JUC_READ_WRITE_LOCK = "java.util.concurrent.locks.ReadWriteLock";
+
   @Override
   public Description matchMethod(MethodTree tree, final VisitorState state) {
     // Constructors are free to mutate guarded state without holding the necessary locks. It is
@@ -58,7 +62,7 @@ public class GuardedBy extends GuardedByValidator implements BugChecker.Variable
       @Override
       public void handleGuardedAccess(
           ExpressionTree tree, GuardedByExpression guard, HeldLockSet live) {
-        report(tree, GuardedBy.this.checkGuardedAccess(tree, guard, live), state);
+        report(tree, GuardedBy.this.checkGuardedAccess(tree, guard, live, state), state);
       }
     });
 
@@ -95,7 +99,23 @@ public class GuardedBy extends GuardedByValidator implements BugChecker.Variable
   }
 
   protected Description checkGuardedAccess(Tree tree, GuardedByExpression guard,
-      HeldLockSet locks) {
+      HeldLockSet locks, VisitorState state) {
+
+    // TODO(user): support ReadWriteLocks
+    //
+    // A common pattern with ReadWriteLocks is to create a copy (either a field or a local
+    // variable) to refer to the read and write locks. The analysis currently can't
+    // recognize that locking the copies is equivalent to locking the read or write
+    // locks directly.
+    //
+    // Also - there are currently no annotations to specify an access policy for
+    // members guarded by ReadWriteLocks. We could allow accesses when either the
+    // read or write locks are held, but that's not much better than enforcing
+    // nothing.
+    if (isRWLock(guard, state)) {
+      return Description.NO_MATCH;
+    }
+
     if (!locks.allLocks().contains(guard)) {
       String message = String.format("Expected %s to be held, instead found %s", guard, locks);
       // TODO(user) - this fix is a debugging aid, remove it before productionizing the check.
@@ -108,9 +128,35 @@ public class GuardedBy extends GuardedByValidator implements BugChecker.Variable
     return Description.NO_MATCH;
   }
 
+  /**
+   * Returns true if the lock expression corresponds to a
+   * {@code java.util.concurrent.locks.ReadWriteLock}.
+   */
+  private static boolean isRWLock(GuardedByExpression guard, VisitorState state) {
+    Symbol guardSym = guard.sym();
+    if (guardSym == null) {
+      return false;
+    }
+
+    Type guardType = guardSym.type;
+    if (guardType == null) {
+      return false;
+    }
+
+    Symbol rwLockSymbol = state.getSymbolFromString(JUC_READ_WRITE_LOCK);
+    if (rwLockSymbol  == null) {
+      return false;
+    }
+
+    return state.getTypes().isSubtype(guardType, rwLockSymbol.type);
+  }
+
   // TODO(user) - this is kind of a hack. Provide an abstraction for matchers that need to do
   // stateful visiting? (e.g. a traversal that passes along a set of held locks...)
   private void report(Tree tree, Description description, VisitorState state) {
+    if (description == null || description == Description.NO_MATCH) {
+      return;
+    }
     state.getMatchListener().onMatch(tree);
     state.getDescriptionListener().onDescribed(description);
   }

@@ -339,6 +339,43 @@ public class GuardedByTest {
     );
   }
 
+  // TODO(user): support read/write lock copies
+  @Ignore
+  @Test
+  public void testReadWriteLockCopy() throws Exception {
+    compilationHelper.assertCompileSucceeds(
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety.Test",
+            "package threadsafety.Test;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "import java.util.concurrent.locks.ReentrantReadWriteLock;",
+            "import java.util.concurrent.locks.Lock;",
+            "class Test {",
+            "  final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();",
+            "  final Lock readLock = lock.readLock();",
+            "  final Lock writeLock = lock.writeLock();",
+            "  @GuardedBy(\"lock\") boolean b = false;",
+            "  void m() {",
+            "    readLock.lock();",
+            "    try {",
+            "      b = true;",
+            "    } finally {",
+            "      readLock.unlock();",
+            "    }",
+            "  }",
+            "  void n() {",
+            "    writeLock.lock();",
+            "    try {",
+            "      b = true;",
+            "    } finally {",
+            "      writeLock.unlock();",
+            "    }",
+            "  }",
+            "}"
+        )
+    );
+  }
+
   @Test
   public void testReadWriteLock() throws Exception {
     compilationHelper.assertCompileSucceeds(
@@ -364,6 +401,29 @@ public class GuardedByTest {
             "      b = true;",
             "    } finally {",
             "      lock.writeLock().unlock();",
+            "    }",
+            "  }",
+            "}"
+        )
+    );
+  }
+
+  // Test that ReadWriteLocks are currently ignored.
+  @Test
+  public void testReadWriteLockIsIgnored() throws Exception {
+    compilationHelper.assertCompileSucceeds(
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety.Test;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "import java.util.concurrent.locks.ReentrantReadWriteLock;",
+            "class Test {",
+            "  final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();",
+            "  @GuardedBy(\"lock\") boolean b = false;",
+            "  void m() {",
+            "    try {",
+            "      b = true;",
+            "    } finally {",
             "    }",
             "  }",
             "}"
