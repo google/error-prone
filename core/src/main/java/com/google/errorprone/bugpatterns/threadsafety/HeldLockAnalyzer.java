@@ -46,6 +46,7 @@ import com.sun.tools.javac.tree.JCTree.JCExpression;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.lang.model.element.Modifier;
@@ -124,9 +125,17 @@ public class HeldLockAnalyzer {
 
     @Override
     public Void visitTry(TryTree tree, HeldLockSet locks) {
-      // TODO(user) - recognize common try-with-resources patterns
-      // Currently there is no standard implementation of an AutoCloseable lock resource to detect.
       scan(tree.getResources(), locks);
+
+      List<? extends Tree> resources = tree.getResources();
+      scan(resources, locks);
+
+      // TODO(user) - recognize common try-with-resources patterns. Currently there is no standard
+      // implementation of an AutoCloseable lock resource to detect.
+      if (!resources.isEmpty()) {
+        // Bail out! We don't know what to do with try-with-resources.
+        return null;
+      }
 
       // Cheesy try/finally heuristic: assume that all locks released in the finally
       // are held for the entirety of the try and catch statements.
