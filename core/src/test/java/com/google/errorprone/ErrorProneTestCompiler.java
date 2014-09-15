@@ -21,6 +21,7 @@ import static com.google.errorprone.CompilationTestHelper.asJavacList;
 import com.sun.tools.javac.util.Context;
 
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.processing.Processor;
@@ -90,6 +91,9 @@ public class ErrorProneTestCompiler {
       processors) {
     Context context = new Context();
     context.put(JavaFileManager.class, fileManager);
-    return compiler.compile(args, context, asJavacList(sources), processors);
+    List<String> processedArgs =
+        CompilationTestHelper.disableImplicitProcessing(Arrays.asList(args));
+    String[] argsArray = processedArgs.toArray(new String[processedArgs.size()]);
+    return compiler.compile(argsArray, context, asJavacList(sources), processors);
   }
 }
