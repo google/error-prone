@@ -18,7 +18,6 @@ package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Sets.intersection;
-import static com.google.errorprone.dataflow.nullnesspropagation.NullnessValue.NULLABLE;
 
 import org.checkerframework.dataflow.analysis.FlowExpressions;
 import org.checkerframework.dataflow.analysis.Store;
@@ -44,7 +43,7 @@ public final class NullnessPropagationStore implements Store<NullnessPropagation
   private final Map<Element, NullnessValue> contents = new HashMap<>();
 
   public NullnessValue getInformation(LocalVariableNode node) {
-    return orNullable(contents.get(node.getElement()));
+    return contents.get(node.getElement());
   }
 
   public void setInformation(LocalVariableNode node, NullnessValue value) {
@@ -99,9 +98,5 @@ public final class NullnessPropagationStore implements Store<NullnessPropagation
   @Override
   public String toDOToutput() {
     throw new UnsupportedOperationException("DOT output not supported");
-  }
-
-  private static NullnessValue orNullable(NullnessValue nullnessValue) {
-    return (nullnessValue != null) ? nullnessValue : NULLABLE;
   }
 }
