@@ -158,6 +158,21 @@ abstract class AbstractNullnessPropagationTransfer
     return NULLABLE;
   }
 
+  /** "Summary" method called by default for bitwise operations. */
+  NullnessValue visitBitwiseOperation() {
+    return NULLABLE;
+  }
+
+  /** "Summary" method called by default for numerical comparisons. */
+  NullnessValue visitNumericalComparison() {
+    return NULLABLE;
+  }
+
+  /** "Summary" method called by default for numerical operations. */
+  NullnessValue visitNumericalOperation() {
+    return NULLABLE;
+  }
+
   /** "Summary" method called by default for every {@code ThisLiteralNode}. */
   NullnessValue visitThisLiteral() {
     return NULLABLE;
@@ -195,7 +210,7 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   NullnessValue visitNumericalAddition() {
-    return NULLABLE;
+    return visitNumericalOperation();
   }
 
   @Override
@@ -435,7 +450,7 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   NullnessValue visitNumericalMinus() {
-    return NULLABLE;
+    return visitNumericalOperation();
   }
 
   @Override
@@ -446,7 +461,7 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   NullnessValue visitNumericalPlus() {
-    return NULLABLE;
+    return visitNumericalOperation();
   }
 
   @Override
@@ -457,7 +472,7 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   NullnessValue visitBitwiseComplement() {
-    return NULLABLE;
+    return visitBitwiseOperation();
   }
 
   @Override
@@ -490,7 +505,7 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   NullnessValue visitNumericalSubtraction() {
-    return NULLABLE;
+    return visitNumericalOperation();
   }
 
   @Override
@@ -502,7 +517,7 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   NullnessValue visitNumericalMultiplication() {
-    return NULLABLE;
+    return visitNumericalOperation();
   }
 
   @Override
@@ -513,7 +528,7 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   NullnessValue visitIntegerDivision() {
-    return NULLABLE;
+    return visitNumericalOperation();
   }
 
   @Override
@@ -524,7 +539,7 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   NullnessValue visitFloatingDivision() {
-    return NULLABLE;
+    return visitNumericalOperation();
   }
 
   @Override
@@ -535,7 +550,7 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   NullnessValue visitIntegerRemainder() {
-    return NULLABLE;
+    return visitNumericalOperation();
   }
 
   @Override
@@ -546,7 +561,7 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   NullnessValue visitFloatingRemainder() {
-    return NULLABLE;
+    return visitNumericalOperation();
   }
 
   @Override
@@ -557,7 +572,7 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   NullnessValue visitLeftShift() {
-    return NULLABLE;
+    return visitNumericalOperation();
   }
 
   @Override
@@ -568,7 +583,7 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   NullnessValue visitSignedRightShift() {
-    return NULLABLE;
+    return visitNumericalOperation();
   }
 
   @Override
@@ -579,7 +594,7 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   NullnessValue visitUnsignedRightShift() {
-    return NULLABLE;
+    return visitNumericalOperation();
   }
 
   @Override
@@ -590,7 +605,7 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   NullnessValue visitBitwiseAnd() {
-    return NULLABLE;
+    return visitBitwiseOperation();
   }
 
   @Override
@@ -601,7 +616,7 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   NullnessValue visitBitwiseOr() {
-    return NULLABLE;
+    return visitBitwiseOperation();
   }
 
   @Override
@@ -612,7 +627,7 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   NullnessValue visitBitwiseXor() {
-    return NULLABLE;
+    return visitBitwiseOperation();
   }
 
   @Override
@@ -635,7 +650,7 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   NullnessValue visitLessThan() {
-    return NULLABLE;
+    return visitNumericalComparison();
   }
 
   @Override
@@ -646,7 +661,7 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   NullnessValue visitLessThanOrEqual() {
-    return NULLABLE;
+    return visitNumericalComparison();
   }
 
   @Override
@@ -657,7 +672,7 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   NullnessValue visitGreaterThan() {
-    return NULLABLE;
+    return visitNumericalComparison();
   }
 
   @Override
@@ -668,7 +683,7 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   NullnessValue visitGreaterThanOrEqual() {
-    return NULLABLE;
+    return visitNumericalComparison();
   }
 
   @Override

@@ -156,6 +156,12 @@ public class NullnessPropagationTest {
             getClass(), "NullnessPropagationTransferCases5.java"));
   }
 
+  @Test
+  public void testTransferFunctions6() throws Exception {
+    compilationHelper.assertCompileFailsWithMessages(
+        compilationHelper.fileManager().sources(
+            getClass(), "NullnessPropagationTransferCases6.java"));
+  }
 
   /**
    * BugPattern to test dataflow analysis using nullness propagation
