@@ -184,8 +184,15 @@ public class HeldLockAnalyzer {
         return;
       }
 
-      GuardedByExpression guard = GuardedByBinder.bindString(guardString,
-          GuardedBySymbolResolver.from(tree, visitorState));
+      GuardedByExpression guard;
+      try {
+        guard = GuardedByBinder.bindString(guardString,
+            GuardedBySymbolResolver.from(tree, visitorState));
+      } catch (IllegalGuardedBy unused) {
+        // Errors about bad @GuardedBy expressions are handled earlier.
+        return;
+      }
+
       Optional<GuardedByExpression> boundGuard =
           ExpectedLockCalculator.from((JCTree.JCExpression) tree, guard, visitorState);
 

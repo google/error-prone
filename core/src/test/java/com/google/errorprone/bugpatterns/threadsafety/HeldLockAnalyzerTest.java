@@ -22,6 +22,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Description;
 
 import com.sun.source.tree.Tree;
@@ -224,7 +225,7 @@ public class HeldLockAnalyzerTest {
 
     @Override
     protected Description checkGuardedAccess(
-        Tree tree, GuardedByExpression guard, HeldLockSet live) {
+        Tree tree, GuardedByExpression guard, HeldLockSet live, VisitorState state) {
       List<String> toSort = new ArrayList<String>();
       for (GuardedByExpression node : live.allLocks()) {
         toSort.add(node.debugPrint());
