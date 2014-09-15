@@ -30,33 +30,17 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 
-import org.checkerframework.dataflow.analysis.ConditionalTransferResult;
-import org.checkerframework.dataflow.analysis.RegularTransferResult;
-import org.checkerframework.dataflow.analysis.TransferFunction;
-import org.checkerframework.dataflow.analysis.TransferInput;
-import org.checkerframework.dataflow.analysis.TransferResult;
-import org.checkerframework.dataflow.cfg.UnderlyingAST;
-import org.checkerframework.dataflow.cfg.node.AbstractNodeVisitor;
 import org.checkerframework.dataflow.cfg.node.AssignmentNode;
-import org.checkerframework.dataflow.cfg.node.ConditionalAndNode;
-import org.checkerframework.dataflow.cfg.node.ConditionalNotNode;
-import org.checkerframework.dataflow.cfg.node.ConditionalOrNode;
 import org.checkerframework.dataflow.cfg.node.EqualToNode;
 import org.checkerframework.dataflow.cfg.node.FieldAccessNode;
 import org.checkerframework.dataflow.cfg.node.LocalVariableNode;
 import org.checkerframework.dataflow.cfg.node.MethodInvocationNode;
-import org.checkerframework.dataflow.cfg.node.NarrowingConversionNode;
 import org.checkerframework.dataflow.cfg.node.Node;
 import org.checkerframework.dataflow.cfg.node.NotEqualNode;
-import org.checkerframework.dataflow.cfg.node.NullLiteralNode;
-import org.checkerframework.dataflow.cfg.node.NumericalAdditionNode;
-import org.checkerframework.dataflow.cfg.node.ObjectCreationNode;
 import org.checkerframework.dataflow.cfg.node.TypeCastNode;
-import org.checkerframework.dataflow.cfg.node.ValueLiteralNode;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.List;
 
 import javax.lang.model.element.VariableElement;
 
@@ -69,26 +53,7 @@ import javax.lang.model.element.VariableElement;
  * 
  * @author deminguyen@google.com (Demi Nguyen)
  */
-public class NullnessPropagationTransfer extends AbstractNodeVisitor<
-    TransferResult<NullnessValue, NullnessPropagationStore>,
-    TransferInput<NullnessValue, NullnessPropagationStore>>
-    implements TransferFunction<NullnessValue, NullnessPropagationStore> {
-  
-  @Override
-  public NullnessPropagationStore initialStore(
-      UnderlyingAST underlyingAST, List<LocalVariableNode> parameters) {
-    return new NullnessPropagationStore();
-  }
-  
-  /**
-   * Handles all other nodes that are not of interest
-   */
-  @Override
-  public TransferResult<NullnessValue, NullnessPropagationStore> visitNode(
-      Node node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
-    return result(before, NULLABLE);
-  }
-  
+public class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer {
   // Literals
   /**
    * Note: A short literal appears as an int to the compiler, and the compiler can perform a
@@ -98,68 +63,68 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
    * conversion call.
    */
   @Override
-  public TransferResult<NullnessValue, NullnessPropagationStore> visitValueLiteral(
-      ValueLiteralNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
-    return result(before, NONNULL);
+  NullnessValue visitValueLiteral() {
+    return NONNULL;
   }
 
   @Override
-  public TransferResult<NullnessValue, NullnessPropagationStore> visitNullLiteral(
-      NullLiteralNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
-    return result(before, NULL);
+  NullnessValue visitNullLiteral() {
+    return NULL;
   }
 
   @Override
-  public TransferResult<NullnessValue, NullnessPropagationStore> visitTypeCast(TypeCastNode node,
-      TransferInput<NullnessValue, NullnessPropagationStore> before) {
-    NullnessValue value = hasPrimitiveType(node)
+  NullnessValue visitTypeCast(TypeCastNode node, SubNodeValues inputs) {
+    return hasPrimitiveType(node)
         ? NONNULL
-        : before.getValueOfSubNode(node.getOperand());
-    return result(before, value);
+        : inputs.valueOfSubNode(node.getOperand());
   }
 
   @Override
-  public TransferResult<NullnessValue, NullnessPropagationStore> visitNumericalAddition(
-      NumericalAdditionNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
-    // TODO(cpovirk): Handle more numerical operations. Also, mark the inputs as dereferenced.
-    return result(before, NONNULL);
+  NullnessValue visitNumericalAddition() {
+    return NONNULL;
   }
 
   @Override
-  public TransferResult<NullnessValue, NullnessPropagationStore> visitNarrowingConversion(
-      NarrowingConversionNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
-    return result(before, NONNULL);
+  NullnessValue visitNarrowingConversion() {
+    return NONNULL;
   }
 
   @Override
-  public TransferResult<NullnessValue, NullnessPropagationStore> visitEqualTo(
-      EqualToNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
-    return handleEqualityComparison(true, node.getLeftOperand(), node.getRightOperand(), before);
+  void visitEqualTo(EqualToNode node, SubNodeValues inputs, LocalVariableUpdates thenUpdates,
+      LocalVariableUpdates elseUpdates) {
+    handleEqualityComparison(true,
+        node.getLeftOperand(),
+        node.getRightOperand(),
+        inputs,
+        thenUpdates,
+        elseUpdates);
+  }
+
+  @Override
+  void visitNotEqual(NotEqualNode node, SubNodeValues inputs, LocalVariableUpdates thenUpdates,
+      LocalVariableUpdates elseUpdates) {
+    handleEqualityComparison(false,
+        node.getLeftOperand(),
+        node.getRightOperand(),
+        inputs,
+        thenUpdates,
+        elseUpdates);
   }
   
   @Override
-  public TransferResult<NullnessValue, NullnessPropagationStore> visitNotEqual(
-      NotEqualNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
-    return handleEqualityComparison(false, node.getLeftOperand(), node.getRightOperand(), before);
-  }
-  
-  /**
-   * Transfers the value of the rhs to the local variable on the lhs of an assignment statement.
-   */
-  @Override
-  public TransferResult<NullnessValue, NullnessPropagationStore> visitAssignment(
-      AssignmentNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
-    NullnessValue value = before.getValueOfSubNode(node.getExpression());
+  NullnessValue visitAssignment(AssignmentNode node, SubNodeValues inputs,
+      LocalVariableUpdates updates) {
+    NullnessValue value = inputs.valueOfSubNode(node.getExpression());
 
     Node target = node.getTarget();
     if (target instanceof LocalVariableNode) {
-      before.getRegularStore().setInformation((LocalVariableNode) target, value);
+      updates.set((LocalVariableNode) target, value);
     }
 
     if (target instanceof FieldAccessNode) {
       FieldAccessNode fieldAccess = (FieldAccessNode) target;
       ClassAndField targetField = tryGetFieldSymbol(target.getTree());
-      setReceiverNullness(before, fieldAccess.getReceiver(), targetField);
+      setReceiverNullness(updates, fieldAccess.getReceiver(), targetField);
     }
 
     /*
@@ -173,7 +138,7 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
      *
      * http://stackoverflow.com/q/12850676/28465
      */
-    return result(before, value);
+    return value;
   }
 
   /**
@@ -182,17 +147,14 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
    *
    * <p>(This second case is rarely of interest to us. Either the variable is being used as a
    * primitive, in which case we probably wouldn't have bothered to run the nullness checker on it,
-   * or it's being used as an Object, in which case its boxing triggers {@link
-   * #visitMethodInvocation}.)
+   * or it's being used as an Object, in which case the compiler generates a call to {@code valueOf}
+   * (to autobox the value), which triggers {@link #visitMethodInvocation}.)
    */
   @Override
-  public TransferResult<NullnessValue, NullnessPropagationStore> visitLocalVariable(
-      LocalVariableNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
-    NullnessValue value = hasPrimitiveType(node) || hasNonNullConstantValue(node)
+  NullnessValue visitLocalVariable(LocalVariableNode node, LocalVariableValues values) {
+    return hasPrimitiveType(node) || hasNonNullConstantValue(node)
         ? NONNULL
-        : before.getRegularStore().getInformation(node);
-
-    return result(before, value);
+        : values.valueOfLocalVariable(node);
   }
 
   /**
@@ -204,11 +166,10 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
    * method. Instead, it will call {@link #visitAssignment}.
    */
   @Override
-  public TransferResult<NullnessValue, NullnessPropagationStore> visitFieldAccess(
-      FieldAccessNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
+  NullnessValue visitFieldAccess(FieldAccessNode node, LocalVariableUpdates updates) {
     ClassAndField accessed = tryGetFieldSymbol(node.getTree());
-    setReceiverNullness(before, node.getReceiver(), accessed);
-    return result(before, fieldNullness(accessed));
+    setReceiverNullness(updates, node.getReceiver(), accessed);
+    return fieldNullness(accessed);
   }
 
   /**
@@ -217,57 +178,17 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
    * returns a primitive type).
    */
   @Override
-  public TransferResult<NullnessValue, NullnessPropagationStore> visitMethodInvocation(
-      MethodInvocationNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
+  NullnessValue visitMethodInvocation(MethodInvocationNode node, LocalVariableUpdates updates) {
     ClassAndMethod callee = tryGetMethodSymbol(node.getTree());
-    setReceiverNullness(before, node.getTarget().getReceiver(), callee);
-    return result(before, returnValueNullness(callee));
+    setReceiverNullness(updates, node.getTarget().getReceiver(), callee);
+    return returnValueNullness(callee);
   }
 
   @Override
-  public TransferResult<NullnessValue, NullnessPropagationStore> visitConditionalAnd(
-      ConditionalAndNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
-    return conditionalResult(before.getThenStore(), before.getElseStore());
+  NullnessValue visitObjectCreation() {
+    return NONNULL;
   }
 
-  @Override
-  public TransferResult<NullnessValue, NullnessPropagationStore> visitConditionalOr(
-      ConditionalOrNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
-    return conditionalResult(before.getThenStore(), before.getElseStore());
-  }
-
-  /*
-   * I considered changing the vanilla visitNode method to always preserve conditional-ness.
-   * However, I was spooked by the fact that this would have done exactly the wrong thing for the !
-   * operator.
-   */
-
-  @Override
-  public TransferResult<NullnessValue, NullnessPropagationStore> visitConditionalNot(
-      ConditionalNotNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
-    return conditionalResult(before.getElseStore(), before.getThenStore());
-  }
-
-  /**
-   * The node for object instantiation has a non-null type because {@code new} can never return
-   * {@code null}.
-   */
-  @Override
-  public TransferResult<NullnessValue, NullnessPropagationStore> visitObjectCreation(
-      ObjectCreationNode node, TransferInput<NullnessValue, NullnessPropagationStore> before) {
-    return result(before, NONNULL);
-  }
-
-  private static RegularTransferResult<NullnessValue, NullnessPropagationStore> result(
-      TransferInput<?, NullnessPropagationStore> before, NullnessValue value) {
-    return new RegularTransferResult<>(value, before.getRegularStore());
-  }
-
-  private static TransferResult<NullnessValue, NullnessPropagationStore> conditionalResult(
-      NullnessPropagationStore thenStore, NullnessPropagationStore elseStore) {
-    return new ConditionalTransferResult<>(NONNULL, thenStore, elseStore);
-  }
-  
   /**
    * Refines the {@code NullnessValue} of {@code LocalVariableNode}s used in an equality 
    * comparison using the greatest lower bound.     
@@ -275,38 +196,38 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
    * @param equalTo whether the comparison is == (false for !=)
    * @param leftNode the left-hand side of the comparison
    * @param rightNode the right-hand side of the comparison
-   * @param before the input {@code TransferResult}
-   * @return the output {@code TransferResult} from this node
+   * @param inputs access to nullness values of the left and right nodes
+   * @param thenUpdates the local variables whose nullness values should be updated if the
+   *     comparison returns {@code true}
+   * @param elseUpdates the local variables whose nullness values should be updated if the
+   *     comparison returns {@code false}
    */
-  private static TransferResult<NullnessValue, NullnessPropagationStore> handleEqualityComparison(
+  private static void handleEqualityComparison(
       boolean equalTo,
       Node leftNode,
       Node rightNode,
-      TransferInput<NullnessValue, NullnessPropagationStore> before) {
-    NullnessPropagationStore equalBranchStore = before.getRegularStore();
-    NullnessPropagationStore notEqualBranchStore = equalBranchStore.copy();
-       
-    NullnessValue leftVal = before.getValueOfSubNode(leftNode);
-    NullnessValue rightVal = before.getValueOfSubNode(rightNode);
+      SubNodeValues inputs,
+      LocalVariableUpdates thenUpdates,
+      LocalVariableUpdates elseUpdates) {
+    NullnessValue leftVal = inputs.valueOfSubNode(leftNode);
+    NullnessValue rightVal = inputs.valueOfSubNode(rightNode);
     NullnessValue equalBranchValue = leftVal.greatestLowerBound(rightVal);
+    LocalVariableUpdates equalBranchUpdates = equalTo ? thenUpdates : elseUpdates;
+    LocalVariableUpdates notEqualBranchUpdates = equalTo ? elseUpdates : thenUpdates;
     
     if (leftNode instanceof LocalVariableNode) {
       LocalVariableNode localVar = (LocalVariableNode) leftNode;
-      equalBranchStore.setInformation(localVar, equalBranchValue);
-      notEqualBranchStore.setInformation(
+      equalBranchUpdates.set(localVar, equalBranchValue);
+      notEqualBranchUpdates.set(
           localVar, leftVal.greatestLowerBound(rightVal.deducedValueWhenNotEqual()));
     }
       
     if (rightNode instanceof LocalVariableNode) {
       LocalVariableNode localVar = (LocalVariableNode) rightNode;
-      equalBranchStore.setInformation(localVar, equalBranchValue);
-      notEqualBranchStore.setInformation(
+      equalBranchUpdates.set(localVar, equalBranchValue);
+      notEqualBranchUpdates.set(
           localVar, rightVal.greatestLowerBound(leftVal.deducedValueWhenNotEqual()));
     }
-    
-    return equalTo 
-        ? conditionalResult(equalBranchStore, notEqualBranchStore)
-        : conditionalResult(notEqualBranchStore, equalBranchStore);
   }
 
   private static boolean hasPrimitiveType(Node node) {
@@ -393,9 +314,9 @@ public class NullnessPropagationTransfer extends AbstractNodeVisitor<
   }
 
   private static void setReceiverNullness(
-      TransferInput<NullnessValue, NullnessPropagationStore> before, Node receiver, Member member) {
+      LocalVariableUpdates updates, Node receiver, Member member) {
     if (!member.isStatic() && receiver instanceof LocalVariableNode) {
-      before.getRegularStore().setInformation((LocalVariableNode) receiver, NONNULL);
+      updates.set((LocalVariableNode) receiver, NONNULL);
     }
   }
 
