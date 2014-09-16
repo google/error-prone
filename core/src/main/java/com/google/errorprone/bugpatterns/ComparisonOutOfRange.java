@@ -121,7 +121,6 @@ public class ComparisonOutOfRange extends BugChecker implements BinaryTreeMatche
       }
 
       // Match trees that have one literal operand and another of the specified type.
-      @SuppressWarnings("unchecked")
       List<ExpressionTree> binaryTreeMatches = ASTHelpers.matchBinaryTree(tree,
           Arrays.asList(Matchers.<ExpressionTree>isInstance(JCLiteral.class),
               Matchers.<ExpressionTree>isSameType(comparisonType)),
@@ -169,7 +168,6 @@ public class ComparisonOutOfRange extends BugChecker implements BinaryTreeMatche
   private static final Matcher<BinaryTree> BYTE_MATCHER = new BadComparisonMatcher(Byte.TYPE);
   private static final Matcher<BinaryTree> CHAR_MATCHER = new BadComparisonMatcher(Character.TYPE);
 
-  @SuppressWarnings("unchecked")
   @Override
   public Description matchBinary(BinaryTree tree, VisitorState state) {
     if(anyOf(BYTE_MATCHER, CHAR_MATCHER).matches(tree, state)) {
@@ -188,7 +186,6 @@ public class ComparisonOutOfRange extends BugChecker implements BinaryTreeMatche
    * (d = reader.read()) == -1.  Maybe add special case handling for assignments.
    */
   public Description describe(BinaryTree tree, VisitorState state) {
-    @SuppressWarnings("unchecked")
     List<ExpressionTree> binaryTreeMatches = ASTHelpers.matchBinaryTree(tree,
         Arrays.asList(Matchers.<ExpressionTree>isInstance(JCLiteral.class),
             Matchers.<ExpressionTree>anything()),

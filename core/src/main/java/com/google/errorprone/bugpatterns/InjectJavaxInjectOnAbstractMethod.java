@@ -60,7 +60,6 @@ public class InjectJavaxInjectOnAbstractMethod extends BugChecker
   };
 
   @Override
-  @SuppressWarnings("unchecked")
   public Description matchAnnotation(AnnotationTree annotationTree, VisitorState state) {
     if (!javaxInjectAnnotationMatcher.matches(annotationTree, state)) {
       return Description.NO_MATCH;

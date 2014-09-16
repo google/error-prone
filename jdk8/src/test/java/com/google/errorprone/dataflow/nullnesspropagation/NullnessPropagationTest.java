@@ -179,7 +179,6 @@ public class NullnessPropagationTest {
     private static final String AMBIGUOUS_CALL_MESSAGE = "AMBIGUOUS CALL: use "
         + "triggerNullnessCheckerOnPrimitive if you want to test the primitive for nullness";
     
-    @SuppressWarnings("unchecked")
     private static final Matcher<ExpressionTree> TRIGGER_CALL_MATCHER = anyOf(
         staticMethod(NullnessPropagationTest.class.getName(), "triggerNullnessCheckerOnPrimitive"),
         staticMethod(NullnessPropagationTest.class.getName(), "triggerNullnessCheckerOnBoxed"),

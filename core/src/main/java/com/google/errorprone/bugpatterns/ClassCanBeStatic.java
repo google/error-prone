@@ -70,7 +70,6 @@ public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
    * </ol>
    */
   private static Matcher<ClassTree> classTreeMatcher = new Matcher<ClassTree>() {
-      @SuppressWarnings("unchecked")
       @Override
       public boolean matches(ClassTree classTree, VisitorState state) {
         return allOf(

@@ -59,7 +59,6 @@ import java.util.List;
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
 public class SelfEquality extends BugChecker implements BinaryTreeMatcher {
 
-  @SuppressWarnings("unchecked")
   @Override
   public Description matchBinary(BinaryTree tree, VisitorState state) {
     if (!(anyOf(kindIs(EQUAL_TO), kindIs(NOT_EQUAL_TO)).matches(tree, state)

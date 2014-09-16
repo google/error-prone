@@ -47,7 +47,6 @@ public class InjectMoreThanOneQualifier extends BugChecker implements Annotation
   private static final String GUICE_BINDING_ANNOTATION = "com.google.inject.BindingAnnotation";
   private static final String JAVAX_QUALIFER_ANNOTATION = "javax.inject.Qualifier";
 
-  @SuppressWarnings("unchecked")
   private static final Matcher<AnnotationTree> QUALIFIER_ANNOTATION_MATCHER =
       Matchers.<AnnotationTree>anyOf(
           hasAnnotation(GUICE_BINDING_ANNOTATION), hasAnnotation(JAVAX_QUALIFER_ANNOTATION));

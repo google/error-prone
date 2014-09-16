@@ -31,6 +31,8 @@ import static com.google.errorprone.matchers.Matchers.not;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.matchers.Matcher;
 
+import com.sun.source.tree.MethodTree;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -57,7 +59,7 @@ import java.util.List;
     category = JUNIT, maturity = EXPERIMENTAL, severity = ERROR)
 public class JUnit4SetUpNotRun extends AbstractJUnit4InitMethodNotRun {
   @Override
-  protected Matcher methodMatcher() {
+  protected Matcher<MethodTree> methodMatcher() {
     return allOf(looksLikeJUnit3SetUp, not(hasJUnit4BeforeAnnotations));
   }
 

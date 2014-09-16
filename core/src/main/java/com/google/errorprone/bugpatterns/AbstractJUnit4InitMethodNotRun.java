@@ -61,7 +61,7 @@ abstract class AbstractJUnit4InitMethodNotRun extends BugChecker implements Meth
    * Returns a matcher that selects which methods this matcher applies to
    * (e.g. public void setUp() without @Before/@BeforeClass annotation)
    */
-  protected abstract Matcher methodMatcher();
+  protected abstract Matcher<MethodTree> methodMatcher();
 
   /**
    * Returns the fully qualified class name of the annotation this bugpattern should apply to
@@ -94,7 +94,6 @@ abstract class AbstractJUnit4InitMethodNotRun extends BugChecker implements Meth
    *    that the test is intended to run with JUnit 4.
    */
   @Override
-  @SuppressWarnings("unchecked")
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
     boolean matches = allOf(
         methodMatcher(),

@@ -78,7 +78,6 @@ public class SelfEquals extends BugChecker implements MethodInvocationTreeMatche
    * TODO(user): This may match too many things, if people are calling methods "equals" that
    * don't really mean equals.
    */
-  @SuppressWarnings("unchecked")
   private static final Matcher<MethodInvocationTree> equalsMatcher = allOf(
       methodSelect(Matchers.instanceMethod(Matchers.<ExpressionTree>anything(), "equals")),
       receiverSameAsArgument(0));

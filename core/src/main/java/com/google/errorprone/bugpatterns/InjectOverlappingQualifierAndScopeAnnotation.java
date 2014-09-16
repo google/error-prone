@@ -53,14 +53,12 @@ public class InjectOverlappingQualifierAndScopeAnnotation extends BugChecker imp
    * Matches types(including annotation types) that are annotated with  @ScopeAnnotation(Guice) or
    * {@code @Scope}(javax).
    */
-  @SuppressWarnings("unchecked")
   private static final Matcher<ClassTree> HAS_SCOPE_ANNOTATION_MATCHER =
       anyOf(hasAnnotation(GUICE_SCOPE_ANNOTATION), hasAnnotation(JAVAX_SCOPE_ANNOTATION));
 
   /**
    * Matches types(including annotation types) that are annotated with @Qualifier or @BindingAnnotation
    */
-  @SuppressWarnings("unchecked")
   private static final Matcher<ClassTree> HAS_QUALIFIER_ANNOTATION_MATCHER =
       anyOf(hasAnnotation(GUICE_BINDING_ANNOTATION), hasAnnotation(JAVAX_QUALIFER_ANNOTATION));
   /**
@@ -83,7 +81,6 @@ public class InjectOverlappingQualifierAndScopeAnnotation extends BugChecker imp
   };
       
   @Override
-  @SuppressWarnings("unchecked")
   public final Description matchAnnotation(AnnotationTree annotationTree, VisitorState state) {
     if (QUALIFIER_OR_SCOPE_MATCHER.matches(annotationTree, state)) {
       ClassTree annotationType = getAnnotationTypeFromMetaAnnotation(state);

@@ -54,6 +54,7 @@ public class ErrorProneJavaCompiler implements JavaCompiler {
   /**
    * @param checkerClasses a custom set of BugCheckers
    */
+  @SafeVarargs
   public ErrorProneJavaCompiler(final Class<? extends BugChecker>... checkerClasses) {
     this(new Supplier<ErrorProneScanner>() {
       private final ImmutableList<Class<? extends BugChecker>> classes =

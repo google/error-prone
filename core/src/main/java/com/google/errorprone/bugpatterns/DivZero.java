@@ -61,7 +61,6 @@ public class DivZero extends BugChecker
     return matchDivZero(tree, tree.getExpression(), state);
   }
 
-  @SuppressWarnings("unchecked")
   private Description matchDivZero(Tree tree, ExpressionTree operand, VisitorState state) {
     if (!anyOf(kindIs(Kind.DIVIDE), kindIs(Kind.DIVIDE_ASSIGNMENT)).matches(tree, state)) {
       return Description.NO_MATCH;

@@ -53,7 +53,6 @@ public class InjectMoreThanOneInjectableConstructor extends BugChecker
   private static final String GUICE_INJECT_ANNOTATION = "com.google.inject.Inject";
   private static final String JAVAX_INJECT_ANNOTATION = "javax.inject.Inject";
 
-  @SuppressWarnings("unchecked")
   private static final Matcher<MethodTree> INJECTABLE_METHOD_MATCHER = Matchers.<MethodTree>anyOf(
       hasAnnotation(GUICE_INJECT_ANNOTATION), hasAnnotation(JAVAX_INJECT_ANNOTATION));
 

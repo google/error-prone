@@ -57,12 +57,10 @@ public class InjectInvalidTargetingOnScopingAnnotation extends BugChecker
   /**
    * Matches classes that are annotated with @Scope or @ScopeAnnotation.
    */
-  @SuppressWarnings("unchecked")
   private static final Matcher<ClassTree> SCOPE_ANNOTATION_MATCHER = Matchers.<ClassTree>anyOf(
       hasAnnotation(GUICE_SCOPE_ANNOTATION), hasAnnotation(JAVAX_SCOPE_ANNOTATION));
 
   @Override
-  @SuppressWarnings("unchecked")
   public final Description matchClass(ClassTree classTree, VisitorState state) {
     Symbol classSymbol = ASTHelpers.getSymbol(classTree);
     if ((classSymbol.flags() & Flags.ANNOTATION) != 0

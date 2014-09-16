@@ -87,7 +87,6 @@ import javax.lang.model.type.TypeKind;
 
 public class MisusedFormattingLogger extends BugChecker implements MethodInvocationTreeMatcher {
 
-  @SuppressWarnings("unchecked")
   private static final Matcher<MethodInvocationTree> isFormattingLogger = anyOf(
       methodSelect(Matchers.methodReceiver(
           Matchers.isSubtypeOf("com.google.common.logging.FormattingLogger"))),
@@ -97,7 +96,6 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
   private static final Matcher<Tree> isThrowable =
       isSubtypeOf("java.lang.Throwable");
 
-  @SuppressWarnings("unchecked")
   private static final Matcher<MethodInvocationTree> isThrowableMessage =
       methodSelect(Matchers.<ExpressionTree>anyOf(
           isDescendantOfMethod("java.lang.Throwable", "getMessage()"),

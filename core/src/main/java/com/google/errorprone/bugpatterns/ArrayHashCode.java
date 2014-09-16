@@ -92,7 +92,6 @@ public class ArrayHashCode extends BugChecker implements MethodInvocationTreeMat
   /**
    * Matches calls to the hashCode instance method on an array.
    */
-  @SuppressWarnings("unchecked")
   private static final Matcher<MethodInvocationTree> instanceHashCodeMethodMatcher = allOf(
       methodSelect(Matchers.instanceMethod(Matchers.<ExpressionTree>isArrayType(), "hashCode")));
 

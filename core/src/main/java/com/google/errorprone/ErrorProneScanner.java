@@ -183,7 +183,6 @@ public class ErrorProneScanner extends Scanner {
    *
    * @param predicate A predicate that selects which of the built-in error-prone checks to enable.
    */
-  @SuppressWarnings("unchecked")
   public ErrorProneScanner(EnabledPredicate predicate) {
     try {
       int enabledCount = 0;

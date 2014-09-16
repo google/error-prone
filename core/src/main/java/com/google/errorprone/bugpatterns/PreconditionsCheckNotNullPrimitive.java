@@ -81,7 +81,6 @@ import java.util.Set;
 public class PreconditionsCheckNotNullPrimitive
     extends BugChecker implements MethodInvocationTreeMatcher {
 
-  @SuppressWarnings("unchecked")
   @Override
   public Description matchMethodInvocation(MethodInvocationTree methodInvocationTree, VisitorState state) {
     if (allOf(

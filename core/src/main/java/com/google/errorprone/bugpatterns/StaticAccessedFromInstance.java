@@ -56,7 +56,6 @@ public class StaticAccessedFromInstance extends BugChecker implements MemberSele
   private static final String MESSAGE_TEMPLATE = "Static %s %s should not be accessed from an "
       + "object instance; instead use %s";
 
-  @SuppressWarnings("unchecked")
   private static final Matcher<ExpressionTree> staticAccessedFromInstanceMatcher = allOf(
       anyOf(
           staticMethod("*", "*"),

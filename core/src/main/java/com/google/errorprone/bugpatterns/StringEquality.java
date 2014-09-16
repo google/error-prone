@@ -71,7 +71,6 @@ public class StringEquality extends BugChecker implements BinaryTreeMatcher {
     }
   };
 
-  @SuppressWarnings("unchecked")
   public static final Matcher<BinaryTree> MATCHER = allOf(
       anyOf(kindIs(EQUAL_TO), kindIs(NOT_EQUAL_TO)),
       STRING_OPERANDS);

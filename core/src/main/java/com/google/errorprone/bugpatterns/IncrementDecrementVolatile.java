@@ -121,7 +121,6 @@ public class IncrementDecrementVolatile extends BugChecker
    * Matches patterns like i++ and i-- in which i is volatile, and the pattern is not enclosed
    * by a synchronized block.
    */
-  @SuppressWarnings("unchecked")
   private static final Matcher<UnaryTree> unaryIncrementDecrementMatcher =
       allOf(
           expressionFromUnaryTree(Matchers.<ExpressionTree>hasModifier(Modifier.VOLATILE)),
@@ -145,7 +144,6 @@ public class IncrementDecrementVolatile extends BugChecker
    * Matches patterns like i += 1 and i -= 1 in which i is volatile, and the pattern is not
    * enclosed by a synchronized block.
    */
-  @SuppressWarnings("unchecked")
   private static final Matcher<CompoundAssignmentTree> compoundAssignmentIncrementDecrementMatcher =
       allOf(
           variableFromCompoundAssignmentTree(
@@ -168,7 +166,6 @@ public class IncrementDecrementVolatile extends BugChecker
    * Matches patterns like i = i + 1 and i = i - 1 in which i is volatile, and the pattern is not
    * enclosed by a synchronized block.
    */
-  @SuppressWarnings("unchecked")
   private static Matcher<AssignmentTree> assignmentIncrementDecrementMatcher(
       ExpressionTree variable) {
     return allOf(

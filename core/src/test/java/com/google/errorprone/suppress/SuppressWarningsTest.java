@@ -52,7 +52,6 @@ public class SuppressWarningsTest {
   public void setUp() {
     compiler = new ErrorProneTestCompiler.Builder()
         .report(new ErrorProneScanner(new EnabledPredicate() {
-          @SuppressWarnings("unchecked")
           @Override
           public boolean isEnabled(Class<? extends BugChecker> check, BugPattern annotation) {
             return asList(DeadException.class, EmptyIfStatement.class, SelfAssignment.class)

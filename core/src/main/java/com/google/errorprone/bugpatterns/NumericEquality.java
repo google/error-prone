@@ -51,15 +51,12 @@ import com.sun.tools.javac.code.Symbol;
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
 public class NumericEquality extends BugChecker implements BinaryTreeMatcher {
 
-  @SuppressWarnings("unchecked")
   public static final Matcher<ExpressionTree> SUBCLASS_OF_NUMBER =
       allOf(isSubtypeOf("java.lang.Number"), not(kindIs(Tree.Kind.NULL_LITERAL)));
-  @SuppressWarnings("unchecked")
   public static final Matcher<BinaryTree> MATCHER = allOf(
       anyOf(kindIs(EQUAL_TO), kindIs(NOT_EQUAL_TO)),
       binaryTree(SUBCLASS_OF_NUMBER, SUBCLASS_OF_NUMBER));
 
-  @SuppressWarnings("unchecked")
   @Override
   public Description matchBinary(BinaryTree tree, VisitorState state) {
     ExpressionTree leftOperand = tree.getLeftOperand();

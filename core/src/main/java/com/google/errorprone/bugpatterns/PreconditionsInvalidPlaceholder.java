@@ -49,7 +49,6 @@ import java.util.regex.Pattern;
 public class PreconditionsInvalidPlaceholder extends BugChecker
     implements MethodInvocationTreeMatcher {
 
-  @SuppressWarnings("unchecked")
   private static final
       Matcher<MethodInvocationTree> PRECONDITIONS_CHECK = Matchers.methodSelect(
           Matchers.<ExpressionTree>anyOf(

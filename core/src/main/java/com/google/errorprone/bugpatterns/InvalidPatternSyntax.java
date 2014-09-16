@@ -84,7 +84,6 @@ public class InvalidPatternSyntax extends BugChecker implements MethodInvocation
    * passing e.g. LITERAL flags, deliberately testing the regex compiler, or deliberately
    * using "." as the "vacuously true regex."
    */
-  @SuppressWarnings("unchecked")
   private static final Matcher<MethodInvocationTree> BAD_REGEX_USAGE =
       allOf(
           anyOf(

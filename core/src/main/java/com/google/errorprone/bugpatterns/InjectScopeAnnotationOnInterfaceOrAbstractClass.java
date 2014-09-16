@@ -53,7 +53,6 @@ public class InjectScopeAnnotationOnInterfaceOrAbstractClass
    * Matches annotations that are themselves annotated with with @ScopeAnnotation(Guice) or
    * @Scope(Javax).
    */
-  @SuppressWarnings("unchecked")
   private static final Matcher<AnnotationTree> SCOPE_ANNOTATION_MATCHER =
       Matchers.<AnnotationTree>anyOf(
           hasAnnotation(GUICE_SCOPE_ANNOTATION), hasAnnotation(JAVAX_SCOPE_ANNOTATION));
@@ -68,7 +67,6 @@ public class InjectScopeAnnotationOnInterfaceOrAbstractClass
       };
 
   @Override
-  @SuppressWarnings("unchecked")
   public final Description matchAnnotation(AnnotationTree annotationTree, VisitorState state) {
     Tree modified = getCurrentlyAnnotatedNode(state);
     if (SCOPE_ANNOTATION_MATCHER.matches(annotationTree, state) &&

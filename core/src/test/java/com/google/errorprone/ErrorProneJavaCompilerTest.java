@@ -70,13 +70,15 @@ public class ErrorProneJavaCompilerTest {
     // error-prone options should be handled
     assertThat(compiler.isSupportedOption("-Xepdisable:"), is(0));
   }
+  
+  interface JavaFileObjectDiagnosticListener extends DiagnosticListener<JavaFileObject> {}
 
   @Test
   public void testGetStandardJavaFileManager() {
     JavaCompiler mockCompiler = mock(JavaCompiler.class);
     ErrorProneJavaCompiler compiler = new ErrorProneJavaCompiler(mockCompiler);
 
-    DiagnosticListener<? super JavaFileObject> listener = mock(DiagnosticListener.class);
+    JavaFileObjectDiagnosticListener listener = mock(JavaFileObjectDiagnosticListener.class);
     Locale locale = Locale.CANADA;
 
     compiler.getStandardFileManager(listener, locale, null);

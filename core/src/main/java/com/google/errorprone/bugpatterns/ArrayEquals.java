@@ -58,7 +58,6 @@ public class ArrayEquals extends BugChecker implements MethodInvocationTreeMatch
   /**
    * Matches when the equals instance method is used to compare two arrays.
    */
-  @SuppressWarnings("unchecked")
   private static final Matcher<MethodInvocationTree> instanceEqualsMatcher = Matchers.allOf(
       methodSelect(instanceMethod(Matchers.<ExpressionTree>isArrayType(), "equals")),
       argument(0, Matchers.<ExpressionTree>isArrayType()));
@@ -67,7 +66,6 @@ public class ArrayEquals extends BugChecker implements MethodInvocationTreeMatch
    * Matches when the Guava com.google.common.base.Objects#equal or the JDK7
    * java.util.Objects#equals method is used to compare two arrays.
    */
-  @SuppressWarnings("unchecked")
   private static final Matcher<MethodInvocationTree> staticEqualsMatcher = allOf(
       anyOf(
         methodSelect(staticMethod("com.google.common.base.Objects", "equal")),

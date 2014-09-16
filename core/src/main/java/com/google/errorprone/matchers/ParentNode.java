@@ -17,25 +17,24 @@
 package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
-
 import com.sun.source.tree.Tree;
 
 /**
+
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class ParentNode<T extends Tree> implements Matcher<Tree> {
-  private final Matcher<T> treeMatcher;
+public class ParentNode implements Matcher<Tree> {
+  private final Matcher<Tree> treeMatcher;
 
-  public ParentNode(Matcher<T> treeMatcher) {
+  public ParentNode(Matcher<Tree> treeMatcher) {
     this.treeMatcher = treeMatcher;
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public boolean matches(Tree tree, VisitorState state) {
     Tree parent = state.getPath().getParentPath().getLeaf();
     try {
-      return treeMatcher.matches((T)parent, state.withPath(state.getPath().getParentPath()));
+      return treeMatcher.matches(parent, state.withPath(state.getPath().getParentPath()));
     } catch (ClassCastException e) {
       return false;
     }

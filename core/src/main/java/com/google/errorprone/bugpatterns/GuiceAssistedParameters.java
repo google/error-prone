@@ -58,7 +58,6 @@ public class GuiceAssistedParameters extends BugChecker implements VariableTreeM
   };
 
   @Override
-  @SuppressWarnings("unchecked")
   public final Description matchVariable(VariableTree variableTree, VisitorState state) {
     if (constructorAssistedParameterMatcher.matches(variableTree, state)) {
       Compound thisParamsAssisted = null;

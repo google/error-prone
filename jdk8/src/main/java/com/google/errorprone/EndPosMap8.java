@@ -61,7 +61,7 @@ public class EndPosMap8 implements ErrorProneEndPosMap {
         throw new LinkageError(e.getMessage());
       }
     }
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")  // Unsafe reflection.
     public static Map<JCTree, Integer> getMap(EndPosTable table) {
       try {
         return (Map<JCTree, Integer>) END_POS_MAP_FIELD.get(table);
