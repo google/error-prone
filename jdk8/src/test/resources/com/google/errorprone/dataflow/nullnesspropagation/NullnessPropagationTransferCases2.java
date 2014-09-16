@@ -16,6 +16,8 @@
 
 package com.google.errorprone.dataflow.nullnesspropagation;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Verify.verifyNotNull;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessCheckerOnBoxed;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessCheckerOnPrimitive;
@@ -428,6 +430,56 @@ public class NullnessPropagationTransferCases2 {
     String s = null;
     // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(s.substring(0));
+  }
+
+  public void checkNotNullReturnsNonNull(String s) {
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(checkNotNull(s));
+  }
+
+  public void checkNotNullUpdatesVariableNullness(String s) {
+    checkNotNull(s);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(s);
+  }
+
+  public void verifyNotNullReturnsNonNull(String s) {
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(verifyNotNull(s));
+  }
+
+  public void verifyNotNullUpdatesVariableNullness(String s) {
+    verifyNotNull(s);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(s);
+  }
+
+  public void junit3AssertNotNullOneArgUpdatesVariableNullness(Object o) {
+    junit.framework.Assert.assertNotNull(o);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(o);
+  }
+
+  public void junit3AssertNotNullTwoArgUpdatesVariableNullness(String message, Object o) {
+    junit.framework.Assert.assertNotNull(message, o);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(o);
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(message);
+  }
+
+  public void junit4AssertNotNullOneArgUpdatesVariableNullness(Object o) {
+    org.junit.Assert.assertNotNull(o);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(o);
+  }
+
+  public void junit4AssertNotNullTwoArgUpdatesVariableNullness(String message, Object o) {
+    org.junit.Assert.assertNotNull(message, o);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(o);
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(message);
   }
 
   public void vanillaVisitNode() {
