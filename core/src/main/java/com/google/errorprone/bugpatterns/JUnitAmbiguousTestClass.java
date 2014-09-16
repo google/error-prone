@@ -44,7 +44,6 @@ import com.sun.source.tree.ClassTree;
     category = JUNIT, maturity = EXPERIMENTAL, severity = WARNING)
 public class JUnitAmbiguousTestClass extends BugChecker implements ClassTreeMatcher {
 
-  @SuppressWarnings("unchecked")
   private static final Matcher<ClassTree> matcher = allOf(
       isTestCaseDescendant,
       hasJUnit4TestCases);

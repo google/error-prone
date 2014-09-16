@@ -50,7 +50,6 @@ abstract class AbstractReturnValueIgnored extends BugChecker
     implements MethodInvocationTreeMatcher {
 
   @Override
-  @SuppressWarnings("unchecked")
   public Description matchMethodInvocation(
       MethodInvocationTree methodInvocationTree, VisitorState state) {
     if (allOf(

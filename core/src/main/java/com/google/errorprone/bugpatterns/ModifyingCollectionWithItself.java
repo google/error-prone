@@ -69,7 +69,6 @@ public class ModifyingCollectionWithItself extends BugChecker
   /**
    * Matches calls to addAll, containsAll, removeAll, and retainAll on itself
    */
-  @SuppressWarnings("unchecked")
   @Override
   public Description matchMethodInvocation(MethodInvocationTree t, VisitorState state) {
     if (allOf(anyOf(

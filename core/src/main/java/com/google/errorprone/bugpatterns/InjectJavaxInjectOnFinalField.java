@@ -59,7 +59,6 @@ public class InjectJavaxInjectOnFinalField extends BugChecker implements Annotat
       new AnnotationType(JAVAX_INJECT_ANNOTATION);
 
   @Override
-  @SuppressWarnings("unchecked")
   public Description matchAnnotation(AnnotationTree annotationTree, VisitorState state) {
     if ( JAVAX_INJECT_ANNOTATION_MATCHER.matches(annotationTree, state)
         && FINAL_FIELD_MATCHER.matches(getAnnotatedNode(state), state)) {

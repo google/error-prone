@@ -209,14 +209,25 @@ public class VisitorState {
    * @param <T>
    * @return the node, or null if there is no enclosing tree node of this type
    */
-  @SuppressWarnings("unchecked")
-  public <T extends Tree> T findEnclosing(java.lang.Class<? extends T>... classes) {
+  @SafeVarargs
+  public final <T extends Tree> T findEnclosing(java.lang.Class<? extends T>... classes) {
     TreePath enclosingPath = getPath();
     while (enclosingPath != null) {
       for (java.lang.Class<? extends T> aClass : classes) {
-        if (aClass.isAssignableFrom(enclosingPath.getLeaf().getClass())) {
-          return (T) enclosingPath.getLeaf();
+        if (aClass.isInstance(enclosingPath.getLeaf())) {
+          return aClass.cast(enclosingPath.getLeaf());
         }
+      }
+      enclosingPath = enclosingPath.getParentPath();
+    }
+    return null;
+  }
+  
+  public <T extends Tree> T findEnclosing(java.lang.Class<T> aClass) {
+    TreePath enclosingPath = getPath();
+    while (enclosingPath != null) {
+      if (aClass.isInstance(enclosingPath.getLeaf())) {
+        return aClass.cast(enclosingPath.getLeaf());
       }
       enclosingPath = enclosingPath.getParentPath();
     }

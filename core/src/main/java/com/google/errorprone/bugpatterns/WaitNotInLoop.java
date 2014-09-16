@@ -102,7 +102,6 @@ public class WaitNotInLoop extends BugChecker implements MethodInvocationTreeMat
    *    Object.wait(long, int), and
    * 2) There is no enclosing loop before reaching a synchronized block or method declaration.
    */
-  @SuppressWarnings("unchecked")
   private static Matcher<MethodInvocationTree> waitMatcher = allOf(
         methodSelect(Matchers.<ExpressionTree>anyOf(
             isDescendantOfMethod("java.lang.Object", "wait()"),
@@ -131,7 +130,6 @@ public class WaitNotInLoop extends BugChecker implements MethodInvocationTreeMat
     }
 
     // loop outside synchronized block -> move synchronized outside
-    @SuppressWarnings("unchecked")
     List<Class<? extends StatementTree>> loopClasses = Arrays.asList(WhileLoopTree.class, ForLoopTree.class,
         EnhancedForLoopTree.class, DoWhileLoopTree.class);
     StatementTree enclosingLoop = null;

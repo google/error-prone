@@ -153,7 +153,7 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
       Scope scope = t.tsym.members();
       for (Scope.Entry e = scope.lookup(getName(name)); e.scope != null; e = e.next()) {
         if (e.sym.getKind().equals(kind)) {
-          return (T) e.sym;
+          return type.cast(e.sym);
         }
       }
     }
@@ -184,7 +184,7 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
     return null;
   }
 
-  private static enum SearchSuperTypes { YES, NO };
+  private static enum SearchSuperTypes { YES, NO }
 
   /**
    * Resolves a simple name as a type. Considers super classes, lexically enclosing classes, and

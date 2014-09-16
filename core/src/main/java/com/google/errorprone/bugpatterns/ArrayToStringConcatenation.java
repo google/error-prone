@@ -50,7 +50,6 @@ public class ArrayToStringConcatenation extends BugChecker implements BinaryTree
   private static final Matcher<ExpressionTree> arrayMatcher =
       Matchers.<ExpressionTree>isArrayType();
 
-  @SuppressWarnings("unchecked")
   private static final Matcher<BinaryTree> concatenationMatcher = allOf(
       kindIs(Kind.PLUS),
       binaryTree(arrayMatcher, Matchers.<ExpressionTree>isSameType("java.lang.String")));

@@ -51,7 +51,6 @@ import com.sun.source.tree.MethodInvocationTree;
     category = JDK, maturity = EXPERIMENTAL, severity = ERROR)
 public class CollectionIncompatibleType extends BugChecker implements MethodInvocationTreeMatcher {
 
-  @SuppressWarnings("unchecked")
   private static final Matcher<MethodInvocationTree> isGenericCollectionsMethod =
       methodSelect(Matchers.<ExpressionTree>anyOf(
           isDescendantOfMethod("java.util.Collection", "contains(java.lang.Object)"),
@@ -65,7 +64,6 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
         Matchers.<ExpressionTree>isCastableTo(genericTypeOfType(receiverType(), typeParamNumber))));
   }
 
-  @SuppressWarnings("unchecked")
   private static final Matcher<MethodInvocationTree> matcher = anyOf(
       allOf(isGenericCollectionsMethod, argCastableToMethodReceiverTypeParam(0, 0)),
       allOf(

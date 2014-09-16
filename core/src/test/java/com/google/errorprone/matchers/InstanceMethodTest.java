@@ -91,7 +91,6 @@ public class InstanceMethodTest extends CompilerBasedAbstractTest {
         Matchers.<ExpressionTree>isArrayType(), "hashCode")));
   }
 
-  @SuppressWarnings("unchecked")
   @Test
   public void shouldNotMatchStaticMethod() {
     writeFile("A.java",

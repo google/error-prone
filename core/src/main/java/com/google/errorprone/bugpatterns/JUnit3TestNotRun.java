@@ -87,7 +87,6 @@ public class JUnit3TestNotRun extends BugChecker implements MethodTreeMatcher {
    */
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
-    @SuppressWarnings("unchecked")
     Matcher<MethodTree> methodMatcher = allOf(
         not(methodNameStartsWith("test")),
         Matchers.<MethodTree>hasModifier(Modifier.PUBLIC),

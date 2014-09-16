@@ -16,6 +16,7 @@
 
 package com.google.errorprone.matchers;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
 
 import com.sun.source.tree.BlockTree;
@@ -44,7 +45,6 @@ public class Enclosing {
       this.clazz = clazz;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public boolean matches(U unused, VisitorState state) {
       T enclosing = state.findEnclosing(clazz);
@@ -75,9 +75,9 @@ public class Enclosing {
   }
 
   public static class BlockOrCase<T extends Tree> implements Matcher<T> {
-    private final Matcher<List<? extends StatementTree>> matcher;
+    private final Matcher<List<StatementTree>> matcher;
 
-    public BlockOrCase(Matcher<List<? extends StatementTree>> matcher) {
+    public BlockOrCase(Matcher<List<StatementTree>> matcher) {
       this.matcher = matcher;
     }
 
@@ -96,7 +96,7 @@ public class Enclosing {
         // findEnclosing given two types must return something of one of those types
         throw new IllegalStateException("enclosing tree not a BlockTree or CaseTree");
       }
-      return matcher.matches(statements, state);
+      return matcher.matches(ImmutableList.copyOf(statements), state);
     }
   }
 }

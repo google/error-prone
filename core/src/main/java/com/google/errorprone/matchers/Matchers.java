@@ -106,6 +106,7 @@ public class Matchers {
   /**
    * Compose several matchers together, such that the composite matches an AST node iff all the given matchers do.
    */
+  @SafeVarargs
   public static <T extends Tree> Matcher<T> allOf(final Matcher<? super T>... matchers) {
     return new Matcher<T>() {
       @Override public boolean matches(T t, VisitorState state) {
@@ -122,6 +123,7 @@ public class Matchers {
   /**
    * Compose several matchers together, such that the composite matches an AST node if any of the given matchers do.
    */
+  @SafeVarargs
   public static <T extends Tree> Matcher<T> anyOf(final Matcher<? super T>... matchers) {
     return new Matcher<T>() {
       @Override public boolean matches(T t, VisitorState state) {
@@ -138,7 +140,7 @@ public class Matchers {
   /**
    * Matches if an AST node is an instance of the given class.
    */
-  public static <T extends Tree> Matcher<T> isInstance(final java.lang.Class klass) {
+  public static <T extends Tree> Matcher<T> isInstance(final java.lang.Class<?> klass) {
     return new Matcher<T>() {
       @Override
       public boolean matches(T t, VisitorState state) {
@@ -315,8 +317,10 @@ public class Matchers {
    * For example, {@code parentNode(kindIs(Kind.RETURN))}
    * would match the {@code this} expression in {@code return this;}
    */
-  public static <T extends Tree> Matcher<Tree> parentNode(Matcher<T> treeMatcher) {
-    return new ParentNode<>(treeMatcher);
+  public static Matcher<Tree> parentNode(Matcher<? extends Tree> treeMatcher) {
+    @SuppressWarnings("unchecked")  // Safe contravariant cast
+    Matcher<Tree> matcher = (Matcher<Tree>) treeMatcher;
+    return new ParentNode(matcher);
   }
 
   /**
@@ -462,7 +466,7 @@ public class Matchers {
    */
   public static <T extends Tree> Matcher<Tree> enclosingNode(final Matcher<T> matcher) {
     return new Matcher<Tree>() {
-      @SuppressWarnings("unchecked")
+      @SuppressWarnings("unchecked")  // TODO(user): this should take a Class<T>
       @Override
       public boolean matches(Tree t, VisitorState state) {
         TreePath path = state.getPath().getParentPath();
@@ -648,7 +652,6 @@ public class Matchers {
   /**
    * Matches a whitelisted method invocation that is known to never return null
    */
-  @SuppressWarnings("unchecked")
   public static Matcher<ExpressionTree> methodReturnsNonNull() {
     return anyOf(
         expressionMethodSelect((isDescendantOfMethod("java.lang.Object", "toString()"))),
@@ -723,6 +726,7 @@ public class Matchers {
    *
    * @param variableMatcher an array of matchers to apply to the parameters of the method
    */
+  @SafeVarargs
   public static Matcher<MethodTree> methodHasParameters(final Matcher<VariableTree>... variableMatcher) {
     return new Matcher<MethodTree>() {
       @Override
@@ -802,7 +806,7 @@ public class Matchers {
     return new Matcher<ClassTree>() {
       @Override
       public boolean matches(ClassTree classTree, VisitorState state) {
-        ClassSymbol sym = (ClassSymbol) ASTHelpers.getSymbol(classTree);
+        ClassSymbol sym = ASTHelpers.getSymbol(classTree);
         return sym.getNestingKind() == kind;
       }
     };
@@ -831,7 +835,6 @@ public class Matchers {
   public static Matcher<BinaryTree> binaryTree(final Matcher<ExpressionTree> matcher1,
       final Matcher<ExpressionTree> matcher2) {
     return new Matcher<BinaryTree>() {
-      @SuppressWarnings("unchecked")
       @Override
       public boolean matches(BinaryTree t, VisitorState state) {
         return null != ASTHelpers.matchBinaryTree(t, Arrays.asList(matcher1, matcher2), state);
@@ -890,7 +893,6 @@ public class Matchers {
   /**
    * Matches an AST node which is an expression yielding the indicated static field access.
    */
-  @SuppressWarnings("unchecked")
   public static Matcher<ExpressionTree> staticFieldAccess() {
     return allOf(isStatic(), isSymbol(VarSymbol.class));
   }
@@ -899,7 +901,7 @@ public class Matchers {
     return new IsStatic();
   }
 
-  static Matcher<Tree> isSymbol(java.lang.Class symbolClass) {
+  static Matcher<Tree> isSymbol(java.lang.Class<? extends Symbol> symbolClass) {
     return new IsSymbol(symbolClass);
   }
 

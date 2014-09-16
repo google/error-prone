@@ -64,7 +64,6 @@ public class JUnitMatchers {
   private static final String JUNIT4_IGNORE_ANNOTATION = "org.junit.Ignore";
 
 
-  @SuppressWarnings("unchecked")
   public static final Matcher<MethodTree> hasJUnitAnnotation = anyOf(
       /* @Test, @Before, and @After are inherited by methods that override a base method with the
        * annotation.  @BeforeClass and @AfterClass can only be applied to static methods, so they
@@ -75,12 +74,10 @@ public class JUnitMatchers {
       hasAnnotation(JUNIT_BEFORE_CLASS_ANNOTATION),
       hasAnnotation(JUNIT_AFTER_CLASS_ANNOTATION));
 
-  @SuppressWarnings("unchecked")
   public static final Matcher<MethodTree> hasJUnit4BeforeAnnotations = anyOf(
       hasAnnotationOnAnyOverriddenMethod(JUNIT_BEFORE_ANNOTATION),
       hasAnnotation(JUNIT_BEFORE_CLASS_ANNOTATION));
 
-  @SuppressWarnings("unchecked")
   public static final Matcher<MethodTree> hasJUnit4AfterAnnotations = anyOf(
       hasAnnotationOnAnyOverriddenMethod(JUNIT_AFTER_ANNOTATION),
       hasAnnotation(JUNIT_AFTER_CLASS_ANNOTATION));
@@ -88,7 +85,6 @@ public class JUnitMatchers {
   /**
    * Matches a class that inherits from test case.
    */
-  @SuppressWarnings("unchecked")
   public static final Matcher<ClassTree> isTestCaseDescendant =
       isSubtypeOf(JUNIT3_TEST_CASE_CLASS);
 
@@ -99,7 +95,6 @@ public class JUnitMatchers {
    * 1) The class does not have a jUnit 4 @RunWith annotation.
    * 2) The class is concrete.
    */
-  @SuppressWarnings("unchecked")
   public static final Matcher<ClassTree> isConcreteClassWithoutRunWith = allOf(
       not(hasAnnotation(JUNIT4_RUN_WITH_ANNOTATION)),
       not(Matchers.<ClassTree>hasModifier(Modifier.ABSTRACT)));
@@ -118,7 +113,6 @@ public class JUnitMatchers {
    * 2) There are no JUnit4 @RunWith annotations
    * 3) The class is concrete
    */
-  @SuppressWarnings("unchecked")
   public static final Matcher<ClassTree> isJUnit3TestClass = allOf(
       isTestCaseDescendant,
       isConcreteClassWithoutRunWith);
@@ -132,7 +126,6 @@ public class JUnitMatchers {
    * 3) The method is public.
    * 4) The method returns void
    */
-  @SuppressWarnings("unchecked")
   public static final Matcher<MethodTree> isJunit3TestCase = allOf(
       methodNameStartsWith("test"),
       methodHasParameters(),
@@ -149,7 +142,6 @@ public class JUnitMatchers {
    * 3) The method is a public or protected instance method that is not abstract
    * 4) The method returns void
    */
-  @SuppressWarnings("unchecked")
   public static final Matcher<MethodTree> looksLikeJUnit3SetUp = allOf(
       methodIsNamed("setUp"),
       methodHasParameters(),
@@ -171,7 +163,6 @@ public class JUnitMatchers {
    * 3) The method is a public or protected instance method that is not abstract
    * 4) The method returns void
    */
-  @SuppressWarnings("unchecked")
   public static final Matcher<MethodTree> looksLikeJUnit3TearDown = allOf(
       methodIsNamed("tearDown"),
       methodHasParameters(),
@@ -187,7 +178,6 @@ public class JUnitMatchers {
   /**
    * Matches a method annotated with @Test but not @Ignore.
    */
-  @SuppressWarnings("unchecked")
   public static final Matcher<MethodTree> wouldRunInJUnit4 = allOf(
       hasAnnotationOnAnyOverriddenMethod(JUNIT4_TEST_ANNOTATION),
       not(hasAnnotationOnAnyOverriddenMethod(JUNIT4_IGNORE_ANNOTATION)));
@@ -237,7 +227,6 @@ public class JUnitMatchers {
       }
     };
 
-    @SuppressWarnings("unchecked")
     private static final Matcher<ClassTree> isJUnit4TestClass = allOf(
         not(isTestCaseDescendant),
         annotations(ANY, hasArgumentWithValue("value", isJUnit4TestRunner)));

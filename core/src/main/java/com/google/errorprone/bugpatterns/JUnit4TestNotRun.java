@@ -64,7 +64,6 @@ public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
    *    that the test is intended to run with JUnit 4.
    */
   @Override
-  @SuppressWarnings("unchecked")
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
     boolean matches = allOf(
         isJunit3TestCase,

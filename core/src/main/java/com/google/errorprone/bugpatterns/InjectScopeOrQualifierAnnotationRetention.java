@@ -56,13 +56,11 @@ public class InjectScopeOrQualifierAnnotationRetention extends BugChecker
   /**
    * Matches classes that are annotated with @Scope or @ScopeAnnotation.
    */
-  @SuppressWarnings("unchecked")
   private static final Matcher<ClassTree> SCOPE_OR_QUALIFIER_ANNOTATION_MATCHER = Matchers.<
       ClassTree>anyOf(hasAnnotation(GUICE_SCOPE_ANNOTATION), hasAnnotation(JAVAX_SCOPE_ANNOTATION),
       hasAnnotation(GUICE_BINDING_ANNOTATION), hasAnnotation(JAVAX_QUALIFER_ANNOTATION));
 
   @Override
-  @SuppressWarnings("unchecked")
   public final Description matchClass(ClassTree classTree, VisitorState state) {
     if ((ASTHelpers.getSymbol(classTree).flags() & Flags.ANNOTATION) != 0) {
       if (SCOPE_OR_QUALIFIER_ANNOTATION_MATCHER.matches(classTree, state)) {

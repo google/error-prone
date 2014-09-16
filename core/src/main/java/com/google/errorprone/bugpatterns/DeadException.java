@@ -65,7 +65,6 @@ public class DeadException extends BugChecker implements NewClassTreeMatcher {
             not(enclosingClass(JUnitMatchers.isJUnit3TestClass)))
   );
 
-  @SuppressWarnings("unchecked")
   @Override
   public Description matchNewClass(NewClassTree newClassTree, VisitorState state) {
     if (!MATCHER.matches(newClassTree, state)) {
@@ -75,7 +74,7 @@ public class DeadException extends BugChecker implements NewClassTreeMatcher {
     StatementTree parent = (StatementTree) state.getPath().getParentPath().getLeaf();
 
     boolean isLastStatement = anyOf(
-        new Enclosing.BlockOrCase(lastStatement(Matchers.<StatementTree>isSame(parent))),
+        new Enclosing.BlockOrCase<>(lastStatement(Matchers.<StatementTree>isSame(parent))),
         // it could also be a bare if statement with no braces
         parentNode(parentNode(kindIs(IF))))
         .matches(newClassTree, state);

@@ -179,6 +179,7 @@ public class ErrorProneCompilerIntegrationTest {
             "ExtendedMultipleTopLevelClassesWithErrors.java"));
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(1));
+    @SuppressWarnings("unchecked")  // hamcrest should use @SafeVarargs
     Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher = hasItem(
         diagnosticMessage(CoreMatchers.<String>allOf(
             containsString("IllegalStateException: test123"),

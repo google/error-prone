@@ -60,7 +60,6 @@ public class InjectAssistedInjectAndInjectOnConstructors extends BugChecker
   /**
    * Matches if any constructor of a class is annotated with an @Inject annotation.
    */
-  @SuppressWarnings("unchecked")
   private MultiMatcher<ClassTree, MethodTree> constructorWithInjectMatcher = constructor(
       ANY, Matchers.<MethodTree>anyOf(
           hasAnnotation(GUICE_INJECT_ANNOTATION), hasAnnotation(JAVAX_INJECT_ANNOTATION)));
@@ -68,7 +67,6 @@ public class InjectAssistedInjectAndInjectOnConstructors extends BugChecker
   /**
    * Matches if any constructor of a class is annotated with an @AssistedInject annotation.
    */
-  @SuppressWarnings("unchecked")
   private MultiMatcher<ClassTree, MethodTree> constructorWithAssistedInjectMatcher =
       constructor(ANY, Matchers.<MethodTree>hasAnnotation(ASSISTED_INJECT_ANNOTATION));
 
@@ -76,12 +74,10 @@ public class InjectAssistedInjectAndInjectOnConstructors extends BugChecker
    * Matches if a class has a constructor that is annotated with @Inject and a constructor annotated
    * with @AssistedInject.
    */
-  @SuppressWarnings("unchecked")
   private Matcher<ClassTree> constructorsWithInjectAndAssistedInjectMatcher =
       Matchers.<ClassTree>allOf(constructorWithInjectMatcher, constructorWithAssistedInjectMatcher);
 
   @Override
-  @SuppressWarnings("unchecked")
   public final Description matchAnnotation(AnnotationTree annotationTree, VisitorState state) {
     Tree modified = state.getPath().getParentPath().getParentPath().getLeaf();
     if (ASTHelpers.getSymbol(modified).isConstructor()) {

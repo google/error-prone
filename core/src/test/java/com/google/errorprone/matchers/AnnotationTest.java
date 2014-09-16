@@ -101,7 +101,6 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
         isType("com.google.WrongAnnotation"))));
   }
 
-  @SuppressWarnings("unchecked")
   @Test
   public void shouldMatchAllAnnotationsOnClass() {
     writeFile("A.java",

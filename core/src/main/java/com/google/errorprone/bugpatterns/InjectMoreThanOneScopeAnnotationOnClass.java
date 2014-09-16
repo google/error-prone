@@ -55,12 +55,10 @@ public class InjectMoreThanOneScopeAnnotationOnClass extends BugChecker
    * Matches annotations that are themselves annotated with with @ScopeAnnotation(Guice) or
    * @Scope(Javax).
    */
-  @SuppressWarnings("unchecked")
   private Matcher<AnnotationTree> scopeAnnotationMatcher = Matchers.<AnnotationTree>anyOf(
       hasAnnotation(GUICE_SCOPE_ANNOTATION), hasAnnotation(JAVAX_SCOPE_ANNOTATION));
 
   @Override
-  @SuppressWarnings("unchecked")
   public final Description matchAnnotation(AnnotationTree annotationTree, VisitorState state) {
     int numberOfScopeAnnotations = 0;
     // check if this annotation is on a class and is a scope annotation

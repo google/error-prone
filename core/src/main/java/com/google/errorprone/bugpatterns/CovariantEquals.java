@@ -88,7 +88,6 @@ public class CovariantEquals extends BugChecker implements MethodTreeMatcher {
    * 4) The enclosing class does not have a method defined that really overrides Object.equals().
    */
   @Override
-  @SuppressWarnings("unchecked")    // matchers + varargs cause this
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
     if (!MATCHER.matches(methodTree, state)) {
       return Description.NO_MATCH;

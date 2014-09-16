@@ -65,7 +65,6 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
    * a type in the typesToCheck set and returns the same type (e.g. String.trim() returns a
    * String).
    */
-  @SuppressWarnings("unchecked")
   @Override
   public Matcher<MethodInvocationTree> specializedMatcher() {
     return methodSelect(Matchers.<ExpressionTree>allOf(

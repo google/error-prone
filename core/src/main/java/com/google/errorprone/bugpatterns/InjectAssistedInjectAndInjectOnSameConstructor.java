@@ -54,14 +54,12 @@ public class InjectAssistedInjectAndInjectOnSameConstructor extends BugChecker
   /**
    * Matches a method/constructor that is annotated with an @Inject annotation.
    */
-  @SuppressWarnings("unchecked")
   private Matcher<MethodTree> constructorWithInjectMatcher = Matchers.<MethodTree>anyOf(
           hasAnnotation(GUICE_INJECT_ANNOTATION), hasAnnotation(JAVAX_INJECT_ANNOTATION));
 
   /**
    * Matches a method/constructor that is annotated with an @AssistedInject annotation.
    */
-  @SuppressWarnings("unchecked")
   private Matcher<MethodTree> constructorWithAssistedInjectMatcher =
       Matchers.<MethodTree>hasAnnotation(ASSISTED_INJECT_ANNOTATION);
   
@@ -78,7 +76,6 @@ public class InjectAssistedInjectAndInjectOnSameConstructor extends BugChecker
   };
       
   @Override
-  @SuppressWarnings("unchecked")
   public Description matchAnnotation(AnnotationTree annotationTree, VisitorState state) {
     if (injectOrAssistedInjectMatcher.matches(annotationTree, state)) {
       Tree treeWithAnnotation = state.getPath().getParentPath().getParentPath().getLeaf();

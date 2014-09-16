@@ -97,7 +97,6 @@ public class BadShiftAmount extends BugChecker implements BinaryTreeMatcher {
       BAD_SHIFT_AMOUNT_INT
   );
 
-  @SuppressWarnings("unchecked")
   @Override
   public Description matchBinary(BinaryTree tree, VisitorState state) {
     if (!BINARY_TREE_MATCHER.matches(tree, state)) {

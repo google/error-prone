@@ -68,6 +68,7 @@ public class DiagnosticTestHelper {
 
   public DiagnosticCollector<JavaFileObject> collector = new DiagnosticCollector<JavaFileObject>();
 
+  @SuppressWarnings("unchecked")  // hamcrest should use @SafeVarargs
   public static Matcher<Diagnostic<JavaFileObject>> suggestsRemovalOfLine(URI fileURI, int line) {
     return allOf(
         diagnosticOnLine(fileURI, line),
@@ -96,7 +97,7 @@ public class DiagnosticTestHelper {
     return new BaseMatcher<Diagnostic<JavaFileObject>>() {
       @Override
       public boolean matches(Object object) {
-        Diagnostic<JavaFileObject> item = (Diagnostic<JavaFileObject>) object;
+        Diagnostic<?> item = (Diagnostic<?>) object;
         return item.getLineNumber() == line && item.getColumnNumber() == column;
       }
 
@@ -116,8 +117,9 @@ public class DiagnosticTestHelper {
     return new BaseMatcher<Diagnostic<JavaFileObject>>() {
       @Override
       public boolean matches(Object object) {
-        Diagnostic<JavaFileObject> item = (Diagnostic<JavaFileObject>) object;
-        return item.getSource() != null && item.getSource().toUri().equals(fileURI)
+        Diagnostic<?> item = (Diagnostic<?>) object;
+        return item.getSource() instanceof JavaFileObject
+            && ((JavaFileObject) item.getSource()).toUri().equals(fileURI)
             && item.getLineNumber() == line;
       }
 
@@ -135,8 +137,9 @@ public class DiagnosticTestHelper {
     return new BaseMatcher<Diagnostic<JavaFileObject>>() {
       @Override
       public boolean matches(Object object) {
-        Diagnostic<JavaFileObject> item = (Diagnostic<JavaFileObject>) object;
-        return item.getSource() != null && item.getSource().toUri().equals(fileURI)
+        Diagnostic<?> item = (Diagnostic<?>) object;
+        return item.getSource() instanceof JavaFileObject
+            && ((JavaFileObject) item.getSource()).toUri().equals(fileURI)
             && item.getLineNumber() == line
             && item.getMessage(Locale.getDefault()).contains(message);
       }
@@ -159,7 +162,7 @@ public class DiagnosticTestHelper {
     return new BaseMatcher<Diagnostic<JavaFileObject>>() {
       @Override
       public boolean matches(Object object) {
-        Diagnostic<JavaFileObject> item = (Diagnostic<JavaFileObject>) object;
+        Diagnostic<?> item = (Diagnostic<?>) object;
         return matcher.matches(item.getMessage(Locale.getDefault()));
       }
 
@@ -188,7 +191,6 @@ public class DiagnosticTestHelper {
    *
    * TODO(user): Switch to use assertThat instead of assertTrue.
    */
-  @SuppressWarnings("unchecked")
   public void assertHasDiagnosticOnAllMatchingLines(JavaFileObject source)
       throws IOException {
     final List<Diagnostic<? extends JavaFileObject>> diagnostics = getDiagnostics();
@@ -225,9 +227,8 @@ public class DiagnosticTestHelper {
 
       } else {
         int lineNumber = reader.getLineNumber() + 1;
-        // Cast is unnecessary, but javac throws an error because of poor type inference.
         Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher =
-            (Matcher) not(hasItem(diagnosticOnLine(source.toUri(), lineNumber)));
+            not(hasItem(diagnosticOnLine(source.toUri(), lineNumber)));
         if (!matcher.matches(diagnostics)) {
           fail("Saw unexpected error on line " + lineNumber + ". All errors:\n" + diagnostics);
         }

@@ -19,10 +19,8 @@ package com.google.errorprone.bugpatterns;
 /**
  * @author pepstein@google.com (Peter Epstein)
  */
-@SuppressWarnings("unchecked")
 public class FallthroughSuppressionNegativeCases extends FallthroughSuppressionToBeExtended {
 
-  @SuppressWarnings("unchecked")
   public void suppressedMethod1a() {}
 
   @SuppressWarnings({"unchecked"})
