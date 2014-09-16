@@ -32,7 +32,7 @@ public class StringEqualityNegativeCases {
 
     return retVal;
   }
-
+  
   @SuppressWarnings("StringEquality")
   public boolean testSuppressWarnings(String x, String y) {
     boolean retVal;
@@ -42,5 +42,4 @@ public class StringEqualityNegativeCases {
 
     return retVal;
   } 
-
 }

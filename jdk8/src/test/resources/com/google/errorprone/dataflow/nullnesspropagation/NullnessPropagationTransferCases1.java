@@ -119,4 +119,15 @@ public class NullnessPropagationTransferCases1 {
     // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(param);
   }
+
+  public void stringConcatenation(String a, String b) {
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(a + b);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(null + b);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(a + 5);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(null + (String) null);
+  }
 }

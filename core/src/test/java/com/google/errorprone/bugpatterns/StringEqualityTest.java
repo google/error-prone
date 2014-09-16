@@ -47,5 +47,4 @@ public class StringEqualityTest {
     compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
         .sources(getClass(), "StringEqualityNegativeCases.java"));
   }
-
 }

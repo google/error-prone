@@ -104,6 +104,18 @@ public class NullnessPropagationTransfer extends AbstractNullnessPropagationTran
         : inputs.valueOfSubNode(node.getOperand());
   }
 
+
+  /**
+   * The result of string concatenation is always non-null. If an operand is {@code null}, it is
+   * converted to {@code "null"}. For more information, see
+   * JLS 15.18.1 "String Concatenation Operator +", and 5.1.11, "String Conversion".
+   */
+  @Override
+  NullnessValue visitStringConcatenate() {
+    // TODO(user): Mark the inputs as dereferenced.
+    return NONNULL;
+  }
+
   @Override
   NullnessValue visitNumericalAddition() {
     return NONNULL;
