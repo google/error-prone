@@ -27,6 +27,8 @@ import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropaga
 import static java.lang.String.format;
 import static java.lang.String.valueOf;
 
+import com.google.common.base.Strings;
+
 import java.math.BigInteger;
 
 /**
@@ -482,73 +484,18 @@ public class NullnessPropagationTransferCases2 {
     triggerNullnessChecker(message);
   }
 
-  public void vanillaVisitNode() {
-    String[] a = new String[1];
-    // BUG: Diagnostic contains: (Nullable)
-    triggerNullnessChecker(a[0]);
+  public void stringsIsNullOrEmptyIsNullCheck(String s) {
+    if (Strings.isNullOrEmpty(s)) {
+      // BUG: Diagnostic contains: (Nullable)
+      triggerNullnessChecker(s);
+    } else {
+      // BUG: Diagnostic contains: (Non-null)
+      triggerNullnessChecker(s);
+    }
   }
 
   public static class HasStaticFields {
     static String staticStringField;
     static int staticIntField;
-  }
-
-  public void sameNameImmediatelyShadowed() {
-    final String s = "foo";
-
-    class Bar {
-      void method(String s) {
-        // BUG: Diagnostic contains: (Nullable)
-        triggerNullnessChecker(s);
-      }
-    }
-  }
-
-  public void sameNameLaterShadowed() {
-    final String s = "foo";
-
-    class Bar {
-      void method() {
-        // BUG: Diagnostic contains: (Non-null)
-        triggerNullnessChecker(s);
-
-        String s = HasStaticFields.staticStringField;
-        // BUG: Diagnostic contains: (Nullable)
-        triggerNullnessChecker(s);
-      }
-    }
-  }
-
-  public void sameNameShadowedThenUnshadowed() {
-    final String s = HasStaticFields.staticStringField;
-
-    class Bar {
-      void method() {
-        {
-          String s = "foo";
-          // BUG: Diagnostic contains: (Non-null)
-          triggerNullnessChecker(s);
-        }
-
-        // BUG: Diagnostic contains: (Nullable)
-        triggerNullnessChecker(s);
-      }
-    }
-  }
-
-  public void nonCompileTimeConstantCapturedVariable() {
-    final Object nonnull = ENUM_INSTANCE;
-
-    class Bar {
-      void method() {
-        /*
-         * We'd prefer for this to be non-null, but we don't run the analysis over the enclosing
-         * class's enclosing method, so our captured-variable handling is limited to compile-time
-         * constants.
-         */
-        // BUG: Diagnostic contains: (Nullable)
-        triggerNullnessChecker(nonnull);
-      }
-    }
   }
 }

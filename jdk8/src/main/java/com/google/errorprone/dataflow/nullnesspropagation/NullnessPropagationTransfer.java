@@ -19,11 +19,14 @@ package com.google.errorprone.dataflow.nullnesspropagation;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessValue.NONNULL;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessValue.NULL;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessValue.NULLABLE;
+import static com.sun.tools.javac.code.TypeTag.BOOLEAN;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.common.base.Verify;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSetMultimap;
+import com.google.errorprone.dataflow.nullnesspropagation.AbstractNullnessPropagationTransfer.LocalVariableUpdates;
 
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
@@ -44,6 +47,7 @@ import org.checkerframework.dataflow.cfg.node.TypeCastNode;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -51,12 +55,12 @@ import java.util.Set;
 import javax.lang.model.element.VariableElement;
 
 /**
- * The {@code TransferFunction} for our nullability analysis.  This analysis determines, for all 
- * variables and parameters, whether they are definitely null ({@link NullnessValue#NULL}), 
- * definitely non-null ({@link NullnessValue#NONNULL}), possibly null 
- * ({@link NullnessValue#NULLABLE}), or are on an infeasible path ({@link NullnessValue#BOTTOM}).  
+ * The {@code TransferFunction} for our nullability analysis.  This analysis determines, for all
+ * variables and parameters, whether they are definitely null ({@link NullnessValue#NULL}),
+ * definitely non-null ({@link NullnessValue#NONNULL}), possibly null
+ * ({@link NullnessValue#NULLABLE}), or are on an infeasible path ({@link NullnessValue#BOTTOM}).
  * This analysis depends only on the code and does not take nullness annotations into account.
- * 
+ *
  * @author deminguyen@google.com (Demi Nguyen)
  */
 public class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer {
@@ -136,7 +140,7 @@ public class NullnessPropagationTransfer extends AbstractNullnessPropagationTran
         thenUpdates,
         elseUpdates);
   }
-  
+
   @Override
   NullnessValue visitAssignment(AssignmentNode node, SubNodeValues inputs,
       LocalVariableUpdates updates) {
@@ -204,10 +208,12 @@ public class NullnessPropagationTransfer extends AbstractNullnessPropagationTran
    * returns a primitive type).
    */
   @Override
-  NullnessValue visitMethodInvocation(MethodInvocationNode node, LocalVariableUpdates updates) {
+  NullnessValue visitMethodInvocation(MethodInvocationNode node, LocalVariableUpdates thenUpdates,
+      LocalVariableUpdates elseUpdates, LocalVariableUpdates bothUpdates) {
     ClassAndMethod callee = tryGetMethodSymbol(node.getTree());
-    setReceiverNullness(updates, node.getTarget().getReceiver(), callee);
-    setArgumentNullness(updates, node.getArguments(), callee);
+    setReceiverNullness(bothUpdates, node.getTarget().getReceiver(), callee);
+    setUnconditionalArgumentNullness(bothUpdates, node.getArguments(), callee);
+    setConditionalArgumentNullness(thenUpdates, elseUpdates, node.getArguments(), callee);
     return returnValueNullness(callee);
   }
 
@@ -217,8 +223,8 @@ public class NullnessPropagationTransfer extends AbstractNullnessPropagationTran
   }
 
   /**
-   * Refines the {@code NullnessValue} of {@code LocalVariableNode}s used in an equality 
-   * comparison using the greatest lower bound.     
+   * Refines the {@code NullnessValue} of {@code LocalVariableNode}s used in an equality
+   * comparison using the greatest lower bound.
    *
    * @param equalTo whether the comparison is == (false for !=)
    * @param leftNode the left-hand side of the comparison
@@ -241,14 +247,14 @@ public class NullnessPropagationTransfer extends AbstractNullnessPropagationTran
     NullnessValue equalBranchValue = leftVal.greatestLowerBound(rightVal);
     LocalVariableUpdates equalBranchUpdates = equalTo ? thenUpdates : elseUpdates;
     LocalVariableUpdates notEqualBranchUpdates = equalTo ? elseUpdates : thenUpdates;
-    
+
     if (leftNode instanceof LocalVariableNode) {
       LocalVariableNode localVar = (LocalVariableNode) leftNode;
       equalBranchUpdates.set(localVar, equalBranchValue);
       notEqualBranchUpdates.set(
           localVar, leftVal.greatestLowerBound(rightVal.deducedValueWhenNotEqual()));
     }
-      
+
     if (rightNode instanceof LocalVariableNode) {
       LocalVariableNode localVar = (LocalVariableNode) rightNode;
       equalBranchUpdates.set(localVar, equalBranchValue);
@@ -277,7 +283,7 @@ public class NullnessPropagationTransfer extends AbstractNullnessPropagationTran
     return null;
   }
 
-  private static ClassAndMethod tryGetMethodSymbol(MethodInvocationTree tree) {
+  static ClassAndMethod tryGetMethodSymbol(MethodInvocationTree tree) {
     Symbol symbol = tryGetSymbol(tree.getMethodSelect());
     if (symbol instanceof MethodSymbol) {
       return ClassAndMethod.make((MethodSymbol) symbol);
@@ -347,10 +353,36 @@ public class NullnessPropagationTransfer extends AbstractNullnessPropagationTran
     }
   }
 
-  private static void setArgumentNullness(
-      LocalVariableUpdates updates, List<Node> arguments, ClassAndMethod callee) {
+  /**
+   * Records which arguments are guaranteed to be non-null if the method completes without
+   * exception. For example, if {@code checkNotNull(foo, message)} completes successfully, then
+   * {@code foo} is not null.
+   */
+  private static void setUnconditionalArgumentNullness(
+      LocalVariableUpdates bothUpdates, List<Node> arguments, ClassAndMethod callee) {
     Set<Integer> requiredNonNullParameters = REQUIRED_NON_NULL_PARAMETERS.get(callee.name());
-    for (Integer i : requiredNonNullParameters) {
+    for (LocalVariableNode var : variablesAtIndexes(requiredNonNullParameters, arguments)) {
+      bothUpdates.set(var, NONNULL);
+    }
+  }
+
+  /**
+   * Records which arguments are guaranteed to be non-null only if the method completes by returning
+   * {@code true} or only if the method completes by returning {@code false}. For example, if {@code
+   * Strings.isNullOrEmpty(s)} returns {@code false}, then {@code s} is not null.
+   */
+  private static void setConditionalArgumentNullness(LocalVariableUpdates thenUpdates,
+      LocalVariableUpdates elseUpdates, List<Node> arguments, ClassAndMethod callee) {
+    Set<Integer> nullImpliesTrueParameters = NULL_IMPLIES_TRUE_PARAMETERS.get(callee.name());
+    for (LocalVariableNode var : variablesAtIndexes(nullImpliesTrueParameters, arguments)) {
+      elseUpdates.set(var, NONNULL);
+    }
+  }
+
+  private static Iterable<LocalVariableNode> variablesAtIndexes(
+      Set<Integer> indexes, List<Node> arguments) {
+    List<LocalVariableNode> result = new ArrayList<>();
+    for (Integer i : indexes) {
       if (i < 0) {
         i = arguments.size() + i;
       }
@@ -358,11 +390,11 @@ public class NullnessPropagationTransfer extends AbstractNullnessPropagationTran
       if (i >= 0 && i < arguments.size()) {
         Node argument = arguments.get(i);
         if (argument instanceof LocalVariableNode) {
-          LocalVariableNode localArgument = (LocalVariableNode) argument;
-          updates.set(localArgument, NONNULL);
+          result.add((LocalVariableNode) argument);
         }
       }
     }
+    return result;
   }
 
   interface Member {
@@ -401,23 +433,26 @@ public class NullnessPropagationTransfer extends AbstractNullnessPropagationTran
     }
   }
 
-  private static final class ClassAndMethod implements Member {
+  static final class ClassAndMethod implements Member {
     final String clazz;
     final String method;
     final boolean isStatic;
     final boolean isPrimitive;
+    final boolean isBoolean;
 
-    private ClassAndMethod(String clazz, String method, boolean isStatic, boolean isPrimitive) {
+    private ClassAndMethod(
+        String clazz, String method, boolean isStatic, boolean isPrimitive, boolean isBoolean) {
       this.clazz = clazz;
       this.method = method;
       this.isStatic = isStatic;
       this.isPrimitive = isPrimitive;
+      this.isBoolean = isBoolean;
     }
 
     static ClassAndMethod make(MethodSymbol symbol) {
       return new ClassAndMethod(symbol.owner.getQualifiedName().toString(),
           symbol.getSimpleName().toString(), symbol.isStatic(),
-          symbol.getReturnType().isPrimitive());
+          symbol.getReturnType().isPrimitive(), symbol.getReturnType().getTag() == BOOLEAN);
     }
 
     @Override
@@ -498,4 +533,13 @@ public class NullnessPropagationTransfer extends AbstractNullnessPropagationTran
           .put(member("org.junit.Assert", "assertNotNull"), -1)
           .build();
 
+  /**
+   * Maps from the names of null-querying methods to the indexes of the arguments that are compared
+   * against null. Indexes may be negative to indicate a position relative to the end of the
+   * argument list. For example, "-1" means "the final parameter."
+   */
+  private static final ImmutableSetMultimap<MemberName, Integer>
+      NULL_IMPLIES_TRUE_PARAMETERS = new ImmutableSetMultimap.Builder<MemberName, Integer>()
+          .put(member(Strings.class, "isNullOrEmpty"), 0)
+          .build();
 }
