@@ -20,7 +20,10 @@ import static com.google.errorprone.dataflow.nullnesspropagation.NullnessValue.N
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessValue.NULL;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessValue.NULLABLE;
 
+import com.google.common.base.Preconditions;
+import com.google.common.base.Verify;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSetMultimap;
 
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
@@ -41,6 +44,9 @@ import org.checkerframework.dataflow.cfg.node.TypeCastNode;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 import javax.lang.model.element.VariableElement;
 
@@ -201,6 +207,7 @@ public class NullnessPropagationTransfer extends AbstractNullnessPropagationTran
   NullnessValue visitMethodInvocation(MethodInvocationNode node, LocalVariableUpdates updates) {
     ClassAndMethod callee = tryGetMethodSymbol(node.getTree());
     setReceiverNullness(updates, node.getTarget().getReceiver(), callee);
+    setArgumentNullness(updates, node.getArguments(), callee);
     return returnValueNullness(callee);
   }
 
@@ -340,8 +347,58 @@ public class NullnessPropagationTransfer extends AbstractNullnessPropagationTran
     }
   }
 
+  private static void setArgumentNullness(
+      LocalVariableUpdates updates, List<Node> arguments, ClassAndMethod callee) {
+    Set<Integer> requiredNonNullParameters = REQUIRED_NON_NULL_PARAMETERS.get(callee.name());
+    for (Integer i : requiredNonNullParameters) {
+      if (i < 0) {
+        i = arguments.size() + i;
+      }
+      // TODO(cpovirk): better handling of varargs
+      if (i >= 0 && i < arguments.size()) {
+        Node argument = arguments.get(i);
+        if (argument instanceof LocalVariableNode) {
+          LocalVariableNode localArgument = (LocalVariableNode) argument;
+          updates.set(localArgument, NONNULL);
+        }
+      }
+    }
+  }
+
   interface Member {
     boolean isStatic();
+  }
+
+  private static MemberName member(Class<?> clazz, String member) {
+    return member(clazz.getName(), member);
+  }
+
+  private static MemberName member(String clazz, String member) {
+    return new MemberName(clazz, member);
+  }
+
+  private static final class MemberName {
+    final String clazz;
+    final String member;
+
+    MemberName(String clazz, String member) {
+      this.clazz = clazz;
+      this.member = member;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (obj instanceof MemberName) {
+        MemberName other = (MemberName) obj;
+        return clazz.equals(other.clazz) && member.equals(other.member);
+      }
+      return false;
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(clazz, member);
+    }
   }
 
   private static final class ClassAndMethod implements Member {
@@ -366,6 +423,10 @@ public class NullnessPropagationTransfer extends AbstractNullnessPropagationTran
     @Override
     public boolean isStatic() {
       return isStatic;
+    }
+
+    MemberName name() {
+      return new MemberName(this.clazz, this.method);
     }
   }
 
@@ -400,7 +461,10 @@ public class NullnessPropagationTransfer extends AbstractNullnessPropagationTran
   }
 
   private static final ImmutableSet<String> CLASSES_WITH_ALL_NON_NULLABLE_RETURNS =
-      ImmutableSet.of(String.class.getName());
+      ImmutableSet.of(
+          Preconditions.class.getName(),
+          Verify.class.getName(),
+          String.class.getName());
 
   private static final ImmutableSet<String> CLASSES_WITH_NON_NULLABLE_VALUE_OF_METHODS =
       ImmutableSet.of(
@@ -420,4 +484,18 @@ public class NullnessPropagationTransfer extends AbstractNullnessPropagationTran
           // TODO(cpovirk): recognize the compiler-generated valueOf() methods on Enum subclasses
           Enum.class.getName(),
           String.class.getName());
+
+  /**
+   * Maps from the names of null-rejecting methods to the indexes of the arguments that aren't
+   * permitted to be null. Indexes may be negative to indicate a position relative to the end of the
+   * argument list. For example, "-1" means "the final parameter."
+   */
+  private static final ImmutableSetMultimap<MemberName, Integer>
+      REQUIRED_NON_NULL_PARAMETERS = new ImmutableSetMultimap.Builder<MemberName, Integer>()
+          .put(member(Preconditions.class, "checkNotNull"), 0)
+          .put(member(Verify.class, "verifyNotNull"), 0)
+          .put(member("junit.framework.Assert", "assertNotNull"), -1)
+          .put(member("org.junit.Assert", "assertNotNull"), -1)
+          .build();
+
 }
