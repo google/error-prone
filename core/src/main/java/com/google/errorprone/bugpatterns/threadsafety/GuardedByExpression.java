@@ -18,6 +18,8 @@ package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.bugpatterns.threadsafety.IllegalGuardedBy.checkGuardedBy;
 
+import com.google.auto.value.AutoValue;
+
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
@@ -36,38 +38,50 @@ import java.util.Map;
  */
 public abstract class GuardedByExpression {
 
+  public abstract Kind kind();
+  public abstract Symbol sym();
+  public abstract Type type();
+  
   private static final String ENCLOSING_INSTANCE_NAME = "outer$";
   
   /**
    * A 'class' literal: ClassName.class
    */
-  public static class ClassLiteral extends BaseNode {
-    ClassLiteral(Symbol owner) {
-      super(Kind.CLASS_LITERAL, owner);
+  @AutoValue
+  public abstract static class ClassLiteral extends GuardedByExpression {
+    public static ClassLiteral create(Symbol owner) {
+      return new AutoValue_GuardedByExpression_ClassLiteral(
+          Kind.CLASS_LITERAL, owner, owner.type);
     }
   }
 
   /**
    * The base expression for a static member select on a class literal (e.g. ClassName.fieldName).
    */
-  public static class TypeLiteral extends BaseNode {
-    TypeLiteral(Symbol owner) {
-      super(Kind.TYPE_LITERAL, owner);
+  @AutoValue
+  public abstract static class TypeLiteral extends GuardedByExpression {
+    public static TypeLiteral create(Symbol owner) {
+      return new AutoValue_GuardedByExpression_TypeLiteral(
+          Kind.TYPE_LITERAL, owner, owner.type);
     }
   }
 
   /**
    * A local variable (or parameter), resolved as part of a lock access expression.
    */
-  public static class LocalVariable extends BaseNode {
-    LocalVariable(Symbol.VarSymbol varSymbol) {
-      super(Kind.LOCAL_VARIABLE, varSymbol);
+  @AutoValue
+  public abstract static class LocalVariable extends GuardedByExpression {
+    public static LocalVariable create(Symbol owner) {
+      return new AutoValue_GuardedByExpression_LocalVariable(
+          Kind.LOCAL_VARIABLE, owner, owner.type);
     }
   }
 
   /**
    * A simple 'this literal.
    */
+  // Don't use AutoValue here, since sym and type need to be 'null'. (And since
+  // it's a singleton we don't need to implement equals() or hashCode()).
   public static class ThisLiteral extends GuardedByExpression {
 
     static final ThisLiteral INSTANCE = new ThisLiteral();
@@ -93,59 +107,13 @@ public abstract class GuardedByExpression {
   /**
    * The member access expression for a field or method.
    */
-  public static class Select extends GuardedByExpression {
-    @Override
-    public Kind kind() {
-      return Kind.SELECT;
-    }
+  @AutoValue
+  public abstract static class Select extends GuardedByExpression {
+    
+    public abstract GuardedByExpression base();
 
-    @Override
-    public Symbol sym() {
-      return sym;
-    }
-
-    @Override
-    public Type type() {
-      return type;
-    }
-
-    final GuardedByExpression base;
-    private final Symbol sym;
-    private final Type type;
-
-    Select(GuardedByExpression base, Symbol sym, Type type) {
-      this.base = base;
-      this.sym = sym;
-      this.type = type;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) {
-        return true;
-      }
-      if (o == null || getClass() != o.getClass()) {
-        return false;
-      }
-
-      Select select = (Select) o;
-
-      if (!base.equals(select.base)) {
-        return false;
-      }
-      if (!sym.equals(select.sym)) {
-        return false;
-      }
-      return type.equals(select.type);
-
-    }
-
-    @Override
-    public int hashCode() {
-      int result = base.hashCode();
-      result = 31 * result + sym.hashCode();
-      result = 31 * result + type.hashCode();
-      return result;
+    public static Select create(GuardedByExpression base, Symbol sym, Type type) {
+      return new AutoValue_GuardedByExpression_Select(Kind.SELECT, sym, type, base);
     }
   }
 
@@ -203,11 +171,11 @@ public abstract class GuardedByExpression {
     }
 
     ClassLiteral classLiteral(Symbol clazz) {
-      return new ClassLiteral(clazz);
+      return ClassLiteral.create(clazz);
     }
 
     TypeLiteral typeLiteral(Symbol type) {
-      return new TypeLiteral(type);
+      return TypeLiteral.create(type);
     }
 
     Select select(GuardedByExpression base, Symbol member) {
@@ -230,92 +198,25 @@ public abstract class GuardedByExpression {
     }
 
     GuardedByExpression select(GuardedByExpression base, Select select) {
-      return normalizedSelect(base, select.sym, select.type);
+      return normalizedSelect(base, select.sym(), select.type());
     }
 
     /** Normalize static accesses so they are not performed on instances. */
     private Select normalizedSelect(GuardedByExpression base, Symbol member, Type type) {
       if (member.isStatic()) {
-        return new Select(typeLiteral(member.owner), member, type);
+        return Select.create(typeLiteral(member.owner), member, type);
       }
-      return new Select(base, member, type);
+      return Select.create(base, member, type);
     }
 
     LocalVariable localVariable(Symbol.VarSymbol varSymbol) {
-      return new LocalVariable(varSymbol);
+      return LocalVariable.create(varSymbol);
     }
   }
-
-  public abstract Kind kind();
-
-  public abstract Symbol sym();
-
-  public abstract Type type();
 
   /** {@link GuardedByExpression} kind. */
   public static enum Kind {
     THIS, CLASS_LITERAL, TYPE_LITERAL, LOCAL_VARIABLE, SELECT;
-  }
-
-  private abstract static class BaseNode extends GuardedByExpression {
-
-    private final Kind kind;
-    private final Symbol symbol;
-    private final Type type;
-
-    BaseNode(Kind kind, Symbol symbol) {
-      this(kind, symbol, symbol.type);
-    }
-
-    BaseNode(Kind kind, Symbol symbol, Type type) {
-      this.kind = kind;
-      this.symbol = symbol;
-      this.type = type;
-    }
-
-    @Override
-    public Kind kind() {
-      return kind;
-    }
-
-    @Override
-    public Symbol sym() {
-      return symbol;
-    }
-
-    @Override
-    public Type type() {
-      return type;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) {
-        return true;
-      }
-      if (o == null || getClass() != o.getClass()) {
-        return false;
-      }
-
-      BaseNode that = (BaseNode) o;
-
-      if (kind != that.kind) {
-        return false;
-      }
-      if (!symbol.equals(that.symbol)) {
-        return false;
-      }
-      return type.equals(that.type);
-
-    }
-
-    @Override
-    public int hashCode() {
-      int result = kind.hashCode();
-      result = 31 * result + symbol.hashCode();
-      result = 31 * result + type.hashCode();
-      return result;
-    }
   }
 
   @Override
@@ -357,10 +258,10 @@ public abstract class GuardedByExpression {
     }
 
     private static void pprintSelect(Select exp, StringBuilder sb) {
-      if (exp.sym.name.contentEquals(ENCLOSING_INSTANCE_NAME)) {
+      if (exp.sym().name.contentEquals(ENCLOSING_INSTANCE_NAME)) {
         sb.append(String.format("%s.this", exp.sym().owner.name));
       } else {
-        pprint(exp.base, sb);
+        pprint(exp.base(), sb);
         sb.append(String.format(".%s", exp.sym().name)); 
       }
     }
@@ -394,11 +295,11 @@ public abstract class GuardedByExpression {
 
     private static void pprintSelect(Select exp, StringBuilder sb) {
       sb.append(String.format("(%s ", exp.kind()));
-      pprint(exp.base, sb);
-      if (exp.sym.name.contentEquals(ENCLOSING_INSTANCE_NAME)) {
+      pprint(exp.base(), sb);
+      if (exp.sym().name.contentEquals(ENCLOSING_INSTANCE_NAME)) {
         sb.append(String.format(" %s%s)", ENCLOSING_INSTANCE_NAME, exp.sym().owner));
       } else {
-        sb.append(String.format(" %s)", exp.sym)); 
+        sb.append(String.format(" %s)", exp.sym())); 
       }
     }
   }

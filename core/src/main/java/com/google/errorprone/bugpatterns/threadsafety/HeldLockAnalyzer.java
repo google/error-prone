@@ -249,7 +249,7 @@ public class HeldLockAnalyzer {
         Optional<GuardedByExpression> node =
             GuardedByBinder.bindExpression((JCExpression) tree, state);
         if (node.isPresent()) {
-          GuardedByExpression receiver = ((GuardedByExpression.Select) node.get()).base;
+          GuardedByExpression receiver = ((GuardedByExpression.Select) node.get()).base();
           locks.add(receiver);
 
           // The analysis interprets members guarded by {@link ReadWriteLock}s as requiring that
@@ -261,7 +261,7 @@ public class HeldLockAnalyzer {
           // TODO(user): investigate a better way to specify the contract for ReadWriteLocks.
           if ((tree.getMethodSelect() instanceof MemberSelectTree)
               && READ_WRITE_RELEASE_MATCHER.matches(ASTHelpers.getReceiver(tree), state)) {
-            locks.add(((Select) receiver).base);
+            locks.add(((Select) receiver).base());
           }
         }
       }
@@ -311,7 +311,7 @@ public class HeldLockAnalyzer {
         return Optional.absent();
       }
 
-      GuardedByExpression memberBase = ((GuardedByExpression.Select) guardedMember.get()).base;
+      GuardedByExpression memberBase = ((GuardedByExpression.Select) guardedMember.get()).base();
       return Optional.of(helper(guard, memberBase));
     }
 
@@ -342,7 +342,7 @@ public class HeldLockAnalyzer {
      */
     private static GuardedByExpression getSelectInstance(GuardedByExpression guard) {
       if (guard instanceof Select) {
-        return getSelectInstance(((Select) guard).base);
+        return getSelectInstance(((Select) guard).base());
       }
       return guard;
     }
@@ -352,7 +352,7 @@ public class HeldLockAnalyzer {
       switch (lockExpression.kind()) {
         case SELECT: {
           GuardedByExpression.Select lockSelect = (GuardedByExpression.Select) lockExpression;
-          return F.select(helper(lockSelect.base, memberAccess), lockSelect.sym());
+          return F.select(helper(lockSelect.base(), memberAccess), lockSelect.sym());
         }
         case THIS:
           return memberAccess;
