@@ -19,16 +19,17 @@ package com.google.errorprone.dataflow.nullnesspropagation;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Verify.verifyNotNull;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
-import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessCheckerOnBoxed;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessCheckerOnPrimitive;
-import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTransferCases2.HasStaticFields.staticIntField;
-import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTransferCases2.HasStaticFields.staticStringField;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTransferCases2.MyEnum.ENUM_INSTANCE;
 import static java.lang.String.format;
 import static java.lang.String.valueOf;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.google.common.base.Strings;
+import com.google.common.io.Files;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.BigInteger;
 
 /**
@@ -36,15 +37,9 @@ import java.math.BigInteger;
  */
 public class NullnessPropagationTransferCases2 {
   private static class MyClass {
-    public int field;
-
     static String staticReturnNullable() {
       return null;
     }
-  }
-
-  private static class MyContainerClass {
-    private MyClass field;
   }
 
   static final int CONSTANT_INT = 1;
@@ -204,135 +199,6 @@ public class NullnessPropagationTransferCases2 {
     NullnessPropagationTest.triggerNullnessChecker(i);
   }
 
-  int i;
-  String str;
-  Object obj;
-
-  public void field() {
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessCheckerOnPrimitive(i);
-
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessCheckerOnBoxed(i);
-
-    // BUG: Diagnostic contains: (Nullable)
-    triggerNullnessChecker(str);
-
-    // BUG: Diagnostic contains: (Nullable)
-    triggerNullnessChecker(obj);
-  }
-  
-  public void fieldQualifiedByThis() {
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessCheckerOnPrimitive(this.i);
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessCheckerOnBoxed(this.i);
-  }
-
-  public void fieldQualifiedByOtherVar() {
-    NullnessPropagationTransferCases2 self = this;
-
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessCheckerOnPrimitive(self.i);
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessCheckerOnBoxed(self.i);
-  }
-
-  public void fieldAccessIsDereference(MyClass nullableParam) {
-    MyClass mc = nullableParam;
-    int i = mc.field;
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessChecker(mc);
-  }
-  
-  public void staticFieldAccessIsNotDereferenceNullableReturn(HasStaticFields nullableParam) {
-    String s = nullableParam.staticStringField;
-    // BUG: Diagnostic contains: (Nullable)
-    triggerNullnessChecker(nullableParam);
-  }
-  
-  public void staticFieldAccessIsNotDereferenceNonNullReturn(MyEnum nullableParam) {
-    MyEnum x = nullableParam.ENUM_INSTANCE;
-    // BUG: Diagnostic contains: (Nullable)
-    triggerNullnessChecker(nullableParam);
-  }
-
-  public void fieldAssignmentIsDereference(MyClass nullableParam) {
-    MyClass mc = nullableParam;
-    mc.field = 0;
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessChecker(mc);
-  }
-
-  public void chainedFieldAssignmentIsDereference(MyClass nullableParam) {
-    MyClass mc = nullableParam;
-    MyContainerClass container = new MyContainerClass();
-    container.field.field = 0;
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessChecker(container);
-  }
-
-  public void staticFieldAssignmentIsNotDereferenceNullableReturn(HasStaticFields nullableParam) {
-    nullableParam.staticStringField = "foo";
-    // BUG: Diagnostic contains: (Nullable)
-    triggerNullnessChecker(nullableParam);
-  }
-
-  public void staticFieldAssignmentIsNotDereferenceNonNullReturn(HasStaticFields nullableParam) {
-    nullableParam.staticIntField = 0;
-    // BUG: Diagnostic contains: (Nullable)
-    triggerNullnessChecker(nullableParam);
-  }
-
-  
-  public void staticFieldAccessIsNotDereferenceButPreservesExistingInformation() {
-    HasStaticFields container = new HasStaticFields();
-    String s = container.staticStringField;
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessChecker(container);
-  }
-  
-  public void fieldValuesMayChange() {
-    MyContainerClass container = new MyContainerClass();
-    container.field = new MyClass();
-    // BUG: Diagnostic contains: (Nullable)
-    triggerNullnessChecker(container.field);
-
-    container.field.field = 10;
-    // BUG: Diagnostic contains: (Nullable)
-    triggerNullnessChecker(container.field);
-  }
-
-  public void assignmentToFieldExpressionValue() {
-    MyContainerClass container = new MyContainerClass();
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessChecker(container.field = new MyClass());
-  }
-
-  public void assignmentToPrimitiveFieldExpressionValue() {
-    MyClass mc = new MyClass();
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessCheckerOnPrimitive(mc.field = 10);
-  }
-
-  public void assignmentToStaticImportedFieldExpressionValue() {
-    // BUG: Diagnostic contains: (Null)
-    triggerNullnessChecker(staticStringField = null);
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessChecker(staticStringField = "foo");
-  }
-
-  public void assignmentToStaticImportedPrimitiveFieldExpressionValue() {
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessCheckerOnPrimitive(staticIntField = boxedIntReturningMethod());
-  }
-
-  public void nullableAssignmentToPrimitiveFieldExpressionValue() {
-    MyClass mc = new MyClass();
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessCheckerOnPrimitive(mc.field = boxedIntReturningMethod());
-  }
-
   public void nullableAssignmentToPrimitiveVariableExpressionValue() {
     int i;
     // BUG: Diagnostic contains: (Non-null)
@@ -347,15 +213,15 @@ public class NullnessPropagationTransferCases2 {
     triggerNullnessChecker(stringReturningMethod());
   }
 
-  Integer boxedIntReturningMethod() {
+  private Integer boxedIntReturningMethod() {
     return null;
   }
 
-  int intReturningMethod() {
+  private int intReturningMethod() {
     return 0;
   }
 
-  String stringReturningMethod() {
+  private String stringReturningMethod() {
     return null;
   }
 
@@ -416,6 +282,11 @@ public class NullnessPropagationTransferCases2 {
     triggerNullnessCheckerOnPrimitive(i += 5);
     // BUG: Diagnostic contains: (Non-null)
     triggerNullnessCheckerOnPrimitive(s += 5);
+  }
+
+  public void filesToStringReturnNonNull() throws IOException {
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(Files.toString(new File("/dev/null"), UTF_8));
   }
 
   public void stringStaticMethodsReturnNonNull() {
@@ -492,10 +363,5 @@ public class NullnessPropagationTransferCases2 {
       // BUG: Diagnostic contains: (Non-null)
       triggerNullnessChecker(s);
     }
-  }
-
-  public static class HasStaticFields {
-    static String staticStringField;
-    static int staticIntField;
   }
 }

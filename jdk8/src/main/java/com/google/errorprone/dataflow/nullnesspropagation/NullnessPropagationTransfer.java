@@ -26,7 +26,7 @@ import com.google.common.base.Strings;
 import com.google.common.base.Verify;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSetMultimap;
-import com.google.errorprone.dataflow.nullnesspropagation.AbstractNullnessPropagationTransfer.LocalVariableUpdates;
+import com.google.common.io.Files;
 
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
@@ -342,6 +342,9 @@ public class NullnessPropagationTransfer extends AbstractNullnessPropagationTran
     if (CLASSES_WITH_ALL_NON_NULLABLE_RETURNS.contains(callee.clazz)) {
       return NONNULL;
     }
+    if (METHODS_WITH_NON_NULLABLE_RETURNS.contains(callee.name())) {
+      return NONNULL;
+    }
 
     return NULLABLE;
   }
@@ -494,6 +497,12 @@ public class NullnessPropagationTransfer extends AbstractNullnessPropagationTran
       return isStatic;
     }
   }
+
+  private static final ImmutableSet<MemberName> METHODS_WITH_NON_NULLABLE_RETURNS =
+      ImmutableSet.of(
+          // We would love to include all the methods of Files, but readFirstLine can return null.
+          member(Files.class.getName(), "toString"));
+  // TODO(cpovirk): respect nullness annotations (and also check them to ensure correctness!)
 
   private static final ImmutableSet<String> CLASSES_WITH_ALL_NON_NULLABLE_RETURNS =
       ImmutableSet.of(
