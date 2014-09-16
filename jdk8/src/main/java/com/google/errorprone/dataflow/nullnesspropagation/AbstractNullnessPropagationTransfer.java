@@ -15,6 +15,7 @@
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTransfer.tryGetMethodSymbol;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessValue.NONNULL;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessValue.NULLABLE;
 
@@ -299,13 +300,32 @@ abstract class AbstractNullnessPropagationTransfer
   @Override
   public final TransferResult<NullnessValue, NullnessPropagationStore> visitMethodInvocation(
       MethodInvocationNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
-    ReadableLocalVariableUpdates updates = new ReadableLocalVariableUpdates();
-    NullnessValue result = visitMethodInvocation(node, updates);
-    updates.apply(input);
-    return result(input, result);
+    ReadableLocalVariableUpdates thenUpdates = new ReadableLocalVariableUpdates();
+    ReadableLocalVariableUpdates elseUpdates = new ReadableLocalVariableUpdates();
+    ReadableLocalVariableUpdates bothUpdates = new ReadableLocalVariableUpdates();
+    NullnessValue result = visitMethodInvocation(node, thenUpdates, elseUpdates, bothUpdates);
+
+    /*
+     * Returning a ConditionalTransferResult for a non-boolean node causes weird test failures, even
+     * if I'm careful to give it its correct NullnessValue instead of hardcoding it to NONNULL as
+     * the current code does. To avoid problems, we return a RegularTransferResult when possible.
+     */
+    if (tryGetMethodSymbol(node.getTree()).isBoolean) {
+      NullnessPropagationStore thenStore = input.getThenStore();
+      NullnessPropagationStore elseStore = input.getElseStore();
+      bothUpdates.apply(thenStore);
+      bothUpdates.apply(elseStore);
+      thenUpdates.apply(thenStore);
+      elseUpdates.apply(elseStore);
+      return conditionalResult(thenStore, elseStore);
+    } else {
+      bothUpdates.apply(input);
+      return result(input, result);
+    }
   }
 
-  NullnessValue visitMethodInvocation(MethodInvocationNode node, LocalVariableUpdates updates) {
+  NullnessValue visitMethodInvocation(MethodInvocationNode node, LocalVariableUpdates thenUpdates,
+      LocalVariableUpdates elseUpdates, LocalVariableUpdates bothUpdates) {
     return NULLABLE;
   }
 
@@ -338,7 +358,9 @@ abstract class AbstractNullnessPropagationTransfer
     return NULLABLE;
   }
 
-  private static RegularTransferResult<NullnessValue, NullnessPropagationStore> result(
+  // TODO(cpovirk): reverse order of arguments on TransferResult methods to match constructors?
+
+  private static TransferResult<NullnessValue, NullnessPropagationStore> result(
       TransferInput<?, NullnessPropagationStore> input, NullnessValue value) {
     return new RegularTransferResult<>(value, input.getRegularStore());
   }

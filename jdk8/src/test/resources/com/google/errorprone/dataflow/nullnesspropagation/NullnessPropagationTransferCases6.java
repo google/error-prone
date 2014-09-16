@@ -18,11 +18,23 @@ package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessCheckerOnPrimitive;
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTransferCases6.MyEnum.ENUM_INSTANCE;
 
 /**
- * Tests for bitwise and numerical operations and comparisons.
+ * Tests for:
+ *
+ * <ul>
+ * <li>bitwise operations
+ * <li>numerical operations and comparisons
+ * <li>plain {@code visitNode}
+ * <li>name shadowing
+ * </ul>
  */
 public class NullnessPropagationTransferCases6 {
+  enum MyEnum {
+    ENUM_INSTANCE;
+  }
+
   public void bitwiseOperations() {
     // BUG: Diagnostic contains: (Non-null)
     triggerNullnessCheckerOnPrimitive(1 | 2);
@@ -110,5 +122,75 @@ public class NullnessPropagationTransferCases6 {
     triggerNullnessChecker(a);
     // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(b);
+  }
+
+  public void vanillaVisitNode() {
+    String[] a = new String[1];
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(a[0]);
+  }
+
+  public void sameNameImmediatelyShadowed() {
+    final String s = "foo";
+
+    class Bar {
+      void method(String s) {
+        // BUG: Diagnostic contains: (Nullable)
+        triggerNullnessChecker(s);
+      }
+    }
+  }
+
+  public void sameNameLaterShadowed() {
+    final String s = "foo";
+
+    class Bar {
+      void method() {
+        // BUG: Diagnostic contains: (Non-null)
+        triggerNullnessChecker(s);
+
+        String s = HasStaticFields.staticStringField;
+        // BUG: Diagnostic contains: (Nullable)
+        triggerNullnessChecker(s);
+      }
+    }
+  }
+
+  public void sameNameShadowedThenUnshadowed() {
+    final String s = HasStaticFields.staticStringField;
+
+    class Bar {
+      void method() {
+        {
+          String s = "foo";
+          // BUG: Diagnostic contains: (Non-null)
+          triggerNullnessChecker(s);
+        }
+
+        // BUG: Diagnostic contains: (Nullable)
+        triggerNullnessChecker(s);
+      }
+    }
+  }
+
+  public void nonCompileTimeConstantCapturedVariable() {
+    final Object nonnull = ENUM_INSTANCE;
+
+    class Bar {
+      void method() {
+        /*
+         * We'd prefer for this to be non-null, but we don't run the analysis over the enclosing
+         * class's enclosing method, so our captured-variable handling is limited to compile-time
+         * constants, which include only primitives and strings:
+         * http://docs.oracle.com/javase/specs/jls/se7/html/jls-15.html#jls-15.28
+         */
+        // BUG: Diagnostic contains: (Nullable)
+        triggerNullnessChecker(nonnull);
+      }
+    }
+  }
+
+  public static class HasStaticFields {
+    static String staticStringField;
   }
 }
