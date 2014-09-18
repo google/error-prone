@@ -134,7 +134,7 @@ public final class DataFlow {
 
     final MethodTree method = (MethodTree) leaf;
     Preconditions.checkNotNull(method.getBody(),
-        "Method to analyze must have a body. Method passed in: %s in file %s",
+        "Method to analyze must have a body. Method passed in: %s() in file %s",
         method.getName(),
         methodPath.getCompilationUnit().getSourceFile().getName());
 
@@ -177,6 +177,15 @@ public final class DataFlow {
       // Currently not supported because it only happens in ~2% of cases.
       return null;
     }
+
+    final MethodTree method = (MethodTree) enclosingMethodPath.getLeaf();
+    if (method.getBody() == null) {
+      // expressions can occur in abstract methods, for example {@code Map.Entry} in:
+      //
+      //   abstract Set<Map.Entry<K, V>> entries();
+      return null;
+    }
+
     return methodDataflow(enclosingMethodPath, context, transfer).getAnalysis().getValue(expr);
   }
 
