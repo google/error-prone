@@ -16,6 +16,8 @@
 
 package com.google.errorprone.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import com.google.errorprone.Scanner;
@@ -23,19 +25,35 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.CompilerBasedAbstractTest;
 import com.google.errorprone.matchers.Matcher;
 
+import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
 
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RunWith(JUnit4.class)
 public class ASTHelpersTest extends CompilerBasedAbstractTest {
+
+  final List<TestScanner> tests = new ArrayList<>();
+
+  @After
+  public void tearDown() {
+    for (TestScanner test : tests) {
+      test.verifyAssertionsComplete();
+    }
+  }
 
   @Test
   public void testGetActualStartPosition() {
@@ -72,13 +90,16 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   }
 
   private Scanner literalExpressionMatches(final Matcher<LiteralTree> matcher) {
-    return new TestScanner() {
+    TestScanner scanner = new TestScanner() {
       @Override
       public Void visitLiteral(LiteralTree node, VisitorState state) {
         assertMatch(node, state, matcher);
+        setAssertionsComplete();
         return super.visitLiteral(node, state);
       }
     };
+    tests.add(scanner);
+    return scanner;
   }
 
   @Test
@@ -126,18 +147,11 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
         ExpressionTree expression = node.getExpression();
         if (expression.toString().equals(expectedExpression)) {
           assertMatch(node.getExpression(), state, matcher);
+          setAssertionsComplete();
         }
         return super.visitExpressionStatement(node, state);
       }
     };
-  }
-
-  private static abstract class TestScanner extends Scanner {
-    <T extends Tree> void assertMatch(T node, VisitorState visitorState,
-        Matcher<T> matcher) {
-      VisitorState state = visitorState.withPath(getCurrentPath());
-      assertTrue(matcher.matches(node, state));
-    }
   }
 
   @Test
@@ -154,7 +168,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
     writeFile("C.java",
         "public class C extends B {}");
 
-    assertCompiles(new TestScanner() {
+    TestScanner scanner = new TestScanner() {
       @Override
       public Void visitClass(ClassTree tree, VisitorState state) {
         if (tree.getSimpleName().toString().equals("C")) {
@@ -164,9 +178,107 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
               return ASTHelpers.hasAnnotation(t, InheritedAnnotation.class);
             }
           });
+          setAssertionsComplete();
         }
         return super.visitClass(tree, state);
       }
-    });
+    };
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
+  @Test
+  public void testGetTypeOnNestedAnnotationType() {
+    writeFile("A.java",
+        "public class A { ",
+        "  @B.MyAnnotation",
+        "  public void bar() {}",
+        "}");
+    writeFile("B.java",
+        "public class B { ",
+        "  @interface MyAnnotation {}",
+        "}");
+    TestScanner scanner = new TestScanner() {
+      @Override
+      public Void visitAnnotation(AnnotationTree tree, VisitorState state) {
+        setAssertionsComplete();
+        assertEquals("B.MyAnnotation", ASTHelpers.getType(tree.getAnnotationType()).toString());
+        return super.visitAnnotation(tree, state);
+      }
+    };
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
+  @Test
+  public void testGetTypeOnNestedClassType() {
+    writeFile("A.java",
+        "public class A { ",
+        "  public void bar() {",
+        "    B.C foo;",
+        "  }",
+        "}");
+    writeFile("B.java",
+        "public class B { ",
+        "  public static class C {}",
+        "}");
+    TestScanner scanner = new TestScanner() {
+      @Override
+      public Void visitVariable(VariableTree tree, VisitorState state) {
+        setAssertionsComplete();
+        assertEquals("B.C", ASTHelpers.getType(tree.getType()).toString());
+        return super.visitVariable(tree, state);
+      }
+    };
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
+  @Test
+  public void testGetTypeOnMethodRemainsUnsupported() {
+    writeFile("A.java",
+        "public class A { ",
+        "  public void bar() {",
+        "    B.doNothing();",
+        "  }",
+        "}");
+    writeFile("B.java",
+        "public class B { ",
+        "  public static void doNothing() {}",
+        "}");
+    TestScanner scanner = new TestScanner() {
+      @Override
+      public Void visitMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+        if (tree.toString().equals("B.doNothing()")) {
+          assertNull(ASTHelpers.getType(tree));
+          setAssertionsComplete();
+        }
+        return super.visitMethodInvocation(tree, state);
+      }
+    };
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
+  private static abstract class TestScanner extends Scanner {
+    private boolean assertionsComplete = false;
+
+    /**
+     * Subclasses of {@link TestScanner} are expected to call this method within their overridden
+     * visitXYZ() method in order to verify that the method has run at least once.
+     */
+    protected void setAssertionsComplete() {
+      this.assertionsComplete = true;
+    }
+
+    <T extends Tree> void assertMatch(T node, VisitorState visitorState,
+        Matcher<T> matcher) {
+      VisitorState state = visitorState.withPath(getCurrentPath());
+      assertTrue(matcher.matches(node, state));
+    }
+
+    public void verifyAssertionsComplete() {
+      assertTrue("Expected the visitor to call setAssertionsComplete().", assertionsComplete);
+    }
   }
 }
