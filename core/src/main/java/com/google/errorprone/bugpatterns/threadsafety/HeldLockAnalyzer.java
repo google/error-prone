@@ -196,30 +196,24 @@ public class HeldLockAnalyzer {
     }
   }
 
-  /**
-   * Find the locks that are released in the given tree.
-   * (e.g. the 'finally' clause of a try/finally)
-   */
-  private static class ReleasedLockFinder extends TreeScanner<Void, Void> {
+  private static final String LOCK_CLASS = "java.util.concurrent.locks.Lock";
+  private static final String MONITOR_CLASS = "com.google.common.util.concurrent.Monitor";
 
-    static Collection<GuardedByExpression> find(Tree tree, VisitorState state) {
+  private static class LockOperationFinder extends TreeScanner<Void, Void> {
+
+    static Collection<GuardedByExpression> find(
+        Tree tree, VisitorState state, Matcher<MethodInvocationTree> lockOperationMatcher) {
       if (tree == null) {
         return Collections.emptyList();
       }
-      ReleasedLockFinder finder = new ReleasedLockFinder(state);
+      LockOperationFinder finder = new LockOperationFinder(state, lockOperationMatcher);
       tree.accept(finder, null);
       return finder.locks;
     }
 
-    private static final String LOCK_CLASS = "java.util.concurrent.locks.Lock";
     private static final String READ_WRITE_LOCK_CLASS = "java.util.concurrent.locks.ReadWriteLock";
-    private static final String MONITOR_CLASS = "com.google.common.util.concurrent.Monitor";
 
-    /** Matcher for methods that release lock resources. */
-    private static final Matcher<MethodInvocationTree> LOCK_RELEASE_MATCHER = methodSelect(
-        Matchers.<ExpressionTree>anyOf(
-            isDescendantOfMethod(LOCK_CLASS, "unlock()"),
-            isDescendantOfMethod(MONITOR_CLASS, "leave()")));
+    private final Matcher<MethodInvocationTree> lockOperationMatcher;
 
     private static final String UNLOCK_METHOD_ANNOTATION = UnlockMethod.class.getName();
 
@@ -228,7 +222,7 @@ public class HeldLockAnalyzer {
         methodSelect(Matchers.<ExpressionTree>hasAnnotation(UNLOCK_METHOD_ANNOTATION));
 
     /** Matcher for ReadWriteLock lock accessors. */
-    private static final Matcher<ExpressionTree> READ_WRITE_RELEASE_MATCHER =
+    private static final Matcher<ExpressionTree> READ_WRITE_ACCESSOR_MATCHER =
         expressionMethodSelect(
             Matchers.<ExpressionTree>anyOf(
                 isDescendantOfMethod(READ_WRITE_LOCK_CLASS, "readLock()"),
@@ -237,8 +231,10 @@ public class HeldLockAnalyzer {
     private final VisitorState state;
     private final Set<GuardedByExpression> locks = new HashSet<>();
 
-    private ReleasedLockFinder(VisitorState state) {
+    private LockOperationFinder(
+        VisitorState state, Matcher<MethodInvocationTree> lockOperationMatcher) {
       this.state = state;
+      this.lockOperationMatcher = lockOperationMatcher;
     }
 
     @Override
@@ -255,7 +251,7 @@ public class HeldLockAnalyzer {
      * TODO(user): Semaphores, CAS, ... ?
      */
     private void handleReleasedLocks(MethodInvocationTree tree) {
-      if (!LOCK_RELEASE_MATCHER.matches(tree, state)) {
+      if (!lockOperationMatcher.matches(tree, state)) {
         return;
       }
       Optional<GuardedByExpression> node =
@@ -272,7 +268,7 @@ public class HeldLockAnalyzer {
         // on the object stored in the field (e.g. inserting into a List).
         // TODO(user): investigate a better way to specify the contract for ReadWriteLocks.
         if ((tree.getMethodSelect() instanceof MemberSelectTree)
-            && READ_WRITE_RELEASE_MATCHER.matches(ASTHelpers.getReceiver(tree), state)) {
+            && READ_WRITE_ACCESSOR_MATCHER.matches(ASTHelpers.getReceiver(tree), state)) {
           locks.add(((Select) receiver).base());
         }
       }
@@ -298,6 +294,40 @@ public class HeldLockAnalyzer {
           }
         }
       }
+    }
+  }
+
+  /**
+   * Find the locks that are released in the given tree.
+   * (e.g. the 'finally' clause of a try/finally)
+   */
+  static class ReleasedLockFinder {
+
+    /** Matcher for methods that release lock resources. */
+    private static final Matcher<MethodInvocationTree> UNLOCK_MATCHER = methodSelect(
+        Matchers.<ExpressionTree>anyOf(
+            isDescendantOfMethod(LOCK_CLASS, "unlock()"),
+            isDescendantOfMethod(MONITOR_CLASS, "leave()")));
+
+    static Collection<GuardedByExpression> find(Tree tree, VisitorState state) {
+      return LockOperationFinder.find(tree, state, UNLOCK_MATCHER);
+    }
+  }
+
+  /**
+   * Find the locks that are acquired in the given tree.
+   * (e.g. the body of a @LockMethod-annotated method.)
+   */
+  static class AcquiredLockFinder {
+
+    /** Matcher for methods that acquire lock resources. */
+    private static final Matcher<MethodInvocationTree> LOCK_MATCHER = methodSelect(
+        Matchers.<ExpressionTree>anyOf(
+            isDescendantOfMethod(LOCK_CLASS, "lock()"),
+            isDescendantOfMethod(MONITOR_CLASS, "enter()")));
+
+    static Collection<GuardedByExpression> find(Tree tree, VisitorState state) {
+      return LockOperationFinder.find(tree, state, LOCK_MATCHER);
     }
   }
 
