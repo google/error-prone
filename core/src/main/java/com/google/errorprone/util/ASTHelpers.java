@@ -470,6 +470,8 @@ public class ASTHelpers {
         return ((JCTypeApply) tree).type;
       case IDENTIFIER:
         return ((JCIdent) tree).type;
+      case MEMBER_SELECT:
+        return ((JCFieldAccess) tree).sym.type;
       default:
         return null;
     }
