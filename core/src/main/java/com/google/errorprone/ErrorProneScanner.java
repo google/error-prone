@@ -18,7 +18,9 @@ package com.google.errorprone;
 
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Multimap;
 import com.google.common.reflect.ClassPath;
 import com.google.common.reflect.ClassPath.ClassInfo;
 import com.google.errorprone.BugPattern.Suppressibility;
@@ -121,10 +123,8 @@ import com.sun.source.tree.WildcardTree;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -217,15 +217,16 @@ public class ErrorProneScanner extends Scanner {
       throws InvalidCommandLineOptionException {
     super.setDisabledChecks(disabledChecks);
     for (String checkName : disabledChecks) {
-      BugChecker checker = nameToChecker.get(checkName);
-      if (checker != null && !checker.isDisableable()) {
-        throw new InvalidCommandLineOptionException("error-prone check " + checkName
-            + " may not be disabled");
+      for (BugChecker checker : nameToChecker.get(checkName)) {
+        if (!checker.isDisableable()) {
+          throw new InvalidCommandLineOptionException("error-prone check "
+              + checker.getCanonicalName() + " may not be disabled");
+        }
       }
     }
   }
 
-  private final Map<String, BugChecker> nameToChecker = new HashMap<>();
+  private final Multimap <String, BugChecker> nameToChecker = HashMultimap.create();
 
   @Override
   protected Set<Class<? extends Annotation>> getCustomSuppressionAnnotations() {
