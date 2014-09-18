@@ -67,14 +67,18 @@ public class GuardedByBinder {
   /**
    * Creates a {@link GuardedByExpression} from a string, given the resolution context.
    */
-  static GuardedByExpression bindString(String string, GuardedBySymbolResolver resolver) {
-    return bind(
-        GuardedByUtils.parseString(string, resolver.context()),
-        BinderContext.of(
-            resolver,
-            resolver.enclosingClass(),
-            Types.instance(resolver.context()),
-            Names.instance(resolver.context())));
+  static Optional<GuardedByExpression> bindString(String string, GuardedBySymbolResolver resolver) {
+    try {
+      return Optional.of(bind(
+          GuardedByUtils.parseString(string, resolver.context()),
+          BinderContext.of(
+              resolver,
+              resolver.enclosingClass(),
+              Types.instance(resolver.context()),
+              Names.instance(resolver.context()))));
+    } catch (IllegalGuardedBy expected) {
+      return Optional.absent();
+    }
   }
 
   private static class BinderContext {

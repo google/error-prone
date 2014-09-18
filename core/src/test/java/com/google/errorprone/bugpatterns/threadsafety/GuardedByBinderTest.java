@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns.threadsafety;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import com.google.common.base.Optional;
 import com.google.errorprone.ErrorProneInMemoryFileManager;
 import com.google.errorprone.util.ASTHelpers;
 
@@ -396,14 +397,17 @@ public class GuardedByBinderTest {
       finder.visitTopLevel((JCTree.JCCompilationUnit) compilationUnit);
       for (JCTree.JCClassDecl classDecl : finder.decls) {
         if (classDecl.getSimpleName().contentEquals(className)) {
-          GuardedByExpression guardExpression = GuardedByBinder.bindString(
+          Optional<GuardedByExpression> guardExpression = GuardedByBinder.bindString(
               exprString,
               GuardedBySymbolResolver.from(
                   ASTHelpers.getSymbol(classDecl),
                   compilationUnit,
                   task.getContext(),
                   null));
-          return guardExpression.debugPrint();
+          if (!guardExpression.isPresent()) {
+            throw new IllegalGuardedBy(exprString);
+          }
+          return guardExpression.get().debugPrint();
         }
       }
     }

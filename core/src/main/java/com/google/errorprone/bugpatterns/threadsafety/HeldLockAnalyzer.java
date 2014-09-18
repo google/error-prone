@@ -24,6 +24,7 @@ import com.google.common.base.Optional;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Kind;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Select;
+import com.google.errorprone.bugpatterns.threadsafety.annotations.UnlockMethod;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
@@ -110,13 +111,10 @@ public class HeldLockAnalyzer {
       // for invocations.
       String guard = GuardedByUtils.getGuardValue(tree);
       if (guard != null) {
-        GuardedByExpression bound;
-        try {
-          bound =
-              GuardedByBinder.bindString(guard, GuardedBySymbolResolver.from(tree, visitorState));
-          locks = locks.plus(bound);
-        } catch (IllegalGuardedBy unused) {
-          // Errors about bad @GuardedBy expressions are handled earlier.
+        Optional<GuardedByExpression> bound = GuardedByBinder.bindString(
+            guard, GuardedBySymbolResolver.from(tree, visitorState));
+        if (bound.isPresent()) {
+          locks = locks.plus(bound.get());
         }
       }
 
@@ -184,23 +182,17 @@ public class HeldLockAnalyzer {
         return;
       }
 
-      GuardedByExpression guard;
-      try {
-        guard = GuardedByBinder.bindString(guardString,
-            GuardedBySymbolResolver.from(tree, visitorState));
-      } catch (IllegalGuardedBy unused) {
-        // Errors about bad @GuardedBy expressions are handled earlier.
+      Optional<GuardedByExpression> guard = GuardedByBinder.bindString(guardString,
+          GuardedBySymbolResolver.from(tree, visitorState));
+      if (!guard.isPresent()) {
         return;
       }
-
       Optional<GuardedByExpression> boundGuard =
-          ExpectedLockCalculator.from((JCTree.JCExpression) tree, guard, visitorState);
-
-      if (boundGuard.isPresent()) {
-        listener.handleGuardedAccess(tree, boundGuard.get(), locks);
+          ExpectedLockCalculator.from((JCTree.JCExpression) tree, guard.get(), visitorState);
+      if (!boundGuard.isPresent()) {
+        return;
       }
-
-      return;
+      listener.handleGuardedAccess(tree, boundGuard.get(), locks);
     }
   }
 
@@ -229,6 +221,12 @@ public class HeldLockAnalyzer {
             isDescendantOfMethod(LOCK_CLASS, "unlock()"),
             isDescendantOfMethod(MONITOR_CLASS, "leave()")));
 
+    private static final String UNLOCK_METHOD_ANNOTATION = UnlockMethod.class.getName();
+
+    /** Matcher for @UnlockMethod-annotated methods. */
+    private static final Matcher<MethodInvocationTree> UNLOCK_METHOD_MATCHER =
+        methodSelect(Matchers.<ExpressionTree>hasAnnotation(UNLOCK_METHOD_ANNOTATION));
+
     /** Matcher for ReadWriteLock lock accessors. */
     private static final Matcher<ExpressionTree> READ_WRITE_RELEASE_MATCHER =
         expressionMethodSelect(
@@ -245,27 +243,61 @@ public class HeldLockAnalyzer {
 
     @Override
     public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
-      if (LOCK_RELEASE_MATCHER.matches(tree, state)) {
-        Optional<GuardedByExpression> node =
-            GuardedByBinder.bindExpression((JCExpression) tree, state);
-        if (node.isPresent()) {
-          GuardedByExpression receiver = ((GuardedByExpression.Select) node.get()).base();
-          locks.add(receiver);
+      handleReleasedLocks(tree);
+      handleUnlockAnnotatedMethods(tree);
+      return null;
+    }
 
-          // The analysis interprets members guarded by {@link ReadWriteLock}s as requiring that
-          // either the read or write lock is held for all accesses, but doesn't enforce a policy
-          // for which of the two is held. Technically the write lock should be required while
-          // writing to the guarded member and the read lock should be used for all other accesses,
-          // but in practice the write lock is frequently held while performing a mutating operation
-          // on the object stored in the field (e.g. inserting into a List).
-          // TODO(user): investigate a better way to specify the contract for ReadWriteLocks.
-          if ((tree.getMethodSelect() instanceof MemberSelectTree)
-              && READ_WRITE_RELEASE_MATCHER.matches(ASTHelpers.getReceiver(tree), state)) {
-            locks.add(((Select) receiver).base());
+    /**
+     * Checks for locks that are released directly. Currently only
+     * {@link java.util.concurrent.lock.Lock#unlock()} is supported.
+     *
+     * TODO(user): Semaphores, CAS, ... ?
+     */
+    private void handleReleasedLocks(MethodInvocationTree tree) {
+      if (!LOCK_RELEASE_MATCHER.matches(tree, state)) {
+        return;
+      }
+      Optional<GuardedByExpression> node =
+          GuardedByBinder.bindExpression((JCExpression) tree, state);
+      if (node.isPresent()) {
+        GuardedByExpression receiver = ((GuardedByExpression.Select) node.get()).base();
+        locks.add(receiver);
+
+        // The analysis interprets members guarded by {@link ReadWriteLock}s as requiring that
+        // either the read or write lock is held for all accesses, but doesn't enforce a policy
+        // for which of the two is held. Technically the write lock should be required while
+        // writing to the guarded member and the read lock should be used for all other accesses,
+        // but in practice the write lock is frequently held while performing a mutating operation
+        // on the object stored in the field (e.g. inserting into a List).
+        // TODO(user): investigate a better way to specify the contract for ReadWriteLocks.
+        if ((tree.getMethodSelect() instanceof MemberSelectTree)
+            && READ_WRITE_RELEASE_MATCHER.matches(ASTHelpers.getReceiver(tree), state)) {
+          locks.add(((Select) receiver).base());
+        }
+      }
+    }
+
+    /**
+     * Checks {@link @UnlockMethod}-annotated methods.
+     */
+    private void handleUnlockAnnotatedMethods(MethodInvocationTree tree) {
+      UnlockMethod annotation = ASTHelpers.getAnnotation(tree, UnlockMethod.class);
+      if (annotation == null) {
+        return;
+      }
+      for (String lockString : annotation.value()) {
+        Optional<GuardedByExpression> guard = GuardedByBinder.bindString(
+            lockString, GuardedBySymbolResolver.from(tree, state));
+        // TODO(user): http://docs.oracle.com/javase/8/docs/api/java/util/Optional.html#ifPresent
+        if (guard.isPresent()) {
+          Optional<GuardedByExpression> lock =
+            ExpectedLockCalculator.from((JCExpression) tree, guard.get(), state);
+          if (lock.isPresent()) {
+            locks.add(lock.get());
           }
         }
       }
-      return null;
     }
   }
 

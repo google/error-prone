@@ -63,11 +63,6 @@ public class GuardedByUtils {
     if (guard == null) {
       return true;
     }
-    try {
-      GuardedByBinder.bindString(guard, GuardedBySymbolResolver.from(tree, state));
-    } catch (IllegalGuardedBy e) {
-      return false;
-    }
-    return true;
+    return GuardedByBinder.bindString(guard, GuardedBySymbolResolver.from(tree, state)).isPresent();
   }
 }
