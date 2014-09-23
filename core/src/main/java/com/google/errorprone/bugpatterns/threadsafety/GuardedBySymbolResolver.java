@@ -128,7 +128,10 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
   @Override
   public Symbol.MethodSymbol resolveMethod(MethodInvocationTree node, GuardedByExpression base,
       javax.lang.model.element.Name identifier) {
-    return getMethod(base.type().asElement(), identifier.toString());
+    Symbol baseSym = base.kind() == GuardedByExpression.Kind.THIS
+        ? enclosingClass
+        : base.type().asElement();
+    return getMethod(baseSym, identifier.toString());
   }
 
   private Symbol.MethodSymbol getMethod(Symbol classSymbol, String name) {
@@ -137,7 +140,10 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
 
   @Override
   public Symbol resolveSelect(GuardedByExpression base, MemberSelectTree node) {
-    return getField(base.type().asElement(), node.getIdentifier().toString());
+    Symbol baseSym = base.kind() == GuardedByExpression.Kind.THIS
+        ? enclosingClass
+        : base.type().asElement();
+    return getField(baseSym, node.getIdentifier().toString());
   }
 
   private Symbol.VarSymbol getField(Symbol classSymbol, String name) {

@@ -190,23 +190,15 @@ public abstract class GuardedByExpression {
     }
 
     Select select(GuardedByExpression base, Symbol.VarSymbol member) {
-      return normalizedSelect(base, member, member.type);
+      return Select.create(base, member, member.type);
     }
 
     Select select(GuardedByExpression base, Symbol.MethodSymbol member) {
-      return normalizedSelect(base, member, member.getReturnType());
+      return Select.create(base, member, member.getReturnType());
     }
 
     GuardedByExpression select(GuardedByExpression base, Select select) {
-      return normalizedSelect(base, select.sym(), select.type());
-    }
-
-    /** Normalize static accesses so they are not performed on instances. */
-    private Select normalizedSelect(GuardedByExpression base, Symbol member, Type type) {
-      if (member.isStatic()) {
-        return Select.create(typeLiteral(member.owner), member, type);
-      }
-      return Select.create(base, member, type);
+      return Select.create(base, select.sym(), select.type());
     }
 
     LocalVariable localVariable(Symbol.VarSymbol varSymbol) {

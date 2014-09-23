@@ -345,6 +345,60 @@ public class GuardedByBinderTest {
           ));
   }
 
+  @Test
+  public void explicitThisOuterClass() throws Exception {
+      assertEquals(
+          "(SELECT (SELECT (THIS) outer$threadsafety.Outer) lock)",
+          bind("Inner", "this.lock",
+              fileManager.forSourceLines(
+                  "threadsafety/Test.java",
+                  "package threadsafety;",
+                  "class Outer {",
+                  "  Object lock;",
+                  "  class Inner {",
+                  "    int x;",
+                  "  }",
+                  "}"
+              )));
+  }
+
+  @Test
+  public void implicitThisOuterClass() throws Exception {
+      assertEquals(
+          "(SELECT (SELECT (THIS) outer$threadsafety.Outer) lock)",
+          bind("Inner", "lock",
+              fileManager.forSourceLines(
+                  "threadsafety/Test.java",
+                  "package threadsafety;",
+                  "class Outer {",
+                  "  Object lock;",
+                  "  class Inner {",
+                  "    int x;",
+                  "  }",
+                  "}"
+              )));
+  }
+
+  @Test
+  public void implicitThisOuterClassMethod() throws Exception {
+      assertEquals(
+          "(SELECT (SELECT (SELECT (THIS) outer$threadsafety.Outer) endpoint()) lock())",
+          bind("Inner", "endpoint().lock()",
+              fileManager.forSourceLines(
+                  "threadsafety/Test.java",
+                  "package threadsafety;",
+                  "class Outer {",
+                  "  class Endpoint {",
+                  "    Object lock() { return null; }",
+                  "  }",
+                  "  Endpoint endpoint() { return null; }",
+                  "  class Inner {",
+                  "    int x;",
+                  "  }",
+                  "}"
+              )));
+  }
+
   //TODO(user): disallow non-final lock expressions
   @Ignore
   @Test
