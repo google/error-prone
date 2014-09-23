@@ -119,4 +119,62 @@ public class GuardedByValidatorTest {
         )
     );
   }
+
+  @Test
+  public void anonymousClassTypo() throws Exception {
+    compilationHelper.assertCompileFailsWithMessages(
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "class Test {",
+            "  static class Endpoint {",
+            "    Object getLock() { return null; }",
+            "  }",
+            "  abstract static class Runnable {",
+            "    private Endpoint endpoint;",
+            "    Runnable(Endpoint endpoint) {",
+            "      this.endpoint = endpoint;",
+            "    }",
+            "    abstract void run();",
+            "  }",
+            "  static void m(Endpoint endpoint) {",
+            "    Runnable runnable =",
+            "      new Runnable(endpoint) {",
+            "        // BUG: Diagnostic contains: Invalid @GuardedBy expression",
+            "        @GuardedBy(\"endpoint_.getLock()\") void run() {}",
+            "    };",
+            "  }",
+            "}"
+        ));
+  }
+
+  @Test
+  public void anonymousClassPrivateAccess() throws Exception {
+    compilationHelper.assertCompileFailsWithMessages(
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "class Test {",
+            "  static class Endpoint {",
+            "    Object getLock() { return null; }",
+            "  }",
+            "  abstract static class Runnable {",
+            "    private Endpoint endpoint;",
+            "    Runnable(Endpoint endpoint) {",
+            "      this.endpoint = endpoint;",
+            "    }",
+            "    abstract void run();",
+            "  }",
+            "  static void m(Endpoint endpoint) {",
+            "    Runnable runnable =",
+            "      new Runnable(endpoint) {",
+            "        // BUG: Diagnostic contains: Invalid @GuardedBy expression",
+            "        @GuardedBy(\"endpoint.getLock()\") void run() {}",
+            "    };",
+            "  }",
+            "}"
+        ));
+  }
 }

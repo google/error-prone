@@ -190,7 +190,7 @@ public class GuardedByBinder {
               checkGuardedBy(base != null, select.getExpression().toString());
               Symbol.MethodSymbol method =
                   context.resolver.resolveMethod(node, base, select.getIdentifier());
-              return bindSelect(base, method);
+              return bindSelect(normalizeBase(context, method, base), method);
             }
             default:
               throw new IllegalGuardedBy(methodSelect.getKind().toString());
@@ -219,7 +219,7 @@ public class GuardedByBinder {
           Symbol sym = context.resolver.resolveSelect(base, node);
           checkGuardedBy(sym != null, "Could not resolve: %s", node);
           checkGuardedBy(sym instanceof Symbol.VarSymbol, "Bad member symbol: %s", sym.getClass());
-          return bindSelect(base, sym);
+          return bindSelect(normalizeBase(context, sym, base), sym);
         }
 
         private GuardedByExpression bindSelect(GuardedByExpression base, Symbol sym) {
@@ -267,14 +267,24 @@ public class GuardedByBinder {
         /**
          * Determines the implicit receiver of a select expression that accesses the given
          * symbol by simple name in the given resolution context.
-         *
-         * @return a type name (for static accesses), a qualified this access (for members
-         * of a lexically enclosing scope), or a 'simple' this access for members
-         * of the current class.
          */
         private GuardedByExpression computeBase(BinderContext context, Symbol symbol) {
+          return normalizeBase(context, symbol, null);
+        }
+
+        /**
+         * Normalizes the receiver of a select expression so that accesses on 'this' are divided
+         * into type names (for static accesses), qualified this accesses (for members of a
+         * lexically enclosing scope), or simple this accesses for members of the current class.
+         */
+        private GuardedByExpression normalizeBase(BinderContext context, Symbol symbol,
+            GuardedByExpression base) {
           if (symbol.isStatic()) {
             return F.typeLiteral(symbol.owner);
+          }
+
+          if (base != null && base.kind() != GuardedByExpression.Kind.THIS) {
+            return base;
           }
 
           if (symbol.isMemberOf(context.thisClass.type.tsym, context.types)) {
@@ -286,7 +296,7 @@ public class GuardedByBinder {
             return F.qualifiedThis(context.names, context.thisClass, lexicalOwner);
           }
 
-          throw new IllegalStateException("Could not find the implicit receiver.");
+          throw new IllegalGuardedBy("Could not find the implicit receiver.");
         }
 
         /**
@@ -294,7 +304,9 @@ public class GuardedByBinder {
          * @{code null} otherwise.
          */
         private Symbol isEnclosedIn(ClassSymbol startingClass, Symbol member, Types types) {
-          for (Symbol scope = startingClass.owner; scope != null; scope = scope.owner) {
+          for (Symbol scope = startingClass.owner;
+               scope != null && scope.type.tsym instanceof ClassSymbol;
+               scope = scope.owner) {
             if (member.isMemberOf(scope.type.tsym, types)) {
               return scope;
             }
