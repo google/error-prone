@@ -1024,6 +1024,88 @@ public class GuardedByTest {
   }
 
   @Test
+  public void testLexicalScopingExampleOne() throws Exception {
+    compilationHelper.assertCompileFailsWithMessages(
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "class Transaction {",
+            "  @GuardedBy(\"this\")",
+            "  int x;",
+            "  interface Handler {",
+            "    void apply();",
+            "  }",
+            "  public void handle() {",
+            "    runHandler(new Handler() {",
+            "      public void apply() {",
+            "        // BUG: Diagnostic contains: Expected Transaction.this to be held",
+            "        x++;",
+            "      }",
+            "    });",
+            "  }",
+            "  private synchronized void runHandler(Handler handler) {",
+            "    handler.apply();",
+            "  }",
+            "}"
+        )
+    );
+  }
+
+  // TODO(user): allowing @GuardedBy on overridden methods is unsound.
+  @Test
+  public void testLexicalScopingExampleTwo() throws Exception {
+    compilationHelper.assertCompileSucceeds(
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "class Transaction {",
+            "  @GuardedBy(\"this\")",
+            "  int x;",
+            "  interface Handler {",
+            "    void apply();",
+            "  }",
+            "  public void handle() {",
+            "    runHandler(new Handler() {",
+            "      @GuardedBy(\"Transaction.this\")",
+            "      public void apply() {",
+            "        x++;",
+            "      }",
+            "    });",
+            "  }",
+            "  private synchronized void runHandler(Handler handler) {",
+            "    // This isn't safe...",
+            "    handler.apply();",
+            "  }",
+            "}"
+        )
+    );
+  }
+
+  @Test
+  public void testAliasing() throws Exception {
+    compilationHelper.assertCompileSucceeds(
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "import java.util.List;",
+            "import java.util.ArrayList;",
+            "class Names {",
+            "  @GuardedBy(\"this\")",
+            "  List<String> names = new ArrayList<>();",
+            "  public void addName(String name) {",
+            "    List<String> copyOfNames;",
+            "    synchronized (this) {",
+            "      copyOfNames = names;  // OK: access of 'names' guarded by 'this'",
+            "    }",
+            "    copyOfNames.add(name);  // should be an error: this access is not thread-safe!",
+            "  }",
+            "}"));
+  }
+
+  @Test
   public void serializable() throws IOException {
     new ObjectOutputStream(new ByteArrayOutputStream()).writeObject(new GuardedBy());
   }
