@@ -28,9 +28,11 @@ import static com.google.errorprone.matchers.Matchers.methodHasVisibility;
 import static com.google.errorprone.matchers.Matchers.methodIsNamed;
 import static com.google.errorprone.matchers.Matchers.methodNameStartsWith;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
+import static com.google.errorprone.matchers.Matchers.nestingKind;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
 import static com.google.errorprone.suppliers.Suppliers.VOID_TYPE;
+import static javax.lang.model.element.NestingKind.TOP_LEVEL;
 
 import com.google.errorprone.VisitorState;
 
@@ -83,7 +85,7 @@ public class JUnitMatchers {
       hasAnnotation(JUNIT_AFTER_CLASS_ANNOTATION));
 
   /**
-   * Matches a class that inherits from test case.
+   * Matches a class that inherits from TestCase.
    */
   public static final Matcher<ClassTree> isTestCaseDescendant =
       isSubtypeOf(JUNIT3_TEST_CASE_CLASS);
@@ -92,15 +94,17 @@ public class JUnitMatchers {
    * Match a class which appears to be missing a @RunWith annotation.
    *
    * Matches if:
-   * 1) The class does not have a jUnit 4 @RunWith annotation.
+   * 1) The class does not have a JUnit 4 @RunWith annotation.
    * 2) The class is concrete.
+   * 3) The class is a top-level class.
    */
   public static final Matcher<ClassTree> isConcreteClassWithoutRunWith = allOf(
       not(hasAnnotation(JUNIT4_RUN_WITH_ANNOTATION)),
-      not(Matchers.<ClassTree>hasModifier(Modifier.ABSTRACT)));
+      not(Matchers.<ClassTree>hasModifier(Modifier.ABSTRACT)),
+      nestingKind(TOP_LEVEL));
 
   /**
-   * Match a class which has one or more methods with a jUnit 4 @Test annotation.
+   * Match a class which has one or more methods with a JUnit 4 @Test annotation.
    */
   public static final Matcher<ClassTree> hasJUnit4TestCases =
       new ClassWithJUnit4TestsMatcher();
@@ -109,9 +113,10 @@ public class JUnitMatchers {
    * Match a class which appears to be a JUnit 3 test class.
    *
    * Matches if:
-   * 1) The class doesn't extend from TestCase
-   * 2) There are no JUnit4 @RunWith annotations
-   * 3) The class is concrete
+   * 1) The class does inherit from TestCase.
+   * 2) The class does not have a JUnit 4 @RunWith annotation.
+   * 3) The class is concrete.
+   * 4) This class is a top-level class.
    */
   public static final Matcher<ClassTree> isJUnit3TestClass = allOf(
       isTestCaseDescendant,
