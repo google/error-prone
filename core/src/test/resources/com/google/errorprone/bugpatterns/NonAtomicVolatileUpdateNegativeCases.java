@@ -16,10 +16,15 @@
 
 package com.google.errorprone.bugpatterns;
 
-public class IncrementDecrementVolatileNegativeCases {
+/**
+ * Positive test cases for {@code NonAtomicVolatileUpdate} checker.
+ */
+public class NonAtomicVolatileUpdateNegativeCases {
   
   private volatile int myVolatileInt = 0;
   private int myInt = 0;
+  private volatile String myVolatileString = "";
+  private String myString = "";
   
   public void incrementNonVolatile() {
     myInt++;
@@ -30,6 +35,9 @@ public class IncrementDecrementVolatileNegativeCases {
     
     myInt = myVolatileInt + 1;
     myVolatileInt = myInt + 1;
+    
+    myString += "update";
+    myString = myString + "update";
   }
 
   public void decrementNonVolatile() {
@@ -45,6 +53,9 @@ public class IncrementDecrementVolatileNegativeCases {
     myVolatileInt += 1;
     myVolatileInt = myVolatileInt + 1;
     myVolatileInt = 1 + myVolatileInt;
+    
+    myVolatileString += "update";
+    myVolatileString = myVolatileString + "update";
   }
   
   public void synchronizedBlock() {
@@ -54,6 +65,9 @@ public class IncrementDecrementVolatileNegativeCases {
       myVolatileInt += 1;
       myVolatileInt = myVolatileInt + 1;
       myVolatileInt = 1 + myVolatileInt;
+      
+      myVolatileString += "update";
+      myVolatileString = myVolatileString + "update";
     }
   }
 }

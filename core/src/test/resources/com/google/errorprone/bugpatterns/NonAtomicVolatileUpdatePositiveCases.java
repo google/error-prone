@@ -16,8 +16,11 @@
 
 package com.google.errorprone.bugpatterns;
 
-public class IncrementDecrementVolatilePositiveCases {
-  
+/**
+ * Positive test cases for {@code NonAtomicVolatileUpdate} checker.
+ */
+public class NonAtomicVolatileUpdatePositiveCases {
+    
   private static class VolatileContainer {
     public volatile int volatileInt = 0;
   }
@@ -73,6 +76,15 @@ public class IncrementDecrementVolatilePositiveCases {
     container.volatileInt -= 1;
     // BUG: Diagnostic contains: 
     container.volatileInt = container.volatileInt - 1;
-  }  
+  }
+  
+  private volatile String myVolatileString = "";
+  
+  public void stringUpdate() {
+    // BUG: Diagnostic contains:
+    myVolatileString += "update";
+    // BUG: Diagnostic contains:
+    myVolatileString = myVolatileString + "update";
+  }
 }
 

@@ -33,7 +33,7 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ExpressionStatementTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
-import com.google.errorprone.bugpatterns.IncrementDecrementVolatile;
+import com.google.errorprone.bugpatterns.NonAtomicVolatileUpdate;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
 
@@ -111,15 +111,15 @@ public class ErrorProneCompilerIntegrationTest {
 
   @Test
   public void fileWithWarning() throws Exception {
-    compilerBuilder.report(new ErrorProneScanner(new IncrementDecrementVolatile()));
+    compilerBuilder.report(new ErrorProneScanner(new NonAtomicVolatileUpdate()));
     compiler = compilerBuilder.build();
     int exitCode = compiler.compile(compiler.fileManager().sources(getClass(),
-        "bugpatterns/IncrementDecrementVolatilePositiveCases.java"));
+        "bugpatterns/NonAtomicVolatileUpdatePositiveCases.java"));
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(0));
 
     Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher = hasItem(
-        diagnosticMessage(containsString("[IncrementDecrementVolatile]")));
+        diagnosticMessage(containsString("[NonAtomicVolatileUpdate]")));
     assertTrue("Warning should be found. " + diagnosticHelper.describe(),
         matcher.matches(diagnosticHelper.getDiagnostics()));
   }

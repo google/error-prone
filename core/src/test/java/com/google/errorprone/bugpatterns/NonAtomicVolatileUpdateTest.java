@@ -23,25 +23,29 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+/**
+ * Tests for {@code NonAtomicVolatileUpdate}.
+ */
+
 @RunWith(JUnit4.class)
-public class IncrementDecrementVolatileTest {
+public class NonAtomicVolatileUpdateTest {
 
   private CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new IncrementDecrementVolatile());
+    compilationHelper = CompilationTestHelper.newInstance(new NonAtomicVolatileUpdate());
   }
 
   @Test
   public void testPositiveCases() throws Exception {
     compilationHelper.assertCompileSucceedsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "IncrementDecrementVolatilePositiveCases.java"));
+        .sources(getClass(), "NonAtomicVolatileUpdatePositiveCases.java"));
   }
 
   @Test
   public void testNegativeCases() throws Exception {
     compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "IncrementDecrementVolatileNegativeCases.java"));
+        .sources(getClass(), "NonAtomicVolatileUpdateNegativeCases.java"));
   }
 }
