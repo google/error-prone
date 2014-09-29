@@ -476,4 +476,9 @@ public class ASTHelpers {
         return null;
     }
   }
+
+  public static String getAnnotationName(AnnotationTree tree) {
+    Symbol sym = getSymbol(tree);
+    return sym == null ? null : sym.name.toString();
+  }
 }
