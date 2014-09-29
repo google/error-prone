@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.fixes.Fix.NO_FIX;
 
@@ -61,12 +61,13 @@ import com.sun.tools.javac.util.Name;
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 @BugPattern(name = "Finally", altNames = "finally",
-    summary = "Finally block may not complete normally",
-    explanation = "Terminating a finally block abruptly preempts the outcome of the try block, "
-        + "and will cause the result of any previously executed return or throw statements to "
-        + "be ignored. This is considered extremely confusing. Please refactor this code to ensure "
-        + "that the finally block will always complete normally.",
-    category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
+    summary = "If you return or throw from a finally, then values returned or thrown from the"
+        + " try-catch block will be ignored",
+    explanation = "Terminating a finally block abruptly preempts the outcome of the try block,"
+        + " and will cause the result of any previously executed return or throw statements to"
+        + " be ignored. This is very confusing. Please refactor this code to ensure that the"
+        + " finally block will always complete normally.",
+    category = JDK, severity = ERROR, maturity = MATURE)
 public class Finally extends BugChecker
     implements ContinueTreeMatcher, ThrowTreeMatcher, BreakTreeMatcher, ReturnTreeMatcher {
 
