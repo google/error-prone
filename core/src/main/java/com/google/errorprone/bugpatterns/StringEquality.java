@@ -17,8 +17,8 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.kindIs;
@@ -49,7 +49,7 @@ import com.sun.tools.javac.tree.JCTree.JCLiteral;
     summary = "String comparison using reference equality instead of value equality",
     explanation = "Strings are compared for reference equality/inequality using == or !="
         + "instead of for value equality using .equals()",
-    category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
+    category = JDK, severity = WARNING, maturity = MATURE)
 public class StringEquality extends BugChecker implements BinaryTreeMatcher {
 
   /**
@@ -77,7 +77,7 @@ public class StringEquality extends BugChecker implements BinaryTreeMatcher {
   public static final Matcher<BinaryTree> MATCHER = allOf(
       anyOf(kindIs(EQUAL_TO), kindIs(NOT_EQUAL_TO)),
       STRING_OPERANDS);
-    
+
   /* Match string that are compared with == and != */
   @Override
   public Description matchBinary(BinaryTree tree, final VisitorState state) {
@@ -87,7 +87,7 @@ public class StringEquality extends BugChecker implements BinaryTreeMatcher {
 
     SuggestedFix.Builder fix = SuggestedFix.builder();
 
-    // Consider one of the tree's operands. If it is "", and the other is non-null, 
+    // Consider one of the tree's operands. If it is "", and the other is non-null,
     // then call isEmpty on the other.
     StringBuilder fixExpr = considerOneOf(tree.getLeftOperand(), tree.getRightOperand(),
         new HandleChoice<ExpressionTree, StringBuilder>() {
@@ -101,14 +101,14 @@ public class StringEquality extends BugChecker implements BinaryTreeMatcher {
     if (fixExpr == null) {
       // Consider one of the tree's operands. If it is non-null,
       // then call equals on it, passing the other operand as argument.
-      fixExpr = considerOneOf(tree.getLeftOperand(), tree.getRightOperand(), 
+      fixExpr = considerOneOf(tree.getLeftOperand(), tree.getRightOperand(),
         new HandleChoice<ExpressionTree, StringBuilder>() {
           @Override
           public StringBuilder apply(ExpressionTree it, ExpressionTree other) {
             return isNonNull(it, state) ? methodCall(it, "equals", other) : null;
           }
         });
-      
+
       if (fixExpr == null) {
         fixExpr = methodCall(
             null, "Objects.equals", tree.getLeftOperand(), tree.getRightOperand());
@@ -129,11 +129,11 @@ public class StringEquality extends BugChecker implements BinaryTreeMatcher {
         ? ((JCLiteral) tree).value
         : ((JCTree) tree).type.constValue();
   }
-  
+
   private interface HandleChoice<T, R> {
     R apply(T it, T other);
   }
-  
+
   private static <T, R> R considerOneOf(final T a, final T b, final HandleChoice<T, R> f) {
     R r = f.apply(a, b);
     return r == null ? f.apply(b, a) : r;
@@ -148,7 +148,7 @@ public class StringEquality extends BugChecker implements BinaryTreeMatcher {
    * If {@code receiver} is null, the call is static or to {@code this},
    * otherwise the call is to {@code receiver}.
    */
-  private static StringBuilder methodCall(ExpressionTree receiver, String methodName, 
+  private static StringBuilder methodCall(ExpressionTree receiver, String methodName,
       ExpressionTree... params) {
     final StringBuilder fixedExpression = new StringBuilder();
     if (receiver != null) {

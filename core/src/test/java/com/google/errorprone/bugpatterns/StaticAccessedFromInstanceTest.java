@@ -38,13 +38,13 @@ public class StaticAccessedFromInstanceTest {
 
   @Test
   public void testPositiveCase1() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+    compilationHelper.assertCompileSucceedsWithMessages(compilationHelper.fileManager()
         .sources(getClass(), "StaticAccessedFromInstancePositiveCase1.java"));
   }
 
   @Test
   public void testPositiveCase2() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+    compilationHelper.assertCompileSucceedsWithMessages(compilationHelper.fileManager()
         .sources(getClass(), "StaticAccessedFromInstancePositiveCase2.java"));
   }
 

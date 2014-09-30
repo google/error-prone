@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.errorprone.BugPattern;
@@ -48,7 +48,7 @@ import com.sun.tools.javac.util.List;
     explanation = "When you pass a primitive array as the only argument to a varargs method, the "
         + "primitive array is autoboxed into a single-element Object array. This is usually "
         + "not what was intended.",
-    category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
+    category = JDK, severity = WARNING, maturity = EXPERIMENTAL)
 public class PrimitiveArrayPassedToVarargsMethod extends BugChecker
     implements MethodInvocationTreeMatcher {
 

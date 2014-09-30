@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.GUAVA;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.argument;
@@ -77,7 +77,7 @@ import java.util.Set;
         "If the intent was to ensure that the primitive met some criterion (e.g., a boolean " +
         "that should be non-null), please use Precondtions.checkState() or " +
         "Preconditions.checkArgument() instead.",
-    category = GUAVA, severity = ERROR, maturity = EXPERIMENTAL)
+    category = GUAVA, severity = ERROR, maturity = MATURE)
 public class PreconditionsCheckNotNullPrimitive
     extends BugChecker implements MethodInvocationTreeMatcher {
 

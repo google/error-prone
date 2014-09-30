@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.isArrayType;
 import static com.google.errorprone.matchers.Matchers.isDescendantOfMethod;
@@ -83,7 +83,7 @@ import javax.lang.model.type.TypeKind;
         + "have unbalanced single quotes (e.g., \"Don't log {0}\" will not format {0} because "
         + "of the quote in \"Don't\"). The number of format elements must match the number of "
         + "arguments provided, and for String.format, the types must match as well.  And so on.",
-    category = JDK, maturity = MATURE, severity = ERROR)
+    category = JDK, maturity = MATURE, severity = WARNING)
 
 public class MisusedFormattingLogger extends BugChecker implements MethodInvocationTreeMatcher {
 

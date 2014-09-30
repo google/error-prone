@@ -99,12 +99,12 @@ public class ErrorProneCompilerIntegrationTest {
   @Test
   public void fileWithError() throws Exception {
     int exitCode = compiler.compile(compiler.fileManager().sources(getClass(),
-        "bugpatterns/EmptyIfStatementPositiveCases.java"));
+        "bugpatterns/BadShiftAmountPositiveCases.java"));
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(1));
 
     Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher = hasItem(
-        diagnosticMessage(containsString("[EmptyIf]")));
+        diagnosticMessage(containsString("[BadShiftAmount]")));
     assertTrue("Error should be found. " + diagnosticHelper.describe(),
         matcher.matches(diagnosticHelper.getDiagnostics()));
   }

@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.ONE_OFF;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
+import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.NOT_A_PROBLEM;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.hasArgumentWithValue;
@@ -45,7 +45,7 @@ import java.util.List;
         "@SuppressWarnings annotation, remove the whole annotation.\n\n" +
         "Note: This checker was specific to a refactoring we performed and should not be " +
         "used as a general error or warning.",
-    category = ONE_OFF, severity = NOT_A_PROBLEM, maturity = MATURE)
+    category = ONE_OFF, severity = NOT_A_PROBLEM, maturity = EXPERIMENTAL)
 public class FallThroughSuppression extends AbstractSuppressWarningsMatcher {
 
   @SuppressWarnings({"varargs", "unchecked"})

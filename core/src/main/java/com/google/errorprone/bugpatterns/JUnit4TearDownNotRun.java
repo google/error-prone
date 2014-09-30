@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JUNIT;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT_AFTER_ANNOTATION;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT_AFTER_CLASS_ANNOTATION;
@@ -56,7 +56,7 @@ import java.util.List;
         + " where this class's tearDown() is invoked by a superclass method that is annotated with"
         + " @After, then please rename the abstract method or add @After to"
         + " the superclass's definition of tearDown()",
-    category = JUNIT, maturity = EXPERIMENTAL, severity = ERROR)
+    category = JUNIT, maturity = MATURE, severity = ERROR)
 public class JUnit4TearDownNotRun extends AbstractJUnit4InitMethodNotRun {
   @Override
   protected Matcher<MethodTree> methodMatcher() {

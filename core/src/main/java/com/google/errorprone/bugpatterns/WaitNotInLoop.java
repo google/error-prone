@@ -17,8 +17,8 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.isDescendantOfMethod;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
@@ -66,7 +66,7 @@ import java.util.List;
         "See Java Concurrency in Practice section 14.2.2, \"Waking up too soon,\" and " +
         "[http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html#wait() " +
         "the Javadoc for Object.wait()].",
-    category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
+    category = JDK, severity = WARNING, maturity = MATURE)
 public class WaitNotInLoop extends BugChecker implements MethodInvocationTreeMatcher {
 
   // Since some of the fixes have formatting problems, do not supply them unless explicitly enabled.

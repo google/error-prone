@@ -31,7 +31,7 @@ public class SynchronizeOnNonFinalFieldTest {
 
   @Test
   public void testPositive1() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
+    compilationHelper.assertCompileSucceedsWithMessages(
         compilationHelper.fileManager().forSourceLines(
             "threadsafety/Test.java",
             "package threadsafety.Test;",
@@ -45,10 +45,10 @@ public class SynchronizeOnNonFinalFieldTest {
         )
     );
   }
-  
+
   @Test
   public void testPositive2() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
+    compilationHelper.assertCompileSucceedsWithMessages(
         compilationHelper.fileManager().forSourceLines(
             "threadsafety/Test.java",
             "package threadsafety.Test;",
@@ -63,10 +63,10 @@ public class SynchronizeOnNonFinalFieldTest {
         )
     );
   }
-  
+
   @Test
   public void testPositive3() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
+    compilationHelper.assertCompileSucceedsWithMessages(
         compilationHelper.fileManager().forSourceLines(
             "threadsafety/Test.java",
             "package threadsafety.Test;",
@@ -80,10 +80,10 @@ public class SynchronizeOnNonFinalFieldTest {
         )
     );
   }
-  
+
   @Test
   public void testNegative() throws Exception {
-    compilationHelper.assertCompileSucceeds(
+    compilationHelper.assertCompileSucceedsWithMessages(
         compilationHelper.fileManager().forSourceLines(
             "threadsafety/Test.java",
             "package threadsafety.Test;",

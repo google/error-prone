@@ -38,7 +38,7 @@ public class StringEqualityTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+    compilationHelper.assertCompileSucceedsWithMessages(compilationHelper.fileManager()
         .sources(getClass(), "StringEqualityPositiveCases.java"));
   }
 

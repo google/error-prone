@@ -38,13 +38,13 @@ public class FinallyTest {
 
   @Test
   public void testPositiveCase1() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+    compilationHelper.assertCompileSucceedsWithMessages(compilationHelper.fileManager()
         .sources(getClass(), "FinallyPositiveCase1.java"));
   }
-        
+
   @Test
   public void testPositiveCase2() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+    compilationHelper.assertCompileSucceedsWithMessages(compilationHelper.fileManager()
         .sources(getClass(), "FinallyPositiveCase2.java"));
   }
 
@@ -53,7 +53,7 @@ public class FinallyTest {
     compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
         .sources(getClass(), "FinallyNegativeCase1.java"));
   }
-  
+
   @Test
   public void testNegativeCase2() throws Exception {
     compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()

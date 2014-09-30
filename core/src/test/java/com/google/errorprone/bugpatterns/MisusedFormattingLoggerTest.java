@@ -38,7 +38,7 @@ public class MisusedFormattingLoggerTest {
 
   @Test
   public void testPositiveCases() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+    compilationHelper.assertCompileSucceedsWithMessages(compilationHelper.fileManager()
         .sources(getClass(), "MisusedFormattingLoggerPositiveCases.java"));
   }
 
