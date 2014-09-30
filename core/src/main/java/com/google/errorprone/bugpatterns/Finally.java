@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.Fix.NO_FIX;
 
 import com.google.errorprone.BugPattern;
@@ -67,7 +67,7 @@ import com.sun.tools.javac.util.Name;
         + " and will cause the result of any previously executed return or throw statements to"
         + " be ignored. This is very confusing. Please refactor this code to ensure that the"
         + " finally block will always complete normally.",
-    category = JDK, severity = ERROR, maturity = MATURE)
+    category = JDK, severity = WARNING, maturity = MATURE)
 public class Finally extends BugChecker
     implements ContinueTreeMatcher, ThrowTreeMatcher, BreakTreeMatcher, ReturnTreeMatcher {
 

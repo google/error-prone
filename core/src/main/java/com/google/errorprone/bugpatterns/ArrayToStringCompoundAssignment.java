@@ -17,13 +17,13 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.bugpatterns.BugChecker.CompoundAssignmentTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.compoundAssignment;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.CompoundAssignmentTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
@@ -43,7 +43,7 @@ import com.sun.source.tree.Tree.Kind;
         "When concatenating-and-assigning an array to a string, the implicit toString call on " +
         "the array will yield its identity, such as [I@4488aabb. This is almost never needed. " +
         "Use Arrays.toString to obtain a human-readable array summary.",
-    category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
+    category = JDK, severity = ERROR, maturity = MATURE)
 public class ArrayToStringCompoundAssignment
     extends BugChecker implements CompoundAssignmentTreeMatcher {
 

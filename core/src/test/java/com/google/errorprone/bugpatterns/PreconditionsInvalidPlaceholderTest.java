@@ -38,7 +38,7 @@ public class PreconditionsInvalidPlaceholderTest {
 
   @Test
   public void testPositiveCase1() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+    compilationHelper.assertCompileSucceedsWithMessages(compilationHelper.fileManager()
         .sources(getClass(), "PreconditionsInvalidPlaceholderPositiveCase1.java"));
   }
 

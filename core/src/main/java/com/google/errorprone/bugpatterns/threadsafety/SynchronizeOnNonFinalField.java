@@ -17,8 +17,8 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -44,7 +44,7 @@ import com.sun.tools.javac.tree.TreeInfo;
         + "* If the field is already effectively final, add the missing 'final' modifier.\n"
         + "* If the field needs to be mutable, create a separate lock by adding a private"
         + "  final field and synchronizing on it to guard all accesses.",
-    category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
+    category = JDK, severity = WARNING, maturity = MATURE)
 public class SynchronizeOnNonFinalField extends BugChecker
     implements BugChecker.SynchronizedTreeMatcher {
 

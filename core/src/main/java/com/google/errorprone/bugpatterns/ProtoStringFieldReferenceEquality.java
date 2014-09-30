@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.ONE_OFF;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
+import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.expressionMethodSelect;
@@ -27,7 +27,6 @@ import static com.google.errorprone.matchers.Matchers.methodReceiver;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
@@ -38,8 +37,8 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.JCTree;
 
-@BugPattern(category = ONE_OFF, maturity = MATURE,
-    name = "ProtoStringFieldReferenceEquality", severity = ERROR, 
+@BugPattern(category = ONE_OFF, maturity = EXPERIMENTAL,
+    name = "ProtoStringFieldReferenceEquality", severity = ERROR,
     summary = "Comparing protobuf fields of type String using reference equality",
     explanation = "Comparing strings with == is almost always an error, but it is an error 100% "
         + "of the time when one of the strings is a protobuf field.  Additionally, protobuf "
@@ -60,7 +59,7 @@ public class ProtoStringFieldReferenceEquality extends BugChecker implements Bin
     String leftOperand = state.getSourceForNode((JCTree) tree.getLeftOperand()).toString();
     String rightOperand = state.getSourceForNode((JCTree) tree.getRightOperand()).toString();
     if ((PROTO_STRING_METHOD.matches(tree.getLeftOperand(), state)
-        && tree.getRightOperand().getKind() != Kind.NULL_LITERAL) 
+        && tree.getRightOperand().getKind() != Kind.NULL_LITERAL)
         || (PROTO_STRING_METHOD.matches(tree.getRightOperand(), state)
         && tree.getLeftOperand().getKind() != Kind.NULL_LITERAL)) {
       String result = leftOperand + ".equals(" + rightOperand + ")";

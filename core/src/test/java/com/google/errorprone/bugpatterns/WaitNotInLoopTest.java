@@ -38,7 +38,7 @@ public class WaitNotInLoopTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+    compilationHelper.assertCompileSucceedsWithMessages(compilationHelper.fileManager()
         .sources(getClass(), "WaitNotInLoopPositiveCases.java"));
   }
 

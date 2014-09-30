@@ -17,8 +17,8 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.GUAVA;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -45,7 +45,7 @@ import java.util.regex.Pattern;
         + "points out places where there is a non-%s placeholder in a Preconditions error "
         + "message template string and the number of arguments does not match the number of "
         + "%s placeholders.",
-    category = GUAVA, maturity = EXPERIMENTAL, severity = ERROR)
+    category = GUAVA, maturity = MATURE, severity = WARNING)
 public class PreconditionsInvalidPlaceholder extends BugChecker
     implements MethodInvocationTreeMatcher {
 

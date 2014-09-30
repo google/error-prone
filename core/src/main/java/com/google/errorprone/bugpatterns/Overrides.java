@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
@@ -48,21 +48,21 @@ import java.util.Set;
     summary = "Varargs doesn't agree for overridden method",
     explanation = "A varargs method is overridden by a method with an array parameter, or vice "
         + "versa.  Please match the signature of the method being overridden.",
-    category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
+    category = JDK, severity = ERROR, maturity = MATURE)
 public class Overrides extends BugChecker implements MethodTreeMatcher {
 
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
     MethodSymbol methodSymbol = (MethodSymbol) ASTHelpers.getSymbol(methodTree);
     boolean isVarargs = (methodSymbol.flags() & Flags.VARARGS) != 0;
-    
+
     Set<MethodSymbol> superMethods = ASTHelpers.findSuperMethods(methodSymbol, state.getTypes());
-    
+
     // If there are no super methods, we're fine:
     if (superMethods.isEmpty()) {
       return Description.NO_MATCH;
     }
-     
+
     Iterator<MethodSymbol> superMethodsIterator = superMethods.iterator();
     boolean areSupersVarargs = superMethodsIterator.next().isVarArgs();
     while (superMethodsIterator.hasNext()) {
@@ -72,15 +72,15 @@ public class Overrides extends BugChecker implements MethodTreeMatcher {
         return describeMatch(methodTree, Fix.NO_FIX);
       }
     }
-    
+
     // The current method is consistent with all of its supermethods:
     if (isVarargs == areSupersVarargs) {
       return Description.NO_MATCH;
     }
-    
+
     // The current method is inconsistent with all of its supermethods, so flip the varargs-ness
     // of the current method.
-    
+
     List<? extends VariableTree> parameterTree = methodTree.getParameters();
     Tree paramType = parameterTree.get(parameterTree.size() - 1).getType();
     CharSequence paramTypeSource = state.getSourceForNode((JCTree) paramType);
@@ -88,7 +88,7 @@ public class Overrides extends BugChecker implements MethodTreeMatcher {
       // No fix if we don't have tree end positions.
       return describeMatch(methodTree, Fix.NO_FIX);
     }
-    
+
     Fix fix = Fix.NO_FIX;
     if (isVarargs) {
       fix = SuggestedFix.replace(paramType, "[]", paramTypeSource.length() - 3, 0);

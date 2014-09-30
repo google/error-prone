@@ -15,7 +15,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.isArrayType;
 import static com.google.errorprone.matchers.Matchers.isDescendantOfMethod;
@@ -61,7 +61,7 @@ import com.sun.tools.javac.tree.JCTree.JCWhileLoop;
     explanation = "This code counts elements using a loop.  You can use various library methods "
         + "(Guava's Iterables.size(), Collection.size(), array.length) to achieve the same thing "
         + "in a cleaner way.",
-    category = JDK, severity = WARNING, maturity = EXPERIMENTAL)
+    category = JDK, severity = WARNING, maturity = MATURE)
 public class ElementsCountedInLoop extends BugChecker
     implements EnhancedForLoopTreeMatcher, WhileLoopTreeMatcher {
 

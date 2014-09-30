@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.binaryTree;
@@ -44,7 +44,7 @@ import com.sun.source.tree.Tree.Kind;
     explanation = "When concatenating an array to a string, the toString method on an array will " +
         "yield its identity, such as [I@4488aabb. This is almost never needed. Use " +
         "Arrays.toString to obtain a human-readable array summary.",
-    category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
+    category = JDK, severity = ERROR, maturity = MATURE)
 public class ArrayToStringConcatenation extends BugChecker implements BinaryTreeMatcher {
 
   private static final Matcher<ExpressionTree> arrayMatcher =

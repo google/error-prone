@@ -25,6 +25,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import com.google.errorprone.bugpatterns.BadShiftAmount;
 import com.google.errorprone.bugpatterns.DepAnnTest;
 import com.google.errorprone.bugpatterns.Finally;
 
@@ -70,7 +71,7 @@ public class ErrorProneJavaCompilerTest {
     // error-prone options should be handled
     assertThat(compiler.isSupportedOption("-Xepdisable:"), is(0));
   }
-  
+
   interface JavaFileObjectDiagnosticListener extends DiagnosticListener<JavaFileObject> {}
 
   @Test
@@ -154,13 +155,14 @@ public class ErrorProneJavaCompilerTest {
 
     ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
 
-    JavaCompiler.CompilationTask task = new ErrorProneJavaCompiler(Finally.class).getTask(
-        printWriter,
-        null,
-        diagnosticHelper.collector,
-        Arrays.asList("-d", tempDir.getRoot().getAbsolutePath()),
-        null,
-        fileManager.sources(Finally.class, "FinallyPositiveCase1.java"));
+    JavaCompiler.CompilationTask task = new ErrorProneJavaCompiler(BadShiftAmount.class)
+        .getTask(
+            printWriter,
+            null,
+            diagnosticHelper.collector,
+            Arrays.asList("-d", tempDir.getRoot().getAbsolutePath()),
+            null,
+            fileManager.sources(BadShiftAmount.class, "BadShiftAmountPositiveCases.java"));
 
     boolean succeeded = task.call();
     assertFalse(outputStream.toString(), succeeded);

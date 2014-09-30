@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
+import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
@@ -50,7 +50,7 @@ import javax.lang.model.type.TypeKind;
         "from Guava that does autobox.  If you intended to create a singleton " +
         "list containing the primitive array, use Collections.singletonList to " +
         "make your intent clearer.",
-    category = JDK, severity = ERROR, maturity = MATURE)
+    category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
 public class ArraysAsListPrimitiveArray extends BugChecker implements MethodInvocationTreeMatcher {
   private static final Matcher<MethodInvocationTree> ARRAYS_AS_LIST_SINGLE_ARRAY = Matchers.allOf(
       Matchers.methodSelect(Matchers.staticMethod("java.util.Arrays", "asList")),
