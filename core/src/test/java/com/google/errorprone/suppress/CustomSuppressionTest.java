@@ -25,7 +25,6 @@ import static org.junit.Assert.assertThat;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Suppressibility;
-import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.DiagnosticTestHelper;
 import com.google.errorprone.ErrorProneScanner;
 import com.google.errorprone.ErrorProneTestCompiler;
@@ -33,7 +32,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.EmptyStatementTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
-import com.google.errorprone.bugpatterns.threadsafety.GuardedBy;
 import com.google.errorprone.matchers.Description;
 
 import com.sun.source.tree.EmptyStatementTree;
@@ -53,8 +51,6 @@ import javax.tools.JavaFileObject;
  */
 @RunWith(JUnit4.class)
 public class CustomSuppressionTest {
-
-  CompilationTestHelper compilationHelper = CompilationTestHelper.newInstance(new GuardedBy());
   
   /**
    * Custom suppression annotation for the first checker in this test.
@@ -106,7 +102,7 @@ public class CustomSuppressionTest {
 
   @Test
   public void testNegativeCase() throws Exception {
-    List<JavaFileObject> sources = compilationHelper.fileManager()
+    List<JavaFileObject> sources = compiler.fileManager()
         .sources(getClass(), "CustomSuppressionNegativeCases.java");
     int exitCode = compiler.compile(sources);
     assertThat(exitCode, is(0));
@@ -114,7 +110,7 @@ public class CustomSuppressionTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    List<JavaFileObject> sources = compilationHelper.fileManager()
+    List<JavaFileObject> sources = compiler.fileManager()
         .sources(getClass(), "CustomSuppressionPositiveCases.java");
     assertThat(compiler.compile(sources), is(1));
     assertThat(diagnosticHelper.getDiagnostics().size(), is(3));

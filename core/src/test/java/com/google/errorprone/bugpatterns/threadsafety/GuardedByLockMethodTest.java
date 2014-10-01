@@ -25,7 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link GuardedBy}Test for {@link LockMethod} and {@link UnlockMethod} */
+/** Test for {@link LockMethod} and {@link UnlockMethod} */
 @RunWith(JUnit4.class)
 public class GuardedByLockMethodTest {
 
@@ -33,7 +33,7 @@ public class GuardedByLockMethodTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new GuardedBy());
+    compilationHelper = CompilationTestHelper.newInstance(new GuardedByChecker());
   }
 
   @Test
