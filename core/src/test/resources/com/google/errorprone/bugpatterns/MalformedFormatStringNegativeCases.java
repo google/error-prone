@@ -59,7 +59,7 @@ public class MalformedFormatStringNegativeCases {
     System.err.printf("%s %d %f", null, null, null);
     System.err.printf("%n %%");
     System.err.printf("%d", new Object[]{17});
-    String.format("%s %s", new String[]{"foo", "bar"});
+    String.format("%s %s", (Object[]) new String[]{"foo", "bar"});
   }
 
   public void finalVariableFormat() {
