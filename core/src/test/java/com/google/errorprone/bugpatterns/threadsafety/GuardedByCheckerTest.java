@@ -27,12 +27,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
-/** {@link GuardedBy}Test */
+/** {@link GuardedByChecker}Test */
 @RunWith(JUnit4.class)
-public class GuardedByTest {
+public class GuardedByCheckerTest {
 
   private final CompilationTestHelper compilationHelper =
-      CompilationTestHelper.newInstance(new GuardedBy());
+      CompilationTestHelper.newInstance(new GuardedByChecker());
 
   @Test
   public void testLocked() throws Exception {
@@ -1107,6 +1107,6 @@ public class GuardedByTest {
 
   @Test
   public void serializable() throws IOException {
-    new ObjectOutputStream(new ByteArrayOutputStream()).writeObject(new GuardedBy());
+    new ObjectOutputStream(new ByteArrayOutputStream()).writeObject(new GuardedByChecker());
   }
 }
