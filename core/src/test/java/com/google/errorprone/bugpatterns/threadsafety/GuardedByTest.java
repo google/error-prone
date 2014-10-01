@@ -1014,7 +1014,7 @@ public class GuardedByTest {
             "  @GuardedBy(\"lock\")",
             "  int x;",
             "  void m(AutoCloseable c) throws Exception {",
-            "    try (AutoCloseable _ = c) {",
+            "    try (AutoCloseable unused = c) {",
             "      x++;  // should be an error!",
             "    }",
             "  }",

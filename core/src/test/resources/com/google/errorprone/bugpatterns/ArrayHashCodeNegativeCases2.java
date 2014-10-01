@@ -23,7 +23,7 @@ import java.util.Objects;
  * 
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class ArrayHashCodeNegativeCases {
+public class ArrayHashCodeNegativeCases2 {
   
   private Object[] objArray = {1, 2, 3};
   private String[] stringArray = {"1", "2", "3"};
@@ -53,6 +53,6 @@ public class ArrayHashCodeNegativeCases {
   public void varagsHashCodeOnObjectOrStringArray() {
     int hashCode;
     hashCode = Objects.hash(objArray);  
-    hashCode = Objects.hash(stringArray);    
+    hashCode = Objects.hash((Object[]) stringArray);    
   }
 }

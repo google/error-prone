@@ -51,6 +51,6 @@ public class ArrayHashCodeNegativeCases {
   public void varagsHashCodeOnObjectOrStringArray() {
     int hashCode;
     hashCode = Objects.hashCode(objArray);
-    hashCode = Objects.hashCode(stringArray);
+    hashCode = Objects.hashCode((Object[]) stringArray);
   }
 }

@@ -44,8 +44,7 @@ public class ChainingConstructorIgnoresParameterTest {
 
   @Test
   public void testNegativeCase() throws Exception {
-    // It's important to not use plain assertCompileSucceeds(), which ignores unexpected messages.
-    compilationHelper.assertCompileSucceedsWithMessages(compilationHelper.fileManager()
+    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
         .sources(getClass(), "ChainingConstructorIgnoresParameterNegativeCases.java"));
   }
 }

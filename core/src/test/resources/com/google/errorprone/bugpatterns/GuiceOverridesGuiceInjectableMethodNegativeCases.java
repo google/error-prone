@@ -69,7 +69,7 @@ public class GuiceOverridesGuiceInjectableMethodNegativeCases {
    * annotated with @com.google.inject.Inject. Warning is suppressed.
    */
   public class TestClass6 extends TestClass1 {
-    @SuppressWarnings("GuiceOverridesGuiceInjectableMethod")
+    @SuppressWarnings("OverridesGuiceInjectableMethod")
     @Override 
     public void foo() {}
   }

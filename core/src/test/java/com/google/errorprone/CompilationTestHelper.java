@@ -34,6 +34,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import javax.tools.Diagnostic;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileManager;
@@ -113,24 +114,32 @@ public class CompilationTestHelper {
   }
 
   /**
-   * Asserts that the compilation succeeds (exits with code 0).
+   * Asserts that the compilation succeeds and no diagnostics were produced.
    *
-   * @param sources The list of {@code File}s to compile
+   * @param sources The list of files to compile
    * @param args Extra command-line arguments to pass to the compiler
    */
   public void assertCompileSucceeds(List<JavaFileObject> sources, List<String> args) {
     List<String> allArgs = buildArguments(args);
     int exitCode = compile(asJavacList(sources), allArgs.toArray(new String[0]));
-    assertThat(diagnosticHelper.getDiagnostics().toString(), exitCode, is(0));
-    // TODO(user): complain if there are any diagnostics
+    List<Diagnostic<? extends JavaFileObject>> diagnostics = diagnosticHelper.getDiagnostics();
+    assertThat("Compilation failed: " + diagnostics.toString(), exitCode, is(0));
+    assertThat("Compilation succeeded but gave warnings: " + diagnostics.toString(),
+        diagnostics.size(), is(0));
   }
 
+  /**
+   * Asserts that the compilation succeeds and no diagnostics were produced.
+   *
+   * @param sources The list of files to compile
+   */
   public void assertCompileSucceeds(List<JavaFileObject> sources) {
     assertCompileSucceeds(sources, ImmutableList.<String>of());
   }
 
   /**
-   * Convenience method for the common case of one source file and no extra args.
+   * Asserts that the compilation succeeds and no diagnostics were produced. Convenience method
+   * for the common case of one source file and no extra args.
    */
   public void assertCompileSucceeds(JavaFileObject source) {
     assertCompileSucceeds(ImmutableList.of(source));
@@ -138,16 +147,18 @@ public class CompilationTestHelper {
 
   /**
    * Assert that the compile succeeds, and that for each line of the test file that contains
-   * the pattern //BUG("foo"), the diagnostic at that line contains "foo".
+   * the pattern "// BUG: Diagnostic contains: foo", the diagnostic at that line contains "foo".
    */
   public void assertCompileSucceedsWithMessages(List<JavaFileObject> sources) throws IOException {
-    assertCompileSucceeds(sources);
+    assertCompileSucceedsIgnoringWarnings(sources);
     for (JavaFileObject source : sources) {
       diagnosticHelper.assertHasDiagnosticOnAllMatchingLines(source);
     }
   }
 
   /**
+   * Asserts that the compile succeeds, and that for each line of the test file that contains
+   * the pattern "// BUG: Diagnostic contains: foo", the diagnostic at that line contains "foo".
    * Convenience method for the common case of one source file and no extra args.
    */
   public void assertCompileSucceedsWithMessages(JavaFileObject source) throws IOException {
@@ -155,19 +166,29 @@ public class CompilationTestHelper {
   }
 
   /**
-   * Assert that the compile fails, and that for each line of the test file that contains
-   * the pattern //BUG("foo"), the diagnostic at that line contains "foo".
+   * Asserts that the compilation succeeds regardless of whether any diagnostics were produced.
+   */
+  private void assertCompileSucceedsIgnoringWarnings(List<JavaFileObject> sources) {
+    List<String> allArgs = buildArguments(Collections.<String>emptyList());
+    int exitCode = compile(asJavacList(sources), allArgs.toArray(new String[0]));
+    assertThat(diagnosticHelper.getDiagnostics().toString(), exitCode, is(0));
+  }
+
+  /**
+   * Asserts that the compile fails, and that for each line of the test file that contains
+   * the pattern "// BUG: Diagnostic contains: foo", the diagnostic at that line contains "foo".
    *
-   * @param sources The list of {@code File}s to compile
+   * @param sources The list of files to compile
    */
   public void assertCompileFailsWithMessages(List<JavaFileObject> sources) throws IOException {
     assertCompileFailsWithMessages(sources, Collections.<String>emptyList());
   }
 
   /**
-   * Assert that the compile fails, and that for each line of the test file that contains
-   * the pattern //BUG("foo"), the diagnostic at that line contains "foo".
-   * @param sources The list of {@code File}s to compile
+   * Asserts that the compile fails, and that for each line of the test file that contains
+   * the pattern "// BUG: Diagnostic contains: foo", the diagnostic at that line contains "foo".
+   *
+   * @param sources The list of files to compile
    * @param args The list of args to pass to the compilation
    */
   public void assertCompileFailsWithMessages(List<JavaFileObject> sources, List<String> args)
@@ -181,6 +202,8 @@ public class CompilationTestHelper {
   }
 
   /**
+   * Asserts that the compile fails, and that for each line of the test file that contains
+   * the pattern "// BUG: Diagnostic contains: foo", the diagnostic at that line contains "foo".
    * Convenience method for the common case of one source file and no extra args.
    */
   public void assertCompileFailsWithMessages(JavaFileObject source) throws IOException {

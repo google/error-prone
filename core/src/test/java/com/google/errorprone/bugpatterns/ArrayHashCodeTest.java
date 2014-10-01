@@ -68,6 +68,6 @@ public class ArrayHashCodeTest {
   @Test
   public void testJava7NegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "ArrayHashCodeNegativeCases.java"));
+        .sources(getClass(), "ArrayHashCodeNegativeCases2.java"));
   }
 }
