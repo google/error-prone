@@ -67,7 +67,7 @@ public class SelfEquality extends BugChecker implements BinaryTreeMatcher {
     }
 
     StringBuilder fixedExpression = new StringBuilder();
-    Fix fix = Fix.NO_FIX;
+    Fix fix = null;
 
     ExpressionTree leftOperand = tree.getLeftOperand();
     ExpressionTree rightOperand = tree.getRightOperand();
@@ -126,7 +126,7 @@ public class SelfEquality extends BugChecker implements BinaryTreeMatcher {
       }
     }
 
-    if (fix == Fix.NO_FIX) {
+    if (fix == null) {
       // No good replacement, let's try something else!
 
       // For floats or doubles, y!=y -> isNaN(y)
@@ -150,6 +150,6 @@ public class SelfEquality extends BugChecker implements BinaryTreeMatcher {
       }
     }
 
-    return describeMatch(tree, fix);
+    return (fix == null) ? describeMatch(tree) : describeMatch(tree, fix);
   }
 }

@@ -17,12 +17,14 @@
 package com.google.errorprone.matchers;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.NOT_A_PROBLEM;
-import static com.google.errorprone.fixes.SuggestedFix.NO_FIX;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.fixes.Fix;
 
 import com.sun.source.tree.Tree;
+
+import java.util.List;
 
 /**
  * Simple data object containing the information captured about an AST match.
@@ -32,7 +34,7 @@ import com.sun.source.tree.Tree;
 public class Description {
   /** Describes the sentinel value of the case where the match failed. */
   public static final Description NO_MATCH = new Description(null, "<no match>", "<no match>",
-      "<no match>", NO_FIX, NOT_A_PROBLEM);
+      "<no match>", ImmutableList.<Fix>of(), NOT_A_PROBLEM);
 
   private static final String UNDEFINED_CHECK_NAME = "Undefined";
 
@@ -57,9 +59,10 @@ public class Description {
   private final String link;
 
   /**
-   * Replacements to suggest in an error message or use in automated refactoring.
+   * A list of fixes to suggest in an error message or use in automated refactoring.  Fixes are
+   * in order of decreasing preference, from most preferred to least preferred.
    */
-  public final Fix suggestedFix;
+  public final List<Fix> fixes;
 
   /**
    * Is this a warning, error, etc.?
@@ -86,20 +89,19 @@ public class Description {
   /** TODO(user): Remove this constructor and ensure that there's always a check name. */
   public Description(Tree node, String message, Fix suggestedFix,
                      BugPattern.SeverityLevel severity) {
-    this(node, UNDEFINED_CHECK_NAME, message, message, suggestedFix, severity);
+    this(node, UNDEFINED_CHECK_NAME, message, message, ImmutableList.of(suggestedFix), severity);
     if (suggestedFix == null) {
-      throw new IllegalArgumentException("suggestedFix must not be null. Use "
-          + "SuggestedFix.NO_FIX if there is no fix.");
+      throw new IllegalArgumentException("suggestedFix must not be null.");
     }
 
   }
 
   private Description(Tree node, String checkName, String rawMessage, String link,
-      Fix suggestedFix, BugPattern.SeverityLevel severity) {
+      ImmutableList<Fix> fixes, BugPattern.SeverityLevel severity) {
     this.checkName = checkName;
     this.rawMessage = rawMessage;
     this.link = link;
-    this.suggestedFix = suggestedFix;
+    this.fixes = fixes;
     this.node = node;
     this.severity = severity;
   }
@@ -148,7 +150,7 @@ public class Description {
   public static class Builder {
     private final Tree node;
     private final BugPattern pattern;
-    private Fix fix = Fix.NO_FIX;
+    private ImmutableList.Builder<Fix> fixListBuilder = ImmutableList.builder();
     private String rawMessage;
 
     private Builder(Tree node, BugPattern pattern) {
@@ -164,15 +166,16 @@ public class Description {
     }
 
     /**
-     * Set a suggested fix for this {@code Description}.
+     * Add a suggested fix for this {@code Description}. Fixes should be added in order of
+     * decreasing preference.
      *
-     * @param fix The suggested fix for this problem
+     * @param fix A suggested fix for this problem
      */
-    public Builder setFix(Fix fix) {
+    public Builder addFix(Fix fix) {
       if (fix == null) {
         throw new IllegalArgumentException("fix must not be null");
       }
-      this.fix = fix;
+      fixListBuilder.add(fix);
       return this;
     }
 
@@ -191,8 +194,8 @@ public class Description {
     }
 
     public Description build() {
-      return new Description(
-          node, pattern.name(), rawMessage, getLink(pattern), fix, pattern.severity());
+      return new Description(node, pattern.name(), rawMessage, getLink(pattern),
+          fixListBuilder.build(), pattern.severity());
     }
   }
 

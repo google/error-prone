@@ -24,7 +24,6 @@ import static org.junit.Assert.assertEquals;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.bugpatterns.BugChecker;
-import com.google.errorprone.fixes.Fix;
 
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TreeVisitor;
@@ -56,7 +55,7 @@ public class DescriptionTest {
       explanation = "", category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
   public static class MyChecker extends BugChecker {
     Description getDescription() {
-      return describeMatch(new MockTree(), Fix.NO_FIX);
+      return describeMatch(new MockTree());
     }
   }
 
@@ -92,7 +91,7 @@ public class DescriptionTest {
       link = "https://www.google.com/")
   public static class CustomLinkChecker extends BugChecker {
     Description getDescription() {
-      return describeMatch(new MockTree(), Fix.NO_FIX);
+      return describeMatch(new MockTree());
     }
   }
 

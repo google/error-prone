@@ -27,7 +27,6 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
-import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 
@@ -50,6 +49,6 @@ public class JUnitAmbiguousTestClass extends BugChecker implements ClassTreeMatc
 
   @Override
   public Description matchClass(ClassTree classTree, VisitorState state) {
-    return matcher.matches(classTree, state) ? describeMatch(classTree, Fix.NO_FIX) : NO_MATCH;
+    return matcher.matches(classTree, state) ? describeMatch(classTree) : NO_MATCH;
   }
 }

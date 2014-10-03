@@ -27,7 +27,6 @@ import static com.google.errorprone.matchers.Matchers.not;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
-import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -117,7 +116,7 @@ public class WaitNotInLoop extends BugChecker implements MethodInvocationTreeMat
     }
 
     if (!SUPPLY_FIX) {
-      return describeMatch(tree, Fix.NO_FIX);
+      return describeMatch(tree);
     }
 
     // if -> while case
@@ -169,6 +168,6 @@ public class WaitNotInLoop extends BugChecker implements MethodInvocationTreeMat
     }
     */
 
-    return describeMatch(tree, Fix.NO_FIX);
+    return describeMatch(tree);
   }
 }

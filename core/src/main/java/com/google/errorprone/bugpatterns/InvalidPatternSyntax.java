@@ -29,7 +29,6 @@ import static com.google.errorprone.matchers.Matchers.staticMethod;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
-import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -104,13 +103,13 @@ public class InvalidPatternSyntax extends BugChecker implements MethodInvocation
     }
 
     // TODO: Suggest fixes for more situations.
-    Fix fix = Fix.NO_FIX;
+    Description.Builder descriptionBuilder = Description.builder(methodInvocationTree, pattern);
     ExpressionTree arg = methodInvocationTree.getArguments().get(0);
     String value = (String) ((JCExpression) arg).type.constValue();
     String reasonInvalid = "";
 
     if (".".equals(value)) {
-      fix = SuggestedFix.replace(arg, "\"\\\\.\"");
+      descriptionBuilder.addFix(SuggestedFix.replace(arg, "\"\\\\.\""));
       reasonInvalid = "\".\" is a valid but useless regex";
     } else {
       try {
@@ -120,9 +119,7 @@ public class InvalidPatternSyntax extends BugChecker implements MethodInvocation
       }
     }
 
-    return Description.builder(methodInvocationTree, pattern)
-        .setMessage(MESSAGE_BASE + reasonInvalid)
-        .setFix(fix)
-        .build();
+    descriptionBuilder.setMessage(MESSAGE_BASE + reasonInvalid);
+    return descriptionBuilder.build();
   }
 }

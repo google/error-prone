@@ -24,7 +24,6 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
-import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
@@ -103,8 +102,6 @@ public class PrimitiveArrayPassedToVarargsMethod extends BugChecker
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree t, VisitorState state) {
-    return isVarargs.matches(t, state)
-        ? describeMatch(t, Fix.NO_FIX)
-        : NO_MATCH;
+    return isVarargs.matches(t, state) ? describeMatch(t) : NO_MATCH;
   }
 }

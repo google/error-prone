@@ -125,15 +125,19 @@ public abstract class BugChecker implements Suppressible, Disableable, Serializa
   }
 
   /**
-   * Helper to create a Description for the common case where the diagnostic message is not
-   * parameterized.
-   *
-   * TODO(user): Remove this method and inline the builder call.
+   * Helper to create a Description for the common case where there is a fix.
    */
   protected Description describeMatch(Tree node, Fix fix) {
     return Description.builder(node, pattern)
-        .setFix(fix)
+        .addFix(fix)
         .build();
+  }
+
+  /**
+   * Helper to create a Description for the common case where there is no fix.
+   */
+  protected Description describeMatch(Tree node) {
+    return Description.builder(node, pattern).build();
   }
 
   @Override

@@ -160,13 +160,13 @@ public class MalformedFormatString extends BugChecker implements MethodInvocatio
       int begin = state.getEndPosition((JCExpression) allArgs.get(formatIndex + e.used));
       int end = state.getEndPosition((JCMethodInvocation) tree);
       if (end < 0) {
-        return describeMatch(tree, null);
+        return describeMatch(tree);
       }
       Fix fix = SuggestedFix.replace(begin, end - 1, "");
       String message = String.format(EXTRA_ARGUMENTS_MESSAGE, e.used, e.provided);
       return Description.builder(tree, pattern)
           .setMessage(message)
-          .setFix(fix)
+          .addFix(fix)
           .build();
     } catch (Exception e) {
       // TODO(user): provide fixes for other problems

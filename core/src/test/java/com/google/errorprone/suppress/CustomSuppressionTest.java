@@ -19,7 +19,6 @@ package com.google.errorprone.suppress;
 import static com.google.errorprone.BugPattern.Category.ONE_OFF;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.fixes.SuggestedFix.NO_FIX;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -66,7 +65,7 @@ public class CustomSuppressionTest {
   private static class MyChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {
-      return describeMatch(tree, NO_FIX);
+      return describeMatch(tree);
     }
   }
 
@@ -84,7 +83,7 @@ public class CustomSuppressionTest {
   private static class MyChecker2 extends BugChecker implements EmptyStatementTreeMatcher {
     @Override
     public Description matchEmptyStatement(EmptyStatementTree tree, VisitorState state) {
-      return describeMatch(tree, NO_FIX);
+      return describeMatch(tree);
     }
   }
 

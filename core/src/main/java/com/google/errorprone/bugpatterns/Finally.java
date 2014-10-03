@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.fixes.Fix.NO_FIX;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -74,7 +73,7 @@ public class Finally extends BugChecker
   @Override
   public Description matchContinue(ContinueTree tree, VisitorState state) {
     if (new FinallyJumpMatcher((JCContinue) tree).matches(tree, state)) {
-      return describeMatch(tree, NO_FIX);
+      return describeMatch(tree);
     }
     return Description.NO_MATCH;
   }
@@ -82,7 +81,7 @@ public class Finally extends BugChecker
   @Override
   public Description matchBreak(BreakTree tree, VisitorState state) {
     if (new FinallyJumpMatcher((JCBreak) tree).matches(tree, state)) {
-      return describeMatch(tree, NO_FIX);
+      return describeMatch(tree);
     }
     return Description.NO_MATCH;
   }
@@ -90,7 +89,7 @@ public class Finally extends BugChecker
   @Override
   public Description matchThrow(ThrowTree tree, VisitorState state) {
     if (new FinallyThrowMatcher().matches(tree, state)) {
-      return describeMatch(tree, NO_FIX);
+      return describeMatch(tree);
     }
     return Description.NO_MATCH;
   }
@@ -98,7 +97,7 @@ public class Finally extends BugChecker
   @Override
   public Description matchReturn(ReturnTree tree, VisitorState state) {
     if (new FinallyCompletionMatcher<ReturnTree>().matches(tree, state)) {
-      return describeMatch(tree, NO_FIX);
+      return describeMatch(tree);
     }
     return Description.NO_MATCH;
   }

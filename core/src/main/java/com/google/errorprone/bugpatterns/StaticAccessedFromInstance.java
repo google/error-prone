@@ -116,7 +116,7 @@ public class StaticAccessedFromInstance extends BugChecker implements MemberSele
         methodOrVariable, memberName, replacement);
     return Description.builder(tree, pattern)
         .setMessage(customDiagnosticMessage)
-        .setFix(fix.build())
+        .addFix(fix.build())
         .build();
   }
 }

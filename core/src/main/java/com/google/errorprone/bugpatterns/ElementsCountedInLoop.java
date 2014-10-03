@@ -75,7 +75,7 @@ public class ElementsCountedInLoop extends BugChecker
           methodInvocation, state)) {
         IdentifierTree identifier = getIncrementedIdentifer(extractSingleStatement(whileLoop.body));
         if (identifier != null) {
-          return describeMatch(tree, Fix.NO_FIX);
+          return describeMatch(tree);
         }
       }
     }
