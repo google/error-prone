@@ -23,7 +23,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
-import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
@@ -114,6 +113,6 @@ public class WrongParameterPackage extends BugChecker implements MethodTreeMatch
       }
     }
 
-    return describeMatch(tree, (builder != null) ? builder.build() : Fix.NO_FIX);
+    return (builder != null) ? describeMatch(tree, builder.build()) : describeMatch(tree);
   }
 }

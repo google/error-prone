@@ -26,7 +26,6 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.CompoundAssignmentTreeMatcher;
-import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
@@ -78,10 +77,9 @@ public class DivZero extends BugChecker
     // Find and replace enclosing Statement.
     StatementTree enclosingStmt =
         ASTHelpers.findEnclosingNode(state.getPath(), StatementTree.class);
-    Fix fix = (enclosingStmt != null)
-        ? SuggestedFix.replace(enclosingStmt, "throw new ArithmeticException(\"/ by zero\");")
-        : Fix.NO_FIX;
-
-    return describeMatch(tree, fix);
+    return (enclosingStmt != null)
+        ? describeMatch(tree,
+            SuggestedFix.replace(enclosingStmt, "throw new ArithmeticException(\"/ by zero\");"))
+        : describeMatch(tree);
   }
 }

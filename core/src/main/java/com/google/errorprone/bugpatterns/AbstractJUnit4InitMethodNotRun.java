@@ -24,7 +24,6 @@ import static com.google.errorprone.matchers.Matchers.not;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
-import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.JUnitMatchers;
@@ -73,7 +72,7 @@ abstract class AbstractJUnit4InitMethodNotRun extends BugChecker implements Meth
   protected abstract String correctAnnotation();
 
   /**
-   * Returns a collection of 'before-and-after' pairs of annotations that should be replaced on 
+   * Returns a collection of 'before-and-after' pairs of annotations that should be replaced on
    * these methods.
    *
    * <p>If this method matcher finds a method annotated with
@@ -129,7 +128,7 @@ abstract class AbstractJUnit4InitMethodNotRun extends BugChecker implements Meth
         if (makeProtectedPublic(methodTree, state, unqualifiedClassName, suggestedFix, false)
             == null) {
           // No source position available, don't suggest a fix
-          return describeMatch(annotationNode, Fix.NO_FIX);
+          return describeMatch(annotationNode);
         }
         suggestedFix.replace(annotationNode, "@" + unqualifiedClassName);
         return describeMatch(annotationNode, suggestedFix.build());
@@ -146,7 +145,7 @@ abstract class AbstractJUnit4InitMethodNotRun extends BugChecker implements Meth
     //
     if (annotationAdded == null) {
       // No source position available, don't suggest a fix
-      return describeMatch(methodTree, Fix.NO_FIX);
+      return describeMatch(methodTree);
     }
 
     if (!annotationAdded) {

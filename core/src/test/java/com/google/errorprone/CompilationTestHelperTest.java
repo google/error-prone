@@ -23,7 +23,6 @@ import static org.junit.Assert.assertTrue;
 
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
-import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
 
 import com.sun.source.tree.ReturnTree;
@@ -73,7 +72,7 @@ public class CompilationTestHelperTest {
   private static class ReturnTreeChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {
-      return describeMatch(tree, Fix.NO_FIX);
+      return describeMatch(tree);
     }
   }
 }

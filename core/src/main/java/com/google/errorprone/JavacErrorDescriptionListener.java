@@ -16,7 +16,10 @@
 
 package com.google.errorprone;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import com.google.errorprone.fixes.AppliedFix;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
 
 import com.sun.tools.javac.main.JavaCompiler;
@@ -24,7 +27,9 @@ import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Log;
 
+import java.io.IOError;
 import java.io.IOException;
+import java.util.List;
 
 import javax.tools.JavaFileObject;
 
@@ -36,7 +41,15 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
   private final Log log;
   private ErrorProneEndPosMap endPositions;
   private final JavaFileObject sourceFile;
+  private final CharSequence sourceFileContent;
   private final JavaCompiler compiler;
+
+  private final Function<Fix, AppliedFix> fixToAppliedFix = new Function<Fix, AppliedFix>() {
+    @Override
+    public AppliedFix apply(Fix fix) {
+      return AppliedFix.fromSource(sourceFileContent, endPositions).apply(fix);
+    }
+  };
 
   // The suffix for properties in src/main/resources/com/google/errorprone/errors.properties
   private static final String MESSAGE_BUNDLE_KEY = "error.prone";
@@ -47,60 +60,64 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
     this.endPositions = endPositions;
     this.sourceFile = sourceFile;
     this.compiler = JavaCompiler.instance(context);
+    try {
+      this.sourceFileContent = sourceFile.getCharContent(true);
+    } catch (IOException e) {
+      throw new IOError(e);
+    }
   }
 
   @Override
   public void onDescribed(Description description) {
-    JavaFileObject originalSource;
     // Swap the log's source and the current file's source; then be sure to swap them back later.
-    originalSource = log.useSource(sourceFile);
-    try {
-      CharSequence content = sourceFile.getCharContent(true);
+    JavaFileObject originalSource = log.useSource(sourceFile);
 
-      // If endPositions were not computed (-Xjcov option was not passed), reparse the file
-      // and compute the end positions so we can generate suggested fixes.
-      if (endPositions == null) {
-        boolean prevGenEndPos = compiler.genEndPos;
-        compiler.genEndPos = true;
-        // Reset the end positions for JDK8:
-        JDKCompatible.resetEndPosMap(compiler, sourceFile);
-        ErrorProneEndPosMap endPosMap = JDKCompatible.getEndPosMap(compiler.parse(sourceFile));
-        compiler.genEndPos = prevGenEndPos;
-        endPositions = new WrappedTreeMap(log, endPosMap);
-      }
+    // If endPositions were not computed (-Xjcov option was not passed), reparse the file
+    // and compute the end positions so we can generate suggested fixes.
+    if (endPositions == null) {
+      boolean prevGenEndPos = compiler.genEndPos;
+      compiler.genEndPos = true;
+      // Reset the end positions for JDK8:
+      JDKCompatible.resetEndPosMap(compiler, sourceFile);
+      ErrorProneEndPosMap endPosMap = JDKCompatible.getEndPosMap(compiler.parse(sourceFile));
+      compiler.genEndPos = prevGenEndPos;
+      endPositions = new WrappedTreeMap(log, endPosMap);
+    }
 
-      AppliedFix fix = null;
-      // TODO(user): description.suggestedFix cannot be null, so remove
-      if (description.suggestedFix != null) {
-        fix = AppliedFix.fromSource(content, endPositions).apply(description.suggestedFix);
-      }
-      final String message;
-      // TODO(user): description.suggestedFix cannot be null, so remove
-      if (description.suggestedFix == null || fix == null) {
-        message = description.getMessage();
+    List<AppliedFix> appliedFixes = Lists.transform(description.fixes, fixToAppliedFix);
+    StringBuilder messageBuilder = new StringBuilder(description.getMessage());
+    boolean first = true;
+    for (AppliedFix appliedFix : appliedFixes) {
+      if (first) {
+        messageBuilder.append("\nDid you mean ");
       } else {
-        if (fix.isRemoveLine()) {
-          message = description.getMessage() + "\nDid you mean to remove this line?";
-        } else {
-          message = description.getMessage() + "\nDid you mean '" + fix.getNewCodeSnippet() + "'?";
-        }
+        messageBuilder.append(" or ");
       }
-      switch (description.severity) {
-        case ERROR:
-          log.error((DiagnosticPosition) description.node, MESSAGE_BUNDLE_KEY, message);
-          break;
-        case WARNING:
-          log.warning((DiagnosticPosition) description.node, MESSAGE_BUNDLE_KEY, message);
-          break;
-        default:
-          break;
+      if (appliedFix.isRemoveLine()) {
+        messageBuilder.append("to remove this line");
+      } else {
+        messageBuilder.append("'" + appliedFix.getNewCodeSnippet() + "'");
       }
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    } finally {
-      if (originalSource != null) {
-        log.useSource(originalSource);
-      }
+      first = false;
+    }
+    if (!first) {     // appended at least one suggested fix to the message
+      messageBuilder.append("?");
+    }
+    final String message = messageBuilder.toString();
+
+    switch (description.severity) {
+      case ERROR:
+        log.error((DiagnosticPosition) description.node, MESSAGE_BUNDLE_KEY, message);
+        break;
+      case WARNING:
+        log.warning((DiagnosticPosition) description.node, MESSAGE_BUNDLE_KEY, message);
+        break;
+      default:
+        break;
+    }
+
+    if (originalSource != null) {
+      log.useSource(originalSource);
     }
   }
 }

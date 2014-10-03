@@ -23,7 +23,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
-import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
@@ -69,7 +68,7 @@ public class Overrides extends BugChecker implements MethodTreeMatcher {
       if (areSupersVarargs != superMethodsIterator.next().isVarArgs()) {
         // The super methods are inconsistent (some are varargs, some are not varargs). Then the
         // current method is inconsistent with some of its supermethods, so report a match.
-        return describeMatch(methodTree, Fix.NO_FIX);
+        return describeMatch(methodTree);
       }
     }
 
@@ -86,12 +85,13 @@ public class Overrides extends BugChecker implements MethodTreeMatcher {
     CharSequence paramTypeSource = state.getSourceForNode((JCTree) paramType);
     if (paramTypeSource == null) {
       // No fix if we don't have tree end positions.
-      return describeMatch(methodTree, Fix.NO_FIX);
+      return describeMatch(methodTree);
     }
 
-    Fix fix = Fix.NO_FIX;
+    Description.Builder descriptionBuilder = Description.builder(methodTree, pattern);
     if (isVarargs) {
-      fix = SuggestedFix.replace(paramType, "[]", paramTypeSource.length() - 3, 0);
+      descriptionBuilder.addFix(
+          SuggestedFix.replace(paramType, "[]", paramTypeSource.length() - 3, 0));
     } else {
       // There may be a comment that includes a '[' character between the open and closed
       // brackets of the array type.  If so, we don't return a fix.
@@ -100,10 +100,11 @@ public class Overrides extends BugChecker implements MethodTreeMatcher {
         arrayOpenIndex--;
       }
       if (paramTypeSource.charAt(arrayOpenIndex) == '[') {
-        fix = SuggestedFix.replace(paramType, "...", arrayOpenIndex, 0);
+        descriptionBuilder.addFix(
+            SuggestedFix.replace(paramType, "...", arrayOpenIndex, 0));
       }
     }
 
-    return describeMatch(methodTree, fix);
+    return descriptionBuilder.build();
   }
 }

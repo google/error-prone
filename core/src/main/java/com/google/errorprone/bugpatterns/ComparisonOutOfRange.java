@@ -220,7 +220,7 @@ public class ComparisonOutOfRange extends BugChecker implements BinaryTreeMatche
           (int) Character.MAX_VALUE, literal.toString(), Boolean.toString(willEvaluateTo));
     }
     return Description.builder(tree, pattern)
-        .setFix(fix)
+        .addFix(fix)
         .setMessage(customDiagnosticMessage)
         .build();
   }

@@ -34,7 +34,6 @@ import com.google.errorprone.bugpatterns.BugChecker.ExpressionStatementTreeMatch
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.NonAtomicVolatileUpdate;
-import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
 
 import com.sun.source.tree.ExpressionStatementTree;
@@ -260,7 +259,7 @@ public class ErrorProneCompilerIntegrationTest {
   private static class ConstructorMatcher extends BugChecker implements MethodTreeMatcher {
     @Override
     public Description matchMethod(MethodTree tree, VisitorState state) {
-      return describeMatch(tree, Fix.NO_FIX);
+      return describeMatch(tree);
     }
   }
 
@@ -296,7 +295,7 @@ public class ErrorProneCompilerIntegrationTest {
         return Description.NO_MATCH;
       }
       return name.contentEquals("super")
-          ? describeMatch(tree,  Fix.NO_FIX)
+          ? describeMatch(tree)
           : Description.NO_MATCH;
     }
   }

@@ -32,7 +32,6 @@ import com.google.common.collect.Maps;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
-import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -229,7 +228,7 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
     // Are there format string references that aren't provided?
     Set<Integer> referencedArguments = getReferencedArguments(parameters.getType(), formatString);
     if (referencesUnspecifiedArguments(referencedArguments, formatArguments.size())) {
-      return describeMatch(tree, SuggestedFix.NO_FIX);
+      return describeMatch(tree);
     }
 
     // Are there parameters that aren't referenced in a MessageFormat?
@@ -308,17 +307,13 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
       int methodStart = state.getEndPosition((JCTree) getInvocationTarget(tree));
       int parameterEnd = state.getEndPosition((JCTree) args.get(args.size() - 1));
 
-      Fix fix;
+      Description.Builder descriptionBuilder = Description.builder(tree, pattern)
+          .setMessage("This call " + join(", ", errors));
       if (methodStart >= 0 && parameterEnd >= 0) {
         String replacement = "." + parameters.getMethodName() + "(" +  join(", ", newParameters);
-        fix = SuggestedFix.replace(methodStart, parameterEnd, replacement);
-      } else {
-        fix = SuggestedFix.NO_FIX;
+        descriptionBuilder.addFix(SuggestedFix.replace(methodStart, parameterEnd, replacement));
       }
-      return Description.builder(tree, pattern)
-          .setMessage("This call " + join(", ", errors))
-          .setFix(fix)
-          .build();
+      return descriptionBuilder.build();
     }
 
     return Description.NO_MATCH;

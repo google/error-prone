@@ -30,11 +30,6 @@ import java.util.Set;
  */
 public interface Fix {
 
-  /**
-   * An immutable value to use when there is no fix.
-   */
-  Fix NO_FIX = new NoFix();
-
   String toString(JCCompilationUnit compilationUnit);
 
   Set<Replacement> getReplacements(ErrorProneEndPosMap endPositions);

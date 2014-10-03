@@ -33,7 +33,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.AssignmentTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.CompoundAssignmentTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.UnaryTreeMatcher;
-import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
@@ -139,7 +138,7 @@ public class NonAtomicVolatileUpdate extends BugChecker
   @Override
   public Description matchUnary(UnaryTree tree, VisitorState state) {
     if (unaryIncrementDecrementMatcher.matches(tree, state)) {
-      return describeMatch(tree, Fix.NO_FIX);
+      return describeMatch(tree);
     }
     return Description.NO_MATCH;
   }
@@ -161,7 +160,7 @@ public class NonAtomicVolatileUpdate extends BugChecker
   @Override
   public Description matchCompoundAssignment(CompoundAssignmentTree tree, VisitorState state) {
     if (compoundAssignmentIncrementDecrementMatcher.matches(tree, state)) {
-      return describeMatch(tree, Fix.NO_FIX);
+      return describeMatch(tree);
     }
     return Description.NO_MATCH;
   }
@@ -189,7 +188,7 @@ public class NonAtomicVolatileUpdate extends BugChecker
   @Override
   public Description matchAssignment(AssignmentTree tree, VisitorState state) {
     if (assignmentIncrementDecrementMatcher(tree.getVariable()).matches(tree, state)) {
-      return describeMatch(tree, Fix.NO_FIX);
+      return describeMatch(tree);
     }
     return Description.NO_MATCH;
   }

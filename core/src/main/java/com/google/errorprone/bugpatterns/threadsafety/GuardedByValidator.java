@@ -25,7 +25,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
-import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
 
 import com.sun.source.tree.MethodTree;
@@ -35,7 +34,7 @@ import com.sun.source.tree.VariableTree;
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 @BugPattern(name = "GuardedByValidator",
-    summary = "Invalid @GuardedBy expression", 
+    summary = "Invalid @GuardedBy expression",
     explanation = "@GuardedBy(lock) documents that a field or method should be accessed only with "
       + "a specific lock held. The lock argument identifies the lock that should be held when "
       + "accessing the annotated field or method. The possible values for lock are: "
@@ -57,7 +56,7 @@ public class GuardedByValidator extends BugChecker implements VariableTreeMatche
   public Description matchMethod(MethodTree tree, final VisitorState state) {
     return GuardedByUtils.isGuardedByValid(tree, state)
         ? Description.NO_MATCH
-        : describeMatch(tree, Fix.NO_FIX);
+        : describeMatch(tree);
   }
 
   @Override
@@ -66,6 +65,6 @@ public class GuardedByValidator extends BugChecker implements VariableTreeMatche
     // parameter, but they won't have @GuardedBy annotations.
     return GuardedByUtils.isGuardedByValid(tree, state)
         ? Description.NO_MATCH
-        : describeMatch(tree, Fix.NO_FIX);
+        : describeMatch(tree);
   }
 }

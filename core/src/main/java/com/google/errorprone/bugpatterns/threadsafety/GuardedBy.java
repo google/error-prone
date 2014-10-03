@@ -39,13 +39,13 @@ import com.sun.tools.javac.code.Type;
 /**
  * @author cushon@google.com (Liam Miller-Cushon)
  */
-@BugPattern(name = "GuardedByChecker",
+@BugPattern(name = "GuardedBy",
     summary = "Checks for unguarded accesses to fields and methods with @GuardedBy annotations",
     explanation = "The @GuardedBy annotation is used to associate a lock with a fields or methods."
         + " Accessing a guarded field or invoking a guarded method should only be done when the"
         + " specified lock is held. Unguarded accesses are not thread safe.",
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
-public class GuardedByChecker extends GuardedByValidator implements BugChecker.VariableTreeMatcher,
+public class GuardedBy extends GuardedByValidator implements BugChecker.VariableTreeMatcher,
     BugChecker.MethodTreeMatcher {
 
   private static final String JUC_READ_WRITE_LOCK = "java.util.concurrent.locks.ReadWriteLock";
@@ -62,7 +62,7 @@ public class GuardedByChecker extends GuardedByValidator implements BugChecker.V
       @Override
       public void handleGuardedAccess(
           ExpressionTree tree, GuardedByExpression guard, HeldLockSet live) {
-        report(tree, GuardedByChecker.this.checkGuardedAccess(tree, guard, live, state), state);
+        report(tree, GuardedBy.this.checkGuardedAccess(tree, guard, live, state), state);
       }
     });
 
@@ -87,8 +87,8 @@ public class GuardedByChecker extends GuardedByValidator implements BugChecker.V
 
   private Description describeInvalidGuardedBy(Tree tree) {
     // Re-use the validation message from {@link GuardedByValidator}.
-    // TODO(user) - consolidate the checks once the clean-up is done; GuardedByChecker is intended
-    // to subsume GuardedByValidator.
+    // TODO(user) - consolidate the checks once the clean-up is done; GuardedBy is intended to
+    // subsume GuardedByValidator.
     String message = GuardedByValidator.class.getAnnotation(BugPattern.class).summary();
     // TODO(user) - this message will have a wiki link to GuardedBy, not GuardedByValidator.
     // Think about the best way to present the information from GuardedByValidator's explanation

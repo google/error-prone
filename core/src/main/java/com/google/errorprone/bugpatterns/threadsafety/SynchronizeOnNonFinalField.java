@@ -23,7 +23,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
-import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 
@@ -64,6 +63,6 @@ public class SynchronizeOnNonFinalField extends BugChecker
       return Description.NO_MATCH;
     }
 
-    return describeMatch(tree.getExpression(), Fix.NO_FIX);
+    return describeMatch(tree.getExpression());
   }
 }
