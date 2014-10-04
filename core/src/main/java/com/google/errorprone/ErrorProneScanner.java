@@ -25,6 +25,7 @@ import com.google.common.reflect.ClassPath;
 import com.google.common.reflect.ClassPath.ClassInfo;
 import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.BugChecker.AnnotatedTypeTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ArrayAccessTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ArrayTypeTreeMatcher;
@@ -49,8 +50,11 @@ import com.google.errorprone.bugpatterns.BugChecker.IdentifierTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.IfTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ImportTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.InstanceOfTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.IntersectionTypeTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.LabeledStatementTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.LambdaExpressionTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.LiteralTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MemberSelectTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -68,11 +72,13 @@ import com.google.errorprone.bugpatterns.BugChecker.TryTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.TypeCastTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.TypeParameterTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.UnaryTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.UnionTypeTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.WhileLoopTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.WildcardTreeMatcher;
 import com.google.errorprone.util.ASTHelpers;
 
+import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.ArrayTypeTree;
@@ -97,8 +103,11 @@ import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.InstanceOfTree;
+import com.sun.source.tree.IntersectionTypeTree;
 import com.sun.source.tree.LabeledStatementTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.LiteralTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
@@ -116,6 +125,7 @@ import com.sun.source.tree.TryTree;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.UnaryTree;
+import com.sun.source.tree.UnionTypeTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
@@ -235,6 +245,8 @@ public class ErrorProneScanner extends Scanner {
 
   private final List<AnnotationTreeMatcher> annotationMatchers =
       new ArrayList<>();
+  private final List<AnnotatedTypeTreeMatcher> annotatedTypeMatchers =
+      new ArrayList<>();
   private final List<ArrayAccessTreeMatcher> arrayAccessMatchers =
       new ArrayList<>();
   private final List<ArrayTypeTreeMatcher> arrayTypeMatchers =
@@ -281,9 +293,15 @@ public class ErrorProneScanner extends Scanner {
       new ArrayList<>();
   private final List<InstanceOfTreeMatcher> instanceOfMatchers =
       new ArrayList<>();
+  private final List<IntersectionTypeTreeMatcher> intersectionTypeMatchers =
+      new ArrayList<>();
   private final List<LabeledStatementTreeMatcher> labeledStatementMatchers =
       new ArrayList<>();
+  private final List<LambdaExpressionTreeMatcher> lambdaExpressionMatchers =
+      new ArrayList<>();
   private final List<LiteralTreeMatcher> literalMatchers =
+      new ArrayList<>();
+  private final List<MemberReferenceTreeMatcher> memberReferenceMatchers =
       new ArrayList<>();
   private final List<MemberSelectTreeMatcher> memberSelectMatchers =
       new ArrayList<>();
@@ -319,6 +337,8 @@ public class ErrorProneScanner extends Scanner {
       new ArrayList<>();
   private final List<UnaryTreeMatcher> unaryMatchers =
       new ArrayList<>();
+  private final List<UnionTypeTreeMatcher> unionTypeTreeMatchers =
+      new ArrayList<>();
   private final List<VariableTreeMatcher> variableMatchers =
       new ArrayList<>();
   private final List<WhileLoopTreeMatcher> whileLoopMatchers =
@@ -334,6 +354,9 @@ public class ErrorProneScanner extends Scanner {
 
     if (checker instanceof AnnotationTreeMatcher) {
       annotationMatchers.add((AnnotationTreeMatcher) checker);
+    }
+    if (checker instanceof AnnotatedTypeTreeMatcher) {
+      annotatedTypeMatchers.add((AnnotatedTypeTreeMatcher) checker);
     }
     if (checker instanceof ArrayAccessTreeMatcher) {
       arrayAccessMatchers.add((ArrayAccessTreeMatcher) checker);
@@ -404,11 +427,20 @@ public class ErrorProneScanner extends Scanner {
     if (checker instanceof InstanceOfTreeMatcher) {
       instanceOfMatchers.add((InstanceOfTreeMatcher) checker);
     }
+    if (checker instanceof IntersectionTypeTreeMatcher) {
+      intersectionTypeMatchers.add((IntersectionTypeTreeMatcher) checker);
+    }
     if (checker instanceof LabeledStatementTreeMatcher) {
       labeledStatementMatchers.add((LabeledStatementTreeMatcher) checker);
     }
+    if (checker instanceof LambdaExpressionTreeMatcher) {
+      lambdaExpressionMatchers.add((LambdaExpressionTreeMatcher) checker);
+    }
     if (checker instanceof LiteralTreeMatcher) {
       literalMatchers.add((LiteralTreeMatcher) checker);
+    }
+    if (checker instanceof MemberReferenceTreeMatcher) {
+      memberReferenceMatchers.add((MemberReferenceTreeMatcher) checker);
     }
     if (checker instanceof MemberSelectTreeMatcher) {
       memberSelectMatchers.add((MemberSelectTreeMatcher) checker);
@@ -461,6 +493,9 @@ public class ErrorProneScanner extends Scanner {
     if (checker instanceof UnaryTreeMatcher) {
       unaryMatchers.add((UnaryTreeMatcher) checker);
     }
+    if (checker instanceof UnionTypeTreeMatcher) {
+      unionTypeTreeMatchers.add((UnionTypeTreeMatcher) checker);
+    }
     if (checker instanceof VariableTreeMatcher) {
       variableMatchers.add((VariableTreeMatcher) checker);
     }
@@ -480,6 +515,16 @@ public class ErrorProneScanner extends Scanner {
       reportMatch(matcher.matchAnnotation(tree, state), tree, state);
     }
     return super.visitAnnotation(tree, visitorState);
+  }
+
+  @Override
+  public Void visitAnnotatedType(AnnotatedTypeTree tree, VisitorState visitorState) {
+    VisitorState state = visitorState.withPath(getCurrentPath());
+    for (AnnotatedTypeTreeMatcher matcher : annotatedTypeMatchers) {
+      if (isSuppressedOrDisabled(matcher)) continue;
+      reportMatch(matcher.matchAnnotatedType(tree, state), tree, state);
+    }
+    return super.visitAnnotatedType(tree, visitorState);
   }
 
   @Override
@@ -720,6 +765,16 @@ public class ErrorProneScanner extends Scanner {
   }
 
   @Override
+  public Void visitIntersectionType(IntersectionTypeTree tree, VisitorState visitorState) {
+    VisitorState state = visitorState.withPath(getCurrentPath());
+    for (IntersectionTypeTreeMatcher matcher : intersectionTypeMatchers) {
+      if (isSuppressedOrDisabled(matcher)) continue;
+      reportMatch(matcher.matchIntersectionType(tree, state), tree, state);
+    }
+    return super.visitIntersectionType(tree, visitorState);
+  }
+
+  @Override
   public Void visitLabeledStatement(LabeledStatementTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (LabeledStatementTreeMatcher matcher : labeledStatementMatchers) {
@@ -727,6 +782,16 @@ public class ErrorProneScanner extends Scanner {
       reportMatch(matcher.matchLabeledStatement(tree, state), tree, state);
     }
     return super.visitLabeledStatement(tree, visitorState);
+  }
+
+  @Override
+  public Void visitLambdaExpression(LambdaExpressionTree tree, VisitorState visitorState) {
+    VisitorState state = visitorState.withPath(getCurrentPath());
+    for (LambdaExpressionTreeMatcher matcher : lambdaExpressionMatchers) {
+      if (isSuppressedOrDisabled(matcher)) continue;
+      reportMatch(matcher.matchLambdaExpression(tree, state), tree, state);
+    }
+    return super.visitLambdaExpression(tree, visitorState);
   }
 
   @Override
@@ -750,12 +815,22 @@ public class ErrorProneScanner extends Scanner {
   }
 
   @Override
+  public Void visitMemberReference(MemberReferenceTree tree, VisitorState visitorState) {
+    VisitorState state = visitorState.withPath(getCurrentPath());
+    for (MemberReferenceTreeMatcher matcher : memberReferenceMatchers) {
+      if (isSuppressedOrDisabled(matcher)) continue;
+      reportMatch(matcher.matchMemberReference(tree, state), tree, state);
+    }
+    return super.visitMemberReference(tree, visitorState);
+}
+
+  @Override
   public Void visitMethod(MethodTree tree, VisitorState visitorState) {
     // Ignore synthetic constructors:
     if (ASTHelpers.isGeneratedConstructor(tree)) {
       return null;
     }
-    
+
     VisitorState state = visitorState.withPath(getCurrentPath());
     for (MethodTreeMatcher matcher : methodMatchers) {
       if (isSuppressedOrDisabled(matcher)) continue;
@@ -917,7 +992,15 @@ public class ErrorProneScanner extends Scanner {
     return super.visitUnary(tree, visitorState);
   }
 
-  // Intentionally skip visitUnionType -- this is not available in Java 6.
+  @Override
+  public Void visitUnionType(UnionTypeTree tree, VisitorState visitorState) {
+    VisitorState state = visitorState.withPath(getCurrentPath());
+    for (UnionTypeTreeMatcher matcher : unionTypeTreeMatchers) {
+      if (isSuppressedOrDisabled(matcher)) continue;
+      reportMatch(matcher.matchUnionType(tree, state), tree, state);
+    }
+    return super.visitUnionType(tree, state);
+  }
 
   @Override
   public Void visitVariable(VariableTree tree, VisitorState visitorState) {

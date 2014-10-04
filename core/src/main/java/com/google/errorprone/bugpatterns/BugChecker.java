@@ -29,6 +29,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Disableable;
 import com.google.errorprone.matchers.Suppressible;
 
+import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.ArrayTypeTree;
@@ -53,8 +54,11 @@ import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.InstanceOfTree;
+import com.sun.source.tree.IntersectionTypeTree;
 import com.sun.source.tree.LabeledStatementTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.LiteralTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
@@ -73,6 +77,7 @@ import com.sun.source.tree.TryTree;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.UnaryTree;
+import com.sun.source.tree.UnionTypeTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
@@ -171,6 +176,10 @@ public abstract class BugChecker implements Suppressible, Disableable, Serializa
 
   public static interface AnnotationTreeMatcher extends Suppressible, Disableable {
     Description matchAnnotation(AnnotationTree tree, VisitorState state);
+  }
+
+  public static interface AnnotatedTypeTreeMatcher extends Suppressible, Disableable {
+    Description matchAnnotatedType(AnnotatedTypeTree tree, VisitorState state);
   }
 
   public static interface ArrayAccessTreeMatcher extends Suppressible, Disableable {
@@ -276,12 +285,24 @@ public abstract class BugChecker implements Suppressible, Disableable, Serializa
     Description matchInstanceOf(InstanceOfTree tree, VisitorState state);
   }
 
+  public static interface IntersectionTypeTreeMatcher extends Suppressible, Disableable {
+    Description matchIntersectionType(IntersectionTypeTree tree, VisitorState state);
+  }
+
   public static interface LabeledStatementTreeMatcher extends Suppressible, Disableable {
     Description matchLabeledStatement(LabeledStatementTree tree, VisitorState state);
   }
 
+  public static interface LambdaExpressionTreeMatcher extends Suppressible, Disableable {
+    Description matchLambdaExpression(LambdaExpressionTree tree, VisitorState state);
+  }
+
   public static interface LiteralTreeMatcher extends Suppressible, Disableable {
     Description matchLiteral(LiteralTree tree, VisitorState state);
+  }
+
+  public static interface MemberReferenceTreeMatcher extends Suppressible, Disableable {
+    Description matchMemberReference(MemberReferenceTree tree, VisitorState state);
   }
 
   public static interface MemberSelectTreeMatcher extends Suppressible, Disableable {
@@ -355,7 +376,9 @@ public abstract class BugChecker implements Suppressible, Disableable, Serializa
     Description matchUnary(UnaryTree tree, VisitorState state);
   }
 
-  // Intentionally skip UnionTypeTreeMatcher -- this is not available in Java 6.
+  public static interface UnionTypeTreeMatcher extends Suppressible, Disableable {
+    Description matchUnionType(UnionTypeTree tree, VisitorState state);
+  }
 
   public static interface VariableTreeMatcher extends Suppressible, Disableable {
     Description matchVariable(VariableTree tree, VisitorState state);
