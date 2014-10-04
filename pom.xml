@@ -58,8 +58,6 @@
   </distributionManagement>
 
   <modules>
-    <module>jdkcompat</module>
-    <module>jdk8</module>
     <module>core</module>
     <module>annotation</module>
     <module>docgen</module>

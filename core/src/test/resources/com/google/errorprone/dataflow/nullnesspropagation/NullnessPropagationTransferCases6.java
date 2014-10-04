@@ -190,7 +190,7 @@ public class NullnessPropagationTransferCases6 {
     }
   }
 
-  public static class HasStaticFields {
+  static class HasStaticFields {
     static String staticStringField;
   }
 }
