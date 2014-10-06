@@ -17,13 +17,13 @@
 package com.google.errorprone;
 
 import com.sun.source.tree.Tree.Kind;
+import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Position;
 
-import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -35,7 +35,7 @@ import java.util.Set;
  *
  * @author Eddie Aftandilian (eaftan@google.com)
  */
-class WrappedTreeMap extends AbstractMap<JCTree, Integer> implements ErrorProneEndPosMap {
+class WrappedTreeMap implements EndPosTable, ErrorProneEndPosMap {
   /**
    * A map from wrapped tree nodes to tree end positions.
    */
@@ -63,26 +63,22 @@ class WrappedTreeMap extends AbstractMap<JCTree, Integer> implements ErrorProneE
     throw new UnsupportedOperationException("entrySet() not implemented on WrappedTreeMap");
   }
 
-  /**
-   * This should never be called directly. It exists to complete a minimal implementation of
-   * Map<JCTree, Integer> so WrappedTreeMap can be used with TreeInfo#getEndPos() below in the
-   * implementation of getEndPosition().
-   */
   @Override
-  public Integer get(Object key) {
-    if (!(key instanceof JCTree)) {
-      return null;
+  public int getEndPos(JCTree tree) {
+    if (tree == null) {
+      return Position.NOPOS;
     }
-    WrappedTreeNode wrappedNode = new WrappedTreeNode((JCTree) key);
-    return wrappedMap.get(wrappedNode);
+    WrappedTreeNode wrappedNode = new WrappedTreeNode(tree);
+    Integer result = wrappedMap.get(wrappedNode);
+    if (result == null) {
+      return Position.NOPOS;
+    }
+    return result;
   }
 
   @Override
   public Integer getEndPosition(DiagnosticPosition pos) {
-    // If two nodes share an end position, there's only one entry in the table.
-    // Call TreeInfo#getEndPos() to figure out which node is the key for the
-    // current node's entry.
-    return JDKCompatible.getEndPosition(pos, this);
+    return pos.getEndPosition(this);
   }
 
   /**
@@ -192,4 +188,13 @@ class WrappedTreeMap extends AbstractMap<JCTree, Integer> implements ErrorProneE
     }
   }
 
+  @Override
+  public void storeEnd(JCTree tree, int endpos) {
+    throw new IllegalStateException();
+  }
+
+  @Override
+  public int replaceTree(JCTree oldtree, JCTree newtree) {
+    throw new IllegalStateException();
+  }
 }

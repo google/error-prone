@@ -43,7 +43,7 @@
     <dependency>
       <groupId>com.google.errorprone</groupId>
       <artifactId>javac</artifactId>
-      <version>1.8.0-beta-132</version>
+      <version>1.8.0-u20</version>
     </dependency>
   </dependencies>
 

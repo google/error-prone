@@ -25,8 +25,6 @@ import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 
-import java.util.Map;
-
 import javax.annotation.processing.Processor;
 import javax.tools.JavaFileObject;
 
@@ -48,7 +46,6 @@ interface JDKCompatibleShim {
       com.sun.tools.javac.util.List<JavaFileObject> files,
       Iterable<? extends Processor> processors);
   int getJCTreeTag(JCTree node);
-  Integer getEndPosition(DiagnosticPosition pos, Map<JCTree, Integer> map);
   JCExpression parseString(String string, Context context);
   Number numberValue(TreePath exprPath, Context context);
   boolean isDefinitelyNonNull(TreePath exprPath, Context context);
