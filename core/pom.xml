@@ -205,6 +205,6 @@
 
   <properties>
     <!-- put javac.jar on bootclasspath when executing tests -->
-    <argLine>-Xbootclasspath/p:${settings.localRepository}/com/google/errorprone/javac/1.8.0-beta-132/javac-1.8.0-beta-132.jar</argLine>
+    <argLine>-Xbootclasspath/p:${settings.localRepository}/com/google/errorprone/javac/1.8.0-u20/javac-1.8.0-u20.jar</argLine>
   </properties>
 </project>

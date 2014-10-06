@@ -20,10 +20,13 @@ import com.sun.tools.javac.parser.JavacParser;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
+import com.sun.tools.javac.util.IntHashTable;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Position;
 
 import java.lang.reflect.Field;
+import java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -62,9 +65,9 @@ public class EndPosMap8 implements ErrorProneEndPosMap {
       }
     }
     @SuppressWarnings("unchecked")  // Unsafe reflection.
-    public static Map<JCTree, Integer> getMap(EndPosTable table) {
+    public static IntHashTable getMap(EndPosTable table) {
       try {
-        return (Map<JCTree, Integer>) END_POS_MAP_FIELD.get(table);
+        return (IntHashTable) END_POS_MAP_FIELD.get(table);
       } catch (Exception e) {
         throw new LinkageError(e.getMessage());
       }
@@ -86,9 +89,9 @@ public class EndPosMap8 implements ErrorProneEndPosMap {
   }
 
   private EndPosTable table;
-  private Map<JCTree, Integer> rawMap;
+  private IntHashTable rawMap;
 
-  private EndPosMap8(EndPosTable table, Map<JCTree, Integer> rawMap) {
+  private EndPosMap8(EndPosTable table, IntHashTable rawMap) {
     this.table = table;
     this.rawMap = rawMap;
   }
@@ -102,41 +105,43 @@ public class EndPosMap8 implements ErrorProneEndPosMap {
     return result != null ? result : Position.NOPOS;
   }
 
+  private static final Field getFieldOrDie(Class<?> clazz, String fieldName) {
+    try {
+      Field field = clazz.getDeclaredField(fieldName);
+      field.setAccessible(true);
+      return field;
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage());
+    }
+  }
+
+  private static final Field OBJS_FIELD = getFieldOrDie(IntHashTable.class, "objs");
+  private static final Field INTS_FIELD = getFieldOrDie(IntHashTable.class, "ints");
+  private static final Object DELETED;
+  static {
+    try {
+      DELETED = getFieldOrDie(IntHashTable.class, "DELETED").get(IntHashTable.class);
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage());
+    }
+  }
+
   @Override
   public Set<Map.Entry<JCTree, Integer>> entrySet() {
-    return rawMap.entrySet();
-  }
-
-  /**
-   * Adapt a Map<JCTree, Integer> into an EndPosTable, and return Position.NOPOS for keys that
-   * aren't present.
-   */
-  private static class EndPosTableAdapter implements EndPosTable {
-
-    private final Map<JCTree, Integer> map;
-
-    public EndPosTableAdapter(Map<JCTree, Integer> map) {
-      this.map = map;
+    Set<Map.Entry<JCTree, Integer>> entries = new HashSet<>();
+    Object[] objs;
+    int[] ints;
+    try {
+      objs = (Object[]) OBJS_FIELD.get(rawMap);
+      ints = (int[]) INTS_FIELD.get(rawMap);
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage());
     }
-
-    @Override
-    public int getEndPos(JCTree tree) {
-      Integer result = map.get(tree);
-      return result != null ? result : Position.NOPOS;
+    for (int i = 0; i < objs.length; i++) {
+      if (objs[i] != null && objs[i] != DELETED) {
+        entries.add(new SimpleImmutableEntry<JCTree, Integer>((JCTree) objs[i], ints[i]));
+      }
     }
-
-    @Override
-    public void storeEnd(JCTree tree, int endpos) {
-      throw new IllegalStateException();
-    }
-
-    @Override
-    public int replaceTree(JCTree oldtree, JCTree newtree) {
-      throw new IllegalStateException();
-    }
-  }
-
-  public static int getEndPos(DiagnosticPosition pos, Map<JCTree, Integer> map) {
-    return pos.getEndPosition(new EndPosTableAdapter(map));
+    return entries;
   }
 }
