@@ -17,13 +17,35 @@
 package com.google.errorprone.fixes;
 
 import com.sun.tools.javac.tree.EndPosTable;
+import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 
 /**
  * Describes a position that only has a start and end index.
  */
-public class IndexedPosition8 extends AbstractIndexedPosition {
-  public IndexedPosition8(int startPos, int endPos) {
-    super(startPos, endPos);
+public class IndexedPosition implements DiagnosticPosition {
+
+  final int startPos;
+  final int endPos;
+
+  public IndexedPosition(int startPos, int endPos) {
+    this.startPos = startPos;
+    this.endPos = endPos;
+  }
+
+  @Override
+  public JCTree getTree() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public int getStartPosition() {
+    return startPos;
+  }
+
+  @Override
+  public int getPreferredPosition() {
+    throw new UnsupportedOperationException();
   }
 
   @Override

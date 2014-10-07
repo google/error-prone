@@ -16,11 +16,12 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
-import com.google.errorprone.JDKCompatible;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.Tree;
+import com.sun.tools.javac.parser.JavacParser;
+import com.sun.tools.javac.parser.ParserFactory;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Context;
 
@@ -49,11 +50,17 @@ public class GuardedByUtils {
   }
 
   public static JCTree.JCExpression parseString(String guardedByString, Context context) {
+    JavacParser parser =
+        ParserFactory.instance(context).newParser(guardedByString, false, true, false);
     JCTree.JCExpression exp;
     try {
-      exp = JDKCompatible.parseString(guardedByString, context);
+      exp = parser.parseExpression();
     } catch (Throwable e) {
       throw new IllegalGuardedBy(e.getMessage());
+    }
+    int len = (parser.getEndPos(exp) - exp.getStartPosition());
+    if (len != guardedByString.length()) {
+      throw new IllegalGuardedBy("Didn't parse entire string.");
     }
     return exp;
   }

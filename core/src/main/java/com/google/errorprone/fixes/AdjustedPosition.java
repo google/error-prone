@@ -18,13 +18,35 @@ package com.google.errorprone.fixes;
 
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 
 /**
  * Describes a tree position with adjustments to the start and end indices.
  */
-public class AdjustedPosition8 extends AbstractAdjustedPosition {
-  public AdjustedPosition8(JCTree position, int startPosAdjustment, int endPosAdjustment) {
-    super(position, startPosAdjustment, endPosAdjustment);
+public class AdjustedPosition implements DiagnosticPosition {
+  protected final JCTree position;
+  protected final int startPositionAdjustment;
+  protected final int endPositionAdjustment;
+
+  public AdjustedPosition(JCTree position, int startPosAdjustment, int endPosAdjustment) {
+    this.position = position;
+    this.startPositionAdjustment = startPosAdjustment;
+    this.endPositionAdjustment = endPosAdjustment;
+  }
+
+  @Override
+  public int getStartPosition() {
+    return position.getStartPosition() + startPositionAdjustment;
+  }
+
+  @Override
+  public JCTree getTree() {
+    return position;
+  }
+
+  @Override
+  public int getPreferredPosition() {
+    throw new UnsupportedOperationException();
   }
 
   @Override

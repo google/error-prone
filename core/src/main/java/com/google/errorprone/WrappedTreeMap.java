@@ -177,7 +177,7 @@ class WrappedTreeMap implements EndPosTable, ErrorProneEndPosMap {
         // getKind() throws an AssertionError for LetExpr and TypeBoundKind. Ignore it for 
         // calculating the hash code.
       }
-      result = 31 * result + JDKCompatible.getJCTreeTag(node);
+      result = 31 * result + node.getTag().ordinal();
       if (node instanceof JCLiteral) {
         Object value = ((JCLiteral) node).getValue();
         if (value != null) {
