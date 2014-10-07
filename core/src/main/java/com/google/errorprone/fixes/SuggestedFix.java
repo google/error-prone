@@ -17,11 +17,9 @@
 package com.google.errorprone.fixes;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.primitives.Ints;
-import com.google.errorprone.ErrorProneEndPosMap;
-import com.google.errorprone.JDKCompatible;
 
 import com.sun.source.tree.Tree;
+import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
@@ -69,7 +67,7 @@ public class SuggestedFix implements Fix {
   @Override
   public String toString(JCCompilationUnit compilationUnit) {
     StringBuilder result = new StringBuilder("replace ");
-    for (Replacement replacement : getReplacements(JDKCompatible.getEndPosMap(compilationUnit))) {
+    for (Replacement replacement : getReplacements(compilationUnit.endPositions)) {
       result
           .append("position " + replacement.startPosition() + ":" + replacement.endPosition())
           .append(" with \"" + replacement.replaceWith() + "\" ");
@@ -78,7 +76,7 @@ public class SuggestedFix implements Fix {
   }
 
   @Override
-  public Set<Replacement> getReplacements(ErrorProneEndPosMap endPositions) {
+  public Set<Replacement> getReplacements(EndPosTable endPositions) {
     if (endPositions == null) {
       throw new IllegalArgumentException(
           "Cannot produce correct replacements without endPositions." +
@@ -88,7 +86,7 @@ public class SuggestedFix implements Fix {
       new Comparator<Replacement>() {
         @Override
         public int compare(Replacement o1, Replacement o2) {
-        return Ints.compare(o2.startPosition(), o1.startPosition());
+        return Integer.compare(o2.startPosition(), o1.startPosition());
         }
       });
     for (FixOperation fix : fixes) {
@@ -279,12 +277,12 @@ public class SuggestedFix implements Fix {
   /** Models a single fix operation. */
   private static interface FixOperation {
     /** Calculate the replacement operation once end positions are available. */
-    Replacement getReplacement(ErrorProneEndPosMap endPositions);
+    Replacement getReplacement(EndPosTable endPositions);
   }
 
   /** Inserts new text at a specific insertion point (e.g. prefix or postfix). */
   private abstract static class InsertionFix implements FixOperation {
-    protected abstract int getInsertionIndex(ErrorProneEndPosMap endPositions);
+    protected abstract int getInsertionIndex(EndPosTable endPositions);
 
     protected final DiagnosticPosition tree;
     protected final String insertion;
@@ -295,7 +293,7 @@ public class SuggestedFix implements Fix {
     }
 
     @Override
-    public Replacement getReplacement(ErrorProneEndPosMap endPositions) {
+    public Replacement getReplacement(EndPosTable endPositions) {
       int insertionIndex = getInsertionIndex(endPositions);
       return Replacement.create(insertionIndex, insertionIndex, insertion);
     }
@@ -307,8 +305,8 @@ public class SuggestedFix implements Fix {
     }
 
     @Override
-    protected int getInsertionIndex(ErrorProneEndPosMap endPositions) {
-      return endPositions.getEndPosition(tree);
+    protected int getInsertionIndex(EndPosTable endPositions) {
+      return tree.getEndPosition(endPositions);
     }
   }
 
@@ -318,7 +316,7 @@ public class SuggestedFix implements Fix {
     }
 
     @Override
-    protected int getInsertionIndex(ErrorProneEndPosMap endPositions) {
+    protected int getInsertionIndex(EndPosTable endPositions) {
       return tree.getStartPosition();
     }
   }
@@ -334,10 +332,10 @@ public class SuggestedFix implements Fix {
     }
 
     @Override
-    public Replacement getReplacement(ErrorProneEndPosMap endPositions) {
+    public Replacement getReplacement(EndPosTable endPositions) {
       return Replacement.create(
           original.getStartPosition(),
-          endPositions.getEndPosition(original),
+          original.getEndPosition(endPositions),
           replacement);
     }
   }

@@ -16,7 +16,7 @@
 
 package com.google.errorprone.fixes;
 
-import com.google.errorprone.ErrorProneEndPosMap;
+import com.sun.tools.javac.tree.EndPosTable;
 
 import java.io.IOException;
 import java.io.LineNumberReader;
@@ -49,9 +49,9 @@ public class AppliedFix {
 
   public static class Applier {
     private final CharSequence source;
-    private final ErrorProneEndPosMap endPositions;
+    private final EndPosTable endPositions;
 
-    public Applier(CharSequence source, ErrorProneEndPosMap endPositions) {
+    public Applier(CharSequence source, EndPosTable endPositions) {
       this.source = source;
       this.endPositions = endPositions;
     }
@@ -110,7 +110,7 @@ public class AppliedFix {
     }
   }
 
-  public static Applier fromSource(CharSequence source, ErrorProneEndPosMap endPositions) {
+  public static Applier fromSource(CharSequence source, EndPosTable endPositions) {
     return new Applier(source, endPositions);
   }
 }

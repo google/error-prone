@@ -16,8 +16,7 @@
 
 package com.google.errorprone.fixes;
 
-import com.google.errorprone.ErrorProneEndPosMap;
-
+import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 
 import java.util.Collection;
@@ -32,7 +31,7 @@ public interface Fix {
 
   String toString(JCCompilationUnit compilationUnit);
 
-  Set<Replacement> getReplacements(ErrorProneEndPosMap endPositions);
+  Set<Replacement> getReplacements(EndPosTable endPositions);
 
   Collection<String> getImportsToAdd();
 

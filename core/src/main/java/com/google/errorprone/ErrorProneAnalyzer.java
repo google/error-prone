@@ -127,7 +127,7 @@ public class ErrorProneAnalyzer {
       return new VisitorState(context, resultsPrinter);
     } else {
       DescriptionListener logReporter = new JavacErrorDescriptionListener(log,
-          JDKCompatible.getEndPosMap(env.toplevel),
+          env.toplevel.endPositions,
           env.enclClass.sym.sourcefile != null
           ? env.enclClass.sym.sourcefile
               : env.toplevel.sourcefile,
