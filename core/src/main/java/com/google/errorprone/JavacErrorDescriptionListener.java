@@ -23,6 +23,7 @@ import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
 
 import com.sun.tools.javac.main.JavaCompiler;
+import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Log;
@@ -39,7 +40,7 @@ import javax.tools.JavaFileObject;
  */
 public class JavacErrorDescriptionListener implements DescriptionListener {
   private final Log log;
-  private ErrorProneEndPosMap endPositions;
+  private EndPosTable endPositions;
   private final JavaFileObject sourceFile;
   private final CharSequence sourceFileContent;
   private final JavaCompiler compiler;
@@ -54,7 +55,7 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
   // The suffix for properties in src/main/resources/com/google/errorprone/errors.properties
   private static final String MESSAGE_BUNDLE_KEY = "error.prone";
 
-  public JavacErrorDescriptionListener(Log log, ErrorProneEndPosMap endPositions,
+  public JavacErrorDescriptionListener(Log log, EndPosTable endPositions,
                                        JavaFileObject sourceFile, Context context) {
     this.log = log;
     this.endPositions = endPositions;
@@ -74,12 +75,12 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
 
     // If endPositions were not computed (-Xjcov option was not passed), reparse the file
     // and compute the end positions so we can generate suggested fixes.
-    if (endPositions == null) {
+    if (EndPosTableUtil.isEmpty(endPositions)) {
       boolean prevGenEndPos = compiler.genEndPos;
       compiler.genEndPos = true;
       // Reset the end positions for JDK8:
-      JDKCompatible.resetEndPosMap(compiler, sourceFile);
-      ErrorProneEndPosMap endPosMap = JDKCompatible.getEndPosMap(compiler.parse(sourceFile));
+      EndPosTableUtil.resetEndPosMap(compiler, sourceFile);
+      EndPosTable endPosMap = compiler.parse(sourceFile).endPositions;
       compiler.genEndPos = prevGenEndPos;
       endPositions = new WrappedTreeMap(log, endPosMap);
     }

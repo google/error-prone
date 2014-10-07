@@ -16,17 +16,17 @@
 
 package com.google.errorprone;
 
+import com.google.common.base.Objects;
+
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
-import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Position;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Wraps a Map<JCTree, Integer> (used for javac endpositions) so that the JCTree keys can be
@@ -35,11 +35,11 @@ import java.util.Set;
  *
  * @author Eddie Aftandilian (eaftan@google.com)
  */
-class WrappedTreeMap implements EndPosTable, ErrorProneEndPosMap {
+class WrappedTreeMap implements EndPosTable {
   /**
    * A map from wrapped tree nodes to tree end positions.
    */
-  private final Map<WrappedTreeNode, Integer> wrappedMap;
+  private final Map<WrappedTreeNode, Integer> backingMap;
 
   private final Log log;
 
@@ -49,18 +49,13 @@ class WrappedTreeMap implements EndPosTable, ErrorProneEndPosMap {
    */
   private final boolean built;
 
-  public WrappedTreeMap(Log log, ErrorProneEndPosMap map) {
+  public WrappedTreeMap(Log log, EndPosTable endPosMap) {
     this.log = log;
-    wrappedMap = new HashMap<>();
-    for (Map.Entry<JCTree, Integer> entry : map.entrySet()) {
-      wrappedMap.put(new WrappedTreeNode(entry.getKey()), entry.getValue());
+    backingMap = new HashMap<>();
+    for (Map.Entry<JCTree, Integer> entry : EndPosTableUtil.getEntries(endPosMap)) {
+      backingMap.put(new WrappedTreeNode(entry.getKey()), entry.getValue());
     }
     built = true;
-  }
-
-  @Override
-  public Set<Map.Entry<JCTree, Integer>> entrySet() {
-    throw new UnsupportedOperationException("entrySet() not implemented on WrappedTreeMap");
   }
 
   @Override
@@ -69,16 +64,11 @@ class WrappedTreeMap implements EndPosTable, ErrorProneEndPosMap {
       return Position.NOPOS;
     }
     WrappedTreeNode wrappedNode = new WrappedTreeNode(tree);
-    Integer result = wrappedMap.get(wrappedNode);
+    Integer result = backingMap.get(wrappedNode);
     if (result == null) {
       return Position.NOPOS;
     }
     return result;
-  }
-
-  @Override
-  public Integer getEndPosition(DiagnosticPosition pos) {
-    return pos.getEndPosition(this);
   }
 
   /**
@@ -141,7 +131,7 @@ class WrappedTreeMap implements EndPosTable, ErrorProneEndPosMap {
 
       // Literal nodes with unequal values are never equal.
       if (node instanceof JCLiteral && other.node instanceof JCLiteral
-          && !objectsEquals(((JCLiteral) node).getValue(), ((JCLiteral) other.node).getValue())) {
+          && !Objects.equal(((JCLiteral) node).getValue(), ((JCLiteral) other.node).getValue())) {
         return false;
       }
 
@@ -149,11 +139,6 @@ class WrappedTreeMap implements EndPosTable, ErrorProneEndPosMap {
           node.getPreferredPosition() == other.node.getPreferredPosition() &&
           thisKind == otherKind &&
           node.getTag() == other.node.getTag();
-    }
-
-    // Can't use Objects.equals() because we still support Java 6.
-    private boolean objectsEquals(Object a, Object b) {
-      return (a == b) || ((a != null) && a.equals(b));
     }
 
     /**

@@ -21,61 +21,15 @@ import com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTra
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessValue;
 
 import com.sun.source.util.TreePath;
-import com.sun.tools.javac.main.JavaCompiler;
-import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
-import com.sun.tools.javac.util.AbstractLog;
 import com.sun.tools.javac.util.Context;
-import com.sun.tools.javac.util.DiagnosticSource;
 
 import org.checkerframework.dataflow.constantpropagation.Constant;
 import org.checkerframework.dataflow.constantpropagation.ConstantPropagationTransfer;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-
-import javax.tools.JavaFileObject;
 
 /**
  * An abstraction over JDK version-specific APIs.
  */
 public final class JDKCompatible {
-
-  /** ErrorProneEndPosMap factory. */
-  public static ErrorProneEndPosMap getEndPosMap(JCCompilationUnit compilationUnit) {
-    return EndPosMap8.fromCompilationUnit(compilationUnit);
-  }
-
-  /**
-   * In JDK 8, the EndPosTable is guarded against being set twice. Use reflection to unset it
-   * so re-parsing for end positions works.
-   *
-   * TODO(user): kill this with fire if -Xjcov ever gets turned on by default
-   * (https://code.google.com/p/error-prone/issues/detail?id=228)
-   */
-  private static final Method ABSTRACT_LOG__GET_SOURCE;
-  private static final Field DIAGNOSTIC_SOURCE__END_POS_TABLE;
-  static {
-    try {
-      ABSTRACT_LOG__GET_SOURCE =
-          AbstractLog.class.getDeclaredMethod("getSource", JavaFileObject.class);
-      ABSTRACT_LOG__GET_SOURCE.setAccessible(true);
-
-      DIAGNOSTIC_SOURCE__END_POS_TABLE =
-          DiagnosticSource.class.getDeclaredField("endPosTable");
-      DIAGNOSTIC_SOURCE__END_POS_TABLE.setAccessible(true);
-    } catch (Exception e) {
-      throw new LinkageError(e.getMessage());
-    }
-  }
-  public static void resetEndPosMap(JavaCompiler compiler, JavaFileObject sourceFile) {
-    try {
-      DiagnosticSource diagnosticSource = (DiagnosticSource)
-          ABSTRACT_LOG__GET_SOURCE.invoke(compiler.log, sourceFile);
-      DIAGNOSTIC_SOURCE__END_POS_TABLE.set(diagnosticSource, null);
-    } catch (Exception e) {
-      throw new LinkageError(e.getMessage());
-    }
-  }
 
   private static final ConstantPropagationTransfer CONSTANT_PROPAGATION =
       new ConstantPropagationTransfer();

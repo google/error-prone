@@ -15,22 +15,23 @@
  */
 
 package com.google.errorprone.fixes;
-
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.when;
 
-import com.google.errorprone.ErrorProneEndPosMap;
-
+import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
+import com.sun.tools.javac.util.Position;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -38,12 +39,39 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class AppliedFixTest {
   @Mock JCTree node;
-  @Mock ErrorProneEndPosMap endPositions;
-
+  final EndPosTable endPositions = new EndPosTable() {
+    
+    Map<JCTree, Integer> map = new HashMap<>();
+    
+    @Override
+    public void storeEnd(JCTree tree, int endpos) {
+      map.put(tree, endpos);
+    }
+    
+    @Override
+    public int replaceTree(JCTree oldtree, JCTree newtree) {
+      Integer endpos = map.get(oldtree);
+      if (endpos == null) {
+        endpos = Position.NOPOS;
+      }
+      map.put(newtree, endpos);
+      return endpos;
+    }
+    
+    @Override
+    public int getEndPos(JCTree tree) {
+      Integer result = map.get(tree);
+      if (result == null) {
+        result = Position.NOPOS;
+      }
+      return result;
+    }
+  };
+  
   @Test
   public void shouldApplySingleFixOnALine() {
     when(node.getStartPosition()).thenReturn(11);
-    when(endPositions.getEndPosition(any(DiagnosticPosition.class))).thenReturn(14);
+    when(node.getEndPosition(same(endPositions))).thenReturn(14);
 
     AppliedFix fix = AppliedFix.fromSource("import org.me.B;", endPositions)
         .apply(SuggestedFix.delete(node));
@@ -53,7 +81,7 @@ public class AppliedFixTest {
   @Test
   public void shouldReportOnlyTheChangedLineInNewSnippet() {
     when(node.getStartPosition()).thenReturn(25);
-    when(endPositions.getEndPosition(any(DiagnosticPosition.class))).thenReturn(26);
+    when(node.getEndPosition(same(endPositions))).thenReturn(26);
 
     AppliedFix fix = AppliedFix.fromSource(
         "public class Foo {\n" +
