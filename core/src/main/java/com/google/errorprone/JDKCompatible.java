@@ -16,16 +16,23 @@
 
 package com.google.errorprone;
 
+import com.google.errorprone.dataflow.DataFlow;
+import com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTransfer;
+import com.google.errorprone.dataflow.nullnesspropagation.NullnessValue;
+
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.main.JavaCompiler;
-import com.sun.tools.javac.main.Main;
-import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
-import com.sun.tools.javac.tree.JCTree.JCExpression;
+import com.sun.tools.javac.util.AbstractLog;
 import com.sun.tools.javac.util.Context;
-import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
+import com.sun.tools.javac.util.DiagnosticSource;
 
-import javax.annotation.processing.Processor;
+import org.checkerframework.dataflow.constantpropagation.Constant;
+import org.checkerframework.dataflow.constantpropagation.ConstantPropagationTransfer;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 import javax.tools.JavaFileObject;
 
 /**
@@ -33,22 +40,9 @@ import javax.tools.JavaFileObject;
  */
 public final class JDKCompatible {
 
-  private static final JDKCompatibleShim backingShim = new JDKShim();
-
-  /** AdjustedPosition factory. */
-  public static DiagnosticPosition getAdjustedPosition(JCTree position, int startPosAdjustment,
-      int endPosAdjustment) {
-    return backingShim.getAdjustedPosition(position, startPosAdjustment, endPosAdjustment);
-  }
-
-  /** IndexedPosition factory. */
-  public static DiagnosticPosition getIndexedPosition(int startPos, int endPos) {
-    return backingShim.getIndexedPosition(startPos, endPos);
-  }
-
   /** ErrorProneEndPosMap factory. */
   public static ErrorProneEndPosMap getEndPosMap(JCCompilationUnit compilationUnit) {
-    return backingShim.getEndPosMap(compilationUnit);
+    return EndPosMap8.fromCompilationUnit(compilationUnit);
   }
 
   /**
@@ -58,35 +52,35 @@ public final class JDKCompatible {
    * TODO(user): kill this with fire if -Xjcov ever gets turned on by default
    * (https://code.google.com/p/error-prone/issues/detail?id=228)
    */
+  private static final Method ABSTRACT_LOG__GET_SOURCE;
+  private static final Field DIAGNOSTIC_SOURCE__END_POS_TABLE;
+  static {
+    try {
+      ABSTRACT_LOG__GET_SOURCE =
+          AbstractLog.class.getDeclaredMethod("getSource", JavaFileObject.class);
+      ABSTRACT_LOG__GET_SOURCE.setAccessible(true);
+
+      DIAGNOSTIC_SOURCE__END_POS_TABLE =
+          DiagnosticSource.class.getDeclaredField("endPosTable");
+      DIAGNOSTIC_SOURCE__END_POS_TABLE.setAccessible(true);
+    } catch (Exception e) {
+      throw new LinkageError(e.getMessage());
+    }
+  }
   public static void resetEndPosMap(JavaCompiler compiler, JavaFileObject sourceFile) {
-    backingShim.resetEndPosMap(compiler, sourceFile);
+    try {
+      DiagnosticSource diagnosticSource = (DiagnosticSource)
+          ABSTRACT_LOG__GET_SOURCE.invoke(compiler.log, sourceFile);
+      DIAGNOSTIC_SOURCE__END_POS_TABLE.set(diagnosticSource, null);
+    } catch (Exception e) {
+      throw new LinkageError(e.getMessage());
+    }
   }
 
-  /**
-   * Run Main.compile() and return the exit code as an integer. (It changes to an enum in JDK8).
-   */
-  public static int runCompile(
-      Main main,
-      String[] args,
-      Context context,
-      com.sun.tools.javac.util.List<JavaFileObject> files,
-      Iterable<? extends Processor> processors) {
-    return backingShim.runCompile(main, args, context, files, processors);
-  }
-
-  /**
-   * Returns the node's tag as an integer. (The tag type becomes an enum in JDK8).
-   */
-  public static int getJCTreeTag(JCTree node) {
-    return backingShim.getJCTreeTag(node);
-  }
-
-  /**
-   * Parse the given string as an expression.
-   */
-  public static JCExpression parseString(String string, Context context) {
-    return backingShim.parseString(string, context);
-  }
+  private static final ConstantPropagationTransfer CONSTANT_PROPAGATION =
+      new ConstantPropagationTransfer();
+  private static final NullnessPropagationTransfer NULLNESS_PROPAGATION =
+      new NullnessPropagationTransfer();
 
   /**
    * Returns the value of the leaf of {@code exprPath}, if it is determined to be a constant
@@ -94,7 +88,11 @@ public final class JDKCompatible {
    * Note that returning null does not necessarily mean the expression is *not* a constant.
    */
   public static Number numberValue(TreePath exprPath, Context context) {
-    return backingShim.numberValue(exprPath, context);
+    Constant val = DataFlow.expressionDataflow(exprPath, context, CONSTANT_PROPAGATION);
+    if (val == null || !val.isConstant()) {
+      return null;
+    }
+    return val.getValue();
   }
 
   /**
@@ -102,7 +100,8 @@ public final class JDKCompatible {
    * Note that returning false does not necessarily mean that the expression can be null.
    */
   public static boolean isDefinitelyNonNull(TreePath exprPath, Context context) {
-    return backingShim.isDefinitelyNonNull(exprPath, context);
+    NullnessValue val = DataFlow.expressionDataflow(exprPath, context, NULLNESS_PROPAGATION);
+    return val != null && val == NullnessValue.NONNULL;
   }
 
   /**
@@ -110,6 +109,7 @@ public final class JDKCompatible {
    * Note that returning false does not necessarily mean that the expression can be non-null.
    */
   public static boolean isDefinitelyNull(TreePath exprPath, Context context) {
-    return backingShim.isDefinitelyNull(exprPath, context);
+    NullnessValue val = DataFlow.expressionDataflow(exprPath, context, NULLNESS_PROPAGATION);
+    return val != null && val == NullnessValue.NULL;
   }
 }

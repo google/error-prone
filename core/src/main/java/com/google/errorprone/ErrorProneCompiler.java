@@ -21,6 +21,7 @@ import static com.google.errorprone.ErrorProneScanner.EnabledPredicate.DEFAULT_C
 import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.main.Main;
+import com.sun.tools.javac.main.Main.Result;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.List;
 
@@ -193,7 +194,8 @@ public class ErrorProneCompiler {
       throw new RuntimeException("The JavaCompiler used must have the preRegister static method. "
           + "We are very sorry.", e);
     }
-    return JDKCompatible.runCompile(
-        main, epOptions.getRemainingArgs(), context, javaFileObjects, processors);
+    Result result =
+        main.compile(epOptions.getRemainingArgs(), context, javaFileObjects, processors);
+    return result.exitCode;
   }
 }

@@ -195,7 +195,7 @@ public class SuggestedFix implements Fix {
      * @param replaceWith The string to replace with
      */
     public Builder replace(int startPos, int endPos, String replaceWith) {
-      DiagnosticPosition pos = JDKCompatible.getIndexedPosition(startPos, endPos);
+      DiagnosticPosition pos = new IndexedPosition(startPos, endPos);
       return with(new ReplacementFix(pos, replaceWith));
     }
 
@@ -215,7 +215,7 @@ public class SuggestedFix implements Fix {
     public Builder replace(Tree node, String replaceWith, int startPosAdjustment,
                            int endPosAdjustment) {
       return with(new ReplacementFix(
-          JDKCompatible.getAdjustedPosition((JCTree) node, startPosAdjustment, endPosAdjustment),
+          new AdjustedPosition((JCTree) node, startPosAdjustment, endPosAdjustment),
           replaceWith));
     }
 
