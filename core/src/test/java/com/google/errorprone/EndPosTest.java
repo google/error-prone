@@ -21,6 +21,8 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
 
+import com.sun.tools.javac.main.Main.Result;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,10 +57,10 @@ public class EndPosTest {
 
   @Test
   public void fileWithError() throws Exception {
-    int exitCode = compiler.compile(compiler.fileManager().sources(getClass(),
+    Result exitCode = compiler.compile(compiler.fileManager().sources(getClass(),
         "bugpatterns/SelfAssignmentPositiveCases1.java"));
     outputStream.flush();
-    assertThat("Compiler should have exited with exit code 1", exitCode, is(1));
+    assertThat("Compiler should have exited with ERROR status", exitCode, is(Result.ERROR));
     assertThat("Compiler error message should include suggested fix", outputStream.toString(),
         containsString("Did you mean 'this.a = b;'?"));
     assertThat("Compiler should not warn about WrappedTreeMap collisions", outputStream.toString(),

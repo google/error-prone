@@ -21,6 +21,8 @@ import static org.hamcrest.CoreMatchers.is;
 import com.google.errorprone.ErrorProneCompiler;
 import com.google.errorprone.Scanner;
 
+import com.sun.tools.javac.main.Main.Result;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -73,7 +75,7 @@ public class DescendantOfTransitiveTest extends DescendantOfAbstractTest {
     ErrorProneCompiler compiler = new ErrorProneCompiler.Builder()
         .report(scanner)
         .build();
-    Assert.assertThat(compiler.compile(args.toArray(new String[0])), is(0));
+    Assert.assertThat(compiler.compile(args.toArray(new String[0])), is(Result.OK));
   }
 
   @Before

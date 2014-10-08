@@ -24,6 +24,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.errorprone.bugpatterns.BugChecker;
 
 import com.sun.tools.javac.api.JavacTool;
+import com.sun.tools.javac.main.Main.Result;
 import com.sun.tools.javac.util.Context;
 
 import java.io.ByteArrayOutputStream;
@@ -121,9 +122,9 @@ public class CompilationTestHelper {
    */
   public void assertCompileSucceeds(List<JavaFileObject> sources, List<String> args) {
     List<String> allArgs = buildArguments(args);
-    int exitCode = compile(asJavacList(sources), allArgs.toArray(new String[0]));
+    Result exitCode = compile(asJavacList(sources), allArgs.toArray(new String[0]));
     List<Diagnostic<? extends JavaFileObject>> diagnostics = diagnosticHelper.getDiagnostics();
-    assertThat("Compilation failed: " + diagnostics.toString(), exitCode, is(0));
+    assertThat("Compilation failed: " + diagnostics.toString(), exitCode, is(Result.OK));
     assertThat("Compilation succeeded but gave warnings: " + diagnostics.toString(),
         diagnostics.size(), is(0));
   }
@@ -170,8 +171,8 @@ public class CompilationTestHelper {
    */
   private void assertCompileSucceedsIgnoringWarnings(List<JavaFileObject> sources) {
     List<String> allArgs = buildArguments(Collections.<String>emptyList());
-    int exitCode = compile(asJavacList(sources), allArgs.toArray(new String[0]));
-    assertThat(diagnosticHelper.getDiagnostics().toString(), exitCode, is(0));
+    Result exitCode = compile(asJavacList(sources), allArgs.toArray(new String[0]));
+    assertThat(diagnosticHelper.getDiagnostics().toString(), exitCode, is(Result.OK));
   }
 
   /**
@@ -194,8 +195,8 @@ public class CompilationTestHelper {
   public void assertCompileFailsWithMessages(List<JavaFileObject> sources, List<String> args)
       throws IOException {
     List<String> allArgs = buildArguments(args);
-    int exitCode = compile(asJavacList(sources), allArgs.toArray(new String[0]));
-    assertThat("Compiler returned an unexpected error code", exitCode, is(1));
+    Result exitCode = compile(asJavacList(sources), allArgs.toArray(new String[0]));
+    assertThat("Compiler returned an unexpected error code", exitCode, is(Result.ERROR));
     for (JavaFileObject source : sources) {
       diagnosticHelper.assertHasDiagnosticOnAllMatchingLines(source);
     }
@@ -210,7 +211,7 @@ public class CompilationTestHelper {
     assertCompileFailsWithMessages(ImmutableList.of(source));
   }
 
-  int compile(Iterable<JavaFileObject> sources, String[] args) {
+  Result compile(Iterable<JavaFileObject> sources, String[] args) {
     checkWellFormed(sources, args);
     Context context = new Context();
     context.put(JavaFileManager.class, fileManager);

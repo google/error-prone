@@ -20,7 +20,7 @@ import static com.google.errorprone.BugPattern.Category.ONE_OFF;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
-import static junit.framework.TestCase.assertTrue;
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasItem;
@@ -42,6 +42,7 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
+import com.sun.tools.javac.main.Main.Result;
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.List;
@@ -97,10 +98,10 @@ public class ErrorProneCompilerIntegrationTest {
 
   @Test
   public void fileWithError() throws Exception {
-    int exitCode = compiler.compile(compiler.fileManager().sources(getClass(),
+    Result exitCode = compiler.compile(compiler.fileManager().sources(getClass(),
         "bugpatterns/BadShiftAmountPositiveCases.java"));
     outputStream.flush();
-    assertThat(outputStream.toString(), exitCode, is(1));
+    assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
 
     Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher = hasItem(
         diagnosticMessage(containsString("[BadShiftAmount]")));
@@ -112,10 +113,10 @@ public class ErrorProneCompilerIntegrationTest {
   public void fileWithWarning() throws Exception {
     compilerBuilder.report(new ErrorProneScanner(new NonAtomicVolatileUpdate()));
     compiler = compilerBuilder.build();
-    int exitCode = compiler.compile(compiler.fileManager().sources(getClass(),
+    Result exitCode = compiler.compile(compiler.fileManager().sources(getClass(),
         "bugpatterns/NonAtomicVolatileUpdatePositiveCases.java"));
     outputStream.flush();
-    assertThat(outputStream.toString(), exitCode, is(0));
+    assertThat(outputStream.toString(), exitCode, is(Result.OK));
 
     Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher = hasItem(
         diagnosticMessage(containsString("[NonAtomicVolatileUpdate]")));
@@ -125,19 +126,19 @@ public class ErrorProneCompilerIntegrationTest {
 
   @Test
   public void fileWithMultipleTopLevelClasses() throws Exception {
-    int exitCode = compiler.compile(
+    Result exitCode = compiler.compile(
         compiler.fileManager().sources(getClass(), "MultipleTopLevelClassesWithNoErrors.java"));
     outputStream.flush();
-    assertThat(outputStream.toString(), exitCode, is(0));
+    assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
 
   @Test
   public void fileWithMultipleTopLevelClassesExtends() throws Exception {
-    int exitCode = compiler.compile(
+    Result exitCode = compiler.compile(
         compiler.fileManager().sources(getClass(), "MultipleTopLevelClassesWithNoErrors.java",
             "ExtendedMultipleTopLevelClassesWithNoErrors.java"));
     outputStream.flush();
-    assertThat(outputStream.toString(), exitCode, is(0));
+    assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
 
   /**
@@ -147,11 +148,11 @@ public class ErrorProneCompilerIntegrationTest {
   @Test
   public void fileWithMultipleTopLevelClassesExtendsWithError()
       throws Exception {
-    int exitCode = compiler.compile(
+    Result exitCode = compiler.compile(
         compiler.fileManager().sources(getClass(), "MultipleTopLevelClassesWithErrors.java",
             "ExtendedMultipleTopLevelClassesWithErrors.java"));
     outputStream.flush();
-    assertThat(outputStream.toString(), exitCode, is(1));
+    assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
 
     Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher = hasItem(
         diagnosticMessage(containsString("[SelfAssignment]")));
@@ -173,11 +174,11 @@ public class ErrorProneCompilerIntegrationTest {
     }
     compilerBuilder.report(new ErrorProneScanner(new Throwing()));
     compiler = compilerBuilder.build();
-    int exitCode = compiler.compile(
+    Result exitCode = compiler.compile(
         compiler.fileManager().sources(getClass(), "MultipleTopLevelClassesWithErrors.java",
             "ExtendedMultipleTopLevelClassesWithErrors.java"));
     outputStream.flush();
-    assertThat(outputStream.toString(), exitCode, is(1));
+    assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
     @SuppressWarnings("unchecked")  // hamcrest should use @SafeVarargs
     Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher = hasItem(
         diagnosticMessage(CoreMatchers.<String>allOf(
@@ -192,11 +193,11 @@ public class ErrorProneCompilerIntegrationTest {
    */
   @Test
   public void annotationProcessingWorks() throws Exception {
-    int exitCode = compiler.compile(
+    Result exitCode = compiler.compile(
         compiler.fileManager().sources(getClass(), "UsesAnnotationProcessor.java"),
         List.of(new NullAnnotationProcessor()));
     outputStream.flush();
-    assertThat(outputStream.toString(), exitCode, is(0));
+    assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
 
   /**
@@ -204,7 +205,7 @@ public class ErrorProneCompilerIntegrationTest {
    */
   @Test
   public void reportReadyForAnalysisOnce() throws Exception {
-    int exitCode = compiler.compile(
+    Result exitCode = compiler.compile(
         compiler.fileManager().sources(getClass(),
             "FlowConstants.java",
             "FlowSub.java",
@@ -213,7 +214,7 @@ public class ErrorProneCompilerIntegrationTest {
             // is desugared, once normally).
             "FlowSuper.java"));
     outputStream.flush();
-    assertThat(outputStream.toString(), exitCode, is(0));
+    assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
 
   @Test
@@ -221,11 +222,11 @@ public class ErrorProneCompilerIntegrationTest {
     ErrorProneScanner scanner = new ErrorProneScanner();
     compilerBuilder.report(scanner);
     compiler = compilerBuilder.build();
-    int exitCode = compiler.compile(
+    Result exitCode = compiler.compile(
         compiler.fileManager().sources(getClass(), "UsesAnnotationProcessor.java"),
         Arrays.asList(new ScannerCheckingProcessor(scanner)));
     outputStream.flush();
-    assertThat(outputStream.toString(), exitCode, is(0));
+    assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
 
   /**
@@ -267,7 +268,7 @@ public class ErrorProneCompilerIntegrationTest {
   public void ignoreGeneratedConstructors() throws Exception {
     compilerBuilder.report(new ErrorProneScanner(new ConstructorMatcher()));
     compiler = compilerBuilder.build();
-    int exitCode = compiler.compile(
+    Result exitCode = compiler.compile(
         Arrays.asList(compiler.fileManager().forSourceLines("Test.java", "public class Test {}")));
     outputStream.flush();
 
@@ -277,7 +278,7 @@ public class ErrorProneCompilerIntegrationTest {
         "Warning should be found. " + diagnosticHelper.describe(),
         matcher.matches(diagnosticHelper.getDiagnostics()));
 
-    assertThat(outputStream.toString(), exitCode, is(0));
+    assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
 
   @BugPattern(name = "SuperCallMatcher", explanation = "",
@@ -306,7 +307,7 @@ public class ErrorProneCompilerIntegrationTest {
   public void ignoreGeneratedSuperInvocations() throws Exception {
     compilerBuilder.report(new ErrorProneScanner(new SuperCallMatcher()));
     compiler = compilerBuilder.build();
-    int exitCode = compiler.compile(Arrays.asList(
+    Result exitCode = compiler.compile(Arrays.asList(
         compiler.fileManager().forSourceLines("Test.java",
             "public class Test {",
             "  public Test() {}",
@@ -319,6 +320,6 @@ public class ErrorProneCompilerIntegrationTest {
         "Warning should be found. " + diagnosticHelper.describe(),
         matcher.matches(diagnosticHelper.getDiagnostics()));
 
-    assertThat(outputStream.toString(), exitCode, is(0));
+    assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
 }

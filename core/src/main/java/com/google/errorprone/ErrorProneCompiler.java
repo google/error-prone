@@ -49,7 +49,7 @@ public class ErrorProneCompiler {
    * @param args the same args which could be passed to javac on the command line
    */
   public static void main(String[] args) {
-    System.exit(new ErrorProneCompiler.Builder().build().compile(args));
+    System.exit(new ErrorProneCompiler.Builder().build().compile(args).exitCode);
   }
 
   /**
@@ -59,7 +59,7 @@ public class ErrorProneCompiler {
    * @param args the same args which would be passed to javac on the command line
    * @return exit code from the compiler invocation
    */
-  public static int compile(DiagnosticListener<JavaFileObject> listener, String[] args) {
+  public static Result compile(DiagnosticListener<JavaFileObject> listener, String[] args) {
     ErrorProneCompiler compiler = new ErrorProneCompiler.Builder()
         .listenToDiagnostics(listener)
         .build();
@@ -73,7 +73,7 @@ public class ErrorProneCompiler {
    * @param out a {@link PrintWriter} to which to send diagnostic output
    * @return exit code from the compiler invocation
    */
-  public static int compile(String[] args, PrintWriter out) {
+  public static Result compile(String[] args, PrintWriter out) {
     ErrorProneCompiler compiler = new ErrorProneCompiler.Builder()
         .redirectOutputTo(out)
         .build();
@@ -146,25 +146,25 @@ public class ErrorProneCompiler {
     }
   }
 
-  public int compile(String[] args) {
+  public Result compile(String[] args) {
     return compile(args, List.<JavaFileObject>nil());
   }
 
-  public int compile(List<JavaFileObject> sources) {
+  public Result compile(List<JavaFileObject> sources) {
     return compile(new String[]{}, sources);
   }
 
-  public int compile(String[] args, List<JavaFileObject> sources) {
+  public Result compile(String[] args, List<JavaFileObject> sources) {
     Context context = new Context();
     JavacFileManager.preRegister(context);
     return compile(args, context, sources, null);
   }
 
-  public int compile(Context context, List<JavaFileObject> sources) {
+  public Result compile(Context context, List<JavaFileObject> sources) {
     return compile(new String[]{}, context, sources, null);
   }
 
-  public int compile(String[] args, Context context, List<JavaFileObject> javaFileObjects,
+  public Result compile(String[] args, Context context, List<JavaFileObject> javaFileObjects,
       Iterable<? extends Processor> processors) {
     ErrorProneOptions epOptions = ErrorProneOptions.processArgs(args);
 
@@ -185,7 +185,7 @@ public class ErrorProneCompiler {
       scannerInContext.setDisabledChecks(epOptions.getDisabledChecks());
     } catch (InvalidCommandLineOptionException e) {
       printWriter.println(e.getMessage());
-      return 2;     // Main.EXIT_CMDERR
+      return Result.CMDERR;
     }
 
     try {
@@ -194,8 +194,6 @@ public class ErrorProneCompiler {
       throw new RuntimeException("The JavaCompiler used must have the preRegister static method. "
           + "We are very sorry.", e);
     }
-    Result result =
-        main.compile(epOptions.getRemainingArgs(), context, javaFileObjects, processors);
-    return result.exitCode;
+    return main.compile(epOptions.getRemainingArgs(), context, javaFileObjects, processors);
   }
 }

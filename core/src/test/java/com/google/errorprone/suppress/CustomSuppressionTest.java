@@ -35,6 +35,7 @@ import com.google.errorprone.matchers.Description;
 
 import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.ReturnTree;
+import com.sun.tools.javac.main.Main.Result;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -103,15 +104,15 @@ public class CustomSuppressionTest {
   public void testNegativeCase() throws Exception {
     List<JavaFileObject> sources = compiler.fileManager()
         .sources(getClass(), "CustomSuppressionNegativeCases.java");
-    int exitCode = compiler.compile(sources);
-    assertThat(exitCode, is(0));
+    Result exitCode = compiler.compile(sources);
+    assertThat(exitCode, is(Result.OK));
   }
 
   @Test
   public void testPositiveCase() throws Exception {
     List<JavaFileObject> sources = compiler.fileManager()
         .sources(getClass(), "CustomSuppressionPositiveCases.java");
-    assertThat(compiler.compile(sources), is(1));
+    assertThat(compiler.compile(sources), is(Result.ERROR));
     assertThat(diagnosticHelper.getDiagnostics().size(), is(3));
     assertThat((int) diagnosticHelper.getDiagnostics().get(0).getLineNumber(), is(28));
     assertThat((int) diagnosticHelper.getDiagnostics().get(1).getLineNumber(), is(33));

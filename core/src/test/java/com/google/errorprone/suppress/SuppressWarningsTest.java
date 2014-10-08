@@ -30,6 +30,8 @@ import com.google.errorprone.bugpatterns.DeadException;
 import com.google.errorprone.bugpatterns.EmptyIfStatement;
 import com.google.errorprone.bugpatterns.SelfAssignment;
 
+import com.sun.tools.javac.main.Main.Result;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -65,6 +67,6 @@ public class SuppressWarningsTest {
   public void testNegativeCase() throws Exception {
     List<JavaFileObject> sources =
         compiler.fileManager().sources(getClass(), "SuppressWarningsNegativeCases.java");
-    assertThat(compiler.compile(sources), is(0));
+    assertThat(compiler.compile(sources), is(Result.OK));
   }
 }
