@@ -34,6 +34,7 @@ import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.matchers.Description;
 
 import com.sun.source.tree.ReturnTree;
+import com.sun.tools.javac.main.Main.Result;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -80,7 +81,7 @@ public class UnsuppressibleTest {
   public void testPositiveCase() throws Exception {
     List<JavaFileObject> sources =
         compiler.fileManager().sources(getClass(), "UnsuppressiblePositiveCases.java");
-    assertThat(compiler.compile(sources), is(1));
+    assertThat(compiler.compile(sources), is(Result.ERROR));
     assertThat(diagnosticHelper.getDiagnostics().toString(), containsString("[MyChecker]"));
   }
 }

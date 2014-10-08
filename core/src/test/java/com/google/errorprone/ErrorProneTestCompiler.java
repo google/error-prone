@@ -18,6 +18,7 @@ package com.google.errorprone;
 
 import static com.google.errorprone.CompilationTestHelper.asJavacList;
 
+import com.sun.tools.javac.main.Main.Result;
 import com.sun.tools.javac.util.Context;
 
 import java.io.PrintWriter;
@@ -75,19 +76,19 @@ public class ErrorProneTestCompiler {
     this.compiler = compiler;
   }
 
-  public int compile(List<JavaFileObject> sources) {
+  public Result compile(List<JavaFileObject> sources) {
     return compile(sources, null);
   }
 
-  public int compile(String[] args, List<JavaFileObject> sources) {
+  public Result compile(String[] args, List<JavaFileObject> sources) {
     return compile(args, sources, null);
   }
 
-  public int compile(List<JavaFileObject> sources, List<? extends Processor> processors) {
+  public Result compile(List<JavaFileObject> sources, List<? extends Processor> processors) {
     return compile(new String[]{}, sources, processors);
   }
   
-  public int compile(String[] args, List<JavaFileObject> sources, List<? extends Processor>
+  public Result compile(String[] args, List<JavaFileObject> sources, List<? extends Processor>
       processors) {
     Context context = new Context();
     context.put(JavaFileManager.class, fileManager);
