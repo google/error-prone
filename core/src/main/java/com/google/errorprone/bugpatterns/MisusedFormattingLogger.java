@@ -215,11 +215,14 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
       } else if (parameters.getType() == FormatType.PRINTF) {
         verifyPrintf(tree, parameters);
       }
-    } catch (FormatterException | IllegalFormatException e) {
+    } catch (Exception e) {
       formatException = e;
     }
     if (formatException != null) {
-      String customMessage = "Format string is invalid: " + formatException.getMessage();
+      String customMessage = "Format string is invalid";
+      if (formatException.getMessage() != null) {
+        customMessage += ": " + formatException.getMessage();
+      }
       return Description.builder(tree, pattern)
           .setMessage(customMessage)
           .build();
