@@ -34,7 +34,6 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
-import com.sun.tools.javac.code.Source;
 import com.sun.tools.javac.code.Symbol;
 
 /**
@@ -68,26 +67,20 @@ public class DepAnn extends BugChecker
 
   /**
    * Reports a dep-ann error for a declaration if:
-   *   (1) compiling with annotations
-   *   (2) javadoc contains the deprecated javadoc tag
-   *   (3) the declaration is not annotated with {@link java.lang.Deprecated}
+   *   (1) javadoc contains the deprecated javadoc tag
+   *   (2) the declaration is not annotated with {@link java.lang.Deprecated}
    */
   @SuppressWarnings("javadoc")
   private Description checkDeprecatedAnnotation(Tree tree, VisitorState state) {
     Symbol symbol = ASTHelpers.getSymbol(tree);
 
     // (1)
-    if (!Source.instance(state.context).allowAnnotations()) {
-      return Description.NO_MATCH;
-    }
-
-    // (2)
     // javac sets the DEPRECATED bit in flags if the Javadoc contains @deprecated
     if ((symbol.flags() & DEPRECATED) == 0) {
       return Description.NO_MATCH;
     }
 
-    // (3)
+    // (2)
     if (symbol.attribute(state.getSymtab().deprecatedType.tsym) != null) {
       return Description.NO_MATCH;
     }
