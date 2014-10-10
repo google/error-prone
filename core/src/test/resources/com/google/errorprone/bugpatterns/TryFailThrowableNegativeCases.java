@@ -123,6 +123,7 @@ public class TryFailThrowableNegativeCases {
     }
   }
 
+  @SuppressWarnings("deprecation")  // deprecated in JUnit 4.11
   public static void codeCatch_oldAssertFail() {
     try {
       dummyMethod();
@@ -132,6 +133,7 @@ public class TryFailThrowableNegativeCases {
     }
   }
 
+  @SuppressWarnings("deprecation")  // deprecated in JUnit 4.11
   public static void codeCatch_oldAssertFailWithMessage() {
     try {
       dummyMethod();

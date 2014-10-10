@@ -35,6 +35,7 @@ import java.math.BigInteger;
 /**
  * Dataflow analysis cases for testing transfer functions in nullness propagation
  */
+@SuppressWarnings("deprecation")  // test cases include deprecated JUnit methods
 public class NullnessPropagationTransferCases2 {
   private static class MyClass {
     static String staticReturnNullable() {
