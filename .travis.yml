@@ -5,4 +5,4 @@ jdk:
   - oraclejdk8
 
 notifications:
-  email: cushon@google.com
+  email: error-prone-team@google.com
