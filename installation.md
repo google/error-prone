@@ -133,7 +133,7 @@ examples/maven$ mvn compile
 
 To add the plugin, start the IDE and find the Plugins dialog. Browse Repositories, choose Category: Build, and find the Error-prone plugin. Right-click and choose "Download and install". The IDE will restart after you've exited these dialogs.
 
-To enable error-prone, choose _Settings | Compiler | Java Compiler | Use compiler: Javac with error-prone_ and also make sure _Settings | Compiler | Use external build_ is NOT selected.
+To enable error-prone, choose "Settings | Compiler | Java Compiler | Use compiler: Javac with error-prone" and also make sure "Settings | Compiler | Use external build" is NOT selected.
 
 # Eclipse
 Ideally, you should find out about failed error-prone checks as you code in eclipse, thanks to the continuous compilation by ECJ (eclipse compiler for Java). But this is an architectural challenge, as error-prone currently relies heavily on the `com.sun.*` APIs for accessing the AST and symbol table.
