@@ -93,7 +93,7 @@ public class GuardedByChecker extends GuardedByValidator implements BugChecker.V
     // TODO(user) - this message will have a wiki link to GuardedBy, not GuardedByValidator.
     // Think about the best way to present the information from GuardedByValidator's explanation
     // field -- should it be a separate page or part of the GuardedBy page?
-    return Description.builder(tree, pattern)
+    return buildDescription(tree)
         .setMessage(message)
         .build();
   }
@@ -120,7 +120,7 @@ public class GuardedByChecker extends GuardedByValidator implements BugChecker.V
       String message = String.format("Expected %s to be held, instead found %s", guard, locks);
       // TODO(user) - this fix is a debugging aid, remove it before productionizing the check.
       Fix fix = SuggestedFix.prefixWith(tree, String.format("/* %s */", message));
-      return Description.builder(tree, pattern)
+      return buildDescription(tree)
           .setMessage(message)
           .addFix(fix)
           .build();

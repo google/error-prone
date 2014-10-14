@@ -88,7 +88,7 @@ public class Overrides extends BugChecker implements MethodTreeMatcher {
       return describeMatch(methodTree);
     }
 
-    Description.Builder descriptionBuilder = Description.builder(methodTree, pattern);
+    Description.Builder descriptionBuilder = buildDescription(methodTree);
     if (isVarargs) {
       descriptionBuilder.addFix(
           SuggestedFix.replace(paramType, "[]", paramTypeSource.length() - 3, 0));

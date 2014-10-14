@@ -67,7 +67,7 @@ public class MissingCasesInEnumSwitch extends BugChecker
       return Description.NO_MATCH;
     }
 
-    return Description.builder(tree, pattern).setMessage(buildMessage(unhandled)).build();
+    return buildDescription(tree).setMessage(buildMessage(unhandled)).build();
   }
 
   /**

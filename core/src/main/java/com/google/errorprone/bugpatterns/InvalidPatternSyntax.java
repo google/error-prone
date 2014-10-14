@@ -103,7 +103,7 @@ public class InvalidPatternSyntax extends BugChecker implements MethodInvocation
     }
 
     // TODO: Suggest fixes for more situations.
-    Description.Builder descriptionBuilder = Description.builder(methodInvocationTree, pattern);
+    Description.Builder descriptionBuilder = buildDescription(methodInvocationTree);
     ExpressionTree arg = methodInvocationTree.getArguments().get(0);
     String value = (String) ((JCExpression) arg).type.constValue();
     String reasonInvalid = "";

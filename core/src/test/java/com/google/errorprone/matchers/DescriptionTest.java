@@ -73,7 +73,7 @@ public class DescriptionTest {
 
   @Test
   public void testCustomDescription() {
-    Description description = Description.builder(new MockTree(), new MyChecker().pattern)
+    Description description = Description.builder(new MockTree(), new MyChecker())
         .setMessage("custom message")
         .build();
     assertEquals("DeadException", description.checkName);
@@ -99,7 +99,7 @@ public class DescriptionTest {
 
   @Test
   public void testCustomLink() {
-    Description description = Description.builder(new MockTree(), new CustomLinkChecker().pattern)
+    Description description = Description.builder(new MockTree(), new CustomLinkChecker())
         .setMessage("custom message")
         .build();
     assertEquals(

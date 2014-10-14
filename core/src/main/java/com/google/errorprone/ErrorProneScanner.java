@@ -228,9 +228,9 @@ public class ErrorProneScanner extends Scanner {
     super.setDisabledChecks(disabledChecks);
     for (String checkName : disabledChecks) {
       for (BugChecker checker : nameToChecker.get(checkName)) {
-        if (!checker.isDisableable()) {
+        if (!checker.disableable()) {
           throw new InvalidCommandLineOptionException("error-prone check "
-              + checker.getCanonicalName() + " may not be disabled");
+              + checker.canonicalName() + " may not be disabled");
         }
       }
     }
@@ -347,9 +347,9 @@ public class ErrorProneScanner extends Scanner {
       new ArrayList<>();
 
   private void registerNodeTypes(BugChecker checker) {
-    nameToChecker.put(checker.getCanonicalName(), checker);
-    if (checker.getSuppressibility() == Suppressibility.CUSTOM_ANNOTATION) {
-      customSuppressionAnnotations.add(checker.getCustomSuppressionAnnotation());
+    nameToChecker.put(checker.canonicalName(), checker);
+    if (checker.suppressibility() == Suppressibility.CUSTOM_ANNOTATION) {
+      customSuppressionAnnotations.add(checker.customSuppressionAnnotation());
     }
 
     if (checker instanceof AnnotationTreeMatcher) {

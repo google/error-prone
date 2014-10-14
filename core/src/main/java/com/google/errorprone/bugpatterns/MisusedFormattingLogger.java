@@ -223,7 +223,7 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
       if (formatException.getMessage() != null) {
         customMessage += ": " + formatException.getMessage();
       }
-      return Description.builder(tree, pattern)
+      return buildDescription(tree)
           .setMessage(customMessage)
           .build();
     }
@@ -310,7 +310,7 @@ public class MisusedFormattingLogger extends BugChecker implements MethodInvocat
       int methodStart = state.getEndPosition((JCTree) getInvocationTarget(tree));
       int parameterEnd = state.getEndPosition((JCTree) args.get(args.size() - 1));
 
-      Description.Builder descriptionBuilder = Description.builder(tree, pattern)
+      Description.Builder descriptionBuilder = buildDescription(tree)
           .setMessage("This call " + join(", ", errors));
       if (methodStart >= 0 && parameterEnd >= 0) {
         String replacement = "." + parameters.getMethodName() + "(" +  join(", ", newParameters);

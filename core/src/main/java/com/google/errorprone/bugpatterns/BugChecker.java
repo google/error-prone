@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.errorprone.BugPatternValidator;
 import com.google.errorprone.ErrorProneScanner;
@@ -98,28 +99,73 @@ import java.util.Set;
  */
 public abstract class BugChecker implements Suppressible, Disableable, Serializable {
 
-  protected final String canonicalName;
   /**
-   * A collection of IDs for this check, to be checked for in @SuppressWarnings annotations.
+   * The canonical name of this check.  Corresponds to the {@code name} attribute from its
+   * {@code BugPattern} annotation.
    */
-  protected final ImmutableSet<String> allNames;
-  public final BugPattern pattern;
-  protected final boolean disableable;
-  protected final BugPattern.Suppressibility suppressibility;
-  protected final Class<? extends Annotation> customSuppressionAnnotation;
+  private final String canonicalName;
+
+  /**
+   * Additional identifiers for this check, to be checked for in @SuppressWarnings annotations.
+   * Corresponds to the canonical name plus all {@code altName}s from its {@code BugPattern}
+   * annotation.
+   */
+  private final ImmutableSet<String> allNames;
+
+  /**
+   * The error message to print in compiler diagnostics when this check triggers.  Corresponds to
+   * the {@code summary} attribute from its {@code BugPattern}.
+   */
+  private final String message;
+
+  /**
+   * The type of diagnostic (error or warning) to emit when this check triggers.  Corresponds to
+   * the {@code severity} attribute from its {@code BugPattern}.
+   */
+  private final SeverityLevel severity;
+
+  /**
+   * The link URL to display in the diagnostic message when this check triggers.  Computed from
+   * the {@code link} and {@code linkType} attributes from its {@code BugPattern}.  May be null
+   * if no link should be displayed.
+   */
+  private final String linkUrl;
+
+  /**
+   * Whether this check may be disabled.  Corresponds to the {@code disableable} attribute from
+   * its {@code BugPattern}.
+   */
+  private final boolean disableable;
+
+  /**
+   * Whether this check may be suppressed.  Corresponds to the {@code suppressibility} attribute
+   * from its {@code BugPattern}.
+   */
+  private final Suppressibility suppressibility;
+
+  /**
+   * A custom suppression annotation for this check.  Computed from the {@code suppressibility} and
+   * {@code customSuppressionAnnotation} attributes from its {@code BugPattern}.  May be null if
+   * there is no custom suppression annotation for this check.
+   */
+  private final Class<? extends Annotation> customSuppressionAnnotation;
 
   public BugChecker() {
-    pattern = this.getClass().getAnnotation(BugPattern.class);
+    BugPattern pattern = this.getClass().getAnnotation(BugPattern.class);
     try {
       BugPatternValidator.validate(pattern);
     } catch (ValidationException e) {
       throw new IllegalStateException(e);
     }
+
     canonicalName = pattern.name();
     allNames = ImmutableSet.<String>builder()
         .add(canonicalName)
         .add(pattern.altNames())
         .build();
+    message = pattern.summary();
+    severity = pattern.severity();
+    linkUrl = createLinkUrl(pattern);
     disableable = pattern.disableable();
     suppressibility = pattern.suppressibility();
     if (suppressibility == Suppressibility.CUSTOM_ANNOTATION) {
@@ -129,11 +175,30 @@ public abstract class BugChecker implements Suppressible, Disableable, Serializa
     }
   }
 
+  private static String createLinkUrl(BugPattern pattern) {
+    switch (pattern.linkType()) {
+      case WIKI:
+        return "http://code.google.com/p/error-prone/wiki/" + pattern.name();
+      case CUSTOM:
+        // annotation.link() must be provided.
+        if (pattern.link().isEmpty()) {
+          throw new IllegalStateException("If linkType element of @BugPattern is CUSTOM, "
+              + "a link element must also be provided.");
+        }
+        return pattern.link();
+      case NONE:
+        return null;
+      default:
+        throw new IllegalStateException("Unexpected value for linkType element of @BugPattern: "
+            + pattern.linkType());
+    }
+  }
+
   /**
    * Helper to create a Description for the common case where there is a fix.
    */
   protected Description describeMatch(Tree node, Fix fix) {
-    return Description.builder(node, pattern)
+    return buildDescription(node)
         .addFix(fix)
         .build();
   }
@@ -142,31 +207,51 @@ public abstract class BugChecker implements Suppressible, Disableable, Serializa
    * Helper to create a Description for the common case where there is no fix.
    */
   protected Description describeMatch(Tree node) {
-    return Description.builder(node, pattern).build();
+    return buildDescription(node).build();
+  }
+
+  /**
+   * Returns a Description builder, which allows you to customize the diagnostic with a custom
+   * message or multiple fixes.
+   */
+  protected Description.Builder buildDescription(Tree node) {
+    return Description.builder(node, this);
   }
 
   @Override
-  public String getCanonicalName() {
+  public String canonicalName() {
     return canonicalName;
   }
 
   @Override
-  public Set<String> getAllNames() {
+  public Set<String> allNames() {
     return allNames;
   }
 
+  public String message() {
+    return message;
+  }
+
+  public SeverityLevel severity() {
+    return severity;
+  }
+
+  public String linkUrl() {
+    return linkUrl;
+  }
+
   @Override
-  public boolean isDisableable() {
+  public boolean disableable() {
     return disableable;
   }
 
   @Override
-  public BugPattern.Suppressibility getSuppressibility() {
+  public Suppressibility suppressibility() {
     return suppressibility;
   }
 
   @Override
-  public Class<? extends Annotation> getCustomSuppressionAnnotation() {
+  public Class<? extends Annotation> customSuppressionAnnotation() {
     return customSuppressionAnnotation;
   }
 

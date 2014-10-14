@@ -78,7 +78,7 @@ public class CompilationTestHelper {
    */
   public static CompilationTestHelper newInstance(BugChecker checker) {
     Scanner scanner = new ErrorProneScanner(checker);
-    String checkName = checker.getCanonicalName();
+    String checkName = checker.canonicalName();
     return new CompilationTestHelper(scanner, checkName);
   }
 

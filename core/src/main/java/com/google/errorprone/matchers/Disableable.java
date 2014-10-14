@@ -20,6 +20,6 @@ package com.google.errorprone.matchers;
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public interface Disableable {
-  boolean isDisableable();
-  String getCanonicalName();
+  boolean disableable();
+  String canonicalName();
 }

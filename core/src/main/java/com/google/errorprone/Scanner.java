@@ -174,8 +174,8 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
   }
 
   public boolean isDisabled(Disableable disableable) {
-    return disableable.isDisableable()
-        && getDisabledChecks().contains(disableable.getCanonicalName());
+    return disableable.disableable()
+        && getDisabledChecks().contains(disableable.canonicalName());
   }
 
   public <T extends Suppressible & Disableable> boolean isSuppressedOrDisabled(T matcher) {
