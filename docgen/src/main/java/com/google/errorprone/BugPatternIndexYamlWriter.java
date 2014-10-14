@@ -30,10 +30,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 /**
@@ -43,7 +40,7 @@ public class BugPatternIndexYamlWriter {
 
   void dump(Collection<Instance> patterns, Writer w)
       throws IOException {
-    Map<String, List<Map<String, String>>> data = new HashMap<>();
+    Map<String, List<Map<String, String>>> data = new TreeMap<>();
 
     Map<String, Collection<Instance>> index = index(patterns, new Function<Instance, String>() {
       @Override
