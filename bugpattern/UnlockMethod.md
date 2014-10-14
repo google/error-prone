@@ -8,7 +8,9 @@ maturity: EXPERIMENTAL
 
 # Bug pattern: UnlockMethod
 __This method does not acquire the locks specified by its @UnlockMethod annotation__
-  * Alternate names: GuardedBy
+
+_Alternate names: GuardedBy_
+
 ## The problem
 Methods with the @UnlockMethod annotation are expected to release one or more locks. The caller must hold the locks when the function is entered, and will not hold them when it completes.
 

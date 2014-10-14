@@ -8,7 +8,9 @@ maturity: MATURE
 
 # Bug pattern: DeadException
 __Exception created but not thrown__
-  * Alternate names: ThrowableInstanceNeverThrown
+
+_Alternate names: ThrowableInstanceNeverThrown_
+
 ## The problem
 The exception is created with new, but is not thrown, and the reference is lost.
 

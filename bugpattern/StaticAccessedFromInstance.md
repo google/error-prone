@@ -8,7 +8,9 @@ maturity: MATURE
 
 # Bug pattern: StaticAccessedFromInstance
 __A static variable or method should not be accessed from an object instance__
-  * Alternate names: static
+
+_Alternate names: static_
+
 ## The problem
 A static variable or method should never be accessed from an instance.  This hides the fact that the variable or method is static and does not depend on the value of the object instance on which this variable or method is being invoked.
 

@@ -8,7 +8,9 @@ maturity: MATURE
 
 # Bug pattern: Finally
 __If you return or throw from a finally, then values returned or thrown from the try-catch block will be ignored__
-  * Alternate names: finally
+
+_Alternate names: finally_
+
 ## The problem
 Terminating a finally block abruptly preempts the outcome of the try block, and will cause the result of any previously executed return or throw statements to be ignored. This is very confusing. Please refactor this code to ensure that the finally block will always complete normally.
 

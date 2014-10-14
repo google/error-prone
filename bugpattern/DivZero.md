@@ -8,7 +8,9 @@ maturity: EXPERIMENTAL
 
 # Bug pattern: DivZero
 __Division by integer literal zero__
-  * Alternate names: divzero
+
+_Alternate names: divzero_
+
 ## The problem
 This code will cause a runtime arithmetic exception if it is executed.
 

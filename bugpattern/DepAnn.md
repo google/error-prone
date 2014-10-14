@@ -8,7 +8,9 @@ maturity: MATURE
 
 # Bug pattern: DepAnn
 __Deprecated item is not annotated with @Deprecated__
-  * Alternate names: dep-ann
+
+_Alternate names: dep-ann_
+
 ## The problem
 A declaration has the @deprecated Javadoc tag but no @Deprecated annotation. Please add an @Deprecated annotation to this declaration in addition to the @deprecated tag in the Javadoc.
 

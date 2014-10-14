@@ -8,7 +8,9 @@ maturity: MATURE
 
 # Bug pattern: Overrides
 __Varargs doesn't agree for overridden method__
-  * Alternate names: overrides
+
+_Alternate names: overrides_
+
 ## The problem
 A varargs method is overridden by a method with an array parameter, or vice versa.  Please match the signature of the method being overridden.
 

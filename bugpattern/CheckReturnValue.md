@@ -8,7 +8,9 @@ maturity: MATURE
 
 # Bug pattern: CheckReturnValue
 __Ignored return value of method that is annotated with @CheckReturnValue__
-  * Alternate names: ResultOfMethodCallIgnored, ReturnValueIgnored
+
+_Alternate names: ResultOfMethodCallIgnored, ReturnValueIgnored_
+
 ## The problem
 The JSR 305 @CheckReturnValue annotation marks methods whose return values should be checked.  This error is triggered when one of these methods is called but the result is not used.
 
