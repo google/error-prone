@@ -40,17 +40,17 @@ public class BugPatternIndexYamlWriter {
 
   void dump(Collection<Instance> patterns, Writer w)
       throws IOException {
-    Map<String, List<Map<String, String>>> data = new TreeMap<>();
+    Map<String, List<Map<String, String>>> data = new TreeMap<>(Ordering.natural().reverse());
 
-    Map<String, Collection<Instance>> index = index(patterns, new Function<Instance, String>() {
+   ListMultimap<String, BugPattern.Instance> index = index(patterns, new Function<Instance, String>() {
       @Override
       public String apply(Instance input) {
         return input.maturity.description + " : " + input.severity;
-      }}).asMap();
+      }});
 
-    for (String key : Ordering.natural().reverse().sortedCopy(index.keySet())) {
-      data.put(key, FluentIterable
-          .from(index.get(key))
+    for (Entry<String, Collection<Instance>> entry : index.asMap().entrySet()) {
+      data.put(entry.getKey(), FluentIterable
+          .from(entry.getValue())
           .transform(new Function<Instance, Map<String, String>>() {
             @Override
             public Map<String, String> apply(Instance input) {
