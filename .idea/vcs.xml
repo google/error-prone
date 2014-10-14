@@ -2,7 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/../../maven/maven-plugins/maven-shade-plugin" vcs="svn" />
+    <mapping directory="$USER_HOME$/maven/maven-plugins/maven-shade-plugin" vcs="svn" />
   </component>
 </project>
 

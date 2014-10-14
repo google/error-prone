@@ -41,12 +41,12 @@ import java.util.regex.Pattern;
  * @author alexeagle@google.com (Alex Eagle)
  */
 class BugPatternFileGenerator implements LineProcessor<List<Instance>> {
-  private final File wikiDir;
+  private final File outputDir;
   private final File exampleDirBase;
   private List<Instance> result;
 
-  public BugPatternFileGenerator(File wikiDir, File exampleDirBase) {
-    this.wikiDir = wikiDir;
+  public BugPatternFileGenerator(File outputDir, File exampleDirBase) {
+    this.outputDir = outputDir;
     this.exampleDirBase = exampleDirBase;
     result = new ArrayList<>();
   }
@@ -119,8 +119,8 @@ class BugPatternFileGenerator implements LineProcessor<List<Instance>> {
     result.add(pattern);
 
     // replace spaces in filename with underscores
-    String basename = pattern.name.replace(' ', '_');
-    Writer writer = new FileWriter(new File(wikiDir, "bugpattern/" + basename + ".md"));
+    Writer writer = new FileWriter(
+        new File(outputDir, pattern.name.replace(' ', '_') + ".md"));
     // replace "\n" with a carriage return for explanation
     parts[9] = parts[9].replace("\\n", "\n");
 
