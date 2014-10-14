@@ -69,7 +69,7 @@ import java.util.Map;
  * @author cpovirk@google.com (Chris Povirk)
  */
 @BugPattern(name = "ChainingConstructorIgnoresParameter",
-    maturity = EXPERIMENTAL, category = JDK, severity = WARNING,
+    maturity = EXPERIMENTAL, category = JDK, severity = WARNING, disableable = true,
     explanation = "A constructor parameter might not be being used as expected",
     summary = "The called constructor accepts a parameter with the same name and type as one of "
         + "its caller's parameters, but its caller doesn't pass that parameter to it.  It's likely "
