@@ -131,6 +131,7 @@ public class DocGen extends AbstractProcessor {
     if (!bugpatternDir.exists()) {
       bugpatternDir.mkdirs();
     }
+    new File(wikiDir, "_data").mkdirs();
     BugPatternFileGenerator generator = new BugPatternFileGenerator(bugpatternDir, exampleDirBase);
     try (Writer w = new FileWriter(new File(wikiDir, "_data/bugpatterns.yaml"))) {
       new BugPatternIndexYamlWriter().dump(readLines(bugPatterns, UTF_8, generator), w);
