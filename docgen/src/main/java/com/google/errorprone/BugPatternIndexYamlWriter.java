@@ -45,25 +45,27 @@ public class BugPatternIndexYamlWriter {
       throws IOException {
     Map<String, List<Map<String, String>>> data = new HashMap<>();
 
-    ListMultimap<String, Instance> index = index(patterns, new Function<Instance, String>() {
+    Map<String, Collection<Instance>> index = index(patterns, new Function<Instance, String>() {
       @Override
       public String apply(Instance input) {
         return input.maturity.description + " : " + input.severity;
-      }});
+      }}).asMap();
 
-    for (Entry<String, Collection<Instance>> entry : index.asMap().entrySet()) {
-      data.put(entry.getKey(), FluentIterable
-          .from(entry.getValue())
+    for (String key : Ordering.natural().reverse().sortedCopy(index.keySet())) {
+      data.put(key, FluentIterable
+          .from(index.get(key))
           .transform(new Function<Instance, Map<String, String>>() {
             @Override
             public Map<String, String> apply(Instance input) {
               return ImmutableMap.of("name", input.name, "summary", input.summary);
-            }})
+            }
+          })
           .toSortedList(new Ordering<Map<String, String>>() {
             @Override
             public int compare(Map<String, String> left, Map<String, String> right) {
               return left.get("name").compareTo(right.get("name"));
-            }}));
+            }
+          }));
     }
     new Yaml().dump(data, w);
   }
