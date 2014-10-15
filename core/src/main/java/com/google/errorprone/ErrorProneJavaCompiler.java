@@ -16,6 +16,8 @@
 
 package com.google.errorprone;
 
+import static com.google.errorprone.ErrorProneScanner.EnabledPredicate.DEFAULT_CHECKS;
+
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -84,7 +86,7 @@ public class ErrorProneJavaCompiler implements JavaCompiler {
     this(javacTool, new Supplier<ErrorProneScanner>() {
       @Override
       public ErrorProneScanner get() {
-        return new ErrorProneScanner(ErrorProneScanner.EnabledPredicate.DEFAULT_CHECKS);
+        return new ErrorProneScanner(DEFAULT_CHECKS);
       }
     });
   }
@@ -113,13 +115,12 @@ public class ErrorProneJavaCompiler implements JavaCompiler {
         out, fileManager, diagnosticListener, remainingOptions, classes, compilationUnits);
     Context context = ((JavacTaskImpl) task).getContext();
     ErrorProneScanner scanner = scannerSupplier.get();
-    context.put(Scanner.class, scanner);
     try {
       scanner.setDisabledChecks(errorProneOptions.getDisabledChecks());
     } catch (InvalidCommandLineOptionException e) {
       throw new RuntimeException(e);
     }
-    ErrorReportingJavaCompiler.preRegister(context);
+    ErrorProneJavacJavaCompiler.preRegister(context, scanner);
     return task;
   }
 

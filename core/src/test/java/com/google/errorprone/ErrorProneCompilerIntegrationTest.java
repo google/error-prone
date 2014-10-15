@@ -322,4 +322,22 @@ public class ErrorProneCompilerIntegrationTest {
 
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
+
+  @Test
+  public void searchMode() throws Exception {
+    compiler = new ErrorProneTestCompiler.Builder()
+        .named("test")
+        .redirectOutputTo(printWriter)
+        .listenToDiagnostics(diagnosticHelper.collector)
+        .search(new ErrorProneScanner(ErrorProneScanner.EnabledPredicate.DEFAULT_CHECKS))
+        .build();
+
+    Result exitCode = compiler.compile(compiler.fileManager().sources(getClass(),
+        "bugpatterns/BadShiftAmountPositiveCases.java"));
+    outputStream.flush();
+    String output = outputStream.toString();
+    assertThat(outputStream.toString(), exitCode, is(Result.OK));
+    assertThat(output, containsString("BadShiftAmountPositiveCases.java:29: Note: Matched"));
+    assertThat(output, containsString("Note: Found 12 matches."));
+  }
 }

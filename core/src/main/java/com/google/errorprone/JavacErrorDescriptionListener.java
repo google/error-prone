@@ -24,7 +24,6 @@ import com.google.errorprone.matchers.Description;
 
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.tree.EndPosTable;
-import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Log;
 
@@ -55,12 +54,15 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
   // The suffix for properties in src/main/resources/com/google/errorprone/errors.properties
   private static final String MESSAGE_BUNDLE_KEY = "error.prone";
 
-  public JavacErrorDescriptionListener(Log log, EndPosTable endPositions,
-                                       JavaFileObject sourceFile, Context context) {
+  public JavacErrorDescriptionListener(
+      Log log,
+      EndPosTable endPositions,
+      JavaFileObject sourceFile,
+      JavaCompiler compiler) {
     this.log = log;
     this.endPositions = endPositions;
     this.sourceFile = sourceFile;
-    this.compiler = JavaCompiler.instance(context);
+    this.compiler = compiler;
     try {
       this.sourceFileContent = sourceFile.getCharContent(true);
     } catch (IOException e) {

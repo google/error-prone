@@ -16,13 +16,14 @@
 
 package com.google.errorprone;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.errorprone.ErrorProneScanner.EnabledPredicate.DEFAULT_CHECKS;
 
 import com.sun.tools.javac.file.JavacFileManager;
-import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.main.Main;
 import com.sun.tools.javac.main.Main.Result;
 import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.JavacMessages;
 import com.sun.tools.javac.util.List;
 
 import java.io.PrintWriter;
@@ -81,32 +82,29 @@ public class ErrorProneCompiler {
   }
 
   private final DiagnosticListener<? super JavaFileObject> diagnosticListener;
-  private final Class<? extends JavaCompiler> compilerClass;
   private final Main main;
   private final PrintWriter printWriter;
-
-  /**
-   * A custom Scanner to use if we want to use a non-default set of error-prone checks, e.g.
-   * for testing.  Null if we want to use the default set of checks.
-   */
+  private final SearchResultsPrinter resultsPrinter;
   private final Scanner errorProneScanner;
 
-  private ErrorProneCompiler(String s, PrintWriter printWriter,
+  private ErrorProneCompiler(
+      String compilerName,
+      PrintWriter printWriter,
       DiagnosticListener<? super JavaFileObject> diagnosticListener,
       Scanner errorProneScanner,
-      Class<? extends JavaCompiler> compilerClass) {
-    this.printWriter = printWriter;
-    this.main = new Main(s, printWriter);
+      boolean useResultsPrinter) {
+    this.printWriter = checkNotNull(printWriter);
+    this.main = new Main(compilerName, printWriter);
     this.diagnosticListener = diagnosticListener;
-    this.errorProneScanner = errorProneScanner;
-    this.compilerClass = compilerClass;
+    this.errorProneScanner = checkNotNull(errorProneScanner);
+    this.resultsPrinter = useResultsPrinter ? new SearchResultsPrinter(printWriter) : null;
   }
 
   public static class Builder {
-    DiagnosticListener<? super JavaFileObject> diagnosticListener = null;
-    PrintWriter out = new PrintWriter(System.err, true);
-    String compilerName = "javac (with error-prone)";
-    Class<? extends JavaCompiler> compilerClass = ErrorReportingJavaCompiler.class;
+    private DiagnosticListener<? super JavaFileObject> diagnosticListener = null;
+    private PrintWriter out = new PrintWriter(System.err, true);
+    private String compilerName = "javac (with error-prone)";
+    private boolean useResultsPrinter = false;
 
     /**
      * A custom Scanner to use if we want to use a non-default set of error-prone checks, e.g.
@@ -115,7 +113,12 @@ public class ErrorProneCompiler {
     Scanner scanner;
 
     public ErrorProneCompiler build() {
-      return new ErrorProneCompiler(compilerName, out, diagnosticListener, scanner, compilerClass);
+      return new ErrorProneCompiler(
+          compilerName,
+          out,
+          diagnosticListener,
+          scanner != null ? scanner : new ErrorProneScanner(DEFAULT_CHECKS),
+          useResultsPrinter);
     }
 
     public Builder named(String compilerName) {
@@ -133,14 +136,15 @@ public class ErrorProneCompiler {
       return this;
     }
 
+    // TODO(user): SearchingResultPrinter interacts awkwardly with everything else and is barely
+    // used; consider deleting it.
     public Builder search(Scanner scanner) {
-      this.compilerClass = SearchingJavaCompiler.class;
       this.scanner = scanner;
+      this.useResultsPrinter = true;
       return this;
     }
 
     public Builder report(Scanner scanner) {
-      this.compilerClass = ErrorReportingJavaCompiler.class;
       this.scanner = scanner;
       return this;
     }
@@ -172,28 +176,31 @@ public class ErrorProneCompiler {
       context.put(DiagnosticListener.class, diagnosticListener);
     }
 
-    Scanner scannerInContext = context.get(Scanner.class);
-    if (scannerInContext == null) {
-      if (errorProneScanner == null) {
-        scannerInContext = new ErrorProneScanner(DEFAULT_CHECKS);
-      } else {
-        scannerInContext = errorProneScanner;
-      }
-      context.put(Scanner.class, scannerInContext);
-    }
     try {
-      scannerInContext.setDisabledChecks(epOptions.getDisabledChecks());
+      errorProneScanner.setDisabledChecks(epOptions.getDisabledChecks());
     } catch (InvalidCommandLineOptionException e) {
       printWriter.println(e.getMessage());
+      printWriter.flush();
       return Result.CMDERR;
     }
 
-    try {
-      compilerClass.getMethod("preRegister", Context.class).invoke(null, context);
-    } catch (ReflectiveOperationException e) {
-      throw new RuntimeException("The JavaCompiler used must have the preRegister static method. "
-          + "We are very sorry.", e);
+    setupMessageBundle(context);
+    ErrorProneJavacJavaCompiler.preRegister(context, errorProneScanner, resultsPrinter);
+
+    Result result =
+        main.compile(epOptions.getRemainingArgs(), context, javaFileObjects, processors);
+
+    if (resultsPrinter != null) {
+      resultsPrinter.printMatches();
     }
-    return main.compile(epOptions.getRemainingArgs(), context, javaFileObjects, processors);
+
+    return result;
+  }
+
+  /**
+   * Registers our message bundle.
+   */
+  public static void setupMessageBundle(Context context) {
+    JavacMessages.instance(context).add("com.google.errorprone.errors");
   }
 }
