@@ -68,9 +68,9 @@ import java.util.ArrayList;
     summary = "Ordering.from(new Comparator<T>() { }) can be refactored to cleaner form",
     explanation =
         "Calls of the form\n" +
-        "{{{Ordering.from(new Comparator<T>() { ... })}}}\n" +
+        "`Ordering.from(new Comparator<T>() { ... })`\n" +
         "can be unwrapped to a new anonymous subclass of Ordering\n" +
-        "{{{new Ordering<T>() { ... }}}}\n" +
+        "`new Ordering<T>() { ... }`\n" +
         "which is shorter and cleaner (and potentially more efficient).",
     category = GUAVA, severity = WARNING, maturity = EXPERIMENTAL)
 public class OrderingFrom extends BugChecker implements MethodInvocationTreeMatcher {
