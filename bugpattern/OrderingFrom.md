@@ -11,9 +11,9 @@ __Ordering.from(new Comparator<T>() { }) can be refactored to cleaner form__
 
 ## The problem
 Calls of the form
-Ordering.from(new Comparator<T>() { ... })
+`Ordering.from(new Comparator<T>() { ... })`
 can be unwrapped to a new anonymous subclass of Ordering
-new Ordering<T>() { ... }
+`new Ordering<T>() { ... }`
 which is shorter and cleaner (and potentially more efficient).
 
 ## Suppression

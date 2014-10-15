@@ -11,9 +11,9 @@ __Suppressing "deprecated" is probably a typo for "deprecation"__
 
 ## The problem
 To suppress warnings to deprecated methods, you should add the annotation
-{{{@SuppressWarnings("deprecation")}}}
+`@SuppressWarnings("deprecation")`
 and not
-{{{@SuppressWarnings("deprecated")}}}
+`@SuppressWarnings("deprecated")`
 
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("SuppressWarningsDeprecated")` annotation to the enclosing element.
