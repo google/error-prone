@@ -12,7 +12,7 @@ are marked __On by default__, and each release promotes some experimental checks
 
 ##{{ maturity[0] }}
 {% for pattern in maturity[1] %}
-__<a href="bugpattern/{{pattern.name}}.html">{{pattern.name}}</a>__<br/>
+__<a href="bugpattern/{{pattern.name}}">{{pattern.name}}</a>__<br/>
 {{pattern.summary}}
 {% endfor %}
 
