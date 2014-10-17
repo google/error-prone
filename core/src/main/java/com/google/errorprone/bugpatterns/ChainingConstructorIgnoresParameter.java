@@ -18,8 +18,8 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Maps.newHashMap;
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.fixes.SuggestedFix.replace;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.hasIdentifier;
@@ -69,7 +69,7 @@ import java.util.Map;
  * @author cpovirk@google.com (Chris Povirk)
  */
 @BugPattern(name = "ChainingConstructorIgnoresParameter",
-    maturity = EXPERIMENTAL, category = JDK, severity = WARNING, disableable = true,
+    maturity = MATURE, category = JDK, severity = ERROR, disableable = true,
     explanation = "A constructor parameter might not be being used as expected",
     summary = "The called constructor accepts a parameter with the same name and type as one of "
         + "its caller's parameters, but its caller doesn't pass that parameter to it.  It's likely "

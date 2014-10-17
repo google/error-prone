@@ -38,7 +38,7 @@ public class ChainingConstructorIgnoresParameterTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(compilationHelper.fileManager()
+    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
         .sources(getClass(), "ChainingConstructorIgnoresParameterPositiveCases.java"));
   }
 
