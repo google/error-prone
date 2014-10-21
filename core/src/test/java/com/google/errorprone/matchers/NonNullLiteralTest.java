@@ -21,6 +21,7 @@ import static org.junit.Assert.assertTrue;
 import com.google.errorprone.Scanner;
 import com.google.errorprone.VisitorState;
 
+import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -114,7 +115,7 @@ public class NonNullLiteralTest extends CompilerBasedAbstractTest {
     );
     assertCompiles(nonNullLiteralMatches(false, Matchers.nonNullLiteral()));
   }
-  
+
   private Scanner nonNullLiteralMatches(
       final boolean shouldMatch, final Matcher<ExpressionTree> toMatch) {
     return new Scanner() {
@@ -123,13 +124,17 @@ public class NonNullLiteralTest extends CompilerBasedAbstractTest {
         assertTrue(node.toString(), !shouldMatch ^ toMatch.matches(node, visitorState));
         return super.visitLiteral(node, visitorState);
       }
-      
+
       @Override
       public Void visitMemberSelect(MemberSelectTree node, VisitorState visitorState) {
         assertTrue(node.toString(), !shouldMatch ^ toMatch.matches(node, visitorState));
         return super.visitMemberSelect(node, visitorState);
       }
       
+      @Override
+      public Void visitCompilationUnit(CompilationUnitTree node, VisitorState visitorState) {
+        return null;
+      }
     };
   }
 }
