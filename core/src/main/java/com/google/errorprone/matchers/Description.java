@@ -118,7 +118,7 @@ public class Description {
   private static String getLinkUrl(BugPattern pattern) {
     switch (pattern.linkType()) {
       case WIKI:
-        return "http://code.google.com/p/error-prone/wiki/" + pattern.name();
+        return String.format("http://errorprone.info/bugpattern/%s", pattern.name());
       case CUSTOM:
         // annotation.link() must be provided.
         if (pattern.link().isEmpty()) {

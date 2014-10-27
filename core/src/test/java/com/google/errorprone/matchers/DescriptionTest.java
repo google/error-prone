@@ -63,10 +63,12 @@ public class DescriptionTest {
   public void testDescriptionFromBugPattern() {
     Description description = new MyChecker().getDescription();
     assertEquals("DeadException", description.checkName);
-    assertEquals("Exception created but not thrown\n  (see http://code.google.com/p/error-prone/wik"
-        + "i/DeadException)", description.getMessageWithoutCheckName());
-    assertEquals("[DeadException] Exception created but not thrown\n  (see http://code.google.com/p"
-        + "/error-prone/wiki/DeadException)", description.getMessage());
+    assertEquals("Exception created but not thrown\n" +
+        "  (see http://errorprone.info/bugpattern/DeadException)",
+        description.getMessageWithoutCheckName());
+    assertEquals("[DeadException] Exception created but not thrown\n" +
+        "  (see http://errorprone.info/bugpattern/DeadException)",
+        description.getMessage());
   }
 
   @Test
@@ -76,11 +78,11 @@ public class DescriptionTest {
         .build();
     assertEquals("DeadException", description.checkName);
     assertEquals(
-        "custom message\n  (see http://code.google.com/p/error-prone/wiki/DeadException)",
+        "custom message\n  (see http://errorprone.info/bugpattern/DeadException)",
         description.getMessageWithoutCheckName());
     assertEquals(
         "[DeadException] custom message\n"
-            + "  (see http://code.google.com/p/error-prone/wiki/DeadException)",
+            + "  (see http://errorprone.info/bugpattern/DeadException)",
         description.getMessage());
   }
 
