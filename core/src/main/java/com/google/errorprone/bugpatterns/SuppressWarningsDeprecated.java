@@ -42,9 +42,9 @@ import java.util.List;
   summary = "Suppressing \"deprecated\" is probably a typo for \"deprecation\"",
   explanation =
     "To suppress warnings to deprecated methods, you should add the annotation\n" +
-    "{{{@SuppressWarnings(\"deprecation\")}}}\n" +
+    "`@SuppressWarnings(\"deprecation\")`\n" +
     "and not\n" +
-    "{{{@SuppressWarnings(\"deprecated\")}}}",
+    "`@SuppressWarnings(\"deprecated\")`",
   category = JDK, severity = ERROR, maturity = MATURE)
 public class SuppressWarningsDeprecated extends AbstractSuppressWarningsMatcher {
 
