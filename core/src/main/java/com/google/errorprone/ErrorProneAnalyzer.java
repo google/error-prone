@@ -189,8 +189,7 @@ public class ErrorProneAnalyzer implements TaskListener {
       DescriptionListener logReporter = new JavacErrorDescriptionListener(
           log,
           ((JCCompilationUnit) compilation).endPositions,
-          compilation.getSourceFile(),
-          compiler);
+          compilation.getSourceFile());
       return new VisitorState(context, logReporter);
     }
   }

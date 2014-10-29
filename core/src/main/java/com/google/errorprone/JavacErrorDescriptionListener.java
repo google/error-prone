@@ -16,13 +16,14 @@
 
 package com.google.errorprone;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.google.errorprone.fixes.AppliedFix;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
 
-import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Log;
@@ -39,10 +40,9 @@ import javax.tools.JavaFileObject;
  */
 public class JavacErrorDescriptionListener implements DescriptionListener {
   private final Log log;
-  private EndPosTable endPositions;
+  private final EndPosTable endPositions;
   private final JavaFileObject sourceFile;
   private final CharSequence sourceFileContent;
-  private final JavaCompiler compiler;
 
   private final Function<Fix, AppliedFix> fixToAppliedFix = new Function<Fix, AppliedFix>() {
     @Override
@@ -57,12 +57,10 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
   public JavacErrorDescriptionListener(
       Log log,
       EndPosTable endPositions,
-      JavaFileObject sourceFile,
-      JavaCompiler compiler) {
+      JavaFileObject sourceFile) {
     this.log = log;
-    this.endPositions = endPositions;
+    this.endPositions = checkNotNull(endPositions);
     this.sourceFile = sourceFile;
-    this.compiler = compiler;
     try {
       this.sourceFileContent = sourceFile.getCharContent(true);
     } catch (IOException e) {
@@ -74,18 +72,6 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
   public void onDescribed(Description description) {
     // Swap the log's source and the current file's source; then be sure to swap them back later.
     JavaFileObject originalSource = log.useSource(sourceFile);
-
-    // If endPositions were not computed (-Xjcov option was not passed), reparse the file
-    // and compute the end positions so we can generate suggested fixes.
-    if (EndPosTableUtil.isEmpty(endPositions)) {
-      boolean prevGenEndPos = compiler.genEndPos;
-      compiler.genEndPos = true;
-      // Reset the end positions for JDK8:
-      EndPosTableUtil.resetEndPosMap(compiler, sourceFile);
-      EndPosTable endPosMap = compiler.parse(sourceFile).endPositions;
-      compiler.genEndPos = prevGenEndPos;
-      endPositions = new WrappedTreeMap(log, endPosMap);
-    }
 
     List<AppliedFix> appliedFixes = Lists.transform(description.fixes, fixToAppliedFix);
     StringBuilder messageBuilder = new StringBuilder(description.getMessage());

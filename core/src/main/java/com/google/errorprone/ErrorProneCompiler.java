@@ -19,6 +19,9 @@ package com.google.errorprone;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.errorprone.ErrorProneScanner.EnabledPredicate.DEFAULT_CHECKS;
 
+import com.sun.source.util.TaskEvent;
+import com.sun.source.util.TaskListener;
+import com.sun.tools.javac.api.MultiTaskListener;
 import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.main.Main;
 import com.sun.tools.javac.main.Main.Result;
@@ -185,6 +188,7 @@ public class ErrorProneCompiler {
     }
 
     setupMessageBundle(context);
+    enableEndPositions(context);
     ErrorProneJavacJavaCompiler.preRegister(context, errorProneScanner, resultsPrinter);
 
     Result result =
@@ -202,5 +206,15 @@ public class ErrorProneCompiler {
    */
   public static void setupMessageBundle(Context context) {
     JavacMessages.instance(context).add("com.google.errorprone.errors");
+  }
+
+  private static final TaskListener EMPTY_LISTENER = new TaskListener() {
+    @Override public void started(TaskEvent e) {}
+    @Override public void finished(TaskEvent e) {}
+  };
+
+  /** Convinces javac to run in 'API mode', and collect end position information. */
+  private static void enableEndPositions(Context context) {
+    MultiTaskListener.instance(context).add(EMPTY_LISTENER);
   }
 }
