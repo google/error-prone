@@ -87,12 +87,17 @@ public class CommandLineFlagDisableTest {
     ErrorProneTestCompiler compiler = builder
         .report(ScannerSupplier.fromBugCheckers(new DisableableChecker()))
         .build();
-
     List<JavaFileObject> sources =
         compiler.fileManager().sources(getClass(), "CommandLineFlagTestFile.java");
+    
     Result exitCode = compiler.compile(sources);
+    assertThat(exitCode).isEqualTo(Result.ERROR);
+    assertThat(diagnosticHelper.getDiagnostics().size()).isGreaterThan(0);
+    
+    diagnosticHelper.clearDiagnostics();
     exitCode = compiler.compile(new String[]{"-Xepdisable:DisableableChecker"}, sources);
     assertThat(exitCode).isEqualTo(Result.OK);
+    assertThat(diagnosticHelper.getDiagnostics().size()).isEqualTo(0);
   }
 
   @Test
@@ -100,9 +105,9 @@ public class CommandLineFlagDisableTest {
     ErrorProneTestCompiler compiler = builder
         .report(ScannerSupplier.fromBugCheckers(new NondisableableChecker()))
         .build();
-
     List<JavaFileObject> sources =
         compiler.fileManager().sources(getClass(), "CommandLineFlagTestFile.java");
+    
     Result exitCode = compiler.compile(new String[]{"-Xepdisable:NondisableableChecker"}, sources);
     assertThat(exitCode).isEqualTo(Result.CMDERR);
     assertThat(output.toString()).contains(
@@ -114,9 +119,9 @@ public class CommandLineFlagDisableTest {
     ErrorProneTestCompiler compiler =  builder
         .report(ScannerSupplier.fromBugCheckers(new DisableableChecker()))
         .build();
-
     List<JavaFileObject> sources =
         compiler.fileManager().sources(getClass(), "CommandLineFlagTestFile.java");
+    
     Result exitCode = compiler.compile(new String[]{"-Xepdisable:BogusChecker"}, sources);
     assertThat(exitCode).isEqualTo(Result.ERROR);
     assertThat(output.toString()).isEqualTo("");
@@ -127,9 +132,9 @@ public class CommandLineFlagDisableTest {
     ErrorProneTestCompiler compiler =  builder
         .report(ScannerSupplier.fromBugCheckers(new DisableableChecker()))
         .build();
-
     List<JavaFileObject> sources =
         compiler.fileManager().sources(getClass(), "CommandLineFlagTestFile.java");
+    
     Result exitCode = compiler.compile(new String[]{"-Xepdisable:foo"}, sources);
     assertThat(exitCode).isEqualTo(Result.ERROR);
     assertThat(output.toString()).isEqualTo("");

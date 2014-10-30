@@ -28,7 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.processing.Processor;
-import javax.tools.DiagnosticCollector;
+import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 
@@ -46,8 +46,8 @@ public class ErrorProneTestCompiler {
       return new ErrorProneTestCompiler(wrappedCompilerBuilder.build());
     }
 
-    public Builder listenToDiagnostics(DiagnosticCollector<JavaFileObject> collector) {
-      wrappedCompilerBuilder.listenToDiagnostics(collector);
+    public Builder listenToDiagnostics(DiagnosticListener<? super JavaFileObject> listener) {
+      wrappedCompilerBuilder.listenToDiagnostics(listener);
       return this;
     }
 

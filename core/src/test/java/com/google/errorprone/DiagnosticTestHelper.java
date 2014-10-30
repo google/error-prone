@@ -23,6 +23,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.not;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.io.CharSource;
 
 import org.hamcrest.BaseMatcher;
@@ -38,7 +39,7 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.tools.Diagnostic;
-import javax.tools.DiagnosticCollector;
+import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
 
 /**
@@ -66,7 +67,8 @@ public class DiagnosticTestHelper {
     this.checkName = checkName;
   }
 
-  public DiagnosticCollector<JavaFileObject> collector = new DiagnosticCollector<JavaFileObject>();
+  public ClearableDiagnosticCollector<JavaFileObject> collector =
+      new ClearableDiagnosticCollector<JavaFileObject>();
 
   @SuppressWarnings("unchecked")  // hamcrest should use @SafeVarargs
   public static Matcher<Diagnostic<JavaFileObject>> suggestsRemovalOfLine(URI fileURI, int line) {
@@ -77,6 +79,10 @@ public class DiagnosticTestHelper {
 
   public List<Diagnostic<? extends JavaFileObject>> getDiagnostics() {
     return collector.getDiagnostics();
+  }
+
+  public void clearDiagnostics() {
+    collector.clear();
   }
 
   public String describe() {
@@ -262,5 +268,22 @@ public class DiagnosticTestHelper {
     }
 
     return result;
+  }
+
+  private static class ClearableDiagnosticCollector<S> implements DiagnosticListener<S> {
+    private final List<Diagnostic<? extends S>> diagnostics = new ArrayList<>();
+
+    @Override
+    public void report(Diagnostic<? extends S> diagnostic) {
+      diagnostics.add(diagnostic);
+    }
+
+    public List<Diagnostic<? extends S>> getDiagnostics() {
+      return ImmutableList.copyOf(diagnostics);
+    }
+
+    public void clear() {
+      diagnostics.clear();
+    }
   }
 }
