@@ -26,12 +26,12 @@ import static org.junit.Assert.assertThat;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.errorprone.DiagnosticTestHelper;
-import com.google.errorprone.ErrorProneScanner;
 import com.google.errorprone.ErrorProneTestCompiler;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.scanner.ScannerSupplier;
 
 import com.sun.source.tree.ReturnTree;
 import com.sun.tools.javac.main.Main.Result;
@@ -73,7 +73,7 @@ public class UnsuppressibleTest {
     diagnosticHelper = new DiagnosticTestHelper();
     compiler = new ErrorProneTestCompiler.Builder()
         .listenToDiagnostics(diagnosticHelper.collector)
-        .report(new ErrorProneScanner(new MyChecker()))
+        .report(ScannerSupplier.fromBugCheckers(new MyChecker()))
         .build();
   }
 

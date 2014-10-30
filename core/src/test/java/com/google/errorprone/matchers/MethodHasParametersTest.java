@@ -22,8 +22,8 @@ import static com.google.errorprone.matchers.MultiMatcher.MatchType.ALL;
 import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
 import static org.junit.Assert.assertEquals;
 
-import com.google.errorprone.Scanner;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.scanner.Scanner;
 
 import com.sun.source.tree.MethodTree;
 

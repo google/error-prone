@@ -25,13 +25,13 @@ import static org.junit.Assert.assertThat;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.errorprone.DiagnosticTestHelper;
-import com.google.errorprone.ErrorProneScanner;
 import com.google.errorprone.ErrorProneTestCompiler;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.EmptyStatementTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.scanner.ScannerSupplier;
 
 import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.ReturnTree;
@@ -51,7 +51,7 @@ import javax.tools.JavaFileObject;
  */
 @RunWith(JUnit4.class)
 public class CustomSuppressionTest {
-  
+
   /**
    * Custom suppression annotation for the first checker in this test.
    */
@@ -96,7 +96,7 @@ public class CustomSuppressionTest {
     diagnosticHelper = new DiagnosticTestHelper();
     compiler = new ErrorProneTestCompiler.Builder()
         .listenToDiagnostics(diagnosticHelper.collector)
-        .report(new ErrorProneScanner(new MyChecker(), new MyChecker2()))
+        .report(ScannerSupplier.fromBugCheckers(new MyChecker(), new MyChecker2()))
         .build();
   }
 

@@ -19,8 +19,8 @@ package com.google.errorprone.matchers;
 import static com.google.errorprone.matchers.Matchers.stringLiteral;
 import static org.junit.Assert.assertTrue;
 
-import com.google.errorprone.Scanner;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.scanner.Scanner;
 
 import com.sun.source.tree.AnnotationTree;
 

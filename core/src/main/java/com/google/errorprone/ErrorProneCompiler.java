@@ -17,7 +17,10 @@
 package com.google.errorprone;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.errorprone.ErrorProneScanner.EnabledPredicate.DEFAULT_CHECKS;
+
+import com.google.errorprone.scanner.ErrorProneScannerSuppliers;
+import com.google.errorprone.scanner.Scanner;
+import com.google.errorprone.scanner.ScannerSupplier;
 
 import com.sun.source.util.TaskEvent;
 import com.sun.source.util.TaskListener;
@@ -88,18 +91,18 @@ public class ErrorProneCompiler {
   private final Main main;
   private final PrintWriter printWriter;
   private final SearchResultsPrinter resultsPrinter;
-  private final Scanner errorProneScanner;
+  private final ScannerSupplier scannerSupplier;
 
   private ErrorProneCompiler(
       String compilerName,
       PrintWriter printWriter,
       DiagnosticListener<? super JavaFileObject> diagnosticListener,
-      Scanner errorProneScanner,
+      ScannerSupplier scannerSupplier,
       boolean useResultsPrinter) {
     this.printWriter = checkNotNull(printWriter);
     this.main = new Main(compilerName, printWriter);
     this.diagnosticListener = diagnosticListener;
-    this.errorProneScanner = checkNotNull(errorProneScanner);
+    this.scannerSupplier = checkNotNull(scannerSupplier);
     this.resultsPrinter = useResultsPrinter ? new SearchResultsPrinter(printWriter) : null;
   }
 
@@ -108,19 +111,14 @@ public class ErrorProneCompiler {
     private PrintWriter out = new PrintWriter(System.err, true);
     private String compilerName = "javac (with error-prone)";
     private boolean useResultsPrinter = false;
-
-    /**
-     * A custom Scanner to use if we want to use a non-default set of error-prone checks, e.g.
-     * for testing.  Null if we want to use the default set of checks.
-     */
-    Scanner scanner;
+    private ScannerSupplier scannerSupplier = ErrorProneScannerSuppliers.matureChecks();
 
     public ErrorProneCompiler build() {
       return new ErrorProneCompiler(
           compilerName,
           out,
           diagnosticListener,
-          scanner != null ? scanner : new ErrorProneScanner(DEFAULT_CHECKS),
+          scannerSupplier,
           useResultsPrinter);
     }
 
@@ -141,14 +139,14 @@ public class ErrorProneCompiler {
 
     // TODO(user): SearchingResultPrinter interacts awkwardly with everything else and is barely
     // used; consider deleting it.
-    public Builder search(Scanner scanner) {
-      this.scanner = scanner;
+    public Builder search(ScannerSupplier scannerSupplier) {
+      this.scannerSupplier = scannerSupplier;
       this.useResultsPrinter = true;
       return this;
     }
 
-    public Builder report(Scanner scanner) {
-      this.scanner = scanner;
+    public Builder report(ScannerSupplier scannerSupplier) {
+      this.scannerSupplier = scannerSupplier;
       return this;
     }
   }
@@ -179,8 +177,9 @@ public class ErrorProneCompiler {
       context.put(DiagnosticListener.class, diagnosticListener);
     }
 
+    Scanner scanner;
     try {
-      errorProneScanner.setDisabledChecks(epOptions.getDisabledChecks());
+      scanner = scannerSupplier.applyOverrides(epOptions.getSeverityMap()).get();
     } catch (InvalidCommandLineOptionException e) {
       printWriter.println(e.getMessage());
       printWriter.flush();
@@ -189,7 +188,7 @@ public class ErrorProneCompiler {
 
     setupMessageBundle(context);
     enableEndPositions(context);
-    ErrorProneJavacJavaCompiler.preRegister(context, errorProneScanner, resultsPrinter);
+    ErrorProneJavacJavaCompiler.preRegister(context, scanner, resultsPrinter);
 
     Result result =
         main.compile(epOptions.getRemainingArgs(), context, javaFileObjects, processors);

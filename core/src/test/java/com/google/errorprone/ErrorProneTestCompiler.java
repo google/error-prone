@@ -18,6 +18,8 @@ package com.google.errorprone;
 
 import static com.google.errorprone.CompilationTestHelper.asJavacList;
 
+import com.google.errorprone.scanner.ScannerSupplier;
+
 import com.sun.tools.javac.main.Main.Result;
 import com.sun.tools.javac.util.Context;
 
@@ -49,13 +51,13 @@ public class ErrorProneTestCompiler {
       return this;
     }
 
-    public Builder report(Scanner errorProneScanner) {
-      wrappedCompilerBuilder.report(errorProneScanner);
+    public Builder report(ScannerSupplier scannerSupplier) {
+      wrappedCompilerBuilder.report(scannerSupplier);
       return this;
     }
 
-    public Builder search(Scanner errorProneScanner) {
-      wrappedCompilerBuilder.search(errorProneScanner);
+    public Builder search(ScannerSupplier scannerSupplier) {
+      wrappedCompilerBuilder.search(scannerSupplier);
       return this;
     }
 
@@ -76,7 +78,7 @@ public class ErrorProneTestCompiler {
   public ErrorProneInMemoryFileManager fileManager() {
     return fileManager;
   }
-  
+
   private ErrorProneTestCompiler(ErrorProneCompiler compiler) {
     this.compiler = compiler;
   }
@@ -92,7 +94,7 @@ public class ErrorProneTestCompiler {
   public Result compile(List<JavaFileObject> sources, List<? extends Processor> processors) {
     return compile(new String[]{}, sources, processors);
   }
-  
+
   public Result compile(String[] args, List<JavaFileObject> sources, List<? extends Processor>
       processors) {
     Context context = new Context();

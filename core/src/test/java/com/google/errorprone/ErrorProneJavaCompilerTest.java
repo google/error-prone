@@ -27,7 +27,7 @@ import static org.mockito.Mockito.verify;
 
 import com.google.errorprone.bugpatterns.BadShiftAmount;
 import com.google.errorprone.bugpatterns.DepAnnTest;
-import com.google.errorprone.bugpatterns.Finally;
+import com.google.errorprone.scanner.ScannerSupplier;
 
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
@@ -155,14 +155,15 @@ public class ErrorProneJavaCompilerTest {
 
     ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
 
-    JavaCompiler.CompilationTask task = new ErrorProneJavaCompiler(BadShiftAmount.class)
-        .getTask(
-            printWriter,
-            null,
-            diagnosticHelper.collector,
-            Arrays.asList("-d", tempDir.getRoot().getAbsolutePath()),
-            null,
-            fileManager.sources(BadShiftAmount.class, "BadShiftAmountPositiveCases.java"));
+    JavaCompiler compiler =
+        new ErrorProneJavaCompiler(ScannerSupplier.fromBugCheckerClasses(BadShiftAmount.class));
+    JavaCompiler.CompilationTask task =  compiler.getTask(
+        printWriter,
+        null,
+        diagnosticHelper.collector,
+        Arrays.asList("-d", tempDir.getRoot().getAbsolutePath()),
+        null,
+        fileManager.sources(BadShiftAmount.class, "BadShiftAmountPositiveCases.java"));
 
     boolean succeeded = task.call();
     assertFalse(outputStream.toString(), succeeded);
@@ -176,7 +177,9 @@ public class ErrorProneJavaCompilerTest {
 
     ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
 
-    JavaCompiler.CompilationTask task = new ErrorProneJavaCompiler(Finally.class).getTask(
+    JavaCompiler compiler =
+        new ErrorProneJavaCompiler(ScannerSupplier.fromBugCheckerClasses(BadShiftAmount.class));
+    JavaCompiler.CompilationTask task =  compiler.getTask(
         printWriter,
         null,
         diagnosticHelper.collector,

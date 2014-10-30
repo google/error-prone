@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-
 package com.google.errorprone;
 
-import java.util.ArrayList;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Contains options specific to error-prone.
@@ -34,26 +31,36 @@ public class ErrorProneOptions {
   private static final String DISABLE_FLAG_PREFIX = "-Xepdisable:";
 
   /**
+   * Severity levels for an error-prone check that define how the check results should be
+   * presented.
+   */
+  // TODO(user): Add support for other severity levels, e.g. DEFAULT, WARN, and ERROR.
+  public enum Severity {
+    OFF,
+  }
+
+  /**
    * see {@link javax.tools.OptionChecker#isSupportedOption(String)}
    */
   public static int isSupportedOption(String option) {
     return option.startsWith(DISABLE_FLAG_PREFIX) ? 0 : -1;
   }
 
-  private Set<String> disabledChecks;
-  private List<String> remainingArgs;
+  private final ImmutableList<String> remainingArgs;
+  private final ImmutableMap<String, Severity> severityMap;
 
-  private ErrorProneOptions(Set<String> disabledChecks, List<String>remainingArgs) {
-    this.disabledChecks = disabledChecks;
+  private ErrorProneOptions(ImmutableMap<String, Severity> severityMap,
+      ImmutableList<String> remainingArgs) {
+    this.severityMap = severityMap;
     this.remainingArgs = remainingArgs;
-  }
-
-  public Set<String> getDisabledChecks() {
-    return disabledChecks;
   }
 
   public String[] getRemainingArgs() {
     return remainingArgs.toArray(new String[remainingArgs.size()]);
+  }
+
+  public ImmutableMap<String, Severity> getSeverityMap() {
+    return severityMap;
   }
 
   /**
@@ -63,19 +70,22 @@ public class ErrorProneOptions {
    * @param args compiler args, possibly {@code null}
    */
   public static ErrorProneOptions processArgs(Iterable<String> args) {
-    List<String> outputArgs = new ArrayList<>();
-    Set<String> disabledChecks = Collections.emptySet();
+    ImmutableList.Builder<String> outputArgs = ImmutableList.builder();
+    ImmutableMap.Builder<String, Severity> severityMap = ImmutableMap.builder();
     if (args != null) {
       for (String arg : args) {
         if (arg.startsWith(DISABLE_FLAG_PREFIX)) {
-          String checksToDisable = arg.substring(DISABLE_FLAG_PREFIX.length());
-          disabledChecks = new HashSet<>(Arrays.asList(checksToDisable.split(",")));
+          String[] checksToDisable = arg.substring(DISABLE_FLAG_PREFIX.length()).split(",");
+          severityMap = ImmutableMap.builder();
+          for (String checkName : checksToDisable) {
+            severityMap.put(checkName, Severity.OFF);
+          }
         } else {
           outputArgs.add(arg);
         }
       }
     }
-    return new ErrorProneOptions(disabledChecks, outputArgs);
+    return new ErrorProneOptions(severityMap.build(), outputArgs.build());
   }
 
   public static ErrorProneOptions processArgs(String[] args) {

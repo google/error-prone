@@ -20,8 +20,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static org.junit.Assert.assertEquals;
 
-import com.google.errorprone.Scanner;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.scanner.Scanner;
 
 import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.code.Type;

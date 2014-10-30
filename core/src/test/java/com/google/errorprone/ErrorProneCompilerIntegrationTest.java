@@ -35,6 +35,10 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.NonAtomicVolatileUpdate;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.scanner.ErrorProneScanner;
+import com.google.errorprone.scanner.ErrorProneScannerSuppliers;
+import com.google.errorprone.scanner.Scanner;
+import com.google.errorprone.scanner.ScannerSupplier;
 
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.IdentifierTree;
@@ -107,7 +111,7 @@ public class ErrorProneCompilerIntegrationTest {
 
   @Test
   public void fileWithWarning() throws Exception {
-    compilerBuilder.report(new ErrorProneScanner(new NonAtomicVolatileUpdate()));
+    compilerBuilder.report(ScannerSupplier.fromBugCheckers(new NonAtomicVolatileUpdate()));
     compiler = compilerBuilder.build();
     Result exitCode = compiler.compile(compiler.fileManager().sources(getClass(),
         "bugpatterns/NonAtomicVolatileUpdatePositiveCases.java"));
@@ -163,7 +167,7 @@ public class ErrorProneCompilerIntegrationTest {
         throw new IllegalStateException("test123");
       }
     }
-    compilerBuilder.report(new ErrorProneScanner(new Throwing()));
+    compilerBuilder.report(ScannerSupplier.fromBugCheckers(new Throwing()));
     compiler = compilerBuilder.build();
     Result exitCode = compiler.compile(
         compiler.fileManager().sources(getClass(), "MultipleTopLevelClassesWithErrors.java",
@@ -207,8 +211,8 @@ public class ErrorProneCompilerIntegrationTest {
 
   @Test
   public void propagatesScannerThroughAnnotationProcessingRounds() throws Exception {
-    ErrorProneScanner scanner = new ErrorProneScanner();
-    compilerBuilder.report(scanner);
+    final ErrorProneScanner scanner = new ErrorProneScanner();
+    compilerBuilder.report(ScannerSupplier.fromScanner(scanner));
     compiler = compilerBuilder.build();
     Result exitCode = compiler.compile(
         compiler.fileManager().sources(getClass(), "UsesAnnotationProcessor.java"),
@@ -253,7 +257,7 @@ public class ErrorProneCompilerIntegrationTest {
 
   @Test
   public void ignoreGeneratedConstructors() throws Exception {
-    compilerBuilder.report(new ErrorProneScanner(new ConstructorMatcher()));
+    compilerBuilder.report(ScannerSupplier.fromBugCheckers(new ConstructorMatcher()));
     compiler = compilerBuilder.build();
     Result exitCode = compiler.compile(
         Arrays.asList(compiler.fileManager().forSourceLines("Test.java", "public class Test {}")));
@@ -291,7 +295,7 @@ public class ErrorProneCompilerIntegrationTest {
   @Ignore
   @Test
   public void ignoreGeneratedSuperInvocations() throws Exception {
-    compilerBuilder.report(new ErrorProneScanner(new SuperCallMatcher()));
+    compilerBuilder.report(ScannerSupplier.fromBugCheckers(new SuperCallMatcher()));
     compiler = compilerBuilder.build();
     Result exitCode = compiler.compile(Arrays.asList(
         compiler.fileManager().forSourceLines("Test.java",
@@ -313,8 +317,8 @@ public class ErrorProneCompilerIntegrationTest {
     compiler = new ErrorProneTestCompiler.Builder()
         .named("test")
         .redirectOutputTo(new PrintWriter(outputStream, true))
+        .search(ErrorProneScannerSuppliers.matureChecks())
         .listenToDiagnostics(diagnosticHelper.collector)
-        .search(new ErrorProneScanner(ErrorProneScanner.EnabledPredicate.DEFAULT_CHECKS))
         .build();
 
     Result exitCode = compiler.compile(compiler.fileManager().sources(getClass(),

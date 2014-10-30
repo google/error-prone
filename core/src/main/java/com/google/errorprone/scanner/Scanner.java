@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.google.errorprone;
+package com.google.errorprone.scanner;
 
+import com.google.errorprone.SuppressionHelper;
+import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Disableable;
 import com.google.errorprone.matchers.Suppressible;
 import com.google.errorprone.util.ASTHelpers;
 
@@ -149,36 +150,5 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
     }
     state.getMatchListener().onMatch(match);
     state.getDescriptionListener().onDescribed(description);
-  }
-
-  protected Set<String> disabledChecks = Collections.emptySet();
-
-  /**
-   * Gets the list of checks that should be disabled.
-   */
-  protected Set<String> getDisabledChecks() {
-    return disabledChecks;
-  }
-
-  /**
-   * Sets the list of checks that should be disabled.
-   *
-   * @param disabledChecks The list of checks to disable, by canonical name. May not be null.
-   */
-  protected void setDisabledChecks(Set<String> disabledChecks)
-      throws InvalidCommandLineOptionException {
-    if (disabledChecks == null) {
-      throw new IllegalArgumentException("disabledChecks may not be null");
-    }
-    this.disabledChecks = disabledChecks;
-  }
-
-  public boolean isDisabled(Disableable disableable) {
-    return disableable.disableable()
-        && getDisabledChecks().contains(disableable.canonicalName());
-  }
-
-  public <T extends Suppressible & Disableable> boolean isSuppressedOrDisabled(T matcher) {
-    return isSuppressed(matcher) || isDisabled(matcher);
   }
 }

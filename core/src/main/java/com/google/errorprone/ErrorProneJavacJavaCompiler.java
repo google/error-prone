@@ -19,6 +19,7 @@ package com.google.errorprone;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Optional;
+import com.google.errorprone.scanner.Scanner;
 
 import com.sun.source.util.TaskEvent;
 import com.sun.source.util.TaskEvent.Kind;
