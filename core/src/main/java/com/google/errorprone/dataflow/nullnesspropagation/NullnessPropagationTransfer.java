@@ -36,6 +36,7 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 
+import org.checkerframework.dataflow.analysis.Analysis;
 import org.checkerframework.dataflow.cfg.node.AssignmentNode;
 import org.checkerframework.dataflow.cfg.node.EqualToNode;
 import org.checkerframework.dataflow.cfg.node.FieldAccessNode;
@@ -60,6 +61,38 @@ import javax.lang.model.element.VariableElement;
  * definitely non-null ({@link NullnessValue#NONNULL}), possibly null
  * ({@link NullnessValue#NULLABLE}), or are on an infeasible path ({@link NullnessValue#BOTTOM}).
  * This analysis depends only on the code and does not take nullness annotations into account.
+ *
+ * <p>Each {@code visit*()} implementation provides us with information about nullability that
+ * applies <i>if the expression is successfully evaluated</i> (in other words, it did not throw an
+ * exception). For example, if {@code foo.toString()} is successfully evaluated, we know two things:
+ *
+ * <ol>
+ * <li>The expression itself is non-null (because {@code toString()} is in our whitelist of methods
+ *     known to return non-null values)
+ * <li>{@code foo} is non-null (because it has been dereferenced without producing a {@code
+ *     NullPointerException})
+ * </ol>
+ *
+ * <p>These particular two pieces of data also demonstrate the two connected but distinct systems
+ * that we use to track nullness:
+ *
+ * <ol>
+ * <li>We compute the nullability of each expression by applying rules that may reference only the
+ *     nullability of <i>subexpressions</i>. We make the result available only to superexpressions
+ *     (and to the {@linkplain Analysis#getValue final output of the analysis}).
+ * <li>We {@linkplain LocalVariableUpdates update} and {@linkplain LocalVariableValues read} the
+ *     nullability of <i>variables</i> in a mapping that persists from node to node. This is the
+ *     only exception to the rule that we propagate data from subexpression to superexpression only.
+ *     The mapping is read only when visiting a {@link LocalVariableNode}. That is enough to give
+ *     the {@code LocalVariableNode} a value that is then available to superexpressions.
+ * </ol>
+ *
+ * <p>A further complication is that sometimes we know the nullability of an expression only
+ * conditionally based on its result. For example, {@code foo == null} proves that {@code foo} is
+ * null in the true case (such as inside {@code if (foo == null) { ... }}) and non-null in the false
+ * case (such an inside an accompanying {@code else} block). This is handled by methods that accept
+ * multiple {@link LocalVariableUpdates} instances, one for the true case and one for the false
+ * case.
  *
  * @author deminguyen@google.com (Demi Nguyen)
  */
