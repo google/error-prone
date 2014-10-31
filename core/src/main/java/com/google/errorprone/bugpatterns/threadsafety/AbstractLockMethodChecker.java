@@ -37,36 +37,36 @@ import java.util.Set;
 
 /**
  * Abstract implementation of checkers for @LockMethod and @UnlockMethod.
- * 
+ *
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 public abstract class AbstractLockMethodChecker extends BugChecker
     implements BugChecker.MethodTreeMatcher {
-  
+
   /**
    * Returns the lock expressions in the @LockMethod/@UnlockMethod annotation, if any.
    */
   protected abstract ImmutableList<String> getLockExpressions(MethodTree tree);
-  
+
   /**
    * Searches the method body for locks that are acquired/released.
    */
   protected abstract Set<GuardedByExpression> getActual(MethodTree tree, VisitorState state);
-  
+
   /**
    * Searches the method body for the incorrect lock operation (e.g. releasing a lock in
    * @LockMethod, or acquiring a lock in @UnlockMethod).
    */
   protected abstract Set<GuardedByExpression> getUnwanted(MethodTree tree, VisitorState state);
-  
+
   /**
    * Builds the error message, given the list of locks that were not handled.
    */
   protected abstract String buildMessage(String unhandled);
-  
+
   @Override
   public Description matchMethod(MethodTree tree, final VisitorState state) {
-    
+
     ImmutableList<String> lockExpressions = getLockExpressions(tree);
     if (lockExpressions.isEmpty()) {
       return Description.NO_MATCH;
@@ -75,7 +75,7 @@ public abstract class AbstractLockMethodChecker extends BugChecker
     Optional<ImmutableSet<GuardedByExpression>> expected =
         parseLockExpressions(lockExpressions, tree, state);
     if (!expected.isPresent()) {
-      return Description.builder(tree, pattern)
+      return buildDescription(tree)
           .setMessage("Could not resolve lock expression.")
           .build();
     }
@@ -84,19 +84,19 @@ public abstract class AbstractLockMethodChecker extends BugChecker
     SetView<GuardedByExpression> mishandled = Sets.intersection(expected.get(), unwanted);
     if (!mishandled.isEmpty()) {
       String message = buildMessage(formatLockString(mishandled));
-      return Description.builder(tree, pattern).setMessage(message).build();
+      return buildDescription(tree).setMessage(message).build();
     }
-    
+
     Set<GuardedByExpression> actual = getActual(tree, state);
     SetView<GuardedByExpression> unhandled = Sets.difference(expected.get(), actual);
     if (!unhandled.isEmpty()) {
       String message = buildMessage(formatLockString(unhandled));
-      return Description.builder(tree, pattern).setMessage(message).build();
+      return buildDescription(tree).setMessage(message).build();
     }
-    
+
     return Description.NO_MATCH;
   }
-  
+
   private static String formatLockString(Set<GuardedByExpression> locks) {
     ImmutableList<String> sortedUnhandled = FluentIterable.from(locks)
         .transform(Functions.toStringFunction())

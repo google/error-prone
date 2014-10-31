@@ -18,6 +18,8 @@ package com.google.errorprone;
 
 import static com.google.errorprone.CompilationTestHelper.asJavacList;
 
+import com.google.errorprone.scanner.ScannerSupplier;
+
 import com.sun.tools.javac.main.Main.Result;
 import com.sun.tools.javac.util.Context;
 
@@ -26,8 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.processing.Processor;
-import javax.tools.DiagnosticCollector;
-import javax.tools.JavaFileManager;
+import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
 
 /**
@@ -44,13 +45,18 @@ public class ErrorProneTestCompiler {
       return new ErrorProneTestCompiler(wrappedCompilerBuilder.build());
     }
 
-    public Builder listenToDiagnostics(DiagnosticCollector<JavaFileObject> collector) {
-      wrappedCompilerBuilder.listenToDiagnostics(collector);
+    public Builder listenToDiagnostics(DiagnosticListener<? super JavaFileObject> listener) {
+      wrappedCompilerBuilder.listenToDiagnostics(listener);
       return this;
     }
 
-    public Builder report(Scanner errorProneScanner) {
-      wrappedCompilerBuilder.report(errorProneScanner);
+    public Builder report(ScannerSupplier scannerSupplier) {
+      wrappedCompilerBuilder.report(scannerSupplier);
+      return this;
+    }
+
+    public Builder search(ScannerSupplier scannerSupplier) {
+      wrappedCompilerBuilder.search(scannerSupplier);
       return this;
     }
 
@@ -71,7 +77,7 @@ public class ErrorProneTestCompiler {
   public ErrorProneInMemoryFileManager fileManager() {
     return fileManager;
   }
-  
+
   private ErrorProneTestCompiler(ErrorProneCompiler compiler) {
     this.compiler = compiler;
   }
@@ -87,14 +93,13 @@ public class ErrorProneTestCompiler {
   public Result compile(List<JavaFileObject> sources, List<? extends Processor> processors) {
     return compile(new String[]{}, sources, processors);
   }
-  
+
   public Result compile(String[] args, List<JavaFileObject> sources, List<? extends Processor>
       processors) {
     Context context = new Context();
-    context.put(JavaFileManager.class, fileManager);
     List<String> processedArgs =
         CompilationTestHelper.disableImplicitProcessing(Arrays.asList(args));
     String[] argsArray = processedArgs.toArray(new String[processedArgs.size()]);
-    return compiler.compile(argsArray, context, asJavacList(sources), processors);
+    return compiler.compile(argsArray, context, fileManager, asJavacList(sources), processors);
   }
 }

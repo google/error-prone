@@ -18,8 +18,8 @@ package com.google.errorprone.matchers;
 
 import static org.junit.Assert.assertTrue;
 
-import com.google.errorprone.Scanner;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.scanner.Scanner;
 
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ExpressionTree;

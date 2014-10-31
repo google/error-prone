@@ -17,10 +17,12 @@
 package com.google.errorprone;
 
 import com.sun.source.tree.Tree;
+import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Pair;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,27 +33,26 @@ import javax.tools.JavaFileObject;
 */
 class SearchResultsPrinter implements MatchListener {
 
-  private final List<Pair<Tree, JavaFileObject>> matches =
-      new ArrayList<>();
+  private final List<Pair<Tree, JavaFileObject>> matches = new ArrayList<>();
   private JavaFileObject sourceFile;
+  private final Log log;
+
+  public SearchResultsPrinter(PrintWriter out) {
+    Context context = new Context();
+    context.put(Log.outKey, out);
+    ErrorProneCompiler.setupMessageBundle(context);
+    this.log = Log.instance(context);
+  }
 
   @Override
   public void onMatch(Tree tree) {
     matches.add(new Pair<Tree, JavaFileObject>(tree, sourceFile));
   }
 
-  public void printMatches(Log log) {
+  public void printMatches() {
     for (Pair<Tree, JavaFileObject> match : matches) {
-      JavaFileObject originalSource;
-      // Swap the log's source and the current file's source; then be sure to swap them back later.
-      originalSource = log.useSource(match.snd);
-      try {
-        log.note((DiagnosticPosition)match.fst, "searchresult", "Matched.");
-      } finally {
-        if (originalSource != null) {
-          log.useSource(originalSource);
-        }
-      }
+      log.useSource(match.snd);
+      log.note((DiagnosticPosition)match.fst, "searchresult", "Matched.");
     }
     log.note("searchresult.count", matches.size());
   }

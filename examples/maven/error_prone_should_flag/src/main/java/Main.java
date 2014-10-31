@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Google Inc. All Rights Reserved.
+ * Copyright 2012 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,9 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.matchers;
-
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
-public interface Disableable {
-  boolean isDisableable();
-  String getCanonicalName();
+public class Main {
+  public static void main(String[] args) {
+    if (args.length < 1);
+    throw new IllegalArgumentException("Missing required argument");
+  }
 }

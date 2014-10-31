@@ -19,13 +19,14 @@ package com.google.errorprone;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
-import com.google.common.collect.Sets;
+import com.google.common.collect.ImmutableMap;
+import com.google.errorprone.ErrorProneOptions.Severity;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.util.Set;
+import java.util.Map;
 
 /**
  * Unit tests for {@code ErrorProneOptions}.
@@ -46,8 +47,12 @@ public class ErrorProneOptionsTest {
   public void parsesDisableChecksFlag() {
     String[] args = {"-Xepdisable:foo,bar,baz"};
     ErrorProneOptions options = ErrorProneOptions.processArgs(args);
-    Set<String> expectedDisabledChecks = Sets.newHashSet("foo", "bar", "baz");
-    assertThat(options.getDisabledChecks(), equalTo(expectedDisabledChecks));
+    Map<String, Severity> expectedSeverityMap = ImmutableMap.<String, Severity>builder()
+        .put("foo", Severity.OFF)
+        .put("bar", Severity.OFF)
+        .put("baz", Severity.OFF)
+        .build();
+    assertThat(options.getSeverityMap(), equalTo(expectedSeverityMap));
   }
 
   @Test
@@ -59,8 +64,12 @@ public class ErrorProneOptionsTest {
     ErrorProneOptions options = ErrorProneOptions.processArgs(args);
     String[] expectedRemainingArgs = {"-classpath", "/this/is/classpath", "-verbose"};
     assertThat(options.getRemainingArgs(), equalTo(expectedRemainingArgs));
-    Set<String> expectedDisabledChecks = Sets.newHashSet("foo", "bar", "baz");
-    assertThat(options.getDisabledChecks(), equalTo(expectedDisabledChecks));
+    Map<String, Severity> expectedSeverityMap = ImmutableMap.<String, Severity>builder()
+        .put("foo", Severity.OFF)
+        .put("bar", Severity.OFF)
+        .put("baz", Severity.OFF)
+        .build();
+    assertThat(options.getSeverityMap(), equalTo(expectedSeverityMap));
   }
 
   @Test
@@ -71,7 +80,11 @@ public class ErrorProneOptionsTest {
         "-verbose",
         "-Xepdisable:one,two,three"};
     ErrorProneOptions options = ErrorProneOptions.processArgs(args);
-    Set<String> expectedDisabledChecks = Sets.newHashSet("one", "two", "three");
-    assertThat(options.getDisabledChecks(), equalTo(expectedDisabledChecks));
+    Map<String, Severity> expectedSeverityMap = ImmutableMap.<String, Severity>builder()
+        .put("one", Severity.OFF)
+        .put("two", Severity.OFF)
+        .put("three", Severity.OFF)
+        .build();
+    assertThat(options.getSeverityMap(), equalTo(expectedSeverityMap));
   }
 }

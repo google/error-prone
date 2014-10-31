@@ -17,18 +17,14 @@
 package com.google.errorprone.suppress;
 
 
-import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneScanner;
-import com.google.errorprone.ErrorProneScanner.EnabledPredicate;
 import com.google.errorprone.ErrorProneTestCompiler;
-import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.DeadException;
 import com.google.errorprone.bugpatterns.EmptyIfStatement;
 import com.google.errorprone.bugpatterns.SelfAssignment;
+import com.google.errorprone.scanner.ScannerSupplier;
 
 import com.sun.tools.javac.main.Main.Result;
 
@@ -52,15 +48,9 @@ public class SuppressWarningsTest {
 
   @Before
   public void setUp() {
-    compiler = new ErrorProneTestCompiler.Builder()
-        .report(new ErrorProneScanner(new EnabledPredicate() {
-          @Override
-          public boolean isEnabled(Class<? extends BugChecker> check, BugPattern annotation) {
-            return asList(DeadException.class, EmptyIfStatement.class, SelfAssignment.class)
-                .contains(check);
-          }
-        }))
-        .build();
+    ScannerSupplier scannerSupplier = ScannerSupplier.fromBugCheckerClasses(
+        DeadException.class, EmptyIfStatement.class, SelfAssignment.class);
+    compiler = new ErrorProneTestCompiler.Builder().report(scannerSupplier).build();
   }
 
   @Test

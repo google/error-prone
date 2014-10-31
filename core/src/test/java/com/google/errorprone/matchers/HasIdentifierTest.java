@@ -20,8 +20,8 @@ import static com.google.errorprone.matchers.Matchers.hasIdentifier;
 import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
 import static org.junit.Assert.assertEquals;
 
-import com.google.errorprone.Scanner;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.scanner.Scanner;
 
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LiteralTree;

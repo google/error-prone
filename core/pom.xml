@@ -75,13 +75,18 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>17.0</version>
+      <version>18.0</version>
     </dependency>
     <dependency>
       <groupId>com.google.jimfs</groupId>
       <artifactId>jimfs</artifactId>
       <version>1.0</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.truth</groupId>
+      <artifactId>truth</artifactId>
+      <version>0.24</version>
     </dependency>
     <dependency>
       <groupId>com.google.inject</groupId>

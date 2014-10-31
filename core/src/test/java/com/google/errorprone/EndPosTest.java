@@ -28,9 +28,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 
 /**
  * Tests that automated fixes ("Did you mean...") are generated even when the -Xjcov compiler
@@ -41,17 +41,15 @@ import java.io.PrintWriter;
 @RunWith(JUnit4.class)
 public class EndPosTest {
 
-  private PrintWriter printWriter;
-  private ByteArrayOutputStream outputStream;
+  private Writer output;
   ErrorProneTestCompiler compiler;
 
   @Before
   public void setUp() {
-    outputStream = new ByteArrayOutputStream();
-    printWriter = new PrintWriter(new OutputStreamWriter(outputStream));
+    output = new StringWriter();
     compiler = new ErrorProneTestCompiler.Builder()
         .named("test")
-        .redirectOutputTo(printWriter)
+        .redirectOutputTo(new PrintWriter(output, true))
         .build();
   }
 
@@ -59,11 +57,10 @@ public class EndPosTest {
   public void fileWithError() throws Exception {
     Result exitCode = compiler.compile(compiler.fileManager().sources(getClass(),
         "bugpatterns/SelfAssignmentPositiveCases1.java"));
-    outputStream.flush();
     assertThat("Compiler should have exited with ERROR status", exitCode, is(Result.ERROR));
-    assertThat("Compiler error message should include suggested fix", outputStream.toString(),
+    assertThat("Compiler error message should include suggested fix", output.toString(),
         containsString("Did you mean 'this.a = b;'?"));
-    assertThat("Compiler should not warn about WrappedTreeMap collisions", outputStream.toString(),
+    assertThat("Compiler should not warn about WrappedTreeMap collisions", output.toString(),
         not(containsString("WrappedTreeMap collision")));
 
   }

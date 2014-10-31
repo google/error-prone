@@ -16,9 +16,9 @@
 
 package com.google.errorprone;
 
-import com.google.common.base.Supplier;
-import com.google.common.collect.ImmutableList;
-import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.scanner.ErrorProneScannerSuppliers;
+import com.google.errorprone.scanner.Scanner;
+import com.google.errorprone.scanner.ScannerSupplier;
 
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTool;
@@ -49,31 +49,7 @@ import javax.tools.StandardJavaFileManager;
 public class ErrorProneJavaCompiler implements JavaCompiler {
 
   private final JavaCompiler javacTool;
-  private final Supplier<ErrorProneScanner> scannerSupplier;
-
-  /**
-   * @param checkerClasses a custom set of BugCheckers
-   */
-  @SafeVarargs
-  public ErrorProneJavaCompiler(final Class<? extends BugChecker>... checkerClasses) {
-    this(new Supplier<ErrorProneScanner>() {
-      private final ImmutableList<Class<? extends BugChecker>> classes =
-          ImmutableList.copyOf(checkerClasses);
-
-      @Override
-      public ErrorProneScanner get() {
-        ImmutableList.Builder<BugChecker> checkers = ImmutableList.builder();
-        for (Class<? extends BugChecker> clazz : classes) {
-          try {
-            checkers.add(clazz.newInstance());
-          } catch (InstantiationException | IllegalAccessException e) {
-            throw new IllegalArgumentException(e);
-          }
-        }
-        return new ErrorProneScanner(checkers.build().toArray(new BugChecker[classes.size()]));
-      }
-    });
-  }
+  private final ScannerSupplier scannerSupplier;
 
   public ErrorProneJavaCompiler() {
     this(JavacTool.create());
@@ -81,20 +57,14 @@ public class ErrorProneJavaCompiler implements JavaCompiler {
 
   // package-private for testing
   ErrorProneJavaCompiler(JavaCompiler javacTool) {
-    this(javacTool, new Supplier<ErrorProneScanner>() {
-      @Override
-      public ErrorProneScanner get() {
-        return new ErrorProneScanner(ErrorProneScanner.EnabledPredicate.DEFAULT_CHECKS);
-      }
-    });
+    this(javacTool, ErrorProneScannerSuppliers.matureChecks());
   }
 
-  private ErrorProneJavaCompiler(Supplier<ErrorProneScanner> scannerSupplier) {
+  public ErrorProneJavaCompiler(ScannerSupplier scannerSupplier) {
     this(JavacTool.create(), scannerSupplier);
   }
 
-  private ErrorProneJavaCompiler(JavaCompiler javacTool,
-      Supplier<ErrorProneScanner> scannerSupplier) {
+  private ErrorProneJavaCompiler(JavaCompiler javacTool, ScannerSupplier scannerSupplier) {
     this.javacTool = javacTool;
     this.scannerSupplier = scannerSupplier;
   }
@@ -112,14 +82,13 @@ public class ErrorProneJavaCompiler implements JavaCompiler {
     CompilationTask task = javacTool.getTask(
         out, fileManager, diagnosticListener, remainingOptions, classes, compilationUnits);
     Context context = ((JavacTaskImpl) task).getContext();
-    ErrorProneScanner scanner = scannerSupplier.get();
-    context.put(Scanner.class, scanner);
+    Scanner scanner;
     try {
-      scanner.setDisabledChecks(errorProneOptions.getDisabledChecks());
+      scanner = scannerSupplier.applyOverrides(errorProneOptions.getSeverityMap()).get();
     } catch (InvalidCommandLineOptionException e) {
       throw new RuntimeException(e);
     }
-    ErrorReportingJavaCompiler.preRegister(context);
+    ErrorProneJavacJavaCompiler.preRegister(context, scanner);
     return task;
   }
 

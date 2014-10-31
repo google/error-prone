@@ -52,12 +52,12 @@ import java.util.List;
  */
 @RunWith(JUnit4.class)
 public class NullnessPropagationTest {
-  
+
   private CompilationTestHelper compilationHelper;
-  
+
   /**
    * This method triggers the {@code BugPattern} used to test nullness propagation
-   * 
+   *
    * @param obj Variable whose nullness value is being checked
    */
   public static void triggerNullnessChecker(Object obj) {}
@@ -120,7 +120,7 @@ public class NullnessPropagationTest {
   public void setUp() {
     compilationHelper = CompilationTestHelper.newInstance(new NullnessPropagationChecker());
   }
-  
+
   @Test
   public void testTransferFunctions1() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
@@ -141,14 +141,14 @@ public class NullnessPropagationTest {
         compilationHelper.fileManager().sources(
             getClass(), "NullnessPropagationTransferCases3.java"));
   }
-  
+
   @Test
   public void testTransferFunctions4() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
         compilationHelper.fileManager().sources(
             getClass(), "NullnessPropagationTransferCases4.java"));
   }
-  
+
   @Test
   public void testTransferFunctions5() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
@@ -180,27 +180,27 @@ public class NullnessPropagationTest {
       category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
   public static final class NullnessPropagationChecker
       extends BugChecker implements MethodInvocationTreeMatcher {
-    private static final NullnessPropagationTransfer NULLNESS_PROPAGATION = 
+    private static final NullnessPropagationTransfer NULLNESS_PROPAGATION =
         new NullnessPropagationTransfer();
-    
+
     private static final String AMBIGUOUS_CALL_MESSAGE = "AMBIGUOUS CALL: use "
         + "triggerNullnessCheckerOnPrimitive if you want to test the primitive for nullness";
-    
+
     private static final Matcher<ExpressionTree> TRIGGER_CALL_MATCHER = anyOf(
         staticMethod(NullnessPropagationTest.class.getName(), "triggerNullnessCheckerOnPrimitive"),
         staticMethod(NullnessPropagationTest.class.getName(), "triggerNullnessCheckerOnBoxed"),
         staticMethod(
             NullnessPropagationTest.class.getName(), "triggerNullnessChecker(java.lang.Object)"));
-    
+
     private static final Matcher<ExpressionTree> AMBIGUOUS_CALL_FALLBACK_MATCHER =
         staticMethod(NullnessPropagationTest.class.getName(), "triggerNullnessChecker");
-    
+
     @Override
     public Description matchMethodInvocation(
         MethodInvocationTree methodInvocation, VisitorState state) {
       if (!TRIGGER_CALL_MATCHER.matches(methodInvocation, state)) {
         if (AMBIGUOUS_CALL_FALLBACK_MATCHER.matches(methodInvocation, state)) {
-          return Description.builder(methodInvocation, pattern)
+          return buildDescription(methodInvocation)
               .setMessage(AMBIGUOUS_CALL_MESSAGE).build();
         }
         return NO_MATCH;

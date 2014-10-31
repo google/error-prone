@@ -16,9 +16,15 @@
 
 package com.google.errorprone;
 
-import com.google.common.base.Optional;
+import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.base.Optional;
+import com.google.errorprone.scanner.Scanner;
+
+import com.sun.source.util.TaskEvent;
+import com.sun.source.util.TaskEvent.Kind;
 import com.sun.tools.javac.comp.AttrContext;
+import com.sun.tools.javac.comp.CompileStates.CompileState;
 import com.sun.tools.javac.comp.Env;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.util.Context;
@@ -36,7 +42,7 @@ import java.util.Queue;
  *
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class ErrorReportingJavaCompiler extends JavaCompiler {
+public class ErrorProneJavacJavaCompiler extends JavaCompiler {
 
   private final ErrorProneAnalyzer errorProneAnalyzer;
 
@@ -47,17 +53,20 @@ public class ErrorReportingJavaCompiler extends JavaCompiler {
     JavacMessages.instance(context).add("com.google.errorprone.errors");
   }
 
-  public ErrorReportingJavaCompiler(Context context) {
+  private ErrorProneJavacJavaCompiler(Context context, Scanner scanner, 
+      SearchResultsPrinter resultsPrinter) {
     super(context);
-    if (context.get(Scanner.class) == null) {
-      throw new IllegalArgumentException("context must have a Scanner instance");
-    }
+    checkNotNull(scanner);
 
     // Setup message bundle.
     setupMessageBundle(context);
 
     // Create ErrorProneAnalyzer.
-    errorProneAnalyzer = new ErrorProneAnalyzer(log, context);
+    errorProneAnalyzer = ErrorProneAnalyzer.create(scanner, resultsPrinter).init(context);
+  }
+
+  public static void preRegister(Context context, Scanner scanner) {
+    preRegister(context, scanner, null);
   }
 
   /**
@@ -66,31 +75,30 @@ public class ErrorReportingJavaCompiler extends JavaCompiler {
    * superclass, JavaCompiler) will actually construct and return our version.
    * It's necessary since many new JavaCompilers may
    * be requested for later stages of the compilation (annotation processing),
-   * within the same Context. And it's the preferred way for extending behavior
-   * within javac, per the documentation in {@link com.sun.tools.javac.util.Context}.
+   * within the same Context.
    */
-  public static void preRegister(final Context context) {
-    final Scanner scanner = context.get(Scanner.class);
+  public static void preRegister(Context context, final Scanner scanner,
+      final SearchResultsPrinter resultsPrinter) {
     context.put(compilerKey, new Factory<JavaCompiler>() {
       @Override
       public JavaCompiler make(Context ctx) {
         // Ensure that future processing rounds continue to use the same Scanner.
-        ctx.put(Scanner.class, scanner);
-        return new ErrorReportingJavaCompiler(ctx);
+        return new ErrorProneJavacJavaCompiler(ctx, scanner, resultsPrinter);
       }
     });
   }
 
   @Override
-  protected void flow(Env<AttrContext> attrContextEnv, Queue<Env<AttrContext>> envs) {
-    super.flow(attrContextEnv, envs);
+  protected void flow(Env<AttrContext> env, Queue<Env<AttrContext>> results) {
+    if (compileStates.isDone(env, CompileState.FLOW)) {
+      return;
+    }
+    super.flow(env, results);
     try {
-      postFlow(attrContextEnv);
+      postFlow(env);
     } catch (Throwable e) {
       ByteArrayOutputStream stackTrace = new ByteArrayOutputStream();
-      PrintWriter writer = new PrintWriter(stackTrace);
-      e.printStackTrace(writer);
-      writer.flush();
+      e.printStackTrace(new PrintWriter(stackTrace, true));
       String version = loadVersionFromPom().or("unknown version");
       log.error("error.prone.crash", stackTrace.toString(), version);
     }
@@ -111,24 +119,10 @@ public class ErrorReportingJavaCompiler extends JavaCompiler {
     return Optional.of(mavenProperties.getProperty("version"));
   }
 
-  public void profilePostFlow(Env<AttrContext> attrContextEnv) {
-    try {
-      // For profiling with YourKit, add to classpath:
-      // <Profiler Installation Directory>/lib/yjp-controller-api-redist.jar
-//      Controller controller = new Controller();
-//      controller.startCPUProfiling(ProfilingModes.CPU_SAMPLING, "");
-      postFlow(attrContextEnv);
-//      controller.stopCPUProfiling();
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-  }
-
   /**
    * Run Error Prone analysis after performing dataflow checks.
    */
   public void postFlow(Env<AttrContext> env) {
-    errorProneAnalyzer.reportReadyForAnalysis(env, errorCount() > 0);
+    errorProneAnalyzer.finished(new TaskEvent(Kind.ANALYZE, env.toplevel, env.enclClass.sym));
   }
-
 }

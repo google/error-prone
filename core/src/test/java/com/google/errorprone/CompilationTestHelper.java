@@ -22,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.scanner.ScannerSupplier;
 
 import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.main.Main.Result;
@@ -38,7 +39,6 @@ import java.util.List;
 import javax.tools.Diagnostic;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
-import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 
 /**
@@ -57,29 +57,32 @@ public class CompilationTestHelper {
   private final ByteArrayOutputStream outputStream;
   private final ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
 
-  private CompilationTestHelper(Scanner scanner, String checkName) {
+  private CompilationTestHelper(ScannerSupplier scannerSupplier, String checkName) {
     this.diagnosticHelper = new DiagnosticTestHelper(checkName);
     this.outputStream = new ByteArrayOutputStream();
-    this.compiler = new ErrorProneCompiler.Builder().report(scanner)
+    this.compiler = new ErrorProneCompiler.Builder()
+        .report(scannerSupplier)
         .redirectOutputTo(new PrintWriter(outputStream, /*autoFlush=*/true))
-        .listenToDiagnostics(diagnosticHelper.collector).build();
+        .listenToDiagnostics(diagnosticHelper.collector)
+        .build();
   }
 
-  public static CompilationTestHelper newInstance(Scanner scanner) {
-    return new CompilationTestHelper(scanner, null);
+  public static CompilationTestHelper newInstance(ScannerSupplier scannerSupplier) {
+    return new CompilationTestHelper(scannerSupplier, null);
   }
 
-  public static CompilationTestHelper newInstance(Scanner scanner, String checkName) {
-    return new CompilationTestHelper(scanner, checkName);
+  public static CompilationTestHelper newInstance(ScannerSupplier scannerSupplier,
+      String checkName) {
+    return new CompilationTestHelper(scannerSupplier, checkName);
   }
 
   /**
    * Test an error-prone {@link BugChecker}.
    */
   public static CompilationTestHelper newInstance(BugChecker checker) {
-    Scanner scanner = new ErrorProneScanner(checker);
-    String checkName = checker.getCanonicalName();
-    return new CompilationTestHelper(scanner, checkName);
+    ScannerSupplier scannerSupplier = ScannerSupplier.fromBugCheckers(checker);
+    String checkName = checker.canonicalName();
+    return new CompilationTestHelper(scannerSupplier, checkName);
   }
 
   /**
@@ -214,8 +217,7 @@ public class CompilationTestHelper {
   Result compile(Iterable<JavaFileObject> sources, String[] args) {
     checkWellFormed(sources, args);
     Context context = new Context();
-    context.put(JavaFileManager.class, fileManager);
-    return compiler.compile(args, context, asJavacList(sources), null);
+    return compiler.compile(args, context, fileManager, asJavacList(sources), null);
   }
 
   private void checkWellFormed(Iterable<JavaFileObject> sources, String[] args) {

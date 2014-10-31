@@ -152,16 +152,16 @@ public class SuppressionHelper {
       Suppressible suppressible,
       Set<String> suppressionsOnCurrentPath,
       Set<Class<? extends Annotation>> customSuppressionsOnCurrentPath) {
-    switch (suppressible.getSuppressibility()) {
+    switch (suppressible.suppressibility()) {
       case UNSUPPRESSIBLE:
         return false;
       case CUSTOM_ANNOTATION:
         return customSuppressionsOnCurrentPath.contains(
-            suppressible.getCustomSuppressionAnnotation());
+            suppressible.customSuppressionAnnotation());
       case SUPPRESS_WARNINGS:
-        return !Collections.disjoint(suppressible.getAllNames(), suppressionsOnCurrentPath);
+        return !Collections.disjoint(suppressible.allNames(), suppressionsOnCurrentPath);
       default:
-        throw new IllegalStateException("No case for: " + suppressible.getSuppressibility());
+        throw new IllegalStateException("No case for: " + suppressible.suppressibility());
     }
   }
 

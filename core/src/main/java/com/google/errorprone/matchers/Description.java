@@ -18,8 +18,11 @@ package com.google.errorprone.matchers;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.NOT_A_PROBLEM;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.fixes.Fix;
 
 import com.sun.source.tree.Tree;
@@ -110,38 +113,18 @@ public class Description {
    * Construct the link text to include in the compiler error message. Returns null if there is
    * no link.
    */
-  private static String getLink(BugPattern pattern) {
-    String url = getLinkUrl(pattern);
-    return url == null ? null : "  (see " + url + ")";
-  }
-
-  private static String getLinkUrl(BugPattern pattern) {
-    switch (pattern.linkType()) {
-      case WIKI:
-        return String.format("http://errorprone.info/bugpattern/%s", pattern.name());
-      case CUSTOM:
-        // annotation.link() must be provided.
-        if (pattern.link().isEmpty()) {
-          throw new IllegalStateException("If linkType element of @BugPattern is CUSTOM, "
-              + "a link element must also be provided.");
-        }
-        return pattern.link();
-      case NONE:
-        return null;
-      default:
-        throw new IllegalStateException("Unexpected value for linkType element of @BugPattern: "
-            + pattern.linkType());
-    }
+  private static String linkTextForDiagnostic(String linkUrl) {
+    return linkUrl == null ? null : "  (see " + linkUrl + ")";
   }
 
   /**
    * Returns a new builder for {@link Description}s.
    *
-   * @param node The node where the error is
-   * @param pattern The BugPattern annotation for this check
+   * @param node the node where the error is
+   * @param checker the {@code BugChecker} instance that is producing this {@code Description}
    */
-  public static Builder builder(Tree node, BugPattern pattern) {
-    return new Builder(node, pattern);
+  public static Builder builder(Tree node, BugChecker checker) {
+    return new Builder(node, checker);
   }
 
   /**
@@ -149,20 +132,19 @@ public class Description {
    */
   public static class Builder {
     private final Tree node;
-    private final BugPattern pattern;
+    private final String name;
+    private final String linkUrl;
+    private final SeverityLevel severity;
     private ImmutableList.Builder<Fix> fixListBuilder = ImmutableList.builder();
     private String rawMessage;
 
-    private Builder(Tree node, BugPattern pattern) {
-      if (node == null) {
-        throw new IllegalArgumentException("node must not be null");
-      }
-      if (pattern == null) {
-        throw new IllegalArgumentException("pattern must not be null");
-      }
-      this.node = node;
-      this.pattern = pattern;
-      this.rawMessage = pattern.summary();
+    private Builder(Tree node, BugChecker checker) {
+      Preconditions.checkNotNull(checker);
+      this.node = Preconditions.checkNotNull(node);
+      this.name = checker.canonicalName();
+      this.linkUrl = checker.linkUrl();
+      this.severity = checker.severity();
+      this.rawMessage = checker.message();
     }
 
     /**
@@ -194,8 +176,8 @@ public class Description {
     }
 
     public Description build() {
-      return new Description(node, pattern.name(), rawMessage, getLink(pattern),
-          fixListBuilder.build(), pattern.severity());
+      return new Description(node, name, rawMessage, linkTextForDiagnostic(linkUrl),
+          fixListBuilder.build(), severity);
     }
   }
 

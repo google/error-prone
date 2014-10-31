@@ -29,16 +29,16 @@ public interface Suppressible {
    * Returns all of the name strings that this checker should respect as part of a
    * {@code @SuppressWarnings} annotation.
    */
-  Set<String> getAllNames();
+  Set<String> allNames();
 
   /**
    * Returns how this checker can be suppressed (e.g., via {@code @SuppressWarnings} or a custom
    * suppression annotation.
    */
-  BugPattern.Suppressibility getSuppressibility();
+  BugPattern.Suppressibility suppressibility();
 
   /**
    * Returns the custom suppression annotation for this checker, if custom suppression is used.
    */
-  Class<? extends Annotation> getCustomSuppressionAnnotation();
+  Class<? extends Annotation> customSuppressionAnnotation();
 }
