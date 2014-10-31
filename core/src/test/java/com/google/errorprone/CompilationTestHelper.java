@@ -39,7 +39,6 @@ import java.util.List;
 import javax.tools.Diagnostic;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
-import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 
 /**
@@ -218,8 +217,7 @@ public class CompilationTestHelper {
   Result compile(Iterable<JavaFileObject> sources, String[] args) {
     checkWellFormed(sources, args);
     Context context = new Context();
-    context.put(JavaFileManager.class, fileManager);
-    return compiler.compile(args, context, asJavacList(sources), null);
+    return compiler.compile(args, context, fileManager, asJavacList(sources), null);
   }
 
   private void checkWellFormed(Iterable<JavaFileObject> sources, String[] args) {

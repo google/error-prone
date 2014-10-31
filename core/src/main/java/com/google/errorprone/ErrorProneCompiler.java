@@ -24,26 +24,28 @@ import com.google.errorprone.scanner.ScannerSupplier;
 
 import com.sun.source.util.TaskEvent;
 import com.sun.source.util.TaskListener;
+import com.sun.tools.javac.api.JavacTaskImpl;
+import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.api.MultiTaskListener;
 import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.main.Main;
 import com.sun.tools.javac.main.Main.Result;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JavacMessages;
-import com.sun.tools.javac.util.List;
 
 import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import javax.annotation.processing.Processor;
 import javax.tools.DiagnosticListener;
+import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 
 /**
  * An error-prone compiler that matches the interface of {@link com.sun.tools.javac.main.Main}.
  * Used by plexus-java-compiler-errorprone.
- *
- * TODO(user): Currently matches the interface of javac 6.  Update to match javac 8, and make
- * sure it doesn't break plexus-java-compiler-errorprone.
  *
  * @author alexeagle@google.com (Alex Eagle)
  */
@@ -88,27 +90,27 @@ public class ErrorProneCompiler {
   }
 
   private final DiagnosticListener<? super JavaFileObject> diagnosticListener;
-  private final Main main;
-  private final PrintWriter printWriter;
+  private final PrintWriter errOutput;
+  private final String compilerName;
   private final SearchResultsPrinter resultsPrinter;
   private final ScannerSupplier scannerSupplier;
 
   private ErrorProneCompiler(
       String compilerName,
-      PrintWriter printWriter,
+      PrintWriter errOutput,
       DiagnosticListener<? super JavaFileObject> diagnosticListener,
       ScannerSupplier scannerSupplier,
       boolean useResultsPrinter) {
-    this.printWriter = checkNotNull(printWriter);
-    this.main = new Main(compilerName, printWriter);
+    this.errOutput = errOutput;
+    this.compilerName = compilerName;
     this.diagnosticListener = diagnosticListener;
     this.scannerSupplier = checkNotNull(scannerSupplier);
-    this.resultsPrinter = useResultsPrinter ? new SearchResultsPrinter(printWriter) : null;
+    this.resultsPrinter = useResultsPrinter ? new SearchResultsPrinter(errOutput) : null;
   }
 
   public static class Builder {
     private DiagnosticListener<? super JavaFileObject> diagnosticListener = null;
-    private PrintWriter out = new PrintWriter(System.err, true);
+    private PrintWriter errOutput = new PrintWriter(System.err, true);
     private String compilerName = "javac (with error-prone)";
     private boolean useResultsPrinter = false;
     private ScannerSupplier scannerSupplier = ErrorProneScannerSuppliers.matureChecks();
@@ -116,7 +118,7 @@ public class ErrorProneCompiler {
     public ErrorProneCompiler build() {
       return new ErrorProneCompiler(
           compilerName,
-          out,
+          errOutput,
           diagnosticListener,
           scannerSupplier,
           useResultsPrinter);
@@ -127,8 +129,8 @@ public class ErrorProneCompiler {
       return this;
     }
 
-    public Builder redirectOutputTo(PrintWriter out) {
-      this.out = out;
+    public Builder redirectOutputTo(PrintWriter errOutput) {
+      this.errOutput = errOutput;
       return this;
     }
 
@@ -152,46 +154,83 @@ public class ErrorProneCompiler {
   }
 
   public Result compile(String[] args) {
-    return compile(args, List.<JavaFileObject>nil());
-  }
-
-  public Result compile(List<JavaFileObject> sources) {
-    return compile(new String[]{}, sources);
-  }
-
-  public Result compile(String[] args, List<JavaFileObject> sources) {
     Context context = new Context();
     JavacFileManager.preRegister(context);
-    return compile(args, context, sources, null);
+    return compile(args, context);
   }
 
-  public Result compile(Context context, List<JavaFileObject> sources) {
-    return compile(new String[]{}, context, sources, null);
-  }
-
-  public Result compile(String[] args, Context context, List<JavaFileObject> javaFileObjects,
-      Iterable<? extends Processor> processors) {
-    ErrorProneOptions epOptions = ErrorProneOptions.processArgs(args);
+  private String[] prepareContext(String[] argv, Context context)
+      throws InvalidCommandLineOptionException {
+    ErrorProneOptions epOptions = ErrorProneOptions.processArgs(argv);
+    argv = epOptions.getRemainingArgs();
 
     if (diagnosticListener != null) {
       context.put(DiagnosticListener.class, diagnosticListener);
     }
 
-    Scanner scanner;
-    try {
-      scanner = scannerSupplier.applyOverrides(epOptions.getSeverityMap()).get();
-    } catch (InvalidCommandLineOptionException e) {
-      printWriter.println(e.getMessage());
-      printWriter.flush();
-      return Result.CMDERR;
-    }
+    Scanner scanner = scannerSupplier.applyOverrides(epOptions.getSeverityMap()).get();
 
     setupMessageBundle(context);
     enableEndPositions(context);
     ErrorProneJavacJavaCompiler.preRegister(context, scanner, resultsPrinter);
 
-    Result result =
-        main.compile(epOptions.getRemainingArgs(), context, javaFileObjects, processors);
+    return argv;
+  }
+
+  private Result compile(String[] argv, Context context) {
+    try {
+      argv = prepareContext(argv, context);
+    } catch (InvalidCommandLineOptionException e) {
+      errOutput.println(e.getMessage());
+      errOutput.flush();
+      return Result.CMDERR;
+    }
+
+    Result result = new Main(compilerName, errOutput).compile(argv, context);
+
+    if (resultsPrinter != null) {
+      resultsPrinter.printMatches();
+    }
+
+    return result;
+  }
+
+  public Result compile(
+    String[] argv,
+    List<JavaFileObject> javaFileObjects) {
+
+    Context context = new Context();
+    return compile(argv, context, null, javaFileObjects, Collections.<Processor>emptyList());
+  }
+
+  public Result compile(
+      String[] argv,
+      Context context,
+      JavaFileManager fileManager,
+      List<JavaFileObject> javaFileObjects,
+      Iterable<? extends Processor> processors) {
+
+    try {
+      argv = prepareContext(argv, context);
+    } catch (InvalidCommandLineOptionException e) {
+      errOutput.println(e.getMessage());
+      errOutput.flush();
+      return Result.CMDERR;
+    }
+
+    JavacTool tool = JavacTool.create();
+    JavacTaskImpl task = (JavacTaskImpl) tool.getTask(
+        errOutput,
+        fileManager,
+        null,
+        Arrays.asList(argv),
+        null,
+        javaFileObjects,
+        context);
+    if (processors != null) {
+      task.setProcessors(processors);
+    }
+    Result result = task.doCall();
 
     if (resultsPrinter != null) {
       resultsPrinter.printMatches();

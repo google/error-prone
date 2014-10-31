@@ -29,7 +29,6 @@ import java.util.List;
 
 import javax.annotation.processing.Processor;
 import javax.tools.DiagnosticListener;
-import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 
 /**
@@ -98,10 +97,9 @@ public class ErrorProneTestCompiler {
   public Result compile(String[] args, List<JavaFileObject> sources, List<? extends Processor>
       processors) {
     Context context = new Context();
-    context.put(JavaFileManager.class, fileManager);
     List<String> processedArgs =
         CompilationTestHelper.disableImplicitProcessing(Arrays.asList(args));
     String[] argsArray = processedArgs.toArray(new String[processedArgs.size()]);
-    return compiler.compile(argsArray, context, asJavacList(sources), processors);
+    return compiler.compile(argsArray, context, fileManager, asJavacList(sources), processors);
   }
 }
