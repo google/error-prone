@@ -23,13 +23,17 @@ import static org.junit.Assert.assertTrue;
 
 import com.google.common.io.CharStreams;
 import com.google.common.io.Files;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.InputStreamReader;
 
+@RunWith(JUnit4.class)
 public class BugPatternFileGeneratorTest {
 
   private File exampleDir;
@@ -55,7 +59,8 @@ public class BugPatternFileGeneratorTest {
   // in the same Jekyll environment you use for prod, and verify it looks good.
   @Test
   public void regressionTest() throws Exception {
-    Files.write("here is an example", new File(exampleDir, "DeadExceptionPositiveCase.java"), UTF_8);
+    Files.write("here is an example",
+        new File(exampleDir, "DeadExceptionPositiveCase.java"), UTF_8);
     generator.processLine(
         "com.google.errorprone.bugpatterns.DeadException\t" +
             "DeadException\tThrowableInstanceNeverThrown\tJDK\tERROR\tMATURE\tSUPPRESS_WARNINGS\t" +

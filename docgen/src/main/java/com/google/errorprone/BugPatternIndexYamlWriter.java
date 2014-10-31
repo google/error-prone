@@ -24,14 +24,16 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Ordering;
 import com.google.errorprone.BugPattern.Instance;
+
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -42,11 +44,12 @@ public class BugPatternIndexYamlWriter {
       throws IOException {
     Map<String, List<Map<String, String>>> data = new TreeMap<>(Ordering.natural().reverse());
 
-   ListMultimap<String, BugPattern.Instance> index = index(patterns, new Function<Instance, String>() {
-      @Override
-      public String apply(Instance input) {
-        return input.maturity.description + " : " + input.severity;
-      }});
+   ListMultimap<String, BugPattern.Instance> index =
+       index(patterns, new Function<Instance, String>() {
+         @Override public String apply(Instance input) {
+           return input.maturity.description + " : " + input.severity;
+         }
+       });
 
     for (Entry<String, Collection<Instance>> entry : index.asMap().entrySet()) {
       data.put(entry.getKey(), FluentIterable
