@@ -17,12 +17,14 @@
 package com.google.errorprone;
 
 import static com.google.common.base.Charsets.UTF_8;
-import static com.google.common.collect.Multimaps.index;
 import static com.google.common.io.Files.readLines;
 
 import com.google.common.base.Joiner;
+
 import org.kohsuke.MetaInfServices;
-import org.yaml.snakeyaml.Yaml;
+
+import java.io.*;
+import java.util.*;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
@@ -31,8 +33,6 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.MirroredTypeException;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
-import java.io.*;
-import java.util.*;
 
 /**
  * This class has two responsibilities:

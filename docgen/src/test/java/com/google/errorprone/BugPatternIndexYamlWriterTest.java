@@ -23,11 +23,15 @@ import static org.junit.Assert.assertThat;
 import com.google.errorprone.BugPattern.Instance;
 import com.google.errorprone.BugPattern.MaturityLevel;
 import com.google.errorprone.BugPattern.SeverityLevel;
+
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.io.StringWriter;
 import java.util.Arrays;
 
+@RunWith(JUnit4.class)
 public class BugPatternIndexYamlWriterTest {
   @Test
   public void dump() throws Exception {
