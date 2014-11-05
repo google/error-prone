@@ -17,7 +17,7 @@
 package com.google.errorprone.scanner;
 
 import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableBiMap;
 import com.google.common.reflect.ClassPath;
 import com.google.common.reflect.ClassPath.ClassInfo;
 import com.google.errorprone.BugCheckerSupplier;
@@ -28,9 +28,10 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import java.io.IOException;
 
 /**
- * Static helper class to build {@link ScannerSupplier}s specific to error-prone.
+ * Static helper class that provides {@link ScannerSupplier}s and {@link BugCheckerSupplier}s
+ * for the built-in error-prone checks, as opposed to plugin checks or checks used in tests.
  */
-public class ErrorProneScannerSuppliers {
+public class BuiltInCheckerSuppliers {
 
   /**
    * Returns a {@link ScannerSupplier} with all {@link BugChecker}s in error-prone.
@@ -48,11 +49,20 @@ public class ErrorProneScannerSuppliers {
   }
 
   /**
-   * A set of all {@link BugChecker}s known reflectively to error-prone.
+   * Returns a {@link BugCheckerSupplier} for the checker with the given name. Returns null if no
+   * checker with that name can be found.
    */
-  private static final ImmutableSet<BugCheckerSupplier> BUILT_IN_CHECKERS;
+  public static BugCheckerSupplier forName(String name) {
+    return BUILT_IN_CHECKERS.get(name);
+  }
+
+  /**
+   * A map of check name to {@link BugCheckerSupplier} for all {@link BugChecker}s known
+   * reflectively to error-prone.
+   */
+  private static final ImmutableBiMap<String, BugCheckerSupplier> BUILT_IN_CHECKERS;
   static {
-    ImmutableSet.Builder<BugCheckerSupplier> checkerListBuilder = ImmutableSet.builder();
+    ImmutableBiMap.Builder<String, BugCheckerSupplier> bimapBuilder = ImmutableBiMap.builder();
     ClassPath classPath;
     try {
       classPath = ClassPath.from(ScannerSupplier.class.getClassLoader());
@@ -69,10 +79,12 @@ public class ErrorProneScannerSuppliers {
       if (clazz.isAnnotationPresent(BugPattern.class) && BugChecker.class.isAssignableFrom(clazz)) {
         BugCheckerSupplier checkerSupplier =
             BugCheckerSupplier.fromClass(clazz.asSubclass(BugChecker.class));
-        checkerListBuilder.add(checkerSupplier);
+        bimapBuilder.put(checkerSupplier.canonicalName(), checkerSupplier);
       }
     }
-    BUILT_IN_CHECKERS = checkerListBuilder.build();
+    // build() enforces that check names are unique since ImmutableBiMap does not allow duplicate
+    // keys or values.
+    BUILT_IN_CHECKERS = bimapBuilder.build();
   }
 
   /**
@@ -86,5 +98,5 @@ public class ErrorProneScannerSuppliers {
   };
 
   // May not be instantiated
-  private ErrorProneScannerSuppliers() {}
+  private BuiltInCheckerSuppliers() {}
 }

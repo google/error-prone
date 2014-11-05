@@ -16,21 +16,29 @@
 
 package com.google.errorprone;
 
+import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import com.google.common.collect.Lists;
+import com.google.errorprone.bugpatterns.ArrayEqualsTest;
 import com.google.errorprone.bugpatterns.BadShiftAmount;
+import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.DepAnnTest;
+import com.google.errorprone.bugpatterns.EmptyIfStatementTest;
+import com.google.errorprone.bugpatterns.Finally;
+import com.google.errorprone.bugpatterns.WaitNotInLoopTest;
 import com.google.errorprone.scanner.ScannerSupplier;
 
 import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -38,11 +46,14 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 
 import javax.lang.model.SourceVersion;
@@ -70,6 +81,7 @@ public class ErrorProneJavaCompilerTest {
 
     // error-prone options should be handled
     assertThat(compiler.isSupportedOption("-Xepdisable:"), is(0));
+    assertThat(compiler.isSupportedOption("-Xep:"), is(0));
   }
 
   interface JavaFileObjectDiagnosticListener extends DiagnosticListener<JavaFileObject> {}
@@ -109,86 +121,297 @@ public class ErrorProneJavaCompilerTest {
 
   @Test
   public void fileWithErrorIntegrationTest() throws Exception {
-    DiagnosticTestHelper diagnosticHelper = new DiagnosticTestHelper();
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(outputStream), true);
-
-    ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
-
-    JavaCompiler.CompilationTask task = new ErrorProneJavaCompiler().getTask(
-        printWriter, fileManager, diagnosticHelper.collector, null, null,
-        fileManager.sources(DepAnnTest.class, "DepAnnPositiveCases.java"));
-
-    boolean succeeded = task.call();
-    assertFalse(outputStream.toString(), succeeded);
-    Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher = Matchers.hasItem(
-        diagnosticMessage(containsString("[DepAnn]")));
-    assertTrue("Error should be found. " + diagnosticHelper.describe(),
-        matcher.matches(diagnosticHelper.getDiagnostics()));
+    CompilationResult result = doCompile(
+        DepAnnTest.class,
+        Arrays.asList("DepAnnPositiveCases.java"),
+        Collections.<String>emptyList(),
+        Collections.<Class<? extends BugChecker>>emptyList());
+    assertThat(result.succeeded).isFalse();
+    Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher =
+        hasItem(diagnosticMessage(containsString("[DepAnn]")));
+    assertTrue(matcher.matches(result.diagnosticHelper.getDiagnostics()));
   }
 
   @Test
   public void testWithDisabledCheck() throws Exception {
-    DiagnosticTestHelper diagnosticHelper = new DiagnosticTestHelper();
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(outputStream), true);
+    CompilationResult result = doCompile(
+        DepAnnTest.class,
+        Arrays.asList("DepAnnPositiveCases.java"),
+        Collections.<String>emptyList(),
+        Collections.<Class<? extends BugChecker>>emptyList());
+    assertThat(result.succeeded).isFalse();
 
-    ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
+    result = doCompile(
+        DepAnnTest.class,
+        Arrays.asList("DepAnnPositiveCases.java"),
+        Arrays.asList("-Xep:DepAnn:OFF"),
+        Collections.<Class<? extends BugChecker>>emptyList());
+    assertThat(result.succeeded).isTrue();
+  }
 
-    JavaCompiler.CompilationTask task = new ErrorProneJavaCompiler().getTask(
-        printWriter,
-        fileManager,
-        diagnosticHelper.collector,
-        Arrays.asList("-Xepdisable:DepAnn", "-d", tempDir.getRoot().getAbsolutePath()),
-        null,
-        fileManager.sources(DepAnnTest.class, "DepAnnPositiveCases.java"));
+  @Test
+  public void testWithOldStyleDisabledCheck() throws Exception {
+    CompilationResult result = doCompile(
+        DepAnnTest.class,
+        Arrays.asList("DepAnnPositiveCases.java"),
+        Collections.<String>emptyList(),
+        Collections.<Class<? extends BugChecker>>emptyList());
+    assertThat(result.succeeded).isFalse();
 
-    boolean succeeded = task.call();
-    assertTrue(outputStream.toString(), succeeded);
+    result = doCompile(
+        DepAnnTest.class,
+        Arrays.asList("DepAnnPositiveCases.java"),
+        Arrays.asList("-Xepdisable:DepAnn"),
+        Collections.<Class<? extends BugChecker>>emptyList());
+    assertThat(result.succeeded).isTrue();
+  }
+
+  @Test
+  public void testWithCheckPromotedToError() throws Exception {
+    CompilationResult result = doCompile(
+        WaitNotInLoopTest.class,
+        Arrays.asList("WaitNotInLoopPositiveCases.java"),
+        Collections.<String>emptyList(),
+        Collections.<Class<? extends BugChecker>>emptyList());
+    assertThat(result.succeeded).isTrue();
+    assertThat(result.diagnosticHelper.getDiagnostics().size()).isGreaterThan(0);
+    Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher =
+        hasItem(diagnosticMessage(containsString("[WaitNotInLoop]")));
+    assertTrue(matcher.matches(result.diagnosticHelper.getDiagnostics()));
+
+    result = doCompile(
+        WaitNotInLoopTest.class,
+        Arrays.asList("WaitNotInLoopPositiveCases.java"),
+        Arrays.asList("-Xep:WaitNotInLoop:ERROR"),
+        Collections.<Class<? extends BugChecker>>emptyList());
+    assertThat(result.succeeded).isFalse();
+    assertThat(result.diagnosticHelper.getDiagnostics().size()).isGreaterThan(0);
+    assertTrue(matcher.matches(result.diagnosticHelper.getDiagnostics()));
+  }
+
+  @Test
+  public void testWithCheckDemotedToWarning() throws Exception {
+    CompilationResult result = doCompile(
+        DepAnnTest.class,
+        Arrays.asList("DepAnnPositiveCases.java"),
+        Collections.<String>emptyList(),
+        Collections.<Class<? extends BugChecker>>emptyList());
+    assertThat(result.succeeded).isFalse();
+    assertThat(result.diagnosticHelper.getDiagnostics().size()).isGreaterThan(0);
+    Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher =
+        hasItem(diagnosticMessage(containsString("[DepAnn]")));
+    assertTrue(matcher.matches(result.diagnosticHelper.getDiagnostics()));
+
+    result = doCompile(
+        DepAnnTest.class,
+        Arrays.asList("DepAnnPositiveCases.java"),
+        Arrays.asList("-Xep:DepAnn:WARN"),
+        Collections.<Class<? extends BugChecker>>emptyList());
+    assertThat(result.succeeded).isTrue();
+    assertThat(result.diagnosticHelper.getDiagnostics().size()).isGreaterThan(0);
+    assertTrue(matcher.matches(result.diagnosticHelper.getDiagnostics()));
+  }
+
+  @Test
+  public void testWithNonDefaultCheckOn() throws Exception {
+    CompilationResult result = doCompile(
+        EmptyIfStatementTest.class,
+        Arrays.asList("EmptyIfStatementPositiveCases.java"),
+        Collections.<String>emptyList(),
+        Collections.<Class<? extends BugChecker>>emptyList());
+    assertThat(result.succeeded).isTrue();
+    assertThat(result.diagnosticHelper.getDiagnostics().size()).isEqualTo(0);
+
+    result = doCompile(
+        EmptyIfStatementTest.class,
+        Arrays.asList("EmptyIfStatementPositiveCases.java"),
+        Arrays.asList("-Xep:EmptyIf"),
+        Collections.<Class<? extends BugChecker>>emptyList());
+    assertThat(result.succeeded).isFalse();
+    assertThat(result.diagnosticHelper.getDiagnostics().size()).isGreaterThan(0);
+    Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher =
+        hasItem(diagnosticMessage(containsString("[EmptyIf]")));
+    assertTrue(matcher.matches(result.diagnosticHelper.getDiagnostics()));
+  }
+
+  @Test
+  public void testBadFlagThrowsException() throws Exception {
+    try {
+      doCompile(
+          EmptyIfStatementTest.class,
+          Arrays.asList("EmptyIfStatementPositiveCases.java"),
+          Arrays.asList("-Xep:foo"),
+          Collections.<Class<? extends BugChecker>>emptyList());
+      fail();
+    } catch (RuntimeException expected) {
+      assertThat(expected.getMessage()).contains("foo is not a valid checker name");
+    }
+  }
+
+  @Test
+  public void testCantDisableNonDisableableCheck() throws Exception {
+    try {
+      doCompile(
+          ArrayEqualsTest.class,
+          Arrays.asList("ArrayEqualsPositiveCases.java"),
+          Arrays.asList("-Xep:ArrayEquals:OFF"),
+          Collections.<Class<? extends BugChecker>>emptyList());
+      fail();
+    } catch (RuntimeException expected) {
+      assertThat(expected.getMessage()).contains("ArrayEquals may not be disabled");
+    }
   }
 
   @Test
   public void testWithCustomCheckPositive() throws Exception {
-    DiagnosticTestHelper diagnosticHelper = new DiagnosticTestHelper();
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(outputStream), true);
-
-    ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
-
-    JavaCompiler compiler =
-        new ErrorProneJavaCompiler(ScannerSupplier.fromBugCheckerClasses(BadShiftAmount.class));
-    JavaCompiler.CompilationTask task =  compiler.getTask(
-        printWriter,
-        null,
-        diagnosticHelper.collector,
-        Arrays.asList("-d", tempDir.getRoot().getAbsolutePath()),
-        null,
-        fileManager.sources(BadShiftAmount.class, "BadShiftAmountPositiveCases.java"));
-
-    boolean succeeded = task.call();
-    assertFalse(outputStream.toString(), succeeded);
+    CompilationResult result = doCompile(
+        BadShiftAmount.class,
+        Arrays.asList("BadShiftAmountPositiveCases.java"),
+        Collections.<String>emptyList(),
+        Arrays.<Class<? extends BugChecker>>asList(BadShiftAmount.class));
+    assertThat(result.succeeded).isFalse();
+    assertThat(result.diagnosticHelper.getDiagnostics().size()).isGreaterThan(0);
+    Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher =
+        hasItem(diagnosticMessage(containsString("[BadShiftAmount]")));
+    assertTrue(matcher.matches(result.diagnosticHelper.getDiagnostics()));
   }
 
   @Test
   public void testWithCustomCheckNegative() throws Exception {
+    CompilationResult result = doCompile(
+        DepAnnTest.class,
+        Arrays.asList("DepAnnPositiveCases.java"),
+        Collections.<String>emptyList(),
+        Arrays.<Class<? extends BugChecker>>asList(Finally.class));
+    assertThat(result.succeeded).isTrue();
+    assertThat(result.diagnosticHelper.getDiagnostics().size()).isEqualTo(0);
+  }
+
+  @Test
+  public void testSeverityResetsAfterOverride() throws Exception {
     DiagnosticTestHelper diagnosticHelper = new DiagnosticTestHelper();
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(outputStream), true);
-
     ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
+    JavaCompiler errorProneJavaCompiler = new ErrorProneJavaCompiler();
+    List<String> args = Lists.newArrayList(
+        "-d", tempDir.getRoot().getAbsolutePath(),
+        "-proc:none",
+        "-Xep:BadShiftAmount:WARN");
+    List<JavaFileObject> sources =
+        fileManager.sources(BadShiftAmount.class, "BadShiftAmountPositiveCases.java");
+    fileManager.close();
 
-    JavaCompiler compiler =
-        new ErrorProneJavaCompiler(ScannerSupplier.fromBugCheckerClasses(BadShiftAmount.class));
-    JavaCompiler.CompilationTask task =  compiler.getTask(
+    JavaCompiler.CompilationTask task = errorProneJavaCompiler.getTask(
+        printWriter,
+        fileManager,
+        diagnosticHelper.collector,
+        args,
+        null,
+        sources);
+    boolean succeeded = task.call();
+    assertThat(succeeded).isTrue();
+    Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher =
+        hasItem(diagnosticMessage(containsString("[BadShiftAmount]")));
+    assertTrue(matcher.matches(diagnosticHelper.getDiagnostics()));
+
+    // reset state between compilations
+    diagnosticHelper.clearDiagnostics();
+    fileManager = new ErrorProneInMemoryFileManager();
+    sources = fileManager.sources(BadShiftAmount.class, "BadShiftAmountPositiveCases.java");
+    fileManager.close();
+    args.remove("-Xep:BadShiftAmount:WARN");
+
+    task = errorProneJavaCompiler.getTask(
+        printWriter,
+        fileManager,
+        diagnosticHelper.collector,
+        args,
+        null,
+        sources);
+    succeeded = task.call();
+    assertThat(succeeded).isFalse();
+    assertTrue(matcher.matches(diagnosticHelper.getDiagnostics()));
+  }
+
+  @Test
+  public void testMaturityResetsAfterOverride() throws Exception {
+    DiagnosticTestHelper diagnosticHelper = new DiagnosticTestHelper();
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(outputStream), true);
+    ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
+    JavaCompiler errorProneJavaCompiler = new ErrorProneJavaCompiler();
+    List<String> args = Lists.newArrayList(
+        "-d", tempDir.getRoot().getAbsolutePath(),
+        "-proc:none",
+        "-Xep:EmptyIf");
+    List<JavaFileObject> sources =
+        fileManager.sources(BadShiftAmount.class, "EmptyIfStatementPositiveCases.java");
+    fileManager.close();
+
+    JavaCompiler.CompilationTask task = errorProneJavaCompiler.getTask(
         printWriter,
         null,
         diagnosticHelper.collector,
-        Arrays.asList("-d", tempDir.getRoot().getAbsolutePath()),
+        args,
         null,
-        fileManager.sources(DepAnnTest.class, "DepAnnPositiveCases.java"));
-
+        sources);
     boolean succeeded = task.call();
-    assertTrue(outputStream.toString(), succeeded);
+    assertThat(succeeded).isFalse();
+    Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher =
+        hasItem(diagnosticMessage(containsString("[EmptyIf]")));
+    assertTrue(matcher.matches(diagnosticHelper.getDiagnostics()));
+
+    diagnosticHelper.clearDiagnostics();
+    args.remove("-Xep:EmptyIf");
+    task = errorProneJavaCompiler.getTask(
+        printWriter,
+        null,
+        diagnosticHelper.collector,
+        args,
+        null,
+        sources);
+    fileManager.close();
+    succeeded = task.call();
+    assertThat(succeeded).isTrue();
+    assertThat(diagnosticHelper.getDiagnostics()).isEmpty();
+  }
+
+
+  private static class CompilationResult {
+    public final boolean succeeded;
+    public final DiagnosticTestHelper diagnosticHelper;
+
+    public CompilationResult(boolean succeeded, DiagnosticTestHelper diagnosticHelper) {
+      this.succeeded = succeeded;
+      this.diagnosticHelper = diagnosticHelper;
+    }
+  }
+
+  private CompilationResult doCompile(Class<?> clazz, List<String> fileNames,
+      List<String> extraArgs, List<Class<? extends BugChecker>> customCheckers) throws IOException {
+    DiagnosticTestHelper diagnosticHelper = new DiagnosticTestHelper();
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(outputStream), true);
+    ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
+
+    List<String> args = Lists.newArrayList(
+        "-d", tempDir.getRoot().getAbsolutePath(),
+        "-proc:none");
+    args.addAll(extraArgs);
+
+    JavaCompiler errorProneJavaCompiler = (customCheckers.isEmpty())
+        ? new ErrorProneJavaCompiler()
+        : new ErrorProneJavaCompiler(ScannerSupplier.fromBugCheckerClasses(customCheckers));
+    JavaCompiler.CompilationTask task = errorProneJavaCompiler.getTask(
+        printWriter,
+        fileManager,
+        diagnosticHelper.collector,
+        args,
+        null,
+        fileManager.sources(clazz, fileNames.toArray(new String[fileNames.size()])));
+
+    fileManager.close();
+    return new CompilationResult(task.call(), diagnosticHelper);
   }
 }
-

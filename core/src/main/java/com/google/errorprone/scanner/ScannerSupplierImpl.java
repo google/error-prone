@@ -19,7 +19,7 @@ package com.google.errorprone.scanner;
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableBiMap;
 import com.google.errorprone.BugCheckerSupplier;
 import com.google.errorprone.bugpatterns.BugChecker;
 
@@ -28,21 +28,23 @@ import com.google.errorprone.bugpatterns.BugChecker;
  * {@link BugCheckerSupplier}s.
  */
 class ScannerSupplierImpl extends ScannerSupplier {
-  private final ImmutableSet<BugCheckerSupplier> suppliers;
+  private final ImmutableBiMap<String, BugCheckerSupplier> nameToSupplierMap;
 
-  ScannerSupplierImpl(ImmutableSet<BugCheckerSupplier> suppliers) {
-    this.suppliers = suppliers;
-  }
-
-  @Override
-  public ImmutableSet<BugCheckerSupplier> getSuppliers() {
-    return suppliers;
+  ScannerSupplierImpl(ImmutableBiMap<String, BugCheckerSupplier> nameToSupplierMap) {
+    this.nameToSupplierMap = nameToSupplierMap;
   }
 
   @Override
   public Scanner get() {
-    Iterable<BugChecker> checkers = FluentIterable.from(suppliers).transform(SUPPLIER_GET);
+    Iterable<BugChecker> checkers = FluentIterable
+        .from(getNameToSupplierMap().values())
+        .transform(SUPPLIER_GET);
     return new ErrorProneScanner(checkers);
+  }
+
+  @Override
+  ImmutableBiMap<String, BugCheckerSupplier> getNameToSupplierMap() {
+    return nameToSupplierMap;
   }
 
   private static final Function<Supplier<BugChecker>, BugChecker> SUPPLIER_GET =

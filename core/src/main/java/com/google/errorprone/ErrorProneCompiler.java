@@ -18,7 +18,7 @@ package com.google.errorprone;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.google.errorprone.scanner.ErrorProneScannerSuppliers;
+import com.google.errorprone.scanner.BuiltInCheckerSuppliers;
 import com.google.errorprone.scanner.Scanner;
 import com.google.errorprone.scanner.ScannerSupplier;
 
@@ -113,7 +113,7 @@ public class ErrorProneCompiler {
     private PrintWriter errOutput = new PrintWriter(System.err, true);
     private String compilerName = "javac (with error-prone)";
     private boolean useResultsPrinter = false;
-    private ScannerSupplier scannerSupplier = ErrorProneScannerSuppliers.matureChecks();
+    private ScannerSupplier scannerSupplier = BuiltInCheckerSuppliers.matureChecks();
 
     public ErrorProneCompiler build() {
       return new ErrorProneCompiler(

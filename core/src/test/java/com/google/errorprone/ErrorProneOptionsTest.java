@@ -16,8 +16,8 @@
 
 package com.google.errorprone;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.fail;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.ErrorProneOptions.Severity;
@@ -26,6 +26,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,14 +39,84 @@ import java.util.Map;
 public class ErrorProneOptionsTest {
 
   @Test
-  public void nonErrorProneFlagsPlacedInRemainingArgs() {
+  public void nonErrorProneFlagsPlacedInRemainingArgs() throws Exception {
     String[] args = {"-nonErrorProneFlag", "value"};
     ErrorProneOptions options = ErrorProneOptions.processArgs(args);
-    assertThat(options.getRemainingArgs(), equalTo(args));
+    assertThat(options.getRemainingArgs()).isEqualTo(args);
   }
 
   @Test
-  public void parsesDisableChecksFlag() {
+  public void malformedOptionThrowsProperException() throws Exception {
+    List<String> badArgs = Arrays.asList(
+        "-Xep:Foo:WARN:jfkdlsdf", // too many parts
+        "-Xep:", // no check name
+        "-Xep:Foo:FJDKFJSD"); // nonexistent severity level
+    for (String arg : badArgs) {
+      try {
+        ErrorProneOptions.processArgs(Arrays.asList(arg));
+        fail();
+      } catch (InvalidCommandLineOptionException expected) {
+        assertThat(expected.getMessage()).contains("invalid flag");
+      }
+    }
+  }
+
+  @Test
+  public void handlesErrorProneFlags() throws Exception {
+    String[] args1 = {"-Xep:Check1"};
+    ErrorProneOptions options = ErrorProneOptions.processArgs(args1);
+    Map<String, Severity> expectedSeverityMap = ImmutableMap.<String, Severity>builder()
+        .put("Check1", Severity.DEFAULT)
+        .build();
+    assertThat(options.getSeverityMap()).isEqualTo(expectedSeverityMap);
+
+    String[] args2 = {"-Xep:Check1", "-Xep:Check2:OFF", "-Xep:Check3:WARN"};
+    options = ErrorProneOptions.processArgs(args2);
+    expectedSeverityMap = ImmutableMap.<String, Severity>builder()
+        .put("Check1", Severity.DEFAULT)
+        .put("Check2", Severity.OFF)
+        .put("Check3", Severity.WARN)
+        .build();
+    assertThat(options.getSeverityMap()).isEqualTo(expectedSeverityMap);
+  }
+
+  @Test
+  public void combineErrorProneFlagsWithNonErrorProneFlags() throws Exception {
+    String[] args = {
+        "-classpath", "/this/is/classpath",
+        "-verbose",
+        "-Xep:Check1:WARN",
+        "-Xep:Check2:ERROR"};
+    ErrorProneOptions options = ErrorProneOptions.processArgs(args);
+    String[] expectedRemainingArgs = {"-classpath", "/this/is/classpath", "-verbose"};
+    assertThat(options.getRemainingArgs()).isEqualTo(expectedRemainingArgs);
+    Map<String, Severity> expectedSeverityMap = ImmutableMap.<String, Severity>builder()
+        .put("Check1", Severity.WARN)
+        .put("Check2", Severity.ERROR)
+        .build();
+    assertThat(options.getSeverityMap()).isEqualTo(expectedSeverityMap);
+  }
+
+  @Test
+  public void lastCheckFlagWins() throws Exception {
+    String[] args = {
+        "-Xep:Check1:ERROR",
+        "-Xep:Check1:OFF"};
+    ErrorProneOptions options = ErrorProneOptions.processArgs(args);
+    Map<String, Severity> expectedSeverityMap = ImmutableMap.<String, Severity>builder()
+        .put("Check1", Severity.OFF)
+        .build();
+    assertThat(options.getSeverityMap()).isEqualTo(expectedSeverityMap);
+  }
+
+
+  /*
+   * Tests below are for old-style "-Xepdisable:..." flags.
+   * TODO(user): Remove after transition period.
+   */
+
+  @Test
+  public void parsesOldStyleDisableChecksFlag() throws Exception {
     String[] args = {"-Xepdisable:foo,bar,baz"};
     ErrorProneOptions options = ErrorProneOptions.processArgs(args);
     Map<String, Severity> expectedSeverityMap = ImmutableMap.<String, Severity>builder()
@@ -52,28 +124,28 @@ public class ErrorProneOptionsTest {
         .put("bar", Severity.OFF)
         .put("baz", Severity.OFF)
         .build();
-    assertThat(options.getSeverityMap(), equalTo(expectedSeverityMap));
+    assertThat(options.getSeverityMap()).isEqualTo(expectedSeverityMap);
   }
 
   @Test
-  public void combineErrorProneFlagsWithNonErrorProneFlags() {
+  public void combineOldStyleErrorProneFlagsWithNonErrorProneFlags() throws Exception {
     String[] args = {
         "-classpath", "/this/is/classpath",
         "-verbose",
         "-Xepdisable:foo,bar,baz"};
     ErrorProneOptions options = ErrorProneOptions.processArgs(args);
     String[] expectedRemainingArgs = {"-classpath", "/this/is/classpath", "-verbose"};
-    assertThat(options.getRemainingArgs(), equalTo(expectedRemainingArgs));
+    assertThat(options.getRemainingArgs()).isEqualTo(expectedRemainingArgs);
     Map<String, Severity> expectedSeverityMap = ImmutableMap.<String, Severity>builder()
         .put("foo", Severity.OFF)
         .put("bar", Severity.OFF)
         .put("baz", Severity.OFF)
         .build();
-    assertThat(options.getSeverityMap(), equalTo(expectedSeverityMap));
+    assertThat(options.getSeverityMap()).isEqualTo(expectedSeverityMap);
   }
 
   @Test
-  public void lastDisableChecksFlagWins() {
+  public void lastOldStyleDisableChecksFlagWins() throws Exception {
     String[] args = {
         "-Xepdisable:foo,bar,baz",
         "-classpath", "/this/is/classpath",
@@ -85,6 +157,19 @@ public class ErrorProneOptionsTest {
         .put("two", Severity.OFF)
         .put("three", Severity.OFF)
         .build();
-    assertThat(options.getSeverityMap(), equalTo(expectedSeverityMap));
+    assertThat(options.getSeverityMap()).isEqualTo(expectedSeverityMap);
+  }
+
+  @Test
+  public void cannotMixOldAndNewStyleFlags() throws Exception {
+    String[] args = {
+        "-Xepdisable:foo,bar,baz",
+        "-Xep:Check1"};
+    try {
+      ErrorProneOptions.processArgs(args);
+      fail();
+    } catch (InvalidCommandLineOptionException expected) {
+      assertThat(expected.getMessage()).contains("cannot mix old- and new-style error-prone flags");
+    }
   }
 }

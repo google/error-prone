@@ -27,13 +27,29 @@ import com.google.errorprone.bugpatterns.BugChecker;
  */
 class FromInstanceBugCheckerSupplier extends BugCheckerSupplier {
   private final BugChecker checker;
+  private final SeverityLevel severity;
 
   FromInstanceBugCheckerSupplier(BugChecker checker) {
-    this.checker = Preconditions.checkNotNull(checker);
+    this(Preconditions.checkNotNull(checker), checker.severity());
+  }
+
+  private FromInstanceBugCheckerSupplier(BugChecker checker, SeverityLevel severity) {
+    this.checker = checker;
+    this.severity = severity;
   }
 
   @Override
   public BugChecker get() {
+    /* Note that we mutate the severity of the BugChecker instance here, which is not ideal.
+     * Ideally BugChecker instances would be immutable, and we would ask for a copy of this
+     * BugChecker with a different severity.
+     *
+     * Instead, we make BugCheckerSupplier and ScannerSupplier immutable. When we process severity
+     * overrides, we do not store a reference to the BugCheckerSupplier with the overridden
+     * severity; we keep only the original BugCheckerSupplier.  This ensures that the default
+     * severity is used for subsequent compilations.
+     */
+    checker.setSeverity(severity);
     return checker;
   }
 
@@ -44,7 +60,12 @@ class FromInstanceBugCheckerSupplier extends BugCheckerSupplier {
 
   @Override
   public SeverityLevel severity() {
-    return checker.severity();
+    return severity;
+  }
+
+  @Override
+  public BugCheckerSupplier overrideSeverity(SeverityLevel severity) {
+    return new FromInstanceBugCheckerSupplier(this.checker, severity);
   }
 
   @Override

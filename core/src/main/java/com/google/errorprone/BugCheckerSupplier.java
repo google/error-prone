@@ -29,6 +29,8 @@ import java.util.Objects;
  * vs. already having an instance.  Additionally provides information about the
  * checker, including canonical name, severity, maturity, and whether the checker may
  * be disabled.
+ *
+ * <p>Implementations of this class should be immutable.
  */
 public abstract class BugCheckerSupplier implements Supplier<BugChecker> {
 
@@ -56,12 +58,18 @@ public abstract class BugCheckerSupplier implements Supplier<BugChecker> {
   public abstract String canonicalName();
 
   /**
-   * The {@link SeverityLevel} of the {@link BugChecker}, e.g. {@link SeverityLevel.ERROR}.
+   * The {@link SeverityLevel} of the {@link BugChecker}, e.g. {@link SeverityLevel#ERROR}.
    */
   public abstract SeverityLevel severity();
 
   /**
-   * The {@link MaturityLevel} of the {@link BugChecker}, e.g. {@link MaturityLevel.EXPERIMENTAL}.
+   * Returns a new {@link BugCheckerSupplier} in which the previous {@link SeverityLevel}
+   * has been overridden to the given value.
+   */
+  public abstract BugCheckerSupplier overrideSeverity(SeverityLevel severity);
+
+  /**
+   * The {@link MaturityLevel} of the {@link BugChecker}, e.g. {@link MaturityLevel#EXPERIMENTAL}.
    */
   public abstract MaturityLevel maturity();
 
