@@ -16,7 +16,7 @@
 
 package com.google.errorprone;
 
-import com.google.errorprone.scanner.ErrorProneScannerSuppliers;
+import com.google.errorprone.scanner.BuiltInCheckerSuppliers;
 import com.google.errorprone.scanner.Scanner;
 import com.google.errorprone.scanner.ScannerSupplier;
 
@@ -57,7 +57,7 @@ public class ErrorProneJavaCompiler implements JavaCompiler {
 
   // package-private for testing
   ErrorProneJavaCompiler(JavaCompiler javacTool) {
-    this(javacTool, ErrorProneScannerSuppliers.matureChecks());
+    this(javacTool, BuiltInCheckerSuppliers.matureChecks());
   }
 
   public ErrorProneJavaCompiler(ScannerSupplier scannerSupplier) {
@@ -77,17 +77,18 @@ public class ErrorProneJavaCompiler implements JavaCompiler {
       Iterable<String> options,
       Iterable<String> classes,
       Iterable<? extends JavaFileObject> compilationUnits) {
-    ErrorProneOptions errorProneOptions = ErrorProneOptions.processArgs(options);
-    List<String> remainingOptions = Arrays.asList(errorProneOptions.getRemainingArgs());
-    CompilationTask task = javacTool.getTask(
-        out, fileManager, diagnosticListener, remainingOptions, classes, compilationUnits);
-    Context context = ((JavacTaskImpl) task).getContext();
+    ErrorProneOptions errorProneOptions;
     Scanner scanner;
     try {
+      errorProneOptions = ErrorProneOptions.processArgs(options);
       scanner = scannerSupplier.applyOverrides(errorProneOptions.getSeverityMap()).get();
     } catch (InvalidCommandLineOptionException e) {
       throw new RuntimeException(e);
     }
+    List<String> remainingOptions = Arrays.asList(errorProneOptions.getRemainingArgs());
+    CompilationTask task = javacTool.getTask(
+        out, fileManager, diagnosticListener, remainingOptions, classes, compilationUnits);
+    Context context = ((JavacTaskImpl) task).getContext();
     ErrorProneJavacJavaCompiler.preRegister(context, scanner);
     return task;
   }

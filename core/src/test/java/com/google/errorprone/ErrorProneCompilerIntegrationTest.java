@@ -35,8 +35,8 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.NonAtomicVolatileUpdate;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.scanner.BuiltInCheckerSuppliers;
 import com.google.errorprone.scanner.ErrorProneScanner;
-import com.google.errorprone.scanner.ErrorProneScannerSuppliers;
 import com.google.errorprone.scanner.Scanner;
 import com.google.errorprone.scanner.ScannerSupplier;
 
@@ -317,7 +317,7 @@ public class ErrorProneCompilerIntegrationTest {
     compiler = new ErrorProneTestCompiler.Builder()
         .named("test")
         .redirectOutputTo(new PrintWriter(outputStream, true))
-        .search(ErrorProneScannerSuppliers.matureChecks())
+        .search(BuiltInCheckerSuppliers.matureChecks())
         .listenToDiagnostics(diagnosticHelper.collector)
         .build();
 
@@ -327,5 +327,99 @@ public class ErrorProneCompilerIntegrationTest {
     assertThat(output, exitCode, is(Result.OK));
     assertThat(output, containsString("BadShiftAmountPositiveCases.java:29: Note: Matched"));
     assertThat(output, containsString("Note: Found 12 matches."));
+  }
+
+  @Test
+  public void invalidFlagCausesCmdErrResult() throws Exception {
+    String[] args = {"-Xep:"};
+    Result exitCode = compiler.compile(args,
+        Arrays.asList(compiler.fileManager().forSourceLines("Test.java",
+            "public class Test {",
+            "  public Test() {}",
+            "}")));
+    outputStream.flush();
+
+    assertThat(outputStream.toString(), exitCode, is(Result.CMDERR));
+  }
+
+  @Test
+  public void flagEnablesCheck() throws Exception {
+    String[] testFile = {"public class Test {",
+        "  public Test() {",
+        "    if (true);",
+        "  }",
+        "}"};
+
+    Result exitCode = compiler.compile(Arrays.asList(
+        compiler.fileManager().forSourceLines("Test.java", testFile)));
+    outputStream.flush();
+    assertTrue(diagnosticHelper.getDiagnostics().isEmpty());
+    assertThat(outputStream.toString(), exitCode, is(Result.OK));
+
+    String[] args = {"-Xep:EmptyIf"};
+    exitCode = compiler.compile(args,
+        Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile)));
+    outputStream.flush();
+
+    Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher = hasItem(
+        diagnosticMessage(containsString("[EmptyIf]")));
+    assertTrue(
+        "Error should be found. " + diagnosticHelper.describe(),
+        matcher.matches(diagnosticHelper.getDiagnostics()));
+
+    assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
+  }
+
+  @Test
+  public void severityIsResetOnNextCompilation() throws Exception {
+    String[] testFile = {"public class Test {",
+        "  public static int shiftBy43(int toShift) {",
+        "    return toShift << 43;",
+        "  }",
+        "}"};
+
+    String[] args = {"-Xep:BadShiftAmount:WARN"};
+    Result exitCode = compiler.compile(args,
+        Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile)));
+    outputStream.flush();
+    Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher = hasItem(
+        diagnosticMessage(containsString("[BadShiftAmount]")));
+    assertThat(outputStream.toString(), exitCode, is(Result.OK));
+    assertTrue(
+        "Warning should be found. " + diagnosticHelper.describe(),
+        matcher.matches(diagnosticHelper.getDiagnostics()));
+
+    // Should reset to default severity (ERROR)
+    exitCode = compiler.compile(
+        Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile)));
+    outputStream.flush();
+    assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
+  }
+
+  @Test
+  public void maturityIsResetOnNextCompilation() throws Exception {
+    String[] testFile = {"public class Test {",
+        "  public Test() {",
+        "    if (true);",
+        "  }",
+        "}"};
+
+    String[] args = {"-Xep:EmptyIf"};
+    Result exitCode = compiler.compile(args,
+        Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile)));
+    outputStream.flush();
+    Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher = hasItem(
+        diagnosticMessage(containsString("[EmptyIf]")));
+    assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
+    assertTrue(
+        "Error should be found. " + diagnosticHelper.describe(),
+        matcher.matches(diagnosticHelper.getDiagnostics()));
+
+    diagnosticHelper.clearDiagnostics();
+    exitCode = compiler.compile(
+        Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile)));
+    outputStream.flush();
+    assertThat(outputStream.toString(), exitCode, is(Result.OK));
+    assertTrue(diagnosticHelper.getDiagnostics().isEmpty());
   }
 }

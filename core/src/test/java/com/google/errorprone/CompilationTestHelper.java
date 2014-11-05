@@ -19,6 +19,7 @@ package com.google.errorprone;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -223,11 +224,17 @@ public class CompilationTestHelper {
   private void checkWellFormed(Iterable<JavaFileObject> sources, String[] args) {
     JavaCompiler compiler = JavacTool.create();
     OutputStream outputStream = new ByteArrayOutputStream();
+    String[] remainingArgs = null;
+    try {
+      remainingArgs = ErrorProneOptions.processArgs(args).getRemainingArgs();
+    } catch (InvalidCommandLineOptionException e) {
+      fail("Exception during argument processing: " + e);
+    }
     CompilationTask task = compiler.getTask(
         new PrintWriter(outputStream, /*autoFlush=*/true),
         fileManager,
         null,
-        buildArguments(Arrays.asList(ErrorProneOptions.processArgs(args).getRemainingArgs())),
+        buildArguments(Arrays.asList(remainingArgs)),
         null,
         sources);
     boolean result = task.call();
@@ -242,5 +249,4 @@ public class CompilationTestHelper {
     }
     return result;
   }
-
 }

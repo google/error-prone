@@ -42,10 +42,21 @@ class FromClassBugCheckerSupplier extends BugCheckerSupplier {
     this.disableable = pattern.disableable();
   }
 
+  private FromClassBugCheckerSupplier(Class<? extends BugChecker> checkerClass,
+      String canonicalName, SeverityLevel severity, MaturityLevel maturity, boolean disableable) {
+    this.checkerClass = checkerClass;
+    this.canonicalName = canonicalName;
+    this.severity = severity;
+    this.maturity = maturity;
+    this.disableable = disableable;
+  }
+
   @Override
   public BugChecker get() {
     try {
-      return checkerClass.newInstance();
+      BugChecker checker = checkerClass.newInstance();
+      checker.setSeverity(severity);
+      return checker;
     } catch (ReflectiveOperationException e) {
       throw new RuntimeException(
           "Could not reflectively create error prone checker " + checkerClass.getName(), e);
@@ -63,6 +74,12 @@ class FromClassBugCheckerSupplier extends BugCheckerSupplier {
   }
 
   @Override
+  public BugCheckerSupplier overrideSeverity(SeverityLevel severity) {
+    return new FromClassBugCheckerSupplier(
+        this.checkerClass, this.canonicalName, severity, this.maturity, this.disableable);
+  }
+
+  @Override
   public MaturityLevel maturity() {
     return maturity;
   }
@@ -70,5 +87,10 @@ class FromClassBugCheckerSupplier extends BugCheckerSupplier {
   @Override
   public boolean disableable() {
     return disableable;
+  }
+
+  @Override
+  public String toString() {
+    return "Supplier from class " + checkerClass.getName();
   }
 }

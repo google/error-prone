@@ -117,10 +117,10 @@ public abstract class BugChecker implements Suppressible, Serializable {
   private final String message;
 
   /**
-   * The type of diagnostic (error or warning) to emit when this check triggers.  Corresponds to
-   * the {@code severity} attribute from its {@code BugPattern}.
+   * The type of diagnostic (error or warning) to emit when this check triggers.  Initialized to
+   * the {@code severity} attribute from its {@code BugPattern}, but may be overridden.
    */
-  private final SeverityLevel severity;
+  private SeverityLevel severity;
 
   /**
    * The maturity of this checker.  Used to decide whether to enable this check.  Corresponds to
@@ -242,6 +242,10 @@ public abstract class BugChecker implements Suppressible, Serializable {
 
   public SeverityLevel severity() {
     return severity;
+  }
+
+  public void setSeverity(SeverityLevel severity) {
+    this.severity = severity;
   }
 
   public String linkUrl() {
