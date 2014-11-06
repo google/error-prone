@@ -148,7 +148,6 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
     if (description == null || description == Description.NO_MATCH) {
       return;
     }
-    state.getMatchListener().onMatch(match);
     state.getDescriptionListener().onDescribed(description);
   }
 }

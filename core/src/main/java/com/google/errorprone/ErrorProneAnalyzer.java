@@ -48,13 +48,8 @@ import java.util.Set;
 public class ErrorProneAnalyzer implements TaskListener {
 
   public static ErrorProneAnalyzer create(Scanner scanner) {
-    return create(scanner, null);
-  }
-
-  public static ErrorProneAnalyzer create(
-      Scanner scanner, SearchResultsPrinter searchResultsPrinter) {
     checkNotNull(scanner);
-    return new ErrorProneAnalyzer(scanner, searchResultsPrinter);
+    return new ErrorProneAnalyzer(scanner);
   }
 
   /**
@@ -76,8 +71,6 @@ public class ErrorProneAnalyzer implements TaskListener {
   }
 
   private final Scanner errorProneScanner;
-  // If matchListener != null, then we are in search mode.
-  private final SearchResultsPrinter resultsPrinter;
   // The set of trees that have already been scanned.
   private final Set<Tree> seen = new HashSet<>();
 
@@ -86,9 +79,8 @@ public class ErrorProneAnalyzer implements TaskListener {
   private JavaCompiler compiler;
   private boolean initialized = false;
 
-  private ErrorProneAnalyzer(Scanner scanner, SearchResultsPrinter resultsPrinter) {
+  private ErrorProneAnalyzer(Scanner scanner) {
     this.errorProneScanner = scanner;
-    this.resultsPrinter = resultsPrinter;
   }
 
   private static class DeclFreeCompilationUnitWrapper extends JCCompilationUnit {
@@ -183,15 +175,10 @@ public class ErrorProneAnalyzer implements TaskListener {
    * Create a VisitorState object from a compilation unit.
    */
   private VisitorState createVisitorState(CompilationUnitTree compilation) {
-    if (resultsPrinter != null) {
-      resultsPrinter.setCompilationUnit(compilation.getSourceFile());
-      return new VisitorState(context, resultsPrinter);
-    } else {
-      DescriptionListener logReporter = new JavacErrorDescriptionListener(
-          log,
-          ((JCCompilationUnit) compilation).endPositions,
-          compilation.getSourceFile());
-      return new VisitorState(context, logReporter);
-    }
+    DescriptionListener logReporter = new JavacErrorDescriptionListener(
+        log,
+        ((JCCompilationUnit) compilation).endPositions,
+        compilation.getSourceFile());
+    return new VisitorState(context, logReporter);
   }
 }

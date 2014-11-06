@@ -92,27 +92,23 @@ public class ErrorProneCompiler {
   private final DiagnosticListener<? super JavaFileObject> diagnosticListener;
   private final PrintWriter errOutput;
   private final String compilerName;
-  private final SearchResultsPrinter resultsPrinter;
   private final ScannerSupplier scannerSupplier;
 
   private ErrorProneCompiler(
       String compilerName,
       PrintWriter errOutput,
       DiagnosticListener<? super JavaFileObject> diagnosticListener,
-      ScannerSupplier scannerSupplier,
-      boolean useResultsPrinter) {
+      ScannerSupplier scannerSupplier) {
     this.errOutput = errOutput;
     this.compilerName = compilerName;
     this.diagnosticListener = diagnosticListener;
     this.scannerSupplier = checkNotNull(scannerSupplier);
-    this.resultsPrinter = useResultsPrinter ? new SearchResultsPrinter(errOutput) : null;
   }
 
   public static class Builder {
     private DiagnosticListener<? super JavaFileObject> diagnosticListener = null;
     private PrintWriter errOutput = new PrintWriter(System.err, true);
     private String compilerName = "javac (with error-prone)";
-    private boolean useResultsPrinter = false;
     private ScannerSupplier scannerSupplier = BuiltInCheckerSuppliers.matureChecks();
 
     public ErrorProneCompiler build() {
@@ -120,8 +116,7 @@ public class ErrorProneCompiler {
           compilerName,
           errOutput,
           diagnosticListener,
-          scannerSupplier,
-          useResultsPrinter);
+          scannerSupplier);
     }
 
     public Builder named(String compilerName) {
@@ -136,14 +131,6 @@ public class ErrorProneCompiler {
 
     public Builder listenToDiagnostics(DiagnosticListener<? super JavaFileObject> listener) {
       this.diagnosticListener = listener;
-      return this;
-    }
-
-    // TODO(user): SearchingResultPrinter interacts awkwardly with everything else and is barely
-    // used; consider deleting it.
-    public Builder search(ScannerSupplier scannerSupplier) {
-      this.scannerSupplier = scannerSupplier;
-      this.useResultsPrinter = true;
       return this;
     }
 
@@ -172,7 +159,7 @@ public class ErrorProneCompiler {
 
     setupMessageBundle(context);
     enableEndPositions(context);
-    ErrorProneJavacJavaCompiler.preRegister(context, scanner, resultsPrinter);
+    ErrorProneJavacJavaCompiler.preRegister(context, scanner);
 
     return argv;
   }
@@ -188,9 +175,6 @@ public class ErrorProneCompiler {
 
     Result result = new Main(compilerName, errOutput).compile(argv, context);
 
-    if (resultsPrinter != null) {
-      resultsPrinter.printMatches();
-    }
 
     return result;
   }
@@ -230,13 +214,7 @@ public class ErrorProneCompiler {
     if (processors != null) {
       task.setProcessors(processors);
     }
-    Result result = task.doCall();
-
-    if (resultsPrinter != null) {
-      resultsPrinter.printMatches();
-    }
-
-    return result;
+    return task.doCall();
   }
 
   /**

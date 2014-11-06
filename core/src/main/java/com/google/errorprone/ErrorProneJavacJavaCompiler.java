@@ -53,8 +53,7 @@ public class ErrorProneJavacJavaCompiler extends JavaCompiler {
     JavacMessages.instance(context).add("com.google.errorprone.errors");
   }
 
-  private ErrorProneJavacJavaCompiler(Context context, Scanner scanner, 
-      SearchResultsPrinter resultsPrinter) {
+  private ErrorProneJavacJavaCompiler(Context context, Scanner scanner) {
     super(context);
     checkNotNull(scanner);
 
@@ -62,11 +61,7 @@ public class ErrorProneJavacJavaCompiler extends JavaCompiler {
     setupMessageBundle(context);
 
     // Create ErrorProneAnalyzer.
-    errorProneAnalyzer = ErrorProneAnalyzer.create(scanner, resultsPrinter).init(context);
-  }
-
-  public static void preRegister(Context context, Scanner scanner) {
-    preRegister(context, scanner, null);
+    errorProneAnalyzer = ErrorProneAnalyzer.create(scanner).init(context);
   }
 
   /**
@@ -77,13 +72,12 @@ public class ErrorProneJavacJavaCompiler extends JavaCompiler {
    * be requested for later stages of the compilation (annotation processing),
    * within the same Context.
    */
-  public static void preRegister(Context context, final Scanner scanner,
-      final SearchResultsPrinter resultsPrinter) {
+  public static void preRegister(Context context, final Scanner scanner) {
     context.put(compilerKey, new Factory<JavaCompiler>() {
       @Override
       public JavaCompiler make(Context ctx) {
         // Ensure that future processing rounds continue to use the same Scanner.
-        return new ErrorProneJavacJavaCompiler(ctx, scanner, resultsPrinter);
+        return new ErrorProneJavacJavaCompiler(ctx, scanner);
       }
     });
   }
