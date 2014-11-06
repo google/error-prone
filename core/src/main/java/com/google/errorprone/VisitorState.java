@@ -45,35 +45,32 @@ import java.io.IOException;
 public class VisitorState {
 
   private final DescriptionListener descriptionListener;
-  private final MatchListener matchListener;
   public final Context context;
   private final TreePath path;
 
-  private VisitorState(Context context, TreePath path,
-      DescriptionListener descriptionListener, MatchListener matchListener) {
-    this.context = context;
-    this.path = path;
-    this.descriptionListener = descriptionListener;
-    this.matchListener = matchListener;
+  // The default no-op implementation of DescriptionListener. We use this instead of null so callers
+  // of getDescriptionListener() don't have to do null-checking.
+  private static final DescriptionListener NULL_LISTENER = new DescriptionListener() {
+    @Override public void onDescribed(Description description) {}
+  };
+
+  public VisitorState(Context context) {
+    this(context, null, NULL_LISTENER);
   }
 
   public VisitorState(Context context, DescriptionListener listener) {
-    this(context, null, listener, new MatchListener() {
-      @Override
-      public void onMatch(Tree tree) {
-      }
-    });
+    this(context, null, listener);
   }
 
-  public VisitorState(Context context, MatchListener listener) {
-    this(context, null, new DescriptionListener() {
-      @Override
-      public void onDescribed(Description description) {}
-    }, listener);
+  private VisitorState(Context context, TreePath path,
+      DescriptionListener descriptionListener) {
+    this.context = context;
+    this.path = path;
+    this.descriptionListener = descriptionListener;
   }
 
   public VisitorState withPath(TreePath path) {
-    return new VisitorState(context, path, descriptionListener, matchListener);
+    return new VisitorState(context, path, descriptionListener);
   }
 
   public TreePath getPath() {
@@ -94,10 +91,6 @@ public class VisitorState {
 
   public DescriptionListener getDescriptionListener() {
     return descriptionListener;
-  }
-
-  public MatchListener getMatchListener() {
-    return matchListener;
   }
 
   public Name getName(String nameStr) {

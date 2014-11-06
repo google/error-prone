@@ -62,7 +62,7 @@ public class GuardedBy extends GuardedByValidator implements BugChecker.Variable
       @Override
       public void handleGuardedAccess(
           ExpressionTree tree, GuardedByExpression guard, HeldLockSet live) {
-        report(tree, GuardedBy.this.checkGuardedAccess(tree, guard, live, state), state);
+        report(GuardedBy.this.checkGuardedAccess(tree, guard, live, state), state);
       }
     });
 
@@ -153,11 +153,10 @@ public class GuardedBy extends GuardedByValidator implements BugChecker.Variable
 
   // TODO(user) - this is kind of a hack. Provide an abstraction for matchers that need to do
   // stateful visiting? (e.g. a traversal that passes along a set of held locks...)
-  private void report(Tree tree, Description description, VisitorState state) {
+  private void report(Description description, VisitorState state) {
     if (description == null || description == Description.NO_MATCH) {
       return;
     }
-    state.getMatchListener().onMatch(tree);
     state.getDescriptionListener().onDescribed(description);
   }
 }

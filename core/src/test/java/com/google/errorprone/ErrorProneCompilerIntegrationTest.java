@@ -35,7 +35,6 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.NonAtomicVolatileUpdate;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.scanner.BuiltInCheckerSuppliers;
 import com.google.errorprone.scanner.ErrorProneScanner;
 import com.google.errorprone.scanner.Scanner;
 import com.google.errorprone.scanner.ScannerSupplier;
@@ -310,23 +309,6 @@ public class ErrorProneCompilerIntegrationTest {
         matcher.matches(diagnosticHelper.getDiagnostics()));
 
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
-  }
-
-  @Test
-  public void searchMode() throws Exception {
-    compiler = new ErrorProneTestCompiler.Builder()
-        .named("test")
-        .redirectOutputTo(new PrintWriter(outputStream, true))
-        .search(BuiltInCheckerSuppliers.matureChecks())
-        .listenToDiagnostics(diagnosticHelper.collector)
-        .build();
-
-    Result exitCode = compiler.compile(compiler.fileManager().sources(getClass(),
-        "bugpatterns/BadShiftAmountPositiveCases.java"));
-    String output = outputStream.toString();
-    assertThat(output, exitCode, is(Result.OK));
-    assertThat(output, containsString("BadShiftAmountPositiveCases.java:29: Note: Matched"));
-    assertThat(output, containsString("Note: Found 12 matches."));
   }
 
   @Test

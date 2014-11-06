@@ -55,11 +55,6 @@ public class ErrorProneTestCompiler {
       return this;
     }
 
-    public Builder search(ScannerSupplier scannerSupplier) {
-      wrappedCompilerBuilder.search(scannerSupplier);
-      return this;
-    }
-
     public Builder named(String test) {
       wrappedCompilerBuilder.named(test);
       return this;
