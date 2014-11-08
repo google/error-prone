@@ -23,6 +23,7 @@ import static org.junit.Assert.fail;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugCheckerSupplier;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.ErrorProneOptions.Severity;
@@ -42,6 +43,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Tests for {@link ScannerSupplier}.
@@ -55,11 +57,11 @@ public class ScannerSupplierTest {
         ArrayEquals.class,
         StaticAccessedFromInstance.class);
 
-    Map<String, BugCheckerSupplier> expected = ImmutableMap.of(
-        "ArrayEquals", fromInstance(new ArrayEquals()),
-        "StaticAccessedFromInstance", fromInstance(new StaticAccessedFromInstance()));
+    Set<BugCheckerSupplier> expected = ImmutableSet.of(
+        fromInstance(new ArrayEquals()),
+        fromInstance(new StaticAccessedFromInstance()));
 
-    assertThat(ss.getNameToSupplierMap()).isEqualTo(expected);
+    assertThat(ss.getEnabledChecks()).isEqualTo(expected);
   }
 
   @Test
@@ -68,11 +70,11 @@ public class ScannerSupplierTest {
         new ArrayEquals(),
         new StaticAccessedFromInstance());
 
-    Map<String, BugCheckerSupplier> expected = ImmutableMap.of(
-        "ArrayEquals", fromClass(ArrayEquals.class),
-        "StaticAccessedFromInstance", fromClass(StaticAccessedFromInstance.class));
+   Set<BugCheckerSupplier> expected = ImmutableSet.of(
+        fromClass(ArrayEquals.class),
+        fromClass(StaticAccessedFromInstance.class));
 
-    assertThat(ss.getNameToSupplierMap()).isEqualTo(expected);
+    assertThat(ss.getEnabledChecks()).isEqualTo(expected);
   }
 
   @Test
@@ -84,16 +86,18 @@ public class ScannerSupplierTest {
         new BadShiftAmount(),
         new PreconditionsCheckNotNull());
 
-    Map<String, BugCheckerSupplier> expected = ImmutableMap.of(
-        "ArrayEquals", fromInstance(new ArrayEquals()),
-        "StaticAccessedFromInstance", fromInstance(new StaticAccessedFromInstance()),
-        "BadShiftAmount", fromInstance(new BadShiftAmount()),
-        "PreconditionsCheckNotNull", fromInstance(new PreconditionsCheckNotNull()));
+    Set<BugCheckerSupplier> expected = ImmutableSet.of(
+        fromInstance(new ArrayEquals()),
+        fromInstance(new StaticAccessedFromInstance()),
+        fromInstance(new BadShiftAmount()),
+        fromInstance(new PreconditionsCheckNotNull()));
 
-    assertThat(ss1.plus(ss2).getNameToSupplierMap()).isEqualTo(expected);
+    assertThat(ss1.plus(ss2).getEnabledChecks()).isEqualTo(expected);
   }
 
   @Test
+  // Calling ScannerSupplier.plus() just to make sure it throws the right exception
+  @SuppressWarnings("CheckReturnValue")
   public void plusDoesntAllowDuplicateChecks() {
     ScannerSupplier ss1 = ScannerSupplier.fromBugCheckers(
         new ArrayEquals(), new StaticAccessedFromInstance());
@@ -101,7 +105,7 @@ public class ScannerSupplierTest {
         new ArrayEquals());
 
     try {
-      ScannerSupplier result = ss1.plus(ss2);
+      ss1.plus(ss2);
       fail();
     } catch (IllegalArgumentException expected) {
       assertThat(expected.getMessage()).contains("ArrayEquals");
@@ -121,10 +125,9 @@ public class ScannerSupplierTest {
       }
     };
 
-    Map<String, BugCheckerSupplier> expected = ImmutableMap.of(
-        "BadShiftAmount", fromInstance(new BadShiftAmount()));
+    Set<BugCheckerSupplier> expected = ImmutableSet.of(fromInstance(new BadShiftAmount()));
 
-    assertThat(ss.filter(isBadShiftAmount).getNameToSupplierMap()).isEqualTo(expected);
+    assertThat(ss.filter(isBadShiftAmount).getEnabledChecks()).isEqualTo(expected);
   }
 
   @Test
@@ -135,22 +138,33 @@ public class ScannerSupplierTest {
         new LongLiteralLowerCaseSuffix());
     Map<String, Severity> overrideMap = ImmutableMap.of();
 
-    Map<String, BugCheckerSupplier> expected = ss.getNameToSupplierMap();
-    assertThat(ss.applyOverrides(overrideMap).getNameToSupplierMap()).isEqualTo(expected);
+    Set<BugCheckerSupplier> expected = ss.getEnabledChecks();
+    assertThat(ss.applyOverrides(overrideMap).getEnabledChecks()).isEqualTo(expected);
   }
 
   @Test
   public void applyOverridesEnablesCheck() throws Exception {
-    ScannerSupplier ss = ScannerSupplier.fromBugCheckers();
+    ScannerSupplier ss = ScannerSupplier
+        .fromBugCheckers(
+            new ArrayEquals(),
+            new BadShiftAmount(),
+            new StaticAccessedFromInstance())
+        .filter(    // disables all checks
+            new Predicate<BugCheckerSupplier>() {
+              @Override
+              public boolean apply(BugCheckerSupplier input) {
+                return false;
+              }
+            });
     Map<String, Severity> overrideMap = ImmutableMap.of(
         "ArrayEquals", Severity.DEFAULT,
         "BadShiftAmount", Severity.DEFAULT);
 
-    Map<String, BugCheckerSupplier> expected = ImmutableMap.of(
-        "ArrayEquals", fromInstance(new ArrayEquals()),
-        "BadShiftAmount", fromInstance(new BadShiftAmount()));
+    Set<BugCheckerSupplier> expected = ImmutableSet.of(
+        fromInstance(new ArrayEquals()),
+        fromInstance(new BadShiftAmount()));
 
-    assertThat(ss.applyOverrides(overrideMap).getNameToSupplierMap()).isEqualTo(expected);
+    assertThat(ss.applyOverrides(overrideMap).getEnabledChecks()).isEqualTo(expected);
   }
 
   @Test
@@ -163,19 +177,20 @@ public class ScannerSupplierTest {
         "LongLiteralLowerCaseSuffix", Severity.OFF,
         "ChainingConstructorIgnoresParameter", Severity.OFF);
 
-    Map<String, BugCheckerSupplier> expected = ImmutableMap.of(
-        "DepAnn", fromInstance(new DepAnn()));
+    Set<BugCheckerSupplier> expected = ImmutableSet.of(fromInstance(new DepAnn()));
 
-    assertThat(ss.applyOverrides(overrideMap).getNameToSupplierMap()).isEqualTo(expected);
+    assertThat(ss.applyOverrides(overrideMap).getEnabledChecks()).isEqualTo(expected);
   }
 
   @Test
+  // Calling ScannerSupplier.applyOverrides() just to make sure it throws the right exception
+  @SuppressWarnings("CheckReturnValue")
   public void applyOverridesThrowsExceptionWhenDisablingNonDisablableCheck() throws Exception {
     ScannerSupplier ss = ScannerSupplier.fromBugCheckers(new ArrayEquals());
     Map<String, Severity> overrideMap = ImmutableMap.of("ArrayEquals", Severity.OFF);
 
     try {
-      ScannerSupplier result = ss.applyOverrides(overrideMap);
+      ss.applyOverrides(overrideMap);
       fail();
     } catch (InvalidCommandLineOptionException expected) {
       assertThat(expected.getMessage()).contains("may not be disabled");
@@ -197,16 +212,16 @@ public class ScannerSupplierTest {
         "ArrayEquals", fromInstance(new ArrayEquals()),
         "BadShiftAmount", fromInstance(new BadShiftAmount()),
         "StringEquality", fromInstance(new StringEquality()));
-    assertThat(overriddenScannerSupplier.getNameToSupplierMap()).isNotEqualTo(unexpected);
+    assertThat(overriddenScannerSupplier.getAllChecks()).isNotEqualTo(unexpected);
 
     BugChecker arrayEqualsWithWarningSeverity = new ArrayEquals();
     arrayEqualsWithWarningSeverity.setSeverity(SeverityLevel.WARNING);
     BugChecker stringEqualityWithErrorSeverity = new StringEquality();
     stringEqualityWithErrorSeverity.setSeverity(SeverityLevel.ERROR);
-    Map<String, BugCheckerSupplier> expected = ImmutableMap.of(
-        "ArrayEquals", fromInstance(arrayEqualsWithWarningSeverity),
-        "BadShiftAmount", fromInstance(new BadShiftAmount()),
-        "StringEquality", fromInstance(stringEqualityWithErrorSeverity));
-    assertThat(overriddenScannerSupplier.getNameToSupplierMap()).isEqualTo(expected);
+    Set<BugCheckerSupplier> expected = ImmutableSet.of(
+        fromInstance(arrayEqualsWithWarningSeverity),
+        fromInstance(new BadShiftAmount()),
+        fromInstance(stringEqualityWithErrorSeverity));
+    assertThat(overriddenScannerSupplier.getEnabledChecks()).isEqualTo(expected);
   }
 }

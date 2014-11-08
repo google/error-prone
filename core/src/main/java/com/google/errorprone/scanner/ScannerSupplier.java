@@ -16,12 +16,13 @@
 
 package com.google.errorprone.scanner;
 
-import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.collect.BiMap;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableBiMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugCheckerSupplier;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.ErrorProneOptions.Severity;
@@ -29,13 +30,16 @@ import com.google.errorprone.InvalidCommandLineOptionException;
 import com.google.errorprone.bugpatterns.BugChecker;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.annotation.CheckReturnValue;
 
 /**
- * Supplies {@link Scanner}s and provides access to the backing list of {@link BugCheckerSupplier}s.
+ * Supplies {@link Scanner}s and provides access to the backing sets of all {@link
+ * BugCheckerSupplier}s and enabled {@link BugCheckerSupplier}s.
  */
 public abstract class ScannerSupplier implements Supplier<Scanner> {
 
@@ -57,10 +61,11 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
       Iterable<Class<? extends BugChecker>> checkerClasses) {
     ImmutableBiMap.Builder<String, BugCheckerSupplier> builder = ImmutableBiMap.builder();
     for (Class<? extends BugChecker> checkerClass : checkerClasses) {
-      BugCheckerSupplier supplier = CLASS_TO_SUPPLIER.apply(checkerClass);
+      BugCheckerSupplier supplier = BugCheckerSupplier.fromClass(checkerClass);
       builder.put(supplier.canonicalName(), supplier);
     }
-    return new ScannerSupplierImpl(builder.build());
+    ImmutableBiMap<String, BugCheckerSupplier> allChecks = builder.build();
+    return new ScannerSupplierImpl(allChecks, allChecks.values());
   }
 
   /**
@@ -76,10 +81,11 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
   public static ScannerSupplier fromBugCheckers(Iterable<? extends BugChecker> checkers) {
     ImmutableBiMap.Builder<String, BugCheckerSupplier> builder = ImmutableBiMap.builder();
     for (BugChecker checker : checkers) {
-      BugCheckerSupplier supplier = INSTANCE_TO_SUPPLIER.apply(checker);
+      BugCheckerSupplier supplier = BugCheckerSupplier.fromInstance(checker);
       builder.put(supplier.canonicalName(), supplier);
     }
-    return new ScannerSupplierImpl(builder.build());
+    ImmutableBiMap<String, BugCheckerSupplier> allChecks = builder.build();
+    return new ScannerSupplierImpl(allChecks, allChecks.values());
   }
 
   /**
@@ -91,36 +97,20 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
     return new InstanceReturningScannerSupplierImpl(scanner);
   }
 
-  /**
-   * Transforms {@link BugChecker} instances into {@link BugCheckerSupplier}s.
-   */
-  private static final Function<BugChecker, BugCheckerSupplier> INSTANCE_TO_SUPPLIER =
-      new Function<BugChecker, BugCheckerSupplier>() {
-        @Override
-        public BugCheckerSupplier apply(BugChecker input) {
-          return BugCheckerSupplier.fromInstance(input);
-        }
-      };
-
-  /**
-   * Transforms {@link BugChecker} classes into {@link BugCheckerSupplier}s.
-   */
-  private static final Function<Class<? extends BugChecker>, BugCheckerSupplier> CLASS_TO_SUPPLIER =
-      new Function<Class<? extends BugChecker>, BugCheckerSupplier>() {
-        @Override
-        public BugCheckerSupplier apply(Class<? extends BugChecker> input) {
-          return BugCheckerSupplier.fromClass(input);
-        }
-      };
-
 
   /* Instance methods */
 
   /**
    * Returns a map of check name to {@link BugCheckerSupplier} for all {@link BugCheckerSupplier}s
-   * in this {@link ScannerSupplier}.
+   * in this {@link ScannerSupplier}, including disabled ones.
    */
-  abstract ImmutableBiMap<String, BugCheckerSupplier> getNameToSupplierMap();
+  protected abstract ImmutableBiMap<String, BugCheckerSupplier> getAllChecks();
+
+  /**
+   * Returns the set of {@link BugCheckerSupplier}s that are enabled in this {@link
+   * ScannerSupplier}.
+   */
+  protected abstract ImmutableSet<BugCheckerSupplier> getEnabledChecks();
 
   /**
    * Applies an override map (from command-line options) to this {@link ScannerSupplier} and
@@ -143,16 +133,17 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
       return this;
     }
 
-    // Initialize result map with current state of this Supplier.  We use a mutable BiMap here
-    // rather than ImmutableBiMap.Builder so that (1) we can replace existing mappings with new
-    // ones to override the severity of a check, and (2) we can remove checks that are overridden
-    // to off.  For (1), BiMap.put() replaces the existing mapping for a key if it exists, whereas
-    // ImmutableBiMap.Builder would throw an exception on build().
-    BiMap<String, BugCheckerSupplier> result = HashBiMap.create(getNameToSupplierMap());
+    // Initialize result allChecks map and enabledChecks set with current state of this Supplier.
+    // We use mutable data structures here so that (1) we can replace existing BugCheckerSuppliers
+    // with new ones to override the severity of a check, and (2) we can remove checks from
+    // enabledChecks if they are overridden to off.
+    BiMap<String, BugCheckerSupplier> allChecks = HashBiMap.create(getAllChecks());
+    Set<BugCheckerSupplier> enabledChecks = new HashSet<>(getEnabledChecks());
 
     // Process overrides
     for (Entry<String, Severity> entry : severityMap.entrySet()) {
       BugCheckerSupplier supplier = forName(entry.getKey());
+      BugCheckerSupplier newSupplier;
       if (supplier == null) {
         throw new InvalidCommandLineOptionException(
             entry.getKey() + " is not a valid checker name");
@@ -163,25 +154,36 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
             throw new InvalidCommandLineOptionException(
                 supplier.canonicalName() + " may not be disabled");
           }
-          result.remove(entry.getKey());
+          enabledChecks.remove(supplier);
           break;
         case DEFAULT:
-          result.put(supplier.canonicalName(), supplier);
+          enabledChecks.add(supplier);
           break;
         case WARN:
-          supplier = supplier.overrideSeverity(SeverityLevel.WARNING);
-          result.put(supplier.canonicalName(), supplier);
+          // When the severity of a check is overridden, a new BugCheckerSupplier is produced.
+          // The old BugCheckerSupplier must be removed from allChecks and enabledChecks,
+          // and the new BugCheckerSupplier must be added.
+          newSupplier = supplier.overrideSeverity(SeverityLevel.WARNING);
+          enabledChecks.remove(supplier);
+          allChecks.put(newSupplier.canonicalName(), newSupplier);
+          enabledChecks.add(newSupplier);
           break;
         case ERROR:
-          supplier = supplier.overrideSeverity(SeverityLevel.ERROR);
-          result.put(supplier.canonicalName(), supplier);
+          // When the severity of a check is overridden, a new BugCheckerSupplier is produced.
+          // The old BugCheckerSupplier must be removed from allChecks and enabledChecks,
+          // and the new BugCheckerSupplier must be added.
+          newSupplier = supplier.overrideSeverity(SeverityLevel.ERROR);
+          enabledChecks.remove(supplier);
+          allChecks.put(newSupplier.canonicalName(), newSupplier);
+          enabledChecks.add(newSupplier);
           break;
         default:
           throw new IllegalStateException("Unexpected severity level: " + entry.getValue());
       }
     }
 
-    return new ScannerSupplierImpl(ImmutableBiMap.copyOf(result));
+    return new ScannerSupplierImpl(ImmutableBiMap.copyOf(allChecks),
+        ImmutableSet.copyOf(enabledChecks));
   }
 
   /**
@@ -191,44 +193,35 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
    */
   @CheckReturnValue
   public ScannerSupplier plus(ScannerSupplier other) {
-    ImmutableBiMap<String, BugCheckerSupplier> result =
+    ImmutableBiMap<String, BugCheckerSupplier> combinedAllChecks =
         ImmutableBiMap.<String, BugCheckerSupplier>builder()
-            .putAll(this.getNameToSupplierMap())
-            .putAll(other.getNameToSupplierMap())
+            .putAll(this.getAllChecks())
+            .putAll(other.getAllChecks())
             .build();
-    return new ScannerSupplierImpl(result);
+    ImmutableSet<BugCheckerSupplier> combinedEnabledChecks =
+        ImmutableSet.<BugCheckerSupplier>builder()
+            .addAll(this.getEnabledChecks())
+            .addAll(other.getEnabledChecks())
+            .build();
+    return new ScannerSupplierImpl(combinedAllChecks, combinedEnabledChecks);
   }
 
   /**
    * Filters this {@link ScannerSupplier} based on the provided predicate.  Returns a
-   * {@link ScannerSupplier} with only the checks that satisfy the predicate.
+   * {@link ScannerSupplier} with only the checks enabled that satisfy the predicate.
    */
   @CheckReturnValue
   public ScannerSupplier filter(Predicate<? super BugCheckerSupplier> predicate) {
-    ImmutableBiMap.Builder<String, BugCheckerSupplier> builder = ImmutableBiMap.builder();
-    for (Entry<String, BugCheckerSupplier> entry : this.getNameToSupplierMap().entrySet()) {
-      if (predicate.apply(entry.getValue())) {
-        builder.put(entry);
-      }
-    }
-    return new ScannerSupplierImpl(builder.build());
+    return new ScannerSupplierImpl(getAllChecks(),
+        FluentIterable.from(getEnabledChecks()).filter(predicate).toSet());
   }
 
   /**
-   * Returns the {@link BugCheckerSupplier} that corresponds to the given {@code name}.  Returns
-   * null if no checker is found with that name.
-   *
-   * <p>First searches the {@link BugCheckerSupplier}s that are part of this
-   * {@link ScannerSupplier}, then searches error-prone's built-in {@link BugChecker}s.  Note that
-   * this does not search any plugin checkers unless this {@link ScannerSupplier} includes those
-   * checkers (e.g., by calling {@link ScannerSupplier#fromBugCheckers} with a list of the
-   * {@link BugChecker}s from the plugin path).
+   * Searches the checkers in this {@link ScannerSupplier} and returns the {@link
+   * BugCheckerSupplier} with the given {@code name}.  Returns null if no checker is found with
+   * that name.
    */
   private BugCheckerSupplier forName(String name) {
-    BugCheckerSupplier result = getNameToSupplierMap().get(name);
-    if (result != null) {
-      return result;
-    }
-    return BuiltInCheckerSuppliers.forName(name);
+    return getAllChecks().get(name);
   }
 }

@@ -17,34 +17,49 @@
 package com.google.errorprone.scanner;
 
 import com.google.common.base.Function;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Supplier;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableBiMap;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import com.google.errorprone.BugCheckerSupplier;
 import com.google.errorprone.bugpatterns.BugChecker;
 
 /**
- * An implementation of a {@link ScannerSupplier}, abstracted as a set of
- * {@link BugCheckerSupplier}s.
+ * An implementation of a {@link ScannerSupplier}, abstracted as a set of all known
+ * {@link BugCheckerSupplier}s and a set of enabled {@link BugCheckerSupplier}s.  The set of
+ * enabled suppliers must be a subset of all known suppliers.
  */
 class ScannerSupplierImpl extends ScannerSupplier {
-  private final ImmutableBiMap<String, BugCheckerSupplier> nameToSupplierMap;
+  private final ImmutableBiMap<String, BugCheckerSupplier> allChecks;
+  private final ImmutableSet<BugCheckerSupplier> enabledChecks;
 
-  ScannerSupplierImpl(ImmutableBiMap<String, BugCheckerSupplier> nameToSupplierMap) {
-    this.nameToSupplierMap = nameToSupplierMap;
+  ScannerSupplierImpl(ImmutableBiMap<String, BugCheckerSupplier> allChecks,
+      ImmutableSet<BugCheckerSupplier> enabledChecks) {
+    Preconditions.checkArgument(
+        Sets.intersection(allChecks.values(), enabledChecks).equals(enabledChecks),
+        "enabledChecks must be a subset of allChecks");
+    this.allChecks = allChecks;
+    this.enabledChecks = enabledChecks;
   }
 
   @Override
   public Scanner get() {
     Iterable<BugChecker> checkers = FluentIterable
-        .from(getNameToSupplierMap().values())
+        .from(enabledChecks)
         .transform(SUPPLIER_GET);
     return new ErrorProneScanner(checkers);
   }
 
   @Override
-  ImmutableBiMap<String, BugCheckerSupplier> getNameToSupplierMap() {
-    return nameToSupplierMap;
+  protected ImmutableBiMap<String, BugCheckerSupplier> getAllChecks() {
+    return allChecks;
+  }
+
+  @Override
+  protected ImmutableSet<BugCheckerSupplier> getEnabledChecks() {
+    return enabledChecks;
   }
 
   private static final Function<Supplier<BugChecker>, BugChecker> SUPPLIER_GET =
