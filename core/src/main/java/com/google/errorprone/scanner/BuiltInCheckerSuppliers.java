@@ -17,7 +17,7 @@
 package com.google.errorprone.scanner;
 
 import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableBiMap;
+import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.ClassPath;
 import com.google.common.reflect.ClassPath.ClassInfo;
 import com.google.errorprone.BugCheckerSupplier;
@@ -37,7 +37,7 @@ public class BuiltInCheckerSuppliers {
    * Returns a {@link ScannerSupplier} with all {@link BugChecker}s in error-prone.
    */
   public static ScannerSupplier allChecks() {
-    return new ScannerSupplierImpl(BUILT_IN_CHECKERS);
+    return ScannerSupplier.fromBugCheckerClasses(BUILT_IN_CHECKERS_LIST);
   }
 
   /**
@@ -49,20 +49,15 @@ public class BuiltInCheckerSuppliers {
   }
 
   /**
-   * Returns a {@link BugCheckerSupplier} for the checker with the given name. Returns null if no
-   * checker with that name can be found.
+   * A list of all {@link BugChecker} classes known reflectively to error-prone.
+   *
+   * <p>TODO(user): This may be slow if the compiler classpath (not the compilation classpath) is
+   * large.  Consider using an annotation processor to compute this list at compile time to avoid
+   * reflection.
    */
-  public static BugCheckerSupplier forName(String name) {
-    return BUILT_IN_CHECKERS.get(name);
-  }
-
-  /**
-   * A map of check name to {@link BugCheckerSupplier} for all {@link BugChecker}s known
-   * reflectively to error-prone.
-   */
-  private static final ImmutableBiMap<String, BugCheckerSupplier> BUILT_IN_CHECKERS;
+  private static final ImmutableList<Class<? extends BugChecker>> BUILT_IN_CHECKERS_LIST;
   static {
-    ImmutableBiMap.Builder<String, BugCheckerSupplier> bimapBuilder = ImmutableBiMap.builder();
+    ImmutableList.Builder<Class<? extends BugChecker>> listBuilder = ImmutableList.builder();
     ClassPath classPath;
     try {
       classPath = ClassPath.from(ScannerSupplier.class.getClassLoader());
@@ -77,14 +72,10 @@ public class BuiltInCheckerSuppliers {
       }
       Class<?> clazz = classInfo.load();
       if (clazz.isAnnotationPresent(BugPattern.class) && BugChecker.class.isAssignableFrom(clazz)) {
-        BugCheckerSupplier checkerSupplier =
-            BugCheckerSupplier.fromClass(clazz.asSubclass(BugChecker.class));
-        bimapBuilder.put(checkerSupplier.canonicalName(), checkerSupplier);
+        listBuilder.add(clazz.asSubclass(BugChecker.class));
       }
     }
-    // build() enforces that check names are unique since ImmutableBiMap does not allow duplicate
-    // keys or values.
-    BUILT_IN_CHECKERS = bimapBuilder.build();
+    BUILT_IN_CHECKERS_LIST = listBuilder.build();
   }
 
   /**
