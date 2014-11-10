@@ -2,6 +2,8 @@
 title: Customizing error-prone with command-line flags
 layout: master
 ---
+Customizing error-prone with command-line flags
+===============================================
 
 error-prone lets the user enable and disable specific checks as well as
 override their built-in severity levels (warning vs. error) by passing options
