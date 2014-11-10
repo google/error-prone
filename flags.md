@@ -5,7 +5,8 @@ layout: master
 
 error-prone lets the user enable and disable specific checks as well as
 override their built-in severity levels (warning vs. error) by passing options
-at the command line.
+to the error-prone compiler invocation.  See your build system's
+documentation for how to pass options to the Java compiler (usually javac).
 
 A valid error-prone command-line option looks like:  
 ```
