@@ -86,7 +86,7 @@ public class CommandLineFlagTest {
   @BugPattern(name = "ErrorChecker",
       summary = "Checker that flags all return statements as errors",
       explanation = "Checker that flags all return statements as errors",
-      category = ONE_OFF, severity = ERROR, maturity = MATURE)
+      category = ONE_OFF, severity = ERROR, maturity = MATURE, disableable = true)
   private static class ErrorChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {

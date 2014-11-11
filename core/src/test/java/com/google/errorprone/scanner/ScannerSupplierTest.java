@@ -198,28 +198,45 @@ public class ScannerSupplierTest {
   }
 
   @Test
+  // Calling ScannerSupplier.applyOverrides() just to make sure it throws the right exception
+  @SuppressWarnings("CheckReturnValue")
+  public void applyOverridesThrowsExceptionWhenDemotingNonDisablableCheck() throws Exception {
+    ScannerSupplier ss = ScannerSupplier.fromBugCheckers(new ArrayEquals());
+    Map<String, Severity> overrideMap = ImmutableMap.of("ArrayEquals", Severity.WARN);
+
+    try {
+      ss.applyOverrides(overrideMap);
+      fail();
+    } catch (InvalidCommandLineOptionException expected) {
+      assertThat(expected.getMessage()).contains("may not be demoted to a warning");
+    }
+  }
+
+  @Test
   public void applyOverridesSetsSeverity() throws Exception {
     ScannerSupplier ss = ScannerSupplier.fromBugCheckers(
-        new ArrayEquals(),
         new BadShiftAmount(),
+        new ChainingConstructorIgnoresParameter(),
         new StringEquality());
     Map<String, Severity> overrideMap = ImmutableMap.of(
-        "ArrayEquals", Severity.WARN,
+        "ChainingConstructorIgnoresParameter", Severity.WARN,
         "StringEquality", Severity.ERROR);
     ScannerSupplier overriddenScannerSupplier = ss.applyOverrides(overrideMap);
 
     Map<String, BugCheckerSupplier> unexpected = ImmutableMap.of(
-        "ArrayEquals", fromInstance(new ArrayEquals()),
         "BadShiftAmount", fromInstance(new BadShiftAmount()),
+        "ChainingConstructorIgnoresParameter", fromInstance(
+            new ChainingConstructorIgnoresParameter()),
         "StringEquality", fromInstance(new StringEquality()));
     assertThat(overriddenScannerSupplier.getAllChecks()).isNotEqualTo(unexpected);
 
-    BugChecker arrayEqualsWithWarningSeverity = new ArrayEquals();
-    arrayEqualsWithWarningSeverity.setSeverity(SeverityLevel.WARNING);
+    BugChecker chainingConstructorCheckWithWarningSeverity =
+        new ChainingConstructorIgnoresParameter();
+    chainingConstructorCheckWithWarningSeverity.setSeverity(SeverityLevel.WARNING);
     BugChecker stringEqualityWithErrorSeverity = new StringEquality();
     stringEqualityWithErrorSeverity.setSeverity(SeverityLevel.ERROR);
     Set<BugCheckerSupplier> expected = ImmutableSet.of(
-        fromInstance(arrayEqualsWithWarningSeverity),
+        fromInstance(chainingConstructorCheckWithWarningSeverity),
         fromInstance(new BadShiftAmount()),
         fromInstance(stringEqualityWithErrorSeverity));
     assertThat(overriddenScannerSupplier.getEnabledChecks()).isEqualTo(expected);

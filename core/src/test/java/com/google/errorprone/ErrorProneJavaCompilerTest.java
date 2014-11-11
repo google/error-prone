@@ -32,6 +32,7 @@ import com.google.common.collect.Lists;
 import com.google.errorprone.bugpatterns.ArrayEqualsTest;
 import com.google.errorprone.bugpatterns.BadShiftAmount;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.ChainingConstructorIgnoresParameter;
 import com.google.errorprone.bugpatterns.DepAnnTest;
 import com.google.errorprone.bugpatterns.EmptyIfStatementTest;
 import com.google.errorprone.bugpatterns.Finally;
@@ -297,9 +298,9 @@ public class ErrorProneJavaCompilerTest {
     List<String> args = Lists.newArrayList(
         "-d", tempDir.getRoot().getAbsolutePath(),
         "-proc:none",
-        "-Xep:BadShiftAmount:WARN");
-    List<JavaFileObject> sources =
-        fileManager.sources(BadShiftAmount.class, "BadShiftAmountPositiveCases.java");
+        "-Xep:ChainingConstructorIgnoresParameter:WARN");
+    List<JavaFileObject> sources = fileManager.sources(ChainingConstructorIgnoresParameter.class,
+        "ChainingConstructorIgnoresParameterPositiveCases.java");
     fileManager.close();
 
     JavaCompiler.CompilationTask task = errorProneJavaCompiler.getTask(
@@ -312,15 +313,16 @@ public class ErrorProneJavaCompilerTest {
     boolean succeeded = task.call();
     assertThat(succeeded).isTrue();
     Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher =
-        hasItem(diagnosticMessage(containsString("[BadShiftAmount]")));
+        hasItem(diagnosticMessage(containsString("[ChainingConstructorIgnoresParameter]")));
     assertTrue(matcher.matches(diagnosticHelper.getDiagnostics()));
 
     // reset state between compilations
     diagnosticHelper.clearDiagnostics();
     fileManager = new ErrorProneInMemoryFileManager();
-    sources = fileManager.sources(BadShiftAmount.class, "BadShiftAmountPositiveCases.java");
+    sources = fileManager.sources(ChainingConstructorIgnoresParameter.class,
+        "ChainingConstructorIgnoresParameterPositiveCases.java");
     fileManager.close();
-    args.remove("-Xep:BadShiftAmount:WARN");
+    args.remove("-Xep:ChainingConstructorIgnoresParameter:WARN");
 
     task = errorProneJavaCompiler.getTask(
         printWriter,

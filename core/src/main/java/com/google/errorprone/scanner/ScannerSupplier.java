@@ -160,6 +160,14 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
           enabledChecks.add(supplier);
           break;
         case WARN:
+          // Demoting an enabled check from an error to a warning is a form of disabling
+          if (enabledChecks.contains(supplier)
+              && !supplier.disableable()
+              && supplier.severity() == SeverityLevel.ERROR) {
+            throw new InvalidCommandLineOptionException(supplier.canonicalName()
+                + " is not disableable and may not be demoted to a warning");
+          }
+
           // When the severity of a check is overridden, a new BugCheckerSupplier is produced.
           // The old BugCheckerSupplier must be removed from allChecks and enabledChecks,
           // and the new BugCheckerSupplier must be added.
