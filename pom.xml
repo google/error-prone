@@ -38,7 +38,7 @@
     <dependency>
       <groupId>org.checkerframework</groupId>
       <artifactId>checker</artifactId>
-      <version>1.8.4</version>
+      <version>1.8.7</version>
     </dependency>
     <dependency>
       <groupId>com.google.errorprone</groupId>
