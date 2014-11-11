@@ -355,17 +355,15 @@ public class ErrorProneCompilerIntegrationTest {
   @Test
   public void severityIsResetOnNextCompilation() throws Exception {
     String[] testFile = {"public class Test {",
-        "  public static int shiftBy43(int toShift) {",
-        "    return toShift << 43;",
-        "  }",
+        "  long myLong = 213124l;",
         "}"};
 
-    String[] args = {"-Xep:BadShiftAmount:WARN"};
+    String[] args = {"-Xep:LongLiteralLowerCaseSuffix:WARN"};
     Result exitCode = compiler.compile(args,
         Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile)));
     outputStream.flush();
     Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher = hasItem(
-        diagnosticMessage(containsString("[BadShiftAmount]")));
+        diagnosticMessage(containsString("[LongLiteralLowerCaseSuffix]")));
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
     assertTrue(
         "Warning should be found. " + diagnosticHelper.describe(),
