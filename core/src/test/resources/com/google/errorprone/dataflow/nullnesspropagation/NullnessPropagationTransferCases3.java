@@ -97,6 +97,27 @@ public class NullnessPropagationTransferCases3 {
     triggerNullnessCheckerOnPrimitive(i);
   }
 
+  public void loop1() {
+    Object o = null;
+    while (true) {
+      // BUG: Diagnostic contains: (Nullable)
+      triggerNullnessChecker(o);
+      o.hashCode();
+    }
+  }
+
+  public void loop2() {
+    Object o = null;
+    Object comingValue = null;
+    while (true) {
+      // BUG: Diagnostic contains: (Nullable)
+      triggerNullnessChecker(o);
+
+      o = comingValue;
+      comingValue = new Object();
+    }
+  }
+
   enum MyEnum {
     ENUM_INSTANCE;
 

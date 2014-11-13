@@ -35,6 +35,6 @@ public class NullnessPropagationStoreTest {
   // TODO(cpovirk): more tests!
 
   private static NullnessPropagationStore newStore() {
-    return new NullnessPropagationStore();
+    return NullnessPropagationStore.empty();
   }
 }
