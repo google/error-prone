@@ -233,6 +233,13 @@ public class NullnessPropagationTransferCases2 {
     triggerNullnessChecker(str);
   }
 
+  public void booleanMethodInvocationIsDereference(String nullableParam) {
+    String str = nullableParam;
+    str.isEmpty();
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(str);
+  }
+
   public void staticMethodInvocationIsNotDereferenceNullableReturn(MyClass nullableParam) {
     nullableParam.staticReturnNullable();
     // BUG: Diagnostic contains: (Nullable)
