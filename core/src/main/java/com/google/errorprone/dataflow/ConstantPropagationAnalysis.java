@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone;
-
-import com.google.errorprone.dataflow.DataFlow;
-import com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTransfer;
-import com.google.errorprone.dataflow.nullnesspropagation.NullnessValue;
+package com.google.errorprone.dataflow;
 
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.util.Context;
@@ -27,14 +23,12 @@ import org.checkerframework.dataflow.constantpropagation.Constant;
 import org.checkerframework.dataflow.constantpropagation.ConstantPropagationTransfer;
 
 /**
- * An abstraction over JDK version-specific APIs.
+ * An interface to the constant propagation analysis.
  */
-public final class JDKCompatible {
+public final class ConstantPropagationAnalysis {
 
   private static final ConstantPropagationTransfer CONSTANT_PROPAGATION =
       new ConstantPropagationTransfer();
-  private static final NullnessPropagationTransfer NULLNESS_PROPAGATION =
-      new NullnessPropagationTransfer();
 
   /**
    * Returns the value of the leaf of {@code exprPath}, if it is determined to be a constant
@@ -47,23 +41,5 @@ public final class JDKCompatible {
       return null;
     }
     return val.getValue();
-  }
-
-  /**
-   * Returns true if the leaf of {@code exprPath} is non-null.
-   * Note that returning false does not necessarily mean that the expression can be null.
-   */
-  public static boolean isDefinitelyNonNull(TreePath exprPath, Context context) {
-    NullnessValue val = DataFlow.expressionDataflow(exprPath, context, NULLNESS_PROPAGATION);
-    return val != null && val == NullnessValue.NONNULL;
-  }
-
-  /**
-   * Returns true if the leaf of {@code exprPath} is null.
-   * Note that returning false does not necessarily mean that the expression can be non-null.
-   */
-  public static boolean isDefinitelyNull(TreePath exprPath, Context context) {
-    NullnessValue val = DataFlow.expressionDataflow(exprPath, context, NULLNESS_PROPAGATION);
-    return val != null && val == NullnessValue.NULL;
   }
 }
