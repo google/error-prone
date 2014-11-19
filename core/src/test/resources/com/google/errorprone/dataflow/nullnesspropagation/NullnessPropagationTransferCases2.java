@@ -296,6 +296,16 @@ public class NullnessPropagationTransferCases2 {
     // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(Files.toString(new File("/dev/null"), UTF_8));
   }
+  
+  public void classgetNamesMethods() throws IOException {
+    Class<?> klass = this.getClass();
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(klass.getName());
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(klass.getSimpleName());
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(klass.getCanonicalName());
+  }
 
   public void stringStaticMethodsReturnNonNull() {
     String s = null;

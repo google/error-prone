@@ -22,11 +22,14 @@ import static com.google.errorprone.dataflow.nullnesspropagation.NullnessValue.N
 import static com.sun.tools.javac.code.TypeTag.BOOLEAN;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.google.common.base.Strings;
 import com.google.common.base.Verify;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSetMultimap;
 import com.google.common.io.Files;
+import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis.MethodInfo;
 
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
@@ -96,7 +99,87 @@ import javax.lang.model.element.VariableElement;
  *
  * @author deminguyen@google.com (Demi Nguyen)
  */
-public class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer {
+class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer {
+
+  /**
+   * Matches methods that are statically known never to return null.
+   */
+  private static class ReturnValueIsNonNull implements Predicate<MethodInfo> {
+    private static final ImmutableSet<MemberName> METHODS_WITH_NON_NULLABLE_RETURNS =
+        ImmutableSet.of(
+          // We would love to include all the methods of Files, but readFirstLine can return null.
+          member(Files.class.getName(), "toString"),
+          // Some methods of Class can return null, e.g. getAnnotation, getCanonicalName
+          member(Class.class.getName(), "getName"),
+          member(Class.class.getName(), "getSimpleName"));
+    // TODO(cpovirk): respect nullness annotations (and also check them to ensure correctness!)
+
+    private static final ImmutableSet<String> CLASSES_WITH_ALL_NON_NULLABLE_RETURNS =
+        ImmutableSet.of(
+            Preconditions.class.getName(),
+            Verify.class.getName(),
+            String.class.getName());
+
+    private static final ImmutableSet<String> CLASSES_WITH_NON_NULLABLE_VALUE_OF_METHODS =
+        ImmutableSet.of(
+            // The primitive types.
+            Boolean.class.getName(),
+            Byte.class.getName(),
+            Character.class.getName(),
+            Double.class.getName(),
+            Float.class.getName(),
+            Integer.class.getName(),
+            Long.class.getName(),
+            Short.class.getName(),
+
+            // Other types.
+            BigDecimal.class.getName(),
+            BigInteger.class.getName(),
+            // TODO(cpovirk): recognize the compiler-generated valueOf() methods on Enum subclasses
+            Enum.class.getName(),
+            String.class.getName());
+
+    @Override
+    public boolean apply(MethodInfo methodInfo) {
+      if (methodInfo.method().equals("valueOf")
+          && CLASSES_WITH_NON_NULLABLE_VALUE_OF_METHODS.contains(methodInfo.clazz())) {
+        return true;
+      }
+      if (methodInfo.isPrimitive()) {
+        return true;
+      }
+      if (CLASSES_WITH_ALL_NON_NULLABLE_RETURNS.contains(methodInfo.clazz())) {
+        return true;
+      }
+      MemberName searchMemberName = new MemberName(methodInfo.clazz(), methodInfo.method());
+      if (METHODS_WITH_NON_NULLABLE_RETURNS.contains(searchMemberName)) {
+        return true;
+      }
+
+      return false;
+    }
+  }
+
+  private final Predicate<MethodInfo> methodReturnsNonNull;
+
+  /**
+   * Constructs a {@link NullnessPropagationTransfer} instance with the built-in set of non-null
+   * returning methods.
+   */
+  public NullnessPropagationTransfer() {
+    this.methodReturnsNonNull = new ReturnValueIsNonNull();
+  }
+
+  /**
+   * Constructs a {@link NullnessPropagationTransfer} instance with additional non-null returning
+   * methods.  The additional predicate is or'ed with the predicate for the built-in set of
+   * non-null returning methods.
+   */
+  public NullnessPropagationTransfer(Predicate<MethodInfo> additionalNonNullReturningMethods) {
+    this.methodReturnsNonNull = Predicates.or(
+        new ReturnValueIsNonNull(), additionalNonNullReturningMethods);
+  }
+
   // Literals
   /**
    * Note: A short literal appears as an int to the compiler, and the compiler can perform a
@@ -372,26 +455,12 @@ public class NullnessPropagationTransfer extends AbstractNullnessPropagationTran
     return NULLABLE;
   }
 
-  private static NullnessValue returnValueNullness(ClassAndMethod callee) {
+  private NullnessValue returnValueNullness(ClassAndMethod callee) {
     if (callee == null) {
       return NULLABLE;
     }
 
-    if (callee.method.equals("valueOf")
-        && CLASSES_WITH_NON_NULLABLE_VALUE_OF_METHODS.contains(callee.clazz)) {
-      return NONNULL;
-    }
-    if (callee.isPrimitive) {
-      return NONNULL;
-    }
-    if (CLASSES_WITH_ALL_NON_NULLABLE_RETURNS.contains(callee.clazz)) {
-      return NONNULL;
-    }
-    if (METHODS_WITH_NON_NULLABLE_RETURNS.contains(callee.name())) {
-      return NONNULL;
-    }
-
-    return NULLABLE;
+    return methodReturnsNonNull.apply(callee) ? NONNULL : NULLABLE;
   }
 
   private static void setReceiverNullness(
@@ -481,7 +550,7 @@ public class NullnessPropagationTransfer extends AbstractNullnessPropagationTran
     }
   }
 
-  static final class ClassAndMethod implements Member {
+  static final class ClassAndMethod implements Member, MethodInfo {
     final String clazz;
     final String method;
     final boolean isStatic;
@@ -510,6 +579,21 @@ public class NullnessPropagationTransfer extends AbstractNullnessPropagationTran
 
     MemberName name() {
       return new MemberName(this.clazz, this.method);
+    }
+
+    @Override
+    public String clazz() {
+      return clazz;
+    }
+
+    @Override
+    public String method() {
+      return method;
+    }
+
+    @Override
+    public boolean isPrimitive() {
+      return isPrimitive;
     }
   }
 
@@ -542,37 +626,6 @@ public class NullnessPropagationTransfer extends AbstractNullnessPropagationTran
       return isStatic;
     }
   }
-
-  private static final ImmutableSet<MemberName> METHODS_WITH_NON_NULLABLE_RETURNS =
-      ImmutableSet.of(
-          // We would love to include all the methods of Files, but readFirstLine can return null.
-          member(Files.class.getName(), "toString"));
-  // TODO(cpovirk): respect nullness annotations (and also check them to ensure correctness!)
-
-  private static final ImmutableSet<String> CLASSES_WITH_ALL_NON_NULLABLE_RETURNS =
-      ImmutableSet.of(
-          Preconditions.class.getName(),
-          Verify.class.getName(),
-          String.class.getName());
-
-  private static final ImmutableSet<String> CLASSES_WITH_NON_NULLABLE_VALUE_OF_METHODS =
-      ImmutableSet.of(
-          // The primitive types.
-          Boolean.class.getName(),
-          Byte.class.getName(),
-          Character.class.getName(),
-          Double.class.getName(),
-          Float.class.getName(),
-          Integer.class.getName(),
-          Long.class.getName(),
-          Short.class.getName(),
-
-          // Other types.
-          BigDecimal.class.getName(),
-          BigInteger.class.getName(),
-          // TODO(cpovirk): recognize the compiler-generated valueOf() methods on Enum subclasses
-          Enum.class.getName(),
-          String.class.getName());
 
   /**
    * Maps from the names of null-rejecting methods to the indexes of the arguments that aren't
