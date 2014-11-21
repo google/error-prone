@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+package com.google.errorprone.bugpatterns;
 
 import com.google.gdata.util.common.logging.FormattingLogger;
 
