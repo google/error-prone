@@ -32,6 +32,7 @@ import static com.google.errorprone.suppliers.Suppliers.EXCEPTION_TYPE;
 import static com.sun.source.tree.Tree.Kind.EXPRESSION_STATEMENT;
 import static com.sun.source.tree.Tree.Kind.IF;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
@@ -43,9 +44,13 @@ import com.google.errorprone.matchers.JUnitMatchers;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 
+import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
+
+import java.util.List;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -73,8 +78,12 @@ public class DeadException extends BugChecker implements NewClassTreeMatcher {
 
     StatementTree parent = (StatementTree) state.getPath().getParentPath().getLeaf();
 
+    Matcher<List<StatementTree>> isLastStatementOfList =
+        lastStatement(Matchers.<StatementTree>isSame(parent));
     boolean isLastStatement = anyOf(
-        new Enclosing.BlockOrCase<>(lastStatement(Matchers.<StatementTree>isSame(parent))),
+        new Enclosing.BlockOrCase<>(
+            inBlockWhereStatement(isLastStatementOfList),
+            inCaseWhereStatement(isLastStatementOfList)),
         // it could also be a bare if statement with no braces
         parentNode(parentNode(kindIs(IF))))
         .matches(newClassTree, state);
@@ -87,5 +96,38 @@ public class DeadException extends BugChecker implements NewClassTreeMatcher {
     }
 
     return describeMatch(newClassTree, fix);
+  }
+
+  /*
+   * state.getTreePath() is set incorrectly by the following classes in their call to
+   * statementsMatcher. The problem is that it's weird to have to choose a proper path for the
+   * multiple statements that statementsMatcher expects. The best approach might be to pick the path
+   * of an arbitrary statement, but of course that has its own problems. Plus, the block might be
+   * empty. Fortunately, in this case, we use only lastStatement, which doesn't use the TreePath.
+   * Thus, it doesn't matter if the TreePath is wrong. But this problem casts suspicion on the use
+   * of any Matcher<NotATree>, since without a unique tree, we can't have a unique TreePath in the
+   * VisitorState passed to its match() method.
+   */
+
+  private static Matcher<BlockTree> inBlockWhereStatement(
+      final Matcher<List<StatementTree>> statementsMatcher) {
+    return new Matcher<BlockTree>() {
+      @Override
+      public boolean matches(BlockTree t, VisitorState state) {
+        // state.getTreePath() will be wrong for statementsMatcher. See doc above.
+        return statementsMatcher.matches(ImmutableList.copyOf(t.getStatements()), state);
+      }
+    };
+  }
+
+  private static Matcher<CaseTree> inCaseWhereStatement(
+      final Matcher<List<StatementTree>> statementsMatcher) {
+    return new Matcher<CaseTree>() {
+      @Override
+      public boolean matches(CaseTree t, VisitorState state) {
+        // state.getTreePath() will be wrong for statementsMatcher. See doc above.
+        return statementsMatcher.matches(ImmutableList.copyOf(t.getStatements()), state);
+      }
+    };
   }
 }

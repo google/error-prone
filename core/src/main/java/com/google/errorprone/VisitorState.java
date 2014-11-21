@@ -197,34 +197,35 @@ public class VisitorState {
   }
 
   /**
-   * Find the first enclosing tree node of one of the given types.
-   * @param classes
-   * @param <T>
-   * @return the node, or null if there is no enclosing tree node of this type
+   * Returns the {@link TreePath} to the nearest tree node of one of the given types. To instead
+   * retrieve the element directly, use {@link #findEnclosing(Class...)}.
+   *
+   * @return the path, or {@code null} if there is no match
    */
   @SafeVarargs
-  public final <T extends Tree> T findEnclosing(java.lang.Class<? extends T>... classes) {
+  public final TreePath findPathToEnclosing(Class<? extends Tree>... classes) {
     TreePath enclosingPath = getPath();
     while (enclosingPath != null) {
-      for (java.lang.Class<? extends T> aClass : classes) {
-        if (aClass.isInstance(enclosingPath.getLeaf())) {
-          return aClass.cast(enclosingPath.getLeaf());
+      for (Class<? extends Tree> clazz : classes) {
+        if (clazz.isInstance(enclosingPath.getLeaf())) {
+          return enclosingPath;
         }
       }
       enclosingPath = enclosingPath.getParentPath();
     }
     return null;
   }
-  
-  public <T extends Tree> T findEnclosing(java.lang.Class<T> aClass) {
-    TreePath enclosingPath = getPath();
-    while (enclosingPath != null) {
-      if (aClass.isInstance(enclosingPath.getLeaf())) {
-        return aClass.cast(enclosingPath.getLeaf());
-      }
-      enclosingPath = enclosingPath.getParentPath();
-    }
-    return null;
+
+  /**
+   * Find the first enclosing tree node of one of the given types.
+   *
+   * @return the node, or {@code null} if there is no match
+   */
+  @SuppressWarnings("unchecked") // findPathToEnclosing guarantees that the type is from |classes|
+  @SafeVarargs
+  public final <T extends Tree> T findEnclosing(Class<? extends T>... classes) {
+    TreePath pathToEnclosing = findPathToEnclosing(classes);
+    return (pathToEnclosing == null) ? null : (T) pathToEnclosing.getLeaf();
   }
 
   /**

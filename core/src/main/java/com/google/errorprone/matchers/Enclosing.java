@@ -16,17 +16,14 @@
 
 package com.google.errorprone.matchers;
 
-import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
 
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
-
-import java.util.List;
+import com.sun.source.util.TreePath;
 
 /**
  * Adapt matchers to match against a parent node of a given type. For example, match a node if the
@@ -47,12 +44,13 @@ public class Enclosing {
 
     @Override
     public boolean matches(U unused, VisitorState state) {
-      T enclosing = state.findEnclosing(clazz);
+      TreePath pathToEnclosing = state.findPathToEnclosing(clazz);
       // No match if there is no enclosing element to match against
-      if (enclosing == null) {
+      if (pathToEnclosing == null) {
         return false;
       }
-      return matcher.matches(enclosing, state);
+      T enclosing = clazz.cast(pathToEnclosing.getLeaf());
+      return matcher.matches(enclosing, state.withPath(pathToEnclosing));
     }
   }
 
@@ -75,28 +73,30 @@ public class Enclosing {
   }
 
   public static class BlockOrCase<T extends Tree> implements Matcher<T> {
-    private final Matcher<List<StatementTree>> matcher;
+    private final Matcher<BlockTree> blockTreeMatcher;
+    private final Matcher<CaseTree> caseTreeMatcher;
 
-    public BlockOrCase(Matcher<List<StatementTree>> matcher) {
-      this.matcher = matcher;
+    public BlockOrCase(Matcher<BlockTree> blockTreeMatcher, Matcher<CaseTree> caseTreeMatcher) {
+      this.blockTreeMatcher = blockTreeMatcher;
+      this.caseTreeMatcher = caseTreeMatcher;
     }
 
     @Override
     public boolean matches(T unused, VisitorState state) {
-      Tree enclosing = state.findEnclosing(CaseTree.class, BlockTree.class);
-      if (enclosing == null) {
+      TreePath pathToEnclosing = state.findPathToEnclosing(CaseTree.class, BlockTree.class);
+      if (pathToEnclosing == null) {
         return false;
       }
-      final List<? extends StatementTree> statements;
+      Tree enclosing = pathToEnclosing.getLeaf();
+      state = state.withPath(pathToEnclosing);
       if (enclosing instanceof BlockTree) {
-        statements = ((BlockTree)enclosing).getStatements();
+        return blockTreeMatcher.matches((BlockTree) enclosing, state);
       } else if (enclosing instanceof CaseTree) {
-        statements = ((CaseTree)enclosing).getStatements();
+        return caseTreeMatcher.matches((CaseTree) enclosing, state);
       } else {
         // findEnclosing given two types must return something of one of those types
         throw new IllegalStateException("enclosing tree not a BlockTree or CaseTree");
       }
-      return matcher.matches(ImmutableList.copyOf(statements), state);
     }
   }
 }
