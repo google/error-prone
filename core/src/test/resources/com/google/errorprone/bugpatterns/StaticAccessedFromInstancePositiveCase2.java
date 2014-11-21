@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+package com.google.errorprone.bugpatterns;
+
 import com.google.common.base.Objects;
 import java.math.BigDecimal;
 

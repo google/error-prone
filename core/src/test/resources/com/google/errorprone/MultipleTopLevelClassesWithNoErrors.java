@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+package com.google.errorprone;
+
 public class MultipleTopLevelClassesWithNoErrors {
   int foo;
   int bar;

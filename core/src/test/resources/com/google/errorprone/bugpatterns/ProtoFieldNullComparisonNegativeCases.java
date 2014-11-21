@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+package com.google.errorprone.bugpatterns;
+
 import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
 import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 

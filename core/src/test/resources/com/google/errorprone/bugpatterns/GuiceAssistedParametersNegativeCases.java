@@ -12,6 +12,8 @@
  * the License.
  */
 
+package com.google.errorprone.bugpatterns;
+
 import com.google.inject.assistedinject.Assisted;
 
 import java.util.List;

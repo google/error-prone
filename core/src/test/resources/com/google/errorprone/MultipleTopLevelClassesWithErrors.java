@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+package com.google.errorprone;
+
 public class MultipleTopLevelClassesWithErrors {}
 
 final class Poo1 {
