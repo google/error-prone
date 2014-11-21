@@ -472,6 +472,7 @@ public class Matchers {
         TreePath path = state.getPath().getParentPath();
         while (path != null) {
           Tree node = path.getLeaf();
+          state = state.withPath(path);
           if (matcher.matches((T) node, state)) {
             return true;
           }
