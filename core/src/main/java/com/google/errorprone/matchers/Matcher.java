@@ -18,11 +18,13 @@ package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
 
+import com.sun.source.tree.Tree;
+
 /**
- * Define a predicate on any type, which also accesses the state of AST traversal.
- * @param <T> typically a javac AST node
+ * Define a predicate on a {@link Tree}, which also accesses the state of AST traversal.
+ * @param <T> a javac AST node
  * @author alexeagle@google.com (Alex Eagle)
  */
-public interface Matcher<T> {
+public interface Matcher<T extends Tree> {
   boolean matches(T t, VisitorState state);
 }

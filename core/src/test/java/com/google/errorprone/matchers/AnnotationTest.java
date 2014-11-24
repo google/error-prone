@@ -16,9 +16,9 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.ALL;
+import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.ANY;
 import static com.google.errorprone.matchers.Matchers.isType;
-import static com.google.errorprone.matchers.MultiMatcher.MatchType.ALL;
-import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
 import static org.junit.Assert.assertEquals;
 
 import com.google.errorprone.VisitorState;
@@ -263,9 +263,12 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
           currPath = currPath.getParentPath();
           parent = currPath.getLeaf();
         }
+        visitorState = visitorState.withPath(currPath);
         if (toMatch.matches(parent, visitorState)) {
           matched = true;
         }
+
+        visitorState = visitorState.withPath(getCurrentPath());
         return super.visitAnnotation(node, visitorState);
       }
 

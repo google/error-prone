@@ -25,7 +25,6 @@ import static com.google.errorprone.matchers.Matchers.enclosingClass;
 import static com.google.errorprone.matchers.Matchers.enclosingMethod;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.kindIs;
-import static com.google.errorprone.matchers.Matchers.lastStatement;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.parentNode;
 import static com.google.errorprone.suppliers.Suppliers.EXCEPTION_TYPE;
@@ -38,8 +37,9 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.matchers.ChildMultiMatcher;
+import com.google.errorprone.matchers.ChildMultiMatcher.MatchType;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Enclosing;
 import com.google.errorprone.matchers.JUnitMatchers;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
@@ -49,8 +49,6 @@ import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
-
-import java.util.List;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -78,12 +76,9 @@ public class DeadException extends BugChecker implements NewClassTreeMatcher {
 
     StatementTree parent = (StatementTree) state.getPath().getParentPath().getLeaf();
 
-    Matcher<List<StatementTree>> isLastStatementOfList =
-        lastStatement(Matchers.<StatementTree>isSame(parent));
     boolean isLastStatement = anyOf(
-        new Enclosing.BlockOrCase<>(
-            inBlockWhereStatement(isLastStatementOfList),
-            inCaseWhereStatement(isLastStatementOfList)),
+        new ChildOfBlockOrCase<>(ChildMultiMatcher.MatchType.LAST,
+            Matchers.<StatementTree>isSame(parent)),
         // it could also be a bare if statement with no braces
         parentNode(parentNode(kindIs(IF))))
         .matches(newClassTree, state);
@@ -97,37 +92,27 @@ public class DeadException extends BugChecker implements NewClassTreeMatcher {
 
     return describeMatch(newClassTree, fix);
   }
+  
+  private static class ChildOfBlockOrCase<T extends Tree> 
+      extends ChildMultiMatcher<T, StatementTree> {
+    public ChildOfBlockOrCase(MatchType matchType, Matcher<StatementTree> nodeMatcher) {
+      super(matchType, nodeMatcher);
+    }
 
-  /*
-   * state.getTreePath() is set incorrectly by the following classes in their call to
-   * statementsMatcher. The problem is that it's weird to have to choose a proper path for the
-   * multiple statements that statementsMatcher expects. The best approach might be to pick the path
-   * of an arbitrary statement, but of course that has its own problems. Plus, the block might be
-   * empty. Fortunately, in this case, we use only lastStatement, which doesn't use the TreePath.
-   * Thus, it doesn't matter if the TreePath is wrong. But this problem casts suspicion on the use
-   * of any Matcher<NotATree>, since without a unique tree, we can't have a unique TreePath in the
-   * VisitorState passed to its match() method.
-   */
-
-  private static Matcher<BlockTree> inBlockWhereStatement(
-      final Matcher<List<StatementTree>> statementsMatcher) {
-    return new Matcher<BlockTree>() {
-      @Override
-      public boolean matches(BlockTree t, VisitorState state) {
-        // state.getTreePath() will be wrong for statementsMatcher. See doc above.
-        return statementsMatcher.matches(ImmutableList.copyOf(t.getStatements()), state);
+    @Override
+    protected Iterable<? extends StatementTree> getChildNodes(T tree, VisitorState state) {
+      Tree enclosing = state.findEnclosing(CaseTree.class, BlockTree.class);
+      if (enclosing == null) {
+        return ImmutableList.of();
       }
-    };
-  }
-
-  private static Matcher<CaseTree> inCaseWhereStatement(
-      final Matcher<List<StatementTree>> statementsMatcher) {
-    return new Matcher<CaseTree>() {
-      @Override
-      public boolean matches(CaseTree t, VisitorState state) {
-        // state.getTreePath() will be wrong for statementsMatcher. See doc above.
-        return statementsMatcher.matches(ImmutableList.copyOf(t.getStatements()), state);
+      if (enclosing instanceof BlockTree) {
+        return ((BlockTree) enclosing).getStatements();
+      } else if (enclosing instanceof CaseTree) {
+        return ((CaseTree) enclosing).getStatements();
+      } else {
+        // findEnclosing given two types must return something of one of those types
+        throw new IllegalStateException("enclosing tree not a BlockTree or CaseTree");
       }
-    };
+    }
   }
 }

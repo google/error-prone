@@ -16,78 +16,65 @@
 
 package com.google.errorprone.matchers;
 
-import static com.google.errorprone.matchers.MultiMatcher.MatchType.ALL;
-import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
+import static com.google.common.base.MoreObjects.firstNonNull;
 
 import com.google.errorprone.VisitorState;
 
 import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.Tree;
 import com.sun.source.tree.IdentifierTree;
-import com.sun.source.util.TreeScanner;
+import com.sun.source.tree.Tree;
+import com.sun.source.util.TreePathScanner;
 
 /**
- * Matches if the given matcher matches all of/any of the identifiers under this syntax tree.
+ * Matches if the given matcher matches all of the identifiers under this syntax tree.
  *
  * @author alexloh@google.com (Alex Loh)
  */
-public class HasIdentifier extends MultiMatcher<Tree, IdentifierTree> {
+public class HasIdentifier implements MultiMatcher<Tree, IdentifierTree> {
 
-  public HasIdentifier(MatchType matchType, Matcher<IdentifierTree> nodeMatcher) {
-    super(matchType, nodeMatcher);
+  private final Matcher<IdentifierTree> nodeMatcher;
+
+  public HasIdentifier(Matcher<IdentifierTree> nodeMatcher) {
+    this.nodeMatcher = nodeMatcher;
   }
 
   @Override
   public boolean matches(Tree tree, VisitorState state) {
-    Boolean matches = tree.accept(new HasIdentifierScanner(matchType, nodeMatcher), null);
-    return matches != null && matches;
+    Boolean matches = new HasIdentifierScanner(state, nodeMatcher).scan(state.getPath(), null);
+    return firstNonNull(matches, false);
   }
 
   /**
    * AST Visitor that matches identifiers in a Tree
    */
-  private static class HasIdentifierScanner extends TreeScanner<Boolean, Void> {
+  private static class HasIdentifierScanner extends TreePathScanner<Boolean, Void> {
 
     private Matcher<IdentifierTree> idMatcher;
-    private MatchType matchType;
+    private VisitorState ancestorState;
 
-    public HasIdentifierScanner(MatchType matchType, Matcher<IdentifierTree> idMatcher) {
-      this.matchType = matchType;
+    public HasIdentifierScanner(VisitorState ancestorState, Matcher<IdentifierTree> idMatcher) {
+      this.ancestorState = ancestorState;
       this.idMatcher = idMatcher; 
     }
 
     @Override
     public Boolean visitIdentifier(IdentifierTree node, Void v) {
-      return idMatcher.matches(node, null);
+      return idMatcher.matches(node, ancestorState.withPath(getCurrentPath()));
     }
 
     @Override
     public Boolean reduce(Boolean r1, Boolean r2) {
-      if (r1 == null) {
-        return r2;
-      } else if (r2 == null) {
-        return r1;
-      } else { 
-        if (matchType == ANY) {
-          return r1 || r2;
-        } else if (matchType == ALL) { 
-          return r1 && r2;
-        }
-      }
-      return null;
+      return firstNonNull(r1, false) || firstNonNull(r2, false);
     }
 
     @Override
     public Boolean visitClass(ClassTree node, Void v) {
-      Boolean res = super.visitClass(node, v);
-      if (res == null) {
-        if (matchType == ANY) {
-          return false;
-        } else if (matchType == ALL) { 
-          return true;
-        }
-      }
-      return res;
+      return firstNonNull(super.visitClass(node, v), false);
     }
+  }
+
+  @Override
+  public IdentifierTree getMatchingNode() {
+    throw new IllegalStateException();
   }
 }

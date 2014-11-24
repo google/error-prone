@@ -16,9 +16,9 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.ALL;
+import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.ANY;
 import static com.google.errorprone.matchers.Matchers.methodHasVisibility;
-import static com.google.errorprone.matchers.MultiMatcher.MatchType.ALL;
-import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
 import static org.junit.Assert.assertEquals;
 
 import com.google.errorprone.VisitorState;
@@ -122,6 +122,7 @@ public class ConstructorOfClassTest extends CompilerBasedAbstractTest {
 
       @Override
       public Void visitClass(ClassTree node, VisitorState visitorState) {
+        visitorState = visitorState.withPath(getCurrentPath());
         if (toMatch.matches(node, visitorState)) {
           matched = true;
         }

@@ -23,7 +23,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.fixes.SuggestedFix.replace;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.hasIdentifier;
-import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
@@ -212,7 +211,7 @@ public final class ChainingConstructorIgnoresParameter extends BugChecker
         return isIdentifierWithName(tree, name);
       }
     };
-    return hasIdentifier(ANY, identifierMatcher).matches(tree, state);
+    return hasIdentifier(identifierMatcher).matches(tree, state);
   }
 
   private static boolean isIdentifierWithName(ExpressionTree tree, String name) {

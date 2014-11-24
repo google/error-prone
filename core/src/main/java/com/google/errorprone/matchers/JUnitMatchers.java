@@ -16,6 +16,7 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.ANY;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.annotations;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -30,7 +31,6 @@ import static com.google.errorprone.matchers.Matchers.methodNameStartsWith;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.Matchers.nestingKind;
 import static com.google.errorprone.matchers.Matchers.not;
-import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
 import static com.google.errorprone.suppliers.Suppliers.VOID_TYPE;
 import static javax.lang.model.element.NestingKind.TOP_LEVEL;
 
