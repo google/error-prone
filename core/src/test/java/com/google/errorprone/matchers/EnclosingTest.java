@@ -49,7 +49,7 @@ import java.util.List;
  */
 @RunWith(JUnit4.class)
 public class EnclosingTest extends CompilerBasedAbstractTest {
-  private abstract static class IsInterestingLoopSubNode<T> implements Matcher<T> {
+  private abstract static class IsInterestingLoopSubNode<T extends Tree> implements Matcher<T> {
     @Override
     public boolean matches(T t, VisitorState state) {
       if (state.getPath().getParentPath() == null) {

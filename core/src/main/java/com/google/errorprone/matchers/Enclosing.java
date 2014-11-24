@@ -33,7 +33,8 @@ import com.sun.source.util.TreePath;
 public class Enclosing {
   private Enclosing() {}
 
-  private static abstract class EnclosingMatcher<T extends Tree, U> implements Matcher<U> {
+  private static abstract class EnclosingMatcher<T extends Tree, U extends Tree>
+      implements Matcher<U> {
     protected final Matcher<T> matcher;
     protected final java.lang.Class<T> clazz;
 

@@ -17,8 +17,8 @@
 package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.matchers.ChildMultiMatcher.MatchType;
 import com.google.errorprone.matchers.MethodVisibility.Visibility;
-import com.google.errorprone.matchers.MultiMatcher.MatchType;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 
@@ -485,13 +485,6 @@ public class Matchers {
   }
 
   /**
-   * Matches a block AST node if the last statement in the block matches the given matcher.
-   */
-  public static Matcher<List<StatementTree>> lastStatement(Matcher<StatementTree> matcher) {
-    return new LastStatement(matcher);
-  }
-
-  /**
    * Matches a statement AST node if the following statement in the enclosing block matches the given matcher.
    */
   public static <T extends StatementTree> NextStatement<T> nextStatement(
@@ -847,13 +840,11 @@ public class Matchers {
    * Matches any AST that contains an identifier with a certain property. This matcher can be used,
    * for instance, to locate identifiers with a certain name or which is defined in a certain class.
    *
-   * @param matchType Whether to match if the matchers match any of or all of the identifiers on
-   * this tree.
    * @param nodeMatcher Which identifiers to look for
    */
-  public static MultiMatcher<Tree, IdentifierTree> hasIdentifier(MatchType matchType,
+  public static MultiMatcher<Tree, IdentifierTree> hasIdentifier(
       Matcher<IdentifierTree> nodeMatcher) {
-    return new HasIdentifier(matchType, nodeMatcher);
+    return new HasIdentifier(nodeMatcher);
   }
 
   /**

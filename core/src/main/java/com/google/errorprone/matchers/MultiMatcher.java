@@ -16,58 +16,19 @@
 
 package com.google.errorprone.matchers;
 
+import com.sun.source.tree.Tree;
+
 /**
- * An abstract class for matchers that applies a single matcher across multiple tree nodes.
- * Configurable to return true if any of or all of the tree nodes match.  In the any of case,
- * provides access to the node that matched.
- *
- * TODO(user): Currently this class is used to match a single matcher against multiple elements
- * under some root element.  It might make sense to refactor this into matcher types with different
- * semantics -- allOf, anyOf, match the nth element, etc.  Then the matchers that currently extend
- * this would instead take one of these as a parameter and use that to define how to do the
- * matching.  This would be more general and composable.
+ * An matcher that applies a single matcher across multiple tree nodes.
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  * @param <T> the type of the node to match on
  * @param <N> the type of the subnode that the given matcher should match
  */
-public abstract class MultiMatcher<T, N> implements Matcher<T> {
-
-  public enum MatchType {
-    ALL,
-    ANY
-  }
+public interface MultiMatcher<T extends Tree, N extends Tree> extends Matcher<T> {
 
   /**
-   * Whether to match all of or any of the nodes.
+   * @return the matching node, iff a single node was matched.
    */
-  final MatchType matchType;
-
-  /**
-   * The matcher to apply to the subnodes in question.
-   */
-  final Matcher<N> nodeMatcher;
-
-  /**
-   * The matching node.  Only set when MatchType is ANY.
-   */
-  N matchingNode;
-
-  public MultiMatcher(MatchType matchType, Matcher<N> nodeMatcher) {
-    this.nodeMatcher = nodeMatcher;
-    this.matchType = matchType;
-  }
-
-  /**
-   * Returns the node that matched.  Node will be non-null.
-   */
-  public N getMatchingNode() {
-    if (matchType == MatchType.ALL) {
-      throw new IllegalStateException("getMatchingNode() makes no sense when matching all nodes");
-    }
-    if (matchingNode == null) {
-      throw new IllegalStateException("No nodes matched");
-    }
-    return matchingNode;
-  }
+  N getMatchingNode();
 }

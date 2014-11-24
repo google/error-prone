@@ -26,7 +26,6 @@ import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.matchers.Matchers.nestingKind;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.parentNode;
-import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -80,7 +79,7 @@ public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
           anyOf(
               parentNode(nestingKind(NestingKind.TOP_LEVEL)),
               parentNode(Matchers.<ClassTree>hasModifier(Modifier.STATIC))),
-          not(hasIdentifier(ANY, referenceEnclosing(classTree, state.getTypes())))
+          not(hasIdentifier(referenceEnclosing(classTree, state.getTypes())))
         ).matches(classTree, state);
       }
     };

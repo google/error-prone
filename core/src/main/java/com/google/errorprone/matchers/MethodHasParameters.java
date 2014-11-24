@@ -16,9 +16,6 @@
 
 package com.google.errorprone.matchers;
 
-import static com.google.errorprone.matchers.MultiMatcher.MatchType.ALL;
-import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
-
 import com.google.errorprone.VisitorState;
 
 import com.sun.source.tree.MethodTree;
@@ -26,32 +23,18 @@ import com.sun.source.tree.VariableTree;
 
 /**
  * Matches if the given matcher matches all of/any of the parameters to this method.
- *
- * TODO(user): All MultiMatchers seem to have a similar looping structure, applying a given
- * matcher to a set of nodes.  Consider refactoring this code into the base class for better
- * reuse.
- *
+  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class MethodHasParameters extends MultiMatcher<MethodTree, VariableTree> {
+public class MethodHasParameters extends ChildMultiMatcher<MethodTree, VariableTree> {
 
   public MethodHasParameters(MatchType matchType, Matcher<VariableTree> nodeMatcher) {
     super(matchType, nodeMatcher);
   }
 
   @Override
-  public boolean matches(MethodTree methodTree, VisitorState state) {
-    // Iterate over members of class (methods and fields).
-    for (VariableTree member : methodTree.getParameters()) {
-      boolean matches = nodeMatcher.matches(member, state);
-      if (matchType == ANY && matches) {
-        matchingNode = member;
-        return true;
-      }
-      if (matchType == ALL && !matches) {
-        return false;
-      }
-    }
-    return matchType == ALL && methodTree.getParameters().size() >= 1;
+  protected Iterable<? extends VariableTree> getChildNodes(MethodTree methodTree, 
+      VisitorState state) {
+    return methodTree.getParameters();
   }
 }

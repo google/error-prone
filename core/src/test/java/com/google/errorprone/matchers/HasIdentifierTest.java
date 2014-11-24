@@ -17,7 +17,6 @@
 package com.google.errorprone.matchers;
 
 import static com.google.errorprone.matchers.Matchers.hasIdentifier;
-import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
 import static org.junit.Assert.assertEquals;
 
 import com.google.errorprone.VisitorState;
@@ -58,7 +57,7 @@ public class HasIdentifierTest extends CompilerBasedAbstractTest {
         "  A(int foo) {}",
         "}");
     assertCompiles(
-        methodHasIdentifierMatching(true, hasIdentifier(ANY, new Matcher<IdentifierTree>() {
+        methodHasIdentifierMatching(true, hasIdentifier(new Matcher<IdentifierTree>() {
           @Override
           public boolean matches(IdentifierTree tree, VisitorState state) {
             return tree.getName().contentEquals("this");
@@ -76,7 +75,7 @@ public class HasIdentifierTest extends CompilerBasedAbstractTest {
         "  }",
         "}");
     assertCompiles(
-        methodHasIdentifierMatching(true, hasIdentifier(ANY, new Matcher<IdentifierTree>() {
+        methodHasIdentifierMatching(true, hasIdentifier(new Matcher<IdentifierTree>() {
           @Override
           public boolean matches(IdentifierTree tree, VisitorState state) {
             return tree.getName().contentEquals("foo");
@@ -93,7 +92,7 @@ public class HasIdentifierTest extends CompilerBasedAbstractTest {
         "  }",
         "}");
     assertCompiles(
-        methodHasIdentifierMatching(true, hasIdentifier(ANY, new Matcher<IdentifierTree>() {
+        methodHasIdentifierMatching(true, hasIdentifier(new Matcher<IdentifierTree>() {
           @Override
           public boolean matches(IdentifierTree tree, VisitorState state) {
             return tree.getName().contentEquals("foo");
@@ -110,7 +109,7 @@ public class HasIdentifierTest extends CompilerBasedAbstractTest {
         "  }",
         "}");
     assertCompiles(
-        methodHasIdentifierMatching(false, hasIdentifier(ANY, new Matcher<IdentifierTree>() {
+        methodHasIdentifierMatching(false, hasIdentifier(new Matcher<IdentifierTree>() {
           @Override
           public boolean matches(IdentifierTree tree, VisitorState state) {
             return tree.getName().contentEquals("foo");
@@ -131,7 +130,7 @@ public class HasIdentifierTest extends CompilerBasedAbstractTest {
         "  }",
         "}");
     assertCompiles(
-        literalHasIdentifierMatching(false, hasIdentifier(ANY, new Matcher<IdentifierTree>() {
+        literalHasIdentifierMatching(false, hasIdentifier(new Matcher<IdentifierTree>() {
           @Override
           public boolean matches(IdentifierTree tree, VisitorState state) {
             return tree.getName().contentEquals("somethingElse");
@@ -150,6 +149,7 @@ public class HasIdentifierTest extends CompilerBasedAbstractTest {
 
       @Override
       public Void visitMethod(MethodTree node, VisitorState visitorState) {
+        visitorState = visitorState.withPath(getCurrentPath());
         if (toMatch.matches(node, visitorState)) {
           matched = true;
         }
@@ -172,6 +172,7 @@ public class HasIdentifierTest extends CompilerBasedAbstractTest {
 
       @Override
       public Void visitLiteral(LiteralTree node, VisitorState visitorState) {
+        visitorState = visitorState.withPath(getCurrentPath());
         if (toMatch.matches(node, visitorState)) {
           matched = true;
         }

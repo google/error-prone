@@ -16,9 +16,7 @@
 
 package com.google.errorprone.matchers;
 
-import static com.google.errorprone.matchers.MultiMatcher.MatchType.ALL;
-import static com.google.errorprone.matchers.MultiMatcher.MatchType.ANY;
-
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
 
@@ -31,30 +29,22 @@ import com.sun.source.tree.Tree;
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class ConstructorOfClass extends MultiMatcher<ClassTree, MethodTree> {
+public class ConstructorOfClass extends ChildMultiMatcher<ClassTree, MethodTree> {
 
   public ConstructorOfClass(MatchType matchType, Matcher<MethodTree> nodeMatcher) {
     super(matchType, nodeMatcher);
   }
 
   @Override
-  public boolean matches(ClassTree classTree, VisitorState state) {
-    boolean hasConstructor = false;
+  protected Iterable<? extends MethodTree> getChildNodes(ClassTree classTree, VisitorState state) {
+    ImmutableList.Builder<MethodTree> result = ImmutableList.builder();
     // Iterate over members of class (methods and fields).
     for (Tree member : classTree.getMembers()) {
       // If this member is a constructor...
       if (member instanceof MethodTree && ASTHelpers.getSymbol(member).isConstructor()) {
-        hasConstructor = true;
-        boolean matches = nodeMatcher.matches((MethodTree) member, state);
-        if (matchType == ANY && matches) {
-          matchingNode = (MethodTree) member;
-          return true;
-        }
-        if (matchType == ALL && !matches) {
-          return false;
-        }
+        result.add((MethodTree) member);
       }
     }
-    return matchType == ALL && hasConstructor;
+    return result.build();
   }
 }

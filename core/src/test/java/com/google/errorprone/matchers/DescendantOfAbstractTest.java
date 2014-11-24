@@ -67,6 +67,7 @@ public class DescendantOfAbstractTest extends CompilerBasedAbstractTest {
 
       @Override
       public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {
+        visitorState = visitorState.withPath(getCurrentPath());
         ExpressionTree methodSelect = node.getMethodSelect();
         if (toMatch.matches(methodSelect, visitorState)) {
           matched = true;
