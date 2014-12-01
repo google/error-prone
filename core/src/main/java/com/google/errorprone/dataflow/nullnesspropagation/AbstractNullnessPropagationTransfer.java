@@ -19,6 +19,8 @@ import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropaga
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessValue.NONNULL;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessValue.NULLABLE;
 
+import com.google.errorprone.dataflow.LocalStore;
+
 import org.checkerframework.dataflow.analysis.ConditionalTransferResult;
 import org.checkerframework.dataflow.analysis.RegularTransferResult;
 import org.checkerframework.dataflow.analysis.TransferFunction;
@@ -121,11 +123,11 @@ import javax.annotation.CheckReturnValue;
  * @author cpovirk@google.com (Chris Povirk)
  */
 abstract class AbstractNullnessPropagationTransfer
-    implements TransferFunction<NullnessValue, NullnessPropagationStore> {
+    implements TransferFunction<NullnessValue, LocalStore<NullnessValue>> {
   @Override
-  public final NullnessPropagationStore initialStore(UnderlyingAST underlyingAST,
-      List<LocalVariableNode> parameters) {
-    return NullnessPropagationStore.empty();
+  public final LocalStore<NullnessValue> initialStore(
+      UnderlyingAST underlyingAST, List<LocalVariableNode> parameters) {
+    return LocalStore.empty();
   }
 
   /**
@@ -182,8 +184,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitNullLiteral(
-      NullLiteralNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitNullLiteral(
+      NullLiteralNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     ReadableLocalVariableUpdates updates = new ReadableLocalVariableUpdates();
     NullnessValue result = visitNullLiteral();
     return updateRegularStore(result, input, updates);
@@ -194,8 +196,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitTypeCast(
-      TypeCastNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitTypeCast(
+      TypeCastNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue result = visitTypeCast(node, values(input));
     return noStoreChanges(result, input);
   }
@@ -205,8 +207,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitNumericalAddition(
-      NumericalAdditionNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitNumericalAddition(
+      NumericalAdditionNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue result = visitNumericalAddition();
     return noStoreChanges(result, input);
   }
@@ -216,8 +218,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitNarrowingConversion(
-      NarrowingConversionNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitNarrowingConversion(
+      NarrowingConversionNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue result = visitNarrowingConversion();
     return noStoreChanges(result, input);
   }
@@ -227,8 +229,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitEqualTo(
-      EqualToNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitEqualTo(
+      EqualToNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     ReadableLocalVariableUpdates thenUpdates = new ReadableLocalVariableUpdates();
     ReadableLocalVariableUpdates elseUpdates = new ReadableLocalVariableUpdates();
     visitEqualTo(node, values(input), thenUpdates, elseUpdates);
@@ -242,8 +244,8 @@ abstract class AbstractNullnessPropagationTransfer
       LocalVariableUpdates elseUpdates) {}
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitNotEqual(
-      NotEqualNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitNotEqual(
+      NotEqualNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     ReadableLocalVariableUpdates thenUpdates = new ReadableLocalVariableUpdates();
     ReadableLocalVariableUpdates elseUpdates = new ReadableLocalVariableUpdates();
     visitNotEqual(node, values(input), thenUpdates, elseUpdates);
@@ -257,8 +259,8 @@ abstract class AbstractNullnessPropagationTransfer
       LocalVariableUpdates elseUpdates) {}
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitAssignment(
-      AssignmentNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitAssignment(
+      AssignmentNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     ReadableLocalVariableUpdates updates = new ReadableLocalVariableUpdates();
     NullnessValue result = visitAssignment(node, values(input), updates);
     return updateRegularStore(result, input, updates);
@@ -270,8 +272,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitLocalVariable(
-      LocalVariableNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitLocalVariable(
+      LocalVariableNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     ReadableLocalVariableUpdates updates = new ReadableLocalVariableUpdates();
     NullnessValue result = visitLocalVariable(node, values(input.getRegularStore()));
     return updateRegularStore(result, input, updates);
@@ -282,8 +284,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitFieldAccess(
-      FieldAccessNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitFieldAccess(
+      FieldAccessNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     ReadableLocalVariableUpdates updates = new ReadableLocalVariableUpdates();
     NullnessValue result = visitFieldAccess(node, updates);
     return updateRegularStore(result, input, updates);
@@ -294,8 +296,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitMethodInvocation(
-      MethodInvocationNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitMethodInvocation(
+      MethodInvocationNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     ReadableLocalVariableUpdates thenUpdates = new ReadableLocalVariableUpdates();
     ReadableLocalVariableUpdates elseUpdates = new ReadableLocalVariableUpdates();
     ReadableLocalVariableUpdates bothUpdates = new ReadableLocalVariableUpdates();
@@ -322,20 +324,20 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitConditionalAnd(
-      ConditionalAndNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitConditionalAnd(
+      ConditionalAndNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     return conditionalResult(input.getThenStore(), input.getElseStore(), NO_STORE_CHANGE);
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitConditionalOr(
-      ConditionalOrNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitConditionalOr(
+      ConditionalOrNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     return conditionalResult(input.getThenStore(), input.getElseStore(), NO_STORE_CHANGE);
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitConditionalNot(
-      ConditionalNotNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitConditionalNot(
+      ConditionalNotNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     /*
      * Weird case: We swap the contents of the THEN and ELSE stores without otherwise modifying
      * them. Presumably that can still count as a change?
@@ -345,8 +347,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitObjectCreation(
-      ObjectCreationNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitObjectCreation(
+      ObjectCreationNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue result = visitObjectCreation();
     return noStoreChanges(result, input);
   }
@@ -355,28 +357,28 @@ abstract class AbstractNullnessPropagationTransfer
     return NULLABLE;
   }
 
-  private static TransferResult<NullnessValue, NullnessPropagationStore> noStoreChanges(
-      NullnessValue value, TransferInput<?, NullnessPropagationStore> input) {
+  private static TransferResult<NullnessValue, LocalStore<NullnessValue>> noStoreChanges(
+      NullnessValue value, TransferInput<?, LocalStore<NullnessValue>> input) {
     return new RegularTransferResult<>(value, input.getRegularStore());
   }
 
   @CheckReturnValue
-  private TransferResult<NullnessValue, NullnessPropagationStore> updateRegularStore(
-      NullnessValue value, TransferInput<?, NullnessPropagationStore> input,
+  private TransferResult<NullnessValue, LocalStore<NullnessValue>> updateRegularStore(
+      NullnessValue value, TransferInput<?, LocalStore<NullnessValue>> input,
       ReadableLocalVariableUpdates updates) {
     ResultingStore newStore = updateStore(input.getRegularStore(), updates);
     return new RegularTransferResult<>(value, newStore.store, newStore.storeChanged);
   }
 
-  private static TransferResult<NullnessValue, NullnessPropagationStore> conditionalResult(
-      NullnessPropagationStore thenStore, NullnessPropagationStore elseStore,
+  private static TransferResult<NullnessValue, LocalStore<NullnessValue>> conditionalResult(
+      LocalStore<NullnessValue> thenStore, LocalStore<NullnessValue> elseStore,
       boolean storeChanged) {
     return new ConditionalTransferResult<>(NONNULL, thenStore, elseStore, storeChanged);
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitShortLiteral(
-      ShortLiteralNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitShortLiteral(
+      ShortLiteralNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue result = visitShortLiteral();
     return noStoreChanges(result, input);
   }
@@ -386,8 +388,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitIntegerLiteral(
-      IntegerLiteralNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitIntegerLiteral(
+      IntegerLiteralNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue result = visitIntegerLiteral();
     return noStoreChanges(result, input);
   }
@@ -397,8 +399,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitLongLiteral(
-      LongLiteralNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitLongLiteral(
+      LongLiteralNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue result = visitLongLiteral();
     return noStoreChanges(result, input);
   }
@@ -408,8 +410,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitFloatLiteral(
-      FloatLiteralNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitFloatLiteral(
+      FloatLiteralNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue result = visitFloatLiteral();
     return noStoreChanges(result, input);
   }
@@ -419,8 +421,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitDoubleLiteral(
-      DoubleLiteralNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitDoubleLiteral(
+      DoubleLiteralNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue result = visitDoubleLiteral();
     return noStoreChanges(result, input);
   }
@@ -430,8 +432,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitBooleanLiteral(
-      BooleanLiteralNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitBooleanLiteral(
+      BooleanLiteralNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue result = visitBooleanLiteral();
     return noStoreChanges(result, input);
   }
@@ -441,8 +443,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitCharacterLiteral(
-      CharacterLiteralNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitCharacterLiteral(
+      CharacterLiteralNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     ReadableLocalVariableUpdates updates = new ReadableLocalVariableUpdates();
     NullnessValue result = visitCharacterLiteral(node, values(input), updates);
     return updateRegularStore(result, input, updates);
@@ -454,8 +456,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitStringLiteral(
-      StringLiteralNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitStringLiteral(
+      StringLiteralNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     ReadableLocalVariableUpdates updates = new ReadableLocalVariableUpdates();
     NullnessValue result = visitStringLiteral(node, values(input), updates);
     return updateRegularStore(result, input, updates);
@@ -467,8 +469,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitNumericalMinus(
-      NumericalMinusNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitNumericalMinus(
+      NumericalMinusNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitNumericalMinus();
     return noStoreChanges(value, input);
   }
@@ -478,8 +480,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitNumericalPlus(
-      NumericalPlusNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitNumericalPlus(
+      NumericalPlusNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitNumericalPlus();
     return noStoreChanges(value, input);
   }
@@ -489,8 +491,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitBitwiseComplement(
-      BitwiseComplementNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitBitwiseComplement(
+      BitwiseComplementNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitBitwiseComplement();
     return noStoreChanges(value, input);
   }
@@ -500,8 +502,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitNullChk(
-      NullChkNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitNullChk(
+      NullChkNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitNullChk();
     return noStoreChanges(value, input);
   }
@@ -511,8 +513,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitStringConcatenate(
-      StringConcatenateNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitStringConcatenate(
+      StringConcatenateNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitStringConcatenate();
     return noStoreChanges(value, input);
   }
@@ -522,8 +524,9 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitNumericalSubtraction(
-      NumericalSubtractionNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitNumericalSubtraction(
+      NumericalSubtractionNode node,
+      TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitNumericalSubtraction();
     return noStoreChanges(value, input);
   }
@@ -533,9 +536,10 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitNumericalMultiplication(
-      NumericalMultiplicationNode node,
-      TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final
+      TransferResult<NullnessValue, LocalStore<NullnessValue>> visitNumericalMultiplication(
+          NumericalMultiplicationNode node,
+          TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitNumericalMultiplication();
     return noStoreChanges(value, input);
   }
@@ -545,8 +549,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitIntegerDivision(
-      IntegerDivisionNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitIntegerDivision(
+      IntegerDivisionNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitIntegerDivision();
     return noStoreChanges(value, input);
   }
@@ -556,8 +560,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitFloatingDivision(
-      FloatingDivisionNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitFloatingDivision(
+      FloatingDivisionNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitFloatingDivision();
     return noStoreChanges(value, input);
   }
@@ -567,8 +571,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitIntegerRemainder(
-      IntegerRemainderNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitIntegerRemainder(
+      IntegerRemainderNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitIntegerRemainder();
     return noStoreChanges(value, input);
   }
@@ -578,8 +582,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitFloatingRemainder(
-      FloatingRemainderNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitFloatingRemainder(
+      FloatingRemainderNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitFloatingRemainder();
     return noStoreChanges(value, input);
   }
@@ -589,8 +593,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitLeftShift(
-      LeftShiftNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitLeftShift(
+      LeftShiftNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitLeftShift();
     return noStoreChanges(value, input);
   }
@@ -600,8 +604,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitSignedRightShift(
-      SignedRightShiftNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitSignedRightShift(
+      SignedRightShiftNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitSignedRightShift();
     return noStoreChanges(value, input);
   }
@@ -611,8 +615,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitUnsignedRightShift(
-      UnsignedRightShiftNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitUnsignedRightShift(
+      UnsignedRightShiftNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitUnsignedRightShift();
     return noStoreChanges(value, input);
   }
@@ -622,8 +626,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitBitwiseAnd(
-      BitwiseAndNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitBitwiseAnd(
+      BitwiseAndNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitBitwiseAnd();
     return noStoreChanges(value, input);
   }
@@ -633,8 +637,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitBitwiseOr(
-      BitwiseOrNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitBitwiseOr(
+      BitwiseOrNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitBitwiseOr();
     return noStoreChanges(value, input);
   }
@@ -644,8 +648,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitBitwiseXor(
-      BitwiseXorNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitBitwiseXor(
+      BitwiseXorNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitBitwiseXor();
     return noStoreChanges(value, input);
   }
@@ -655,9 +659,9 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore>
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>>
       visitStringConcatenateAssignment(StringConcatenateAssignmentNode node,
-          TransferInput<NullnessValue, NullnessPropagationStore> input) {
+          TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitStringConcatenateAssignment();
     return noStoreChanges(value, input);
   }
@@ -667,8 +671,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitLessThan(
-      LessThanNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitLessThan(
+      LessThanNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitLessThan();
     return noStoreChanges(value, input);
   }
@@ -678,8 +682,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitLessThanOrEqual(
-      LessThanOrEqualNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitLessThanOrEqual(
+      LessThanOrEqualNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitLessThanOrEqual();
     return noStoreChanges(value, input);
   }
@@ -689,8 +693,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitGreaterThan(
-      GreaterThanNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitGreaterThan(
+      GreaterThanNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitGreaterThan();
     return noStoreChanges(value, input);
   }
@@ -700,8 +704,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitGreaterThanOrEqual(
-      GreaterThanOrEqualNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitGreaterThanOrEqual(
+      GreaterThanOrEqualNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitGreaterThanOrEqual();
     return noStoreChanges(value, input);
   }
@@ -711,8 +715,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitTernaryExpression(
-      TernaryExpressionNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitTernaryExpression(
+      TernaryExpressionNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     ReadableLocalVariableUpdates updates = new ReadableLocalVariableUpdates();
     NullnessValue result = visitTernaryExpression(node, values(input), updates);
     return updateRegularStore(result, input, updates);
@@ -724,8 +728,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitVariableDeclaration(
-      VariableDeclarationNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitVariableDeclaration(
+      VariableDeclarationNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitVariableDeclaration();
     return noStoreChanges(value, input);
   }
@@ -735,8 +739,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitMethodAccess(
-      MethodAccessNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitMethodAccess(
+      MethodAccessNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitMethodAccess();
     return noStoreChanges(value, input);
   }
@@ -746,8 +750,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitArrayAccess(
-      ArrayAccessNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitArrayAccess(
+      ArrayAccessNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     ReadableLocalVariableUpdates updates = new ReadableLocalVariableUpdates();
     NullnessValue result = visitArrayAccess(node, values(input), updates);
     return updateRegularStore(result, input, updates);
@@ -759,8 +763,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitImplicitThisLiteral(
-      ImplicitThisLiteralNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitImplicitThisLiteral(
+      ImplicitThisLiteralNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitImplicitThisLiteral();
     return noStoreChanges(value, input);
   }
@@ -770,8 +774,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitExplicitThisLiteral(
-      ExplicitThisLiteralNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitExplicitThisLiteral(
+      ExplicitThisLiteralNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitExplicitThisLiteral();
     return noStoreChanges(value, input);
   }
@@ -781,8 +785,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitSuper(SuperNode node,
-      TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitSuper(SuperNode node,
+      TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitSuper();
     return noStoreChanges(value, input);
   }
@@ -792,8 +796,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitReturn(ReturnNode node,
-      TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitReturn(ReturnNode node,
+      TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitReturn();
     return noStoreChanges(value, input);
   }
@@ -803,8 +807,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitStringConversion(
-      StringConversionNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitStringConversion(
+      StringConversionNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitStringConversion();
     return noStoreChanges(value, input);
   }
@@ -814,8 +818,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitWideningConversion(
-      WideningConversionNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitWideningConversion(
+      WideningConversionNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitWideningConversion();
     return noStoreChanges(value, input);
   }
@@ -825,8 +829,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitInstanceOf(
-      InstanceOfNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitInstanceOf(
+      InstanceOfNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     ReadableLocalVariableUpdates updates = new ReadableLocalVariableUpdates();
     NullnessValue result = visitInstanceOf(node, values(input), updates);
     return updateRegularStore(result, input, updates);
@@ -838,8 +842,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitSynchronized(
-      SynchronizedNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitSynchronized(
+      SynchronizedNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     ReadableLocalVariableUpdates updates = new ReadableLocalVariableUpdates();
     NullnessValue result = visitSynchronized(node, values(input), updates);
     return updateRegularStore(result, input, updates);
@@ -851,8 +855,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitAssertionError(
-      AssertionErrorNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitAssertionError(
+      AssertionErrorNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitAssertionError();
     return noStoreChanges(value, input);
   }
@@ -862,8 +866,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitThrow(ThrowNode node,
-      TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitThrow(ThrowNode node,
+      TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     ReadableLocalVariableUpdates updates = new ReadableLocalVariableUpdates();
     NullnessValue result = visitThrow(node, values(input), updates);
     return updateRegularStore(result, input, updates);
@@ -874,8 +878,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitCase(CaseNode node,
-      TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitCase(CaseNode node,
+      TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitCase();
     return noStoreChanges(value, input);
   }
@@ -885,8 +889,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitMemberReference(
-      FunctionalInterfaceNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitMemberReference(
+      FunctionalInterfaceNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     ReadableLocalVariableUpdates updates = new ReadableLocalVariableUpdates();
     NullnessValue result = visitMemberReference(node, values(input), updates);
     return updateRegularStore(result, input, updates);
@@ -898,8 +902,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitArrayCreation(
-      ArrayCreationNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitArrayCreation(
+      ArrayCreationNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     ReadableLocalVariableUpdates updates = new ReadableLocalVariableUpdates();
     NullnessValue result = visitArrayCreation(node, values(input), updates);
     return updateRegularStore(result, input, updates);
@@ -911,8 +915,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitArrayType(
-      ArrayTypeNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitArrayType(
+      ArrayTypeNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitArrayType();
     return noStoreChanges(value, input);
   }
@@ -922,8 +926,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitPrimitiveType(
-      PrimitiveTypeNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitPrimitiveType(
+      PrimitiveTypeNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitPrimitiveType();
     return noStoreChanges(value, input);
   }
@@ -933,8 +937,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitClassName(
-      ClassNameNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitClassName(
+      ClassNameNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitClassName();
     return noStoreChanges(value, input);
   }
@@ -944,8 +948,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitPackageName(
-      PackageNameNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitPackageName(
+      PackageNameNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitPackageName();
     return noStoreChanges(value, input);
   }
@@ -955,8 +959,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitParameterizedType(
-      ParameterizedTypeNode node, TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitParameterizedType(
+      ParameterizedTypeNode node, TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     NullnessValue value = visitParameterizedType();
     return noStoreChanges(value, input);
   }
@@ -966,8 +970,8 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<NullnessValue, NullnessPropagationStore> visitMarker(MarkerNode node,
-      TransferInput<NullnessValue, NullnessPropagationStore> input) {
+  public final TransferResult<NullnessValue, LocalStore<NullnessValue>> visitMarker(MarkerNode node,
+      TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     ReadableLocalVariableUpdates updates = new ReadableLocalVariableUpdates();
     NullnessValue result = visitMarker(node, values(input), updates);
     return updateRegularStore(result, input, updates);
@@ -988,19 +992,19 @@ abstract class AbstractNullnessPropagationTransfer
 
   @CheckReturnValue
   private static ResultingStore updateStore(
-      NullnessPropagationStore oldStore, ReadableLocalVariableUpdates... updates) {
-    NullnessPropagationStore.Builder builder = oldStore.toBuilder();
+      LocalStore<NullnessValue> oldStore, ReadableLocalVariableUpdates... updates) {
+    LocalStore.Builder<NullnessValue> builder = oldStore.toBuilder();
     for (ReadableLocalVariableUpdates update : updates) {
       for (Entry<LocalVariableNode, NullnessValue> entry : update.values.entrySet()) {
         builder.setInformation(entry.getKey(), entry.getValue());
       }
     }
-    NullnessPropagationStore newStore = builder.build();
+    LocalStore<NullnessValue> newStore = builder.build();
     return new ResultingStore(newStore, !newStore.equals(oldStore));
   }
 
   private static SubNodeValues values(
-      final TransferInput<NullnessValue, NullnessPropagationStore> input) {
+      final TransferInput<NullnessValue, LocalStore<NullnessValue>> input) {
     return new SubNodeValues() {
       @Override
       public NullnessValue valueOfSubNode(Node node) {
@@ -1009,7 +1013,7 @@ abstract class AbstractNullnessPropagationTransfer
     };
   }
 
-  private static LocalVariableValues values(final NullnessPropagationStore store) {
+  private static LocalVariableValues values(final LocalStore<NullnessValue> store) {
     return new LocalVariableValues() {
       @Override
       public NullnessValue valueOfLocalVariable(LocalVariableNode node) {
@@ -1023,15 +1027,14 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   private static final class ResultingStore {
-    final NullnessPropagationStore store;
+    final LocalStore<NullnessValue> store;
     final boolean storeChanged;
 
-    ResultingStore(NullnessPropagationStore store, boolean storeChanged) {
+    ResultingStore(LocalStore<NullnessValue> store, boolean storeChanged) {
       this.store = store;
       this.storeChanged = storeChanged;
     }
   }
 
-  private static final boolean STORE_CHANGE = true;
   private static final boolean NO_STORE_CHANGE = false;
 }

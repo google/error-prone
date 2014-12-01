@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.dataflow.nullnesspropagation;
+package com.google.errorprone.dataflow;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Sets.intersection;
 
 import com.google.common.collect.ImmutableMap;
 
+import org.checkerframework.dataflow.analysis.AbstractValue;
 import org.checkerframework.dataflow.analysis.FlowExpressions;
 import org.checkerframework.dataflow.analysis.Store;
 import org.checkerframework.dataflow.cfg.node.LocalVariableNode;
@@ -31,7 +32,7 @@ import java.util.Map;
 import javax.lang.model.element.Element;
 
 /**
- * Immutable map from each local variable to its {@link NullnessValue}. Note that, while the
+ * Immutable map from each local variable to its {@link AbstractValue}. Note that, while the
  * interface is written in terms of <b>nodes</b>, the stored data is indexed by variable
  * <b>declaration</b>, so values persist across nodes.
  *
@@ -40,62 +41,63 @@ import javax.lang.model.element.Element;
  *
  * @author deminguyen@google.com (Demi Nguyen)
  */
-public final class NullnessPropagationStore implements Store<NullnessPropagationStore> {
-  private static final NullnessPropagationStore EMPTY =
-      new NullnessPropagationStore(ImmutableMap.<Element, NullnessValue>of());
+public final class LocalStore<V extends AbstractValue<V>> implements Store<LocalStore<V>> {
+  @SuppressWarnings({"unchecked", "rawtypes"}) // fully variant
+  private static final LocalStore<?> EMPTY = new LocalStore(ImmutableMap.of());
 
-  public static NullnessPropagationStore empty() {
-    return EMPTY;
+  @SuppressWarnings("unchecked") // fully variant
+  public static <V extends AbstractValue<V>> LocalStore<V> empty() {
+    return (LocalStore<V>) EMPTY;
   }
 
   /*
    * TODO(cpovirk): Return to LocalVariableNode keys if LocalVariableNode.equals is fixed to use the
    * variable's declaring element instead of its name.
    */
-  private final ImmutableMap<Element, NullnessValue> contents;
+  private final ImmutableMap<Element, V> contents;
 
-  private NullnessPropagationStore(Map<Element, NullnessValue> contents) {
+  private LocalStore(Map<Element, V> contents) {
     this.contents = ImmutableMap.copyOf(contents);
   }
 
-  public NullnessValue getInformation(LocalVariableNode node) {
+  public V getInformation(LocalVariableNode node) {
     return contents.get(node.getElement());
   }
 
-  public Builder toBuilder() {
-    return new Builder(this);
+  public Builder<V> toBuilder() {
+    return new Builder<V>(this);
   }
 
   /**
-   * Builder for {@link NullnessPropagationStore} instances. To obtain an instance, obtain a
-   * {@link NullnessPropagationStore} (such as {@link NullnessPropagationStore#empty()}), and call
-   * {@link NullnessPropagationStore#toBuilder() toBuilder()} on it.
+   * Builder for {@link LocalStore} instances. To obtain an instance, obtain a {@link LocalStore}
+   * (such as {@link LocalStore#empty()}), and call {@link LocalStore#toBuilder() toBuilder()} on
+   * it.
    */
-  public static final class Builder {
-    private final Map<Element, NullnessValue> contents;
+  public static final class Builder<V extends AbstractValue<V>> {
+    private final Map<Element, V> contents;
 
-    Builder(NullnessPropagationStore prototype) {
+    Builder(LocalStore<V> prototype) {
       contents = new HashMap<>(prototype.contents);
     }
 
-    public void setInformation(LocalVariableNode node, NullnessValue value) {
+    public void setInformation(LocalVariableNode node, V value) {
       contents.put(node.getElement(), checkNotNull(value));
     }
 
-    public NullnessPropagationStore build() {
-      return new NullnessPropagationStore(contents);
+    public LocalStore<V> build() {
+      return new LocalStore<V>(contents);
     }
   }
 
   @Override
-  public NullnessPropagationStore copy() {
+  public LocalStore<V> copy() {
     // No need to copy because it's immutable.
     return this;
   }
 
   @Override
-  public NullnessPropagationStore leastUpperBound(NullnessPropagationStore other) {
-    Builder result = EMPTY.toBuilder();
+  public LocalStore<V> leastUpperBound(LocalStore<V> other) {
+    Builder<V> result = LocalStore.<V>empty().toBuilder();
     for (Element var : intersection(contents.keySet(), other.contents.keySet())) {
       result.contents.put(var, contents.get(var).leastUpperBound(other.contents.get(var)));
     }
@@ -104,10 +106,10 @@ public final class NullnessPropagationStore implements Store<NullnessPropagation
 
   @Override
   public boolean equals(Object o) {
-    if (!(o instanceof NullnessPropagationStore)) {
+    if (!(o instanceof LocalStore)) {
       return false;
     }
-    NullnessPropagationStore other = (NullnessPropagationStore) o;
+    LocalStore<?> other = (LocalStore<?>) o;
     return contents.equals(other.contents);
   }
 

@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.dataflow.nullnesspropagation;
+package com.google.errorprone.dataflow;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+
+import com.google.errorprone.dataflow.nullnesspropagation.NullnessValue;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +28,7 @@ import org.junit.runners.JUnit4;
  * @author cpovirk@google.com (Chris Povirk)
  */
 @RunWith(JUnit4.class)
-public class NullnessPropagationStoreTest {
+public class LocalStoreTest {
   @Test
   public void leastUpperBoundEmpty() {
     assertEquals(newStore(), newStore().leastUpperBound(newStore()));
@@ -34,7 +36,7 @@ public class NullnessPropagationStoreTest {
 
   // TODO(cpovirk): more tests!
 
-  private static NullnessPropagationStore newStore() {
-    return NullnessPropagationStore.empty();
+  private static LocalStore<NullnessValue> newStore() {
+    return LocalStore.empty();
   }
 }
