@@ -19,7 +19,8 @@ package com.google.errorprone;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Function;
-import com.google.common.collect.Lists;
+import com.google.common.base.Predicates;
+import com.google.common.collect.FluentIterable;
 import com.google.errorprone.fixes.AppliedFix;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
@@ -73,7 +74,12 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
     // Swap the log's source and the current file's source; then be sure to swap them back later.
     JavaFileObject originalSource = log.useSource(sourceFile);
 
-    List<AppliedFix> appliedFixes = Lists.transform(description.fixes, fixToAppliedFix);
+    List<AppliedFix> appliedFixes = FluentIterable
+        .from(description.fixes)
+        .transform(fixToAppliedFix)
+        .filter(Predicates.notNull())
+        .toList();
+        
     StringBuilder messageBuilder = new StringBuilder(description.getMessage());
     boolean first = true;
     for (AppliedFix appliedFix : appliedFixes) {
