@@ -23,7 +23,7 @@ import org.checkerframework.dataflow.analysis.AbstractValue;
  *
  * @author deminguyen@google.com (Demi Nguyen)
  */
-public enum NullnessValue implements AbstractValue<NullnessValue> {
+public enum Nullness implements AbstractValue<Nullness> {
 
   /**
    * The lattice for nullness looks like:
@@ -41,7 +41,7 @@ public enum NullnessValue implements AbstractValue<NullnessValue> {
 
   private final String displayName;
 
-  NullnessValue(String displayName) {
+  Nullness(String displayName) {
     this.displayName = displayName;
   }
 
@@ -50,7 +50,7 @@ public enum NullnessValue implements AbstractValue<NullnessValue> {
   // represent the lattice directly and compute these functions from the lattice.
 
   @Override
-  public NullnessValue leastUpperBound(NullnessValue other) {
+  public Nullness leastUpperBound(Nullness other) {
     if (this == other) {
       return this;
     }
@@ -65,7 +65,7 @@ public enum NullnessValue implements AbstractValue<NullnessValue> {
     return NULLABLE;
   }
 
-  public NullnessValue greatestLowerBound(NullnessValue other) {
+  public Nullness greatestLowerBound(Nullness other) {
     if (this == other) {
       return this;
     }
@@ -81,28 +81,27 @@ public enum NullnessValue implements AbstractValue<NullnessValue> {
   }
 
   /**
-   * Returns the {@code NullnessValue} that corresponds to what you can deduce by knowing that some
-   * expression is not equal to another expression with this {@code NullnessValue}.
+   * Returns the {@code Nullness} that corresponds to what you can deduce by knowing that some
+   * expression is not equal to another expression with this {@code Nullness}.
    *
-   * <p>A {@code NullnessValue} represents a set of possible values for a expression. Suppose you
-   * have two variables {@code var1} and {@code var2}.  If {@code var1 != var2}, then {@code var1}
-   * must be an element of the complement of the singleton set containing the value of {@code var2}.
-   * If you union these complement sets over all possible values of {@code var2}, the set that
-   * results is what this method returns, assuming that {@code this} is the {@code NullnessValue}
-   * of {@code var2}.
+   * <p>A {@code Nullness} represents a set of possible values for a expression. Suppose you have
+   * two variables {@code var1} and {@code var2}. If {@code var1 != var2}, then {@code var1} must be
+   * an element of the complement of the singleton set containing the value of {@code var2}. If you
+   * union these complement sets over all possible values of {@code var2}, the set that results is
+   * what this method returns, assuming that {@code this} is the {@code Nullness} of {@code var2}.
    *
-   * <p>Example 1: Suppose {@code nv2 == NULL}.  Then {@code var2} can have exactly one value,
+   * <p>Example 1: Suppose {@code nv2 == NULL}. Then {@code var2} can have exactly one value,
    * {@code null}, and {@code var1} must have a value in the set of all values except {@code null}.
    * That set is exactly {@code NONNULL}.
    *
-   * <p>Example 2: Suppose {@code nv2 == NONNULL}.  Then {@code var2} can have any value except
-   * {@code null}.  Suppose {@code var2} has value {@code "foo"}.  Then {@code var1} must have a
-   * value in the set of all values except {@code "foo"}.  Now suppose {@code var2} has value
-   * {@code "bar"}.  Then {@code var1} must have a value in set of all values except {@code "bar"}.
-   * Since we don't know which value in the set {@code NONNULL var2} has, we union all possible
-   * complement sets to get the set of all values, or {@code NULLABLE}.
+   * <p>Example 2: Suppose {@code nv2 == NONNULL}. Then {@code var2} can have any value except
+   * {@code null}. Suppose {@code var2} has value {@code "foo"}. Then {@code var1} must have a value
+   * in the set of all values except {@code "foo"}. Now suppose {@code var2} has value {@code "bar"}
+   * . Then {@code var1} must have a value in set of all values except {@code "bar"}. Since we don't
+   * know which value in the set {@code NONNULL var2} has, we union all possible complement sets to
+   * get the set of all values, or {@code NULLABLE}.
    */
-  public NullnessValue deducedValueWhenNotEqual() {
+  public Nullness deducedValueWhenNotEqual() {
     switch (this) {
       case NULLABLE:
         return NULLABLE;

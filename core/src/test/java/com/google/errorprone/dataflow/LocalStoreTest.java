@@ -18,7 +18,7 @@ package com.google.errorprone.dataflow;
 
 import static org.junit.Assert.assertEquals;
 
-import com.google.errorprone.dataflow.nullnesspropagation.NullnessValue;
+import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,7 +36,7 @@ public class LocalStoreTest {
 
   // TODO(cpovirk): more tests!
 
-  private static LocalStore<NullnessValue> newStore() {
+  private static LocalStore<Nullness> newStore() {
     return LocalStore.empty();
   }
 }
