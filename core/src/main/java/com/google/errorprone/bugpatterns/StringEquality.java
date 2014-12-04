@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NONNULL;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.kindIs;
@@ -30,7 +31,6 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis;
-import com.google.errorprone.dataflow.nullnesspropagation.NullnessValue;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -105,12 +105,12 @@ public class StringEquality extends BugChecker implements BinaryTreeMatcher {
       // Consider one of the tree's operands. If it is non-null,
       // then call equals on it, passing the other operand as argument.
       fixExpr = considerOneOf(tree.getLeftOperand(), tree.getRightOperand(),
-        new HandleChoice<ExpressionTree, StringBuilder>() {
-          @Override
-          public StringBuilder apply(ExpressionTree it, ExpressionTree other) {
-            return isNonNull(it, state) ? methodCall(it, "equals", other) : null;
-          }
-        });
+          new HandleChoice<ExpressionTree, StringBuilder>() {
+            @Override
+            public StringBuilder apply(ExpressionTree it, ExpressionTree other) {
+              return isNonNull(it, state) ? methodCall(it, "equals", other) : null;
+            }
+          });
 
       if (fixExpr == null) {
         fixExpr = methodCall(
@@ -144,7 +144,7 @@ public class StringEquality extends BugChecker implements BinaryTreeMatcher {
 
   private boolean isNonNull(ExpressionTree expr, VisitorState state) {
     TreePath pathToExpr = new TreePath(state.getPath(), expr);
-    return nullnessAnalysis.getNullnessValue(pathToExpr, state.context) == NullnessValue.NONNULL;
+    return nullnessAnalysis.getNullness(pathToExpr, state.context) == NONNULL;
   }
 
   /**

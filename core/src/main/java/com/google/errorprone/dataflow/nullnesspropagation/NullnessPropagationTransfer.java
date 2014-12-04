@@ -16,9 +16,9 @@
 
 package com.google.errorprone.dataflow.nullnesspropagation;
 
-import static com.google.errorprone.dataflow.nullnesspropagation.NullnessValue.NONNULL;
-import static com.google.errorprone.dataflow.nullnesspropagation.NullnessValue.NULL;
-import static com.google.errorprone.dataflow.nullnesspropagation.NullnessValue.NULLABLE;
+import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NONNULL;
+import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NULL;
+import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NULLABLE;
 import static com.sun.tools.javac.code.TypeTag.BOOLEAN;
 
 import com.google.common.base.Preconditions;
@@ -60,9 +60,9 @@ import javax.lang.model.element.VariableElement;
 
 /**
  * The {@code TransferFunction} for our nullability analysis.  This analysis determines, for all
- * variables and parameters, whether they are definitely null ({@link NullnessValue#NULL}),
- * definitely non-null ({@link NullnessValue#NONNULL}), possibly null
- * ({@link NullnessValue#NULLABLE}), or are on an infeasible path ({@link NullnessValue#BOTTOM}).
+ * variables and parameters, whether they are definitely null ({@link Nullness#NULL}),
+ * definitely non-null ({@link Nullness#NONNULL}), possibly null
+ * ({@link Nullness#NULLABLE}), or are on an infeasible path ({@link Nullness#BOTTOM}).
  * This analysis depends only on the code and does not take nullness annotations into account.
  *
  * <p>Each {@code visit*()} implementation provides us with information about nullability that
@@ -189,37 +189,36 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer {
    * conversion call.
    */
   @Override
-  NullnessValue visitValueLiteral() {
+  Nullness visitValueLiteral() {
     return NONNULL;
   }
 
   @Override
-  NullnessValue visitNullLiteral() {
+  Nullness visitNullLiteral() {
     return NULL;
   }
 
   @Override
-  NullnessValue visitBitwiseOperation() {
+  Nullness visitBitwiseOperation() {
     return NONNULL;
   }
 
   @Override
-  NullnessValue visitNumericalComparison() {
+  Nullness visitNumericalComparison() {
     return NONNULL;
   }
 
   @Override
-  NullnessValue visitNumericalOperation() {
+  Nullness visitNumericalOperation() {
     return NONNULL;
   }
 
   @Override
-  NullnessValue visitTypeCast(TypeCastNode node, SubNodeValues inputs) {
+  Nullness visitTypeCast(TypeCastNode node, SubNodeValues inputs) {
     return hasPrimitiveType(node)
         ? NONNULL
         : inputs.valueOfSubNode(node.getOperand());
   }
-
 
   /**
    * The result of string concatenation is always non-null. If an operand is {@code null}, it is
@@ -227,23 +226,18 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer {
    * JLS 15.18.1 "String Concatenation Operator +", and 5.1.11, "String Conversion".
    */
   @Override
-  NullnessValue visitStringConcatenate() {
+  Nullness visitStringConcatenate() {
     // TODO(user): Mark the inputs as dereferenced.
     return NONNULL;
   }
 
   @Override
-  NullnessValue visitNumericalAddition() {
+  Nullness visitNarrowingConversion() {
     return NONNULL;
   }
 
   @Override
-  NullnessValue visitNarrowingConversion() {
-    return NONNULL;
-  }
-
-  @Override
-  NullnessValue visitWideningConversion() {
+  Nullness visitWideningConversion() {
     return NONNULL;
   }
 
@@ -270,9 +264,9 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer {
   }
 
   @Override
-  NullnessValue visitAssignment(AssignmentNode node, SubNodeValues inputs,
+  Nullness visitAssignment(AssignmentNode node, SubNodeValues inputs,
       LocalVariableUpdates updates) {
-    NullnessValue value = inputs.valueOfSubNode(node.getExpression());
+    Nullness value = inputs.valueOfSubNode(node.getExpression());
 
     Node target = node.getTarget();
     if (target instanceof LocalVariableNode) {
@@ -309,7 +303,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer {
    * (to autobox the value), which triggers {@link #visitMethodInvocation}.)
    */
   @Override
-  NullnessValue visitLocalVariable(LocalVariableNode node, LocalVariableValues values) {
+  Nullness visitLocalVariable(LocalVariableNode node, LocalVariableValues values) {
     return hasPrimitiveType(node) || hasNonNullConstantValue(node)
         ? NONNULL
         : values.valueOfLocalVariable(node);
@@ -324,7 +318,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer {
    * method. Instead, it will call {@link #visitAssignment}.
    */
   @Override
-  NullnessValue visitFieldAccess(FieldAccessNode node, LocalVariableUpdates updates) {
+  Nullness visitFieldAccess(FieldAccessNode node, LocalVariableUpdates updates) {
     ClassAndField accessed = tryGetFieldSymbol(node.getTree());
     setReceiverNullness(updates, node.getReceiver(), accessed);
     return fieldNullness(accessed);
@@ -336,7 +330,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer {
    * returns a primitive type).
    */
   @Override
-  NullnessValue visitMethodInvocation(MethodInvocationNode node, LocalVariableUpdates thenUpdates,
+  Nullness visitMethodInvocation(MethodInvocationNode node, LocalVariableUpdates thenUpdates,
       LocalVariableUpdates elseUpdates, LocalVariableUpdates bothUpdates) {
     ClassAndMethod callee = tryGetMethodSymbol(node.getTree());
     setReceiverNullness(bothUpdates, node.getTarget().getReceiver(), callee);
@@ -346,22 +340,22 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer {
   }
 
   @Override
-  NullnessValue visitObjectCreation() {
+  Nullness visitObjectCreation() {
     return NONNULL;
   }
 
   /**
-   * Refines the {@code NullnessValue} of {@code LocalVariableNode}s used in an equality
-   * comparison using the greatest lower bound.
+   * Refines the {@code Nullness} of {@code LocalVariableNode}s used in an equality comparison using
+   * the greatest lower bound.
    *
    * @param equalTo whether the comparison is == (false for !=)
    * @param leftNode the left-hand side of the comparison
    * @param rightNode the right-hand side of the comparison
    * @param inputs access to nullness values of the left and right nodes
    * @param thenUpdates the local variables whose nullness values should be updated if the
-   *     comparison returns {@code true}
+   *      comparison returns {@code true}
    * @param elseUpdates the local variables whose nullness values should be updated if the
-   *     comparison returns {@code false}
+   *      comparison returns {@code false}
    */
   private static void handleEqualityComparison(
       boolean equalTo,
@@ -370,9 +364,9 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer {
       SubNodeValues inputs,
       LocalVariableUpdates thenUpdates,
       LocalVariableUpdates elseUpdates) {
-    NullnessValue leftVal = inputs.valueOfSubNode(leftNode);
-    NullnessValue rightVal = inputs.valueOfSubNode(rightNode);
-    NullnessValue equalBranchValue = leftVal.greatestLowerBound(rightVal);
+    Nullness leftVal = inputs.valueOfSubNode(leftNode);
+    Nullness rightVal = inputs.valueOfSubNode(rightNode);
+    Nullness equalBranchValue = leftVal.greatestLowerBound(rightVal);
     LocalVariableUpdates equalBranchUpdates = equalTo ? thenUpdates : elseUpdates;
     LocalVariableUpdates notEqualBranchUpdates = equalTo ? elseUpdates : thenUpdates;
 
@@ -434,7 +428,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer {
     return null;
   }
 
-  private static NullnessValue fieldNullness(ClassAndField accessed) {
+  private static Nullness fieldNullness(ClassAndField accessed) {
     if (accessed == null) {
       return NULLABLE;
     }
@@ -455,7 +449,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer {
     return NULLABLE;
   }
 
-  private NullnessValue returnValueNullness(ClassAndMethod callee) {
+  private Nullness returnValueNullness(ClassAndMethod callee) {
     if (callee == null) {
       return NULLABLE;
     }

@@ -16,10 +16,10 @@
 
 package com.google.errorprone.dataflow.nullnesspropagation;
 
-import static com.google.errorprone.dataflow.nullnesspropagation.NullnessValue.BOTTOM;
-import static com.google.errorprone.dataflow.nullnesspropagation.NullnessValue.NONNULL;
-import static com.google.errorprone.dataflow.nullnesspropagation.NullnessValue.NULL;
-import static com.google.errorprone.dataflow.nullnesspropagation.NullnessValue.NULLABLE;
+import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.BOTTOM;
+import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NONNULL;
+import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NULL;
+import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NULLABLE;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
@@ -27,12 +27,12 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 /** 
- * Unit tests for {@link NullnessValue}.
+ * Unit tests for {@link Nullness}.
  * 
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 @RunWith(JUnit4.class)
-public class NullnessValueTest {  
+public class NullnessTest {  
   @Test
   public void testLeastUpperBound() {
     assertEquals(NULLABLE, NULLABLE.leastUpperBound(NULLABLE));

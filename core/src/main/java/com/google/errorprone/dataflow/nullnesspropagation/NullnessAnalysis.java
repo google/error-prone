@@ -57,9 +57,13 @@ public final class NullnessAnalysis {
   }
 
   /**
-   * Returns the {@link NullnessValue} of the leaf of {@code exprPath}.
+   * Returns the {@link Nullness} of the leaf of {@code exprPath}.
+   *
+   * <p>If the leaf required the compiler to generate autoboxing or autounboxing calls,
+   * {@code getNullness} returns the {@code Nullness} <i>after</i> the boxing/unboxing. This implies
+   * that, in those cases, it will always return {@code NONNULL}.
    */
-  public NullnessValue getNullnessValue(TreePath exprPath, Context context) {
+  public Nullness getNullness(TreePath exprPath, Context context) {
     return DataFlow.expressionDataflow(exprPath, context, nullnessPropagation);
   }
 }
