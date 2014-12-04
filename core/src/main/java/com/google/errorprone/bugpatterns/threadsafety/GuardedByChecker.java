@@ -28,7 +28,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 
-import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
@@ -62,40 +61,18 @@ public class GuardedByChecker extends GuardedByValidator implements BugChecker.V
       @Override
       public void handleGuardedAccess(
           ExpressionTree tree, GuardedByExpression guard, HeldLockSet live) {
-        report(tree, GuardedByChecker.this.checkGuardedAccess(tree, guard, live, state), state);
+        report(GuardedByChecker.this.checkGuardedAccess(tree, guard, live, state), state);
       }
     });
 
-    return GuardedByUtils.isGuardedByValid(tree, state)
-        ? Description.NO_MATCH
-        : describeInvalidGuardedBy(tree);
+    return GuardedByValidator.validate(this, tree, state);
   }
 
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
-    // Only field declarations can have @GuardedBy annotations, so filter out parameters and
-    // local variables (which are also represented as {@link VariableTree}s in the AST).
-    if (!ASTHelpers.findEnclosingNode(state.getPath(), ClassTree.class).getMembers()
-        .contains(tree)) {
-      return Description.NO_MATCH;
-    }
-
-    return GuardedByUtils.isGuardedByValid(tree, state)
-        ? Description.NO_MATCH
-        : describeInvalidGuardedBy(tree);
-  }
-
-  private Description describeInvalidGuardedBy(Tree tree) {
-    // Re-use the validation message from {@link GuardedByValidator}.
-    // TODO(user) - consolidate the checks once the clean-up is done; GuardedByChecker is intended
-    // to subsume GuardedByValidator.
-    String message = GuardedByValidator.class.getAnnotation(BugPattern.class).summary();
-    // TODO(user) - this message will have a wiki link to GuardedBy, not GuardedByValidator.
-    // Think about the best way to present the information from GuardedByValidator's explanation
-    // field -- should it be a separate page or part of the GuardedBy page?
-    return buildDescription(tree)
-        .setMessage(message)
-        .build();
+    // We only want to check field declarations. The VariableTree might be for a local or a
+    // parameter, but they won't have @GuardedBy annotations.
+    return GuardedByValidator.validate(this, tree, state);
   }
 
   protected Description checkGuardedAccess(Tree tree, GuardedByExpression guard,
@@ -153,7 +130,7 @@ public class GuardedByChecker extends GuardedByValidator implements BugChecker.V
 
   // TODO(user) - this is kind of a hack. Provide an abstraction for matchers that need to do
   // stateful visiting? (e.g. a traversal that passes along a set of held locks...)
-  private void report(Tree tree, Description description, VisitorState state) {
+  private void report(Description description, VisitorState state) {
     if (description == null || description == Description.NO_MATCH) {
       return;
     }

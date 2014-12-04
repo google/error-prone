@@ -16,10 +16,13 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
+import com.google.auto.value.AutoValue;
+import com.google.common.base.Optional;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.Tree;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.parser.JavacParser;
 import com.sun.tools.javac.parser.ParserFactory;
 import com.sun.tools.javac.tree.JCTree;
@@ -64,12 +67,47 @@ public class GuardedByUtils {
     }
     return exp;
   }
+  
 
-  public static boolean isGuardedByValid(Tree tree, VisitorState state) {
+  @AutoValue
+  abstract static class GuardedByValidationResult {
+    abstract String message();
+    abstract Boolean isValid();
+    
+    static GuardedByValidationResult invalid(String message) {
+      return new AutoValue_GuardedByUtils_GuardedByValidationResult(message, false);
+    }
+    
+    static GuardedByValidationResult ok() {
+      return new AutoValue_GuardedByUtils_GuardedByValidationResult("", true);
+    }
+  }
+
+  public static GuardedByValidationResult isGuardedByValid(Tree tree, VisitorState state) {
     String guard = GuardedByUtils.getGuardValue(tree);
     if (guard == null) {
-      return true;
+      return GuardedByValidationResult.ok();
     }
-    return GuardedByBinder.bindString(guard, GuardedBySymbolResolver.from(tree, state)).isPresent();
+
+    Optional<GuardedByExpression> boundGuard =
+        GuardedByBinder.bindString(guard, GuardedBySymbolResolver.from(tree, state));
+    if (!boundGuard.isPresent()) {
+      return GuardedByValidationResult.invalid("could not resolve guard");
+    }
+
+    Symbol treeSym = ASTHelpers.getSymbol(tree);
+    if (treeSym == null) {
+      // this shouldn't happen unless the compilation had already failed.
+      return GuardedByValidationResult.ok();
+    }
+
+    boolean staticGuard = boundGuard.get().kind() == GuardedByExpression.Kind.CLASS_LITERAL
+        || (boundGuard.get().sym() != null && boundGuard.get().sym().isStatic());
+    if (treeSym.isStatic() && !staticGuard) {
+      return GuardedByValidationResult.invalid(
+          "static member guarded by instance");
+    }
+
+    return GuardedByValidationResult.ok();
   }
 }
