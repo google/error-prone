@@ -25,9 +25,11 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
+import com.google.errorprone.bugpatterns.threadsafety.GuardedByUtils.GuardedByValidationResult;
 import com.google.errorprone.matchers.Description;
 
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 
 /**
@@ -52,19 +54,27 @@ import com.sun.source.tree.VariableTree;
 public class GuardedByValidator extends BugChecker implements VariableTreeMatcher,
     MethodTreeMatcher {
 
+  private static final String MESSAGE_FORMAT = "Invalid @GuardedBy expression: %s";
+  
   @Override
   public Description matchMethod(MethodTree tree, final VisitorState state) {
-    return GuardedByUtils.isGuardedByValid(tree, state)
-        ? Description.NO_MATCH
-        : describeMatch(tree);
+    return validate(this, tree, state);
   }
 
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
     // We only want to check field declarations. The VariableTree might be for a local or a
     // parameter, but they won't have @GuardedBy annotations.
-    return GuardedByUtils.isGuardedByValid(tree, state)
-        ? Description.NO_MATCH
-        : describeMatch(tree);
+    return validate(this, tree, state);
+  }
+
+  static Description validate(BugChecker checker, Tree tree, VisitorState state) {
+    GuardedByValidationResult result = GuardedByUtils.isGuardedByValid(tree, state);
+    if (result.isValid()) {
+      return Description.NO_MATCH;
+    }
+    return Description.builder(tree, checker)
+        .setMessage(String.format(MESSAGE_FORMAT, result.message()))
+        .build();
   }
 }

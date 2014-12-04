@@ -41,9 +41,11 @@ public class GuardedByValidatorTest {
             "package threadsafety.Test;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class Test {",
-            "  // BUG: Diagnostic contains: Invalid @GuardedBy expression",
+            "  // BUG: Diagnostic contains:",
+            "  // Invalid @GuardedBy expression: could not resolve guard",
             "  @GuardedBy(\"This thread\") int x;",
-            "  // BUG: Diagnostic contains: Invalid @GuardedBy expression",
+            "  // BUG: Diagnostic contains:",
+            "  // Invalid @GuardedBy expression: could not resolve guard",
             "  @GuardedBy(\"This thread\") void m() {}",
             "}"
         )
@@ -98,7 +100,8 @@ public class GuardedByValidatorTest {
             "import javax.annotation.concurrent.GuardedBy;",
             "class Test {",
             "  final Object instanceField = new Object();",
-            "  // BUG: Diagnostic contains: Invalid @GuardedBy expression",
+            "  // BUG: Diagnostic contains:",
+            "  // Invalid @GuardedBy expression: could not resolve guard",
             "  @GuardedBy(\"Test.instanceField\") Object s_;",
             "}"
         )
@@ -113,7 +116,8 @@ public class GuardedByValidatorTest {
             "package threadsafety.Test;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class Test {",
-            "  // BUG: Diagnostic contains: Invalid @GuardedBy expression",
+            "  // BUG: Diagnostic contains:",
+            "  // Invalid @GuardedBy expression: could not resolve guard",
             "  @GuardedBy(\"Test\") Object s_;",
             "}"
         )
@@ -141,7 +145,8 @@ public class GuardedByValidatorTest {
             "  static void m(Endpoint endpoint) {",
             "    Runnable runnable =",
             "      new Runnable(endpoint) {",
-            "        // BUG: Diagnostic contains: Invalid @GuardedBy expression",
+            "        // BUG: Diagnostic contains:",
+            "        // Invalid @GuardedBy expression: could not resolve guard",
             "        @GuardedBy(\"endpoint_.getLock()\") void run() {}",
             "    };",
             "  }",
@@ -170,11 +175,61 @@ public class GuardedByValidatorTest {
             "  static void m(Endpoint endpoint) {",
             "    Runnable runnable =",
             "      new Runnable(endpoint) {",
-            "        // BUG: Diagnostic contains: Invalid @GuardedBy expression",
+            "        // BUG: Diagnostic contains:",
+            "        // Invalid @GuardedBy expression: could not resolve guard",
             "        @GuardedBy(\"endpoint.getLock()\") void run() {}",
             "    };",
             "  }",
             "}"
         ));
+  }
+
+
+  @Test
+  public void testStaticGuardedByInstance() throws Exception {
+    compilationHelper.assertCompileFailsWithMessages(
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety.Test;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "class Test {",
+            "  // BUG: Diagnostic contains:",
+            "  // Invalid @GuardedBy expression: static member guarded by instance",
+            "  @GuardedBy(\"this\") static int x;",
+            "}"
+        )
+    );
+  }
+  
+  @Test
+  public void testStaticGuardedByInstanceMethod() throws Exception {
+    compilationHelper.assertCompileFailsWithMessages(
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety.Test;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "class Test {",
+            "  final Object mu_ = new Object();",
+            "  Object lock() { return mu_; }",
+            "  // BUG: Diagnostic contains:",
+            "  // Invalid @GuardedBy expression: static member guarded by instance",
+            "  @GuardedBy(\"lock()\") static int x;",
+            "}"
+        )
+    );
+  }
+  
+  @Test
+  public void testStaticGuardedByStatic() throws Exception {
+    compilationHelper.assertCompileSucceeds(
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety.Test;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "class Test {",
+            "  @GuardedBy(\"Test.class\") static int x;",
+            "}"
+        )
+    );
   }
 }
