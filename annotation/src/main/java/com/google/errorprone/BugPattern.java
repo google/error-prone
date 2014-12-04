@@ -95,7 +95,11 @@ public @interface BugPattern {
     /**
      *  JSR-330 errors not specific to Guice.
      */
-    INJECT
+    INJECT,
+    /**
+     * Errors specific to Mockito.
+     */
+    MOCKITO;
   }
 
   /**

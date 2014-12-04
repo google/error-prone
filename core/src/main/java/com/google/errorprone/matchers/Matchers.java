@@ -551,6 +551,21 @@ public class Matchers {
     };
   }
 
+  public static Matcher<ExpressionTree> classLiteral(
+      final Matcher<? super ExpressionTree> classMatcher) {
+    return new Matcher<ExpressionTree>() {
+      @Override
+      public boolean matches(ExpressionTree expressionTree, VisitorState state) {
+        if (expressionTree.getKind() == Kind.MEMBER_SELECT) {
+          MemberSelectTree select = (MemberSelectTree) expressionTree;
+          return select.getIdentifier().contentEquals("class")
+              && classMatcher.matches(select.getExpression(), state);
+        }
+        return false;
+      }
+    };
+  }
+
   /**
    * Matches an Annotation AST node if the argument to the annotation with the given name has a value which
    * matches the given matcher.
