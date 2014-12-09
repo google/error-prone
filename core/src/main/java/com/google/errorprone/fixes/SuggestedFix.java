@@ -169,8 +169,7 @@ public class SuggestedFix implements Fix {
 
     public Fix build() {
       if (isEmpty()) {
-        throw new IllegalStateException(
-            "Empty fixes are not supported. Use Fix.NO_FIX instead.");
+        throw new IllegalStateException("Empty fixes are not supported.");
       }
       return new SuggestedFix(fixes, importsToAdd, importsToRemove);
     }
