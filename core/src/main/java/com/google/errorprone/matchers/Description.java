@@ -128,6 +128,14 @@ public class Description {
   }
 
   /**
+   * Returns a new builder for {@link Description}s.
+   */
+  public static Builder builder(
+      Tree node, String name, String link, SeverityLevel severity, String message) {
+    return new Builder(node, name, link, severity, message);
+  }
+
+  /**
    * Builder for {@code Description}s.
    */
   public static class Builder {
@@ -145,6 +153,15 @@ public class Description {
       this.linkUrl = checker.linkUrl();
       this.severity = checker.severity();
       this.rawMessage = checker.message();
+    }
+
+    private Builder(
+        Tree node, String name, String linkUrl, SeverityLevel severity, String rawMessage) {
+      this.node = Preconditions.checkNotNull(node);
+      this.name = Preconditions.checkNotNull(name);
+      this.linkUrl = Preconditions.checkNotNull(linkUrl);
+      this.severity = Preconditions.checkNotNull(severity);
+      this.rawMessage = Preconditions.checkNotNull(rawMessage);
     }
 
     /**
