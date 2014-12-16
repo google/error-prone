@@ -80,11 +80,12 @@ public class NarrowingCompoundAssignment extends BugChecker
       case LEFT_SHIFT_ASSIGNMENT:
         return "<<";
       case RIGHT_SHIFT_ASSIGNMENT:
-        return ">>";
       case UNSIGNED_RIGHT_SHIFT_ASSIGNMENT:
-        return ">>>";
+        // Right shifts can never cause an unexpected loss of precision.
+        return null;
+      default:
+        throw new IllegalArgumentException();
     }
-    throw new IllegalArgumentException();
   }
 
   @Override
@@ -103,6 +104,9 @@ public class NarrowingCompoundAssignment extends BugChecker
       return Description.NO_MATCH;
     }
     String op = op2string(tree.getKind());
+    if (op == null) {
+      return Description.NO_MATCH;
+    }
     // e.g. 's *= 42' -> 's = (short) (s * 42)'
     String replacement = String.format("%s = (%s) (%s %s %s)", var, deficient, var, op, expr);
     return describeMatch(tree, SuggestedFix.replace(tree, replacement));

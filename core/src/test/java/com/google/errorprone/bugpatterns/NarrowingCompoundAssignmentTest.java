@@ -77,9 +77,8 @@ public class NarrowingCompoundAssignmentTest {
             "    s -= 1;",
             "    // BUG: Diagnostic contains: s = (short) (s << 1)",
             "    s <<= 1;",
-            "    // BUG: Diagnostic contains: s = (short) (s >> 1)",
+            "    // Right shifts are OK",
             "    s >>= 1;",
-            "    // BUG: Diagnostic contains: s = (short) (s >>> 1)",
             "    s >>>= 1;",
             "  }",
             "}")
