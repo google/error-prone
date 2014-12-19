@@ -70,6 +70,6 @@ public class LongLiteralLowerCaseSuffixTest {
   public void testDisableable() throws Exception {
     compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
         .sources(getClass(), "LongLiteralLowerCaseSuffixPositiveCase1.java"),
-        ImmutableList.of("-Xepdisable:LongLiteralLowerCaseSuffix"));
+        ImmutableList.of("-Xep:LongLiteralLowerCaseSuffix:OFF"));
   }
 }
