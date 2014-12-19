@@ -25,11 +25,14 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompoundAssignmentTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.OperatorPrecedence;
 
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCBinary;
 
 import java.util.EnumMap;
 
@@ -65,7 +68,7 @@ public class NarrowingCompoundAssignment extends BugChecker
     DEFICIENT_TYPES.put(TypeKind.FLOAT, "float");
   }
 
-  static String op2string(Tree.Kind kind) {
+  static String compoundAssignmentString(Tree.Kind kind) {
     switch (kind) {
       case MULTIPLY_ASSIGNMENT:
         return "*";
@@ -79,15 +82,50 @@ public class NarrowingCompoundAssignment extends BugChecker
         return "-";
       case LEFT_SHIFT_ASSIGNMENT:
         return "<<";
+      case AND_ASSIGNMENT:
+        return "&=";
+      case XOR_ASSIGNMENT:
+        return "^=";
+      case OR_ASSIGNMENT:
+        return "|=";
       case RIGHT_SHIFT_ASSIGNMENT:
+        return ">>=";
       case UNSIGNED_RIGHT_SHIFT_ASSIGNMENT:
-        // Right shifts can never cause an unexpected loss of precision.
-        return null;
+        return ">>>=";
       default:
-        throw new IllegalArgumentException();
+        throw new IllegalArgumentException("Unexpected operator assignment kind: " + kind);
     }
   }
-
+  
+  static Kind regularAssignmentFromCompound(Kind kind) {
+    switch (kind) {
+      case MULTIPLY_ASSIGNMENT:
+        return Kind.ASSIGNMENT;
+      case DIVIDE_ASSIGNMENT:
+        return Kind.DIVIDE;
+      case REMAINDER_ASSIGNMENT:
+        return Kind.REMAINDER;
+      case PLUS_ASSIGNMENT:
+        return Kind.PLUS;
+      case MINUS_ASSIGNMENT:
+        return Kind.MINUS;
+      case LEFT_SHIFT_ASSIGNMENT:
+        return Kind.LEFT_SHIFT;
+      case AND_ASSIGNMENT:
+        return Kind.AND;
+      case XOR_ASSIGNMENT:
+        return Kind.XOR;
+      case OR_ASSIGNMENT:
+        return Kind.OR;
+      case RIGHT_SHIFT_ASSIGNMENT:
+        return Kind.RIGHT_SHIFT;
+      case UNSIGNED_RIGHT_SHIFT_ASSIGNMENT:
+        return Kind.UNSIGNED_RIGHT_SHIFT;
+      default:
+        throw new IllegalArgumentException("Unexpected compound assignment kind: " + kind);
+    }
+  }
+  
   @Override
   public Description matchCompoundAssignment(CompoundAssignmentTree tree, VisitorState state) {
     String deficient = DEFICIENT_TYPES.get(type(tree.getVariable()).getKind());
@@ -103,10 +141,25 @@ public class NarrowingCompoundAssignment extends BugChecker
     if (var == null || expr == null) {
       return Description.NO_MATCH;
     }
-    String op = op2string(tree.getKind());
-    if (op == null) {
-      return Description.NO_MATCH;
+    switch (tree.getKind()) {
+      case RIGHT_SHIFT_ASSIGNMENT:
+      case UNSIGNED_RIGHT_SHIFT_ASSIGNMENT:
+        // Right shifts cannot cause overflow
+        return Description.NO_MATCH;
+      default:  // continue below
     }
+    String op = compoundAssignmentString(tree.getKind());
+    
+    // Add parens to the rhs if necessary to preserve the current precedence
+    // e.g. 's -= 1 - 2' -> 's = s - (1 - 2)'
+    if (tree.getExpression() instanceof JCBinary) {
+      Kind regularAssignmentKind = regularAssignmentFromCompound(tree.getKind());
+      Kind rhsKind = ((JCBinary) tree.getExpression()).getKind();
+      if (OperatorPrecedence.from(rhsKind) == OperatorPrecedence.from(regularAssignmentKind)) {
+        expr = String.format("(%s)", expr); 
+      }
+    }
+
     // e.g. 's *= 42' -> 's = (short) (s * 42)'
     String replacement = String.format("%s = (%s) (%s %s %s)", var, deficient, var, op, expr);
     return describeMatch(tree, SuggestedFix.replace(tree, replacement));

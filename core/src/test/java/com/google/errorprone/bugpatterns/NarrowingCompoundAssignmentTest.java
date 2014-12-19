@@ -117,4 +117,32 @@ public class NarrowingCompoundAssignmentTest {
             "}")
         );
   }
+  
+  @Test
+  public void testPreservePrecedence() throws Exception {
+    compilationHelper.assertCompileFailsWithMessages(
+        compilationHelper.fileManager().forSourceLines("Test.java",
+            "class Test {",
+            "  void m() {",
+            "    float f = 0;",
+            "    // BUG: Diagnostic contains: f = (float) (f - (3.0 - 2.0))",
+            "    f -= 3.0 - 2.0;",
+            "  }",
+            "}")
+        );
+  }
+  
+  @Test
+  public void testPreservePrecedence2() throws Exception {
+    compilationHelper.assertCompileFailsWithMessages(
+        compilationHelper.fileManager().forSourceLines("Test.java",
+            "class Test {",
+            "  void m() {",
+            "    float f = 0;",
+            "    // BUG: Diagnostic contains: f = (float) (f - 3.0 * 2.0)",
+            "    f -= 3.0 * 2.0;",
+            "  }",
+            "}")
+        );
+  }
 }
