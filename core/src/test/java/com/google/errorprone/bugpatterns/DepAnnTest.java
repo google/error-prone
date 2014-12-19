@@ -58,6 +58,6 @@ public class DepAnnTest {
   public void testDisableable() throws Exception {
     compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
         .sources(getClass(), "DepAnnPositiveCases.java"),
-        ImmutableList.of("-Xepdisable:DepAnn"));
+        ImmutableList.of("-Xep:DepAnn:OFF"));
   }
 }

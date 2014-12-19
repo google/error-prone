@@ -20,9 +20,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
@@ -73,16 +71,16 @@ public class ErrorProneJavaCompilerTest {
 
   @Test
   public void testIsSupportedOption() {
-    JavaCompiler mockCompiler = mock(JavaCompiler.class);
-    ErrorProneJavaCompiler compiler = new ErrorProneJavaCompiler(mockCompiler);
+    ErrorProneJavaCompiler compiler = new ErrorProneJavaCompiler();
 
     // javac options should be passed through
-    compiler.isSupportedOption("-source");
-    verify(mockCompiler).isSupportedOption("-source");
+    assertThat(compiler.isSupportedOption("-source")).is(1);
 
     // error-prone options should be handled
-    assertThat(compiler.isSupportedOption("-Xepdisable:"), is(0));
-    assertThat(compiler.isSupportedOption("-Xep:"), is(0));
+    assertThat(compiler.isSupportedOption("-Xep:")).is(0);
+
+    // old-style error-prone options are not supported
+    assertThat(compiler.isSupportedOption("-Xepdisable:")).is(-1);
   }
 
   interface JavaFileObjectDiagnosticListener extends DiagnosticListener<JavaFileObject> {}
@@ -146,23 +144,6 @@ public class ErrorProneJavaCompilerTest {
         DepAnnTest.class,
         Arrays.asList("DepAnnPositiveCases.java"),
         Arrays.asList("-Xep:DepAnn:OFF"),
-        Collections.<Class<? extends BugChecker>>emptyList());
-    assertThat(result.succeeded).isTrue();
-  }
-
-  @Test
-  public void testWithOldStyleDisabledCheck() throws Exception {
-    CompilationResult result = doCompile(
-        DepAnnTest.class,
-        Arrays.asList("DepAnnPositiveCases.java"),
-        Collections.<String>emptyList(),
-        Collections.<Class<? extends BugChecker>>emptyList());
-    assertThat(result.succeeded).isFalse();
-
-    result = doCompile(
-        DepAnnTest.class,
-        Arrays.asList("DepAnnPositiveCases.java"),
-        Arrays.asList("-Xepdisable:DepAnn"),
         Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isTrue();
   }

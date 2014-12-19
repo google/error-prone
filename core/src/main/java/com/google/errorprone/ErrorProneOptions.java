@@ -49,25 +49,17 @@ import java.util.Map;
  * -Xep:StringEquality:OFF -Xep:StringEquality  [turns on StringEquality check]
  * }</pre>
  *
- * <p>We will continue to support the old-style error-prone disabling flags for a short transition
- * period.  Those flags have the following syntax:<br>
- * <pre>{@code
- * -Xepdisable:<checkName>[,<checkName>...]
- * }</pre>
- *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public class ErrorProneOptions {
 
   private static final String FLAG_PREFIX = "-Xep:";
-  private static final String OLD_DISABLE_FLAG_PREFIX = "-Xepdisable:";
 
   /**
    * see {@link javax.tools.OptionChecker#isSupportedOption(String)}
    */
   public static int isSupportedOption(String option) {
-    return (option.startsWith(FLAG_PREFIX) || option.startsWith(OLD_DISABLE_FLAG_PREFIX))
-        ? 0 : -1;
+    return option.startsWith(FLAG_PREFIX) ? 0 : -1;
   }
 
   /**
@@ -112,53 +104,30 @@ public class ErrorProneOptions {
     ImmutableList.Builder<String> outputArgs = ImmutableList.builder();
     Map<String, Severity> severityMap = new HashMap<>();
 
-    FlagStyle flagStyle = getFlagStyle(args);
-    switch (flagStyle) {
-      case OLD:
-        for (String arg : args) {
-          if (arg.startsWith(OLD_DISABLE_FLAG_PREFIX)) {
-            String[] checksToDisable = arg.substring(OLD_DISABLE_FLAG_PREFIX.length()).split(",");
-            severityMap = new HashMap<>();
-            for (String checkName : checksToDisable) {
-              severityMap.put(checkName, Severity.OFF);
-            }
-          } else {
-            outputArgs.add(arg);
+    for (String arg : args) {
+      if (arg.startsWith(FLAG_PREFIX)) {
+        // Strip prefix
+        String remaining = arg.substring(FLAG_PREFIX.length());
+        // Split on ':'
+        String[] parts = remaining.split(":");
+        if (parts.length > 2 || parts[0].isEmpty()) {
+          throw new InvalidCommandLineOptionException("invalid flag: " + arg);
+        }
+        String checkName = parts[0];
+        Severity severity;
+        if (parts.length == 1) {
+          severity = Severity.DEFAULT;
+        } else {  // parts.length == 2
+          try {
+            severity = Severity.valueOf(parts[1]);
+          } catch (IllegalArgumentException e) {
+            throw new InvalidCommandLineOptionException("invalid flag: " + arg);
           }
         }
-        break;
-      case NEW:
-        for (String arg : args) {
-          if (arg.startsWith(FLAG_PREFIX)) {
-            // Strip prefix
-            String remaining = arg.substring(FLAG_PREFIX.length());
-            // Split on ':'
-            String[] parts = remaining.split(":");
-            if (parts.length > 2 || parts[0].isEmpty()) {
-              throw new InvalidCommandLineOptionException("invalid flag: " + arg);
-            }
-            String checkName = parts[0];
-            Severity severity;
-            if (parts.length == 1) {
-              severity = Severity.DEFAULT;
-            } else {  // parts.length == 2
-              try {
-                severity = Severity.valueOf(parts[1]);
-              } catch (IllegalArgumentException e) {
-                throw new InvalidCommandLineOptionException("invalid flag: " + arg);
-              }
-            }
-            severityMap.put(checkName, severity);
-          } else {
-            outputArgs.add(arg);
-          }
-        }
-        break;
-      case NEITHER:
-        outputArgs.addAll(args);
-        break;
-      default:
-        throw new IllegalStateException("Unhandled enum value: " + flagStyle);
+        severityMap.put(checkName, severity);
+      } else {
+        outputArgs.add(arg);
+      }
     }
 
     return new ErrorProneOptions(ImmutableMap.copyOf(severityMap), outputArgs.build());
@@ -176,53 +145,5 @@ public class ErrorProneOptions {
       throws InvalidCommandLineOptionException {
     Preconditions.checkNotNull(args);
     return processArgs(Arrays.asList(args));
-  }
-
-  private enum FlagStyle {
-    OLD,
-    NEW,
-    NEITHER
-  }
-
-  /**
-   * Checks the list of command-line arguments and returns whether they contain old-style
-   * ("-Xepdisable:<checkname>"), new-style ("-Xep:<checkname>[:<severity]"), or no error-prone
-   * flags.
-   *
-   * <p>Mixing old- and new-style error-prone flags is not allowed.  If you mix them, the handling
-   * of "last flag wins" is unclear.
-   *
-   * @param args command-line options
-   * @throws InvalidCommandLineOptionException if args contains both old- and new-style flags
-   */
-  private static FlagStyle getFlagStyle(Iterable<String> args)
-      throws InvalidCommandLineOptionException {
-    boolean hasOldStyleFlags = false;
-    boolean hasNewStyleFlags = false;
-
-    if (args != null) {
-      for (String arg : args) {
-        if (arg.startsWith(OLD_DISABLE_FLAG_PREFIX)) {
-          hasOldStyleFlags = true;
-        } else if (arg.startsWith(FLAG_PREFIX)) {
-          hasNewStyleFlags = true;
-        }
-      }
-    }
-
-    if (hasOldStyleFlags && hasNewStyleFlags) {
-      throw new InvalidCommandLineOptionException(
-          "cannot mix old- and new-style error-prone flags: " + args);
-    }
-
-    if (hasOldStyleFlags) {
-      return FlagStyle.OLD;
-    }
-
-    if (hasNewStyleFlags) {
-      return FlagStyle.NEW;
-    }
-
-    return FlagStyle.NEITHER;
   }
 }

@@ -142,7 +142,7 @@ public @interface BugPattern {
   }
 
   /**
-   * Whether this check should be disableable by the -Xepdisable commandline flag.
+   * Whether this check should be disableable by a command-line flag.
    *
    * <p>You are strongly encouraged to keep the default value of false since error-prone checks
    * should have a zero false positive rate. A check should only be disabled when bugs exist in
