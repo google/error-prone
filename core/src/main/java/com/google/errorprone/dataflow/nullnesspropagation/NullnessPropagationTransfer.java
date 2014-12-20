@@ -21,11 +21,13 @@ import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NULL;
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NULLABLE;
 import static com.sun.tools.javac.code.TypeTag.BOOLEAN;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.base.Strings;
 import com.google.common.base.Verify;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSetMultimap;
 import com.google.common.io.Files;
@@ -56,6 +58,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.VariableElement;
 
 /**
@@ -114,8 +117,9 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer {
           member(Class.class.getName(), "getSimpleName"));
     // TODO(cpovirk): respect nullness annotations (and also check them to ensure correctness!)
 
-    private static final ImmutableSet<String> CLASSES_WITH_ALL_NON_NULLABLE_RETURNS =
+    private static final ImmutableSet<String> CLASSES_WITH_NON_NULLABLE_RETURNS =
         ImmutableSet.of(
+            Optional.class.getName(),
             Preconditions.class.getName(),
             Verify.class.getName(),
             String.class.getName());
@@ -141,6 +145,14 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer {
 
     @Override
     public boolean apply(MethodInfo methodInfo) {
+      // Any method explicitly annotated with @Nullable is assumed to be capable of returning
+      // null.
+      for (String annotation : methodInfo.annotations()) {
+        if (annotation.endsWith("Nullable")) {
+          return false;
+        }
+      }
+
       if (methodInfo.method().equals("valueOf")
           && CLASSES_WITH_NON_NULLABLE_VALUE_OF_METHODS.contains(methodInfo.clazz())) {
         return true;
@@ -148,7 +160,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer {
       if (methodInfo.isPrimitive()) {
         return true;
       }
-      if (CLASSES_WITH_ALL_NON_NULLABLE_RETURNS.contains(methodInfo.clazz())) {
+      if (CLASSES_WITH_NON_NULLABLE_RETURNS.contains(methodInfo.clazz())) {
         return true;
       }
       MemberName searchMemberName = new MemberName(methodInfo.clazz(), methodInfo.method());
@@ -547,23 +559,33 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer {
   static final class ClassAndMethod implements Member, MethodInfo {
     final String clazz;
     final String method;
+    final List<String> annotations;
     final boolean isStatic;
     final boolean isPrimitive;
     final boolean isBoolean;
 
-    private ClassAndMethod(
-        String clazz, String method, boolean isStatic, boolean isPrimitive, boolean isBoolean) {
+    private ClassAndMethod(String clazz, String method, List<String> annotations, boolean isStatic,
+        boolean isPrimitive, boolean isBoolean) {
       this.clazz = clazz;
       this.method = method;
+      this.annotations = ImmutableList.copyOf(annotations);
       this.isStatic = isStatic;
       this.isPrimitive = isPrimitive;
       this.isBoolean = isBoolean;
     }
 
     static ClassAndMethod make(MethodSymbol symbol) {
+      List<? extends AnnotationMirror> annotationMirrors = symbol.getAnnotationMirrors();
+      List<String> annotations = new ArrayList<>(annotationMirrors.size());
+      for (AnnotationMirror annotationMirror : annotationMirrors) {
+        annotations.add(annotationMirror.getAnnotationType().toString());
+      }
       return new ClassAndMethod(symbol.owner.getQualifiedName().toString(),
-          symbol.getSimpleName().toString(), symbol.isStatic(),
-          symbol.getReturnType().isPrimitive(), symbol.getReturnType().getTag() == BOOLEAN);
+          symbol.getSimpleName().toString(),
+          annotations,
+          symbol.isStatic(),
+          symbol.getReturnType().isPrimitive(),
+          symbol.getReturnType().getTag() == BOOLEAN);
     }
 
     @Override
@@ -583,6 +605,11 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer {
     @Override
     public String method() {
       return method;
+    }
+
+    @Override
+    public List<String> annotations() {
+      return annotations;
     }
 
     @Override
