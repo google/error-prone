@@ -22,6 +22,8 @@ import com.google.errorprone.dataflow.DataFlow;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.util.Context;
 
+import java.util.List;
+
 /**
  * An interface to the nullness analysis.
  */
@@ -33,6 +35,7 @@ public final class NullnessAnalysis {
   public interface MethodInfo {
     String clazz();
     String method();
+    List<String> annotations();
     boolean isStatic();
     boolean isPrimitive();
   }

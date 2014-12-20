@@ -25,6 +25,7 @@ import static java.lang.String.format;
 import static java.lang.String.valueOf;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.common.io.Files;
 
@@ -381,5 +382,26 @@ public class NullnessPropagationTransferCases2 {
       // BUG: Diagnostic contains: (Non-null)
       triggerNullnessChecker(s);
     }
+  }
+  
+  public void optionalMethodsReturnNonNullUnlessAnnotated() {
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(Optional.absent());
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(Optional.of(""));
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(Optional.fromNullable(null));
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(Optional.of("Test"));
+    Optional<String> myOptional = Optional.absent();
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(myOptional.get());
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(myOptional.or(""));
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(myOptional.asSet());
+
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(myOptional.orNull());
   }
 }
