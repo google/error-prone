@@ -25,6 +25,7 @@ import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugCheckerSupplier;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.ErrorProneOptions;
 import com.google.errorprone.ErrorProneOptions.Severity;
 import com.google.errorprone.InvalidCommandLineOptionException;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -122,13 +123,15 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
    * an error to a warning</li>
    * </ul>
    *
-   * @param severityMap a map of check canonical names to their overridden severities
+   * @param errorProneOptions an {@link ErrorProneOptions} object that encapsulates the overrides
+   * for this compilation
    * @throws InvalidCommandLineOptionException if the override map attempts to disable a check
    * that may not be disabled
    */
   @CheckReturnValue
-  public ScannerSupplier applyOverrides(Map<String, Severity> severityMap)
+  public ScannerSupplier applyOverrides(ErrorProneOptions errorProneOptions)
       throws InvalidCommandLineOptionException {
+    Map<String, Severity> severityMap = errorProneOptions.getSeverityMap();
     if (severityMap.isEmpty()) {
       return this;
     }
@@ -145,6 +148,9 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
       BugCheckerSupplier supplier = forName(entry.getKey());
       BugCheckerSupplier newSupplier;
       if (supplier == null) {
+        if (errorProneOptions.ignoreUnknownChecks()) {
+          continue;
+        }
         throw new InvalidCommandLineOptionException(
             entry.getKey() + " is not a valid checker name");
       }

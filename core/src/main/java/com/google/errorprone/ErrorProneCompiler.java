@@ -155,7 +155,7 @@ public class ErrorProneCompiler {
       context.put(DiagnosticListener.class, diagnosticListener);
     }
 
-    Scanner scanner = scannerSupplier.applyOverrides(epOptions.getSeverityMap()).get();
+    Scanner scanner = scannerSupplier.applyOverrides(epOptions).get();
 
     setupMessageBundle(context);
     enableEndPositions(context);

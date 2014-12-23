@@ -53,6 +53,7 @@ import java.util.Map;
  */
 public class ErrorProneOptions {
 
+  private static final String IGNORE_UNKNOWN_CHECKS_FLAG = "-XepIgnoreUnknownCheckNames";
   private static final String FLAG_PREFIX = "-Xep:";
 
   /**
@@ -75,11 +76,13 @@ public class ErrorProneOptions {
 
   private final ImmutableList<String> remainingArgs;
   private final ImmutableMap<String, Severity> severityMap;
+  private final boolean ignoreUnknownChecks;
 
   private ErrorProneOptions(ImmutableMap<String, Severity> severityMap,
-      ImmutableList<String> remainingArgs) {
+      ImmutableList<String> remainingArgs, boolean ignoreUnknownChecks) {
     this.severityMap = severityMap;
     this.remainingArgs = remainingArgs;
+    this.ignoreUnknownChecks = ignoreUnknownChecks;
   }
 
   public String[] getRemainingArgs() {
@@ -88,6 +91,10 @@ public class ErrorProneOptions {
 
   public ImmutableMap<String, Severity> getSeverityMap() {
     return severityMap;
+  }
+
+  public boolean ignoreUnknownChecks() {
+    return ignoreUnknownChecks;
   }
 
   /**
@@ -104,8 +111,18 @@ public class ErrorProneOptions {
     ImmutableList.Builder<String> outputArgs = ImmutableList.builder();
     Map<String, Severity> severityMap = new HashMap<>();
 
+    /* By default, we throw an error when an unknown option is passed in, if for example you
+     * try to disable a check that doesn't match any of the known checks.  This catches typos from
+     * the command line.
+     *
+     * You can pass the IGNORE_UNKNOWN_CHECKS_FLAG to opt-out of that checking.  This allows you to
+     * use command lines from different versions of error-prone interchangably.
+     */
+    boolean ignoreUnknownChecks = false;
     for (String arg : args) {
-      if (arg.startsWith(FLAG_PREFIX)) {
+      if (arg.equals(IGNORE_UNKNOWN_CHECKS_FLAG)) {
+        ignoreUnknownChecks = true;
+      } else if (arg.startsWith(FLAG_PREFIX)) {
         // Strip prefix
         String remaining = arg.substring(FLAG_PREFIX.length());
         // Split on ':'
@@ -130,7 +147,8 @@ public class ErrorProneOptions {
       }
     }
 
-    return new ErrorProneOptions(ImmutableMap.copyOf(severityMap), outputArgs.build());
+    return new ErrorProneOptions(
+        ImmutableMap.copyOf(severityMap), outputArgs.build(), ignoreUnknownChecks);
   }
 
   /**

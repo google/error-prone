@@ -22,11 +22,13 @@ import static com.google.errorprone.BugCheckerSupplier.fromInstance;
 import static org.junit.Assert.fail;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugCheckerSupplier;
 import com.google.errorprone.BugPattern.SeverityLevel;
-import com.google.errorprone.ErrorProneOptions.Severity;
+import com.google.errorprone.ErrorProneOptions;
 import com.google.errorprone.InvalidCommandLineOptionException;
 import com.google.errorprone.bugpatterns.ArrayEquals;
 import com.google.errorprone.bugpatterns.BadShiftAmount;
@@ -42,6 +44,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -136,10 +139,10 @@ public class ScannerSupplierTest {
         new ChainingConstructorIgnoresParameter(),
         new DepAnn(),
         new LongLiteralLowerCaseSuffix());
-    Map<String, Severity> overrideMap = ImmutableMap.of();
+    ErrorProneOptions epOptions = ErrorProneOptions.processArgs(Collections.<String>emptyList());
 
     Set<BugCheckerSupplier> expected = ss.getEnabledChecks();
-    assertThat(ss.applyOverrides(overrideMap).getEnabledChecks()).isEqualTo(expected);
+    assertThat(ss.applyOverrides(epOptions).getEnabledChecks()).isEqualTo(expected);
   }
 
   @Test
@@ -149,22 +152,16 @@ public class ScannerSupplierTest {
             new ArrayEquals(),
             new BadShiftAmount(),
             new StaticAccessedFromInstance())
-        .filter(    // disables all checks
-            new Predicate<BugCheckerSupplier>() {
-              @Override
-              public boolean apply(BugCheckerSupplier input) {
-                return false;
-              }
-            });
-    Map<String, Severity> overrideMap = ImmutableMap.of(
-        "ArrayEquals", Severity.DEFAULT,
-        "BadShiftAmount", Severity.DEFAULT);
+        .filter(Predicates.alwaysFalse());    // disables all checks
+
+    ErrorProneOptions epOptions = ErrorProneOptions.processArgs(
+        ImmutableList.of("-Xep:ArrayEquals", "-Xep:BadShiftAmount"));
 
     Set<BugCheckerSupplier> expected = ImmutableSet.of(
         fromInstance(new ArrayEquals()),
         fromInstance(new BadShiftAmount()));
 
-    assertThat(ss.applyOverrides(overrideMap).getEnabledChecks()).isEqualTo(expected);
+    assertThat(ss.applyOverrides(epOptions).getEnabledChecks()).isEqualTo(expected);
   }
 
   @Test
@@ -173,13 +170,14 @@ public class ScannerSupplierTest {
         new ChainingConstructorIgnoresParameter(),
         new DepAnn(),
         new LongLiteralLowerCaseSuffix());
-    Map<String, Severity> overrideMap = ImmutableMap.of(
-        "LongLiteralLowerCaseSuffix", Severity.OFF,
-        "ChainingConstructorIgnoresParameter", Severity.OFF);
+    ErrorProneOptions epOptions = ErrorProneOptions.processArgs(
+        ImmutableList.of(
+            "-Xep:LongLiteralLowerCaseSuffix:OFF",
+            "-Xep:ChainingConstructorIgnoresParameter:OFF"));
 
     Set<BugCheckerSupplier> expected = ImmutableSet.of(fromInstance(new DepAnn()));
 
-    assertThat(ss.applyOverrides(overrideMap).getEnabledChecks()).isEqualTo(expected);
+    assertThat(ss.applyOverrides(epOptions).getEnabledChecks()).isEqualTo(expected);
   }
 
   @Test
@@ -187,10 +185,11 @@ public class ScannerSupplierTest {
   @SuppressWarnings("CheckReturnValue")
   public void applyOverridesThrowsExceptionWhenDisablingNonDisablableCheck() throws Exception {
     ScannerSupplier ss = ScannerSupplier.fromBugCheckers(new ArrayEquals());
-    Map<String, Severity> overrideMap = ImmutableMap.of("ArrayEquals", Severity.OFF);
+    ErrorProneOptions epOptions = ErrorProneOptions.processArgs(
+        ImmutableList.of("-Xep:ArrayEquals:OFF"));
 
     try {
-      ss.applyOverrides(overrideMap);
+      ss.applyOverrides(epOptions);
       fail();
     } catch (InvalidCommandLineOptionException expected) {
       assertThat(expected.getMessage()).contains("may not be disabled");
@@ -202,14 +201,27 @@ public class ScannerSupplierTest {
   @SuppressWarnings("CheckReturnValue")
   public void applyOverridesThrowsExceptionWhenDemotingNonDisablableCheck() throws Exception {
     ScannerSupplier ss = ScannerSupplier.fromBugCheckers(new ArrayEquals());
-    Map<String, Severity> overrideMap = ImmutableMap.of("ArrayEquals", Severity.WARN);
+    ErrorProneOptions epOptions = ErrorProneOptions.processArgs(
+        ImmutableList.of("-Xep:ArrayEquals:WARN"));
 
     try {
-      ss.applyOverrides(overrideMap);
+      ss.applyOverrides(epOptions);
       fail();
     } catch (InvalidCommandLineOptionException expected) {
       assertThat(expected.getMessage()).contains("may not be demoted to a warning");
     }
+  }
+
+  @Test
+  // Calling ScannerSupplier.applyOverrides() just to make sure it does not throw an exception
+  @SuppressWarnings("CheckReturnValue")
+  public void applyOverridesSucceedsWhenDisablingUnknownCheckAndIgnoreUnknownCheckNamesIsSet()
+      throws Exception {
+    ScannerSupplier ss = ScannerSupplier.fromBugCheckers(new ArrayEquals());
+    ErrorProneOptions epOptions = ErrorProneOptions.processArgs(
+        ImmutableList.of("-XepIgnoreUnknownCheckNames", "-Xep:foo:OFF"));
+
+    ss.applyOverrides(epOptions);
   }
 
   @Test
@@ -218,10 +230,11 @@ public class ScannerSupplierTest {
         new BadShiftAmount(),
         new ChainingConstructorIgnoresParameter(),
         new StringEquality());
-    Map<String, Severity> overrideMap = ImmutableMap.of(
-        "ChainingConstructorIgnoresParameter", Severity.WARN,
-        "StringEquality", Severity.ERROR);
-    ScannerSupplier overriddenScannerSupplier = ss.applyOverrides(overrideMap);
+    ErrorProneOptions epOptions = ErrorProneOptions.processArgs(
+        ImmutableList.of(
+            "-Xep:ChainingConstructorIgnoresParameter:WARN",
+            "-Xep:StringEquality:ERROR"));
+    ScannerSupplier overriddenScannerSupplier = ss.applyOverrides(epOptions);
 
     Map<String, BugCheckerSupplier> unexpected = ImmutableMap.of(
         "BadShiftAmount", fromInstance(new BadShiftAmount()),

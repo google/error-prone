@@ -81,7 +81,7 @@ public class ErrorProneJavaCompiler implements JavaCompiler {
     Scanner scanner;
     try {
       errorProneOptions = ErrorProneOptions.processArgs(options);
-      scanner = scannerSupplier.applyOverrides(errorProneOptions.getSeverityMap()).get();
+      scanner = scannerSupplier.applyOverrides(errorProneOptions).get();
     } catch (InvalidCommandLineOptionException e) {
       throw new RuntimeException(e);
     }
