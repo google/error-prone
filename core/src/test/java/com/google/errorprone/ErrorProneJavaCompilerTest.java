@@ -222,11 +222,11 @@ public class ErrorProneJavaCompilerTest {
       doCompile(
           EmptyIfStatementTest.class,
           Arrays.asList("EmptyIfStatementPositiveCases.java"),
-          Arrays.asList("-Xep:foo"),
+          Arrays.asList("-Xep:foo:bar:baz"),
           Collections.<Class<? extends BugChecker>>emptyList());
       fail();
     } catch (RuntimeException expected) {
-      assertThat(expected.getMessage()).contains("foo is not a valid checker name");
+      assertThat(expected.getMessage()).contains("invalid flag");
     }
   }
 

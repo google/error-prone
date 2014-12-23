@@ -260,4 +260,23 @@ public class CommandLineFlagTest {
       assertThat(output.toString()).contains("foo is not a valid checker name");
     }
   }
+
+  @Test
+  public void ignoreUnknownChecksFlagAllowsOverridingUnknownCheck() throws Exception {
+    ErrorProneTestCompiler compiler =  builder.build();
+    List<JavaFileObject> sources =
+        compiler.fileManager().sources(getClass(), "CommandLineFlagTestFile.java");
+    List<String> badOptions = Arrays.asList(
+        "-Xep:BogusChecker:ERROR",
+        "-Xep:BogusChecker:WARN",
+        "-Xep:BogusChecker:OFF",
+        "-Xep:BogusChecker");
+
+    for (String badOption : badOptions) {
+      Result exitCode = compiler.compile(
+          new String[]{"-XepIgnoreUnknownCheckNames", badOption},
+          sources);
+      assertThat(exitCode).isEqualTo(Result.OK);
+    }
+  }
 }
