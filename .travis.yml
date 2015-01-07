@@ -6,3 +6,18 @@ jdk:
 
 notifications:
   email: error-prone-team@google.com
+
+# Store encrypted credentials for gh-pages and sonatype:
+# travis encrypt -r google/error-prone GH_TOKEN=<github access token>
+# travis encrypt -r google/error-prone CI_DEPLOY_USERNAME=<sonatype username>
+# travis encrypt -r google/error-prone CI_DEPLOY_PASSWORD=<sonatype password>
+
+env:
+  global:
+    - secure: "kM6uLpPkYz/i5FTMAh0yUyhLrmJFDr643u49i9FHreg+L5n+DYUilbRPOfHhN802Wd9Pb1yGkFxbumuzo+ZjTjHmyjH5w5hsRvRrPVX3FRnMN5SMCnE95nBZJOyMrYHYnko+IXsENqqfPjTe5d/fUsMcwYcIPuqssaO+lvTv0Yw="
+    - secure: "VTl3ljwGf0KPbX5wW1+MgQuLwpfSppph/STiyUOQkISO5jDwBAfnvcBymn/oLESwQeLZ/D+GZtL/sooG2Kf6v8Fdn6Q6VhwfSxgLDJUME+A4rOBBnDExhpUz+OT0XugWHfQ/sYRaDRk1/c1axt3XB/cxlzPNIJKlzDoPZpfDyGM="
+    - secure: "FHXaeHYXmdGNYZLuSbAE7c5xmIhUT8/VzpnlkVmDgCPXgOGY7RzCpF4MVPIDm7f63bx/qZSu+d008gFHTI98UQLHMACjD1wuahk+0vqXVG1W3WwruqilTriYjW1gUkwa5zv5AaApq0dd5CO7li1DpNPgqOrU50ddJlb0BZ6wv1Q="
+
+after_success:
+  - util/publish-snapshot-on-commit.sh
+  - util/generate-latest-docs.sh
