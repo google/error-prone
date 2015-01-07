@@ -28,7 +28,9 @@ if [ "$TRAVIS_REPO_SLUG" == "google/error-prone" ] && \
 
   cd $GH_PAGES_DIR
   git add --all .
-  git commit -m "Lastest docs on successful travis build $TRAVIS_BUILD_NUMBER auto-pushed to gh-pages" --author "travis-ci <travis@travis-ci.org>"
+  git config --global user.name "travis-ci"
+  git config --global user.email "travis@travis-ci.org"
+  git commit -m "Lastest docs on successful travis build $TRAVIS_BUILD_NUMBER auto-pushed to gh-pages"
   git push -fq origin gh-pages > /dev/null
 
   echo -e "Published docs to gh-pages.\n"
