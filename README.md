@@ -10,5 +10,5 @@ To develop and build error-prone, see our documentation on the [wiki](https://gi
 
 ## Links
 
-- [Javadoc](http://errorprone.info/api/latest/).
+- [Javadoc](http://errorprone.info/api/latest/)
 - Pre-release snapshots are available from [sonatype's snapshot repository](https://oss.sonatype.org/content/repositories/snapshots/com/google/errorprone/).
