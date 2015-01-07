@@ -2,4 +2,4 @@
 
 Our documentation for users is at http://errorprone.info
 
-To develop and build error-prone, see our documentation on the wiki.
+To develop and build error-prone, see our documentation on the [wiki](https://github.com/google/error-prone/wiki/For-Developers).
