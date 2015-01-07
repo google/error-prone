@@ -1,6 +1,6 @@
 # https://github.com/google/dagger/blob/master/util/publish-snapshot-on-commit.sh
 
-if [ "$TRAVIS_REPO_SLUG" == "cushon/error-prone" ] && \
+if [ "$TRAVIS_REPO_SLUG" == "google/error-prone" ] && \
    [ "$TRAVIS_JDK_VERSION" == "oraclejdk7" ] && \
    [ "$TRAVIS_PULL_REQUEST" == "false" ] && \
    [ "$TRAVIS_BRANCH" == "master" ]; then
