@@ -19,6 +19,10 @@
 - {name: ArrayToStringCompoundAssignment, summary: Implicit toString used on an array (String += Array)}
 - {name: ArrayToStringConcatenation, summary: Implicit toString used on an array (String + Array)}
 - {name: BadShiftAmount, summary: Shift by an amount that is out of range}
+- {name: ChainingConstructorIgnoresParameter, summary: 'The called constructor accepts
+    a parameter with the same name and type as one of its caller''s parameters, but
+    its caller doesn''t pass that parameter to it.  It''s likely that it was intended
+    to.'}
 - {name: CheckReturnValue, summary: Ignored return value of method that is annotated with @CheckReturnValue}
 - {name: ComparisonOutOfRange, summary: Comparison to value that is out of range for the compared type}
 - {name: DeadException, summary: Exception created but not thrown}
@@ -41,15 +45,9 @@
 - {name: StringBuilderInitWithChar, summary: StringBuilder does not have a char constructor; this invokes the int constructor.}
 - {name: SuppressWarningsDeprecated, summary: Suppressing "deprecated" is probably a typo for "deprecation"}
 - {name: TryFailThrowable, summary: Catching Throwable masks failures from fail() or assert*() in the try block}
-'Experimental : NOT_A_PROBLEM':
-- {name: FallthroughSuppression, summary: Fallthrough warning suppression has no effect if warning is suppressed}
 'Experimental : WARNING':
 - {name: AssistedInjectAndInjectOnConstructors, summary: '@AssistedInject and @Inject
     should not be used on different constructors in the same class.'}
-- {name: ChainingConstructorIgnoresParameter, summary: 'The called constructor accepts
-    a parameter with the same name and type as one of its caller''s parameters, but
-    its caller doesn''t pass that parameter to it.  It''s likely that it was intended
-    to.'}
 - {name: GuiceInjectOnFinalField, summary: 'Although Guice allows injecting final
     fields, doing so is not recommended because the injected value may not be visible
     to other threads.'}
@@ -62,6 +60,8 @@
 - {name: PreconditionsErrorMessageEagerEvaluation, summary: 'Second argument to Preconditions.*
     is a call to String.format(), which can be unwrapped'}
 - {name: PrimitiveArrayPassedToVarargsMethod, summary: Passing a primitive array to a varargs method is usually wrong}
+'Experimental : NOT_A_PROBLEM':
+- {name: FallthroughSuppression, summary: Fallthrough warning suppression has no effect if warning is suppressed}
 'Experimental : ERROR':
 - {name: ArraysAsListPrimitiveArray, summary: 'Arrays.asList does not autobox primitive
     arrays, as one might expect.'}

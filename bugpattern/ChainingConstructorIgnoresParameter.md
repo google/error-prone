@@ -2,8 +2,8 @@
 title: ChainingConstructorIgnoresParameter
 layout: bugpattern
 category: JDK
-severity: WARNING
-maturity: EXPERIMENTAL
+severity: ERROR
+maturity: MATURE
 ---
 
 # Bug pattern: ChainingConstructorIgnoresParameter
