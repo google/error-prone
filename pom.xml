@@ -19,9 +19,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.google</groupId>
-    <artifactId>google</artifactId>
-    <version>5</version>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>7</version>
   </parent>
 
   <name>Maven parent POM</name>
@@ -47,16 +47,6 @@
     </dependency>
   </dependencies>
 
-  <distributionManagement>
-    <!-- Override the setting in the parent Google POM, per instruction from Sonatype,
-         see https://issues.sonatype.org/browse/OSSRH-3462 -->
-    <snapshotRepository>
-      <id>sonatype-nexus-staging</id>
-      <name>Sonatype Snapshot Repository</name>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
-  </distributionManagement>
-
   <modules>
     <module>core</module>
     <module>annotation</module>
@@ -65,10 +55,9 @@
   </modules>
 
   <scm>
-    <connection>scm:git:http://code.google.com/p/error-prone</connection>
-    <developerConnection>scm:git:https://code.google.com/p/error-prone</developerConnection>
-    <url>http://code.google.com/p/error-prone/source/browse/</url>
-    <tag>HEAD</tag>
+    <connection>scm:git:https://github.com/google/error-prone.git</connection>
+    <developerConnection>scm:git:git@github.com:google/error-prone.git</developerConnection>
+    <url>https://github.com/google/error-prone</url>
   </scm>
 
   <build>
@@ -144,6 +133,10 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>2.7</version>
       </plugin>
     </plugins>
   </build>
