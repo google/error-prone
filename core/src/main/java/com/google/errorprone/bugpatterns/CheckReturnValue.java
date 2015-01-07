@@ -19,13 +19,17 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
+import static com.google.errorprone.util.ASTHelpers.enclosingClass;
+import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
-import com.sun.source.tree.ExpressionTree;
+import com.google.errorprone.util.ASTHelpers;
+
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
@@ -38,14 +42,24 @@ import com.sun.source.tree.MethodInvocationTree;
         + "the result is not used.",
     category = JDK, severity = ERROR, maturity = MATURE)
 public class CheckReturnValue extends AbstractReturnValueIgnored {
-
+  
+  private static final Matcher<MethodInvocationTree> MATCHER = 
+      new Matcher<MethodInvocationTree>() {
+        @Override
+        public boolean matches(MethodInvocationTree tree, VisitorState state) {
+          MethodSymbol method = ASTHelpers.getSymbol(tree);
+          return hasAnnotation(method, javax.annotation.CheckReturnValue.class)
+              || hasAnnotation(enclosingClass(method), javax.annotation.CheckReturnValue.class)
+              || hasAnnotation(enclosingPackage(method), javax.annotation.CheckReturnValue.class);
+        }
+      };
+  
   /**
    * Return a matcher for method invocations in which the method being called has the
    * @CheckReturnValue annotation.
    */
   @Override
   public Matcher<MethodInvocationTree> specializedMatcher() {
-    return methodSelect(
-        Matchers.<ExpressionTree>hasAnnotation("javax.annotation.CheckReturnValue"));
+    return MATCHER;
   }
 }
