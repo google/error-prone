@@ -36,6 +36,7 @@ import com.sun.tools.javac.code.Scope;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
@@ -421,7 +422,7 @@ public class ASTHelpers {
   // after attribution it's safe to use here.
   @SuppressWarnings("deprecation")
   public static <T extends Annotation> T getAnnotation(Symbol sym, Class<T> annotationType) {
-    return sym.getAnnotation(annotationType);
+    return sym == null ? null : sym.getAnnotation(annotationType);
   }
 
   /** @return all values of the given enum type, in declaration order. */
@@ -480,5 +481,25 @@ public class ASTHelpers {
   public static String getAnnotationName(AnnotationTree tree) {
     Symbol sym = getSymbol(tree);
     return sym == null ? null : sym.name.toString();
+  }
+
+  private static <T extends Symbol> T enclosingSymbol(Symbol sym, Class<T> clazz) {
+    while (sym != null) {
+      if (clazz.isInstance(sym)) {
+        return clazz.cast(sym);
+      }
+      sym = sym.owner;
+    }
+    return null;
+  }
+
+  /** Return the enclosing {@code ClassSymbol} of the given symbol, or {@code null}. */
+  public static ClassSymbol enclosingClass(Symbol sym) {
+    return enclosingSymbol(sym, ClassSymbol.class);
+  }
+
+  /** Return the enclosing {@code PackageSymbol} of the given symbol, or {@code null}. */
+  public static PackageSymbol enclosingPackage(Symbol sym) {
+    return enclosingSymbol(sym, PackageSymbol.class);
   }
 }

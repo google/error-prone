@@ -23,6 +23,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.util.Arrays;
+
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
@@ -48,5 +50,42 @@ public class CheckReturnValueTest {
         .sources(getClass(), "CheckReturnValueNegativeCases.java"));
   }
 
+  @Test
+  public void testPackageAnnotation() throws Exception {
+    compilationHelper.assertCompileFailsWithMessages(Arrays.asList(
+        compilationHelper.fileManager().forSourceLines("package-info.java",
+            "@javax.annotation.CheckReturnValue",
+            "package lib;"),
+        compilationHelper.fileManager().forSourceLines("lib/Lib.java",
+            "package lib;",
+            "public class Lib {",
+            "  public static int f() { return 42; }",
+            "}"),
+        compilationHelper.fileManager().forSourceLines("Test.java",
+            "class Test {",
+            "  void m() {",
+            "    // BUG: Diagnostic contains: Ignored return value",
+            "    lib.Lib.f();",
+            "  }",
+            "}")));
+  }
+
+  @Test
+  public void testClassAnnotation() throws Exception {
+    compilationHelper.assertCompileFailsWithMessages(Arrays.asList(
+        compilationHelper.fileManager().forSourceLines("lib/Lib.java",
+            "package lib;",
+            "@javax.annotation.CheckReturnValue",
+            "public class Lib {",
+            "  public static int f() { return 42; }",
+            "}"),
+        compilationHelper.fileManager().forSourceLines("Test.java",
+            "class Test {",
+            "  void m() {",
+            "    // BUG: Diagnostic contains: Ignored return value",
+            "    lib.Lib.f();",
+            "  }",
+            "}")));
+  }
 }
 
