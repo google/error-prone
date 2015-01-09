@@ -38,6 +38,7 @@ __MisusedFormattingLoggerNegativeCases.java__
  * limitations under the License.
  */
 
+package com.google.errorprone.bugpatterns;
 
 import com.google.gdata.util.common.logging.FormattingLogger;
 
@@ -93,6 +94,8 @@ __MisusedFormattingLoggerPositiveCases.java__
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package com.google.errorprone.bugpatterns;
 
 import com.google.gdata.util.common.logging.FormattingLogger;
 

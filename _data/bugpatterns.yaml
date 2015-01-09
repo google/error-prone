@@ -6,11 +6,17 @@
 - {name: MisusedFormattingLogger, summary: FormattingLogger uses wrong or mismatched format string}
 - {name: NonAtomicVolatileUpdate, summary: This update of a volatile variable is non-atomic}
 - {name: PreconditionsInvalidPlaceholder, summary: Preconditions only accepts the %s placeholder in error message strings}
+- {name: ProtoFieldPreconditionsCheckNotNull, summary: 'Protobuf fields cannot be
+    null, so this check is redundant'}
 - {name: StaticAccessedFromInstance, summary: A static variable or method should not be accessed from an object instance}
 - {name: StringEquality, summary: String comparison using reference equality instead of value equality}
 - {name: SynchronizeOnNonFinalField, summary: 'Synchronizing on non-final fields is
     not safe: if the field is ever updated, different threads may end up locking on
     different objects.'}
+- {name: TypeParameterUnusedInFormals, summary: 'Declaring a type parameter that is
+    only used in the return type is a misuse of generics: operations on the type parameter
+    are unchecked, it hides unsafe casts at invocations of the method, and it interacts
+    badly with method overload resolution'}
 - {name: WaitNotInLoop, summary: Object.wait() should always be called in a loop}
 'On by default : ERROR':
 - {name: ArrayEquals, summary: Reference equality used to compare arrays}
@@ -35,6 +41,8 @@
 - {name: JUnit4TearDownNotRun, summary: tearDown() method will not be run; Please add an @After annotation}
 - {name: JUnit4TestNotRun, summary: Test method will not be run; please add @Test annotation}
 - {name: LongLiteralLowerCaseSuffix, summary: Prefer 'L' to 'l' for the suffix to long literals}
+- {name: NarrowingCompoundAssignment, summary: 'Compound assignments to bytes, shorts,
+    chars, and floats hide dangerous casts'}
 - {name: Overrides, summary: Varargs doesn't agree for overridden method}
 - {name: PreconditionsCheckNotNull, summary: Literal passed as first argument to Preconditions.checkNotNull() can never be null}
 - {name: PreconditionsCheckNotNullPrimitive, summary: First argument to Preconditions.checkNotNull() is a primitive rather than an object reference}
@@ -67,12 +75,12 @@
     arrays, as one might expect.'}
 - {name: AssistedInjectAndInjectOnSameConstructor, summary: '@AssistedInject and @Inject
     cannot be used on the same constructor.'}
+- {name: CannotMockFinalClass, summary: Mockito cannot mock final classes}
 - {name: ClassCanBeStatic, summary: Inner class is non-static but does not reference enclosing class}
 - {name: CollectionIncompatibleType, summary: Incompatible type as argument to non-generic Java collections method.}
 - {name: CovariantEquals, summary: equals() method doesn't override Object.equals()}
 - {name: DivZero, summary: Division by integer literal zero}
 - {name: EmptyIf, summary: Empty statement after if}
-- {name: GuardedBy, summary: Checks for unguarded accesses to fields and methods with @GuardedBy annotations}
 - {name: GuardedByChecker, summary: Checks for unguarded accesses to fields and methods with @GuardedBy annotations}
 - {name: GuardedByValidator, summary: Invalid @GuardedBy expression}
 - {name: GuiceAssistedParameters, summary: 'A constructor cannot have two @Assisted

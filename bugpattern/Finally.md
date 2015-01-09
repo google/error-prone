@@ -38,7 +38,7 @@ __FinallyNegativeCase1.java__
  * limitations under the License.
  */
 
-package finallyreturn;
+package com.google.errorprone.bugpatterns;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)

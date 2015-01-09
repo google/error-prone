@@ -38,6 +38,8 @@ __DepAnnNegativeCase1.java__
  * limitations under the License.
  */
 
+package com.google.errorprone.bugpatterns;
+
 /**
  * @deprecated
  */
@@ -113,6 +115,8 @@ __DepAnnNegativeCase2.java__
  * limitations under the License.
  */
 
+package com.google.errorprone.bugpatterns;
+
 /**
  * @deprecated
  */
@@ -155,6 +159,8 @@ __DepAnnPositiveCases.java__
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package com.google.errorprone.bugpatterns;
 
 /**
  * @deprecated

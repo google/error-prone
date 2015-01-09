@@ -38,6 +38,8 @@ __ProtoFieldNullComparisonNegativeCases.java__
  * limitations under the License.
  */
 
+package com.google.errorprone.bugpatterns;
+
 import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
 import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 
@@ -75,6 +77,8 @@ __ProtoFieldNullComparisonPositiveCases.java__
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
 import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
