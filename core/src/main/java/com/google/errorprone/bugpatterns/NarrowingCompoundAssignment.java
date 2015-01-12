@@ -41,7 +41,7 @@ import javax.lang.model.type.TypeKind;
 /**
  * @author cushon@google.com (Liam Miller-Cushon)
  */
-@BugPattern(name = "NarrowingCompoundAssignment", altNames = "finally",
+@BugPattern(name = "NarrowingCompoundAssignment",
     summary = "Compound assignments to bytes, shorts, chars, and floats hide dangerous casts",
     explanation = "The compound assignment E1 op= E2 could be mistaken for being equivalent to "
         + " E1 = E1 op E2. However, this is not the case: compound "
@@ -55,7 +55,7 @@ import javax.lang.model.type.TypeKind;
         + " For example, 'byte b = 0; b = b << 1;' does not compile, but 'byte b = 0; b <<= 1;'"
         + " does!\n\n"
         + " (See Puzzle #9 in 'Java Puzzlers: Traps, Pitfalls, and Corner Cases'.)",
-    category = JDK, severity = ERROR, maturity = MATURE)
+    category = JDK, severity = ERROR, maturity = MATURE, disableable = true)
 public class NarrowingCompoundAssignment extends BugChecker
     implements CompoundAssignmentTreeMatcher {
 
