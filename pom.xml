@@ -50,6 +50,7 @@
   <modules>
     <module>core</module>
     <module>annotation</module>
+    <module>annotations</module>
     <module>docgen</module>
     <module>ant</module>
   </modules>
