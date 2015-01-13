@@ -68,30 +68,30 @@ public class NarrowingCompoundAssignment extends BugChecker
     DEFICIENT_TYPES.put(TypeKind.FLOAT, "float");
   }
 
-  static String compoundAssignmentString(Tree.Kind kind) {
+  static String assignmentToString(Tree.Kind kind) {
     switch (kind) {
-      case MULTIPLY_ASSIGNMENT:
+      case MULTIPLY:
         return "*";
-      case DIVIDE_ASSIGNMENT:
+      case DIVIDE:
         return "/";
-      case REMAINDER_ASSIGNMENT:
+      case REMAINDER:
         return "%";
-      case PLUS_ASSIGNMENT:
+      case PLUS:
         return "+";
-      case MINUS_ASSIGNMENT:
+      case MINUS:
         return "-";
-      case LEFT_SHIFT_ASSIGNMENT:
+      case LEFT_SHIFT:
         return "<<";
-      case AND_ASSIGNMENT:
-        return "&=";
-      case XOR_ASSIGNMENT:
-        return "^=";
-      case OR_ASSIGNMENT:
-        return "|=";
-      case RIGHT_SHIFT_ASSIGNMENT:
-        return ">>=";
-      case UNSIGNED_RIGHT_SHIFT_ASSIGNMENT:
-        return ">>>=";
+      case AND:
+        return "&";
+      case XOR:
+        return "^";
+      case OR:
+        return "|";
+      case RIGHT_SHIFT:
+        return ">>";
+      case UNSIGNED_RIGHT_SHIFT:
+        return ">>>";
       default:
         throw new IllegalArgumentException("Unexpected operator assignment kind: " + kind);
     }
@@ -100,7 +100,7 @@ public class NarrowingCompoundAssignment extends BugChecker
   static Kind regularAssignmentFromCompound(Kind kind) {
     switch (kind) {
       case MULTIPLY_ASSIGNMENT:
-        return Kind.ASSIGNMENT;
+        return Kind.MULTIPLY;
       case DIVIDE_ASSIGNMENT:
         return Kind.DIVIDE;
       case REMAINDER_ASSIGNMENT:
@@ -148,12 +148,12 @@ public class NarrowingCompoundAssignment extends BugChecker
         return Description.NO_MATCH;
       default:  // continue below
     }
-    String op = compoundAssignmentString(tree.getKind());
-    
+    Kind regularAssignmentKind = regularAssignmentFromCompound(tree.getKind());
+    String op = assignmentToString(regularAssignmentKind);
+
     // Add parens to the rhs if necessary to preserve the current precedence
     // e.g. 's -= 1 - 2' -> 's = s - (1 - 2)'
     if (tree.getExpression() instanceof JCBinary) {
-      Kind regularAssignmentKind = regularAssignmentFromCompound(tree.getKind());
       Kind rhsKind = ((JCBinary) tree.getExpression()).getKind();
       if (OperatorPrecedence.from(rhsKind) == OperatorPrecedence.from(regularAssignmentKind)) {
         expr = String.format("(%s)", expr); 
