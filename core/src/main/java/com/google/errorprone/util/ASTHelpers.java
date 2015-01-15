@@ -18,6 +18,8 @@ package com.google.errorprone.util;
 
 import com.google.common.base.CharMatcher;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
+import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis;
 import com.google.errorprone.matchers.Matcher;
 
 import com.sun.source.tree.AnnotationTree;
@@ -501,5 +503,15 @@ public class ASTHelpers {
   /** Return the enclosing {@code PackageSymbol} of the given symbol, or {@code null}. */
   public static PackageSymbol enclosingPackage(Symbol sym) {
     return enclosingSymbol(sym, PackageSymbol.class);
+  }
+
+  /**
+   * Returns the {@link Nullness} for an expression as determined by the nullness dataflow
+   * analysis.
+   */
+  public static Nullness getNullnessValue(ExpressionTree expr, VisitorState state,
+      NullnessAnalysis nullnessAnalysis) {
+    TreePath pathToExpr = new TreePath(state.getPath(), expr);
+    return nullnessAnalysis.getNullness(pathToExpr, state.context);
   }
 }
