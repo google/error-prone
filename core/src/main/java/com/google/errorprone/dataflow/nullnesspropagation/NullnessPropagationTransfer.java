@@ -51,6 +51,7 @@ import org.checkerframework.dataflow.cfg.node.Node;
 import org.checkerframework.dataflow.cfg.node.NotEqualNode;
 import org.checkerframework.dataflow.cfg.node.TypeCastNode;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -102,12 +103,13 @@ import javax.lang.model.element.VariableElement;
  *
  * @author deminguyen@google.com (Demi Nguyen)
  */
-class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer {
+class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
+    implements Serializable {
 
   /**
    * Matches methods that are statically known never to return null.
    */
-  private static class ReturnValueIsNonNull implements Predicate<MethodInfo> {
+  private static class ReturnValueIsNonNull implements Predicate<MethodInfo>, Serializable {
     private static final ImmutableSet<MemberName> METHODS_WITH_NON_NULLABLE_RETURNS =
         ImmutableSet.of(
           // We would love to include all the methods of Files, but readFirstLine can return null.
@@ -347,7 +349,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer {
     ClassAndMethod callee = tryGetMethodSymbol(node.getTree());
     setReceiverNullness(bothUpdates, node.getTarget().getReceiver(), callee);
     setUnconditionalArgumentNullness(bothUpdates, node.getArguments(), callee);
-    setConditionalArgumentNullness(thenUpdates, elseUpdates, node.getArguments(), callee);
+    setConditionalArgumentNullness(elseUpdates, node.getArguments(), callee);
     return returnValueNullness(callee);
   }
 
@@ -494,7 +496,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer {
    * {@code true} or only if the method completes by returning {@code false}. For example, if {@code
    * Strings.isNullOrEmpty(s)} returns {@code false}, then {@code s} is not null.
    */
-  private static void setConditionalArgumentNullness(LocalVariableUpdates thenUpdates,
+  private static void setConditionalArgumentNullness(
       LocalVariableUpdates elseUpdates, List<Node> arguments, ClassAndMethod callee) {
     Set<Integer> nullImpliesTrueParameters = NULL_IMPLIES_TRUE_PARAMETERS.get(callee.name());
     for (LocalVariableNode var : variablesAtIndexes(nullImpliesTrueParameters, arguments)) {

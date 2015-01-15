@@ -20,11 +20,13 @@ import com.google.errorprone.VisitorState;
 
 import com.sun.source.tree.Tree;
 
+import java.io.Serializable;
+
 /**
  * Define a predicate on a {@link Tree}, which also accesses the state of AST traversal.
  * @param <T> a javac AST node
  * @author alexeagle@google.com (Alex Eagle)
  */
-public interface Matcher<T extends Tree> {
+public interface Matcher<T extends Tree> extends Serializable {
   boolean matches(T t, VisitorState state);
 }

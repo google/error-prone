@@ -22,12 +22,13 @@ import com.google.errorprone.dataflow.DataFlow;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.util.Context;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * An interface to the nullness analysis.
  */
-public final class NullnessAnalysis {
+public final class NullnessAnalysis implements Serializable {
 
   /**
    * Represents a Java method.  Used for custom predicates to match non-null-returning methods.
