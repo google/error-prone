@@ -28,6 +28,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugCheckerSupplier;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.ErrorProneJavaCompilerTest;
 import com.google.errorprone.ErrorProneOptions;
 import com.google.errorprone.InvalidCommandLineOptionException;
 import com.google.errorprone.bugpatterns.ArrayEquals;
@@ -184,7 +185,8 @@ public class ScannerSupplierTest {
   // Calling ScannerSupplier.applyOverrides() just to make sure it throws the right exception
   @SuppressWarnings("CheckReturnValue")
   public void applyOverridesThrowsExceptionWhenDisablingNonDisablableCheck() throws Exception {
-    ScannerSupplier ss = ScannerSupplier.fromBugCheckers(new ArrayEquals());
+    ScannerSupplier ss = ScannerSupplier.fromBugCheckers(
+        new ErrorProneJavaCompilerTest.UnsuppressibleArrayEquals());
     ErrorProneOptions epOptions = ErrorProneOptions.processArgs(
         ImmutableList.of("-Xep:ArrayEquals:OFF"));
 
@@ -200,7 +202,8 @@ public class ScannerSupplierTest {
   // Calling ScannerSupplier.applyOverrides() just to make sure it throws the right exception
   @SuppressWarnings("CheckReturnValue")
   public void applyOverridesThrowsExceptionWhenDemotingNonDisablableCheck() throws Exception {
-    ScannerSupplier ss = ScannerSupplier.fromBugCheckers(new ArrayEquals());
+    ScannerSupplier ss = ScannerSupplier.fromBugCheckers(
+        new ErrorProneJavaCompilerTest.UnsuppressibleArrayEquals());
     ErrorProneOptions epOptions = ErrorProneOptions.processArgs(
         ImmutableList.of("-Xep:ArrayEquals:WARN"));
 

@@ -156,7 +156,7 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
       }
       switch (entry.getValue()) {
         case OFF:
-          if (!supplier.disableable()) {
+          if (!supplier.suppressibility().disableable()) {
             throw new InvalidCommandLineOptionException(
                 supplier.canonicalName() + " may not be disabled");
           }
@@ -168,7 +168,7 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
         case WARN:
           // Demoting an enabled check from an error to a warning is a form of disabling
           if (enabledChecks.contains(supplier)
-              && !supplier.disableable()
+              && !supplier.suppressibility().disableable()
               && supplier.severity() == SeverityLevel.ERROR) {
             throw new InvalidCommandLineOptionException(supplier.canonicalName()
                 + " is not disableable and may not be demoted to a warning");

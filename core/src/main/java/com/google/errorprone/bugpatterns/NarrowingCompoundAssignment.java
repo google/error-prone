@@ -55,7 +55,7 @@ import javax.lang.model.type.TypeKind;
         + " For example, 'byte b = 0; b = b << 1;' does not compile, but 'byte b = 0; b <<= 1;'"
         + " does!\n\n"
         + " (See Puzzle #9 in 'Java Puzzlers: Traps, Pitfalls, and Corner Cases'.)",
-    category = JDK, severity = ERROR, maturity = MATURE, disableable = true)
+    category = JDK, severity = ERROR, maturity = MATURE)
 public class NarrowingCompoundAssignment extends BugChecker
     implements CompoundAssignmentTreeMatcher {
 

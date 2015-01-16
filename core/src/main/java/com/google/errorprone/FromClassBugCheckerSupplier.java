@@ -19,6 +19,7 @@ package com.google.errorprone;
 import com.google.common.base.Preconditions;
 import com.google.errorprone.BugPattern.MaturityLevel;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.errorprone.bugpatterns.BugChecker;
 
 /**
@@ -29,7 +30,7 @@ class FromClassBugCheckerSupplier extends BugCheckerSupplier {
   private final String canonicalName;
   private final SeverityLevel severity;
   private final MaturityLevel maturity;
-  private final boolean disableable;
+  private final Suppressibility suppressibility;
 
   FromClassBugCheckerSupplier(Class<? extends BugChecker> checkerClass) {
     BugPattern pattern = checkerClass.getAnnotation(BugPattern.class);
@@ -39,16 +40,17 @@ class FromClassBugCheckerSupplier extends BugCheckerSupplier {
     this.canonicalName = pattern.name();
     this.severity = pattern.severity();
     this.maturity = pattern.maturity();
-    this.disableable = pattern.disableable();
+    this.suppressibility = pattern.suppressibility();
   }
 
   private FromClassBugCheckerSupplier(Class<? extends BugChecker> checkerClass,
-      String canonicalName, SeverityLevel severity, MaturityLevel maturity, boolean disableable) {
+      String canonicalName, SeverityLevel severity, MaturityLevel maturity,
+      Suppressibility suppressibility) {
     this.checkerClass = checkerClass;
     this.canonicalName = canonicalName;
     this.severity = severity;
     this.maturity = maturity;
-    this.disableable = disableable;
+    this.suppressibility = suppressibility;
   }
 
   @Override
@@ -76,7 +78,7 @@ class FromClassBugCheckerSupplier extends BugCheckerSupplier {
   @Override
   public BugCheckerSupplier overrideSeverity(SeverityLevel severity) {
     return new FromClassBugCheckerSupplier(
-        this.checkerClass, this.canonicalName, severity, this.maturity, this.disableable);
+        this.checkerClass, this.canonicalName, severity, this.maturity, this.suppressibility);
   }
 
   @Override
@@ -85,8 +87,8 @@ class FromClassBugCheckerSupplier extends BugCheckerSupplier {
   }
 
   @Override
-  public boolean disableable() {
-    return disableable;
+  public Suppressibility suppressibility() {
+    return suppressibility;
   }
 
   @Override
