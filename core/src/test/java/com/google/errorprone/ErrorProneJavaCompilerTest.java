@@ -17,6 +17,10 @@
 package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.errorprone.BugPattern.Category.JDK;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.Suppressibility.UNSUPPRESSIBLE;
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasItem;
@@ -26,7 +30,9 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.google.errorprone.bugpatterns.ArrayEquals;
 import com.google.errorprone.bugpatterns.ArrayEqualsTest;
 import com.google.errorprone.bugpatterns.BadShiftAmount;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -230,6 +236,12 @@ public class ErrorProneJavaCompilerTest {
     }
   }
 
+  @BugPattern(name = "ArrayEquals",
+      summary = "Reference equality used to compare arrays",
+      explanation = "", category = JDK, severity = ERROR, maturity = MATURE,
+      suppressibility = UNSUPPRESSIBLE)
+  public static class UnsuppressibleArrayEquals extends ArrayEquals {}
+  
   @Test
   public void testCantDisableNonDisableableCheck() throws Exception {
     try {
@@ -237,7 +249,7 @@ public class ErrorProneJavaCompilerTest {
           ArrayEqualsTest.class,
           Arrays.asList("ArrayEqualsPositiveCases.java"),
           Arrays.asList("-Xep:ArrayEquals:OFF"),
-          Collections.<Class<? extends BugChecker>>emptyList());
+          ImmutableList.<Class<? extends BugChecker>>of(UnsuppressibleArrayEquals.class));
       fail();
     } catch (RuntimeException expected) {
       assertThat(expected.getMessage()).contains("ArrayEquals may not be disabled");

@@ -136,12 +136,6 @@ public abstract class BugChecker implements Suppressible, Serializable {
   private final String linkUrl;
 
   /**
-   * Whether this check may be disabled.  Corresponds to the {@code disableable} attribute from
-   * its {@code BugPattern}.
-   */
-  private final boolean disableable;
-
-  /**
    * Whether this check may be suppressed.  Corresponds to the {@code suppressibility} attribute
    * from its {@code BugPattern}.
    */
@@ -171,7 +165,6 @@ public abstract class BugChecker implements Suppressible, Serializable {
     maturity = pattern.maturity();
     severity = pattern.severity();
     linkUrl = createLinkUrl(pattern);
-    disableable = pattern.disableable();
     suppressibility = pattern.suppressibility();
     if (suppressibility == Suppressibility.CUSTOM_ANNOTATION) {
       customSuppressionAnnotation = pattern.customSuppressionAnnotation();
@@ -250,10 +243,6 @@ public abstract class BugChecker implements Suppressible, Serializable {
 
   public String linkUrl() {
     return linkUrl;
-  }
-
-  public boolean disableable() {
-    return disableable;
   }
 
   @Override

@@ -19,6 +19,7 @@ package com.google.errorprone;
 import com.google.common.base.Preconditions;
 import com.google.errorprone.BugPattern.MaturityLevel;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.errorprone.bugpatterns.BugChecker;
 
 /**
@@ -74,7 +75,7 @@ class FromInstanceBugCheckerSupplier extends BugCheckerSupplier {
   }
 
   @Override
-  public boolean disableable() {
-    return checker.disableable();
+  public Suppressibility suppressibility() {
+    return checker.suppressibility();
   }
 }

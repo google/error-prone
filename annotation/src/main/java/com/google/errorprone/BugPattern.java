@@ -16,11 +16,11 @@
 
 package com.google.errorprone;
 
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Retention;
 import java.util.Comparator;
-
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * Describes a bug pattern detected by error-prone.  Used to generate compiler error messages,
@@ -142,15 +142,6 @@ public @interface BugPattern {
   }
 
   /**
-   * Whether this check should be disableable by a command-line flag.
-   *
-   * <p>You are strongly encouraged to keep the default value of false since error-prone checks
-   * should have a zero false positive rate. A check should only be disabled when bugs exist in
-   * legacy code and are infeasible to fix.
-   */
-  boolean disableable() default false;
-
-  /**
    * Whether this checker should be suppressible, and if so, by what means.
    */
   Suppressibility suppressibility() default Suppressibility.SUPPRESS_WARNINGS;
@@ -160,15 +151,25 @@ public @interface BugPattern {
      * Can be suppressed using the standard {@code SuppressWarnings("foo")} mechanism. This
      * setting should be used unless there is a good reason otherwise, e.g. security.
      */
-    SUPPRESS_WARNINGS,
+    SUPPRESS_WARNINGS(true),
     /**
      * Can be suppressed with a custom annotation on a parent AST node.
      */
-    CUSTOM_ANNOTATION,
+    CUSTOM_ANNOTATION(false),
     /**
      * Cannot be suppressed.
      */
-    UNSUPPRESSIBLE
+    UNSUPPRESSIBLE(false);
+
+    private final boolean disableable;
+
+    Suppressibility(boolean disableable) {
+      this.disableable = disableable;
+    }
+
+    public boolean disableable() {
+      return disableable;
+    }
   }
 
   /**

@@ -19,6 +19,7 @@ package com.google.errorprone;
 import com.google.common.base.Supplier;
 import com.google.errorprone.BugPattern.MaturityLevel;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.errorprone.bugpatterns.BugChecker;
 
 import java.util.Objects;
@@ -63,6 +64,12 @@ public abstract class BugCheckerSupplier implements Supplier<BugChecker> {
   public abstract SeverityLevel severity();
 
   /**
+   * The {@link Suppressibility} of the {@link BugChecker}, e.g.
+   * {@link Suppressibility#UNSUPPRESSIBLE}
+   */
+  public abstract Suppressibility suppressibility();
+
+  /**
    * Returns a new {@link BugCheckerSupplier} in which the previous {@link SeverityLevel}
    * has been overridden to the given value.
    */
@@ -73,11 +80,6 @@ public abstract class BugCheckerSupplier implements Supplier<BugChecker> {
    */
   public abstract MaturityLevel maturity();
 
-  /**
-   * Whether this {@link BugChecker} may be disabled.
-   */
-  public abstract boolean disableable();
-
   @Override
   public boolean equals(Object obj) {
     if (obj instanceof BugCheckerSupplier) {
@@ -85,13 +87,13 @@ public abstract class BugCheckerSupplier implements Supplier<BugChecker> {
       return this.canonicalName().equals(that.canonicalName())
           && this.severity().equals(that.severity())
           && this.maturity().equals(that.maturity())
-          && this.disableable() == that.disableable();
+          && this.suppressibility().equals(that.suppressibility());
     }
     return false;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(canonicalName(), severity(), maturity(), disableable());
+    return Objects.hash(canonicalName(), severity(), maturity(), suppressibility());
   }
 }

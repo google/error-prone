@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.Category.ONE_OFF;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.Suppressibility.UNSUPPRESSIBLE;
 
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
@@ -53,7 +54,7 @@ public class CommandLineFlagTest {
   @BugPattern(name = "DisableableChecker", altNames = "foo",
       summary = "Disableable checker that flags all return statements as errors",
       explanation = "Disableable checker that flags all return statements as errors",
-      disableable = true, category = ONE_OFF, severity = ERROR, maturity = MATURE)
+      category = ONE_OFF, severity = ERROR, maturity = MATURE)
   private static class DisableableChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {
@@ -64,7 +65,7 @@ public class CommandLineFlagTest {
   @BugPattern(name = "NondisableableChecker",
       summary = "NondisableableChecker checker that flags all return statements as errors",
       explanation = "NondisableableChecker checker that flags all return statements as errors",
-      category = ONE_OFF, severity = ERROR, maturity = MATURE)
+      suppressibility = UNSUPPRESSIBLE, category = ONE_OFF, severity = ERROR, maturity = MATURE)
   private static class NondisableableChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {
@@ -86,7 +87,7 @@ public class CommandLineFlagTest {
   @BugPattern(name = "ErrorChecker",
       summary = "Checker that flags all return statements as errors",
       explanation = "Checker that flags all return statements as errors",
-      category = ONE_OFF, severity = ERROR, maturity = MATURE, disableable = true)
+      category = ONE_OFF, severity = ERROR, maturity = MATURE)
   private static class ErrorChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {
