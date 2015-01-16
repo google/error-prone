@@ -43,6 +43,7 @@ import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
+import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCArrayTypeTree;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
@@ -513,5 +514,14 @@ public class ASTHelpers {
       NullnessAnalysis nullnessAnalysis) {
     TreePath pathToExpr = new TreePath(state.getPath(), expr);
     return nullnessAnalysis.getNullness(pathToExpr, state.context);
+  }
+
+  /**
+   * Returns the constant value of a tree, if it has one, or null otherwise.
+   */
+  public static Object constValue(JCTree tree) {
+    return (tree instanceof JCLiteral)
+        ? ((JCLiteral) tree).value
+        : tree.type.constValue();
   }
 }

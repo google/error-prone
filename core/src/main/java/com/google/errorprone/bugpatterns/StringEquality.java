@@ -23,6 +23,7 @@ import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NONNUL
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.kindIs;
+import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.sun.source.tree.Tree.Kind.EQUAL_TO;
 import static com.sun.source.tree.Tree.Kind.NOT_EQUAL_TO;
 
@@ -41,7 +42,6 @@ import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.JCTree.JCLiteral;
 
 /**
  * @author ptoomey@google.com (Patrick Toomey)
@@ -96,7 +96,7 @@ public class StringEquality extends BugChecker implements BinaryTreeMatcher {
         new HandleChoice<ExpressionTree, StringBuilder>() {
           @Override
           public StringBuilder apply(ExpressionTree it, ExpressionTree other) {
-            return "".equals(getConstValue(it)) && isNonNull(other, state)
+            return "".equals(constValue((JCTree) it)) && isNonNull(other, state)
                    ? methodCall(other, "isEmpty") : null;
           }
         });
@@ -125,12 +125,6 @@ public class StringEquality extends BugChecker implements BinaryTreeMatcher {
 
     fix.replace(tree, fixExpr.toString());
     return describeMatch(tree, fix.build());
-  }
-
-  private static Object getConstValue(Tree tree) {
-    return (tree instanceof JCLiteral)
-        ? ((JCLiteral) tree).value
-        : ((JCTree) tree).type.constValue();
   }
 
   private interface HandleChoice<T, R> {
