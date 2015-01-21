@@ -3,6 +3,5 @@
 **/.project
 **/.settings
 **/.gitignore
-**/*.iml
-.idea/*
+*.iml
 .java-version
