@@ -168,6 +168,9 @@ public class ErrorProneCompiler {
     }
 
     return ImmutableList.<String>builder()
+        // suppress xlint 'options' warnings to avoid diagnostics like:
+        // 'bootstrap class path not set in conjunction with -source 1.7'
+        .add("-Xlint:-options")
         .add("-source").add(overrideLanguageLevel)
         .add("-target").add(overrideLanguageLevel)
         .add(argv)
