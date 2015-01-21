@@ -17,7 +17,9 @@
 package com.google.errorprone;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.StandardSystemProperty.JAVA_SPECIFICATION_VERSION;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.scanner.BuiltInCheckerSuppliers;
 import com.google.errorprone.scanner.Scanner;
 import com.google.errorprone.scanner.ScannerSupplier;
@@ -146,9 +148,38 @@ public class ErrorProneCompiler {
     return compile(args, context);
   }
 
-  private String[] prepareContext(String[] argv, Context context)
+  /**
+   * Default to compiling with the same -source and -target as the host's javac.
+   *
+   * <p>This prevents, e.g., targeting Java 8 by default when using error-prone on JDK7.
+   */
+  private List<String> defaultToLatestSupportedLanguageLevel(String[] argv) {
+
+    String overrideLanguageLevel;
+    switch (JAVA_SPECIFICATION_VERSION.value()) {
+      case "1.7":
+        overrideLanguageLevel = "7";
+        break;
+      case "1.8":
+        overrideLanguageLevel = "8";
+        break;
+      default:
+        return ImmutableList.copyOf(argv);
+    }
+
+    return ImmutableList.<String>builder()
+        .add("-source").add(overrideLanguageLevel)
+        .add("-target").add(overrideLanguageLevel)
+        .add(argv)
+        .build();
+  }
+
+  private String[] prepareCompilation(String[] argv, Context context)
       throws InvalidCommandLineOptionException {
-    ErrorProneOptions epOptions = ErrorProneOptions.processArgs(argv);
+
+    List<String> newArgs = defaultToLatestSupportedLanguageLevel(argv);
+    ErrorProneOptions epOptions = ErrorProneOptions.processArgs(newArgs);
+
     argv = epOptions.getRemainingArgs();
 
     if (diagnosticListener != null) {
@@ -166,17 +197,14 @@ public class ErrorProneCompiler {
 
   private Result compile(String[] argv, Context context) {
     try {
-      argv = prepareContext(argv, context);
+      argv = prepareCompilation(argv, context);
     } catch (InvalidCommandLineOptionException e) {
       errOutput.println(e.getMessage());
       errOutput.flush();
       return Result.CMDERR;
     }
 
-    Result result = new Main(compilerName, errOutput).compile(argv, context);
-
-
-    return result;
+    return new Main(compilerName, errOutput).compile(argv, context);
   }
 
   public Result compile(
@@ -195,7 +223,7 @@ public class ErrorProneCompiler {
       Iterable<? extends Processor> processors) {
 
     try {
-      argv = prepareContext(argv, context);
+      argv = prepareCompilation(argv, context);
     } catch (InvalidCommandLineOptionException e) {
       errOutput.println(e.getMessage());
       errOutput.flush();
