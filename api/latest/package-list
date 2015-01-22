@@ -1,4 +1,5 @@
 com.google.errorprone
+com.google.errorprone.annotations
 com.google.errorprone.bugpatterns
 com.google.errorprone.bugpatterns.threadsafety
 com.google.errorprone.bugpatterns.threadsafety.annotations

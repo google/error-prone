@@ -23,12 +23,12 @@ The 'doCast' method would be better implemented as:
       return clazz.cast(o); // has the expected behaviour
     }
 
-Second, this pattern causes unsafe casts to occur at invocations of the method. Considerthe following snippet, which uses the first (incorrect) implementation of 'doCast':
+Second, this pattern causes unsafe casts to occur at invocations of the method. Consider the following snippet, which uses the first (incorrect) implementation of 'doCast':
 
     this.<String>doCast(42);  // succeeds
     String s = doCast(42);  // fails at runtime
 
-Finally, relying on the type parameter to be inferred can have surprising results, andinteracts badly with overloaded methods. Consider:
+Finally, relying on the type parameter to be inferred can have surprising results, and interacts badly with overloaded methods. Consider:
 
     <T> T getThing()
     void assertThat(int a, int b)

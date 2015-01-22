@@ -41,6 +41,7 @@
 - {name: JUnit4TearDownNotRun, summary: tearDown() method will not be run; Please add an @After annotation}
 - {name: JUnit4TestNotRun, summary: Test method will not be run; please add @Test annotation}
 - {name: LongLiteralLowerCaseSuffix, summary: Prefer 'L' to 'l' for the suffix to long literals}
+- {name: MisusedWeekYear, summary: Use of "YYYY" (week year) in a date pattern without "ww" (week in year). You probably meant to use "yyyy" (year) instead.}
 - {name: NarrowingCompoundAssignment, summary: 'Compound assignments to bytes, shorts,
     chars, and floats hide dangerous casts'}
 - {name: Overrides, summary: Varargs doesn't agree for overridden method}
