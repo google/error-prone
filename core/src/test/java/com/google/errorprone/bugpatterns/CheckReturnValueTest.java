@@ -87,5 +87,38 @@ public class CheckReturnValueTest {
             "  }",
             "}")));
   }
+
+  // Don't match void-returning methods in packages with @CRV
+  @Test
+  public void testVoidReturningMethodInAnnotatedPackage() throws Exception {
+    compilationHelper.assertCompileSucceeds(Arrays.asList(
+        compilationHelper.fileManager().forSourceLines("package-info.java",
+            "@javax.annotation.CheckReturnValue",
+            "package lib;"),
+        compilationHelper.fileManager().forSourceLines("lib/Lib.java",
+            "package lib;",
+            "public class Lib {",
+            "  public static void f() {}",
+            "}"),
+        compilationHelper.fileManager().forSourceLines("Test.java",
+            "class Test {",
+            "  void m() {",
+            "    lib.Lib.f();",
+            "  }",
+            "}")));
+  }
+
+  @Test
+  public void badCRVOnProcedure() throws Exception {
+    compilationHelper.assertCompileFailsWithMessages(
+        compilationHelper.fileManager().forSourceLines("Test.java",
+            "package lib;",
+            "@javax.annotation.CheckReturnValue",
+            "public class Test {",
+            "  // BUG: Diagnostic contains:",
+            "  // @CheckReturnValue may not be applied to void-returning methods",
+            "  @javax.annotation.CheckReturnValue public static void f() {}",
+            "}"));
+  }
 }
 
