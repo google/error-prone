@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.base.MoreObjects.firstNonNull;
+
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.MaturityLevel;
@@ -84,6 +86,7 @@ import com.sun.source.tree.WildcardTree;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -117,10 +120,9 @@ public abstract class BugChecker implements Suppressible, Serializable {
   private final String message;
 
   /**
-   * The type of diagnostic (error or warning) to emit when this check triggers.  Initialized to
-   * the {@code severity} attribute from its {@code BugPattern}, but may be overridden.
+   * The default type of diagnostic (error or warning) to emit when this check triggers.
    */
-  private SeverityLevel severity;
+  private final SeverityLevel defaultSeverity;
 
   /**
    * The maturity of this checker.  Used to decide whether to enable this check.  Corresponds to
@@ -163,7 +165,7 @@ public abstract class BugChecker implements Suppressible, Serializable {
         .build();
     message = pattern.summary();
     maturity = pattern.maturity();
-    severity = pattern.severity();
+    defaultSeverity = pattern.severity();
     linkUrl = createLinkUrl(pattern);
     suppressibility = pattern.suppressibility();
     if (suppressibility == Suppressibility.CUSTOM_ANNOTATION) {
@@ -233,12 +235,12 @@ public abstract class BugChecker implements Suppressible, Serializable {
     return maturity;
   }
 
-  public SeverityLevel severity() {
-    return severity;
+  public SeverityLevel defaultSeverity() {
+    return defaultSeverity;
   }
-
-  public void setSeverity(SeverityLevel severity) {
-    this.severity = severity;
+  
+  public SeverityLevel severity(Map<String, SeverityLevel> severities) {
+    return firstNonNull(severities.get(canonicalName), defaultSeverity);
   }
 
   public String linkUrl() {

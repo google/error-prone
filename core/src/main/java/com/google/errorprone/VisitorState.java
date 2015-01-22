@@ -16,6 +16,8 @@
 
 package com.google.errorprone;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.matchers.Description;
 
 import com.sun.source.tree.Tree;
@@ -38,6 +40,8 @@ import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -47,6 +51,7 @@ public class VisitorState {
   private final DescriptionListener descriptionListener;
   public final Context context;
   private final TreePath path;
+  private final Map<String, SeverityLevel> severityMap;
 
   // The default no-op implementation of DescriptionListener. We use this instead of null so callers
   // of getDescriptionListener() don't have to do null-checking.
@@ -55,22 +60,28 @@ public class VisitorState {
   };
 
   public VisitorState(Context context) {
-    this(context, null, NULL_LISTENER);
+    this(context, null, NULL_LISTENER, ImmutableMap.<String, SeverityLevel>of());
   }
 
   public VisitorState(Context context, DescriptionListener listener) {
-    this(context, null, listener);
+    this(context, null, listener, Collections.<String, SeverityLevel>emptyMap());
+  }
+
+  public VisitorState(Context context, DescriptionListener listener,
+      Map<String, SeverityLevel> severityMap) {
+    this(context, null, listener, severityMap);
   }
 
   private VisitorState(Context context, TreePath path,
-      DescriptionListener descriptionListener) {
+      DescriptionListener descriptionListener, Map<String, SeverityLevel> severityMap) {
     this.context = context;
     this.path = path;
     this.descriptionListener = descriptionListener;
+    this.severityMap = severityMap;
   }
 
   public VisitorState withPath(TreePath path) {
-    return new VisitorState(context, path, descriptionListener);
+    return new VisitorState(context, path, descriptionListener, severityMap);
   }
 
   public TreePath getPath() {
@@ -89,8 +100,17 @@ public class VisitorState {
     return Symtab.instance(context);
   }
 
-  public DescriptionListener getDescriptionListener() {
-    return descriptionListener;
+  public void reportMatch(Description description) {
+    // TODO(user): creating Descriptions with the default severity and updating them here isn't
+    // ideal (we could forget to do the update), so consider removing severity from Description.
+    // Instead, there could be another method on the listener that took a description and a
+    // (separate) SeverityLevel. Adding the method to the interface would require updating the
+    // existing implementations, though. Wait for default methods?
+    SeverityLevel override = severityMap.get(description.checkName);
+    if (override != null) {
+      description = description.applySeverityOverride(override);
+    }
+    descriptionListener.onDescribed(description);
   }
 
   public Name getName(String nameStr) {

@@ -18,23 +18,22 @@ package com.google.errorprone.scanner;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugCheckerSupplier;
+import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.ErrorProneOptions;
 import com.google.errorprone.ErrorProneOptions.Severity;
 import com.google.errorprone.InvalidCommandLineOptionException;
 import com.google.errorprone.bugpatterns.BugChecker;
 
+import org.pcollections.HashTreePMap;
+import org.pcollections.PMap;
+
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.annotation.CheckReturnValue;
 
@@ -55,6 +54,15 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
     return fromBugCheckerClasses(Arrays.asList(checkerClasses));
   }
 
+  private static PMap<String, BugPattern.SeverityLevel> defaultSeverities(
+      Iterable<BugCheckerSupplier> checkers) {
+    PMap<String, BugPattern.SeverityLevel> severities = HashTreePMap.empty();
+    for (BugCheckerSupplier check : checkers) {
+      severities = severities.plus(check.canonicalName(), check.defaultSeverity());
+    }
+    return severities;
+  }
+
   /**
    * Returns a {@link ScannerSupplier} with a specific list of {@link BugChecker} classes.
    */
@@ -66,7 +74,7 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
       builder.put(supplier.canonicalName(), supplier);
     }
     ImmutableBiMap<String, BugCheckerSupplier> allChecks = builder.build();
-    return new ScannerSupplierImpl(allChecks, allChecks.values());
+    return new ScannerSupplierImpl(allChecks, defaultSeverities(allChecks.values()));
   }
 
   /**
@@ -86,7 +94,7 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
       builder.put(supplier.canonicalName(), supplier);
     }
     ImmutableBiMap<String, BugCheckerSupplier> allChecks = builder.build();
-    return new ScannerSupplierImpl(allChecks, allChecks.values());
+    return new ScannerSupplierImpl(allChecks, defaultSeverities(allChecks.values()));
   }
 
   /**
@@ -113,6 +121,8 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
    */
   protected abstract ImmutableSet<BugCheckerSupplier> getEnabledChecks();
 
+  protected abstract PMap<String, BugPattern.SeverityLevel> severities();
+
   /**
    * Applies an override map (from command-line options) to this {@link ScannerSupplier} and
    * returns the resulting {@link ScannerSupplier}.  The overrides may do any of the following:
@@ -131,22 +141,18 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
   @CheckReturnValue
   public ScannerSupplier applyOverrides(ErrorProneOptions errorProneOptions)
       throws InvalidCommandLineOptionException {
-    Map<String, Severity> severityMap = errorProneOptions.getSeverityMap();
-    if (severityMap.isEmpty()) {
+    Map<String, Severity> severityOverrides = errorProneOptions.getSeverityMap();
+    if (severityOverrides.isEmpty()) {
       return this;
     }
-
+    
     // Initialize result allChecks map and enabledChecks set with current state of this Supplier.
-    // We use mutable data structures here so that (1) we can replace existing BugCheckerSuppliers
-    // with new ones to override the severity of a check, and (2) we can remove checks from
-    // enabledChecks if they are overridden to off.
-    BiMap<String, BugCheckerSupplier> allChecks = HashBiMap.create(getAllChecks());
-    Set<BugCheckerSupplier> enabledChecks = new HashSet<>(getEnabledChecks());
+    ImmutableBiMap<String, BugCheckerSupplier> checks = getAllChecks();
+    PMap<String, SeverityLevel> severities = severities();
 
     // Process overrides
-    for (Entry<String, Severity> entry : severityMap.entrySet()) {
-      BugCheckerSupplier supplier = forName(entry.getKey());
-      BugCheckerSupplier newSupplier;
+    for (Entry<String, Severity> entry : severityOverrides.entrySet()) {
+      BugCheckerSupplier supplier = getAllChecks().get(entry.getKey());
       if (supplier == null) {
         if (errorProneOptions.ignoreUnknownChecks()) {
           continue;
@@ -160,44 +166,30 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
             throw new InvalidCommandLineOptionException(
                 supplier.canonicalName() + " may not be disabled");
           }
-          enabledChecks.remove(supplier);
+          severities = severities.plus(supplier.canonicalName(), SeverityLevel.NOT_A_PROBLEM);
           break;
         case DEFAULT:
-          enabledChecks.add(supplier);
+          severities = severities.plus(supplier.canonicalName(), supplier.defaultSeverity());
           break;
         case WARN:
           // Demoting an enabled check from an error to a warning is a form of disabling
-          if (enabledChecks.contains(supplier)
+          if (supplier.severity(severities).enabled()
               && !supplier.suppressibility().disableable()
-              && supplier.severity() == SeverityLevel.ERROR) {
+              && supplier.defaultSeverity() == SeverityLevel.ERROR) {
             throw new InvalidCommandLineOptionException(supplier.canonicalName()
                 + " is not disableable and may not be demoted to a warning");
           }
-
-          // When the severity of a check is overridden, a new BugCheckerSupplier is produced.
-          // The old BugCheckerSupplier must be removed from allChecks and enabledChecks,
-          // and the new BugCheckerSupplier must be added.
-          newSupplier = supplier.overrideSeverity(SeverityLevel.WARNING);
-          enabledChecks.remove(supplier);
-          allChecks.put(newSupplier.canonicalName(), newSupplier);
-          enabledChecks.add(newSupplier);
+          severities = severities.plus(supplier.canonicalName(), SeverityLevel.WARNING);
           break;
         case ERROR:
-          // When the severity of a check is overridden, a new BugCheckerSupplier is produced.
-          // The old BugCheckerSupplier must be removed from allChecks and enabledChecks,
-          // and the new BugCheckerSupplier must be added.
-          newSupplier = supplier.overrideSeverity(SeverityLevel.ERROR);
-          enabledChecks.remove(supplier);
-          allChecks.put(newSupplier.canonicalName(), newSupplier);
-          enabledChecks.add(newSupplier);
+          severities = severities.plus(supplier.canonicalName(), SeverityLevel.ERROR);
           break;
         default:
           throw new IllegalStateException("Unexpected severity level: " + entry.getValue());
       }
     }
 
-    return new ScannerSupplierImpl(ImmutableBiMap.copyOf(allChecks),
-        ImmutableSet.copyOf(enabledChecks));
+    return new ScannerSupplierImpl(checks, severities);
   }
 
   /**
@@ -212,12 +204,9 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
             .putAll(this.getAllChecks())
             .putAll(other.getAllChecks())
             .build();
-    ImmutableSet<BugCheckerSupplier> combinedEnabledChecks =
-        ImmutableSet.<BugCheckerSupplier>builder()
-            .addAll(this.getEnabledChecks())
-            .addAll(other.getEnabledChecks())
-            .build();
-    return new ScannerSupplierImpl(combinedAllChecks, combinedEnabledChecks);
+    PMap<String, SeverityLevel> combinedSeverities =
+        this.severities().plusAll(other.severities());
+    return new ScannerSupplierImpl(combinedAllChecks, combinedSeverities);
   }
 
   /**
@@ -226,16 +215,12 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
    */
   @CheckReturnValue
   public ScannerSupplier filter(Predicate<? super BugCheckerSupplier> predicate) {
-    return new ScannerSupplierImpl(getAllChecks(),
-        FluentIterable.from(getEnabledChecks()).filter(predicate).toSet());
-  }
-
-  /**
-   * Searches the checkers in this {@link ScannerSupplier} and returns the {@link
-   * BugCheckerSupplier} with the given {@code name}.  Returns null if no checker is found with
-   * that name.
-   */
-  private BugCheckerSupplier forName(String name) {
-    return getAllChecks().get(name);
+    PMap<String, SeverityLevel> filteredSeverities = severities();
+    for (Entry<String, SeverityLevel> entry : severities().entrySet()) {
+      if (!predicate.apply(getAllChecks().get(entry.getKey()))) {
+        filteredSeverities = filteredSeverities.plus(entry.getKey(), SeverityLevel.NOT_A_PROBLEM);
+      }
+    }
+    return new ScannerSupplierImpl(getAllChecks(), filteredSeverities);
   }
 }

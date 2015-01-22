@@ -179,6 +179,6 @@ public class ErrorProneAnalyzer implements TaskListener {
         log,
         ((JCCompilationUnit) compilation).endPositions,
         compilation.getSourceFile());
-    return new VisitorState(context, logReporter);
+    return new VisitorState(context, logReporter, errorProneScanner.severityMap());
   }
 }

@@ -19,6 +19,9 @@ package com.google.errorprone.scanner;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugCheckerSupplier;
+import com.google.errorprone.BugPattern.SeverityLevel;
+
+import org.pcollections.PMap;
 
 /**
  * An implementation of a {@link ScannerSupplier} that just returns the {@link Scanner} that
@@ -42,6 +45,11 @@ class InstanceReturningScannerSupplierImpl extends ScannerSupplier {
     throw new UnsupportedOperationException();
   }
 
+  @Override
+  protected PMap<String, SeverityLevel> severities() {
+    throw new UnsupportedOperationException();
+  }
+  
   @Override
   protected ImmutableSet<BugCheckerSupplier> getEnabledChecks() {
     throw new UnsupportedOperationException();

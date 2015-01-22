@@ -16,6 +16,9 @@
 
 package com.google.errorprone.scanner;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -129,6 +132,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -140,6 +144,8 @@ public class ErrorProneScanner extends Scanner {
   private Set<Class<? extends Annotation>> customSuppressionAnnotations =
       new HashSet<>();
 
+  private final Map<String, SeverityLevel> severities;
+
   /**
    * Create an error-prone scanner for a non-hardcoded set of checkers.
    *
@@ -148,6 +154,15 @@ public class ErrorProneScanner extends Scanner {
   public ErrorProneScanner(BugChecker... checkers) {
     this(Arrays.asList(checkers));
   }
+  
+  private static Map<String, BugPattern.SeverityLevel> defaultSeverities(
+      Iterable<BugChecker> checkers) {
+    ImmutableMap.Builder<String, BugPattern.SeverityLevel> builder = ImmutableMap.builder();
+    for (BugChecker check : checkers) {
+      builder.put(check.canonicalName(), check.defaultSeverity());
+    }
+    return builder.build();
+  }
 
   /**
    * Create an error-prone scanner for a non-hardcoded set of checkers.
@@ -155,6 +170,17 @@ public class ErrorProneScanner extends Scanner {
    * @param checkers The checkers that this scanner should use.
    */
   public ErrorProneScanner(Iterable<BugChecker> checkers) {
+    this(checkers, defaultSeverities(checkers));
+  }
+
+  /**
+   * Create an error-prone scanner for a non-hardcoded set of checkers.
+   *
+   * @param checkers The checkers that this scanner should use.
+   * @param severities The default check severities.
+   */
+  public ErrorProneScanner(Iterable<BugChecker> checkers, Map<String, SeverityLevel> severities) {
+    this.severities = severities;
     for (BugChecker checker : checkers) {
       registerNodeTypes(checker);
     }
@@ -1002,5 +1028,10 @@ public class ErrorProneScanner extends Scanner {
       }
     }
     return super.visitWildcard(tree, visitorState);
+  }
+  
+  @Override
+  public Map<String, SeverityLevel> severityMap() {
+    return severities;
   }
 }

@@ -33,7 +33,6 @@ import com.google.errorprone.ErrorProneOptions;
 import com.google.errorprone.InvalidCommandLineOptionException;
 import com.google.errorprone.bugpatterns.ArrayEquals;
 import com.google.errorprone.bugpatterns.BadShiftAmount;
-import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.ChainingConstructorIgnoresParameter;
 import com.google.errorprone.bugpatterns.DepAnn;
 import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
@@ -238,23 +237,12 @@ public class ScannerSupplierTest {
             "-Xep:ChainingConstructorIgnoresParameter:WARN",
             "-Xep:StringEquality:ERROR"));
     ScannerSupplier overriddenScannerSupplier = ss.applyOverrides(epOptions);
+    
+    Map<String, SeverityLevel> expected = ImmutableMap.of(
+        "BadShiftAmount", SeverityLevel.ERROR,
+        "ChainingConstructorIgnoresParameter", SeverityLevel.WARNING,
+        "StringEquality", SeverityLevel.ERROR);
 
-    Map<String, BugCheckerSupplier> unexpected = ImmutableMap.of(
-        "BadShiftAmount", fromInstance(new BadShiftAmount()),
-        "ChainingConstructorIgnoresParameter", fromInstance(
-            new ChainingConstructorIgnoresParameter()),
-        "StringEquality", fromInstance(new StringEquality()));
-    assertThat(overriddenScannerSupplier.getAllChecks()).isNotEqualTo(unexpected);
-
-    BugChecker chainingConstructorCheckWithWarningSeverity =
-        new ChainingConstructorIgnoresParameter();
-    chainingConstructorCheckWithWarningSeverity.setSeverity(SeverityLevel.WARNING);
-    BugChecker stringEqualityWithErrorSeverity = new StringEquality();
-    stringEqualityWithErrorSeverity.setSeverity(SeverityLevel.ERROR);
-    Set<BugCheckerSupplier> expected = ImmutableSet.of(
-        fromInstance(chainingConstructorCheckWithWarningSeverity),
-        fromInstance(new BadShiftAmount()),
-        fromInstance(stringEqualityWithErrorSeverity));
-    assertThat(overriddenScannerSupplier.getEnabledChecks()).isEqualTo(expected);
+    assertThat(overriddenScannerSupplier.severities()).isEqualTo(expected);
   }
 }

@@ -195,12 +195,7 @@ public final class ChainingConstructorIgnoresParameter extends BugChecker
 
   private void reportMatch(
       Tree diagnosticPosition, VisitorState state, Tree toReplace, String replaceWith) {
-    report(describeMatch(diagnosticPosition, replace(toReplace, replaceWith)), state);
-  }
-
-  // Cloned from Scanner. This also appears in ThreadSafe. See the TODO there.
-  private void report(Description description, VisitorState state) {
-    state.getDescriptionListener().onDescribed(description);
+    state.reportMatch(describeMatch(diagnosticPosition, replace(toReplace, replaceWith)));
   }
 
   private static boolean referencesIdentifierWithName(

@@ -18,13 +18,17 @@ package com.google.errorprone.scanner;
 
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugCheckerSupplier;
+import com.google.errorprone.BugPattern;
 import com.google.errorprone.bugpatterns.BugChecker;
+
+import org.pcollections.PMap;
 
 /**
  * An implementation of a {@link ScannerSupplier}, abstracted as a set of all known
@@ -32,36 +36,49 @@ import com.google.errorprone.bugpatterns.BugChecker;
  * enabled suppliers must be a subset of all known suppliers.
  */
 class ScannerSupplierImpl extends ScannerSupplier {
-  private final ImmutableBiMap<String, BugCheckerSupplier> allChecks;
-  private final ImmutableSet<BugCheckerSupplier> enabledChecks;
+  private final ImmutableBiMap<String, BugCheckerSupplier> checks;
+  private final PMap<String, BugPattern.SeverityLevel> severities;
 
-  ScannerSupplierImpl(ImmutableBiMap<String, BugCheckerSupplier> allChecks,
-      ImmutableSet<BugCheckerSupplier> enabledChecks) {
+  ScannerSupplierImpl(ImmutableBiMap<String, BugCheckerSupplier> checks,
+      PMap<String, BugPattern.SeverityLevel> severities) {
     Preconditions.checkArgument(
-        Sets.intersection(allChecks.values(), enabledChecks).equals(enabledChecks),
+        Sets.difference(severities.keySet(), checks.keySet()).isEmpty(),
         "enabledChecks must be a subset of allChecks");
-    this.allChecks = allChecks;
-    this.enabledChecks = enabledChecks;
+    this.checks = checks;
+    this.severities = severities;
   }
 
   @Override
-  public Scanner get() {
+  public ErrorProneScanner get() {
     Iterable<BugChecker> checkers = FluentIterable
-        .from(enabledChecks)
+        .from(getEnabledChecks())
         .transform(SUPPLIER_GET);
-    return new ErrorProneScanner(checkers);
+    return new ErrorProneScanner(checkers, severities);
   }
 
   @Override
   protected ImmutableBiMap<String, BugCheckerSupplier> getAllChecks() {
-    return allChecks;
+    return checks;
+  }
+
+  @Override
+  protected PMap<String, BugPattern.SeverityLevel> severities() {
+    return severities;
   }
 
   @Override
   protected ImmutableSet<BugCheckerSupplier> getEnabledChecks() {
-    return enabledChecks;
+    return FluentIterable.from(getAllChecks().values()).filter(enabledChecks).toSet();
   }
-
+  
+  private final Predicate<BugCheckerSupplier> enabledChecks =
+      new Predicate<BugCheckerSupplier>() {
+        @Override
+        public boolean apply(BugCheckerSupplier input) {
+          return input.severity(severities).enabled();
+        }
+  };
+  
   private static final Function<Supplier<BugChecker>, BugChecker> SUPPLIER_GET =
       new Function<Supplier<BugChecker>, BugChecker>() {
     @Override

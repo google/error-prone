@@ -29,6 +29,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ExpressionStatementTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -61,6 +62,7 @@ import org.junit.runners.JUnit4;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -210,7 +212,8 @@ public class ErrorProneCompilerIntegrationTest {
 
   @Test
   public void propagatesScannerThroughAnnotationProcessingRounds() throws Exception {
-    final ErrorProneScanner scanner = new ErrorProneScanner();
+    final ErrorProneScanner scanner = new ErrorProneScanner(Collections.<BugChecker>emptyList(),
+        Collections.<String, SeverityLevel>emptyMap());
     compilerBuilder.report(ScannerSupplier.fromScanner(scanner));
     compiler = compilerBuilder.build();
     Result exitCode = compiler.compile(
