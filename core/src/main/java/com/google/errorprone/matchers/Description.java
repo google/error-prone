@@ -27,7 +27,7 @@ import com.google.errorprone.fixes.Fix;
 
 import com.sun.source.tree.Tree;
 
-import java.util.List;
+import javax.annotation.CheckReturnValue;
 
 /**
  * Simple data object containing the information captured about an AST match.
@@ -65,7 +65,7 @@ public class Description {
    * A list of fixes to suggest in an error message or use in automated refactoring.  Fixes are
    * in order of decreasing preference, from most preferred to least preferred.
    */
-  public final List<Fix> fixes;
+  public final ImmutableList<Fix> fixes;
 
   /**
    * Is this a warning, error, etc.?
@@ -96,17 +96,21 @@ public class Description {
     if (suggestedFix == null) {
       throw new IllegalArgumentException("suggestedFix must not be null.");
     }
-
   }
 
   private Description(Tree node, String checkName, String rawMessage, String link,
       ImmutableList<Fix> fixes, BugPattern.SeverityLevel severity) {
+    this.node = node;
     this.checkName = checkName;
     this.rawMessage = rawMessage;
     this.link = link;
     this.fixes = fixes;
-    this.node = node;
     this.severity = severity;
+  }
+
+  @CheckReturnValue
+  public Description applySeverityOverride(SeverityLevel severity) {
+    return new Description(node, checkName, rawMessage, link, fixes, severity);
   }
 
   /**
@@ -151,7 +155,7 @@ public class Description {
       this.node = Preconditions.checkNotNull(node);
       this.name = checker.canonicalName();
       this.linkUrl = checker.linkUrl();
-      this.severity = checker.severity();
+      this.severity = checker.defaultSeverity();
       this.rawMessage = checker.message();
     }
 

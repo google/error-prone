@@ -22,6 +22,7 @@ import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.errorprone.bugpatterns.BugChecker;
 
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -59,10 +60,10 @@ public abstract class BugCheckerSupplier implements Supplier<BugChecker> {
   public abstract String canonicalName();
 
   /**
-   * The {@link SeverityLevel} of the {@link BugChecker}, e.g. {@link SeverityLevel#ERROR}.
+   * The default {@link SeverityLevel} of the {@link BugChecker}, e.g. {@link SeverityLevel#ERROR}.
    */
-  public abstract SeverityLevel severity();
-
+  public abstract SeverityLevel defaultSeverity();
+  
   /**
    * The {@link Suppressibility} of the {@link BugChecker}, e.g.
    * {@link Suppressibility#UNSUPPRESSIBLE}
@@ -70,10 +71,10 @@ public abstract class BugCheckerSupplier implements Supplier<BugChecker> {
   public abstract Suppressibility suppressibility();
 
   /**
-   * Returns a new {@link BugCheckerSupplier} in which the previous {@link SeverityLevel}
-   * has been overridden to the given value.
+   * The per-compilation {@link SeverityLevel} of the {@link BugChecker}, e.g.
+   * {@link SeverityLevel#ERROR}.
    */
-  public abstract BugCheckerSupplier overrideSeverity(SeverityLevel severity);
+  public abstract SeverityLevel severity(Map<String, SeverityLevel> severityMap);
 
   /**
    * The {@link MaturityLevel} of the {@link BugChecker}, e.g. {@link MaturityLevel#EXPERIMENTAL}.
@@ -85,7 +86,7 @@ public abstract class BugCheckerSupplier implements Supplier<BugChecker> {
     if (obj instanceof BugCheckerSupplier) {
       BugCheckerSupplier that = (BugCheckerSupplier) obj;
       return this.canonicalName().equals(that.canonicalName())
-          && this.severity().equals(that.severity())
+          && this.defaultSeverity().equals(that.defaultSeverity())
           && this.maturity().equals(that.maturity())
           && this.suppressibility().equals(that.suppressibility());
     }
@@ -94,6 +95,6 @@ public abstract class BugCheckerSupplier implements Supplier<BugChecker> {
 
   @Override
   public int hashCode() {
-    return Objects.hash(canonicalName(), severity(), maturity(), suppressibility());
+    return Objects.hash(canonicalName(), defaultSeverity(), maturity(), suppressibility());
   }
 }

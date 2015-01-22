@@ -16,6 +16,7 @@
 
 package com.google.errorprone.scanner;
 
+import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.SuppressionHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Description;
@@ -30,6 +31,7 @@ import com.sun.tools.javac.code.Symbol;
 import java.lang.annotation.Annotation;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -148,6 +150,13 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
     if (description == null || description == Description.NO_MATCH) {
       return;
     }
-    state.getDescriptionListener().onDescribed(description);
+    state.reportMatch(description);
+  }
+
+  /**
+   * Returns a mapping between the canonical names of checks and their {@link SeverityLevel}.
+   */
+  public Map<String, SeverityLevel> severityMap() {
+    return Collections.emptyMap();
   }
 }

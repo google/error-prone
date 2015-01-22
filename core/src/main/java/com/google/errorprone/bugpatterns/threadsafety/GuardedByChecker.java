@@ -134,6 +134,6 @@ public class GuardedByChecker extends GuardedByValidator implements BugChecker.V
     if (description == null || description == Description.NO_MATCH) {
       return;
     }
-    state.getDescriptionListener().onDescribed(description);
+    state.reportMatch(description);
   }
 }

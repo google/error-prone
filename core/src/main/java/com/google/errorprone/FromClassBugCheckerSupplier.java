@@ -22,6 +22,8 @@ import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.errorprone.bugpatterns.BugChecker;
 
+import java.util.Map;
+
 /**
  * A {@link BugCheckerSupplier} that supplies {@link BugChecker}s given a class.
  */
@@ -56,11 +58,9 @@ class FromClassBugCheckerSupplier extends BugCheckerSupplier {
   @Override
   public BugChecker get() {
     try {
-      BugChecker checker = checkerClass.newInstance();
-      checker.setSeverity(severity);
-      return checker;
+      return checkerClass.newInstance();
     } catch (ReflectiveOperationException e) {
-      throw new RuntimeException(
+      throw new LinkageError(
           "Could not reflectively create error prone checker " + checkerClass.getName(), e);
     }
   }
@@ -69,16 +69,15 @@ class FromClassBugCheckerSupplier extends BugCheckerSupplier {
   public String canonicalName() {
     return canonicalName;
   }
-
+  
   @Override
-  public SeverityLevel severity() {
-    return severity;
+  public SeverityLevel severity(Map<String, SeverityLevel> severityMap) {
+    return severityMap.get(canonicalName);
   }
 
   @Override
-  public BugCheckerSupplier overrideSeverity(SeverityLevel severity) {
-    return new FromClassBugCheckerSupplier(
-        this.checkerClass, this.canonicalName, severity, this.maturity, this.suppressibility);
+  public SeverityLevel defaultSeverity() {
+    return severity;
   }
 
   @Override

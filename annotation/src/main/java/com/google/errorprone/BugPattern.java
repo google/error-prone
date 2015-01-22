@@ -121,12 +121,22 @@ public @interface BugPattern {
   SeverityLevel severity();
 
   public enum SeverityLevel {
-    ERROR,
-    WARNING,
+    ERROR(true),
+    WARNING(true),
     /**
      * Should not be used for general code.
      */
-    NOT_A_PROBLEM
+    NOT_A_PROBLEM(false);
+
+    private final boolean enabled;
+
+    SeverityLevel(boolean enabled) {
+      this.enabled = enabled;
+    }
+
+    public boolean enabled() {
+      return enabled;
+    }
   }
 
   MaturityLevel maturity();
