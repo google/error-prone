@@ -45,6 +45,12 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
+      <groupId>com.google.errorprone</groupId>
+      <artifactId>error_prone_annotations</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit-dep</artifactId>
       <version>4.10</version>
