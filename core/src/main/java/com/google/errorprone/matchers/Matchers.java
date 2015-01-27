@@ -25,9 +25,11 @@ import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.EnhancedForLoopTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LiteralTree;
@@ -38,6 +40,7 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.SynchronizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol;
@@ -700,6 +703,19 @@ public class Matchers {
   }
 
   /**
+   * Match a method that returns a non-primitive type.
+   */
+  public static Matcher<MethodTree> methodReturnsNonPrimitiveType() {
+    return new Matcher<MethodTree>() {
+      @Override
+      public boolean matches(MethodTree methodTree, VisitorState state) {
+        Tree returnTree = methodTree.getReturnType();
+        return returnTree == null ? false : !((JCTree) returnTree).type.isPrimitive();
+      }
+    };
+  }
+
+  /**
    * Match a method declaration with a specific name.
    *
    * @param methodName The name of the method to match, e.g., "equals"
@@ -799,11 +815,32 @@ public class Matchers {
     };
   }
 
+  /**
+   * Matches on the type of a VariableTree AST node.
+   *
+   * @param treeMatcher A matcher on the type of the variable.
+   */
   public static Matcher<VariableTree> variableType(final Matcher<Tree> treeMatcher) {
     return new Matcher<VariableTree>() {
       @Override
       public boolean matches(VariableTree variableTree, VisitorState state) {
         return treeMatcher.matches(variableTree.getType(), state);
+      }
+    };
+  }
+
+  /**
+   * Matches on the initializer of a VariableTree AST node.
+   *
+   * @param expressionTreeMatcher A matcher on the initializer of the variable.
+   */
+  public static
+  Matcher<VariableTree> variableInitializer(final Matcher<ExpressionTree> expressionTreeMatcher) {
+    return new Matcher<VariableTree>() {
+      @Override
+      public boolean matches(VariableTree variableTree, VisitorState state) {
+        ExpressionTree initializer = variableTree.getInitializer();
+        return initializer == null ? false : expressionTreeMatcher.matches(initializer, state);
       }
     };
   }
@@ -981,5 +1018,60 @@ public class Matchers {
    */
   public static Matcher<ExpressionTree> isNull(NullnessAnalysis nullnessAnalysis) {
     return new NullnessMatcher(nullnessAnalysis, Nullness.NULL);
+  }
+
+  /**
+   * Matches an enhanced for loop if all the given matchers match.
+   *
+   * @param variableMatcher The matcher to apply to the variable.
+   * @param expressionMatcher The matcher to apply to the expression.
+   * @param statementMatcher The matcher to apply to the statement.
+   */
+  public static
+  Matcher<EnhancedForLoopTree> enhancedForLoop(final Matcher<VariableTree> variableMatcher,
+      final Matcher<ExpressionTree> expressionMatcher,
+      final Matcher<StatementTree> statementMatcher) {
+    return new Matcher<EnhancedForLoopTree>() {
+      @Override
+      public boolean matches(EnhancedForLoopTree t, VisitorState state) {
+        return variableMatcher.matches(t.getVariable(), state)
+            && expressionMatcher.matches(t.getExpression(), state)
+            && statementMatcher.matches(t.getStatement(), state);
+      }
+    };
+  }
+
+  /**
+   * Matches an assignment operator AST node if both of the given matchers match.
+   *
+   * @param variableMatcher The matcher to apply to the variable.
+   * @param expressionMatcher The matcher to apply to the expression.
+   */
+  public static Matcher<AssignmentTree> assignment(final Matcher<ExpressionTree> variableMatcher,
+      final Matcher<ExpressionTree> expressionMatcher) {
+    return new Matcher<AssignmentTree>() {
+      @Override
+      public boolean matches(AssignmentTree t, VisitorState state) {
+        return variableMatcher.matches(t.getVariable(), state)
+            && expressionMatcher.matches(t.getExpression(), state);
+      }
+    };
+  }
+
+  /**
+   * Matches a type cast AST node if both of the given matchers match.
+   *
+   * @param typeMatcher The matcher to apply to the type.
+   * @param expressionMatcher The matcher to apply to the expression.
+   */
+  public static Matcher<TypeCastTree> typeCast(final Matcher<Tree> typeMatcher,
+      final Matcher<ExpressionTree> expressionMatcher) {
+    return new Matcher<TypeCastTree>() {
+      @Override
+      public boolean matches(TypeCastTree t, VisitorState state) {
+        return typeMatcher.matches(t.getType(), state)
+            && expressionMatcher.matches(t.getExpression(), state);
+      }
+    };
   }
 }
