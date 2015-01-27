@@ -187,4 +187,15 @@ public class TypeParameterUnusedInFormalsTest {
             "}")
     );
   }
+
+  @Test
+  public void abstractMethod() throws Exception {
+      compilationHelper.assertCompileSucceedsWithMessages(
+        compilationHelper.fileManager().forSourceLines("Test.java",
+            "abstract class Test {",
+            "  // BUG: Diagnostic contains:",
+            "  abstract <T> T badMethod();",
+            "}")
+    );
+  }
 }

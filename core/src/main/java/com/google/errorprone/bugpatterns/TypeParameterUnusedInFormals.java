@@ -111,9 +111,10 @@ public class TypeParameterUnusedInFormals extends BugChecker implements MethodTr
       }
     }
 
-    // Ignore cases where the type is never used in the method body. Methods that claim to return
-    // 'any' type are OK if they only return null, or always throw.
-    if (!CastFinder.find(tree.getBody(), retType)) {
+    // Ignore cases where the method has a body (is not abstract) and the type is never used in the
+    // body. Methods that claim to return 'any' type are OK if they only return null, or always
+    // throw.
+    if (tree.getBody() != null && !CastFinder.find(tree.getBody(), retType)) {
       return Description.NO_MATCH;
     }
 
@@ -272,6 +273,9 @@ public class TypeParameterUnusedInFormals extends BugChecker implements MethodTr
   private static class CastFinder extends TreeScanner {
 
     static boolean find(Tree tree, Type retType) {
+      if (tree == null) {
+        return false;
+      }
       CastFinder finder = new CastFinder(retType);
       ((JCTree) tree).accept(finder);
       return finder.found;
