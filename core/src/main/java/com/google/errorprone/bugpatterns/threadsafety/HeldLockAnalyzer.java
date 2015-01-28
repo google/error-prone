@@ -22,9 +22,9 @@ import static com.google.errorprone.matchers.Matchers.methodSelect;
 
 import com.google.common.base.Optional;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.annotations.concurrent.UnlockMethod;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Kind;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Select;
-import com.google.errorprone.bugpatterns.threadsafety.annotations.UnlockMethod;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
