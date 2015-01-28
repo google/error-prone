@@ -232,4 +232,23 @@ public class GuardedByValidatorTest {
         )
     );
   }
+  
+  @Test
+  public void testNonExistantMethod() throws Exception {
+    compilationHelper.assertCompileFailsWithMessages(
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety.Test;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "class Test {",
+            "  // BUG: Diagnostic contains:",
+            "  // Invalid @GuardedBy expression: could not resolve guard",
+            "  @GuardedBy(\"lock()\") int x;",
+            "  // BUG: Diagnostic contains:",
+            "  // Invalid @GuardedBy expression: could not resolve guard",
+            "  @GuardedBy(\"lock()\") void m() {}",
+            "}"
+        )
+    );
+  }
 }

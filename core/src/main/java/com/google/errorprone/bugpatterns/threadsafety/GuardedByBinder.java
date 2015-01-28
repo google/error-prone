@@ -182,6 +182,7 @@ public class GuardedByBinder {
               IdentifierTree identifier = (IdentifierTree) methodSelect;
               Symbol.MethodSymbol method =
                   context.resolver.resolveMethod(node, identifier.getName());
+              checkGuardedBy(method != null, identifier.toString());
               return bindSelect(computeBase(context, method), method);
             }
             case MEMBER_SELECT: {
