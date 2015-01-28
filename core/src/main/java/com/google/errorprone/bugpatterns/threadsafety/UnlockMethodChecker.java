@@ -24,7 +24,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.bugpatterns.threadsafety.annotations.UnlockMethod;
+import com.google.errorprone.annotations.concurrent.UnlockMethod;
 import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.MethodTree;
