@@ -61,8 +61,6 @@
     fields, doing so is not recommended because the injected value may not be visible
     to other threads.'}
 - {name: JUnitAmbiguousTestClass, summary: Test class mixes JUnit 3 and JUnit 4 idioms}
-- {name: OrderingFrom, summary: 'Ordering.from(new Comparator<T>() { }) can be refactored
-    to cleaner form'}
 - {name: OverridesGuiceInjectableMethod, summary: 'This method is not annotated with
     @Inject, but it overrides a method that is annotated with @com.google.inject.Inject.
     Guice will inject this method,and it is recommended to annotate it explicitly.'}
@@ -101,6 +99,8 @@
 - {name: MissingCasesInEnumSwitch, summary: Enum switch statement is missing cases}
 - {name: ModifyingCollectionWithItself, summary: Modifying a collection with itself}
 - {name: MoreThanOneInjectableConstructor, summary: A class may not have more than one injectable constructor.}
+- {name: NoAllocation, summary: '@NoAllocation was specified on this method, but something
+    was found that would trigger an allocation'}
 - {name: NonRuntimeAnnotation, summary: Calling getAnnotation on an annotation that is not retained at runtime.}
 - {name: NumericEquality, summary: Numeric comparison using reference equality instead of value equality}
 - {name: OverlappingQualifierAndScopeAnnotation, summary: Annotations cannot be both Qualifiers/BindingAnnotations and Scopes}
@@ -109,4 +109,6 @@
 - {name: ParameterPackage, summary: Method parameter has wrong package}
 - {name: ProtoStringFieldReferenceEquality, summary: Comparing protobuf fields of type String using reference equality}
 - {name: SelfEquality, summary: Variable compared to itself}
+- {name: SizeGreaterThanOrEqualsZero, summary: 'Comparison of a size >= 0 is always
+    true, did you intend to check for non-emptiness?'}
 - {name: UnlockMethod, summary: This method does not acquire the locks specified by its @UnlockMethod annotation}
