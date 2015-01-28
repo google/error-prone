@@ -16,11 +16,12 @@
 
 package com.google.errorprone.scanner;
 
+import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.errorprone.BugCheckerSupplier;
+import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.ErrorProneOptions;
@@ -39,7 +40,7 @@ import javax.annotation.CheckReturnValue;
 
 /**
  * Supplies {@link Scanner}s and provides access to the backing sets of all {@link
- * BugCheckerSupplier}s and enabled {@link BugCheckerSupplier}s.
+ * BugChecker}s and enabled {@link BugCheckerSupplier}s.
  */
 public abstract class ScannerSupplier implements Supplier<Scanner> {
 
@@ -55,9 +56,9 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
   }
 
   private static PMap<String, BugPattern.SeverityLevel> defaultSeverities(
-      Iterable<BugCheckerSupplier> checkers) {
+      Iterable<BugChecker> checkers) {
     PMap<String, BugPattern.SeverityLevel> severities = HashTreePMap.empty();
-    for (BugCheckerSupplier check : checkers) {
+    for (BugChecker check : checkers) {
       severities = severities.plus(check.canonicalName(), check.defaultSeverity());
     }
     return severities;
@@ -68,14 +69,20 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
    */
   public static ScannerSupplier fromBugCheckerClasses(
       Iterable<Class<? extends BugChecker>> checkerClasses) {
-    ImmutableBiMap.Builder<String, BugCheckerSupplier> builder = ImmutableBiMap.builder();
-    for (Class<? extends BugChecker> checkerClass : checkerClasses) {
-      BugCheckerSupplier supplier = BugCheckerSupplier.fromClass(checkerClass);
-      builder.put(supplier.canonicalName(), supplier);
-    }
-    ImmutableBiMap<String, BugCheckerSupplier> allChecks = builder.build();
-    return new ScannerSupplierImpl(allChecks, defaultSeverities(allChecks.values()));
+    return fromBugCheckers(Iterables.transform(checkerClasses, INSTANTIATE_CHECKER));
   }
+
+  private static final Function<Class<? extends BugChecker>, BugChecker> INSTANTIATE_CHECKER =
+      new Function<Class<? extends BugChecker>, BugChecker>() {
+    @Override
+    public BugChecker apply(Class<? extends BugChecker> checkerClass) {
+      try {
+        return checkerClass.newInstance();
+      } catch (InstantiationException | IllegalAccessException e) {
+        throw new LinkageError("Could not instantiate BugChecker.", e);
+      }
+    }
+  };
 
   /**
    * Returns a {@link ScannerSupplier} built from a list of {@link BugChecker} instances.
@@ -88,12 +95,11 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
    * Returns a {@link ScannerSupplier} built from a list of {@link BugChecker} instances.
    */
   public static ScannerSupplier fromBugCheckers(Iterable<? extends BugChecker> checkers) {
-    ImmutableBiMap.Builder<String, BugCheckerSupplier> builder = ImmutableBiMap.builder();
+    ImmutableBiMap.Builder<String, BugChecker> builder = ImmutableBiMap.builder();
     for (BugChecker checker : checkers) {
-      BugCheckerSupplier supplier = BugCheckerSupplier.fromInstance(checker);
-      builder.put(supplier.canonicalName(), supplier);
+      builder.put(checker.canonicalName(), checker);
     }
-    ImmutableBiMap<String, BugCheckerSupplier> allChecks = builder.build();
+    ImmutableBiMap<String, BugChecker> allChecks = builder.build();
     return new ScannerSupplierImpl(allChecks, defaultSeverities(allChecks.values()));
   }
 
@@ -110,16 +116,16 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
   /* Instance methods */
 
   /**
-   * Returns a map of check name to {@link BugCheckerSupplier} for all {@link BugCheckerSupplier}s
+   * Returns a map of check name to {@link BugChecker} for all {@link BugCheckerSupplier}s
    * in this {@link ScannerSupplier}, including disabled ones.
    */
-  protected abstract ImmutableBiMap<String, BugCheckerSupplier> getAllChecks();
+  protected abstract ImmutableBiMap<String, BugChecker> getAllChecks();
 
   /**
-   * Returns the set of {@link BugCheckerSupplier}s that are enabled in this {@link
+   * Returns the set of {@link BugChecker}s that are enabled in this {@link
    * ScannerSupplier}.
    */
-  protected abstract ImmutableSet<BugCheckerSupplier> getEnabledChecks();
+  protected abstract ImmutableSet<BugChecker> getEnabledChecks();
 
   protected abstract PMap<String, BugPattern.SeverityLevel> severities();
 
@@ -147,12 +153,12 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
     }
     
     // Initialize result allChecks map and enabledChecks set with current state of this Supplier.
-    ImmutableBiMap<String, BugCheckerSupplier> checks = getAllChecks();
+    ImmutableBiMap<String, BugChecker> checks = getAllChecks();
     PMap<String, SeverityLevel> severities = severities();
 
     // Process overrides
     for (Entry<String, Severity> entry : severityOverrides.entrySet()) {
-      BugCheckerSupplier supplier = getAllChecks().get(entry.getKey());
+      BugChecker supplier = getAllChecks().get(entry.getKey());
       if (supplier == null) {
         if (errorProneOptions.ignoreUnknownChecks()) {
           continue;
@@ -199,8 +205,8 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
    */
   @CheckReturnValue
   public ScannerSupplier plus(ScannerSupplier other) {
-    ImmutableBiMap<String, BugCheckerSupplier> combinedAllChecks =
-        ImmutableBiMap.<String, BugCheckerSupplier>builder()
+    ImmutableBiMap<String, BugChecker> combinedAllChecks =
+        ImmutableBiMap.<String, BugChecker>builder()
             .putAll(this.getAllChecks())
             .putAll(other.getAllChecks())
             .build();
@@ -214,7 +220,7 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
    * {@link ScannerSupplier} with only the checks enabled that satisfy the predicate.
    */
   @CheckReturnValue
-  public ScannerSupplier filter(Predicate<? super BugCheckerSupplier> predicate) {
+  public ScannerSupplier filter(Predicate<? super BugChecker> predicate) {
     PMap<String, SeverityLevel> filteredSeverities = severities();
     for (Entry<String, SeverityLevel> entry : severities().entrySet()) {
       if (!predicate.apply(getAllChecks().get(entry.getKey()))) {

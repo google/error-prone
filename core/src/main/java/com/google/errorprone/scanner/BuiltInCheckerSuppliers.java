@@ -20,7 +20,6 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.ClassPath;
 import com.google.common.reflect.ClassPath.ClassInfo;
-import com.google.errorprone.BugCheckerSupplier;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.MaturityLevel;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -28,7 +27,7 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import java.io.IOException;
 
 /**
- * Static helper class that provides {@link ScannerSupplier}s and {@link BugCheckerSupplier}s
+ * Static helper class that provides {@link ScannerSupplier}s and {@link BugChecker}s
  * for the built-in error-prone checks, as opposed to plugin checks or checks used in tests.
  */
 public class BuiltInCheckerSuppliers {
@@ -81,9 +80,9 @@ public class BuiltInCheckerSuppliers {
   /**
    * A predicate for mature checks.
    */
-  private static final Predicate<BugCheckerSupplier> MATURE = new Predicate<BugCheckerSupplier>() {
+  private static final Predicate<BugChecker> MATURE = new Predicate<BugChecker>() {
     @Override
-    public boolean apply(BugCheckerSupplier input) {
+    public boolean apply(BugChecker input) {
       return (input.maturity() == MaturityLevel.MATURE);
     }
   };

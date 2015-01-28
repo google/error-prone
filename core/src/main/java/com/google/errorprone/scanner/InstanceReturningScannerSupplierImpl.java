@@ -18,8 +18,8 @@ package com.google.errorprone.scanner;
 
 import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.errorprone.BugCheckerSupplier;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.bugpatterns.BugChecker;
 
 import org.pcollections.PMap;
 
@@ -41,7 +41,7 @@ class InstanceReturningScannerSupplierImpl extends ScannerSupplier {
   }
 
   @Override
-  protected ImmutableBiMap<String, BugCheckerSupplier> getAllChecks() {
+  protected ImmutableBiMap<String, BugChecker> getAllChecks() {
     throw new UnsupportedOperationException();
   }
 
@@ -51,7 +51,7 @@ class InstanceReturningScannerSupplierImpl extends ScannerSupplier {
   }
   
   @Override
-  protected ImmutableSet<BugCheckerSupplier> getEnabledChecks() {
+  protected ImmutableSet<BugChecker> getEnabledChecks() {
     throw new UnsupportedOperationException();
   }
 }
