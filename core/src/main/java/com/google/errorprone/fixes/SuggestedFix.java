@@ -79,8 +79,7 @@ public class SuggestedFix implements Fix {
   public Set<Replacement> getReplacements(EndPosTable endPositions) {
     if (endPositions == null) {
       throw new IllegalArgumentException(
-          "Cannot produce correct replacements without endPositions." +
-              " Pass -Xjcov to the compiler to enable endPositions.");
+          "Cannot produce correct replacements without endPositions.");
     }
     TreeSet<Replacement> replacements = new TreeSet<>(
       new Comparator<Replacement>() {
