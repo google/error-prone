@@ -38,11 +38,77 @@
   <artifactId>error_prone_core</artifactId>
 
   <dependencies>
+    <!-- If you add a dependency, please also add a comment with the license
+         as the existing examples do.
+
+         If the license is compatible with ours (e.g. Apache 2.0, BSD, and MIT
+         are; assume anything else is not), please add the dependency to
+         the Maven shade includes section below, so it will be packaged with
+         the error-prone JAR file that we distribute.  -->
+
     <dependency>
+      <!-- Apache 2.0 -->
       <groupId>com.google.errorprone</groupId>
       <artifactId>error_prone_annotation</artifactId>
       <version>${project.version}</version>
-      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <!-- Apache 2.0 -->
+      <groupId>com.github.stephenc.jcip</groupId>
+      <artifactId>jcip-annotations</artifactId>
+      <version>1.0-1</version>
+    </dependency>
+    <dependency>
+      <!-- MIT -->
+      <groupId>org.pcollections</groupId>
+      <artifactId>pcollections</artifactId>
+      <version>2.1.2</version>
+    </dependency>
+    <dependency>
+      <!-- Apache 2.0 -->
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>18.0</version>
+    </dependency>
+    <dependency>
+      <!-- LGPL -->
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>jFormatString</artifactId>
+      <version>2.0.2</version>
+    </dependency>
+    <dependency>
+      <!-- BSD New -->
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>jsr305</artifactId>
+      <version>2.0.1</version>
+    </dependency>
+    <dependency>
+      <!-- GPLv2 with Classpath Exception -->
+      <groupId>org.checkerframework</groupId>
+      <artifactId>dataflow</artifactId>
+      <version>1.8.9</version>
+    </dependency>
+    <dependency>
+      <!-- Needed by Checker Framework dataflow.  Really should be a dependency
+           of that artifact.
+           TODO(eaftan): Remove after it is added as a dependency to the
+           dataflow artifact. -->
+      <!-- GPLv2 with Classpath Exception -->
+      <groupId>org.checkerframework</groupId>
+      <artifactId>javacutil</artifactId>
+      <version>1.8.9</version>
+    </dependency>
+    <dependency>
+      <!-- GPLv2 with Classpath Exception -->
+      <groupId>com.google.errorprone</groupId>
+      <artifactId>javac</artifactId>
+      <version>1.8.0-u20</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.auto.value</groupId>
+      <artifactId>auto-value</artifactId>
+      <version>1.0-rc1</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.google.errorprone</groupId>
@@ -69,21 +135,6 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>net.jcip</groupId>
-      <artifactId>jcip-annotations</artifactId>
-      <version>1.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.pcollections</groupId>
-      <artifactId>pcollections</artifactId>
-      <version>2.1.2</version>
-    </dependency>
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>18.0</version>
-    </dependency>
-    <dependency>
       <groupId>com.google.jimfs</groupId>
       <artifactId>jimfs</artifactId>
       <version>1.0</version>
@@ -93,6 +144,7 @@
       <groupId>com.google.truth</groupId>
       <artifactId>truth</artifactId>
       <version>0.24</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.google.inject</groupId>
@@ -125,26 +177,10 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.google.code.findbugs</groupId>
-      <artifactId>jFormatString</artifactId>
-      <version>2.0.2</version>
-    </dependency>
-    <dependency>
       <groupId>com.google.gdata</groupId>
       <artifactId>core</artifactId>
       <version>1.47.1</version>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.google.code.findbugs</groupId>
-      <artifactId>jsr305</artifactId>
-      <version>2.0.1</version>
-    </dependency>
-    <dependency>
-      <groupId>com.google.auto.value</groupId>
-      <artifactId>auto-value</artifactId>
-      <version>1.0-rc1</version>
-      <scope>provided</scope>
     </dependency>
   </dependencies>
 
@@ -163,6 +199,17 @@
             </goals>
             <configuration>
               <createDependencyReducedPom>false</createDependencyReducedPom>
+              <artifactSet>
+                <!-- Include only dependencies with compatible licenses.
+                     Apache, BSD, and MIT are OK; others are not. -->
+                <includes>
+                  <include>com.google.errorprone:error_prone_annotation</include>
+                  <include>com.github.stephenc.jcip:jcip-annotations</include>
+                  <include>org.pcollections:pcollections</include>
+                  <include>com.google.guava:guava</include>
+                  <include>com.google.code.findbugs:jsr305</include>
+                </includes>
+              </artifactSet>
             </configuration>
           </execution>
         </executions>
