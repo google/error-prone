@@ -51,7 +51,7 @@ import javax.tools.JavaFileObject;
 public class CompilationTestHelper {
 
   private static final List<String> DEFAULT_ARGS = ImmutableList.of(
-      "-encoding", "UTF-8", "-Xjcov");
+      "-encoding", "UTF-8");
 
   private final DiagnosticTestHelper diagnosticHelper;
   private final ErrorProneCompiler compiler;
