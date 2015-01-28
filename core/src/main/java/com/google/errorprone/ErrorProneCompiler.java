@@ -60,7 +60,7 @@ public class ErrorProneCompiler {
    * @param args the same args which could be passed to javac on the command line
    */
   public static void main(String[] args) {
-    System.exit(new ErrorProneCompiler.Builder().build().compile(args).exitCode);
+    System.exit(compile(args).exitCode);
   }
 
   /**
@@ -68,13 +68,23 @@ public class ErrorProneCompiler {
    *
    * @param listener listens to the diagnostics produced by error-prone
    * @param args the same args which would be passed to javac on the command line
-   * @return exit code from the compiler invocation
+   * @return result from the compiler invocation
    */
   public static Result compile(DiagnosticListener<JavaFileObject> listener, String[] args) {
     ErrorProneCompiler compiler = new ErrorProneCompiler.Builder()
         .listenToDiagnostics(listener)
         .build();
-    return compiler.compile(args);
+    return compiler.run(args);
+  }
+
+  /**
+   * Programmatic interface to the error-prone Java compiler.
+   *
+   * @param args the same args which would be passed to javac on the command line
+   * @return result from the compiler invocation
+   */
+  public static Result compile(String[] args) {
+    return new Builder().build().run(args);
   }
 
   /**
@@ -82,13 +92,13 @@ public class ErrorProneCompiler {
    *
    * @param args the same args which would be passed to javac on the command line
    * @param out a {@link PrintWriter} to which to send diagnostic output
-   * @return exit code from the compiler invocation
+   * @return result from the compiler invocation
    */
   public static Result compile(String[] args, PrintWriter out) {
     ErrorProneCompiler compiler = new ErrorProneCompiler.Builder()
         .redirectOutputTo(out)
         .build();
-    return compiler.compile(args);
+    return compiler.run(args);
   }
 
   private final DiagnosticListener<? super JavaFileObject> diagnosticListener;
@@ -142,10 +152,10 @@ public class ErrorProneCompiler {
     }
   }
 
-  public Result compile(String[] args) {
+  public Result run(String[] args) {
     Context context = new Context();
     JavacFileManager.preRegister(context);
-    return compile(args, context);
+    return run(args, context);
   }
 
   /**
@@ -198,7 +208,7 @@ public class ErrorProneCompiler {
     return argv;
   }
 
-  private Result compile(String[] argv, Context context) {
+  private Result run(String[] argv, Context context) {
     try {
       argv = prepareCompilation(argv, context);
     } catch (InvalidCommandLineOptionException e) {
@@ -210,15 +220,15 @@ public class ErrorProneCompiler {
     return new Main(compilerName, errOutput).compile(argv, context);
   }
 
-  public Result compile(
+  public Result run(
     String[] argv,
     List<JavaFileObject> javaFileObjects) {
 
     Context context = new Context();
-    return compile(argv, context, null, javaFileObjects, Collections.<Processor>emptyList());
+    return run(argv, context, null, javaFileObjects, Collections.<Processor>emptyList());
   }
 
-  public Result compile(
+  public Result run(
       String[] argv,
       Context context,
       JavaFileManager fileManager,

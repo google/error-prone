@@ -76,7 +76,7 @@ public class DescendantOfTransitiveTest extends DescendantOfAbstractTest {
     ErrorProneCompiler compiler = new ErrorProneCompiler.Builder()
         .report(ScannerSupplier.fromScanner(scanner))
         .build();
-    Assert.assertThat(compiler.compile(args.toArray(new String[0])), is(Result.OK));
+    Assert.assertThat(compiler.run(args.toArray(new String[0])), is(Result.OK));
   }
 
   @Before
