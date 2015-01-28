@@ -27,6 +27,6 @@ public class ErrorProneAntCompilerAdapter extends DefaultCompilerAdapter {
   @Override
   public boolean execute() throws BuildException {
     String[] args = setupModernJavacCommand().getArguments();
-    return new ErrorProneCompiler.Builder().build().compile(args).isOK();
+    return ErrorProneCompiler.compile(args).isOK();
   }
 }

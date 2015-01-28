@@ -218,7 +218,7 @@ public class CompilationTestHelper {
   Result compile(Iterable<JavaFileObject> sources, String[] args) {
     checkWellFormed(sources, args);
     Context context = new Context();
-    return compiler.compile(args, context, fileManager, asJavacList(sources), null);
+    return compiler.run(args, context, fileManager, asJavacList(sources), null);
   }
 
   private void checkWellFormed(Iterable<JavaFileObject> sources, String[] args) {

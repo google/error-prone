@@ -34,7 +34,7 @@ public class DogfoodErrorProne {
 
   private void compile() throws URISyntaxException {
     long start = System.currentTimeMillis();
-    new ErrorProneCompiler.Builder().build().compile(findSources());
+    ErrorProneCompiler.compile(findSources());
     System.out.printf("Finished compiling in %d millis\n", System.currentTimeMillis() - start);
   }
 
