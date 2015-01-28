@@ -60,7 +60,7 @@ public class ErrorProneCompiler {
    * @param args the same args which could be passed to javac on the command line
    */
   public static void main(String[] args) {
-    System.exit(new ErrorProneCompiler.Builder().build().compile(args).exitCode);
+    System.exit(compile(args).exitCode);
   }
 
   /**
@@ -75,6 +75,16 @@ public class ErrorProneCompiler {
         .listenToDiagnostics(listener)
         .build();
     return compiler.compile(args);
+  }
+
+  /**
+   * Programmatic interface to the error-prone Java compiler.
+   *
+   * @param args the same args which would be passed to javac on the command line
+   * @return exit code from the compiler invocation
+   */
+  public static Result compile(String[] args) {
+    return new ErrorProneCompiler.Builder().build().compile(args);
   }
 
   /**
