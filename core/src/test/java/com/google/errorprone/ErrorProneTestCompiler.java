@@ -95,6 +95,6 @@ public class ErrorProneTestCompiler {
     List<String> processedArgs =
         CompilationTestHelper.disableImplicitProcessing(Arrays.asList(args));
     String[] argsArray = processedArgs.toArray(new String[processedArgs.size()]);
-    return compiler.compile(argsArray, context, fileManager, asJavacList(sources), processors);
+    return compiler.run(argsArray, context, fileManager, asJavacList(sources), processors);
   }
 }
