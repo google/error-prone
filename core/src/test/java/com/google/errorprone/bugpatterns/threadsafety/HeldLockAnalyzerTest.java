@@ -263,7 +263,7 @@ public class HeldLockAnalyzerTest {
       summary = "",
       explanation = "",
       category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
-  private static class GuardedByLockSetAnalyzer extends GuardedByChecker {
+  public static class GuardedByLockSetAnalyzer extends GuardedByChecker {
 
     @Override
     protected Description checkGuardedAccess(

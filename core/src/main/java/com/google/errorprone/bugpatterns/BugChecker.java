@@ -87,6 +87,7 @@ import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -473,5 +474,22 @@ public abstract class BugChecker implements Suppressible, Serializable {
 
   public static interface WildcardTreeMatcher extends Suppressible {
     Description matchWildcard(WildcardTree tree, VisitorState state);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (!(obj instanceof BugChecker)) {
+      return false;
+    }
+    BugChecker that = (BugChecker) obj;
+    return this.canonicalName().equals(that.canonicalName())
+        && this.defaultSeverity().equals(that.defaultSeverity())
+        && this.maturity().equals(that.maturity())
+        && this.suppressibility().equals(that.suppressibility());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(canonicalName(), defaultSeverity(), maturity(), suppressibility());
   }
 }

@@ -17,8 +17,6 @@
 package com.google.errorprone.scanner;
 
 import static com.google.common.truth.Truth.assertThat;
-import static com.google.errorprone.BugCheckerSupplier.fromClass;
-import static com.google.errorprone.BugCheckerSupplier.fromInstance;
 import static org.junit.Assert.fail;
 
 import com.google.common.base.Predicate;
@@ -26,13 +24,13 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.errorprone.BugCheckerSupplier;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.ErrorProneJavaCompilerTest;
 import com.google.errorprone.ErrorProneOptions;
 import com.google.errorprone.InvalidCommandLineOptionException;
 import com.google.errorprone.bugpatterns.ArrayEquals;
 import com.google.errorprone.bugpatterns.BadShiftAmount;
+import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.ChainingConstructorIgnoresParameter;
 import com.google.errorprone.bugpatterns.DepAnn;
 import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
@@ -60,9 +58,9 @@ public class ScannerSupplierTest {
         ArrayEquals.class,
         StaticAccessedFromInstance.class);
 
-    Set<BugCheckerSupplier> expected = ImmutableSet.of(
-        fromInstance(new ArrayEquals()),
-        fromInstance(new StaticAccessedFromInstance()));
+    Set<BugChecker> expected = ImmutableSet.of(
+        new ArrayEquals(),
+        new StaticAccessedFromInstance());
 
     assertThat(ss.getEnabledChecks()).isEqualTo(expected);
   }
@@ -73,9 +71,9 @@ public class ScannerSupplierTest {
         new ArrayEquals(),
         new StaticAccessedFromInstance());
 
-   Set<BugCheckerSupplier> expected = ImmutableSet.of(
-        fromClass(ArrayEquals.class),
-        fromClass(StaticAccessedFromInstance.class));
+   Set<BugChecker> expected = ImmutableSet.of(
+        new ArrayEquals(),
+        new StaticAccessedFromInstance());
 
     assertThat(ss.getEnabledChecks()).isEqualTo(expected);
   }
@@ -89,11 +87,11 @@ public class ScannerSupplierTest {
         new BadShiftAmount(),
         new PreconditionsCheckNotNull());
 
-    Set<BugCheckerSupplier> expected = ImmutableSet.of(
-        fromInstance(new ArrayEquals()),
-        fromInstance(new StaticAccessedFromInstance()),
-        fromInstance(new BadShiftAmount()),
-        fromInstance(new PreconditionsCheckNotNull()));
+    Set<BugChecker> expected = ImmutableSet.of(
+        new ArrayEquals(),
+        new StaticAccessedFromInstance(),
+        new BadShiftAmount(),
+        new PreconditionsCheckNotNull());
 
     assertThat(ss1.plus(ss2).getEnabledChecks()).isEqualTo(expected);
   }
@@ -121,14 +119,14 @@ public class ScannerSupplierTest {
         new ArrayEquals(),
         new BadShiftAmount(),
         new StaticAccessedFromInstance());
-    Predicate<BugCheckerSupplier> isBadShiftAmount = new Predicate<BugCheckerSupplier>() {
+    Predicate<BugChecker> isBadShiftAmount = new Predicate<BugChecker>() {
       @Override
-      public boolean apply(BugCheckerSupplier input) {
+      public boolean apply(BugChecker input) {
         return input.canonicalName().equals("BadShiftAmount");
       }
     };
 
-    Set<BugCheckerSupplier> expected = ImmutableSet.of(fromInstance(new BadShiftAmount()));
+    Set<BugChecker> expected = ImmutableSet.<BugChecker>of(new BadShiftAmount());
 
     assertThat(ss.filter(isBadShiftAmount).getEnabledChecks()).isEqualTo(expected);
   }
@@ -141,7 +139,7 @@ public class ScannerSupplierTest {
         new LongLiteralLowerCaseSuffix());
     ErrorProneOptions epOptions = ErrorProneOptions.processArgs(Collections.<String>emptyList());
 
-    Set<BugCheckerSupplier> expected = ss.getEnabledChecks();
+    Set<BugChecker> expected = ss.getEnabledChecks();
     assertThat(ss.applyOverrides(epOptions).getEnabledChecks()).isEqualTo(expected);
   }
 
@@ -157,9 +155,9 @@ public class ScannerSupplierTest {
     ErrorProneOptions epOptions = ErrorProneOptions.processArgs(
         ImmutableList.of("-Xep:ArrayEquals", "-Xep:BadShiftAmount"));
 
-    Set<BugCheckerSupplier> expected = ImmutableSet.of(
-        fromInstance(new ArrayEquals()),
-        fromInstance(new BadShiftAmount()));
+    Set<BugChecker> expected = ImmutableSet.of(
+        new ArrayEquals(),
+        new BadShiftAmount());
 
     assertThat(ss.applyOverrides(epOptions).getEnabledChecks()).isEqualTo(expected);
   }
@@ -175,7 +173,7 @@ public class ScannerSupplierTest {
             "-Xep:LongLiteralLowerCaseSuffix:OFF",
             "-Xep:ChainingConstructorIgnoresParameter:OFF"));
 
-    Set<BugCheckerSupplier> expected = ImmutableSet.of(fromInstance(new DepAnn()));
+    Set<BugChecker> expected = ImmutableSet.<BugChecker>of(new DepAnn());
 
     assertThat(ss.applyOverrides(epOptions).getEnabledChecks()).isEqualTo(expected);
   }

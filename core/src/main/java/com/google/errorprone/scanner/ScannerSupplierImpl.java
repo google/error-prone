@@ -16,15 +16,12 @@
 
 package com.google.errorprone.scanner;
 
-import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
-import com.google.common.base.Supplier;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
-import com.google.errorprone.BugCheckerSupplier;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.bugpatterns.BugChecker;
 
@@ -32,14 +29,14 @@ import org.pcollections.PMap;
 
 /**
  * An implementation of a {@link ScannerSupplier}, abstracted as a set of all known
- * {@link BugCheckerSupplier}s and a set of enabled {@link BugCheckerSupplier}s.  The set of
+ * {@link BugChecker}s and a set of enabled {@link BugCheckerSupplier}s.  The set of
  * enabled suppliers must be a subset of all known suppliers.
  */
 class ScannerSupplierImpl extends ScannerSupplier {
-  private final ImmutableBiMap<String, BugCheckerSupplier> checks;
+  private final ImmutableBiMap<String, BugChecker> checks;
   private final PMap<String, BugPattern.SeverityLevel> severities;
 
-  ScannerSupplierImpl(ImmutableBiMap<String, BugCheckerSupplier> checks,
+  ScannerSupplierImpl(ImmutableBiMap<String, BugChecker> checks,
       PMap<String, BugPattern.SeverityLevel> severities) {
     Preconditions.checkArgument(
         Sets.difference(severities.keySet(), checks.keySet()).isEmpty(),
@@ -50,14 +47,11 @@ class ScannerSupplierImpl extends ScannerSupplier {
 
   @Override
   public ErrorProneScanner get() {
-    Iterable<BugChecker> checkers = FluentIterable
-        .from(getEnabledChecks())
-        .transform(SUPPLIER_GET);
-    return new ErrorProneScanner(checkers, severities);
+    return new ErrorProneScanner(getEnabledChecks(), severities);
   }
 
   @Override
-  protected ImmutableBiMap<String, BugCheckerSupplier> getAllChecks() {
+  protected ImmutableBiMap<String, BugChecker> getAllChecks() {
     return checks;
   }
 
@@ -67,23 +61,15 @@ class ScannerSupplierImpl extends ScannerSupplier {
   }
 
   @Override
-  protected ImmutableSet<BugCheckerSupplier> getEnabledChecks() {
-    return FluentIterable.from(getAllChecks().values()).filter(enabledChecks).toSet();
+  protected ImmutableSet<BugChecker> getEnabledChecks() {
+    return FluentIterable.from(getAllChecks().values()).filter(isCheckEnabled).toSet();
   }
   
-  private final Predicate<BugCheckerSupplier> enabledChecks =
-      new Predicate<BugCheckerSupplier>() {
+  private final Predicate<BugChecker> isCheckEnabled =
+      new Predicate<BugChecker>() {
         @Override
-        public boolean apply(BugCheckerSupplier input) {
+        public boolean apply(BugChecker input) {
           return input.severity(severities).enabled();
         }
-  };
-  
-  private static final Function<Supplier<BugChecker>, BugChecker> SUPPLIER_GET =
-      new Function<Supplier<BugChecker>, BugChecker>() {
-    @Override
-    public BugChecker apply(Supplier<BugChecker> input) {
-      return input.get();
-    }
   };
 }
