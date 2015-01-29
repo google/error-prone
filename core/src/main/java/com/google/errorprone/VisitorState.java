@@ -262,14 +262,13 @@ public class VisitorState {
   }
 
   /**
-   * Gets the original source code that represents the given node.  The source is only available
-   * if the compiler was invoked with the -Xjcov option.
+   * Gets the original source code that represents the given node.
    *
    * <p>Note that this may be different from what is returned by calling .toString() on the node.
    * This returns exactly what is in the source code, whereas .toString() pretty-prints the node
    * from its AST representation.
    *
-   * @return the source code that represents the node, or null if it is not available
+   * @return the source code that represents the node.
    */
   public CharSequence getSourceForNode(JCTree node) {
     int start = node.getStartPosition();
@@ -281,8 +280,7 @@ public class VisitorState {
   }
 
   /**
-   * Gets the end position of the given node.  The position is only available if the compiler was
-   * invoked with the -Xjcov option.
+   * Gets the end position of the given node.
    *
    * @return the end position of the node, or -1 if it is not available
    */
