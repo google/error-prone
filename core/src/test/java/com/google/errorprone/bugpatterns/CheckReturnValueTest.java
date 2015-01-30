@@ -120,5 +120,144 @@ public class CheckReturnValueTest {
             "  @javax.annotation.CheckReturnValue public static void f() {}",
             "}"));
   }
+  
+  @Test
+  public void testPackageAnnotationButCanIgnoreReturnValue() throws Exception {
+    compilationHelper.assertCompileSucceeds(Arrays.asList(
+        compilationHelper.fileManager().forSourceLines("package-info.java",
+            "@javax.annotation.CheckReturnValue",
+            "package lib;"),
+        compilationHelper.fileManager().forSourceLines("lib/Lib.java",
+            "package lib;",
+            "public class Lib {",
+            "  @com.google.errorprone.annotations.CanIgnoreReturnValue",
+            "  public static int f() { return 42; }",
+            "}"),
+        compilationHelper.fileManager().forSourceLines("Test.java",
+            "class Test {",
+            "  void m() {",
+            "    lib.Lib.f();",
+            "  }",
+            "}")));
+  }
+
+  @Test
+  public void testClassAnnotationButCanIgnoreReturnValue() throws Exception {
+    compilationHelper.assertCompileSucceeds(Arrays.asList(
+        compilationHelper.fileManager().forSourceLines("lib/Lib.java",
+            "package lib;",
+            "@javax.annotation.CheckReturnValue",
+            "public class Lib {",
+            "  @com.google.errorprone.annotations.CanIgnoreReturnValue",
+            "  public static int f() { return 42; }",
+            "}"),
+        compilationHelper.fileManager().forSourceLines("Test.java",
+            "class Test {",
+            "  void m() {",
+            "    lib.Lib.f();",
+            "  }",
+            "}")));
+  }
+  
+  @Test
+  public void badCanIgnoreReturnValueOnProcedure() throws Exception {
+    compilationHelper.assertCompileFailsWithMessages(
+        compilationHelper.fileManager().forSourceLines("Test.java",
+            "package lib;",
+            "@javax.annotation.CheckReturnValue",
+            "public class Test {",
+            "  // BUG: Diagnostic contains:",
+            "  // @CanIgnoreReturnValue may not be applied to void-returning methods",
+            "  @com.google.errorprone.annotations.CanIgnoreReturnValue public static void f() {}",
+            "}"));
+  }
+  
+  @Test
+  public void testNestedClassAnnotation() throws Exception {
+    compilationHelper.assertCompileFailsWithMessages(Arrays.asList(
+        compilationHelper.fileManager().forSourceLines("lib/Lib.java",
+            "package lib;",
+            "@javax.annotation.CheckReturnValue",
+            "public class Lib {",
+            "  public static class Inner {",
+            "    public static class InnerMost {",
+            "      public static int f() { return 42; }",
+            "    }",
+            "  }",
+            "}"),
+        compilationHelper.fileManager().forSourceLines("Test.java",
+            "class Test {",
+            "  void m() {",
+            "    // BUG: Diagnostic contains: Ignored return value",
+            "    lib.Lib.Inner.InnerMost.f();",
+            "  }",
+            "}")));
+  }
+  
+  @Test
+  public void testNestedClassWithCanIgnoreAnnotation() throws Exception {
+    compilationHelper.assertCompileSucceeds(Arrays.asList(
+        compilationHelper.fileManager().forSourceLines("lib/Lib.java",
+            "package lib;",
+            "@javax.annotation.CheckReturnValue",
+            "public class Lib {",
+            "  @com.google.errorprone.annotations.CanIgnoreReturnValue",
+            "  public static class Inner {",
+            "    public static class InnerMost {",
+            "      public static int f() { return 42; }",
+            "    }",
+            "  }",
+            "}"),
+        compilationHelper.fileManager().forSourceLines("Test.java",
+            "class Test {",
+            "  void m() {",
+            "    lib.Lib.Inner.InnerMost.f();",
+            "  }",
+            "}")));
+  }
+  
+  @Test
+  public void testPackageWithCanIgnoreAnnotation() throws Exception {
+      compilationHelper.assertCompileSucceeds(Arrays.asList(
+          compilationHelper.fileManager().forSourceLines("package-info.java",
+              "@javax.annotation.CheckReturnValue",
+              "package lib;"),
+          compilationHelper.fileManager().forSourceLines("lib/Lib.java",
+              "package lib;",
+              "@com.google.errorprone.annotations.CanIgnoreReturnValue",
+              "public class Lib {",
+              "  public static int f() { return 42; }",
+              "}"),
+          compilationHelper.fileManager().forSourceLines("Test.java",
+              "class Test {",
+              "  void m() {",
+              "    lib.Lib.f();",
+              "  }",
+              "}")));
+    }
+  
+  @Test
+  public void errorBothClass() throws Exception {
+      compilationHelper.assertCompileFailsWithMessages(Arrays.asList(
+          compilationHelper.fileManager().forSourceLines("Test.java",
+              "@com.google.errorprone.annotations.CanIgnoreReturnValue",
+              "@javax.annotation.CheckReturnValue",
+              "// BUG: Diagnostic contains: @CheckReturnValue and @CanIgnoreReturnValue cannot"
+              + " both be applied to the same class",
+              "class Test {}")));
+  }
+  
+  @Test
+  public void errorBothMethod() throws Exception {
+      compilationHelper.assertCompileFailsWithMessages(Arrays.asList(
+          compilationHelper.fileManager().forSourceLines("Test.java",
+              "class Test {",
+              "  @com.google.errorprone.annotations.CanIgnoreReturnValue",
+              "  @javax.annotation.CheckReturnValue",
+              "  // BUG: Diagnostic contains: @CheckReturnValue and @CanIgnoreReturnValue cannot"
+              + " both be applied to the same method",
+              "  void m() {}",
+              "}")));
+  }
 }
 
