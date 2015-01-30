@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Throwables;
 import com.google.errorprone.scanner.Scanner;
 
 import com.sun.source.tree.CompilationUnitTree;
@@ -37,8 +38,6 @@ import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Log;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -159,9 +158,8 @@ public class ErrorProneAnalyzer implements TaskListener {
       // symbol's supertypes. If javac didn't need to check the symbol's assignability
       // then a normal compilation would have succeeded, and no diagnostics will have been
       // reported yet, but we don't want to crash javac.
-      StringWriter message = new StringWriter();
-      e.printStackTrace(new PrintWriter(message));
-      log.error("proc.cant.access", e.sym, e.getDetailValue(), message.toString());
+      log.error(
+          "proc.cant.access", e.sym, e.getDetailValue(), Throwables.getStackTraceAsString(e));
     } catch (RuntimeException e) {
       // If there is a RuntimeException in an analyzer, swallow it if there are other compiler
       // errors.  This prevents javac from exiting with code 4, Abnormal Termination.
