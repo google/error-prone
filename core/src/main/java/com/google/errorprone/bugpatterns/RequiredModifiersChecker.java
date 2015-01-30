@@ -1,0 +1,79 @@
+/*
+ * Copyright 2013 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.google.errorprone.bugpatterns;
+
+import static com.google.errorprone.BugPattern.Category.JDK;
+import static com.google.errorprone.BugPattern.LinkType.NONE;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+
+import com.google.errorprone.BugPattern;
+import com.google.errorprone.VisitorState;
+import com.google.errorprone.annotations.RequiredModifiers;
+import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
+import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.ASTHelpers;
+
+import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.ModifiersTree;
+
+import java.util.EnumSet;
+import java.util.Set;
+
+import javax.lang.model.element.Modifier;
+
+/**
+ * @author sgoldfeder@google.com (Steven Goldfeder)
+ */
+@BugPattern(name = "RequiredModifiers",
+    summary = "This annotation is missing required modifiers as specified by its "
+    + "@RequiredModifiers annotation",
+    explanation = "This annotation is itself annotated with @RequiredModifiers and "
+    + "can only be used when the specified modifiers are present. You are attempting to"
+    + "use it on an  element that is missing one or more required modifiers.", linkType = NONE,
+    category = JDK, severity = WARNING, maturity = MATURE)
+public class RequiredModifiersChecker extends BugChecker implements AnnotationTreeMatcher {
+
+  private static final String MESSAGE_TEMPLATE = "%s has specified that it must be used"
+      + " together with the following modifiers: %s";
+
+  @Override
+  public Description matchAnnotation(AnnotationTree tree, VisitorState state) {
+    Set<Modifier> missing = EnumSet.noneOf(Modifier.class);
+    RequiredModifiers requiredModifiersAnnotation =
+        ASTHelpers.getAnnotation(tree, RequiredModifiers.class);
+    if (requiredModifiersAnnotation != null) {
+      for (Modifier m : requiredModifiersAnnotation.value()) {
+        if (!((ModifiersTree) state.getPath().getParentPath().getLeaf()).getFlags().contains(m)) {
+          missing.add(m);
+        }
+      }
+    }
+    if (missing.isEmpty()) {
+      return Description.NO_MATCH;
+    }
+
+    String annotationName = ASTHelpers.getAnnotationName(tree);
+    String nameString = annotationName != null
+        ? String.format("The annotation '@%s'", annotationName)
+        : "This annotation";
+    String customMessage = String.format(MESSAGE_TEMPLATE, nameString, missing.toString());
+    return buildDescription(tree)
+        .setMessage(customMessage)
+        .build();
+  }
+}
