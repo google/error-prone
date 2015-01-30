@@ -19,6 +19,7 @@ package com.google.errorprone;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Throwables;
 import com.google.errorprone.scanner.Scanner;
 
 import com.sun.source.util.TaskEvent;
@@ -31,10 +32,8 @@ import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Context.Factory;
 import com.sun.tools.javac.util.JavacMessages;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.util.Properties;
 import java.util.Queue;
 
@@ -92,10 +91,8 @@ public class ErrorProneJavacJavaCompiler extends JavaCompiler {
     try {
       postFlow(env);
     } catch (Throwable e) {
-      ByteArrayOutputStream stackTrace = new ByteArrayOutputStream();
-      e.printStackTrace(new PrintWriter(stackTrace, true));
       String version = loadVersionFromPom().or("unknown version");
-      log.error("error.prone.crash", stackTrace.toString(), version);
+      log.error("error.prone.crash", Throwables.getStackTraceAsString(e), version);
     }
   }
 
