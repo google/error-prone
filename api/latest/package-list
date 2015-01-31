@@ -6,6 +6,7 @@ com.google.errorprone.bugpatterns.threadsafety.annotations
 com.google.errorprone.dataflow
 com.google.errorprone.dataflow.nullnesspropagation
 com.google.errorprone.fixes
+com.google.errorprone.internal
 com.google.errorprone.matchers
 com.google.errorprone.scanner
 com.google.errorprone.suppliers
