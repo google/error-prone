@@ -209,7 +209,7 @@ public class CommandLineFlagTest {
     diagnosticHelper.clearDiagnostics();
     exitCode = compiler.compile(new String[]{"-Xep:DisableableChecker:OFF"}, sources);
     assertThat(exitCode).isEqualTo(Result.OK);
-    assertThat(diagnosticHelper.getDiagnostics().size()).isEqualTo(0);
+    assertThat(diagnosticHelper.getDiagnostics()).isEmpty();
   }
 
   @Test
