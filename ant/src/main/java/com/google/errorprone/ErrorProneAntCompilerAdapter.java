@@ -16,6 +16,8 @@
 
 package com.google.errorprone;
 
+import com.google.common.base.Function;
+import com.google.errorprone.internal.NonDelegatingClassLoaderRunner;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.compilers.DefaultCompilerAdapter;
 
@@ -24,9 +26,16 @@ import org.apache.tools.ant.taskdefs.compilers.DefaultCompilerAdapter;
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class ErrorProneAntCompilerAdapter extends DefaultCompilerAdapter {
+  public static class AntRunner implements Function<String[], Boolean> {
+    @Override
+    public Boolean apply(String[] args) {
+      return ErrorProneCompiler.compile(args).isOK();
+    }
+  }
+
   @Override
   public boolean execute() throws BuildException {
     String[] args = setupModernJavacCommand().getArguments();
-    return ErrorProneCompiler.compile(args).isOK();
+    return NonDelegatingClassLoaderRunner.run(args, Boolean.class, AntRunner.class.getName());
   }
 }
