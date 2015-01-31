@@ -16,6 +16,7 @@
 
 package com.google.errorprone;
 
+import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
@@ -59,8 +60,8 @@ public class CompilationTestHelperTest {
       failed = false;
     } catch (Throwable unused) {
       // Expect test to fail:
-      assertTrue(unused.getMessage().contains(
-          "Test program failed to compile with non error-prone error"));
+      assertThat(unused.getMessage())
+          .contains("Test program failed to compile with non error-prone error");
     }
     assertTrue(failed);
   }

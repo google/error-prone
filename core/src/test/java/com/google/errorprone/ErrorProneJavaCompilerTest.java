@@ -24,7 +24,6 @@ import static com.google.errorprone.BugPattern.Suppressibility.UNSUPPRESSIBLE;
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasItem;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
@@ -120,8 +119,8 @@ public class ErrorProneJavaCompilerTest {
   @Test
   public void testSourceVersion() {
     ErrorProneJavaCompiler compiler = new ErrorProneJavaCompiler();
-    assertTrue(compiler.getSourceVersions().contains(SourceVersion.latest()));
-    assertFalse(compiler.getSourceVersions().contains(SourceVersion.RELEASE_5));
+    assertThat(compiler.getSourceVersions()).contains(SourceVersion.latest());
+    assertThat(compiler.getSourceVersions()).doesNotContain(SourceVersion.RELEASE_5);
   }
 
   @Test
@@ -208,7 +207,7 @@ public class ErrorProneJavaCompilerTest {
         Collections.<String>emptyList(),
         Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isTrue();
-    assertThat(result.diagnosticHelper.getDiagnostics().size()).isEqualTo(0);
+    assertThat(result.diagnosticHelper.getDiagnostics()).isEmpty();
 
     result = doCompile(
         EmptyIfStatementTest.class,
@@ -278,7 +277,7 @@ public class ErrorProneJavaCompilerTest {
         Collections.<String>emptyList(),
         Arrays.<Class<? extends BugChecker>>asList(Finally.class));
     assertThat(result.succeeded).isTrue();
-    assertThat(result.diagnosticHelper.getDiagnostics().size()).isEqualTo(0);
+    assertThat(result.diagnosticHelper.getDiagnostics()).isEmpty();
   }
 
   @Test

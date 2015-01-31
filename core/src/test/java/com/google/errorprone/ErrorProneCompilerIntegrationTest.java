@@ -16,6 +16,7 @@
 
 package com.google.errorprone;
 
+import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugPattern.Category.ONE_OFF;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
@@ -24,7 +25,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -154,7 +154,7 @@ public class ErrorProneCompilerIntegrationTest {
         diagnosticMessage(containsString("[SelfAssignment]")));
     assertTrue("Warning should be found. " + diagnosticHelper.describe(),
         matcher.matches(diagnosticHelper.getDiagnostics()));
-    assertEquals(3, diagnosticHelper.getDiagnostics().size());
+    assertThat(diagnosticHelper.getDiagnostics()).hasSize(3);
   }
 
   @Test
@@ -338,7 +338,7 @@ public class ErrorProneCompilerIntegrationTest {
     Result exitCode = compiler.compile(Arrays.asList(
         compiler.fileManager().forSourceLines("Test.java", testFile)));
     outputStream.flush();
-    assertTrue(diagnosticHelper.getDiagnostics().isEmpty());
+    assertThat(diagnosticHelper.getDiagnostics()).isEmpty();
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
 
     String[] args = {"-Xep:EmptyIf"};
@@ -403,6 +403,6 @@ public class ErrorProneCompilerIntegrationTest {
         Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile)));
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
-    assertTrue(diagnosticHelper.getDiagnostics().isEmpty());
+    assertThat(diagnosticHelper.getDiagnostics()).isEmpty();
   }
 }
