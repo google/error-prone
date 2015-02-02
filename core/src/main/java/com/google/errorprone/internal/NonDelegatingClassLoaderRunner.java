@@ -33,7 +33,8 @@ public class NonDelegatingClassLoaderRunner {
         NonDelegatingClassLoader.create(ImmutableSet.<String>of(Function.class.getName()));
     try {
       Class<?> runnerClass = Class.forName(runnerClassName, true, loader);
-      Function<T, R> runner = Function.class.cast(runnerClass.newInstance());
+      @SuppressWarnings("unchecked")
+      Function<T, R> runner = (Function<T, R>) Function.class.cast(runnerClass.newInstance());
       return runner.apply(input);
     } catch (ReflectiveOperationException e) {
       throw new LinkageError("Unable to create runner.", e);

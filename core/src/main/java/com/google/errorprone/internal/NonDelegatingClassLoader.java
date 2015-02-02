@@ -60,7 +60,7 @@ public class NonDelegatingClassLoader extends URLClassLoader {
 
     try {
       synchronized (getClassLoadingLock(name)) {
-        Class c = findLoadedClass(name);
+        Class<?> c = findLoadedClass(name);
         if (c != null) {
           return c;
         }
