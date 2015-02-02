@@ -85,6 +85,7 @@ public class ErrorProneJavacJavaCompiler extends JavaCompiler {
   @Override
   protected void flow(Env<AttrContext> env, Queue<Env<AttrContext>> results) {
     if (compileStates.isDone(env, CompileState.FLOW)) {
+      super.flow(env, results);
       return;
     }
     super.flow(env, results);
