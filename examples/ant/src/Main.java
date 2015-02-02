@@ -16,7 +16,8 @@
 
 public class Main {
   public static void main(String[] args) {
-    // Dead exception
-    new Exception();
+    if (args.length < 1) {
+      new IllegalArgumentException("Missing required argument");
+    }
   }
 }
