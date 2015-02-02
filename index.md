@@ -29,8 +29,8 @@ $ ant
 Buildfile: ./error-prone/examples/ant/build.xml
 
 compile:
-    [javac] Compiling 1 source file to /Users/cushon/src/error-prone/examples/ant/build
-    [javac] /Users/cushon/src/error-prone/examples/ant/src/Main.java:20: error: [DeadException] Exception created but not thrown
+    [javac] Compiling 1 source file to ./src/error-prone/examples/ant/build
+    [javac] src/Main.java:20: error: [DeadException] Exception created but not thrown
     [javac]       new IllegalArgumentException("Missing required argument");
     [javac]       ^
     [javac]     (see http://errorprone.info/bugpattern/DeadException)
