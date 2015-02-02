@@ -3,11 +3,13 @@
     loop, can be replaced by a simpler library method'}
 - {name: Finally, summary: 'If you return or throw from a finally, then values returned
     or thrown from the try-catch block will be ignored'}
+- {name: IncompatibleModifiers, summary: This annotation has incompatible modifiers as specified by its @IncompatibleModifiers annotation}
 - {name: MisusedFormattingLogger, summary: FormattingLogger uses wrong or mismatched format string}
 - {name: NonAtomicVolatileUpdate, summary: This update of a volatile variable is non-atomic}
 - {name: PreconditionsInvalidPlaceholder, summary: Preconditions only accepts the %s placeholder in error message strings}
 - {name: ProtoFieldPreconditionsCheckNotNull, summary: 'Protobuf fields cannot be
     null, so this check is redundant'}
+- {name: RequiredModifiers, summary: This annotation is missing required modifiers as specified by its @RequiredModifiers annotation}
 - {name: StaticAccessedFromInstance, summary: A static variable or method should not be accessed from an object instance}
 - {name: StringEquality, summary: String comparison using reference equality instead of value equality}
 - {name: SynchronizeOnNonFinalField, summary: 'Synchronizing on non-final fields is
@@ -31,9 +33,11 @@
     to.'}
 - {name: CheckReturnValue, summary: Ignored return value of method that is annotated with @CheckReturnValue}
 - {name: ComparisonOutOfRange, summary: Comparison to value that is out of range for the compared type}
+- {name: CompileTimeConstant, summary: Non-compile-time constant expression passed to parameter with @CompileTimeConstant type annotation}
 - {name: DeadException, summary: Exception created but not thrown}
 - {name: DepAnn, summary: Deprecated item is not annotated with @Deprecated}
 - {name: EqualsNaN, summary: == NaN always returns false; use the isNaN methods instead}
+- {name: ForOverride, summary: Method annotated @ForOverride must be protected and only invoked from declaring class}
 - {name: GuiceAssistedInjectScoping, summary: Scope annotation on implementation class of AssistedInject factory is not allowed}
 - {name: InvalidPatternSyntax, summary: Invalid syntax used for a regular expression}
 - {name: JUnit3TestNotRun, summary: Test method will not be run; please prefix name with "test"}

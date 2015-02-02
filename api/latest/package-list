@@ -1,8 +1,8 @@
 com.google.errorprone
 com.google.errorprone.annotations
+com.google.errorprone.annotations.concurrent
 com.google.errorprone.bugpatterns
 com.google.errorprone.bugpatterns.threadsafety
-com.google.errorprone.bugpatterns.threadsafety.annotations
 com.google.errorprone.dataflow
 com.google.errorprone.dataflow.nullnesspropagation
 com.google.errorprone.fixes
