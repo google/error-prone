@@ -18,21 +18,23 @@ __src/Main.java__
 {% highlight java linenos %}
 public class Main {
   public static void main(String[] args) {
-    if (args.length < 1); //OOPS!
-      throw new IllegalArgumentException("Missing required argument");
+    if (args.length < 1) {
+      new IllegalArgumentException("Missing required argument");
+    }
   }
 }
 {% endhighlight %}
 {% highlight bash %}
 $ ant
-Buildfile: /Projects/error-prone/examples/ant/build.xml
+Buildfile: ./error-prone/examples/ant/build.xml
 
 compile:
-    [javac] Compiling 1 source file to /Projects/error-prone/examples/ant/build
-    [javac] src/Main.java:3: error: [EmptyIf] Empty statement after if
-    [javac]     if (args.length < 1);
-    [javac]     ^
-    [javac]   did you mean 'if (args.length < 1)'?
+    [javac] Compiling 1 source file to /Users/cushon/src/error-prone/examples/ant/build
+    [javac] /Users/cushon/src/error-prone/examples/ant/src/Main.java:20: error: [DeadException] Exception created but not thrown
+    [javac]       new IllegalArgumentException("Missing required argument");
+    [javac]       ^
+    [javac]     (see http://errorprone.info/bugpattern/DeadException)
+    [javac]   Did you mean 'throw new IllegalArgumentException("Missing required argument");'?
     [javac] 1 error
 
 BUILD FAILED
