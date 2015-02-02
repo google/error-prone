@@ -74,19 +74,19 @@
       <!-- LGPL -->
       <groupId>com.google.code.findbugs</groupId>
       <artifactId>jFormatString</artifactId>
-      <version>2.0.2</version>
+      <version>3.0.0</version>
     </dependency>
     <dependency>
       <!-- BSD New -->
       <groupId>com.google.code.findbugs</groupId>
       <artifactId>jsr305</artifactId>
-      <version>2.0.1</version>
+      <version>3.0.0</version>
     </dependency>
     <dependency>
       <!-- GPLv2 with Classpath Exception -->
       <groupId>org.checkerframework</groupId>
       <artifactId>dataflow</artifactId>
-      <version>1.8.9</version>
+      <version>1.8.10</version>
     </dependency>
     <dependency>
       <!-- Needed by Checker Framework dataflow.  Really should be a dependency
@@ -96,7 +96,7 @@
       <!-- GPLv2 with Classpath Exception -->
       <groupId>org.checkerframework</groupId>
       <artifactId>javacutil</artifactId>
-      <version>1.8.9</version>
+      <version>1.8.10</version>
     </dependency>
     <dependency>
       <!-- GPLv2 with Classpath Exception -->
@@ -107,7 +107,7 @@
     <dependency>
       <groupId>com.google.auto.value</groupId>
       <artifactId>auto-value</artifactId>
-      <version>1.0-rc1</version>
+      <version>1.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -143,37 +143,37 @@
     <dependency>
       <groupId>com.google.truth</groupId>
       <artifactId>truth</artifactId>
-      <version>0.24</version>
+      <version>0.25</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.google.inject</groupId>
       <artifactId>guice</artifactId>
-      <version>3.0</version>
+      <version>4.0-beta5</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.google.inject.extensions</groupId>
       <artifactId>guice-assistedinject</artifactId>
-      <version>3.0</version>
+      <version>4.0-beta5</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.google.inject.extensions</groupId>
       <artifactId>guice-servlet</artifactId>
-      <version>3.0</version>
+      <version>4.0-beta5</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>1.8.5</version>
+      <version>2.0.3-beta</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.google.protobuf</groupId>
       <artifactId>protobuf-java</artifactId>
-      <version>2.5.0</version>
+      <version>2.6.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
