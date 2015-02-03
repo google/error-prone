@@ -1,11 +1,14 @@
 package com.google.errorprone;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.compilers.DefaultCompilerAdapter;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.Commandline.Argument;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.JavaEnvUtils;
@@ -17,6 +20,8 @@ import org.apache.tools.ant.util.LoaderUtils;
 public class ErrorProneExternalCompilerAdapter extends DefaultCompilerAdapter {
   private Path classpath;
   private boolean suggestFixes;
+  private String memoryStackSize;
+  private List<Argument> jvmArgs = new ArrayList<Argument>();
 
   public void setClasspath(Path classpath) {
     this.classpath = classpath;
@@ -38,13 +43,25 @@ public class ErrorProneExternalCompilerAdapter extends DefaultCompilerAdapter {
     this.suggestFixes = suggestFixes;
   }
 
+  public void setMemoryStackSize(String memoryStackSize) {
+    this.memoryStackSize = memoryStackSize;
+  }
+
+  public Argument createJvmArg() {
+    Argument arg = new Argument();
+    jvmArgs.add(arg);
+    return arg;
+  }
+
   @Override
   public boolean execute() throws BuildException {
     if (getJavac().isForkedJavac()) {
       attributes.log("Using external error-prone compiler", Project.MSG_VERBOSE);
       Commandline cmd = new Commandline();
       cmd.setExecutable(JavaEnvUtils.getJdkExecutable("java"));
-
+      if (memoryStackSize != null) {
+        cmd.createArgument().setValue("-Xss" + memoryStackSize);
+      }
       String memoryParameterPrefix = "-X";
       if (memoryInitialSize != null) {
         cmd.createArgument().setValue(memoryParameterPrefix + "ms" + this.memoryInitialSize);
@@ -55,6 +72,11 @@ public class ErrorProneExternalCompilerAdapter extends DefaultCompilerAdapter {
         cmd.createArgument().setValue(memoryParameterPrefix + "mx" + this.memoryMaximumSize);
         // Prevent setupModernJavacCommandlineSwitches() from doing it also
         memoryMaximumSize = null;
+      }
+      for (Argument arg : jvmArgs) {
+        for (String part : arg.getParts()) {
+          cmd.createArgument().setValue(part);
+        }
       }
 
       cmd.createArgument().setValue("-classpath");
