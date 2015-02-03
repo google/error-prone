@@ -1,3 +1,19 @@
+/*
+ * Copyright 2012 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.google.errorprone;
 
 import java.io.File;
@@ -19,7 +35,6 @@ import org.apache.tools.ant.util.LoaderUtils;
  */
 public class ErrorProneExternalCompilerAdapter extends DefaultCompilerAdapter {
   private Path classpath;
-  private boolean suggestFixes;
   private String memoryStackSize;
   private List<Argument> jvmArgs = new ArrayList<Argument>();
 
@@ -37,10 +52,6 @@ public class ErrorProneExternalCompilerAdapter extends DefaultCompilerAdapter {
 
   public void setClasspathRef(Reference r) {
     createClasspath().setRefid(r);
-  }
-
-  public void setSuggestFixes(boolean suggestFixes) {
-    this.suggestFixes = suggestFixes;
   }
 
   public void setMemoryStackSize(String memoryStackSize) {
@@ -89,9 +100,6 @@ public class ErrorProneExternalCompilerAdapter extends DefaultCompilerAdapter {
       addResourceSource(classpath, "com/sun/tools/javac/Main.class");
       cmd.createArgument().setPath(classpath);
       cmd.createArgument().setValue(ErrorProneCompiler.class.getName());
-      if (suggestFixes) {
-        cmd.createArgument().setValue("-Xjcov");
-      }
       setupModernJavacCommandlineSwitches(cmd);
       logAndAddFilesToCompile(cmd);
       return executeExternalCompile(cmd.getCommandline(), cmd.size(), true) == 0;
