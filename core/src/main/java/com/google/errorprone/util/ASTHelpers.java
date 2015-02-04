@@ -21,6 +21,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.suppliers.Suppliers;
 
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.BinaryTree;
@@ -66,6 +67,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.type.TypeKind;
 
 /**
  * This class contains utility methods to work with the javac AST.
@@ -523,5 +525,16 @@ public class ASTHelpers {
     return (tree instanceof JCLiteral)
         ? ((JCLiteral) tree).value
         : tree.type.constValue();
+  }
+
+  /**
+   * Return true if the given type is 'void' or 'Void'.
+   */
+  public static boolean isVoidType(Type type, VisitorState state) {
+    if (type == null) {
+      return false;
+    }
+    return type.getKind() == TypeKind.VOID
+        || state.getTypes().isSameType(Suppliers.JAVA_LANG_VOID_TYPE.get(state), type);
   }
 }

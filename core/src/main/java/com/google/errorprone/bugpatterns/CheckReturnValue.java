@@ -39,7 +39,6 @@ import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.code.TypeTag;
 
 import javax.lang.model.element.ElementKind;
 
@@ -93,7 +92,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
         public boolean matches(MethodInvocationTree tree, VisitorState state) {
 
           MethodSymbol method = ASTHelpers.getSymbol(tree);
-          if (method.getReturnType().getTag() == TypeTag.VOID) {
+          if (ASTHelpers.isVoidType(method.getReturnType(), state)) {
             return false;
           }
 
@@ -160,7 +159,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
       // skip contructors (which javac thinks are void-returning)
       return Description.NO_MATCH;
     }
-    if (method.getReturnType().getTag() != TypeTag.VOID) {
+    if (!ASTHelpers.isVoidType(method.getReturnType(), state)) {
       return Description.NO_MATCH;
     }
     String message =

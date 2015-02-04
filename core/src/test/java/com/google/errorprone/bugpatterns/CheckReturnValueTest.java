@@ -120,6 +120,21 @@ public class CheckReturnValueTest {
             "  @javax.annotation.CheckReturnValue public static void f() {}",
             "}"));
   }
+
+  @Test
+  public void badCRVOnPseudoProcedure() throws Exception {
+    compilationHelper.assertCompileFailsWithMessages(
+        compilationHelper.fileManager().forSourceLines("Test.java",
+            "package lib;",
+            "@javax.annotation.CheckReturnValue",
+            "public class Test {",
+            "  // BUG: Diagnostic contains:",
+            "  // @CheckReturnValue may not be applied to void-returning methods",
+            "  @javax.annotation.CheckReturnValue public static Void f() {",
+            "    return null;",
+            "  }",
+            "}"));
+  }
   
   @Test
   public void testPackageAnnotationButCanIgnoreReturnValue() throws Exception {
@@ -258,6 +273,28 @@ public class CheckReturnValueTest {
               + " both be applied to the same method",
               "  void m() {}",
               "}")));
+  }
+
+  // Don't match Void-returning methods in packages with @CRV
+  @Test
+  public void testJavaLangVoidReturningMethodInAnnotatedPackage() throws Exception {
+    compilationHelper.assertCompileSucceeds(Arrays.asList(
+        compilationHelper.fileManager().forSourceLines("package-info.java",
+            "@javax.annotation.CheckReturnValue",
+            "package lib;"),
+        compilationHelper.fileManager().forSourceLines("lib/Lib.java",
+            "package lib;",
+            "public class Lib {",
+            "  public static Void f() {",
+            "    return null;",
+            "  }",
+            "}"),
+        compilationHelper.fileManager().forSourceLines("Test.java",
+            "class Test {",
+            "  void m() {",
+            "    lib.Lib.f();",
+            "  }",
+            "}")));
   }
 }
 
