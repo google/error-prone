@@ -18,6 +18,7 @@ package com.google.errorprone.internal;
 
 import com.google.common.collect.ImmutableSet;
 
+import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Set;
 
@@ -38,16 +39,21 @@ public class NonDelegatingClassLoader extends URLClassLoader {
   private final ClassLoader original;
   private final ImmutableSet<String> whiteList;
 
-  public static NonDelegatingClassLoader create(Set<String> whiteList) {
-    ClassLoader contextLoader = Thread.currentThread().getContextClassLoader();
-    if (!(contextLoader instanceof URLClassLoader)) {
-      throw new IllegalStateException("Expected a URLClassLoader!");
-    }
-    return new NonDelegatingClassLoader((URLClassLoader) contextLoader, whiteList);
+  public static NonDelegatingClassLoader create(
+      Set<String> whiteList,
+      URLClassLoader original) {
+    return create(whiteList, original.getURLs(), original);
   }
 
-  public NonDelegatingClassLoader(URLClassLoader original, Set<String> whiteList) {
-    super(original.getURLs(), null);
+  public static NonDelegatingClassLoader create(
+      Set<String> whiteList,
+      URL[] urls,
+      ClassLoader original) {
+    return new NonDelegatingClassLoader(original, urls, whiteList);
+  }
+
+  private NonDelegatingClassLoader(ClassLoader original, URL[] urls, Set<String> whiteList) {
+    super(urls, null);
     this.original = original;
     this.whiteList = ImmutableSet.copyOf(whiteList);
   }
