@@ -89,16 +89,6 @@
       <version>1.8.10</version>
     </dependency>
     <dependency>
-      <!-- Needed by Checker Framework dataflow.  Really should be a dependency
-           of that artifact.
-           TODO(eaftan): Remove after it is added as a dependency to the
-           dataflow artifact. -->
-      <!-- GPLv2 with Classpath Exception -->
-      <groupId>org.checkerframework</groupId>
-      <artifactId>javacutil</artifactId>
-      <version>1.8.10</version>
-    </dependency>
-    <dependency>
       <!-- GPLv2 with Classpath Exception -->
       <groupId>com.google.errorprone</groupId>
       <artifactId>javac</artifactId>
