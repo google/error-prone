@@ -70,7 +70,6 @@ public class DiagnosticTestHelper {
   public ClearableDiagnosticCollector<JavaFileObject> collector =
       new ClearableDiagnosticCollector<JavaFileObject>();
 
-  @SuppressWarnings("unchecked")  // hamcrest should use @SafeVarargs
   public static Matcher<Diagnostic<JavaFileObject>> suggestsRemovalOfLine(URI fileURI, int line) {
     return allOf(
         diagnosticOnLine(fileURI, line),
