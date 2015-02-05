@@ -17,9 +17,16 @@
 package com.google.errorprone;
 
 import com.google.common.base.Function;
-import com.google.errorprone.internal.NonDelegatingClassLoaderRunner;
+import com.google.common.collect.ImmutableSet;
+import com.google.errorprone.internal.NonDelegatingClassLoader;
+import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.compilers.DefaultCompilerAdapter;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.nio.file.Paths;
 
 /**
  * Adapts the error-prone compiler to be used in an Ant build.
@@ -35,7 +42,36 @@ public class ErrorProneAntCompilerAdapter extends DefaultCompilerAdapter {
 
   @Override
   public boolean execute() throws BuildException {
+    ClassLoader originalLoader = ErrorProneCompiler.class.getClassLoader();
+    URL[] urls;
+    if (originalLoader instanceof URLClassLoader) {
+      urls = ((URLClassLoader) originalLoader).getURLs();
+    } else if (originalLoader instanceof AntClassLoader) {
+      String[] pieces = ((AntClassLoader) originalLoader).getClasspath().split(":");
+      urls = new URL[pieces.length];
+      for (int i = 0; i < pieces.length; ++i) {
+        try {
+          urls[i] = Paths.get(pieces[i]).toUri().toURL();
+        } catch (MalformedURLException e) {
+          throw new BuildException(e);
+        }
+      }
+    } else {
+      throw new BuildException("Unexpected ClassLoader: " + originalLoader.getClass());
+    }
+
+    ClassLoader loader = NonDelegatingClassLoader.create(
+        ImmutableSet.<String>of(Function.class.getName()), urls, originalLoader);
+
     String[] args = setupModernJavacCommand().getArguments();
-    return NonDelegatingClassLoaderRunner.run(args, Boolean.class, AntRunner.class.getName());
+
+    try {
+      Class<?> runnerClass = Class.forName(AntRunner.class.getName(), true, loader);
+      @SuppressWarnings("unchecked")
+      Function<String[], Boolean> runner = (Function<String[], Boolean>) runnerClass.newInstance();
+      return runner.apply(args);
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError("Unable to create runner.", e);
+    }
   }
 }
