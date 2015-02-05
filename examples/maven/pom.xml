@@ -36,13 +36,8 @@
         <dependencies>
           <dependency>
             <groupId>org.codehaus.plexus</groupId>
-            <artifactId>plexus-compiler-javac</artifactId>
-            <version>2.3</version>
-          </dependency>
-          <dependency>
-            <groupId>org.codehaus.plexus</groupId>
             <artifactId>plexus-compiler-javac-errorprone</artifactId>
-            <version>2.3</version>
+            <version>2.5</version>
           </dependency>
         </dependencies>
       </plugin>
