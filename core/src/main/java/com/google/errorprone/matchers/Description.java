@@ -19,7 +19,9 @@ package com.google.errorprone.matchers;
 import static com.google.errorprone.BugPattern.SeverityLevel.NOT_A_PROBLEM;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -111,6 +113,16 @@ public class Description {
   @CheckReturnValue
   public Description applySeverityOverride(SeverityLevel severity) {
     return new Description(node, checkName, rawMessage, link, fixes, severity);
+  }
+
+  @CheckReturnValue
+  public Description filterFixes(Predicate<? super Fix> predicate) {
+    return new Description(node,
+        checkName,
+        rawMessage,
+        link,
+        ImmutableList.copyOf(Iterables.filter(fixes, predicate)),
+        severity);
   }
 
   /**
