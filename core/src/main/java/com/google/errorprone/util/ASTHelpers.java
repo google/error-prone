@@ -246,6 +246,8 @@ public class ASTHelpers {
     } else if (expressionTree instanceof JCIdent) {
       JCIdent methodCall = (JCIdent) expressionTree;
       return methodCall.type.getReturnType();
+    } else if (expressionTree instanceof JCMethodInvocation) {
+      return getReturnType(((JCMethodInvocation) expressionTree).getMethodSelect());
     }
     throw new IllegalArgumentException("Expected a JCFieldAccess or JCIdent");
   }
@@ -266,6 +268,8 @@ public class ASTHelpers {
     } else if (expressionTree instanceof JCIdent) {
       JCIdent methodCall = (JCIdent) expressionTree;
       return methodCall.sym.owner.type;
+    } else if (expressionTree instanceof JCMethodInvocation) {
+      return getReceiverType(((JCMethodInvocation) expressionTree).getMethodSelect());
     }
     throw new IllegalArgumentException(
         "Expected a JCFieldAccess or JCIdent from expression " + expressionTree);
@@ -536,5 +540,16 @@ public class ASTHelpers {
     }
     return type.getKind() == TypeKind.VOID
         || state.getTypes().isSameType(Suppliers.JAVA_LANG_VOID_TYPE.get(state), type);
+  }
+
+  /**
+   * Returns true if erasure(s) <: erasure(t).
+   */
+  public static boolean isSubtype(Type s, Type t, VisitorState state) {
+    if (s == null || t == null) {
+      return false;
+    }
+    Types types = state.getTypes();
+    return types.isSubtype(types.erasure(s), types.erasure(t));
   }
 }

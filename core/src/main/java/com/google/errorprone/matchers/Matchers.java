@@ -21,6 +21,11 @@ import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis;
 import com.google.errorprone.matchers.ChildMultiMatcher.MatchType;
 import com.google.errorprone.matchers.MethodVisibility.Visibility;
+import com.google.errorprone.matchers.method.MethodMatchers;
+import com.google.errorprone.matchers.method.MethodMatchers.AnyMethodMatcher;
+import com.google.errorprone.matchers.method.MethodMatchers.ConstructorMatcher;
+import com.google.errorprone.matchers.method.MethodMatchers.InstanceMethodMatcher;
+import com.google.errorprone.matchers.method.MethodMatchers.StaticMethodMatcher;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 
@@ -176,6 +181,26 @@ public class Matchers {
     };
   }
 
+  /** Matches a static method. */
+  public static StaticMethodMatcher staticMethod() {
+    return MethodMatchers.staticMethod();
+  }
+
+  /** Matches an instance method. */
+  public static InstanceMethodMatcher instanceMethod() {
+    return MethodMatchers.instanceMethod();
+  }
+
+  /** Matches a static or instance method. */
+  public static AnyMethodMatcher anyMethod() {
+    return MethodMatchers.anyMethod();
+  }
+
+  /** Matches a constructor. */
+  public static ConstructorMatcher constructor() {
+    return MethodMatchers.constructor();
+  }
+
   /**
    * Matches an AST node which is an expression yielding the indicated static method.
    * You can use "*" wildcard instead of any of the arguments.
@@ -183,6 +208,7 @@ public class Matchers {
    * @param methodName either name or full signature of the static method which is a member of the
    * class, like "compile" or "compile(java.lang.String)"
    */
+  // TODO(user): expunge
   public static StaticMethod staticMethod(String fullClassName, String methodName) {
     return new StaticMethod(fullClassName, methodName);
   }
@@ -192,6 +218,7 @@ public class Matchers {
    * @param receiverMatcher Used to determine if the part of the expression before the dot matches.
    * @param methodName The name of the method to match, e.g., "equals"
    */
+  // TODO(user): expunge
   public static InstanceMethod instanceMethod(Matcher<? super ExpressionTree> receiverMatcher, String methodName) {
     return new InstanceMethod(receiverMatcher, methodName);
   }
@@ -200,6 +227,7 @@ public class Matchers {
    * Matches an AST node which is an expression yielding the indicated non-static method.
    * @param receiverMatcher Used to determine if the part of the expression before the dot matches.
    */
+  // TODO(user): expunge
   public static InstanceMethod methodReceiver(Matcher<? super ExpressionTree> receiverMatcher) {
     return InstanceMethod.methodReceiverMatcher(receiverMatcher);
   }
@@ -283,6 +311,7 @@ public class Matchers {
   /**
    * Matches a constructor with the given class name and parameter types.
    */
+  // TODO(user): expunge
   public static Constructor constructor(String className, List<String> parameterTypes) {
     return new Constructor(className, parameterTypes);
   }
@@ -295,10 +324,12 @@ public class Matchers {
     return new ConstructorOfClass(matchType, constructorMatcher);
   }
 
+  // TODO(user): expunge
   public static Matcher<MethodInvocationTree> methodSelect(Matcher<ExpressionTree> methodSelectMatcher) {
     return new MethodInvocationMethodSelect(methodSelectMatcher);
   }
 
+  // TODO(user): expunge
   public static Matcher<ExpressionTree> expressionMethodSelect(Matcher<ExpressionTree> methodSelectMatcher) {
     return new ExpressionMethodSelect(methodSelectMatcher);
   }
@@ -675,10 +706,10 @@ public class Matchers {
    */
   public static Matcher<ExpressionTree> methodReturnsNonNull() {
     return anyOf(
-        expressionMethodSelect((isDescendantOfMethod("java.lang.Object", "toString()"))),
-        expressionMethodSelect(methodReceiver(isSameType("java.lang.String"))),
-        expressionMethodSelect(staticMethod("java.lang.String", "*")),
-        expressionMethodSelect(instanceMethod(isSameType("java.util.StringTokenizer"), "nextToken"))
+        instanceMethod().onDescendantOf("java.lang.Object").named("toString"),
+        instanceMethod().onExactClass("java.lang.String"),
+        staticMethod().onClass("java.lang.String"),
+        instanceMethod().onExactClass("java.util.StringTokenizer").named("nextToken")
     );
   }
 
@@ -727,6 +758,7 @@ public class Matchers {
    *
    * @param methodName The name of the method to match, e.g., "equals"
    */
+  // TODO(user): expunge
   public static Matcher<MethodTree> methodIsNamed(final String methodName) {
     return new Matcher<MethodTree>() {
       @Override
@@ -876,6 +908,7 @@ public class Matchers {
    * @param methodName The name of the method to match, including arguments, e.g.,
    * "get(java.lang.Object)"
    */
+  // TODO(user): expunge
   public static Matcher<ExpressionTree> isDescendantOfMethod(String fullClassName, String methodName) {
     return new DescendantOf(fullClassName, methodName);
   }
