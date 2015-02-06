@@ -33,14 +33,16 @@ import java.util.Set;
  */
 @AutoValue
 public abstract class TopLevelAnalysisWithSeverity implements TopLevelAnalysis {
-  static TopLevelAnalysisWithSeverity wrap(String canonicalName, SeverityLevel defaultSeverity,
-      boolean disableable, TopLevelAnalysis analysis) {
-    return new AutoValue_TopLevelAnalysisWithSeverity(canonicalName, defaultSeverity, disableable,
-        analysis);
+  static TopLevelAnalysisWithSeverity wrap(String canonicalName, boolean onByDefault,
+      SeverityLevel defaultSeverity, boolean disableable, TopLevelAnalysis analysis) {
+    return new AutoValue_TopLevelAnalysisWithSeverity(canonicalName, onByDefault, defaultSeverity,
+        disableable, analysis);
   }
 
   // TODO(user): consider eliminating this and respecting all configs on knownAnalysisNames
   abstract String canonicalName();
+
+  abstract boolean onByDefault();
 
   abstract SeverityLevel defaultSeverity();
 
@@ -57,6 +59,7 @@ public abstract class TopLevelAnalysisWithSeverity implements TopLevelAnalysis {
   public void analyze(CompilationUnitTree compilationUnit, Context context,
       AnalysesConfig config, final DescriptionListener listener) {
     final SeverityLevel severity;
+    boolean on = onByDefault();
     Severity optionsSeverity = config.errorProneOptions().getSeverityMap().get(canonicalName());
     if (optionsSeverity != null) {
       switch (optionsSeverity) {
@@ -64,9 +67,11 @@ public abstract class TopLevelAnalysisWithSeverity implements TopLevelAnalysis {
           if (!disableable()) {
             throw new IllegalArgumentException(canonicalName() + " may not be disabled");
           }
+          on = false;
           severity = SeverityLevel.NOT_A_PROBLEM;
           break;
         case DEFAULT:
+          on = true;
           severity = defaultSeverity();
           break;
         case WARN:
@@ -75,9 +80,11 @@ public abstract class TopLevelAnalysisWithSeverity implements TopLevelAnalysis {
             throw new IllegalArgumentException(
                 canonicalName() + " is not disableable and may not be demoted to a warning");
           }
+          on = true;
           severity = SeverityLevel.WARNING;
           break;
         case ERROR:
+          on = true;
           severity = SeverityLevel.ERROR;
           break;
         default:
@@ -86,7 +93,7 @@ public abstract class TopLevelAnalysisWithSeverity implements TopLevelAnalysis {
     } else {
       severity = defaultSeverity();
     }
-    if (severity.enabled()) {
+    if (on && severity.enabled()) {
       analysis().analyze(compilationUnit, context, config, new DescriptionListener() {
         @Override
         public void onDescribed(Description description) {
