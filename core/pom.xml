@@ -92,7 +92,7 @@
       <!-- GPLv2 with Classpath Exception -->
       <groupId>com.google.errorprone</groupId>
       <artifactId>javac</artifactId>
-      <version>1.8.0-u20</version>
+      <version>1.9.0-dev-r2644-1</version>
     </dependency>
     <dependency>
       <groupId>com.google.auto.value</groupId>
@@ -253,6 +253,6 @@
 
   <properties>
     <!-- put javac.jar on bootclasspath when executing tests -->
-    <argLine>-Xbootclasspath/p:${settings.localRepository}/com/google/errorprone/javac/1.8.0-u20/javac-1.8.0-u20.jar</argLine>
+    <argLine>-Xbootclasspath/p:${settings.localRepository}/com/google/errorprone/javac/1.9.0-dev-r2644-1/javac-1.9.0-dev-r2644-1.jar</argLine>
   </properties>
 </project>

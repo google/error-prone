@@ -141,7 +141,7 @@ public class ForOverrideChecker extends BugChecker
     while (currType != null
         && !currType.equals(state.getSymtab().objectType)
         && !currType.equals(Type.noType)) {
-      Symbol sym = currType.tsym.members().lookup(method.name).sym;
+      Symbol sym = currType.tsym.members().findFirst(method.name);
       if (sym instanceof MethodSymbol) {
         list.add((MethodSymbol) sym);
       }

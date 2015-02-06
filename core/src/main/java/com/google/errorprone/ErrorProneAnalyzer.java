@@ -83,15 +83,18 @@ public class ErrorProneAnalyzer implements TaskListener {
   }
 
   private static class DeclFreeCompilationUnitWrapper extends JCCompilationUnit {
-    protected DeclFreeCompilationUnitWrapper(JCCompilationUnit original) {
-      super(
-          original.packageAnnotations,
-          original.pid,
-          com.sun.tools.javac.util.List.<JCTree>nil(),
-          original.sourcefile,
-          original.packge,
-          original.namedImportScope,
-          original.starImportScope);
+    private DeclFreeCompilationUnitWrapper(JCCompilationUnit original) {
+      super(filter(original));
+    }
+
+    static com.sun.tools.javac.util.List<JCTree> filter(JCCompilationUnit original) {
+      com.sun.tools.javac.util.List<JCTree> defs = com.sun.tools.javac.util.List.nil();
+      for (JCTree def : original.defs) {
+        if (!(def instanceof JCClassDecl)) {
+          defs = defs.append(def);
+        }
+      }
+      return defs;
     }
   }
 

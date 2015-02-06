@@ -358,13 +358,13 @@ public class ASTHelpers {
         continue; // Skip the owner of the method
       }
       Scope scope = sup.tsym.members();
-      for (Scope.Entry e = scope.lookup(methodSymbol.name); e.scope != null; e = e.next()) {
-        if (e.sym != null
-            && !e.sym.isStatic()
-            && ((e.sym.flags() & Flags.SYNTHETIC) == 0)
-            && e.sym.name.contentEquals(methodSymbol.name)
-            && methodSymbol.overrides(e.sym, owner, types, true)) {
-          supers.add((MethodSymbol) e.sym);
+      for (Symbol sym : scope.getSymbolsByName(methodSymbol.name)) {
+        if (sym != null
+            && !sym.isStatic()
+            && ((sym.flags() & Flags.SYNTHETIC) == 0)
+            && sym.name.contentEquals(methodSymbol.name)
+            && methodSymbol.overrides(sym, owner, types, true)) {
+          supers.add((MethodSymbol) sym);
         }
       }
     }
@@ -381,7 +381,7 @@ public class ASTHelpers {
     if (superClass == null) {
       return null;
     }
-    for (Symbol sym : superClass.members().getElements()) {
+    for (Symbol sym : superClass.members().getSymbols()) {
       if (sym.name.contentEquals(method.name)
           && method.overrides(sym, superClass, types, true)) {
         return (MethodSymbol) sym;
@@ -437,16 +437,16 @@ public class ASTHelpers {
     }
     Scope scope = enumType.members();
     Deque<String> values = new ArrayDeque<>();
-    for (Scope.Entry e = scope.elems; e != null; e = e.sibling) {
-      if (e.sym instanceof VarSymbol) {
-        VarSymbol var = (VarSymbol) e.sym;
+    for (Symbol sym : scope.getSymbols()) {
+      if (sym instanceof VarSymbol) {
+        VarSymbol var = (VarSymbol) sym;
         if ((var.flags() & Flags.ENUM) != 0) {
           /**
            * Javac gives us the members backwards, apparently. It's worth making an effort to
            * preserve declaration order because it's useful for diagnostics (e.g. in
            * {@link MissingCasesInEnumSwitch}).
            */
-          values.push(e.sym.name.toString());
+          values.push(sym.name.toString());
         }
       }
     }

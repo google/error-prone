@@ -98,7 +98,7 @@ public class GuiceOverridesJavaxInjectableMethod extends BugChecker implements M
 
   private MethodSymbol findSuperMethod(MethodSymbol method, VisitorState state) {
     TypeSymbol superClass = method.enclClass().getSuperclass().tsym;
-    for (Symbol s : superClass.members().getElements()) {
+    for (Symbol s : superClass.members().getSymbols()) {
       if (s.name.contentEquals(method.name)
           && method.overrides(s, superClass, state.getTypes(), true)) {
         return (MethodSymbol) s;

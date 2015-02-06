@@ -59,7 +59,7 @@ public class WrongParameterPackage extends BugChecker implements MethodTreeMatch
     ClassSymbol classSym = method.enclClass();
     TypeSymbol superClass = classSym.getSuperclass().tsym;
 
-    for (Symbol s : superClass.members().getElements()) {
+    for (Symbol s : superClass.members().getSymbols()) {
       if (s.name.contentEquals(method.name) && s.getKind() == ElementKind.METHOD) {
         MethodSymbol supermethod = (MethodSymbol) s;
 

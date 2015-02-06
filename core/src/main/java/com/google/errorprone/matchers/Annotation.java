@@ -22,6 +22,7 @@ import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.PackageTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 
@@ -47,6 +48,8 @@ public class Annotation<T extends Tree> extends ChildMultiMatcher<T, AnnotationT
       return ((MethodTree) tree).getModifiers().getAnnotations();
     } else if (tree instanceof CompilationUnitTree) {
       return ((CompilationUnitTree) tree).getPackageAnnotations();
+    } else if (tree instanceof PackageTree) {
+      return ((PackageTree) tree).getAnnotations();
     } else {
       throw new IllegalArgumentException(
           "Cannot access annotations from tree of type " + tree.getClass());

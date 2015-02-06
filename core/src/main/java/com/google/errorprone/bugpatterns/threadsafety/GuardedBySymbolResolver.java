@@ -157,9 +157,9 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
     }
     for (Type t : types.closure(classSymbol.type)) {
       Scope scope = t.tsym.members();
-      for (Scope.Entry e = scope.lookup(getName(name)); e.scope != null; e = e.next()) {
-        if (e.sym.getKind().equals(kind)) {
-          return type.cast(e.sym);
+      for (Symbol sym : scope.getSymbolsByName(getName(name))) {
+        if (sym.getKind().equals(kind)) {
+          return type.cast(sym);
         }
       }
     }
