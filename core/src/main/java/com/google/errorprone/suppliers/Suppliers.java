@@ -143,6 +143,13 @@ public class Suppliers {
       }
     };
 
+  public static final Supplier<Type> INT_TYPE = new Supplier<Type>() {
+      @Override
+      public Type get(VisitorState state) {
+        return state.getSymtab().intType;
+      }
+    };
+
   public static final Supplier<Type> OBJECT_TYPE = new Supplier<Type>() {
       @Override
       public Type get(VisitorState state) {
