@@ -66,7 +66,9 @@ To develop and build error-prone, see our documentation on the
 [wiki](https://github.com/google/error-prone/wiki/For-Developers).
 
 ## Links
-
+- Mailing lists
+  - [General discussion](https://groups.google.com/forum/#!forum/error-prone-discuss)
+  - [Announcements](https://groups.google.com/forum/#!forum/error-prone-announce)
 - [Javadoc](http://errorprone.info/api/latest/)
 - Pre-release snapshots are available from [Sonatype's snapshot
   repository](https://oss.sonatype.org/content/repositories/snapshots/com/google/errorprone/).
