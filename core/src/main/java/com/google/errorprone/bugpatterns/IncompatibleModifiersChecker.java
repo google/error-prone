@@ -21,6 +21,10 @@ import static com.google.errorprone.BugPattern.LinkType.NONE;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
+import com.google.common.base.Function;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.IncompatibleModifiers;
@@ -30,11 +34,13 @@ import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ModifiersTree;
+import com.sun.tools.javac.code.Attribute;
 
-import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
 
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
@@ -51,19 +57,44 @@ public class IncompatibleModifiersChecker extends BugChecker implements Annotati
   private static final String MESSAGE_TEMPLATE = "%s has specified that it should not be used"
       + " together with the following modifiers: %s";
 
-  @Override
-  public Description matchAnnotation(AnnotationTree tree, VisitorState state) {
-    Set<Modifier> incompatible = EnumSet.noneOf(Modifier.class);
-    IncompatibleModifiers incompatibleModifiersAnnotation =
-        ASTHelpers.getAnnotation(tree, IncompatibleModifiers.class);
-    if (incompatibleModifiersAnnotation != null) {
-      for (Modifier m : incompatibleModifiersAnnotation.value()) {
-        ModifiersTree modifiers = (ModifiersTree) state.getPath().getParentPath().getLeaf();
-        if (modifiers.getFlags().contains(m)) {
-          incompatible.add(m);
+
+  // TODO(user): deprecate and remove
+  private static final String GUAVA_ANNOTATION =
+      "com.google.common.annotations.IncompatibleModifiers";
+
+  private static final Function<Attribute.Enum, Modifier> TO_MODIFIER =
+      new Function<Attribute.Enum, Modifier>() {
+        public Modifier apply(Attribute.Enum input) {
+          return Modifier.valueOf(input.getValue().name.toString());
         }
+      };
+
+  private static Set<Modifier> getIncompatibleModifiers(AnnotationTree tree, VisitorState state) {
+    for (Attribute.Compound c : ASTHelpers.getSymbol(tree).getAnnotationMirrors()) {
+      if (((TypeElement) c.getAnnotationType().asElement()).getQualifiedName()
+          .contentEquals(GUAVA_ANNOTATION)) {
+        @SuppressWarnings("unchecked")
+        List<Attribute.Enum> modifiers =
+            (List<Attribute.Enum>) c.member(state.getName("value")).getValue();
+        return ImmutableSet.copyOf(Iterables.transform(modifiers, TO_MODIFIER));
       }
     }
+
+    IncompatibleModifiers annotation = ASTHelpers.getAnnotation(tree, IncompatibleModifiers.class);
+    if (annotation != null) {
+      return ImmutableSet.copyOf(annotation.value());
+    }
+
+    return ImmutableSet.of();
+  }
+
+
+  @Override
+  public Description matchAnnotation(AnnotationTree tree, VisitorState state) {
+    Set<Modifier> incompatible = Sets.intersection(
+        getIncompatibleModifiers(tree, state),
+        ((ModifiersTree) state.getPath().getParentPath().getLeaf()).getFlags());
+
     if (incompatible.isEmpty()) {
       return Description.NO_MATCH;
     }

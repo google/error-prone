@@ -21,6 +21,10 @@ import static com.google.errorprone.BugPattern.LinkType.NONE;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
+import com.google.common.base.Function;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.RequiredModifiers;
@@ -30,11 +34,14 @@ import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ModifiersTree;
+import com.sun.tools.javac.code.Attribute;
+import com.sun.tools.javac.util.Names;
 
-import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
 
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
@@ -51,18 +58,42 @@ public class RequiredModifiersChecker extends BugChecker implements AnnotationTr
   private static final String MESSAGE_TEMPLATE = "%s has specified that it must be used"
       + " together with the following modifiers: %s";
 
-  @Override
-  public Description matchAnnotation(AnnotationTree tree, VisitorState state) {
-    Set<Modifier> missing = EnumSet.noneOf(Modifier.class);
-    RequiredModifiers requiredModifiersAnnotation =
-        ASTHelpers.getAnnotation(tree, RequiredModifiers.class);
-    if (requiredModifiersAnnotation != null) {
-      for (Modifier m : requiredModifiersAnnotation.value()) {
-        if (!((ModifiersTree) state.getPath().getParentPath().getLeaf()).getFlags().contains(m)) {
-          missing.add(m);
+  // TODO(user): deprecate and remove
+  private static final String GUAVA_ANNOTATION =
+      "com.google.common.annotations.RequiredModifiers";
+
+  private static final Function<Attribute.Enum, Modifier> TO_MODIFIER =
+      new Function<Attribute.Enum, Modifier>() {
+        public Modifier apply(Attribute.Enum input) {
+          return Modifier.valueOf(input.getValue().name.toString());
         }
+      };
+
+  private static Set<Modifier> getRequiredModifiers(AnnotationTree tree, VisitorState state) {
+    for (Attribute.Compound c : ASTHelpers.getSymbol(tree).getAnnotationMirrors()) {
+      if (((TypeElement) c.getAnnotationType().asElement()).getQualifiedName()
+          .contentEquals(GUAVA_ANNOTATION)) {
+        @SuppressWarnings("unchecked")
+        List<Attribute.Enum> modifiers =
+            (List<Attribute.Enum>) c.member(Names.instance(state.context).value).getValue();
+        return ImmutableSet.copyOf(Iterables.transform(modifiers, TO_MODIFIER));
       }
     }
+
+    RequiredModifiers annotation = ASTHelpers.getAnnotation(tree, RequiredModifiers.class);
+    if (annotation != null) {
+      return ImmutableSet.copyOf(annotation.value());
+    }
+
+    return ImmutableSet.of();
+  }
+
+  @Override
+  public Description matchAnnotation(AnnotationTree tree, VisitorState state) {
+    Set<Modifier> missing = Sets.difference(
+        getRequiredModifiers(tree, state),
+        ((ModifiersTree) state.getPath().getParentPath().getLeaf()).getFlags());
+
     if (missing.isEmpty()) {
       return Description.NO_MATCH;
     }

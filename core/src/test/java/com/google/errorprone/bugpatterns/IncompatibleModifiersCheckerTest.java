@@ -138,4 +138,60 @@ public class IncompatibleModifiersCheckerTest {
             "import test.NotAbstract;",
             "public class IncompatibleModifiersTestCase {}")));
   }
+
+  @Test
+  public void testGuavaAnnotation() throws Exception {
+    compilationHelper.assertCompileSucceedsWithMessages(Arrays.asList(
+        compilationHelper.fileManager().forSourceLines(
+            "com/google/common/annotations/IncompatibleModifiers.java",
+            "package com.google.common.annotations;",
+            "import javax.lang.model.element.Modifier;",
+            "import java.lang.annotation.Target;",
+            "import java.lang.annotation.ElementType;",
+            "@Target(ElementType.ANNOTATION_TYPE)",
+            "public @interface IncompatibleModifiers {",
+            "  Modifier[] value();",
+            "}"),
+        compilationHelper.fileManager().forSourceLines("test/NotAbstract.java",
+            "package test;",
+            "import static javax.lang.model.element.Modifier.ABSTRACT;",
+            "import com.google.common.annotations.IncompatibleModifiers;",
+            "@IncompatibleModifiers(ABSTRACT)",
+            "public @interface NotAbstract {",
+            "}"),
+        compilationHelper.fileManager().forSourceLines("test/RequiredModifiersTestCase.java",
+            "package test;",
+            "import test.NotAbstract;",
+            "// BUG: Diagnostic contains: The annotation '@NotAbstract' has specified that it"
+            + " should not be used together with the following modifiers: [abstract]",
+            "@NotAbstract public abstract class RequiredModifiersTestCase {",
+            "}")));
+  }
+
+  @Test
+  public void testGuavaAnnotationOK() throws Exception {
+    compilationHelper.assertCompileSucceeds(Arrays.asList(
+        compilationHelper.fileManager().forSourceLines(
+            "com/google/common/annotations/IncompatibleModifiers.java",
+            "package com.google.common.annotations;",
+            "import javax.lang.model.element.Modifier;",
+            "import java.lang.annotation.Target;",
+            "import java.lang.annotation.ElementType;",
+            "@Target(ElementType.ANNOTATION_TYPE)",
+            "public @interface IncompatibleModifiers {",
+            "  Modifier[] value();",
+            "}"),
+        compilationHelper.fileManager().forSourceLines("test/NotAbstract.java",
+            "package test;",
+            "import static javax.lang.model.element.Modifier.ABSTRACT;",
+            "import com.google.common.annotations.IncompatibleModifiers;",
+            "@IncompatibleModifiers(ABSTRACT)",
+            "public @interface NotAbstract {",
+            "}"),
+        compilationHelper.fileManager().forSourceLines("test/RequiredModifiersTestCase.java",
+            "package test;",
+            "import test.NotAbstract;",
+            "@NotAbstract public class RequiredModifiersTestCase {",
+            "}")));
+  }
 }
