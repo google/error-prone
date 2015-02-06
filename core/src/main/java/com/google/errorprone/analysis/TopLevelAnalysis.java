@@ -19,12 +19,23 @@ import com.google.errorprone.DescriptionListener;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.tools.javac.util.Context;
 
+import java.util.Set;
+
 /**
  * Represents an analysis that can be run on an entire compilation unit.
  *
  * @author Louis Wasserman
  */
 public interface TopLevelAnalysis {
-  void analyze(CompilationUnitTree compilationUnit, Context context,
-      AnalysesConfig configuration, DescriptionListener listener);
+  /**
+   * Analyzes the specified compilation unit with the given javac context, configuration, and
+   * callback for static analysis results.
+   */
+  void analyze(CompilationUnitTree compilationUnit, Context context, AnalysesConfig configuration,
+      DescriptionListener listener);
+
+  /**
+   * Returns the set of all analyses in this {@code TopLevelAnalysis}.
+   */
+  Set<String> knownAnalysisNames();
 }

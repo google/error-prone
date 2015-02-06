@@ -36,6 +36,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.NavigableSet;
+import java.util.Set;
 import java.util.TreeSet;
 
 import javax.annotation.Nullable;
@@ -62,6 +63,11 @@ public abstract class RecompilingTopLevelAnalysis implements TopLevelAnalysis {
   RecompilingTopLevelAnalysis() {}
   
   abstract TopLevelAnalysis analysis();
+
+  @Override
+  public Set<String> knownAnalysisNames() {
+    return analysis().knownAnalysisNames();
+  }
 
   @Override
   public void analyze(final CompilationUnitTree compilationUnit, final Context context,

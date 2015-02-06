@@ -23,6 +23,8 @@ import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.tools.javac.util.Context;
 
+import java.util.Set;
+
 /**
  * Wraps a {@code TopLevelAnalysis} to handle severity levels, taking into account
  * {@code ErrorProneOptions} in updating the severity level.
@@ -37,6 +39,7 @@ public abstract class TopLevelAnalysisWithSeverity implements TopLevelAnalysis {
         analysis);
   }
 
+  // TODO(user): consider eliminating this and respecting all configs on knownAnalysisNames
   abstract String canonicalName();
 
   abstract SeverityLevel defaultSeverity();
@@ -44,6 +47,11 @@ public abstract class TopLevelAnalysisWithSeverity implements TopLevelAnalysis {
   abstract boolean disableable();
 
   abstract TopLevelAnalysis analysis();
+
+  @Override
+  public Set<String> knownAnalysisNames() {
+    return analysis().knownAnalysisNames();
+  }
 
   @Override
   public void analyze(CompilationUnitTree compilationUnit, Context context,

@@ -16,6 +16,9 @@ package com.google.errorprone.analysis;
 
 import com.google.auto.value.AutoValue;
 import com.google.errorprone.ErrorProneOptions;
+import com.google.errorprone.InvalidCommandLineOptionException;
+
+import java.util.Set;
 
 /**
  * Config for all kinds of analyses.
@@ -31,4 +34,15 @@ public abstract class AnalysesConfig {
   AnalysesConfig() {}
   
   abstract ErrorProneOptions errorProneOptions();
+  
+  void validate(TopLevelAnalysis analysis) throws InvalidCommandLineOptionException {
+    if (!errorProneOptions().ignoreUnknownChecks()) {
+      Set<String> knownAnalyses = analysis.knownAnalysisNames();
+      for (String configured : errorProneOptions().getSeverityMap().keySet()) {
+        if (!knownAnalyses.contains(configured)) {
+          throw new InvalidCommandLineOptionException(configured + " is not a valid checker name");
+        }
+      }
+    }
+  }
 }

@@ -26,6 +26,7 @@ import com.sun.tools.javac.util.Context;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Set;
 
 /**
  * Scans a top-level compilation unit with a local analysis, respecting local suppression
@@ -42,6 +43,11 @@ public abstract class LocalAnalysisAsTopLevelAnalysis implements TopLevelAnalysi
   abstract LocalAnalysis analysis();
 
   LocalAnalysisAsTopLevelAnalysis() {}
+
+  @Override
+  public Set<String> knownAnalysisNames() {
+    return analysis().allNames();
+  }
 
   private boolean suppressed(Tree tree) {
     switch (analysis().suppressibility()) {

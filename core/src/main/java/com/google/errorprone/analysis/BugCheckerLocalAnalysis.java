@@ -137,7 +137,7 @@ import java.util.Set;
  *
  * @author Louis Wasserman
  */
-public class BugCheckerLocalAnalysis extends SimpleTreeVisitor<Void, VisitorState>
+public final class BugCheckerLocalAnalysis extends SimpleTreeVisitor<Void, VisitorState>
     implements LocalAnalysis {
   private final BugChecker checker;
 

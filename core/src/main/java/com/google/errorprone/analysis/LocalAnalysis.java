@@ -26,7 +26,7 @@ import com.sun.tools.javac.util.Context;
  *
  * @author Louis Wasserman
  */
-public interface LocalAnalysis extends Suppressible {
+public interface LocalAnalysis extends Suppressible {  
   void analyze(TreePath tree, Context context, AnalysesConfig configuration,
       DescriptionListener listener);
 }

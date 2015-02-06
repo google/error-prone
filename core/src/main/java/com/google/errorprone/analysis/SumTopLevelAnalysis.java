@@ -16,10 +16,13 @@ package com.google.errorprone.analysis;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.DescriptionListener;
 
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.tools.javac.util.Context;
+
+import java.util.Set;
 
 /**
  * Represents a combination of multiple top-level analyses.
@@ -35,6 +38,15 @@ public abstract class SumTopLevelAnalysis implements TopLevelAnalysis {
   SumTopLevelAnalysis() {}
 
   abstract ImmutableList<TopLevelAnalysis> analyses();
+
+  @Override
+  public Set<String> knownAnalysisNames() {
+    ImmutableSet.Builder<String> builder = ImmutableSet.builder();
+    for (TopLevelAnalysis analysis : analyses()) {
+      builder.addAll(analysis.knownAnalysisNames());
+    }
+    return builder.build();
+  }
 
   @Override
   public void analyze(CompilationUnitTree compilationUnit, Context context,
