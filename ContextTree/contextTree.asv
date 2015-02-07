@@ -1,8 +1,8 @@
 %%%%% Author: Pedro Borges
 %%%%% Reads Log from file and creates a context tree
-%%%%% Input:
+%%%%% Input: 
 %%%%%   File: File containing lines of CALL name and RETURN name
-%%%%% Ouput:
+%%%%% Ouput: 
 %%%%%    tree: Calling Context Tree resulting from the prossecing of the
 %%%%%    file
 function [ tree ] = contextTree( File )
@@ -24,7 +24,7 @@ fclose(fid);
 i = 0;
 aux = 'a';
 %%% Initialize the data structure of the tree
-is_prev_return = false; %%% Flag used to know if the previous action was to call a function or to return from one
+is_prev_return = false; %%% Flag used to know if the previous action was to go deeper in
 tree = {};
 %treeNode = struct('name', 'init', 'parent', 'init','child', {}, 'times_called',0, 'index',1); %% Parent contains the index of the parent in the tree array. Child contains the index of the child in the tree array
 treeNode.name = 'ROOT';
@@ -32,7 +32,7 @@ treeNode.parent = [];
 treeNode.child = [];
 treeNode.times_called = 1;
 treeNode.index = 1;
-treeNode.stackbottom = false;
+treeNode.stackbottom = false
 treeNode.stack_shows = 0; %%% Only the not that is a stack bottom should have this different than 0;
 tree{1} = treeNode;
 already_child = false; %% initializes the variable that checks if a node already has the presented child
@@ -45,7 +45,7 @@ for i = 1:length(tline)-1
     remain = char(remain);
     remain = strtrim(remain); %% Take off the white space that is in the begining
     if ~isempty(strfind( aux, 'CALL')) %% there is the word CALL in the line
-        is_prev_return = false;
+        
         %%%% if it is the root
         if node_index == 2
             
@@ -106,15 +106,11 @@ for i = 1:length(tline)-1
         end
         
     elseif ~isempty(strfind( aux, 'RETURN')) %% there is the word RETURN in the line
-        
         if ~isempty(treeNode.parent) %% if it is empty it is the root
-            if ~is_prev_return
-                tree{treeNode.index}.stackbottom = true; % mark as the bottom of a stack
-                var = tree{treeNode.index}.stack_shows;
-                var = var +1;
-                tree{treeNode.index}.stack_shows = var; % increments the number of times the stack appeared
-                is_prev_return = true; % updates the flag to true
-            end
+            tree{treeNode.index}.stackbottom = true;
+            var = tree{treeNode.index}.stack_shows;
+            var = var +1;
+            tree{treeNode.index}.stack_shows = var;
             treeNode = tree{treeNode.parent};
         end
     end
