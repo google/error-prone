@@ -6,3 +6,4 @@
 *.iml
 .java-version
 .idea
+core/instrument/*.class
