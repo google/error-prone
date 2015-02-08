@@ -10,10 +10,10 @@ To use this functionality, there are two basic commands:
      Run all tests in the package, saving all results to disk.
 
 ### Authors:
-Alan Litteneker
-Justin Morgan
-Sam Tarin
-Pedro Perez
+Alan Litteneker  
+Justin Morgan  
+Sam Tarin  
+Pedro Perez  
 
 ---
 
