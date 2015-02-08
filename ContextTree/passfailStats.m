@@ -1,4 +1,5 @@
-%%%Author: Pedro Borges
+%%  Author: Pedro Borges
+%%%
 %%%Receives a vector of structure of the type stacks_stats with previous
 %%% stats, a vector of stacks and if the test was a pass or fail. Returns
 %%% the updated stacks_stats vector with the correct number of pass and

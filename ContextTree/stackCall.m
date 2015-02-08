@@ -1,4 +1,9 @@
+%% Author: Pedro Borges
+
 %%%% Uses a tree and forms the stacks of calls from it.
+%%%% receives a stack, a node and a tree of method calls. Returns all the
+%%%% resulting stacks. In order to call this function the first time, you
+%%%% should pass an empty stack element.
 
 function [stacks] = stackCall(stack, node, Calltree)
 
