@@ -5,9 +5,9 @@ the build process for which has been reconfigured to instrument each method, and
 
 To use this functionality, there are two basic commands:  
 1) mvn -Dmaven.test.skip=true package  
-     Compile and instrument all project files, without running tests.  
+&nbsp;&nbsp;&nbsp;&nbsp;Compile and instrument all project files, without running tests.  
 2) ./run-tests.sh  
-Run all tests in the package, saving all results to disk.  
+&nbsp;&nbsp;&nbsp;&nbsp;Run all tests in the package, saving all results to disk.  
 
 ### Authors:
 Alan Litteneker  
