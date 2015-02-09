@@ -7,7 +7,7 @@ layout: master
 
 We're used to getting help from the compiler, but it doesn't do much beyond static type checking. Using Error Prone to augment the compiler's type analysis, you can catch more mistakes before they cost you time, or end up as bugs in production. We use Error Prone in Google's Java build system to eliminate classes of serious bugs from entering our code, and we've open-sourced it, so you can too!
 
-__error prone ...__
+__Error Prone ...__
 
 * __hooks into your standard build, so all developers run it without thinking__
 * __tells you about mistakes immediately after they're made__
