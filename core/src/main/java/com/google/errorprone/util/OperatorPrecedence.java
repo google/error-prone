@@ -22,21 +22,20 @@ import com.sun.source.tree.Tree;
  * The precedence for an operator kind in the {@link com.sun.source.tree} API.
  * 
  * As documented at: http://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html
- * 
- * Here logical and bitwise and and or are represented as being the same precedence. This isn't
- * true, but the javac AST doesn't distinguish between the different kinds of and and or.
  */
 public enum OperatorPrecedence {
-  POSTFIX(11),
-  UNARY(10),
-  MULTIPLICATIVE(9),
-  ADDITIVE(8),
-  SHIFT(7),
-  RELATIONAL(6),
-  EQUALITY(5),
-  LOGICAL_OR_BITWISE_AND(4),
-  EXCLUSIVE_OR(3),
-  LOGICAL_OR_BITWISE_INCLUSIVE_OR(2),
+  POSTFIX(13),
+  UNARY(12),
+  MULTIPLICATIVE(11),
+  ADDITIVE(10),
+  SHIFT(9),
+  RELATIONAL(8),
+  EQUALITY(7),
+  AND(6),
+  XOR(5),
+  OR(4),
+  CONDITIONAL_AND(3),
+  CONDITIONAL_OR(2),
   TERNARY(1),
   ASSIGNMENT(0);
   
@@ -79,11 +78,15 @@ public enum OperatorPrecedence {
       case NOT_EQUAL_TO:
         return OperatorPrecedence.EQUALITY;
       case AND:
-        return OperatorPrecedence.LOGICAL_OR_BITWISE_AND;
+        return OperatorPrecedence.AND;
       case XOR:
-        return OperatorPrecedence.EXCLUSIVE_OR;
+        return OperatorPrecedence.XOR;
       case OR:
-        return OperatorPrecedence.LOGICAL_OR_BITWISE_INCLUSIVE_OR; 
+        return OperatorPrecedence.OR;
+      case CONDITIONAL_AND:
+        return OperatorPrecedence.CONDITIONAL_AND;
+      case CONDITIONAL_OR:
+        return OperatorPrecedence.CONDITIONAL_OR;
       case ASSIGNMENT:
       case MULTIPLY_ASSIGNMENT:
       case DIVIDE_ASSIGNMENT:

@@ -145,4 +145,57 @@ public class NarrowingCompoundAssignmentTest {
             "}")
         );
   }
+
+  @Test
+  public void testPreservePrecedenceExhaustive() throws Exception {
+    testPrecedence("*", "*", true);
+    testPrecedence("*", "+", false);
+    testPrecedence("*", "<<", false);
+    testPrecedence("*", "&", false);
+    testPrecedence("*", "|", false);
+
+    testPrecedence("+", "*", true);
+    testPrecedence("+", "+", true);
+    testPrecedence("+", "<<", false);
+    testPrecedence("+", "&", false);
+    testPrecedence("+", "|", false);
+
+    testPrecedence("<<", "*", false);
+    testPrecedence("<<", "+", false);
+    testPrecedence("<<", "<<", true);
+    testPrecedence("<<", "&", true);
+    testPrecedence("<<", "|", true);
+
+    testPrecedence("&", "*", false);
+    testPrecedence("&", "+", false);
+    testPrecedence("&", "<<", false);
+    testPrecedence("&", "&", true);
+    testPrecedence("&", "|", true);
+
+    testPrecedence("|", "*", false);
+    testPrecedence("|", "+", false);
+    testPrecedence("|", "<<", false);
+    testPrecedence("|", "&", false);
+    testPrecedence("|", "|", false);
+  }
+
+  private void testPrecedence(String opA, String opB, boolean parens) throws Exception {
+    String rhs = String.format("1 %s 2", opB);
+    if (parens) {
+      rhs = "(" + rhs + ")";
+    }
+    String expect = String.format("s = (short) (s %s ", opA, rhs);
+
+    String compoundAssignment = String.format("    s %s= 1 %s 2;", opA, opB);
+
+    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager().forSourceLines(
+        "Test.java",
+        "class Test {",
+        "  void m() {",
+        "    short s = 0;",
+        "    // BUG: Diagnostic contains: " + expect,
+        compoundAssignment,
+        "  }",
+        "}"));
+  }
 }
