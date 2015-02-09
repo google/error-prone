@@ -1,16 +1,16 @@
 ---
-title: Customizing error-prone with command-line flags
+title: Customizing Error Prone with command-line flags
 layout: master
 ---
-Customizing error-prone with command-line flags
+Customizing Error Prone with command-line flags
 ===============================================
 
-error-prone lets the user enable and disable specific checks as well as
+Error Prone lets the user enable and disable specific checks as well as
 override their built-in severity levels (warning vs. error) by passing options
-to the error-prone compiler invocation.  See your build system's
+to the Error Prone compiler invocation.  See your build system's
 documentation for how to pass options to the Java compiler (usually javac).
 
-A valid error-prone command-line option looks like:
+A valid Error Prone command-line option looks like:
 
 {% highlight bash %}
 -Xep:<checkName>[:severity]
@@ -30,9 +30,9 @@ Examples of usage follow:
 -Xep:StringEquality:OFF -Xep:StringEquality  [turns on StringEquality check]
 {% endhighlight %}
 
-We will continue to support the old-style error-prone disabling flags for a
-short transition period.  Those flags have the following syntax:
-{% highlight bash %}
--Xepdisable:<checkName>[,<checkName>...]
-{% endhighlight %}
+If you pass a flag that refers to an unknown check name, by default Error
+Prone will throw an error. You can allow the use of unknown check names by
+passing the `-XepIgnoreUnknownCheckNames` flag.
 
+We no longer support the old-style Error Prone disabling flags that used the
+`-Xepdisable:<checkName>` syntax.
