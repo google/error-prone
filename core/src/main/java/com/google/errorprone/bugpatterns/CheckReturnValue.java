@@ -54,9 +54,9 @@ import javax.lang.model.element.ElementKind;
         + "the result is not used.\n\n"
         + "@CheckReturnValue may be applied to a class or package to indicate that all methods "
         + "in that class or package must have their return values checked.  For convenience, "
-        + "we provide an annotation, @CanIgnoreReturnValue, to exempt specific methods from "
-        + "this behavior.  @CanIgnoreReturnValue is available from the Error Prone annotations "
-        + "package, `com.google.errorprone.annotations`.",
+        + "we provide an annotation, @CanIgnoreReturnValue, to exempt specific methods or classes "
+        + "from this behavior.  @CanIgnoreReturnValue is available from the Error Prone "
+        + "annotations package, `com.google.errorprone.annotations`.",
     category = JDK, severity = ERROR, maturity = MATURE)
 public class CheckReturnValue extends AbstractReturnValueIgnored
     implements MethodTreeMatcher, ClassTreeMatcher {
