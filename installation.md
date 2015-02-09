@@ -1,14 +1,14 @@
 ---
-title: Installing error-prone
+title: Installing Error Prone
 layout: master
 ---
 
-Our goal is to make it simple to add error-prone checks to your existing Java compilation.
+Our goal is to make it simple to add Error Prone checks to your existing Java compilation.
 Please join our [mailing list](http://groups.google.com/group/error-prone-announce) to know when a new version is released!
 
 # Ant
 
-1. Add error-prone to the compile-time classpath. There are two ways:
+1. Add Error Prone to the compile-time classpath. There are two ways:
   * Include a `compilerclasspath` element in your `<javac />` task definition
   * Modify your Ant installation by copying the `error_prone_ant.jar` to your `${user.home}/.ant/lib` or `ANT_HOME/lib` directory.
 2. Modify your `<javac>` tasks to include this attribute: `compiler="com.google.errorprone.ErrorProneAntCompilerAdapter"`
@@ -69,7 +69,7 @@ Edit your `pom.xml` file to add settings to the maven-compiler-plugin:
   [...]
     <plugins>
     [...]
-      <!-- Turn on error-prone -->
+      <!-- Turn on Error Prone -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -133,10 +133,10 @@ examples/maven$ mvn compile
 
 To add the plugin, start the IDE and find the Plugins dialog. Browse Repositories, choose Category: Build, and find the Error-prone plugin. Right-click and choose "Download and install". The IDE will restart after you've exited these dialogs.
 
-To enable error-prone, choose "Settings | Compiler | Java Compiler | Use compiler: Javac with error-prone" and also make sure "Settings | Compiler | Use external build" is NOT selected.
+To enable Error Prone, choose "Settings | Compiler | Java Compiler | Use compiler: Javac with error-prone" and also make sure "Settings | Compiler | Use external build" is NOT selected.
 
 # Eclipse
-Ideally, you should find out about failed error-prone checks as you code in eclipse, thanks to the continuous compilation by ECJ (eclipse compiler for Java). But this is an architectural challenge, as error-prone currently relies heavily on the `com.sun.*` APIs for accessing the AST and symbol table.
+Ideally, you should find out about failed Error Prone checks as you code in eclipse, thanks to the continuous compilation by ECJ (eclipse compiler for Java). But this is an architectural challenge, as Error Prone currently relies heavily on the `com.sun.*` APIs for accessing the AST and symbol table.
 
 For now, Eclipse users should use the Findbugs eclipse plugin instead, as it catches many of the same issues.
 
@@ -150,6 +150,6 @@ Error-prone is implemented as a compiler hook, using an internal mechanism in ja
 
 Find the spot in your build system where javac's main method is called. This is assuming you call javac in-process, rather than shell'ing out to the javac executable on the machine (which would be pretty lame since it's hard to know where that's located). 
 
-First, add error-prone's core library to the right classpath. It will need to be visible to the classloader which currently locates the javac Main class. Then replace the call of `javac.main.Main.main()` with the error-prone compiler:
+First, add Error Prone's core library to the right classpath. It will need to be visible to the classloader which currently locates the javac Main class. Then replace the call of `javac.main.Main.main()` with the Error Prone compiler:
 
 `return new ErrorProneCompiler.Builder().build().compile(args) == 0`

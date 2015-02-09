@@ -3,11 +3,11 @@ title: Criteria for new checks
 layout: master
 ---
 
-error-prone gives us a powerful tool to disallow certain patterns from entering our Java code. We must be careful how we use it so that we benefit users without creating busywork for them. 
+Error Prone gives us a powerful tool to disallow certain patterns from entering our Java code. We must be careful how we use it so that we benefit users without creating busywork for them. 
 
 # Criteria for admitting new Severity.ERROR checks that are enabled by default
 
-An error-prone bug pattern (error) should have the following properties:
+An Error Prone bug pattern (error) should have the following properties:
 
 1. *The bug should be easy to understand.*  The problem should be obvious once the compiler points it out.  
 1. *The fix should be easy to make.* For example, “Swap the order of these arguments,” or “Delete this semicolon,” not “Introduce a new subclass and override methods A, B, and C.”
@@ -15,7 +15,7 @@ An error-prone bug pattern (error) should have the following properties:
 1. *The bug should represent a correctness issue.* We want to fix impactful bugs, not enforce best practices or style rules.  We shouldn’t nitpick a user’s code.
 1. *The bug should occur with a small but noticeable frequency.*  There is no point in detecting bug patterns that never actually occur, but if a bug pattern occurs too frequently, it’s likely that it’s not causing any real problems.  We don’t want to overwhelm people with too many errors on apparently “correct” code.
 
-The bottom line is that, when a user sees one of our errors, she should think, “I’m glad error-prone caught that for me.”
+The bottom line is that, when a user sees one of our errors, she should think, “I’m glad Error Prone caught that for me.”
 
 # Examples
 
