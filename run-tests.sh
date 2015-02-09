@@ -14,7 +14,7 @@ echo "Executing: $line"
 
 mvn -Dtest=$line -DfailIfNoTests=false surefire:test 2> $tmpcct 1> $tmpresult
 
-result=$( grep "FAILED" $tmpresult )
+result=$( grep "FAILURE" $tmpresult )
 if [ -z $result ]
 then
 
