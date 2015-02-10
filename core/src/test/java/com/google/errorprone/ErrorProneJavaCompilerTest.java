@@ -79,13 +79,13 @@ public class ErrorProneJavaCompilerTest {
     ErrorProneJavaCompiler compiler = new ErrorProneJavaCompiler();
 
     // javac options should be passed through
-    assertThat(compiler.isSupportedOption("-source")).is(1);
+    assertThat(compiler.isSupportedOption("-source")).isEqualTo(1);
 
     // error-prone options should be handled
-    assertThat(compiler.isSupportedOption("-Xep:")).is(0);
+    assertThat(compiler.isSupportedOption("-Xep:")).isEqualTo(0);
 
     // old-style error-prone options are not supported
-    assertThat(compiler.isSupportedOption("-Xepdisable:")).is(-1);
+    assertThat(compiler.isSupportedOption("-Xepdisable:")).isEqualTo(-1);
   }
 
   interface JavaFileObjectDiagnosticListener extends DiagnosticListener<JavaFileObject> {}
