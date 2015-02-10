@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.GUAVA;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.matchers.Matchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -50,11 +51,10 @@ public class PreconditionsInvalidPlaceholder extends BugChecker
     implements MethodInvocationTreeMatcher {
 
   private static final
-      Matcher<MethodInvocationTree> PRECONDITIONS_CHECK = Matchers.methodSelect(
-          Matchers.<ExpressionTree>anyOf(
-            Matchers.staticMethod("com.google.common.base.Preconditions", "checkArgument"),
-            Matchers.staticMethod("com.google.common.base.Preconditions", "checkNotNull"),
-            Matchers.staticMethod("com.google.common.base.Preconditions", "checkState")));
+      Matcher<ExpressionTree> PRECONDITIONS_CHECK = Matchers.<ExpressionTree>anyOf(
+          staticMethod().onClass("com.google.common.base.Preconditions").named("checkArgument"),
+          staticMethod().onClass("com.google.common.base.Preconditions").named("checkNotNull"),
+          staticMethod().onClass("com.google.common.base.Preconditions").named("checkState"));
 
   private static int expectedArguments(String formatString) {
     int count = 0;

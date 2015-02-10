@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Matchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -53,7 +54,7 @@ import javax.lang.model.type.TypeKind;
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
 public class ArraysAsListPrimitiveArray extends BugChecker implements MethodInvocationTreeMatcher {
   private static final Matcher<MethodInvocationTree> ARRAYS_AS_LIST_SINGLE_ARRAY = Matchers.allOf(
-      Matchers.methodSelect(Matchers.staticMethod("java.util.Arrays", "asList")),
+      staticMethod().onClass("java.util.Arrays").named("asList"),
       Matchers.argumentCount(1),
       Matchers.argument(1, Matchers.<ExpressionTree>isArrayType()));
 

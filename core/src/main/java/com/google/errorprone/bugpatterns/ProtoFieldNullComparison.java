@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.ONE_OFF;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Matchers.instanceMethod;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -51,8 +52,8 @@ public class ProtoFieldNullComparison extends BugChecker implements BinaryTreeMa
 
   private static final String PROTO_SUPER_CLASS = "com.google.protobuf.GeneratedMessage";
 
-  private static final Matcher<MethodInvocationTree> protoMessageReceiverMatcher =
-      Matchers.methodSelect(Matchers.methodReceiver(Matchers.isSubtypeOf(PROTO_SUPER_CLASS)));
+  private static final Matcher<ExpressionTree> protoMessageReceiverMatcher =
+      instanceMethod().onDescendantOf(PROTO_SUPER_CLASS);
 
   private static final String LIST_INTERFACE = "java.util.List";
 

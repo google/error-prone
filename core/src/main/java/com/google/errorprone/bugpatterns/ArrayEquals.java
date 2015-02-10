@@ -24,8 +24,8 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.argument;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.predicates.TypePredicates.isArray;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -59,7 +59,7 @@ public class ArrayEquals extends BugChecker implements MethodInvocationTreeMatch
    * Matches when the equals instance method is used to compare two arrays.
    */
   private static final Matcher<MethodInvocationTree> instanceEqualsMatcher = Matchers.allOf(
-      methodSelect(instanceMethod(Matchers.<ExpressionTree>isArrayType(), "equals")),
+      instanceMethod().onClass(isArray()).named("equals"),
       argument(0, Matchers.<ExpressionTree>isArrayType()));
 
   /**
@@ -68,8 +68,8 @@ public class ArrayEquals extends BugChecker implements MethodInvocationTreeMatch
    */
   private static final Matcher<MethodInvocationTree> staticEqualsMatcher = allOf(
       anyOf(
-        methodSelect(staticMethod("com.google.common.base.Objects", "equal")),
-        methodSelect(staticMethod("java.util.Objects", "equals"))),
+        staticMethod().onClass("com.google.common.base.Objects").named("equal"),
+        staticMethod().onClass("java.util.Objects").named("equals")),
       argument(0, Matchers.<ExpressionTree>isArrayType()),
       argument(1, Matchers.<ExpressionTree>isArrayType()));
 

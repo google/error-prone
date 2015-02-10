@@ -19,12 +19,10 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.isArrayType;
-import static com.google.errorprone.matchers.Matchers.isDescendantOfMethod;
 import static com.google.errorprone.matchers.Matchers.isPrimitiveArrayType;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.collect.ImmutableMap;
@@ -86,19 +84,18 @@ import javax.lang.model.type.TypeKind;
 
 public class MisusedFormattingLogger extends BugChecker implements MethodInvocationTreeMatcher {
 
-  private static final Matcher<MethodInvocationTree> isFormattingLogger = anyOf(
-      methodSelect(Matchers.methodReceiver(
-          Matchers.isSubtypeOf("com.google.common.logging.FormattingLogger"))),
-      methodSelect(Matchers.methodReceiver(
-          Matchers.isSubtypeOf("com.google.gdata.util.common.logging.FormattingLogger"))));
+  private static final Matcher<ExpressionTree> isFormattingLogger =
+      Matchers.<ExpressionTree>anyOf(
+          instanceMethod().onDescendantOf("com.google.common.logging.FormattingLogger"),
+          instanceMethod().onDescendantOf("com.google.gdata.util.common.logging.FormattingLogger"));
 
   private static final Matcher<Tree> isThrowable =
       isSubtypeOf("java.lang.Throwable");
 
-  private static final Matcher<MethodInvocationTree> isThrowableMessage =
-      methodSelect(Matchers.<ExpressionTree>anyOf(
-          isDescendantOfMethod("java.lang.Throwable", "getMessage()"),
-          isDescendantOfMethod("java.lang.Throwable", "toString()")));
+  private static final Matcher<ExpressionTree> isThrowableMessage =
+      Matchers.<ExpressionTree>anyOf(
+          instanceMethod().onDescendantOf("java.lang.Throwable").named("getMessage"),
+          instanceMethod().onDescendantOf("java.lang.Throwable").named("toString"));
 
   /**
    * A regex pattern for matching logging methods in FormattingLogger.

@@ -20,7 +20,7 @@ import static com.google.errorprone.BugPattern.Category.GUAVA;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
+import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.receiverSameAsArgument;
 import static com.google.errorprone.matchers.Matchers.sameArgument;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
@@ -32,7 +32,6 @@ import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.ExpressionTree;
@@ -66,7 +65,7 @@ public class SelfEquals extends BugChecker implements MethodInvocationTreeMatche
    */
   @SuppressWarnings({"unchecked"})
   private static final Matcher<MethodInvocationTree> guavaMatcher = allOf(
-      methodSelect(staticMethod("com.google.common.base.Objects", "equal")),
+      staticMethod().onClass("com.google.common.base.Objects").named("equal"),
       sameArgument(0, 1));
 
   /**
@@ -79,7 +78,7 @@ public class SelfEquals extends BugChecker implements MethodInvocationTreeMatche
    * don't really mean equals.
    */
   private static final Matcher<MethodInvocationTree> equalsMatcher = allOf(
-      methodSelect(Matchers.instanceMethod(Matchers.<ExpressionTree>anything(), "equals")),
+      instanceMethod().anyClass().named("equals"),
       receiverSameAsArgument(0));
 
   /**

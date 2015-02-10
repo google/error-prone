@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JUNIT;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.expressionMethodSelect;
 import static com.google.errorprone.matchers.Matchers.isSameType;
 import static com.sun.source.tree.Tree.Kind.EMPTY_STATEMENT;
 
@@ -38,6 +37,7 @@ import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
@@ -98,9 +98,12 @@ public class TryFailThrowable extends BugChecker implements TryTreeMatcher {
 
   private static final Matcher<VariableTree> javaLangThrowable = isSameType("java.lang.Throwable");
 
-  private static final Matcher<ExpressionTree> failOrAssert = expressionMethodSelect(
+  private static final Matcher<ExpressionTree> failOrAssert =
       new Matcher<ExpressionTree>() {
         @Override public boolean matches(ExpressionTree item, VisitorState state) {
+          if (item.getKind() != Kind.METHOD_INVOCATION) {
+            return false;
+          }
           Symbol sym = ASTHelpers.getSymbol(item);
           if (!(sym instanceof MethodSymbol)) {
             throw new IllegalArgumentException("not a method call");
@@ -117,7 +120,7 @@ public class TryFailThrowable extends BugChecker implements TryTreeMatcher {
                   || className.equals("junit.framework.TestCase")
                   || className.endsWith("MoreAsserts"));
         }
-      });
+      };
 
   @Override
   public Description matchTry(TryTree tree, VisitorState state) {

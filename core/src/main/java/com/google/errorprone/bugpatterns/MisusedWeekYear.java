@@ -21,10 +21,7 @@ import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
-import static com.google.errorprone.matchers.Matchers.isSameType;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
 
-import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -66,17 +63,16 @@ public class MisusedWeekYear extends BugChecker
 
   private static final Matcher<NewClassTree> simpleDateFormatConstructorMatcher =
       Matchers.<NewClassTree>anyOf(
-          constructor("java.text.SimpleDateFormat",
-              ImmutableList.of("java.lang.String")),
-          constructor("java.text.SimpleDateFormat",
-              ImmutableList.of("java.lang.String", "java.text.DateFormatSymbols")),
-          constructor("java.text.SimpleDateFormat",
-              ImmutableList.of("java.lang.String", "java.util.Locale")));
+          constructor().forClass("java.text.SimpleDateFormat").withParameters("java.lang.String"),
+          constructor().forClass("java.text.SimpleDateFormat")
+              .withParameters("java.lang.String", "java.text.DateFormatSymbols"),
+          constructor().forClass("java.text.SimpleDateFormat")
+              .withParameters("java.lang.String", "java.util.Locale"));
 
-  private static final Matcher<MethodInvocationTree> applyPatternMatcher =
-      methodSelect(Matchers.<ExpressionTree>anyOf(
-          instanceMethod(isSameType("java.text.SimpleDateFormat"), "applyPattern"),
-          instanceMethod(isSameType("java.text.SimpleDateFormat"), "applyLocalizedPattern")));
+  private static final Matcher<ExpressionTree> applyPatternMatcher =
+      Matchers.<ExpressionTree>anyOf(
+          instanceMethod().onExactClass("java.text.SimpleDateFormat").named("applyPattern"),
+          instanceMethod().onExactClass("java.text.SimpleDateFormat").named("applyLocalizedPattern"));
 
   /**
    * Match uses of SimpleDateFormat.applyPattern and SimpleDateFormat.applyLocalizedPattern in

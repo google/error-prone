@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.sun.source.tree.Tree.Kind.CLASS;
 import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
@@ -112,9 +111,10 @@ public class SelfAssignment extends BugChecker
    * TODO(user): Also match calls to Java 7's Objects.requireNonNull() method.
    */
   private ExpressionTree stripCheckNotNull(ExpressionTree expression, VisitorState state) {
-    if (expression != null && expression.getKind() == METHOD_INVOCATION && methodSelect(
-        staticMethod("com.google.common.base.Preconditions", "checkNotNull"))
-        .matches((MethodInvocationTree) expression, state)) {
+    if (expression != null
+        && expression.getKind() == METHOD_INVOCATION
+        && staticMethod().onClass("com.google.common.base.Preconditions").named("checkNotNull")
+            .matches(expression, state)) {
       return ((MethodInvocationTree) expression).getArguments().get(0);
     }
     return expression;

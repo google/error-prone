@@ -22,8 +22,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.argument;
-import static com.google.errorprone.matchers.Matchers.isDescendantOfMethod;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
+import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.suppliers.Suppliers.genericTypeOfType;
 import static com.google.errorprone.suppliers.Suppliers.receiverType;
 
@@ -51,12 +50,12 @@ import com.sun.source.tree.MethodInvocationTree;
     category = JDK, maturity = EXPERIMENTAL, severity = ERROR)
 public class CollectionIncompatibleType extends BugChecker implements MethodInvocationTreeMatcher {
 
-  private static final Matcher<MethodInvocationTree> isGenericCollectionsMethod =
-      methodSelect(Matchers.<ExpressionTree>anyOf(
-          isDescendantOfMethod("java.util.Collection", "contains(java.lang.Object)"),
-          isDescendantOfMethod("java.util.Collection", "remove(java.lang.Object)"),
-          isDescendantOfMethod("java.util.List", "indexOf(java.lang.Object)"),
-          isDescendantOfMethod("java.util.List", "lastIndexOf(java.lang.Object)")));
+  private static final Matcher<ExpressionTree> isGenericCollectionsMethod =
+      Matchers.<ExpressionTree>anyOf(
+          instanceMethod().onDescendantOf("java.util.Collection").withSignature("contains(java.lang.Object)"),
+          instanceMethod().onDescendantOf("java.util.Collection").withSignature("remove(java.lang.Object)"),
+          instanceMethod().onDescendantOf("java.util.List").withSignature("indexOf(java.lang.Object)"),
+          instanceMethod().onDescendantOf("java.util.List").withSignature("lastIndexOf(java.lang.Object)"));
 
   private static Matcher<MethodInvocationTree> argCastableToMethodReceiverTypeParam(int argNumber,
       int typeParamNumber) {
@@ -68,12 +67,12 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
       allOf(isGenericCollectionsMethod, argCastableToMethodReceiverTypeParam(0, 0)),
       allOf(
           anyOf(
-            isDescendantOfMethod("java.util.Map", "get(java.lang.Object)"),
-            isDescendantOfMethod("java.util.Map", "containsKey(java.lang.Object)"),
-            isDescendantOfMethod("java.util.Map", "remove(java.lang.Object)")),
+            instanceMethod().onDescendantOf("java.util.Map").withSignature("get(java.lang.Object)"),
+            instanceMethod().onDescendantOf("java.util.Map").withSignature("containsKey(java.lang.Object)"),
+            instanceMethod().onDescendantOf("java.util.Map").withSignature("remove(java.lang.Object)")),
           argCastableToMethodReceiverTypeParam(0, 0)),
       allOf(
-          isDescendantOfMethod("java.util.Map", "containsValue(java.lang.Object)"),
+          instanceMethod().onDescendantOf("java.util.Map").withSignature("containsValue(java.lang.Object)"),
           argCastableToMethodReceiverTypeParam(0, 1))
   );
 

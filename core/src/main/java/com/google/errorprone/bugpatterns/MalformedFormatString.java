@@ -20,8 +20,8 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.isDescendantOfMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
@@ -69,26 +69,32 @@ public class MalformedFormatString extends BugChecker implements MethodInvocatio
       "Too many arguments for printf-like format string: expected %d, got %d";
 
   private static final Matcher<ExpressionTree> isPrintfLike = anyOf(
-    isDescendantOfMethod("java.io.PrintStream", "format(java.lang.String,java.lang.Object...)"),
-    isDescendantOfMethod("java.io.PrintStream", "printf(java.lang.String,java.lang.Object...)"),
-    isDescendantOfMethod("java.io.PrintWriter", "format(java.lang.String,java.lang.Object...)"),
-    isDescendantOfMethod("java.io.PrintWriter", "printf(java.lang.String,java.lang.Object...)"),
-    isDescendantOfMethod("java.util.Formatter", "format(java.lang.String,java.lang.Object...)"),
-    staticMethod("java.lang.String", "format(java.lang.String,java.lang.Object...)")
+    instanceMethod().onDescendantOf("java.io.PrintStream")
+        .withSignature("format(java.lang.String,java.lang.Object...)"),
+    instanceMethod().onDescendantOf("java.io.PrintStream")
+        .withSignature("printf(java.lang.String,java.lang.Object...)"),
+    instanceMethod().onDescendantOf("java.io.PrintWriter")
+        .withSignature("format(java.lang.String,java.lang.Object...)"),
+    instanceMethod().onDescendantOf("java.io.PrintWriter")
+        .withSignature("printf(java.lang.String,java.lang.Object...)"),
+    instanceMethod().onDescendantOf("java.util.Formatter")
+        .withSignature("format(java.lang.String,java.lang.Object...)"),
+    staticMethod().onClass("java.lang.String")
+        .withSignature("format(java.lang.String,java.lang.Object...)")
     );
   private static final Matcher<ExpressionTree> isPrintfLikeWithLocale = anyOf(
-    isDescendantOfMethod("java.io.PrintStream",
-      "format(java.util.Locale,java.lang.String,java.lang.Object...)"),
-    isDescendantOfMethod("java.io.PrintStream",
-        "printf(java.util.Locale,java.lang.String,java.lang.Object...)"),
-    isDescendantOfMethod("java.io.PrintWriter",
-        "printf(java.util.Locale,java.lang.String,java.lang.Object...)"),
-    isDescendantOfMethod("java.io.PrintWriter",
-      "format(java.util.Locale,java.lang.String,java.lang.Object...)"),
-    isDescendantOfMethod("java.util.Formatter",
-        "format(java.util.Locale,java.lang.String,java.lang.Object...)"),
-    staticMethod("java.lang.String",
-        "format(java.util.Locale,java.lang.String,java.lang.Object...)")
+    instanceMethod().onDescendantOf("java.io.PrintStream")
+        .withSignature("format(java.util.Locale,java.lang.String,java.lang.Object...)"),
+    instanceMethod().onDescendantOf("java.io.PrintStream")
+        .withSignature("printf(java.util.Locale,java.lang.String,java.lang.Object...)"),
+    instanceMethod().onDescendantOf("java.io.PrintWriter")
+        .withSignature("printf(java.util.Locale,java.lang.String,java.lang.Object...)"),
+    instanceMethod().onDescendantOf("java.io.PrintWriter")
+        .withSignature("format(java.util.Locale,java.lang.String,java.lang.Object...)"),
+    instanceMethod().onDescendantOf("java.util.Formatter")
+        .withSignature("format(java.util.Locale,java.lang.String,java.lang.Object...)"),
+    staticMethod().onClass("java.lang.String")
+        .withSignature("format(java.util.Locale,java.lang.String,java.lang.Object...)")
     );
   private static final ImmutableMap<TypeKind, String> BOXED_TYPE_NAMES;
 

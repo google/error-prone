@@ -58,7 +58,7 @@ public class StaticAccessedFromInstance extends BugChecker implements MemberSele
 
   private static final Matcher<ExpressionTree> staticAccessedFromInstanceMatcher = allOf(
       anyOf(
-          staticMethod("*", "*"),
+          staticMethod(),
           staticFieldAccess()),
       kindIs(Kind.MEMBER_SELECT),
       selectedIsInstance());

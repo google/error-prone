@@ -24,7 +24,6 @@ import static com.google.errorprone.matchers.Matchers.hasArgumentWithValue;
 import static com.google.errorprone.matchers.Matchers.hasModifier;
 import static com.google.errorprone.matchers.Matchers.isSameType;
 import static com.google.errorprone.matchers.Matchers.isType;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.matchers.Matchers.variableType;
 
@@ -76,7 +75,7 @@ public class CannotMockFinalClass extends BugChecker implements MethodInvocation
       enclosingClassIsJunit4Test);
 
   private static final Matcher<MethodInvocationTree> creationOfMockForFinalClass = allOf(
-      methodSelect(staticMethod("org.mockito.Mockito", "mock")),
+      staticMethod().onClass("org.mockito.Mockito").named("mock"),
       argument(0, classLiteral(hasModifier(Modifier.FINAL))),
       enclosingClassIsJunit4Test);
 

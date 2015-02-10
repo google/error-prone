@@ -20,10 +20,8 @@ import static com.google.errorprone.BugPattern.Category.ONE_OFF;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.expressionMethodSelect;
+import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.isSameType;
-import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
-import static com.google.errorprone.matchers.Matchers.methodReceiver;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -48,7 +46,7 @@ public class ProtoStringFieldReferenceEquality extends BugChecker implements Bin
   private static final String PROTO_SUPER_CLASS = "com.google.protobuf.GeneratedMessage";
 
   private static final Matcher<ExpressionTree> PROTO_STRING_METHOD = allOf(
-      expressionMethodSelect(methodReceiver(isSubtypeOf(PROTO_SUPER_CLASS))),
+      instanceMethod().onDescendantOf(PROTO_SUPER_CLASS),
       isSameType("java.lang.String"));
 
   @Override

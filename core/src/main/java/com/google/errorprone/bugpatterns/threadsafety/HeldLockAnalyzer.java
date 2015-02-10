@@ -16,9 +16,7 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
-import static com.google.errorprone.matchers.Matchers.expressionMethodSelect;
-import static com.google.errorprone.matchers.Matchers.isDescendantOfMethod;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
+import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
 import com.google.common.base.Optional;
 import com.google.errorprone.VisitorState;
@@ -202,7 +200,7 @@ public class HeldLockAnalyzer {
   private static class LockOperationFinder extends TreeScanner<Void, Void> {
 
     static Collection<GuardedByExpression> find(
-        Tree tree, VisitorState state, Matcher<MethodInvocationTree> lockOperationMatcher) {
+        Tree tree, VisitorState state, Matcher<ExpressionTree> lockOperationMatcher) {
       if (tree == null) {
         return Collections.emptyList();
       }
@@ -213,26 +211,25 @@ public class HeldLockAnalyzer {
 
     private static final String READ_WRITE_LOCK_CLASS = "java.util.concurrent.locks.ReadWriteLock";
 
-    private final Matcher<MethodInvocationTree> lockOperationMatcher;
+    private final Matcher<ExpressionTree> lockOperationMatcher;
 
     private static final String UNLOCK_METHOD_ANNOTATION = UnlockMethod.class.getName();
 
     /** Matcher for @UnlockMethod-annotated methods. */
-    private static final Matcher<MethodInvocationTree> UNLOCK_METHOD_MATCHER =
-        methodSelect(Matchers.<ExpressionTree>hasAnnotation(UNLOCK_METHOD_ANNOTATION));
+    private static final Matcher<ExpressionTree> UNLOCK_METHOD_MATCHER =
+        Matchers.<ExpressionTree>hasAnnotation(UNLOCK_METHOD_ANNOTATION);
 
     /** Matcher for ReadWriteLock lock accessors. */
     private static final Matcher<ExpressionTree> READ_WRITE_ACCESSOR_MATCHER =
-        expressionMethodSelect(
-            Matchers.<ExpressionTree>anyOf(
-                isDescendantOfMethod(READ_WRITE_LOCK_CLASS, "readLock()"),
-                isDescendantOfMethod(READ_WRITE_LOCK_CLASS, "writeLock()")));
+        Matchers.<ExpressionTree>anyOf(
+            instanceMethod().onDescendantOf(READ_WRITE_LOCK_CLASS).named("readLock"),
+            instanceMethod().onDescendantOf(READ_WRITE_LOCK_CLASS).named("writeLock"));
 
     private final VisitorState state;
     private final Set<GuardedByExpression> locks = new HashSet<>();
 
     private LockOperationFinder(
-        VisitorState state, Matcher<MethodInvocationTree> lockOperationMatcher) {
+        VisitorState state, Matcher<ExpressionTree> lockOperationMatcher) {
       this.state = state;
       this.lockOperationMatcher = lockOperationMatcher;
     }
@@ -304,10 +301,10 @@ public class HeldLockAnalyzer {
   static class ReleasedLockFinder {
 
     /** Matcher for methods that release lock resources. */
-    private static final Matcher<MethodInvocationTree> UNLOCK_MATCHER = methodSelect(
+    private static final Matcher<ExpressionTree> UNLOCK_MATCHER =
         Matchers.<ExpressionTree>anyOf(
-            isDescendantOfMethod(LOCK_CLASS, "unlock()"),
-            isDescendantOfMethod(MONITOR_CLASS, "leave()")));
+            instanceMethod().onDescendantOf(LOCK_CLASS).named("unlock"),
+            instanceMethod().onDescendantOf(MONITOR_CLASS).named("leave"));
 
     static Collection<GuardedByExpression> find(Tree tree, VisitorState state) {
       return LockOperationFinder.find(tree, state, UNLOCK_MATCHER);
@@ -321,10 +318,10 @@ public class HeldLockAnalyzer {
   static class AcquiredLockFinder {
 
     /** Matcher for methods that acquire lock resources. */
-    private static final Matcher<MethodInvocationTree> LOCK_MATCHER = methodSelect(
+    private static final Matcher<ExpressionTree> LOCK_MATCHER =
         Matchers.<ExpressionTree>anyOf(
-            isDescendantOfMethod(LOCK_CLASS, "lock()"),
-            isDescendantOfMethod(MONITOR_CLASS, "enter()")));
+            instanceMethod().onDescendantOf(LOCK_CLASS).named("lock"),
+            instanceMethod().onDescendantOf(MONITOR_CLASS).named("enter"));
 
     static Collection<GuardedByExpression> find(Tree tree, VisitorState state) {
       return LockOperationFinder.find(tree, state, LOCK_MATCHER);

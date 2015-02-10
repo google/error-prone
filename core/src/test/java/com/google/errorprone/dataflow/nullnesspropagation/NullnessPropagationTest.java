@@ -187,13 +187,16 @@ public class NullnessPropagationTest {
         + "triggerNullnessCheckerOnPrimitive if you want to test the primitive for nullness";
 
     private static final Matcher<ExpressionTree> TRIGGER_CALL_MATCHER = anyOf(
-        staticMethod(NullnessPropagationTest.class.getName(), "triggerNullnessCheckerOnPrimitive"),
-        staticMethod(NullnessPropagationTest.class.getName(), "triggerNullnessCheckerOnBoxed"),
-        staticMethod(
-            NullnessPropagationTest.class.getName(), "triggerNullnessChecker(java.lang.Object)"));
+        staticMethod().onClass(NullnessPropagationTest.class.getName())
+            .named("triggerNullnessCheckerOnPrimitive"),
+        staticMethod().onClass(NullnessPropagationTest.class.getName())
+            .named("triggerNullnessCheckerOnBoxed"),
+        staticMethod().onClass(NullnessPropagationTest.class.getName())
+            .withSignature("triggerNullnessChecker(java.lang.Object)"));
 
     private static final Matcher<ExpressionTree> AMBIGUOUS_CALL_FALLBACK_MATCHER =
-        staticMethod(NullnessPropagationTest.class.getName(), "triggerNullnessChecker");
+        staticMethod().onClass(NullnessPropagationTest.class.getName())
+            .named("triggerNullnessChecker");
 
     @Override
     public Description matchMethodInvocation(

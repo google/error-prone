@@ -23,8 +23,9 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.argument;
 import static com.google.errorprone.matchers.Matchers.argumentCount;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
+import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.predicates.TypePredicates.isArray;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -75,8 +76,8 @@ public class ArrayHashCode extends BugChecker implements MethodInvocationTreeMat
   @SuppressWarnings({"unchecked"})
   private static final Matcher<MethodInvocationTree> varargsHashCodeMethodMatcher = allOf(
       Matchers.anyOf(
-        methodSelect(staticMethod("com.google.common.base.Objects", "hashCode")),
-        methodSelect(staticMethod("java.util.Objects", "hash"))),
+        staticMethod().onClass("com.google.common.base.Objects").named("hashCode"),
+        staticMethod().onClass("java.util.Objects").named("hash")),
       argumentCount(1),
       argument(0, Matchers.<ExpressionTree>isPrimitiveArrayType()));
 
@@ -86,14 +87,14 @@ public class ArrayHashCode extends BugChecker implements MethodInvocationTreeMat
    */
   @SuppressWarnings({"unchecked"})
   private static final Matcher<MethodInvocationTree> jdk7HashCodeMethodMatcher = allOf(
-      methodSelect(staticMethod("java.util.Objects", "hashCode")),
+      staticMethod().onClass("java.util.Objects").named("hashCode"),
       argument(0, Matchers.<ExpressionTree>isArrayType()));
 
   /**
    * Matches calls to the hashCode instance method on an array.
    */
-  private static final Matcher<MethodInvocationTree> instanceHashCodeMethodMatcher = allOf(
-      methodSelect(Matchers.instanceMethod(Matchers.<ExpressionTree>isArrayType(), "hashCode")));
+  private static final Matcher<ExpressionTree> instanceHashCodeMethodMatcher =
+      instanceMethod().onClass(isArray()).named("hashCode");
 
   /**
    * Substitutes Arrays.hashCode() for any of the incorrect hashcode invocation patterns above.

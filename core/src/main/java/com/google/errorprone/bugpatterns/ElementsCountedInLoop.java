@@ -18,9 +18,8 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.isArrayType;
-import static com.google.errorprone.matchers.Matchers.isDescendantOfMethod;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
+import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -71,7 +70,7 @@ public class ElementsCountedInLoop extends BugChecker
     JCExpression whileExpression = ((JCParens) whileLoop.getCondition()).getExpression();
     if (whileExpression instanceof MethodInvocationTree) {
       MethodInvocationTree methodInvocation = (MethodInvocationTree) whileExpression;
-      if (methodSelect(isDescendantOfMethod("java.util.Iterator", "hasNext()")).matches(
+      if (instanceMethod().onDescendantOf("java.util.Iterator").withSignature("hasNext()").matches(
           methodInvocation, state)) {
         IdentifierTree identifier = getIncrementedIdentifer(extractSingleStatement(whileLoop.body));
         if (identifier != null) {

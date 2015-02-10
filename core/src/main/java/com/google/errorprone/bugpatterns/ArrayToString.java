@@ -20,7 +20,7 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
+import static com.google.errorprone.predicates.TypePredicates.isArray;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -29,7 +29,6 @@ import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.ExpressionTree;
@@ -49,16 +48,15 @@ public class ArrayToString extends BugChecker implements MethodInvocationTreeMat
   /**
    * Matches calls to Throwable.getStackTrace().
    */
-  private static final Matcher<MethodInvocationTree> getStackTraceMatcher = methodSelect(
-      instanceMethod(Matchers.<ExpressionTree>isSubtypeOf("java.lang.Throwable"), "getStackTrace"));
+  private static final Matcher<ExpressionTree> getStackTraceMatcher =
+      instanceMethod().onDescendantOf("java.lang.Throwable").named("getStackTrace");
 
   /**
    * Matches calls to a toString instance method in which the receiver is an array type.
    */
   @Override
   public Description matchMethodInvocation(MethodInvocationTree methodTree, VisitorState state) {
-    if (!methodSelect(instanceMethod(Matchers.<ExpressionTree>isArrayType(), "toString"))
-        .matches(methodTree, state)) {
+    if (!instanceMethod().onClass(isArray()).named("toString").matches(methodTree, state)) {
       return Description.NO_MATCH;
     }
 
@@ -72,7 +70,7 @@ public class ArrayToString extends BugChecker implements MethodInvocationTreeMat
 
     ExpressionTree receiverTree = ASTHelpers.getReceiver(methodTree);
     if (receiverTree instanceof MethodInvocationTree &&
-        getStackTraceMatcher.matches((MethodInvocationTree) receiverTree, state)) {
+        getStackTraceMatcher.matches(receiverTree, state)) {
       String throwable = ASTHelpers.getReceiver(receiverTree).toString();
       fix = SuggestedFix.builder()
           .replace(methodTree, "Throwables.getStackTraceAsString(" + throwable + ")")

@@ -21,7 +21,7 @@ import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.argument;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
+import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.parentNode;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 
@@ -58,8 +58,8 @@ public class ProtoFieldPreconditionsCheckNotNull
 
   private static final String PROTO_SUPER_CLASS = "com.google.protobuf.GeneratedMessage";
 
-  private static final Matcher<MethodInvocationTree> protoMessageReceiverMatcher =
-      Matchers.methodSelect(Matchers.methodReceiver(Matchers.isSubtypeOf(PROTO_SUPER_CLASS)));
+  private static final Matcher<ExpressionTree> protoMessageReceiverMatcher =
+      instanceMethod().onDescendantOf(PROTO_SUPER_CLASS);
 
   private static final String LIST_INTERFACE = "java.util.List";
 
@@ -76,7 +76,7 @@ public class ProtoFieldPreconditionsCheckNotNull
 
   @SuppressWarnings({"unchecked"})
   private static final Matcher<MethodInvocationTree> CHECK_NOT_NULL_MATCHER = allOf(
-      methodSelect(staticMethod("com.google.common.base.Preconditions", "checkNotNull")),
+      staticMethod().onClass("com.google.common.base.Preconditions").named("checkNotNull"),
       argument(0, Matchers.<ExpressionTree>allOf(
           Matchers.<ExpressionTree>kindIs(Kind.METHOD_INVOCATION),
           PROTO_MESSAGE_INVOCATION_MATCHER)));

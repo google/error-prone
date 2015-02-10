@@ -20,9 +20,8 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.isDescendantOfMethod;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
 import static com.google.errorprone.matchers.Matchers.not;
+import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -102,10 +101,10 @@ public class WaitNotInLoop extends BugChecker implements MethodInvocationTreeMat
    * 2) There is no enclosing loop before reaching a synchronized block or method declaration.
    */
   private static Matcher<MethodInvocationTree> waitMatcher = allOf(
-        methodSelect(Matchers.<ExpressionTree>anyOf(
-            isDescendantOfMethod("java.lang.Object", "wait()"),
-            isDescendantOfMethod("java.lang.Object", "wait(long)"),
-            isDescendantOfMethod("java.lang.Object", "wait(long,int)"))),
+        Matchers.<ExpressionTree>anyOf(
+            instanceMethod().onDescendantOf("java.lang.Object").withSignature("wait()"),
+            instanceMethod().onDescendantOf("java.lang.Object").withSignature("wait(long)"),
+            instanceMethod().onDescendantOf("java.lang.Object").withSignature("wait(long,int)")),
         not(inLoopBeforeSynchronizedMatcher));
 
   // TODO(user): Better suggested fixes.

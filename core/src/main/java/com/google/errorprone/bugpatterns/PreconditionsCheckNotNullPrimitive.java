@@ -21,7 +21,6 @@ import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.argument;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 
 import com.google.common.base.Joiner;
@@ -84,8 +83,7 @@ public class PreconditionsCheckNotNullPrimitive
   @Override
   public Description matchMethodInvocation(MethodInvocationTree methodInvocationTree, VisitorState state) {
     if (allOf(
-            methodSelect(staticMethod(
-                "com.google.common.base.Preconditions", "checkNotNull")),
+            staticMethod().onClass("com.google.common.base.Preconditions").named("checkNotNull"),
             argument(0, Matchers.<ExpressionTree>isPrimitiveType()))
             .matches(methodInvocationTree, state)) {
       return describe(methodInvocationTree, state);

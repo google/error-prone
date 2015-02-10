@@ -21,7 +21,6 @@ import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.argument;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
 
@@ -55,7 +54,7 @@ public class PreconditionsCheckNotNull extends BugChecker implements MethodInvoc
 
   @SuppressWarnings({"unchecked"})
   private static final Matcher<MethodInvocationTree> matcher = allOf(
-      methodSelect(staticMethod("com.google.common.base.Preconditions", "checkNotNull")),
+      staticMethod().onClass("com.google.common.base.Preconditions").named("checkNotNull"),
       argument(0, Matchers.<ExpressionTree>kindIs(STRING_LITERAL)));
 
   @Override

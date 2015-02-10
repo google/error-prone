@@ -23,7 +23,7 @@ import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
+import static com.google.errorprone.matchers.Matchers.staticMethod;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
@@ -40,6 +40,8 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
+import com.google.errorprone.predicates.TypePredicate;
+import com.google.errorprone.predicates.TypePredicates;
 import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.BinaryTree;
@@ -51,7 +53,6 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.JCTree;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -84,8 +85,7 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
           .put("java.util.Collection", MethodName.SIZE, true)
           .put("java.util.Dictionary", MethodName.SIZE, true)
           .put("java.util.Map", MethodName.SIZE, true)
-
-          .put("java.lang.BitSet", MethodName.LENGTH, true)
+          .put("java.util.BitSet", MethodName.LENGTH, true)
           .put("java.lang.CharSequence", MethodName.LENGTH, false)
           .put("java.lang.String", MethodName.LENGTH, true)
           .put("java.lang.StringBuilder", MethodName.LENGTH, false)
@@ -97,9 +97,9 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
           .put("com.google.common.collect.Iterables", MethodName.SIZE, true)
           .build();
 
-  private static final Matcher<MethodInvocationTree> INSTANCE_METHOD_MATCHER =
+  private static final Matcher<ExpressionTree> INSTANCE_METHOD_MATCHER =
       buildInstanceMethodMatcher();
-  private static final Matcher<MethodInvocationTree> STATIC_METHOD_MATCHER =
+  private static final Matcher<ExpressionTree> STATIC_METHOD_MATCHER =
       buildStaticMethodMatcher();
   private static final Matcher<MemberSelectTree> ARRAY_LENGTH_MATCHER = arrayLengthMatcher();
   private static final Matcher<ExpressionTree> HAS_EMPTY_METHOD =
@@ -131,22 +131,24 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
     return Description.NO_MATCH;
   }
 
-  private static Matcher<MethodInvocationTree> buildInstanceMethodMatcher() {
-    Collection<String> lengthMethodClassNames = CLASSES.column(MethodName.LENGTH).keySet();
-    Collection<String> sizeMethodClassNames = CLASSES.column(MethodName.SIZE).keySet();
+  private static Matcher<ExpressionTree> buildInstanceMethodMatcher() {
+    TypePredicate lengthMethodClass =
+        TypePredicates.isDescendantOfAny(CLASSES.column(MethodName.LENGTH).keySet());
+    TypePredicate sizeMethodClass =
+        TypePredicates.isDescendantOfAny(CLASSES.column(MethodName.SIZE).keySet());
 
-    return methodSelect(anyOf(
-        instanceMethod(isSubtypeOfAny(sizeMethodClassNames), "size"),
-        instanceMethod(isSubtypeOfAny(lengthMethodClassNames), "length")));
+    return anyOf(
+        instanceMethod().onClass(sizeMethodClass).named("size"),
+        instanceMethod().onClass(lengthMethodClass).named("length"));
   }
 
-  private static Matcher<MethodInvocationTree> buildStaticMethodMatcher() {
+  private static Matcher<ExpressionTree> buildStaticMethodMatcher() {
     Iterable<Matcher<ExpressionTree>> sizeStaticMethods =
         staticMethodMatcher(STATIC_CLASSES.column(MethodName.SIZE).keySet(), "size");
     Iterable<Matcher<ExpressionTree>> lengthStaticMethods =
         staticMethodMatcher(STATIC_CLASSES.column(MethodName.LENGTH).keySet(), "length");
 
-    return methodSelect(anyOfIterable(concat(sizeStaticMethods, lengthStaticMethods)));
+    return anyOfIterable(concat(sizeStaticMethods, lengthStaticMethods));
   }
 
   private static Iterable<Matcher<ExpressionTree>> staticMethodMatcher(
@@ -155,7 +157,7 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
         new Function<String, Matcher<ExpressionTree>>() {
           @Override
           public Matcher<ExpressionTree> apply(String className) {
-            return Matchers.staticMethod(className, methodName);
+            return staticMethod().onClass(className).named(methodName);
           }
         });
   }

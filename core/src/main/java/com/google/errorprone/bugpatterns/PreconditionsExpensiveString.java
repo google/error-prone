@@ -22,8 +22,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.argument;
-import static com.google.errorprone.matchers.Matchers.expressionMethodSelect;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
@@ -65,17 +63,13 @@ public class PreconditionsExpensiveString
   @SuppressWarnings({"vararg", "unchecked"})
   private static final Matcher<MethodInvocationTree> matcher = allOf(
       anyOf(
-          methodSelect(staticMethod(
-              "com.google.common.base.Preconditions", "checkNotNull")),
-          methodSelect(staticMethod(
-              "com.google.common.base.Preconditions", "checkState")),
-          methodSelect(staticMethod(
-              "com.google.common.base.Preconditions", "checkArgument"))),
+          staticMethod().onClass("com.google.common.base.Preconditions").named("checkNotNull"),
+          staticMethod().onClass("com.google.common.base.Preconditions").named("checkState"),
+          staticMethod().onClass("com.google.common.base.Preconditions").named("checkArgument")),
       argument(1, Matchers.<ExpressionTree>allOf(
           Matchers.<ExpressionTree>kindIs(Kind.METHOD_INVOCATION),
-          expressionMethodSelect(staticMethod("java.lang.String", "format")),
-          new StringFormatCallContainsNoSpecialFormattingMatcher(
-              Pattern.compile("%[^%s]"))
+          staticMethod().onClass("java.lang.String").named("format"),
+          new StringFormatCallContainsNoSpecialFormattingMatcher(Pattern.compile("%[^%s]"))
       ))
   );
 

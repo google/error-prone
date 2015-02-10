@@ -23,7 +23,6 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
 import static com.google.errorprone.matchers.Matchers.receiverSameAsArgument;
 import static com.google.errorprone.matchers.Matchers.variableType;
 import static com.sun.source.tree.Tree.Kind.CLASS;
@@ -38,7 +37,6 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.EditDistance;
 
@@ -72,14 +70,10 @@ public class ModifyingCollectionWithItself extends BugChecker
   @Override
   public Description matchMethodInvocation(MethodInvocationTree t, VisitorState state) {
     if (allOf(anyOf(
-        methodSelect(instanceMethod(
-            Matchers.<ExpressionTree>isSubtypeOf("java.util.Collection"), "addAll")),
-        methodSelect(instanceMethod(
-            Matchers.<ExpressionTree>isSubtypeOf("java.util.Collection"), "removeAll")),
-        methodSelect(instanceMethod(
-            Matchers.<ExpressionTree>isSubtypeOf("java.util.Collection"), "containsAll")),
-        methodSelect(instanceMethod(
-            Matchers.<ExpressionTree>isSubtypeOf("java.util.Collection"), "retainAll"))),
+        instanceMethod().onDescendantOf("java.util.Collection").named("addAll"),
+        instanceMethod().onDescendantOf("java.util.Collection").named("removeAll"),
+        instanceMethod().onDescendantOf("java.util.Collection").named("containsAll"),
+        instanceMethod().onDescendantOf("java.util.Collection").named("retainAll")),
         receiverSameAsArgument(0)).matches(t, state)) {
       return describe(t, state);
     }
@@ -109,11 +103,10 @@ public class ModifyingCollectionWithItself extends BugChecker
 
     ExpressionTree lhs = ASTHelpers.getReceiver(methodInvocationTree);
     ExpressionTree rhs = methodInvocationTree.getArguments().get(0);
-    
+
     // default fix for methods
     Fix fix = SuggestedFix.delete(parent);
-    if (methodSelect(instanceMethod(Matchers.<ExpressionTree>anything(), "removeAll"))
-        .matches(methodInvocationTree, state)) {
+    if (instanceMethod().anyClass().named("removeAll").matches(methodInvocationTree, state)) {
       fix = SuggestedFix.replace(methodInvocationTree, lhs + ".clear()");
     }
 

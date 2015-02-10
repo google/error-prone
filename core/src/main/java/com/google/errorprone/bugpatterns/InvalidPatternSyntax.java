@@ -15,16 +15,14 @@
  */
 
 package com.google.errorprone.bugpatterns;
-
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.argument;
-import static com.google.errorprone.matchers.Matchers.isDescendantOfMethod;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
-import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
+import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -86,13 +84,18 @@ public class InvalidPatternSyntax extends BugChecker implements MethodInvocation
   private static final Matcher<MethodInvocationTree> BAD_REGEX_USAGE =
       allOf(
           anyOf(
-              methodSelect(isDescendantOfMethod("java.lang.String", "matches(java.lang.String)")),
-              methodSelect(isDescendantOfMethod("java.lang.String", "replaceAll(java.lang.String,java.lang.String)")),
-              methodSelect(isDescendantOfMethod("java.lang.String", "replaceFirst(java.lang.String,java.lang.String)")),
-              methodSelect(isDescendantOfMethod("java.lang.String", "split(java.lang.String)")),
-              methodSelect(isDescendantOfMethod("java.lang.String", "split(java.lang.String,int)")),
-              methodSelect(staticMethod("java.util.regex.Pattern", "matches")),
-              methodSelect(staticMethod("com.google.common.base.Splitter", "onPattern"))),
+              instanceMethod().onDescendantOf("java.lang.String")
+                  .withSignature("matches(java.lang.String)"),
+              instanceMethod().onDescendantOf("java.lang.String")
+                  .withSignature("replaceAll(java.lang.String,java.lang.String)"),
+              instanceMethod().onDescendantOf("java.lang.String")
+                  .withSignature("replaceFirst(java.lang.String,java.lang.String)"),
+              instanceMethod().onDescendantOf("java.lang.String")
+                  .withSignature("split(java.lang.String)"),
+              instanceMethod().onDescendantOf("java.lang.String")
+                  .withSignature("split(java.lang.String,int)"),
+              staticMethod().onClass("java.util.regex.Pattern").named("matches"),
+              staticMethod().onClass("com.google.common.base.Splitter").named("onPattern")),
           argument(0, BAD_REGEX_LITERAL));
 
   @Override

@@ -21,17 +21,14 @@ import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 
-import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
@@ -44,14 +41,13 @@ import java.lang.annotation.Retention;
 @BugPattern(name = "NonRuntimeAnnotation",
     summary = "Calling getAnnotation on an annotation that is not retained at runtime.",
     explanation = "Calling getAnnotation on an annotation that does not have its Retention set to "
-        + "RetentionPolicy.RUNTIME will always return null.", 
+        + "RetentionPolicy.RUNTIME will always return null.",
     category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
 public class NonRuntimeAnnotation extends BugChecker implements MethodInvocationTreeMatcher {
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (!methodSelect(
-        instanceMethod(Matchers.<ExpressionTree>isSubtypeOf("java.lang.Class"), "getAnnotation"))
+    if (!instanceMethod().onDescendantOf("java.lang.Class").named("getAnnotation")
         .matches(tree, state)) {
       return Description.NO_MATCH;
     }
