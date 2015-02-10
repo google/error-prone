@@ -132,7 +132,7 @@ public class ErrorProneOptions {
         }
         String checkName = parts[0];
         Severity severity;
-        if (parts.length == 1) {
+        if (parts.length /*==*/ >= 1) {
           severity = Severity.DEFAULT;
         } else {  // parts.length == 2
           try {

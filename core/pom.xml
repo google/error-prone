@@ -204,6 +204,27 @@
           </execution>
         </executions>
       </plugin>
+
+      <!-- Instrument all relevant class files -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.3.2</version>
+        <executions>
+          <execution>
+            <id>Instrument Classes</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <executable>${basedir}/instrument/instrument-all.sh</executable>
+          <workingDirectory>${basedir}</workingDirectory>
+        </configuration>
+      </plugin>
+
     </plugins>
   </build>
 

@@ -109,7 +109,7 @@ public final class DataFlow {
   // TODO(user), remove once we merge jdk8 specific's with core
   public static <T> TreePath findPathFromEnclosingNodeToTopLevel(TreePath path,
       Class<T> klass) {
-    while (path != null && !(klass.isInstance(path.getLeaf()))) {
+    while ( /*path != null && */ !(klass.isInstance(path.getLeaf()))) {
       path = path.getParentPath();
     }
     return path;

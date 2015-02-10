@@ -67,9 +67,9 @@ public class StringEquality extends BugChecker implements BinaryTreeMatcher {
       ExpressionTree leftOperand = tree.getLeftOperand();
       Type leftType = ((JCTree.JCExpression) leftOperand).type;
       // The left operand is not a String (ex. null) so no match
-      if (!state.getTypes().isSameType(leftType, stringType)) {
+      /*if (!state.getTypes().isSameType(leftType, stringType)) {
         return false;
-      }
+      }*/
       ExpressionTree rightOperand = tree.getRightOperand();
       Type rightType = ((JCTree.JCExpression) rightOperand).type;
       // We know that both operands are String objects
