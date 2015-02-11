@@ -57,6 +57,11 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
     writeFile("SampleAnnotation2.java",
         "package com.google;",
         "public @interface SampleAnnotation2 {}");
+    writeFile("SampleNestedAnnotation.java",
+        "package com.google;",
+        "public class SampleNestedAnnotation {",
+        "  public @interface Annotation {}",
+        "}");
   }
 
   @After
@@ -90,10 +95,58 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
   }
 
   @Test
+  public void shouldMatchSingleFullyQualifiedAnnotationOnClass() {
+    writeFile("A.java",
+      "package com.google.foo;",
+      "@com.google.SampleAnnotation1",
+      "public class A {}");
+    assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(ANY,
+        isType("com.google.SampleAnnotation1"))));
+    assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(ALL,
+        isType("com.google.SampleAnnotation1"))));
+  }
+
+  @Test
+  public void shouldMatchSingleNestedAnnotationOnClass() {
+    writeFile("A.java",
+      "package com.google;",
+      "@SampleNestedAnnotation.Annotation",
+      "public class A {}");
+    assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(ANY,
+        isType("com.google.SampleNestedAnnotation.Annotation"))));
+    assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(ALL,
+        isType("com.google.SampleNestedAnnotation.Annotation"))));
+  }
+
+  @Test
   public void shouldNotMatchNonmatchingSingleAnnotationOnClass() {
     writeFile("A.java",
       "package com.google;",
       "@SampleAnnotation1",
+      "public class A {}");
+    assertCompiles(nodeWithAnnotationMatches(false, new Annotation<Tree>(ANY,
+        isType("com.google.WrongAnnotation"))));
+    assertCompiles(nodeWithAnnotationMatches(false, new Annotation<Tree>(ALL,
+        isType("com.google.WrongAnnotation"))));
+  }
+
+  @Test
+  public void shouldNotMatchNonmatchingSingleFullyQualifiedAnnotationOnClass() {
+    writeFile("A.java",
+      "package com.google.foo;",
+      "@com.google.SampleAnnotation1",
+      "public class A {}");
+    assertCompiles(nodeWithAnnotationMatches(false, new Annotation<Tree>(ANY,
+        isType("com.google.WrongAnnotation"))));
+    assertCompiles(nodeWithAnnotationMatches(false, new Annotation<Tree>(ALL,
+        isType("com.google.WrongAnnotation"))));
+  }
+
+  @Test
+  public void shouldNotMatchNonmatchingNestedAnnotationOnClass() {
+    writeFile("A.java",
+      "package com.google;",
+      "@com.google.SampleNestedAnnotation.Annotation",
       "public class A {}");
     assertCompiles(nodeWithAnnotationMatches(false, new Annotation<Tree>(ANY,
         isType("com.google.WrongAnnotation"))));
