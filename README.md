@@ -1,5 +1,7 @@
 # error-prone
 
+[![Join the chat at https://gitter.im/google/error-prone](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/google/error-prone?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Catch common Java mistakes as compile-time errors
 
 [![Build Status](https://travis-ci.org/google/error-prone.svg?branch=master)](https://travis-ci.org/google/error-prone) [![Gitter chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/google/error-prone)
