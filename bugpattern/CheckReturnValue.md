@@ -14,6 +14,8 @@ _Alternate names: ResultOfMethodCallIgnored, ReturnValueIgnored_
 ## The problem
 The JSR 305 @CheckReturnValue annotation marks methods whose return values should be checked.  This error is triggered when one of these methods is called but the result is not used.
 
+@CheckReturnValue may be applied to a class or package to indicate that all methods in that class or package must have their return values checked.  For convenience, we provide an annotation, @CanIgnoreReturnValue, to exempt specific methods or classes from this behavior.  @CanIgnoreReturnValue is available from the Error Prone annotations package, `com.google.errorprone.annotations`.
+
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("CheckReturnValue")` annotation to the enclosing element.
 
