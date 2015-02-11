@@ -2,7 +2,7 @@
 
 Catch common Java mistakes as compile-time errors
 
-[![Build Status](https://travis-ci.org/google/error-prone.svg?branch=master)](https://travis-ci.org/google/error-prone)
+[![Build Status](https://travis-ci.org/google/error-prone.svg?branch=master)](https://travis-ci.org/google/error-prone) [![Gitter chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/google/error-prone)
 
 ## Getting Started
 
