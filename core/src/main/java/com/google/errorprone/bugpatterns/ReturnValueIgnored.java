@@ -39,7 +39,7 @@ import java.util.Set;
  * @author alexeagle@google.com (Alex Eagle)
  */
 @BugPattern(name = "ReturnValueIgnored",
-    altNames = {"ResultOfMethodCallIgnored"},
+    altNames = {"ResultOfMethodCallIgnored", "CheckReturnValue"},
     summary = "Return value of this method must be used",
     explanation = "Certain library methods do nothing useful if their return value is ignored. " +
         "For example, String.trim() has no side effects, and you must store the return value " +
