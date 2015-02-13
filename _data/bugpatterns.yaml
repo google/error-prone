@@ -1,6 +1,7 @@
 'On by default : WARNING':
 - {name: ElementsCountedInLoop, summary: 'This code, which counts elements using a
     loop, can be replaced by a simpler library method'}
+- {name: EqualsHashCode, summary: Classes that override equals should also override hashCode.}
 - {name: Finally, summary: 'If you return or throw from a finally, then values returned
     or thrown from the try-catch block will be ignored'}
 - {name: IncompatibleModifiers, summary: This annotation has incompatible modifiers as specified by its @IncompatibleModifiers annotation}
