@@ -24,40 +24,38 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 
 import com.sun.source.tree.AssertTree;
-import com.sun.source.tree.ExpressionTree;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.matchers.Matchers.kindIs;
-import static com.sun.source.tree.Tree.Kind.BOOLEAN_LITERAL;
-import static com.sun.tools.javac.tree.JCTree.JCLiteral;
+import static com.google.errorprone.matchers.Matchers.assertionWithCondition;
+import static com.google.errorprone.matchers.Matchers.booleanLiteral;
 
 /**
  * @author sebastian.h.monte@gmail.com (Sebastian Monte)
  */
 @BugPattern(name = "AssertFalse",
-    summary = "Assert false should not be used",
-    explanation = "Assert false indicates that the code should never be"
-                  + " executed except in case of a bug. It is better to"
-                  + " throw an AssertionError so an exception is raised"
-                  + " regardless whether assertions are enabled.",
+    summary = "Assertions may be disabled at runtime and do not guarantee"
+              + " that execution will halt here; consider throwing an"
+              + " exception instead.",
+    explanation = "Java assertions do not necessarily execute at runtime;"
+                  + " they may be enabled and disabled depending on which"
+                  + " options are passed to the JVM invocation. An assert"
+                  + " false statement may be intended to ensure that the"
+                  + " program never proceeds beyond that statement. If the"
+                  + " correct execution of the program depends on that"
+                  + " being the case, consider throwing an exception instead,"
+                  + " so that execution is halted regardless of runtime configuration.",
     category = JDK, severity = WARNING, maturity = EXPERIMENTAL)
 public class AssertFalse extends BugChecker implements AssertTreeMatcher {
 
   @Override
   public Description matchAssert(AssertTree tree, VisitorState state) {
-    ExpressionTree condition = tree.getCondition();
-    if (kindIs(BOOLEAN_LITERAL).matches(condition, state)) {
-      Boolean value = (Boolean) ((JCLiteral) condition).getValue();
-      if (!value) {
-        Fix fix = SuggestedFix.builder()
-            .replace(tree, "throw new AssertionError()")
-            .build();
-        return describeMatch(tree, fix);
-      } else {
-        return Description.NO_MATCH;
-      }
+    if (assertionWithCondition(booleanLiteral(false)).matches(tree, state)) {
+      Fix fix = SuggestedFix.builder()
+          .replace(tree, "throw new AssertionError()")
+          .build();
+      return describeMatch(tree, fix);
     } else {
       return Description.NO_MATCH;
     }

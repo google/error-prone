@@ -25,6 +25,7 @@ import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.AssertTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BlockTree;
@@ -1078,6 +1079,15 @@ public class Matchers {
       public boolean matches(TypeCastTree t, VisitorState state) {
         return typeMatcher.matches(t.getType(), state)
             && expressionMatcher.matches(t.getExpression(), state);
+      }
+    };
+  }
+
+  public static Matcher<AssertTree> assertionWithCondition(final Matcher<ExpressionTree> conditionMatcher) {
+    return new Matcher<AssertTree>() {
+      @Override
+      public boolean matches(AssertTree tree, VisitorState state) {
+        return conditionMatcher.matches(tree.getCondition(), state);
       }
     };
   }
