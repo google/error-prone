@@ -60,6 +60,7 @@
 - {name: SuppressWarningsDeprecated, summary: Suppressing "deprecated" is probably a typo for "deprecation"}
 - {name: TryFailThrowable, summary: Catching Throwable masks failures from fail() or assert*() in the try block}
 'Experimental : WARNING':
+- {name: AssertFalse, summary: Assertions may be disabled at runtime and do not guarantee that execution will halt here; consider throwing an exception instead}
 - {name: AssistedInjectAndInjectOnConstructors, summary: '@AssistedInject and @Inject
     should not be used on different constructors in the same class.'}
 - {name: GuiceInjectOnFinalField, summary: 'Although Guice allows injecting final
