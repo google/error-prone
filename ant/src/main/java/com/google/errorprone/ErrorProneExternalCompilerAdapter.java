@@ -104,13 +104,16 @@ public class ErrorProneExternalCompilerAdapter extends DefaultCompilerAdapter {
       logAndAddFilesToCompile(cmd);
       return executeExternalCompile(cmd.getCommandline(), cmd.size(), true) == 0;
     } else {
-      attributes.log("You must set fork=\"yes\" to use the external error-prone compiler", Project.MSG_ERR);
+      attributes.log("You must set fork=\"yes\" to use the external error-prone compiler",
+          Project.MSG_ERR);
       return false;
     }
   }
 
   private void addResourceSource(Path classpath, String resource) {
-    final File f = LoaderUtils.getResourceSource(ErrorProneExternalCompilerAdapter.class.getClassLoader(), resource);
+    final File f = LoaderUtils.getResourceSource(
+        ErrorProneExternalCompilerAdapter.class.getClassLoader(),
+        resource);
     if (f != null) {
       attributes.log("Found " + f.getAbsolutePath(), Project.MSG_DEBUG);
       classpath.createPath().setLocation(f);
