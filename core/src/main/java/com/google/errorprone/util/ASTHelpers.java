@@ -45,7 +45,6 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.JCTree.JCArrayTypeTree;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
@@ -53,8 +52,6 @@ import com.sun.tools.javac.tree.JCTree.JCLiteral;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
-import com.sun.tools.javac.tree.JCTree.JCPrimitiveTypeTree;
-import com.sun.tools.javac.tree.JCTree.JCTypeApply;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 
 import java.lang.annotation.Annotation;
@@ -457,7 +454,7 @@ public class ASTHelpers {
     return new LinkedHashSet<>(values);
   }
 
-  /** Returns true if the given tree is a generated contructor. **/
+  /** Returns true if the given tree is a generated constructor. **/
   public static boolean isGeneratedConstructor(MethodTree tree) {
     if (!(tree instanceof JCMethodDecl)) {
         return false;
@@ -471,19 +468,12 @@ public class ASTHelpers {
    * {@link VariableTree#getType()} or {@link MethodTree#getReturnType()}.
    */
   public static Type getType(Tree tree) {
-    switch (tree.getKind()) {
-      case ARRAY_TYPE:
-        return ((JCArrayTypeTree) tree).type;
-      case PRIMITIVE_TYPE:
-        return ((JCPrimitiveTypeTree) tree).type;
-      case PARAMETERIZED_TYPE:
-        return ((JCTypeApply) tree).type;
-      case IDENTIFIER:
-        return ((JCIdent) tree).type;
-      case MEMBER_SELECT:
-        return ((JCFieldAccess) tree).sym.type;
-      default:
-        return null;
+    if (tree instanceof JCFieldAccess) {
+      return ((JCFieldAccess) tree).sym.type;
+    } else if (tree instanceof JCTree) {
+      return ((JCTree) tree).type;
+    } else {
+      return null;
     }
   }
 

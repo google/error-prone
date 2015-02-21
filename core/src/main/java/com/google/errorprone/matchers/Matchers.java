@@ -340,6 +340,14 @@ public class Matchers {
     return new MethodInvocationArgument(position, argumentMatcher);
   }
 
+  /**
+   * Matches if the given matcher matches all of/any of the arguments to this method invocation.
+   */
+  public static MultiMatcher<MethodInvocationTree, ExpressionTree> hasArguments(
+      MatchType matchType, Matcher<ExpressionTree> argumentMatcher) {
+    return new HasArguments(matchType, argumentMatcher);
+  }
+
   public static Matcher<MethodInvocationTree> argumentCount(final int argumentCount) {
     return new Matcher<MethodInvocationTree>() {
       @Override

@@ -17,7 +17,6 @@
 package com.google.errorprone.util;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import com.google.errorprone.VisitorState;
@@ -30,7 +29,6 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
-import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
@@ -228,32 +226,6 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
         setAssertionsComplete();
         assertEquals("B.C", ASTHelpers.getType(tree.getType()).toString());
         return super.visitVariable(tree, state);
-      }
-    };
-    tests.add(scanner);
-    assertCompiles(scanner);
-  }
-
-  @Test
-  public void testGetTypeOnMethodRemainsUnsupported() {
-    writeFile("A.java",
-        "public class A { ",
-        "  public void bar() {",
-        "    B.doNothing();",
-        "  }",
-        "}");
-    writeFile("B.java",
-        "public class B { ",
-        "  public static void doNothing() {}",
-        "}");
-    TestScanner scanner = new TestScanner() {
-      @Override
-      public Void visitMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-        if (tree.toString().equals("B.doNothing()")) {
-          assertNull(ASTHelpers.getType(tree));
-          setAssertionsComplete();
-        }
-        return super.visitMethodInvocation(tree, state);
       }
     };
     tests.add(scanner);

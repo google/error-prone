@@ -37,13 +37,7 @@ public class ArrayHashCodeNegativeCases2 {
     hashCode = Objects.hashCode(obj);    
     hashCode = Objects.hashCode(str);
   }
-  
-  public void varargsHashCodeOnMoreThanOneArg() {
-    int hashCode;
-    hashCode = Objects.hash(objArray, intArray);
-    hashCode = Objects.hash(stringArray, byteArray);
-  }
-  
+    
   public void varagsHashCodeOnNonArrayType() {
     int hashCode;
     hashCode = Objects.hash(obj);
