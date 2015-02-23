@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.hasAnnotationOnAnyOverriddenMethod;
 import static com.google.errorprone.matchers.Matchers.hasArgumentWithValue;
+import static com.google.errorprone.matchers.Matchers.hasMethod;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.methodHasParameters;
 import static com.google.errorprone.matchers.Matchers.methodHasVisibility;
@@ -39,7 +40,6 @@ import com.google.errorprone.VisitorState;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ClassType;
@@ -107,7 +107,7 @@ public class JUnitMatchers {
    * Match a class which has one or more methods with a JUnit 4 @Test annotation.
    */
   public static final Matcher<ClassTree> hasJUnit4TestCases =
-      new ClassWithJUnit4TestsMatcher();
+      hasMethod(hasAnnotationOnAnyOverriddenMethod(JUNIT4_TEST_ANNOTATION));
 
   /**
    * Match a class which appears to be a JUnit 3 test class.
@@ -239,23 +239,6 @@ public class JUnitMatchers {
     @Override
     public boolean matches(ClassTree classTree, VisitorState state) {
       return isJUnit4TestClass.matches(classTree, state);
-    }
-  }
-
-  private static final class ClassWithJUnit4TestsMatcher implements Matcher<ClassTree> {
-
-    @Override
-    public boolean matches(ClassTree classTree, VisitorState state) {
-      for (Tree member : classTree.getMembers()) {
-        if (member.getKind() != Tree.Kind.METHOD) {
-          continue;
-        }
-        MethodTree methodTree = (MethodTree) member;
-        if (hasAnnotationOnAnyOverriddenMethod(JUNIT4_TEST_ANNOTATION).matches(methodTree, state)) {
-          return true;
-        }
-      }
-      return false;
     }
   }
 }
