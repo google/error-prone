@@ -131,7 +131,7 @@ public class ErrorProneJavaCompilerTest {
         Collections.<String>emptyList(),
         Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isFalse();
-    Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher =
+    Matcher<? super Iterable<Diagnostic<JavaFileObject>>> matcher =
         hasItem(diagnosticMessage(containsString("[DepAnn]")));
     assertTrue(matcher.matches(result.diagnosticHelper.getDiagnostics()));
   }
@@ -162,7 +162,7 @@ public class ErrorProneJavaCompilerTest {
         Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isTrue();
     assertThat(result.diagnosticHelper.getDiagnostics().size()).isGreaterThan(0);
-    Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher =
+    Matcher<? super Iterable<Diagnostic<JavaFileObject>>> matcher =
         hasItem(diagnosticMessage(containsString("[WaitNotInLoop]")));
     assertTrue(matcher.matches(result.diagnosticHelper.getDiagnostics()));
 
@@ -185,7 +185,7 @@ public class ErrorProneJavaCompilerTest {
         Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isFalse();
     assertThat(result.diagnosticHelper.getDiagnostics().size()).isGreaterThan(0);
-    Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher =
+    Matcher<? super Iterable<Diagnostic<JavaFileObject>>> matcher =
         hasItem(diagnosticMessage(containsString("[DepAnn]")));
     assertTrue(matcher.matches(result.diagnosticHelper.getDiagnostics()));
 
@@ -216,7 +216,7 @@ public class ErrorProneJavaCompilerTest {
         Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isFalse();
     assertThat(result.diagnosticHelper.getDiagnostics().size()).isGreaterThan(0);
-    Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher =
+    Matcher<? super Iterable<Diagnostic<JavaFileObject>>> matcher =
         hasItem(diagnosticMessage(containsString("[EmptyIf]")));
     assertTrue(matcher.matches(result.diagnosticHelper.getDiagnostics()));
   }
@@ -264,7 +264,7 @@ public class ErrorProneJavaCompilerTest {
         Arrays.<Class<? extends BugChecker>>asList(BadShiftAmount.class));
     assertThat(result.succeeded).isFalse();
     assertThat(result.diagnosticHelper.getDiagnostics().size()).isGreaterThan(0);
-    Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher =
+    Matcher<? super Iterable<Diagnostic<JavaFileObject>>> matcher =
         hasItem(diagnosticMessage(containsString("[BadShiftAmount]")));
     assertTrue(matcher.matches(result.diagnosticHelper.getDiagnostics()));
   }
@@ -304,7 +304,7 @@ public class ErrorProneJavaCompilerTest {
         sources);
     boolean succeeded = task.call();
     assertThat(succeeded).isTrue();
-    Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher =
+    Matcher<? super Iterable<Diagnostic<JavaFileObject>>> matcher =
         hasItem(diagnosticMessage(containsString("[ChainingConstructorIgnoresParameter]")));
     assertTrue(matcher.matches(diagnosticHelper.getDiagnostics()));
 
@@ -352,7 +352,7 @@ public class ErrorProneJavaCompilerTest {
         sources);
     boolean succeeded = task.call();
     assertThat(succeeded).isFalse();
-    Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher =
+    Matcher<? super Iterable<Diagnostic<JavaFileObject>>> matcher =
         hasItem(diagnosticMessage(containsString("[EmptyIf]")));
     assertTrue(matcher.matches(diagnosticHelper.getDiagnostics()));
 

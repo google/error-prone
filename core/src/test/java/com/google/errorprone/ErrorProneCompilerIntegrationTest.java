@@ -104,7 +104,7 @@ public class ErrorProneCompilerIntegrationTest {
         "bugpatterns/BadShiftAmountPositiveCases.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
 
-    Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher = hasItem(
+    Matcher<? super Iterable<Diagnostic<JavaFileObject>>> matcher = hasItem(
         diagnosticMessage(containsString("[BadShiftAmount]")));
     assertTrue("Error should be found. " + diagnosticHelper.describe(),
         matcher.matches(diagnosticHelper.getDiagnostics()));
@@ -118,7 +118,7 @@ public class ErrorProneCompilerIntegrationTest {
         "bugpatterns/NonAtomicVolatileUpdatePositiveCases.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
 
-    Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher = hasItem(
+    Matcher<? super Iterable<Diagnostic<JavaFileObject>>> matcher = hasItem(
         diagnosticMessage(containsString("[NonAtomicVolatileUpdate]")));
     assertTrue("Warning should be found. " + diagnosticHelper.describe(),
         matcher.matches(diagnosticHelper.getDiagnostics()));
@@ -150,7 +150,7 @@ public class ErrorProneCompilerIntegrationTest {
         compiler.fileManager().sources(getClass(), "MultipleTopLevelClassesWithErrors.java",
             "ExtendedMultipleTopLevelClassesWithErrors.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
-    Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher = hasItem(
+    Matcher<? super Iterable<Diagnostic<JavaFileObject>>> matcher = hasItem(
         diagnosticMessage(containsString("[SelfAssignment]")));
     assertTrue("Warning should be found. " + diagnosticHelper.describe(),
         matcher.matches(diagnosticHelper.getDiagnostics()));
@@ -174,7 +174,7 @@ public class ErrorProneCompilerIntegrationTest {
         compiler.fileManager().sources(getClass(), "MultipleTopLevelClassesWithErrors.java",
             "ExtendedMultipleTopLevelClassesWithErrors.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
-    Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher = hasItem(
+    Matcher<? super Iterable<Diagnostic<JavaFileObject>>> matcher = hasItem(
         diagnosticMessage(CoreMatchers.<String>allOf(
             containsString("IllegalStateException: test123"),
             containsString("unhandled exception was thrown by the Error Prone"))));
@@ -263,7 +263,7 @@ public class ErrorProneCompilerIntegrationTest {
     Result exitCode = compiler.compile(
         Arrays.asList(compiler.fileManager().forSourceLines("Test.java", "public class Test {}")));
 
-    Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher = not(hasItem(
+    Matcher<? super Iterable<Diagnostic<JavaFileObject>>> matcher = not(hasItem(
         diagnosticMessage(containsString("[ConstructorMatcher]"))));
     assertTrue(
         "Warning should be found. " + diagnosticHelper.describe(),
@@ -304,7 +304,7 @@ public class ErrorProneCompilerIntegrationTest {
             "  public Test() {}",
             "}")));
 
-    Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher = not(hasItem(
+    Matcher<? super Iterable<Diagnostic<JavaFileObject>>> matcher = not(hasItem(
         diagnosticMessage(containsString("[SuperCallMatcher]"))));
     assertTrue(
         "Warning should be found. " + diagnosticHelper.describe(),
@@ -345,7 +345,7 @@ public class ErrorProneCompilerIntegrationTest {
         Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile)));
     outputStream.flush();
 
-    Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher = hasItem(
+    Matcher<? super Iterable<Diagnostic<JavaFileObject>>> matcher = hasItem(
         diagnosticMessage(containsString("[EmptyIf]")));
     assertTrue(
         "Error should be found. " + diagnosticHelper.describe(),
@@ -364,7 +364,7 @@ public class ErrorProneCompilerIntegrationTest {
     Result exitCode = compiler.compile(args,
         Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile)));
     outputStream.flush();
-    Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher = hasItem(
+    Matcher<? super Iterable<Diagnostic<JavaFileObject>>> matcher = hasItem(
         diagnosticMessage(containsString("[LongLiteralLowerCaseSuffix]")));
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
     assertTrue(
@@ -390,7 +390,7 @@ public class ErrorProneCompilerIntegrationTest {
     Result exitCode = compiler.compile(args,
         Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile)));
     outputStream.flush();
-    Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher = hasItem(
+    Matcher<? super Iterable<Diagnostic<JavaFileObject>>> matcher = hasItem(
         diagnosticMessage(containsString("[EmptyIf]")));
     assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
     assertTrue(

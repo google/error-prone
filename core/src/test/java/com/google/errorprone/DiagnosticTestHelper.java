@@ -212,7 +212,7 @@ public class DiagnosticTestHelper {
         List<String> patterns = extractPatterns(line, reader);
         int lineNumber = reader.getLineNumber();
         for (String pattern : patterns) {
-          Matcher<Iterable<Diagnostic<JavaFileObject>>> patternMatcher =
+          Matcher<? super Iterable<Diagnostic<JavaFileObject>>> patternMatcher =
               hasItem(diagnosticOnLine(source.toUri(), lineNumber, pattern));
           assertTrue(
               "Did not see an error on line " + lineNumber + " containing " + pattern
@@ -222,7 +222,7 @@ public class DiagnosticTestHelper {
 
         if (checkName != null) {
           // Diagnostic must contain check name.
-          Matcher<Iterable<Diagnostic<JavaFileObject>>> checkNameMatcher = hasItem(
+          Matcher<? super Iterable<Diagnostic<JavaFileObject>>> checkNameMatcher = hasItem(
               diagnosticOnLine(source.toUri(), lineNumber, "[" + checkName + "]"));
           assertTrue(
               "Did not see an error on line " + lineNumber + " containing [" + checkName
@@ -232,7 +232,7 @@ public class DiagnosticTestHelper {
 
       } else {
         int lineNumber = reader.getLineNumber() + 1;
-        Matcher<Iterable<Diagnostic<JavaFileObject>>> matcher =
+        Matcher<? super Iterable<Diagnostic<JavaFileObject>>> matcher =
             not(hasItem(diagnosticOnLine(source.toUri(), lineNumber)));
         if (!matcher.matches(diagnostics)) {
           fail("Saw unexpected error on line " + lineNumber + ". All errors:\n" + diagnostics);
