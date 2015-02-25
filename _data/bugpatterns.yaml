@@ -80,6 +80,8 @@
     arrays, as one might expect.'}
 - {name: AssistedInjectAndInjectOnSameConstructor, summary: '@AssistedInject and @Inject
     cannot be used on the same constructor.'}
+- {name: AsyncFunctionReturnsNull, summary: 'AsyncFunction should not return a null
+    Future, only a Future whose result is null.'}
 - {name: CannotMockFinalClass, summary: Mockito cannot mock final classes}
 - {name: ClassCanBeStatic, summary: Inner class is non-static but does not reference enclosing class}
 - {name: CollectionIncompatibleType, summary: Incompatible type as argument to non-generic Java collections method.}

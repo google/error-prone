@@ -15,9 +15,10 @@ Computing a hashcode for an array is tricky.  Typically you want a hashcode that
 This check flags attempts to compute a hashcode from an array that do not take the contents of the array into account. There are several ways to mess this up:
   * Call the instance .hashCode() method on an array.
   * Call the JDK method java.util.Objects#hashCode() with an argument of array type.
-  * Call either the JDK method java.util.Objects#hash() or the Guava method com.google.common.base.Objects#hashCode() with a single argument of _primitive_ array type. Because these are varags methods that take Object..., the primitive array is autoboxed into a single-element Object array, and these methods use the identity hashcode of the primitive array rather than examining its contents. Note that calling these methods on an argument of _Object_ array type actually does the right thing because no boxing is needed.
+  * Call the JDK method java.util.Objects#hash() or the Guava method com.google.common.base.Objects#hashCode() with multiple arguments, at least one of which is an array.
+  * Call the JDK method java.util.Objects#hash() or the Guava method com.google.common.base.Objects#hashCode() with a single argument of _primitive_ array type. Because these are varags methods that take Object..., the primitive array is autoboxed into a single-element Object array, and these methods use the identity hashcode of the primitive array rather than examining its contents. Note that calling these methods on an argument of _Object_ array type actually does the right thing because no boxing is needed.
 
-Please use java.util.Arrays#hashCode() instead to compute a hash value that depends on the contents of the array. If you really intended to compute the identity hash code, consider using java.lang.System#identityHashCode() instead for clarity.
+Please use either java.util.Arrays#hashCode() (for single-dimensional arrays) or java.util.Arrays#deepHashCode() (for multidimensional arrays) to compute a hash value that depends on the contents of the array. If you really intended to compute the identity hash code, consider using java.lang.System#identityHashCode() instead for clarity.
 
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("ArrayHashCode")` annotation to the enclosing element.
@@ -63,12 +64,6 @@ public class ArrayHashCodeNegativeCases {
     int hashCode;
     hashCode = obj.hashCode();
     hashCode = str.hashCode();
-  }
-    
-  public void varargsHashCodeOnMoreThanOneArg() {
-    int hashCode;
-    hashCode = Objects.hashCode(objArray, intArray);
-    hashCode = Objects.hashCode(stringArray, byteArray);
   }
   
   public void varagsHashCodeOnNonArrayType() {
@@ -126,13 +121,7 @@ public class ArrayHashCodeNegativeCases2 {
     hashCode = Objects.hashCode(obj);    
     hashCode = Objects.hashCode(str);
   }
-  
-  public void varargsHashCodeOnMoreThanOneArg() {
-    int hashCode;
-    hashCode = Objects.hash(objArray, intArray);
-    hashCode = Objects.hash(stringArray, byteArray);
-  }
-  
+    
   public void varagsHashCodeOnNonArrayType() {
     int hashCode;
     hashCode = Objects.hash(obj);
@@ -177,6 +166,8 @@ public class ArrayHashCodePositiveCases {
   private String[] stringArray = {"1", "2", "3"};
   private int[] intArray = {1, 2, 3};
   private byte[] byteArray = {1, 2, 3};
+  private int[][] multidimensionalIntArray = { {1, 2, 3}, {4, 5, 6} };
+  private String[][] multidimensionalStringArray = { {"1", "2", "3"}, {"4", "5", "6"} };
   
   public void objectHashCode() {
     int hashCode;
@@ -186,6 +177,12 @@ public class ArrayHashCodePositiveCases {
     hashCode = stringArray.hashCode();
     // BUG: Diagnostic contains: Arrays.hashCode(intArray)
     hashCode = intArray.hashCode();
+    
+    // BUG: Diagnostic contains: Arrays.deepHashCode(multidimensionalIntArray)
+    hashCode = multidimensionalIntArray.hashCode();
+    // BUG: Diagnostic contains: Arrays.deepHashCode(multidimensionalStringArray)
+    hashCode = multidimensionalStringArray.hashCode();
+
   }
 
   public void guavaObjectsHashCode() {
@@ -194,6 +191,33 @@ public class ArrayHashCodePositiveCases {
     hashCode = Objects.hashCode(intArray);
     // BUG: Diagnostic contains: Arrays.hashCode(byteArray)
     hashCode = Objects.hashCode(byteArray);
+    
+    // BUG: Diagnostic contains: Arrays.deepHashCode(multidimensionalIntArray)
+    hashCode = Objects.hashCode(multidimensionalIntArray);
+    // BUG: Diagnostic contains: Arrays.deepHashCode(multidimensionalStringArray)
+    hashCode = Objects.hashCode(multidimensionalStringArray);
+  }
+  
+  public void varargsHashCodeOnMoreThanOneArg() {
+    int hashCode;
+    // BUG: Diagnostic contains: Objects.hashCode(Arrays.hashCode(objArray), Arrays.hashCode(intArray))
+    hashCode = Objects.hashCode(objArray, intArray);
+    // BUG: Diagnostic contains: Objects.hashCode(Arrays.hashCode(stringArray), Arrays.hashCode(byteArray))
+    hashCode = Objects.hashCode(stringArray, byteArray);
+    
+    Object obj1 = new Object();
+    Object obj2 = new Object();
+    // BUG: Diagnostic contains: Objects.hashCode(obj1, obj2, Arrays.hashCode(intArray))
+    hashCode = Objects.hashCode(obj1, obj2, intArray);
+    // BUG: Diagnostic contains: Objects.hashCode(obj1, Arrays.hashCode(intArray), obj2)
+    hashCode = Objects.hashCode(obj1, intArray, obj2);
+    // BUG: Diagnostic contains: Objects.hashCode(Arrays.hashCode(intArray), obj1, obj2)
+    hashCode = Objects.hashCode(intArray, obj1, obj2);
+    
+    // BUG: Diagnostic contains: Objects.hashCode(obj1, obj2, Arrays.deepHashCode(multidimensionalIntArray))
+    hashCode = Objects.hashCode(obj1, obj2, multidimensionalIntArray);
+    // BUG: Diagnostic contains: Objects.hashCode(obj1, obj2, Arrays.deepHashCode(multidimensionalStringArray))
+    hashCode = Objects.hashCode(obj1, obj2, multidimensionalStringArray);
   }
 }
 
@@ -230,6 +254,8 @@ public class ArrayHashCodePositiveCases2 {
   private String[] stringArray = {"1", "2", "3"};
   private int[] intArray = {1, 2, 3};
   private byte[] byteArray = {1, 2, 3};
+  private int[][] multidimensionalIntArray = { {1, 2, 3}, {4, 5, 6} };
+  private String[][] multidimensionalStringArray = { {"1", "2", "3"}, {"4", "5", "6"} };
    
   public void javaUtilObjectsHashCode() {
     int hashCode;
@@ -239,7 +265,12 @@ public class ArrayHashCodePositiveCases2 {
     hashCode = Objects.hashCode(stringArray);
     // BUG: Diagnostic contains: Arrays.hashCode(intArray)
     hashCode = Objects.hashCode(intArray);
-  }
+    
+    // BUG: Diagnostic contains: Arrays.deepHashCode(multidimensionalIntArray)
+    hashCode = Objects.hashCode(multidimensionalIntArray);
+    // BUG: Diagnostic contains: Arrays.deepHashCode(multidimensionalStringArray)
+    hashCode = Objects.hashCode(multidimensionalStringArray);
+  }  
   
   public void javaUtilObjectsHash() {
     int hashCode;
@@ -247,6 +278,33 @@ public class ArrayHashCodePositiveCases2 {
     hashCode = Objects.hash(intArray);
     // BUG: Diagnostic contains: Arrays.hashCode(byteArray)
     hashCode = Objects.hash(byteArray);
+    
+    // BUG: Diagnostic contains: Arrays.deepHashCode(multidimensionalIntArray)
+    hashCode = Objects.hash(multidimensionalIntArray);
+    // BUG: Diagnostic contains: Arrays.deepHashCode(multidimensionalStringArray)
+    hashCode = Objects.hash(multidimensionalStringArray);
+  }
+  
+  public void varargsHashCodeOnMoreThanOneArg() {
+    int hashCode;
+    // BUG: Diagnostic contains: Objects.hash(Arrays.hashCode(objArray), Arrays.hashCode(intArray))
+    hashCode = Objects.hash(objArray, intArray);
+    // BUG: Diagnostic contains: Objects.hash(Arrays.hashCode(stringArray), Arrays.hashCode(byteArray))
+    hashCode = Objects.hash(stringArray, byteArray);
+    
+    Object obj1 = new Object();
+    Object obj2 = new Object();
+    // BUG: Diagnostic contains: Objects.hash(obj1, obj2, Arrays.hashCode(intArray))
+    hashCode = Objects.hash(obj1, obj2, intArray);
+    // BUG: Diagnostic contains: Objects.hash(obj1, Arrays.hashCode(intArray), obj2)
+    hashCode = Objects.hash(obj1, intArray, obj2);
+    // BUG: Diagnostic contains: Objects.hash(Arrays.hashCode(intArray), obj1, obj2)
+    hashCode = Objects.hash(intArray, obj1, obj2);
+    
+    // BUG: Diagnostic contains: Objects.hash(obj1, obj2, Arrays.deepHashCode(multidimensionalIntArray))
+    hashCode = Objects.hash(obj1, obj2, multidimensionalIntArray);
+    // BUG: Diagnostic contains: Objects.hash(obj1, obj2, Arrays.deepHashCode(multidimensionalStringArray))
+    hashCode = Objects.hash(obj1, obj2, multidimensionalStringArray);
   }
 }
 
