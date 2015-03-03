@@ -62,6 +62,59 @@ public class ForOverrideCheckerTest {
   }
 
   @Test
+  public void testCanApplyForOverrideToProtectedMethod() throws Exception {
+    compilationHelper.assertCompileSucceeds(withFile("test/Test.java",
+        "package test;",
+        "import com.google.errorprone.annotations.ForOverride;",
+        "public class Test {",
+        "  @ForOverride protected void myMethod() {}",
+        "}"));
+  }
+
+  @Test
+  public void testCanApplyForOverrideToPackagePrivateMethod() throws Exception {
+    compilationHelper.assertCompileSucceeds(withFile("test/Test.java",
+        "package test;",
+        "import com.google.errorprone.annotations.ForOverride;",
+        "public class Test {",
+        "  @ForOverride void myMethod() {}",
+        "}"));
+  }
+
+  @Test
+  public void testCannotApplyForOverrideToPublicMethod() throws Exception {
+    compilationHelper.assertCompileFailsWithMessages(withFile("test/Test.java",
+        "package test;",
+        "import com.google.errorprone.annotations.ForOverride;",
+        "public class Test {",
+        "  // BUG: Diagnostic contains: must have protected or package-private visibility",
+        "  @ForOverride public void myMethod() {}",
+        "}"));
+  }
+
+  @Test
+  public void testCannotApplyForOverrideToPrivateMethod() throws Exception {
+    compilationHelper.assertCompileFailsWithMessages(withFile("test/Test.java",
+        "package test;",
+        "import com.google.errorprone.annotations.ForOverride;",
+        "public class Test {",
+        "  // BUG: Diagnostic contains: must have protected or package-private visibility",
+        "  @ForOverride private void myMethod() {}",
+        "}"));
+  }
+
+  @Test
+  public void testCannotApplyForOverrideToInterfaceMethod() throws Exception {
+    compilationHelper.assertCompileFailsWithMessages(withFile("test/Test.java",
+        "package test;",
+        "import com.google.errorprone.annotations.ForOverride;",
+        "public interface Test {",
+        "  // BUG: Diagnostic contains: must have protected or package-private visibility",
+        "  @ForOverride void myMethod();",
+        "}"));
+  }
+
+  @Test
   public void testUserCanCallAppropriateMethod() throws Exception {
     compilationHelper.assertCompileSucceeds(withFile("test/Test.java",
         "package test;",
@@ -118,7 +171,7 @@ public class ForOverrideCheckerTest {
     compilationHelper.assertCompileFailsWithMessages(withFile("test/Test.java",
         "package test2;",
         "public class Test extends test.ExtendMe {",
-        "  // BUG: Diagnostic contains: must have 'protected' visibility",
+        "  // BUG: Diagnostic contains: must have protected or package-private visibility",
         "  public void overrideMe() {",
         "    System.err.println(\"Capybaras are rodents.\");",
         "  }",

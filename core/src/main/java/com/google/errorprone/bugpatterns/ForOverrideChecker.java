@@ -52,7 +52,8 @@ import javax.lang.model.element.Modifier;
  */
 @BugPattern(name = "ForOverride",
     summary =
-        "Method annotated @ForOverride must be protected and only invoked from declaring class",
+        "Method annotated @ForOverride must be protected or package-private and only invoked from "
+        + "declaring class",
     explanation =
         "A method that overrides a @ForOverride method should not be invoked directly. Instead, it"
         + " should be invoked only from the class in which it was declared. For example, if"
@@ -101,11 +102,12 @@ public class ForOverrideChecker extends BugChecker
       return Description.NO_MATCH;
     }
 
-    if (!method.getModifiers().contains(Modifier.PROTECTED)) {
+    if (method.getModifiers().contains(Modifier.PUBLIC)
+        || method.getModifiers().contains(Modifier.PRIVATE)) {
       List<MethodSymbol> overriddenMethods = getOverriddenMethods(state, method);
 
       if (!overriddenMethods.isEmpty()) {
-        String customMessage = MESSAGE_BASE + "must have 'protected' visibility";
+        String customMessage = MESSAGE_BASE + "must have protected or package-private visibility";
         return buildDescription(tree)
             .setMessage(customMessage)
             .build();
@@ -135,8 +137,8 @@ public class ForOverrideChecker extends BugChecker
 
     // Iterate over supertypes of the type that owns this method, collecting a list of all method
     // symbols with the same name.  We intentionally exclude interface methods because interface
-    // methods cannot be annotated @ForOverride.  @ForOverride methods must have protected
-    // visibility, but interface methods have implicit public visibility.
+    // methods cannot be annotated @ForOverride.  @ForOverride methods must have protected or
+    // package-private visibility, but interface methods have implicit public visibility.
     Type currType = state.getTypes().supertype(method.owner.type);
     while (currType != null
         && !currType.equals(state.getSymtab().objectType)
