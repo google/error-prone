@@ -26,9 +26,9 @@ import static org.hamcrest.Matchers.not;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.CharSource;
 
-import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeDiagnosingMatcher;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -70,7 +70,8 @@ public class DiagnosticTestHelper {
   public ClearableDiagnosticCollector<JavaFileObject> collector =
       new ClearableDiagnosticCollector<JavaFileObject>();
 
-  public static Matcher<Diagnostic<JavaFileObject>> suggestsRemovalOfLine(URI fileURI, int line) {
+  public static Matcher<Diagnostic<? extends JavaFileObject>> suggestsRemovalOfLine(
+      URI fileURI, int line) {
     return allOf(
         diagnosticOnLine(fileURI, line),
         diagnosticMessage(containsString("remove this line")));
@@ -97,13 +98,25 @@ public class DiagnosticTestHelper {
     return stringBuilder.toString();
   }
 
-  public static BaseMatcher<Diagnostic<JavaFileObject>> diagnosticLineAndColumn(
+  public static Matcher<Diagnostic<? extends JavaFileObject>> diagnosticLineAndColumn(
       final long line, final long column) {
-    return new BaseMatcher<Diagnostic<JavaFileObject>>() {
+    return new TypeSafeDiagnosingMatcher<Diagnostic<? extends JavaFileObject>>() {
       @Override
-      public boolean matches(Object object) {
-        Diagnostic<?> item = (Diagnostic<?>) object;
-        return item.getLineNumber() == line && item.getColumnNumber() == column;
+      protected boolean matchesSafely(Diagnostic<? extends JavaFileObject> item,
+          Description mismatchDescription) {
+        if (item.getLineNumber() != line) {
+          mismatchDescription.appendText("diagnostic not on line ")
+              .appendValue(item.getLineNumber());
+          return false;
+        }
+
+        if (item.getColumnNumber() != column) {
+          mismatchDescription.appendText("diagnostic not on column ")
+              .appendValue(item.getColumnNumber());
+          return false;
+        }
+
+        return true;
       }
 
       @Override
@@ -117,15 +130,24 @@ public class DiagnosticTestHelper {
     };
   }
 
-  public static BaseMatcher<Diagnostic<JavaFileObject>> diagnosticOnLine(
+  public static Matcher<Diagnostic<? extends JavaFileObject>> diagnosticOnLine(
       final URI fileURI, final long line) {
-    return new BaseMatcher<Diagnostic<JavaFileObject>>() {
+    return new TypeSafeDiagnosingMatcher<Diagnostic<? extends JavaFileObject>>() {
       @Override
-      public boolean matches(Object object) {
-        Diagnostic<?> item = (Diagnostic<?>) object;
-        return item.getSource() instanceof JavaFileObject
-            && ((JavaFileObject) item.getSource()).toUri().equals(fileURI)
-            && item.getLineNumber() == line;
+      public boolean matchesSafely(Diagnostic<? extends JavaFileObject> item,
+          Description mismatchDescription) {
+        if (!item.getSource().toUri().equals(fileURI)) {
+          mismatchDescription.appendText("diagnostic not in file ").appendValue(fileURI);
+          return false;
+        }
+
+        if (item.getLineNumber() != line) {
+          mismatchDescription.appendText("diagnostic not on line ")
+              .appendValue(item.getLineNumber());
+          return false;
+        }
+
+        return true;
       }
 
       @Override
@@ -137,16 +159,29 @@ public class DiagnosticTestHelper {
     };
   }
 
-  public static BaseMatcher<Diagnostic<JavaFileObject>> diagnosticOnLine(
+  public static Matcher<Diagnostic<? extends JavaFileObject>> diagnosticOnLine(
       final URI fileURI, final long line, final String message) {
-    return new BaseMatcher<Diagnostic<JavaFileObject>>() {
+    return new TypeSafeDiagnosingMatcher<Diagnostic<? extends JavaFileObject>>() {
       @Override
-      public boolean matches(Object object) {
-        Diagnostic<?> item = (Diagnostic<?>) object;
-        return item.getSource() instanceof JavaFileObject
-            && ((JavaFileObject) item.getSource()).toUri().equals(fileURI)
-            && item.getLineNumber() == line
-            && item.getMessage(Locale.getDefault()).contains(message);
+      public boolean matchesSafely(Diagnostic<? extends JavaFileObject> item,
+          Description mismatchDescription) {
+        if (!item.getSource().toUri().equals(fileURI)) {
+          mismatchDescription.appendText("diagnostic not in file ").appendValue(fileURI);
+          return false;
+        }
+
+        if (item.getLineNumber() != line) {
+          mismatchDescription.appendText("diagnostic not on line ")
+              .appendValue(item.getLineNumber());
+          return false;
+        }
+
+        if (!item.getMessage(Locale.getDefault()).contains(message)) {
+          mismatchDescription.appendText("diagnostic does not contain ").appendValue(message);
+          return false;
+        }
+
+        return true;
       }
 
       @Override
@@ -162,13 +197,19 @@ public class DiagnosticTestHelper {
   }
 
 
-  public static BaseMatcher<Diagnostic<JavaFileObject>> diagnosticMessage(
+  public static Matcher<Diagnostic<? extends JavaFileObject>> diagnosticMessage(
       final Matcher<String> matcher) {
-    return new BaseMatcher<Diagnostic<JavaFileObject>>() {
+    return new TypeSafeDiagnosingMatcher<Diagnostic<? extends JavaFileObject>>() {
       @Override
-      public boolean matches(Object object) {
-        Diagnostic<?> item = (Diagnostic<?>) object;
-        return matcher.matches(item.getMessage(Locale.getDefault()));
+      public boolean matchesSafely(Diagnostic<? extends JavaFileObject> item,
+          Description mismatchDescription) {
+        if (!matcher.matches(item.getMessage(Locale.getDefault()))) {
+          mismatchDescription.appendText("diagnostic message does not match ")
+              .appendDescriptionOf(matcher);
+          return false;
+        }
+
+        return true;
       }
 
       @Override
@@ -212,7 +253,7 @@ public class DiagnosticTestHelper {
         List<String> patterns = extractPatterns(line, reader);
         int lineNumber = reader.getLineNumber();
         for (String pattern : patterns) {
-          Matcher<? super Iterable<Diagnostic<JavaFileObject>>> patternMatcher =
+          Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> patternMatcher =
               hasItem(diagnosticOnLine(source.toUri(), lineNumber, pattern));
           assertTrue(
               "Did not see an error on line " + lineNumber + " containing " + pattern
@@ -222,8 +263,8 @@ public class DiagnosticTestHelper {
 
         if (checkName != null) {
           // Diagnostic must contain check name.
-          Matcher<? super Iterable<Diagnostic<JavaFileObject>>> checkNameMatcher = hasItem(
-              diagnosticOnLine(source.toUri(), lineNumber, "[" + checkName + "]"));
+          Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> checkNameMatcher =
+              hasItem(diagnosticOnLine(source.toUri(), lineNumber, "[" + checkName + "]"));
           assertTrue(
               "Did not see an error on line " + lineNumber + " containing [" + checkName
                   + "]. All errors:\n" + diagnostics,
@@ -232,7 +273,7 @@ public class DiagnosticTestHelper {
 
       } else {
         int lineNumber = reader.getLineNumber() + 1;
-        Matcher<? super Iterable<Diagnostic<JavaFileObject>>> matcher =
+        Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
             not(hasItem(diagnosticOnLine(source.toUri(), lineNumber)));
         if (!matcher.matches(diagnostics)) {
           fail("Saw unexpected error on line " + lineNumber + ". All errors:\n" + diagnostics);
