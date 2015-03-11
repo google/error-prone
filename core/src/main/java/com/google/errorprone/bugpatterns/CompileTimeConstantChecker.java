@@ -62,7 +62,8 @@ import java.util.Iterator;
 @BugPattern(name = "CompileTimeConstant",
     summary =
         "Non-compile-time constant expression passed to parameter with "
-        + "@CompileTimeConstant type annotation",
+        + "@CompileTimeConstant type annotation. If your expression is using another "
+        + "@CompileTimeConstant parameter, make sure that parameter is also marked final.",
     explanation =
         "A method or constructor with one or more parameters whose declaration is "
         + "annotated with the @CompileTimeConstant type annotation must only be invoked "
