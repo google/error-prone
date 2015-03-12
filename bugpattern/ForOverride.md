@@ -7,7 +7,7 @@ maturity: MATURE
 ---
 
 # Bug pattern: ForOverride
-__Method annotated @ForOverride must be protected and only invoked from declaring class__
+__Method annotated @ForOverride must be protected or package-private and only invoked from declaring class__
 
 ## The problem
 A method that overrides a @ForOverride method should not be invoked directly. Instead, it should be invoked only from the class in which it was declared. For example, if overriding Converter.doForward, you should invoke it through Converter.convert. For testing, factor out the code you want to run to a separate method.

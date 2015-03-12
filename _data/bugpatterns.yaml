@@ -34,11 +34,14 @@
     to.'}
 - {name: CheckReturnValue, summary: Ignored return value of method that is annotated with @CheckReturnValue}
 - {name: ComparisonOutOfRange, summary: Comparison to value that is out of range for the compared type}
-- {name: CompileTimeConstant, summary: Non-compile-time constant expression passed to parameter with @CompileTimeConstant type annotation}
+- {name: CompileTimeConstant, summary: 'Non-compile-time constant expression passed
+    to parameter with @CompileTimeConstant type annotation. If your expression is
+    using another @CompileTimeConstant parameter, make sure that parameter is also
+    marked final.'}
 - {name: DeadException, summary: Exception created but not thrown}
 - {name: DepAnn, summary: Deprecated item is not annotated with @Deprecated}
 - {name: EqualsNaN, summary: == NaN always returns false; use the isNaN methods instead}
-- {name: ForOverride, summary: Method annotated @ForOverride must be protected and only invoked from declaring class}
+- {name: ForOverride, summary: Method annotated @ForOverride must be protected or package-private and only invoked from declaring class}
 - {name: GuiceAssistedInjectScoping, summary: Scope annotation on implementation class of AssistedInject factory is not allowed}
 - {name: InvalidPatternSyntax, summary: Invalid syntax used for a regular expression}
 - {name: JUnit3TestNotRun, summary: Test method will not be run; please prefix name with "test"}
