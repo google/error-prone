@@ -1126,8 +1126,8 @@ public class Matchers {
 
   /**
    * Matches an assertion AST node if the given matcher matches its condition.
-   * 
-   * @param conditionMatcher the matcher to apply to the condition in the assertion, e.g. in 
+   *
+   * @param conditionMatcher the matcher to apply to the condition in the assertion, e.g. in
    * "assert false", the "false" part of the statement
    */
   public static Matcher<AssertTree> assertionWithCondition(
