@@ -236,11 +236,11 @@
                   <goal>java</goal>
                 </goals>
                 <configuration>
-                  <mainClass>com.google.errorprone.DocGen</mainClass>
+                  <mainClass>com.google.errorprone.DocGenTool</mainClass>
                   <arguments>
-                    <argument>${basedir}/target/generated-sources/annotations/bugPatterns.txt</argument>
-                    <argument>${basedir}/target/generated-wiki/</argument>
-                    <argument>${basedir}/src/test/resources/</argument>
+                    <argument>-bug_patterns=${basedir}/target/generated-sources/annotations/bugPatterns.txt</argument>
+                    <argument>-docs_repository=${basedir}/target/generated-wiki/</argument>
+                    <argument>-examples=${basedir}/src/test/resources/</argument>
                   </arguments>
                 </configuration>
               </execution>
