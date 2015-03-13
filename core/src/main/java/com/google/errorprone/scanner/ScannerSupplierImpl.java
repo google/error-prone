@@ -29,7 +29,7 @@ import org.pcollections.PMap;
 
 /**
  * An implementation of a {@link ScannerSupplier}, abstracted as a set of all known
- * {@link BugChecker}s and a set of enabled {@link BugCheckerSupplier}s.  The set of
+ * {@link BugChecker}s and a set of enabled {@link BugChecker}s.  The set of
  * enabled suppliers must be a subset of all known suppliers.
  */
 class ScannerSupplierImpl extends ScannerSupplier {
