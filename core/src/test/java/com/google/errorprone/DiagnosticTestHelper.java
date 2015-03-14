@@ -16,6 +16,7 @@
 
 package com.google.errorprone;
 
+import static java.util.Locale.ENGLISH;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
 import static org.hamcrest.Matchers.allOf;
@@ -136,6 +137,12 @@ public class DiagnosticTestHelper {
       @Override
       public boolean matchesSafely(Diagnostic<? extends JavaFileObject> item,
           Description mismatchDescription) {
+        if (item.getSource() == null) {
+          mismatchDescription.appendText("diagnostic not attached to a file: ")
+              .appendValue(item.getMessage(ENGLISH));
+          return false;
+        }
+
         if (!item.getSource().toUri().equals(fileURI)) {
           mismatchDescription.appendText("diagnostic not in file ").appendValue(fileURI);
           return false;
@@ -165,6 +172,12 @@ public class DiagnosticTestHelper {
       @Override
       public boolean matchesSafely(Diagnostic<? extends JavaFileObject> item,
           Description mismatchDescription) {
+        if (item.getSource() == null) {
+          mismatchDescription.appendText("diagnostic not attached to a file: ")
+              .appendValue(item.getMessage(ENGLISH));
+          return false;
+        }
+
         if (!item.getSource().toUri().equals(fileURI)) {
           mismatchDescription.appendText("diagnostic not in file ").appendValue(fileURI);
           return false;
