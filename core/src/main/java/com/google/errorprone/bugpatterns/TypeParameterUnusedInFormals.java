@@ -39,7 +39,6 @@ import com.sun.tools.javac.code.Type.TypeVar;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
-import com.sun.tools.javac.tree.JCTree.JCTypeCast;
 import com.sun.tools.javac.tree.JCTree.JCTypeParameter;
 import com.sun.tools.javac.tree.TreeScanner;
 
@@ -109,13 +108,6 @@ public class TypeParameterUnusedInFormals extends BugChecker implements MethodTr
       if (TypeParameterFinder.visit(formalParam.type).contains(retType)) {
         return Description.NO_MATCH;
       }
-    }
-
-    // Ignore cases where the method has a body (is not abstract) and the type is never used in the
-    // body. Methods that claim to return 'any' type are OK if they only return null, or always
-    // throw.
-    if (tree.getBody() != null && !CastFinder.find(tree.getBody(), retType)) {
-      return Description.NO_MATCH;
     }
 
     return attemptFix(retType, tree, state);
@@ -267,31 +259,6 @@ public class TypeParameterUnusedInFormals extends BugChecker implements MethodTr
     @Override
     public Void visitType(Type type, Void unused) {
       return null;
-    }
-  }
-
-  private static class CastFinder extends TreeScanner {
-
-    static boolean find(Tree tree, Type retType) {
-      if (tree == null) {
-        return false;
-      }
-      CastFinder finder = new CastFinder(retType);
-      ((JCTree) tree).accept(finder);
-      return finder.found;
-    }
-
-    Type retType;
-    boolean found = false;
-
-    private CastFinder(Type retType) {
-      this.retType = retType;
-    }
-
-    @Override
-    public void visitTypeCast(JCTypeCast tree) {
-      found |= retType.tsym.equals(ASTHelpers.getSymbol(tree.clazz));
-      scan(tree.expr);
     }
   }
 }

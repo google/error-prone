@@ -23,6 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+
 @RunWith(JUnit4.class)
 public class TypeParameterUnusedInFormalsTest {
 
@@ -153,37 +154,6 @@ public class TypeParameterUnusedInFormalsTest {
             "import java.util.List;",
             "class Test<T> {",
             "  T noop(T t) { return t; }",
-            "}")
-    );
-  }
-
-  @Test
-  public void okAlwaysThrows() throws Exception {
-      compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines("Test.java",
-            "class Test {",
-            "  <T> T logAndThrow() { throw new RuntimeException(); }",
-            "}")
-    );
-  }
-
-  @Test
-  public void okAlwaysReturnsNull() throws Exception {
-      compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines("Test.java",
-            "class Test {",
-            "  <T> T nullFactory() { return null; }",
-            "}")
-    );
-  }
-
-  @Test
-  public void badCast() throws Exception {
-      compilationHelper.assertCompileSucceedsWithMessages(
-        compilationHelper.fileManager().forSourceLines("Test.java",
-            "class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  <T> T nullFactory() { return (T) null; }",
             "}")
     );
   }
