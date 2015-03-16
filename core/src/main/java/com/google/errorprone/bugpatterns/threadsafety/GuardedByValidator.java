@@ -73,7 +73,7 @@ public class GuardedByValidator extends BugChecker implements VariableTreeMatche
     if (result.isValid()) {
       return Description.NO_MATCH;
     }
-    return Description.builder(tree, checker)
+    return BugChecker.buildDescriptionFromChecker(tree, checker)
         .setMessage(String.format(MESSAGE_FORMAT, result.message()))
         .build();
   }

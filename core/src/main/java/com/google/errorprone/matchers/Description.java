@@ -24,12 +24,12 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
-import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.fixes.Fix;
 
 import com.sun.source.tree.Tree;
 
 import javax.annotation.CheckReturnValue;
+import javax.annotation.Nullable;
 
 /**
  * Simple data object containing the information captured about an AST match.
@@ -61,6 +61,7 @@ public class Description {
   /**
    * The link to include in the error message. May be null if there is no link.
    */
+  @Nullable
   private final String link;
 
   /**
@@ -135,19 +136,9 @@ public class Description {
 
   /**
    * Returns a new builder for {@link Description}s.
-   *
-   * @param node the node where the error is
-   * @param checker the {@code BugChecker} instance that is producing this {@code Description}
-   */
-  public static Builder builder(Tree node, BugChecker checker) {
-    return new Builder(node, checker);
-  }
-
-  /**
-   * Returns a new builder for {@link Description}s.
    */
   public static Builder builder(
-      Tree node, String name, String link, SeverityLevel severity, String message) {
+      Tree node, String name, @Nullable String link, SeverityLevel severity, String message) {
     return new Builder(node, name, link, severity, message);
   }
 
@@ -162,20 +153,15 @@ public class Description {
     private ImmutableList.Builder<Fix> fixListBuilder = ImmutableList.builder();
     private String rawMessage;
 
-    private Builder(Tree node, BugChecker checker) {
-      Preconditions.checkNotNull(checker);
-      this.node = Preconditions.checkNotNull(node);
-      this.name = checker.canonicalName();
-      this.linkUrl = checker.linkUrl();
-      this.severity = checker.defaultSeverity();
-      this.rawMessage = checker.message();
-    }
-
     private Builder(
-        Tree node, String name, String linkUrl, SeverityLevel severity, String rawMessage) {
+        Tree node,
+        String name,
+        @Nullable String linkUrl,
+        SeverityLevel severity,
+        String rawMessage) {
       this.node = Preconditions.checkNotNull(node);
       this.name = Preconditions.checkNotNull(name);
-      this.linkUrl = Preconditions.checkNotNull(linkUrl);
+      this.linkUrl = linkUrl;
       this.severity = Preconditions.checkNotNull(severity);
       this.rawMessage = Preconditions.checkNotNull(rawMessage);
     }

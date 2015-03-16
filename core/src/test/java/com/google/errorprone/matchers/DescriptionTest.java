@@ -73,9 +73,10 @@ public class DescriptionTest {
 
   @Test
   public void testCustomDescription() {
-    Description description = Description.builder(new MockTree(), new MyChecker())
-        .setMessage("custom message")
-        .build();
+    Description description =
+        BugChecker.buildDescriptionFromChecker(new MockTree(), new MyChecker())
+            .setMessage("custom message")
+            .build();
     assertEquals("DeadException", description.checkName);
     assertEquals(
         "custom message\n  (see http://errorprone.info/bugpattern/DeadException)",
@@ -99,9 +100,10 @@ public class DescriptionTest {
 
   @Test
   public void testCustomLink() {
-    Description description = Description.builder(new MockTree(), new CustomLinkChecker())
-        .setMessage("custom message")
-        .build();
+    Description description =
+        BugChecker.buildDescriptionFromChecker(new MockTree(), new CustomLinkChecker())
+            .setMessage("custom message")
+            .build();
     assertEquals(
         "[CustomLinkChecker] custom message\n  (see https://www.google.com/)",
         description.getMessage());

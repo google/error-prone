@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.base.MoreObjects.firstNonNull;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.MaturityLevel;
@@ -216,7 +217,22 @@ public abstract class BugChecker implements Suppressible, Serializable {
    * message or multiple fixes.
    */
   protected Description.Builder buildDescription(Tree node) {
-    return Description.builder(node, this);
+    return buildDescriptionFromChecker(node, this);
+  }
+
+  /**
+   * Returns a new builder for {@link Description}s.
+   *
+   * @param node the node where the error is
+   * @param checker the {@code BugChecker} instance that is producing this {@code Description}
+   */
+  public static Description.Builder buildDescriptionFromChecker(Tree node, BugChecker checker) {
+    return Description.builder(
+        Preconditions.checkNotNull(node),
+        checker.canonicalName(),
+        checker.linkUrl(),
+        checker.defaultSeverity(),
+        checker.message());
   }
 
   public String canonicalName() {
