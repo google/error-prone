@@ -91,6 +91,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.annotation.CheckReturnValue;
+
 /**
  * A base class for implementing bug checkers. The {@code BugChecker} supplies a Scanner
  * implementation for this checker, making it easy to use a single checker.
@@ -199,6 +201,7 @@ public abstract class BugChecker implements Suppressible, Serializable {
   /**
    * Helper to create a Description for the common case where there is a fix.
    */
+  @CheckReturnValue
   protected Description describeMatch(Tree node, Fix fix) {
     return buildDescription(node)
         .addFix(fix)
@@ -208,6 +211,7 @@ public abstract class BugChecker implements Suppressible, Serializable {
   /**
    * Helper to create a Description for the common case where there is no fix.
    */
+  @CheckReturnValue
   protected Description describeMatch(Tree node) {
     return buildDescription(node).build();
   }
@@ -216,6 +220,7 @@ public abstract class BugChecker implements Suppressible, Serializable {
    * Returns a Description builder, which allows you to customize the diagnostic with a custom
    * message or multiple fixes.
    */
+  @CheckReturnValue
   protected Description.Builder buildDescription(Tree node) {
     return buildDescriptionFromChecker(node, this);
   }
@@ -226,6 +231,7 @@ public abstract class BugChecker implements Suppressible, Serializable {
    * @param node the node where the error is
    * @param checker the {@code BugChecker} instance that is producing this {@code Description}
    */
+  @CheckReturnValue
   public static Description.Builder buildDescriptionFromChecker(Tree node, BugChecker checker) {
     return Description.builder(
         Preconditions.checkNotNull(node),
