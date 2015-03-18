@@ -258,4 +258,19 @@ public class CompileTimeConstantCheckerTest {
             "  }",
             "}"));
   }
+
+  @Test
+  public void testMatches_nonFinalCompileTimeConstantParam() throws Exception {
+    compilationHelper.assertCompileFailsWithMessages(
+        compilationHelper.fileManager().forSourceLines("test/CompileTimeConstantTestCase.java",
+            "package test;",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "public class CompileTimeConstantTestCase {",
+            "  public static void m(@CompileTimeConstant String y) { }",
+            "  public static void r(@CompileTimeConstant String x) { ",
+            "    // BUG: Diagnostic contains: . Did you mean to make 'x' final?",
+            "    m(x); ",
+            "  }",
+            "}"));
+  }
 }

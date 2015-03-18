@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.Category.GUAVA;
 import static com.google.errorprone.BugPattern.LinkType.NONE;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.CompileTimeConstantExpressionMatcher.hasCompileTimeConstantAnnotation;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -35,6 +36,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.tree.JCTree;
 
 import java.util.Iterator;
@@ -62,8 +64,7 @@ import java.util.Iterator;
 @BugPattern(name = "CompileTimeConstant",
     summary =
         "Non-compile-time constant expression passed to parameter with "
-        + "@CompileTimeConstant type annotation. If your expression is using another "
-        + "@CompileTimeConstant parameter, make sure that parameter is also marked final.",
+        + "@CompileTimeConstant type annotation.",
     explanation =
         "A method or constructor with one or more parameters whose declaration is "
         + "annotated with the @CompileTimeConstant type annotation must only be invoked "
@@ -73,64 +74,44 @@ import java.util.Iterator;
 public class CompileTimeConstantChecker extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
 
+  private static final String DID_YOU_MEAN_FINAL_FMT_MESSAGE =
+      " Did you mean to make '%s' final?";
+
   private final Matcher<ExpressionTree> compileTimeConstExpressionMatcher =
       new CompileTimeConstantExpressionMatcher();
 
-  private final Matcher<MethodInvocationTree> methodInvocationTreeMatcher =
-      new Matcher<MethodInvocationTree>() {
-        @Override
-        public boolean matches(MethodInvocationTree tree, VisitorState state) {
-          ExpressionTree methodSelect = tree.getMethodSelect();
-          Symbol sym = ASTHelpers.getSymbol(methodSelect);
-          if (sym == null) {
-            throw new IllegalStateException();
-          }
-          return matchArguments(state, (Symbol.MethodSymbol) sym, tree.getArguments().iterator());
-        }
-  };
-
-  private final Matcher<NewClassTree> newClassTreeMatcher = new Matcher<NewClassTree>() {
-    @Override
-    public boolean matches(NewClassTree tree, VisitorState state) {
-      JCTree.JCNewClass newClass = (JCTree.JCNewClass) tree;
-      return matchArguments(
-          state, (Symbol.MethodSymbol) newClass.constructor, tree.getArguments().iterator());
-    }
-  };
-
   /**
    * Matches formal parameters with
-   * {@link com.google.common.annotations.CompileTimeConstant} annotations against
+   * {@link com.google.errorprone.annotations.CompileTimeConstant} annotations against
    * corresponding actual parameters.
    *
-   * @param state the visitor state
+   * @param state        the visitor state
    * @param calleeSymbol the method whose formal parameters to consider
    * @param actualParams the list of actual parameters
-   *
-   * @return {@code true} <i>iff</i> for any of the actual parameters that is annotated with
-   *         {@link com.google.common.annotations.CompileTimeConstant}, the corresponding
-   *         formal parameter is not a compile-time-constant expression in the sense of
-   *         {@link CompileTimeConstantExpressionMatcher}.
+   * @return a {@code Description} of the match <i>iff</i> for any of the actual parameters that
+   * is annotated with {@link com.google.errorprone.annotations.CompileTimeConstant}, the
+   * corresponding formal parameter is not a compile-time-constant expression in the sense of
+   * {@link CompileTimeConstantExpressionMatcher}. Otherwise returns {@code Description.NO_MATCH}.
    */
-  private boolean matchArguments(VisitorState state, final Symbol.MethodSymbol calleeSymbol,
-      Iterator<? extends ExpressionTree> actualParams) {
+  private Description matchArguments(VisitorState state, final Symbol.MethodSymbol calleeSymbol,
+                                     Iterator<? extends ExpressionTree> actualParams) {
     Symbol.VarSymbol lastFormalParam = null;
     for (Symbol.VarSymbol formalParam : calleeSymbol.getParameters()) {
       lastFormalParam = formalParam;
       // It appears that for some reason, the Tree for implicit Enum constructors
-      // inculdes an invocation of super(), but the target symbol has the signature
+      // includes an invocation of super(), but the target symbol has the signature
       // Enum(String, int). This resulted in NoSuchElementExceptions.
-      // It is safe to return false in this case, since even if this could happen
+      // It is safe to return no match in this case, since even if this could happen
       // in another scenario, a non-existent actual parameter can't possibly
       // be a non-constant parameter for a @CompileTimeConstant formal.
       if (!actualParams.hasNext()) {
-        return false;
+        return Description.NO_MATCH;
       }
       ExpressionTree actualParam = actualParams.next();
-      if (CompileTimeConstantExpressionMatcher.hasCompileTimeConstantAnnotation(
+      if (hasCompileTimeConstantAnnotation(
           state, formalParam)) {
         if (!compileTimeConstExpressionMatcher.matches(actualParam, state)) {
-          return true;
+          return handleMatch(actualParam, state);
         }
       }
     }
@@ -138,38 +119,54 @@ public class CompileTimeConstantChecker extends BugChecker
     // If the last formal parameter is a vararg and has the @CompileTimeConstant annotation,
     // we need to check the remaining args as well.
     if (lastFormalParam == null || (lastFormalParam.flags() & Flags.VARARGS) == 0) {
-      return false;
+      return Description.NO_MATCH;
     }
-    if (!CompileTimeConstantExpressionMatcher.hasCompileTimeConstantAnnotation(
+    if (!hasCompileTimeConstantAnnotation(
         state, lastFormalParam)) {
-      return false;
+      return Description.NO_MATCH;
     }
     while (actualParams.hasNext()) {
       ExpressionTree actualParam = actualParams.next();
       if (!compileTimeConstExpressionMatcher.matches(actualParam, state)) {
-        return true;
+        return handleMatch(actualParam, state);
       }
     }
-    return false;
+    return Description.NO_MATCH;
+  }
+
+  /**
+   * If the non-constant variable is annotated with @CompileTimeConstant, it must have been
+   * non-final. Suggest making it final in the error message.
+   */
+  private Description handleMatch(ExpressionTree actualParam, VisitorState state) {
+    Symbol sym = ASTHelpers.getSymbol(actualParam);
+    if (!(sym instanceof VarSymbol)) {
+      return describeMatch(actualParam);
+    }
+    VarSymbol var = (VarSymbol) sym;
+    if (!hasCompileTimeConstantAnnotation(state, var)) {
+      return describeMatch(actualParam);
+    }
+    return buildDescription(actualParam)
+        .setMessage(this.message()
+            + String.format(DID_YOU_MEAN_FINAL_FMT_MESSAGE, var.getSimpleName()))
+        .build();
   }
 
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
-    if (!newClassTreeMatcher.matches(tree, state)) {
-      return Description.NO_MATCH;
-    }
-
-    // There are no suggested fixes for this bug.
-    return describeMatch(tree);
+    JCTree.JCNewClass newClass = (JCTree.JCNewClass) tree;
+    return matchArguments(
+        state, (Symbol.MethodSymbol) newClass.constructor, tree.getArguments().iterator());
   }
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (!methodInvocationTreeMatcher.matches(tree, state)) {
+    ExpressionTree methodSelect = tree.getMethodSelect();
+    Symbol sym = ASTHelpers.getSymbol(methodSelect);
+    if (sym == null) {
       return Description.NO_MATCH;
     }
-
-    // There are no suggested fixes for this bug.
-    return describeMatch(tree);
+    return matchArguments(state, (Symbol.MethodSymbol) sym, tree.getArguments().iterator());
   }
 }
