@@ -16,6 +16,8 @@
 
 package com.google.errorprone;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import com.google.auto.service.AutoService;
 import com.google.common.base.Joiner;
 
@@ -63,7 +65,7 @@ public class DocGenProcessor extends AbstractProcessor {
     try {
       FileObject manifest = processingEnv.getFiler()
           .createResource(StandardLocation.SOURCE_OUTPUT, "", "bugPatterns.txt");
-      pw = new PrintWriter(new OutputStreamWriter(manifest.openOutputStream()));
+      pw = new PrintWriter(new OutputStreamWriter(manifest.openOutputStream(), UTF_8));
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
