@@ -83,6 +83,7 @@ public class ErrorProneJavaCompilerTest {
 
     // error-prone options should be handled
     assertThat(compiler.isSupportedOption("-Xep:")).isEqualTo(0);
+    assertThat(compiler.isSupportedOption("-XepIgnoreUnknownCheckNames")).isEqualTo(0);
 
     // old-style error-prone options are not supported
     assertThat(compiler.isSupportedOption("-Xepdisable:")).isEqualTo(-1);

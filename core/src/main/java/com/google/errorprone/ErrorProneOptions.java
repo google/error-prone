@@ -60,7 +60,9 @@ public class ErrorProneOptions {
    * see {@link javax.tools.OptionChecker#isSupportedOption(String)}
    */
   public static int isSupportedOption(String option) {
-    return option.startsWith(FLAG_PREFIX) ? 0 : -1;
+    boolean isSupported = option.startsWith(FLAG_PREFIX)
+        || option.equals(IGNORE_UNKNOWN_CHECKS_FLAG);
+    return isSupported ? 0 : -1;
   }
 
   /**
