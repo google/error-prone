@@ -30,7 +30,6 @@ import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.BugPattern.Suppressibility;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.Writer;
@@ -147,8 +146,8 @@ class BugPatternFileGenerator implements LineProcessor<List<Instance>> {
     result.add(pattern);
 
     // replace spaces in filename with underscores
-    Writer writer = new FileWriter(
-        new File(outputDir, pattern.name.replace(' ', '_') + ".md"));
+    Writer writer = Files.newWriter(
+        new File(outputDir, pattern.name.replace(' ', '_') + ".md"), UTF_8);
     // replace "\n" with a carriage return for explanation
     parts[9] = parts[9].replace("\\n", "\n");
 
