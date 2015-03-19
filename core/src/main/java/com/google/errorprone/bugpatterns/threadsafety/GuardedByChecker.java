@@ -38,7 +38,7 @@ import com.sun.tools.javac.code.Type;
 /**
  * @author cushon@google.com (Liam Miller-Cushon)
  */
-@BugPattern(name = "GuardedByChecker",
+@BugPattern(name = "GuardedByChecker", altNames = "GuardedBy",
     summary = "Checks for unguarded accesses to fields and methods with @GuardedBy annotations",
     explanation = "The @GuardedBy annotation is used to associate a lock with a fields or methods."
         + " Accessing a guarded field or invoking a guarded method should only be done when the"
