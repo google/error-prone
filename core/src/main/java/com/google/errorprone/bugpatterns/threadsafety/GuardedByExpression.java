@@ -31,6 +31,8 @@ import com.sun.tools.javac.util.Names;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.lang.model.element.ElementKind;
+
 /**
  * The lock expression of an {@code @GuardedBy} annotation.
  *
@@ -254,7 +256,10 @@ public abstract class GuardedByExpression {
         sb.append(String.format("%s.this", exp.sym().owner.name));
       } else {
         pprint(exp.base(), sb);
-        sb.append(String.format(".%s", exp.sym().name)); 
+        sb.append(String.format(".%s", exp.sym().name));
+        if (exp.sym().getKind() == ElementKind.METHOD) {
+          sb.append("()");
+        }
       }
     }
   }

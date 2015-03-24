@@ -1174,6 +1174,29 @@ public class GuardedByCheckerTest {
   }
 
   @Test
+  public void synchronizedOnLockMethod_negative() throws Exception {
+    compilationHelper.assertCompileSucceeds(
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            // do not remove, regression test for a bug when RWL is on the classpath
+            "import java.util.concurrent.locks.ReadWriteLock;",
+            "class Test {",
+            "  Object lock() { return null; }",
+            "  @GuardedBy(\"lock()\")",
+            "  int x;",
+            "  void m() {",
+            "    synchronized (lock()) {",
+            "      x++;",
+            "    }",
+            "  }",
+            "}"
+        )
+    );
+  }
+
+  @Test
   public void serializable() throws IOException {
     new ObjectOutputStream(new ByteArrayOutputStream()).writeObject(new GuardedByChecker());
   }

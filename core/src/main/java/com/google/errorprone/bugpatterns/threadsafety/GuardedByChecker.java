@@ -130,12 +130,7 @@ public class GuardedByChecker extends GuardedByValidator implements BugChecker.V
    * {@code java.util.concurrent.locks.ReadWriteLock}.
    */
   private static boolean isRWLock(GuardedByExpression guard, VisitorState state) {
-    Symbol guardSym = guard.sym();
-    if (guardSym == null) {
-      return false;
-    }
-
-    Type guardType = guardSym.type;
+    Type guardType = guard.type();
     if (guardType == null) {
       return false;
     }
