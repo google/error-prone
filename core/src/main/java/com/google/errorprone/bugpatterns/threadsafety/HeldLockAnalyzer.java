@@ -18,7 +18,11 @@ package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
+import com.google.auto.value.AutoValue;
+import com.google.common.base.Function;
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.concurrent.UnlockMethod;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Kind;
@@ -39,8 +43,10 @@ import com.sun.source.tree.TryTree;
 import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
+import com.sun.tools.javac.tree.JCTree.JCNewClass;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -78,7 +84,34 @@ public class HeldLockAnalyzer {
    * members.
    */
   public static void analyze(VisitorState state, LockEventListener listener) {
-    new LockScanner(state, listener).scan(state.getPath(), HeldLockSet.empty());
+    HeldLockSet locks = HeldLockSet.empty();
+    locks = handleMonitorGuards(state, locks);
+    new LockScanner(state, listener).scan(state.getPath(), locks);
+  }
+
+  // Don't use Class#getName() for inner classes, we don't want `Monitor$Guard`
+  private static final String MONITOR_GUARD_CLASS =
+      "com.google.common.util.concurrent.Monitor.Guard";
+
+  private static HeldLockSet handleMonitorGuards(VisitorState state, HeldLockSet locks) {
+    JCNewClass newClassTree =
+        ASTHelpers.findEnclosingNode(state.getPath(), JCNewClass.class);
+    if (newClassTree == null) {
+      return locks;
+    }
+    Symbol clazzSym = ASTHelpers.getSymbol(newClassTree.clazz);
+    if (!(clazzSym instanceof ClassSymbol)) {
+      return locks;
+    }
+    if (!((ClassSymbol) clazzSym).fullname.contentEquals(MONITOR_GUARD_CLASS)) {
+      return locks;
+    }
+    Optional<GuardedByExpression> lockExpression = GuardedByBinder.bindExpression(
+        Iterables.getOnlyElement(newClassTree.getArguments()), state);
+    if (!lockExpression.isPresent()) {
+      return locks;
+    }
+    return locks.plus(lockExpression.get());
   }
 
   private static class LockScanner extends TreePathScanner<Void, HeldLockSet> {
@@ -194,8 +227,41 @@ public class HeldLockAnalyzer {
     }
   }
 
-  private static final String LOCK_CLASS = "java.util.concurrent.locks.Lock";
-  private static final String MONITOR_CLASS = "com.google.common.util.concurrent.Monitor";
+  /**
+   * An abstraction over the lock classes we understand.
+   */
+  @AutoValue
+  abstract static class LockResource {
+
+    /** The fully-qualified name of the lock class. */
+    abstract String className();
+
+    /** The method that acquires the lock. */
+    abstract String lockMethod();
+
+    /** The method that releases the lock. */
+    abstract String unlockMethod();
+
+    public Matcher<ExpressionTree> createUnlockMatcher() {
+      return instanceMethod().onDescendantOf(className()).named(unlockMethod());
+    }
+
+    public Matcher<ExpressionTree> createLockMatcher() {
+      return instanceMethod().onDescendantOf(className()).named(lockMethod());
+    }
+
+    static LockResource create(String className, String lockMethod, String unlockMethod) {
+      return new AutoValue_HeldLockAnalyzer_LockResource(className, lockMethod, unlockMethod);
+    }
+  }
+
+  /**
+   * The set of supported lock classes.
+   */
+  private static final ImmutableList<LockResource> LOCK_RESOURCES = ImmutableList.of(
+      LockResource.create("java.util.concurrent.locks.Lock", "lock", "unlock"),
+      LockResource.create("com.google.common.util.concurrent.Monitor", "enter", "leave"),
+      LockResource.create("java.util.concurrent.Semaphore", "acquire", "release"));
 
   private static class LockOperationFinder extends TreeScanner<Void, Void> {
 
@@ -243,7 +309,7 @@ public class HeldLockAnalyzer {
 
     /**
      * Checks for locks that are released directly. Currently only
-     * {@link java.util.concurrent.lock.Lock#unlock()} is supported.
+     * {@link java.util.concurrent.locks.Lock#unlock()} is supported.
      *
      * TODO(user): Semaphores, CAS, ... ?
      */
@@ -272,7 +338,7 @@ public class HeldLockAnalyzer {
     }
 
     /**
-     * Checks {@link @UnlockMethod}-annotated methods.
+     * Checks {@link UnlockMethod}-annotated methods.
      */
     private void handleUnlockAnnotatedMethods(MethodInvocationTree tree) {
       UnlockMethod annotation = ASTHelpers.getAnnotation(tree, UnlockMethod.class);
@@ -302,9 +368,17 @@ public class HeldLockAnalyzer {
 
     /** Matcher for methods that release lock resources. */
     private static final Matcher<ExpressionTree> UNLOCK_MATCHER =
-        Matchers.<ExpressionTree>anyOf(
-            instanceMethod().onDescendantOf(LOCK_CLASS).named("unlock"),
-            instanceMethod().onDescendantOf(MONITOR_CLASS).named("leave"));
+        Matchers.<ExpressionTree>anyOf(unlockMatchers());
+
+    private static Iterable<Matcher<ExpressionTree>> unlockMatchers() {
+      return Iterables.transform(LOCK_RESOURCES,
+          new Function<LockResource, Matcher<ExpressionTree>>() {
+            @Override
+            public Matcher<ExpressionTree> apply(LockResource res) {
+              return res.createUnlockMatcher();
+            }
+          });
+    }
 
     static Collection<GuardedByExpression> find(Tree tree, VisitorState state) {
       return LockOperationFinder.find(tree, state, UNLOCK_MATCHER);
@@ -319,9 +393,17 @@ public class HeldLockAnalyzer {
 
     /** Matcher for methods that acquire lock resources. */
     private static final Matcher<ExpressionTree> LOCK_MATCHER =
-        Matchers.<ExpressionTree>anyOf(
-            instanceMethod().onDescendantOf(LOCK_CLASS).named("lock"),
-            instanceMethod().onDescendantOf(MONITOR_CLASS).named("enter"));
+        Matchers.<ExpressionTree>anyOf(unlockMatchers());
+
+    private static Iterable<Matcher<ExpressionTree>> unlockMatchers() {
+      return Iterables.transform(LOCK_RESOURCES,
+          new Function<LockResource, Matcher<ExpressionTree>>() {
+            @Override
+            public Matcher<ExpressionTree> apply(LockResource res) {
+              return res.createLockMatcher();
+            }
+          });
+    }
 
     static Collection<GuardedByExpression> find(Tree tree, VisitorState state) {
       return LockOperationFinder.find(tree, state, LOCK_MATCHER);

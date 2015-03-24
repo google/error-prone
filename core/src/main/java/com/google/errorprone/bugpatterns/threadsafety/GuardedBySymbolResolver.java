@@ -201,6 +201,9 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
     if (searchSuperTypes == SearchSuperTypes.YES) {
       type = getSuperType(enclosingClass, name);
     }
+    if (enclosingClass.getSimpleName().contentEquals(name)) {
+      type = enclosingClass;
+    }
     if (type == null) {
       type = getLexicallyEnclosing(enclosingClass, name);
     }

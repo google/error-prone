@@ -20,11 +20,10 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
+import com.google.common.base.Joiner;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
-import com.google.errorprone.fixes.Fix;
-import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 
@@ -93,16 +92,37 @@ public class GuardedByChecker extends GuardedByValidator implements BugChecker.V
       return Description.NO_MATCH;
     }
 
-    if (!locks.allLocks().contains(guard)) {
-      String message = String.format("Expected %s to be held, instead found %s", guard, locks);
-      // TODO(user) - this fix is a debugging aid, remove it before productionizing the check.
-      Fix fix = SuggestedFix.prefixWith(tree, String.format("/* %s */", message));
-      return buildDescription(tree)
-          .setMessage(message)
-          .addFix(fix)
-          .build();
+    if (locks.allLocks().contains(guard)) {
+      return Description.NO_MATCH;
     }
-    return Description.NO_MATCH;
+
+    return buildDescription(tree).setMessage(buildMessage(guard, locks)).build();
+  }
+
+  /**
+   * Construct a diagnostic message, e.g.:
+   *
+   * <ul>
+   * <li>This access should be guarded by 'this', which is not currently held
+   * <li>This access should be guarded by 'this'; instead found 'mu'
+   * <li>This access should be guarded by 'this'; instead found: 'mu1', 'mu2'
+   * </ul>
+   */
+  private String buildMessage(GuardedByExpression guard, HeldLockSet locks) {
+    StringBuilder message = new StringBuilder();
+    message.append(
+        String.format(
+            "This access should be guarded by '%s'",
+            guard));
+    int heldLocks = locks.allLocks().size();
+    if (heldLocks == 0) {
+      message.append(", which is not currently held");
+    } else {
+      message.append(String.format("; instead found: '%s'",
+          Joiner.on("', '").join(locks.allLocks())));
+    }
+    String content = message.toString();
+    return content;
   }
 
   /**
@@ -128,7 +148,7 @@ public class GuardedByChecker extends GuardedByValidator implements BugChecker.V
     return state.getTypes().isSubtype(guardType, rwLockSymbol.type);
   }
 
-  // TODO(user) - this is kind of a hack. Provide an abstraction for matchers that need to do
+  // TODO(user) - this is a hack. Provide an abstraction for matchers that need to do
   // stateful visiting? (e.g. a traversal that passes along a set of held locks...)
   private void report(Description description, VisitorState state) {
     if (description == null || description == Description.NO_MATCH) {

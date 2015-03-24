@@ -17,12 +17,12 @@
 package com.google.errorprone;
 
 import static java.util.Locale.ENGLISH;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.CharSource;

@@ -399,6 +399,19 @@ public class GuardedByBinderTest {
               )));
   }
 
+  @Test
+  public void explicitThisSameClass() throws Exception {
+      assertEquals(
+          "(THIS)",
+          bind("Test", "Test.this",
+              fileManager.forSourceLines(
+                  "threadsafety/Test.java",
+                  "package threadsafety;",
+                  "class Test {",
+                  "}"
+              )));
+  }
+
   //TODO(user): disallow non-final lock expressions
   @Ignore
   @Test

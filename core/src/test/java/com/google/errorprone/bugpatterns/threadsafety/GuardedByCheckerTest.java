@@ -49,7 +49,7 @@ public class GuardedByCheckerTest {
             "  void m() {",
             "    lock.lock();",
             "    // BUG: Diagnostic contains:",
-            "    // Expected this.lock",
+            "    // access should be guarded by 'this.lock'",
             "    x++;",
             "    try {",
             "      x++;",
@@ -59,7 +59,7 @@ public class GuardedByCheckerTest {
             "      lock.unlock();",
             "    }",
             "    // BUG: Diagnostic contains:",
-            "    // Expected this.lock",
+            "    // access should be guarded by 'this.lock'",
             "    x++;",
             "  }",
             "}"
@@ -105,7 +105,7 @@ public class GuardedByCheckerTest {
             "  void m() {",
             "    monitor.enter();",
             "    // BUG: Diagnostic contains:",
-            "    // Expected this.monitor",
+            "    // access should be guarded by 'this.monitor'",
             "    x++;",
             "    try {",
             "      x++;",
@@ -113,7 +113,7 @@ public class GuardedByCheckerTest {
             "      monitor.leave();",
             "    }",
             "    // BUG: Diagnostic contains:",
-            "    // Expected this.monitor",
+            "    // access should be guarded by 'this.monitor'",
             "    x++;",
             "  }",
             "}"
@@ -138,7 +138,7 @@ public class GuardedByCheckerTest {
             "    lock2.lock();",
             "    try {",
             "    // BUG: Diagnostic contains:",
-            "    // Expected this.lock1",
+            "    // access should be guarded by 'this.lock1'",
             "      x++;",
             "    } finally {",
             "      lock2.unlock();",
@@ -243,7 +243,7 @@ public class GuardedByCheckerTest {
             "  public static int x;",
             "  void m() {",
             "    // BUG: Diagnostic contains:",
-            "    // Expected Test.lock",
+            "    // access should be guarded by 'Test.lock'",
             "    Test.x++;",
             "  }",
             "}"
@@ -279,7 +279,8 @@ public class GuardedByCheckerTest {
             "}",
             "class Main {",
             "  void m(Test t) {",
-            "    // BUG: Diagnostic contains: Expected t.mu",
+            "    // BUG: Diagnostic contains:",
+            "      // should be guarded by 't.mu'",
             "    t.y++;",
             "  }",
             "}"
@@ -339,8 +340,7 @@ public class GuardedByCheckerTest {
     );
   }
 
-  // TODO(user): support read/write lock copies
-  @Ignore
+  @Ignore // TODO(user): support read/write lock copies
   @Test
   public void testReadWriteLockCopy() throws Exception {
     compilationHelper.assertCompileSucceeds(
@@ -469,7 +469,8 @@ public class GuardedByCheckerTest {
             "  @GuardedBy(\"this\") boolean b = false;",
             "  private final class Baz {",
             "    private synchronized void n() {",
-            "      // BUG: Diagnostic contains: Expected Test.this",
+            "      // BUG: Diagnostic contains:",
+            "      // should be guarded by 'Test.this'",
             "      b = true;",
             "    }",
             "  }",
@@ -491,7 +492,8 @@ public class GuardedByCheckerTest {
             "    b = true;",
             "    new Object() {",
             "      void m() {",
-            "        // BUG: Diagnostic contains: Expected Test.this",
+            "        // BUG: Diagnostic contains:",
+            "        // should be guarded by 'Test.this'",
             "        b = true;",
             "      }",
             "    };",
@@ -634,11 +636,13 @@ public class GuardedByCheckerTest {
             "  @GuardedBy(\"lock\") static boolean flag = false;",
             "  void m() {",
             "    synchronized (B.lock) {",
-            "      // BUG: Diagnostic contains: Expected A.lock",
+            "      // BUG: Diagnostic contains:",
+            "      // should be guarded by 'A.lock'",
             "      A.flag = true;",
             "    }",
             "    synchronized (A.lock) {",
-            "      // BUG: Diagnostic contains: Expected B.lock",
+            "      // BUG: Diagnostic contains:",
+            "      // should be guarded by 'B.lock'",
             "      B.flag = true;",
             "    }",
             "  }",
@@ -663,11 +667,13 @@ public class GuardedByCheckerTest {
             "  @GuardedBy(\"lock\") static boolean flag = false;",
             "  void m() {",
             "    synchronized (B.lock) {",
-            "      // BUG: Diagnostic contains: Expected A.lock",
+            "      // BUG: Diagnostic contains:",
+            "      // should be guarded by 'A.lock'",
             "      A.flag = true;",
             "    }",
             "    synchronized (A.lock) {",
-            "      // BUG: Diagnostic contains: Expected B.lock",
+            "      // BUG: Diagnostic contains:",
+            "      // should be guarded by 'B.lock'",
             "      B.flag = true;",
             "    }",
             "  }",
@@ -717,7 +723,8 @@ public class GuardedByCheckerTest {
             "    synchronized (this.lock) {",
             "      this.x++;",
             "    }",
-            "    // BUG: Diagnostic contains: Expected this.lock",
+            "    // BUG: Diagnostic contains:",
+            "    // should be guarded by 'this.lock'",
             "    this.x++;",
             "  }",
             "}",
@@ -743,7 +750,8 @@ public class GuardedByCheckerTest {
             "        synchronized (Outer.this.lock) {",
             "          this.x++;",
             "        }",
-            "        // BUG: Diagnostic contains: Expected Outer.this.lock",
+            "        // BUG: Diagnostic contains:",
+            "        // should be guarded by 'Outer.this.lock'",
             "        this.x++;",
             "      }",
             "    }",
@@ -770,7 +778,8 @@ public class GuardedByCheckerTest {
             "        synchronized (Outer.this.lock) {",
             "          Outer.this.x++;",
             "        }",
-            "        // BUG: Diagnostic contains: Expected Outer.this.lock",
+            "        // BUG: Diagnostic contains:",
+            "        // should be guarded by 'Outer.this.lock'",
             "        Outer.this.x++;",
             "      }",
             "    }",
@@ -798,7 +807,8 @@ public class GuardedByCheckerTest {
             "          synchronized (Outer.this.lock) {",
             "            Inner.this.x++;",
             "          }",
-            "          // BUG: Diagnostic contains: Expected Outer.this.lock",
+            "          // BUG: Diagnostic contains:",
+            "          // should be guarded by 'Outer.this.lock'",
             "          Inner.this.x++;",
             "        }",
             "      }",
@@ -826,7 +836,8 @@ public class GuardedByCheckerTest {
             "      synchronized (this) {",
             "        this.x++;",
             "      }",
-            "      // BUG: Diagnostic contains: Expected this",
+            "      // BUG: Diagnostic contains:",
+            "      // should be guarded by 'this'",
             "      this.x++;",
             "    }",
             "  }",
@@ -851,7 +862,8 @@ public class GuardedByCheckerTest {
             "        synchronized (Outer.this) {",
             "          x++;",
             "        }",
-            "        // BUG: Diagnostic contains: Expected Outer.this",
+            "        // BUG: Diagnostic contains:",
+            "      // should be guarded by 'Outer.this'",
             "        x++;",
             "      }",
             "    }",
@@ -877,7 +889,8 @@ public class GuardedByCheckerTest {
             "        synchronized (Outer.this) {",
             "          Outer.this.x++;",
             "        }",
-            "        // BUG: Diagnostic contains: Expected Outer.this",
+            "        // BUG: Diagnostic contains:",
+            "      // should be guarded by 'Outer.this'",
             "        Outer.this.x++;",
             "      }",
             "    }",
@@ -904,7 +917,8 @@ public class GuardedByCheckerTest {
             "          synchronized (Outer.this) {",
             "            Inner.this.x++;",
             "          }",
-            "          // BUG: Diagnostic contains: Expected Outer.this",
+            "          // BUG: Diagnostic contains:",
+            "          // should be guarded by 'Outer.this'",
             "          Inner.this.x++;",
             "        }",
             "      }",
@@ -951,8 +965,9 @@ public class GuardedByCheckerTest {
             "    @GuardedBy(\"lock\") int x = 0;",
             "    void m(Inner i) {",
             "      synchronized (WrongInnerClassInstance.this.lock) {",
-            "        // BUG: Diagnostic contains: Expected WrongInnerClassInstance.this.lock to be "
-            + "held, instead found [WrongInnerClassInstance.this.lock]",
+            "        // BUG: Diagnostic contains:",
+            "        // should be guarded by 'WrongInnerClassInstance.this.lock'; instead found:"
+            + " 'WrongInnerClassInstance.this.lock'",
             "        i.x++;",
             "      }",
             "    }",
@@ -962,10 +977,9 @@ public class GuardedByCheckerTest {
     );
   }
 
-  // TODO(user): support try-with-resources
   // (This currently passes because the analysis ignores try-with-resources, not because it
   // understands why this example is safe.)
-  @Ignore
+  @Ignore // TODO(user): support try-with-resources
   @Test
   public void tryWithResources() throws Exception {
     compilationHelper.assertCompileSucceeds(
@@ -1039,7 +1053,8 @@ public class GuardedByCheckerTest {
             "  public void handle() {",
             "    runHandler(new Handler() {",
             "      public void apply() {",
-            "        // BUG: Diagnostic contains: Expected Transaction.this to be held",
+            "        // BUG: Diagnostic contains:",
+            "        // should be guarded by 'Transaction.this'",
             "        x++;",
             "      }",
             "    });",
@@ -1103,6 +1118,59 @@ public class GuardedByCheckerTest {
             "    copyOfNames.add(name);  // should be an error: this access is not thread-safe!",
             "  }",
             "}"));
+  }
+
+  @Test
+  public void testMonitorGuard() throws Exception {
+    compilationHelper.assertCompileSucceeds(
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "import com.google.common.util.concurrent.Monitor;",
+            "import java.util.List;",
+            "import java.util.ArrayList;",
+            "class Test {",
+            "  final Monitor monitor = new Monitor();",
+            "  @GuardedBy(\"monitor\") int x;",
+            "  final Monitor.Guard guard = new Monitor.Guard(monitor) {",
+            "    @Override public boolean isSatisfied() {",
+            "      x++;",
+            "      return true;",
+            "    }",
+            "  };",
+            "}"));
+  }
+
+  @Test
+  public void testSemaphore() throws Exception {
+    compilationHelper.assertCompileFailsWithMessages(
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "import java.util.concurrent.Semaphore;",
+            "class Test {",
+            "  final Semaphore semaphore = null;",
+            "  @GuardedBy(\"semaphore\")",
+            "  int x;",
+            "  void m() throws InterruptedException {",
+            "    semaphore.acquire();",
+            "    // BUG: Diagnostic contains:",
+            "    // access should be guarded by 'this.semaphore'",
+            "    x++;",
+            "    try {",
+            "      x++;",
+            "    } finally {",
+            "      semaphore.release();",
+            "    }",
+            "    // BUG: Diagnostic contains:",
+            "    // access should be guarded by 'this.semaphore'",
+            "    x++;",
+            "  }",
+            "}"
+        )
+    );
   }
 
   @Test
