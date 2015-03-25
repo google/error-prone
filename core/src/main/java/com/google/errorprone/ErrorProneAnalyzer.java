@@ -18,12 +18,14 @@ package com.google.errorprone;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.base.Verify.verify;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Throwables;
 import com.google.errorprone.scanner.Scanner;
 
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TaskEvent;
 import com.sun.source.util.TaskEvent.Kind;
@@ -32,7 +34,6 @@ import com.sun.source.util.TreePath;
 import com.sun.tools.javac.api.MultiTaskListener;
 import com.sun.tools.javac.code.Symbol.CompletionFailure;
 import com.sun.tools.javac.main.JavaCompiler;
-import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
@@ -82,22 +83,6 @@ public class ErrorProneAnalyzer implements TaskListener {
     this.errorProneScanner = scanner;
   }
 
-  private static class DeclFreeCompilationUnitWrapper extends JCCompilationUnit {
-    private DeclFreeCompilationUnitWrapper(JCCompilationUnit original) {
-      super(filter(original));
-    }
-
-    static com.sun.tools.javac.util.List<JCTree> filter(JCCompilationUnit original) {
-      com.sun.tools.javac.util.List<JCTree> defs = com.sun.tools.javac.util.List.nil();
-      for (JCTree def : original.defs) {
-        if (!(def instanceof JCClassDecl)) {
-          defs = defs.append(def);
-        }
-      }
-      return defs;
-    }
-  }
-
   @Override
   public void started(TaskEvent taskEvent) {
     checkState(initialized);
@@ -128,6 +113,18 @@ public class ErrorProneAnalyzer implements TaskListener {
   }
 
   /**
+   * Returns true if all declarations inside the given compilation unit have been visited.
+   */
+  private boolean finishedCompilation(CompilationUnitTree tree) {
+    for (Tree type : tree.getTypeDecls()) {
+      if (!seen.contains(type)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
    * Reports that a class is ready for error-prone to analyze.
    *
    * @param path the path from the compilation unit to the class declaration
@@ -135,24 +132,35 @@ public class ErrorProneAnalyzer implements TaskListener {
    */
   public void reportReadyForAnalysis(TaskEvent taskEvent, TreePath path, boolean hasErrors) {
     try {
-      if (seen.add(path.getCompilationUnit())) {
-        // Visit the compilation unit separately from the enclosed class declarations, and
-        // prevent scanners from accessing the (incomplete) class declarations.
-        TreePath rootPath = new TreePath(new DeclFreeCompilationUnitWrapper(
-            (JCCompilationUnit) path.getCompilationUnit()));
-        errorProneScanner.scan(rootPath, createVisitorState(path.getCompilationUnit()));
-      }
-
-      if (path.getLeaf().getKind() == Tree.Kind.COMPILATION_UNIT) {
-        // If we're visiting, e.g., a package-info.java file with no class decls, then we're done.
-        return;
-      }
-
-      if (!seen.add(path.getLeaf())) {
-        throw new IllegalStateException("Duplicate FLOW event for: " + taskEvent.getTypeElement());
-      }
-
+      // Assert that the event is unique and scan the current tree.
+      verify(seen.add(path.getLeaf()), "Duplicate FLOW event for: %s", taskEvent.getTypeElement());
       errorProneScanner.scan(path, createVisitorState(path.getCompilationUnit()));
+
+      // We only get TaskEvents for compilation units if they contain no package declarations
+      // (e.g. package-info.java files). Otherwise there are events for each individual
+      // declaration. Once we've processed all of the declarations we manually start a post-order
+      // visit of the compilation unit.
+      if (path.getLeaf().getKind() != Tree.Kind.COMPILATION_UNIT
+          && finishedCompilation(path.getCompilationUnit())) {
+        CompilationUnitTree tree = path.getCompilationUnit();
+        VisitorState visitorState = createVisitorState(path.getCompilationUnit());
+
+
+        errorProneScanner.matchCompilationUnit(tree, visitorState);
+
+        // Manually traverse into the components of the compilation tree we are interested in, and
+        // skip type decls: top-level declarations are visited separately first, and at this point
+        // parts of the classes could be lowered away.
+        if (tree.getPackage() != null) {
+          errorProneScanner.scan(new TreePath(path, tree.getPackage()), visitorState);
+        }
+        for (ImportTree importTree : tree.getImports()) {
+          if (importTree == null) {
+            continue;
+          }
+          errorProneScanner.scan(new TreePath(path, importTree), visitorState);
+        }
+      }
 
     } catch (CompletionFailure e) {
       // A CompletionFailure can be triggered when error-prone tries to complete a symbol

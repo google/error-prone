@@ -23,6 +23,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Suppressible;
 import com.google.errorprone.util.ASTHelpers;
 
+import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
@@ -158,5 +159,10 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
    */
   public Map<String, SeverityLevel> severityMap() {
     return Collections.emptyMap();
+  }
+
+  /** Performs a non-recursive visit of a {@link CompilationUnitTree}. */
+  // TODO(user): refactor callers to use ErrorProneScanner directly, and remove it here?
+  public void matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
   }
 }

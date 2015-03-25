@@ -23,6 +23,7 @@ import com.google.errorprone.scanner.Scanner;
 
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MemberSelectTree;
 
@@ -35,7 +36,7 @@ import org.junit.runners.JUnit4;
  */
 @RunWith(JUnit4.class)
 public class NonNullLiteralTest extends CompilerBasedAbstractTest {
-  
+
   @Test
   public void shouldMatchPrimitiveLiterals() {
     writeFile("A.java",
@@ -65,7 +66,7 @@ public class NonNullLiteralTest extends CompilerBasedAbstractTest {
       );
       assertCompiles(nonNullLiteralMatches(true, Matchers.nonNullLiteral()));
   }
-  
+
   @Test
   public void shouldMatchClassLiteral() {
     writeFile("A.java",
@@ -78,7 +79,7 @@ public class NonNullLiteralTest extends CompilerBasedAbstractTest {
       );
       assertCompiles(nonNullLiteralMatches(true, Matchers.nonNullLiteral()));
   }
-  
+
   @Test
   public void shouldNotMatchClassDeclaration() {
     writeFile("A.java",
@@ -91,7 +92,7 @@ public class NonNullLiteralTest extends CompilerBasedAbstractTest {
     );
     assertCompiles(nonNullLiteralMatches(false, Matchers.nonNullLiteral()));
   }
-  
+
   @Test
   public void shouldNotMatchMemberAccess() {
     writeFile("A.java",
@@ -103,7 +104,7 @@ public class NonNullLiteralTest extends CompilerBasedAbstractTest {
         "  }",
         "}"
     );
-    
+
     writeFile("B.java",
         "import com.google.A;",
         "public class B {",
@@ -130,7 +131,12 @@ public class NonNullLiteralTest extends CompilerBasedAbstractTest {
         assertTrue(node.toString(), !shouldMatch ^ toMatch.matches(node, visitorState));
         return super.visitMemberSelect(node, visitorState);
       }
-      
+
+      @Override
+      public Void visitImport(ImportTree node, VisitorState visitorState) {
+        return null;
+      }
+
       @Override
       public Void visitCompilationUnit(CompilationUnitTree node, VisitorState visitorState) {
         return null;

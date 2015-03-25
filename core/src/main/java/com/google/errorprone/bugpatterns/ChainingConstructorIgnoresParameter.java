@@ -38,10 +38,8 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 
-import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
-import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
@@ -79,8 +77,7 @@ public final class ChainingConstructorIgnoresParameter extends BugChecker
   private final Multimap<MethodSymbol, Caller> callersToEvaluate = ArrayListMultimap.create();
 
   @Override
-  public Description matchCompilationUnit(List<? extends AnnotationTree> packageAnnotations,
-      ExpressionTree packageName, List<? extends ImportTree> imports, VisitorState state) {
+  public Description matchCompilationUnit(CompilationUnitTreeInfo info, VisitorState state) {
     /*
      * Clear the collections to save memory. (I wonder if it also helps to handle weird cases when a
      * class has multiple definitions. But I would expect for multiple definitions within the same

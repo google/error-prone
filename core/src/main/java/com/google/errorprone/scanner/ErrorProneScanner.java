@@ -34,6 +34,7 @@ import com.google.errorprone.bugpatterns.BugChecker.BreakTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.CaseTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.CatchTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeInfo;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.CompoundAssignmentTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ConditionalExpressionTreeMatcher;
@@ -154,7 +155,7 @@ public class ErrorProneScanner extends Scanner {
   public ErrorProneScanner(BugChecker... checkers) {
     this(Arrays.asList(checkers));
   }
-  
+
   private static Map<String, BugPattern.SeverityLevel> defaultSeverities(
       Iterable<BugChecker> checkers) {
     ImmutableMap.Builder<String, BugPattern.SeverityLevel> builder = ImmutableMap.builder();
@@ -586,18 +587,25 @@ public class ErrorProneScanner extends Scanner {
     return super.visitClass(tree, visitorState);
   }
 
+  /**
+   * Runs {@link CompilationUnitTreeMatcher}s on the current compilation unit, but does not
+   * descend into child nodes.
+   */
+  @Override
+  public void matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
+    for (CompilationUnitTreeMatcher matcher : compilationUnitMatchers) {
+      if (!isSuppressed(matcher)) {
+        reportMatch(
+            matcher.matchCompilationUnit(CompilationUnitTreeInfo.create(tree), state),
+            tree, state);
+      }
+    }
+  }
+
   @Override
   public Void visitCompilationUnit(CompilationUnitTree tree, VisitorState visitorState) {
     VisitorState state = visitorState.withPath(getCurrentPath());
-    for (CompilationUnitTreeMatcher matcher : compilationUnitMatchers) {
-      if (!isSuppressed(matcher)) {
-        reportMatch(matcher.matchCompilationUnit(
-            tree.getPackageAnnotations(),
-            tree.getPackageName(),
-            tree.getImports(),
-            state), tree, state);
-      }
-    }
+    matchCompilationUnit(tree, state);
     return super.visitCompilationUnit(tree, visitorState);
   }
 
@@ -1029,7 +1037,7 @@ public class ErrorProneScanner extends Scanner {
     }
     return super.visitWildcard(tree, visitorState);
   }
-  
+
   @Override
   public Map<String, SeverityLevel> severityMap() {
     return severities;

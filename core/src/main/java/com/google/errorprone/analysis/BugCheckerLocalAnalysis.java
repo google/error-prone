@@ -32,6 +32,7 @@ import com.google.errorprone.bugpatterns.BugChecker.BreakTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.CaseTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.CatchTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeInfo;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.CompoundAssignmentTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ConditionalExpressionTreeMatcher;
@@ -199,8 +200,7 @@ public final class BugCheckerLocalAnalysis extends SimpleTreeVisitor<Void, Visit
   public Void visitCompilationUnit(CompilationUnitTree node, VisitorState state) {
     if (checker instanceof CompilationUnitTreeMatcher) {
       CompilationUnitTreeMatcher matcher = (CompilationUnitTreeMatcher) checker;
-      report(matcher.matchCompilationUnit(node.getPackageAnnotations(), node.getPackageName(),
-          node.getImports(), state), state);
+      report(matcher.matchCompilationUnit(CompilationUnitTreeInfo.create(node), state), state);
     }
     return null;
   }

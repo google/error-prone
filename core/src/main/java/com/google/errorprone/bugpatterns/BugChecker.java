@@ -18,7 +18,10 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.base.MoreObjects.firstNonNull;
 
+import com.google.auto.value.AutoValue;
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.MaturityLevel;
@@ -43,6 +46,7 @@ import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ContinueTree;
@@ -92,6 +96,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import javax.annotation.CheckReturnValue;
+import javax.tools.JavaFileObject;
 
 /**
  * A base class for implementing bug checkers. The {@code BugChecker} supplies a Scanner
@@ -261,7 +266,7 @@ public abstract class BugChecker implements Suppressible, Serializable {
   public SeverityLevel defaultSeverity() {
     return defaultSeverity;
   }
-  
+
   public SeverityLevel severity(Map<String, SeverityLevel> severities) {
     return firstNonNull(severities.get(canonicalName), defaultSeverity);
   }
@@ -329,15 +334,66 @@ public abstract class BugChecker implements Suppressible, Serializable {
   }
 
   /**
-   * Error-prone does not support matching entire compilation unit trees, due to a limitation of
+   * The information that is safe for a {@link CompilationUnitTreeMatcher} to access.
+   *
+   * <p>Error-prone does not support matching entire compilation unit trees, due to a limitation of
    * javac. Class declarations must be inspected one at a time via {@link ClassTreeMatcher}.
+   *
+   * <p>CAUTION: checks can still access the compilation unit tree using
+   * {@link VisitorState#getPath()}, but the AST nodes for type declarations may be in an
+   * inconsistent state.
    */
+  @AutoValue
+  public abstract static class CompilationUnitTreeInfo {
+
+    /**
+     * Information about the top-level types in a compilation unit.
+     */
+    @AutoValue
+    public abstract static class DeclarationInfo {
+      public abstract String name();
+      public abstract Tree.Kind kind();
+
+      public static DeclarationInfo create(String name, Tree.Kind kind) {
+        return new AutoValue_BugChecker_CompilationUnitTreeInfo_DeclarationInfo(name, kind);
+      }
+    }
+
+    /** Wrapper for {@link CompilationUnitTree#getPackageAnnotations()}. */
+    public abstract List<? extends AnnotationTree> packageAnnotations();
+
+    /** Wrapper for {@link CompilationUnitTree#getPackageName()}. */
+    public abstract Optional<ExpressionTree> packageName();
+
+    /** Wrapper for {@link CompilationUnitTree#getImports()}. */
+    public abstract List<? extends ImportTree> imports();
+
+    /** Wrapper for {@link CompilationUnitTree#getTypeDecls()}. */
+    public abstract ImmutableList<DeclarationInfo> typeDeclarations();
+
+    /** Wrapper for {@link CompilationUnitTree#getSourceFile()}. */
+    public abstract JavaFileObject sourceFile();
+
+    public static CompilationUnitTreeInfo create(final CompilationUnitTree node) {
+      final ImmutableList.Builder<DeclarationInfo> members = ImmutableList.builder();
+      for (Tree tree : node.getTypeDecls()) {
+        if (tree instanceof ClassTree) {
+          ClassTree classTree = (ClassTree) tree;
+          members.add(
+              DeclarationInfo.create(classTree.getSimpleName().toString(), classTree.getKind()));
+        }
+      }
+      return new AutoValue_BugChecker_CompilationUnitTreeInfo(
+          node.getPackageAnnotations(),
+          Optional.fromNullable(node.getPackageName()),
+          node.getImports(),
+          members.build(),
+          node.getSourceFile());
+    }
+  }
+
   public static interface CompilationUnitTreeMatcher extends Suppressible {
-    Description matchCompilationUnit(
-        List<? extends AnnotationTree> packageAnnotations,
-        ExpressionTree packageName,
-        List<? extends ImportTree> imports,
-        VisitorState state);
+    Description matchCompilationUnit(CompilationUnitTreeInfo info, VisitorState state);
   }
 
   public static interface CompoundAssignmentTreeMatcher extends Suppressible {
