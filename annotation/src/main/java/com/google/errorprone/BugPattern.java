@@ -124,6 +124,7 @@ public @interface BugPattern {
   public enum SeverityLevel {
     ERROR(true),
     WARNING(true),
+    SUGGESTION(true),
     /**
      * Should not be used for general code.
      */

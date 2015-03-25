@@ -79,7 +79,7 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
         .transform(fixToAppliedFix)
         .filter(Predicates.notNull())
         .toList();
-        
+
     StringBuilder messageBuilder = new StringBuilder(description.getMessage());
     boolean first = true;
     for (AppliedFix appliedFix : appliedFixes) {
@@ -106,6 +106,9 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
         break;
       case WARNING:
         log.warning((DiagnosticPosition) description.node, MESSAGE_BUNDLE_KEY, message);
+        break;
+      case SUGGESTION:
+        log.note((DiagnosticPosition) description.node, MESSAGE_BUNDLE_KEY, message);
         break;
       default:
         break;
