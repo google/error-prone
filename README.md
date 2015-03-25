@@ -1,4 +1,4 @@
-# error-prone
+# Error Prone
 
 Catch common Java mistakes as compile-time errors
 
@@ -37,7 +37,7 @@ Add the following configuration to your `pom.xml`.
 
 ### Ant
 
-Download the [latest release of error-prone](https://repo1.maven.org/maven2/com/google/errorprone/error_prone_ant)
+Download the [latest release of Error Prone](https://repo1.maven.org/maven2/com/google/errorprone/error_prone_ant)
 from maven, and add the following javac task in your `build.xml`.
 
 ```xml
@@ -60,9 +60,9 @@ The gradle plugin is an external contribution. The documentation and code is
 at [tbroyer/gradle-errorprone-plugin](https://github.com/tbroyer/gradle-errorprone-plugin)
 
 
-## Developing error-prone
+## Developing Error Prone
 
-To develop and build error-prone, see our documentation on the
+To develop and build Error Prone, see our documentation on the
 [wiki](https://github.com/google/error-prone/wiki/For-Developers).
 
 ## Links
