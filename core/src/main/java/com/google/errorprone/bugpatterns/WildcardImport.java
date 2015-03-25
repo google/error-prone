@@ -168,6 +168,13 @@ public class WildcardImport extends BugChecker implements ClassTreeMatcher {
       return Description.NO_MATCH;
     }
 
+    if (unit.getTypeDecls().size() > 1) {
+      // There are multiple top-level types, so visiting this class isn't sufficient to find all
+      // of the imports to add. Visiting all of the classes is hard (see the docs for
+      // CompilationUnitTreeInfo), so we skip the fix.
+      return describeMatch(wildcardImports.get(0));
+    }
+
     // Find all of the types that need to be imported.
     Set<TypeToImport> typesToImport = ImportCollector.collect((JCClassDecl) tree);
 
