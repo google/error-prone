@@ -638,6 +638,11 @@ public class Matchers {
     return new AnnotationType(annotationClassName);
   }
 
+  /** Matches an Annotation node with the given simple name. */
+  public static Matcher<AnnotationTree> annotationHasSimpleName(final String simpleName) {
+    return new AnnotationSimpleName(simpleName);
+  }
+
   /**
    * Matches a MethodInvocation AST node when the arguments at the two given indices are both the same identifier.
    */
