@@ -2,7 +2,7 @@
 <!-- NewPage -->
 <html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>UnlockMethodChecker (Maven parent POM 2.0.2-SNAPSHOT API)</title>
 <link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
 </head>
@@ -172,7 +172,7 @@ extends <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/A
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>protected <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></td>
-<td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/UnlockMethodChecker.html#getActual(com.sun.source.tree.MethodTree, com.google.errorprone.VisitorState)">getActual</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
+<td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/UnlockMethodChecker.html#getActual(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">getActual</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
          <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
 <div class="block">Searches the method body for locks that are acquired/released.</div>
 </td>
@@ -185,7 +185,7 @@ extends <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/A
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>protected <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></td>
-<td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/UnlockMethodChecker.html#getUnwanted(com.sun.source.tree.MethodTree, com.google.errorprone.VisitorState)">getUnwanted</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
+<td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/UnlockMethodChecker.html#getUnwanted(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">getUnwanted</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
            <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
 <div class="block">Searches the method body for the incorrect lock operation (e.g.</div>
 </td>
@@ -196,21 +196,21 @@ extends <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/A
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;com.google.errorprone.bugpatterns.threadsafety.<a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AbstractLockMethodChecker</a></h3>
-<code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html#matchMethod(com.sun.source.tree.MethodTree, com.google.errorprone.VisitorState)">matchMethod</a></code></li>
+<code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods_inherited_from_class_com.google.errorprone.bugpatterns.BugChecker">
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;com.google.errorprone.bugpatterns.<a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></h3>
-<code><a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html#allNames()">allNames</a>, <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html#buildDescription(com.sun.source.tree.Tree)">buildDescription</a>, <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html#buildDescriptionFromChecker(com.sun.source.tree.Tree, com.google.errorprone.bugpatterns.BugChecker)">buildDescriptionFromChecker</a>, <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html#canonicalName()">canonicalName</a>, <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html#customSuppressionAnnotation()">customSuppressionAnnotation</a>, <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html#defaultSeverity()">defaultSeverity</a>, <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html#describeMatch(com.sun.source.tree.Tree)">describeMatch</a>, <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html#describeMatch(com.sun.source.tree.Tree, com.google.errorprone.fixes.Fix)">describeMatch</a>, <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html#equals(java.lang.Object)">equals</a>, <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html#hashCode()">hashCode</a>, <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html#linkUrl()">linkUrl</a>, <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html#maturity()">maturity</a>, <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html#message()">message</a>, <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html#severity(java.util.Map)">severity</a>, <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html#suppressibility()">suppressibility</a></code></li>
+<code><a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html#allNames()">allNames</a>, <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html#buildDescription(com.sun.source.tree.Tree)">buildDescription</a>, <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html#buildDescriptionFromChecker(com.sun.source.tree.Tree,%20com.google.errorprone.bugpatterns.BugChecker)">buildDescriptionFromChecker</a>, <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html#canonicalName()">canonicalName</a>, <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html#customSuppressionAnnotation()">customSuppressionAnnotation</a>, <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html#defaultSeverity()">defaultSeverity</a>, <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html#describeMatch(com.sun.source.tree.Tree)">describeMatch</a>, <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html#describeMatch(com.sun.source.tree.Tree,%20com.google.errorprone.fixes.Fix)">describeMatch</a>, <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html#equals(java.lang.Object)">equals</a>, <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html#hashCode()">hashCode</a>, <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html#linkUrl()">linkUrl</a>, <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html#maturity()">maturity</a>, <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html#message()">message</a>, <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html#severity(java.util.Map)">severity</a>, <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html#suppressibility()">suppressibility</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods_inherited_from_class_java.lang.Object">
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;java.lang.<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></h3>
-<code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#clone()" title="class or interface in java.lang">clone</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#finalize()" title="class or interface in java.lang">finalize</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#getClass()" title="class or interface in java.lang">getClass</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#notify()" title="class or interface in java.lang">notify</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#notifyAll()" title="class or interface in java.lang">notifyAll</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#toString()" title="class or interface in java.lang">toString</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#wait()" title="class or interface in java.lang">wait</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#wait(long)" title="class or interface in java.lang">wait</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#wait(long, int)" title="class or interface in java.lang">wait</a></code></li>
+<code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#clone()" title="class or interface in java.lang">clone</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#finalize()" title="class or interface in java.lang">finalize</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#getClass()" title="class or interface in java.lang">getClass</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#notify()" title="class or interface in java.lang">notify</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#notifyAll()" title="class or interface in java.lang">notifyAll</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#toString()" title="class or interface in java.lang">toString</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#wait()" title="class or interface in java.lang">wait</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#wait(long)" title="class or interface in java.lang">wait</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#wait(long,%20int)" title="class or interface in java.lang">wait</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods_inherited_from_class_com.google.errorprone.matchers.Suppressible">
@@ -273,11 +273,11 @@ extends <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/A
 <h4>getActual</h4>
 <pre>protected&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;&nbsp;getActual(com.sun.source.tree.MethodTree&nbsp;tree,
                                  <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
-<div class="block"><strong>Description copied from class:&nbsp;<code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html#getActual(com.sun.source.tree.MethodTree, com.google.errorprone.VisitorState)">AbstractLockMethodChecker</a></code></strong></div>
+<div class="block"><strong>Description copied from class:&nbsp;<code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html#getActual(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">AbstractLockMethodChecker</a></code></strong></div>
 <div class="block">Searches the method body for locks that are acquired/released.</div>
 <dl>
 <dt><strong>Specified by:</strong></dt>
-<dd><code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html#getActual(com.sun.source.tree.MethodTree, com.google.errorprone.VisitorState)">getActual</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AbstractLockMethodChecker</a></code></dd>
+<dd><code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html#getActual(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">getActual</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AbstractLockMethodChecker</a></code></dd>
 </dl>
 </li>
 </ul>
@@ -289,11 +289,11 @@ extends <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/A
 <h4>getUnwanted</h4>
 <pre>protected&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;&nbsp;getUnwanted(com.sun.source.tree.MethodTree&nbsp;tree,
                                    <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
-<div class="block"><strong>Description copied from class:&nbsp;<code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html#getUnwanted(com.sun.source.tree.MethodTree, com.google.errorprone.VisitorState)">AbstractLockMethodChecker</a></code></strong></div>
+<div class="block"><strong>Description copied from class:&nbsp;<code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html#getUnwanted(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">AbstractLockMethodChecker</a></code></strong></div>
 <div class="block">Searches the method body for the incorrect lock operation (e.g. releasing a lock in</div>
 <dl>
 <dt><strong>Specified by:</strong></dt>
-<dd><code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html#getUnwanted(com.sun.source.tree.MethodTree, com.google.errorprone.VisitorState)">getUnwanted</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AbstractLockMethodChecker</a></code></dd>
+<dd><code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html#getUnwanted(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">getUnwanted</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AbstractLockMethodChecker</a></code></dd>
 </dl>
 </li>
 </ul>
