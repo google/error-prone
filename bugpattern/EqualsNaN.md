@@ -1,0 +1,104 @@
+---
+title: EqualsNaN
+layout: bugpattern
+category: JDK
+severity: ERROR
+maturity: MATURE
+---
+
+<div style="float:right;"><table id="metadata">
+<tr><td>Category</td><td>JDK</td></tr>
+<tr><td>Severity</td><td>ERROR</td></tr>
+<tr><td>Maturity</td><td>MATURE</td></tr>
+</table></div>
+
+# Bug pattern: EqualsNaN
+__== NaN always returns false; use the isNaN methods instead__
+
+## The problem
+As per JLS 15.21.1, == NaN comparisons always return false, even NaN == NaN. Instead, use the isNaN methods to check for NaN.
+
+## Suppression
+Suppress false positives by adding an `@SuppressWarnings("EqualsNaN")` annotation to the enclosing element.
+
+----------
+
+# Examples
+__EqualsNaNNegativeCases.java__
+
+{% highlight java %}
+/*
+ * Copyright 2014 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.google.errorprone.bugpatterns;
+
+/**
+ * @author lowasser@google.com (Louis Wasserman)
+ */
+public class EqualsNaNNegativeCases {
+  static final boolean NAN_AFTER_MATH = (0.0 / 0.0) == 1.0;
+  static final boolean NORMAL_COMPARISON = 1.0 == 2.0;
+}
+
+{% endhighlight %}
+
+__EqualsNaNPositiveCases.java__
+
+{% highlight java %}
+/*
+ * Copyright 2014 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.google.errorprone.bugpatterns;
+
+/**
+ * @author lowasser@google.com (Louis Wasserman)
+ */
+public class EqualsNaNPositiveCases {
+  
+  // BUG: Diagnostic contains: Double.isNaN(0.0)
+  static final boolean ZERO_DOUBLE_NAN = 0.0 == Double.NaN;
+  
+  // BUG: Diagnostic contains: !Double.isNaN(1.0)
+  static final boolean ONE_NOT_DOUBLE_NAN = Double.NaN != 1.0;
+  
+  // BUG: Diagnostic contains: Float.isNaN(2.f)
+  static final boolean TWO_FLOAT_NAN = 2.f == Float.NaN;
+
+  // BUG: Diagnostic contains: !Float.isNaN(3.0f)
+  static final boolean THREE_NOT_FLOAT_NAN = 3.0f != Float.NaN;
+  
+  // BUG: Diagnostic contains: Double.isNaN(Double.NaN)
+  static final boolean NAN_IS_NAN = Double.NaN == Double.NaN;
+  
+  // BUG: Diagnostic contains: Double.isNaN(123456)
+  static final boolean INT_IS_NAN = 123456 == Double.NaN;
+}
+
+{% endhighlight %}
+
