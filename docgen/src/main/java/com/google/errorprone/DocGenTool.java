@@ -23,6 +23,7 @@ import com.google.common.io.Files;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
+import com.beust.jcommander.Parameters;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +36,7 @@ import java.nio.charset.StandardCharsets;
  */
 public class DocGenTool {
 
+  @Parameters(separators = "=")
   static class Options {
     @Parameter(names = {"-bug_patterns"}, description = "Path to bugPatterns.txt",
         required = true)
