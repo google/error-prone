@@ -34,6 +34,7 @@ import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ModifiersTree;
+import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.util.Names;
 
@@ -64,6 +65,7 @@ public class RequiredModifiersChecker extends BugChecker implements AnnotationTr
 
   private static final Function<Attribute.Enum, Modifier> TO_MODIFIER =
       new Function<Attribute.Enum, Modifier>() {
+        @Override
         public Modifier apply(Attribute.Enum input) {
           return Modifier.valueOf(input.getValue().name.toString());
         }
@@ -90,9 +92,20 @@ public class RequiredModifiersChecker extends BugChecker implements AnnotationTr
 
   @Override
   public Description matchAnnotation(AnnotationTree tree, VisitorState state) {
+    Set<Modifier> requiredModifiers = getRequiredModifiers(tree, state);
+    if (requiredModifiers.isEmpty()) {
+      return Description.NO_MATCH;
+    }
+
+    Tree parent = state.getPath().getParentPath().getLeaf();
+    if (!(parent instanceof ModifiersTree)) {
+      // e.g. An annotated package name
+      return Description.NO_MATCH;
+    }
+
     Set<Modifier> missing = Sets.difference(
-        getRequiredModifiers(tree, state),
-        ((ModifiersTree) state.getPath().getParentPath().getLeaf()).getFlags());
+        requiredModifiers,
+        ((ModifiersTree) parent).getFlags());
 
     if (missing.isEmpty()) {
       return Description.NO_MATCH;

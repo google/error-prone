@@ -34,6 +34,7 @@ import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ModifiersTree;
+import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Attribute;
 
 import java.util.List;
@@ -52,6 +53,7 @@ import javax.lang.model.element.TypeElement;
     + "is incompatible with a set of provided modifiers. This check ensures that all "
     + "annotations respect their @IncompatibleModifiers specifications.",
     linkType = NONE, category = JDK, severity = WARNING, maturity = MATURE)
+// TODO(user): merge the implementation with RequiredModifiersChecker
 public class IncompatibleModifiersChecker extends BugChecker implements AnnotationTreeMatcher {
 
   private static final String MESSAGE_TEMPLATE = "%s has specified that it should not be used"
@@ -64,6 +66,7 @@ public class IncompatibleModifiersChecker extends BugChecker implements Annotati
 
   private static final Function<Attribute.Enum, Modifier> TO_MODIFIER =
       new Function<Attribute.Enum, Modifier>() {
+        @Override
         public Modifier apply(Attribute.Enum input) {
           return Modifier.valueOf(input.getValue().name.toString());
         }
@@ -88,12 +91,22 @@ public class IncompatibleModifiersChecker extends BugChecker implements Annotati
     return ImmutableSet.of();
   }
 
-
   @Override
   public Description matchAnnotation(AnnotationTree tree, VisitorState state) {
+    Set<Modifier> incompatibleModifiers = getIncompatibleModifiers(tree, state);
+    if (incompatibleModifiers.isEmpty()) {
+      return Description.NO_MATCH;
+    }
+
+    Tree parent = state.getPath().getParentPath().getLeaf();
+    if (!(parent instanceof ModifiersTree)) {
+      // e.g. An annotated package name
+      return Description.NO_MATCH;
+    }
+
     Set<Modifier> incompatible = Sets.intersection(
-        getIncompatibleModifiers(tree, state),
-        ((ModifiersTree) state.getPath().getParentPath().getLeaf()).getFlags());
+        incompatibleModifiers,
+        ((ModifiersTree) parent).getFlags());
 
     if (incompatible.isEmpty()) {
       return Description.NO_MATCH;

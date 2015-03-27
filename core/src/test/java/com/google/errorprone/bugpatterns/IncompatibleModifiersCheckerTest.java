@@ -194,4 +194,36 @@ public class IncompatibleModifiersCheckerTest {
             "@NotAbstract public class RequiredModifiersTestCase {",
             "}")));
   }
+
+  // Regression test for #313
+  @Test
+  public void negativeNestedAnnotations() throws Exception {
+    compilationHelper.assertCompileSucceeds(
+        compilationHelper.fileManager().forSourceLines("test/Test.java",
+            "package test;",
+            "@interface Foos {",
+            "  Foo[] value();",
+            "}",
+            "@interface Foo {",
+            "}",
+            "@Foos({@Foo, @Foo}) public class Test {",
+            "}"));
+  }
+
+  // Regression test for #313
+  @Test
+  public void negativePackageAnnotation() throws Exception {
+    compilationHelper.assertCompileSucceeds(Arrays.asList(
+        compilationHelper.fileManager().forSourceLines(
+            "testdata/Anno.java",
+            "package testdata;",
+            "import java.lang.annotation.Target;",
+            "import java.lang.annotation.ElementType;",
+            "@Target(ElementType.PACKAGE)",
+            "public @interface Anno {",
+            "}"),
+        compilationHelper.fileManager().forSourceLines("testdata/package-info.java",
+            "@Anno",
+            "package testdata;")));
+  }
 }
