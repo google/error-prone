@@ -28,4 +28,9 @@ public class NullablePrimitiveNegativeCases {
 
   public void method(@Nullable Integer a) {
   }
+
+  @Nullable
+  public Integer method() {
+    return new Integer(0);
+  }
 }

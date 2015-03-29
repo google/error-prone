@@ -633,7 +633,11 @@ public class Matchers {
     return new AnnotationType(annotationClassName);
   }
 
-  /**
+  public static Matcher<AnnotationTree> hasSimpleName(final String simpleName) {
+    return new AnnotationSimpleName(simpleName);
+  }
+
+    /**
    * Matches a MethodInvocation AST node when the arguments at the two given indices are both the same identifier.
    */
   public static Matcher<? super MethodInvocationTree> sameArgument(

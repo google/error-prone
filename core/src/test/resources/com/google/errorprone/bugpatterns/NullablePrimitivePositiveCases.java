@@ -31,4 +31,10 @@ public class NullablePrimitivePositiveCases {
                      @Nullable
                      int a) {
   }
+
+  // BUG: Diagnostic contains: remove
+  @Nullable
+  public int method() {
+    return 0;
+  }
 }
