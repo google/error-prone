@@ -5,3 +5,10 @@
 **/*.iml
 .idea/*
 .java-version
+
+# bazel
+bazel-bin
+bazel-error-prone
+bazel-genfiles
+bazel-out
+bazel-testlogs
