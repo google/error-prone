@@ -6,6 +6,9 @@
 .idea/*
 .java-version
 
+# jekyll
+_site
+
 # bazel
 bazel-bin
 bazel-error-prone
