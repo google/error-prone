@@ -16,7 +16,7 @@
 
 package com.google.errorprone.matchers;
 
-import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.ANY;
+import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.annotations;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -234,7 +234,7 @@ public class JUnitMatchers {
 
     private static final Matcher<ClassTree> isJUnit4TestClass = allOf(
         not(isTestCaseDescendant),
-        annotations(ANY, hasArgumentWithValue("value", isJUnit4TestRunner)));
+        annotations(AT_LEAST_ONE, hasArgumentWithValue("value", isJUnit4TestRunner)));
 
     @Override
     public boolean matches(ClassTree classTree, VisitorState state) {

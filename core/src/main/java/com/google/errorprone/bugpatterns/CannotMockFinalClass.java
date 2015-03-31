@@ -14,7 +14,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.ANY;
+import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.argument;
 import static com.google.errorprone.matchers.Matchers.classLiteral;
@@ -67,7 +67,7 @@ public class CannotMockFinalClass extends BugChecker implements MethodInvocation
       hasArgumentWithValue("value", classLiteral(isSameType("org.junit.runners.JUnit4"))));
 
   private static final Matcher<Tree> enclosingClassIsJunit4Test =
-      enclosingClass(Matchers.<ClassTree>annotations(ANY, runWithJunit4));
+      enclosingClass(Matchers.<ClassTree>annotations(AT_LEAST_ONE, runWithJunit4));
 
   private static final Matcher<VariableTree> variableOfFinalClassAnnotatedMock = allOf(
       variableType(hasModifier(Modifier.FINAL)),

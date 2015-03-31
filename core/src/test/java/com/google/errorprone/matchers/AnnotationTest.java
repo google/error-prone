@@ -17,7 +17,7 @@
 package com.google.errorprone.matchers;
 
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.ALL;
-import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.ANY;
+import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.Matchers.isType;
 import static org.junit.Assert.assertEquals;
 
@@ -76,7 +76,7 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
     writeFile("A.java",
         "package com.google;",
         "public class A {}");
-    assertCompiles(nodeWithAnnotationMatches(false, new Annotation<Tree>(ANY,
+    assertCompiles(nodeWithAnnotationMatches(false, new Annotation<Tree>(AT_LEAST_ONE,
         isType("com.google.SampleAnnotation1"))));
     assertCompiles(nodeWithAnnotationMatches(false, new Annotation<Tree>(ALL,
         isType("com.google.SampleAnnotation1"))));
@@ -88,7 +88,7 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
       "package com.google;",
       "@SampleAnnotation1",
       "public class A {}");
-    assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(ANY,
+    assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(AT_LEAST_ONE,
         isType("com.google.SampleAnnotation1"))));
     assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(ALL,
         isType("com.google.SampleAnnotation1"))));
@@ -100,7 +100,7 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
       "package com.google.foo;",
       "@com.google.SampleAnnotation1",
       "public class A {}");
-    assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(ANY,
+    assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(AT_LEAST_ONE,
         isType("com.google.SampleAnnotation1"))));
     assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(ALL,
         isType("com.google.SampleAnnotation1"))));
@@ -112,7 +112,7 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
       "package com.google;",
       "@SampleNestedAnnotation.Annotation",
       "public class A {}");
-    assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(ANY,
+    assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(AT_LEAST_ONE,
         isType("com.google.SampleNestedAnnotation.Annotation"))));
     assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(ALL,
         isType("com.google.SampleNestedAnnotation.Annotation"))));
@@ -124,7 +124,7 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
       "package com.google;",
       "@SampleAnnotation1",
       "public class A {}");
-    assertCompiles(nodeWithAnnotationMatches(false, new Annotation<Tree>(ANY,
+    assertCompiles(nodeWithAnnotationMatches(false, new Annotation<Tree>(AT_LEAST_ONE,
         isType("com.google.WrongAnnotation"))));
     assertCompiles(nodeWithAnnotationMatches(false, new Annotation<Tree>(ALL,
         isType("com.google.WrongAnnotation"))));
@@ -136,7 +136,7 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
       "package com.google.foo;",
       "@com.google.SampleAnnotation1",
       "public class A {}");
-    assertCompiles(nodeWithAnnotationMatches(false, new Annotation<Tree>(ANY,
+    assertCompiles(nodeWithAnnotationMatches(false, new Annotation<Tree>(AT_LEAST_ONE,
         isType("com.google.WrongAnnotation"))));
     assertCompiles(nodeWithAnnotationMatches(false, new Annotation<Tree>(ALL,
         isType("com.google.WrongAnnotation"))));
@@ -148,7 +148,7 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
       "package com.google;",
       "@com.google.SampleNestedAnnotation.Annotation",
       "public class A {}");
-    assertCompiles(nodeWithAnnotationMatches(false, new Annotation<Tree>(ANY,
+    assertCompiles(nodeWithAnnotationMatches(false, new Annotation<Tree>(AT_LEAST_ONE,
         isType("com.google.WrongAnnotation"))));
     assertCompiles(nodeWithAnnotationMatches(false, new Annotation<Tree>(ALL,
         isType("com.google.WrongAnnotation"))));
@@ -160,7 +160,7 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
         "package com.google;",
         "@SampleAnnotation1 @SampleAnnotation2",
         "public class A {}");
-      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(ANY,
+      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(AT_LEAST_ONE,
           Matchers.<AnnotationTree>anyOf(isType("com.google.SampleAnnotation1"),
               isType("com.google.SampleAnnotation2")))));
       assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(ALL,
@@ -174,7 +174,7 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
         "package com.google;",
         "@SampleAnnotation1 @SampleAnnotation2",
         "public class A {}");
-      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(ANY,
+      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(AT_LEAST_ONE,
           isType("com.google.SampleAnnotation1"))));
       assertCompiles(nodeWithAnnotationMatches(false, new Annotation<Tree>(ALL,
           isType("com.google.SampleAnnotation1"))));
@@ -186,7 +186,7 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
         "package com.google;",
         "@SampleAnnotation1",
         "public interface A {}");
-      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(ANY,
+      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(AT_LEAST_ONE,
           isType("com.google.SampleAnnotation1"))));
       assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(ALL,
           isType("com.google.SampleAnnotation1"))));
@@ -198,7 +198,7 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
         "package com.google;",
         "@SampleAnnotation1",
         "public enum A {}");
-      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(ANY,
+      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(AT_LEAST_ONE,
           isType("com.google.SampleAnnotation1"))));
       assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(ALL,
           isType("com.google.SampleAnnotation1"))));
@@ -212,7 +212,7 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
         "  @SampleAnnotation1",
         "  public int i;",
         "}");
-      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(ANY,
+      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(AT_LEAST_ONE,
           isType("com.google.SampleAnnotation1"))));
       assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(ALL,
           isType("com.google.SampleAnnotation1"))));
@@ -226,7 +226,7 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
         "  @SampleAnnotation1",
         "  public void foo() {}",
         "}");
-      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(ANY,
+      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(AT_LEAST_ONE,
           isType("com.google.SampleAnnotation1"))));
       assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(ALL,
           isType("com.google.SampleAnnotation1"))));
@@ -239,7 +239,7 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
         "public class A {",
         "  public void foo(@SampleAnnotation1 int i) {}",
         "}");
-      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(ANY,
+      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(AT_LEAST_ONE,
           isType("com.google.SampleAnnotation1"))));
       assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(ALL,
           isType("com.google.SampleAnnotation1"))));
@@ -253,7 +253,7 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
         "  @SampleAnnotation1",
         "  public A() {}",
         "}");
-      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(ANY,
+      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(AT_LEAST_ONE,
           isType("com.google.SampleAnnotation1"))));
       assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(ALL,
           isType("com.google.SampleAnnotation1"))));
@@ -269,7 +269,7 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
         "    int i = 0;",
         "  }",
         "}");
-      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(ANY,
+      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(AT_LEAST_ONE,
           isType("com.google.SampleAnnotation1"))));
       assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(ALL,
           isType("com.google.SampleAnnotation1"))));
@@ -281,7 +281,7 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
         "package com.google;",
         "@SampleAnnotation1",
         "public @interface A {}");
-      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(ANY,
+      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(AT_LEAST_ONE,
           isType("com.google.SampleAnnotation1"))));
       assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(ALL,
           isType("com.google.SampleAnnotation1"))));
@@ -292,7 +292,7 @@ public class AnnotationTest extends CompilerBasedAbstractTest {
     writeFile("package-info.java",
         "@SampleAnnotation1",
         "package com.google;");
-      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(ANY,
+      assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(AT_LEAST_ONE,
           isType("com.google.SampleAnnotation1"))));
       assertCompiles(nodeWithAnnotationMatches(true, new Annotation<Tree>(ALL,
           isType("com.google.SampleAnnotation1"))));

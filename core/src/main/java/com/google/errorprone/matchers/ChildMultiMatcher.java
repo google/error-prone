@@ -41,7 +41,7 @@ public abstract class ChildMultiMatcher<T extends Tree, N extends Tree>
 
   public enum MatchType {
     ALL,
-    ANY,
+    AT_LEAST_ONE,
     LAST
   }
   
@@ -89,8 +89,8 @@ public abstract class ChildMultiMatcher<T extends Tree, N extends Tree>
       switch (matchType) {
         case ALL:
           return new AllMatcher<>();
-        case ANY:
-          return new AnyMatcher<>();
+        case AT_LEAST_ONE:
+          return new AtLeastOneMatcher<>();
         case LAST:
           return new LastMatcher<>();
       }
@@ -117,9 +117,9 @@ public abstract class ChildMultiMatcher<T extends Tree, N extends Tree>
   }
   
   /**
-   * A matcher that returns true if any nodes in the list match.
+   * A matcher that returns true if at least one node in the list matches.
    */
-  private static class AnyMatcher<N extends Tree> extends ListMatcher<N> {
+  private static class AtLeastOneMatcher<N extends Tree> extends ListMatcher<N> {
     @Override
     public MatchResult<N> matches(List<Matchable<N>> matchables, Matcher<N> nodeMatcher) {
       for (Matchable<N> matchable : matchables) {

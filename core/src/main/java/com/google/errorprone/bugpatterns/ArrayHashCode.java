@@ -83,7 +83,7 @@ public class ArrayHashCode extends BugChecker implements MethodInvocationTreeMat
       Matchers.anyOf(
         staticMethod().onClass("com.google.common.base.Objects").named("hashCode"),
         staticMethod().onClass("java.util.Objects").named("hash")),
-      hasArguments(MatchType.ANY, Matchers.<ExpressionTree>isArrayType()));
+      hasArguments(MatchType.AT_LEAST_ONE, Matchers.<ExpressionTree>isArrayType()));
 
   /**
    * Matches calls to the JDK7 method {@link java.util.Objects#hashCode} with an argument of array

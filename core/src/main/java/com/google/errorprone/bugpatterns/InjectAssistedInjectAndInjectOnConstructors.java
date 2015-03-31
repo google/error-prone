@@ -19,7 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.ANY;
+import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 
@@ -61,14 +61,14 @@ public class InjectAssistedInjectAndInjectOnConstructors extends BugChecker
    * Matches if any constructor of a class is annotated with an @Inject annotation.
    */
   private MultiMatcher<ClassTree, MethodTree> constructorWithInjectMatcher = constructor(
-      ANY, Matchers.<MethodTree>anyOf(
+      AT_LEAST_ONE, Matchers.<MethodTree>anyOf(
           hasAnnotation(GUICE_INJECT_ANNOTATION), hasAnnotation(JAVAX_INJECT_ANNOTATION)));
 
   /**
    * Matches if any constructor of a class is annotated with an @AssistedInject annotation.
    */
   private MultiMatcher<ClassTree, MethodTree> constructorWithAssistedInjectMatcher =
-      constructor(ANY, Matchers.<MethodTree>hasAnnotation(ASSISTED_INJECT_ANNOTATION));
+      constructor(AT_LEAST_ONE, Matchers.<MethodTree>hasAnnotation(ASSISTED_INJECT_ANNOTATION));
 
   /**
    * Matches if a class has a constructor that is annotated with @Inject and a constructor annotated

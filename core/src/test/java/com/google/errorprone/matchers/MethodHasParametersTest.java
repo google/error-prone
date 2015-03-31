@@ -17,7 +17,7 @@
 package com.google.errorprone.matchers;
 
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.ALL;
-import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.ANY;
+import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.Matchers.isPrimitiveType;
 import static com.google.errorprone.matchers.Matchers.variableType;
 import static org.junit.Assert.assertEquals;
@@ -71,7 +71,7 @@ public class MethodHasParametersTest extends CompilerBasedAbstractTest {
         "public class A {",
         "  public void A(int i) {}",
         "}");
-    assertCompiles(methodMatches(true, new MethodHasParameters(ANY, variableType(
+    assertCompiles(methodMatches(true, new MethodHasParameters(AT_LEAST_ONE, variableType(
         isPrimitiveType()))));
     assertCompiles(methodMatches(true, new MethodHasParameters(ALL, variableType(
         isPrimitiveType()))));
@@ -84,7 +84,7 @@ public class MethodHasParametersTest extends CompilerBasedAbstractTest {
         "public class A {",
         "  public void A() {}",
         "}");
-    assertCompiles(methodMatches(false, new MethodHasParameters(ANY, variableType(
+    assertCompiles(methodMatches(false, new MethodHasParameters(AT_LEAST_ONE, variableType(
         isPrimitiveType()))));
     assertCompiles(methodMatches(false, new MethodHasParameters(ALL, variableType(
         isPrimitiveType()))));
@@ -97,7 +97,7 @@ public class MethodHasParametersTest extends CompilerBasedAbstractTest {
         "public class A {",
         "  public void A(Object obj) {}",
         "}");
-    assertCompiles(methodMatches(false, new MethodHasParameters(ANY, variableType(
+    assertCompiles(methodMatches(false, new MethodHasParameters(AT_LEAST_ONE, variableType(
         isPrimitiveType()))));
     assertCompiles(methodMatches(false, new MethodHasParameters(ALL, variableType(
         isPrimitiveType()))));
@@ -111,7 +111,7 @@ public class MethodHasParametersTest extends CompilerBasedAbstractTest {
         "  private A() {}",
         "  public void A(int i, Object obj) {}",
         "}");
-    assertCompiles(methodMatches(true, new MethodHasParameters(ANY, variableType(
+    assertCompiles(methodMatches(true, new MethodHasParameters(AT_LEAST_ONE, variableType(
         isPrimitiveType()))));
     assertCompiles(methodMatches(false, new MethodHasParameters(ALL, variableType(
         isPrimitiveType()))));

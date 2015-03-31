@@ -55,7 +55,7 @@ public class GuiceInjectOnFinalField extends BugChecker implements VariableTreeM
   private static final String GUICE_INJECT_ANNOTATION = "com.google.inject.Inject";
 
   private static final MultiMatcher<Tree, AnnotationTree> ANNOTATED_WITH_GUICE_INJECT_MATCHER =
-      annotations(MatchType.ANY, isType(GUICE_INJECT_ANNOTATION));
+      annotations(MatchType.AT_LEAST_ONE, isType(GUICE_INJECT_ANNOTATION));
 
   private static final Matcher<Tree> FINAL_FIELD_MATCHER = new Matcher<Tree>() {
     @Override
