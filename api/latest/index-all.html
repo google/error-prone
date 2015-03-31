@@ -171,6 +171,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/matchers/AnnotationHasArgumentWithValue.html#AnnotationHasArgumentWithValue(java.lang.String,%20com.google.errorprone.matchers.Matcher)">AnnotationHasArgumentWithValue(String, Matcher&lt;ExpressionTree&gt;)</a></span> - Constructor for class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/AnnotationHasArgumentWithValue.html" title="class in com.google.errorprone.matchers">AnnotationHasArgumentWithValue</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/matchers/Matchers.html#annotationHasSimpleName(java.lang.String)">annotationHasSimpleName(String)</a></span> - Static method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
+<dd>
+<div class="block">Matches an Annotation node with the given simple name.</div>
+</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/JUnit4SetUpNotRun.html#annotationReplacements()">annotationReplacements()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/JUnit4SetUpNotRun.html" title="class in com.google.errorprone.bugpatterns">JUnit4SetUpNotRun</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/JUnit4TearDownNotRun.html#annotationReplacements()">annotationReplacements()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/JUnit4TearDownNotRun.html" title="class in com.google.errorprone.bugpatterns">JUnit4TearDownNotRun</a></dt>
@@ -182,6 +186,10 @@
 <div class="block">Matches if the given annotation matcher matches all of or any of the annotations on this tree
  node.</div>
 </dd>
+<dt><a href="./com/google/errorprone/matchers/AnnotationSimpleName.html" title="class in com.google.errorprone.matchers"><span class="strong">AnnotationSimpleName</span></a> - Class in <a href="./com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/matchers/AnnotationSimpleName.html#AnnotationSimpleName(java.lang.String)">AnnotationSimpleName(String)</a></span> - Constructor for class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/AnnotationSimpleName.html" title="class in com.google.errorprone.matchers">AnnotationSimpleName</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="./com/google/errorprone/matchers/AnnotationType.html" title="class in com.google.errorprone.matchers"><span class="strong">AnnotationType</span></a> - Class in <a href="./com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/matchers/AnnotationType.html#AnnotationType(java.lang.String)">AnnotationType(String)</a></span> - Constructor for class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/AnnotationType.html" title="class in com.google.errorprone.matchers">AnnotationType</a></dt>
@@ -2240,6 +2248,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/InjectScopeAnnotationOnInterfaceOrAbstractClass.html#matchAnnotation(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matchAnnotation(AnnotationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/InjectScopeAnnotationOnInterfaceOrAbstractClass.html" title="class in com.google.errorprone.bugpatterns">InjectScopeAnnotationOnInterfaceOrAbstractClass</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/NullablePrimitive.html#matchAnnotation(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matchAnnotation(AnnotationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/NullablePrimitive.html" title="class in com.google.errorprone.bugpatterns">NullablePrimitive</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/RequiredModifiersChecker.html#matchAnnotation(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matchAnnotation(AnnotationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/RequiredModifiersChecker.html" title="class in com.google.errorprone.bugpatterns">RequiredModifiersChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/SuppressWarningsDeprecated.html#matchAnnotation(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matchAnnotation(AnnotationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/SuppressWarningsDeprecated.html" title="class in com.google.errorprone.bugpatterns">SuppressWarningsDeprecated</a></dt>
@@ -2401,6 +2411,8 @@
 <dt><span class="strong"><a href="./com/google/errorprone/matchers/AnnotationDoesNotHaveArgument.html#matches(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matches(AnnotationTree, VisitorState)</a></span> - Method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/AnnotationDoesNotHaveArgument.html" title="class in com.google.errorprone.matchers">AnnotationDoesNotHaveArgument</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/matchers/AnnotationHasArgumentWithValue.html#matches(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matches(AnnotationTree, VisitorState)</a></span> - Method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/AnnotationHasArgumentWithValue.html" title="class in com.google.errorprone.matchers">AnnotationHasArgumentWithValue</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/matchers/AnnotationSimpleName.html#matches(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matches(AnnotationTree, VisitorState)</a></span> - Method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/AnnotationSimpleName.html" title="class in com.google.errorprone.matchers">AnnotationSimpleName</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/matchers/AnnotationType.html#matches(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matches(AnnotationTree, VisitorState)</a></span> - Method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/AnnotationType.html" title="class in com.google.errorprone.matchers">AnnotationType</a></dt>
 <dd>&nbsp;</dd>
@@ -2940,6 +2952,10 @@
 <dd>
 <div class="block">A matcher that matches no AST node.</div>
 </dd>
+<dt><a href="./com/google/errorprone/bugpatterns/NullablePrimitive.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">NullablePrimitive</span></a> - Class in <a href="./com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/NullablePrimitive.html#NullablePrimitive()">NullablePrimitive()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/NullablePrimitive.html" title="class in com.google.errorprone.bugpatterns">NullablePrimitive</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="./com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation"><span class="strong">Nullness</span></a> - Enum in <a href="./com/google/errorprone/dataflow/nullnesspropagation/package-summary.html">com.google.errorprone.dataflow.nullnesspropagation</a></dt>
 <dd>
 <div class="block">Represents one of the possible nullness values in our nullness analysis.</div>

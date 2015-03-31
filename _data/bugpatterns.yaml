@@ -72,6 +72,7 @@
     fields, doing so is not recommended because the injected value may not be visible
     to other threads.'}
 - {name: JUnitAmbiguousTestClass, summary: Test class mixes JUnit 3 and JUnit 4 idioms}
+- {name: NullablePrimitive, summary: '@Nullable should not be used for primitive types.'}
 - {name: OverridesGuiceInjectableMethod, summary: 'This method is not annotated with
     @Inject, but it overrides a method that is annotated with @com.google.inject.Inject.
     Guice will inject this method,and it is recommended to annotate it explicitly.'}
