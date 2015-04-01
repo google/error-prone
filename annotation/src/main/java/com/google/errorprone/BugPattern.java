@@ -117,7 +117,7 @@ public @interface BugPattern {
    *
    * <p>Markdown syntax is allowed for this element.
    */
-  String explanation();
+  String explanation() default "";
 
   SeverityLevel severity();
 

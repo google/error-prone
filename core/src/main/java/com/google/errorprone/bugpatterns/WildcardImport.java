@@ -54,7 +54,7 @@ import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
 
 /**
- * Enforce § 3.3.1 of the style guide.
+ * Enforce style guide §3.3.1.
  *
  * <p>https://google-styleguide.googlecode.com/svn/trunk/javaguide.html#s3.3.1-wildcard-imports
  *
@@ -62,37 +62,6 @@ import javax.lang.model.element.ElementKind;
 */
 @BugPattern(name = "WildcardImport",
     summary =  "Use of wildcard imports is forbidden",
-    explanation = "Wildcard imports are forbidden by §3.3.1 of the Google Java Style Guide.\n\n"
-        + " They make code brittle and difficult to reason about, both for programmers and for"
-        + " tools."
-        + " In the following example, the processing of the first import requires reasoning about"
-        + " the classes `Outer` and `Nested`, including their supertypes, and ends up depending"
-        + " on information in the second import statement. This code is (incorrectly) rejected"
-        + " by the latest version of javac. Also, note that `I` is actually being imported via"
-        + " the name `p.q.C.I` even though it's not declared in `C`! Its canonical name is"
-        + " `p.q.D.I`. Regular single-type imports require that all types are imported by"
-        + " their canonical name, but static imports do not.\n\n"
-        + "```java\n"
-        + "package p;\n\n"
-        + "import static p.Outer.Nested.*;\n"
-        + "import static p.q.C.*;\n\n"
-        + "public class Outer {\n"
-        + "  public static class Nested implements I {\n"
-        + "  }\n"
-        + "}\n"
-        + "```\n"
-        + "```java\n"
-        + "package p.q;\n\n"
-        + "public class C extends D {\n"
-        + "}\n"
-        + "```\n"
-        + "```java\n"
-        + "package p.q;\n\n"
-        + "public class D {\n"
-        + "  public interface I {\n"
-        + "  }\n"
-        + "}\n"
-        + "```\n",
     category = GUAVA, severity = ERROR, maturity = EXPERIMENTAL)
 public class WildcardImport extends BugChecker implements ClassTreeMatcher {
 

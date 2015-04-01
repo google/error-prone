@@ -17,12 +17,9 @@
 package com.google.errorprone;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import com.google.common.io.CharStreams;
-import com.google.common.io.Files;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -31,10 +28,10 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.io.File;
-import java.io.FileReader;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
 
 @RunWith(JUnit4.class)
 public class BugPatternFileGeneratorTest {
@@ -42,18 +39,20 @@ public class BugPatternFileGeneratorTest {
   @Rule
   public TemporaryFolder tmpfolder = new TemporaryFolder();
 
-  private File exampleDir;
-  private File wikiDir;
-  private File exampleDirBase;
+  private Path exampleDir;
+  private Path wikiDir;
+  private Path exampleDirBase;
+  private Path explanationDirBase;
 
   @Before
   public void setUp() throws Exception {
-    wikiDir = tmpfolder.newFolder("wiki");
-    exampleDirBase = tmpfolder.newFolder("examples");
-    exampleDir = new File(exampleDirBase, "com/google/errorprone/bugpatterns");
-    assertTrue(exampleDir.mkdirs());
-    Files.write("here is an example",
-        new File(exampleDir, "DeadExceptionPositiveCase.java"), UTF_8);
+    wikiDir = tmpfolder.newFolder("wiki").toPath();
+    exampleDirBase = tmpfolder.newFolder("examples").toPath();
+    explanationDirBase = tmpfolder.newFolder("explanations").toPath();
+    exampleDir = exampleDirBase.resolve("com/google/errorprone/bugpatterns");
+    Files.createDirectories(exampleDir);
+    Files.write(exampleDir.resolve("DeadExceptionPositiveCase.java"),
+        Arrays.asList("here is an example"), UTF_8);
   }
 
   private static final String BUGPATTERN_LINE =
@@ -62,6 +61,12 @@ public class BugPatternFileGeneratorTest {
       + "com.google.errorprone.BugPattern.NoCustomSuppression\t"
       + "Exception created but not thrown\t"
       + "The exception is created with new, but is not thrown, and the reference is lost.\n";
+  
+  private static final String BUGPATTERN_LINE_SIDECAR =
+      "com.google.errorprone.bugpatterns.DeadException\t"
+      + "DeadException\tThrowableInstanceNeverThrown\tJDK\tERROR\tMATURE\tSUPPRESS_WARNINGS\t"
+      + "com.google.errorprone.BugPattern.NoCustomSuppression\t"
+      + "Exception created but not thrown\t\n";
 
   // Assert that the generator produces the same output it did before.
   // This is brittle, but you can open the golden file
@@ -70,25 +75,40 @@ public class BugPatternFileGeneratorTest {
   @Test
   public void regressionTest_frontmatter_pygments() throws Exception {
     BugPatternFileGenerator generator =
-        new BugPatternFileGenerator(wikiDir, exampleDirBase, true, true);
+        new BugPatternFileGenerator(wikiDir, exampleDirBase, explanationDirBase, true, true);
     generator.processLine(BUGPATTERN_LINE);
     String expected = CharStreams.toString(new InputStreamReader(
         getClass().getResourceAsStream("DeadException_frontmatter_pygments.md"), UTF_8));
     String actual = CharStreams.toString(
-        Files.newReader(new File(wikiDir, "DeadException.md"), StandardCharsets.UTF_8));
+        Files.newBufferedReader(wikiDir.resolve("DeadException.md"), UTF_8));
     System.err.println(actual);
-    assertThat(actual, is(expected));
+    System.err.println(expected);
+    assertEquals(expected.trim(), actual.trim());
   }
 
   @Test
   public void regressionTest_nofrontmatter_gfm() throws Exception {
     BugPatternFileGenerator generator =
-        new BugPatternFileGenerator(wikiDir, exampleDirBase, false, false);
+        new BugPatternFileGenerator(wikiDir, exampleDirBase, explanationDirBase, false, false);
     generator.processLine(BUGPATTERN_LINE);
     String expected = CharStreams.toString(new InputStreamReader(
         getClass().getResourceAsStream("DeadException_nofrontmatter_gfm.md"), UTF_8));
-    String actual = CharStreams.toString(new FileReader(new File(wikiDir, "DeadException.md")));
-    System.err.println(actual);
-    assertThat(actual, is(expected));
+    String actual = new String(Files.readAllBytes(wikiDir.resolve("DeadException.md")), UTF_8);
+    assertEquals(expected.trim(), actual.trim());
+  }
+
+  @Test
+  public void regressionTest_sidecar() throws Exception {
+    BugPatternFileGenerator generator =
+        new BugPatternFileGenerator(wikiDir, exampleDirBase, explanationDirBase, false, false);
+    Files.write(explanationDirBase.resolve("DeadException.md"),
+        Arrays.asList(
+            "The exception is created with new, but is not thrown, and the reference is lost."), 
+            UTF_8);
+    generator.processLine(BUGPATTERN_LINE_SIDECAR);
+    String expected = CharStreams.toString(new InputStreamReader(
+        getClass().getResourceAsStream("DeadException_nofrontmatter_gfm.md"), UTF_8));
+    String actual = new String(Files.readAllBytes(wikiDir.resolve("DeadException.md")), UTF_8);
+    assertEquals(expected.trim(), actual.trim());
   }
 }

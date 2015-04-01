@@ -19,16 +19,16 @@ package com.google.errorprone;
 import static com.google.common.io.Files.readLines;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-import com.google.common.io.Files;
-
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Utility main which consumes the same tab-delimited text file and generates GitHub pages for
@@ -41,6 +41,10 @@ public class DocGenTool {
     @Parameter(names = {"-bug_patterns"}, description = "Path to bugPatterns.txt",
         required = true)
     private String bugPatterns;
+
+    @Parameter(names = {"-explanations"}, description = "Path to side-car explanations",
+        required = true)
+    private String explanations;
 
     @Parameter(names = {"-docs_repository"}, description = "Path to docs repository",
         required = true)
@@ -62,29 +66,40 @@ public class DocGenTool {
     Options options = new Options();
     new JCommander(options, args);
 
-    final File bugPatterns = new File(options.bugPatterns);
-    if (!bugPatterns.exists()) {
-      System.err.println("Cannot find bugPatterns file: " + options.bugPatterns);
-      System.exit(1);
+    Path bugPatterns = Paths.get(options.bugPatterns);
+    if (!Files.exists(bugPatterns)) {
+      usage("Cannot find bugPatterns file: " + options.bugPatterns);
     }
-    final File wikiDir = new File(options.docsRepository);
-    wikiDir.mkdir();
-    final File exampleDirBase = new File(options.examples);
-    if (!exampleDirBase.exists()) {
-      System.err.println("Cannot find example directory: " + options.examples);
-      System.exit(1);
+    Path explanationDir = Paths.get(options.explanations);
+    if (!Files.exists(explanationDir)) {
+      usage("Cannot find explanations dir: " + options.explanations);
     }
-
-    File bugpatternDir = new File(wikiDir, "bugpattern");
-    if (!bugpatternDir.exists()) {
-      bugpatternDir.mkdirs();
+    Path wikiDir = Paths.get(options.docsRepository);
+    Files.createDirectories(wikiDir);
+    Path exampleDirBase = Paths.get(options.examples);
+    if (!Files.exists(exampleDirBase)) {
+      usage("Cannot find example directory: " + options.examples);
     }
-    new File(wikiDir, "_data").mkdirs();
-    BugPatternFileGenerator generator = new BugPatternFileGenerator(
-        bugpatternDir, exampleDirBase, options.generateFrontMatter, options.usePygments);
-    try (Writer w =
-        Files.newWriter(new File(wikiDir, "_data/bugpatterns.yaml"), StandardCharsets.UTF_8)) {
-      new BugPatternIndexYamlWriter().dump(readLines(bugPatterns, UTF_8, generator), w);
+    Path bugpatternDir = wikiDir.resolve("bugpattern");
+    if (!Files.exists(bugpatternDir)) {
+      Files.createDirectories(bugpatternDir);
     }
+    Files.createDirectories(wikiDir.resolve("_data"));
+    BugPatternFileGenerator generator = 
+        new BugPatternFileGenerator(
+            bugpatternDir,
+            exampleDirBase,
+            explanationDir,
+            options.generateFrontMatter,
+            options.usePygments);
+    try (Writer w = Files.newBufferedWriter(
+        wikiDir.resolve("_data/bugpatterns.yaml"), StandardCharsets.UTF_8)) {
+      new BugPatternIndexYamlWriter().dump(readLines(bugPatterns.toFile(), UTF_8, generator), w);
+    }
+  }
+  
+  private static void usage(String err) {
+    System.err.println(err);
+    System.exit(1);
   }
 }

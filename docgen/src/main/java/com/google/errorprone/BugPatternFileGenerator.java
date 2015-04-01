@@ -22,20 +22,22 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
-import com.google.common.io.Files;
+import com.google.common.collect.Iterables;
 import com.google.common.io.LineProcessor;
 import com.google.errorprone.BugPattern.Instance;
 import com.google.errorprone.BugPattern.MaturityLevel;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.BugPattern.Suppressibility;
 
-import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.Writer;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -47,8 +49,9 @@ import java.util.regex.Pattern;
  * @author alexeagle@google.com (Alex Eagle)
  */
 class BugPatternFileGenerator implements LineProcessor<List<Instance>> {
-  private final File outputDir;
-  private final File exampleDirBase;
+  private final Path outputDir;
+  private final Path exampleDirBase;
+  private final Path explanationDir;
   private List<Instance> result;
 
   /**
@@ -63,15 +66,20 @@ class BugPatternFileGenerator implements LineProcessor<List<Instance>> {
   private final boolean generateFrontMatter;
 
   public BugPatternFileGenerator(
-      File outputDir, File exampleDirBase, boolean generateFrontMatter, boolean usePygments) {
-    this.outputDir = outputDir;
+      Path bugpatternDir,
+      Path exampleDirBase,
+      Path explanationDir,
+      boolean generateFrontMatter,
+      boolean usePygments) {
+    this.outputDir = bugpatternDir;
     this.exampleDirBase = exampleDirBase;
+    this.explanationDir = explanationDir;
     this.generateFrontMatter = generateFrontMatter;
     this.usePygments = usePygments;
     result = new ArrayList<>();
   }
 
-  private static class ExampleFilter implements FilenameFilter {
+  private static class ExampleFilter implements DirectoryStream.Filter<Path> {
     private Pattern matchPattern;
 
     public ExampleFilter(String checkerName) {
@@ -79,8 +87,8 @@ class BugPatternFileGenerator implements LineProcessor<List<Instance>> {
     }
 
     @Override
-    public boolean accept(File dir, String name) {
-      return matchPattern.matcher(name).matches();
+    public boolean accept(Path entry) throws IOException {
+      return matchPattern.matcher(entry.getFileName().toString()).matches();
     }
   }
 
@@ -134,60 +142,79 @@ class BugPatternFileGenerator implements LineProcessor<List<Instance>> {
 
   @Override
   public boolean processLine(String line) throws IOException {
-    String[] parts = line.split("\t");
+    ArrayList<String> parts = new ArrayList<>(Splitter.on('\t').trimResults().splitToList(line));
     Instance pattern = new Instance();
-    pattern.name = parts[1];
-    pattern.altNames = parts[2];
-    pattern.maturity = MaturityLevel.valueOf(parts[5]);
-    pattern.summary = parts[8];
-    pattern.severity = SeverityLevel.valueOf(parts[4]);
-    pattern.suppressibility = Suppressibility.valueOf(parts[6]);
-    pattern.customSuppressionAnnotation = parts[7];
+    pattern.name = parts.get(1);
+    pattern.altNames = parts.get(2);
+    pattern.maturity = MaturityLevel.valueOf(parts.get(5));
+    pattern.summary = parts.get(8);
+    pattern.severity = SeverityLevel.valueOf(parts.get(4));
+    pattern.suppressibility = Suppressibility.valueOf(parts.get(6));
+    pattern.customSuppressionAnnotation = parts.get(7);
     result.add(pattern);
 
     // replace spaces in filename with underscores
-    Writer writer = Files.newWriter(
-        new File(outputDir, pattern.name.replace(' ', '_') + ".md"), UTF_8);
-    // replace "\n" with a carriage return for explanation
-    parts[9] = parts[9].replace("\\n", "\n");
+    Path checkPath = Paths.get(pattern.name.replace(' ', '_') + ".md");
 
-    MessageFormat wikiPageTemplate = constructPageTemplate(pattern, generateFrontMatter);
-    writer.write(wikiPageTemplate.format(parts));
+    try (Writer writer = Files.newBufferedWriter(
+        outputDir.resolve(checkPath), UTF_8)) {
+      // replace "\n" with a carriage return for explanation
+      parts.set(9, parts.get(9).replace("\\n", "\n"));
 
-    Iterable<String> classNameParts = Splitter.on('.').split(parts[0]);
-    String path = Joiner.on('/').join(limit(classNameParts, size(classNameParts) - 1));
-    File exampleDir = new File(exampleDirBase, path);
-    if (!exampleDir.exists()) {
-      // Not all check dirs have example fields (e.g. threadsafety).
-      // TODO(user): clean this up.
-      // System.err.println("Warning: cannot find path " + exampleDir);
-    } else {
-      // Example filename must match example pattern.
-      File[] examples = exampleDir.listFiles(new ExampleFilter(
-          parts[0].substring(parts[0].lastIndexOf('.') + 1)));
-      Arrays.sort(examples);
-      if (examples.length > 0) {
-        writer.write("\n----------\n\n");
-        writer.write("# Examples\n");
+      // load side-car explanation file, if it exists
+      Path sidecarExplanation = explanationDir.resolve(checkPath);
+      if (Files.exists(sidecarExplanation)) {
+        if (!parts.get(9).isEmpty()) {
+          throw new AssertionError(
+              String.format(
+                  "%s specifies an explanation via @BugPattern and side-car",
+                  pattern.name));
+        }
+        parts.set(9, new String(Files.readAllBytes(sidecarExplanation), UTF_8).trim());
+      }
 
-        for (File example: examples) {
-          writer.write("__" + example.getName() + "__\n\n");
-          if (usePygments) {
-            writer.write("{% highlight java %}\n");
-          } else {
-            writer.write("```java\n");
+      MessageFormat wikiPageTemplate = constructPageTemplate(pattern, generateFrontMatter);
+      writer.write(wikiPageTemplate.format(parts.toArray()));
+
+      Iterable<String> classNameParts = Splitter.on('.').split(parts.get(0));
+      String path = Joiner.on('/').join(limit(classNameParts, size(classNameParts) - 1));
+      Path exampleDir = exampleDirBase.resolve(path);
+      if (!Files.exists(exampleDir)) {
+        // Not all check dirs have example fields (e.g. threadsafety).
+        // TODO(user): clean this up.
+        // System.err.println("Warning: cannot find path " + exampleDir);
+      } else {
+        // Example filename must match example pattern.
+        List<Path> examples = new ArrayList<>();
+        ExampleFilter filter =
+            new ExampleFilter(parts.get(0).substring(parts.get(0).lastIndexOf('.') + 1));
+        try (DirectoryStream<Path> directoryStream =
+            Files.newDirectoryStream(exampleDir, filter)) {
+          Iterables.addAll(examples, directoryStream);
+        }
+        Collections.sort(examples);
+        if (examples.size() > 0) {
+          writer.write("\n----------\n\n");
+          writer.write("# Examples\n");
+
+          for (Path example: examples) {
+            writer.write("__" + example.getFileName() + "__\n\n");
+            if (usePygments) {
+              writer.write("{% highlight java %}\n");
+            } else {
+              writer.write("```java\n");
+            }
+            writer.write(new String(Files.readAllBytes(example), UTF_8).trim() + "\n");
+            if (usePygments) {
+              writer.write("{% endhighlight %}\n");
+            } else {
+              writer.write("```\n");
+            }
+            writer.write("\n");
           }
-          writer.write(Files.toString(example, UTF_8) + "\n");
-          if (usePygments) {
-            writer.write("{% endhighlight %}\n");
-          } else {
-            writer.write("```\n");
-          }
-          writer.write("\n");
         }
       }
     }
-    writer.close();
     return true;
   }
 
