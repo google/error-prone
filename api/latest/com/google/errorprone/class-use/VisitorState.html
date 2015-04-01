@@ -3,13 +3,13 @@
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Uses of Class com.google.errorprone.VisitorState (Maven parent POM 2.0.2-SNAPSHOT API)</title>
+<title>Uses of Class com.google.errorprone.VisitorState (Maven parent POM 2.0.2 API)</title>
 <link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
 </head>
 <body>
 <script type="text/javascript"><!--
     if (location.href.indexOf('is-external=true') == -1) {
-        parent.document.title="Uses of Class com.google.errorprone.VisitorState (Maven parent POM 2.0.2-SNAPSHOT API)";
+        parent.document.title="Uses of Class com.google.errorprone.VisitorState (Maven parent POM 2.0.2 API)";
     }
 //-->
 </script>
@@ -462,18 +462,18 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">PreconditionsCheckNotNullPrimitive.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/PreconditionsCheckNotNullPrimitive.html#describe(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">describe</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
-        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
-<div class="block">If the call to Preconditions.checkNotNull is part of an expression (assignment, return, etc.),
- we substitute the argument for the method call.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <td class="colLast"><span class="strong">ModifyingCollectionWithItself.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/ModifyingCollectionWithItself.html#describe(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">describe</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
         <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
 <div class="block">We expect that the lhs is a field and the rhs is an identifier, specifically
  a parameter to the method.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">PreconditionsCheckNotNullPrimitive.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/PreconditionsCheckNotNullPrimitive.html#describe(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">describe</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
+        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
+<div class="block">If the call to Preconditions.checkNotNull is part of an expression (assignment, return, etc.),
+ we substitute the argument for the method call.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -488,12 +488,12 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">WrongParameterPackage.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/WrongParameterPackage.html#describe(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">describe</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
+<td class="colLast"><span class="strong">InjectMoreThanOneInjectableConstructor.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/InjectMoreThanOneInjectableConstructor.html#describe(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">describe</a></strong>(com.sun.source.tree.MethodTree&nbsp;methodTree,
         <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">InjectMoreThanOneInjectableConstructor.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/InjectMoreThanOneInjectableConstructor.html#describe(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">describe</a></strong>(com.sun.source.tree.MethodTree&nbsp;methodTree,
+<td class="colLast"><span class="strong">WrongParameterPackage.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/WrongParameterPackage.html#describe(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">describe</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
         <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
@@ -521,37 +521,17 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">InjectMoreThanOneScopeAnnotationOnClass.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/InjectMoreThanOneScopeAnnotationOnClass.html#matchAnnotation(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matchAnnotation</a></strong>(com.sun.source.tree.AnnotationTree&nbsp;annotationTree,
-               <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <td class="colLast"><span class="strong">BugChecker.AnnotationTreeMatcher.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.AnnotationTreeMatcher.html#matchAnnotation(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matchAnnotation</a></strong>(com.sun.source.tree.AnnotationTree&nbsp;tree,
                <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">SuppressWarningsDeprecated.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/SuppressWarningsDeprecated.html#matchAnnotation(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matchAnnotation</a></strong>(com.sun.source.tree.AnnotationTree&nbsp;annotationTree,
+<td class="colLast"><span class="strong">RequiredModifiersChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/RequiredModifiersChecker.html#matchAnnotation(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matchAnnotation</a></strong>(com.sun.source.tree.AnnotationTree&nbsp;tree,
                <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <td class="colLast"><span class="strong">NullablePrimitive.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/NullablePrimitive.html#matchAnnotation(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matchAnnotation</a></strong>(com.sun.source.tree.AnnotationTree&nbsp;tree,
-               <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">InjectAssistedInjectAndInjectOnConstructors.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/InjectAssistedInjectAndInjectOnConstructors.html#matchAnnotation(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matchAnnotation</a></strong>(com.sun.source.tree.AnnotationTree&nbsp;annotationTree,
-               <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">FallThroughSuppression.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/FallThroughSuppression.html#matchAnnotation(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matchAnnotation</a></strong>(com.sun.source.tree.AnnotationTree&nbsp;annotationTree,
-               <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">InjectMoreThanOneQualifier.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/InjectMoreThanOneQualifier.html#matchAnnotation(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matchAnnotation</a></strong>(com.sun.source.tree.AnnotationTree&nbsp;annotationTree,
                <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
@@ -561,7 +541,27 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">RequiredModifiersChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/RequiredModifiersChecker.html#matchAnnotation(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matchAnnotation</a></strong>(com.sun.source.tree.AnnotationTree&nbsp;tree,
+<td class="colLast"><span class="strong">InjectAssistedInjectAndInjectOnSameConstructor.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/InjectAssistedInjectAndInjectOnSameConstructor.html#matchAnnotation(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matchAnnotation</a></strong>(com.sun.source.tree.AnnotationTree&nbsp;annotationTree,
+               <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">FallThroughSuppression.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/FallThroughSuppression.html#matchAnnotation(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matchAnnotation</a></strong>(com.sun.source.tree.AnnotationTree&nbsp;annotationTree,
+               <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">InjectMoreThanOneScopeAnnotationOnClass.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/InjectMoreThanOneScopeAnnotationOnClass.html#matchAnnotation(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matchAnnotation</a></strong>(com.sun.source.tree.AnnotationTree&nbsp;annotationTree,
+               <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">InjectScopeAnnotationOnInterfaceOrAbstractClass.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/InjectScopeAnnotationOnInterfaceOrAbstractClass.html#matchAnnotation(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matchAnnotation</a></strong>(com.sun.source.tree.AnnotationTree&nbsp;annotationTree,
+               <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">InjectJavaxInjectOnFinalField.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/InjectJavaxInjectOnFinalField.html#matchAnnotation(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matchAnnotation</a></strong>(com.sun.source.tree.AnnotationTree&nbsp;annotationTree,
                <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
@@ -571,22 +571,22 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">InjectAssistedInjectAndInjectOnSameConstructor.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/InjectAssistedInjectAndInjectOnSameConstructor.html#matchAnnotation(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matchAnnotation</a></strong>(com.sun.source.tree.AnnotationTree&nbsp;annotationTree,
+<td class="colLast"><span class="strong">InjectOverlappingQualifierAndScopeAnnotation.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/InjectOverlappingQualifierAndScopeAnnotation.html#matchAnnotation(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matchAnnotation</a></strong>(com.sun.source.tree.AnnotationTree&nbsp;annotationTree,
                <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">InjectOverlappingQualifierAndScopeAnnotation.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/InjectOverlappingQualifierAndScopeAnnotation.html#matchAnnotation(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matchAnnotation</a></strong>(com.sun.source.tree.AnnotationTree&nbsp;annotationTree,
+<td class="colLast"><span class="strong">InjectAssistedInjectAndInjectOnConstructors.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/InjectAssistedInjectAndInjectOnConstructors.html#matchAnnotation(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matchAnnotation</a></strong>(com.sun.source.tree.AnnotationTree&nbsp;annotationTree,
                <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">InjectScopeAnnotationOnInterfaceOrAbstractClass.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/InjectScopeAnnotationOnInterfaceOrAbstractClass.html#matchAnnotation(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matchAnnotation</a></strong>(com.sun.source.tree.AnnotationTree&nbsp;annotationTree,
+<td class="colLast"><span class="strong">InjectMoreThanOneQualifier.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/InjectMoreThanOneQualifier.html#matchAnnotation(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matchAnnotation</a></strong>(com.sun.source.tree.AnnotationTree&nbsp;annotationTree,
                <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">InjectJavaxInjectOnFinalField.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/InjectJavaxInjectOnFinalField.html#matchAnnotation(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matchAnnotation</a></strong>(com.sun.source.tree.AnnotationTree&nbsp;annotationTree,
+<td class="colLast"><span class="strong">SuppressWarningsDeprecated.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/SuppressWarningsDeprecated.html#matchAnnotation(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matchAnnotation</a></strong>(com.sun.source.tree.AnnotationTree&nbsp;annotationTree,
                <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
@@ -616,17 +616,17 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">NoAllocationChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/NoAllocationChecker.html#matchAssignment(com.sun.source.tree.AssignmentTree,%20com.google.errorprone.VisitorState)">matchAssignment</a></strong>(com.sun.source.tree.AssignmentTree&nbsp;tree,
+<td class="colLast"><span class="strong">NonAtomicVolatileUpdate.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/NonAtomicVolatileUpdate.html#matchAssignment(com.sun.source.tree.AssignmentTree,%20com.google.errorprone.VisitorState)">matchAssignment</a></strong>(com.sun.source.tree.AssignmentTree&nbsp;tree,
                <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">SelfAssignment.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/SelfAssignment.html#matchAssignment(com.sun.source.tree.AssignmentTree,%20com.google.errorprone.VisitorState)">matchAssignment</a></strong>(com.sun.source.tree.AssignmentTree&nbsp;tree,
+<td class="colLast"><span class="strong">NoAllocationChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/NoAllocationChecker.html#matchAssignment(com.sun.source.tree.AssignmentTree,%20com.google.errorprone.VisitorState)">matchAssignment</a></strong>(com.sun.source.tree.AssignmentTree&nbsp;tree,
                <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">NonAtomicVolatileUpdate.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/NonAtomicVolatileUpdate.html#matchAssignment(com.sun.source.tree.AssignmentTree,%20com.google.errorprone.VisitorState)">matchAssignment</a></strong>(com.sun.source.tree.AssignmentTree&nbsp;tree,
+<td class="colLast"><span class="strong">SelfAssignment.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/SelfAssignment.html#matchAssignment(com.sun.source.tree.AssignmentTree,%20com.google.errorprone.VisitorState)">matchAssignment</a></strong>(com.sun.source.tree.AssignmentTree&nbsp;tree,
                <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
@@ -641,42 +641,42 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">EqualsNaN.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/EqualsNaN.html#matchBinary(com.sun.source.tree.BinaryTree,%20com.google.errorprone.VisitorState)">matchBinary</a></strong>(com.sun.source.tree.BinaryTree&nbsp;tree,
-           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">ProtoStringFieldReferenceEquality.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/ProtoStringFieldReferenceEquality.html#matchBinary(com.sun.source.tree.BinaryTree,%20com.google.errorprone.VisitorState)">matchBinary</a></strong>(com.sun.source.tree.BinaryTree&nbsp;tree,
-           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">NoAllocationChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/NoAllocationChecker.html#matchBinary(com.sun.source.tree.BinaryTree,%20com.google.errorprone.VisitorState)">matchBinary</a></strong>(com.sun.source.tree.BinaryTree&nbsp;tree,
-           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <td class="colLast"><span class="strong">SizeGreaterThanOrEqualsZero.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/SizeGreaterThanOrEqualsZero.html#matchBinary(com.sun.source.tree.BinaryTree,%20com.google.errorprone.VisitorState)">matchBinary</a></strong>(com.sun.source.tree.BinaryTree&nbsp;tree,
-           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">ComparisonOutOfRange.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/ComparisonOutOfRange.html#matchBinary(com.sun.source.tree.BinaryTree,%20com.google.errorprone.VisitorState)">matchBinary</a></strong>(com.sun.source.tree.BinaryTree&nbsp;tree,
-           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">StringEquality.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/StringEquality.html#matchBinary(com.sun.source.tree.BinaryTree,%20com.google.errorprone.VisitorState)">matchBinary</a></strong>(com.sun.source.tree.BinaryTree&nbsp;tree,
-           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">DivZero.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/DivZero.html#matchBinary(com.sun.source.tree.BinaryTree,%20com.google.errorprone.VisitorState)">matchBinary</a></strong>(com.sun.source.tree.BinaryTree&nbsp;tree,
            <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <td class="colLast"><span class="strong">SelfEquality.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/SelfEquality.html#matchBinary(com.sun.source.tree.BinaryTree,%20com.google.errorprone.VisitorState)">matchBinary</a></strong>(com.sun.source.tree.BinaryTree&nbsp;tree,
+           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">ProtoFieldNullComparison.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/ProtoFieldNullComparison.html#matchBinary(com.sun.source.tree.BinaryTree,%20com.google.errorprone.VisitorState)">matchBinary</a></strong>(com.sun.source.tree.BinaryTree&nbsp;tree,
+           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">NoAllocationChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/NoAllocationChecker.html#matchBinary(com.sun.source.tree.BinaryTree,%20com.google.errorprone.VisitorState)">matchBinary</a></strong>(com.sun.source.tree.BinaryTree&nbsp;tree,
+           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">EqualsNaN.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/EqualsNaN.html#matchBinary(com.sun.source.tree.BinaryTree,%20com.google.errorprone.VisitorState)">matchBinary</a></strong>(com.sun.source.tree.BinaryTree&nbsp;tree,
+           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">DivZero.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/DivZero.html#matchBinary(com.sun.source.tree.BinaryTree,%20com.google.errorprone.VisitorState)">matchBinary</a></strong>(com.sun.source.tree.BinaryTree&nbsp;tree,
+           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">BadShiftAmount.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/BadShiftAmount.html#matchBinary(com.sun.source.tree.BinaryTree,%20com.google.errorprone.VisitorState)">matchBinary</a></strong>(com.sun.source.tree.BinaryTree&nbsp;tree,
+           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">ProtoStringFieldReferenceEquality.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/ProtoStringFieldReferenceEquality.html#matchBinary(com.sun.source.tree.BinaryTree,%20com.google.errorprone.VisitorState)">matchBinary</a></strong>(com.sun.source.tree.BinaryTree&nbsp;tree,
            <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
@@ -688,12 +688,12 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">BadShiftAmount.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/BadShiftAmount.html#matchBinary(com.sun.source.tree.BinaryTree,%20com.google.errorprone.VisitorState)">matchBinary</a></strong>(com.sun.source.tree.BinaryTree&nbsp;tree,
+<td class="colLast"><span class="strong">StringEquality.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/StringEquality.html#matchBinary(com.sun.source.tree.BinaryTree,%20com.google.errorprone.VisitorState)">matchBinary</a></strong>(com.sun.source.tree.BinaryTree&nbsp;tree,
            <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">ProtoFieldNullComparison.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/ProtoFieldNullComparison.html#matchBinary(com.sun.source.tree.BinaryTree,%20com.google.errorprone.VisitorState)">matchBinary</a></strong>(com.sun.source.tree.BinaryTree&nbsp;tree,
+<td class="colLast"><span class="strong">ComparisonOutOfRange.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/ComparisonOutOfRange.html#matchBinary(com.sun.source.tree.BinaryTree,%20com.google.errorprone.VisitorState)">matchBinary</a></strong>(com.sun.source.tree.BinaryTree&nbsp;tree,
            <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
@@ -723,37 +723,27 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">DepAnn.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/DepAnn.html#matchClass(com.sun.source.tree.ClassTree,%20com.google.errorprone.VisitorState)">matchClass</a></strong>(com.sun.source.tree.ClassTree&nbsp;classTree,
-          <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <td class="colLast"><span class="strong">BugChecker.ClassTreeMatcher.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.ClassTreeMatcher.html#matchClass(com.sun.source.tree.ClassTree,%20com.google.errorprone.VisitorState)">matchClass</a></strong>(com.sun.source.tree.ClassTree&nbsp;tree,
           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">JUnitAmbiguousTestClass.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/JUnitAmbiguousTestClass.html#matchClass(com.sun.source.tree.ClassTree,%20com.google.errorprone.VisitorState)">matchClass</a></strong>(com.sun.source.tree.ClassTree&nbsp;classTree,
-          <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
 <tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">InjectScopeOrQualifierAnnotationRetention.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/InjectScopeOrQualifierAnnotationRetention.html#matchClass(com.sun.source.tree.ClassTree,%20com.google.errorprone.VisitorState)">matchClass</a></strong>(com.sun.source.tree.ClassTree&nbsp;classTree,
-          <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <td class="colLast"><span class="strong">GuiceAssistedInjectScoping.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/GuiceAssistedInjectScoping.html#matchClass(com.sun.source.tree.ClassTree,%20com.google.errorprone.VisitorState)">matchClass</a></strong>(com.sun.source.tree.ClassTree&nbsp;classTree,
           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">InjectScopeOrQualifierAnnotationRetention.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/InjectScopeOrQualifierAnnotationRetention.html#matchClass(com.sun.source.tree.ClassTree,%20com.google.errorprone.VisitorState)">matchClass</a></strong>(com.sun.source.tree.ClassTree&nbsp;classTree,
+          <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">EqualsHashCode.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/EqualsHashCode.html#matchClass(com.sun.source.tree.ClassTree,%20com.google.errorprone.VisitorState)">matchClass</a></strong>(com.sun.source.tree.ClassTree&nbsp;classTree,
+<td class="colLast"><span class="strong">JUnitAmbiguousTestClass.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/JUnitAmbiguousTestClass.html#matchClass(com.sun.source.tree.ClassTree,%20com.google.errorprone.VisitorState)">matchClass</a></strong>(com.sun.source.tree.ClassTree&nbsp;classTree,
           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">ClassCanBeStatic.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/ClassCanBeStatic.html#matchClass(com.sun.source.tree.ClassTree,%20com.google.errorprone.VisitorState)">matchClass</a></strong>(com.sun.source.tree.ClassTree&nbsp;tree,
+<td class="colLast"><span class="strong">EqualsHashCode.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/EqualsHashCode.html#matchClass(com.sun.source.tree.ClassTree,%20com.google.errorprone.VisitorState)">matchClass</a></strong>(com.sun.source.tree.ClassTree&nbsp;classTree,
           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
@@ -763,30 +753,30 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">DepAnn.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/DepAnn.html#matchClass(com.sun.source.tree.ClassTree,%20com.google.errorprone.VisitorState)">matchClass</a></strong>(com.sun.source.tree.ClassTree&nbsp;classTree,
+          <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">ClassCanBeStatic.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/ClassCanBeStatic.html#matchClass(com.sun.source.tree.ClassTree,%20com.google.errorprone.VisitorState)">matchClass</a></strong>(com.sun.source.tree.ClassTree&nbsp;tree,
+          <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">WildcardImport.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/WildcardImport.html#matchClass(com.sun.source.tree.ClassTree,%20com.google.errorprone.VisitorState)">matchClass</a></strong>(com.sun.source.tree.ClassTree&nbsp;tree,
+          <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <td class="colLast"><span class="strong">CheckReturnValue.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/CheckReturnValue.html#matchClass(com.sun.source.tree.ClassTree,%20com.google.errorprone.VisitorState)">matchClass</a></strong>(com.sun.source.tree.ClassTree&nbsp;tree,
           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
 <div class="block">Validate that at most one of <a href="http://docs.oracle.com/javase/7/docs/api/javax/annotation/CheckReturnValue.html?is-external=true" title="class or interface in javax.annotation"><code>CheckReturnValue</code></a> and
  <a href="../../../../com/google/errorprone/annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations"><code>CanIgnoreReturnValue</code></a> are applied to a class (or interface or enum).</div>
 </td>
 </tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">WildcardImport.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/WildcardImport.html#matchClass(com.sun.source.tree.ClassTree,%20com.google.errorprone.VisitorState)">matchClass</a></strong>(com.sun.source.tree.ClassTree&nbsp;tree,
-          <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <td class="colLast"><span class="strong">BugChecker.CompilationUnitTreeMatcher.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.CompilationUnitTreeMatcher.html#matchCompilationUnit(com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeInfo,%20com.google.errorprone.VisitorState)">matchCompilationUnit</a></strong>(<a href="../../../../com/google/errorprone/bugpatterns/BugChecker.CompilationUnitTreeInfo.html" title="class in com.google.errorprone.bugpatterns">BugChecker.CompilationUnitTreeInfo</a>&nbsp;info,
-                    <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">ClassName.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/ClassName.html#matchCompilationUnit(com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeInfo,%20com.google.errorprone.VisitorState)">matchCompilationUnit</a></strong>(<a href="../../../../com/google/errorprone/bugpatterns/BugChecker.CompilationUnitTreeInfo.html" title="class in com.google.errorprone.bugpatterns">BugChecker.CompilationUnitTreeInfo</a>&nbsp;info,
-                    <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">PackageLocation.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/PackageLocation.html#matchCompilationUnit(com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeInfo,%20com.google.errorprone.VisitorState)">matchCompilationUnit</a></strong>(<a href="../../../../com/google/errorprone/bugpatterns/BugChecker.CompilationUnitTreeInfo.html" title="class in com.google.errorprone.bugpatterns">BugChecker.CompilationUnitTreeInfo</a>&nbsp;info,
                     <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
@@ -796,17 +786,17 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">BugChecker.CompoundAssignmentTreeMatcher.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.CompoundAssignmentTreeMatcher.html#matchCompoundAssignment(com.sun.source.tree.CompoundAssignmentTree,%20com.google.errorprone.VisitorState)">matchCompoundAssignment</a></strong>(com.sun.source.tree.CompoundAssignmentTree&nbsp;tree,
-                       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+<td class="colLast"><span class="strong">PackageLocation.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/PackageLocation.html#matchCompilationUnit(com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeInfo,%20com.google.errorprone.VisitorState)">matchCompilationUnit</a></strong>(<a href="../../../../com/google/errorprone/bugpatterns/BugChecker.CompilationUnitTreeInfo.html" title="class in com.google.errorprone.bugpatterns">BugChecker.CompilationUnitTreeInfo</a>&nbsp;info,
+                    <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">NoAllocationChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/NoAllocationChecker.html#matchCompoundAssignment(com.sun.source.tree.CompoundAssignmentTree,%20com.google.errorprone.VisitorState)">matchCompoundAssignment</a></strong>(com.sun.source.tree.CompoundAssignmentTree&nbsp;tree,
-                       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+<td class="colLast"><span class="strong">ClassName.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/ClassName.html#matchCompilationUnit(com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeInfo,%20com.google.errorprone.VisitorState)">matchCompilationUnit</a></strong>(<a href="../../../../com/google/errorprone/bugpatterns/BugChecker.CompilationUnitTreeInfo.html" title="class in com.google.errorprone.bugpatterns">BugChecker.CompilationUnitTreeInfo</a>&nbsp;info,
+                    <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">NarrowingCompoundAssignment.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/NarrowingCompoundAssignment.html#matchCompoundAssignment(com.sun.source.tree.CompoundAssignmentTree,%20com.google.errorprone.VisitorState)">matchCompoundAssignment</a></strong>(com.sun.source.tree.CompoundAssignmentTree&nbsp;tree,
+<td class="colLast"><span class="strong">BugChecker.CompoundAssignmentTreeMatcher.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.CompoundAssignmentTreeMatcher.html#matchCompoundAssignment(com.sun.source.tree.CompoundAssignmentTree,%20com.google.errorprone.VisitorState)">matchCompoundAssignment</a></strong>(com.sun.source.tree.CompoundAssignmentTree&nbsp;tree,
                        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
@@ -818,12 +808,22 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">NonAtomicVolatileUpdate.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/NonAtomicVolatileUpdate.html#matchCompoundAssignment(com.sun.source.tree.CompoundAssignmentTree,%20com.google.errorprone.VisitorState)">matchCompoundAssignment</a></strong>(com.sun.source.tree.CompoundAssignmentTree&nbsp;tree,
+                       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">NoAllocationChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/NoAllocationChecker.html#matchCompoundAssignment(com.sun.source.tree.CompoundAssignmentTree,%20com.google.errorprone.VisitorState)">matchCompoundAssignment</a></strong>(com.sun.source.tree.CompoundAssignmentTree&nbsp;tree,
+                       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <td class="colLast"><span class="strong">DivZero.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/DivZero.html#matchCompoundAssignment(com.sun.source.tree.CompoundAssignmentTree,%20com.google.errorprone.VisitorState)">matchCompoundAssignment</a></strong>(com.sun.source.tree.CompoundAssignmentTree&nbsp;tree,
                        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">NonAtomicVolatileUpdate.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/NonAtomicVolatileUpdate.html#matchCompoundAssignment(com.sun.source.tree.CompoundAssignmentTree,%20com.google.errorprone.VisitorState)">matchCompoundAssignment</a></strong>(com.sun.source.tree.CompoundAssignmentTree&nbsp;tree,
+<td class="colLast"><span class="strong">NarrowingCompoundAssignment.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/NarrowingCompoundAssignment.html#matchCompoundAssignment(com.sun.source.tree.CompoundAssignmentTree,%20com.google.errorprone.VisitorState)">matchCompoundAssignment</a></strong>(com.sun.source.tree.CompoundAssignmentTree&nbsp;tree,
                        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
@@ -903,12 +903,12 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">NonCanonicalStaticImport.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/NonCanonicalStaticImport.html#matchImport(com.sun.source.tree.ImportTree,%20com.google.errorprone.VisitorState)">matchImport</a></strong>(com.sun.source.tree.ImportTree&nbsp;tree,
+<td class="colLast"><span class="strong">UnnecessaryStaticImport.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/UnnecessaryStaticImport.html#matchImport(com.sun.source.tree.ImportTree,%20com.google.errorprone.VisitorState)">matchImport</a></strong>(com.sun.source.tree.ImportTree&nbsp;tree,
            <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">UnnecessaryStaticImport.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/UnnecessaryStaticImport.html#matchImport(com.sun.source.tree.ImportTree,%20com.google.errorprone.VisitorState)">matchImport</a></strong>(com.sun.source.tree.ImportTree&nbsp;tree,
+<td class="colLast"><span class="strong">NonCanonicalStaticImport.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/NonCanonicalStaticImport.html#matchImport(com.sun.source.tree.ImportTree,%20com.google.errorprone.VisitorState)">matchImport</a></strong>(com.sun.source.tree.ImportTree&nbsp;tree,
            <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
@@ -958,15 +958,42 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">DepAnn.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/DepAnn.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;methodTree,
+<td class="colLast"><span class="strong">BugChecker.MethodTreeMatcher.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodTreeMatcher.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
            <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">BugChecker.MethodTreeMatcher.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodTreeMatcher.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
+<td class="colLast"><span class="strong">InjectMoreThanOneInjectableConstructor.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/InjectMoreThanOneInjectableConstructor.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;methodTree,
            <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">ChainingConstructorIgnoresParameter.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/ChainingConstructorIgnoresParameter.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
+           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">WrongParameterPackage.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/WrongParameterPackage.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
+           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">InjectedConstructorAnnotations.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/InjectedConstructorAnnotations.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;methodTree,
+           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
+<div class="block">Matches injected constructors annotated with @Inject(optional=true) or binding annotations.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">DepAnn.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/DepAnn.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;methodTree,
+           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">GuiceOverridesJavaxInjectableMethod.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/GuiceOverridesJavaxInjectableMethod.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;methodTree,
+           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <td class="colLast"><span class="strong">CovariantEquals.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/CovariantEquals.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;methodTree,
            <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
@@ -974,52 +1001,6 @@
  1) Defined method is named "equals."
  2) Defined method returns a boolean.</div>
 </td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">InjectedConstructorAnnotations.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/InjectedConstructorAnnotations.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;methodTree,
-           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
-<div class="block">Matches injected constructors annotated with @Inject(optional=true) or binding annotations.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">ForOverrideChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/ForOverrideChecker.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
-           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">JUnit3TestNotRun.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/JUnit3TestNotRun.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;methodTree,
-           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
-<div class="block">Matches if:
- 1) Method's name begins with misspelled variation of "test".</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">TypeParameterUnusedInFormals.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/TypeParameterUnusedInFormals.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
-           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">JUnit4TestNotRun.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/JUnit4TestNotRun.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;methodTree,
-           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
-<div class="block">Matches if:
- 1) The method appears to be a JUnit 3 test case.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">CheckReturnValue.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/CheckReturnValue.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
-           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
-<div class="block">Validate <a href="http://docs.oracle.com/javase/7/docs/api/javax/annotation/CheckReturnValue.html?is-external=true" title="class or interface in javax.annotation"><code>CheckReturnValue</code></a> and <a href="../../../../com/google/errorprone/annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations"><code>CanIgnoreReturnValue</code></a> usage on
- methods.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">Overrides.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/Overrides.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;methodTree,
-           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
@@ -1033,22 +1014,41 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">WrongParameterPackage.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/WrongParameterPackage.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
+<td class="colLast"><span class="strong">JUnit4TestNotRun.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/JUnit4TestNotRun.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;methodTree,
+           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
+<div class="block">Matches if:
+ 1) The method appears to be a JUnit 3 test case.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">CheckReturnValue.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/CheckReturnValue.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
+           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
+<div class="block">Validate <a href="http://docs.oracle.com/javase/7/docs/api/javax/annotation/CheckReturnValue.html?is-external=true" title="class or interface in javax.annotation"><code>CheckReturnValue</code></a> and <a href="../../../../com/google/errorprone/annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations"><code>CanIgnoreReturnValue</code></a> usage on
+ methods.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">TypeParameterUnusedInFormals.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/TypeParameterUnusedInFormals.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
            <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">GuiceOverridesJavaxInjectableMethod.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/GuiceOverridesJavaxInjectableMethod.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;methodTree,
+<td class="colLast"><span class="strong">ForOverrideChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/ForOverrideChecker.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
            <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">InjectMoreThanOneInjectableConstructor.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/InjectMoreThanOneInjectableConstructor.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;methodTree,
-           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+<td class="colLast"><span class="strong">JUnit3TestNotRun.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/JUnit3TestNotRun.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;methodTree,
+           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
+<div class="block">Matches if:
+ 1) Method's name begins with misspelled variation of "test".</div>
+</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">ChainingConstructorIgnoresParameter.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/ChainingConstructorIgnoresParameter.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
+<td class="colLast"><span class="strong">Overrides.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/Overrides.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;methodTree,
            <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
@@ -1058,12 +1058,12 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">CannotMockFinalClass.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/CannotMockFinalClass.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
+<td class="colLast"><span class="strong">MisusedFormattingLogger.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/MisusedFormattingLogger.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
                      <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">CompileTimeConstantChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/CompileTimeConstantChecker.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
+<td class="colLast"><span class="strong">PreconditionsExpensiveString.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/PreconditionsExpensiveString.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
                      <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
@@ -1077,51 +1077,7 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">CollectionIncompatibleType.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/CollectionIncompatibleType.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
-                     <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">ForOverrideChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/ForOverrideChecker.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
-                     <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">ProtoFieldPreconditionsCheckNotNull.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/ProtoFieldPreconditionsCheckNotNull.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
-                     <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">PreconditionsCheckNotNull.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/PreconditionsCheckNotNull.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
-                     <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">PreconditionsExpensiveString.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/PreconditionsExpensiveString.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
-                     <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">ArrayEquals.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/ArrayEquals.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;t,
-                     <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
-<div class="block">Suggests replacing with Arrays.equals(a, b).</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">PreconditionsCheckNotNullPrimitive.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/PreconditionsCheckNotNullPrimitive.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
-                     <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">ArrayToString.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/ArrayToString.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;methodTree,
-                     <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
-<div class="block">Matches calls to a toString instance method in which the receiver is an array type.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">WaitNotInLoop.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/WaitNotInLoop.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
+<td class="colLast"><span class="strong">ChainingConstructorIgnoresParameter.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/ChainingConstructorIgnoresParameter.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
                      <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
@@ -1133,22 +1089,34 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">NoAllocationChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/NoAllocationChecker.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
+<td class="colLast"><span class="strong">WaitNotInLoop.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/WaitNotInLoop.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
                      <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">ArrayToString.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/ArrayToString.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;methodTree,
+                     <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
+<div class="block">Matches calls to a toString instance method in which the receiver is an array type.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <td class="colLast"><span class="strong">MalformedFormatString.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/MalformedFormatString.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
                      <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">CompileTimeConstantChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/CompileTimeConstantChecker.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
+                     <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">MisusedFormattingLogger.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/MisusedFormattingLogger.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
+<td class="colLast"><span class="strong">CannotMockFinalClass.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/CannotMockFinalClass.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
                      <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">PreconditionsInvalidPlaceholder.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/PreconditionsInvalidPlaceholder.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;t,
+<td class="colLast"><span class="strong">NonRuntimeAnnotation.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/NonRuntimeAnnotation.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
                      <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
@@ -1158,8 +1126,30 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">SelfEquals.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/SelfEquals.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
+<td class="colLast"><span class="strong">NoAllocationChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/NoAllocationChecker.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
                      <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">InvalidPatternSyntax.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/InvalidPatternSyntax.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
+                     <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">CollectionIncompatibleType.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/CollectionIncompatibleType.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
+                     <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">PrimitiveArrayPassedToVarargsMethod.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/PrimitiveArrayPassedToVarargsMethod.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;t,
+                     <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">ArrayEquals.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/ArrayEquals.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;t,
+                     <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
+<div class="block">Suggests replacing with Arrays.equals(a, b).</div>
+</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
@@ -1172,22 +1162,32 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">NonRuntimeAnnotation.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/NonRuntimeAnnotation.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
+<td class="colLast"><span class="strong">PreconditionsCheckNotNull.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/PreconditionsCheckNotNull.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
                      <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">InvalidPatternSyntax.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/InvalidPatternSyntax.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
+<td class="colLast"><span class="strong">ProtoFieldPreconditionsCheckNotNull.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/ProtoFieldPreconditionsCheckNotNull.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
                      <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">PrimitiveArrayPassedToVarargsMethod.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/PrimitiveArrayPassedToVarargsMethod.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;t,
+<td class="colLast"><span class="strong">PreconditionsCheckNotNullPrimitive.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/PreconditionsCheckNotNullPrimitive.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
                      <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">ChainingConstructorIgnoresParameter.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/ChainingConstructorIgnoresParameter.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
+<td class="colLast"><span class="strong">PreconditionsInvalidPlaceholder.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/PreconditionsInvalidPlaceholder.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;t,
+                     <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">SelfEquals.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/SelfEquals.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
+                     <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">ForOverrideChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/ForOverrideChecker.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
                      <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
@@ -1212,31 +1212,31 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">CompileTimeConstantChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/CompileTimeConstantChecker.html#matchNewClass(com.sun.source.tree.NewClassTree,%20com.google.errorprone.VisitorState)">matchNewClass</a></strong>(com.sun.source.tree.NewClassTree&nbsp;tree,
-             <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">NoAllocationChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/NoAllocationChecker.html#matchNewClass(com.sun.source.tree.NewClassTree,%20com.google.errorprone.VisitorState)">matchNewClass</a></strong>(com.sun.source.tree.NewClassTree&nbsp;tree,
-             <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <td class="colLast"><span class="strong">DeadException.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/DeadException.html#matchNewClass(com.sun.source.tree.NewClassTree,%20com.google.errorprone.VisitorState)">matchNewClass</a></strong>(com.sun.source.tree.NewClassTree&nbsp;newClassTree,
              <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">CompileTimeConstantChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/CompileTimeConstantChecker.html#matchNewClass(com.sun.source.tree.NewClassTree,%20com.google.errorprone.VisitorState)">matchNewClass</a></strong>(com.sun.source.tree.NewClassTree&nbsp;tree,
+             <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">NoAllocationChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/NoAllocationChecker.html#matchNewClass(com.sun.source.tree.NewClassTree,%20com.google.errorprone.VisitorState)">matchNewClass</a></strong>(com.sun.source.tree.NewClassTree&nbsp;tree,
+             <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">StringBuilderInitWithChar.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/StringBuilderInitWithChar.html#matchNewClass(com.sun.source.tree.NewClassTree,%20com.google.errorprone.VisitorState)">matchNewClass</a></strong>(com.sun.source.tree.NewClassTree&nbsp;tree,
+             <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <td class="colLast"><span class="strong">MisusedWeekYear.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/MisusedWeekYear.html#matchNewClass(com.sun.source.tree.NewClassTree,%20com.google.errorprone.VisitorState)">matchNewClass</a></strong>(com.sun.source.tree.NewClassTree&nbsp;tree,
              <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
 <div class="block">Match uses of the SimpleDateFormat constructor in which the pattern passed in contains
  YYYY but not ww, signifying that it was not intended to be a week date.</div>
 </td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">StringBuilderInitWithChar.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/StringBuilderInitWithChar.html#matchNewClass(com.sun.source.tree.NewClassTree,%20com.google.errorprone.VisitorState)">matchNewClass</a></strong>(com.sun.source.tree.NewClassTree&nbsp;tree,
-             <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
@@ -1325,12 +1325,12 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">NoAllocationChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/NoAllocationChecker.html#matchUnary(com.sun.source.tree.UnaryTree,%20com.google.errorprone.VisitorState)">matchUnary</a></strong>(com.sun.source.tree.UnaryTree&nbsp;tree,
+<td class="colLast"><span class="strong">NonAtomicVolatileUpdate.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/NonAtomicVolatileUpdate.html#matchUnary(com.sun.source.tree.UnaryTree,%20com.google.errorprone.VisitorState)">matchUnary</a></strong>(com.sun.source.tree.UnaryTree&nbsp;tree,
           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">NonAtomicVolatileUpdate.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/NonAtomicVolatileUpdate.html#matchUnary(com.sun.source.tree.UnaryTree,%20com.google.errorprone.VisitorState)">matchUnary</a></strong>(com.sun.source.tree.UnaryTree&nbsp;tree,
+<td class="colLast"><span class="strong">NoAllocationChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/NoAllocationChecker.html#matchUnary(com.sun.source.tree.UnaryTree,%20com.google.errorprone.VisitorState)">matchUnary</a></strong>(com.sun.source.tree.UnaryTree&nbsp;tree,
           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
@@ -1340,17 +1340,7 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">DepAnn.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/DepAnn.html#matchVariable(com.sun.source.tree.VariableTree,%20com.google.errorprone.VisitorState)">matchVariable</a></strong>(com.sun.source.tree.VariableTree&nbsp;variableTree,
-             <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <td class="colLast"><span class="strong">BugChecker.VariableTreeMatcher.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.VariableTreeMatcher.html#matchVariable(com.sun.source.tree.VariableTree,%20com.google.errorprone.VisitorState)">matchVariable</a></strong>(com.sun.source.tree.VariableTree&nbsp;tree,
-             <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">CannotMockFinalClass.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/CannotMockFinalClass.html#matchVariable(com.sun.source.tree.VariableTree,%20com.google.errorprone.VisitorState)">matchVariable</a></strong>(com.sun.source.tree.VariableTree&nbsp;tree,
              <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
@@ -1360,17 +1350,27 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">DepAnn.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/DepAnn.html#matchVariable(com.sun.source.tree.VariableTree,%20com.google.errorprone.VisitorState)">matchVariable</a></strong>(com.sun.source.tree.VariableTree&nbsp;variableTree,
+             <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="strong">CannotMockFinalClass.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/CannotMockFinalClass.html#matchVariable(com.sun.source.tree.VariableTree,%20com.google.errorprone.VisitorState)">matchVariable</a></strong>(com.sun.source.tree.VariableTree&nbsp;tree,
+             <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <td class="colLast"><span class="strong">NoAllocationChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/NoAllocationChecker.html#matchVariable(com.sun.source.tree.VariableTree,%20com.google.errorprone.VisitorState)">matchVariable</a></strong>(com.sun.source.tree.VariableTree&nbsp;tree,
              <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">GuiceAssistedParameters.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/GuiceAssistedParameters.html#matchVariable(com.sun.source.tree.VariableTree,%20com.google.errorprone.VisitorState)">matchVariable</a></strong>(com.sun.source.tree.VariableTree&nbsp;variableTree,
+<td class="colLast"><span class="strong">SelfAssignment.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/SelfAssignment.html#matchVariable(com.sun.source.tree.VariableTree,%20com.google.errorprone.VisitorState)">matchVariable</a></strong>(com.sun.source.tree.VariableTree&nbsp;tree,
              <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">SelfAssignment.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/SelfAssignment.html#matchVariable(com.sun.source.tree.VariableTree,%20com.google.errorprone.VisitorState)">matchVariable</a></strong>(com.sun.source.tree.VariableTree&nbsp;tree,
+<td class="colLast"><span class="strong">GuiceAssistedParameters.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/GuiceAssistedParameters.html#matchVariable(com.sun.source.tree.VariableTree,%20com.google.errorprone.VisitorState)">matchVariable</a></strong>(com.sun.source.tree.VariableTree&nbsp;variableTree,
              <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
@@ -1433,7 +1433,7 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>protected <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></td>
-<td class="colLast"><span class="strong">UnlockMethodChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/threadsafety/UnlockMethodChecker.html#getActual(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">getActual</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
+<td class="colLast"><span class="strong">LockMethodChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/threadsafety/LockMethodChecker.html#getActual(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">getActual</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
          <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
@@ -1445,12 +1445,12 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>protected <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></td>
-<td class="colLast"><span class="strong">LockMethodChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/threadsafety/LockMethodChecker.html#getActual(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">getActual</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
+<td class="colLast"><span class="strong">UnlockMethodChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/threadsafety/UnlockMethodChecker.html#getActual(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">getActual</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
          <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>protected <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></td>
-<td class="colLast"><span class="strong">UnlockMethodChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/threadsafety/UnlockMethodChecker.html#getUnwanted(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">getUnwanted</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
+<td class="colLast"><span class="strong">LockMethodChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/threadsafety/LockMethodChecker.html#getUnwanted(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">getUnwanted</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
            <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
@@ -1462,7 +1462,7 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>protected <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></td>
-<td class="colLast"><span class="strong">LockMethodChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/threadsafety/LockMethodChecker.html#getUnwanted(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">getUnwanted</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
+<td class="colLast"><span class="strong">UnlockMethodChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/threadsafety/UnlockMethodChecker.html#getUnwanted(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">getUnwanted</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
            <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
@@ -1472,17 +1472,17 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">GuardedByValidator.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByValidator.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
+<td class="colLast"><span class="strong">GuardedByChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByChecker.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
            <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">AbstractLockMethodChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
+<td class="colLast"><span class="strong">GuardedByValidator.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByValidator.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
            <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">GuardedByChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByChecker.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
+<td class="colLast"><span class="strong">AbstractLockMethodChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
            <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
@@ -1492,12 +1492,12 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">GuardedByValidator.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByValidator.html#matchVariable(com.sun.source.tree.VariableTree,%20com.google.errorprone.VisitorState)">matchVariable</a></strong>(com.sun.source.tree.VariableTree&nbsp;tree,
+<td class="colLast"><span class="strong">GuardedByChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByChecker.html#matchVariable(com.sun.source.tree.VariableTree,%20com.google.errorprone.VisitorState)">matchVariable</a></strong>(com.sun.source.tree.VariableTree&nbsp;tree,
              <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><span class="strong">GuardedByChecker.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByChecker.html#matchVariable(com.sun.source.tree.VariableTree,%20com.google.errorprone.VisitorState)">matchVariable</a></strong>(com.sun.source.tree.VariableTree&nbsp;tree,
+<td class="colLast"><span class="strong">GuardedByValidator.</span><code><strong><a href="../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByValidator.html#matchVariable(com.sun.source.tree.VariableTree,%20com.google.errorprone.VisitorState)">matchVariable</a></strong>(com.sun.source.tree.VariableTree&nbsp;tree,
              <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 </tbody>
@@ -1548,22 +1548,22 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><span class="strong">AnnotationSimpleName.</span><code><strong><a href="../../../../com/google/errorprone/matchers/AnnotationSimpleName.html#matches(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.AnnotationTree&nbsp;annotationTree,
-       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><span class="strong">AnnotationHasArgumentWithValue.</span><code><strong><a href="../../../../com/google/errorprone/matchers/AnnotationHasArgumentWithValue.html#matches(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.AnnotationTree&nbsp;annotationTree,
-       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><span class="strong">AnnotationDoesNotHaveArgument.</span><code><strong><a href="../../../../com/google/errorprone/matchers/AnnotationDoesNotHaveArgument.html#matches(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.AnnotationTree&nbsp;annotationTree,
        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><span class="strong">AnnotationType.</span><code><strong><a href="../../../../com/google/errorprone/matchers/AnnotationType.html#matches(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.AnnotationTree&nbsp;annotationTree,
+       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><span class="strong">AnnotationHasArgumentWithValue.</span><code><strong><a href="../../../../com/google/errorprone/matchers/AnnotationHasArgumentWithValue.html#matches(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.AnnotationTree&nbsp;annotationTree,
+       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><span class="strong">AnnotationSimpleName.</span><code><strong><a href="../../../../com/google/errorprone/matchers/AnnotationSimpleName.html#matches(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.AnnotationTree&nbsp;annotationTree,
        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
@@ -1578,37 +1578,7 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><span class="strong">ExpressionMethodSelect.</span><code><strong><a href="../../../../com/google/errorprone/matchers/ExpressionMethodSelect.html#matches(com.sun.source.tree.ExpressionTree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.ExpressionTree&nbsp;t,
-       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><span class="strong">NewInstanceAnonymousInnerClass.</span><code><strong><a href="../../../../com/google/errorprone/matchers/NewInstanceAnonymousInnerClass.html#matches(com.sun.source.tree.ExpressionTree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.ExpressionTree&nbsp;t,
-       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><span class="strong">StaticMethod.</span><code><strong><a href="../../../../com/google/errorprone/matchers/StaticMethod.html#matches(com.sun.source.tree.ExpressionTree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.ExpressionTree&nbsp;item,
-       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><span class="strong">NullnessMatcher.</span><code><strong><a href="../../../../com/google/errorprone/matchers/NullnessMatcher.html#matches(com.sun.source.tree.ExpressionTree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.ExpressionTree&nbsp;expr,
-       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><span class="strong">CompileTimeConstantExpressionMatcher.</span><code><strong><a href="../../../../com/google/errorprone/matchers/CompileTimeConstantExpressionMatcher.html#matches(com.sun.source.tree.ExpressionTree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.ExpressionTree&nbsp;t,
-       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><span class="strong">StringLiteral.</span><code><strong><a href="../../../../com/google/errorprone/matchers/StringLiteral.html#matches(com.sun.source.tree.ExpressionTree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.ExpressionTree&nbsp;expressionTree,
-       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><span class="strong">DescendantOf.</span><code><strong><a href="../../../../com/google/errorprone/matchers/DescendantOf.html#matches(com.sun.source.tree.ExpressionTree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.ExpressionTree&nbsp;expressionTree,
        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
@@ -1618,12 +1588,42 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><span class="strong">MethodInvocationArgument.</span><code><strong><a href="../../../../com/google/errorprone/matchers/MethodInvocationArgument.html#matches(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
+<td class="colLast"><span class="strong">DescendantOf.</span><code><strong><a href="../../../../com/google/errorprone/matchers/DescendantOf.html#matches(com.sun.source.tree.ExpressionTree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.ExpressionTree&nbsp;expressionTree,
        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><span class="strong">NewInstanceAnonymousInnerClass.</span><code><strong><a href="../../../../com/google/errorprone/matchers/NewInstanceAnonymousInnerClass.html#matches(com.sun.source.tree.ExpressionTree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.ExpressionTree&nbsp;t,
+       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><span class="strong">NullnessMatcher.</span><code><strong><a href="../../../../com/google/errorprone/matchers/NullnessMatcher.html#matches(com.sun.source.tree.ExpressionTree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.ExpressionTree&nbsp;expr,
+       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><span class="strong">CompileTimeConstantExpressionMatcher.</span><code><strong><a href="../../../../com/google/errorprone/matchers/CompileTimeConstantExpressionMatcher.html#matches(com.sun.source.tree.ExpressionTree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.ExpressionTree&nbsp;t,
+       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><span class="strong">ExpressionMethodSelect.</span><code><strong><a href="../../../../com/google/errorprone/matchers/ExpressionMethodSelect.html#matches(com.sun.source.tree.ExpressionTree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.ExpressionTree&nbsp;t,
+       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><span class="strong">StringLiteral.</span><code><strong><a href="../../../../com/google/errorprone/matchers/StringLiteral.html#matches(com.sun.source.tree.ExpressionTree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.ExpressionTree&nbsp;expressionTree,
+       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><span class="strong">MethodInvocationMethodSelect.</span><code><strong><a href="../../../../com/google/errorprone/matchers/MethodInvocationMethodSelect.html#matches(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;item,
+       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><span class="strong">MethodInvocationArgument.</span><code><strong><a href="../../../../com/google/errorprone/matchers/MethodInvocationArgument.html#matches(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
@@ -1638,37 +1638,27 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><span class="strong">ParentNode.</span><code><strong><a href="../../../../com/google/errorprone/matchers/ParentNode.html#matches(com.sun.source.tree.Tree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.Tree&nbsp;tree,
+       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><span class="strong">IsStatic.</span><code><strong><a href="../../../../com/google/errorprone/matchers/IsStatic.html#matches(com.sun.source.tree.Tree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.Tree&nbsp;tree,
+       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><span class="strong">HasIdentifier.</span><code><strong><a href="../../../../com/google/errorprone/matchers/HasIdentifier.html#matches(com.sun.source.tree.Tree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.Tree&nbsp;tree,
        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><span class="strong">ParentNode.</span><code><strong><a href="../../../../com/google/errorprone/matchers/ParentNode.html#matches(com.sun.source.tree.Tree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.Tree&nbsp;tree,
-       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><span class="strong">IsStatic.</span><code><strong><a href="../../../../com/google/errorprone/matchers/IsStatic.html#matches(com.sun.source.tree.Tree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.Tree&nbsp;tree,
-       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><span class="strong">IsCastableTo.</span><code><strong><a href="../../../../com/google/errorprone/matchers/IsCastableTo.html#matches(T,%20com.google.errorprone.VisitorState)">matches</a></strong>(<a href="../../../../com/google/errorprone/matchers/IsCastableTo.html" title="type parameter in IsCastableTo">T</a>&nbsp;tree,
-       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><span class="strong">NextStatement.</span><code><strong><a href="../../../../com/google/errorprone/matchers/NextStatement.html#matches(T,%20com.google.errorprone.VisitorState)">matches</a></strong>(<a href="../../../../com/google/errorprone/matchers/NextStatement.html" title="type parameter in NextStatement">T</a>&nbsp;stmt,
-       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><span class="strong">IsSubtypeOf.</span><code><strong><a href="../../../../com/google/errorprone/matchers/IsSubtypeOf.html#matches(T,%20com.google.errorprone.VisitorState)">matches</a></strong>(<a href="../../../../com/google/errorprone/matchers/IsSubtypeOf.html" title="type parameter in IsSubtypeOf">T</a>&nbsp;tree,
-       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><span class="strong">ChildMultiMatcher.</span><code><strong><a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.html#matches(T,%20com.google.errorprone.VisitorState)">matches</a></strong>(<a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.html" title="type parameter in ChildMultiMatcher">T</a>&nbsp;tree,
+       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><span class="strong">Matcher.</span><code><strong><a href="../../../../com/google/errorprone/matchers/Matcher.html#matches(T,%20com.google.errorprone.VisitorState)">matches</a></strong>(<a href="../../../../com/google/errorprone/matchers/Matcher.html" title="type parameter in Matcher">T</a>&nbsp;t,
        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
@@ -1678,7 +1668,7 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><span class="strong">Matcher.</span><code><strong><a href="../../../../com/google/errorprone/matchers/Matcher.html#matches(T,%20com.google.errorprone.VisitorState)">matches</a></strong>(<a href="../../../../com/google/errorprone/matchers/Matcher.html" title="type parameter in Matcher">T</a>&nbsp;t,
+<td class="colLast"><span class="strong">NextStatement.</span><code><strong><a href="../../../../com/google/errorprone/matchers/NextStatement.html#matches(T,%20com.google.errorprone.VisitorState)">matches</a></strong>(<a href="../../../../com/google/errorprone/matchers/NextStatement.html" title="type parameter in NextStatement">T</a>&nbsp;stmt,
        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
@@ -1688,7 +1678,17 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><span class="strong">IsCastableTo.</span><code><strong><a href="../../../../com/google/errorprone/matchers/IsCastableTo.html#matches(T,%20com.google.errorprone.VisitorState)">matches</a></strong>(<a href="../../../../com/google/errorprone/matchers/IsCastableTo.html" title="type parameter in IsCastableTo">T</a>&nbsp;tree,
+       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><span class="strong">IsSameType.</span><code><strong><a href="../../../../com/google/errorprone/matchers/IsSameType.html#matches(T,%20com.google.errorprone.VisitorState)">matches</a></strong>(<a href="../../../../com/google/errorprone/matchers/IsSameType.html" title="type parameter in IsSameType">T</a>&nbsp;tree,
+       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><span class="strong">IsSubtypeOf.</span><code><strong><a href="../../../../com/google/errorprone/matchers/IsSubtypeOf.html#matches(T,%20com.google.errorprone.VisitorState)">matches</a></strong>(<a href="../../../../com/google/errorprone/matchers/IsSubtypeOf.html" title="type parameter in IsSubtypeOf">T</a>&nbsp;tree,
        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 </tbody>
@@ -1757,22 +1757,22 @@
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><span class="strong">DescendantOfAny.</span><code><strong><a href="../../../../com/google/errorprone/predicates/type/DescendantOfAny.html#apply(com.sun.tools.javac.code.Type,%20com.google.errorprone.VisitorState)">apply</a></strong>(com.sun.tools.javac.code.Type&nbsp;type,
+<td class="colLast"><span class="strong">ExactAny.</span><code><strong><a href="../../../../com/google/errorprone/predicates/type/ExactAny.html#apply(com.sun.tools.javac.code.Type,%20com.google.errorprone.VisitorState)">apply</a></strong>(com.sun.tools.javac.code.Type&nbsp;type,
      <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><span class="strong">Exact.</span><code><strong><a href="../../../../com/google/errorprone/predicates/type/Exact.html#apply(com.sun.tools.javac.code.Type,%20com.google.errorprone.VisitorState)">apply</a></strong>(com.sun.tools.javac.code.Type&nbsp;type,
+<td class="colLast"><span class="strong">DescendantOfAny.</span><code><strong><a href="../../../../com/google/errorprone/predicates/type/DescendantOfAny.html#apply(com.sun.tools.javac.code.Type,%20com.google.errorprone.VisitorState)">apply</a></strong>(com.sun.tools.javac.code.Type&nbsp;type,
      <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><span class="strong">DescendantOf.</span><code><strong><a href="../../../../com/google/errorprone/predicates/type/DescendantOf.html#apply(com.sun.tools.javac.code.Type,%20com.google.errorprone.VisitorState)">apply</a></strong>(com.sun.tools.javac.code.Type&nbsp;type,
+<td class="colLast"><span class="strong">Exact.</span><code><strong><a href="../../../../com/google/errorprone/predicates/type/Exact.html#apply(com.sun.tools.javac.code.Type,%20com.google.errorprone.VisitorState)">apply</a></strong>(com.sun.tools.javac.code.Type&nbsp;type,
      <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><span class="strong">ExactAny.</span><code><strong><a href="../../../../com/google/errorprone/predicates/type/ExactAny.html#apply(com.sun.tools.javac.code.Type,%20com.google.errorprone.VisitorState)">apply</a></strong>(com.sun.tools.javac.code.Type&nbsp;type,
+<td class="colLast"><span class="strong">DescendantOf.</span><code><strong><a href="../../../../com/google/errorprone/predicates/type/DescendantOf.html#apply(com.sun.tools.javac.code.Type,%20com.google.errorprone.VisitorState)">apply</a></strong>(com.sun.tools.javac.code.Type&nbsp;type,
      <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 </tbody>
@@ -1791,17 +1791,17 @@
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="strong">ErrorProneScanner.</span><code><strong><a href="../../../../com/google/errorprone/scanner/ErrorProneScanner.html#matchCompilationUnit(com.sun.source.tree.CompilationUnitTree,%20com.google.errorprone.VisitorState)">matchCompilationUnit</a></strong>(com.sun.source.tree.CompilationUnitTree&nbsp;tree,
+<td class="colLast"><span class="strong">Scanner.</span><code><strong><a href="../../../../com/google/errorprone/scanner/Scanner.html#matchCompilationUnit(com.sun.source.tree.CompilationUnitTree,%20com.google.errorprone.VisitorState)">matchCompilationUnit</a></strong>(com.sun.source.tree.CompilationUnitTree&nbsp;tree,
                     <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
-<div class="block">Runs <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.CompilationUnitTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns"><code>BugChecker.CompilationUnitTreeMatcher</code></a>s on the current compilation unit, but does not
- descend into child nodes.</div>
+<div class="block">Performs a non-recursive visit of a <code>CompilationUnitTree</code>.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="strong">Scanner.</span><code><strong><a href="../../../../com/google/errorprone/scanner/Scanner.html#matchCompilationUnit(com.sun.source.tree.CompilationUnitTree,%20com.google.errorprone.VisitorState)">matchCompilationUnit</a></strong>(com.sun.source.tree.CompilationUnitTree&nbsp;tree,
+<td class="colLast"><span class="strong">ErrorProneScanner.</span><code><strong><a href="../../../../com/google/errorprone/scanner/ErrorProneScanner.html#matchCompilationUnit(com.sun.source.tree.CompilationUnitTree,%20com.google.errorprone.VisitorState)">matchCompilationUnit</a></strong>(com.sun.source.tree.CompilationUnitTree&nbsp;tree,
                     <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
-<div class="block">Performs a non-recursive visit of a <code>CompilationUnitTree</code>.</div>
+<div class="block">Runs <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.CompilationUnitTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns"><code>BugChecker.CompilationUnitTreeMatcher</code></a>s on the current compilation unit, but does not
+ descend into child nodes.</div>
 </td>
 </tr>
 <tr class="altColor">
