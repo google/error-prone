@@ -81,8 +81,6 @@ public class BugPatternFileGeneratorTest {
         getClass().getResourceAsStream("DeadException_frontmatter_pygments.md"), UTF_8));
     String actual = CharStreams.toString(
         Files.newBufferedReader(wikiDir.resolve("DeadException.md"), UTF_8));
-    System.err.println(actual);
-    System.err.println(expected);
     assertEquals(expected.trim(), actual.trim());
   }
 
