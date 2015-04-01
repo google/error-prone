@@ -107,7 +107,6 @@ public class ElementsCountedInLoopNegativeCases {
     return count;
   }
 }
-
 {% endhighlight %}
 
 __ElementsCountedInLoopPositiveCases.java__
@@ -194,6 +193,5 @@ public class ElementsCountedInLoopPositiveCases {
     return count;
   }
 }
-
 {% endhighlight %}
 

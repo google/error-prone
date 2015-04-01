@@ -93,7 +93,6 @@ public class AsyncFunctionReturnsNullNegativeCases {
     ListenableFuture<O> apply(@Nullable I input) throws Exception;
   }
 }
-
 {% endhighlight %}
 
 __AsyncFunctionReturnsNullPositiveCases.java__
@@ -169,6 +168,5 @@ public class AsyncFunctionReturnsNullPositiveCases {
     }
   }
 }
-
 {% endhighlight %}
 

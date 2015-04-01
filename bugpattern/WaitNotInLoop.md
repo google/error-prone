@@ -131,7 +131,6 @@ public class WaitNotInLoopNegativeCases {
   }
 
 }
-
 {% endhighlight %}
 
 __WaitNotInLoopPositiveCases.java__
@@ -212,6 +211,5 @@ public class WaitNotInLoopPositiveCases {
   }
 
 }
-
 {% endhighlight %}
 

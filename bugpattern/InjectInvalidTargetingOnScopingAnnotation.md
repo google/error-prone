@@ -89,7 +89,6 @@ public class InjectInvalidTargetingOnScopingAnnotationNegativeCases {
   public @interface TestAnnotation4 {
   }
 }
-
 {% endhighlight %}
 
 __InjectInvalidTargetingOnScopingAnnotationPositiveCases.java__
@@ -161,6 +160,5 @@ public class InjectInvalidTargetingOnScopingAnnotationPositiveCases {
   public @interface TestAnnotation4 {
   }
 }
-
 {% endhighlight %}
 

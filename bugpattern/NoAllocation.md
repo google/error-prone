@@ -511,7 +511,6 @@ public class NoAllocationCheckerNegativeCases {
     };
   }
 }
-
 {% endhighlight %}
 
 __NoAllocationCheckerPositiveCases.java__
@@ -1003,6 +1002,5 @@ public class NoAllocationCheckerPositiveCases {
     };
   }
 }
-
 {% endhighlight %}
 

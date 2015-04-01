@@ -158,7 +158,6 @@ public class PreconditionsCheckNotNullPositiveCase2 {
     com.google.common.base.Preconditions.checkNotNull("string literal");
   }
 }
-
 {% endhighlight %}
 
 __PreconditionsCheckNotNullPositiveCase3.java__
@@ -194,6 +193,5 @@ public class PreconditionsCheckNotNullPositiveCase3 {
     checkNotNull("string literal");
   }
 }
-
 {% endhighlight %}
 

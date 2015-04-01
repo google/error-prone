@@ -114,27 +114,21 @@ public @interface <span class="strong">BugPattern</span></pre>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><strong><a href="../../../com/google/errorprone/BugPattern.html#explanation()">explanation</a></strong></code>
-<div class="block">A longer explanation of the problem that this checker detects.</div>
-</td>
-</tr>
-<tr class="altColor">
 <td class="colFirst"><code><a href="../../../com/google/errorprone/BugPattern.MaturityLevel.html" title="enum in com.google.errorprone">BugPattern.MaturityLevel</a></code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/BugPattern.html#maturity()">maturity</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/BugPattern.html#name()">name</a></strong></code>
 <div class="block">A unique identifier for this bug, used for @SuppressWarnings and in the compiler error
  message.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../com/google/errorprone/BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a></code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/BugPattern.html#severity()">severity</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/BugPattern.html#summary()">summary</a></strong></code>
 <div class="block">A short summary of the problem that this checker detects.</div>
@@ -170,17 +164,23 @@ public @interface <span class="strong">BugPattern</span></pre>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
+<td class="colLast"><code><strong><a href="../../../com/google/errorprone/BugPattern.html#explanation()">explanation</a></strong></code>
+<div class="block">A longer explanation of the problem that this checker detects.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/BugPattern.html#link()">link</a></strong></code>
 <div class="block">The link URL to use if linkType() is LinkType.CUSTOM.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../com/google/errorprone/BugPattern.LinkType.html" title="enum in com.google.errorprone">BugPattern.LinkType</a></code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/BugPattern.html#linkType()">linkType</a></strong></code>
 <div class="block">The type of link to generate in the compiler error message.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../com/google/errorprone/BugPattern.Suppressibility.html" title="enum in com.google.errorprone">BugPattern.Suppressibility</a></code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/BugPattern.html#suppressibility()">suppressibility</a></strong></code>
 <div class="block">Whether this checker should be suppressible, and if so, by what means.</div>
@@ -234,19 +234,6 @@ public @interface <span class="strong">BugPattern</span></pre>
  to match javac warning/error style.
 
  <p>Markdown syntax is not allowed for this element.</div>
-</li>
-</ul>
-<a name="explanation()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>explanation</h4>
-<pre>public abstract&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;explanation</pre>
-<div class="block">A longer explanation of the problem that this checker detects.  Used as the main content
- in the generated documentation for this checker.
-
- <p>Markdown syntax is allowed for this element.</div>
 </li>
 </ul>
 <a name="severity()">
@@ -303,6 +290,23 @@ public @interface <span class="strong">BugPattern</span></pre>
 <h4>link</h4>
 <pre>public abstract&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;link</pre>
 <div class="block">The link URL to use if linkType() is LinkType.CUSTOM.</div>
+<dl>
+<dt>Default:</dt>
+<dd>""</dd>
+</dl>
+</li>
+</ul>
+<a name="explanation()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>explanation</h4>
+<pre>public abstract&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;explanation</pre>
+<div class="block">A longer explanation of the problem that this checker detects.  Used as the main content
+ in the generated documentation for this checker.
+
+ <p>Markdown syntax is allowed for this element.</div>
 <dl>
 <dt>Default:</dt>
 <dd>""</dd>

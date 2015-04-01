@@ -19,7 +19,7 @@ __Abstract methods are not injectable with javax.inject.Inject.__
 The javax.inject.Inject annotation cannot go on an abstract method as per the JSR-330 spec. This is in line with the fact that if a class overrides a method that was annotated with javax.inject.Inject, and the subclass methodis not annotated, the subclass method will not be injected.
 
 See http://docs.oracle.com/javaee/6/api/javax/inject/Inject.html
-and https://code.google.com/p/google-guice/wiki/JSR330 
+and https://code.google.com/p/google-guice/wiki/JSR330
 
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("JavaxInjectOnAbstractMethod")` annotation to the enclosing element.
@@ -104,7 +104,6 @@ public class InjectJavaxInjectOnAbstractMethodNegativeCases {
     abstract void abstractMethod();
   }
 }
-
 {% endhighlight %}
 
 __InjectJavaxInjectOnAbstractMethodPositiveCases.java__
@@ -164,6 +163,5 @@ public class InjectJavaxInjectOnAbstractMethodPositiveCases {
     abstract void abstarctMethod2();
   }
 }
-
 {% endhighlight %}
 

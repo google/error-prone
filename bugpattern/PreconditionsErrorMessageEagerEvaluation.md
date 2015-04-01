@@ -62,7 +62,6 @@ public class PreconditionsExpensiveStringNegativeCase1 {
     Preconditions.checkState(true, String.format("The foo %d foo is not a good foo", foo));
   }
 }
-
 {% endhighlight %}
 
 __PreconditionsExpensiveStringNegativeCase2.java__
@@ -100,7 +99,6 @@ public class PreconditionsExpensiveStringNegativeCase2 {
     Preconditions.checkState(true, "The foo" + foo + " is not a good foo");
   }
 }
-
 {% endhighlight %}
 
 __PreconditionsExpensiveStringPositiveCase1.java__
@@ -138,6 +136,5 @@ public class PreconditionsExpensiveStringPositiveCase1 {
     Preconditions.checkState(true, String.format("The foo %s (%s) is not a good foo", foo, bar));
   }
 }
-
 {% endhighlight %}
 

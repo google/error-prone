@@ -145,7 +145,6 @@ public class CovariantEqualsPositiveCase1 {
     return false;
   }
 }
-
 {% endhighlight %}
 
 __CovariantEqualsPositiveCase2.java__
@@ -183,7 +182,6 @@ public class CovariantEqualsPositiveCase2 {
     return false;
   }
 }
-
 {% endhighlight %}
 
 __CovariantEqualsPositiveCase3.java__
@@ -225,7 +223,6 @@ public class CovariantEqualsPositiveCase3 {
   }
 
 }
-
 {% endhighlight %}
 
 __CovariantEqualsPositiveCase4.java__

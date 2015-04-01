@@ -105,7 +105,6 @@ public class InjectMoreThanOneInjectableConstructorNegativeCases {
   }
 
 }
-
 {% endhighlight %}
 
 __InjectMoreThanOneInjectableConstructorPositiveCases.java__
@@ -196,6 +195,5 @@ public class InjectMoreThanOneInjectableConstructorPositiveCases {
     public TestClass4(int m, int n) {}
   }
 }
-
 {% endhighlight %}
 

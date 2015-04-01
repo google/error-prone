@@ -94,7 +94,6 @@ public class ComparisonOutOfRangeNegativeCases {
   }
 
 }
-
 {% endhighlight %}
 
 __ComparisonOutOfRangePositiveCases.java__
@@ -165,7 +164,5 @@ public class ComparisonOutOfRangePositiveCases {
     result = (d = (char) reader.read()) == -1;
   }
 }
-
-
 {% endhighlight %}
 

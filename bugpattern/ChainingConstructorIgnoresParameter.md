@@ -144,7 +144,6 @@ public class ChainingConstructorIgnoresParameterNegativeCases {
     }
   }
 }
-
 {% endhighlight %}
 
 __ChainingConstructorIgnoresParameterPositiveCases.java__
@@ -254,6 +253,5 @@ public class ChainingConstructorIgnoresParameterPositiveCases {
 
   enum Location { TEST_TARGET }
 }
-
 {% endhighlight %}
 

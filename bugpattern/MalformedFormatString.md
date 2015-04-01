@@ -123,7 +123,6 @@ public class MalformedFormatStringNegativeCases {
   }
   // TODO(user): maybe test format flags, or more advanced usage?
 }
-
 {% endhighlight %}
 
 __MalformedFormatStringPositiveCases.java__
@@ -180,6 +179,5 @@ public class MalformedFormatStringPositiveCases {
     String.format(FORMAT, true, false);
   }
 }
-
 {% endhighlight %}
 

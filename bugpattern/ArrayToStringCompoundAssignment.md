@@ -61,7 +61,6 @@ public class ArrayToStringCompoundAssignmentNegativeCases {
     b += a;
   }
 }
-
 {% endhighlight %}
 
 __ArrayToStringCompoundAssignmentPositiveCases.java__
@@ -100,6 +99,5 @@ public class ArrayToStringCompoundAssignmentPositiveCases {
     b += a;
   }
 }
-
 {% endhighlight %}
 

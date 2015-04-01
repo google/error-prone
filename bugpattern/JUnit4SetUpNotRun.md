@@ -138,7 +138,6 @@ abstract class SetUpAnnotatedBaseClass {
 class J4SetUpExtendsAnnotatedMethod extends SetUpAnnotatedBaseClass {
   public void setUp() {}
 }
-
 {% endhighlight %}
 
 __JUnit4SetUpNotRunPositiveCaseCustomBefore.java__
@@ -176,7 +175,6 @@ public class JUnit4SetUpNotRunPositiveCaseCustomBefore {
 }
 
 @interface Before {}
-
 {% endhighlight %}
 
 __JUnit4SetUpNotRunPositiveCases.java__
@@ -267,7 +265,5 @@ class J4OverriddenSetUpPublic extends BaseTestClass {
   // BUG: Diagnostic contains: @Before
   @Override public void setUp() {}
 }
-
-
 {% endhighlight %}
 

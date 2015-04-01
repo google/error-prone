@@ -81,7 +81,6 @@ public class InjectJavaxInjectOnFinalFieldNegativeCases {
     final void method() {}
   }
 }
-
 {% endhighlight %}
 
 __InjectJavaxInjectOnFinalFieldPositiveCases.java__
@@ -121,6 +120,5 @@ public class InjectJavaxInjectOnFinalFieldPositiveCases {
     public final int n = 0;
   }
 }
-
 {% endhighlight %}
 

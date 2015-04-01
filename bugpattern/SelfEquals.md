@@ -84,7 +84,6 @@ public class SelfEqualsNegativeCases {
     return Boolean.TRUE.toString().equals(Boolean.FALSE.toString());
   }
 }
-
 {% endhighlight %}
 
 __SelfEqualsPositiveCase1.java__
@@ -154,7 +153,6 @@ public class SelfEqualsPositiveCase1 {
     public String string;
   }
 }
-
 {% endhighlight %}
 
 __SelfEqualsPositiveCase2.java__
@@ -200,6 +198,5 @@ public class SelfEqualsPositiveCase2 {
     return equals(this);
   }
 }
-
 {% endhighlight %}
 

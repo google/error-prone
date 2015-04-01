@@ -84,8 +84,6 @@ public class InjectedConstructorAnnotationsNegativeCases {
     public TestClass4() {}
   }
 }
-
-
 {% endhighlight %}
 
 __InjectedConstructorAnnotationsPositiveCases.java__
@@ -139,7 +137,5 @@ public class InjectedConstructorAnnotationsPositiveCases {
     @TestBindingAnnotation @Inject(optional = true) public TestClass3() {}
   }
 }
-
-
 {% endhighlight %}
 

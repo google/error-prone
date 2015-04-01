@@ -65,7 +65,6 @@ public class CheckReturnValueNegativeCases {
   }
   
 }
-
 {% endhighlight %}
 
 __CheckReturnValuePositiveCases.java__
@@ -201,6 +200,5 @@ public class CheckReturnValuePositiveCases {
     }
   }
 }
-
 {% endhighlight %}
 

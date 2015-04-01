@@ -128,7 +128,6 @@ public class SelfAssignmentNegativeCases {
   }
   
 }
-
 {% endhighlight %}
 
 __SelfAssignmentPositiveCases1.java__
@@ -194,7 +193,6 @@ public class SelfAssignmentPositiveCases1 {
     return "foo" + "bar";
   }
 }
-
 {% endhighlight %}
 
 __SelfAssignmentPositiveCases2.java__
@@ -288,6 +286,5 @@ public class SelfAssignmentPositiveCases2 {
     Bar bar;
   }
 }
-
 {% endhighlight %}
 

@@ -128,7 +128,6 @@ public class GuiceOverridesJavaxInjectableMethodNegativeCases {
   }
   
 }
-
 {% endhighlight %}
 
 __GuiceOverridesJavaxInjectableMethodPositiveCases.java__
@@ -186,6 +185,5 @@ public class GuiceOverridesJavaxInjectableMethodPositiveCases {
     public void foo() {}
   }
 }
-
 {% endhighlight %}
 

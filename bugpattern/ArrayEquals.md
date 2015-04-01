@@ -106,7 +106,6 @@ public class ArrayEqualsNegativeCases {
   
   
 }
-
 {% endhighlight %}
 
 __ArrayEqualsNegativeCases2.java__
@@ -171,7 +170,6 @@ public class ArrayEqualsNegativeCases2 {
     }
   }
 }
-
 {% endhighlight %}
 
 __ArrayEqualsPositiveCases.java__
@@ -276,7 +274,6 @@ public class ArrayEqualsPositiveCases {
     }
   }
 }
-
 {% endhighlight %}
 
 __ArrayEqualsPositiveCases2.java__
@@ -333,6 +330,5 @@ public class ArrayEqualsPositiveCases2 {
     }
   }
 }
-
 {% endhighlight %}
 

@@ -81,7 +81,6 @@ public class StaticAccessedFromInstanceNegativeCases {
     Class<?> klass = String[].class;
   }
 }
-
 {% endhighlight %}
 
 __StaticAccessedFromInstancePositiveCase1.java__
@@ -255,7 +254,6 @@ public class StaticAccessedFromInstancePositiveCase1 {
     int x = new C<String>().foo();
   }
 }
-
 {% endhighlight %}
 
 __StaticAccessedFromInstancePositiveCase2.java__

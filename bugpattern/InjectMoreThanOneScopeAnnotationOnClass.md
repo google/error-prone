@@ -16,7 +16,7 @@ maturity: EXPERIMENTAL
 __A class can be annotated with at most one scope annotation__
 
 ## The problem
-Annotating a class with more than one scope annotation is invalid according to the JSR-330 specification. 
+Annotating a class with more than one scope annotation is invalid according to the JSR-330 specification.
 
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("InjectMoreThanOneScopeAnnotationOnClass")` annotation to the enclosing element.
@@ -135,6 +135,5 @@ public class InjectMoreThanOneScopeAnnotationOnClassPositiveCases {
   public class TestClass2 {}
   
 }
-
 {% endhighlight %}
 

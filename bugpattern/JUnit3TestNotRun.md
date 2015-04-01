@@ -85,7 +85,6 @@ public class JUnit3TestNotRunNegativeCase1 extends TestCase {
   @Test @Ignore public void ignoredTest2() {}
   @Ignore @Test public void ignoredTest() {}
 }
-
 {% endhighlight %}
 
 __JUnit3TestNotRunNegativeCase2.java__
@@ -127,7 +126,6 @@ public class JUnit3TestNotRunNegativeCase2 {
   @Test public void tstName() {}
   @Test public void TestName() {}
 }
-
 {% endhighlight %}
 
 __JUnit3TestNotRunNegativeCase3.java__
@@ -168,7 +166,6 @@ public class JUnit3TestNotRunNegativeCase3 extends TestCase {
   public void tesMisspelled() {}
   @Test public void tesBothIssuesAtOnce() {}
 }
-
 {% endhighlight %}
 
 __JUnit3TestNotRunNegativeCase4.java__
@@ -206,7 +203,6 @@ public abstract class JUnit3TestNotRunNegativeCase4 extends TestCase {
   public void tesMisspelled() {}
   @Test public void tesBothIssuesAtOnce() {}
 }
-
 {% endhighlight %}
 
 __JUnit3TestNotRunNegativeCase5.java__
@@ -246,7 +242,6 @@ public class JUnit3TestNotRunNegativeCase5 extends JUnit3TestNotRunNegativeCase3
   public void tesMisspelled() {}
   @Test public void tesBothIssuesAtOnce() {}
 }
-
 {% endhighlight %}
 
 __JUnit3TestNotRunPositiveCases.java__
@@ -343,6 +338,5 @@ public class JUnit3TestNotRunPositiveCases extends TestCase {
   // BUG: Diagnostic contains: void testMultiline() {
       tesMultiline() {}
 }
-
 {% endhighlight %}
 

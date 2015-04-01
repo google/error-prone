@@ -73,7 +73,6 @@ public class SelfEqualityNegativeCases {
   }
 
 }
-
 {% endhighlight %}
 
 __SelfEqualityPositiveCases.java__
@@ -155,6 +154,5 @@ public class SelfEqualityPositiveCases {
   }
 
 }
-
 {% endhighlight %}
 

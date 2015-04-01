@@ -79,7 +79,6 @@ public class ReturnValueIgnoredNegativeCases {
   }
   
 }
-
 {% endhighlight %}
 
 __ReturnValueIgnoredPositiveCases.java__
@@ -183,6 +182,5 @@ public class ReturnValueIgnoredPositiveCases {
   }
   
 }
-
 {% endhighlight %}
 

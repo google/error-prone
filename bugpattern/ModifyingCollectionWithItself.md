@@ -71,7 +71,6 @@ public class ModifyingCollectionWithItselfNegativeCases {
     return a.containsAll(b);
   }
 }
-
 {% endhighlight %}
 
 __ModifyingCollectionWithItselfPositiveCases.java__
@@ -126,6 +125,5 @@ public class ModifyingCollectionWithItselfPositiveCases {
     return this.a.removeAll(a);
   }
 }
-
 {% endhighlight %}
 

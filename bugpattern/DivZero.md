@@ -56,8 +56,6 @@ public class DivZeroNegativeCases {
     double y = (double) a / 0.0;
   }
 }
-
-
 {% endhighlight %}
 
 __DivZeroPositiveCases.java__

@@ -85,7 +85,6 @@ public class ArrayHashCodeNegativeCases {
     hashCode = Objects.hashCode((Object[]) stringArray);
   }
 }
-
 {% endhighlight %}
 
 __ArrayHashCodeNegativeCases2.java__
@@ -143,7 +142,6 @@ public class ArrayHashCodeNegativeCases2 {
     hashCode = Objects.hash((Object[]) stringArray);    
   }
 }
-
 {% endhighlight %}
 
 __ArrayHashCodePositiveCases.java__
@@ -231,7 +229,6 @@ public class ArrayHashCodePositiveCases {
     hashCode = Objects.hashCode(obj1, obj2, multidimensionalStringArray);
   }
 }
-
 {% endhighlight %}
 
 __ArrayHashCodePositiveCases2.java__
@@ -320,6 +317,5 @@ public class ArrayHashCodePositiveCases2 {
     hashCode = Objects.hash(obj1, obj2, multidimensionalStringArray);
   }
 }
-
 {% endhighlight %}
 

@@ -79,7 +79,6 @@ public class NumericEqualityNegativeCases {
   }
 
 }
-
 {% endhighlight %}
 
 __NumericEqualityPositiveCases.java__
@@ -128,6 +127,5 @@ public class NumericEqualityPositiveCases {
   }
 
 }
-
 {% endhighlight %}
 

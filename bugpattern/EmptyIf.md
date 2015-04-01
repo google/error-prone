@@ -85,7 +85,6 @@ public class EmptyIfStatementNegativeCases {
 
 
 }
-
 {% endhighlight %}
 
 __EmptyIfStatementPositiveCases.java__
@@ -156,6 +155,5 @@ public class EmptyIfStatementPositiveCases {
     }
   }
 }
-
 {% endhighlight %}
 

@@ -84,7 +84,6 @@ public class ProtoFieldPreconditionsCheckNotNullNegativeCases {
         Object... errorMessageArgs) {}
   }
 }
-
 {% endhighlight %}
 
 __ProtoFieldPreconditionsCheckNotNullPositiveCases.java__
@@ -153,6 +152,5 @@ public class ProtoFieldPreconditionsCheckNotNullPositiveCases {
     Preconditions.checkNotNull(message.getMessage(), "Message").toString();
   }
 }
-
 {% endhighlight %}
 

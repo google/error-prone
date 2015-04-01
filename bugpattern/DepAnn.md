@@ -102,7 +102,6 @@ public class DepAnnNegativeCase1 {
 
   public void newMethod() {}
 }
-
 {% endhighlight %}
 
 __DepAnnNegativeCase2.java__
@@ -149,7 +148,6 @@ public class DepAnnNegativeCase2 {
   }
   
 }
-
 {% endhighlight %}
 
 __DepAnnPositiveCases.java__

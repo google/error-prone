@@ -61,7 +61,6 @@ public class CannotMockFinalClassNegativeCases {
     NonFinalClass local = Mockito.mock(NonFinalClass.class);
   }
 }
-
 {% endhighlight %}
 
 __CannotMockFinalClassNegativeCases2.java__
@@ -98,7 +97,6 @@ public class CannotMockFinalClassNegativeCases2 {
     FinalClass local = Mockito.mock(FinalClass.class);
   }
 }
-
 {% endhighlight %}
 
 __CannotMockFinalClassPositiveCases.java__
@@ -140,6 +138,5 @@ public class CannotMockFinalClassPositiveCases {
     FinalClass local = Mockito.mock(FinalClass.class);
   }
 }
-
 {% endhighlight %}
 

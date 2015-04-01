@@ -61,7 +61,6 @@ public class ArrayToStringNegativeCases {
     }
   }
 }
-
 {% endhighlight %}
 
 __ArrayToStringPositiveCases.java__
@@ -142,6 +141,5 @@ public class ArrayToStringPositiveCases {
     System.out.println(e.getStackTrace().toString());
   }
 }
-
 {% endhighlight %}
 

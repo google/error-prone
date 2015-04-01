@@ -276,6 +276,5 @@ public class GuiceAssistedInjectScopingPositiveCases {
     }
   }
 }
-
 {% endhighlight %}
 

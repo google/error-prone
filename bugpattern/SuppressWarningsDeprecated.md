@@ -84,7 +84,6 @@ public class SuppressWarningsDeprecatedNegativeCases {
     Bar b = null;
   }
 }
-
 {% endhighlight %}
 
 __SuppressWarningsDeprecatedPositiveCases.java__
@@ -163,6 +162,5 @@ public class SuppressWarningsDeprecatedPositiveCases {
   public static void positiveCase9() {
   }
 }
-
 {% endhighlight %}
 

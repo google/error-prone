@@ -72,7 +72,6 @@ public class StringEqualityNegativeCases {
     return retVal;
   } 
 }
-
 {% endhighlight %}
 
 __StringEqualityPositiveCases.java__
@@ -163,6 +162,5 @@ public class StringEqualityPositiveCases {
   }
 
 }
-
 {% endhighlight %}
 

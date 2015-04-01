@@ -66,7 +66,6 @@ public class PrimitiveArrayPassedToVarargsMethodNegativeCases {
     objectVarargsMethodWithMultipleParams(new Object());
   }
 }
-
 {% endhighlight %}
 
 __PrimitiveArrayPassedToVarargsMethodPositiveCases.java__
@@ -121,6 +120,5 @@ public class PrimitiveArrayPassedToVarargsMethodPositiveCases {
     Arrays.asList(intArray);
   }
 }
-
 {% endhighlight %}
 

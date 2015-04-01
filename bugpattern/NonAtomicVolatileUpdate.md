@@ -104,8 +104,6 @@ public class NonAtomicVolatileUpdateNegativeCases {
     }
   }
 }
-
-
 {% endhighlight %}
 
 __NonAtomicVolatileUpdatePositiveCases.java__
@@ -200,7 +198,5 @@ public class NonAtomicVolatileUpdatePositiveCases {
     myVolatileString = myVolatileString + "update";
   }
 }
-
-
 {% endhighlight %}
 

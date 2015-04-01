@@ -58,7 +58,6 @@ import org.junit.runners.JUnit4;
 public class JUnit4TestNotRunNegativeCase1 {
   public void testThisIsATest() {}
 }
-
 {% endhighlight %}
 
 __JUnit4TestNotRunNegativeCase2.java__
@@ -94,7 +93,6 @@ import org.junit.internal.runners.JUnit38ClassRunner;
 public class JUnit4TestNotRunNegativeCase2 {
   public void testThisIsATest() {}
 }
-
 {% endhighlight %}
 
 __JUnit4TestNotRunNegativeCase3.java__
@@ -155,7 +153,6 @@ public class JUnit4TestNotRunNegativeCase3 {
   // Doesn't return void
   public int testSomething() { return 42; }
 }
-
 {% endhighlight %}
 
 __JUnit4TestNotRunNegativeCase4.java__
@@ -192,7 +189,6 @@ import org.junit.runners.JUnit4;
 public class JUnit4TestNotRunNegativeCase4 extends TestCase {
   public void testThisIsATest() {}
 }
-
 {% endhighlight %}
 
 __JUnit4TestNotRunNegativeCase5.java__
@@ -272,7 +268,6 @@ public class JUnit4TestNotRunPositiveCase1 {
   // BUG: Diagnostic contains: @Test
   public static void testThisIsAStaticTest() {}
 }
-
 {% endhighlight %}
 
 __JUnit4TestNotRunPositiveCase2.java__

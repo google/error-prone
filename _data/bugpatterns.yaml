@@ -55,6 +55,7 @@
 - {name: NonFinalCompileTimeConstant, summary: '@CompileTimeConstant parameters should
     be final'}
 - {name: Overrides, summary: Varargs doesn't agree for overridden method}
+- {name: PackageLocation, summary: Packages names should match the directory they are declared in}
 - {name: PreconditionsCheckNotNull, summary: Literal passed as first argument to Preconditions.checkNotNull() can never be null}
 - {name: PreconditionsCheckNotNullPrimitive, summary: First argument to Preconditions.checkNotNull() is a primitive rather than an object reference}
 - {name: ProtoFieldNullComparison, summary: Protobuf fields cannot be null}
@@ -96,9 +97,7 @@
 - {name: EmptyIf, summary: Empty statement after if}
 - {name: GuardedByChecker, summary: Checks for unguarded accesses to fields and methods with @GuardedBy annotations}
 - {name: GuardedByValidator, summary: Invalid @GuardedBy expression}
-- {name: GuiceAssistedParameters, summary: 'A constructor cannot have two @Assisted
-    parameters of the same type unless they are disambiguated with named @Assisted
-    annotations. '}
+- {name: GuiceAssistedParameters, summary: A constructor cannot have two @Assisted parameters of the same type unless they are disambiguated with named @Assisted annotations.}
 - {name: InjectInvalidTargetingOnScopingAnnotation, summary: The target of a scoping annotation must be set to METHOD and/or TYPE.}
 - {name: InjectMoreThanOneQualifier, summary: Using more than one qualifier annotation on the same element is not allowed.}
 - {name: InjectMoreThanOneScopeAnnotationOnClass, summary: A class can be annotated with at most one scope annotation}

@@ -161,7 +161,6 @@ public class OverridesNegativeCase2 {
     abstract void varargsMethod(Object... newNames);
   }
 }
-
 {% endhighlight %}
 
 __OverridesNegativeCase3.java__
@@ -209,7 +208,6 @@ public class OverridesNegativeCase3 {
     abstract void arrayMethod(Object[] xs);
   }
 }
-
 {% endhighlight %}
 
 __OverridesPositiveCase1.java__
@@ -369,7 +367,6 @@ public class OverridesPositiveCase2 {
     abstract void varargsMethod(Object[] newNames);
   }
 }
-
 {% endhighlight %}
 
 __OverridesPositiveCase3.java__
@@ -423,7 +420,6 @@ public class OverridesPositiveCase3 {
     abstract void arrayMethod(Object... newNames);
   }
 }
-
 {% endhighlight %}
 
 __OverridesPositiveCase4.java__
@@ -474,7 +470,6 @@ public class OverridesPositiveCase4 {
     abstract void varargsMethod(@Note final Map<Object, Object>  /*dsa*/ [ /* [ */ ] /* dsa */ xs);
   }
 }
-
 {% endhighlight %}
 
 __OverridesPositiveCase5.java__
@@ -524,6 +519,5 @@ public class OverridesPositiveCase5 {
     }
   }
 }
-
 {% endhighlight %}
 

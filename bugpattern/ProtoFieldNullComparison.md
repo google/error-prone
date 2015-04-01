@@ -65,7 +65,6 @@ public class ProtoFieldNullComparisonNegativeCases {
     }
   }
 }
-
 {% endhighlight %}
 
 __ProtoFieldNullComparisonPositiveCases.java__
@@ -119,6 +118,5 @@ public class ProtoFieldNullComparisonPositiveCases {
     }
   }
 }
-
 {% endhighlight %}
 

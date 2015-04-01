@@ -13,7 +13,7 @@ maturity: EXPERIMENTAL
 </table></div>
 
 # Bug pattern: GuiceAssistedParameters
-__A constructor cannot have two @Assisted parameters of the same type unless they are disambiguated with named @Assisted annotations. __
+__A constructor cannot have two @Assisted parameters of the same type unless they are disambiguated with named @Assisted annotations.__
 
 ## The problem
 See http://google-guice.googlecode.com/git/javadoc/com/google/inject/assistedinject/FactoryModuleBuilder.html
@@ -98,7 +98,6 @@ public class GuiceAssistedParametersNegativeCases {
     public TestClass5(@Assisted("foo") List<String> x, @Assisted("foo") List<Integer> y, String z) {}
   }
 }
-
 {% endhighlight %}
 
 __GuiceAssistedParametersPositiveCases.java__
@@ -175,6 +174,5 @@ public class GuiceAssistedParametersPositiveCases {
                       List<String> y, String z) {}
   }
 }
-
 {% endhighlight %}
 

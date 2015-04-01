@@ -86,7 +86,6 @@ public class MisusedWeekYearNegativeCases {
     mySdf.applyLocalizedPattern("YYYY-MM-dd");
   }
 }
-
 {% endhighlight %}
 
 __MisusedWeekYearPositiveCases.java__
@@ -167,6 +166,5 @@ public class MisusedWeekYearPositiveCases {
     sdf.applyLocalizedPattern(WEEK_YEAR_PATTERN);
   }
 }
-
 {% endhighlight %}
 

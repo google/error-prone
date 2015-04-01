@@ -221,7 +221,6 @@ public class TryFailThrowableNegativeCases {
   private static void dummyMethod() {}
 
 }
-
 {% endhighlight %}
 
 __TryFailThrowablePositiveCases.java__
@@ -367,6 +366,5 @@ public class TryFailThrowablePositiveCases {
 
   private static void dummyMethod() {}
 }
-
 {% endhighlight %}
 

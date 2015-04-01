@@ -82,7 +82,6 @@ public class MisusedFormattingLoggerNegativeCases {
     logger.severe("{0} {1}", new Object[] { "a", "b" });
   }
 }
-
 {% endhighlight %}
 
 __MisusedFormattingLoggerPositiveCases.java__
@@ -190,6 +189,5 @@ public class MisusedFormattingLoggerPositiveCases {
     logger.warning("var='%s'", "foo", "bar", new RuntimeException().toString());
   }
 }
-
 {% endhighlight %}
 

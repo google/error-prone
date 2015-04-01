@@ -109,7 +109,6 @@ public class SizeGreaterThanOrEqualsZeroNegativeCases {
     public int size() { return length; }
   }
 }
-
 {% endhighlight %}
 
 __SizeGreaterThanOrEqualsZeroPositiveCases.java__
@@ -252,6 +251,5 @@ public class SizeGreaterThanOrEqualsZeroPositiveCases {
     }
   }
 }
-
 {% endhighlight %}
 

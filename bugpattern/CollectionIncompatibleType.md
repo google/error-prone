@@ -83,7 +83,6 @@ public class CollectionIncompatibleTypeNegativeCases {
     }
   }
 }
-
 {% endhighlight %}
 
 __CollectionIncompatibleTypePositiveCases.java__
@@ -149,6 +148,5 @@ public class CollectionIncompatibleTypePositiveCases {
     return map.get("not an integer");
   }
 }
-
 {% endhighlight %}
 

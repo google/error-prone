@@ -63,7 +63,6 @@ public class BadShiftAmountNegativeCases {
   }
 
 }
-
 {% endhighlight %}
 
 __BadShiftAmountPositiveCases.java__
@@ -129,6 +128,5 @@ public class BadShiftAmountPositiveCases {
   }
   
 }
-
 {% endhighlight %}
 

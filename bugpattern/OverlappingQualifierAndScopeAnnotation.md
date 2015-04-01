@@ -84,7 +84,6 @@ public class InjectOverlappingQualifierAndScopeAnnotationNegativeCases {
   @interface JavaxScopeAndGuiceBindingAnnotation {}
   
 }
-
 {% endhighlight %}
 
 __InjectOverlappingQualifierAndScopeAnnotationPositiveCases.java__
@@ -138,6 +137,5 @@ public class InjectOverlappingQualifierAndScopeAnnotationPositiveCases {
   @interface JavaxScopeAndGuiceBindingAnnotation {}
 
 }
-
 {% endhighlight %}
 

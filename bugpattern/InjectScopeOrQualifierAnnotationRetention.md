@@ -106,7 +106,6 @@ public class InjectScopeOrQualifierAnnotationRetentionNegativeCases {
   public @interface TestAnnotation5 {
   }
 }
-
 {% endhighlight %}
 
 __InjectScopeOrQualifierAnnotationRetentionPositiveCases.java__
@@ -196,6 +195,5 @@ public class InjectScopeOrQualifierAnnotationRetentionPositiveCases {
   public @interface TestAnnotation5 {
   }
 }
-
 {% endhighlight %}
 

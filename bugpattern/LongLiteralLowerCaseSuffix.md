@@ -93,7 +93,6 @@ public class LongLiteralLowerCaseSuffixNegativeCases {
   }
 
 }
-
 {% endhighlight %}
 
 __LongLiteralLowerCaseSuffixPositiveCase1.java__
@@ -194,7 +193,6 @@ public class LongLiteralLowerCaseSuffixPositiveCase1 {
   }
 
 }
-
 {% endhighlight %}
 
 __LongLiteralLowerCaseSuffixPositiveCase2.java__
@@ -233,6 +231,5 @@ public class LongLiteralLowerCaseSuffixPositiveCase2 {
     long value = 0_1__2l;
   }
 }
-
 {% endhighlight %}
 

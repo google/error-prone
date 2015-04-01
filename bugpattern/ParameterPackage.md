@@ -84,7 +84,6 @@ public class WrongParameterPackageNegativeCases {
   public static class Integer {
   }
 }
-
 {% endhighlight %}
 
 __WrongParameterPackagePositiveCases.java__
@@ -151,6 +150,5 @@ public class WrongParameterPackagePositiveCases {
   public static class Integer {
   }
 }
-
 {% endhighlight %}
 

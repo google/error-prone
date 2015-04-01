@@ -65,7 +65,6 @@ public class NonRuntimeAnnotationNegativeCases {
   public @interface Runtime {
   }
 }
-
 {% endhighlight %}
 
 __NonRuntimeAnnotationPositiveCases.java__
@@ -124,6 +123,5 @@ public class NonRuntimeAnnotationPositiveCases {
   public @interface NotSpecified {
   }
 }
-
 {% endhighlight %}
 

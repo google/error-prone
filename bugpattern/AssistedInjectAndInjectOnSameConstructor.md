@@ -126,7 +126,6 @@ public class InjectAssistedInjectAndInjectOnSameConstructorNegativeCases {
     public TestClass8() {}
   }
 }
-
 {% endhighlight %}
 
 __InjectAssistedInjectAndInjectOnSameConstructorPositiveCases.java__
@@ -178,6 +177,5 @@ public class InjectAssistedInjectAndInjectOnSameConstructorPositiveCases {
     public TestClass2() {}
   }
 }
-
 {% endhighlight %}
 

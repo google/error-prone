@@ -61,7 +61,6 @@ public class NullablePrimitiveNegativeCases {
     return new Integer(0);
   }
 }
-
 {% endhighlight %}
 
 __NullablePrimitivePositiveCases.java__
@@ -108,6 +107,5 @@ public class NullablePrimitivePositiveCases {
     return 0;
   }
 }
-
 {% endhighlight %}
 

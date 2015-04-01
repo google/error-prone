@@ -52,7 +52,6 @@ public class EqualsNaNNegativeCases {
   static final boolean NAN_AFTER_MATH = (0.0 / 0.0) == 1.0;
   static final boolean NORMAL_COMPARISON = 1.0 == 2.0;
 }
-
 {% endhighlight %}
 
 __EqualsNaNPositiveCases.java__
@@ -99,6 +98,5 @@ public class EqualsNaNPositiveCases {
   // BUG: Diagnostic contains: Double.isNaN(123456)
   static final boolean INT_IS_NAN = 123456 == Double.NaN;
 }
-
 {% endhighlight %}
 

@@ -72,7 +72,6 @@ public class PreconditionsInvalidPlaceholderNegativeCase1 {
     checkNotNull(foo, "Foo", this);
   }
 }
-
 {% endhighlight %}
 
 __PreconditionsInvalidPlaceholderPositiveCase1.java__
@@ -113,6 +112,5 @@ public class PreconditionsInvalidPlaceholderPositiveCase1 {
     Preconditions.checkState(foo == 0, "foo must be equal to 0 but was {0}", foo);
   }
 }
-
 {% endhighlight %}
 

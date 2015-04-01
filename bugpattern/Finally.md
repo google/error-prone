@@ -131,7 +131,6 @@ public class FinallyNegativeCase1 {
     }
   }
 }
-
 {% endhighlight %}
 
 __FinallyNegativeCase2.java__
@@ -213,7 +212,6 @@ public class FinallyNegativeCase2 {
     }
   }
 }
-
 {% endhighlight %}
 
 __FinallyPositiveCase1.java__
@@ -365,7 +363,6 @@ public class FinallyPositiveCase1 {
     }
   }
 }
-
 {% endhighlight %}
 
 __FinallyPositiveCase2.java__
@@ -503,6 +500,5 @@ public class FinallyPositiveCase2 {
     }
   }
 }
-
 {% endhighlight %}
 

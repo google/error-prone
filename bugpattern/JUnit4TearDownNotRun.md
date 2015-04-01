@@ -121,7 +121,6 @@ class J4TearDownInheritsFromAnnotatedMethod2 extends TearDownAnnotatedBaseClass 
   @After
   public void tearDown() {}
 }
-
 {% endhighlight %}
 
 __JUnit4TearDownNotRunPositiveCaseCustomAfter.java__
@@ -159,7 +158,6 @@ public class JUnit4TearDownNotRunPositiveCaseCustomAfter {
 }
 
 @interface After {}
-
 {% endhighlight %}
 
 __JUnit4TearDownNotRunPositiveCases.java__
@@ -236,8 +234,5 @@ class J4TearDownHasPublicOverride extends TearDownUnannotatedBaseClass {
   // BUG: Diagnostic contains: @After
   @Override public void tearDown() {}
 }
-
-
-
 {% endhighlight %}
 

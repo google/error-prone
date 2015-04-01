@@ -79,7 +79,6 @@ public class InjectScopeAnnotationOnInterfaceOrAbstractClassNegativeCases {
   public class TestClass4 {
   }
 }
-
 {% endhighlight %}
 
 __InjectScopeAnnotationOnInterfaceOrAbstractClassPositiveCases.java__
@@ -129,6 +128,5 @@ public class InjectScopeAnnotationOnInterfaceOrAbstractClassPositiveCases {
   public interface TestClass2 {
   }
 }
-
 {% endhighlight %}
 

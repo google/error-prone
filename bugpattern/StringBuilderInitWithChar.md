@@ -55,7 +55,6 @@ public class StringBuilderInitWithCharNegativeCases {
     new StringBuilder();
   }
 }
-
 {% endhighlight %}
 
 __StringBuilderInitWithCharPositiveCases.java__
@@ -93,6 +92,5 @@ public class StringBuilderInitWithCharPositiveCases {
     new StringBuilder(c);
   }
 }
-
 {% endhighlight %}
 

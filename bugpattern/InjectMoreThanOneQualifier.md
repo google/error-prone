@@ -106,7 +106,6 @@ public class InjectMoreThanOneQualifierNegativeCases {
   @Retention(RUNTIME)
   public @interface Bar {}
 }
-
 {% endhighlight %}
 
 __InjectMoreThanOneQualifierPositiveCases.java__
@@ -259,6 +258,5 @@ public class InjectMoreThanOneQualifierPositiveCases {
   @Retention(RUNTIME)
   public @interface Bar2 {}
 }
-
 {% endhighlight %}
 

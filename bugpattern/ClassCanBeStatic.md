@@ -121,8 +121,6 @@ public class ClassCanBeStaticNegativeCases {
     }
   }
 }
-
-
 {% endhighlight %}
 
 __ClassCanBeStaticPositiveCase1.java__
@@ -159,7 +157,6 @@ public class ClassCanBeStaticPositiveCase1 {
     int innerVar;
   }
 }
-
 {% endhighlight %}
 
 __ClassCanBeStaticPositiveCase2.java__
@@ -201,7 +198,6 @@ public class ClassCanBeStaticPositiveCase2 {
     }
   }
 }
-
 {% endhighlight %}
 
 __ClassCanBeStaticPositiveCase3.java__
@@ -240,6 +236,5 @@ public class ClassCanBeStaticPositiveCase3 {
     }
   }
 }
-
 {% endhighlight %}
 

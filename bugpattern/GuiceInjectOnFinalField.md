@@ -79,7 +79,6 @@ public class GuiceInjectOnFinalFieldNegativeCases {
     final void method() {}
   }
 }
-
 {% endhighlight %}
 
 __GuiceInjectOnFinalFieldPositiveCases.java__
@@ -130,6 +129,5 @@ public class GuiceInjectOnFinalFieldPositiveCases {
     final Object c = null;
   }
 }
-
 {% endhighlight %}
 

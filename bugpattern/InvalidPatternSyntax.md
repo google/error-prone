@@ -73,7 +73,6 @@ public class InvalidPatternSyntaxNegativeCases {
     "".split(x, 0);
   }
 }
-
 {% endhighlight %}
 
 __InvalidPatternSyntaxPositiveCases.java__
@@ -138,6 +137,5 @@ public class InvalidPatternSyntaxPositiveCases {
 
   }
 }
-
 {% endhighlight %}
 

@@ -106,7 +106,6 @@ public class InjectAssistedInjectAndInjectOnConstructorsNegativeCases {
     public TestClass6(int n) {}
   }
 }
-
 {% endhighlight %}
 
 __InjectAssistedInjectAndInjectOnConstructorsPositiveCases.java__
@@ -180,6 +179,5 @@ public class InjectAssistedInjectAndInjectOnConstructorsPositiveCases {
     public TestClass3(String s) {}
   }
 }
-
 {% endhighlight %}
 
