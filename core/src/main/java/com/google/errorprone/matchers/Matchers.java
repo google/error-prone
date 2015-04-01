@@ -65,6 +65,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
 
@@ -904,6 +906,20 @@ public class Matchers {
   }
 
   /**
+   * Matches if a {@link VariableTree} is a field declaration, as opposed to a local variable, enum
+   * constant, parameter to a method, etc.
+   */
+  public static Matcher<VariableTree> isField() {
+    return new Matcher<VariableTree>() {
+      @Override
+      public boolean matches(VariableTree variableTree, VisitorState state) {
+        Element element = ASTHelpers.getSymbol(variableTree);
+        return element.getKind() == ElementKind.FIELD;
+      }
+    };
+  }
+
+  /**
    * Matches an class based on whether it is nested in another class or method.
    *
    * @param kind The kind of nesting to match, eg ANONYMOUS, LOCAL, MEMBER, TOP_LEVEL
@@ -1002,8 +1018,16 @@ public class Matchers {
     return allOf(isStatic(), isSymbol(VarSymbol.class));
   }
 
-  public static Matcher<Tree> isStatic() {
-    return new IsStatic();
+  /**
+   * Matches an AST node that is static.
+   */
+  public static <T extends Tree> Matcher<T> isStatic() {
+    return new Matcher<T>() {
+      @Override public boolean matches(Tree tree, VisitorState state) {
+        Symbol sym = ASTHelpers.getSymbol(tree);
+        return sym != null && sym.isStatic();
+      }
+    };
   }
 
   static Matcher<Tree> isSymbol(java.lang.Class<? extends Symbol> symbolClass) {
