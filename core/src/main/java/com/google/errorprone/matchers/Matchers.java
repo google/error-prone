@@ -1035,22 +1035,15 @@ public class Matchers {
   }
 
   /**
-   * Safely adapts a matcher on a subtype of Tree into a matcher on Tree.  Fails if the tree
-   * node passed in is not an instance of the subtype, or the if the matcher does not match.
-   *
-   * @param returnTypeParam Type parameter of the Matcher that will be returned
-   * @param matcherTypeParam Type parameter of the Matcher passed in
-   * @param matcher The matcher to apply to the tree node
+   * Converts the given matcher to one that can be applied to any tree but is only executed when
+   * run on a tree of {@code type} and returns {@code false} for all other tree types.
    */
-  public static <S extends Tree, T extends S> Matcher<S> adaptMatcherType(
-      final Class<S> returnTypeParam, final Class<T> matcherTypeParam, final Matcher<T> matcher) {
-    return new Matcher<S>() {
+  public static <T extends Tree> Matcher<Tree> toType(
+      final Class<T> type, final Matcher<? super T> matcher) {
+    return new Matcher<Tree>() {
       @Override
-      public boolean matches(S tree, VisitorState state) {
-        if (matcherTypeParam.isInstance(tree)) {
-          return matcher.matches(matcherTypeParam.cast(tree), state);
-        }
-        return false;
+      public boolean matches(Tree tree, VisitorState state) {
+        return type.isInstance(tree) && matcher.matches(type.cast(tree), state);
       }
     };
   }
@@ -1131,7 +1124,7 @@ public class Matchers {
    * @param expressionMatcher The matcher to apply to the expression.
    */
   public static Matcher<AssignmentTree> assignment(final Matcher<ExpressionTree> variableMatcher,
-      final Matcher<ExpressionTree> expressionMatcher) {
+      final Matcher<? super ExpressionTree> expressionMatcher) {
     return new Matcher<AssignmentTree>() {
       @Override
       public boolean matches(AssignmentTree t, VisitorState state) {

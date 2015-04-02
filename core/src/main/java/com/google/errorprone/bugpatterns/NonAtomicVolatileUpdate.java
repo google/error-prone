@@ -19,14 +19,15 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.matchers.Matchers.adaptMatcherType;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.assignment;
 import static com.google.errorprone.matchers.Matchers.binaryTree;
 import static com.google.errorprone.matchers.Matchers.inSynchronized;
 import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.sameVariable;
+import static com.google.errorprone.matchers.Matchers.toType;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -76,19 +77,6 @@ public class NonAtomicVolatileUpdate extends BugChecker
     return new Matcher<UnaryTree>() {
       @Override
       public boolean matches(UnaryTree tree, VisitorState state) {
-        return exprMatcher.matches(tree.getExpression(), state);
-      }
-    };
-  }
-
-  /**
-   * Extracts the expression from an AssignmentTree and applies a matcher to it.
-   */
-  private static Matcher<AssignmentTree> expressionFromAssignmentTree(
-      final Matcher <ExpressionTree> exprMatcher) {
-    return new Matcher<AssignmentTree>() {
-      @Override
-      public boolean matches(AssignmentTree tree, VisitorState state) {
         return exprMatcher.matches(tree.getExpression(), state);
       }
     };
@@ -175,14 +163,17 @@ public class NonAtomicVolatileUpdate extends BugChecker
           variableFromAssignmentTree(
               Matchers.<ExpressionTree>hasModifier(Modifier.VOLATILE)),
           not(inSynchronized()),
-          expressionFromAssignmentTree(adaptMatcherType(ExpressionTree.class, BinaryTree.class,
-              Matchers.<BinaryTree>allOf(
-                  Matchers.<BinaryTree>anyOf(
-                      kindIs(Kind.PLUS),
-                      kindIs(Kind.MINUS)),
-                  binaryTree(
-                      sameVariable(variable),
-                      Matchers.<ExpressionTree>anything())))));
+          assignment(
+              Matchers.<ExpressionTree>anything(),
+              toType(
+                  BinaryTree.class,
+                  Matchers.<BinaryTree>allOf(
+                      Matchers.<BinaryTree>anyOf(
+                          kindIs(Kind.PLUS),
+                          kindIs(Kind.MINUS)),
+                      binaryTree(
+                          sameVariable(variable),
+                          Matchers.<ExpressionTree>anything())))));
   }
 
   @Override
