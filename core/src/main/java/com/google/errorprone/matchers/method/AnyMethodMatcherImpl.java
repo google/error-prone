@@ -21,6 +21,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.method.MethodMatchers.AnyMethodMatcher;
 import com.google.errorprone.matchers.method.MethodMatchers.MethodClassMatcher;
 import com.google.errorprone.predicates.TypePredicate;
+import com.google.errorprone.predicates.TypePredicates;
 
 import com.sun.source.tree.ExpressionTree;
 
@@ -36,5 +37,10 @@ class AnyMethodMatcherImpl extends MethodMatcher implements AnyMethodMatcher {
   @Override
   public MethodClassMatcher onClass(TypePredicate predicate) {
     return new MethodClassMatcherImpl(this, predicate);
+  }
+
+  @Override
+  public MethodClassMatcherImpl anyClass() {
+    return new MethodClassMatcherImpl(this, TypePredicates.anyType());
   }
 }

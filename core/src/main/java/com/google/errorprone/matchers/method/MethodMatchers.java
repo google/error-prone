@@ -23,6 +23,8 @@ import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Type;
 
+import java.util.regex.Pattern;
+
 public class MethodMatchers {
 
   // Language definition for fluent method matchers.
@@ -70,6 +72,9 @@ public class MethodMatchers {
   public interface AnyMethodMatcher extends Matcher<ExpressionTree> {
     /** Match the given type exactly. */
     MethodClassMatcher onClass(TypePredicate predicate);
+
+    /** Match on any class. */
+    MethodClassMatcher anyClass();
   }
 
   public interface MethodClassMatcher extends Matcher<ExpressionTree> {
@@ -78,6 +83,9 @@ public class MethodMatchers {
     
     /** Match methods with any name. */
     MethodNameMatcher withAnyName();
+
+    /** Match methods with a name that matches the given regular expression. */
+    MethodNameMatcher withNameMatching(Pattern pattern);
     
     /**
      * Match methods with the given signature. The implementation uses javac internals to

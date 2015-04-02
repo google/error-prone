@@ -35,6 +35,7 @@ import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.ContinueTree;
 import com.sun.source.tree.EnhancedForLoopTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
@@ -54,11 +55,13 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
+import com.sun.tools.javac.tree.TreeInfo;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -241,6 +244,36 @@ public class Matchers {
   }
 
   /**
+   * Matches an AST node that represents a non-static field.
+   */
+  public static Matcher<ExpressionTree> isInstanceField() {
+    return new Matcher<ExpressionTree>() {
+      @Override
+      public boolean matches(ExpressionTree expressionTree, VisitorState state) {
+        Symbol symbol = ASTHelpers.getSymbol(expressionTree);
+        return symbol != null && symbol.getKind() == ElementKind.FIELD && !symbol.isStatic();
+      }
+    };
+  }
+
+  /**
+   * Matches an AST node that represents a local variable or parameter.
+   */
+  public static Matcher<ExpressionTree> isVariable() {
+    return new Matcher<ExpressionTree>() {
+      @Override
+      public boolean matches(ExpressionTree expressionTree, VisitorState state) {
+        Symbol symbol = ASTHelpers.getSymbol(expressionTree);
+        if (symbol == null) {
+          return false;
+        }
+        return symbol.getKind() == ElementKind.LOCAL_VARIABLE
+            || symbol.getKind() == ElementKind.PARAMETER;
+      }
+    };
+  }
+
+  /**
    * Matches a compound assignment operator AST node which matches a given left-operand matcher, a
    * given right-operand matcher, and a specific compound assignment operator.
    *
@@ -353,6 +386,37 @@ public class Matchers {
   public static MultiMatcher<MethodInvocationTree, ExpressionTree> hasArguments(
       MatchType matchType, Matcher<ExpressionTree> argumentMatcher) {
     return new HasArguments(matchType, argumentMatcher);
+  }
+
+  /**
+   * Matches an AST node if it is a method invocation and the given matchers match.
+   *
+   * @param methodSelectMatcher matcher identifying the method being called
+   * @param matchType how to match method arguments with {@code methodArgumentMatcher}
+   * @param methodArgumentMatcher matcher applied to each method argument
+   */
+  public static Matcher<ExpressionTree> methodInvocation(
+      Matcher<ExpressionTree> methodSelectMatcher, MatchType matchType,
+      Matcher<ExpressionTree> methodArgumentMatcher) {
+    return new MethodInvocation(methodSelectMatcher, matchType, methodArgumentMatcher);
+  }
+
+  /**
+   * Matches an AST node if it is a method invocation and the method select matches
+   * {@code methodSelectMatcher}. Ignores any arguments.
+   */
+  public static Matcher<ExpressionTree> methodInvocation(
+      final Matcher<ExpressionTree> methodSelectMatcher) {
+    return new Matcher<ExpressionTree>() {
+      @Override
+      public boolean matches(ExpressionTree expressionTree, VisitorState state) {
+        if (!(expressionTree instanceof MethodInvocationTree)) {
+          return false;
+        }
+        MethodInvocationTree tree = (MethodInvocationTree) expressionTree;
+        return methodSelectMatcher.matches(tree.getMethodSelect(), state);
+      }
+    };
   }
 
   public static Matcher<MethodInvocationTree> argumentCount(final int argumentCount) {
@@ -588,6 +652,43 @@ public class Matchers {
         }
         return false;
       }
+    };
+  }
+
+  /**
+   * Matches the boolean constant ({@link Boolean#TRUE} or {@link Boolean#FALSE}) corresponding to
+   * the given value.
+   */
+  public static Matcher<ExpressionTree> booleanConstant(final boolean value) {
+    return new Matcher<ExpressionTree>() {
+      @Override
+      public boolean matches(ExpressionTree expressionTree, VisitorState state) {
+        if (expressionTree instanceof JCFieldAccess) {
+          Symbol symbol = ASTHelpers.getSymbol(expressionTree);
+          if (symbol.isStatic()
+              && state.getTypes().unboxedTypeOrType(symbol.type).getTag() == TypeTag.BOOLEAN) {
+            return ((value && symbol.getSimpleName().contentEquals("TRUE"))
+                || symbol.getSimpleName().contentEquals("FALSE"));
+          }
+        }
+        return false;
+      }
+    };
+  }
+
+  /**
+   * Ignores any number of parenthesis wrapping an expression and then applies the passed matcher to
+   * that expression. For example, the passed matcher would be applied to {@code value} in
+   * {@code (((value)))}.
+   */
+  public static Matcher<ExpressionTree> ignoreParens(final Matcher<ExpressionTree> innerMatcher) {
+    return new Matcher<ExpressionTree>() {
+      @Override
+      public boolean matches(ExpressionTree expressionTree, VisitorState state) {
+        return innerMatcher.matches(
+            (ExpressionTree) TreeInfo.skipParens((JCTree) expressionTree),
+            state);
+        }
     };
   }
 
@@ -1026,6 +1127,44 @@ public class Matchers {
       @Override public boolean matches(Tree tree, VisitorState state) {
         Symbol sym = ASTHelpers.getSymbol(tree);
         return sym != null && sym.isStatic();
+      }
+    };
+  }
+
+  /**
+   * Matches a {@code throw} statement where the thrown item is matched by the passed
+   * {@code thrownMatcher}.
+   */
+  public static Matcher<StatementTree> throwStatement(
+      Matcher<? super ExpressionTree> thrownMatcher) {
+    return new Throws(thrownMatcher);
+  }
+
+  /**
+   * Matches a {@code return} statement where the returned expression is matched by the passed
+   * {@code returnedMatcher}.
+   */
+  public static Matcher<StatementTree> returnStatement(
+      Matcher<? super ExpressionTree> returnedMatcher) {
+    return new Returns(returnedMatcher);
+  }
+
+  /**
+   * Matches an {@code assert} statement where the condition is matched by the passed
+   * {@code conditionMatcher}.
+   */
+  public static Matcher<StatementTree> assertStatement(Matcher<ExpressionTree> conditionMatcher) {
+    return new Asserts(conditionMatcher);
+  }
+
+  /**
+   * Matches a {@code continue} statement.
+   */
+  public static Matcher<StatementTree> continueStatement() {
+    return new Matcher<StatementTree>() {
+      @Override
+      public boolean matches(StatementTree statementTree, VisitorState state) {
+        return statementTree instanceof ContinueTree;
       }
     };
   }

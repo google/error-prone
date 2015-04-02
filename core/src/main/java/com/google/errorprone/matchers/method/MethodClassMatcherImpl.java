@@ -21,9 +21,12 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.method.MethodMatchers.MethodClassMatcher;
 import com.google.errorprone.matchers.method.MethodMatchers.MethodNameMatcher;
 import com.google.errorprone.matchers.method.MethodMatchers.MethodSignatureMatcher;
+import com.google.errorprone.matchers.method.MethodNameMatcherImpl.Regex;
 import com.google.errorprone.predicates.TypePredicate;
 
 import com.sun.source.tree.ExpressionTree;
+
+import java.util.regex.Pattern;
 
 /** Matches on the method's class type, and allows refinement on method name or signature. */
 class MethodClassMatcherImpl extends AbstractChainedMatcher<MatchState, MatchState>
@@ -57,5 +60,10 @@ class MethodClassMatcherImpl extends AbstractChainedMatcher<MatchState, MatchSta
   @Override
   public MethodSignatureMatcher withSignature(String signature) {
     return new MethodSignatureMatcherImpl(this, signature);
+  }
+
+  @Override
+  public MethodNameMatcher withNameMatching(Pattern pattern) {
+    return new Regex(this, pattern);
   }
 }

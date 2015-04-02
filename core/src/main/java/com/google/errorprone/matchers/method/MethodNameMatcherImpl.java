@@ -24,6 +24,7 @@ import com.google.errorprone.matchers.method.MethodMatchers.ParameterMatcher;
 import com.sun.source.tree.ExpressionTree;
 
 import java.util.Arrays;
+import java.util.regex.Pattern;
 
 /** Matchers that select on method name. */
 public abstract class MethodNameMatcherImpl extends AbstractChainedMatcher<MatchState, MatchState>
@@ -71,6 +72,27 @@ public abstract class MethodNameMatcherImpl extends AbstractChainedMatcher<Match
     @Override
     protected Optional<MatchState> matchResult(ExpressionTree item, MatchState method,
         VisitorState state) {
+      return Optional.of(method);
+    }
+  }
+
+  /** Matches methods with a name that matches the given regular expression. */
+  static class Regex extends MethodNameMatcherImpl {
+
+    private final Pattern regex;
+
+    Regex(AbstractSimpleMatcher<MatchState> baseMatcher, Pattern regex) {
+      super(baseMatcher);
+      this.regex = regex;
+    }
+
+
+    @Override
+    protected Optional<MatchState> matchResult(ExpressionTree item, MatchState method,
+        VisitorState state) {
+      if (!regex.matcher(method.sym().getSimpleName().toString()).matches()) {
+        return Optional.absent();
+      }
       return Optional.of(method);
     }
   }

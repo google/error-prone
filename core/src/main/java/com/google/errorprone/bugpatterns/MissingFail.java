@@ -1,0 +1,606 @@
+/*
+ * Copyright 2014 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.google.errorprone.bugpatterns;
+
+import static com.google.errorprone.BugPattern.Category.JUNIT;
+import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.matchers.JUnitMatchers.JUNIT_AFTER_ANNOTATION;
+import static com.google.errorprone.matchers.JUnitMatchers.JUNIT_BEFORE_ANNOTATION;
+import static com.google.errorprone.matchers.Matchers.assertStatement;
+import static com.google.errorprone.matchers.Matchers.assignment;
+import static com.google.errorprone.matchers.Matchers.booleanConstant;
+import static com.google.errorprone.matchers.Matchers.booleanLiteral;
+import static com.google.errorprone.matchers.Matchers.continueStatement;
+import static com.google.errorprone.matchers.Matchers.ignoreParens;
+import static com.google.errorprone.matchers.Matchers.isInstanceField;
+import static com.google.errorprone.matchers.Matchers.isSameType;
+import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
+import static com.google.errorprone.matchers.Matchers.isVariable;
+import static com.google.errorprone.matchers.Matchers.methodInvocation;
+import static com.google.errorprone.matchers.Matchers.nextStatement;
+import static com.google.errorprone.matchers.Matchers.returnStatement;
+import static com.google.errorprone.matchers.Matchers.throwStatement;
+import static com.google.errorprone.matchers.Matchers.toType;
+import static com.google.errorprone.matchers.method.MethodMatchers.anyMethod;
+import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+
+import com.google.errorprone.BugPattern;
+import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.TryTreeMatcher;
+import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.matchers.ChildMultiMatcher;
+import com.google.errorprone.matchers.ChildMultiMatcher.MatchType;
+import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.JUnitMatchers;
+import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Matchers;
+import com.google.errorprone.matchers.MultiMatcher;
+import com.google.errorprone.matchers.NextStatement;
+import com.google.errorprone.util.ASTHelpers;
+
+import com.sun.source.tree.AssignmentTree;
+import com.sun.source.tree.CatchTree;
+import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.DoWhileLoopTree;
+import com.sun.source.tree.EnhancedForLoopTree;
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.ForLoopTree;
+import com.sun.source.tree.LiteralTree;
+import com.sun.source.tree.MemberSelectTree;
+import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.TryTree;
+import com.sun.source.tree.VariableTree;
+import com.sun.source.tree.WhileLoopTree;
+import com.sun.source.util.TreeScanner;
+import com.sun.tools.javac.code.Symbol;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
+
+import javax.lang.model.element.Name;
+
+/**
+ * A bug checker for the following code pattern:
+ *
+ * <pre>
+ * try {
+ *   ... do something that should throw ...
+ *   // forget to call Assert.fail()
+ * } catch (SomeException expected) {
+ *   // asserts on the exception or comments
+ * }
+ * </pre>
+ *
+ * <h1>Detection</h1>
+ * This checker uses heuristics that identify as many occurrences of the problem as possible while
+ * keeping the false positive rate low (low single-digit percentages).
+ *
+ * <h2>Synonyms</h2>
+ * Many test writers don't seem to know about {@code fail()}. They instead use synonyms of varying
+ * complexity instead. A large class of synonyms replaces {@code fail()} with a single, equivalent
+ * statement such as {@code assertTrue(false)}, {@code assertFalse(true)} or {@code throw
+ * new AssertionError()}. In these cases we will simply skip any further analysis, they work
+ * perfectly fine.
+ *
+ * <p>Other, more complex synonyms tend to use boolean variables, like such:
+ * <pre>
+ * boolean thrown = false;
+ * try {
+ *   throwingExpression();
+ * } catch (SomeException e) {
+ *   thrown = true;
+ * }
+ * assertTrue(thrown);
+ * </pre>
+ *
+ * <p>In these complex cases, the checker treats them as if they contained no detection of the
+ * missing exception and shows the usual suggestion to use {@code fail()} instead. This should alert
+ * the writer that their test can be simplified.
+ *
+ * <h2>Heuristics</h2>
+ * Five methods were explored to detect missing {@code fail()} calls, triggering if no {@code
+ * fail()} is used in a {@code try/catch} statement within a JUnit test class:
+ *
+ * <ul>
+ *   <li>Cases in which the caught exception is called "expected".
+ *   <li>Cases in which there is a call to an {@code assert*()} method in the catch block.
+ *   <li>Cases in which "expected" shows up in a comment inside the {@code catch} block.
+ *   <li>Cases in which the {@code catch} block is empty.
+ *   <li>Cases in which the {@code try} block contains only a single statement.
+ * </ul>
+ *
+ * <p>Only the first three yield useful results and also required some more refinement to reduce
+ * false positives. In addition, the checker does not trigger on comments in the {@code catch} block
+ * due to implementation complexity.
+ *
+ * <p>To reduce false positives, no match is found if any of the following is true:
+ *
+ * <ul>
+ *   <li>Any method with {@code fail} in its name is present in either catch or try block.
+ *   <li>A {@code throw} statement or synonym ({@code assertTrue(false)}, etc.) is present in either
+ *       {@code catch} or {@code try} block.
+ *   <li>The occurrence happens inside a {@code setUp}, {@code tearDown},
+ *       {@literal @}{@code Before}, {@literal @}{@code After}, {@code suite} or{@code main} method.
+ *   <li>The method returns from the {@code try} or {@code catch} block or immediately after.
+ *   <li>The exception caught is of type {@link InterruptedException}, {@link AssertionError},
+ *       {@link junit.framework.AssertionFailedError} or {@link Throwable}.
+ *   <li>The occurrence is inside a loop.
+ *   <li>The try block contains a {@code while\(true\)} loop.
+ *   <li>The {@code try} or {@code catch} block contains a {@code continue;} statement.
+ *   <li>The {@code try/catch} statement also contains a {@code finally} statement.
+ *   <li>A logging call is present in the {@code catch} block.
+ * </ul>
+ *
+ * <p>In addition, for occurrences which matched because they have a call to an {@code assert*()}
+ * method in the catch block, no match is found if any of the following characteristics are present:
+ *
+ * <ul>
+ *   <li>A field assignment in the catch block.
+ *   <li>A call to {@code assertTrue/False(boolean variable or field)} in the catch block.
+ *   <li>The last statement in the {@code try} block is an {@code assert*()} (that is not a noop:
+ *       {@code assertFalse(false)}, {@code assertTrue(true))} or {@code Mockito.verify()} call.
+ * </ul>
+ *
+ * @author schmitt@google.com (Peter Schmitt)
+ */
+@BugPattern(name = "MissingFail",
+    altNames = "missing-fail",
+    summary = "Not calling fail() when expecting an exception masks bugs",
+    explanation =
+          "When testing for exceptions in junit, it is easy to forget the call to `fail()`:\n\n"
+        + "    try {\n"
+        + "      ... do something that should throw ...\n"
+        + "      // forget to call Assert.fail()\n"
+        + "    } catch (SomeException expected) {\n"
+        + "      // asserts on the exception or comments\n"
+        + "    }\n\n"
+        + "Without this call, this test will always pass, regardless of whether an exception is "
+        + "thrown or not: It is a noop.",
+    category = JUNIT,
+    maturity = EXPERIMENTAL,
+    severity = WARNING)
+public class MissingFail extends BugChecker implements TryTreeMatcher {
+
+  private static final Matcher<ExpressionTree> ASSERT_EQUALS = Matchers.anyOf(
+      staticMethod().onClass("org.junit.Assert").named("assertEquals"),
+      staticMethod().onClass("junit.framework.Assert").named("assertEquals"),
+      staticMethod().onClass("junit.framework.TestCase").named("assertEquals"));
+  private static final Matcher<Tree> ASSERT_UNEQUAL =
+      toType(MethodInvocationTree.class, new UnequalIntegerLiteralMatcher(ASSERT_EQUALS));
+
+  private static final Matcher<ExpressionTree> ASSERT_TRUE = Matchers.anyOf(
+      staticMethod().onClass("org.junit.Assert").named("assertTrue"),
+      staticMethod().onClass("junit.framework.Assert").named("assertTrue"),
+      staticMethod().onClass("junit.framework.TestCase").named("assertTrue"));
+  private static final Matcher<ExpressionTree> ASSERT_FALSE = Matchers.anyOf(
+      staticMethod().onClass("org.junit.Assert").named("assertFalse"),
+      staticMethod().onClass("junit.framework.Assert").named("assertFalse"),
+      staticMethod().onClass("junit.framework.TestCase").named("assertFalse"));
+  private static final Matcher<ExpressionTree> ASSERT_TRUE_FALSE =
+      methodInvocation(ASSERT_TRUE, MatchType.AT_LEAST_ONE,
+          Matchers.anyOf(booleanLiteral(false), booleanConstant(false)));
+  private static final Matcher<ExpressionTree> ASSERT_FALSE_TRUE =
+      methodInvocation(ASSERT_FALSE, MatchType.AT_LEAST_ONE, Matchers.anyOf(
+          booleanLiteral(true), booleanConstant(true)));
+  private static final Matcher<ExpressionTree> ASSERT_TRUE_TRUE =
+      methodInvocation(ASSERT_TRUE, MatchType.AT_LEAST_ONE, Matchers.anyOf(
+          booleanLiteral(true), booleanConstant(true)));
+  private static final Matcher<ExpressionTree> ASSERT_FALSE_FALSE =
+      methodInvocation(ASSERT_FALSE, MatchType.AT_LEAST_ONE, Matchers.anyOf(
+          booleanLiteral(false), booleanConstant(false)));
+
+  private static final Matcher<StatementTree> JAVA_ASSERT_FALSE =
+      assertStatement(ignoreParens(Matchers.anyOf(booleanLiteral(false), booleanConstant(false))));
+
+  private static final Matcher<ExpressionTree> LOG_CALL = methodInvocation(new LogMethodMatcher());
+  private static final Matcher<Tree> LOG_IN_BLOCK =
+      new Contains(toType(ExpressionTree.class, LOG_CALL));
+
+  private static final Pattern FAIL_PATTERN = Pattern.compile(".*(?i:fail).*");
+  private static final Matcher<ExpressionTree> FAIL =
+      anyMethod().anyClass().withNameMatching(FAIL_PATTERN);
+
+  private static final Matcher<ExpressionTree> ASSERT_CALL =
+      methodInvocation(new AssertMethodMatcher());
+  private static final Matcher<ExpressionTree> REAL_ASSERT_CALL = Matchers.allOf(
+      ASSERT_CALL,
+      Matchers.not(Matchers.anyOf(ASSERT_FALSE_FALSE, ASSERT_TRUE_TRUE)));
+  private static final Matcher<ExpressionTree> VERIFY_CALL =
+      methodInvocation(staticMethod().onClass("org.mockito.Mockito").named("verify"));
+  private static final MultiMatcher<TryTree, Tree> ASSERT_LAST_CALL_IN_TRY =
+      new ChildOfTryMatcher(MatchType.LAST, new Contains(toType(ExpressionTree.class,
+          Matchers.anyOf(REAL_ASSERT_CALL, VERIFY_CALL))));
+  private static final Matcher<Tree> ASSERT_IN_BLOCK =
+      new Contains(toType(ExpressionTree.class, REAL_ASSERT_CALL));
+
+  private static final Matcher<StatementTree> THROW_STATEMENT = throwStatement(Matchers.anything());
+  private static final Matcher<Tree> THROW_OR_FAIL_IN_BLOCK = new Contains(
+      Matchers.anyOf(
+          toType(StatementTree.class, THROW_STATEMENT),
+          // TODO(user): Include Preconditions.checkState(false)?
+          toType(ExpressionTree.class, ASSERT_TRUE_FALSE),
+          toType(ExpressionTree.class, ASSERT_FALSE_TRUE),
+          toType(ExpressionTree.class, ASSERT_UNEQUAL),
+          toType(StatementTree.class, JAVA_ASSERT_FALSE),
+          toType(ExpressionTree.class, FAIL)));
+
+  private static final Matcher<TryTree> NON_TEST_METHOD = new IgnoredEnclosingMethodMatcher();
+
+  private static final Matcher<Tree> RETURN_IN_BLOCK = new Contains(
+      toType(StatementTree.class, returnStatement(Matchers.anything())));
+  private static final NextStatement<StatementTree> RETURN_AFTER =
+      nextStatement(returnStatement(Matchers.anything()));
+
+  private static final Matcher<VariableTree> INAPPLICABLE_EXCEPTION = Matchers.anyOf(
+      isSameType("java.lang.InterruptedException"),
+      isSameType("java.lang.AssertionError"),
+      isSameType("java.lang.Throwable"),
+      isSameType("junit.framework.AssertionFailedError"));
+
+  private static final InLoopMatcher IN_LOOP = new InLoopMatcher();
+
+  private static final Matcher<Tree> WHILE_TRUE_IN_BLOCK =
+      new Contains(toType(WhileLoopTree.class, new WhileTrueLoopMatcher()));
+
+  private static final Matcher<Tree> CONTINUE_IN_BLOCK =
+      new Contains(toType(StatementTree.class, continueStatement()));
+
+  private static final Matcher<AssignmentTree> FIELD_ASSIGNMENT =
+      assignment(isInstanceField(), Matchers.<ExpressionTree>anything());
+  private static final Matcher<Tree> FIELD_ASSIGNMENT_IN_BLOCK =
+      new Contains(toType(AssignmentTree.class, FIELD_ASSIGNMENT));
+
+  private static final Matcher<ExpressionTree> BOOLEAN_ASSERT_VAR = methodInvocation(
+      Matchers.anyOf(ASSERT_FALSE, ASSERT_TRUE),
+      MatchType.AT_LEAST_ONE,
+      Matchers.anyOf(isInstanceField(), isVariable()));
+  private static final Matcher<Tree> BOOLEAN_ASSERT_VAR_IN_BLOCK =
+      new Contains(toType(ExpressionTree.class, BOOLEAN_ASSERT_VAR));
+
+  // Subtly different from JUnitMatchers: We want to match test base classes too.
+  private static final Matcher<ClassTree> JUNIT3_TEST_CLASS =
+      isSubtypeOf("junit.framework.TestCase");
+  private static final Matcher<ClassTree> TEST_CLASS = Matchers.anyOf(JUNIT3_TEST_CLASS,
+      new JUnitMatchers.JUnit4TestClassMatcher());
+
+  @Override
+  public Description matchTry(TryTree tree, VisitorState state) {
+    if (tryTreeMatches(tree, state)) {
+      List<? extends StatementTree> tryStatements = tree.getBlock().getStatements();
+      StatementTree lastTryStatement = tryStatements.get(tryStatements.size() - 1);
+
+      String failCall = String.format("%nfail(\"Expected %s\");", exceptionToString(tree));
+      SuggestedFix.Builder fixBuilder = SuggestedFix.builder()
+          .postfixWith(lastTryStatement, failCall);
+
+      // Make sure that when the fail import is added it doesn't conflict with existing ones.
+      fixBuilder.removeStaticImport("junit.framework.Assert.fail");
+      fixBuilder.removeStaticImport("junit.framework.TestCase.fail");
+      fixBuilder.addStaticImport("org.junit.Assert.fail");
+
+      return describeMatch(lastTryStatement, fixBuilder.build());
+    } else {
+      return Description.NO_MATCH;
+    }
+  }
+
+  /**
+   * Returns a string describing the exception type caught by the given try tree's catch
+   * statement(s), defaulting to {@code "Exception"} if more than one exception type is caught.
+   */
+  private String exceptionToString(TryTree tree) {
+    if (tree.getCatches().size() != 1) {
+      return "Exception";
+    }
+    String exceptionType = tree.getCatches().iterator().next().getParameter().getType().toString();
+    if (exceptionType.contains("|")) {
+      return "Exception";
+    }
+    return exceptionType;
+  }
+
+  private boolean tryTreeMatches(TryTree tree, VisitorState state) {
+    if (!isInClass(tree, state, TEST_CLASS)) {
+      return false;
+    }
+
+    boolean assertInCatch = hasAssertInCatch(tree, state);
+    if (!hasExpectedException(tree) && !assertInCatch) {
+      return false;
+    }
+
+    if (hasThrowOrFail(tree, state) || isInInapplicableMethod(tree, state)
+        || returnsInTryCatchOrAfter(tree, state) || isInapplicableExceptionType(tree, state)
+        || isInLoop(state, tree) || hasWhileTrue(tree, state) || hasContinue(tree, state)
+        || hasFinally(tree) || logsInCatch(state, tree)) {
+      return false;
+    }
+
+    if (assertInCatch
+        && (hasFieldAssignmentInCatch(tree, state)
+            || hasBooleanAssertVariableInCatch(tree, state)
+            || lastTryStatementIsAssert(tree, state))) {
+      return false;
+    }
+
+    return true;
+  }
+
+  private boolean hasWhileTrue(TryTree tree, VisitorState state) {
+    return WHILE_TRUE_IN_BLOCK.matches(tree, state);
+  }
+
+  private boolean isInClass(TryTree tree, VisitorState state, Matcher<ClassTree> classTree) {
+    return Matchers.enclosingNode(toType(ClassTree.class, classTree)).matches(tree, state);
+  }
+
+  private boolean hasBooleanAssertVariableInCatch(TryTree tree, VisitorState state) {
+    return anyCatchBlockMatches(tree, state, BOOLEAN_ASSERT_VAR_IN_BLOCK);
+  }
+
+  private boolean lastTryStatementIsAssert(TryTree tree, VisitorState state) {
+    return ASSERT_LAST_CALL_IN_TRY.matches(tree, state);
+  }
+
+  private boolean hasFieldAssignmentInCatch(TryTree tree, VisitorState state) {
+    return anyCatchBlockMatches(tree, state, FIELD_ASSIGNMENT_IN_BLOCK);
+  }
+
+  private boolean logsInCatch(VisitorState state, TryTree tree) {
+    return anyCatchBlockMatches(tree, state, LOG_IN_BLOCK);
+  }
+
+  private boolean hasFinally(TryTree tree) {
+    return tree.getFinallyBlock() != null;
+  }
+
+  private boolean hasContinue(TryTree tree, VisitorState state) {
+    return CONTINUE_IN_BLOCK.matches(tree, state);
+  }
+
+  private boolean isInLoop(VisitorState state, TryTree tree) {
+    return IN_LOOP.matches(tree, state);
+  }
+
+  private boolean isInapplicableExceptionType(TryTree tree, VisitorState state) {
+    for (CatchTree catchTree : tree.getCatches()) {
+      if (INAPPLICABLE_EXCEPTION.matches(catchTree.getParameter(), state)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private boolean returnsInTryCatchOrAfter(TryTree tree, VisitorState state) {
+    return RETURN_IN_BLOCK.matches(tree, state) || RETURN_AFTER.matches(tree, state);
+  }
+
+  private boolean isInInapplicableMethod(TryTree tree, VisitorState state) {
+    return NON_TEST_METHOD.matches(tree, state);
+  }
+
+  private boolean hasThrowOrFail(TryTree tree, VisitorState state) {
+    return THROW_OR_FAIL_IN_BLOCK.matches(tree, state);
+  }
+
+  private boolean hasAssertInCatch(TryTree tree, VisitorState state) {
+    return anyCatchBlockMatches(tree, state, ASSERT_IN_BLOCK);
+  }
+
+  private boolean hasExpectedException(TryTree tree) {
+    for (CatchTree catchTree : tree.getCatches()) {
+      if (catchTree.getParameter().getName().toString().equals("expected")) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private boolean anyCatchBlockMatches(TryTree tree, VisitorState state, Matcher<Tree> matcher) {
+    for (CatchTree catchTree : tree.getCatches()) {
+      if (matcher.matches(catchTree.getBlock(), state)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private static class AssertMethodMatcher implements Matcher<ExpressionTree> {
+
+    @Override
+    public boolean matches(ExpressionTree expressionTree, VisitorState state) {
+      Symbol sym = ASTHelpers.getSymbol(expressionTree);
+      return sym != null && sym.getSimpleName().toString().startsWith("assert");
+    }
+  }
+
+  private static class LogMethodMatcher implements Matcher<ExpressionTree> {
+
+    @Override
+    public boolean matches(ExpressionTree expressionTree, VisitorState state) {
+      Symbol sym = ASTHelpers.getSymbol(expressionTree);
+      if (sym != null && sym.getSimpleName().toString().startsWith("log")) {
+        return true;
+      }
+
+      if (sym != null && sym.isStatic()) {
+        if (sym.owner.getQualifiedName().toString().contains("Logger")) {
+          return true;
+        }
+      } else if (expressionTree instanceof MemberSelectTree) {
+        if (((MemberSelectTree) expressionTree).getExpression().toString().startsWith("log")) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+  }
+
+  /**
+   * Matches any try-tree that is enclosed in a loop.
+   */
+  private static class InLoopMatcher implements Matcher<TryTree> {
+
+    @Override
+    public boolean matches(TryTree tryTree, VisitorState state) {
+      return ASTHelpers.findEnclosingNode(state.getPath(), DoWhileLoopTree.class) != null
+          || ASTHelpers.findEnclosingNode(state.getPath(), EnhancedForLoopTree.class) != null
+          || ASTHelpers.findEnclosingNode(state.getPath(), WhileLoopTree.class) != null
+          || ASTHelpers.findEnclosingNode(state.getPath(), ForLoopTree.class) != null;
+    }
+  }
+
+  private static class WhileTrueLoopMatcher implements Matcher<WhileLoopTree> {
+
+    @Override
+    public boolean matches(WhileLoopTree tree, VisitorState state) {
+      return ignoreParens(booleanLiteral(true))
+          .matches(tree.getCondition(), state);
+    }
+  }
+
+  /**
+   * Matches any try-tree that is in a JUNit3 {@code setUp} or {@code tearDown} method, their JUnit4
+   * equivalents, a JUnit {@code suite()} method or a {@code main} method.
+   */
+  private static class IgnoredEnclosingMethodMatcher implements Matcher<TryTree> {
+
+    @Override
+    public boolean matches(TryTree tryTree, VisitorState state) {
+      MethodTree enclosingMethodTree =
+          ASTHelpers.findEnclosingNode(state.getPath(), MethodTree.class);
+
+      Name name = enclosingMethodTree.getName();
+      return JUnitMatchers.looksLikeJUnit3SetUp.matches(enclosingMethodTree, state)
+          || JUnitMatchers.looksLikeJUnit3TearDown.matches(enclosingMethodTree, state)
+          || name.contentEquals("main")
+          // TODO(user): Move to JUnitMatchers?
+          || name.contentEquals("suite")
+          || Matchers.hasAnnotation(JUNIT_BEFORE_ANNOTATION).matches(enclosingMethodTree, state)
+          || Matchers.hasAnnotation(JUNIT_AFTER_ANNOTATION).matches(enclosingMethodTree, state);
+    }
+  }
+
+  /**
+   * Matches if any two of the given list of expressions are integer literals with different values.
+   */
+  private static class UnequalIntegerLiteralMatcher
+      implements MultiMatcher<MethodInvocationTree, ExpressionTree> {
+
+    private final Matcher<ExpressionTree> methodSelectMatcher;
+
+    private UnequalIntegerLiteralMatcher(Matcher<ExpressionTree> methodSelectMatcher) {
+      this.methodSelectMatcher = methodSelectMatcher;
+    }
+
+    @Override
+    public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
+      return methodSelectMatcher.matches(methodInvocationTree, state)
+          && matches(methodInvocationTree.getArguments());
+    }
+
+    private boolean matches(List<? extends ExpressionTree> expressionTrees) {
+      Set<Integer> foundValues = new HashSet<>();
+      for (Tree tree : expressionTrees) {
+        if (tree instanceof LiteralTree) {
+          Object value = ((LiteralTree) tree).getValue();
+          if (value instanceof Integer) {
+            boolean duplicate = !foundValues.add((Integer) value);
+            if (!duplicate && foundValues.size() > 1) {
+              return true;
+            }
+          }
+        }
+      }
+      return false;
+    }
+
+    @Override
+    public ExpressionTree getMatchingNode() {
+      throw new UnsupportedOperationException();
+    }
+  }
+
+  /**
+   * A matcher that recursively inspects a tree, applying the given matcher to all levels of each
+   * tree and returning {@code true} if any match is found.
+   */
+  private static class Contains implements Matcher<Tree> {
+
+    private final Matcher<Tree> matcher;
+
+    /**
+     * Creates a new matcher that will recursively apply {@code matcher} to the input tree.
+     */
+    public Contains(Matcher<Tree> matcher) {
+      this.matcher = matcher;
+    }
+
+    @Override
+    public boolean matches(Tree tree, VisitorState state) {
+      Boolean matchFound = tree.accept(new FirstMatchingScanner(state, matcher), false);
+      return matchFound != null && matchFound;
+    }
+
+    private class FirstMatchingScanner extends TreeScanner<Boolean, Boolean> {
+
+      private final VisitorState state;
+      private final Matcher<Tree> matcher;
+
+      public FirstMatchingScanner(VisitorState state, Matcher<Tree> matcher) {
+        this.state = state;
+        this.matcher = matcher;
+      }
+
+      @Override
+      public Boolean scan(Tree tree, Boolean matchFound) {
+        if (matchFound) {
+          return true;
+        }
+
+        if (matcher.matches(tree, state)) {
+          return true;
+        }
+        return super.scan(tree, false);
+      }
+
+      @Override
+      public Boolean reduce(Boolean left, Boolean right) {
+        return (left != null && left) || (right != null && right);
+      }
+    }
+  }
+
+  private static class ChildOfTryMatcher extends ChildMultiMatcher<TryTree, Tree> {
+
+    public ChildOfTryMatcher(MatchType matchType, Matcher<Tree> nodeMatcher) {
+      super(matchType, nodeMatcher);
+    }
+
+    @Override
+    protected Iterable<? extends StatementTree> getChildNodes(TryTree tree, VisitorState state) {
+      return tree.getBlock().getStatements();
+    }
+  }
+}
