@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.CompilationTestHelper.BugComments;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -58,6 +59,7 @@ public class DepAnnTest {
   public void testDisableable() throws Exception {
     compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
         .sources(getClass(), "DepAnnPositiveCases.java"),
-        ImmutableList.of("-Xep:DepAnn:OFF"));
+        ImmutableList.of("-Xep:DepAnn:OFF"),
+        BugComments.IGNORED);
   }
 }

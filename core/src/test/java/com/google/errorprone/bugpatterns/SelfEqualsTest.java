@@ -19,10 +19,13 @@ package com.google.errorprone.bugpatterns;
 import static org.junit.Assert.fail;
 
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.CompilationTestHelper.BugComments;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
+import java.util.Arrays;
 
 import javax.tools.JavaFileObject;
 
@@ -81,17 +84,17 @@ public class SelfEqualsTest {
     compilationHelper = CompilationTestHelper.newInstance(checker);
     compilationHelper.assertCompileFailsWithMessages(positiveCase2);
 
-    // Guava on, Eauals off.
+    // Guava on, Equals off.
     checker = new SelfEquals(true, false);
     compilationHelper = CompilationTestHelper.newInstance(checker);
     compilationHelper.assertCompileFailsWithMessages(positiveCase1);
     compilationHelper = CompilationTestHelper.newInstance(checker);
-    compilationHelper.assertCompileSucceeds(positiveCase2);
+    compilationHelper.assertCompileSucceeds(Arrays.asList(positiveCase2), BugComments.IGNORED);
 
     // Equals on, Guava off.
     checker = new SelfEquals(false, true);
     compilationHelper = CompilationTestHelper.newInstance(checker);
-    compilationHelper.assertCompileSucceeds(positiveCase1);
+    compilationHelper.assertCompileSucceeds(Arrays.asList(positiveCase1), BugComments.IGNORED);
     compilationHelper = CompilationTestHelper.newInstance(checker);
     compilationHelper.assertCompileFailsWithMessages(positiveCase2);
   }

@@ -30,6 +30,7 @@ import com.sun.tools.javac.main.Main.Result;
 import com.sun.tools.javac.util.Context;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOError;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -49,6 +50,10 @@ import javax.tools.JavaFileObject;
  * TODO(user): Refactor default argument construction to make setup cleaner.
  */
 public class CompilationTestHelper {
+
+  public enum BugComments {
+    IGNORED, CHECK
+  }
 
   private static final List<String> DEFAULT_ARGS = ImmutableList.of(
       "-encoding", "UTF-8");
@@ -125,12 +130,35 @@ public class CompilationTestHelper {
    * @param args Extra command-line arguments to pass to the compiler
    */
   public void assertCompileSucceeds(List<JavaFileObject> sources, List<String> args) {
+    assertCompileSucceeds(sources, args, BugComments.CHECK);
+  }
+
+  /**
+   * Asserts that the compilation succeeds and no diagnostics were produced.
+   *
+   * @param sources The list of files to compile
+   * @param args Extra command-line arguments to pass to the compiler
+   * @param bugComments Control BUG comment checking
+   */
+  public void assertCompileSucceeds(
+      List<JavaFileObject> sources, List<String> args, BugComments bugComments) {
     List<String> allArgs = buildArguments(args);
     Result exitCode = compile(asJavacList(sources), allArgs.toArray(new String[0]));
     List<Diagnostic<? extends JavaFileObject>> diagnostics = diagnosticHelper.getDiagnostics();
     assertThat("Compilation failed: " + diagnostics.toString(), exitCode, is(Result.OK));
     assertThat("Compilation succeeded but gave warnings: " + diagnostics.toString(),
         diagnostics.size(), is(0));
+    if (bugComments == BugComments.CHECK) {
+      // we don't expect any diagnostics, but check anyways in case a negative test mistakenly
+      // included BUG comments
+      for (JavaFileObject source : sources) {
+        try {
+          diagnosticHelper.assertHasDiagnosticOnAllMatchingLines(source);
+        } catch (IOException e) {
+          throw new IOError(e);
+        }
+      }
+    }
   }
 
   /**
@@ -140,6 +168,16 @@ public class CompilationTestHelper {
    */
   public void assertCompileSucceeds(List<JavaFileObject> sources) {
     assertCompileSucceeds(sources, ImmutableList.<String>of());
+  }
+
+  /**
+   * Asserts that the compilation succeeds and no diagnostics were produced.
+   *
+   * @param sources The list of files to compile
+   * @param bugComments Control BUG comment checking
+   */
+  public void assertCompileSucceeds(List<JavaFileObject> sources, BugComments bugComments) {
+    assertCompileSucceeds(sources, ImmutableList.<String>of(), bugComments);
   }
 
   /**

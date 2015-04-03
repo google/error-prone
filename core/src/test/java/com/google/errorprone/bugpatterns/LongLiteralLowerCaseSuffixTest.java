@@ -21,6 +21,7 @@ import static org.junit.Assume.assumeTrue;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.CompilationTestHelper.BugComments;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -70,6 +71,7 @@ public class LongLiteralLowerCaseSuffixTest {
   public void testDisableable() throws Exception {
     compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
         .sources(getClass(), "LongLiteralLowerCaseSuffixPositiveCase1.java"),
-        ImmutableList.of("-Xep:LongLiteralLowerCaseSuffix:OFF"));
+        ImmutableList.of("-Xep:LongLiteralLowerCaseSuffix:OFF"),
+        BugComments.IGNORED);
   }
 }
