@@ -64,20 +64,20 @@ public class UnnecessaryTypeArgument extends BugChecker
       return Description.NO_MATCH;
     }
     MethodSymbol methodSymbol = (MethodSymbol) sym;
-
-    for (MethodSymbol superMethod : ASTHelpers.findSuperMethods(methodSymbol, state.getTypes())) {
-      if (!superMethod.getTypeParameters().isEmpty()) {
-        // Exempt methods that override generic methods to preserve the substitutability of the
-        // two types.
-        return Description.NO_MATCH;  
-      }
-    }
     
     int expected = methodSymbol.getTypeParameters().size();
     int actual = arguments.size();
 
     if (actual <= expected) {
       return Description.NO_MATCH;
+    }
+    
+    for (MethodSymbol superMethod : ASTHelpers.findSuperMethods(methodSymbol, state.getTypes())) {
+      if (!superMethod.getTypeParameters().isEmpty()) {
+        // Exempt methods that override generic methods to preserve the substitutability of the
+        // two types.
+        return Description.NO_MATCH;  
+      }
     }
 
     return describeMatch(tree, buildFix(tree, arguments, state));
