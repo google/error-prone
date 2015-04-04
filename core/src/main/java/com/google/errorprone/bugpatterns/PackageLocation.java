@@ -32,13 +32,18 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 
+import java.io.IOException;
+import java.net.JarURLConnection;
+import java.net.URI;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 /**
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 @BugPattern(name = "PackageLocation",
-    summary = "Packages names should match the directory they are declared in",
+    summary = "Package names should match the directory they are declared in",
     explanation = "Java files should be located in a directory that matches the fully qualified"
         + " name of the package. For example, classes in the package"
         + " `edu.oswego.cs.dl.util.concurrent` should be located in:"
@@ -48,18 +53,23 @@ public class PackageLocation extends BugChecker implements CompilationUnitTreeMa
 
   private static final Joiner DOT_JOINER = Joiner.on('.');
   private static final Splitter PATH_SPLITTER = Splitter.on('/').omitEmptyStrings();
-  
+
   @Override
   public Description matchCompilationUnit(CompilationUnitTreeInfo info, VisitorState state) {
     if (!info.packageName().isPresent()) {
       return Description.NO_MATCH;
     }
+
+    String fileName = getFileName(info.sourceFile().toUri());
+    if (fileName == null) {
+      return Description.NO_MATCH;
+    }
+
     ImmutableList<String> packageName = asName(info.packageName().get());
-    ImmutableList<String> directory =
-        split(info.sourceFile().toUri().getPath());
-    ImmutableList<String> directorySuffix = 
+    ImmutableList<String> directory = split(fileName);
+    ImmutableList<String> directorySuffix =
         directory.subList(
-            Math.max(0, directory.size() - packageName.size()), 
+            Math.max(0, directory.size() - packageName.size()),
             directory.size());
     if (!directorySuffix.equals(packageName)) {
       String message = String.format(
@@ -81,7 +91,7 @@ public class PackageLocation extends BugChecker implements CompilationUnitTreeMa
     asNameImpl(result, tree);
     return result.build();
   }
-  
+
   private static void asNameImpl(ImmutableList.Builder<String> acc, ExpressionTree tree) {
     if (tree instanceof JCIdent) {
       acc.add(((JCIdent) tree).getName().toString());
@@ -92,6 +102,20 @@ public class PackageLocation extends BugChecker implements CompilationUnitTreeMa
     } else {
       throw new AssertionError(
           "Unexpected " + tree.getClass() + " in package name");
+    }
+  }
+
+  /** Extract the filename from the URI, with special handling for jar files. */
+  @Nullable
+  private static String getFileName(URI uri) {
+    if (!uri.getScheme().equals("jar")) {
+      return uri.getPath();
+    }
+
+    try {
+      return ((JarURLConnection) uri.toURL().openConnection()).getEntryName();
+    } catch (IOException e) {
+      return null;
     }
   }
 }
