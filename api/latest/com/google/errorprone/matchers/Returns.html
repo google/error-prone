@@ -3,13 +3,13 @@
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>StaticMethod (Maven parent POM 2.0.3-SNAPSHOT API)</title>
+<title>Returns (Maven parent POM 2.0.3-SNAPSHOT API)</title>
 <link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
 </head>
 <body>
 <script type="text/javascript"><!--
     if (location.href.indexOf('is-external=true') == -1) {
-        parent.document.title="StaticMethod (Maven parent POM 2.0.3-SNAPSHOT API)";
+        parent.document.title="Returns (Maven parent POM 2.0.3-SNAPSHOT API)";
     }
 //-->
 </script>
@@ -26,7 +26,7 @@
 <li><a href="../../../../overview-summary.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
-<li><a href="class-use/StaticMethod.html">Use</a></li>
+<li><a href="class-use/Returns.html">Use</a></li>
 <li><a href="package-tree.html">Tree</a></li>
 <li><a href="../../../../deprecated-list.html">Deprecated</a></li>
 <li><a href="../../../../index-all.html">Index</a></li>
@@ -35,12 +35,12 @@
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../com/google/errorprone/matchers/Returns.html" title="class in com.google.errorprone.matchers"><span class="strong">Prev Class</span></a></li>
-<li><a href="../../../../com/google/errorprone/matchers/StringLiteral.html" title="class in com.google.errorprone.matchers"><span class="strong">Next Class</span></a></li>
+<li><a href="../../../../com/google/errorprone/matchers/ParentNode.html" title="class in com.google.errorprone.matchers"><span class="strong">Prev Class</span></a></li>
+<li><a href="../../../../com/google/errorprone/matchers/StaticMethod.html" title="class in com.google.errorprone.matchers"><span class="strong">Next Class</span></a></li>
 </ul>
 <ul class="navList">
-<li><a href="../../../../index.html?com/google/errorprone/matchers/StaticMethod.html" target="_top">Frames</a></li>
-<li><a href="StaticMethod.html" target="_top">No Frames</a></li>
+<li><a href="../../../../index.html?com/google/errorprone/matchers/Returns.html" target="_top">Frames</a></li>
+<li><a href="Returns.html" target="_top">No Frames</a></li>
 </ul>
 <ul class="navList" id="allclasses_navbar_top">
 <li><a href="../../../../allclasses-noframe.html">All Classes</a></li>
@@ -79,14 +79,14 @@
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="subTitle">com.google.errorprone.matchers</div>
-<h2 title="Class StaticMethod" class="title">Class StaticMethod</h2>
+<h2 title="Class Returns" class="title">Class Returns</h2>
 </div>
 <div class="contentContainer">
 <ul class="inheritance">
 <li><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">java.lang.Object</a></li>
 <li>
 <ul class="inheritance">
-<li>com.google.errorprone.matchers.StaticMethod</li>
+<li>com.google.errorprone.matchers.Returns</li>
 </ul>
 </li>
 </ul>
@@ -95,17 +95,17 @@
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;, <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io">Serializable</a></dd>
+<dd><a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.StatementTree&gt;, <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io">Serializable</a></dd>
 </dl>
 <hr>
 <br>
-<pre>public class <span class="strong">StaticMethod</span>
+<pre>public class <span class="strong">Returns</span>
 extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>
-implements <a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;</pre>
-<div class="block">Matches a static method expression.</div>
+implements <a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.StatementTree&gt;</pre>
+<div class="block">Matches a <code>return</code> statement whose returned expression is matched by the given matcher.</div>
 <dl><dt><span class="strong">Author:</span></dt>
-  <dd>alexeagle@google.com (Alex Eagle)</dd>
-<dt><span class="strong">See Also:</span></dt><dd><a href="../../../../serialized-form.html#com.google.errorprone.matchers.StaticMethod">Serialized Form</a></dd></dl>
+  <dd>schmitt@google.com (Peter Schmitt)</dd>
+<dt><span class="strong">See Also:</span></dt><dd><a href="../../../../serialized-form.html#com.google.errorprone.matchers.Returns">Serialized Form</a></dd></dl>
 </li>
 </ul>
 </div>
@@ -124,8 +124,10 @@ implements <a href="../../../../com/google/errorprone/matchers/Matcher.html" tit
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><strong><a href="../../../../com/google/errorprone/matchers/StaticMethod.html#StaticMethod(java.lang.String,%20java.lang.String)">StaticMethod</a></strong>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;fullClass,
-            <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;methodName)</code>&nbsp;</td>
+<td class="colOne"><code><strong><a href="../../../../com/google/errorprone/matchers/Returns.html#Returns(com.google.errorprone.matchers.Matcher)">Returns</a></strong>(<a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super com.sun.source.tree.ExpressionTree&gt;&nbsp;returnedMatcher)</code>
+<div class="block">New matcher for a <code>return</code> statement where the returned expression is matched by the
+ passed <code>returnedMatcher</code>.</div>
+</td>
 </tr>
 </table>
 </li>
@@ -144,7 +146,7 @@ implements <a href="../../../../com/google/errorprone/matchers/Matcher.html" tit
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/matchers/StaticMethod.html#matches(com.sun.source.tree.ExpressionTree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.ExpressionTree&nbsp;item,
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/matchers/Returns.html#matches(com.sun.source.tree.StatementTree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.StatementTree&nbsp;expressionTree,
        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 </table>
@@ -169,14 +171,15 @@ implements <a href="../../../../com/google/errorprone/matchers/Matcher.html" tit
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="StaticMethod(java.lang.String, java.lang.String)">
+<a name="Returns(com.google.errorprone.matchers.Matcher)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>StaticMethod</h4>
-<pre>public&nbsp;StaticMethod(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;fullClass,
-            <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;methodName)</pre>
+<h4>Returns</h4>
+<pre>public&nbsp;Returns(<a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super com.sun.source.tree.ExpressionTree&gt;&nbsp;returnedMatcher)</pre>
+<div class="block">New matcher for a <code>return</code> statement where the returned expression is matched by the
+ passed <code>returnedMatcher</code>.</div>
 </li>
 </ul>
 </li>
@@ -187,17 +190,17 @@ implements <a href="../../../../com/google/errorprone/matchers/Matcher.html" tit
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="matches(com.sun.source.tree.ExpressionTree, com.google.errorprone.VisitorState)">
+<a name="matches(com.sun.source.tree.StatementTree, com.google.errorprone.VisitorState)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>matches</h4>
-<pre>public&nbsp;boolean&nbsp;matches(com.sun.source.tree.ExpressionTree&nbsp;item,
+<pre>public&nbsp;boolean&nbsp;matches(com.sun.source.tree.StatementTree&nbsp;expressionTree,
               <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
 <dl>
 <dt><strong>Specified by:</strong></dt>
-<dd><code><a href="../../../../com/google/errorprone/matchers/Matcher.html#matches(T,%20com.google.errorprone.VisitorState)">matches</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;</code></dd>
+<dd><code><a href="../../../../com/google/errorprone/matchers/Matcher.html#matches(T,%20com.google.errorprone.VisitorState)">matches</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.StatementTree&gt;</code></dd>
 </dl>
 </li>
 </ul>
@@ -218,7 +221,7 @@ implements <a href="../../../../com/google/errorprone/matchers/Matcher.html" tit
 <li><a href="../../../../overview-summary.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
-<li><a href="class-use/StaticMethod.html">Use</a></li>
+<li><a href="class-use/Returns.html">Use</a></li>
 <li><a href="package-tree.html">Tree</a></li>
 <li><a href="../../../../deprecated-list.html">Deprecated</a></li>
 <li><a href="../../../../index-all.html">Index</a></li>
@@ -227,12 +230,12 @@ implements <a href="../../../../com/google/errorprone/matchers/Matcher.html" tit
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../com/google/errorprone/matchers/Returns.html" title="class in com.google.errorprone.matchers"><span class="strong">Prev Class</span></a></li>
-<li><a href="../../../../com/google/errorprone/matchers/StringLiteral.html" title="class in com.google.errorprone.matchers"><span class="strong">Next Class</span></a></li>
+<li><a href="../../../../com/google/errorprone/matchers/ParentNode.html" title="class in com.google.errorprone.matchers"><span class="strong">Prev Class</span></a></li>
+<li><a href="../../../../com/google/errorprone/matchers/StaticMethod.html" title="class in com.google.errorprone.matchers"><span class="strong">Next Class</span></a></li>
 </ul>
 <ul class="navList">
-<li><a href="../../../../index.html?com/google/errorprone/matchers/StaticMethod.html" target="_top">Frames</a></li>
-<li><a href="StaticMethod.html" target="_top">No Frames</a></li>
+<li><a href="../../../../index.html?com/google/errorprone/matchers/Returns.html" target="_top">Frames</a></li>
+<li><a href="Returns.html" target="_top">No Frames</a></li>
 </ul>
 <ul class="navList" id="allclasses_navbar_bottom">
 <li><a href="../../../../allclasses-noframe.html">All Classes</a></li>

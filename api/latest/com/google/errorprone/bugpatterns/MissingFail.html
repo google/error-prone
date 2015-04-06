@@ -3,13 +3,13 @@
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>MissingCasesInEnumSwitch (Maven parent POM 2.0.3-SNAPSHOT API)</title>
+<title>MissingFail (Maven parent POM 2.0.3-SNAPSHOT API)</title>
 <link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
 </head>
 <body>
 <script type="text/javascript"><!--
     if (location.href.indexOf('is-external=true') == -1) {
-        parent.document.title="MissingCasesInEnumSwitch (Maven parent POM 2.0.3-SNAPSHOT API)";
+        parent.document.title="MissingFail (Maven parent POM 2.0.3-SNAPSHOT API)";
     }
 //-->
 </script>
@@ -26,7 +26,7 @@
 <li><a href="../../../../overview-summary.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
-<li><a href="class-use/MissingCasesInEnumSwitch.html">Use</a></li>
+<li><a href="class-use/MissingFail.html">Use</a></li>
 <li><a href="package-tree.html">Tree</a></li>
 <li><a href="../../../../deprecated-list.html">Deprecated</a></li>
 <li><a href="../../../../index-all.html">Index</a></li>
@@ -35,12 +35,12 @@
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../com/google/errorprone/bugpatterns/MalformedFormatString.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">Prev Class</span></a></li>
-<li><a href="../../../../com/google/errorprone/bugpatterns/MissingFail.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">Next Class</span></a></li>
+<li><a href="../../../../com/google/errorprone/bugpatterns/MissingCasesInEnumSwitch.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">Prev Class</span></a></li>
+<li><a href="../../../../com/google/errorprone/bugpatterns/MisusedFormattingLogger.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">Next Class</span></a></li>
 </ul>
 <ul class="navList">
-<li><a href="../../../../index.html?com/google/errorprone/bugpatterns/MissingCasesInEnumSwitch.html" target="_top">Frames</a></li>
-<li><a href="MissingCasesInEnumSwitch.html" target="_top">No Frames</a></li>
+<li><a href="../../../../index.html?com/google/errorprone/bugpatterns/MissingFail.html" target="_top">Frames</a></li>
+<li><a href="MissingFail.html" target="_top">No Frames</a></li>
 </ul>
 <ul class="navList" id="allclasses_navbar_top">
 <li><a href="../../../../allclasses-noframe.html">All Classes</a></li>
@@ -79,7 +79,7 @@
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="subTitle">com.google.errorprone.bugpatterns</div>
-<h2 title="Class MissingCasesInEnumSwitch" class="title">Class MissingCasesInEnumSwitch</h2>
+<h2 title="Class MissingFail" class="title">Class MissingFail</h2>
 </div>
 <div class="contentContainer">
 <ul class="inheritance">
@@ -89,7 +89,7 @@
 <li><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.BugChecker</a></li>
 <li>
 <ul class="inheritance">
-<li>com.google.errorprone.bugpatterns.MissingCasesInEnumSwitch</li>
+<li>com.google.errorprone.bugpatterns.MissingFail</li>
 </ul>
 </li>
 </ul>
@@ -100,16 +100,95 @@
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.SwitchTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.SwitchTreeMatcher</a>, <a href="../../../../com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io">Serializable</a></dd>
+<dd><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.TryTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.TryTreeMatcher</a>, <a href="../../../../com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io">Serializable</a></dd>
 </dl>
 <hr>
 <br>
-<pre>public class <span class="strong">MissingCasesInEnumSwitch</span>
+<pre>public class <span class="strong">MissingFail</span>
 extends <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
-implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.SwitchTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.SwitchTreeMatcher</a></pre>
+implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.TryTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.TryTreeMatcher</a></pre>
+<div class="block">A bug checker for the following code pattern:
+
+ <pre>
+ try {
+   ... do something that should throw ...
+   // forget to call Assert.fail()
+ } catch (SomeException expected) {
+   // asserts on the exception or comments
+ }
+ </pre>
+
+ <h1>Detection</h1>
+ This checker uses heuristics that identify as many occurrences of the problem as possible while
+ keeping the false positive rate low (low single-digit percentages).
+
+ <h2>Synonyms</h2>
+ Many test writers don't seem to know about <code>fail()</code>. They instead use synonyms of varying
+ complexity instead. A large class of synonyms replaces <code>fail()</code> with a single, equivalent
+ statement such as <code>assertTrue(false)</code>, <code>assertFalse(true)</code> or <code>throw
+ new AssertionError()</code>. In these cases we will simply skip any further analysis, they work
+ perfectly fine.
+
+ <p>Other, more complex synonyms tend to use boolean variables, like such:
+ <pre>
+ boolean thrown = false;
+ try {
+   throwingExpression();
+ } catch (SomeException e) {
+   thrown = true;
+ }
+ assertTrue(thrown);
+ </pre>
+
+ <p>In these complex cases, the checker treats them as if they contained no detection of the
+ missing exception and shows the usual suggestion to use <code>fail()</code> instead. This should alert
+ the writer that their test can be simplified.
+
+ <h2>Heuristics</h2>
+ Five methods were explored to detect missing <code>fail()</code> calls, triggering if no <code>fail()</code> is used in a <code>try/catch</code> statement within a JUnit test class:
+
+ <ul>
+   <li>Cases in which the caught exception is called "expected".
+   <li>Cases in which there is a call to an <code>assert*()</code> method in the catch block.
+   <li>Cases in which "expected" shows up in a comment inside the <code>catch</code> block.
+   <li>Cases in which the <code>catch</code> block is empty.
+   <li>Cases in which the <code>try</code> block contains only a single statement.
+ </ul>
+
+ <p>Only the first three yield useful results and also required some more refinement to reduce
+ false positives. In addition, the checker does not trigger on comments in the <code>catch</code> block
+ due to implementation complexity.
+
+ <p>To reduce false positives, no match is found if any of the following is true:
+
+ <ul>
+   <li>Any method with <code>fail</code> in its name is present in either catch or try block.
+   <li>A <code>throw</code> statement or synonym (<code>assertTrue(false)</code>, etc.) is present in either
+       <code>catch</code> or <code>try</code> block.
+   <li>The occurrence happens inside a <code>setUp</code>, <code>tearDown</code>,
+       @<code>Before</code>, @<code>After</code>, <code>suite</code> or<code>main</code> method.
+   <li>The method returns from the <code>try</code> or <code>catch</code> block or immediately after.
+   <li>The exception caught is of type <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang"><code>InterruptedException</code></a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/AssertionError.html?is-external=true" title="class or interface in java.lang"><code>AssertionError</code></a>,
+       <code>junit.framework.AssertionFailedError</code> or <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang"><code>Throwable</code></a>.
+   <li>The occurrence is inside a loop.
+   <li>The try block contains a <code>while\(true\)</code> loop.
+   <li>The <code>try</code> or <code>catch</code> block contains a <code>continue;</code> statement.
+   <li>The <code>try/catch</code> statement also contains a <code>finally</code> statement.
+   <li>A logging call is present in the <code>catch</code> block.
+ </ul>
+
+ <p>In addition, for occurrences which matched because they have a call to an <code>assert*()</code>
+ method in the catch block, no match is found if any of the following characteristics are present:
+
+ <ul>
+   <li>A field assignment in the catch block.
+   <li>A call to <code>assertTrue/False(boolean variable or field)</code> in the catch block.
+   <li>The last statement in the <code>try</code> block is an <code>assert*()</code> (that is not a noop:
+       <code>assertFalse(false)</code>, <code>assertTrue(true))</code> or <code>Mockito.verify()</code> call.
+ </ul></div>
 <dl><dt><span class="strong">Author:</span></dt>
-  <dd>cushon@google.com (Liam Miller-Cushon)</dd>
-<dt><span class="strong">See Also:</span></dt><dd><a href="../../../../serialized-form.html#com.google.errorprone.bugpatterns.MissingCasesInEnumSwitch">Serialized Form</a></dd></dl>
+  <dd>schmitt@google.com (Peter Schmitt)</dd>
+<dt><span class="strong">See Also:</span></dt><dd><a href="../../../../serialized-form.html#com.google.errorprone.bugpatterns.MissingFail">Serialized Form</a></dd></dl>
 </li>
 </ul>
 </div>
@@ -143,7 +222,7 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Swi
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><strong><a href="../../../../com/google/errorprone/bugpatterns/MissingCasesInEnumSwitch.html#MissingCasesInEnumSwitch()">MissingCasesInEnumSwitch</a></strong>()</code>&nbsp;</td>
+<td class="colOne"><code><strong><a href="../../../../com/google/errorprone/bugpatterns/MissingFail.html#MissingFail()">MissingFail</a></strong>()</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -162,8 +241,8 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Swi
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/bugpatterns/MissingCasesInEnumSwitch.html#matchSwitch(com.sun.source.tree.SwitchTree,%20com.google.errorprone.VisitorState)">matchSwitch</a></strong>(com.sun.source.tree.SwitchTree&nbsp;tree,
-           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/bugpatterns/MissingFail.html#matchTry(com.sun.source.tree.TryTree,%20com.google.errorprone.VisitorState)">matchTry</a></strong>(com.sun.source.tree.TryTree&nbsp;tree,
+        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -201,13 +280,13 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Swi
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="MissingCasesInEnumSwitch()">
+<a name="MissingFail()">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>MissingCasesInEnumSwitch</h4>
-<pre>public&nbsp;MissingCasesInEnumSwitch()</pre>
+<h4>MissingFail</h4>
+<pre>public&nbsp;MissingFail()</pre>
 </li>
 </ul>
 </li>
@@ -218,17 +297,17 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Swi
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="matchSwitch(com.sun.source.tree.SwitchTree, com.google.errorprone.VisitorState)">
+<a name="matchTry(com.sun.source.tree.TryTree, com.google.errorprone.VisitorState)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>matchSwitch</h4>
-<pre>public&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;matchSwitch(com.sun.source.tree.SwitchTree&nbsp;tree,
-                      <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
+<h4>matchTry</h4>
+<pre>public&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;matchTry(com.sun.source.tree.TryTree&nbsp;tree,
+                   <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
 <dl>
 <dt><strong>Specified by:</strong></dt>
-<dd><code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.SwitchTreeMatcher.html#matchSwitch(com.sun.source.tree.SwitchTree,%20com.google.errorprone.VisitorState)">matchSwitch</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.SwitchTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.SwitchTreeMatcher</a></code></dd>
+<dd><code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.TryTreeMatcher.html#matchTry(com.sun.source.tree.TryTree,%20com.google.errorprone.VisitorState)">matchTry</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.TryTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.TryTreeMatcher</a></code></dd>
 </dl>
 </li>
 </ul>
@@ -249,7 +328,7 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Swi
 <li><a href="../../../../overview-summary.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
-<li><a href="class-use/MissingCasesInEnumSwitch.html">Use</a></li>
+<li><a href="class-use/MissingFail.html">Use</a></li>
 <li><a href="package-tree.html">Tree</a></li>
 <li><a href="../../../../deprecated-list.html">Deprecated</a></li>
 <li><a href="../../../../index-all.html">Index</a></li>
@@ -258,12 +337,12 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Swi
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../com/google/errorprone/bugpatterns/MalformedFormatString.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">Prev Class</span></a></li>
-<li><a href="../../../../com/google/errorprone/bugpatterns/MissingFail.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">Next Class</span></a></li>
+<li><a href="../../../../com/google/errorprone/bugpatterns/MissingCasesInEnumSwitch.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">Prev Class</span></a></li>
+<li><a href="../../../../com/google/errorprone/bugpatterns/MisusedFormattingLogger.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">Next Class</span></a></li>
 </ul>
 <ul class="navList">
-<li><a href="../../../../index.html?com/google/errorprone/bugpatterns/MissingCasesInEnumSwitch.html" target="_top">Frames</a></li>
-<li><a href="MissingCasesInEnumSwitch.html" target="_top">No Frames</a></li>
+<li><a href="../../../../index.html?com/google/errorprone/bugpatterns/MissingFail.html" target="_top">Frames</a></li>
+<li><a href="MissingFail.html" target="_top">No Frames</a></li>
 </ul>
 <ul class="navList" id="allclasses_navbar_bottom">
 <li><a href="../../../../allclasses-noframe.html">All Classes</a></li>

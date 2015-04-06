@@ -13,7 +13,7 @@ maturity: MATURE
 </table></div>
 
 # Bug pattern: PackageLocation
-__Packages names should match the directory they are declared in__
+__Package names should match the directory they are declared in__
 
 ## The problem
 Java files should be located in a directory that matches the fully qualified name of the package. For example, classes in the package `edu.oswego.cs.dl.util.concurrent` should be located in: `.../edu/oswego/cs/dl/util/concurrent`.

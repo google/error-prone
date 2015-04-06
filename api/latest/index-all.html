@@ -84,10 +84,6 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/matchers/AbstractTypeMatcher.html#AbstractTypeMatcher(java.lang.String)">AbstractTypeMatcher(String)</a></span> - Constructor for class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/AbstractTypeMatcher.html" title="class in com.google.errorprone.matchers">AbstractTypeMatcher</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="strong"><a href="./com/google/errorprone/matchers/Matchers.html#adaptMatcherType(java.lang.Class,%20java.lang.Class,%20com.google.errorprone.matchers.Matcher)">adaptMatcherType(Class&lt;S&gt;, Class&lt;T&gt;, Matcher&lt;T&gt;)</a></span> - Static method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
-<dd>
-<div class="block">Safely adapts a matcher on a subtype of Tree into a matcher on Tree.</div>
-</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/matchers/Description.Builder.html#addFix(com.google.errorprone.fixes.Fix)">addFix(Fix)</a></span> - Method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></dt>
 <dd>
 <div class="block">Add a suggested fix for this <code>Description</code>.</div>
@@ -198,6 +194,10 @@
 <dd>
 <div class="block">Matches any type.</div>
 </dd>
+<dt><span class="strong"><a href="./com/google/errorprone/matchers/method/MethodMatchers.AnyMethodMatcher.html#anyClass()">anyClass()</a></span> - Method in interface com.google.errorprone.matchers.method.<a href="./com/google/errorprone/matchers/method/MethodMatchers.AnyMethodMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.AnyMethodMatcher</a></dt>
+<dd>
+<div class="block">Match on any class.</div>
+</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/matchers/method/MethodMatchers.InstanceMethodMatcher.html#anyClass()">anyClass()</a></span> - Method in interface com.google.errorprone.matchers.method.<a href="./com/google/errorprone/matchers/method/MethodMatchers.InstanceMethodMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.InstanceMethodMatcher</a></dt>
 <dd>
 <div class="block">Match on any class.</div>
@@ -295,7 +295,18 @@
 <dd>
 <div class="block">Matches an assertion AST node if the given matcher matches its condition.</div>
 </dd>
-<dt><span class="strong"><a href="./com/google/errorprone/matchers/Matchers.html#assignment(com.google.errorprone.matchers.Matcher,%20com.google.errorprone.matchers.Matcher)">assignment(Matcher&lt;ExpressionTree&gt;, Matcher&lt;ExpressionTree&gt;)</a></span> - Static method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
+<dt><a href="./com/google/errorprone/matchers/Asserts.html" title="class in com.google.errorprone.matchers"><span class="strong">Asserts</span></a> - Class in <a href="./com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a></dt>
+<dd>
+<div class="block">Matches assert statements which have a condition expression matched by the given matcher.</div>
+</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/matchers/Asserts.html#Asserts(com.google.errorprone.matchers.Matcher)">Asserts(Matcher&lt;ExpressionTree&gt;)</a></span> - Constructor for class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/Asserts.html" title="class in com.google.errorprone.matchers">Asserts</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/matchers/Matchers.html#assertStatement(com.google.errorprone.matchers.Matcher)">assertStatement(Matcher&lt;ExpressionTree&gt;)</a></span> - Static method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
+<dd>
+<div class="block">Matches an <code>assert</code> statement where the condition is matched by the passed
+ <code>conditionMatcher</code>.</div>
+</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/matchers/Matchers.html#assignment(com.google.errorprone.matchers.Matcher,%20com.google.errorprone.matchers.Matcher)">assignment(Matcher&lt;ExpressionTree&gt;, Matcher&lt;? super ExpressionTree&gt;)</a></span> - Static method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
 <div class="block">Matches an assignment operator AST node if both of the given matchers match.</div>
 </dd>
@@ -337,6 +348,11 @@
 </dd>
 <dt><span class="strong"><a href="./com/google/errorprone/suppliers/Suppliers.html#BOOLEAN_TYPE">BOOLEAN_TYPE</a></span> - Static variable in class com.google.errorprone.suppliers.<a href="./com/google/errorprone/suppliers/Suppliers.html" title="class in com.google.errorprone.suppliers">Suppliers</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/matchers/Matchers.html#booleanConstant(boolean)">booleanConstant(boolean)</a></span> - Static method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
+<dd>
+<div class="block">Matches the boolean constant (<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Boolean.html?is-external=true#TRUE" title="class or interface in java.lang"><code>Boolean.TRUE</code></a> or <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Boolean.html?is-external=true#FALSE" title="class or interface in java.lang"><code>Boolean.FALSE</code></a>) corresponding to
+ the given value.</div>
+</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/matchers/Matchers.html#booleanLiteral(boolean)">booleanLiteral(boolean)</a></span> - Static method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="./com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">BugChecker</span></a> - Class in <a href="./com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
@@ -750,6 +766,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/VisitorState.html#context">context</a></span> - Variable in class com.google.errorprone.<a href="./com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/matchers/Matchers.html#continueStatement()">continueStatement()</a></span> - Static method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
+<dd>
+<div class="block">Matches a <code>continue</code> statement.</div>
+</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/dataflow/LocalStore.html#copy()">copy()</a></span> - Method in class com.google.errorprone.dataflow.<a href="./com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/JUnit4SetUpNotRun.html#correctAnnotation()">correctAnnotation()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/JUnit4SetUpNotRun.html" title="class in com.google.errorprone.bugpatterns">JUnit4SetUpNotRun</a></dt>
@@ -1738,6 +1758,11 @@
 <dd>
 <div class="block">Supplies what was given.</div>
 </dd>
+<dt><span class="strong"><a href="./com/google/errorprone/matchers/Matchers.html#ignoreParens(com.google.errorprone.matchers.Matcher)">ignoreParens(Matcher&lt;ExpressionTree&gt;)</a></span> - Static method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
+<dd>
+<div class="block">Ignores any number of parenthesis wrapping an expression and then applies the passed matcher to
+ that expression.</div>
+</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/ErrorProneOptions.html#ignoreUnknownChecks()">ignoreUnknownChecks()</a></span> - Method in class com.google.errorprone.<a href="./com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="./com/google/errorprone/bugpatterns/threadsafety/IllegalGuardedBy.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><span class="strong">IllegalGuardedBy</span></a> - Exception in <a href="./com/google/errorprone/bugpatterns/threadsafety/package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a></dt>
@@ -1922,6 +1947,11 @@
 <dd>
 <div class="block">Match types that are exactly equal to any of the given types.</div>
 </dd>
+<dt><span class="strong"><a href="./com/google/errorprone/matchers/Matchers.html#isField()">isField()</a></span> - Static method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
+<dd>
+<div class="block">Matches if a <code>VariableTree</code> is a field declaration, as opposed to a local variable, enum
+ constant, parameter to a method, etc.</div>
+</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/NumericEquality.html#isFinal(com.sun.tools.javac.code.Symbol)">isFinal(Symbol)</a></span> - Static method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/NumericEquality.html" title="class in com.google.errorprone.bugpatterns">NumericEquality</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/util/ASTHelpers.html#isGeneratedConstructor(com.sun.source.tree.MethodTree)">isGeneratedConstructor(MethodTree)</a></span> - Static method in class com.google.errorprone.util.<a href="./com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
@@ -1935,6 +1965,10 @@
 <dt><span class="strong"><a href="./com/google/errorprone/matchers/Matchers.html#isInstance(java.lang.Class)">isInstance(Class&lt;?&gt;)</a></span> - Static method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
 <div class="block">Matches if an AST node is an instance of the given class.</div>
+</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/matchers/Matchers.html#isInstanceField()">isInstanceField()</a></span> - Static method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
+<dd>
+<div class="block">Matches an AST node that represents a non-static field.</div>
 </dd>
 <dt><span class="strong"><a href="./com/google/errorprone/matchers/JUnitMatchers.html#isJunit3TestCase">isJunit3TestCase</a></span> - Static variable in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/JUnitMatchers.html" title="class in com.google.errorprone.matchers">JUnitMatchers</a></dt>
 <dd>
@@ -1996,14 +2030,10 @@
 </dd>
 <dt><span class="strong"><a href="./com/google/errorprone/dataflow/nullnesspropagation/NullnessAnalysis.MethodInfo.html#isStatic()">isStatic()</a></span> - Method in interface com.google.errorprone.dataflow.nullnesspropagation.<a href="./com/google/errorprone/dataflow/nullnesspropagation/NullnessAnalysis.MethodInfo.html" title="interface in com.google.errorprone.dataflow.nullnesspropagation">NullnessAnalysis.MethodInfo</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="./com/google/errorprone/matchers/IsStatic.html" title="class in com.google.errorprone.matchers"><span class="strong">IsStatic</span></a> - Class in <a href="./com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a></dt>
-<dd>
-<div class="block">Matches static symbols.</div>
-</dd>
-<dt><span class="strong"><a href="./com/google/errorprone/matchers/IsStatic.html#IsStatic()">IsStatic()</a></span> - Constructor for class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/IsStatic.html" title="class in com.google.errorprone.matchers">IsStatic</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/matchers/Matchers.html#isStatic()">isStatic()</a></span> - Static method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Matches an AST node that is static.</div>
+</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/util/ASTHelpers.html#isSubtype(com.sun.tools.javac.code.Type,%20com.sun.tools.javac.code.Type,%20com.google.errorprone.VisitorState)">isSubtype(Type, Type, VisitorState)</a></span> - Static method in class com.google.errorprone.util.<a href="./com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
 <div class="block">Returns true if erasure(s) <: erasure(t).</div>
@@ -2050,6 +2080,10 @@
 </dd>
 <dt><span class="strong"><a href="./com/google/errorprone/matchers/Matchers.html#isType(java.lang.String)">isType(String)</a></span> - Static method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/matchers/Matchers.html#isVariable()">isVariable()</a></span> - Static method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
+<dd>
+<div class="block">Matches an AST node that represents a local variable or parameter.</div>
+</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/util/ASTHelpers.html#isVoidType(com.sun.tools.javac.code.Type,%20com.google.errorprone.VisitorState)">isVoidType(Type, VisitorState)</a></span> - Static method in class com.google.errorprone.util.<a href="./com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
 <div class="block">Return true if the given type is 'void' or 'Void'.</div>
@@ -2418,6 +2452,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/matchers/AnnotationType.html#matches(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matches(AnnotationTree, VisitorState)</a></span> - Method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/AnnotationType.html" title="class in com.google.errorprone.matchers">AnnotationType</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/matchers/Asserts.html#matches(com.sun.source.tree.StatementTree,%20com.google.errorprone.VisitorState)">matches(StatementTree, VisitorState)</a></span> - Method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/Asserts.html" title="class in com.google.errorprone.matchers">Asserts</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/matchers/ChildMultiMatcher.html#matches(T,%20com.google.errorprone.VisitorState)">matches(T, VisitorState)</a></span> - Method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/ChildMultiMatcher.html" title="class in com.google.errorprone.matchers">ChildMultiMatcher</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/matchers/CompileTimeConstantExpressionMatcher.html#matches(com.sun.source.tree.ExpressionTree,%20com.google.errorprone.VisitorState)">matches(ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/CompileTimeConstantExpressionMatcher.html" title="class in com.google.errorprone.matchers">CompileTimeConstantExpressionMatcher</a></dt>
@@ -2440,13 +2476,13 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/matchers/IsSameType.html#matches(T,%20com.google.errorprone.VisitorState)">matches(T, VisitorState)</a></span> - Method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/IsSameType.html" title="class in com.google.errorprone.matchers">IsSameType</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="strong"><a href="./com/google/errorprone/matchers/IsStatic.html#matches(com.sun.source.tree.Tree,%20com.google.errorprone.VisitorState)">matches(Tree, VisitorState)</a></span> - Method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/IsStatic.html" title="class in com.google.errorprone.matchers">IsStatic</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/matchers/IsSubtypeOf.html#matches(T,%20com.google.errorprone.VisitorState)">matches(T, VisitorState)</a></span> - Method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/IsSubtypeOf.html" title="class in com.google.errorprone.matchers">IsSubtypeOf</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/matchers/JUnitMatchers.JUnit4TestClassMatcher.html#matches(com.sun.source.tree.ClassTree,%20com.google.errorprone.VisitorState)">matches(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/JUnitMatchers.JUnit4TestClassMatcher.html" title="class in com.google.errorprone.matchers">JUnitMatchers.JUnit4TestClassMatcher</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/matchers/Matcher.html#matches(T,%20com.google.errorprone.VisitorState)">matches(T, VisitorState)</a></span> - Method in interface com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/matchers/MethodInvocation.html#matches(com.sun.source.tree.ExpressionTree,%20com.google.errorprone.VisitorState)">matches(ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/MethodInvocation.html" title="class in com.google.errorprone.matchers">MethodInvocation</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/matchers/MethodInvocationArgument.html#matches(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matches(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/MethodInvocationArgument.html" title="class in com.google.errorprone.matchers">MethodInvocationArgument</a></dt>
 <dd>&nbsp;</dd>
@@ -2462,9 +2498,13 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/matchers/ParentNode.html#matches(com.sun.source.tree.Tree,%20com.google.errorprone.VisitorState)">matches(Tree, VisitorState)</a></span> - Method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/ParentNode.html" title="class in com.google.errorprone.matchers">ParentNode</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/matchers/Returns.html#matches(com.sun.source.tree.StatementTree,%20com.google.errorprone.VisitorState)">matches(StatementTree, VisitorState)</a></span> - Method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/Returns.html" title="class in com.google.errorprone.matchers">Returns</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/matchers/StaticMethod.html#matches(com.sun.source.tree.ExpressionTree,%20com.google.errorprone.VisitorState)">matches(ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/StaticMethod.html" title="class in com.google.errorprone.matchers">StaticMethod</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/matchers/StringLiteral.html#matches(com.sun.source.tree.ExpressionTree,%20com.google.errorprone.VisitorState)">matches(ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/StringLiteral.html" title="class in com.google.errorprone.matchers">StringLiteral</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/matchers/Throws.html#matches(com.sun.source.tree.StatementTree,%20com.google.errorprone.VisitorState)">matches(StatementTree, VisitorState)</a></span> - Method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/Throws.html" title="class in com.google.errorprone.matchers">Throws</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/BugChecker.ExpressionStatementTreeMatcher.html#matchExpressionStatement(com.sun.source.tree.ExpressionStatementTree,%20com.google.errorprone.VisitorState)">matchExpressionStatement(ExpressionStatementTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/BugChecker.ExpressionStatementTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ExpressionStatementTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
@@ -2613,6 +2653,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/SelfEquals.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/SelfEquals.html" title="class in com.google.errorprone.bugpatterns">SelfEquals</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/UnnecessaryTypeArgument.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/UnnecessaryTypeArgument.html" title="class in com.google.errorprone.bugpatterns">UnnecessaryTypeArgument</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/WaitNotInLoop.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/WaitNotInLoop.html" title="class in com.google.errorprone.bugpatterns">WaitNotInLoop</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/BugChecker.ModifiersTreeMatcher.html#matchModifiers(com.sun.source.tree.ModifiersTree,%20com.google.errorprone.VisitorState)">matchModifiers(ModifiersTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/BugChecker.ModifiersTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ModifiersTreeMatcher</a></dt>
@@ -2635,6 +2677,8 @@
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/NoAllocationChecker.html#matchNewClass(com.sun.source.tree.NewClassTree,%20com.google.errorprone.VisitorState)">matchNewClass(NewClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/NoAllocationChecker.html" title="class in com.google.errorprone.bugpatterns">NoAllocationChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/StringBuilderInitWithChar.html#matchNewClass(com.sun.source.tree.NewClassTree,%20com.google.errorprone.VisitorState)">matchNewClass(NewClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/StringBuilderInitWithChar.html" title="class in com.google.errorprone.bugpatterns">StringBuilderInitWithChar</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/UnnecessaryTypeArgument.html#matchNewClass(com.sun.source.tree.NewClassTree,%20com.google.errorprone.VisitorState)">matchNewClass(NewClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/UnnecessaryTypeArgument.html" title="class in com.google.errorprone.bugpatterns">UnnecessaryTypeArgument</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/BugChecker.ParameterizedTypeTreeMatcher.html#matchParameterizedType(com.sun.source.tree.ParameterizedTypeTree,%20com.google.errorprone.VisitorState)">matchParameterizedType(ParameterizedTypeTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/BugChecker.ParameterizedTypeTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ParameterizedTypeTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
@@ -2667,6 +2711,8 @@
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/Finally.html#matchThrow(com.sun.source.tree.ThrowTree,%20com.google.errorprone.VisitorState)">matchThrow(ThrowTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/Finally.html" title="class in com.google.errorprone.bugpatterns">Finally</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/BugChecker.TryTreeMatcher.html#matchTry(com.sun.source.tree.TryTree,%20com.google.errorprone.VisitorState)">matchTry(TryTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/BugChecker.TryTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.TryTreeMatcher</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/MissingFail.html#matchTry(com.sun.source.tree.TryTree,%20com.google.errorprone.VisitorState)">matchTry(TryTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/MissingFail.html" title="class in com.google.errorprone.bugpatterns">MissingFail</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/TryFailThrowable.html#matchTry(com.sun.source.tree.TryTree,%20com.google.errorprone.VisitorState)">matchTry(TryTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/TryFailThrowable.html" title="class in com.google.errorprone.bugpatterns">TryFailThrowable</a></dt>
 <dd>&nbsp;</dd>
@@ -2745,6 +2791,24 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/matchers/Matchers.html#methodHasVisibility(com.google.errorprone.matchers.MethodVisibility.Visibility)">methodHasVisibility(MethodVisibility.Visibility)</a></span> - Static method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/matchers/Matchers.html#methodInvocation(com.google.errorprone.matchers.Matcher,%20com.google.errorprone.matchers.ChildMultiMatcher.MatchType,%20com.google.errorprone.matchers.Matcher)">methodInvocation(Matcher&lt;ExpressionTree&gt;, ChildMultiMatcher.MatchType, Matcher&lt;ExpressionTree&gt;)</a></span> - Static method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
+<dd>
+<div class="block">Matches an AST node if it is a method invocation and the given matchers match.</div>
+</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/matchers/Matchers.html#methodInvocation(com.google.errorprone.matchers.Matcher)">methodInvocation(Matcher&lt;ExpressionTree&gt;)</a></span> - Static method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
+<dd>
+<div class="block">Matches an AST node if it is a method invocation and the method select matches
+ <code>methodSelectMatcher</code>.</div>
+</dd>
+<dt><a href="./com/google/errorprone/matchers/MethodInvocation.html" title="class in com.google.errorprone.matchers"><span class="strong">MethodInvocation</span></a> - Class in <a href="./com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a></dt>
+<dd>
+<div class="block">Matches a method invocation based on a matcher for the method select (receiver + method
+ identifier) and one for the arguments.</div>
+</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/matchers/MethodInvocation.html#MethodInvocation(com.google.errorprone.matchers.Matcher,%20com.google.errorprone.matchers.ChildMultiMatcher.MatchType,%20com.google.errorprone.matchers.Matcher)">MethodInvocation(Matcher&lt;ExpressionTree&gt;, ChildMultiMatcher.MatchType, Matcher&lt;ExpressionTree&gt;)</a></span> - Constructor for class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/MethodInvocation.html" title="class in com.google.errorprone.matchers">MethodInvocation</a></dt>
+<dd>
+<div class="block">Creates a new matcher for method invocations based on a method select and an argument matcher.</div>
+</dd>
 <dt><a href="./com/google/errorprone/matchers/MethodInvocationArgument.html" title="class in com.google.errorprone.matchers"><span class="strong">MethodInvocationArgument</span></a> - Class in <a href="./com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a></dt>
 <dd>
 <div class="block">Applies an Expression matcher to an argument of a MethodInvocation by position.</div>
@@ -2832,6 +2896,12 @@
 <dt><a href="./com/google/errorprone/bugpatterns/MissingCasesInEnumSwitch.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">MissingCasesInEnumSwitch</span></a> - Class in <a href="./com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/MissingCasesInEnumSwitch.html#MissingCasesInEnumSwitch()">MissingCasesInEnumSwitch()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/MissingCasesInEnumSwitch.html" title="class in com.google.errorprone.bugpatterns">MissingCasesInEnumSwitch</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="./com/google/errorprone/bugpatterns/MissingFail.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">MissingFail</span></a> - Class in <a href="./com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">A bug checker for the following code pattern:</div>
+</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/MissingFail.html#MissingFail()">MissingFail()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/MissingFail.html" title="class in com.google.errorprone.bugpatterns">MissingFail</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="./com/google/errorprone/bugpatterns/MisusedFormattingLogger.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">MisusedFormattingLogger</span></a> - Class in <a href="./com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
@@ -3288,6 +3358,20 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/threadsafety/GuardedBySymbolResolver.html#resolveTypeLiteral(com.sun.source.tree.ExpressionTree)">resolveTypeLiteral(ExpressionTree)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="./com/google/errorprone/bugpatterns/threadsafety/GuardedBySymbolResolver.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedBySymbolResolver</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="./com/google/errorprone/matchers/Returns.html" title="class in com.google.errorprone.matchers"><span class="strong">Returns</span></a> - Class in <a href="./com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a></dt>
+<dd>
+<div class="block">Matches a <code>return</code> statement whose returned expression is matched by the given matcher.</div>
+</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/matchers/Returns.html#Returns(com.google.errorprone.matchers.Matcher)">Returns(Matcher&lt;? super ExpressionTree&gt;)</a></span> - Constructor for class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/Returns.html" title="class in com.google.errorprone.matchers">Returns</a></dt>
+<dd>
+<div class="block">New matcher for a <code>return</code> statement where the returned expression is matched by the
+ passed <code>returnedMatcher</code>.</div>
+</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/matchers/Matchers.html#returnStatement(com.google.errorprone.matchers.Matcher)">returnStatement(Matcher&lt;? super ExpressionTree&gt;)</a></span> - Static method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
+<dd>
+<div class="block">Matches a <code>return</code> statement where the returned expression is matched by the passed
+ <code>returnedMatcher</code>.</div>
+</dd>
 <dt><a href="./com/google/errorprone/bugpatterns/ReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">ReturnValueIgnored</span></a> - Class in <a href="./com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/ReturnValueIgnored.html#ReturnValueIgnored()">ReturnValueIgnored()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/ReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">ReturnValueIgnored</a></dt>
@@ -3543,6 +3627,20 @@
 </a>
 <h2 class="title">T</h2>
 <dl>
+<dt><a href="./com/google/errorprone/matchers/Throws.html" title="class in com.google.errorprone.matchers"><span class="strong">Throws</span></a> - Class in <a href="./com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a></dt>
+<dd>
+<div class="block">Matches a <code>throw</code> statement whose thrown expression is matched by the given matcher.</div>
+</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/matchers/Throws.html#Throws(com.google.errorprone.matchers.Matcher)">Throws(Matcher&lt;? super ExpressionTree&gt;)</a></span> - Constructor for class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/Throws.html" title="class in com.google.errorprone.matchers">Throws</a></dt>
+<dd>
+<div class="block">New matcher for a <code>throw</code> statement where the thrown item is matched by the passed
+ <code>thrownMatcher</code>.</div>
+</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/matchers/Matchers.html#throwStatement(com.google.errorprone.matchers.Matcher)">throwStatement(Matcher&lt;? super ExpressionTree&gt;)</a></span> - Static method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
+<dd>
+<div class="block">Matches a <code>throw</code> statement where the thrown item is matched by the passed
+ <code>thrownMatcher</code>.</div>
+</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/dataflow/LocalStore.html#toBuilder()">toBuilder()</a></span> - Method in class com.google.errorprone.dataflow.<a href="./com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/dataflow/LocalStore.html#toDOToutput()">toDOToutput()</a></span> - Method in class com.google.errorprone.dataflow.<a href="./com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a></dt>
@@ -3572,6 +3670,11 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/fixes/SuggestedFix.html#toString(com.sun.tools.javac.tree.JCTree.JCCompilationUnit)">toString(JCTree.JCCompilationUnit)</a></span> - Method in class com.google.errorprone.fixes.<a href="./com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/matchers/Matchers.html#toType(java.lang.Class,%20com.google.errorprone.matchers.Matcher)">toType(Class&lt;T&gt;, Matcher&lt;? super T&gt;)</a></span> - Static method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
+<dd>
+<div class="block">Converts the given matcher to one that can be applied to any tree but is only executed when
+ run on a tree of <code>type</code> and returns <code>false</code> for all other tree types.</div>
+</dd>
 <dt><a href="./com/google/errorprone/bugpatterns/TryFailThrowable.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">TryFailThrowable</span></a> - Class in <a href="./com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">A bug checker for the following code pattern:</div>
@@ -3633,6 +3736,10 @@
 <div class="block">Static imports shouldn't be used for types.</div>
 </dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/UnnecessaryStaticImport.html#UnnecessaryStaticImport()">UnnecessaryStaticImport()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/UnnecessaryStaticImport.html" title="class in com.google.errorprone.bugpatterns">UnnecessaryStaticImport</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="./com/google/errorprone/bugpatterns/UnnecessaryTypeArgument.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">UnnecessaryTypeArgument</span></a> - Class in <a href="./com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/UnnecessaryTypeArgument.html#UnnecessaryTypeArgument()">UnnecessaryTypeArgument()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/UnnecessaryTypeArgument.html" title="class in com.google.errorprone.bugpatterns">UnnecessaryTypeArgument</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <a name="_V_">
@@ -4028,6 +4135,10 @@ the order they are declared.</div>
 <dt><span class="strong"><a href="./com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html#withAnyName()">withAnyName()</a></span> - Method in interface com.google.errorprone.matchers.method.<a href="./com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></dt>
 <dd>
 <div class="block">Match methods with any name.</div>
+</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html#withNameMatching(java.util.regex.Pattern)">withNameMatching(Pattern)</a></span> - Method in interface com.google.errorprone.matchers.method.<a href="./com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></dt>
+<dd>
+<div class="block">Match methods with a name that matches the given regular expression.</div>
 </dd>
 <dt><span class="strong"><a href="./com/google/errorprone/matchers/method/MethodMatchers.ConstructorClassMatcher.html#withParameters(java.lang.String...)">withParameters(String...)</a></span> - Method in interface com.google.errorprone.matchers.method.<a href="./com/google/errorprone/matchers/method/MethodMatchers.ConstructorClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.ConstructorClassMatcher</a></dt>
 <dd>

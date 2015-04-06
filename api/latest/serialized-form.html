@@ -564,6 +564,11 @@
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/MissingCasesInEnumSwitch.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.MissingCasesInEnumSwitch</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
 </li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.MissingFail">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/MissingFail.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.MissingFail</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.MisusedFormattingLogger">
 <!--   -->
 </a>
@@ -771,6 +776,11 @@
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/UnnecessaryStaticImport.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.UnnecessaryStaticImport</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
 </li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.UnnecessaryTypeArgument">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/UnnecessaryTypeArgument.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.UnnecessaryTypeArgument</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.WaitNotInLoop">
 <!--   -->
 </a>
@@ -977,6 +987,24 @@
 <li class="blockListLast">
 <h4>annotationClassName</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> annotationClassName</pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="blockList"><a name="com.google.errorprone.matchers.Asserts">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/matchers/Asserts.html" title="class in com.google.errorprone.matchers">com.google.errorprone.matchers.Asserts</a> extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a> implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList"><a name="serializedForm">
+<!--   -->
+</a>
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockListLast">
+<h4>expressionMatcher</h4>
+<pre><a href="com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="com/google/errorprone/matchers/Matcher.html" title="type parameter in Matcher">T</a> extends com.sun.source.tree.Tree&gt; expressionMatcher</pre>
 </li>
 </ul>
 </li>
@@ -1216,11 +1244,6 @@
 </a>
 <h3>Class <a href="com/google/errorprone/matchers/IsSameType.html" title="class in com.google.errorprone.matchers">com.google.errorprone.matchers.IsSameType</a> extends <a href="com/google/errorprone/matchers/AbstractTypeMatcher.html" title="class in com.google.errorprone.matchers">AbstractTypeMatcher</a>&lt;<a href="com/google/errorprone/matchers/IsSameType.html" title="type parameter in IsSameType">T</a> extends com.sun.source.tree.Tree&gt; implements Serializable</h3>
 </li>
-<li class="blockList"><a name="com.google.errorprone.matchers.IsStatic">
-<!--   -->
-</a>
-<h3>Class <a href="com/google/errorprone/matchers/IsStatic.html" title="class in com.google.errorprone.matchers">com.google.errorprone.matchers.IsStatic</a> extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a> implements Serializable</h3>
-</li>
 <li class="blockList"><a name="com.google.errorprone.matchers.IsSubtypeOf">
 <!--   -->
 </a>
@@ -1235,6 +1258,28 @@
 <!--   -->
 </a>
 <h3>Class <a href="com/google/errorprone/matchers/MethodHasParameters.html" title="class in com.google.errorprone.matchers">com.google.errorprone.matchers.MethodHasParameters</a> extends <a href="com/google/errorprone/matchers/ChildMultiMatcher.html" title="class in com.google.errorprone.matchers">ChildMultiMatcher</a>&lt;com.sun.source.tree.MethodTree,com.sun.source.tree.VariableTree&gt; implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.matchers.MethodInvocation">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/matchers/MethodInvocation.html" title="class in com.google.errorprone.matchers">com.google.errorprone.matchers.MethodInvocation</a> extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a> implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList"><a name="serializedForm">
+<!--   -->
+</a>
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockList">
+<h4>methodSelectMatcher</h4>
+<pre><a href="com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="com/google/errorprone/matchers/Matcher.html" title="type parameter in Matcher">T</a> extends com.sun.source.tree.Tree&gt; methodSelectMatcher</pre>
+</li>
+<li class="blockListLast">
+<h4>methodArgumentMatcher</h4>
+<pre>com.google.errorprone.matchers.MethodInvocation.MethodArgumentMatcher methodArgumentMatcher</pre>
+</li>
+</ul>
+</li>
+</ul>
 </li>
 <li class="blockList"><a name="com.google.errorprone.matchers.MethodInvocationArgument">
 <!--   -->
@@ -1372,6 +1417,24 @@
 </li>
 </ul>
 </li>
+<li class="blockList"><a name="com.google.errorprone.matchers.Returns">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/matchers/Returns.html" title="class in com.google.errorprone.matchers">com.google.errorprone.matchers.Returns</a> extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a> implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList"><a name="serializedForm">
+<!--   -->
+</a>
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockListLast">
+<h4>returnedMatcher</h4>
+<pre><a href="com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="com/google/errorprone/matchers/Matcher.html" title="type parameter in Matcher">T</a> extends com.sun.source.tree.Tree&gt; returnedMatcher</pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="blockList"><a name="com.google.errorprone.matchers.StaticMethod">
 <!--   -->
 </a>
@@ -1407,6 +1470,24 @@
 <li class="blockListLast">
 <h4>value</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> value</pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="blockList"><a name="com.google.errorprone.matchers.Throws">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/matchers/Throws.html" title="class in com.google.errorprone.matchers">com.google.errorprone.matchers.Throws</a> extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a> implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList"><a name="serializedForm">
+<!--   -->
+</a>
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockListLast">
+<h4>thrownMatcher</h4>
+<pre><a href="com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="com/google/errorprone/matchers/Matcher.html" title="type parameter in Matcher">T</a> extends com.sun.source.tree.Tree&gt; thrownMatcher</pre>
 </li>
 </ul>
 </li>

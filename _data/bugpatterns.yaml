@@ -55,7 +55,7 @@
 - {name: NonFinalCompileTimeConstant, summary: '@CompileTimeConstant parameters should
     be final'}
 - {name: Overrides, summary: Varargs doesn't agree for overridden method}
-- {name: PackageLocation, summary: Packages names should match the directory they are declared in}
+- {name: PackageLocation, summary: Package names should match the directory they are declared in}
 - {name: PreconditionsCheckNotNull, summary: Literal passed as first argument to Preconditions.checkNotNull() can never be null}
 - {name: PreconditionsCheckNotNullPrimitive, summary: First argument to Preconditions.checkNotNull() is a primitive rather than an object reference}
 - {name: ProtoFieldNullComparison, summary: Protobuf fields cannot be null}
@@ -65,6 +65,7 @@
 - {name: StringBuilderInitWithChar, summary: StringBuilder does not have a char constructor; this invokes the int constructor.}
 - {name: SuppressWarningsDeprecated, summary: Suppressing "deprecated" is probably a typo for "deprecation"}
 - {name: TryFailThrowable, summary: Catching Throwable masks failures from fail() or assert*() in the try block}
+- {name: UnnecessaryTypeArgument, summary: Non-generic methods should not be invoked with type arguments}
 'Experimental : WARNING':
 - {name: AssertFalse, summary: Assertions may be disabled at runtime and do not guarantee that execution will halt here; consider throwing an exception instead}
 - {name: AssistedInjectAndInjectOnConstructors, summary: '@AssistedInject and @Inject
@@ -73,6 +74,7 @@
     fields, doing so is not recommended because the injected value may not be visible
     to other threads.'}
 - {name: JUnitAmbiguousTestClass, summary: Test class mixes JUnit 3 and JUnit 4 idioms}
+- {name: MissingFail, summary: Not calling fail() when expecting an exception masks bugs}
 - {name: NullablePrimitive, summary: '@Nullable should not be used for primitive types.'}
 - {name: OverridesGuiceInjectableMethod, summary: 'This method is not annotated with
     @Inject, but it overrides a method that is annotated with @com.google.inject.Inject.
