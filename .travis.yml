@@ -18,7 +18,6 @@ notifications:
       - https://webhooks.gitter.im/e/74d33a22fbfb1942920e
     on_success: change  # options: [always|never|change] default: always
     on_failure: always  # options: [always|never|change] default: always
-    on_start: false     # default: false
 
 # Store encrypted credentials for gh-pages and sonatype:
 # travis encrypt -r google/error-prone GH_TOKEN=<github access token>
