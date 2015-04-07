@@ -22,7 +22,9 @@ import com.google.auto.value.AutoValue;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.concurrent.UnlockMethod;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Kind;
@@ -40,6 +42,7 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.SynchronizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
+import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
@@ -207,6 +210,42 @@ public class HeldLockAnalyzer {
       return null;
     }
 
+    private static final Set<String> SUPPRESSION_NAMES = getSuppressionNames();
+
+    private static Set<String> getSuppressionNames() {
+      BugPattern bugpattern = GuardedByChecker.class.getAnnotation(BugPattern.class);
+      return ImmutableSet.<String>builder()
+          .add(bugpattern.altNames())
+          .add(bugpattern.name())
+          .build();
+    }
+
+    /**
+     * Returns true if the given tree is annotated with {@code @SuppressWarnings} and the list
+     * of suppressions includes GuardedBy.
+     */
+    private static boolean isSuppressed(Tree node) {
+      SuppressWarnings suppression = ASTHelpers.getAnnotation(node, SuppressWarnings.class);
+      if (suppression == null) {
+        return false;
+      }
+      for (String suppressed : suppression.value()) {
+        if (SUPPRESSION_NAMES.contains(suppressed)) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    @Override
+    public Void visitVariable(VariableTree node, HeldLockSet locks) {
+      if (!isSuppressed(node)) {
+        return super.visitVariable(node, locks);
+      } else {
+        return null;
+      }
+    }
+
     private void checkMatch(ExpressionTree tree, HeldLockSet locks) {
       String guardString = GuardedByUtils.getGuardValue(tree);
       if (guardString == null) {
@@ -278,12 +317,6 @@ public class HeldLockAnalyzer {
     private static final String READ_WRITE_LOCK_CLASS = "java.util.concurrent.locks.ReadWriteLock";
 
     private final Matcher<ExpressionTree> lockOperationMatcher;
-
-    private static final String UNLOCK_METHOD_ANNOTATION = UnlockMethod.class.getName();
-
-    /** Matcher for @UnlockMethod-annotated methods. */
-    private static final Matcher<ExpressionTree> UNLOCK_METHOD_MATCHER =
-        Matchers.<ExpressionTree>hasAnnotation(UNLOCK_METHOD_ANNOTATION);
 
     /** Matcher for ReadWriteLock lock accessors. */
     private static final Matcher<ExpressionTree> READ_WRITE_ACCESSOR_MATCHER =

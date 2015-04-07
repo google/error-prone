@@ -1197,6 +1197,27 @@ public class GuardedByCheckerTest {
   }
 
   @Test
+  public void suppressLocalVariable() throws Exception {
+    compilationHelper.assertCompileSucceeds(
+        compilationHelper.fileManager().forSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "import java.util.concurrent.locks.Lock;",
+            "class Test {",
+            "  final Lock lock = null;",
+            "  @GuardedBy(\"lock\")",
+            "  int x;",
+            "  void m() {",
+            "    @SuppressWarnings(\"GuardedBy\")",
+            "    int z = x++;",
+            "  }",
+            "}"
+        )
+    );
+  }
+
+  @Test
   public void serializable() throws IOException {
     new ObjectOutputStream(new ByteArrayOutputStream()).writeObject(new GuardedByChecker());
   }
