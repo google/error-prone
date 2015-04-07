@@ -7,6 +7,10 @@ jdk:
 # use travis-ci docker based infrastructure
 sudo: false
 
+cache:
+  directories:
+    - $HOME/.m2
+
 notifications:
   #email: error-prone-team@google.com
   webhooks:
