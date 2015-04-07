@@ -4,6 +4,9 @@ jdk:
   - oraclejdk7
   - oraclejdk8
 
+# use travis-ci docker based infrastructure
+sudo: false
+
 notifications:
   #email: error-prone-team@google.com
   webhooks:
