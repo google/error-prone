@@ -118,23 +118,23 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.BinaryTree&gt;</code></td>
-<td class="colLast"><span class="strong">NumericEquality.</span><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/NumericEquality.html#MATCHER">MATCHER</a></strong></code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ClassTree&gt;</code></td>
-<td class="colLast"><span class="strong">GuiceAssistedInjectScoping.</span><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/GuiceAssistedInjectScoping.html#MATCHER">MATCHER</a></strong></code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.Tree&gt;</code></td>
-<td class="colLast"><span class="strong">DeadException.</span><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/DeadException.html#MATCHER">MATCHER</a></strong></code>&nbsp;</td>
+<td class="colLast"><span class="strong">StringEquality.</span><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/StringEquality.html#MATCHER">MATCHER</a></strong></code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodTree&gt;</code></td>
 <td class="colLast"><span class="strong">CovariantEquals.</span><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/CovariantEquals.html#MATCHER">MATCHER</a></strong></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.Tree&gt;</code></td>
+<td class="colLast"><span class="strong">DeadException.</span><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/DeadException.html#MATCHER">MATCHER</a></strong></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ClassTree&gt;</code></td>
+<td class="colLast"><span class="strong">GuiceAssistedInjectScoping.</span><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/GuiceAssistedInjectScoping.html#MATCHER">MATCHER</a></strong></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.BinaryTree&gt;</code></td>
-<td class="colLast"><span class="strong">StringEquality.</span><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/StringEquality.html#MATCHER">MATCHER</a></strong></code>&nbsp;</td>
+<td class="colLast"><span class="strong">NumericEquality.</span><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/NumericEquality.html#MATCHER">MATCHER</a></strong></code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;</code></td>
@@ -155,23 +155,23 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>protected <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodTree&gt;</code></td>
-<td class="colLast"><span class="strong">JUnit4SetUpNotRun.</span><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/JUnit4SetUpNotRun.html#methodMatcher()">methodMatcher</a></strong>()</code>&nbsp;</td>
+<td class="colLast"><span class="strong">JUnit4TearDownNotRun.</span><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/JUnit4TearDownNotRun.html#methodMatcher()">methodMatcher</a></strong>()</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>protected <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodTree&gt;</code></td>
-<td class="colLast"><span class="strong">JUnit4TearDownNotRun.</span><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/JUnit4TearDownNotRun.html#methodMatcher()">methodMatcher</a></strong>()</code>&nbsp;</td>
+<td class="colLast"><span class="strong">JUnit4SetUpNotRun.</span><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/JUnit4SetUpNotRun.html#methodMatcher()">methodMatcher</a></strong>()</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodInvocationTree&gt;</code></td>
-<td class="colLast"><span class="strong">ReturnValueIgnored.</span><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/ReturnValueIgnored.html#specializedMatcher()">specializedMatcher</a></strong>()</code>
-<div class="block">Return a matcher for method invocations in which the method being called is on an instance of
- a type in the typesToCheck set and returns the same type (e.g.</div>
+<td class="colLast"><span class="strong">CheckReturnValue.</span><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/CheckReturnValue.html#specializedMatcher()">specializedMatcher</a></strong>()</code>
+<div class="block">Return a matcher for method invocations in which the method being called has the</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodInvocationTree&gt;</code></td>
-<td class="colLast"><span class="strong">CheckReturnValue.</span><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/CheckReturnValue.html#specializedMatcher()">specializedMatcher</a></strong>()</code>
-<div class="block">Return a matcher for method invocations in which the method being called has the</div>
+<td class="colLast"><span class="strong">ReturnValueIgnored.</span><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/ReturnValueIgnored.html#specializedMatcher()">specializedMatcher</a></strong>()</code>
+<div class="block">Return a matcher for method invocations in which the method being called is on an instance of
+ a type in the typesToCheck set and returns the same type (e.g.</div>
 </td>
 </tr>
 </tbody>
