@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.base.Joiner;
@@ -39,7 +39,7 @@ import com.sun.tools.javac.code.Type;
  */
 @BugPattern(name = "GuardedByChecker", altNames = "GuardedBy",
     summary = "Checks for unguarded accesses to fields and methods with @GuardedBy annotations",
-    category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
+    category = JDK, severity = ERROR, maturity = MATURE)
 public class GuardedByChecker extends GuardedByValidator implements BugChecker.VariableTreeMatcher,
     BugChecker.MethodTreeMatcher {
 
