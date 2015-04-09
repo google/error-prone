@@ -99,6 +99,12 @@ class BugPatternFileGenerator implements LineProcessor<List<Instance>> {
   private static MessageFormat constructPageTemplate(
       Instance pattern,  boolean generateFrontMatter) {
     StringBuilder result = new StringBuilder();
+    result.append(
+        "<!--\n"
+        + "*** AUTO-GENERATED, DO NOT MODIFY ***\n"
+        + "To make changes, edit the @BugPattern annotation or the explanation in"
+        + " docs/bugpattern.\n"
+        + "-->\n\n");
     if (generateFrontMatter) {
       result.append("---\n"
           + "title: {1}\n"
