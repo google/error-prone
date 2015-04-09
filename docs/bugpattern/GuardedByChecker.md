@@ -1,5 +1,5 @@
 The GuardedBy analysis checks that fields or methods annotated with
-`@GuardedBy(lock)` are only accessed when the specified lock is held. 
+`@GuardedBy(lock)` are only accessed when the specified lock is held.
 
 Example:
 
@@ -11,26 +11,26 @@ class Account {
   private int balance;
 
   public synchronized int getBalance() {
-    return balance;  // OK: intrinsic 'this' lock is held.
+    return balance; // OK: implicit 'this' lock is held.
   }
 
   public synchronized void withdraw(int amount) {
-    setBalance(balance - amount);  // OK: intrinsic 'this' lock is held.
+    setBalance(balance - amount); // OK: implicit 'this' lock is held.
   }
 
   public void deposit(int amount) {
-    setBalance(balance + amount);  // ERROR: access to 'balance' not guarded by 'this'.
+    setBalance(balance + amount); // ERROR: access to 'balance' not guarded by 'this'.
   }
 
   @GuardedBy("this")
   private void setBalance(int newBalance) {
     checkState(newBalance >= 0, "Balance cannot be negative.");
-    balance = newBalance;  // OK: 'this' must be held by caller of 'setBalance'.
+    balance = newBalance; // OK: 'this' must be held by caller of 'setBalance'.
   }
 }
 ```
 
-This above example uses intrinsic locks (via the 'synchronized' keyword). The
+This above example uses implicit locks (via the 'synchronized' modifier). The
 analysis also supports synchronized statements and java.util.concurrent locks.
 
 ## Basic Concepts
@@ -41,12 +41,12 @@ java.util.concurrent Lock.
 
 An implicit lock is acquired using the built in synchronization features of the
 language. Adding the 'synchronized' modifier to an instance method causes the
-intrinsic lock of the enclosing instance to be acquired for the duration of the
+implicit lock of the enclosing instance to be acquired for the duration of the
 method. Adding the 'synchronized' modifier to a static method is similar,
-except the intrinsic lock of the Class object is acquired instead.
+except the implicit lock of the Class object is acquired instead.
 
 The Locks defined in java.util.concurrent are acquired with explicit
-lock()/unlock() methods. The use of these methods in java should always
+lock()/unlock() methods. The use of these methods in Java should always
 correspond to a try/finally block, to ensure that the locks are released on all
 execution paths.
 
@@ -61,12 +61,12 @@ The following syntax can be used to describe a lock:
 
 this
 </code></td><td>
-The intrinsic object lock of the enclosing class.
+The implicit object lock of the enclosing class.
 </td></tr><tr><td><code>
 
 ClassName.this
 </code></td><td>
-The intrinsic object lock of the enclosing class specified by ClassName.
+The implicit object lock of the enclosing class specified by ClassName.
 (For inner classes, the ClassName.this designation allows you to specify which
 'this' reference is intended.)
 
@@ -88,7 +88,7 @@ locks should be deterministic.
 </td></tr><tr><td><code>
 ClassName.class
 </code></td><td>
-The intrinsic lock of specified Class object.
+The implicit lock of specified Class object.
 
 </td></tr><tr><td><code>
 ClassName.fieldName
@@ -112,11 +112,11 @@ javax.annotation.concurrent.GuardedBy
 The @GuardedBy annotation is used to document that a member (a field or a
 method) can only be accessed when the specified lock is held.
 
-@GuardedBy can be used with both intrinsic locks and java.util.concurrent
+@GuardedBy can be used with both implicit locks and java.util.concurrent
 Locks.
 
 ```java
-final Lock lock;
+final Lock lock = new ReentrantLock();
 
 @GuardedBy("lock")
 int x;
@@ -139,11 +139,11 @@ com.google.errorprone.bugpatterns.threadsafety.annotations.LockMethod
 The method to which this annotation is applied acquires one or more locks. The
 caller will hold the locks when the function finishes execution.
  
-This annotation does not apply to intrinsic locks, which cannot be acquired
+This annotation does not apply to implicit locks, which cannot be acquired
 without being released in the same method.
 
 ```java
-final Lock lock;
+final Lock lock = new ReentrantLock();
 
 @LockMethod("lock")
 acquireLock() {}  // error: 'lock' was not acquired
@@ -157,11 +157,11 @@ The method to which this annotation is applied releases one or more locks. The
 caller must hold the locks when the function is entered, and will not hold them
 when it completes.
  
-This annotation does not apply to intrinsic locks, which cannot be released
+This annotation does not apply to implicit locks, which cannot be released
 without being acquired in the same method.
 
 ```java
-final Lock lock;
+final Lock lock = new ReentrantLock();
 
 @GuardedBy("lock")
 int x;
