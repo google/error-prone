@@ -55,8 +55,8 @@ import javax.lang.model.element.Modifier;
     summary = "Mockito cannot mock final classes",
     explanation = "Mockito cannot mock final classes. See "
         + "https://github.com/mockito/mockito/wiki/FAQ for details.",
-    category = Category.MOCKITO, maturity = MaturityLevel.EXPERIMENTAL,
-    severity = SeverityLevel.ERROR)
+    category = Category.MOCKITO, maturity = MaturityLevel.MATURE,
+    severity = SeverityLevel.WARNING)
 public class CannotMockFinalClass extends BugChecker implements MethodInvocationTreeMatcher,
     VariableTreeMatcher {
   // TODO(user): consider stopping mocks of primitive types here or in its own checker

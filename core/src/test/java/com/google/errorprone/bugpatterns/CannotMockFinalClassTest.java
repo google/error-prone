@@ -31,7 +31,7 @@ import org.mockito.exceptions.base.MockitoException;
 
 /**
  * Tests for {@code CannotMockFinalClass}.
- * 
+ *
  * @author Louis Wasserman
  */
 @RunWith(JUnit4.class)
@@ -59,7 +59,7 @@ public class CannotMockFinalClassTest {
     exception.expect(MockitoException.class);
     MockitoAnnotations.initMocks(new MocksFinalClassWithAnnotation());
   }
-  
+
   @Test
   public void mockingFinalClassWithMockMethodFails() {
     exception.expect(MockitoException.class);
@@ -68,7 +68,7 @@ public class CannotMockFinalClassTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
+    compilationHelper.assertCompileSucceedsWithMessages(compilationHelper.fileManager()
         .sources(getClass(), "CannotMockFinalClassPositiveCases.java"));
   }
 

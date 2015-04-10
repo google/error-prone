@@ -121,7 +121,7 @@ public class ErrorProneCompiler {
     private DiagnosticListener<? super JavaFileObject> diagnosticListener = null;
     private PrintWriter errOutput = new PrintWriter(System.err, true);
     private String compilerName = "javac (with error-prone)";
-    private ScannerSupplier scannerSupplier = BuiltInCheckerSuppliers.matureChecks();
+    private ScannerSupplier scannerSupplier = BuiltInCheckerSuppliers.defaultChecks();
 
     public ErrorProneCompiler build() {
       return new ErrorProneCompiler(
