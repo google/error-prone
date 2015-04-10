@@ -143,7 +143,7 @@ public class CompilationTestHelper {
   public void assertCompileSucceeds(
       List<JavaFileObject> sources, List<String> args, BugComments bugComments) {
     List<String> allArgs = buildArguments(args);
-    Result exitCode = compile(asJavacList(sources), allArgs.toArray(new String[0]));
+    Result exitCode = compile(sources, allArgs.toArray(new String[0]));
     List<Diagnostic<? extends JavaFileObject>> diagnostics = diagnosticHelper.getDiagnostics();
     assertThat("Compilation failed: " + diagnostics.toString(), exitCode, is(Result.OK));
     assertThat("Compilation succeeded but gave warnings: " + diagnostics.toString(),
@@ -213,7 +213,7 @@ public class CompilationTestHelper {
    */
   private void assertCompileSucceedsIgnoringWarnings(List<JavaFileObject> sources) {
     List<String> allArgs = buildArguments(Collections.<String>emptyList());
-    Result exitCode = compile(asJavacList(sources), allArgs.toArray(new String[0]));
+    Result exitCode = compile(sources, allArgs.toArray(new String[0]));
     assertThat(diagnosticHelper.getDiagnostics().toString(), exitCode, is(Result.OK));
   }
 
@@ -237,7 +237,7 @@ public class CompilationTestHelper {
   public void assertCompileFailsWithMessages(List<JavaFileObject> sources, List<String> args)
       throws IOException {
     List<String> allArgs = buildArguments(args);
-    Result exitCode = compile(asJavacList(sources), allArgs.toArray(new String[0]));
+    Result exitCode = compile(sources, allArgs.toArray(new String[0]));
     assertThat("Compiler returned an unexpected error code", exitCode, is(Result.ERROR));
     for (JavaFileObject source : sources) {
       diagnosticHelper.assertHasDiagnosticOnAllMatchingLines(source);
@@ -256,7 +256,7 @@ public class CompilationTestHelper {
   Result compile(Iterable<JavaFileObject> sources, String[] args) {
     checkWellFormed(sources, args);
     Context context = new Context();
-    return compiler.run(args, context, fileManager, asJavacList(sources), null);
+    return compiler.run(args, context, fileManager, ImmutableList.copyOf(sources), null);
   }
 
   private void checkWellFormed(Iterable<JavaFileObject> sources, String[] args) {
@@ -278,13 +278,5 @@ public class CompilationTestHelper {
     boolean result = task.call();
     assertTrue(String.format("Test program failed to compile with non error-prone error: %s",
         outputStream.toString()), result);
-  }
-
-  public static <T> com.sun.tools.javac.util.List<T> asJavacList(Iterable<? extends T> xs) {
-    com.sun.tools.javac.util.List<T> result = com.sun.tools.javac.util.List.nil();
-    for (T x : xs) {
-      result = result.append(x);
-    }
-    return result;
   }
 }
