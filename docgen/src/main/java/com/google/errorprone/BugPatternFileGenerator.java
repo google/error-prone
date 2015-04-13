@@ -16,13 +16,9 @@
 
 package com.google.errorprone;
 
-import static com.google.common.collect.Iterables.limit;
-import static com.google.common.collect.Iterables.size;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
-import com.google.common.collect.Iterables;
 import com.google.common.io.LineProcessor;
 import com.google.errorprone.BugPattern.Instance;
 import com.google.errorprone.BugPattern.MaturityLevel;
@@ -68,8 +64,8 @@ class BugPatternFileGenerator implements LineProcessor<List<Instance>> {
   public BugPatternFileGenerator(
       Path bugpatternDir,
       Path exampleDirBase,
-      Path explanationDir,
-      boolean generateFrontMatter,
+      Path explanationDir, 
+      boolean generateFrontMatter, 
       boolean usePygments) {
     this.outputDir = bugpatternDir;
     this.exampleDirBase = exampleDirBase;
@@ -88,7 +84,8 @@ class BugPatternFileGenerator implements LineProcessor<List<Instance>> {
 
     @Override
     public boolean accept(Path entry) throws IOException {
-      return matchPattern.matcher(entry.getFileName().toString()).matches();
+      return Files.isDirectory(entry)
+          || matchPattern.matcher(entry.getFileName().toString()).matches();
     }
   }
 
@@ -166,7 +163,7 @@ class BugPatternFileGenerator implements LineProcessor<List<Instance>> {
         outputDir.resolve(checkPath), UTF_8)) {
       // replace "\n" with a carriage return for explanation
       parts.set(9, parts.get(9).replace("\\n", "\n"));
-
+      
       // load side-car explanation file, if it exists
       Path sidecarExplanation = explanationDir.resolve(checkPath);
       if (Files.exists(sidecarExplanation)) {
@@ -178,50 +175,52 @@ class BugPatternFileGenerator implements LineProcessor<List<Instance>> {
         }
         parts.set(9, new String(Files.readAllBytes(sidecarExplanation), UTF_8).trim());
       }
-
+  
       MessageFormat wikiPageTemplate = constructPageTemplate(pattern, generateFrontMatter);
       writer.write(wikiPageTemplate.format(parts.toArray()));
-
+  
       Iterable<String> classNameParts = Splitter.on('.').split(parts.get(0));
-      String path = Joiner.on('/').join(limit(classNameParts, size(classNameParts) - 1));
-      Path exampleDir = exampleDirBase.resolve(path);
-      if (!Files.exists(exampleDir)) {
-        // Not all check dirs have example fields (e.g. threadsafety).
-        // TODO(user): clean this up.
-        // System.err.println("Warning: cannot find path " + exampleDir);
-      } else {
-        // Example filename must match example pattern.
-        List<Path> examples = new ArrayList<>();
-        ExampleFilter filter =
-            new ExampleFilter(parts.get(0).substring(parts.get(0).lastIndexOf('.') + 1));
-        try (DirectoryStream<Path> directoryStream =
-            Files.newDirectoryStream(exampleDir, filter)) {
-          Iterables.addAll(examples, directoryStream);
-        }
-        Collections.sort(examples);
-        if (examples.size() > 0) {
-          writer.write("\n----------\n\n");
-          writer.write("# Examples\n");
-
-          for (Path example: examples) {
-            writer.write("__" + example.getFileName() + "__\n\n");
-            if (usePygments) {
-              writer.write("{% highlight java %}\n");
-            } else {
-              writer.write("```java\n");
-            }
-            writer.write(new String(Files.readAllBytes(example), UTF_8).trim() + "\n");
-            if (usePygments) {
-              writer.write("{% endhighlight %}\n");
-            } else {
-              writer.write("```\n");
-            }
-            writer.write("\n");
+      // Example filename must match example pattern.
+      List<Path> examples = new ArrayList<>();
+      ExampleFilter filter =
+          new ExampleFilter(parts.get(0).substring(parts.get(0).lastIndexOf('.') + 1));
+      findExamples(examples, exampleDirBase, filter);
+      Collections.sort(examples);
+      if (examples.size() > 0) {
+        writer.write("\n----------\n\n");
+        writer.write("# Examples\n");
+  
+        for (Path example: examples) {
+          writer.write("__" + example.getFileName() + "__\n\n");
+          if (usePygments) {
+            writer.write("{% highlight java %}\n");
+          } else {
+            writer.write("```java\n");
           }
+          writer.write(new String(Files.readAllBytes(example), UTF_8).trim() + "\n");
+          if (usePygments) {
+            writer.write("{% endhighlight %}\n");
+          } else {
+            writer.write("```\n");
+          }
+          writer.write("\n");
         }
       }
     }
     return true;
+  }
+
+  private static void findExamples(
+      List<Path> examples, Path dir, DirectoryStream.Filter<Path> filter) throws IOException {
+    try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir, filter)) {
+      for (Path entry : stream) {
+        if (Files.isDirectory(entry)) {
+          findExamples(examples, entry, filter);
+        } else {
+          examples.add(entry);
+        }
+      }
+    }
   }
 
   @Override

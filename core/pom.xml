@@ -166,12 +166,6 @@
       <version>2.6.1</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>com.google.gdata</groupId>
-      <artifactId>core</artifactId>
-      <version>1.47.1</version>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
 
   <build>

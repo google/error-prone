@@ -77,7 +77,6 @@ import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
 import com.google.errorprone.bugpatterns.MalformedFormatString;
 import com.google.errorprone.bugpatterns.MissingCasesInEnumSwitch;
 import com.google.errorprone.bugpatterns.MissingFail;
-import com.google.errorprone.bugpatterns.MisusedFormattingLogger;
 import com.google.errorprone.bugpatterns.MisusedWeekYear;
 import com.google.errorprone.bugpatterns.ModifyingCollectionWithItself;
 import com.google.errorprone.bugpatterns.NarrowingCompoundAssignment;
@@ -206,7 +205,6 @@ public class BuiltInCheckerSuppliers {
       new Finally(),
       new IncompatibleModifiersChecker(),
       new NonAtomicVolatileUpdate(),
-      new MisusedFormattingLogger(),
       new PreconditionsInvalidPlaceholder(),
       new RequiredModifiersChecker(),
       new StaticAccessedFromInstance(),
