@@ -30,6 +30,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
@@ -63,6 +64,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.TypeKind;
 
@@ -541,5 +543,19 @@ public class ASTHelpers {
     }
     Types types = state.getTypes();
     return types.isSubtype(types.erasure(s), types.erasure(t));
+  }
+
+  /** Returns the modifiers tree of the given class, method, or variable declaration. */
+  @Nullable
+  public static ModifiersTree getModifiers(Tree tree) {
+    if (tree instanceof ClassTree) {
+      return ((ClassTree) tree).getModifiers();
+    } else if (tree instanceof MethodTree) {
+      return ((MethodTree) tree).getModifiers();
+    } else if (tree instanceof VariableTree) {
+      return ((VariableTree) tree).getModifiers();
+    } else {
+      return null;
+    }
   }
 }
