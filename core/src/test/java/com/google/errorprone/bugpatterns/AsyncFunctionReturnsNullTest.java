@@ -32,18 +32,17 @@ public class AsyncFunctionReturnsNullTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new AsyncFunctionReturnsNull());
+    compilationHelper =
+        CompilationTestHelper.newInstance(new AsyncFunctionReturnsNull(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "AsyncFunctionReturnsNullPositiveCases.java"));
+    compilationHelper.addSourceFile("AsyncFunctionReturnsNullPositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "AsyncFunctionReturnsNullNegativeCases.java"));
+    compilationHelper.addSourceFile("AsyncFunctionReturnsNullNegativeCases.java").doTest();
   }
 }

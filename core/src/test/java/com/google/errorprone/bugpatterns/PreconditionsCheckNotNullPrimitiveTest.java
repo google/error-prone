@@ -49,19 +49,20 @@ public class PreconditionsCheckNotNullPrimitiveTest extends CompilerBasedAbstrac
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new PreconditionsCheckNotNullPrimitive());
+    compilationHelper =
+        CompilationTestHelper.newInstance(new PreconditionsCheckNotNullPrimitive(), getClass());
   }
 
   @Test
   public void testPositiveCases() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "PreconditionsCheckNotNullPrimitivePositiveCases.java"));
+    compilationHelper.addSourceFile("PreconditionsCheckNotNullPrimitivePositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void testNegativeCase1() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "PreconditionsCheckNotNullPrimitiveNegativeCases.java"));
+    compilationHelper.addSourceFile("PreconditionsCheckNotNullPrimitiveNegativeCases.java")
+        .doTest();
   }
 
   @Test

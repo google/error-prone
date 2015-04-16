@@ -103,7 +103,7 @@ public class CustomSuppressionTest {
   @Test
   public void testNegativeCase() throws Exception {
     List<JavaFileObject> sources = compiler.fileManager()
-        .sources(getClass(), "CustomSuppressionNegativeCases.java");
+        .forResources(getClass(), "CustomSuppressionNegativeCases.java");
     Result exitCode = compiler.compile(sources);
     assertThat(exitCode, is(Result.OK));
   }
@@ -111,7 +111,7 @@ public class CustomSuppressionTest {
   @Test
   public void testPositiveCase() throws Exception {
     List<JavaFileObject> sources = compiler.fileManager()
-        .sources(getClass(), "CustomSuppressionPositiveCases.java");
+        .forResources(getClass(), "CustomSuppressionPositiveCases.java");
     assertThat(compiler.compile(sources), is(Result.ERROR));
     assertThat(diagnosticHelper.getDiagnostics().size(), is(3));
     assertThat((int) diagnosticHelper.getDiagnostics().get(0).getLineNumber(), is(28));

@@ -27,6 +27,7 @@ import com.google.errorprone.matchers.Description;
 
 import com.sun.source.tree.Tree;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -38,14 +39,18 @@ import java.util.List;
 /** {@link GuardedByLockSetAnalyzer}Test */
 @RunWith(JUnit4.class)
 public class HeldLockAnalyzerTest {
+  private CompilationTestHelper compilationHelper;
 
-  private final CompilationTestHelper compilationHelper =
-      CompilationTestHelper.newInstance(new GuardedByLockSetAnalyzer());
+  @Before
+  public void setUp() {
+    compilationHelper =
+        CompilationTestHelper.newInstance(new GuardedByLockSetAnalyzer(), getClass());
+  }
 
   @Test
   public void testInstance() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -62,15 +67,14 @@ public class HeldLockAnalyzerTest {
             "      x++;",
             "    } finally { lock.unlock(); }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testTwoInstances() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -88,15 +92,14 @@ public class HeldLockAnalyzerTest {
             "    x++;",
             "    } finally { lock.unlock(); lock2.unlock(); }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testSynchronizedMethod() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -108,15 +111,14 @@ public class HeldLockAnalyzerTest {
             "    // BUG: Diagnostic contains:  [(THIS)]",
             "    x++;",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testSynchronizedThis() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -130,15 +132,14 @@ public class HeldLockAnalyzerTest {
             "      x++;",
             "    }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testSynchronizedField() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -154,15 +155,14 @@ public class HeldLockAnalyzerTest {
             "      x++;",
             "    }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testSynchronizedClass() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -177,15 +177,14 @@ public class HeldLockAnalyzerTest {
             "      x++;",
             "    }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testLocked() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -209,15 +208,14 @@ public class HeldLockAnalyzerTest {
             "    // BUG: Diagnostic contains:  []",
             "    x++;",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testLockMethodEnclosingAccess() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -243,21 +241,20 @@ public class HeldLockAnalyzerTest {
             "    void m(Inner i) {",
             "      i.lock();",
             "      try {",
-            "        // BUG: Diagnostic contains:"
-            + " [(SELECT (SELECT (LOCAL_VARIABLE i) outer$threadsafety.Outer) lock)]",
+            "        // BUG: Diagnostic contains:",
+            "        // [(SELECT (SELECT (LOCAL_VARIABLE i) outer$threadsafety.Outer) lock)]",
             "        i.x++;",
             "      } finally {",
             "        i.unlock();",
             "      }",
             "    }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   /**
-   * A customized {@link GuardedBy} checker that prints more test-friendly diagnostics.
+   * A customized {@link GuardedByChecker} that prints more test-friendly diagnostics.
    */
   @BugPattern(name = "GuardedByLockSet",
       summary = "",

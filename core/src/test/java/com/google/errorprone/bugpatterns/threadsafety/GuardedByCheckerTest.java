@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.threadsafety;
 
 import com.google.errorprone.CompilationTestHelper;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,14 +31,17 @@ import java.io.ObjectOutputStream;
 /** {@link GuardedByChecker}Test */
 @RunWith(JUnit4.class)
 public class GuardedByCheckerTest {
+  private CompilationTestHelper compilationHelper;
 
-  private final CompilationTestHelper compilationHelper =
-      CompilationTestHelper.newInstance(new GuardedByChecker());
+  @Before
+  public void setUp() {
+    compilationHelper = CompilationTestHelper.newInstance(new GuardedByChecker(), getClass());
+  }
 
   @Test
   public void testLocked() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -62,9 +66,8 @@ public class GuardedByCheckerTest {
             "    // access should be guarded by 'this.lock'",
             "    x++;",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   /**
@@ -72,8 +75,8 @@ public class GuardedByCheckerTest {
    */
   @Test
   public void testStaticLocked() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -84,16 +87,14 @@ public class GuardedByCheckerTest {
             "  static synchronized void m() {",
             "    x++;",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
-
 
   @Test
   public void testMonitor() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -116,15 +117,14 @@ public class GuardedByCheckerTest {
             "    // access should be guarded by 'this.monitor'",
             "    x++;",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testWrongLock() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -144,15 +144,14 @@ public class GuardedByCheckerTest {
             "      lock2.unlock();",
             "    }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testGuardedStaticFieldAccess_1() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -165,15 +164,14 @@ public class GuardedByCheckerTest {
             "      Test.x++;",
             "    }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testGuardedStaticFieldAccess_2() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -186,15 +184,14 @@ public class GuardedByCheckerTest {
             "      Test.x++;",
             "    }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testGuardedStaticFieldAccess_3() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -207,15 +204,14 @@ public class GuardedByCheckerTest {
             "      x++;",
             "    }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testGuardedStaticFieldAccess_EnclosingClass() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -225,15 +221,14 @@ public class GuardedByCheckerTest {
             "  synchronized static void n() {",
             "    Test.x++;",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testBadStaticFieldAccess() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -246,30 +241,28 @@ public class GuardedByCheckerTest {
             "    // access should be guarded by 'Test.lock'",
             "    Test.x++;",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testBadGuard() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
             "class Test {",
             "  // BUG: Diagnostic contains: Invalid @GuardedBy expression",
             "  @GuardedBy(\"foo\") int y;",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testUnheldInstanceGuard() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -283,15 +276,14 @@ public class GuardedByCheckerTest {
             "      // should be guarded by 't.mu'",
             "    t.y++;",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testCtor() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -300,15 +292,14 @@ public class GuardedByCheckerTest {
             "  public Test() {",
             "    this.x = 42;",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testBadGuardMethodAccess() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -318,15 +309,14 @@ public class GuardedByCheckerTest {
             "    // BUG: Diagnostic contains: this",
             "    x();",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testTransitiveGuardMethodAccess() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -335,16 +325,15 @@ public class GuardedByCheckerTest {
             "  @GuardedBy(\"this\") void m() {",
             "    x();",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Ignore // TODO(user): support read/write lock copies
   @Test
   public void testReadWriteLockCopy() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety.Test",
             "package threadsafety.Test;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -371,15 +360,14 @@ public class GuardedByCheckerTest {
             "      writeLock.unlock();",
             "    }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testReadWriteLock() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -403,16 +391,15 @@ public class GuardedByCheckerTest {
             "      lock.writeLock().unlock();",
             "    }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   // Test that ReadWriteLocks are currently ignored.
   @Test
   public void testReadWriteLockIsIgnored() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety.Test;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -426,15 +413,14 @@ public class GuardedByCheckerTest {
             "    } finally {",
             "    }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testInnerClass_enclosingClassLock() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -452,16 +438,15 @@ public class GuardedByCheckerTest {
             "      b = true;",
             "    }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   // notice lexically enclosing owner, use NamedThis!
   @Test
   public void testInnerClass_thisLock() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -474,15 +459,14 @@ public class GuardedByCheckerTest {
             "      b = true;",
             "    }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testAnonymousClass() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -498,15 +482,14 @@ public class GuardedByCheckerTest {
             "      }",
             "    };",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testInheritedLock() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -520,15 +503,14 @@ public class GuardedByCheckerTest {
             "      b = true;",
             "    };",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testEnclosingSuperAccess() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -545,15 +527,14 @@ public class GuardedByCheckerTest {
             "      }",
             "    };",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testSuperAccess_this() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -565,15 +546,14 @@ public class GuardedByCheckerTest {
             "  synchronized void m() {",
             "    flag = true;",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testSuperAccess_lock() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -590,15 +570,14 @@ public class GuardedByCheckerTest {
             "      flag = true;",
             "    }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testSuperAccess_staticLock() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -615,15 +594,14 @@ public class GuardedByCheckerTest {
             "      flag = true;",
             "    }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testOtherClass_bad_staticLock() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -646,15 +624,14 @@ public class GuardedByCheckerTest {
             "      B.flag = true;",
             "    }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testOtherClass_bad_staticLock_alsoSub() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -677,15 +654,14 @@ public class GuardedByCheckerTest {
             "      B.flag = true;",
             "    }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testOtherClass_staticLock() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -699,15 +675,14 @@ public class GuardedByCheckerTest {
             "      A.flag = true;",
             "    }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void instanceAccess_instanceGuard() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -728,15 +703,14 @@ public class GuardedByCheckerTest {
             "    this.x++;",
             "  }",
             "}",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void instanceAccess_lexicalGuard() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -756,15 +730,14 @@ public class GuardedByCheckerTest {
             "      }",
             "    }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void lexicalAccess_instanceGuard() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -784,15 +757,14 @@ public class GuardedByCheckerTest {
             "      }",
             "    }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void lexicalAccess_lexicalGuard() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -814,15 +786,14 @@ public class GuardedByCheckerTest {
             "      }",
             "    }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void instanceAccess_thisGuard() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -841,15 +812,14 @@ public class GuardedByCheckerTest {
             "      this.x++;",
             "    }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void instanceAccess_namedThisGuard() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -868,15 +838,14 @@ public class GuardedByCheckerTest {
             "      }",
             "    }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void lexicalAccess_thisGuard() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -895,15 +864,14 @@ public class GuardedByCheckerTest {
             "      }",
             "    }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void lexicalAccess_namedThisGuard() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -924,9 +892,8 @@ public class GuardedByCheckerTest {
             "      }",
             "    }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   // Test that the analysis doesn't crash on lock expressions it doesn't recognize.
@@ -934,8 +901,8 @@ public class GuardedByCheckerTest {
   // element.
   @Test
   public void complexLockExpression() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "class ComplexLockExpression {",
@@ -946,16 +913,15 @@ public class GuardedByCheckerTest {
             "      ys[i]++;",
             "    }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   // TODO(user): make the diagnostic comprehensible...
   @Test
   public void wrongInnerClassInstance() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -972,9 +938,8 @@ public class GuardedByCheckerTest {
             "      }",
             "    }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   // (This currently passes because the analysis ignores try-with-resources, not because it
@@ -982,8 +947,8 @@ public class GuardedByCheckerTest {
   @Ignore // TODO(user): support try-with-resources
   @Test
   public void tryWithResources() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -1008,17 +973,16 @@ public class GuardedByCheckerTest {
             "      x++;",
             "    }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   // Test that the contents of try-with-resources are ignored (for now).
   // TODO(user): support try-with-resources
   @Test
   public void tryWithResourcesAreUnsupported() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -1032,15 +996,14 @@ public class GuardedByCheckerTest {
             "      x++;  // should be an error!",
             "    }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testLexicalScopingExampleOne() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -1062,16 +1025,15 @@ public class GuardedByCheckerTest {
             "  private synchronized void runHandler(Handler handler) {",
             "    handler.apply();",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   // TODO(user): allowing @GuardedBy on overridden methods is unsound.
   @Test
   public void testLexicalScopingExampleTwo() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -1093,15 +1055,14 @@ public class GuardedByCheckerTest {
             "    // This isn't safe...",
             "    handler.apply();",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testAliasing() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -1117,13 +1078,14 @@ public class GuardedByCheckerTest {
             "    }",
             "    copyOfNames.add(name);  // should be an error: this access is not thread-safe!",
             "  }",
-            "}"));
+            "}")
+        .doTest();
   }
 
   @Test
   public void testMonitorGuard() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -1139,13 +1101,14 @@ public class GuardedByCheckerTest {
             "      return true;",
             "    }",
             "  };",
-            "}"));
+            "}")
+        .doTest();
   }
 
   @Test
   public void testSemaphore() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -1168,15 +1131,14 @@ public class GuardedByCheckerTest {
             "    // access should be guarded by 'this.semaphore'",
             "    x++;",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void synchronizedOnLockMethod_negative() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -1191,15 +1153,14 @@ public class GuardedByCheckerTest {
             "      x++;",
             "    }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void suppressLocalVariable() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -1212,9 +1173,8 @@ public class GuardedByCheckerTest {
             "    @SuppressWarnings(\"GuardedBy\")",
             "    int z = x++;",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test

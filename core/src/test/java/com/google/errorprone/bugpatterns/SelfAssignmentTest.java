@@ -33,25 +33,22 @@ public class SelfAssignmentTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new SelfAssignment());
+    compilationHelper = CompilationTestHelper.newInstance(new SelfAssignment(), getClass());
   }
 
   @Test
   public void testPositiveCases1() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "SelfAssignmentPositiveCases1.java"));
+    compilationHelper.addSourceFile("SelfAssignmentPositiveCases1.java").doTest();
   }
 
   @Test
   public void testPositiveCases2() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "SelfAssignmentPositiveCases2.java"));
+    compilationHelper.addSourceFile("SelfAssignmentPositiveCases2.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "SelfAssignmentNegativeCases.java"));
+    compilationHelper.addSourceFile("SelfAssignmentNegativeCases.java").doTest();
   }
 
 }

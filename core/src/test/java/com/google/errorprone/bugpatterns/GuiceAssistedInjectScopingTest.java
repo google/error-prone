@@ -33,19 +33,18 @@ public class GuiceAssistedInjectScopingTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new GuiceAssistedInjectScoping());
+    compilationHelper =
+        CompilationTestHelper.newInstance(new GuiceAssistedInjectScoping(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "GuiceAssistedInjectScopingPositiveCases.java"));
+    compilationHelper.addSourceFile("GuiceAssistedInjectScopingPositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "GuiceAssistedInjectScopingNegativeCases.java"));
+    compilationHelper.addSourceFile("GuiceAssistedInjectScopingNegativeCases.java").doTest();
   }
 
 }

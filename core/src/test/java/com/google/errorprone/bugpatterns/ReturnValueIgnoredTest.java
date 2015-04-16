@@ -33,19 +33,17 @@ public class ReturnValueIgnoredTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new ReturnValueIgnored());
+    compilationHelper = CompilationTestHelper.newInstance(new ReturnValueIgnored(), getClass());
   }
 
   @Test
   public void testPositiveCases() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "ReturnValueIgnoredPositiveCases.java"));
+    compilationHelper.addSourceFile("ReturnValueIgnoredPositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "ReturnValueIgnoredNegativeCases.java"));
+    compilationHelper.addSourceFile("ReturnValueIgnoredNegativeCases.java").doTest();
   }
 
 }

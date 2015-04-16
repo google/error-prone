@@ -33,30 +33,26 @@ public class FinallyTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new Finally());
+    compilationHelper = CompilationTestHelper.newInstance(new Finally(), getClass());
   }
 
   @Test
   public void testPositiveCase1() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "FinallyPositiveCase1.java"));
+    compilationHelper.addSourceFile("FinallyPositiveCase1.java").doTest();
   }
 
   @Test
   public void testPositiveCase2() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "FinallyPositiveCase2.java"));
+    compilationHelper.addSourceFile("FinallyPositiveCase2.java").doTest();
   }
 
   @Test
   public void testNegativeCase1() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "FinallyNegativeCase1.java"));
+    compilationHelper.addSourceFile("FinallyNegativeCase1.java").doTest();
   }
 
   @Test
   public void testNegativeCase2() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "FinallyNegativeCase2.java"));
+    compilationHelper.addSourceFile("FinallyNegativeCase2.java").doTest();
   }
 }

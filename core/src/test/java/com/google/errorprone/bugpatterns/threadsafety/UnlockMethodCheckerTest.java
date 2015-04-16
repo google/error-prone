@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.threadsafety;
 
 import com.google.errorprone.CompilationTestHelper;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -25,14 +26,17 @@ import org.junit.runners.JUnit4;
 /** {@link UnlockMethodChecker}Test */
 @RunWith(JUnit4.class)
 public class UnlockMethodCheckerTest {
+  private CompilationTestHelper compilationHelper;
 
-  private final CompilationTestHelper compilationHelper =
-      CompilationTestHelper.newInstance(new UnlockMethodChecker());
+  @Before
+  public void setUp() {
+    compilationHelper = CompilationTestHelper.newInstance(new UnlockMethodChecker(), getClass());
+  }
 
   @Test
   public void testUnlocked() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -45,15 +49,14 @@ public class UnlockMethodCheckerTest {
             "    lock1.unlock();",
             "    lock2.unlock();",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
-  
+
   @Test
   public void testUnlockedAndLocked() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -69,15 +72,14 @@ public class UnlockMethodCheckerTest {
             "    lock1.lock();",
             "    lock2.lock();",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
-  
+
   @Test
   public void testUnlockedRWLock() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import com.google.errorprone.annotations.concurrent.UnlockMethod;",
@@ -92,15 +94,14 @@ public class UnlockMethodCheckerTest {
             "  void n() {",
             "    lock.writeLock().unlock();",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
-  
+
   @Test
   public void testUnlockedMonitor() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import com.google.errorprone.annotations.concurrent.UnlockMethod;",
@@ -111,15 +112,14 @@ public class UnlockMethodCheckerTest {
             "  void m() {",
             "    monitor.leave();",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
-  
+
   @Test
   public void testNotUnlocked() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -130,15 +130,14 @@ public class UnlockMethodCheckerTest {
             "  Lock lock2;",
             "  // BUG: Diagnostic contains: not released: this.lock1, this.lock2",
             "  @UnlockMethod({\"lock1\", \"lock2\"}) void m() {}",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
-  
+
   @Test
   public void testNotUnlockedRWLock() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import com.google.errorprone.annotations.concurrent.UnlockMethod;",
@@ -147,15 +146,14 @@ public class UnlockMethodCheckerTest {
             "  ReentrantReadWriteLock lock;",
             "  // BUG: Diagnostic contains: not released: this.lock",
             "  @UnlockMethod(\"lock\") void n() {}",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
-  
+
   @Test
   public void testNotUnlockedMonitor() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import com.google.errorprone.annotations.concurrent.UnlockMethod;",
@@ -164,23 +162,21 @@ public class UnlockMethodCheckerTest {
             "  Monitor monitor;",
             "  // BUG: Diagnostic contains: not released: this.monitor",
             "  @UnlockMethod(\"monitor\") void m() {}",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
-  
+
   @Test
   public void testBadLockExpression() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import com.google.errorprone.annotations.concurrent.UnlockMethod;",
             "class Test {",
             "  // BUG: Diagnostic contains: Could not resolve lock expression.",
             "  @UnlockMethod(\"mu\") void m() {}",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 }

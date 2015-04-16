@@ -16,11 +16,11 @@
 
 package com.google.errorprone;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static com.google.common.truth.Truth.assertWithMessage;
 import static org.junit.Assert.fail;
 
+import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.scanner.ScannerSupplier;
@@ -34,8 +34,8 @@ import java.io.IOError;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import javax.tools.Diagnostic;
@@ -44,26 +44,23 @@ import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
 
 /**
- * Utility class for tests that need to build using error-prone.
- * @author eaftan@google.com (Eddie Aftandilian)
- *
- * TODO(user): Refactor default argument construction to make setup cleaner.
+ * Helps test Error Prone bug checkers and compilations.
  */
 public class CompilationTestHelper {
-
-  public enum BugComments {
-    IGNORED, CHECK
-  }
-
   private static final List<String> DEFAULT_ARGS = ImmutableList.of(
       "-encoding", "UTF-8");
 
   private final DiagnosticTestHelper diagnosticHelper;
   private final ErrorProneCompiler compiler;
   private final ByteArrayOutputStream outputStream;
-  private final ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
+  private final ErrorProneInMemoryFileManager fileManager;
+  private List<JavaFileObject> sources = new ArrayList<>();
+  private List<String> args = ImmutableList.of();
+  private boolean expectNoDiagnostics = false;
+  private Optional<Result> expectedResult = Optional.absent();
 
-  private CompilationTestHelper(ScannerSupplier scannerSupplier, String checkName) {
+  private CompilationTestHelper(ScannerSupplier scannerSupplier, String checkName, Class<?> clazz) {
+    this.fileManager = new ErrorProneInMemoryFileManager(clazz);
     this.diagnosticHelper = new DiagnosticTestHelper(checkName);
     this.outputStream = new ByteArrayOutputStream();
     this.compiler = new ErrorProneCompiler.Builder()
@@ -73,22 +70,26 @@ public class CompilationTestHelper {
         .build();
   }
 
-  public static CompilationTestHelper newInstance(ScannerSupplier scannerSupplier) {
-    return new CompilationTestHelper(scannerSupplier, null);
-  }
-
-  public static CompilationTestHelper newInstance(ScannerSupplier scannerSupplier,
-      String checkName) {
-    return new CompilationTestHelper(scannerSupplier, checkName);
+  /**
+   * Returns a new {@link CompilationTestHelper}.
+   *
+   * @param scannerSupplier the {@link ScannerSupplier} to test
+   * @param clazz the class to use to locate file resources
+   */
+  public static CompilationTestHelper newInstance(ScannerSupplier scannerSupplier, Class<?> clazz) {
+    return new CompilationTestHelper(scannerSupplier, null, clazz);
   }
 
   /**
-   * Test an error-prone {@link BugChecker}.
+   * Returns a new {@link CompilationTestHelper}.
+   *
+   * @param checker the {@link BugChecker} to test
+   * @param clazz the class to use to locate file resources
    */
-  public static CompilationTestHelper newInstance(BugChecker checker) {
+  public static CompilationTestHelper newInstance(BugChecker checker, Class<?> clazz) {
     ScannerSupplier scannerSupplier = ScannerSupplier.fromBugCheckers(checker);
     String checkName = checker.canonicalName();
-    return new CompilationTestHelper(scannerSupplier, checkName);
+    return new CompilationTestHelper(scannerSupplier, checkName, clazz);
   }
 
   /**
@@ -117,40 +118,80 @@ public class CompilationTestHelper {
   }
 
   /**
-   * Returns the file manager associated with the test compilation.
+   * Adds a source file to the test compilation, from the string content of the file.
+   *
+   * <p>The diagnostics expected from compiling the file are inferred from the file contents. For
+   * each line of the test file that contains the bug marker pattern "// BUG: Diagnostic contains:
+   * foo", we expect to see a diagnostic on that line containing "foo". For each line of the test
+   * file that does <i>not</i> contain the bug marker pattern, we expect no diagnostic to be
+   * generated.
+   *
+   * @param path a path for the source file
+   * @param lines the content of the source file
    */
-  public ErrorProneInMemoryFileManager fileManager() {
-    return fileManager;
+  // TODO(user): We could eliminate this path parameter and just infer the path from the
+  // package and class name
+  public CompilationTestHelper addSourceLines(String path, String... lines) {
+    this.sources.add(fileManager.forSourceLines(path, lines));
+    return this;
   }
 
   /**
-   * Asserts that the compilation succeeds and no diagnostics were produced.
+   * Adds a source file to the test compilation, from an existing resource file.
    *
-   * @param sources The list of files to compile
-   * @param args Extra command-line arguments to pass to the compiler
+   * <p>See {@link #addSourceLines} for how expected diagnostics should be specified.
+   *
+   * @param path the path to the source file
    */
-  public void assertCompileSucceeds(List<JavaFileObject> sources, List<String> args) {
-    assertCompileSucceeds(sources, args, BugComments.CHECK);
+  public CompilationTestHelper addSourceFile(String path) {
+    this.sources.add(fileManager.forResource(path));
+    return this;
   }
 
   /**
-   * Asserts that the compilation succeeds and no diagnostics were produced.
-   *
-   * @param sources The list of files to compile
-   * @param args Extra command-line arguments to pass to the compiler
-   * @param bugComments Control BUG comment checking
+   * Sets custom command-line arguments for the compilation. These will be appended to the default
+   * compilation arguments.
    */
-  public void assertCompileSucceeds(
-      List<JavaFileObject> sources, List<String> args, BugComments bugComments) {
+  public CompilationTestHelper setArgs(List<String> args) {
+    this.args = args;
+    return this;
+  }
+
+  /**
+   * Tells the compilation helper to expect that no diagnostics will be generated, even if the
+   * source file contains bug markers. Useful for testing that a check is actually disabled when the
+   * proper command-line argument is passed.
+   */
+  public CompilationTestHelper expectNoDiagnostics() {
+    this.expectNoDiagnostics = true;
+    return this;
+  }
+
+  /**
+   * Tells the compilation helper to expect a specific result from the compilation, e.g. success
+   * or failure.
+   */
+  public CompilationTestHelper expectResult(Result result) {
+    expectedResult = Optional.of(result);
+    return this;
+  }
+
+  /**
+   * Performs a compilation and checks that the diagnostics and result match the expectations.
+   */
+  // TODO(user): any way to ensure that this is actually called?
+  public void doTest() {
+    Preconditions.checkState(!sources.isEmpty(), "No source files to compile");
     List<String> allArgs = buildArguments(args);
-    Result exitCode = compile(sources, allArgs.toArray(new String[0]));
-    List<Diagnostic<? extends JavaFileObject>> diagnostics = diagnosticHelper.getDiagnostics();
-    assertThat("Compilation failed: " + diagnostics.toString(), exitCode, is(Result.OK));
-    assertThat("Compilation succeeded but gave warnings: " + diagnostics.toString(),
-        diagnostics.size(), is(0));
-    if (bugComments == BugComments.CHECK) {
-      // we don't expect any diagnostics, but check anyways in case a negative test mistakenly
-      // included BUG comments
+    Result result = compile(sources, allArgs.toArray(new String[allArgs.size()]));
+    if (expectNoDiagnostics) {
+      List<Diagnostic<? extends JavaFileObject>> diagnostics = diagnosticHelper.getDiagnostics();
+      assertWithMessage(String.format(
+              "Expected no diagnostics produced, but found %d: %s",
+              diagnostics.size(), diagnostics))
+          .that(diagnostics.size())
+          .isEqualTo(0);
+    } else {
       for (JavaFileObject source : sources) {
         try {
           diagnosticHelper.assertHasDiagnosticOnAllMatchingLines(source);
@@ -159,101 +200,16 @@ public class CompilationTestHelper {
         }
       }
     }
-  }
 
-  /**
-   * Asserts that the compilation succeeds and no diagnostics were produced.
-   *
-   * @param sources The list of files to compile
-   */
-  public void assertCompileSucceeds(List<JavaFileObject> sources) {
-    assertCompileSucceeds(sources, ImmutableList.<String>of());
-  }
-
-  /**
-   * Asserts that the compilation succeeds and no diagnostics were produced.
-   *
-   * @param sources The list of files to compile
-   * @param bugComments Control BUG comment checking
-   */
-  public void assertCompileSucceeds(List<JavaFileObject> sources, BugComments bugComments) {
-    assertCompileSucceeds(sources, ImmutableList.<String>of(), bugComments);
-  }
-
-  /**
-   * Asserts that the compilation succeeds and no diagnostics were produced. Convenience method
-   * for the common case of one source file and no extra args.
-   */
-  public void assertCompileSucceeds(JavaFileObject source) {
-    assertCompileSucceeds(ImmutableList.of(source));
-  }
-
-  /**
-   * Assert that the compile succeeds, and that for each line of the test file that contains
-   * the pattern "// BUG: Diagnostic contains: foo", the diagnostic at that line contains "foo".
-   */
-  public void assertCompileSucceedsWithMessages(List<JavaFileObject> sources) throws IOException {
-    assertCompileSucceedsIgnoringWarnings(sources);
-    for (JavaFileObject source : sources) {
-      diagnosticHelper.assertHasDiagnosticOnAllMatchingLines(source);
+    if (expectedResult.isPresent()) {
+      assertWithMessage(String.format(
+              "Expected compilation result %s, but was %s", expectedResult.get(), result))
+          .that(result)
+          .isEqualTo(expectedResult.get());
     }
   }
 
-  /**
-   * Asserts that the compile succeeds, and that for each line of the test file that contains
-   * the pattern "// BUG: Diagnostic contains: foo", the diagnostic at that line contains "foo".
-   * Convenience method for the common case of one source file and no extra args.
-   */
-  public void assertCompileSucceedsWithMessages(JavaFileObject source) throws IOException {
-    assertCompileSucceedsWithMessages(ImmutableList.of(source));
-  }
-
-  /**
-   * Asserts that the compilation succeeds regardless of whether any diagnostics were produced.
-   */
-  private void assertCompileSucceedsIgnoringWarnings(List<JavaFileObject> sources) {
-    List<String> allArgs = buildArguments(Collections.<String>emptyList());
-    Result exitCode = compile(sources, allArgs.toArray(new String[0]));
-    assertThat(diagnosticHelper.getDiagnostics().toString(), exitCode, is(Result.OK));
-  }
-
-  /**
-   * Asserts that the compile fails, and that for each line of the test file that contains
-   * the pattern "// BUG: Diagnostic contains: foo", the diagnostic at that line contains "foo".
-   *
-   * @param sources The list of files to compile
-   */
-  public void assertCompileFailsWithMessages(List<JavaFileObject> sources) throws IOException {
-    assertCompileFailsWithMessages(sources, Collections.<String>emptyList());
-  }
-
-  /**
-   * Asserts that the compile fails, and that for each line of the test file that contains
-   * the pattern "// BUG: Diagnostic contains: foo", the diagnostic at that line contains "foo".
-   *
-   * @param sources The list of files to compile
-   * @param args The list of args to pass to the compilation
-   */
-  public void assertCompileFailsWithMessages(List<JavaFileObject> sources, List<String> args)
-      throws IOException {
-    List<String> allArgs = buildArguments(args);
-    Result exitCode = compile(sources, allArgs.toArray(new String[0]));
-    assertThat("Compiler returned an unexpected error code", exitCode, is(Result.ERROR));
-    for (JavaFileObject source : sources) {
-      diagnosticHelper.assertHasDiagnosticOnAllMatchingLines(source);
-    }
-  }
-
-  /**
-   * Asserts that the compile fails, and that for each line of the test file that contains
-   * the pattern "// BUG: Diagnostic contains: foo", the diagnostic at that line contains "foo".
-   * Convenience method for the common case of one source file and no extra args.
-   */
-  public void assertCompileFailsWithMessages(JavaFileObject source) throws IOException {
-    assertCompileFailsWithMessages(ImmutableList.of(source));
-  }
-
-  Result compile(Iterable<JavaFileObject> sources, String[] args) {
+  private Result compile(Iterable<JavaFileObject> sources, String[] args) {
     checkWellFormed(sources, args);
     Context context = new Context();
     return compiler.run(args, context, fileManager, ImmutableList.copyOf(sources), null);
@@ -276,7 +232,10 @@ public class CompilationTestHelper {
         null,
         sources);
     boolean result = task.call();
-    assertTrue(String.format("Test program failed to compile with non error-prone error: %s",
-        outputStream.toString()), result);
+    assertWithMessage(String.format(
+            "Test program failed to compile with non Error Prone error: %s",
+            outputStream.toString()))
+        .that(result)
+        .isTrue();
   }
 }

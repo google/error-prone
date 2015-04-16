@@ -33,24 +33,22 @@ public class JUnit4TearDownNotRunTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new JUnit4TearDownNotRun());
+    compilationHelper = CompilationTestHelper.newInstance(new JUnit4TearDownNotRun(), getClass());
   }
 
   @Test
   public void testPositiveCases() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "JUnit4TearDownNotRunPositiveCases.java"));
+    compilationHelper.addSourceFile("JUnit4TearDownNotRunPositiveCases.java").doTest();
   }
 
   @Test
   public void testPositiveCase_customAnnotation() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "JUnit4TearDownNotRunPositiveCaseCustomAfter.java"));
+    compilationHelper.addSourceFile("JUnit4TearDownNotRunPositiveCaseCustomAfter.java")
+        .doTest();
   }
 
   @Test
   public void testNegativeCases() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "JUnit4TearDownNotRunNegativeCases.java"));
+    compilationHelper.addSourceFile("JUnit4TearDownNotRunNegativeCases.java").doTest();
   }
 }

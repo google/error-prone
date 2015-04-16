@@ -36,13 +36,12 @@ public class ArrayHashCodeTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new ArrayHashCode());
+    compilationHelper = CompilationTestHelper.newInstance(new ArrayHashCode(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "ArrayHashCodePositiveCases.java"));
+    compilationHelper.addSourceFile("ArrayHashCodePositiveCases.java").doTest();
   }
 
   /**
@@ -52,14 +51,12 @@ public class ArrayHashCodeTest {
   public void testJava7PositiveCase() throws Exception {
     String[] javaVersion = JAVA_VERSION.value().split("\\.");
     assumeTrue(Integer.parseInt(javaVersion[1]) >= 7);
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "ArrayHashCodePositiveCases2.java"));
+    compilationHelper.addSourceFile("ArrayHashCodePositiveCases2.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "ArrayHashCodeNegativeCases.java"));
+    compilationHelper.addSourceFile("ArrayHashCodeNegativeCases.java").doTest();
   }
 
   /**
@@ -67,7 +64,6 @@ public class ArrayHashCodeTest {
    */
   @Test
   public void testJava7NegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "ArrayHashCodeNegativeCases2.java"));
+    compilationHelper.addSourceFile("ArrayHashCodeNegativeCases2.java").doTest();
   }
 }

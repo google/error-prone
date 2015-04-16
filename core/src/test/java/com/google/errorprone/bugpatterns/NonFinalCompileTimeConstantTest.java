@@ -31,53 +31,61 @@ public class NonFinalCompileTimeConstantTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new NonFinalCompileTimeConstant());
+    compilationHelper =
+        CompilationTestHelper.newInstance(new NonFinalCompileTimeConstant(), getClass());
   }
 
   @Test
   public void positive() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines("Test.java",
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
             "import com.google.errorprone.annotations.CompileTimeConstant;",
             "public class Test {",
             "  // BUG: Diagnostic contains: (@CompileTimeConstant final Object x)",
             "  public void f(@CompileTimeConstant Object x) {}",
-            "}"));
+            "}")
+        .doTest();
   }
 
   @Test
   public void positiveTwoParams() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines("Test.java",
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
             "import com.google.errorprone.annotations.CompileTimeConstant;",
             "public class Test {",
             "  // BUG: Diagnostic contains:"
-            + " (@CompileTimeConstant final Object x, @CompileTimeConstant final Object y)",
+                + " (@CompileTimeConstant final Object x, @CompileTimeConstant final Object y)",
             "  public void f(@CompileTimeConstant Object x, @CompileTimeConstant Object y) {}",
-            "}"));
+            "}")
+        .doTest();
   }
 
   @Test
   public void positiveOneOfTwoParams() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines("Test.java",
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
             "import com.google.errorprone.annotations.CompileTimeConstant;",
             "public class Test {",
             "  public void f(",
             "      // BUG: Diagnostic contains: , @CompileTimeConstant final Object y)",
             "      @CompileTimeConstant final Object x, @CompileTimeConstant Object y) {",
             "  }",
-            "}"));
+            "}")
+        .doTest();
   }
 
   @Test
   public void negative() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines("Test.java",
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
             "import com.google.errorprone.annotations.CompileTimeConstant;",
             "public class Test {",
             "  public void f(final @CompileTimeConstant Object x) {}",
-            "}"));
+            "}")
+        .doTest();
   }
 }
-

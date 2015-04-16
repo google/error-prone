@@ -33,18 +33,16 @@ public class MalformedFormatStringTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new MalformedFormatString());
+    compilationHelper = CompilationTestHelper.newInstance(new MalformedFormatString(), getClass());
   }
 
   @Test
   public void testPositiveCases() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "MalformedFormatStringPositiveCases.java"));
+    compilationHelper.addSourceFile("MalformedFormatStringPositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCases() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "MalformedFormatStringNegativeCases.java"));
+    compilationHelper.addSourceFile("MalformedFormatStringNegativeCases.java").doTest();
   }
 }

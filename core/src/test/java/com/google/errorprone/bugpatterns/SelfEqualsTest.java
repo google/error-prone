@@ -19,50 +19,37 @@ package com.google.errorprone.bugpatterns;
 import static org.junit.Assert.fail;
 
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.CompilationTestHelper.BugComments;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.util.Arrays;
-
-import javax.tools.JavaFileObject;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 @RunWith(JUnit4.class)
 public class SelfEqualsTest {
+  CompilationTestHelper compilationHelper;
 
-  CompilationTestHelper compilationHelper = CompilationTestHelper.newInstance(
-      new SelfEquals(true, true));
-  final JavaFileObject positiveCase1;
-  final JavaFileObject positiveCase2;
-  final JavaFileObject negativeCases;
-
-  public SelfEqualsTest() throws Exception {
-    positiveCase1 =
-        compilationHelper.fileManager().source(getClass(), "SelfEqualsPositiveCase1.java");
-    positiveCase2 =
-        compilationHelper.fileManager().source(getClass(), "SelfEqualsPositiveCase2.java");
-    negativeCases =
-        compilationHelper.fileManager().source(getClass(), "SelfEqualsNegativeCases.java");
+  @Before
+  public void setUp() {
+    compilationHelper = CompilationTestHelper.newInstance(new SelfEquals(true, true), getClass());
   }
 
   @Test
   public void testPositiveCase1() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(positiveCase1);
+    compilationHelper.addSourceFile("SelfEqualsPositiveCase1.java").doTest();
   }
 
   @Test
   public void testPositiveCase2() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(positiveCase2);
+    compilationHelper.addSourceFile("SelfEqualsPositiveCase2.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(negativeCases);
+    compilationHelper.addSourceFile("SelfEqualsNegativeCases.java").doTest();
   }
 
   @Test
@@ -79,24 +66,28 @@ public class SelfEqualsTest {
 
     // Both checks on.
     checker = new SelfEquals(true, true);
-    compilationHelper = CompilationTestHelper.newInstance(checker);
-    compilationHelper.assertCompileFailsWithMessages(positiveCase1);
-    compilationHelper = CompilationTestHelper.newInstance(checker);
-    compilationHelper.assertCompileFailsWithMessages(positiveCase2);
+    compilationHelper = CompilationTestHelper.newInstance(checker, getClass());
+    compilationHelper.addSourceFile("SelfEqualsPositiveCase1.java").doTest();
+    compilationHelper = CompilationTestHelper.newInstance(checker, getClass());
+    compilationHelper.addSourceFile("SelfEqualsPositiveCase2.java").doTest();
 
     // Guava on, Equals off.
     checker = new SelfEquals(true, false);
-    compilationHelper = CompilationTestHelper.newInstance(checker);
-    compilationHelper.assertCompileFailsWithMessages(positiveCase1);
-    compilationHelper = CompilationTestHelper.newInstance(checker);
-    compilationHelper.assertCompileSucceeds(Arrays.asList(positiveCase2), BugComments.IGNORED);
+    compilationHelper = CompilationTestHelper.newInstance(checker, getClass());
+    compilationHelper.addSourceFile("SelfEqualsPositiveCase1.java").doTest();
+    compilationHelper = CompilationTestHelper.newInstance(checker, getClass());
+    compilationHelper.addSourceFile("SelfEqualsPositiveCase2.java")
+        .expectNoDiagnostics()
+        .doTest();
 
     // Equals on, Guava off.
     checker = new SelfEquals(false, true);
-    compilationHelper = CompilationTestHelper.newInstance(checker);
-    compilationHelper.assertCompileSucceeds(Arrays.asList(positiveCase1), BugComments.IGNORED);
-    compilationHelper = CompilationTestHelper.newInstance(checker);
-    compilationHelper.assertCompileFailsWithMessages(positiveCase2);
+    compilationHelper = CompilationTestHelper.newInstance(checker, getClass());
+    compilationHelper.addSourceFile("SelfEqualsPositiveCase1.java")
+        .expectNoDiagnostics()
+        .doTest();
+    compilationHelper = CompilationTestHelper.newInstance(checker, getClass());
+    compilationHelper.addSourceFile("SelfEqualsPositiveCase2.java").doTest();
   }
 
 }

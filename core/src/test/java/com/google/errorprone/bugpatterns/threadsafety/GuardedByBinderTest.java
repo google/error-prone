@@ -34,7 +34,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -443,8 +442,7 @@ public class GuardedByBinderTest {
         );
   }
 
-  private void bindFail(String className, String exprString, JavaFileObject fileObject)
-      throws IOException {
+  private void bindFail(String className, String exprString, JavaFileObject fileObject) {
     try {
       bind(className, exprString, fileObject);
       fail("Expected binding to fail.");
@@ -452,8 +450,7 @@ public class GuardedByBinderTest {
     }
   }
 
-  private String bind(String className, String exprString, JavaFileObject fileObject)
-      throws IOException {
+  private String bind(String className, String exprString, JavaFileObject fileObject) {
     JavaCompiler javaCompiler = JavacTool.create();
     JavacTaskImpl task = (JavacTaskImpl) javaCompiler.getTask(new PrintWriter(System.err, true),
         fileManager, null, Collections.<String>emptyList(), null, Arrays.asList(fileObject));

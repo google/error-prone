@@ -34,18 +34,21 @@ public class InjectOverlappingQualifierAndScopeAnnotationTest {
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(new InjectOverlappingQualifierAndScopeAnnotation());
+        CompilationTestHelper.newInstance(
+            new InjectOverlappingQualifierAndScopeAnnotation(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "InjectOverlappingQualifierAndScopeAnnotationPositiveCases.java"));
+    compilationHelper
+        .addSourceFile("InjectOverlappingQualifierAndScopeAnnotationPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "InjectOverlappingQualifierAndScopeAnnotationNegativeCases.java"));
+    compilationHelper
+        .addSourceFile("InjectOverlappingQualifierAndScopeAnnotationNegativeCases.java")
+        .doTest();
   }
 }

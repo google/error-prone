@@ -33,18 +33,19 @@ public class ArrayToStringCompoundAssignmentTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new ArrayToStringCompoundAssignment());
+    compilationHelper =
+        CompilationTestHelper.newInstance(new ArrayToStringCompoundAssignment(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "ArrayToStringCompoundAssignmentPositiveCases.java"));
+    compilationHelper.addSourceFile("ArrayToStringCompoundAssignmentPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "ArrayToStringCompoundAssignmentNegativeCases.java"));
+    compilationHelper.addSourceFile("ArrayToStringCompoundAssignmentNegativeCases.java")
+        .doTest();
   }
 }

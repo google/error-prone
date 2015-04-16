@@ -56,7 +56,7 @@ public class SuppressWarningsTest {
   @Test
   public void testNegativeCase() throws Exception {
     List<JavaFileObject> sources =
-        compiler.fileManager().sources(getClass(), "SuppressWarningsNegativeCases.java");
+        compiler.fileManager().forResources(getClass(), "SuppressWarningsNegativeCases.java");
     assertThat(compiler.compile(sources), is(Result.OK));
   }
 }

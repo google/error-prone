@@ -36,51 +36,45 @@ public class JUnit4TestNotRunTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new JUnit4TestNotRun());
+    compilationHelper = CompilationTestHelper.newInstance(new JUnit4TestNotRun(), getClass());
   }
 
   @Test
   public void testPositiveCase1() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "JUnit4TestNotRunPositiveCase1.java"));
+    compilationHelper.addSourceFile("JUnit4TestNotRunPositiveCase1.java").doTest();
   }
 
   @Test
   public void testPositiveCase2() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "JUnit4TestNotRunPositiveCase2.java"));
+    compilationHelper.addSourceFile("JUnit4TestNotRunPositiveCase2.java").doTest();
   }
 
   @Test
   public void testNegativeCase1() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "JUnit4TestNotRunNegativeCase1.java"));
+    compilationHelper.addSourceFile("JUnit4TestNotRunNegativeCase1.java").doTest();
   }
 
   @Test
   public void testNegativeCase2() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "JUnit4TestNotRunNegativeCase2.java"));
+    compilationHelper.addSourceFile("JUnit4TestNotRunNegativeCase2.java").doTest();
   }
 
   @Test
   public void testNegativeCase3() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "JUnit4TestNotRunNegativeCase3.java"));
+    compilationHelper.addSourceFile("JUnit4TestNotRunNegativeCase3.java").doTest();
   }
 
   @Test
   public void testNegativeCase4() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "JUnit4TestNotRunNegativeCase4.java"));
+    compilationHelper.addSourceFile("JUnit4TestNotRunNegativeCase4.java").doTest();
   }
 
   @Test
   public void testNegativeCase5() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(),
-            "JUnit4TestNotRunBaseClass.java",
-            "JUnit4TestNotRunNegativeCase5.java"));
+    compilationHelper
+        .addSourceFile("JUnit4TestNotRunBaseClass.java")
+        .addSourceFile("JUnit4TestNotRunNegativeCase5.java")
+        .doTest();
   }
 
   @Test

@@ -18,6 +18,8 @@ package com.google.errorprone;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.jimfs.Configuration;
@@ -40,30 +42,52 @@ import javax.tools.JavaFileObject;
  * An in-memory file manager for testing that uses {@link JavacPathFileManager} and {@link Jimfs}.
  */
 public class ErrorProneInMemoryFileManager extends JavacPathFileManager {
-  
   private final FileSystem fileSystem;
-  
+  private final Optional<Class<?>> clazz;
+
+  /**
+   * Constructs an ErrorProneInMemoryFileManager instance.
+   *
+   * <p>Instances constructed with this constructor may not use the {@link #forResource(String)}
+   * method to create a JavaFileObject from a source file on disk.  If you wish to use that method,
+   * use the {@link #ErrorProneInMemoryFileManager(Class)} constructor instead.
+   */
   public ErrorProneInMemoryFileManager() {
+    this(Optional.<Class<?>>absent());
+  }
+
+  /**
+   * Constructs an ErrorProneInMemoryFileManager instance, given a class that can be used to lookup
+   * file resources, such as test inputs to compile.
+   *
+   * @param clazz the class to use to locate file resources
+   */
+  public ErrorProneInMemoryFileManager(Class<?> clazz) {
+    this(Optional.<Class<?>>of(clazz));
+  }
+
+  private ErrorProneInMemoryFileManager(Optional<Class<?>> clazz) {
     super(new Context(), false, UTF_8);
     this.fileSystem = Jimfs.newFileSystem(Configuration.unix());
+    this.clazz = clazz;
     setDefaultFileSystem(fileSystem);
   }
-  
+
   /**
-   * Loads resources of the current class into {@link JavaFileObject}s.
+   * Loads resources of the provided class into {@link JavaFileObject}s.
    */
-  public List<JavaFileObject> sources(Class<?> clazz, String... fileNames) {
+  public List<JavaFileObject> forResources(Class<?> clazz, String... fileNames) {
     ImmutableList.Builder<JavaFileObject> result = ImmutableList.builder();
     for (String fileName : fileNames) {
-      result.add(source(clazz, fileName));
+      result.add(forResource(clazz, fileName));
     }
     return result.build();
   }
-  
+
   /**
-   * Loads a resource of the current class into a {@link JavaFileObject}.
+   * Loads a resource of the provided class into a {@link JavaFileObject}.
    */
-  public JavaFileObject source(Class<?> clazz, String fileName) {
+  public JavaFileObject forResource(Class<?> clazz, String fileName) {
     Path path = fileSystem.getPath("/", clazz.getPackage().getName().replace('.', '/'), fileName);
     try {
       Files.createDirectories(path.getParent());
@@ -77,7 +101,16 @@ public class ErrorProneInMemoryFileManager extends JavacPathFileManager {
   }
 
   /**
-   * Creates a {@link JavaFileObject} with the given name and content. 
+   * Loads a resource of the class passed into the constructor into a {@link JavaFileObject}.
+   */
+  public JavaFileObject forResource(String fileName) {
+    Preconditions.checkState(
+        clazz.isPresent(), "clazz must be set if you want to add a source from a resource file");
+    return forResource(clazz.get(), fileName);
+  }
+
+  /**
+   * Creates a {@link JavaFileObject} with the given name and content.
    */
   public JavaFileObject forSourceLines(String fileName, String... lines) {
     if (!fileName.startsWith("/")) {

@@ -33,21 +33,20 @@ public class WrongParameterPackageTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new WrongParameterPackage());
+    compilationHelper = CompilationTestHelper.newInstance(new WrongParameterPackage(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(),
-            "WrongParameterPackageNegativeCases.java",
-            "WrongParameterPackagePositiveCases.java"));
+    compilationHelper
+        .addSourceFile("WrongParameterPackageNegativeCases.java") // used as a dependency
+        .addSourceFile("WrongParameterPackagePositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "WrongParameterPackageNegativeCases.java"));
+    compilationHelper.addSourceFile("WrongParameterPackageNegativeCases.java").doTest();
   }
 
 }

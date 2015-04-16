@@ -23,8 +23,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.util.Arrays;
-
 /** {@link UnnecessaryTypeArgument}Test */
 @RunWith(JUnit4.class)
 public class UnnecessaryTypeArgumentTest {
@@ -33,13 +31,15 @@ public class UnnecessaryTypeArgumentTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new UnnecessaryTypeArgument());
+    compilationHelper =
+        CompilationTestHelper.newInstance(new UnnecessaryTypeArgument(), getClass());
   }
 
   @Test
   public void positiveCall() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines("Test.java",
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
             "package foo.bar;",
             "class Test {",
             "  void f() {}",
@@ -48,13 +48,14 @@ public class UnnecessaryTypeArgumentTest {
             "    this.<String>f();",
             "  }",
             "}")
-    );
+        .doTest();
   }
 
   @Test
   public void positiveThis() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines("Test.java",
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
             "package foo.bar;",
             "class Test {",
             "  static class C {",
@@ -66,13 +67,14 @@ public class UnnecessaryTypeArgumentTest {
             "    }",
             "  }",
             "}")
-    );
+        .doTest();
   }
 
   @Test
   public void positiveSuper() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines("Test.java",
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
             "package foo.bar;",
             "class Test {",
             "  static class B {",
@@ -86,13 +88,14 @@ public class UnnecessaryTypeArgumentTest {
             "    }",
             "  }",
             "}")
-    );
+        .doTest();
   }
 
   @Test
   public void positiveInstantiation() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines("Test.java",
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
             "package foo.bar;",
             "class Test {",
             "  static class C {",
@@ -103,13 +106,14 @@ public class UnnecessaryTypeArgumentTest {
             "    new <String, Integer>C();",
             "  }",
             "}")
-    );
+        .doTest();
   }
 
   @Test
   public void negative() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines("Test.java",
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
             "package foo.bar;",
             "class Test {",
             "  <T> void f() {}",
@@ -117,34 +121,38 @@ public class UnnecessaryTypeArgumentTest {
             "    this.<String>f();",
             "  }",
             "}")
-    );
+        .doTest();
   }
-  
+
   @Test
   public void negativeGenericSuper() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        Arrays.asList(
-            compilationHelper.fileManager().forSourceLines("Super.java",
-                "public class Super {",
-                "  public <T> T f(T x) { return x; }",
-                "}"),
-            compilationHelper.fileManager().forSourceLines("Sub.java",
-                "@SuppressWarnings(\"unchecked\")",
-                "public class Sub extends Super {",
-                "  public Object f(Object x) { return x; }",
-                "}"),
-            compilationHelper.fileManager().forSourceLines("Test.java",
-                "public class Test {",
-                "  void m(Sub s) {",
-                "    s.<String>f(null);",
-                "  }",
-                "}")));
+    compilationHelper
+        .addSourceLines(
+            "Super.java",
+            "public class Super {",
+            "  public <T> T f(T x) { return x; }",
+            "}")
+        .addSourceLines(
+            "Sub.java",
+            "@SuppressWarnings(\"unchecked\")",
+            "public class Sub extends Super {",
+            "  public Object f(Object x) { return x; }",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "public class Test {",
+            "  void m(Sub s) {",
+            "    s.<String>f(null);",
+            "  }",
+            "}")
+        .doTest();
   }
-  
+
   @Test
   public void whitespaceFix() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines("Test.java",
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
             "package foo.bar;",
             "class Test {",
             "  void f() {}",
@@ -153,7 +161,6 @@ public class UnnecessaryTypeArgumentTest {
             "    this.<  /*  */ String  /*  */ >f();",
             "  }",
             "}")
-    );
+        .doTest();
   }
 }
-

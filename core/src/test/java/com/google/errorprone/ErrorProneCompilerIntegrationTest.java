@@ -100,7 +100,7 @@ public class ErrorProneCompilerIntegrationTest {
 
   @Test
   public void fileWithError() throws Exception {
-    Result exitCode = compiler.compile(compiler.fileManager().sources(getClass(),
+    Result exitCode = compiler.compile(compiler.fileManager().forResources(getClass(),
         "bugpatterns/BadShiftAmountPositiveCases.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
 
@@ -114,7 +114,7 @@ public class ErrorProneCompilerIntegrationTest {
   public void fileWithWarning() throws Exception {
     compilerBuilder.report(ScannerSupplier.fromBugCheckers(new NonAtomicVolatileUpdate()));
     compiler = compilerBuilder.build();
-    Result exitCode = compiler.compile(compiler.fileManager().sources(getClass(),
+    Result exitCode = compiler.compile(compiler.fileManager().forResources(getClass(),
         "bugpatterns/NonAtomicVolatileUpdatePositiveCases.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
 
@@ -127,14 +127,15 @@ public class ErrorProneCompilerIntegrationTest {
   @Test
   public void fileWithMultipleTopLevelClasses() throws Exception {
     Result exitCode = compiler.compile(
-        compiler.fileManager().sources(getClass(), "MultipleTopLevelClassesWithNoErrors.java"));
+        compiler.fileManager().forResources(getClass(),
+            "MultipleTopLevelClassesWithNoErrors.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
 
   @Test
   public void fileWithMultipleTopLevelClassesExtends() throws Exception {
     Result exitCode = compiler.compile(
-        compiler.fileManager().sources(getClass(), "MultipleTopLevelClassesWithNoErrors.java",
+        compiler.fileManager().forResources(getClass(), "MultipleTopLevelClassesWithNoErrors.java",
             "ExtendedMultipleTopLevelClassesWithNoErrors.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
@@ -147,7 +148,7 @@ public class ErrorProneCompilerIntegrationTest {
   public void fileWithMultipleTopLevelClassesExtendsWithError()
       throws Exception {
     Result exitCode = compiler.compile(
-        compiler.fileManager().sources(getClass(), "MultipleTopLevelClassesWithErrors.java",
+        compiler.fileManager().forResources(getClass(), "MultipleTopLevelClassesWithErrors.java",
             "ExtendedMultipleTopLevelClassesWithErrors.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher = hasItem(
@@ -171,7 +172,7 @@ public class ErrorProneCompilerIntegrationTest {
     compilerBuilder.report(ScannerSupplier.fromBugCheckers(new Throwing()));
     compiler = compilerBuilder.build();
     Result exitCode = compiler.compile(
-        compiler.fileManager().sources(getClass(), "MultipleTopLevelClassesWithErrors.java",
+        compiler.fileManager().forResources(getClass(), "MultipleTopLevelClassesWithErrors.java",
             "ExtendedMultipleTopLevelClassesWithErrors.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher = hasItem(
@@ -188,7 +189,7 @@ public class ErrorProneCompilerIntegrationTest {
   @Test
   public void annotationProcessingWorks() throws Exception {
     Result exitCode = compiler.compile(
-        compiler.fileManager().sources(getClass(), "UsesAnnotationProcessor.java"),
+        compiler.fileManager().forResources(getClass(), "UsesAnnotationProcessor.java"),
         List.of(new NullAnnotationProcessor()));
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
@@ -199,7 +200,7 @@ public class ErrorProneCompilerIntegrationTest {
   @Test
   public void reportReadyForAnalysisOnce() throws Exception {
     Result exitCode = compiler.compile(
-        compiler.fileManager().sources(getClass(),
+        compiler.fileManager().forResources(getClass(),
             "FlowConstants.java",
             "FlowSub.java",
             // This order is important: the superclass needs to occur after the subclass in the
@@ -216,7 +217,7 @@ public class ErrorProneCompilerIntegrationTest {
     compilerBuilder.report(ScannerSupplier.fromScanner(scanner));
     compiler = compilerBuilder.build();
     Result exitCode = compiler.compile(
-        compiler.fileManager().sources(getClass(), "UsesAnnotationProcessor.java"),
+        compiler.fileManager().forResources(getClass(), "UsesAnnotationProcessor.java"),
         Arrays.asList(new ScannerCheckingProcessor(scanner)));
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }

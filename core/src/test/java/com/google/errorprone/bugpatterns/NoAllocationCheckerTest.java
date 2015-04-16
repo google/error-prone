@@ -33,18 +33,16 @@ public class NoAllocationCheckerTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new NoAllocationChecker());
+    compilationHelper = CompilationTestHelper.newInstance(new NoAllocationChecker(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "NoAllocationCheckerPositiveCases.java"));
+    compilationHelper.addSourceFile("NoAllocationCheckerPositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "NoAllocationCheckerNegativeCases.java"));
+    compilationHelper.addSourceFile("NoAllocationCheckerNegativeCases.java").doTest();
   }
 }

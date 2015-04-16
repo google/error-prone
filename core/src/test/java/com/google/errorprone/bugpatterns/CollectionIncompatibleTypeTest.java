@@ -33,30 +33,27 @@ public class CollectionIncompatibleTypeTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new CollectionIncompatibleType());
+    compilationHelper =
+        CompilationTestHelper.newInstance(new CollectionIncompatibleType(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "CollectionIncompatibleTypePositiveCases.java"));
+    compilationHelper.addSourceFile("CollectionIncompatibleTypePositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "CollectionIncompatibleTypeNegativeCases.java"));
+    compilationHelper.addSourceFile("CollectionIncompatibleTypeNegativeCases.java").doTest();
   }
 
   @Test
   public void testOutOfBounds() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "CollectionIncompatibleTypeOutOfBounds.java"));
+    compilationHelper.addSourceFile("CollectionIncompatibleTypeOutOfBounds.java").doTest();
   }
 
   @Test
   public void testClassCast() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "CollectionIncompatibleTypeClassCast.java"));
+    compilationHelper.addSourceFile("CollectionIncompatibleTypeClassCast.java").doTest();
   }
 }

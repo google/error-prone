@@ -33,19 +33,17 @@ public class NumericEqualityTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new NumericEquality());
+    compilationHelper = CompilationTestHelper.newInstance(new NumericEquality(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "NumericEqualityPositiveCases.java"));
+    compilationHelper.addSourceFile("NumericEqualityPositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "NumericEqualityNegativeCases.java"));
+    compilationHelper.addSourceFile("NumericEqualityNegativeCases.java").doTest();
   }
 
 }

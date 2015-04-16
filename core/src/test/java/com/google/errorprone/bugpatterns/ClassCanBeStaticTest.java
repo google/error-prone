@@ -33,29 +33,26 @@ public class ClassCanBeStaticTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new ClassCanBeStatic());
+    compilationHelper = CompilationTestHelper.newInstance(new ClassCanBeStatic(), getClass());
   }
 
-  @Test public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "ClassCanBeStaticNegativeCases.java"));
+  @Test
+  public void testNegativeCase() throws Exception {
+    compilationHelper.addSourceFile("ClassCanBeStaticNegativeCases.java").doTest();
   }
 
   @Test
   public void testPositiveCase1() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "ClassCanBeStaticPositiveCase1.java"));
+    compilationHelper.addSourceFile("ClassCanBeStaticPositiveCase1.java").doTest();
   }
 
   @Test
   public void testPositiveCase2() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "ClassCanBeStaticPositiveCase2.java"));
+    compilationHelper.addSourceFile("ClassCanBeStaticPositiveCase2.java").doTest();
   }
 
   @Test
   public void testPositiveCase3() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "ClassCanBeStaticPositiveCase3.java"));
+    compilationHelper.addSourceFile("ClassCanBeStaticPositiveCase3.java").doTest();
   }
 }

@@ -33,18 +33,17 @@ public class InjectMoreThanOneQualifierTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new InjectMoreThanOneQualifier());
+    compilationHelper =
+        CompilationTestHelper.newInstance(new InjectMoreThanOneQualifier(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "InjectMoreThanOneQualifierPositiveCases.java"));
+    compilationHelper.addSourceFile("InjectMoreThanOneQualifierPositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "InjectMoreThanOneQualifierNegativeCases.java"));
+    compilationHelper.addSourceFile("InjectMoreThanOneQualifierNegativeCases.java").doTest();
   }
 }

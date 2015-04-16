@@ -23,8 +23,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.util.Arrays;
-
 /** {@link UnnecessaryStaticImport}Test */
 @RunWith(JUnit4.class)
 public class UnnecessaryStaticImportTest {
@@ -33,109 +31,117 @@ public class UnnecessaryStaticImportTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new UnnecessaryStaticImport());
+    compilationHelper =
+        CompilationTestHelper.newInstance(new UnnecessaryStaticImport(), getClass());
   }
 
   @Test
   public void positive() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(Arrays.asList(
-            compilationHelper.fileManager().forSourceLines("b/B.java",
-                "package b;",
-                "public class B {",
-                "  public static class Inner {}",
-               "}"),
-            compilationHelper.fileManager().forSourceLines("Test.java",
-                "// BUG: Diagnostic contains: import b.B.Inner;",
-                "import static b.B.Inner;",
-                "class Test {}")
-        )
-    );
+    compilationHelper
+        .addSourceLines(
+            "b/B.java",
+            "package b;",
+            "public class B {",
+            "  public static class Inner {}",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "// BUG: Diagnostic contains: import b.B.Inner;",
+            "import static b.B.Inner;",
+            "class Test {}")
+        .doTest();
   }
 
   @Test
   public void positiveRename() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(Arrays.asList(
-        compilationHelper.fileManager().forSourceLines("a/A.java",
+    compilationHelper
+        .addSourceLines(
+            "a/A.java",
             "package a;",
             "public class A {",
             "  public static class Inner {}",
-            "}"),
-        compilationHelper.fileManager().forSourceLines("b/B.java",
+            "}")
+        .addSourceLines(
+            "b/B.java",
             "package b;",
             "import a.A;",
-            "public class B extends A {}"),
-        compilationHelper.fileManager().forSourceLines("b/Test.java",
+            "public class B extends A {}")
+        .addSourceLines(
+            "b/Test.java",
             "package b;",
             "// BUG: Diagnostic contains: import a.A.Inner;",
             "import static b.B.Inner;",
             "class Test {}")
-        )
-    );
+        .doTest();
   }
 
   @Test
   public void negativeStaticMethod() throws Exception {
-    compilationHelper.assertCompileSucceeds(Arrays.asList(
-            compilationHelper.fileManager().forSourceLines("a/A.java",
-                "package a;",
-                "public class A {",
-                "  public static class Inner {",
-                "    public static void f() {}",
-                "  }",
-                "}"),
-            compilationHelper.fileManager().forSourceLines("b/B.java",
-                "package b;",
-                "import a.A;",
-                "public class B extends A {}"),
-            compilationHelper.fileManager().forSourceLines("b/Test.java",
-                "package b;",
-                "import static a.A.Inner.f;",
-                "class Test {}")
-        )
-    );
+    compilationHelper
+        .addSourceLines(
+            "a/A.java",
+            "package a;",
+            "public class A {",
+            "  public static class Inner {",
+            "    public static void f() {}",
+            "  }",
+            "}")
+        .addSourceLines(
+            "b/B.java",
+            "package b;",
+            "import a.A;",
+            "public class B extends A {}")
+        .addSourceLines(
+            "b/Test.java",
+            "package b;",
+            "import static a.A.Inner.f;",
+            "class Test {}")
+        .doTest();
   }
 
   @Test
   public void negativeGenericTypeStaticMethod() throws Exception {
-    compilationHelper.assertCompileSucceeds(Arrays.asList(
-            compilationHelper.fileManager().forSourceLines("a/A.java",
-                "package a;",
-                "public class A {",
-                "  public static class Inner<T> {",
-                "    public static void f() {}",
-                "  }",
-                "}"),
-            compilationHelper.fileManager().forSourceLines("b/B.java",
-                "package b;",
-                "import a.A;",
-                "public class B extends A {}"),
-            compilationHelper.fileManager().forSourceLines("b/Test.java",
-                "package b;",
-                "import static a.A.Inner.f;",
-                "class Test {}")
-        )
-    );
+    compilationHelper
+        .addSourceLines(
+            "a/A.java",
+            "package a;",
+            "public class A {",
+            "  public static class Inner<T> {",
+            "    public static void f() {}",
+            "  }",
+            "}")
+        .addSourceLines(
+            "b/B.java",
+            "package b;",
+            "import a.A;",
+            "public class B extends A {}")
+        .addSourceLines(
+            "b/Test.java",
+            "package b;",
+            "import static a.A.Inner.f;",
+            "class Test {}")
+        .doTest();
   }
 
   @Test
   public void negative() throws Exception {
-    compilationHelper.assertCompileSucceeds(Arrays.asList(
-        compilationHelper.fileManager().forSourceLines("a/A.java",
+    compilationHelper
+        .addSourceLines(
+            "a/A.java",
             "package a;",
             "public class A {",
             "  public static class Inner {}",
-            "}"),
-        compilationHelper.fileManager().forSourceLines("b/B.java",
+            "}")
+        .addSourceLines(
+            "b/B.java",
             "package b;",
             "import a.A;",
-            "public class B extends A {}"),
-        compilationHelper.fileManager().forSourceLines("b/Test.java",
+            "public class B extends A {}")
+        .addSourceLines(
+            "b/Test.java",
             "package b;",
             "import a.A.Inner;",
             "class Test {}")
-        )
-    );
+        .doTest();
   }
 }
-
-

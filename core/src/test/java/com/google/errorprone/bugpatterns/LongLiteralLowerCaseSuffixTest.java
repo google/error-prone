@@ -21,7 +21,6 @@ import static org.junit.Assume.assumeTrue;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.CompilationTestHelper.BugComments;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -40,14 +39,13 @@ public class LongLiteralLowerCaseSuffixTest {
 
   @Before
   public void setUp() {
-
-    compilationHelper = CompilationTestHelper.newInstance(new LongLiteralLowerCaseSuffix());
+    compilationHelper =
+        CompilationTestHelper.newInstance(new LongLiteralLowerCaseSuffix(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "LongLiteralLowerCaseSuffixPositiveCase1.java"));
+    compilationHelper.addSourceFile("LongLiteralLowerCaseSuffixPositiveCase1.java").doTest();
   }
 
   /**
@@ -57,21 +55,20 @@ public class LongLiteralLowerCaseSuffixTest {
   public void testJava7PositiveCase() throws Exception {
     String[] javaVersion = JAVA_VERSION.value().split("\\.");
     assumeTrue(Integer.parseInt(javaVersion[1]) >= 7);
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "LongLiteralLowerCaseSuffixPositiveCase2.java"));
+    compilationHelper.addSourceFile("LongLiteralLowerCaseSuffixPositiveCase2.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "LongLiteralLowerCaseSuffixNegativeCases.java"));
+    compilationHelper.addSourceFile("LongLiteralLowerCaseSuffixNegativeCases.java").doTest();
   }
 
   @Test
   public void testDisableable() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "LongLiteralLowerCaseSuffixPositiveCase1.java"),
-        ImmutableList.of("-Xep:LongLiteralLowerCaseSuffix:OFF"),
-        BugComments.IGNORED);
+    compilationHelper
+        .setArgs(ImmutableList.of("-Xep:LongLiteralLowerCaseSuffix:OFF"))
+        .expectNoDiagnostics()
+        .addSourceFile("LongLiteralLowerCaseSuffixPositiveCase1.java")
+        .doTest();
   }
 }

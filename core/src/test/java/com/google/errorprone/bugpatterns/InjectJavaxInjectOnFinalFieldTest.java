@@ -32,18 +32,17 @@ public class InjectJavaxInjectOnFinalFieldTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new InjectJavaxInjectOnFinalField());
+    compilationHelper =
+        CompilationTestHelper.newInstance(new InjectJavaxInjectOnFinalField(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "InjectJavaxInjectOnFinalFieldPositiveCases.java"));
+    compilationHelper.addSourceFile("InjectJavaxInjectOnFinalFieldPositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "InjectJavaxInjectOnFinalFieldNegativeCases.java"));
+    compilationHelper.addSourceFile("InjectJavaxInjectOnFinalFieldNegativeCases.java").doTest();
   }
 }

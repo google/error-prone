@@ -32,18 +32,18 @@ public class InjectedConstructorAnnotationsTest {
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(new InjectedConstructorAnnotations());
+        CompilationTestHelper.newInstance(new InjectedConstructorAnnotations(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "InjectedConstructorAnnotationsPositiveCases.java"));
+    compilationHelper.addSourceFile("InjectedConstructorAnnotationsPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "InjectedConstructorAnnotationsNegativeCases.java"));
+    compilationHelper.addSourceFile("InjectedConstructorAnnotationsNegativeCases.java")
+        .doTest();
   }
 }

@@ -25,8 +25,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.util.Arrays;
-
 /** {@link WildcardImport}Test */
 @RunWith(JUnit4.class)
 public class WildcardImportTest {
@@ -35,40 +33,43 @@ public class WildcardImportTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new WildcardImport(FixStrategies.TEST));
+    compilationHelper =
+        CompilationTestHelper.newInstance(new WildcardImport(FixStrategies.TEST), getClass());
   }
 
   @Test
   public void chainOffStatic() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(Arrays.asList(
-        compilationHelper.fileManager().forSourceLines("a/One.java",
+    compilationHelper
+        .addSourceLines(
+            "a/One.java",
             "package a;",
             "public class One {",
             "  public static Two THE_INSTANCE = null;",
-            "}"),
-        compilationHelper.fileManager().forSourceLines("a/Two.java",
+            "}")
+        .addSourceLines("a/Two.java",
             "package a;",
             "public class Two {",
             "  public static String MESSAGE = \"Hello\";",
-            "}"),
-        compilationHelper.fileManager().forSourceLines("test/Test.java",
+            "}")
+        .addSourceLines(
+            "test/Test.java",
             "package test;",
             "// BUG: Diagnostic contains: [import static a.One.THE_INSTANCE;]",
             "import static a.One.*;",
             "public class Test {",
             "  String m = THE_INSTANCE.MESSAGE;",
             "}")
-    ));
+        .doTest();
   }
 
   @Test
   public void classLiteral() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(Arrays.asList(
-        compilationHelper.fileManager().forSourceLines("a/A.java",
+    compilationHelper
+        .addSourceLines("a/A.java",
             "package a;",
             "public class A {",
-            "}"),
-        compilationHelper.fileManager().forSourceLines("test/Test.java",
+            "}")
+        .addSourceLines("test/Test.java",
             "package test;",
             "// BUG: Diagnostic contains: [import a.A;]",
             "import a.*;",
@@ -77,18 +78,20 @@ public class WildcardImportTest {
             "     System.err.println(A.class);",
             "  }",
             "}")
-    ));
+        .doTest();
   }
 
   @Test
   public void staticMethod() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(Arrays.asList(
-        compilationHelper.fileManager().forSourceLines("a/A.java",
+    compilationHelper
+        .addSourceLines(
+            "a/A.java",
             "package a;",
             "public class A {",
             "  public static void f() {}",
-            "}"),
-        compilationHelper.fileManager().forSourceLines("test/Test.java",
+            "}")
+        .addSourceLines(
+            "test/Test.java",
             "package test;",
             "// BUG: Diagnostic contains: [import static a.A.f;]",
             "import static a.A.*;",
@@ -97,13 +100,14 @@ public class WildcardImportTest {
             "    f();",
             "  }",
             "}")
-    ));
+        .doTest();
   }
 
   @Test
   public void enumTest() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines("test/Test.java",
+    compilationHelper
+        .addSourceLines(
+            "test/Test.java",
             "package test;",
             "// BUG: Diagnostic contains: [import static java.nio.charset.StandardCharsets.UTF_8;]",
             "import static java.nio.charset.StandardCharsets.*;",
@@ -111,15 +115,15 @@ public class WildcardImportTest {
             "  void m() {",
             "    System.err.println(UTF_8);",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void positive() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines("test/Test.java",
+    compilationHelper
+        .addSourceLines(
+            "test/Test.java",
             "package test;",
             "// BUG: Diagnostic contains: []",
             "import java.util.*;",
@@ -127,15 +131,15 @@ public class WildcardImportTest {
             "    java.util.Map.Entry<String, String> e;",
             "    C c;",
             "    static class C {}",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void doublePrefix() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines("test/Test.java",
+    compilationHelper
+        .addSourceLines(
+            "test/Test.java",
             "package test;",
             "// BUG: Diagnostic contains: []",
             "import java.*;",
@@ -143,15 +147,15 @@ public class WildcardImportTest {
             "import java.util.*;",
             "public class Test {",
             "    void f(List c) {}",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void positiveClassSelect() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines("test/Test.java",
+    compilationHelper
+        .addSourceLines(
+            "test/Test.java",
             "package test;",
             "// BUG: Diagnostic contains: [import java.util.Map;]",
             "import java.util.*;",
@@ -159,15 +163,15 @@ public class WildcardImportTest {
             "    Map.Entry<String, String> e;",
             "    C c;",
             "    static class C {}",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void positiveInnerClass() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines("test/Test.java",
+    compilationHelper
+        .addSourceLines(
+            "test/Test.java",
             "package test;",
             "// BUG: Diagnostic contains: [import java.util.Map.Entry;]",
             "import java.util.Map.*;",
@@ -175,43 +179,43 @@ public class WildcardImportTest {
             "    Entry<String, String> e;",
             "    C c;",
             "    static class C {}",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void dontImportRuntime() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines("test/Test.java",
+    compilationHelper
+        .addSourceLines(
+            "test/Test.java",
             "package test;",
             "// BUG: Diagnostic contains: []",
             "import java.util.*;",
             "public class Test {",
             "    String s;",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void dontImportSelf() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines("test/Test.java",
+    compilationHelper
+        .addSourceLines(
+            "test/Test.java",
             "package test;",
             "// BUG: Diagnostic contains: []",
             "import java.util.*;",
             "public class Test {",
             "    Test s;",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void dontImportSelfPrivate() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines("test/Test.java",
+    compilationHelper
+        .addSourceLines(
+            "test/Test.java",
             "package test;",
             "// BUG: Diagnostic contains: []",
             "import test.Test.Inner.*;",
@@ -221,15 +225,15 @@ public class WildcardImportTest {
             "      InnerMost i;",
             "    }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void dontImportSelfNested() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines("test/Test.java",
+    compilationHelper
+        .addSourceLines(
+            "test/Test.java",
             "package test;",
             "// BUG: Diagnostic contains: []",
             "import java.util.*;",
@@ -237,43 +241,43 @@ public class WildcardImportTest {
             "  public static class Inner {",
             "    Inner t;",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void importSamePackage() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(Arrays.asList(
-        compilationHelper.fileManager().forSourceLines("test/A.java",
+    compilationHelper
+        .addSourceLines(
+            "test/A.java",
             "package test;",
             "public class A {",
             "  public static class Inner {}",
-            "}"),
-        compilationHelper.fileManager().forSourceLines("test/Test.java",
+            "}")
+        .addSourceLines(
+            "test/Test.java",
             "package test;",
             "// BUG: Diagnostic contains: [import test.A.Inner;]",
             "import test.A.*;",
             "public class Test {",
             "  Inner t;",
-            "}"
-        )
-    ));
+            "}")
+        .doTest();
   }
 
   @Test
   public void negativeNoWildcard() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines("test/Test.java",
+    compilationHelper
+        .addSourceLines(
+            "test/Test.java",
             "package test;",
             "import java.util.Map;",
             "public class Test {",
             "    Map.Entry<String, String> e;",
             "    C c;",
             "    static class C {}",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   // This is too hard to get right. We try to add an import for Test.C, which will fail because C
@@ -281,8 +285,9 @@ public class WildcardImportTest {
   // for test.Test.*.
   @Ignore
   public void sameUnitWithSpuriousWildImport() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines("test/Test.java",
+    compilationHelper
+        .addSourceLines(
+            "test/Test.java",
             "package test;",
             "import java.util.Map;",
             "// BUG: Diagnostic contains: []",
@@ -291,9 +296,8 @@ public class WildcardImportTest {
             "    Map.Entry<String, String> e;",
             "    C c;",
             "    private static class C {}",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   // Also too hard. Here 'test.Two.Inner' is imported via 'import static a.One.*' by its
@@ -301,25 +305,27 @@ public class WildcardImportTest {
   // but this (almost) never happens in practice.
   @Ignore
   public void nonCanonical() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(Arrays.asList(
-        compilationHelper.fileManager().forSourceLines("a/One.java",
+    compilationHelper
+        .addSourceLines(
+            "a/One.java",
             "package a;",
             "public class One extends Two {",
-            "}"),
-        compilationHelper.fileManager().forSourceLines("a/Two.java",
+            "}")
+        .addSourceLines(
+            "a/Two.java",
             "package a;",
             "public class Two {",
             "  public static class Inner {}",
-            "}"),
-        compilationHelper.fileManager().forSourceLines("test/Test.java",
+            "}")
+        .addSourceLines(
+            "test/Test.java",
             "package test;",
             "// BUG: Diagnostic contains: [import a.Two.Inner;]",
             "import static a.One.*;",
             "public class Test {",
             "  Inner i;",
             "}")
-    ));
+        .doTest();
   }
 
 }
-

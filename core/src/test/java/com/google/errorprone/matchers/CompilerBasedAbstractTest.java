@@ -16,18 +16,16 @@
 
 package com.google.errorprone.matchers;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.scanner.Scanner;
 import com.google.errorprone.scanner.ScannerSupplier;
+
+import com.sun.tools.javac.main.Main.Result;
 
 import org.junit.After;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.tools.JavaFileObject;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -56,16 +54,12 @@ public class CompilerBasedAbstractTest {
   }
 
   private void assertCompiles(ScannerSupplier scannerSupplier) {
-    final CompilationTestHelper compilationHelper =
-        CompilationTestHelper.newInstance(scannerSupplier);
-    List<JavaFileObject> fileObjects =
-        Lists.transform(filesToCompile, new Function<FileToCompile, JavaFileObject>() {
-          @Override
-          public JavaFileObject apply(FileToCompile file) {
-            return compilationHelper.fileManager().forSourceLines(file.name, file.lines);
-          }
-        });
-    compilationHelper.assertCompileSucceeds(fileObjects);
+    CompilationTestHelper compilationHelper =
+        CompilationTestHelper.newInstance(scannerSupplier, getClass()).expectResult(Result.OK);
+    for (FileToCompile fileToCompile : filesToCompile) {
+      compilationHelper.addSourceLines(fileToCompile.name, fileToCompile.lines);
+    }
+    compilationHelper.doTest();
   }
 
   protected void assertCompiles(final Scanner scanner) {

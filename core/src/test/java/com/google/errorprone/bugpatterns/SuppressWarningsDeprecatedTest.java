@@ -35,18 +35,17 @@ public class SuppressWarningsDeprecatedTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new SuppressWarningsDeprecated());
+    compilationHelper =
+        CompilationTestHelper.newInstance(new SuppressWarningsDeprecated(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "SuppressWarningsDeprecatedPositiveCases.java"));
+    compilationHelper.addSourceFile("SuppressWarningsDeprecatedPositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "SuppressWarningsDeprecatedNegativeCases.java"));
+    compilationHelper.addSourceFile("SuppressWarningsDeprecatedNegativeCases.java").doTest();
   }
 }

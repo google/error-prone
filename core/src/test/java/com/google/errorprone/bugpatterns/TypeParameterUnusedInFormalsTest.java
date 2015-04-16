@@ -31,90 +31,98 @@ public class TypeParameterUnusedInFormalsTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new TypeParameterUnusedInFormals());
+    compilationHelper =
+        CompilationTestHelper.newInstance(new TypeParameterUnusedInFormals(), getClass());
   }
 
   @Test
   public void evilCastImpl() throws Exception {
-      compilationHelper.assertCompileSucceedsWithMessages(
-        compilationHelper.fileManager().forSourceLines("Test.java",
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
             "package foo.bar;",
             "class Test {",
             "  // BUG: Diagnostic contains:",
             "  // static Object doCast(Object o) { Object t = (Object) o; return t; }",
             "  static <T> T doCast(Object o) { T t = (T) o; return t; }",
             "}")
-    );
+        .doTest();
   }
-  
+
   @Test
   public void leadingParam() throws Exception {
-      compilationHelper.assertCompileSucceedsWithMessages(
-        compilationHelper.fileManager().forSourceLines("Test.java",
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
             "package foo.bar;",
             "class Test {",
             "  // BUG: Diagnostic contains:",
             "  // static <U extends Object> Object doCast(U o) { Object t = (Object) o; return t; }",
             "  static <U extends Object, T> T doCast(U o) { T t = (T) o; return t; }",
             "}")
-    );
+        .doTest();
   }
-  
+
   @Test
   public void trailingParam() throws Exception {
-      compilationHelper.assertCompileSucceedsWithMessages(
-        compilationHelper.fileManager().forSourceLines("Test.java",
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
             "package foo.bar;",
             "class Test {",
             "  // BUG: Diagnostic contains:",
             "  // static <U extends Object> Object doCast(U o) { Object t = (Object) o; return t; }",
             "  static <T, U extends Object> T doCast(U o) { T t = (T) o; return t; }",
             "}")
-    );
+        .doTest();
   }
-  
+
   @Test
   public void leadingAndTrailingParam() throws Exception {
-      compilationHelper.assertCompileSucceedsWithMessages(
-        compilationHelper.fileManager().forSourceLines("Test.java",
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
             "package foo.bar;",
             "class Test {",
             "  // BUG: Diagnostic contains:",
             "  // static <V extends Object, U extends Object> Object doCast(U o, V v) { Object t = (Object) o; return t; }",
             "  static <V extends Object, T, U extends Object> T doCast(U o, V v) { T t = (T) o; return t; }",
             "}")
-    );
+        .doTest();
   }
-  
+
   @Test
   public void superBound() throws Exception {
-      compilationHelper.assertCompileSucceedsWithMessages(
-        compilationHelper.fileManager().forSourceLines("Test.java",
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
             "package foo.bar;",
             "class Test {",
             "  // BUG: Diagnostic contains:",
             "  // static Number doCast(Object o) { return (Number) o; }",
             "  static <T extends Number> T doCast(Object o) { return (T) o; }",
             "}")
-    );
+        .doTest();
   }
-  
+
   @Test
   public void okFBound() throws Exception {
-      compilationHelper.assertCompileSucceedsWithMessages(
-        compilationHelper.fileManager().forSourceLines("Test.java",
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
             "package foo.bar;",
             "class Test {",
             "  interface Foo<T> {}",
             "  static <T extends Foo<T>> T doCast(Object o) { return (T) o; }",
             "}")
-    );
+        .doTest();
   }
-  
+
   @Test
   public void wildbound() throws Exception {
-      compilationHelper.assertCompileSucceedsWithMessages(
-        compilationHelper.fileManager().forSourceLines("Test.java",
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
             "package foo.bar;",
             "class Test {",
             "  interface Foo<T> {}",
@@ -122,50 +130,54 @@ public class TypeParameterUnusedInFormalsTest {
             "  // static Foo<?> doCast(Object o) { return (Foo<?>) o; }",
             "  static <T extends Foo<?>> T doCast(Object o) { return (T) o; }",
             "}")
-    );
+        .doTest();
   }
 
   @Test
   public void okGenericFactory()  throws Exception {
-      compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines("Test.java",
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
             "import java.util.List;",
             "class Test {",
             "  static <T> List<T> newList() { return null; }",
             "}")
-    );
+        .doTest();
   }
-  
+
   @Test
   public void okWithParam()  throws Exception {
-      compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines("Test.java",
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
             "import java.util.List;",
             "class Test {",
             "  static <T> T noop(T t) { return t; }",
             "}")
-    );
+        .doTest();
   }
-  
+
   @Test
   public void okNotMyParam()  throws Exception {
-      compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines("Test.java",
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
             "import java.util.List;",
             "class Test<T> {",
             "  T noop(T t) { return t; }",
             "}")
-    );
+        .doTest();
   }
 
   @Test
   public void abstractMethod() throws Exception {
-      compilationHelper.assertCompileSucceedsWithMessages(
-        compilationHelper.fileManager().forSourceLines("Test.java",
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
             "abstract class Test {",
             "  // BUG: Diagnostic contains:",
             "  abstract <T> T badMethod();",
             "}")
-    );
+        .doTest();
   }
 }

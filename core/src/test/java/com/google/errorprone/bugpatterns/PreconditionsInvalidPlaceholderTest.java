@@ -33,19 +33,20 @@ public class PreconditionsInvalidPlaceholderTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new PreconditionsInvalidPlaceholder());
+    compilationHelper =
+        CompilationTestHelper.newInstance(new PreconditionsInvalidPlaceholder(), getClass());
   }
 
   @Test
   public void testPositiveCase1() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "PreconditionsInvalidPlaceholderPositiveCase1.java"));
+    compilationHelper.addSourceFile("PreconditionsInvalidPlaceholderPositiveCase1.java")
+        .doTest();
   }
 
   @Test
   public void testNegativeCase1() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "PreconditionsInvalidPlaceholderNegativeCase1.java"));
+    compilationHelper.addSourceFile("PreconditionsInvalidPlaceholderNegativeCase1.java")
+        .doTest();
   }
 
 }

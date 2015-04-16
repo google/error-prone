@@ -33,18 +33,16 @@ public class GuiceInjectOnFinalFieldTest {
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(new GuiceInjectOnFinalField());
+        CompilationTestHelper.newInstance(new GuiceInjectOnFinalField(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "GuiceInjectOnFinalFieldPositiveCases.java"));
+    compilationHelper.addSourceFile("GuiceInjectOnFinalFieldPositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "GuiceInjectOnFinalFieldNegativeCases.java"));
+    compilationHelper.addSourceFile("GuiceInjectOnFinalFieldNegativeCases.java").doTest();
   }
 }

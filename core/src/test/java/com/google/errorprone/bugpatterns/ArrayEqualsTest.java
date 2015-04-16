@@ -36,35 +36,30 @@ public class ArrayEqualsTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new ArrayEquals());
+    compilationHelper = CompilationTestHelper.newInstance(new ArrayEquals(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "ArrayEqualsPositiveCases.java"));
+    compilationHelper.addSourceFile("ArrayEqualsPositiveCases.java").doTest();
   }
 
   @Test
   public void testJava7PositiveCase() throws Exception {
     String[] javaVersion = JAVA_VERSION.value().split("\\.");
     assumeTrue(Integer.parseInt(javaVersion[1]) >= 7);
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "ArrayEqualsPositiveCases2.java"));
+    compilationHelper.addSourceFile("ArrayEqualsPositiveCases2.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "ArrayEqualsNegativeCases.java"));
+    compilationHelper.addSourceFile("ArrayEqualsNegativeCases.java").doTest();
   }
 
   @Test
   public void testJava7NegativeCase() throws Exception {
     String[] javaVersion = JAVA_VERSION.value().split("\\.");
     assumeTrue(Integer.parseInt(javaVersion[1]) >= 7);
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "ArrayEqualsNegativeCases2.java"));
+    compilationHelper.addSourceFile("ArrayEqualsNegativeCases2.java").doTest();
   }
-
 }

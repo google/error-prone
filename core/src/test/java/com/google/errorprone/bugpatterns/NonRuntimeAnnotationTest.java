@@ -33,19 +33,17 @@ public class NonRuntimeAnnotationTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new NonRuntimeAnnotation());
+    compilationHelper = CompilationTestHelper.newInstance(new NonRuntimeAnnotation(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "NonRuntimeAnnotationPositiveCases.java"));
+    compilationHelper.addSourceFile("NonRuntimeAnnotationPositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "NonRuntimeAnnotationNegativeCases.java"));
+    compilationHelper.addSourceFile("NonRuntimeAnnotationNegativeCases.java").doTest();
   }
 
 }

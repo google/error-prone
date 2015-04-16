@@ -33,18 +33,21 @@ public class InjectScopeOrQualifierAnnotationRetentionTest {
   @Before
   public void setUp() {
     compilationHelper =
-      CompilationTestHelper.newInstance(new InjectScopeOrQualifierAnnotationRetention());
+        CompilationTestHelper.newInstance(
+            new InjectScopeOrQualifierAnnotationRetention(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "InjectScopeOrQualifierAnnotationRetentionPositiveCases.java"));
+    compilationHelper
+        .addSourceFile("InjectScopeOrQualifierAnnotationRetentionPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "InjectScopeOrQualifierAnnotationRetentionNegativeCases.java"));
+    compilationHelper
+        .addSourceFile("InjectScopeOrQualifierAnnotationRetentionNegativeCases.java")
+        .doTest();
   }
 }

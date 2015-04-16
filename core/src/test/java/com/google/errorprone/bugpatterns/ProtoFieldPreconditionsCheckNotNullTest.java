@@ -14,18 +14,12 @@
 
 package com.google.errorprone.bugpatterns;
 
-import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.net.URISyntaxException;
-import java.util.List;
-
-import javax.tools.JavaFileObject;
 
 /**
  * @author awturner@google.com (Andy Turner)
@@ -34,29 +28,23 @@ import javax.tools.JavaFileObject;
 public class ProtoFieldPreconditionsCheckNotNullTest {
 
   private CompilationTestHelper compilationHelper;
-  private JavaFileObject protoFile;
 
   @Before
   public void setUp() throws Exception {
-    compilationHelper =
-        CompilationTestHelper.newInstance(new ProtoFieldPreconditionsCheckNotNull());
-    protoFile = compilationHelper.fileManager().source(getClass(), "proto/ProtoTest.java");
-  }
-
-  private List<JavaFileObject> getSourceFiles(String mainFileName) throws URISyntaxException {
-    JavaFileObject mainFile = compilationHelper.fileManager().source(getClass(), mainFileName);
-    return ImmutableList.of(mainFile, protoFile);
+    compilationHelper = CompilationTestHelper
+        .newInstance(new ProtoFieldPreconditionsCheckNotNull(), getClass())
+        .addSourceFile("proto/ProtoTest.java");
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(
-        getSourceFiles("ProtoFieldPreconditionsCheckNotNullPositiveCases.java"));
+    compilationHelper.addSourceFile("ProtoFieldPreconditionsCheckNotNullPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        getSourceFiles("ProtoFieldPreconditionsCheckNotNullNegativeCases.java"));
+    compilationHelper.addSourceFile("ProtoFieldPreconditionsCheckNotNullNegativeCases.java")
+        .doTest();
   }
 }

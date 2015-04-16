@@ -34,18 +34,21 @@ public class InjectScopeAnnotationOnInterfaceOrAbstractClassTest {
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(new InjectScopeAnnotationOnInterfaceOrAbstractClass());
+        CompilationTestHelper.newInstance(
+            new InjectScopeAnnotationOnInterfaceOrAbstractClass(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "InjectScopeAnnotationOnInterfaceOrAbstractClassPositiveCases.java"));
+    compilationHelper
+        .addSourceFile("InjectScopeAnnotationOnInterfaceOrAbstractClassPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "InjectScopeAnnotationOnInterfaceOrAbstractClassNegativeCases.java"));
+    compilationHelper
+        .addSourceFile("InjectScopeAnnotationOnInterfaceOrAbstractClassNegativeCases.java")
+        .doTest();
   }
 }

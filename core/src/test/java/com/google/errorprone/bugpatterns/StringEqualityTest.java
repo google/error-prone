@@ -33,18 +33,16 @@ public class StringEqualityTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new StringEquality());
+    compilationHelper = CompilationTestHelper.newInstance(new StringEquality(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "StringEqualityPositiveCases.java"));
+    compilationHelper.addSourceFile("StringEqualityPositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "StringEqualityNegativeCases.java"));
+    compilationHelper.addSourceFile("StringEqualityNegativeCases.java").doTest();
   }
 }

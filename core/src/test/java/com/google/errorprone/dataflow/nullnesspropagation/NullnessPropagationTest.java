@@ -118,56 +118,43 @@ public class NullnessPropagationTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new NullnessPropagationChecker());
+    compilationHelper =
+        CompilationTestHelper.newInstance(new NullnessPropagationChecker(), getClass());
   }
 
   @Test
   public void testTransferFunctions1() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().sources(
-            getClass(), "NullnessPropagationTransferCases1.java"));
+    compilationHelper.addSourceFile("NullnessPropagationTransferCases1.java").doTest();
   }
 
   @Test
   public void testTransferFunctions2() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().sources(
-            getClass(), "NullnessPropagationTransferCases2.java"));
+    compilationHelper.addSourceFile("NullnessPropagationTransferCases2.java").doTest();
   }
 
   @Test
   public void testTransferFunctions3() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().sources(
-            getClass(), "NullnessPropagationTransferCases3.java"));
+    compilationHelper.addSourceFile("NullnessPropagationTransferCases3.java").doTest();
   }
 
   @Test
   public void testTransferFunctions4() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().sources(
-            getClass(), "NullnessPropagationTransferCases4.java"));
+    compilationHelper.addSourceFile("NullnessPropagationTransferCases4.java").doTest();
   }
 
   @Test
   public void testTransferFunctions5() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().sources(
-            getClass(), "NullnessPropagationTransferCases5.java"));
+    compilationHelper.addSourceFile("NullnessPropagationTransferCases5.java").doTest();
   }
 
   @Test
   public void testTransferFunctions6() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().sources(
-            getClass(), "NullnessPropagationTransferCases6.java"));
+    compilationHelper.addSourceFile("NullnessPropagationTransferCases6.java").doTest();
   }
 
   @Test
   public void testTransferFunctions7() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().sources(
-            getClass(), "NullnessPropagationTransferCases7.java"));
+    compilationHelper.addSourceFile("NullnessPropagationTransferCases7.java").doTest();
   }
 
   /**

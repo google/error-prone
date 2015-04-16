@@ -33,18 +33,16 @@ public class ComparisonOutOfRangeTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new ComparisonOutOfRange());
+    compilationHelper = CompilationTestHelper.newInstance(new ComparisonOutOfRange(), getClass());
   }
 
   @Test
   public void testPositiveCases() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "ComparisonOutOfRangePositiveCases.java"));
+    compilationHelper.addSourceFile("ComparisonOutOfRangePositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCases() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "ComparisonOutOfRangeNegativeCases.java"));
+    compilationHelper.addSourceFile("ComparisonOutOfRangeNegativeCases.java").doTest();
   }
 }

@@ -33,42 +33,36 @@ public class CovariantEqualsTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new CovariantEquals());
+    compilationHelper = CompilationTestHelper.newInstance(new CovariantEquals(), getClass());
   }
 
   @Test
   public void testPositiveCase1() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "CovariantEqualsPositiveCase1.java"));
+    compilationHelper.addSourceFile("CovariantEqualsPositiveCase1.java").doTest();
   }
 
   @Test
   public void testPositiveCase2() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "CovariantEqualsPositiveCase2.java"));
+    compilationHelper.addSourceFile("CovariantEqualsPositiveCase2.java").doTest();
   }
 
   @Test
   public void testPositiveCase3() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "CovariantEqualsPositiveCase3.java"));
+    compilationHelper.addSourceFile("CovariantEqualsPositiveCase3.java").doTest();
   }
 
   @Test
   public void testPositiveCase4() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "CovariantEqualsPositiveCase4.java"));
+    compilationHelper.addSourceFile("CovariantEqualsPositiveCase4.java").doTest();
   }
 
   @Test
   public void testPositiveCase5() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "CovariantEqualsPositiveCase5.java"));
+    compilationHelper.addSourceFile("CovariantEqualsPositiveCase5.java").doTest();
   }
 
-
-  @Test public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-    compilationHelper.fileManager().sources(getClass(), "CovariantEqualsNegativeCases.java"));
+  @Test
+  public void testNegativeCase() throws Exception {
+    compilationHelper.addSourceFile("CovariantEqualsNegativeCases.java").doTest();
   }
 }

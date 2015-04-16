@@ -33,37 +33,33 @@ public class PreconditionsCheckNotNullTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new PreconditionsCheckNotNull());
+    compilationHelper =
+        CompilationTestHelper.newInstance(new PreconditionsCheckNotNull(), getClass());
   }
 
   @Test
   public void testPositiveCase1() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "PreconditionsCheckNotNullPositiveCase1.java"));
+    compilationHelper.addSourceFile("PreconditionsCheckNotNullPositiveCase1.java").doTest();
   }
 
   @Test
   public void testPositiveCase2() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "PreconditionsCheckNotNullPositiveCase2.java"));
+    compilationHelper.addSourceFile("PreconditionsCheckNotNullPositiveCase2.java").doTest();
   }
 
   @Test
   public void testPositiveCase3() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "PreconditionsCheckNotNullPositiveCase3.java"));
+    compilationHelper.addSourceFile("PreconditionsCheckNotNullPositiveCase3.java").doTest();
   }
 
   @Test
   public void testNegativeCase1() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "PreconditionsCheckNotNullNegativeCase1.java"));
+    compilationHelper.addSourceFile("PreconditionsCheckNotNullNegativeCase1.java").doTest();
   }
 
   @Test
   public void testNegativeCase2() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "PreconditionsCheckNotNullNegativeCase2.java"));
+    compilationHelper.addSourceFile("PreconditionsCheckNotNullNegativeCase2.java").doTest();
   }
 
 }

@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -27,14 +28,19 @@ import org.junit.runners.JUnit4;
  */
 @RunWith(JUnit4.class)
 public class NarrowingCompoundAssignmentTest {
+  private CompilationTestHelper compilationHelper;
 
-  private CompilationTestHelper compilationHelper =
-      CompilationTestHelper.newInstance(new NarrowingCompoundAssignment());
+  @Before
+  public void setUp() {
+    compilationHelper =
+        CompilationTestHelper.newInstance(new NarrowingCompoundAssignment(), getClass());
+  }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines("Test.java",
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
             "class Test {",
             "  void m() {",
             "    short s = 0;",
@@ -55,13 +61,14 @@ public class NarrowingCompoundAssignmentTest {
             "    v *= 1.0d;",
             "  }",
             "}")
-        );
+        .doTest();
   }
-  
+
   @Test
   public void testAllOps() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines("Test.java",
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
             "class Test {",
             "  void m() {",
             "    short s = 0;",
@@ -82,13 +89,14 @@ public class NarrowingCompoundAssignmentTest {
             "    s >>>= 1;",
             "  }",
             "}")
-        );
+        .doTest();
   }
-  
+
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines("Test.java",
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
             "class Test {",
             "  void m() {",
             "    int s = 0;",
@@ -99,13 +107,14 @@ public class NarrowingCompoundAssignmentTest {
             "    u *= 1;",
             "  }",
             "}")
-        );
+        .doTest();
   }
-  
+
   @Test
   public void testFloatFloat() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines("Test.java",
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
             "class Test {",
             "  void m() {",
             "    float a = 0;",
@@ -115,13 +124,14 @@ public class NarrowingCompoundAssignmentTest {
             "    a += c;",
             "  }",
             "}")
-        );
+        .doTest();
   }
-  
+
   @Test
   public void testPreservePrecedence() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines("Test.java",
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
             "class Test {",
             "  void m() {",
             "    float f = 0;",
@@ -129,13 +139,14 @@ public class NarrowingCompoundAssignmentTest {
             "    f -= 3.0 - 2.0;",
             "  }",
             "}")
-        );
+        .doTest();
   }
-  
+
   @Test
   public void testPreservePrecedence2() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines("Test.java",
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
             "class Test {",
             "  void m() {",
             "    float f = 0;",
@@ -143,7 +154,7 @@ public class NarrowingCompoundAssignmentTest {
             "    f -= 3.0 * 2.0;",
             "  }",
             "}")
-        );
+        .doTest();
   }
 
   @Test
@@ -188,14 +199,16 @@ public class NarrowingCompoundAssignmentTest {
 
     String compoundAssignment = String.format("    s %s= 1 %s 2;", opA, opB);
 
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager().forSourceLines(
-        "Test.java",
-        "class Test {",
-        "  void m() {",
-        "    short s = 0;",
-        "    // BUG: Diagnostic contains: " + expect,
-        compoundAssignment,
-        "  }",
-        "}"));
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void m() {",
+            "    short s = 0;",
+            "    // BUG: Diagnostic contains: " + expect,
+            compoundAssignment,
+            "  }",
+            "}")
+        .doTest();
   }
 }
