@@ -53,14 +53,13 @@ public class JMockTestWithoutRunWithOrRuleAnnotation extends BugChecker implemen
     private static class DoesNotHaveARunnerOrDeclaredARuleMatcher implements Matcher<VariableTree> {
 
         private static final Matcher<VariableTree> variableWithRule = hasAnnotation("org.junit.Rule");
-        private static final Matcher<Tree> classWithRunWith = enclosingClass(Matchers.<ClassTree>annotations(ChildMultiMatcher.MatchType.ALL, isType("org.junit.runner.RunWith")));
-        private static final Matcher<Tree> classRunnerIsJMock = enclosingClass(Matchers.<ClassTree>annotations(ChildMultiMatcher.MatchType.ALL,
-                hasArgumentWithValue("value", classLiteral(isSameType("org.jmock.integration.junit4.JMock")))));
+        private static final Matcher<Tree> classWithRunWith = enclosingClass(Matchers.<ClassTree>annotations(ChildMultiMatcher.MatchType.ALL, allOf(isType("org.junit.runner.RunWith"),
+                hasArgumentWithValue("value", classLiteral(isSameType("org.jmock.integration.junit4.JMock"))))));
 
         @Override
         public boolean matches(VariableTree variableTree, VisitorState state) {
-            return (classWithRunWith.matches(variableTree, state) && !classRunnerIsJMock.matches(variableTree, state))
-                    || !variableWithRule.matches(variableTree, state);
+            return !(variableWithRule.matches(variableTree, state) || classWithRunWith.matches(variableTree, state));
         }
     }
+
 }
