@@ -39,27 +39,17 @@ import static com.google.errorprone.matchers.Matchers.*;
 public class JMockTestWithoutRunWithOrRuleAnnotation extends BugChecker implements BugChecker.VariableTreeMatcher {
 
     private static final Matcher<VariableTree> JMOCK_MOCKERY_MATCHER = allOf(isSameType("org.jmock.Mockery"), isField());
-    private static final DoesNotHaveARunnerOrDeclaredARuleMatcher DOES_NOT_HAVE_A_RUNNER_OR_DECLARED_A_RULE_MATCHER = new DoesNotHaveARunnerOrDeclaredARuleMatcher();
-    private static final Matcher<VariableTree> BIG_DADDY_MATCHER = allOf(JMOCK_MOCKERY_MATCHER, DOES_NOT_HAVE_A_RUNNER_OR_DECLARED_A_RULE_MATCHER);
+    private static final Matcher<VariableTree> FIELD_A_RULE_ANNOTATION_MATHER = hasAnnotation("org.junit.Rule");
+    private static final Matcher<Tree> CLASS_USING_JMOCK_RUNNER_MATCHER = enclosingClass(Matchers.<ClassTree>annotations(ChildMultiMatcher.MatchType.ALL, allOf(isType("org.junit.runner.RunWith"),
+            hasArgumentWithValue("value", classLiteral(isSameType("org.jmock.integration.junit4.JMock"))))));
 
     @Override
     public Description matchVariable(VariableTree tree, VisitorState state) {
-        if (BIG_DADDY_MATCHER.matches(tree, state)) {
+        if (JMOCK_MOCKERY_MATCHER.matches(tree, state) && !(FIELD_A_RULE_ANNOTATION_MATHER.matches(tree, state) || CLASS_USING_JMOCK_RUNNER_MATCHER.matches(tree, state))) {
             return describeMatch(tree);
         }
         return Description.NO_MATCH;
     }
 
-    private static class DoesNotHaveARunnerOrDeclaredARuleMatcher implements Matcher<VariableTree> {
-
-        private static final Matcher<VariableTree> variableWithRule = hasAnnotation("org.junit.Rule");
-        private static final Matcher<Tree> classWithRunWith = enclosingClass(Matchers.<ClassTree>annotations(ChildMultiMatcher.MatchType.ALL, allOf(isType("org.junit.runner.RunWith"),
-                hasArgumentWithValue("value", classLiteral(isSameType("org.jmock.integration.junit4.JMock"))))));
-
-        @Override
-        public boolean matches(VariableTree variableTree, VisitorState state) {
-            return !(variableWithRule.matches(variableTree, state) || classWithRunWith.matches(variableTree, state));
-        }
-    }
 
 }
