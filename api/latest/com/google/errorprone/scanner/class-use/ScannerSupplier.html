@@ -130,7 +130,7 @@
 <tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></code></td>
 <td class="colLast"><span class="strong">BuiltInCheckerSuppliers.</span><code><strong><a href="../../../../../com/google/errorprone/scanner/BuiltInCheckerSuppliers.html#allChecks()">allChecks</a></strong>()</code>
-<div class="block">Returns a <a href="../../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with all <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>s in error-prone.</div>
+<div class="block">Returns a <a href="../../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with all <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>s in Error Prone.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -138,6 +138,19 @@
 <td class="colLast"><span class="strong">ScannerSupplier.</span><code><strong><a href="../../../../../com/google/errorprone/scanner/ScannerSupplier.html#applyOverrides(com.google.errorprone.ErrorProneOptions)">applyOverrides</a></strong>(<a href="../../../../../com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a>&nbsp;errorProneOptions)</code>
 <div class="block">Applies an override map (from command-line options) to this <a href="../../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> and
  returns the resulting <a href="../../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></code></td>
+<td class="colLast"><span class="strong">BuiltInCheckerSuppliers.</span><code><strong><a href="../../../../../com/google/errorprone/scanner/BuiltInCheckerSuppliers.html#defaultChecks()">defaultChecks</a></strong>()</code>
+<div class="block">Returns a <a href="../../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with the <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>s that are in the ENABLED lists.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></code></td>
+<td class="colLast"><span class="strong">BuiltInCheckerSuppliers.</span><code><strong><a href="../../../../../com/google/errorprone/scanner/BuiltInCheckerSuppliers.html#errorChecks()">errorChecks</a></strong>()</code>
+<div class="block">Returns a <a href="../../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with the <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>s that are in the ENABLED_ERRORS
+ list.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -177,13 +190,6 @@
 </td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></code></td>
-<td class="colLast"><span class="strong">BuiltInCheckerSuppliers.</span><code><strong><a href="../../../../../com/google/errorprone/scanner/BuiltInCheckerSuppliers.html#matureChecks()">matureChecks</a></strong>()</code>
-<div class="block">Returns a <a href="../../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with all <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>s in error-prone that have
- <code>maturity == MaturityLevel.MATURE</code>.</div>
-</td>
-</tr>
-<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></code></td>
 <td class="colLast"><span class="strong">ScannerSupplier.</span><code><strong><a href="../../../../../com/google/errorprone/scanner/ScannerSupplier.html#plus(com.google.errorprone.scanner.ScannerSupplier)">plus</a></strong>(<a href="../../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a>&nbsp;other)</code>
 <div class="block">Composes this <a href="../../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with the <code>other</code> <a href="../../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>.</div>

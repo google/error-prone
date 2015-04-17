@@ -209,10 +209,16 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/VisitorState.html#getSymtab()">getSymtab</a></strong>()</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>com.google.common.collect.ImmutableList&lt;com.sun.tools.javac.parser.Tokens.Token&gt;</code></td>
+<td class="colLast"><code><strong><a href="../../../com/google/errorprone/VisitorState.html#getTokensForNode(com.sun.tools.javac.tree.JCTree)">getTokensForNode</a></strong>(com.sun.tools.javac.tree.JCTree&nbsp;tree)</code>
+<div class="block">Returns the list of <code>Tokens.Token</code>s for the given <code>JCTree</code>.</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>com.sun.tools.javac.tree.TreeMaker</code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/VisitorState.html#getTreeMaker()">getTreeMaker</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>com.sun.tools.javac.code.Type</code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/VisitorState.html#getType(com.sun.tools.javac.code.Type,%20boolean,%20com.sun.tools.javac.util.List)">getType</a></strong>(com.sun.tools.javac.code.Type&nbsp;baseType,
        boolean&nbsp;isArray,
@@ -220,7 +226,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <div class="block">Build an instance of a Type.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>com.sun.tools.javac.code.Type</code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/VisitorState.html#getType(com.sun.tools.javac.code.Type,%20boolean,%20java.util.List)">getType</a></strong>(com.sun.tools.javac.code.Type&nbsp;baseType,
        boolean&nbsp;isArray,
@@ -228,22 +234,22 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <div class="block">Build an instance of a Type.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>com.sun.tools.javac.code.Type</code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/VisitorState.html#getTypeFromString(java.lang.String)">getTypeFromString</a></strong>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;typeStr)</code>
 <div class="block">Given the string representation of a simple (non-array, non-generic) type, return the
  matching Type.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>com.sun.tools.javac.code.Types</code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/VisitorState.html#getTypes()">getTypes</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/VisitorState.html#reportMatch(com.google.errorprone.matchers.Description)">reportMatch</a></strong>(<a href="../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;description)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/VisitorState.html#withPath(com.sun.source.util.TreePath)">withPath</a></strong>(com.sun.source.util.TreePath&nbsp;path)</code>&nbsp;</td>
 </tr>
@@ -489,6 +495,19 @@ public final&nbsp;&lt;T extends com.sun.source.tree.Tree&gt;&nbsp;T&nbsp;findEnc
  This returns exactly what is in the source code, whereas .toString() pretty-prints the node
  from its AST representation.</div>
 <dl><dt><span class="strong">Returns:</span></dt><dd>the source code that represents the node.</dd></dl>
+</li>
+</ul>
+<a name="getTokensForNode(com.sun.tools.javac.tree.JCTree)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getTokensForNode</h4>
+<pre>public&nbsp;com.google.common.collect.ImmutableList&lt;com.sun.tools.javac.parser.Tokens.Token&gt;&nbsp;getTokensForNode(com.sun.tools.javac.tree.JCTree&nbsp;tree)</pre>
+<div class="block">Returns the list of <code>Tokens.Token</code>s for the given <code>JCTree</code>.
+
+ <p>This is moderately expensive (the source of the node has to be re-lexed), so it should
+ only be used if a fix is already going to be emitted.</div>
 </li>
 </ul>
 <a name="getEndPosition(com.sun.tools.javac.tree.JCTree)">

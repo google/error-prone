@@ -1,3 +1,8 @@
+<!--
+*** AUTO-GENERATED, DO NOT MODIFY ***
+To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
+-->
+
 ---
 title: NonAtomicVolatileUpdate
 layout: bugpattern

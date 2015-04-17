@@ -1,11 +1,11 @@
 'On by default : WARNING':
+- {name: CannotMockFinalClass, summary: Mockito cannot mock final classes}
 - {name: ElementsCountedInLoop, summary: 'This code, which counts elements using a
     loop, can be replaced by a simpler library method'}
 - {name: EqualsHashCode, summary: Classes that override equals should also override hashCode.}
 - {name: Finally, summary: 'If you return or throw from a finally, then values returned
     or thrown from the try-catch block will be ignored'}
 - {name: IncompatibleModifiers, summary: This annotation has incompatible modifiers as specified by its @IncompatibleModifiers annotation}
-- {name: MisusedFormattingLogger, summary: FormattingLogger uses wrong or mismatched format string}
 - {name: NonAtomicVolatileUpdate, summary: This update of a volatile variable is non-atomic}
 - {name: NonCanonicalStaticImport, summary: Static import of type uses non-canonical name}
 - {name: PreconditionsInvalidPlaceholder, summary: Preconditions only accepts the %s placeholder in error message strings}
@@ -42,6 +42,7 @@
 - {name: DepAnn, summary: Deprecated item is not annotated with @Deprecated}
 - {name: EqualsNaN, summary: == NaN always returns false; use the isNaN methods instead}
 - {name: ForOverride, summary: Method annotated @ForOverride must be protected or package-private and only invoked from declaring class}
+- {name: GuardedByChecker, summary: Checks for unguarded accesses to fields and methods with @GuardedBy annotations}
 - {name: GuiceAssistedInjectScoping, summary: Scope annotation on implementation class of AssistedInject factory is not allowed}
 - {name: InvalidPatternSyntax, summary: Invalid syntax used for a regular expression}
 - {name: JUnit3TestNotRun, summary: Test method will not be run; please prefix name with "test"}
@@ -91,13 +92,11 @@
     cannot be used on the same constructor.'}
 - {name: AsyncFunctionReturnsNull, summary: 'AsyncFunction should not return a null
     Future, only a Future whose result is null.'}
-- {name: CannotMockFinalClass, summary: Mockito cannot mock final classes}
 - {name: ClassCanBeStatic, summary: Inner class is non-static but does not reference enclosing class}
 - {name: CollectionIncompatibleType, summary: Incompatible type as argument to non-generic Java collections method.}
 - {name: CovariantEquals, summary: equals() method doesn't override Object.equals()}
 - {name: DivZero, summary: Division by integer literal zero}
 - {name: EmptyIf, summary: Empty statement after if}
-- {name: GuardedByChecker, summary: Checks for unguarded accesses to fields and methods with @GuardedBy annotations}
 - {name: GuardedByValidator, summary: Invalid @GuardedBy expression}
 - {name: GuiceAssistedParameters, summary: A constructor cannot have two @Assisted parameters of the same type unless they are disambiguated with named @Assisted annotations.}
 - {name: InjectInvalidTargetingOnScopingAnnotation, summary: The target of a scoping annotation must be set to METHOD and/or TYPE.}

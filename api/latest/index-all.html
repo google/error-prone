@@ -92,6 +92,10 @@
 <dd>
 <div class="block">Add an import statement as part of this SuggestedFix.</div>
 </dd>
+<dt><span class="strong"><a href="./com/google/errorprone/fixes/SuggestedFix.html#addModifier(com.sun.source.tree.Tree,%20javax.lang.model.element.Modifier,%20com.google.errorprone.VisitorState)">addModifier(Tree, Modifier, VisitorState)</a></span> - Static method in class com.google.errorprone.fixes.<a href="./com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></dt>
+<dd>
+<div class="block">Add a modifier to the given class, method, or field declaration.</div>
+</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/fixes/SuggestedFix.Builder.html#addStaticImport(java.lang.String)">addStaticImport(String)</a></span> - Method in class com.google.errorprone.fixes.<a href="./com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></dt>
 <dd>
 <div class="block">Add a static import statement as part of this SuggestedFix.</div>
@@ -104,7 +108,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/scanner/BuiltInCheckerSuppliers.html#allChecks()">allChecks()</a></span> - Static method in class com.google.errorprone.scanner.<a href="./com/google/errorprone/scanner/BuiltInCheckerSuppliers.html" title="class in com.google.errorprone.scanner">BuiltInCheckerSuppliers</a></dt>
 <dd>
-<div class="block">Returns a <a href="./com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with all <a href="./com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>s in error-prone.</div>
+<div class="block">Returns a <a href="./com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with all <a href="./com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>s in Error Prone.</div>
 </dd>
 <dt><span class="strong"><a href="./com/google/errorprone/analysis/BugCheckerLocalAnalysis.html#allNames()">allNames()</a></span> - Method in class com.google.errorprone.analysis.<a href="./com/google/errorprone/analysis/BugCheckerLocalAnalysis.html" title="class in com.google.errorprone.analysis">BugCheckerLocalAnalysis</a></dt>
 <dd>&nbsp;</dd>
@@ -884,6 +888,10 @@
 </dd>
 <dt><span class="strong"><a href="./com/google/errorprone/analysis/BugCheckerLocalAnalysis.html#defaultAction(com.sun.source.tree.Tree,%20com.google.errorprone.VisitorState)">defaultAction(Tree, VisitorState)</a></span> - Method in class com.google.errorprone.analysis.<a href="./com/google/errorprone/analysis/BugCheckerLocalAnalysis.html" title="class in com.google.errorprone.analysis">BugCheckerLocalAnalysis</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/scanner/BuiltInCheckerSuppliers.html#defaultChecks()">defaultChecks()</a></span> - Static method in class com.google.errorprone.scanner.<a href="./com/google/errorprone/scanner/BuiltInCheckerSuppliers.html" title="class in com.google.errorprone.scanner">BuiltInCheckerSuppliers</a></dt>
+<dd>
+<div class="block">Returns a <a href="./com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with the <a href="./com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>s that are in the ENABLED lists.</div>
+</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/BugChecker.html#defaultSeverity()">defaultSeverity()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/fixes/SuggestedFix.Builder.html#delete(com.sun.source.tree.Tree)">delete(Tree)</a></span> - Method in class com.google.errorprone.fixes.<a href="./com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></dt>
@@ -1099,6 +1107,11 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/EqualsNaN.html#EqualsNaN()">EqualsNaN()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/EqualsNaN.html" title="class in com.google.errorprone.bugpatterns">EqualsNaN</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/scanner/BuiltInCheckerSuppliers.html#errorChecks()">errorChecks()</a></span> - Static method in class com.google.errorprone.scanner.<a href="./com/google/errorprone/scanner/BuiltInCheckerSuppliers.html" title="class in com.google.errorprone.scanner">BuiltInCheckerSuppliers</a></dt>
+<dd>
+<div class="block">Returns a <a href="./com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with the <a href="./com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>s that are in the ENABLED_ERRORS
+ list.</div>
+</dd>
 <dt><a href="./com/google/errorprone/ErrorProneAnalyzer.html" title="class in com.google.errorprone"><span class="strong">ErrorProneAnalyzer</span></a> - Class in <a href="./com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
 <dd>
 <div class="block">Used to run an error-prone analysis as a phase in the javac compiler.</div>
@@ -1432,6 +1445,10 @@
 <dd>
 <div class="block">Returns the message, not including the check name but including the link.</div>
 </dd>
+<dt><span class="strong"><a href="./com/google/errorprone/util/ASTHelpers.html#getModifiers(com.sun.source.tree.Tree)">getModifiers(Tree)</a></span> - Static method in class com.google.errorprone.util.<a href="./com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dd>
+<div class="block">Returns the modifiers tree of the given class, method, or variable declaration.</div>
+</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/VisitorState.html#getName(java.lang.String)">getName(String)</a></span> - Method in class com.google.errorprone.<a href="./com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/fixes/AppliedFix.html#getNewCodeSnippet()">getNewCodeSnippet()</a></span> - Method in class com.google.errorprone.fixes.<a href="./com/google/errorprone/fixes/AppliedFix.html" title="class in com.google.errorprone.fixes">AppliedFix</a></dt>
@@ -1519,6 +1536,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/ErrorProneJavaCompiler.html#getTask(java.io.Writer,%20javax.tools.JavaFileManager,%20javax.tools.DiagnosticListener,%20java.lang.Iterable,%20java.lang.Iterable,%20java.lang.Iterable)">getTask(Writer, JavaFileManager, DiagnosticListener&lt;? super JavaFileObject&gt;, Iterable&lt;String&gt;, Iterable&lt;String&gt;, Iterable&lt;? extends JavaFileObject&gt;)</a></span> - Method in class com.google.errorprone.<a href="./com/google/errorprone/ErrorProneJavaCompiler.html" title="class in com.google.errorprone">ErrorProneJavaCompiler</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/VisitorState.html#getTokensForNode(com.sun.tools.javac.tree.JCTree)">getTokensForNode(JCTree)</a></span> - Method in class com.google.errorprone.<a href="./com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
+<dd>
+<div class="block">Returns the list of <code>Tokens.Token</code>s for the given <code>JCTree</code>.</div>
+</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/fixes/AdjustedPosition.html#getTree()">getTree()</a></span> - Method in class com.google.errorprone.fixes.<a href="./com/google/errorprone/fixes/AdjustedPosition.html" title="class in com.google.errorprone.fixes">AdjustedPosition</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/fixes/IndexedPosition.html#getTree()">getTree()</a></span> - Method in class com.google.errorprone.fixes.<a href="./com/google/errorprone/fixes/IndexedPosition.html" title="class in com.google.errorprone.fixes">IndexedPosition</a></dt>
@@ -2623,8 +2644,6 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/MalformedFormatString.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/MalformedFormatString.html" title="class in com.google.errorprone.bugpatterns">MalformedFormatString</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/MisusedFormattingLogger.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/MisusedFormattingLogger.html" title="class in com.google.errorprone.bugpatterns">MisusedFormattingLogger</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/MisusedWeekYear.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/MisusedWeekYear.html" title="class in com.google.errorprone.bugpatterns">MisusedWeekYear</a></dt>
 <dd>
 <div class="block">Match uses of SimpleDateFormat.applyPattern and SimpleDateFormat.applyLocalizedPattern in
@@ -2754,11 +2773,6 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/BugChecker.WildcardTreeMatcher.html#matchWildcard(com.sun.source.tree.WildcardTree,%20com.google.errorprone.VisitorState)">matchWildcard(WildcardTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/BugChecker.WildcardTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.WildcardTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="strong"><a href="./com/google/errorprone/scanner/BuiltInCheckerSuppliers.html#matureChecks()">matureChecks()</a></span> - Static method in class com.google.errorprone.scanner.<a href="./com/google/errorprone/scanner/BuiltInCheckerSuppliers.html" title="class in com.google.errorprone.scanner">BuiltInCheckerSuppliers</a></dt>
-<dd>
-<div class="block">Returns a <a href="./com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with all <a href="./com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>s in error-prone that have
- <code>maturity == MaturityLevel.MATURE</code>.</div>
-</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/BugPattern.Instance.html#maturity">maturity</a></span> - Variable in class com.google.errorprone.<a href="./com/google/errorprone/BugPattern.Instance.html" title="class in com.google.errorprone">BugPattern.Instance</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/BugChecker.html#maturity()">maturity()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></dt>
@@ -2902,10 +2916,6 @@
 <div class="block">A bug checker for the following code pattern:</div>
 </dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/MissingFail.html#MissingFail()">MissingFail()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/MissingFail.html" title="class in com.google.errorprone.bugpatterns">MissingFail</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="./com/google/errorprone/bugpatterns/MisusedFormattingLogger.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">MisusedFormattingLogger</span></a> - Class in <a href="./com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/MisusedFormattingLogger.html#MisusedFormattingLogger()">MisusedFormattingLogger()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/MisusedFormattingLogger.html" title="class in com.google.errorprone.bugpatterns">MisusedFormattingLogger</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="./com/google/errorprone/bugpatterns/MisusedWeekYear.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">MisusedWeekYear</span></a> - Class in <a href="./com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>

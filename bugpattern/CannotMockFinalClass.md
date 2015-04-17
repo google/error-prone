@@ -1,15 +1,20 @@
+<!--
+*** AUTO-GENERATED, DO NOT MODIFY ***
+To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
+-->
+
 ---
 title: CannotMockFinalClass
 layout: bugpattern
 category: MOCKITO
-severity: ERROR
-maturity: EXPERIMENTAL
+severity: WARNING
+maturity: MATURE
 ---
 
 <div style="float:right;"><table id="metadata">
 <tr><td>Category</td><td>MOCKITO</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Severity</td><td>WARNING</td></tr>
+<tr><td>Maturity</td><td>MATURE</td></tr>
 </table></div>
 
 # Bug pattern: CannotMockFinalClass
