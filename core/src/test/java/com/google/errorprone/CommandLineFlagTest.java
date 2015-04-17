@@ -25,6 +25,7 @@ import static com.google.errorprone.BugPattern.Suppressibility.UNSUPPRESSIBLE;
 
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
+import com.google.errorprone.bugpatterns.EmptyIfStatement;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.scanner.ScannerSupplier;
 
@@ -134,8 +135,9 @@ public class CommandLineFlagTest {
   @Test
   public void canEnableWithDefaultSeverity() throws Exception {
     ErrorProneTestCompiler compiler = builder.build();
-    List<JavaFileObject> sources = compiler.fileManager().forResources(getClass(),
-        "bugpatterns/EmptyIfStatementPositiveCases.java");
+    List<JavaFileObject> sources = compiler.fileManager().forResources(
+        EmptyIfStatement.class,
+        "EmptyIfStatementPositiveCases.java");
 
     Result exitCode = compiler.compile(sources);
     assertThat(exitCode).isEqualTo(Result.OK);
@@ -148,8 +150,9 @@ public class CommandLineFlagTest {
   @Test
   public void canEnableWithOverriddenSeverity() throws Exception {
     ErrorProneTestCompiler compiler = builder.build();
-    List<JavaFileObject> sources = compiler.fileManager().forResources(getClass(),
-        "bugpatterns/EmptyIfStatementPositiveCases.java");
+    List<JavaFileObject> sources = compiler.fileManager().forResources(
+        EmptyIfStatement.class,
+        "EmptyIfStatementPositiveCases.java");
 
     Result exitCode = compiler.compile(sources);
     assertThat(exitCode).isEqualTo(Result.OK);

@@ -91,8 +91,15 @@ public class ErrorProneInMemoryFileManager extends JavacPathFileManager {
     Path path = fileSystem.getPath("/", clazz.getPackage().getName().replace('.', '/'), fileName);
     try {
       Files.createDirectories(path.getParent());
-      try (InputStream inputStream = clazz.getResourceAsStream(fileName)) {
+      InputStream inputStream = null;
+      try {
+        inputStream = clazz.getResourceAsStream(fileName);
+        if (inputStream == null) {
+          inputStream = clazz.getResourceAsStream("testdata/" + fileName);
+        }
         Files.copy(inputStream, path);
+      } finally {
+        inputStream.close();
       }
     } catch (IOException e) {
       throw new AssertionError(e);

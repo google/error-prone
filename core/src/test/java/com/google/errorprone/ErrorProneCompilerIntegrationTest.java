@@ -30,6 +30,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.bugpatterns.BadShiftAmount;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ExpressionStatementTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -100,8 +101,9 @@ public class ErrorProneCompilerIntegrationTest {
 
   @Test
   public void fileWithError() throws Exception {
-    Result exitCode = compiler.compile(compiler.fileManager().forResources(getClass(),
-        "bugpatterns/BadShiftAmountPositiveCases.java"));
+    Result exitCode = compiler.compile(compiler.fileManager().forResources(
+        BadShiftAmount.class,
+        "BadShiftAmountPositiveCases.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
 
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher = hasItem(
@@ -114,8 +116,9 @@ public class ErrorProneCompilerIntegrationTest {
   public void fileWithWarning() throws Exception {
     compilerBuilder.report(ScannerSupplier.fromBugCheckers(new NonAtomicVolatileUpdate()));
     compiler = compilerBuilder.build();
-    Result exitCode = compiler.compile(compiler.fileManager().forResources(getClass(),
-        "bugpatterns/NonAtomicVolatileUpdatePositiveCases.java"));
+    Result exitCode = compiler.compile(compiler.fileManager().forResources(
+        NonAtomicVolatileUpdate.class,
+        "NonAtomicVolatileUpdatePositiveCases.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
 
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher = hasItem(
