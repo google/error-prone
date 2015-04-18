@@ -1,8 +1,3 @@
-<!--
-*** AUTO-GENERATED, DO NOT MODIFY ***
-To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
--->
-
 ---
 title: MalformedFormatString
 layout: bugpattern
@@ -10,6 +5,11 @@ category: JDK
 severity: ERROR
 maturity: EXPERIMENTAL
 ---
+
+<!--
+*** AUTO-GENERATED, DO NOT MODIFY ***
+To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
+-->
 
 <div style="float:right;"><table id="metadata">
 <tr><td>Category</td><td>JDK</td></tr>

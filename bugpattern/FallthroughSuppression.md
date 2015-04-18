@@ -1,8 +1,3 @@
-<!--
-*** AUTO-GENERATED, DO NOT MODIFY ***
-To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
--->
-
 ---
 title: FallthroughSuppression
 layout: bugpattern
@@ -10,6 +5,11 @@ category: ONE_OFF
 severity: NOT_A_PROBLEM
 maturity: EXPERIMENTAL
 ---
+
+<!--
+*** AUTO-GENERATED, DO NOT MODIFY ***
+To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
+-->
 
 <div style="float:right;"><table id="metadata">
 <tr><td>Category</td><td>ONE_OFF</td></tr>
