@@ -96,12 +96,7 @@ class BugPatternFileGenerator implements LineProcessor<List<Instance>> {
   private static MessageFormat constructPageTemplate(
       Instance pattern,  boolean generateFrontMatter) {
     StringBuilder result = new StringBuilder();
-    result.append(
-        "<!--\n"
-        + "*** AUTO-GENERATED, DO NOT MODIFY ***\n"
-        + "To make changes, edit the @BugPattern annotation or the explanation in"
-        + " docs/bugpattern.\n"
-        + "-->\n\n");
+
     if (generateFrontMatter) {
       result.append("---\n"
           + "title: {1}\n"
@@ -111,6 +106,14 @@ class BugPatternFileGenerator implements LineProcessor<List<Instance>> {
           + "maturity: {5}\n"
           + "---\n\n");
     }
+
+    result.append(
+        "<!--\n"
+        + "*** AUTO-GENERATED, DO NOT MODIFY ***\n"
+        + "To make changes, edit the @BugPattern annotation or the explanation in"
+        + " docs/bugpattern.\n"
+        + "-->\n\n");
+
     result.append("<div style=\"float:right;\"><table id=\"metadata\">\n"
         + "<tr><td>Category</td><td>{3}</td></tr>\n"
         + "<tr><td>Severity</td><td>{4}</td></tr>\n"
