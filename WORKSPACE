@@ -35,6 +35,18 @@ bind(
 )
 
 maven_jar(
+    name = "javacutil",
+    group_id = "org.checkerframework",
+    artifact_id = "javacutil",
+    version = "1.8.10",
+)
+
+bind(
+    name = "javacutil-jar",
+    actual = "@javacutil//jar"
+)
+
+maven_jar(
     name = "dataflow",
     group_id = "org.checkerframework",
     artifact_id = "dataflow",
@@ -131,6 +143,30 @@ bind(
 )
 
 maven_jar(
+    name = "guice_servlet",
+    group_id = "com.google.inject.extensions",
+    artifact_id = "guice-servlet",
+    version = "4.0-beta5",
+)
+
+bind(
+    name = "guice_servlet-jar",
+    actual = "@guice_servlet//jar"
+)
+
+maven_jar(
+    name = "guice_assistedinject",
+    group_id = "com.google.inject.extensions",
+    artifact_id = "guice-assistedinject",
+    version = "4.0-beta5",
+)
+
+bind(
+    name = "guice_assistedinject-jar",
+    actual = "@guice_assistedinject//jar"
+)
+
+maven_jar(
     name = "guice",
     group_id = "com.google.inject",
     artifact_id = "guice",
@@ -178,6 +214,18 @@ bind(
 )
 
 maven_jar(
+    name = "mockito_core",
+    group_id = "org.mockito",
+    artifact_id = "mockito-core",
+    version = "2.0.3-beta",
+)
+
+bind(
+    name = "mockito_core-jar",
+    actual = "@mockito_core//jar"
+)
+
+maven_jar(
     name = "mockito",
     group_id = "org.mockito",
     artifact_id = "mockito-core",
@@ -187,4 +235,40 @@ maven_jar(
 bind(
     name = "mockito-jar",
     actual = "@mockito//jar"
+)
+
+maven_jar(
+    name = "objenesis",
+    group_id = "org.objenesis",
+    artifact_id = "objenesis",
+    version = "2.1",
+)
+
+bind(
+    name = "objenesis-jar",
+    actual = "@objenesis//jar"
+)
+
+maven_jar(
+    name = "jsr330_inject",
+    group_id = "javax.inject",
+    artifact_id = "javax.inject",
+    version = "1",
+)
+
+bind(
+    name = "jsr330_inject-jar",
+    actual = "@jsr330_inject//jar"
+)
+
+maven_jar(
+    name = "protobuf",
+    group_id = "com.google.protobuf",
+    artifact_id = "protobuf-java",
+    version = "2.6.1",
+)
+
+bind(
+    name = "protobuf-jar",
+    actual = "@protobuf//jar"
 )
