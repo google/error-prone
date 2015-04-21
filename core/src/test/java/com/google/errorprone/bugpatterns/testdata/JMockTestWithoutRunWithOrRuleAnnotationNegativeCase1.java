@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import org.junit.Rule;
 import org.jmock.Mockery;
 
-public class JMockTestWithoutRunWithOrRuleAnnotationNegativeCase5 {
+public class JMockTestWithoutRunWithOrRuleAnnotationNegativeCase1 {
     @Rule
     final Mockery mockery = new Mockery();
 }

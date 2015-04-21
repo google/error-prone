@@ -33,18 +33,19 @@ public class InjectJavaxInjectOnAbstractMethodTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new InjectJavaxInjectOnAbstractMethod());
+    compilationHelper =
+        CompilationTestHelper.newInstance(new InjectJavaxInjectOnAbstractMethod(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "InjectJavaxInjectOnAbstractMethodPositiveCases.java"));
+    compilationHelper.addSourceFile("InjectJavaxInjectOnAbstractMethodPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "InjectJavaxInjectOnAbstractMethodNegativeCases.java"));
+    compilationHelper.addSourceFile("InjectJavaxInjectOnAbstractMethodNegativeCases.java")
+        .doTest();
   }
 }

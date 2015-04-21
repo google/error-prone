@@ -46,31 +46,43 @@ public class MissingFailTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new MissingFail());
+    compilationHelper = CompilationTestHelper.newInstance(new MissingFail(), getClass());
   }
 
   @Test
   public void testPositiveCases() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(
-        compilationHelper.fileManager().sources(getClass(), "MissingFailPositiveCases.java",
-            "MissingFailPositiveCases2.java", "MissingFailPositiveCases3.java"));
+    compilationHelper.addSourceFile("MissingFailPositiveCases.java").doTest();
+  }
+
+  @Test
+  public void testPositiveCases2() throws Exception {
+    compilationHelper.addSourceFile("MissingFailPositiveCases2.java").doTest();
+  }
+
+  @Test
+  public void testPositiveCases3() throws Exception {
+    compilationHelper.addSourceFile("MissingFailPositiveCases3.java").doTest();
   }
 
   @Test
   public void testNegativeCases() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().sources(
-            getClass(), "MissingFailNegativeCases.java", "MissingFailNegativeCases2.java"));
+    compilationHelper.addSourceFile("MissingFailNegativeCases.java").doTest();
+  }
+
+  @Test
+  public void testNegativeCases2() throws Exception {
+    compilationHelper.addSourceFile("MissingFailNegativeCases2.java").doTest();
   }
 
   @Test
   public void testFailImport() throws Exception {
     TestScanner scanner = new TestScanner();
     CompilationTestHelper compilationHelper =
-        CompilationTestHelper.newInstance(ScannerSupplier.fromScanner(scanner));
+        CompilationTestHelper.newInstance(ScannerSupplier.fromScanner(scanner), getClass());
 
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines("test/A.java",
+    compilationHelper
+        .addSourceLines(
+            "test/A.java",
             "package test;",
             "import junit.framework.TestCase;",
             "public class A extends TestCase {",
@@ -79,7 +91,8 @@ public class MissingFailTest {
             "      new String();",
             "    } catch (IllegalArgumentException expected) {}",
             "  }",
-            "}"));
+            "}")
+        .doTest();
 
     assertThat(getOnlyFix(scanner).getImportsToAdd())
         .containsExactly("import static org.junit.Assert.fail");
@@ -93,10 +106,11 @@ public class MissingFailTest {
   public void testFailMessageMultiCatch() throws Exception {
     TestScanner scanner = new TestScanner();
     CompilationTestHelper compilationHelper =
-        CompilationTestHelper.newInstance(ScannerSupplier.fromScanner(scanner));
+        CompilationTestHelper.newInstance(ScannerSupplier.fromScanner(scanner), getClass());
 
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines("test/A.java",
+    compilationHelper
+        .addSourceLines(
+            "test/A.java",
             "package test;",
             "import junit.framework.TestCase;",
             "public class A extends TestCase {",
@@ -105,7 +119,8 @@ public class MissingFailTest {
             "      new String();",
             "    } catch (IllegalArgumentException | IllegalStateException expected) {}",
             "  }",
-            "}"));
+            "}")
+        .doTest();
 
     assertThat(getOnlyFix(scanner).getReplacements(new NoopEndPosTable()))
         .containsExactly(Replacement.create(0, 0, "\nfail(\"Expected Exception\");"));

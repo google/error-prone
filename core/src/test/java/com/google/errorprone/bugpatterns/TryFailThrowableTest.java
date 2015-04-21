@@ -32,18 +32,16 @@ public class TryFailThrowableTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new TryFailThrowable());
+    compilationHelper = CompilationTestHelper.newInstance(new TryFailThrowable(), getClass());
   }
 
   @Test
   public void testPositiveCases() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "TryFailThrowablePositiveCases.java"));
+    compilationHelper.addSourceFile("TryFailThrowablePositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCases() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "TryFailThrowableNegativeCases.java"));
+    compilationHelper.addSourceFile("TryFailThrowableNegativeCases.java").doTest();
   }
 }

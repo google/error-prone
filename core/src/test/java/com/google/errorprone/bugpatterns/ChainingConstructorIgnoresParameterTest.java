@@ -33,18 +33,18 @@ public class ChainingConstructorIgnoresParameterTest {
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(new ChainingConstructorIgnoresParameter());
+        CompilationTestHelper.newInstance(new ChainingConstructorIgnoresParameter(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "ChainingConstructorIgnoresParameterPositiveCases.java"));
+    compilationHelper.addSourceFile("ChainingConstructorIgnoresParameterPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "ChainingConstructorIgnoresParameterNegativeCases.java"));
+    compilationHelper.addSourceFile("ChainingConstructorIgnoresParameterNegativeCases.java")
+        .doTest();
   }
 }

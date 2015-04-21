@@ -33,18 +33,18 @@ public class GuiceOverridesJavaxInjectableMethodTest {
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(new GuiceOverridesJavaxInjectableMethod());
+        CompilationTestHelper.newInstance(new GuiceOverridesJavaxInjectableMethod(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "GuiceOverridesJavaxInjectableMethodPositiveCases.java"));
+    compilationHelper.addSourceFile("GuiceOverridesJavaxInjectableMethodPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "GuiceOverridesJavaxInjectableMethodNegativeCases.java"));
+    compilationHelper.addSourceFile("GuiceOverridesJavaxInjectableMethodNegativeCases.java")
+        .doTest();
   }
 }

@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.base.Joiner;
@@ -39,10 +39,7 @@ import com.sun.tools.javac.code.Type;
  */
 @BugPattern(name = "GuardedByChecker", altNames = "GuardedBy",
     summary = "Checks for unguarded accesses to fields and methods with @GuardedBy annotations",
-    explanation = "The @GuardedBy annotation is used to associate a lock with a fields or methods."
-        + " Accessing a guarded field or invoking a guarded method should only be done when the"
-        + " specified lock is held. Unguarded accesses are not thread safe.",
-    category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
+    category = JDK, severity = ERROR, maturity = MATURE)
 public class GuardedByChecker extends GuardedByValidator implements BugChecker.VariableTreeMatcher,
     BugChecker.MethodTreeMatcher {
 

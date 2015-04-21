@@ -78,7 +78,7 @@ public class BugPatternFileGeneratorTest {
         new BugPatternFileGenerator(wikiDir, exampleDirBase, explanationDirBase, true, true);
     generator.processLine(BUGPATTERN_LINE);
     String expected = CharStreams.toString(new InputStreamReader(
-        getClass().getResourceAsStream("DeadException_frontmatter_pygments.md"), UTF_8));
+        getClass().getResourceAsStream("testdata/DeadException_frontmatter_pygments.md"), UTF_8));
     String actual = CharStreams.toString(
         Files.newBufferedReader(wikiDir.resolve("DeadException.md"), UTF_8));
     assertEquals(expected.trim(), actual.trim());
@@ -90,7 +90,7 @@ public class BugPatternFileGeneratorTest {
         new BugPatternFileGenerator(wikiDir, exampleDirBase, explanationDirBase, false, false);
     generator.processLine(BUGPATTERN_LINE);
     String expected = CharStreams.toString(new InputStreamReader(
-        getClass().getResourceAsStream("DeadException_nofrontmatter_gfm.md"), UTF_8));
+        getClass().getResourceAsStream("testdata/DeadException_nofrontmatter_gfm.md"), UTF_8));
     String actual = new String(Files.readAllBytes(wikiDir.resolve("DeadException.md")), UTF_8);
     assertEquals(expected.trim(), actual.trim());
   }
@@ -105,7 +105,7 @@ public class BugPatternFileGeneratorTest {
             UTF_8);
     generator.processLine(BUGPATTERN_LINE_SIDECAR);
     String expected = CharStreams.toString(new InputStreamReader(
-        getClass().getResourceAsStream("DeadException_nofrontmatter_gfm.md"), UTF_8));
+        getClass().getResourceAsStream("testdata/DeadException_nofrontmatter_gfm.md"), UTF_8));
     String actual = new String(Files.readAllBytes(wikiDir.resolve("DeadException.md")), UTF_8);
     assertEquals(expected.trim(), actual.trim());
   }

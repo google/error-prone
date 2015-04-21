@@ -57,7 +57,7 @@ public class ErrorProneJavaCompiler implements JavaCompiler {
 
   // package-private for testing
   ErrorProneJavaCompiler(JavaCompiler javacTool) {
-    this(javacTool, BuiltInCheckerSuppliers.matureChecks());
+    this(javacTool, BuiltInCheckerSuppliers.defaultChecks());
   }
 
   public ErrorProneJavaCompiler(ScannerSupplier scannerSupplier) {

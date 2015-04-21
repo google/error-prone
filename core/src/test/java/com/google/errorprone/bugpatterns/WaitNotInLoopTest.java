@@ -33,18 +33,16 @@ public class WaitNotInLoopTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new WaitNotInLoop());
+    compilationHelper = CompilationTestHelper.newInstance(new WaitNotInLoop(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "WaitNotInLoopPositiveCases.java"));
+    compilationHelper.addSourceFile("WaitNotInLoopPositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "WaitNotInLoopNegativeCases.java"));
+    compilationHelper.addSourceFile("WaitNotInLoopNegativeCases.java").doTest();
   }
 }

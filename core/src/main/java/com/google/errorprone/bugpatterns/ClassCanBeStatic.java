@@ -39,7 +39,6 @@ import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.IdentifierTree;
-import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
@@ -114,33 +113,11 @@ public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
       return Description.NO_MATCH;
     }
 
-    // figure out where to insert the static modifier
-    // if there is other modifier, prepend 'static ' in front of class
-    // else insert 'static ' AFTER public/private/protected and BEFORE final
-    Fix fix;
-
-    ModifiersTree mods = tree.getModifiers();
-    if (mods.getFlags().isEmpty()) {
-      fix = SuggestedFix.prefixWith(tree, "static ");
-    } else {
-      // Note that the use of .toString() here effectively destroys any special
-      // formatting, eg if the modifiers previously had multiple spaces or a
-      // comment between them, after this fix they will all have exactly one
-      // space between each modifier.
-      String newmods = mods.toString();
-      int ind = newmods.indexOf("final");
-      if (ind < 0) {
-        // append if 'final' not found
-        newmods += "static";
-        fix = SuggestedFix.replace(mods, newmods);
-      } else {
-        // insert at ind, just before 'final'
-        newmods = newmods.substring(0, ind) + "static "
-                + newmods.substring(ind, newmods.length() - 1);
-        fix = SuggestedFix.replace(mods, newmods);
-      }
+    Description.Builder builder = buildDescription(tree);
+    Fix fix = SuggestedFix.addModifier(tree, Modifier.STATIC, state);
+    if (fix != null) {
+      builder.addFix(fix);
     }
-
-    return describeMatch(tree, fix);
+    return builder.build();
   }
 }

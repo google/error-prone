@@ -23,8 +23,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.util.Arrays;
-
 /** {@link ClassName}Test */
 @RunWith(JUnit4.class)
 public class ClassNameTest {
@@ -33,100 +31,116 @@ public class ClassNameTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new ClassName());
+    compilationHelper = CompilationTestHelper.newInstance(new ClassName(), getClass());
   }
 
   @Test
   public void twoClasses() throws Exception {
-      compilationHelper.assertCompileFailsWithMessages(
-          Arrays.asList(
-              compilationHelper.fileManager().forSourceLines("a/A.java",
-                  "// BUG: Diagnostic contains: A inside A.java, instead found: One, Two",
-                  "package a;",
-                  "class One {}",
-                  "class Two {}"),
-              compilationHelper.fileManager().forSourceLines("b/B.java",
-                  "// BUG: Diagnostic contains: B inside B.java, instead found: Three, Four",
-                  "package b;",
-                  "class Three {}",
-                  "class Four {}")));
+      compilationHelper
+          .addSourceLines(
+              "a/A.java",
+              "// BUG: Diagnostic contains: A inside A.java, instead found: One, Two",
+              "package a;",
+              "class One {}",
+              "class Two {}")
+          .addSourceLines(
+              "b/B.java",
+              "// BUG: Diagnostic contains: B inside B.java, instead found: Three, Four",
+              "package b;",
+              "class Three {}",
+              "class Four {}")
+          .doTest();
   }
 
   @Test
   public void packageInfo() throws Exception {
-      compilationHelper.assertCompileFailsWithMessages(
-          Arrays.asList(
-              compilationHelper.fileManager().forSourceLines("a/package-info.java",
-                  "/** Documentation for our package */",
-                  "package a;"),
-              compilationHelper.fileManager().forSourceLines("b/Test.java",
-                  "// BUG: Diagnostic contains: Test inside Test.java, instead found: Green",
-                  "package b;",
-                  "class Green {}")));
+      compilationHelper
+          .addSourceLines(
+              "a/package-info.java",
+              "/** Documentation for our package */",
+              "package a;")
+          .addSourceLines(
+              "b/Test.java",
+              "// BUG: Diagnostic contains: Test inside Test.java, instead found: Green",
+              "package b;",
+              "class Green {}")
+          .doTest();
   }
 
 
   @Test
   public void negative() throws Exception {
-      compilationHelper.assertCompileSucceeds(
-          Arrays.asList(
-              compilationHelper.fileManager().forSourceLines("a/A.java",
-                  "package a;",
-                  "class A {}"),
-              compilationHelper.fileManager().forSourceLines("b/B.java",
-                  "package b;",
-                  "class B {}")));
+      compilationHelper
+          .addSourceLines(
+              "a/A.java",
+              "package a;",
+              "class A {}")
+          .addSourceLines(
+              "b/B.java",
+              "package b;",
+              "class B {}")
+          .doTest();
   }
 
   @Test
   public void negativeMultipleTopLevel() throws Exception {
-      compilationHelper.assertCompileSucceeds(
-          Arrays.asList(
-              compilationHelper.fileManager().forSourceLines("a/A.java",
-                  "package a;",
-                  "class A {}"),
-              compilationHelper.fileManager().forSourceLines("b/B.java",
-                  "package b;",
-                  "class B {}",
-                  "class C {}")));
+      compilationHelper
+          .addSourceLines(
+              "a/A.java",
+              "package a;",
+              "class A {}")
+          .addSourceLines(
+              "b/B.java",
+              "package b;",
+              "class B {}",
+              "class C {}")
+          .doTest();
   }
 
   @Test
   public void negativeInnerClass() throws Exception {
-      compilationHelper.assertCompileSucceeds(
-          compilationHelper.fileManager().forSourceLines("b/B.java",
+      compilationHelper
+          .addSourceLines(
+              "b/B.java",
               "package b;",
               "class B {",
               "  static class Inner {}",
-              "}"));
+              "}")
+          .doTest();
   }
 
   @Test
   public void negativeInterface() throws Exception {
-      compilationHelper.assertCompileSucceeds(
-          compilationHelper.fileManager().forSourceLines("b/B.java",
+      compilationHelper
+          .addSourceLines(
+              "b/B.java",
               "package b;",
               "interface B {",
               "  static class Inner {}",
-              "}"));
+              "}")
+          .doTest();
   }
 
   @Test
   public void negativeEnum() throws Exception {
-      compilationHelper.assertCompileSucceeds(
-          compilationHelper.fileManager().forSourceLines("b/B.java",
+      compilationHelper
+          .addSourceLines(
+              "b/B.java",
               "package b;",
               "enum B {",
               "  ONE;",
-              "}"));
+              "}")
+          .doTest();
  }
 
   @Test
   public void negativeAnnotation() throws Exception {
-      compilationHelper.assertCompileSucceeds(
-          compilationHelper.fileManager().forSourceLines("b/B.java",
+      compilationHelper
+          .addSourceLines(
+              "b/B.java",
               "package b;",
               "public @interface B {",
-              "}"));
+              "}")
+          .doTest();
   }
 }

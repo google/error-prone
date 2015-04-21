@@ -34,18 +34,21 @@ public class InjectInvalidTargetingOnScopingAnnotationTest {
   @Before
   public void setUp() {
     compilationHelper =
-      CompilationTestHelper.newInstance(new InjectInvalidTargetingOnScopingAnnotation());
+        CompilationTestHelper.newInstance(
+            new InjectInvalidTargetingOnScopingAnnotation(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "InjectInvalidTargetingOnScopingAnnotationPositiveCases.java"));
+    compilationHelper
+        .addSourceFile("InjectInvalidTargetingOnScopingAnnotationPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "InjectInvalidTargetingOnScopingAnnotationNegativeCases.java"));
+    compilationHelper
+        .addSourceFile("InjectInvalidTargetingOnScopingAnnotationNegativeCases.java")
+        .doTest();
   }
 }

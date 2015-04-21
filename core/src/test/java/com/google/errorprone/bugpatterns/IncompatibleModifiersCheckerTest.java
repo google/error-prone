@@ -23,10 +23,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.util.Arrays;
-
-import javax.tools.JavaFileObject;
-
 /**
  * Unit tests for {@link IncompatibleModifiersChecker}.
  *
@@ -35,114 +31,114 @@ import javax.tools.JavaFileObject;
 @RunWith(JUnit4.class)
 public class IncompatibleModifiersCheckerTest {
 
-
   private CompilationTestHelper compilationHelper;
-
-  JavaFileObject notPrivateOrFinal;
-  JavaFileObject notPublicOrFinal;
-  JavaFileObject notAbstract;
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new IncompatibleModifiersChecker());
-
-    notPrivateOrFinal =
-        compilationHelper.fileManager().forSourceLines("test/NotPrivateOrFinal.java",
-        "package test;",
-        "import static javax.lang.model.element.Modifier.FINAL;",
-        "import static javax.lang.model.element.Modifier.PRIVATE;",
-        "import com.google.errorprone.annotations.IncompatibleModifiers;",
-        "@IncompatibleModifiers({PRIVATE, FINAL})",
-        "public @interface NotPrivateOrFinal {",
-        "}");
-
-    notPublicOrFinal = compilationHelper.fileManager().forSourceLines("test/NotPublicOrFinal.java",
-        "package test;",
-        "import static javax.lang.model.element.Modifier.FINAL;",
-        "import static javax.lang.model.element.Modifier.PUBLIC;",
-        "import com.google.errorprone.annotations.IncompatibleModifiers;",
-        "@IncompatibleModifiers({PUBLIC, FINAL})",
-        "public @interface NotPublicOrFinal {",
-        "}");
-
-    notAbstract = compilationHelper.fileManager().forSourceLines("test/NotAbstract.java",
-        "package test;",
-        "import static javax.lang.model.element.Modifier.ABSTRACT;",
-        "import com.google.errorprone.annotations.IncompatibleModifiers;",
-        "@IncompatibleModifiers(ABSTRACT)",
-        "public @interface NotAbstract {",
-        "}");
+    compilationHelper = CompilationTestHelper
+        .newInstance(new IncompatibleModifiersChecker(), getClass())
+        .addSourceLines(
+            "test/NotPrivateOrFinal.java",
+            "package test;",
+            "import static javax.lang.model.element.Modifier.FINAL;",
+            "import static javax.lang.model.element.Modifier.PRIVATE;",
+            "import com.google.errorprone.annotations.IncompatibleModifiers;",
+            "@IncompatibleModifiers({PRIVATE, FINAL})",
+            "public @interface NotPrivateOrFinal {",
+            "}")
+        .addSourceLines(
+            "test/NotPublicOrFinal.java",
+            "package test;",
+            "import static javax.lang.model.element.Modifier.FINAL;",
+            "import static javax.lang.model.element.Modifier.PUBLIC;",
+            "import com.google.errorprone.annotations.IncompatibleModifiers;",
+            "@IncompatibleModifiers({PUBLIC, FINAL})",
+            "public @interface NotPublicOrFinal {",
+            "}")
+        .addSourceLines(
+            "test/NotAbstract.java",
+            "package test;",
+            "import static javax.lang.model.element.Modifier.ABSTRACT;",
+            "import com.google.errorprone.annotations.IncompatibleModifiers;",
+            "@IncompatibleModifiers(ABSTRACT)",
+            "public @interface NotAbstract {",
+            "}");
   }
 
   @Test
   public void testAnnotationWithIncompatibleModifierOnClassFails() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(Arrays.asList(
-        notAbstract,
-        compilationHelper.fileManager().forSourceLines("test/IncompatibleModifiersTestCase.java",
+    compilationHelper
+        .addSourceLines(
+            "test/IncompatibleModifiersTestCase.java",
             "package test;",
             "import test.NotAbstract;",
             "// BUG: Diagnostic contains: The annotation '@NotAbstract' has specified that it"
-            + " should not be used together with the following modifiers: [abstract]",
+                + " should not be used together with the following modifiers: [abstract]",
             "@NotAbstract abstract class IncompatibleModifiersTestCase {",
-            "}")));
+            "}")
+        .doTest();
   }
 
   @Test
   public void testAnnotationWithIncompatibleModifierOnFieldFails() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(Arrays.asList(
-        notPrivateOrFinal,
-        compilationHelper.fileManager().forSourceLines("test/IncompatibleModifiersTestCase.java",
+    compilationHelper
+        .addSourceLines(
+            "test/IncompatibleModifiersTestCase.java",
             "package test;",
             "import test.NotPrivateOrFinal;",
             "public class IncompatibleModifiersTestCase {",
             "  // BUG: Diagnostic contains: The annotation '@NotPrivateOrFinal' has specified that"
-            + " it should not be used together with the following modifiers: [final]",
+                + " it should not be used together with the following modifiers: [final]",
             "  @NotPrivateOrFinal public final int n = 0;",
-            "}")));
+            "}")
+        .doTest();
   }
 
   @Test
   public void testAnnotationWithIncompatibleModifierOnMethodFails() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(Arrays.asList(
-        notPrivateOrFinal,
-        compilationHelper.fileManager().forSourceLines("test/IncompatibleModifiersTestCase.java",
-          "package test;",
-          "import test.NotPrivateOrFinal;",
-          "public class IncompatibleModifiersTestCase {",
-          "  // BUG: Diagnostic contains: The annotation '@NotPrivateOrFinal' has specified that"
-          + " it should not be used together with the following modifiers: [private]",
-          "  @NotPrivateOrFinal private void foo(){}",
-          "}")));
+    compilationHelper
+        .addSourceLines(
+            "test/IncompatibleModifiersTestCase.java",
+            "package test;",
+            "import test.NotPrivateOrFinal;",
+            "public class IncompatibleModifiersTestCase {",
+            "  // BUG: Diagnostic contains: The annotation '@NotPrivateOrFinal' has specified that"
+                + " it should not be used together with the following modifiers: [private]",
+            "  @NotPrivateOrFinal private void foo(){}",
+            "}")
+        .doTest();
   }
 
   @Test
   public void testAnnotationWithTwoIncompatibleModifiersFails() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(Arrays.asList(
-        notPublicOrFinal,
-        compilationHelper.fileManager().forSourceLines("test/IncompatibleModifiersTestCase.java",
+    compilationHelper
+        .addSourceLines(
+            "test/IncompatibleModifiersTestCase.java",
             "package test;",
             "import test.NotPublicOrFinal;",
             "public class IncompatibleModifiersTestCase {",
             "  // BUG: Diagnostic contains: The annotation '@NotPublicOrFinal' has specified that"
-            + " it should not be used together with the following modifiers: [public, final]",
+                + " it should not be used together with the following modifiers: [public, final]",
             "  @NotPublicOrFinal public static final int FOO = 0;",
-            "}")));
+            "}")
+        .doTest();
   }
 
   @Test
   public void testAnnotationWithCompatibleModifiersSucceeds() throws Exception {
-    compilationHelper.assertCompileSucceeds(Arrays.asList(
-        notAbstract,
-        compilationHelper.fileManager().forSourceLines("test/IncompatibleModifiersTestCase.java",
+    compilationHelper
+        .addSourceLines(
+            "test/IncompatibleModifiersTestCase.java",
             "package test;",
             "import test.NotAbstract;",
-            "public class IncompatibleModifiersTestCase {}")));
+            "public class IncompatibleModifiersTestCase {}")
+        .doTest();
   }
 
   @Test
   public void testGuavaAnnotation() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(Arrays.asList(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "com/google/common/annotations/IncompatibleModifiers.java",
             "package com.google.common.annotations;",
             "import javax.lang.model.element.Modifier;",
@@ -151,27 +147,30 @@ public class IncompatibleModifiersCheckerTest {
             "@Target(ElementType.ANNOTATION_TYPE)",
             "public @interface IncompatibleModifiers {",
             "  Modifier[] value();",
-            "}"),
-        compilationHelper.fileManager().forSourceLines("test/NotAbstract.java",
+            "}")
+        .addSourceLines(
+            "test/NotAbstract.java",
             "package test;",
             "import static javax.lang.model.element.Modifier.ABSTRACT;",
             "import com.google.common.annotations.IncompatibleModifiers;",
             "@IncompatibleModifiers(ABSTRACT)",
             "public @interface NotAbstract {",
-            "}"),
-        compilationHelper.fileManager().forSourceLines("test/RequiredModifiersTestCase.java",
+            "}")
+        .addSourceLines(
+            "test/RequiredModifiersTestCase.java",
             "package test;",
             "import test.NotAbstract;",
             "// BUG: Diagnostic contains: The annotation '@NotAbstract' has specified that it"
             + " should not be used together with the following modifiers: [abstract]",
             "@NotAbstract public abstract class RequiredModifiersTestCase {",
-            "}")));
+            "}")
+        .doTest();
   }
 
   @Test
   public void testGuavaAnnotationOK() throws Exception {
-    compilationHelper.assertCompileSucceeds(Arrays.asList(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "com/google/common/annotations/IncompatibleModifiers.java",
             "package com.google.common.annotations;",
             "import javax.lang.model.element.Modifier;",
@@ -180,26 +179,30 @@ public class IncompatibleModifiersCheckerTest {
             "@Target(ElementType.ANNOTATION_TYPE)",
             "public @interface IncompatibleModifiers {",
             "  Modifier[] value();",
-            "}"),
-        compilationHelper.fileManager().forSourceLines("test/NotAbstract.java",
+            "}")
+        .addSourceLines(
+            "test/NotAbstract.java",
             "package test;",
             "import static javax.lang.model.element.Modifier.ABSTRACT;",
             "import com.google.common.annotations.IncompatibleModifiers;",
             "@IncompatibleModifiers(ABSTRACT)",
             "public @interface NotAbstract {",
-            "}"),
-        compilationHelper.fileManager().forSourceLines("test/RequiredModifiersTestCase.java",
+            "}")
+        .addSourceLines(
+            "test/RequiredModifiersTestCase.java",
             "package test;",
             "import test.NotAbstract;",
             "@NotAbstract public class RequiredModifiersTestCase {",
-            "}")));
+            "}")
+        .doTest();
   }
 
   // Regression test for #313
   @Test
   public void negativeNestedAnnotations() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines("test/Test.java",
+    compilationHelper
+        .addSourceLines(
+            "test/Test.java",
             "package test;",
             "@interface Foos {",
             "  Foo[] value();",
@@ -207,23 +210,26 @@ public class IncompatibleModifiersCheckerTest {
             "@interface Foo {",
             "}",
             "@Foos({@Foo, @Foo}) public class Test {",
-            "}"));
+            "}")
+        .doTest();
   }
 
   // Regression test for #313
   @Test
   public void negativePackageAnnotation() throws Exception {
-    compilationHelper.assertCompileSucceeds(Arrays.asList(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "testdata/Anno.java",
             "package testdata;",
             "import java.lang.annotation.Target;",
             "import java.lang.annotation.ElementType;",
             "@Target(ElementType.PACKAGE)",
             "public @interface Anno {",
-            "}"),
-        compilationHelper.fileManager().forSourceLines("testdata/package-info.java",
+            "}")
+        .addSourceLines(
+            "testdata/package-info.java",
             "@Anno",
-            "package testdata;")));
+            "package testdata;")
+        .doTest();
   }
 }

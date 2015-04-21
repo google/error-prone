@@ -17,12 +17,11 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.io.IOException;
 
 /**
  * @author sebastian.h.monte@gmail.com (Sebastian Monte)
@@ -33,18 +32,16 @@ public class NullablePrimitiveTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new NullablePrimitive());
+    compilationHelper = CompilationTestHelper.newInstance(new NullablePrimitive(), getClass());
   }
 
   @Test
-  public void testPositiveCase() throws IOException {
-    compilationHelper.assertCompileSucceedsWithMessages(
-        compilationHelper.fileManager().sources(getClass(), "NullablePrimitivePositiveCases.java"));
+  public void testPositiveCase() {
+    compilationHelper.addSourceFile("NullablePrimitivePositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() throws IOException {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().sources(getClass(), "NullablePrimitiveNegativeCases.java"));
+  public void testNegativeCase() {
+    compilationHelper.addSourceFile("NullablePrimitiveNegativeCases.java").doTest();
   }
 }

@@ -16,8 +16,6 @@
 
 package com.google.errorprone;
 
-import static com.google.errorprone.CompilationTestHelper.asJavacList;
-
 import com.google.errorprone.scanner.ScannerSupplier;
 
 import com.sun.tools.javac.main.Main.Result;
@@ -95,6 +93,6 @@ public class ErrorProneTestCompiler {
     List<String> processedArgs =
         CompilationTestHelper.disableImplicitProcessing(Arrays.asList(args));
     String[] argsArray = processedArgs.toArray(new String[processedArgs.size()]);
-    return compiler.run(argsArray, context, fileManager, asJavacList(sources), processors);
+    return compiler.run(argsArray, context, fileManager, sources, processors);
   }
 }

@@ -34,19 +34,17 @@ public class ElementsCountedInLoopTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new ElementsCountedInLoop());
+    compilationHelper = CompilationTestHelper.newInstance(new ElementsCountedInLoop(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "ElementsCountedInLoopPositiveCases.java"));
+    compilationHelper.addSourceFile("ElementsCountedInLoopPositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "ElementsCountedInLoopNegativeCases.java"));
+    compilationHelper.addSourceFile("ElementsCountedInLoopNegativeCases.java").doTest();
   }
 
 }

@@ -33,19 +33,17 @@ public class EqualsNaNTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new EqualsNaN());
+    compilationHelper = CompilationTestHelper.newInstance(new EqualsNaN(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "EqualsNaNPositiveCases.java"));
+    compilationHelper.addSourceFile("EqualsNaNPositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "EqualsNaNNegativeCases.java"));
+    compilationHelper.addSourceFile("EqualsNaNNegativeCases.java").doTest();
   }
 
 }

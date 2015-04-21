@@ -33,19 +33,17 @@ public class InvalidPatternSyntaxTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new InvalidPatternSyntax());
+    compilationHelper = CompilationTestHelper.newInstance(new InvalidPatternSyntax(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "InvalidPatternSyntaxPositiveCases.java"));
+    compilationHelper.addSourceFile("InvalidPatternSyntaxPositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "InvalidPatternSyntaxNegativeCases.java"));
+    compilationHelper.addSourceFile("InvalidPatternSyntaxNegativeCases.java").doTest();
   }
 
 }

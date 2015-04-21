@@ -33,19 +33,17 @@ public class MisusedWeekYearTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new MisusedWeekYear());
+    compilationHelper = CompilationTestHelper.newInstance(new MisusedWeekYear(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "MisusedWeekYearPositiveCases.java"));
+    compilationHelper.addSourceFile("MisusedWeekYearPositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "MisusedWeekYearNegativeCases.java"));
+    compilationHelper.addSourceFile("MisusedWeekYearNegativeCases.java").doTest();
   }
 
 }

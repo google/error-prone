@@ -59,15 +59,16 @@ public class DescriptionTest {
     }
   }
 
+  private static final String URL =
+      "  (see http://errorprone.info/bugpattern/DeadException)";
+
   @Test
   public void testDescriptionFromBugPattern() {
     Description description = new MyChecker().getDescription();
     assertEquals("DeadException", description.checkName);
-    assertEquals("Exception created but not thrown\n" +
-        "  (see http://errorprone.info/bugpattern/DeadException)",
+    assertEquals("Exception created but not thrown\n" + URL,
         description.getMessageWithoutCheckName());
-    assertEquals("[DeadException] Exception created but not thrown\n" +
-        "  (see http://errorprone.info/bugpattern/DeadException)",
+    assertEquals("[DeadException] Exception created but not thrown\n" + URL,
         description.getMessage());
   }
 
@@ -79,11 +80,10 @@ public class DescriptionTest {
             .build();
     assertEquals("DeadException", description.checkName);
     assertEquals(
-        "custom message\n  (see http://errorprone.info/bugpattern/DeadException)",
+        "custom message\n" + URL,
         description.getMessageWithoutCheckName());
     assertEquals(
-        "[DeadException] custom message\n"
-            + "  (see http://errorprone.info/bugpattern/DeadException)",
+        "[DeadException] custom message\n" + URL,
         description.getMessage());
   }
 

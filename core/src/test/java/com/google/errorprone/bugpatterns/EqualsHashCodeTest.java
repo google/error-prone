@@ -30,20 +30,16 @@ public class EqualsHashCodeTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new EqualsHashCode());
+    compilationHelper = CompilationTestHelper.newInstance(new EqualsHashCode(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(
-        compilationHelper.fileManager().sources(
-            getClass(), "EqualsHashCodeTestPositiveCases.java"));
+    compilationHelper.addSourceFile("EqualsHashCodeTestPositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().sources(
-            getClass(), "EqualsHashCodeTestNegativeCases.java"));
+    compilationHelper.addSourceFile("EqualsHashCodeTestNegativeCases.java").doTest();
   }
 }

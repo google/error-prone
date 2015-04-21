@@ -33,18 +33,17 @@ public class GuiceAssistedParametersTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new GuiceAssistedParameters());
+    compilationHelper =
+        CompilationTestHelper.newInstance(new GuiceAssistedParameters(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "GuiceAssistedParametersPositiveCases.java"));
+    compilationHelper.addSourceFile("GuiceAssistedParametersPositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "GuiceAssistedParametersNegativeCases.java"));
+    compilationHelper.addSourceFile("GuiceAssistedParametersNegativeCases.java").doTest();
   }
 }

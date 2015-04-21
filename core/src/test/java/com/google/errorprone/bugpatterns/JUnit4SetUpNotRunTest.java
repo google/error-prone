@@ -33,25 +33,22 @@ public class JUnit4SetUpNotRunTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new JUnit4SetUpNotRun());
+    compilationHelper = CompilationTestHelper.newInstance(new JUnit4SetUpNotRun(), getClass());
   }
 
   @Test
   public void testPositiveCases() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "JUnit4SetUpNotRunPositiveCases.java"));
+    compilationHelper.addSourceFile("JUnit4SetUpNotRunPositiveCases.java").doTest();
   }
 
   @Test
   public void testPositiveCase_customBefore() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "JUnit4SetUpNotRunPositiveCaseCustomBefore.java"));
+    compilationHelper.addSourceFile("JUnit4SetUpNotRunPositiveCaseCustomBefore.java").doTest();
   }
 
   @Test
   public void testNegativeCases() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "JUnit4SetUpNotRunNegativeCases.java"));
+    compilationHelper.addSourceFile("JUnit4SetUpNotRunNegativeCases.java").doTest();
   }
 
 }

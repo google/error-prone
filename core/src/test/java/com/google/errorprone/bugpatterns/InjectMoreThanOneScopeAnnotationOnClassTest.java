@@ -33,18 +33,19 @@ public class InjectMoreThanOneScopeAnnotationOnClassTest {
   @Before
   public void setUp() {
     compilationHelper = 
-     CompilationTestHelper.newInstance(new InjectMoreThanOneScopeAnnotationOnClass());
+        CompilationTestHelper.newInstance(
+            new InjectMoreThanOneScopeAnnotationOnClass(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "InjectMoreThanOneScopeAnnotationOnClassPositiveCases.java"));
+    compilationHelper.addSourceFile("InjectMoreThanOneScopeAnnotationOnClassPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "InjectMoreThanOneScopeAnnotationOnClassNegativeCases.java"));
+    compilationHelper.addSourceFile("InjectMoreThanOneScopeAnnotationOnClassNegativeCases.java")
+        .doTest();
   }
 }

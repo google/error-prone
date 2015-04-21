@@ -21,7 +21,6 @@ import static org.junit.Assert.assertTrue;
 
 import com.google.common.truth.Truth;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.ErrorProneInMemoryFileManager;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CompileTimeConstant;
 import com.google.errorprone.scanner.Scanner;
@@ -29,6 +28,7 @@ import com.google.errorprone.scanner.ScannerSupplier;
 
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.tools.javac.main.Main.Result;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,136 +39,132 @@ import java.lang.annotation.Target;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.tools.JavaFileObject;
-
 /** {@link CompileTimeConstantExpressionMatcher}Test */
 @RunWith(JUnit4.class)
 public class CompileTimeConstantExpressionMatcherTest {
 
-  private final ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
-
   @Test
   public void testMatches_matchesLiteralsAndStaticFinals() throws Exception {
-    JavaFileObject source =
-        fileManager.forSourceLines("test/CompileTimeConstantExpressionMatcherTestCase.java",
-            "package test;",
-            "import com.google.errorprone.annotations.CompileTimeConstant;",
-            "public class CompileTimeConstantExpressionMatcherTestCase {",
-            "  private final String final_string = \"bap\";",
-            "  private final int final_int = 29;",
-            "  private static final int static_final_int = 29;",
-            "  public void m() { ",
-            "    String s1; s1 = \"boop\"; s1 = \"boop\" + final_string;",
-            "    int int2; int2 = 42;",
-            "    Integer int3; int3 = 42 * final_int; int3 = 12 - static_final_int;",
-            "    boolean bool4; bool4 = false;",
-            "  }",
-            "}");
+    String[] lines = {
+      "package test;",
+      "import com.google.errorprone.annotations.CompileTimeConstant;",
+      "public class CompileTimeConstantExpressionMatcherTestCase {",
+      "  private final String final_string = \"bap\";",
+      "  private final int final_int = 29;",
+      "  private static final int static_final_int = 29;",
+      "  public void m() { ",
+      "    String s1; s1 = \"boop\"; s1 = \"boop\" + final_string;",
+      "    int int2; int2 = 42;",
+      "    Integer int3; int3 = 42 * final_int; int3 = 12 - static_final_int;",
+      "    boolean bool4; bool4 = false;",
+      "  }",
+      "}"
+    };
 
     Map<String, Boolean> expectedMatches = new HashMap<String, Boolean>();
     expectedMatches.put("s1", true);
     expectedMatches.put("int2", true);
     expectedMatches.put("int3", true);
     expectedMatches.put("bool4", true);
-    assertCompilerMatchesOnAssignment(source, expectedMatches);
+    assertCompilerMatchesOnAssignment(expectedMatches, lines);
   }
 
   @Test
   public void testMatches_nullLiteral() throws Exception {
-        JavaFileObject source =
-        fileManager.forSourceLines("test/CompileTimeConstantExpressionMatcherTestCase.java",
-            "package test;",
-            "import com.google.errorprone.annotations.CompileTimeConstant;",
-            "public class CompileTimeConstantExpressionMatcherTestCase {",
-            "  private static final String static_final_string = null;",
-            "  public void m() { ",
-            "    String s1; s1 = null;",
-            "    String s2; s2 = static_final_string;",
-            "  }",
-            "}");
+    String[] lines = {
+      "package test;",
+      "import com.google.errorprone.annotations.CompileTimeConstant;",
+      "public class CompileTimeConstantExpressionMatcherTestCase {",
+      "  private static final String static_final_string = null;",
+      "  public void m() { ",
+      "    String s1; s1 = null;",
+      "    String s2; s2 = static_final_string;",
+      "  }",
+      "}"
+    };
     Map<String, Boolean> expectedMatches = new HashMap<String, Boolean>();
     expectedMatches.put("s1", true);
     // Even though s2 has the compile-time constant value "null", it's not
     // a literal.  I don't know how to distinguish this, but I doubt this is
     // an important use case.
     expectedMatches.put("s2", false);
-    assertCompilerMatchesOnAssignment(source, expectedMatches);
+    assertCompilerMatchesOnAssignment(expectedMatches, lines);
   }
 
   @Test
   public void testMatches_doesNotMatchNonLiterals() throws Exception {
-        JavaFileObject source =
-        fileManager.forSourceLines("test/CompileTimeConstantExpressionMatcherTestCase.java",
-            "package test;",
-            "import com.google.errorprone.annotations.CompileTimeConstant;",
-            "public class CompileTimeConstantExpressionMatcherTestCase {",
-            "  private final int nonfinal_int;",
-            "  public CompileTimeConstantExpressionMatcherTestCase(int i) { ",
-            "    nonfinal_int = i;",
-            "  }",
-            "  public void m(String s) { ",
-            "    String s1; s1 = s;",
-            "    int int2; int2 = s.length();",
-            "    Integer int3; int3 = nonfinal_int; int3 = 14 * nonfinal_int;",
-            "    boolean bool4; bool4 = false;",
-            "  }",
-            "}");
+    String[] lines = {
+      "package test;",
+      "import com.google.errorprone.annotations.CompileTimeConstant;",
+      "public class CompileTimeConstantExpressionMatcherTestCase {",
+      "  private final int nonfinal_int;",
+      "  public CompileTimeConstantExpressionMatcherTestCase(int i) { ",
+      "    nonfinal_int = i;",
+      "  }",
+      "  public void m(String s) { ",
+      "    String s1; s1 = s;",
+      "    int int2; int2 = s.length();",
+      "    Integer int3; int3 = nonfinal_int; int3 = 14 * nonfinal_int;",
+      "    boolean bool4; bool4 = false;",
+      "  }",
+      "}"
+    };
     Map<String, Boolean> expectedMatches = new HashMap<String, Boolean>();
     expectedMatches.put("s1", false);
     expectedMatches.put("int2", false);
     expectedMatches.put("int3", false);
-    assertCompilerMatchesOnAssignment(source, expectedMatches);
+    assertCompilerMatchesOnAssignment(expectedMatches, lines);
   }
 
   @Test
   public void testMatches_finalCompileTimeConstantMethodParameters() throws Exception {
-        JavaFileObject source =
-        fileManager.forSourceLines("test/CompileTimeConstantExpressionMatcherTestCase.java",
-            "package test;",
-            "import com.google.errorprone.annotations.CompileTimeConstant;",
-            "public class CompileTimeConstantExpressionMatcherTestCase {",
-            "  public void m1(final @CompileTimeConstant String s) { ",
-            "    String s1; s1 = s;",
-            "  }",
-            "  public void m2(@CompileTimeConstant String s) { ",
-            "    String s2; s2 = s;",
-            "  }",
-            "  public void m3(final String s) { ",
-            "    String s3; s3 = s;",
-            "  }",
-            "}");
+    String[] lines = {
+      "package test;",
+      "import com.google.errorprone.annotations.CompileTimeConstant;",
+      "public class CompileTimeConstantExpressionMatcherTestCase {",
+      "  public void m1(final @CompileTimeConstant String s) { ",
+      "    String s1; s1 = s;",
+      "  }",
+      "  public void m2(@CompileTimeConstant String s) { ",
+      "    String s2; s2 = s;",
+      "  }",
+      "  public void m3(final String s) { ",
+      "    String s3; s3 = s;",
+      "  }",
+      "}"
+    };
     Map<String, Boolean> expectedMatches = new HashMap<String, Boolean>();
     expectedMatches.put("s1", true);
     expectedMatches.put("s2", false);
     expectedMatches.put("s3", false);
-    assertCompilerMatchesOnAssignment(source, expectedMatches);
+    assertCompilerMatchesOnAssignment(expectedMatches, lines);
   }
 
   @Test
   public void testMatches_finalCompileTimeConstantConstructorParameters() throws Exception {
-        JavaFileObject source =
-        fileManager.forSourceLines("test/CompileTimeConstantExpressionMatcherTestCase.java",
-            "package test;",
-            "import com.google.errorprone.annotations.CompileTimeConstant;",
-            "public class CompileTimeConstantExpressionMatcherTestCase {",
-            "  public CompileTimeConstantExpressionMatcherTestCase(",
-            "      final @CompileTimeConstant String s) { ",
-            "    String s1; s1 = s;",
-            "  }",
-            "  public CompileTimeConstantExpressionMatcherTestCase(",
-            "      @CompileTimeConstant String s, int foo) { ",
-            "    String s2; s2 = s;",
-            "  }",
-            "  public CompileTimeConstantExpressionMatcherTestCase(",
-            "      final String s, boolean foo) { ",
-            "    String s3; s3 = s;",
-            "  }",
-            "}");
+    String[] lines = {
+      "package test;",
+      "import com.google.errorprone.annotations.CompileTimeConstant;",
+      "public class CompileTimeConstantExpressionMatcherTestCase {",
+      "  public CompileTimeConstantExpressionMatcherTestCase(",
+      "      final @CompileTimeConstant String s) { ",
+      "    String s1; s1 = s;",
+      "  }",
+      "  public CompileTimeConstantExpressionMatcherTestCase(",
+      "      @CompileTimeConstant String s, int foo) { ",
+      "    String s2; s2 = s;",
+      "  }",
+      "  public CompileTimeConstantExpressionMatcherTestCase(",
+      "      final String s, boolean foo) { ",
+      "    String s3; s3 = s;",
+      "  }",
+      "}"
+    };
     Map<String, Boolean> expectedMatches = new HashMap<String, Boolean>();
     expectedMatches.put("s1", true);
     expectedMatches.put("s2", false);
     expectedMatches.put("s3", false);
-    assertCompilerMatchesOnAssignment(source, expectedMatches);
+    assertCompilerMatchesOnAssignment(expectedMatches, lines);
   }
 
   // TODO(user): We'd like to eventually support other cases, but I first need
@@ -182,8 +178,8 @@ public class CompileTimeConstantExpressionMatcherTest {
   }
 
   // Helper methods.
-  private void assertCompilerMatchesOnAssignment(JavaFileObject source,
-    final Map<String, Boolean> expectedMatches) {
+  private void assertCompilerMatchesOnAssignment(
+      final Map<String, Boolean> expectedMatches, String... lines) {
     final Matcher<ExpressionTree> matcher = new CompileTimeConstantExpressionMatcher();
     final Scanner scanner = new Scanner() {
       @Override
@@ -201,7 +197,10 @@ public class CompileTimeConstantExpressionMatcherTest {
       }
     };
 
-    CompilationTestHelper.newInstance(ScannerSupplier.fromScanner(scanner))
-        .assertCompileSucceeds(source);
+    CompilationTestHelper
+        .newInstance(ScannerSupplier.fromScanner(scanner), getClass())
+        .expectResult(Result.OK)
+        .addSourceLines("test/CompileTimeConstantExpressionMatcherTestCase.java", lines)
+        .doTest();
   }
 }

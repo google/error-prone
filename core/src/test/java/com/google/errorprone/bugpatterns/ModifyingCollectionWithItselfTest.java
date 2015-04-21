@@ -33,19 +33,18 @@ public class ModifyingCollectionWithItselfTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new ModifyingCollectionWithItself());
+    compilationHelper =
+        CompilationTestHelper.newInstance(new ModifyingCollectionWithItself(), getClass());
   }
 
   @Test
   public void testPositiveCases1() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "ModifyingCollectionWithItselfPositiveCases.java"));
+    compilationHelper.addSourceFile("ModifyingCollectionWithItselfPositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "ModifyingCollectionWithItselfNegativeCases.java"));
+    compilationHelper.addSourceFile("ModifyingCollectionWithItselfNegativeCases.java").doTest();
   }
 
 }

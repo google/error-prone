@@ -33,13 +33,13 @@ public class GuardedByLockMethodTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new GuardedByChecker());
+    compilationHelper = CompilationTestHelper.newInstance(new GuardedByChecker(), getClass());
   }
 
   @Test
   public void testSimple() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -66,8 +66,7 @@ public class GuardedByLockMethodTest {
             "      unlock();",
             "    }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 }

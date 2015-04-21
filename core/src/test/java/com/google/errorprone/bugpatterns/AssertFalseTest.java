@@ -23,8 +23,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.io.IOException;
-
 /**
  * @author sebastian.h.monte@gmail.com (Sebastian Monte)
  */
@@ -35,18 +33,16 @@ public class AssertFalseTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new AssertFalse());
+    compilationHelper = CompilationTestHelper.newInstance(new AssertFalse(), getClass());
   }
 
   @Test
   public void testNegativeCase() {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager().sources(
-        getClass(), "AssertFalseNegativeCases.java"));
+    compilationHelper.addSourceFile("AssertFalseNegativeCases.java").doTest();
   }
 
   @Test
-  public void testPositiveCase() throws IOException {
-    compilationHelper.assertCompileSucceedsWithMessages(compilationHelper.fileManager().sources(
-        getClass(), "AssertFalsePositiveCases.java"));
+  public void testPositiveCase() {
+    compilationHelper.addSourceFile("AssertFalsePositiveCases.java").doTest();
   }
 }

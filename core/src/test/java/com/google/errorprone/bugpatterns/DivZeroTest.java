@@ -33,19 +33,17 @@ public class DivZeroTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new DivZero());
+    compilationHelper = CompilationTestHelper.newInstance(new DivZero(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "DivZeroPositiveCases.java"));
+    compilationHelper.addSourceFile("DivZeroPositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "DivZeroNegativeCases.java"));
+    compilationHelper.addSourceFile("DivZeroNegativeCases.java").doTest();
   }
 
 }

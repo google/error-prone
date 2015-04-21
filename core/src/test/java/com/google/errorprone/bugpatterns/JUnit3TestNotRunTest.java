@@ -33,44 +33,39 @@ public class JUnit3TestNotRunTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new JUnit3TestNotRun());
+    compilationHelper = CompilationTestHelper.newInstance(new JUnit3TestNotRun(), getClass());
   }
 
   @Test
   public void testPositiveCases() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "JUnit3TestNotRunPositiveCases.java"));
+    compilationHelper.addSourceFile("JUnit3TestNotRunPositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCase1() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "JUnit3TestNotRunNegativeCase1.java"));
+    compilationHelper.addSourceFile("JUnit3TestNotRunNegativeCase1.java").doTest();
   }
 
   @Test
   public void testNegativeCase2() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "JUnit3TestNotRunNegativeCase2.java"));
+    compilationHelper.addSourceFile("JUnit3TestNotRunNegativeCase2.java").doTest();
   }
 
   @Test
   public void testNegativeCase3() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "JUnit3TestNotRunNegativeCase3.java"));
+    compilationHelper.addSourceFile("JUnit3TestNotRunNegativeCase3.java").doTest();
   }
 
   @Test
   public void testNegativeCase4() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "JUnit3TestNotRunNegativeCase4.java"));
+    compilationHelper.addSourceFile("JUnit3TestNotRunNegativeCase4.java").doTest();
   }
 
   @Test
   public void testNegativeCase5() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(),
-            "JUnit3TestNotRunNegativeCase3.java",
-            "JUnit3TestNotRunNegativeCase5.java"));
+    compilationHelper
+        .addSourceFile("JUnit3TestNotRunNegativeCase3.java") // needed as a dependency
+        .addSourceFile("JUnit3TestNotRunNegativeCase5.java")
+        .doTest();
   }
 }

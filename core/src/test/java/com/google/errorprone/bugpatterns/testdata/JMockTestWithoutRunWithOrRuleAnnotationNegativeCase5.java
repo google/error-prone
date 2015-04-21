@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Google Inc. All Rights Reserved.
+ * Copyright 2015 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,12 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @author alexloh@google.com (Alex Loh)
- */
-public class ClassCanBeStaticPositiveCase2 {
+import org.junit.Rule;
+import org.jmock.Mockery;
 
-  int outerVar1;
-  int outerVar2;
-
-  // Outer variable overridden
-  // BUG: Diagnostic contains: private static final class Inner2
-  private   final class Inner2 {
-    int outerVar1;
-    int innerVar = outerVar1;
-    int localMethod(int outerVar2) {
-      return outerVar2;
-    }
-  }
+public class JMockTestWithoutRunWithOrRuleAnnotationNegativeCase5 {
+    @Rule
+    final Mockery mockery = new Mockery();
 }

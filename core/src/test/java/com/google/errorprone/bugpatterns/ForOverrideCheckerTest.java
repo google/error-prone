@@ -16,17 +16,12 @@
 
 package com.google.errorprone.bugpatterns;
 
-import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.util.List;
-
-import javax.tools.JavaFileObject;
 
 /**
  * Tests for {@code ForOverrideChecker}.
@@ -38,181 +33,210 @@ public class ForOverrideCheckerTest {
 
   @Before
   public void setUp() throws Exception {
-    compilationHelper = CompilationTestHelper.newInstance(new ForOverrideChecker());
-  }
+    compilationHelper = CompilationTestHelper
+        .newInstance(new ForOverrideChecker(), getClass())
+        .addSourceLines(
+            "test/ExtendMe.java",
+            "package test;",
+            "import com.google.errorprone.annotations.ForOverride;",
 
-  private List<JavaFileObject> withFile(String name, String... lines) {
-
-    JavaFileObject extendedClass = compilationHelper.fileManager().forSourceLines(
-        "test/ExtendMe.java",
-        "package test;",
-        "import com.google.errorprone.annotations.ForOverride;",
-
-        "public class ExtendMe {",
-        "  @ForOverride",
-        "  protected void overrideMe() {}",
-        "",
-        "  public final void callMe() {",
-        "    overrideMe();",
-        "  }",
-        "}");
-
-    return ImmutableList.of(extendedClass,
-        compilationHelper.fileManager().forSourceLines(name, lines));
+            "public class ExtendMe {",
+            "  @ForOverride",
+            "  protected void overrideMe() {}",
+            "",
+            "  public final void callMe() {",
+            "    overrideMe();",
+            "  }",
+            "}");
   }
 
   @Test
   public void testCanApplyForOverrideToProtectedMethod() throws Exception {
-    compilationHelper.assertCompileSucceeds(withFile("test/Test.java",
-        "package test;",
-        "import com.google.errorprone.annotations.ForOverride;",
-        "public class Test {",
-        "  @ForOverride protected void myMethod() {}",
-        "}"));
+    compilationHelper
+        .addSourceLines(
+            "test/Test.java",
+            "package test;",
+            "import com.google.errorprone.annotations.ForOverride;",
+            "public class Test {",
+            "  @ForOverride protected void myMethod() {}",
+            "}")
+        .doTest();
   }
 
   @Test
   public void testCanApplyForOverrideToPackagePrivateMethod() throws Exception {
-    compilationHelper.assertCompileSucceeds(withFile("test/Test.java",
-        "package test;",
-        "import com.google.errorprone.annotations.ForOverride;",
-        "public class Test {",
-        "  @ForOverride void myMethod() {}",
-        "}"));
+    compilationHelper
+        .addSourceLines(
+            "test/Test.java",
+            "package test;",
+            "import com.google.errorprone.annotations.ForOverride;",
+            "public class Test {",
+            "  @ForOverride void myMethod() {}",
+            "}")
+        .doTest();
   }
 
   @Test
   public void testCannotApplyForOverrideToPublicMethod() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(withFile("test/Test.java",
-        "package test;",
-        "import com.google.errorprone.annotations.ForOverride;",
-        "public class Test {",
-        "  // BUG: Diagnostic contains: must have protected or package-private visibility",
-        "  @ForOverride public void myMethod() {}",
-        "}"));
+    compilationHelper
+        .addSourceLines(
+            "test/Test.java",
+            "package test;",
+            "import com.google.errorprone.annotations.ForOverride;",
+            "public class Test {",
+            "  // BUG: Diagnostic contains: must have protected or package-private visibility",
+            "  @ForOverride public void myMethod() {}",
+            "}")
+        .doTest();
   }
 
   @Test
   public void testCannotApplyForOverrideToPrivateMethod() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(withFile("test/Test.java",
-        "package test;",
-        "import com.google.errorprone.annotations.ForOverride;",
-        "public class Test {",
-        "  // BUG: Diagnostic contains: must have protected or package-private visibility",
-        "  @ForOverride private void myMethod() {}",
-        "}"));
+    compilationHelper
+        .addSourceLines(
+            "test/Test.java",
+            "package test;",
+            "import com.google.errorprone.annotations.ForOverride;",
+            "public class Test {",
+            "  // BUG: Diagnostic contains: must have protected or package-private visibility",
+            "  @ForOverride private void myMethod() {}",
+            "}")
+        .doTest();
   }
 
   @Test
   public void testCannotApplyForOverrideToInterfaceMethod() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(withFile("test/Test.java",
-        "package test;",
-        "import com.google.errorprone.annotations.ForOverride;",
-        "public interface Test {",
-        "  // BUG: Diagnostic contains: must have protected or package-private visibility",
-        "  @ForOverride void myMethod();",
-        "}"));
+    compilationHelper
+        .addSourceLines(
+            "test/Test.java",
+            "package test;",
+            "import com.google.errorprone.annotations.ForOverride;",
+            "public interface Test {",
+            "  // BUG: Diagnostic contains: must have protected or package-private visibility",
+            "  @ForOverride void myMethod();",
+            "}")
+        .doTest();
   }
 
   @Test
   public void testUserCanCallAppropriateMethod() throws Exception {
-    compilationHelper.assertCompileSucceeds(withFile("test/Test.java",
-        "package test;",
-        "public class Test extends test.ExtendMe {",
-        "  public void googleyMethod() {",
-        "    callMe();",
-        "  }",
-        "}"));
+    compilationHelper
+        .addSourceLines(
+            "test/Test.java",
+            "package test;",
+            "public class Test extends test.ExtendMe {",
+            "  public void googleyMethod() {",
+            "    callMe();",
+            "  }",
+            "}")
+        .doTest();
   }
 
   @Test
   public void testUserInSamePackageCannotCallMethod() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(withFile("test/Test.java",
-        "package test;",
-        "public class Test {",
-        "  public void tryCall() {",
-        "    ExtendMe extendMe = new ExtendMe();",
-        "    // BUG: Diagnostic contains: must not be invoked",
-        "    extendMe.overrideMe();",
-        "  }",
-        "}"));
+    compilationHelper
+        .addSourceLines(
+            "test/Test.java",
+            "package test;",
+            "public class Test {",
+            "  public void tryCall() {",
+            "    ExtendMe extendMe = new ExtendMe();",
+            "    // BUG: Diagnostic contains: must not be invoked",
+            "    extendMe.overrideMe();",
+            "  }",
+            "}")
+        .doTest();
   }
 
   @Test
   public void testUserCannotCallDefault() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(withFile("test/Test.java",
-        "package test;",
-        "public class Test extends test.ExtendMe {",
-        "  public void circumventer() {",
-        "    // BUG: Diagnostic contains: must not be invoked",
-        "    overrideMe();",
-        "  }",
-        "}"));
+    compilationHelper
+        .addSourceLines(
+            "test/Test.java",
+            "package test;",
+            "public class Test extends test.ExtendMe {",
+            "  public void circumventer() {",
+            "    // BUG: Diagnostic contains: must not be invoked",
+            "    overrideMe();",
+            "  }",
+            "}")
+        .doTest();
   }
 
   @Test
   public void testUserCannotCallOverridden() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(withFile("test/Test.java",
-        "package test2;",
-        "public class Test extends test.ExtendMe {",
-        "  @Override",
-        "  protected void overrideMe() {",
-        "    System.err.println(\"Capybaras are semi-aquatic.\");",
-        "  }",
-        "  public void circumventer() {",
-        "    // BUG: Diagnostic contains: must not be invoked",
-        "    overrideMe();",
-        "  }",
-        "}"));
+    compilationHelper
+        .addSourceLines(
+            "test/Test.java",
+            "package test2;",
+            "public class Test extends test.ExtendMe {",
+            "  @Override",
+            "  protected void overrideMe() {",
+            "    System.err.println(\"Capybaras are semi-aquatic.\");",
+            "  }",
+            "  public void circumventer() {",
+            "    // BUG: Diagnostic contains: must not be invoked",
+            "    overrideMe();",
+            "  }",
+            "}")
+        .doTest();
   }
 
   @Test
   public void testUserCannotMakeMethodPublic() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(withFile("test/Test.java",
-        "package test2;",
-        "public class Test extends test.ExtendMe {",
-        "  // BUG: Diagnostic contains: must have protected or package-private visibility",
-        "  public void overrideMe() {",
-        "    System.err.println(\"Capybaras are rodents.\");",
-        "  }",
-        "}"));
+    compilationHelper
+        .addSourceLines(
+            "test/Test.java",
+            "package test2;",
+            "public class Test extends test.ExtendMe {",
+            "  // BUG: Diagnostic contains: must have protected or package-private visibility",
+            "  public void overrideMe() {",
+            "    System.err.println(\"Capybaras are rodents.\");",
+            "  }",
+            "}")
+        .doTest();
   }
 
   @Test
   public void testDefinerCanCallFromInnerClass() throws Exception {
-    compilationHelper.assertCompileSucceeds(withFile("test/OuterClass.java",
-        "package test;",
-        "import com.google.errorprone.annotations.ForOverride;",
+    compilationHelper
+        .addSourceLines(
+            "test/OuterClass.java",
+            "package test;",
+            "import com.google.errorprone.annotations.ForOverride;",
 
-        "public class OuterClass {",
-        "  @ForOverride",
-        "  protected void forOverride() { }",
+            "public class OuterClass {",
+            "  @ForOverride",
+            "  protected void forOverride() { }",
 
-        "  private class InnerClass {",
-        "    void invoke() {",
-        "      forOverride();",
-        "    }",
-        "  }",
-        "}"));
+            "  private class InnerClass {",
+            "    void invoke() {",
+            "      forOverride();",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
   }
 
   @Test
   public void testDefinerCanCallFromAnonymousInnerClass() throws Exception {
-    compilationHelper.assertCompileSucceeds(withFile("test/OuterClass.java",
-        "package test;",
-        "import com.google.errorprone.annotations.ForOverride;",
+    compilationHelper
+        .addSourceLines(
+            "test/OuterClass.java",
+            "package test;",
+            "import com.google.errorprone.annotations.ForOverride;",
+            "public class OuterClass {",
+            "  @ForOverride",
+            "  protected void forOverride() { }",
 
-        "public class OuterClass {",
-        "  @ForOverride",
-        "  protected void forOverride() { }",
-
-        "  public Runnable getRunner() {",
-        "    return new Runnable() {",
-        "      public void run() {",
-        "        forOverride();",
-        "      }",
-        "    };",
-        "  }",
-        "}"));
+            "  public Runnable getRunner() {",
+            "    return new Runnable() {",
+            "      public void run() {",
+            "        forOverride();",
+            "      }",
+            "    };",
+            "  }",
+            "}")
+        .doTest();
   }
 }

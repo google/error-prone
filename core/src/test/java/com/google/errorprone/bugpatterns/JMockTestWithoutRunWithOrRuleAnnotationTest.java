@@ -30,27 +30,24 @@ public class JMockTestWithoutRunWithOrRuleAnnotationTest {
     @Before
     public void setup()
     {
-        compilationTestHelper = CompilationTestHelper.newInstance(new JMockTestWithoutRunWithOrRuleAnnotation());
+        compilationTestHelper = CompilationTestHelper.newInstance(new JMockTestWithoutRunWithOrRuleAnnotation(),
+                getClass());
     }
 
     @Test
     public void testPositiveCase() throws Exception
     {
-        compilationTestHelper.assertCompileFailsWithMessages(compilationTestHelper.fileManager().
-                sources(getClass(),
-                        "JMockTestWithoutRunWithOrRuleAnnotationPositiveCase1.java",
-                        "JMockTestWithoutRunWithOrRuleAnnotationPositiveCase2.java"));
+        compilationTestHelper.addSourceFile("JMockTestWithoutRunWithOrRuleAnnotationPositiveCase1.java").
+                addSourceFile("JMockTestWithoutRunWithOrRuleAnnotationPositiveCase2.java").doTest();
     }
 
     @Test
     public void testNegativeCase() throws Exception
     {
-        compilationTestHelper.assertCompileSucceedsWithMessages(compilationTestHelper.fileManager()
-                .sources(getClass(),
-                        "JMockTestWithoutRunWithOrRuleAnnotationNegativeCase1.java",
-                        "JMockTestWithoutRunWithOrRuleAnnotationNegativeCase2.java",
-                        "JMockTestWithoutRunWithOrRuleAnnotationNegativeCase3.java",
-                        "JMockTestWithoutRunWithOrRuleAnnotationNegativeCase4.java",
-                        "JMockTestWithoutRunWithOrRuleAnnotationNegativeCase5.java"));
+        compilationTestHelper.addSourceFile("JMockTestWithoutRunWithOrRuleAnnotationNegativeCase1.java").
+                addSourceFile("JMockTestWithoutRunWithOrRuleAnnotationNegativeCase2.java").
+                addSourceFile("JMockTestWithoutRunWithOrRuleAnnotationNegativeCase3.java").
+                addSourceFile("JMockTestWithoutRunWithOrRuleAnnotationNegativeCase4.java").
+                addSourceFile("JMockTestWithoutRunWithOrRuleAnnotationNegativeCase5.java").doTest();
     }
 }

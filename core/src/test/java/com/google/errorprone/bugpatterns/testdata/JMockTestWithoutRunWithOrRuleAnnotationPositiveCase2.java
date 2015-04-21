@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
-import org.junit.Rule;
 import org.junit.runner.RunWith;
 import org.jmock.Mockery;
 import org.junit.runners.Parameterized;
 
 @RunWith(Parameterized.class)
-public class JMockTestWithoutRunWithOrRuleAnnotationNegativeCase2 {
-    @Rule
+public class JMockTestWithoutRunWithOrRuleAnnotationPositiveCase2 {
+
+    // BUG: Diagnostic contains: JMock tests must have @RunWith class annotation or the mockery field declared as a JUnit rule
     final Mockery mockery = new Mockery();
 }

@@ -30,13 +30,15 @@ public class MissingCasesInEnumSwitchTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new MissingCasesInEnumSwitch());
+    compilationHelper =
+        CompilationTestHelper.newInstance(new MissingCasesInEnumSwitch(), getClass());
   }
 
   @Test
   public void testExhaustive() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines("Test.java",
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
             "class Test {",
             "  enum Case { ONE, TWO, THREE }",
             "  void m(Case c) {",
@@ -50,13 +52,14 @@ public class MissingCasesInEnumSwitchTest {
             "  }",
             "}"
         )
-    );
+        .doTest();
   }
 
   @Test
   public void testNonExhaustive_withDefault() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines("Test.java",
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
             "class Test {",
             "  enum Case { ONE, TWO, THREE }",
             "  void m(Case c) {",
@@ -71,13 +74,14 @@ public class MissingCasesInEnumSwitchTest {
             "  }",
             "}"
         )
-    );
+        .doTest();
   }
 
   @Test
   public void testNonExhaustive() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines("Test.java",
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
             "class Test {",
             "  enum Case { ONE, TWO, THREE }",
             "  void m(Case c) {",
@@ -89,15 +93,15 @@ public class MissingCasesInEnumSwitchTest {
             "        break;",
             "    }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testNonExhaustive_manyCases() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(
-        compilationHelper.fileManager().forSourceLines("Test.java",
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
             "class Test {",
             "  enum Case { ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT }",
             "  void m(Case c) {",
@@ -112,13 +116,14 @@ public class MissingCasesInEnumSwitchTest {
             "  }",
             "}"
         )
-    );
+        .doTest();
   }
 
   @Test
   public void testNonExhaustive_nonEnum() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines("Test.java",
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
             "class Test {",
             "  void m(int i) {",
             "    switch (i) {",
@@ -128,8 +133,7 @@ public class MissingCasesInEnumSwitchTest {
             "        break;",
             "    }",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 }

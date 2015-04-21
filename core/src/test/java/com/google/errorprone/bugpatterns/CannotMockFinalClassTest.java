@@ -31,7 +31,7 @@ import org.mockito.exceptions.base.MockitoException;
 
 /**
  * Tests for {@code CannotMockFinalClass}.
- * 
+ *
  * @author Louis Wasserman
  */
 @RunWith(JUnit4.class)
@@ -43,7 +43,7 @@ public class CannotMockFinalClassTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new CannotMockFinalClass());
+    compilationHelper = CompilationTestHelper.newInstance(new CannotMockFinalClass(), getClass());
   }
 
   static final class FinalClass {
@@ -59,7 +59,7 @@ public class CannotMockFinalClassTest {
     exception.expect(MockitoException.class);
     MockitoAnnotations.initMocks(new MocksFinalClassWithAnnotation());
   }
-  
+
   @Test
   public void mockingFinalClassWithMockMethodFails() {
     exception.expect(MockitoException.class);
@@ -68,20 +68,17 @@ public class CannotMockFinalClassTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "CannotMockFinalClassPositiveCases.java"));
+    compilationHelper.addSourceFile("CannotMockFinalClassPositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "CannotMockFinalClassNegativeCases.java"));
+    compilationHelper.addSourceFile("CannotMockFinalClassNegativeCases.java").doTest();
   }
 
   @Test
   public void testNegativeCase2() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "CannotMockFinalClassNegativeCases2.java"));
+    compilationHelper.addSourceFile("CannotMockFinalClassNegativeCases2.java").doTest();
   }
 
 }

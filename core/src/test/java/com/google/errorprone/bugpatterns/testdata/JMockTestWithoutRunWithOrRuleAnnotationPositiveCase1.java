@@ -1,4 +1,4 @@
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import org.jmock.Mockery;
 

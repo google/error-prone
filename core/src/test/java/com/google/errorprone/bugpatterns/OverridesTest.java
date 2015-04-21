@@ -32,54 +32,46 @@ public class OverridesTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new Overrides());
+    compilationHelper = CompilationTestHelper.newInstance(new Overrides(), getClass());
   }
 
   @Test
   public void testPositiveCase1() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "OverridesPositiveCase1.java"));
+    compilationHelper.addSourceFile("OverridesPositiveCase1.java").doTest();
   }
 
   @Test
   public void testPositiveCase2() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "OverridesPositiveCase2.java"));
+    compilationHelper.addSourceFile("OverridesPositiveCase2.java").doTest();
   }
 
   @Test
   public void testPositiveCase3() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "OverridesPositiveCase3.java"));
+    compilationHelper.addSourceFile("OverridesPositiveCase3.java").doTest();
   }
   
   @Test
   public void testPositiveCase4() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "OverridesPositiveCase4.java"));
+    compilationHelper.addSourceFile("OverridesPositiveCase4.java").doTest();
   }
 
   @Test
   public void testPositiveCase5() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "OverridesPositiveCase5.java"));
+    compilationHelper.addSourceFile("OverridesPositiveCase5.java").doTest();
   }
 
   @Test
   public void testNegativeCase1() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "OverridesNegativeCase1.java"));
+    compilationHelper.addSourceFile("OverridesNegativeCase1.java").doTest();
   }
 
   @Test
   public void testNegativeCase2() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "OverridesNegativeCase2.java"));
+    compilationHelper.addSourceFile("OverridesNegativeCase2.java").doTest();
   }
 
   @Test
   public void testNegativeCase3() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "OverridesNegativeCase3.java"));
+    compilationHelper.addSourceFile("OverridesNegativeCase3.java").doTest();
   }
 }

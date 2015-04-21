@@ -33,19 +33,17 @@ public class BadShiftAmountTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new BadShiftAmount());
+    compilationHelper = CompilationTestHelper.newInstance(new BadShiftAmount(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "BadShiftAmountPositiveCases.java"));
+    compilationHelper.addSourceFile("BadShiftAmountPositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "BadShiftAmountNegativeCases.java"));
+    compilationHelper.addSourceFile("BadShiftAmountNegativeCases.java").doTest();
   }
 
 }

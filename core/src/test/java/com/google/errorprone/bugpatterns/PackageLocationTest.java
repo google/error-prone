@@ -31,48 +31,58 @@ public class PackageLocationTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new PackageLocation());
+    compilationHelper = CompilationTestHelper.newInstance(new PackageLocation(), getClass());
   }
-  
+
   @Test
   public void positiveCustomRoot() throws Exception {
-      compilationHelper.assertCompileFailsWithMessages(
-          compilationHelper.fileManager().forSourceLines("src/main/java/a/b/A.java",
-              "// BUG: Diagnostic contains: a does not match expected package b",
-              "package a;",
-              "class A {}"));
+    compilationHelper
+        .addSourceLines(
+            "src/main/java/a/b/A.java",
+            "// BUG: Diagnostic contains: a does not match expected package b",
+            "package a;",
+            "class A {}")
+        .doTest();
   }
-  
+
   @Test
   public void positiveTooShort() throws Exception {
-      compilationHelper.assertCompileFailsWithMessages(
-          compilationHelper.fileManager().forSourceLines("b/c/d/A.java",
-              "// BUG: Diagnostic contains: a.b.c.d does not match expected package b.c.d",
-              "package a.b.c.d;",
-              "class A {}"));
+    compilationHelper
+        .addSourceLines(
+            "b/c/d/A.java",
+            "// BUG: Diagnostic contains: a.b.c.d does not match expected package b.c.d",
+            "package a.b.c.d;",
+            "class A {}")
+        .doTest();
   }
-  
+
   @Test
   public void negative() throws Exception {
-      compilationHelper.assertCompileSucceeds(
-          compilationHelper.fileManager().forSourceLines("a/A.java",
-              "package a;",
-              "class A {}"));
+    compilationHelper
+        .addSourceLines(
+            "a/A.java",
+            "package a;",
+            "class A {}")
+        .doTest();
   }
-  
+
   @Test
   public void negative2() throws Exception {
-      compilationHelper.assertCompileSucceeds(
-          compilationHelper.fileManager().forSourceLines("a/b/c/A.java",
-              "package a.b.c;",
-              "class A {}"));
+    compilationHelper
+        .addSourceLines(
+            "a/b/c/A.java",
+            "package a.b.c;",
+            "class A {}")
+        .doTest();
   }
-  
+
   @Test
   public void negativeSuffix() throws Exception {
-      compilationHelper.assertCompileSucceeds(
-          compilationHelper.fileManager().forSourceLines("src/main/java/a/b/A.java",
-              "package a.b;",
-              "class A {}"));
+    compilationHelper
+        .addSourceLines(
+            "src/main/java/a/b/A.java",
+            "package a.b;",
+            "class A {}")
+        .doTest();
   }
 }

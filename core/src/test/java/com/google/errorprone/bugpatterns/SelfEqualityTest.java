@@ -33,19 +33,17 @@ public class SelfEqualityTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new SelfEquality());
+    compilationHelper = CompilationTestHelper.newInstance(new SelfEquality(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "SelfEqualityPositiveCases.java"));
+    compilationHelper.addSourceFile("SelfEqualityPositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "SelfEqualityNegativeCases.java"));
+    compilationHelper.addSourceFile("SelfEqualityNegativeCases.java").doTest();
   }
 
 }

@@ -16,9 +16,14 @@
 
 package com.google.errorprone.fixes;
 
+import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
+import com.google.errorprone.VisitorState;
+import com.google.errorprone.util.ASTHelpers;
 
+import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.Tree;
+import com.sun.tools.javac.parser.Tokens.Token;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
@@ -26,10 +31,14 @@ import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+
+import javax.annotation.Nullable;
+import javax.lang.model.element.Modifier;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -335,6 +344,135 @@ public class SuggestedFix implements Fix {
           original.getStartPosition(),
           original.getEndPosition(endPositions),
           replacement);
+    }
+  }
+
+  /** Return an ordinal for the modifier, in Google Java Style order. */
+  private static int modifierOrder(Modifier mod) {
+    switch (mod) {
+      case PUBLIC:
+        return 1;
+      case PROTECTED:
+        return 2;
+      case PRIVATE:
+        return 3;
+      case ABSTRACT:
+        return 4;
+      // TODO(user): requires JDK8
+      // case DEFAULT:
+      //   return 5;
+      case STATIC:
+        return 6;
+      case FINAL:
+        return 7;
+      case TRANSIENT:
+        return 8;
+      case VOLATILE:
+        return 9;
+      case SYNCHRONIZED:
+        return 10;
+      case NATIVE:
+        return 11;
+      case STRICTFP:
+        return 12;
+      default:
+        throw new AssertionError(mod);
+    }
+  }
+
+  /** Info about a modifier token. */
+  @AutoValue
+  abstract static class TokInfo implements Comparable<TokInfo> {
+    abstract Token token();
+    abstract Modifier mod();
+
+    public static TokInfo create(Token tree, Modifier mod) {
+      return new AutoValue_SuggestedFix_TokInfo(tree, mod);
+    }
+
+    @Override
+    public int compareTo(TokInfo o) {
+      return Integer.compare(modifierOrder(mod()), modifierOrder(o.mod()));
+    }
+  }
+
+  /** Parse a modifier token into a {@link Modifier}. */
+  @Nullable
+  private static Modifier getTokModifierKind(Token tok) {
+    switch (tok.kind) {
+      case PUBLIC:
+        return Modifier.PUBLIC;
+      case PROTECTED:
+        return Modifier.PROTECTED;
+      case PRIVATE:
+        return Modifier.PRIVATE;
+      case ABSTRACT:
+        return Modifier.ABSTRACT;
+      case STATIC:
+        return Modifier.STATIC;
+      case FINAL:
+        return Modifier.FINAL;
+      case TRANSIENT:
+        return Modifier.TRANSIENT;
+      case VOLATILE:
+        return Modifier.VOLATILE;
+      case SYNCHRONIZED:
+        return Modifier.SYNCHRONIZED;
+      case NATIVE:
+        return Modifier.NATIVE;
+      case STRICTFP:
+        return Modifier.STRICTFP;
+      // TODO(user):
+      // case DEFAULT:
+      //   return Modifier.DEFAULT;
+      default:
+        return null;
+    }
+  }
+
+  /**
+   * Add a modifier to the given class, method, or field declaration.
+   *
+   * <p>Preserves Google Java Style order.
+   */
+  @Nullable
+  public static Fix addModifier(Tree tree, Modifier modifier, VisitorState state) {
+    ModifiersTree originalModifiers = ASTHelpers.getModifiers(tree);
+    if (originalModifiers == null) {
+      return null;
+    }
+    ImmutableList<Token> tokens = state.getTokensForNode((JCTree) originalModifiers);
+    ArrayList<TokInfo> infos = new ArrayList<>();
+    for (Token tok : tokens) {
+      Modifier mod = getTokModifierKind(tok);
+      if (mod != null) {
+        infos.add(TokInfo.create(tok, mod));
+      }
+    }
+    Collections.sort(infos);
+    TokInfo prev = null;
+    for (TokInfo info : infos) {
+      int c = info.mod().compareTo(modifier);
+      if (c < 0) {
+        prev = info;
+      } else if (c == 0) {
+        // the modifier doesn't need to be added
+        return null;
+      }
+    }
+    JCTree posTree = (JCTree) originalModifiers;
+    if (posTree.getStartPosition() < 0) {
+      // if the modifier tree is empty, it won't have a position
+      posTree = (JCTree) tree;
+    }
+    if (prev != null) {
+      // insert the new modifier after an existing modifier
+      // the start pos of the re-lexed tokens is relative to the start of the tree
+      int pos = posTree.getStartPosition() + prev.token().pos + prev.mod().toString().length();
+      return SuggestedFix.replace(pos, pos, " " + modifier);
+    } else {
+      // the new modifier is first
+      return SuggestedFix.prefixWith(posTree, modifier + " ");
     }
   }
 }

@@ -80,7 +80,7 @@ public class UnsuppressibleTest {
   @Test
   public void testPositiveCase() throws Exception {
     List<JavaFileObject> sources =
-        compiler.fileManager().sources(getClass(), "UnsuppressiblePositiveCases.java");
+        compiler.fileManager().forResources(getClass(), "UnsuppressiblePositiveCases.java");
     assertThat(compiler.compile(sources), is(Result.ERROR));
     assertThat(diagnosticHelper.getDiagnostics().toString(), containsString("[MyChecker]"));
   }

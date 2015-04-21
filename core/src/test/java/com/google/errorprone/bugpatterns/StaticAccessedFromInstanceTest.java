@@ -33,25 +33,23 @@ public class StaticAccessedFromInstanceTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new StaticAccessedFromInstance());
+    compilationHelper =
+        CompilationTestHelper.newInstance(new StaticAccessedFromInstance(), getClass());
   }
 
   @Test
   public void testPositiveCase1() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "StaticAccessedFromInstancePositiveCase1.java"));
+    compilationHelper.addSourceFile("StaticAccessedFromInstancePositiveCase1.java").doTest();
   }
 
   @Test
   public void testPositiveCase2() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "StaticAccessedFromInstancePositiveCase2.java"));
+    compilationHelper.addSourceFile("StaticAccessedFromInstancePositiveCase2.java").doTest();
   }
 
   @Test
   public void testNegativeCases() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "StaticAccessedFromInstanceNegativeCases.java"));
+    compilationHelper.addSourceFile("StaticAccessedFromInstanceNegativeCases.java").doTest();
   }
 
 }

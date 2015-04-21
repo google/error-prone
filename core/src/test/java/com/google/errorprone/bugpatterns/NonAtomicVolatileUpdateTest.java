@@ -34,18 +34,17 @@ public class NonAtomicVolatileUpdateTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new NonAtomicVolatileUpdate());
+    compilationHelper =
+        CompilationTestHelper.newInstance(new NonAtomicVolatileUpdate(), getClass());
   }
 
   @Test
   public void testPositiveCases() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "NonAtomicVolatileUpdatePositiveCases.java"));
+    compilationHelper.addSourceFile("NonAtomicVolatileUpdatePositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCases() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "NonAtomicVolatileUpdateNegativeCases.java"));
+    compilationHelper.addSourceFile("NonAtomicVolatileUpdateNegativeCases.java").doTest();
   }
 }

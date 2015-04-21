@@ -34,18 +34,18 @@ public class InjectMoreThanOneInjectableConstructorTest {
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(new InjectMoreThanOneInjectableConstructor());
+        CompilationTestHelper.newInstance(new InjectMoreThanOneInjectableConstructor(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "InjectMoreThanOneInjectableConstructorPositiveCases.java"));
+    compilationHelper.addSourceFile("InjectMoreThanOneInjectableConstructorPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "InjectMoreThanOneInjectableConstructorNegativeCases.java"));
+    compilationHelper.addSourceFile("InjectMoreThanOneInjectableConstructorNegativeCases.java")
+        .doTest();
   }
 }

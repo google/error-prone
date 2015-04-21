@@ -33,19 +33,17 @@ public class DeadExceptionTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new DeadException());
+    compilationHelper = CompilationTestHelper.newInstance(new DeadException(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "DeadExceptionPositiveCases.java"));
+    compilationHelper.addSourceFile("DeadExceptionPositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "DeadExceptionNegativeCases.java"));
+    compilationHelper.addSourceFile("DeadExceptionNegativeCases.java").doTest();
   }
 
   /**
@@ -54,7 +52,6 @@ public class DeadExceptionTest {
    */
   @Test
   public void testNegativeCaseWhenExceptionsUnthrownInTests() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "DeadExceptionTestingNegativeCases.java"));
+    compilationHelper.addSourceFile("DeadExceptionTestingNegativeCases.java").doTest();
   }
 }

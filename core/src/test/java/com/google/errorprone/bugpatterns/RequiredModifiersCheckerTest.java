@@ -23,8 +23,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.util.Arrays;
-
 import javax.tools.JavaFileObject;
 
 /**
@@ -42,138 +40,146 @@ public class RequiredModifiersCheckerTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new RequiredModifiersChecker());
-
-    abstractRequired = compilationHelper.fileManager().forSourceLines("test/AbstractRequired.java",
-        "package test;",
-        "import static javax.lang.model.element.Modifier.ABSTRACT;",
-        "import com.google.errorprone.annotations.RequiredModifiers;",
-        "@RequiredModifiers(ABSTRACT)",
-        "public @interface AbstractRequired {",
-        "}");
-
-    publicAndFinalRequired =
-        compilationHelper.fileManager().forSourceLines("test/PublicAndFinalRequired.java",
-        "package test;",
-        "import static javax.lang.model.element.Modifier.FINAL;",
-        "import static javax.lang.model.element.Modifier.PUBLIC;",
-        "import com.google.errorprone.annotations.RequiredModifiers;",
-        "@RequiredModifiers({PUBLIC, FINAL})",
-        "public @interface PublicAndFinalRequired {",
-        "}");
+    compilationHelper = CompilationTestHelper
+        .newInstance(new RequiredModifiersChecker(), getClass())
+        .addSourceLines(
+            "test/AbstractRequired.java",
+            "package test;",
+            "import static javax.lang.model.element.Modifier.ABSTRACT;",
+            "import com.google.errorprone.annotations.RequiredModifiers;",
+            "@RequiredModifiers(ABSTRACT)",
+            "public @interface AbstractRequired {",
+            "}")
+        .addSourceLines(
+            "test/PublicAndFinalRequired.java",
+            "package test;",
+            "import static javax.lang.model.element.Modifier.FINAL;",
+            "import static javax.lang.model.element.Modifier.PUBLIC;",
+            "import com.google.errorprone.annotations.RequiredModifiers;",
+            "@RequiredModifiers({PUBLIC, FINAL})",
+            "public @interface PublicAndFinalRequired {",
+            "}");
   }
 
   @Test
   public void testAnnotationWithRequiredModifiersMissingOnClassFails() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(Arrays.asList(
-        abstractRequired,
-        compilationHelper.fileManager().forSourceLines("test/RequiredModifiersTestCase.java",
+    compilationHelper
+        .addSourceLines(
+            "test/RequiredModifiersTestCase.java",
             "package test;",
             "import test.AbstractRequired;",
             "// BUG: Diagnostic contains: The annotation '@AbstractRequired' has specified that it"
-            + " must be used together with the following modifiers: [abstract]",
+                + " must be used together with the following modifiers: [abstract]",
             "@AbstractRequired public class RequiredModifiersTestCase {",
-            "}")));
+            "}")
+        .doTest();
   }
 
   @Test
   public void testAnnotationWithRequiredModifiersMissingOnFieldFails1() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(Arrays.asList(
-        publicAndFinalRequired,
-        compilationHelper.fileManager().forSourceLines("test/RequiredModifiersTestCase.java",
+    compilationHelper
+        .addSourceLines(
+            "test/RequiredModifiersTestCase.java",
             "package test;",
             "import test.PublicAndFinalRequired;",
             "public class RequiredModifiersTestCase {",
             "  // BUG: Diagnostic contains: The annotation '@PublicAndFinalRequired' has specified"
-            + " that it must be used together with the following modifiers: [public, final]",
+                + " that it must be used together with the following modifiers: [public, final]",
             "  @PublicAndFinalRequired int n = 0;",
-            "}")));
+            "}")
+        .doTest();
   }
 
   @Test
   public void testAnnotationWithRequiredModifiersMissingOnFieldFails2() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(Arrays.asList(
-        publicAndFinalRequired,
-        compilationHelper.fileManager().forSourceLines("test/RequiredModifiersTestCase.java",
+    compilationHelper
+        .addSourceLines(
+            "test/RequiredModifiersTestCase.java",
             "package test;",
             "import test.PublicAndFinalRequired;",
             "public class RequiredModifiersTestCase {",
             "  // BUG: Diagnostic contains: The annotation '@PublicAndFinalRequired' has specified"
-            + " that it must be used together with the following modifiers: [final]",
+                + " that it must be used together with the following modifiers: [final]",
             "  @PublicAndFinalRequired public int n = 0;",
-            "}")));
+            "}")
+        .doTest();
   }
 
   @Test
   public void testAnnotationWithRequiredModifiersMissingOnFieldFails3() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(Arrays.asList(
-        publicAndFinalRequired,
-        compilationHelper.fileManager().forSourceLines("test/RequiredModifiersTestCase.java",
+    compilationHelper
+        .addSourceLines(
+            "test/RequiredModifiersTestCase.java",
             "package test;",
             "import test.PublicAndFinalRequired;",
             "public class RequiredModifiersTestCase {",
             "  // BUG: Diagnostic contains: The annotation '@PublicAndFinalRequired' has specified"
-            + " that it must be used together with the following modifiers: [public]",
+                + " that it must be used together with the following modifiers: [public]",
             "  @PublicAndFinalRequired final int n = 0;",
-            "}")));
+            "}")
+        .doTest();
   }
 
   @Test
   public void testAnnotationWithRequiredModifiersMissingOnMethodFails1() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(Arrays.asList(
-        publicAndFinalRequired,
-        compilationHelper.fileManager().forSourceLines("test/RequiredModifiersTestCase.java",
+    compilationHelper
+        .addSourceLines(
+            "test/RequiredModifiersTestCase.java",
             "package test;",
             "import test.PublicAndFinalRequired;",
             "public class RequiredModifiersTestCase {",
             "  // BUG: Diagnostic contains: The annotation '@PublicAndFinalRequired' has specified"
-            + " that it must be used together with the following modifiers: [public, final]",
+                + " that it must be used together with the following modifiers: [public, final]",
             "  @PublicAndFinalRequired private void foo(){}",
-            "}")));
+            "}")
+        .doTest();
   }
 
   @Test
   public void testAnnotationWithRequiredModifiersMissingOnMethodFails2() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(Arrays.asList(
-        publicAndFinalRequired,
-        compilationHelper.fileManager().forSourceLines("test/RequiredModifiersTestCase.java",
+    compilationHelper
+        .addSourceLines(
+            "test/RequiredModifiersTestCase.java",
             "package test;",
             "import test.PublicAndFinalRequired;",
             "public class RequiredModifiersTestCase {",
             "  // BUG: Diagnostic contains: The annotation '@PublicAndFinalRequired' has specified"
-            + " that it must be used together with the following modifiers: [final]",
+                + " that it must be used together with the following modifiers: [final]",
             "  @PublicAndFinalRequired public void foo(){}",
-            "}")));
+            "}")
+        .doTest();
   }
 
   @Test
   public void testAnnotationWithRequiredModifiersMissingOnMethodFails3() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(Arrays.asList(
-        publicAndFinalRequired,
-        compilationHelper.fileManager().forSourceLines("test/RequiredModifiersTestCase.java",
+    compilationHelper
+        .addSourceLines(
+            "test/RequiredModifiersTestCase.java",
             "package test;",
             "import test.PublicAndFinalRequired;",
             "public class RequiredModifiersTestCase {",
             "  // BUG: Diagnostic contains: The annotation '@PublicAndFinalRequired' has specified"
-            + " that it must be used together with the following modifiers: [public]",
+                + " that it must be used together with the following modifiers: [public]",
             "  @PublicAndFinalRequired final void foo(){}",
-            "}")));
+            "}")
+        .doTest();
   }
 
   @Test
   public void testHasRequiredModifiersSucceeds() throws Exception {
-    compilationHelper.assertCompileSucceeds(Arrays.asList(
-        abstractRequired,
-        compilationHelper.fileManager().forSourceLines("test/RequiredModifiersTestCase.java",
+    compilationHelper
+        .addSourceLines(
+            "test/RequiredModifiersTestCase.java",
             "package test;",
             "import test.AbstractRequired;",
-            "abstract class RequiredModifiersTestCase {}")));
+            "abstract class RequiredModifiersTestCase {}")
+        .doTest();
   }
 
   @Test
   public void testGuavaAnnotation() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(Arrays.asList(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "com/google/common/annotations/RequiredModifiers.java",
             "package com.google.common.annotations;",
             "import javax.lang.model.element.Modifier;",
@@ -182,27 +188,30 @@ public class RequiredModifiersCheckerTest {
             "@Target(ElementType.ANNOTATION_TYPE)",
             "public @interface RequiredModifiers {",
             "  Modifier[] value();",
-            "}"),
-        compilationHelper.fileManager().forSourceLines("test/AbstractRequired.java",
+            "}")
+        .addSourceLines(
+            "test/AbstractRequired.java",
             "package test;",
             "import static javax.lang.model.element.Modifier.ABSTRACT;",
             "import com.google.common.annotations.RequiredModifiers;",
             "@RequiredModifiers(ABSTRACT)",
             "public @interface AbstractRequired {",
-            "}"),
-        compilationHelper.fileManager().forSourceLines("test/RequiredModifiersTestCase.java",
+            "}")
+        .addSourceLines(
+            "test/RequiredModifiersTestCase.java",
             "package test;",
             "import test.AbstractRequired;",
             "// BUG: Diagnostic contains: The annotation '@AbstractRequired' has specified that it"
-            + " must be used together with the following modifiers: [abstract]",
+                + " must be used together with the following modifiers: [abstract]",
             "@AbstractRequired public class RequiredModifiersTestCase {",
-            "}")));
+            "}")
+        .doTest();
   }
 
   @Test
   public void testGuavaAnnotationOK() throws Exception {
-    compilationHelper.assertCompileSucceeds(Arrays.asList(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "com/google/common/annotations/RequiredModifiers.java",
             "package com.google.common.annotations;",
             "import javax.lang.model.element.Modifier;",
@@ -211,26 +220,30 @@ public class RequiredModifiersCheckerTest {
             "@Target(ElementType.ANNOTATION_TYPE)",
             "public @interface RequiredModifiers {",
             "  Modifier[] value();",
-            "}"),
-        compilationHelper.fileManager().forSourceLines("test/AbstractRequired.java",
+            "}")
+        .addSourceLines(
+            "test/AbstractRequired.java",
             "package test;",
             "import static javax.lang.model.element.Modifier.ABSTRACT;",
             "import com.google.common.annotations.RequiredModifiers;",
             "@RequiredModifiers(ABSTRACT)",
             "public @interface AbstractRequired {",
-            "}"),
-        compilationHelper.fileManager().forSourceLines("test/RequiredModifiersTestCase.java",
+            "}")
+        .addSourceLines(
+            "test/RequiredModifiersTestCase.java",
             "package test;",
             "import test.AbstractRequired;",
             "@AbstractRequired public abstract class RequiredModifiersTestCase {",
-            "}")));
+            "}")
+        .doTest();
   }
 
   // Regression test for #313
   @Test
   public void negativeNestedAnnotations() throws Exception {
-    compilationHelper.assertCompileSucceeds(
-        compilationHelper.fileManager().forSourceLines("test/Test.java",
+    compilationHelper
+        .addSourceLines(
+            "test/Test.java",
             "package test;",
             "@interface Foos {",
             "  Foo[] value();",
@@ -238,23 +251,26 @@ public class RequiredModifiersCheckerTest {
             "@interface Foo {",
             "}",
             "@Foos({@Foo, @Foo}) public class Test {",
-            "}"));
+            "}")
+        .doTest();
   }
 
   // Regression test for #313
   @Test
   public void negativePackageAnnotation() throws Exception {
-    compilationHelper.assertCompileSucceeds(Arrays.asList(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "testdata/Anno.java",
             "package testdata;",
             "import java.lang.annotation.Target;",
             "import java.lang.annotation.ElementType;",
             "@Target(ElementType.PACKAGE)",
             "public @interface Anno {",
-            "}"),
-        compilationHelper.fileManager().forSourceLines("testdata/package-info.java",
+            "}")
+        .addSourceLines(
+            "testdata/package-info.java",
             "@Anno",
-            "package testdata;")));
+            "package testdata;")
+        .doTest();
   }
 }

@@ -32,18 +32,17 @@ public class SizeGreaterThanOrEqualsZeroTest {
 
   @Before
   public void setUp() throws Exception {
-    compilationHelper = CompilationTestHelper.newInstance(new SizeGreaterThanOrEqualsZero());
+    compilationHelper =
+        CompilationTestHelper.newInstance(new SizeGreaterThanOrEqualsZero(), getClass());
   }
 
   @Test
   public void testCollectionSizePositiveCases() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "SizeGreaterThanOrEqualsZeroPositiveCases.java"));
+    compilationHelper.addSourceFile("SizeGreaterThanOrEqualsZeroPositiveCases.java").doTest();
   }
 
   @Test
   public void testCollectionSizeNegativeCases() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "SizeGreaterThanOrEqualsZeroNegativeCases.java"));
+    compilationHelper.addSourceFile("SizeGreaterThanOrEqualsZeroNegativeCases.java").doTest();
   }
 }

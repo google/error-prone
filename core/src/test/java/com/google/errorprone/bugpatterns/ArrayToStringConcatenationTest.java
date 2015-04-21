@@ -33,18 +33,17 @@ public class ArrayToStringConcatenationTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new ArrayToStringConcatenation());
+    compilationHelper =
+        CompilationTestHelper.newInstance(new ArrayToStringConcatenation(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "ArrayStringConcatenationPositiveCases.java"));
+    compilationHelper.addSourceFile("ArrayStringConcatenationPositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "ArrayStringConcatenationNegativeCases.java"));
+    compilationHelper.addSourceFile("ArrayStringConcatenationNegativeCases.java").doTest();
   }
 }

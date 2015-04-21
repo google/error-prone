@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.threadsafety;
 
 import com.google.errorprone.CompilationTestHelper;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -25,14 +26,18 @@ import org.junit.runners.JUnit4;
 /** {@link SynchronizeOnNonFinalFieldTest}Test */
 @RunWith(JUnit4.class)
 public class SynchronizeOnNonFinalFieldTest {
+  private CompilationTestHelper compilationHelper;
 
-  private final CompilationTestHelper compilationHelper =
-      CompilationTestHelper.newInstance(new SynchronizeOnNonFinalField());
+  @Before
+  public void setUp() {
+    compilationHelper =
+        CompilationTestHelper.newInstance(new SynchronizeOnNonFinalField(), getClass());
+  }
 
   @Test
   public void testPositive1() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety.Test;",
             "class Test {",
@@ -41,15 +46,14 @@ public class SynchronizeOnNonFinalFieldTest {
             "    // BUG: Diagnostic contains: Synchronizing on non-final fields is not safe",
             "    synchronized (lock) {}",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testPositive2() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety.Test;",
             "class Test {",
@@ -59,15 +63,14 @@ public class SynchronizeOnNonFinalFieldTest {
             "    // BUG: Diagnostic contains: Synchronizing on non-final fields is not safe",
             "    synchronized (this.tx[i].lock) {}",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testPositive3() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety.Test;",
             "class Test {",
@@ -76,15 +79,14 @@ public class SynchronizeOnNonFinalFieldTest {
             "    // BUG: Diagnostic contains: Synchronizing on non-final fields is not safe",
             "    synchronized (t.lock) {}",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 
   @Test
   public void testNegative() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(
-        compilationHelper.fileManager().forSourceLines(
+    compilationHelper
+        .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety.Test;",
             "class Test {",
@@ -92,8 +94,7 @@ public class SynchronizeOnNonFinalFieldTest {
             "  void m() {",
             "    synchronized (lock) {}",
             "  }",
-            "}"
-        )
-    );
+            "}")
+        .doTest();
   }
 }

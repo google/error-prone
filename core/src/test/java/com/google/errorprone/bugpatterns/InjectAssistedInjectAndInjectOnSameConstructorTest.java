@@ -34,18 +34,21 @@ public class InjectAssistedInjectAndInjectOnSameConstructorTest {
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(new InjectAssistedInjectAndInjectOnSameConstructor());
+        CompilationTestHelper.newInstance(
+            new InjectAssistedInjectAndInjectOnSameConstructor(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "InjectAssistedInjectAndInjectOnSameConstructorPositiveCases.java"));
+    compilationHelper
+        .addSourceFile("InjectAssistedInjectAndInjectOnSameConstructorPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "InjectAssistedInjectAndInjectOnSameConstructorNegativeCases.java"));
+    compilationHelper
+        .addSourceFile("InjectAssistedInjectAndInjectOnSameConstructorNegativeCases.java")
+        .doTest();
   }
 }

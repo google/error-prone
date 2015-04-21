@@ -34,19 +34,19 @@ public class PrimitiveArrayPassedToVarargsMethodTest {
   @Before
   public void setUp() {
     compilationHelper =
-      CompilationTestHelper.newInstance(new PrimitiveArrayPassedToVarargsMethod());
+        CompilationTestHelper.newInstance(new PrimitiveArrayPassedToVarargsMethod(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileSucceedsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "PrimitiveArrayPassedToVarargsMethodPositiveCases.java"));
+    compilationHelper.addSourceFile("PrimitiveArrayPassedToVarargsMethodPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "PrimitiveArrayPassedToVarargsMethodNegativeCases.java"));
+    compilationHelper.addSourceFile("PrimitiveArrayPassedToVarargsMethodNegativeCases.java")
+        .doTest();
   }
 
 }

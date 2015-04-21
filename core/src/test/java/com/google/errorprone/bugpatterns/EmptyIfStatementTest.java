@@ -33,19 +33,17 @@ public class EmptyIfStatementTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new EmptyIfStatement());
+    compilationHelper = CompilationTestHelper.newInstance(new EmptyIfStatement(), getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "EmptyIfStatementPositiveCases.java"));
+    compilationHelper.addSourceFile("EmptyIfStatementPositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "EmptyIfStatementNegativeCases.java"));
+    compilationHelper.addSourceFile("EmptyIfStatementNegativeCases.java").doTest();
   }
 
 }

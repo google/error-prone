@@ -241,7 +241,7 @@ public class ErrorProneJavaCompilerTest {
       explanation = "", category = JDK, severity = ERROR, maturity = MATURE,
       suppressibility = UNSUPPRESSIBLE)
   public static class UnsuppressibleArrayEquals extends ArrayEquals {}
-  
+
   @Test
   public void testCantDisableNonDisableableCheck() throws Exception {
     try {
@@ -292,7 +292,8 @@ public class ErrorProneJavaCompilerTest {
         "-d", tempDir.getRoot().getAbsolutePath(),
         "-proc:none",
         "-Xep:ChainingConstructorIgnoresParameter:WARN");
-    List<JavaFileObject> sources = fileManager.sources(ChainingConstructorIgnoresParameter.class,
+    List<JavaFileObject> sources = fileManager.forResources(
+        ChainingConstructorIgnoresParameter.class,
         "ChainingConstructorIgnoresParameterPositiveCases.java");
     fileManager.close();
 
@@ -312,7 +313,7 @@ public class ErrorProneJavaCompilerTest {
     // reset state between compilations
     diagnosticHelper.clearDiagnostics();
     fileManager = new ErrorProneInMemoryFileManager();
-    sources = fileManager.sources(ChainingConstructorIgnoresParameter.class,
+    sources = fileManager.forResources(ChainingConstructorIgnoresParameter.class,
         "ChainingConstructorIgnoresParameterPositiveCases.java");
     fileManager.close();
     args.remove("-Xep:ChainingConstructorIgnoresParameter:WARN");
@@ -341,7 +342,7 @@ public class ErrorProneJavaCompilerTest {
         "-proc:none",
         "-Xep:EmptyIf");
     List<JavaFileObject> sources =
-        fileManager.sources(BadShiftAmount.class, "EmptyIfStatementPositiveCases.java");
+        fileManager.forResources(BadShiftAmount.class, "EmptyIfStatementPositiveCases.java");
     fileManager.close();
 
     JavaCompiler.CompilationTask task = errorProneJavaCompiler.getTask(
@@ -404,7 +405,7 @@ public class ErrorProneJavaCompilerTest {
         diagnosticHelper.collector,
         args,
         null,
-        fileManager.sources(clazz, fileNames.toArray(new String[fileNames.size()])));
+        fileManager.forResources(clazz, fileNames.toArray(new String[fileNames.size()])));
 
     fileManager.close();
     return new CompilationResult(task.call(), diagnosticHelper);

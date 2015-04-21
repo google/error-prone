@@ -33,18 +33,17 @@ public class StringBuilderInitWithCharTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new StringBuilderInitWithChar());
+    compilationHelper =
+        CompilationTestHelper.newInstance(new StringBuilderInitWithChar(), getClass());
   }
 
   @Test
   public void testPositiveCases() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(compilationHelper.fileManager()
-        .sources(getClass(), "StringBuilderInitWithCharPositiveCases.java"));
+    compilationHelper.addSourceFile("StringBuilderInitWithCharPositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCases() throws Exception {
-    compilationHelper.assertCompileSucceeds(compilationHelper.fileManager()
-        .sources(getClass(), "StringBuilderInitWithCharNegativeCases.java"));
+    compilationHelper.addSourceFile("StringBuilderInitWithCharNegativeCases.java").doTest();
   }
 }

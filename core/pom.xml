@@ -178,12 +178,6 @@
       <version>2.6.1</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>com.google.gdata</groupId>
-      <artifactId>core</artifactId>
-      <version>1.47.1</version>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
 
   <build>
@@ -262,7 +256,7 @@
                   <arguments>
                     <argument>-bug_patterns=${basedir}/target/generated-sources/annotations/bugPatterns.txt</argument>
                     <argument>-docs_repository=${basedir}/target/generated-wiki/</argument>
-                    <argument>-examples=${basedir}/src/test/resources/</argument>
+                    <argument>-examples=${basedir}/src/test/java/</argument>
                     <argument>-explanations=${basedir}/../docs/bugpattern/</argument>
                   </arguments>
                 </configuration>
