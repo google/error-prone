@@ -27,7 +27,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
+import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.*;
 
@@ -35,7 +35,7 @@ import static com.google.errorprone.matchers.Matchers.*;
         summary = "JMock tests must have @RunWith class annotation or the mockery field declared as a JUnit rule",
         explanation = "If this is not done then all of your JMock tests will run and pass. However none of your assertions " +
                 "will actually be evaluated so your tests will be producing false positive results.",
-        category = Category.JMOCK, severity = ERROR, maturity = MATURE)
+        category = Category.JMOCK, severity = ERROR, maturity = EXPERIMENTAL)
 public class JMockTestWithoutRunWithOrRuleAnnotation extends BugChecker implements BugChecker.VariableTreeMatcher {
 
     private static final Matcher<VariableTree> JMOCK_MOCKERY_MATCHER = allOf(isSameType("org.jmock.Mockery"), isField());
