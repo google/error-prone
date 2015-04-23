@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
@@ -58,6 +58,18 @@ public class WaitNotInLoopNegativeCases {
     }
   }
 
+  // This code is incorrect, but this check should not flag it.
+  public void testLoopNotInSynchronized() {
+    while (!flag) {
+      synchronized (this) {
+        try {
+          wait();
+        } catch (InterruptedException e) {
+        }
+      }
+    }
+  }
+
   public void testDoLoop() {
     synchronized (this) {
       do {
@@ -71,7 +83,7 @@ public class WaitNotInLoopNegativeCases {
 
   public void testForLoop() {
     synchronized (this) {
-      for (;!flag;) {
+      for (; !flag; ) {
         try {
           wait();
         } catch (InterruptedException e) {

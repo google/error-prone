@@ -1257,6 +1257,36 @@ public class Matchers {
   }
 
   /**
+   * Matches if the given tree is inside a loop.
+   */
+  public static <T extends Tree> Matcher<T> inLoop() {
+    return new Matcher<T>() {
+      @Override
+      public boolean matches(Tree tree, VisitorState state) {
+        TreePath path = state.getPath().getParentPath();
+        Tree node = path.getLeaf();
+        while (path != null) {
+          switch (node.getKind()) {
+            case METHOD:
+            case CLASS:
+              return false;
+            case WHILE_LOOP:
+            case FOR_LOOP:
+            case ENHANCED_FOR_LOOP:
+            case DO_WHILE_LOOP:
+              return true;
+            default:
+              path = path.getParentPath();
+              node = path.getLeaf();
+              break;
+          }
+        }
+        return false;
+      }
+    };
+  }
+
+  /**
    * Matches an assignment operator AST node if both of the given matchers match.
    *
    * @param variableMatcher The matcher to apply to the variable.
