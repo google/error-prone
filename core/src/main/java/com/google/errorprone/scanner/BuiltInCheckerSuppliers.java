@@ -115,6 +115,7 @@ import com.google.errorprone.bugpatterns.UnnecessaryTypeArgument;
 import com.google.errorprone.bugpatterns.WaitNotInLoop;
 import com.google.errorprone.bugpatterns.WildcardImport;
 import com.google.errorprone.bugpatterns.WrongParameterPackage;
+import com.google.errorprone.bugpatterns.threadsafety.DoubleCheckedLocking;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByChecker;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByValidator;
 import com.google.errorprone.bugpatterns.threadsafety.LockMethodChecker;
@@ -227,6 +228,7 @@ public class BuiltInCheckerSuppliers {
       new CollectionIncompatibleType(),
       new CovariantEquals(),
       new DivZero(),
+      new DoubleCheckedLocking(),
       new EmptyIfStatement(),
       new FallThroughSuppression(),
       new GuiceAssistedParameters(),
