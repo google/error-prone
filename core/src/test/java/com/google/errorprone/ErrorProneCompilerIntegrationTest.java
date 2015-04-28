@@ -114,7 +114,7 @@ public class ErrorProneCompilerIntegrationTest {
 
   @Test
   public void fileWithWarning() throws Exception {
-    compilerBuilder.report(ScannerSupplier.fromBugCheckers(new NonAtomicVolatileUpdate()));
+    compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(NonAtomicVolatileUpdate.class));
     compiler = compilerBuilder.build();
     Result exitCode = compiler.compile(compiler.fileManager().forResources(
         NonAtomicVolatileUpdate.class,
@@ -161,18 +161,19 @@ public class ErrorProneCompilerIntegrationTest {
     assertThat(diagnosticHelper.getDiagnostics()).hasSize(3);
   }
 
+  @BugPattern(
+      name = "", explanation = "", summary = "", maturity = EXPERIMENTAL, severity = ERROR,
+      category = ONE_OFF)
+  public static class Throwing extends BugChecker implements ExpressionStatementTreeMatcher {
+    @Override
+    public Description matchExpressionStatement(ExpressionStatementTree tree, VisitorState state) {
+      throw new IllegalStateException("test123");
+    }
+  }
+
   @Test
   public void unhandledExceptionsAreReportedWithoutBugParadeLink() throws Exception {
-    @BugPattern(name = "", explanation = "", summary = "",
-        maturity = EXPERIMENTAL, severity = ERROR, category = ONE_OFF)
-    class Throwing extends BugChecker implements ExpressionStatementTreeMatcher {
-      @Override
-      public Description matchExpressionStatement(ExpressionStatementTree tree, VisitorState state)
-      {
-        throw new IllegalStateException("test123");
-      }
-    }
-    compilerBuilder.report(ScannerSupplier.fromBugCheckers(new Throwing()));
+    compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(Throwing.class));
     compiler = compilerBuilder.build();
     Result exitCode = compiler.compile(
         compiler.fileManager().forResources(getClass(), "MultipleTopLevelClassesWithErrors.java",
@@ -253,7 +254,7 @@ public class ErrorProneCompilerIntegrationTest {
 
   @BugPattern(name = "ConstructorMatcher", explanation = "",
       category = ONE_OFF, maturity = EXPERIMENTAL, severity = ERROR, summary = "")
-  private static class ConstructorMatcher extends BugChecker implements MethodTreeMatcher {
+  public static class ConstructorMatcher extends BugChecker implements MethodTreeMatcher {
     @Override
     public Description matchMethod(MethodTree tree, VisitorState state) {
       return describeMatch(tree);
@@ -262,7 +263,7 @@ public class ErrorProneCompilerIntegrationTest {
 
   @Test
   public void ignoreGeneratedConstructors() throws Exception {
-    compilerBuilder.report(ScannerSupplier.fromBugCheckers(new ConstructorMatcher()));
+    compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(ConstructorMatcher.class));
     compiler = compilerBuilder.build();
     Result exitCode = compiler.compile(
         Arrays.asList(compiler.fileManager().forSourceLines("Test.java", "public class Test {}")));
@@ -278,7 +279,7 @@ public class ErrorProneCompilerIntegrationTest {
 
   @BugPattern(name = "SuperCallMatcher", explanation = "",
       category = ONE_OFF, maturity = EXPERIMENTAL, severity = ERROR, summary = "")
-  private static class SuperCallMatcher extends BugChecker implements MethodInvocationTreeMatcher {
+  static class SuperCallMatcher extends BugChecker implements MethodInvocationTreeMatcher {
     @Override
     public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
       Tree select = tree.getMethodSelect();
@@ -300,7 +301,7 @@ public class ErrorProneCompilerIntegrationTest {
   @Ignore
   @Test
   public void ignoreGeneratedSuperInvocations() throws Exception {
-    compilerBuilder.report(ScannerSupplier.fromBugCheckers(new SuperCallMatcher()));
+    compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(SuperCallMatcher.class));
     compiler = compilerBuilder.build();
     Result exitCode = compiler.compile(Arrays.asList(
         compiler.fileManager().forSourceLines("Test.java",

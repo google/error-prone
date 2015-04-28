@@ -56,7 +56,7 @@ public class CommandLineFlagTest {
       summary = "Disableable checker that flags all return statements as errors",
       explanation = "Disableable checker that flags all return statements as errors",
       category = ONE_OFF, severity = ERROR, maturity = MATURE)
-  private static class DisableableChecker extends BugChecker implements ReturnTreeMatcher {
+  public static class DisableableChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {
       return describeMatch(tree);
@@ -67,7 +67,7 @@ public class CommandLineFlagTest {
       summary = "NondisableableChecker checker that flags all return statements as errors",
       explanation = "NondisableableChecker checker that flags all return statements as errors",
       suppressibility = UNSUPPRESSIBLE, category = ONE_OFF, severity = ERROR, maturity = MATURE)
-  private static class NondisableableChecker extends BugChecker implements ReturnTreeMatcher {
+  public static class NondisableableChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {
       return describeMatch(tree);
@@ -78,7 +78,7 @@ public class CommandLineFlagTest {
       summary = "Checker that flags all return statements as warnings",
       explanation = "Checker that flags all return statements as warningss",
       category = ONE_OFF, severity = WARNING, maturity = MATURE)
-  private static class WarningChecker extends BugChecker implements ReturnTreeMatcher {
+  public static class WarningChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {
       return describeMatch(tree);
@@ -89,7 +89,7 @@ public class CommandLineFlagTest {
       summary = "Checker that flags all return statements as errors",
       explanation = "Checker that flags all return statements as errors",
       category = ONE_OFF, severity = ERROR, maturity = MATURE)
-  private static class ErrorChecker extends BugChecker implements ReturnTreeMatcher {
+  public static class ErrorChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {
       return describeMatch(tree);
@@ -167,9 +167,8 @@ public class CommandLineFlagTest {
 
   @Test
   public void canPromoteToError() throws Exception {
-    ErrorProneTestCompiler compiler = builder
-        .report(ScannerSupplier.fromBugCheckers(new WarningChecker()))
-        .build();
+    ErrorProneTestCompiler compiler =
+        builder.report(ScannerSupplier.fromBugCheckerClasses(WarningChecker.class)).build();
     List<JavaFileObject> sources =
         compiler.fileManager().forResources(getClass(), "CommandLineFlagTestFile.java");
 
@@ -183,9 +182,8 @@ public class CommandLineFlagTest {
 
   @Test
   public void canDemoteToWarning() throws Exception {
-    ErrorProneTestCompiler compiler = builder
-        .report(ScannerSupplier.fromBugCheckers(new ErrorChecker()))
-        .build();
+    ErrorProneTestCompiler compiler =
+        builder.report(ScannerSupplier.fromBugCheckerClasses(ErrorChecker.class)).build();
     List<JavaFileObject> sources =
         compiler.fileManager().forResources(getClass(), "CommandLineFlagTestFile.java");
 
@@ -200,9 +198,8 @@ public class CommandLineFlagTest {
 
   @Test
   public void canDisable() throws Exception {
-    ErrorProneTestCompiler compiler = builder
-        .report(ScannerSupplier.fromBugCheckers(new DisableableChecker()))
-        .build();
+    ErrorProneTestCompiler compiler =
+        builder.report(ScannerSupplier.fromBugCheckerClasses(DisableableChecker.class)).build();
     List<JavaFileObject> sources =
         compiler.fileManager().forResources(getClass(), "CommandLineFlagTestFile.java");
 
@@ -217,9 +214,8 @@ public class CommandLineFlagTest {
 
   @Test
   public void cantDisableNondisableableCheck() throws Exception {
-    ErrorProneTestCompiler compiler = builder
-        .report(ScannerSupplier.fromBugCheckers(new NondisableableChecker()))
-        .build();
+    ErrorProneTestCompiler compiler =
+        builder.report(ScannerSupplier.fromBugCheckerClasses(NondisableableChecker.class)).build();
     List<JavaFileObject> sources =
         compiler.fileManager().forResources(getClass(), "CommandLineFlagTestFile.java");
 
@@ -247,9 +243,8 @@ public class CommandLineFlagTest {
 
   @Test
   public void canOverrideByAltname() throws Exception {
-    ErrorProneTestCompiler compiler =  builder
-        .report(ScannerSupplier.fromBugCheckers(new DisableableChecker()))
-        .build();
+    ErrorProneTestCompiler compiler =
+        builder.report(ScannerSupplier.fromBugCheckerClasses(DisableableChecker.class)).build();
     List<JavaFileObject> sources =
         compiler.fileManager().forResources(getClass(), "CommandLineFlagTestFile.java");
 

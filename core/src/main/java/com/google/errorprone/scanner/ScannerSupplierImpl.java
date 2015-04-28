@@ -16,12 +16,15 @@
 
 package com.google.errorprone.scanner;
 
+import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
+import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.bugpatterns.BugChecker;
 
@@ -29,14 +32,15 @@ import org.pcollections.PMap;
 
 /**
  * An implementation of a {@link ScannerSupplier}, abstracted as a set of all known
- * {@link BugChecker}s and a set of enabled {@link BugChecker}s.  The set of
- * enabled suppliers must be a subset of all known suppliers.
+ * {@link BugChecker}s and a set of enabled {@link BugChecker}s. The set of enabled suppliers must
+ * be a subset of all known suppliers.
  */
 class ScannerSupplierImpl extends ScannerSupplier {
-  private final ImmutableBiMap<String, BugChecker> checks;
+  private final ImmutableBiMap<String, BugCheckerInfo> checks;
   private final PMap<String, BugPattern.SeverityLevel> severities;
 
-  ScannerSupplierImpl(ImmutableBiMap<String, BugChecker> checks,
+  ScannerSupplierImpl(
+      ImmutableBiMap<String, BugCheckerInfo> checks,
       PMap<String, BugPattern.SeverityLevel> severities) {
     Preconditions.checkArgument(
         Sets.difference(severities.keySet(), checks.keySet()).isEmpty(),
@@ -45,13 +49,27 @@ class ScannerSupplierImpl extends ScannerSupplier {
     this.severities = severities;
   }
 
+  // TODO(user): BugCheckerSupplier::get
+  private static final Function<BugCheckerInfo, BugChecker> INSTANTIATE_CHECKER =
+      new Function<BugCheckerInfo, BugChecker>() {
+        @Override
+        public BugChecker apply(BugCheckerInfo checkerClass) {
+          try {
+            return checkerClass.checkerClass().newInstance();
+          } catch (InstantiationException | IllegalAccessException e) {
+            throw new LinkageError("Could not instantiate BugChecker.", e);
+          }
+        }
+      };
+
   @Override
   public ErrorProneScanner get() {
-    return new ErrorProneScanner(getEnabledChecks(), severities);
+    return new ErrorProneScanner(
+        Iterables.transform(getEnabledChecks(), INSTANTIATE_CHECKER), severities);
   }
 
   @Override
-  protected ImmutableBiMap<String, BugChecker> getAllChecks() {
+  protected ImmutableBiMap<String, BugCheckerInfo> getAllChecks() {
     return checks;
   }
 
@@ -61,14 +79,14 @@ class ScannerSupplierImpl extends ScannerSupplier {
   }
 
   @Override
-  protected ImmutableSet<BugChecker> getEnabledChecks() {
+  protected ImmutableSet<BugCheckerInfo> getEnabledChecks() {
     return FluentIterable.from(getAllChecks().values()).filter(isCheckEnabled).toSet();
   }
-  
-  private final Predicate<BugChecker> isCheckEnabled =
-      new Predicate<BugChecker>() {
+
+  private final Predicate<BugCheckerInfo> isCheckEnabled =
+      new Predicate<BugCheckerInfo>() {
         @Override
-        public boolean apply(BugChecker input) {
+        public boolean apply(BugCheckerInfo input) {
           return input.severity(severities).enabled();
         }
   };

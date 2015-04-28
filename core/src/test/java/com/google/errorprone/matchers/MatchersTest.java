@@ -16,11 +16,14 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.errorprone.BugPattern.Category.ONE_OFF;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.inLoop;
 
+import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.MatcherChecker;
-import com.google.errorprone.bugpatterns.BugChecker;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,8 +37,8 @@ public class MatchersTest {
 
   @Test
   public void inLoopShouldMatchInWhileLoop() {
-    CompilationTestHelper compilationHelper = CompilationTestHelper.newInstance(
-        inLoopChecker(), getClass());
+    CompilationTestHelper compilationHelper =
+        CompilationTestHelper.newInstance(new InLoopChecker(), getClass());
     compilationHelper
         .addSourceLines("Test.java",
             "public class Test {",
@@ -51,8 +54,8 @@ public class MatchersTest {
 
   @Test
   public void inLoopShouldMatchInDoLoop() {
-    CompilationTestHelper compilationHelper = CompilationTestHelper.newInstance(
-        inLoopChecker(), getClass());
+    CompilationTestHelper compilationHelper =
+        CompilationTestHelper.newInstance(new InLoopChecker(), getClass());
     compilationHelper
         .addSourceLines("Test.java",
             "public class Test {",
@@ -68,8 +71,8 @@ public class MatchersTest {
 
   @Test
   public void inLoopShouldMatchInForLoop() {
-    CompilationTestHelper compilationHelper = CompilationTestHelper.newInstance(
-        inLoopChecker(), getClass());
+    CompilationTestHelper compilationHelper =
+        CompilationTestHelper.newInstance(new InLoopChecker(), getClass());
     compilationHelper
         .addSourceLines("Test.java",
             "public class Test {",
@@ -85,8 +88,8 @@ public class MatchersTest {
 
   @Test
   public void inLoopShouldMatchInEnhancedForLoop() {
-    CompilationTestHelper compilationHelper = CompilationTestHelper.newInstance(
-        inLoopChecker(), getClass());
+    CompilationTestHelper compilationHelper =
+        CompilationTestHelper.newInstance(new InLoopChecker(), getClass());
     compilationHelper
         .addSourceLines("Test.java",
             "import java.util.List;",
@@ -103,8 +106,8 @@ public class MatchersTest {
 
   @Test
   public void inLoopShouldNotMatchInInitializerWithoutLoop() {
-    CompilationTestHelper compilationHelper = CompilationTestHelper.newInstance(
-        inLoopChecker(), getClass());
+    CompilationTestHelper compilationHelper =
+        CompilationTestHelper.newInstance(new InLoopChecker(), getClass());
     compilationHelper
         .addSourceLines("Test.java",
             "import java.util.List;",
@@ -118,8 +121,8 @@ public class MatchersTest {
 
   @Test
   public void inLoopShouldMatchInInitializerInLoop() {
-    CompilationTestHelper compilationHelper = CompilationTestHelper.newInstance(
-        inLoopChecker(), getClass());
+    CompilationTestHelper compilationHelper =
+        CompilationTestHelper.newInstance(new InLoopChecker(), getClass());
     compilationHelper
         .addSourceLines("Test.java",
             "import java.util.List;",
@@ -137,8 +140,8 @@ public class MatchersTest {
 
   @Test
   public void inLoopShouldNotMatchInAnonymousInnerClassDefinedInLoop() {
-    CompilationTestHelper compilationHelper = CompilationTestHelper.newInstance(
-        inLoopChecker(), getClass());
+    CompilationTestHelper compilationHelper =
+        CompilationTestHelper.newInstance(new InLoopChecker(), getClass());
     compilationHelper
         .addSourceLines("Test.java",
             "import java.util.*;",
@@ -162,7 +165,13 @@ public class MatchersTest {
         .doTest();
   }
 
-  private static BugChecker inLoopChecker() {
-    return new MatcherChecker("System.out.println();", inLoop());
+  @BugPattern(
+      name = "InLoopChecker",
+      summary = "Checker that flags the given expression statement if the given matcher matches",
+      category = ONE_OFF, maturity = MATURE, severity = ERROR)
+  public static class InLoopChecker extends MatcherChecker {
+    public InLoopChecker() {
+      super("System.out.println();", inLoop());
+    }
   }
 }

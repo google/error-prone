@@ -16,8 +16,12 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.BugPattern.Category.GUAVA;
+import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+
+import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.bugpatterns.WildcardImport.FixStrategies;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -28,13 +32,21 @@ import org.junit.runners.JUnit4;
 /** {@link WildcardImport}Test */
 @RunWith(JUnit4.class)
 public class WildcardImportTest {
-
   private CompilationTestHelper compilationHelper;
+
+  @BugPattern(
+      name = "WildcardImport", summary = "Use of wildcard imports is forbidden", category = GUAVA,
+      severity = ERROR, maturity = EXPERIMENTAL)
+  public static class WildcardImportTestChecker extends WildcardImport {
+    public WildcardImportTestChecker() {
+      super(FixStrategies.TEST);
+    }
+  }
 
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(new WildcardImport(FixStrategies.TEST), getClass());
+        CompilationTestHelper.newInstance(new WildcardImportTestChecker(), getClass());
   }
 
   @Test

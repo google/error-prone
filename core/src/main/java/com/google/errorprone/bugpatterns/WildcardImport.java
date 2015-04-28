@@ -21,7 +21,6 @@ import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.auto.value.AutoValue;
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
@@ -79,8 +78,7 @@ public class WildcardImport extends BugChecker implements ClassTreeMatcher {
     this(FixStrategies.PRODUCTION);
   }
 
-  @VisibleForTesting
-  public WildcardImport(FixStrategy fixStrategy) {
+  protected WildcardImport(FixStrategy fixStrategy) {
     this.fixStrategy = fixStrategy;
   }
 

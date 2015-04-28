@@ -16,8 +16,12 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.BugPattern.Category.GUAVA;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static org.junit.Assert.fail;
 
+import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
@@ -32,9 +36,18 @@ import org.junit.runners.JUnit4;
 public class SelfEqualsTest {
   CompilationTestHelper compilationHelper;
 
+  @BugPattern(
+      name = "SelfEquals", summary = "An object is tested for equality to itself", category = GUAVA,
+      severity = ERROR, maturity = MATURE)
+  public static class SelfEqualsTestChecker extends SelfEquals {
+    public SelfEqualsTestChecker() {
+      super(true, true);
+    }
+  }
+
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new SelfEquals(true, true), getClass());
+    compilationHelper = CompilationTestHelper.newInstance(new SelfEqualsTestChecker(), getClass());
   }
 
   @Test
@@ -52,6 +65,33 @@ public class SelfEqualsTest {
     compilationHelper.addSourceFile("SelfEqualsNegativeCases.java").doTest();
   }
 
+  @BugPattern(
+      name = "SelfEquals", summary = "An object is tested for equality to itself", category = GUAVA,
+      severity = ERROR, maturity = MATURE)
+  public static class SelfEquals_Guava_Equals extends SelfEquals {
+    public SelfEquals_Guava_Equals() {
+      super(true, true);
+    }
+  }
+
+  @BugPattern(
+      name = "SelfEquals", summary = "An object is tested for equality to itself", category = GUAVA,
+      severity = ERROR, maturity = MATURE)
+  public static class SelfEquals_Guava extends SelfEquals {
+    public SelfEquals_Guava() {
+      super(true, false);
+    }
+  }
+
+  @BugPattern(
+      name = "SelfEquals", summary = "An object is tested for equality to itself", category = GUAVA,
+      severity = ERROR, maturity = MATURE)
+  public static class SelfEquals_Equals extends SelfEquals {
+    public SelfEquals_Equals() {
+      super(false, true);
+    }
+  }
+
   @Test
   public void testFlags() throws Exception {
     SelfEquals checker;
@@ -65,14 +105,14 @@ public class SelfEqualsTest {
     }
 
     // Both checks on.
-    checker = new SelfEquals(true, true);
+    checker = new SelfEquals_Guava_Equals();
     compilationHelper = CompilationTestHelper.newInstance(checker, getClass());
     compilationHelper.addSourceFile("SelfEqualsPositiveCase1.java").doTest();
     compilationHelper = CompilationTestHelper.newInstance(checker, getClass());
     compilationHelper.addSourceFile("SelfEqualsPositiveCase2.java").doTest();
 
     // Guava on, Equals off.
-    checker = new SelfEquals(true, false);
+    checker = new SelfEquals_Guava();
     compilationHelper = CompilationTestHelper.newInstance(checker, getClass());
     compilationHelper.addSourceFile("SelfEqualsPositiveCase1.java").doTest();
     compilationHelper = CompilationTestHelper.newInstance(checker, getClass());
@@ -81,7 +121,7 @@ public class SelfEqualsTest {
         .doTest();
 
     // Equals on, Guava off.
-    checker = new SelfEquals(false, true);
+    checker = new SelfEquals_Equals();
     compilationHelper = CompilationTestHelper.newInstance(checker, getClass());
     compilationHelper.addSourceFile("SelfEqualsPositiveCase1.java")
         .expectNoDiagnostics()

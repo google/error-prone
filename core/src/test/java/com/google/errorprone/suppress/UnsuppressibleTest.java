@@ -58,7 +58,7 @@ public class UnsuppressibleTest {
       explanation = "Test checker that that is unsuppressible",
       suppressibility = Suppressibility.UNSUPPRESSIBLE,
       category = ONE_OFF, severity = ERROR, maturity = MATURE)
-  private static class MyChecker extends BugChecker implements ReturnTreeMatcher {
+  public static class MyChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {
       return describeMatch(tree);
@@ -73,7 +73,7 @@ public class UnsuppressibleTest {
     diagnosticHelper = new DiagnosticTestHelper();
     compiler = new ErrorProneTestCompiler.Builder()
         .listenToDiagnostics(diagnosticHelper.collector)
-        .report(ScannerSupplier.fromBugCheckers(new MyChecker()))
+        .report(ScannerSupplier.fromBugCheckerClasses(MyChecker.class))
         .build();
   }
 

@@ -18,8 +18,9 @@ package com.google.errorprone.scanner;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Predicates;
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.bugpatterns.ArrayEquals;
 import com.google.errorprone.bugpatterns.ArrayHashCode;
 import com.google.errorprone.bugpatterns.ArrayToString;
@@ -123,16 +124,24 @@ import com.google.errorprone.bugpatterns.threadsafety.SynchronizeOnNonFinalField
 import com.google.errorprone.bugpatterns.threadsafety.UnlockMethodChecker;
 
 /**
- * Static helper class that provides {@link ScannerSupplier}s and {@link BugChecker}s
- * for the built-in error-prone checks, as opposed to plugin checks or checks used in tests.
+ * Static helper class that provides {@link ScannerSupplier}s and {@link BugChecker}s for the
+ * built-in Error Prone checks, as opposed to plugin checks or checks used in tests.
  */
 public class BuiltInCheckerSuppliers {
+  @SafeVarargs
+  public static ImmutableSet<BugCheckerInfo> getSuppliers(Class<? extends BugChecker>... checkers) {
+    ImmutableSet.Builder<BugCheckerInfo> result = ImmutableSet.builder();
+    for (Class<? extends BugChecker> checker : checkers) {
+      result.add(BugCheckerInfo.create(checker));
+    }
+    return result.build();
+  }
 
   /**
    * Returns a {@link ScannerSupplier} with all {@link BugChecker}s in Error Prone.
    */
   public static ScannerSupplier allChecks() {
-    return ScannerSupplier.fromBugCheckers(
+    return ScannerSupplier.fromBugCheckerInfos(
         Iterables.concat(ENABLED_ERRORS, ENABLED_WARNINGS, DISABLED_CHECKS));
   }
 
@@ -158,119 +167,122 @@ public class BuiltInCheckerSuppliers {
    * A list of all checks with severity ERROR that are on by default.
    */
   @VisibleForTesting
-  static final ImmutableList<BugChecker> ENABLED_ERRORS = ImmutableList.of(
-      new ArrayEquals(),
-      new ArrayHashCode(),
-      new ArrayToString(),
-      new ArrayToStringCompoundAssignment(),
-      new ArrayToStringConcatenation(),
-      new BadShiftAmount(),
-      new ChainingConstructorIgnoresParameter(),
-      new CheckReturnValue(),
-      new ComparisonOutOfRange(),
-      new CompileTimeConstantChecker(),
-      new DeadException(),
-      new DepAnn(),
-      new EqualsNaN(),
-      new ForOverrideChecker(),
-      new GuiceAssistedInjectScoping(),
-      new GuardedByValidator(),
-      new GuardedByChecker(),
-      new InvalidPatternSyntax(),
-      new JUnit3TestNotRun(),
-      new JUnit4SetUpNotRun(),
-      new JUnit4TearDownNotRun(),
-      new JUnit4TestNotRun(),
-      new LongLiteralLowerCaseSuffix(),
-      new MisusedWeekYear(),
-      new NonFinalCompileTimeConstant(),
-      new Overrides(),
-      new PreconditionsCheckNotNull(),
-      new PreconditionsCheckNotNullPrimitive(),
-      new ProtoFieldNullComparison(),
-      new ReturnValueIgnored(),
-      new SelfAssignment(),
-      new SelfEquals(),
-      new SizeGreaterThanOrEqualsZero(),
-      new StringBuilderInitWithChar(),
-      new SuppressWarningsDeprecated(),
-      new TryFailThrowable());
+  static final ImmutableSet<BugCheckerInfo> ENABLED_ERRORS =
+      getSuppliers(
+          ArrayEquals.class,
+          ArrayHashCode.class,
+          ArrayToString.class,
+          ArrayToStringCompoundAssignment.class,
+          ArrayToStringConcatenation.class,
+          BadShiftAmount.class,
+          ChainingConstructorIgnoresParameter.class,
+          CheckReturnValue.class,
+          ComparisonOutOfRange.class,
+          CompileTimeConstantChecker.class,
+          DeadException.class,
+          DepAnn.class,
+          EqualsNaN.class,
+          ForOverrideChecker.class,
+          GuiceAssistedInjectScoping.class,
+          GuardedByValidator.class,
+          GuardedByChecker.class,
+          InvalidPatternSyntax.class,
+          JUnit3TestNotRun.class,
+          JUnit4SetUpNotRun.class,
+          JUnit4TearDownNotRun.class,
+          JUnit4TestNotRun.class,
+          LongLiteralLowerCaseSuffix.class,
+          MisusedWeekYear.class,
+          NonFinalCompileTimeConstant.class,
+          Overrides.class,
+          PreconditionsCheckNotNull.class,
+          PreconditionsCheckNotNullPrimitive.class,
+          ProtoFieldNullComparison.class,
+          ReturnValueIgnored.class,
+          SelfAssignment.class,
+          SelfEquals.class,
+          SizeGreaterThanOrEqualsZero.class,
+          StringBuilderInitWithChar.class,
+          SuppressWarningsDeprecated.class,
+          TryFailThrowable.class);
 
   /**
    * A list of all checks with severity WARNING that are on by default.
    */
   @VisibleForTesting
-  static final ImmutableList<BugChecker> ENABLED_WARNINGS = ImmutableList.of(
-      new CannotMockFinalClass(),
-      new ElementsCountedInLoop(),
-      new EqualsHashCode(),
-      new Finally(),
-      new IncompatibleModifiersChecker(),
-      new NonAtomicVolatileUpdate(),
-      new PreconditionsInvalidPlaceholder(),
-      new RequiredModifiersChecker(),
-      new StaticAccessedFromInstance(),
-      new StringEquality(),
-      new WaitNotInLoop(),
-      new SynchronizeOnNonFinalField(),
-      new TypeParameterUnusedInFormals());
+  static final ImmutableSet<BugCheckerInfo> ENABLED_WARNINGS =
+      getSuppliers(
+          CannotMockFinalClass.class,
+          ElementsCountedInLoop.class,
+          EqualsHashCode.class,
+          Finally.class,
+          IncompatibleModifiersChecker.class,
+          NonAtomicVolatileUpdate.class,
+          PreconditionsInvalidPlaceholder.class,
+          RequiredModifiersChecker.class,
+          StaticAccessedFromInstance.class,
+          StringEquality.class,
+          WaitNotInLoop.class,
+          SynchronizeOnNonFinalField.class,
+          TypeParameterUnusedInFormals.class);
 
   /**
    * A list of all checks that are off by default.
    */
   @VisibleForTesting
-  static final ImmutableList<BugChecker> DISABLED_CHECKS = ImmutableList.<BugChecker>of(
-      new ArraysAsListPrimitiveArray(),
-      new AssertFalse(),
-      new AsyncFunctionReturnsNull(),
-      new ClassCanBeStatic(),
-      new ClassName(),
-      new CollectionIncompatibleType(),
-      new CovariantEquals(),
-      new DivZero(),
-      new DoubleCheckedLocking(),
-      new EmptyIfStatement(),
-      new FallThroughSuppression(),
-      new GuiceAssistedParameters(),
-      new GuiceInjectOnFinalField(),
-      new GuiceOverridesGuiceInjectableMethod(),
-      new GuiceOverridesJavaxInjectableMethod(),
-      new InjectAssistedInjectAndInjectOnConstructors(),
-      new InjectAssistedInjectAndInjectOnSameConstructor(),
-      new InjectedConstructorAnnotations(),
-      new InjectInvalidTargetingOnScopingAnnotation(),
-      new InjectJavaxInjectOnAbstractMethod(),
-      new InjectJavaxInjectOnFinalField(),
-      new InjectMoreThanOneInjectableConstructor(),
-      new InjectMoreThanOneQualifier(),
-      new InjectMoreThanOneScopeAnnotationOnClass(),
-      new InjectOverlappingQualifierAndScopeAnnotation(),
-      new InjectScopeAnnotationOnInterfaceOrAbstractClass(),
-      new InjectScopeOrQualifierAnnotationRetention(),
-      new JMockTestWithoutRunWithOrRuleAnnotation(),
-      new JUnitAmbiguousTestClass(),
-      new LockMethodChecker(),
-      new MalformedFormatString(),
-      new MissingCasesInEnumSwitch(),
-      new MissingFail(),
-      new ModifyingCollectionWithItself(),
-      new NarrowingCompoundAssignment(),
-      new NoAllocationChecker(),
-      new NonCanonicalStaticImport(),
-      new NonRuntimeAnnotation(),
-      new NullablePrimitive(),
-      new NumericEquality(),
-      new PackageLocation(),
-      new PreconditionsExpensiveString(),
-      new PrimitiveArrayPassedToVarargsMethod(),
-      new ProtoFieldPreconditionsCheckNotNull(),
-      new ProtoStringFieldReferenceEquality(),
-      new SelfEquality(),
-      new UnlockMethodChecker(),
-      new UnnecessaryStaticImport(),
-      new UnnecessaryTypeArgument(),
-      new WildcardImport(),
-      new WrongParameterPackage());
+  static final ImmutableSet<BugCheckerInfo> DISABLED_CHECKS =
+      getSuppliers(
+          ArraysAsListPrimitiveArray.class,
+          AssertFalse.class,
+          AsyncFunctionReturnsNull.class,
+          ClassCanBeStatic.class,
+          ClassName.class,
+          CollectionIncompatibleType.class,
+          CovariantEquals.class,
+          DivZero.class,
+          DoubleCheckedLocking.class,
+          EmptyIfStatement.class,
+          FallThroughSuppression.class,
+          GuiceAssistedParameters.class,
+          GuiceInjectOnFinalField.class,
+          GuiceOverridesGuiceInjectableMethod.class,
+          GuiceOverridesJavaxInjectableMethod.class,
+          InjectAssistedInjectAndInjectOnConstructors.class,
+          InjectAssistedInjectAndInjectOnSameConstructor.class,
+          InjectedConstructorAnnotations.class,
+          InjectInvalidTargetingOnScopingAnnotation.class,
+          InjectJavaxInjectOnAbstractMethod.class,
+          InjectJavaxInjectOnFinalField.class,
+          InjectMoreThanOneInjectableConstructor.class,
+          InjectMoreThanOneQualifier.class,
+          InjectMoreThanOneScopeAnnotationOnClass.class,
+          InjectOverlappingQualifierAndScopeAnnotation.class,
+          InjectScopeAnnotationOnInterfaceOrAbstractClass.class,
+          InjectScopeOrQualifierAnnotationRetention.class,
+          JMockTestWithoutRunWithOrRuleAnnotation.class,
+          JUnitAmbiguousTestClass.class,
+          LockMethodChecker.class,
+          MalformedFormatString.class,
+          MissingCasesInEnumSwitch.class,
+          MissingFail.class,
+          ModifyingCollectionWithItself.class,
+          NarrowingCompoundAssignment.class,
+          NoAllocationChecker.class,
+          NonCanonicalStaticImport.class,
+          NonRuntimeAnnotation.class,
+          NullablePrimitive.class,
+          NumericEquality.class,
+          PackageLocation.class,
+          PreconditionsExpensiveString.class,
+          PrimitiveArrayPassedToVarargsMethod.class,
+          ProtoFieldPreconditionsCheckNotNull.class,
+          ProtoStringFieldReferenceEquality.class,
+          SelfEquality.class,
+          UnlockMethodChecker.class,
+          UnnecessaryStaticImport.class,
+          UnnecessaryTypeArgument.class,
+          WildcardImport.class,
+          WrongParameterPackage.class);
 
   // May not be instantiated
   private BuiltInCheckerSuppliers() {}

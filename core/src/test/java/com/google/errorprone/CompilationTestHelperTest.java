@@ -240,7 +240,7 @@ public class CompilationTestHelperTest {
       summary = "Method may return normally.",
       explanation = "Consider mutating some global state instead.",
       category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
-  private static class ReturnTreeChecker extends BugChecker implements ReturnTreeMatcher {
+  public static class ReturnTreeChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {
       return describeMatch(tree);

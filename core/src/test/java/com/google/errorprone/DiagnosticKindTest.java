@@ -73,7 +73,7 @@ public class DiagnosticKindTest {
       summary = "This is an error!",
       explanation = "Don't do this!",
       category = JDK, severity = SeverityLevel.ERROR, maturity = EXPERIMENTAL)
-  private static class ErrorChecker extends BugChecker implements ReturnTreeMatcher {
+  public static class ErrorChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {
       return describeMatch(tree);
@@ -82,7 +82,7 @@ public class DiagnosticKindTest {
 
   @Test
   public void testError() throws Exception {
-    compilerBuilder.report(ScannerSupplier.fromBugCheckers(new ErrorChecker()));
+    compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(ErrorChecker.class));
     ErrorProneTestCompiler compiler = compilerBuilder.build();
     Result result = compiler.compile(Arrays.asList(
         compiler.fileManager().forSourceLines("Test.java", TEST_CODE)));
@@ -97,7 +97,7 @@ public class DiagnosticKindTest {
       summary = "This is a warning!",
       explanation = "Please don't do this!",
       category = JDK, severity = SeverityLevel.WARNING, maturity = EXPERIMENTAL)
-  private static class WarningChecker extends BugChecker implements ReturnTreeMatcher {
+  public static class WarningChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {
       return describeMatch(tree);
@@ -106,7 +106,7 @@ public class DiagnosticKindTest {
 
   @Test
   public void testWarning() throws Exception {
-    compilerBuilder.report(ScannerSupplier.fromBugCheckers(new WarningChecker()));
+    compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(WarningChecker.class));
     ErrorProneTestCompiler compiler = compilerBuilder.build();
     Result result = compiler.compile(Arrays.asList(
         compiler.fileManager().forSourceLines("Test.java", TEST_CODE)));
@@ -120,9 +120,9 @@ public class DiagnosticKindTest {
 
   @BugPattern(name = "SuggestionChecker",
       summary = "This is a suggestion!",
-      explanation = "Don't do this. Or do it. I'm a suggestion, not a cop.",
-      category = JDK, severity = SeverityLevel.SUGGESTION, maturity = EXPERIMENTAL)
-  private static class SuggestionChecker extends BugChecker implements ReturnTreeMatcher {
+      explanation = "Don't do this. Or do it. I'm a suggestion, not a cop.", category = JDK,
+      severity = SeverityLevel.SUGGESTION, maturity = EXPERIMENTAL)
+  public static class SuggestionChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {
       return describeMatch(tree);
@@ -131,7 +131,7 @@ public class DiagnosticKindTest {
 
   @Test
   public void testSuggestion() throws Exception {
-    compilerBuilder.report(ScannerSupplier.fromBugCheckers(new SuggestionChecker()));
+    compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(SuggestionChecker.class));
     ErrorProneTestCompiler compiler = compilerBuilder.build();
     Result result = compiler.compile(Arrays.asList(
         compiler.fileManager().forSourceLines("Test.java", TEST_CODE)));

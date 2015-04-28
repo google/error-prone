@@ -16,10 +16,6 @@
 
 package com.google.errorprone;
 
-import static com.google.errorprone.BugPattern.Category.ONE_OFF;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ExpressionStatementTreeMatcher;
 import com.google.errorprone.matchers.Description;
@@ -38,10 +34,7 @@ import com.sun.source.tree.Tree;
  *
  * <p>Useful for testing {@link Matcher}s.
  */
-@BugPattern(name = "MatcherChecker",
-   summary = "Checker that flags the given expression statement if the given matcher matches",
-   category = ONE_OFF, maturity = MATURE, severity = ERROR)
-public class MatcherChecker extends BugChecker implements ExpressionStatementTreeMatcher {
+public abstract class MatcherChecker extends BugChecker implements ExpressionStatementTreeMatcher {
   private final String expressionStatement;
   private final Matcher<Tree> matcher;
 

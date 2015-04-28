@@ -63,7 +63,7 @@ public class CustomSuppressionTest {
       suppressibility = Suppressibility.CUSTOM_ANNOTATION,
       customSuppressionAnnotation = SuppressMyChecker.class,
       category = ONE_OFF, severity = ERROR, maturity = MATURE)
-  private static class MyChecker extends BugChecker implements ReturnTreeMatcher {
+  public static class MyChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {
       return describeMatch(tree);
@@ -81,7 +81,7 @@ public class CustomSuppressionTest {
       suppressibility = Suppressibility.CUSTOM_ANNOTATION,
       customSuppressionAnnotation = SuppressMyChecker2.class,
       category = ONE_OFF, severity = ERROR, maturity = MATURE)
-  private static class MyChecker2 extends BugChecker implements EmptyStatementTreeMatcher {
+  public static class MyChecker2 extends BugChecker implements EmptyStatementTreeMatcher {
     @Override
     public Description matchEmptyStatement(EmptyStatementTree tree, VisitorState state) {
       return describeMatch(tree);
@@ -96,7 +96,7 @@ public class CustomSuppressionTest {
     diagnosticHelper = new DiagnosticTestHelper();
     compiler = new ErrorProneTestCompiler.Builder()
         .listenToDiagnostics(diagnosticHelper.collector)
-        .report(ScannerSupplier.fromBugCheckers(new MyChecker(), new MyChecker2()))
+        .report(ScannerSupplier.fromBugCheckerClasses(MyChecker.class, MyChecker2.class))
         .build();
   }
 
