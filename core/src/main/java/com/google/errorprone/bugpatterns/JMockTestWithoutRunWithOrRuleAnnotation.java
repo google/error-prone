@@ -18,7 +18,17 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.*;
+import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.classLiteral;
+import static com.google.errorprone.matchers.Matchers.enclosingClass;
+import static com.google.errorprone.matchers.Matchers.hasAnnotation;
+import static com.google.errorprone.matchers.Matchers.hasArgumentWithValue;
+import static com.google.errorprone.matchers.Matchers.isCastableTo;
+import static com.google.errorprone.matchers.Matchers.isField;
+import static com.google.errorprone.matchers.Matchers.isSameType;
+import static com.google.errorprone.matchers.Matchers.isType;
+import static com.google.errorprone.matchers.Matchers.not;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.VisitorState;
