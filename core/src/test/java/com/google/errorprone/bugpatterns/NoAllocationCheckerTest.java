@@ -33,7 +33,7 @@ public class NoAllocationCheckerTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new NoAllocationChecker(), getClass());
+    compilationHelper = CompilationTestHelper.newInstance(NoAllocationChecker.class, getClass());
   }
 
   @Test

@@ -32,7 +32,7 @@ public class NullablePrimitiveTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new NullablePrimitive(), getClass());
+    compilationHelper = CompilationTestHelper.newInstance(NullablePrimitive.class, getClass());
   }
 
   @Test

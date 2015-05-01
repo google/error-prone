@@ -33,7 +33,7 @@ public class ArrayToStringTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new ArrayToString(), getClass());
+    compilationHelper = CompilationTestHelper.newInstance(ArrayToString.class, getClass());
   }
 
   @Test

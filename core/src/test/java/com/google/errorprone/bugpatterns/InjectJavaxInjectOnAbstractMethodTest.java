@@ -34,7 +34,7 @@ public class InjectJavaxInjectOnAbstractMethodTest {
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(new InjectJavaxInjectOnAbstractMethod(), getClass());
+        CompilationTestHelper.newInstance(InjectJavaxInjectOnAbstractMethod.class, getClass());
   }
 
   @Test

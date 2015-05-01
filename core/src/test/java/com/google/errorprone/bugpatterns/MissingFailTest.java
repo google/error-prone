@@ -46,7 +46,7 @@ public class MissingFailTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new MissingFail(), getClass());
+    compilationHelper = CompilationTestHelper.newInstance(MissingFail.class, getClass());
   }
 
   @Test

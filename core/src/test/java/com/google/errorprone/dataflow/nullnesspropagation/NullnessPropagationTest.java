@@ -119,7 +119,7 @@ public class NullnessPropagationTest {
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(new NullnessPropagationChecker(), getClass());
+        CompilationTestHelper.newInstance(NullnessPropagationChecker.class, getClass());
   }
 
   @Test

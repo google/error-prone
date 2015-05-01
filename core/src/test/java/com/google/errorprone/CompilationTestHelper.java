@@ -86,19 +86,6 @@ public class CompilationTestHelper {
    * @param checker the {@link BugChecker} to test
    * @param clazz the class to use to locate file resources
    */
-  // TODO(user): deprecate and migrate to newInstance(Class<? extends BugChecker>, Class<?>)
-  // This version is misleading, because it doesn't allow per-instance state to be propagated
-  // through: we call getClass() and then drop the instance that's passed in.
-  public static CompilationTestHelper newInstance(BugChecker checker, Class<?> clazz) {
-    return newInstance(checker.getClass(), clazz);
-  }
-
-  /**
-   * Returns a new {@link CompilationTestHelper}.
-   *
-   * @param checker the {@link BugChecker} to test
-   * @param clazz the class to use to locate file resources
-   */
   public static CompilationTestHelper newInstance(
       Class<? extends BugChecker> checker, Class<?> clazz) {
     ScannerSupplier scannerSupplier = ScannerSupplier.fromBugCheckerClasses(checker);

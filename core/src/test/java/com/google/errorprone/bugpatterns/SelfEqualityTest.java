@@ -33,7 +33,7 @@ public class SelfEqualityTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new SelfEquality(), getClass());
+    compilationHelper = CompilationTestHelper.newInstance(SelfEquality.class, getClass());
   }
 
   @Test

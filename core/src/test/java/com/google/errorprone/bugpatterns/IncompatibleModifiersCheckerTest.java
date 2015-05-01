@@ -36,7 +36,7 @@ public class IncompatibleModifiersCheckerTest {
   @Before
   public void setUp() {
     compilationHelper = CompilationTestHelper
-        .newInstance(new IncompatibleModifiersChecker(), getClass())
+        .newInstance(IncompatibleModifiersChecker.class, getClass())
         .addSourceLines(
             "test/NotPrivateOrFinal.java",
             "package test;",

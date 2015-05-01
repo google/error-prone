@@ -30,7 +30,7 @@ public class UnlockMethodCheckerTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new UnlockMethodChecker(), getClass());
+    compilationHelper = CompilationTestHelper.newInstance(UnlockMethodChecker.class, getClass());
   }
 
   @Test

@@ -25,6 +25,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.MatcherChecker;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -35,10 +36,15 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class MatchersTest {
 
+  private CompilationTestHelper compilationHelper;
+
+  @Before
+  public void setUp() {
+    compilationHelper = CompilationTestHelper.newInstance(InLoopChecker.class, getClass());
+  }
+
   @Test
   public void inLoopShouldMatchInWhileLoop() {
-    CompilationTestHelper compilationHelper =
-        CompilationTestHelper.newInstance(new InLoopChecker(), getClass());
     compilationHelper
         .addSourceLines("Test.java",
             "public class Test {",
@@ -54,8 +60,6 @@ public class MatchersTest {
 
   @Test
   public void inLoopShouldMatchInDoLoop() {
-    CompilationTestHelper compilationHelper =
-        CompilationTestHelper.newInstance(new InLoopChecker(), getClass());
     compilationHelper
         .addSourceLines("Test.java",
             "public class Test {",
@@ -71,8 +75,6 @@ public class MatchersTest {
 
   @Test
   public void inLoopShouldMatchInForLoop() {
-    CompilationTestHelper compilationHelper =
-        CompilationTestHelper.newInstance(new InLoopChecker(), getClass());
     compilationHelper
         .addSourceLines("Test.java",
             "public class Test {",
@@ -88,8 +90,6 @@ public class MatchersTest {
 
   @Test
   public void inLoopShouldMatchInEnhancedForLoop() {
-    CompilationTestHelper compilationHelper =
-        CompilationTestHelper.newInstance(new InLoopChecker(), getClass());
     compilationHelper
         .addSourceLines("Test.java",
             "import java.util.List;",
@@ -106,8 +106,6 @@ public class MatchersTest {
 
   @Test
   public void inLoopShouldNotMatchInInitializerWithoutLoop() {
-    CompilationTestHelper compilationHelper =
-        CompilationTestHelper.newInstance(new InLoopChecker(), getClass());
     compilationHelper
         .addSourceLines("Test.java",
             "import java.util.List;",
@@ -121,8 +119,6 @@ public class MatchersTest {
 
   @Test
   public void inLoopShouldMatchInInitializerInLoop() {
-    CompilationTestHelper compilationHelper =
-        CompilationTestHelper.newInstance(new InLoopChecker(), getClass());
     compilationHelper
         .addSourceLines("Test.java",
             "import java.util.List;",
@@ -140,8 +136,6 @@ public class MatchersTest {
 
   @Test
   public void inLoopShouldNotMatchInAnonymousInnerClassDefinedInLoop() {
-    CompilationTestHelper compilationHelper =
-        CompilationTestHelper.newInstance(new InLoopChecker(), getClass());
     compilationHelper
         .addSourceLines("Test.java",
             "import java.util.*;",

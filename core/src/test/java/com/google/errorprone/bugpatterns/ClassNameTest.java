@@ -31,7 +31,7 @@ public class ClassNameTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new ClassName(), getClass());
+    compilationHelper = CompilationTestHelper.newInstance(ClassName.class, getClass());
   }
 
   @Test

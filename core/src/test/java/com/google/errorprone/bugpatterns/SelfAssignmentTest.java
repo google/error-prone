@@ -33,7 +33,7 @@ public class SelfAssignmentTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new SelfAssignment(), getClass());
+    compilationHelper = CompilationTestHelper.newInstance(SelfAssignment.class, getClass());
   }
 
   @Test

@@ -34,7 +34,7 @@ public class CollectionIncompatibleTypeTest {
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(new CollectionIncompatibleType(), getClass());
+        CompilationTestHelper.newInstance(CollectionIncompatibleType.class, getClass());
   }
 
   @Test

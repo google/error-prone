@@ -43,7 +43,7 @@ public class CannotMockFinalClassTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new CannotMockFinalClass(), getClass());
+    compilationHelper = CompilationTestHelper.newInstance(CannotMockFinalClass.class, getClass());
   }
 
   static final class FinalClass {

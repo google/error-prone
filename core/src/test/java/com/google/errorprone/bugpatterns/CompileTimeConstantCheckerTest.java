@@ -36,7 +36,7 @@ public class CompileTimeConstantCheckerTest {
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(new CompileTimeConstantChecker(), getClass());
+        CompilationTestHelper.newInstance(CompileTimeConstantChecker.class, getClass());
   }
 
   @Test

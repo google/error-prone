@@ -34,7 +34,7 @@ public class ForOverrideCheckerTest {
   @Before
   public void setUp() throws Exception {
     compilationHelper = CompilationTestHelper
-        .newInstance(new ForOverrideChecker(), getClass())
+        .newInstance(ForOverrideChecker.class, getClass())
         .addSourceLines(
             "test/ExtendMe.java",
             "package test;",

@@ -33,7 +33,7 @@ public class ClassCanBeStaticTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new ClassCanBeStatic(), getClass());
+    compilationHelper = CompilationTestHelper.newInstance(ClassCanBeStatic.class, getClass());
   }
 
   @Test

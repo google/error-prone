@@ -33,7 +33,7 @@ public class JUnit4TearDownNotRunTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new JUnit4TearDownNotRun(), getClass());
+    compilationHelper = CompilationTestHelper.newInstance(JUnit4TearDownNotRun.class, getClass());
   }
 
   @Test

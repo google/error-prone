@@ -33,7 +33,7 @@ public class WrongParameterPackageTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new WrongParameterPackage(), getClass());
+    compilationHelper = CompilationTestHelper.newInstance(WrongParameterPackage.class, getClass());
   }
 
   @Test

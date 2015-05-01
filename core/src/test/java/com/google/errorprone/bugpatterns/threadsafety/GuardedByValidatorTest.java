@@ -30,7 +30,7 @@ public class GuardedByValidatorTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new GuardedByValidator(), getClass());
+    compilationHelper = CompilationTestHelper.newInstance(GuardedByValidator.class, getClass());
   }
 
   @Test

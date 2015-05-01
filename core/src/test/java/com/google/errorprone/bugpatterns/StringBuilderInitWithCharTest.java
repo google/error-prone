@@ -34,7 +34,7 @@ public class StringBuilderInitWithCharTest {
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(new StringBuilderInitWithChar(), getClass());
+        CompilationTestHelper.newInstance(StringBuilderInitWithChar.class, getClass());
   }
 
   @Test

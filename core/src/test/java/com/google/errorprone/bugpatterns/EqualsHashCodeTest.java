@@ -30,7 +30,7 @@ public class EqualsHashCodeTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new EqualsHashCode(), getClass());
+    compilationHelper = CompilationTestHelper.newInstance(EqualsHashCode.class, getClass());
   }
 
   @Test

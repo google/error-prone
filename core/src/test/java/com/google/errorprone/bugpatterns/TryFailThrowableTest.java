@@ -32,7 +32,7 @@ public class TryFailThrowableTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new TryFailThrowable(), getClass());
+    compilationHelper = CompilationTestHelper.newInstance(TryFailThrowable.class, getClass());
   }
 
   @Test

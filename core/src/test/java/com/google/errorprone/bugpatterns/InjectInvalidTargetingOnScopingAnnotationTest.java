@@ -35,7 +35,7 @@ public class InjectInvalidTargetingOnScopingAnnotationTest {
   public void setUp() {
     compilationHelper =
         CompilationTestHelper.newInstance(
-            new InjectInvalidTargetingOnScopingAnnotation(), getClass());
+            InjectInvalidTargetingOnScopingAnnotation.class, getClass());
   }
 
   @Test

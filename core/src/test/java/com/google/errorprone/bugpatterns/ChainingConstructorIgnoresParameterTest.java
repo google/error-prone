@@ -33,7 +33,7 @@ public class ChainingConstructorIgnoresParameterTest {
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(new ChainingConstructorIgnoresParameter(), getClass());
+        CompilationTestHelper.newInstance(ChainingConstructorIgnoresParameter.class, getClass());
   }
 
   @Test

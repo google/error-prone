@@ -30,7 +30,7 @@ public class JMockTestWithoutRunWithOrRuleAnnotationTest {
   @Before
   public void setup() {
     compilationTestHelper = CompilationTestHelper.newInstance(
-        new JMockTestWithoutRunWithOrRuleAnnotation(), getClass());
+        JMockTestWithoutRunWithOrRuleAnnotation.class, getClass());
   }
   
   @Test

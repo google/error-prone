@@ -32,7 +32,7 @@ public class NonFinalCompileTimeConstantTest {
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(new NonFinalCompileTimeConstant(), getClass());
+        CompilationTestHelper.newInstance(NonFinalCompileTimeConstant.class, getClass());
   }
 
   @Test

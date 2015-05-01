@@ -33,7 +33,7 @@ public class NumericEqualityTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new NumericEquality(), getClass());
+    compilationHelper = CompilationTestHelper.newInstance(NumericEquality.class, getClass());
   }
 
   @Test

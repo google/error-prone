@@ -35,7 +35,7 @@ public class NonAtomicVolatileUpdateTest {
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(new NonAtomicVolatileUpdate(), getClass());
+        CompilationTestHelper.newInstance(NonAtomicVolatileUpdate.class, getClass());
   }
 
   @Test

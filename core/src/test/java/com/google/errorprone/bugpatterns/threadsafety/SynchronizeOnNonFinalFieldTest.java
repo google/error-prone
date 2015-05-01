@@ -31,7 +31,7 @@ public class SynchronizeOnNonFinalFieldTest {
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(new SynchronizeOnNonFinalField(), getClass());
+        CompilationTestHelper.newInstance(SynchronizeOnNonFinalField.class, getClass());
   }
 
   @Test

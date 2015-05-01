@@ -46,7 +46,7 @@ public class WildcardImportTest {
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(new WildcardImportTestChecker(), getClass());
+        CompilationTestHelper.newInstance(WildcardImportTestChecker.class, getClass());
   }
 
   @Test

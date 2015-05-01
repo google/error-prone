@@ -33,7 +33,7 @@ public class AssertFalseTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new AssertFalse(), getClass());
+    compilationHelper = CompilationTestHelper.newInstance(AssertFalse.class, getClass());
   }
 
   @Test

@@ -33,7 +33,7 @@ public class SizeGreaterThanOrEqualsZeroTest {
   @Before
   public void setUp() throws Exception {
     compilationHelper =
-        CompilationTestHelper.newInstance(new SizeGreaterThanOrEqualsZero(), getClass());
+        CompilationTestHelper.newInstance(SizeGreaterThanOrEqualsZero.class, getClass());
   }
 
   @Test

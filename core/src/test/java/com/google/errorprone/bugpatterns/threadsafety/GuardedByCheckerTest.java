@@ -35,7 +35,7 @@ public class GuardedByCheckerTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new GuardedByChecker(), getClass());
+    compilationHelper = CompilationTestHelper.newInstance(GuardedByChecker.class, getClass());
   }
 
   @Test

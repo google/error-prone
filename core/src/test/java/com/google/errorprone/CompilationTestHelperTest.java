@@ -45,7 +45,7 @@ public class CompilationTestHelperTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new ReturnTreeChecker(), getClass());
+    compilationHelper = CompilationTestHelper.newInstance(ReturnTreeChecker.class, getClass());
   }
 
   @Test

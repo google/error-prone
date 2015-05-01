@@ -34,7 +34,7 @@ public class PreconditionsCheckNotNullTest {
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(new PreconditionsCheckNotNull(), getClass());
+        CompilationTestHelper.newInstance(PreconditionsCheckNotNull.class, getClass());
   }
 
   @Test

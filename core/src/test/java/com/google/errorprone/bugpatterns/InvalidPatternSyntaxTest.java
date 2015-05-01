@@ -33,7 +33,7 @@ public class InvalidPatternSyntaxTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new InvalidPatternSyntax(), getClass());
+    compilationHelper = CompilationTestHelper.newInstance(InvalidPatternSyntax.class, getClass());
   }
 
   @Test

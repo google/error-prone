@@ -33,7 +33,7 @@ public class CheckReturnValueTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new CheckReturnValue(), getClass());
+    compilationHelper = CompilationTestHelper.newInstance(CheckReturnValue.class, getClass());
   }
 
   @Test

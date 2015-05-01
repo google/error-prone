@@ -33,7 +33,7 @@ public class MisusedWeekYearTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new MisusedWeekYear(), getClass());
+    compilationHelper = CompilationTestHelper.newInstance(MisusedWeekYear.class, getClass());
   }
 
   @Test

@@ -32,7 +32,7 @@ public class UnnecessaryTypeArgumentTest {
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(new UnnecessaryTypeArgument(), getClass());
+        CompilationTestHelper.newInstance(UnnecessaryTypeArgument.class, getClass());
   }
 
   @Test

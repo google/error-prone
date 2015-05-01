@@ -32,7 +32,7 @@ public class UnnecessaryStaticImportTest {
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(new UnnecessaryStaticImport(), getClass());
+        CompilationTestHelper.newInstance(UnnecessaryStaticImport.class, getClass());
   }
 
   @Test

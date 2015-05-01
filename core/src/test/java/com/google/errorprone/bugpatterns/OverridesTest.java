@@ -32,7 +32,7 @@ public class OverridesTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new Overrides(), getClass());
+    compilationHelper = CompilationTestHelper.newInstance(Overrides.class, getClass());
   }
 
   @Test

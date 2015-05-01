@@ -32,7 +32,7 @@ public class ProtoFieldNullComparisonTest {
   @Before
   public void setUp() throws Exception {
     compilationHelper = CompilationTestHelper
-        .newInstance(new ProtoFieldNullComparison(), getClass())
+        .newInstance(ProtoFieldNullComparison.class, getClass())
         .addSourceFile("proto/ProtoTest.java");
   }
 

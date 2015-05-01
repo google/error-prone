@@ -34,7 +34,7 @@ public class PrimitiveArrayPassedToVarargsMethodTest {
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(new PrimitiveArrayPassedToVarargsMethod(), getClass());
+        CompilationTestHelper.newInstance(PrimitiveArrayPassedToVarargsMethod.class, getClass());
   }
 
   @Test

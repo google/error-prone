@@ -47,7 +47,7 @@ public class SelfEqualsTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new SelfEqualsTestChecker(), getClass());
+    compilationHelper = CompilationTestHelper.newInstance(SelfEqualsTestChecker.class, getClass());
   }
 
   @Test
@@ -94,7 +94,7 @@ public class SelfEqualsTest {
 
   @Test
   public void testFlags() throws Exception {
-    SelfEquals checker;
+    Class<? extends SelfEquals> checker;
     CompilationTestHelper compilationHelper;
     // Both checks off.
     try {
@@ -105,14 +105,14 @@ public class SelfEqualsTest {
     }
 
     // Both checks on.
-    checker = new SelfEquals_Guava_Equals();
+    checker = SelfEquals_Guava_Equals.class;
     compilationHelper = CompilationTestHelper.newInstance(checker, getClass());
     compilationHelper.addSourceFile("SelfEqualsPositiveCase1.java").doTest();
     compilationHelper = CompilationTestHelper.newInstance(checker, getClass());
     compilationHelper.addSourceFile("SelfEqualsPositiveCase2.java").doTest();
 
     // Guava on, Equals off.
-    checker = new SelfEquals_Guava();
+    checker = SelfEquals_Guava.class;
     compilationHelper = CompilationTestHelper.newInstance(checker, getClass());
     compilationHelper.addSourceFile("SelfEqualsPositiveCase1.java").doTest();
     compilationHelper = CompilationTestHelper.newInstance(checker, getClass());
@@ -121,7 +121,7 @@ public class SelfEqualsTest {
         .doTest();
 
     // Equals on, Guava off.
-    checker = new SelfEquals_Equals();
+    checker = SelfEquals_Equals.class;
     compilationHelper = CompilationTestHelper.newInstance(checker, getClass());
     compilationHelper.addSourceFile("SelfEqualsPositiveCase1.java")
         .expectNoDiagnostics()

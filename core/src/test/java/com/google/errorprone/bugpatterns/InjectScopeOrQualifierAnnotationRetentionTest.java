@@ -34,7 +34,7 @@ public class InjectScopeOrQualifierAnnotationRetentionTest {
   public void setUp() {
     compilationHelper =
         CompilationTestHelper.newInstance(
-            new InjectScopeOrQualifierAnnotationRetention(), getClass());
+            InjectScopeOrQualifierAnnotationRetention.class, getClass());
   }
 
   @Test

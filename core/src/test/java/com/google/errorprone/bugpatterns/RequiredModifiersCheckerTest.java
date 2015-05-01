@@ -41,7 +41,7 @@ public class RequiredModifiersCheckerTest {
   @Before
   public void setUp() {
     compilationHelper = CompilationTestHelper
-        .newInstance(new RequiredModifiersChecker(), getClass())
+        .newInstance(RequiredModifiersChecker.class, getClass())
         .addSourceLines(
             "test/AbstractRequired.java",
             "package test;",

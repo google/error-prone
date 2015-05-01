@@ -33,7 +33,7 @@ public class StringEqualityTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new StringEquality(), getClass());
+    compilationHelper = CompilationTestHelper.newInstance(StringEquality.class, getClass());
   }
 
   @Test

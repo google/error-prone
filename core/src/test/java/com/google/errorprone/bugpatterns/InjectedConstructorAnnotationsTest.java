@@ -32,7 +32,7 @@ public class InjectedConstructorAnnotationsTest {
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(new InjectedConstructorAnnotations(), getClass());
+        CompilationTestHelper.newInstance(InjectedConstructorAnnotations.class, getClass());
   }
 
   @Test

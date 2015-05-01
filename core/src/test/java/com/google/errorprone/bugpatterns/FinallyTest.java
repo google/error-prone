@@ -33,7 +33,7 @@ public class FinallyTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new Finally(), getClass());
+    compilationHelper = CompilationTestHelper.newInstance(Finally.class, getClass());
   }
 
   @Test

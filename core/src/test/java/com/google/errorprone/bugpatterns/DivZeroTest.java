@@ -33,7 +33,7 @@ public class DivZeroTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new DivZero(), getClass());
+    compilationHelper = CompilationTestHelper.newInstance(DivZero.class, getClass());
   }
 
   @Test

@@ -44,7 +44,7 @@ public class HeldLockAnalyzerTest {
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(new GuardedByLockSetAnalyzer(), getClass());
+        CompilationTestHelper.newInstance(GuardedByLockSetAnalyzer.class, getClass());
   }
 
   @Test

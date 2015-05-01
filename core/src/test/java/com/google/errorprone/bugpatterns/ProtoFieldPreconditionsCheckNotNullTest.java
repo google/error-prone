@@ -32,7 +32,7 @@ public class ProtoFieldPreconditionsCheckNotNullTest {
   @Before
   public void setUp() throws Exception {
     compilationHelper = CompilationTestHelper
-        .newInstance(new ProtoFieldPreconditionsCheckNotNull(), getClass())
+        .newInstance(ProtoFieldPreconditionsCheckNotNull.class, getClass())
         .addSourceFile("proto/ProtoTest.java");
   }
 

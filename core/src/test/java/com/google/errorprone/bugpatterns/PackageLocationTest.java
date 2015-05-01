@@ -31,7 +31,7 @@ public class PackageLocationTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new PackageLocation(), getClass());
+    compilationHelper = CompilationTestHelper.newInstance(PackageLocation.class, getClass());
   }
 
   @Test

@@ -33,7 +33,7 @@ public class ComparisonOutOfRangeTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new ComparisonOutOfRange(), getClass());
+    compilationHelper = CompilationTestHelper.newInstance(ComparisonOutOfRange.class, getClass());
   }
 
   @Test

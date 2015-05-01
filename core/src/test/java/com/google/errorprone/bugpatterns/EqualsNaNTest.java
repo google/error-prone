@@ -33,7 +33,7 @@ public class EqualsNaNTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new EqualsNaN(), getClass());
+    compilationHelper = CompilationTestHelper.newInstance(EqualsNaN.class, getClass());
   }
 
   @Test

@@ -33,7 +33,7 @@ public class CovariantEqualsTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new CovariantEquals(), getClass());
+    compilationHelper = CompilationTestHelper.newInstance(CovariantEquals.class, getClass());
   }
 
   @Test

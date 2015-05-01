@@ -33,7 +33,7 @@ public class NarrowingCompoundAssignmentTest {
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(new NarrowingCompoundAssignment(), getClass());
+        CompilationTestHelper.newInstance(NarrowingCompoundAssignment.class, getClass());
   }
 
   @Test

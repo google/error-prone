@@ -32,7 +32,7 @@ public class NonCanonicalStaticImportTest {
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(new NonCanonicalStaticImport(), getClass());
+        CompilationTestHelper.newInstance(NonCanonicalStaticImport.class, getClass());
   }
 
   @Test

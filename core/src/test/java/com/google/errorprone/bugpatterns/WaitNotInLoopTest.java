@@ -33,7 +33,7 @@ public class WaitNotInLoopTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new WaitNotInLoop(), getClass());
+    compilationHelper = CompilationTestHelper.newInstance(WaitNotInLoop.class, getClass());
   }
 
   @Test

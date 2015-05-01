@@ -33,7 +33,7 @@ public class AsyncFunctionReturnsNullTest {
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(new AsyncFunctionReturnsNull(), getClass());
+        CompilationTestHelper.newInstance(AsyncFunctionReturnsNull.class, getClass());
   }
 
   @Test

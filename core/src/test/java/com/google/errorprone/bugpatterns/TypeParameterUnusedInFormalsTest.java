@@ -32,7 +32,7 @@ public class TypeParameterUnusedInFormalsTest {
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(new TypeParameterUnusedInFormals(), getClass());
+        CompilationTestHelper.newInstance(TypeParameterUnusedInFormals.class, getClass());
   }
 
   @Test

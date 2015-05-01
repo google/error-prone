@@ -33,7 +33,7 @@ public class DeadExceptionTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(new DeadException(), getClass());
+    compilationHelper = CompilationTestHelper.newInstance(DeadException.class, getClass());
   }
 
   @Test

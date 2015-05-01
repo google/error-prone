@@ -26,7 +26,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class DoubleCheckedLockingTest {
   private final CompilationTestHelper compilationHelper =
-      CompilationTestHelper.newInstance(new DoubleCheckedLocking(), getClass());
+      CompilationTestHelper.newInstance(DoubleCheckedLocking.class, getClass());
 
   @Test
   public void positive() throws Exception {
