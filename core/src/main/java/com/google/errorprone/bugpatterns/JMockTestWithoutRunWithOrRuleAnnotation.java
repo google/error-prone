@@ -38,7 +38,7 @@ import static com.google.errorprone.matchers.Matchers.*;
         category = Category.JMOCK, severity = ERROR, maturity = EXPERIMENTAL)
 public class JMockTestWithoutRunWithOrRuleAnnotation extends BugChecker implements BugChecker.VariableTreeMatcher {
 
-    private static final Matcher<VariableTree> JMOCK_MOCKERY_MATCHER = allOf(isSameType("org.jmock.Mockery"), isField());
+    private static final Matcher<VariableTree> JMOCK_MOCKERY_MATCHER = allOf(isCastableTo("org.jmock.Mockery"), isField());
     private static final Matcher<VariableTree> FIELD_A_RULE_ANNOTATION_MATHER = hasAnnotation("org.junit.Rule");
     private static final Matcher<Tree> CLASS_USING_JMOCK_RUNNER_MATCHER = enclosingClass(Matchers.<ClassTree>annotations(ChildMultiMatcher.MatchType.ALL, allOf(isType("org.junit.runner.RunWith"),
             hasArgumentWithValue("value", classLiteral(isSameType("org.jmock.integration.junit4.JMock"))))));
@@ -50,6 +50,4 @@ public class JMockTestWithoutRunWithOrRuleAnnotation extends BugChecker implemen
         }
         return Description.NO_MATCH;
     }
-
-
 }

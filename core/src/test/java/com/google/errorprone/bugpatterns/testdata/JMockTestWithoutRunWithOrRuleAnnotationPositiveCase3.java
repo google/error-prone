@@ -16,11 +16,11 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-import org.jmock.Mockery;
+import org.jmock.integration.junit4.JUnitRuleMockery;
 
-public class JMockTestWithoutRunWithOrRuleAnnotationPositiveCase1
+public class JMockTestWithoutRunWithOrRuleAnnotationPositiveCase3
 {
 
     // BUG: Diagnostic contains: JMock tests must have @RunWith class annotation or the mockery field declared as a JUnit rule
-    private final Mockery mockery = new Mockery();
+    public final JUnitRuleMockery mockery = new JUnitRuleMockery();
 }

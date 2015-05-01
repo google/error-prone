@@ -16,10 +16,15 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-import org.junit.Rule;
 import org.jmock.Mockery;
+import org.jmock.integration.junit4.JUnitRuleMockery;
+import org.junit.Rule;
 
-public class JMockTestWithoutRunWithOrRuleAnnotationNegativeCase1 {
+public class JMockTestWithoutRunWithOrRuleAnnotationNegativeCase1
+{
     @Rule
-    final Mockery mockery = new Mockery();
+    private final Mockery mockery = new Mockery();
+
+    @Rule
+    public final JUnitRuleMockery mockery2 = new JUnitRuleMockery();
 }

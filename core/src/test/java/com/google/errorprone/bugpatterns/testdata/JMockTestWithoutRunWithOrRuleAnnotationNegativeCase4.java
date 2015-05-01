@@ -16,13 +16,18 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-import org.junit.Rule;
-import org.junit.runner.RunWith;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
+import org.jmock.integration.junit4.JUnitRuleMockery;
+import org.junit.Rule;
+import org.junit.runner.RunWith;
 
 @RunWith(JMock.class)
-public class JMockTestWithoutRunWithOrRuleAnnotationNegativeCase4 {
+public class JMockTestWithoutRunWithOrRuleAnnotationNegativeCase4
+{
     @Rule
-    final Mockery mockery = new Mockery();
+    private final Mockery mockery = new Mockery();
+
+    @Rule
+    public final JUnitRuleMockery mockery2 = new JUnitRuleMockery();
 }
