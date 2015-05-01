@@ -16,11 +16,12 @@
 
 package com.google.errorprone;
 
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Retention;
 import java.util.Comparator;
 
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * Describes a bug pattern detected by error-prone.  Used to generate compiler error messages,
