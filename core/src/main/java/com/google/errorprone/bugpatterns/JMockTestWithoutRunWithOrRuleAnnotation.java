@@ -16,6 +16,9 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Matchers.*;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.VisitorState;
@@ -27,10 +30,6 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.*;
-
 @BugPattern(name = "JMockTestWithoutRunWithOrRuleAnnotation",
         summary = "JMock tests must have @RunWith class annotation or the mockery field declared as a JUnit rule",
         explanation = "If this is not done then all of your JMock tests will run and pass. However none of your assertions " +
@@ -39,13 +38,16 @@ import static com.google.errorprone.matchers.Matchers.*;
 public class JMockTestWithoutRunWithOrRuleAnnotation extends BugChecker implements BugChecker.VariableTreeMatcher {
 
     private static final Matcher<VariableTree> JMOCK_MOCKERY_MATCHER = allOf(isCastableTo("org.jmock.Mockery"), isField());
-    private static final Matcher<VariableTree> FIELD_A_RULE_ANNOTATION_MATHER = hasAnnotation("org.junit.Rule");
-    private static final Matcher<Tree> CLASS_USING_JMOCK_RUNNER_MATCHER = enclosingClass(Matchers.<ClassTree>annotations(ChildMultiMatcher.MatchType.ALL, allOf(isType("org.junit.runner.RunWith"),
-            hasArgumentWithValue("value", classLiteral(isSameType("org.jmock.integration.junit4.JMock"))))));
+    private static final Matcher<VariableTree> FIELD_WITH_RULE_ANNOTATION_MATCHER = hasAnnotation("org.junit.Rule");
+    private static final Matcher<Tree> CLASS_USES_JMOCK_RUNNER_MATCHER =
+            enclosingClass(Matchers.<ClassTree>annotations(ChildMultiMatcher.MatchType.ALL, allOf(isType("org.junit.runner.RunWith"),
+                    hasArgumentWithValue("value", classLiteral(isSameType("org.jmock.integration.junit4.JMock"))))));
+    private static final Matcher<VariableTree> BUG_PATTERN_MATCHER = allOf(JMOCK_MOCKERY_MATCHER,
+            not(anyOf(FIELD_WITH_RULE_ANNOTATION_MATCHER, CLASS_USES_JMOCK_RUNNER_MATCHER)));
 
     @Override
     public Description matchVariable(VariableTree tree, VisitorState state) {
-        if (JMOCK_MOCKERY_MATCHER.matches(tree, state) && !(FIELD_A_RULE_ANNOTATION_MATHER.matches(tree, state) || CLASS_USING_JMOCK_RUNNER_MATCHER.matches(tree, state))) {
+        if (BUG_PATTERN_MATCHER.matches(tree, state)) {
             return describeMatch(tree);
         }
         return Description.NO_MATCH;
