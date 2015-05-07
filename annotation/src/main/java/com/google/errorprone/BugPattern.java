@@ -22,6 +22,7 @@ import java.lang.annotation.Annotation;
 import java.lang.annotation.Retention;
 import java.util.Comparator;
 
+
 /**
  * Describes a bug pattern detected by error-prone.  Used to generate compiler error messages,
  * for @SuppressWarnings, and to generate the documentation that we host on our web site.
@@ -99,7 +100,11 @@ public @interface BugPattern {
     /**
      * Errors specific to Mockito.
      */
-    MOCKITO;
+    MOCKITO,
+    /**
+     * Errors specific to JMock
+     */
+    JMOCK;
   }
 
   /**
