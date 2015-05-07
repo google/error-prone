@@ -24,9 +24,9 @@ import static com.google.errorprone.matchers.Matchers.classLiteral;
 import static com.google.errorprone.matchers.Matchers.enclosingClass;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.hasArgumentWithValue;
-import static com.google.errorprone.matchers.Matchers.isCastableTo;
 import static com.google.errorprone.matchers.Matchers.isField;
 import static com.google.errorprone.matchers.Matchers.isSameType;
+import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.isType;
 import static com.google.errorprone.matchers.Matchers.not;
 import com.google.errorprone.BugPattern;
@@ -47,7 +47,7 @@ import com.sun.source.tree.VariableTree;
         category = Category.JMOCK, severity = ERROR, maturity = EXPERIMENTAL)
 public class JMockTestWithoutRunWithOrRuleAnnotation extends BugChecker implements BugChecker.VariableTreeMatcher {
 
-    private static final Matcher<VariableTree> JMOCK_MOCKERY_MATCHER = allOf(isCastableTo("org.jmock.Mockery"), isField());
+    private static final Matcher<VariableTree> JMOCK_MOCKERY_MATCHER = allOf(isSubtypeOf("org.jmock.Mockery"), isField());
     private static final Matcher<VariableTree> FIELD_WITH_RULE_ANNOTATION_MATCHER = hasAnnotation("org.junit.Rule");
     private static final Matcher<Tree> CLASS_USES_JMOCK_RUNNER_MATCHER =
             enclosingClass(Matchers.<ClassTree>annotations(ChildMultiMatcher.MatchType.ALL, allOf(isType("org.junit.runner.RunWith"),

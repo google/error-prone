@@ -28,15 +28,13 @@ public class JMockTestWithoutRunWithOrRuleAnnotationTest {
     private CompilationTestHelper compilationTestHelper;
 
     @Before
-    public void setup()
-    {
+    public void setup() {
         compilationTestHelper =CompilationTestHelper.newInstance(new JMockTestWithoutRunWithOrRuleAnnotation(),
                 getClass());
     }
 
     @Test
-    public void testPositiveCase() throws Exception
-    {
+    public void testPositiveCase() throws Exception {
         compilationTestHelper.
                 addSourceFile("JMockTestWithoutRunWithOrRuleAnnotationPositiveCase1.java").
                 addSourceFile("JMockTestWithoutRunWithOrRuleAnnotationPositiveCase2.java").
@@ -45,8 +43,7 @@ public class JMockTestWithoutRunWithOrRuleAnnotationTest {
     }
 
     @Test
-    public void testNegativeCase() throws Exception
-    {
+    public void testNegativeCase() throws Exception {
         compilationTestHelper.
                 addSourceFile("JMockTestWithoutRunWithOrRuleAnnotationNegativeCase1.java").
                 addSourceFile("JMockTestWithoutRunWithOrRuleAnnotationNegativeCase2.java").
