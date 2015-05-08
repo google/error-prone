@@ -85,6 +85,7 @@ import com.google.errorprone.bugpatterns.NarrowingCompoundAssignment;
 import com.google.errorprone.bugpatterns.NoAllocationChecker;
 import com.google.errorprone.bugpatterns.NonAtomicVolatileUpdate;
 import com.google.errorprone.bugpatterns.NonCanonicalStaticImport;
+import com.google.errorprone.bugpatterns.NonCanonicalStaticMemberImport;
 import com.google.errorprone.bugpatterns.NonFinalCompileTimeConstant;
 import com.google.errorprone.bugpatterns.NonOverridingEquals;
 import com.google.errorprone.bugpatterns.NonRuntimeAnnotation;
@@ -271,6 +272,7 @@ public class BuiltInCheckerSuppliers {
           ModifyingCollectionWithItself.class,
           NarrowingCompoundAssignment.class,
           NoAllocationChecker.class,
+          NonCanonicalStaticMemberImport.class,
           NonRuntimeAnnotation.class,
           NullablePrimitive.class,
           NumericEquality.class,

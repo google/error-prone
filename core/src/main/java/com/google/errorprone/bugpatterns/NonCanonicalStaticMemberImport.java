@@ -30,23 +30,26 @@ import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.ImportTree;
 
 /**
- * Static imports shouldn't be used for types.
+ * Members shouldn't be statically by their non-canonical name.
  *
  * @author cushon@google.com (Liam Miller-Cushon)
  */
-@BugPattern(name = "UnnecessaryStaticImport",
-    summary = "Using static imports for types is unnecessary",
-    explanation = "Using static imports for types is unnecessary, since they can always be"
-        + " replaced by equivalent non-static imports.",
-    category = JDK, severity = WARNING, maturity = MATURE)
-public class UnnecessaryStaticImport extends BugChecker implements ImportTreeMatcher {
+@BugPattern(
+  name = "NonCanonicalStaticMemberImport",
+  summary = "Static import of member uses non-canonical name",
+  category = JDK,
+  severity = WARNING,
+  maturity = MATURE
+)
+public class NonCanonicalStaticMemberImport extends BugChecker implements ImportTreeMatcher {
 
   @Override
   public Description matchImport(ImportTree tree, VisitorState state) {
     StaticImportInfo importInfo = StaticImports.tryCreate(tree, state);
-    if (importInfo == null || importInfo.member().isPresent()) {
+    if (importInfo == null || importInfo.isCanonical() || !importInfo.member().isPresent()) {
       return Description.NO_MATCH;
     }
     return describeMatch(tree, SuggestedFix.replace(tree, importInfo.importStatement()));
   }
 }
+

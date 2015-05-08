@@ -23,7 +23,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ImportTreeMatcher;
-import com.google.errorprone.bugpatterns.UnnecessaryStaticImport.StaticTypeImportInfo;
+import com.google.errorprone.bugpatterns.StaticImports.StaticImportInfo;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 
@@ -41,11 +41,10 @@ public class NonCanonicalStaticImport extends BugChecker implements ImportTreeMa
 
   @Override
   public Description matchImport(ImportTree tree, VisitorState state) {
-    StaticTypeImportInfo importInfo = StaticTypeImportInfo.tryCreate(tree, state);
-    if (importInfo == null || importInfo.isCanonical()) {
+    StaticImportInfo importInfo = StaticImports.tryCreate(tree, state);
+    if (importInfo == null || importInfo.isCanonical() || importInfo.member().isPresent()) {
       return Description.NO_MATCH;
     }
     return describeMatch(tree, SuggestedFix.replace(tree, importInfo.importStatement()));
   }
 }
-
