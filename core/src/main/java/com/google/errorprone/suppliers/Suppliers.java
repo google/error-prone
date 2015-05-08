@@ -33,7 +33,7 @@ import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 public class Suppliers {
 
   /**
-   * Supplies the n'th generic type of the given expression. For example, in {@code Map<A,B> c;} for 
+   * Supplies the n'th generic type of the given expression. For example, in {@code Map<A,B> c;} for
    * the expression c and n=1, the result is the type of {@code B}. If there are an insufficient number of
    * type arguments, this method will return the {@code java.lang.Object} type from symbol table.
    *
@@ -133,6 +133,13 @@ public class Suppliers {
       @Override
       public Type get(VisitorState state) {
         return state.getSymtab().voidType;
+      }
+    };
+
+  public static final Supplier<Type> JAVA_LANG_BOOLEAN_TYPE = new Supplier<Type>() {
+      @Override
+      public Type get(VisitorState state) {
+        return state.getTypeFromString("java.lang.Boolean");
       }
     };
 

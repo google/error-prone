@@ -39,7 +39,6 @@ import com.google.errorprone.bugpatterns.ClassName;
 import com.google.errorprone.bugpatterns.CollectionIncompatibleType;
 import com.google.errorprone.bugpatterns.ComparisonOutOfRange;
 import com.google.errorprone.bugpatterns.CompileTimeConstantChecker;
-import com.google.errorprone.bugpatterns.CovariantEquals;
 import com.google.errorprone.bugpatterns.DeadException;
 import com.google.errorprone.bugpatterns.DepAnn;
 import com.google.errorprone.bugpatterns.DivZero;
@@ -86,6 +85,7 @@ import com.google.errorprone.bugpatterns.NoAllocationChecker;
 import com.google.errorprone.bugpatterns.NonAtomicVolatileUpdate;
 import com.google.errorprone.bugpatterns.NonCanonicalStaticImport;
 import com.google.errorprone.bugpatterns.NonFinalCompileTimeConstant;
+import com.google.errorprone.bugpatterns.NonOverridingEquals;
 import com.google.errorprone.bugpatterns.NonRuntimeAnnotation;
 import com.google.errorprone.bugpatterns.NullablePrimitive;
 import com.google.errorprone.bugpatterns.NumericEquality;
@@ -238,7 +238,7 @@ public class BuiltInCheckerSuppliers {
           ClassCanBeStatic.class,
           ClassName.class,
           CollectionIncompatibleType.class,
-          CovariantEquals.class,
+          NonOverridingEquals.class,
           DivZero.class,
           DoubleCheckedLocking.class,
           EmptyIfStatement.class,
