@@ -69,6 +69,75 @@
 <li class="blockList">
 <h2 title="Package">Package&nbsp;com.google.errorprone</h2>
 <ul class="blockList">
+<li class="blockList"><a name="com.google.errorprone.BugCheckerInfo">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">com.google.errorprone.BugCheckerInfo</a> extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a> implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList"><a name="serializedForm">
+<!--   -->
+</a>
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockList">
+<h4>checker</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">T</a>&gt; checker</pre>
+<div class="block">The BugChecker class.</div>
+</li>
+<li class="blockList">
+<h4>canonicalName</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> canonicalName</pre>
+<div class="block">The canonical name of this check. Corresponds to the <code>name</code> attribute from its
+ <code>BugPattern</code> annotation.</div>
+</li>
+<li class="blockList">
+<h4>allNames</h4>
+<pre>com.google.common.collect.ImmutableSet&lt;E&gt; allNames</pre>
+<div class="block">Additional identifiers for this check, to be checked for in @SuppressWarnings annotations.
+ Corresponds to the canonical name plus all <code>altName</code>s from its <code>BugPattern</code>
+ annotation.</div>
+</li>
+<li class="blockList">
+<h4>message</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> message</pre>
+<div class="block">The error message to print in compiler diagnostics when this check triggers. Corresponds to the
+ <code>summary</code> attribute from its <code>BugPattern</code>.</div>
+</li>
+<li class="blockList">
+<h4>defaultSeverity</h4>
+<pre><a href="com/google/errorprone/BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a> defaultSeverity</pre>
+<div class="block">The default type of diagnostic (error or warning) to emit when this check triggers.</div>
+</li>
+<li class="blockList">
+<h4>maturity</h4>
+<pre><a href="com/google/errorprone/BugPattern.MaturityLevel.html" title="enum in com.google.errorprone">BugPattern.MaturityLevel</a> maturity</pre>
+<div class="block">The maturity of this checker. Used to decide whether to enable this check. Corresponds to the
+ <code>maturity</code> attribute from its <code>BugPattern</code>.</div>
+</li>
+<li class="blockList">
+<h4>linkUrl</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> linkUrl</pre>
+<div class="block">The link URL to display in the diagnostic message when this check triggers. Computed from the
+ <code>link</code> and <code>linkType</code> attributes from its <code>BugPattern</code>. May be null if no
+ link should be displayed.</div>
+</li>
+<li class="blockList">
+<h4>suppressibility</h4>
+<pre><a href="com/google/errorprone/BugPattern.Suppressibility.html" title="enum in com.google.errorprone">BugPattern.Suppressibility</a> suppressibility</pre>
+<div class="block">Whether this check may be suppressed. Corresponds to the <code>suppressibility</code> attribute from
+ its <code>BugPattern</code>.</div>
+</li>
+<li class="blockListLast">
+<h4>customSuppressionAnnotation</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">T</a>&gt; customSuppressionAnnotation</pre>
+<div class="block">A custom suppression annotation for this check. Computed from the <code>suppressibility</code> and
+ <code>customSuppressionAnnotation</code> attributes from its <code>BugPattern</code>. May be null if
+ there is no custom suppression annotation for this check.</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="blockList"><a name="com.google.errorprone.InvalidCommandLineOptionException">
 <!--   -->
 </a>
@@ -161,55 +230,9 @@
 </a>
 <h3>Serialized Fields</h3>
 <ul class="blockList">
-<li class="blockList">
-<h4>canonicalName</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> canonicalName</pre>
-<div class="block">The canonical name of this check.  Corresponds to the <code>name</code> attribute from its
- <code>BugPattern</code> annotation.</div>
-</li>
-<li class="blockList">
-<h4>allNames</h4>
-<pre>com.google.common.collect.ImmutableSet&lt;E&gt; allNames</pre>
-<div class="block">Additional identifiers for this check, to be checked for in @SuppressWarnings annotations.
- Corresponds to the canonical name plus all <code>altName</code>s from its <code>BugPattern</code>
- annotation.</div>
-</li>
-<li class="blockList">
-<h4>message</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> message</pre>
-<div class="block">The error message to print in compiler diagnostics when this check triggers.  Corresponds to
- the <code>summary</code> attribute from its <code>BugPattern</code>.</div>
-</li>
-<li class="blockList">
-<h4>defaultSeverity</h4>
-<pre><a href="com/google/errorprone/BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a> defaultSeverity</pre>
-<div class="block">The default type of diagnostic (error or warning) to emit when this check triggers.</div>
-</li>
-<li class="blockList">
-<h4>maturity</h4>
-<pre><a href="com/google/errorprone/BugPattern.MaturityLevel.html" title="enum in com.google.errorprone">BugPattern.MaturityLevel</a> maturity</pre>
-<div class="block">The maturity of this checker.  Used to decide whether to enable this check.  Corresponds to
- the <code>maturity</code> attribute from its <code>BugPattern</code>.</div>
-</li>
-<li class="blockList">
-<h4>linkUrl</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> linkUrl</pre>
-<div class="block">The link URL to display in the diagnostic message when this check triggers.  Computed from
- the <code>link</code> and <code>linkType</code> attributes from its <code>BugPattern</code>.  May be null
- if no link should be displayed.</div>
-</li>
-<li class="blockList">
-<h4>suppressibility</h4>
-<pre><a href="com/google/errorprone/BugPattern.Suppressibility.html" title="enum in com.google.errorprone">BugPattern.Suppressibility</a> suppressibility</pre>
-<div class="block">Whether this check may be suppressed.  Corresponds to the <code>suppressibility</code> attribute
- from its <code>BugPattern</code>.</div>
-</li>
 <li class="blockListLast">
-<h4>customSuppressionAnnotation</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">T</a>&gt; customSuppressionAnnotation</pre>
-<div class="block">A custom suppression annotation for this check.  Computed from the <code>suppressibility</code> and
- <code>customSuppressionAnnotation</code> attributes from its <code>BugPattern</code>.  May be null if
- there is no custom suppression annotation for this check.</div>
+<h4>info</h4>
+<pre><a href="com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a> info</pre>
 </li>
 </ul>
 </li>
@@ -284,11 +307,6 @@
 </ul>
 </li>
 </ul>
-</li>
-<li class="blockList"><a name="com.google.errorprone.bugpatterns.CovariantEquals">
-<!--   -->
-</a>
-<h3>Class <a href="com/google/errorprone/bugpatterns/CovariantEquals.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.CovariantEquals</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
 </li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.DeadException">
 <!--   -->
@@ -609,6 +627,11 @@
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/NonFinalCompileTimeConstant.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.NonFinalCompileTimeConstant</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
 </li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.NonOverridingEquals">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/NonOverridingEquals.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.NonOverridingEquals</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.NonRuntimeAnnotation">
 <!--   -->
 </a>
@@ -834,6 +857,11 @@
 <!--   -->
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">com.google.errorprone.bugpatterns.threadsafety.AbstractLockMethodChecker</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.threadsafety.DoubleCheckedLocking">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/threadsafety/DoubleCheckedLocking.html" title="class in com.google.errorprone.bugpatterns.threadsafety">com.google.errorprone.bugpatterns.threadsafety.DoubleCheckedLocking</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
 </li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.threadsafety.GuardedByChecker">
 <!--   -->

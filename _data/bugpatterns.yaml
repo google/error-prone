@@ -8,6 +8,7 @@
 - {name: IncompatibleModifiers, summary: This annotation has incompatible modifiers as specified by its @IncompatibleModifiers annotation}
 - {name: NonAtomicVolatileUpdate, summary: This update of a volatile variable is non-atomic}
 - {name: NonCanonicalStaticImport, summary: Static import of type uses non-canonical name}
+- {name: NonOverridingEquals, summary: equals method doesn't override Object.equals}
 - {name: PreconditionsInvalidPlaceholder, summary: Preconditions only accepts the %s placeholder in error message strings}
 - {name: ProtoFieldPreconditionsCheckNotNull, summary: 'Protobuf fields cannot be
     null, so this check is redundant'}
@@ -22,7 +23,8 @@
     are unchecked, it hides unsafe casts at invocations of the method, and it interacts
     badly with method overload resolution'}
 - {name: UnnecessaryStaticImport, summary: Using static imports for types is unnecessary}
-- {name: WaitNotInLoop, summary: Object.wait() should always be called in a loop}
+- {name: WaitNotInLoop, summary: 'Because of spurious wakeups, Object.wait() and Condition.await()
+    must always be called in a loop'}
 'On by default : ERROR':
 - {name: ArrayEquals, summary: Reference equality used to compare arrays}
 - {name: ArrayHashCode, summary: hashcode method on array does not hash array contents}
@@ -40,6 +42,7 @@
 - {name: CompileTimeConstant, summary: Non-compile-time constant expression passed to parameter with @CompileTimeConstant type annotation.}
 - {name: DeadException, summary: Exception created but not thrown}
 - {name: DepAnn, summary: Deprecated item is not annotated with @Deprecated}
+- {name: DoubleCheckedLocking, summary: Double-checked locking on non-volatile fields is unsafe}
 - {name: EqualsNaN, summary: == NaN always returns false; use the isNaN methods instead}
 - {name: ForOverride, summary: Method annotated @ForOverride must be protected or package-private and only invoked from declaring class}
 - {name: GuardedByChecker, summary: Checks for unguarded accesses to fields and methods with @GuardedBy annotations}
@@ -94,7 +97,6 @@
     Future, only a Future whose result is null.'}
 - {name: ClassCanBeStatic, summary: Inner class is non-static but does not reference enclosing class}
 - {name: CollectionIncompatibleType, summary: Incompatible type as argument to non-generic Java collections method.}
-- {name: CovariantEquals, summary: equals() method doesn't override Object.equals()}
 - {name: DivZero, summary: Division by integer literal zero}
 - {name: EmptyIf, summary: Empty statement after if}
 - {name: GuardedByValidator, summary: Invalid @GuardedBy expression}

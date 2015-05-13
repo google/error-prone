@@ -112,6 +112,8 @@
 </dd>
 <dt><span class="strong"><a href="./com/google/errorprone/analysis/BugCheckerLocalAnalysis.html#allNames()">allNames()</a></span> - Method in class com.google.errorprone.analysis.<a href="./com/google/errorprone/analysis/BugCheckerLocalAnalysis.html" title="class in com.google.errorprone.analysis">BugCheckerLocalAnalysis</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/BugCheckerInfo.html#allNames()">allNames()</a></span> - Method in class com.google.errorprone.<a href="./com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/BugChecker.html#allNames()">allNames()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/matchers/Suppressible.html#allNames()">allNames()</a></span> - Method in interface com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></dt>
@@ -479,6 +481,11 @@
 <dd>&nbsp;</dd>
 <dt><a href="./com/google/errorprone/bugpatterns/BugChecker.WildcardTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns"><span class="strong">BugChecker.WildcardTreeMatcher</span></a> - Interface in <a href="./com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="./com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone"><span class="strong">BugCheckerInfo</span></a> - Class in <a href="./com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
+<dd>
+<div class="block">An accessor for information about a single bug checker, including the metadata in the check's
+ <code>@BugPattern</code> annotation and the class that implements the check.</div>
+</dd>
 <dt><a href="./com/google/errorprone/analysis/BugCheckerLocalAnalysis.html" title="class in com.google.errorprone.analysis"><span class="strong">BugCheckerLocalAnalysis</span></a> - Class in <a href="./com/google/errorprone/analysis/package-summary.html">com.google.errorprone.analysis</a></dt>
 <dd>
 <div class="block">Adapter from <code>BugChecker</code> to <code>LocalAnalysis</code>.</div>
@@ -528,6 +535,10 @@
 <div class="block">Returns a Description builder, which allows you to customize the diagnostic with a custom
  message or multiple fixes.</div>
 </dd>
+<dt><span class="strong"><a href="./com/google/errorprone/BugCheckerInfo.html#buildDescriptionFromChecker(com.sun.source.tree.Tree,%20com.google.errorprone.bugpatterns.BugChecker)">buildDescriptionFromChecker(Tree, BugChecker)</a></span> - Static method in class com.google.errorprone.<a href="./com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a></dt>
+<dd>
+<div class="block">Returns a new builder for <a href="./com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers"><code>Description</code></a>s.</div>
+</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/BugChecker.html#buildDescriptionFromChecker(com.sun.source.tree.Tree,%20com.google.errorprone.bugpatterns.BugChecker)">buildDescriptionFromChecker(Tree, BugChecker)</a></span> - Static method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></dt>
 <dd>
 <div class="block">Returns a new builder for <a href="./com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers"><code>Description</code></a>s.</div>
@@ -548,8 +559,8 @@
 <dd>&nbsp;</dd>
 <dt><a href="./com/google/errorprone/scanner/BuiltInCheckerSuppliers.html" title="class in com.google.errorprone.scanner"><span class="strong">BuiltInCheckerSuppliers</span></a> - Class in <a href="./com/google/errorprone/scanner/package-summary.html">com.google.errorprone.scanner</a></dt>
 <dd>
-<div class="block">Static helper class that provides <a href="./com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>s and <a href="./com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>s
- for the built-in error-prone checks, as opposed to plugin checks or checks used in tests.</div>
+<div class="block">Static helper class that provides <a href="./com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>s and <a href="./com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>s for the
+ built-in Error Prone checks, as opposed to plugin checks or checks used in tests.</div>
 </dd>
 <dt><span class="strong"><a href="./com/google/errorprone/BugPattern.Instance.html#BY_NAME">BY_NAME</a></span> - Static variable in class com.google.errorprone.<a href="./com/google/errorprone/BugPattern.Instance.html" title="class in com.google.errorprone">BugPattern.Instance</a></dt>
 <dd>&nbsp;</dd>
@@ -573,6 +584,8 @@
 </dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/CannotMockFinalClass.html#CannotMockFinalClass()">CannotMockFinalClass()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/CannotMockFinalClass.html" title="class in com.google.errorprone.bugpatterns">CannotMockFinalClass</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/BugCheckerInfo.html#canonicalName()">canonicalName()</a></span> - Method in class com.google.errorprone.<a href="./com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/BugChecker.html#canonicalName()">canonicalName()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="./com/google/errorprone/bugpatterns/ChainingConstructorIgnoresParameter.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">ChainingConstructorIgnoresParameter</span></a> - Class in <a href="./com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
@@ -581,6 +594,8 @@
  the caller passes <code>foo</code> as a parameter.</div>
 </dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/ChainingConstructorIgnoresParameter.html#ChainingConstructorIgnoresParameter()">ChainingConstructorIgnoresParameter()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/ChainingConstructorIgnoresParameter.html" title="class in com.google.errorprone.bugpatterns">ChainingConstructorIgnoresParameter</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/BugCheckerInfo.html#checkerClass()">checkerClass()</a></span> - Method in class com.google.errorprone.<a href="./com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/threadsafety/GuardedByChecker.html#checkGuardedAccess(com.sun.source.tree.Tree,%20com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,%20com.google.errorprone.bugpatterns.threadsafety.HeldLockSet,%20com.google.errorprone.VisitorState)">checkGuardedAccess(Tree, GuardedByExpression, HeldLockSet, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="./com/google/errorprone/bugpatterns/threadsafety/GuardedByChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByChecker</a></dt>
 <dd>&nbsp;</dd>
@@ -780,10 +795,6 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/JUnit4TearDownNotRun.html#correctAnnotation()">correctAnnotation()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/JUnit4TearDownNotRun.html" title="class in com.google.errorprone.bugpatterns">JUnit4TearDownNotRun</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="./com/google/errorprone/bugpatterns/CovariantEquals.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">CovariantEquals</span></a> - Class in <a href="./com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/CovariantEquals.html#CovariantEquals()">CovariantEquals()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/CovariantEquals.html" title="class in com.google.errorprone.bugpatterns">CovariantEquals</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/analysis/AnalysesConfig.html#create(com.google.errorprone.ErrorProneOptions)">create(ErrorProneOptions)</a></span> - Static method in class com.google.errorprone.analysis.<a href="./com/google/errorprone/analysis/AnalysesConfig.html" title="class in com.google.errorprone.analysis">AnalysesConfig</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/analysis/ErrorProneTopLevelAnalysis.html#create(com.google.errorprone.bugpatterns.BugChecker...)">create(BugChecker...)</a></span> - Static method in class com.google.errorprone.analysis.<a href="./com/google/errorprone/analysis/ErrorProneTopLevelAnalysis.html" title="class in com.google.errorprone.analysis">ErrorProneTopLevelAnalysis</a></dt>
@@ -799,6 +810,8 @@
 <dt><span class="strong"><a href="./com/google/errorprone/analysis/RecompilingTopLevelAnalysis.html#create(com.google.errorprone.analysis.TopLevelAnalysis)">create(TopLevelAnalysis)</a></span> - Static method in class com.google.errorprone.analysis.<a href="./com/google/errorprone/analysis/RecompilingTopLevelAnalysis.html" title="class in com.google.errorprone.analysis">RecompilingTopLevelAnalysis</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/analysis/SumTopLevelAnalysis.html#create(java.lang.Iterable)">create(Iterable&lt;? extends TopLevelAnalysis&gt;)</a></span> - Static method in class com.google.errorprone.analysis.<a href="./com/google/errorprone/analysis/SumTopLevelAnalysis.html" title="class in com.google.errorprone.analysis">SumTopLevelAnalysis</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/BugCheckerInfo.html#create(java.lang.Class)">create(Class&lt;? extends BugChecker&gt;)</a></span> - Static method in class com.google.errorprone.<a href="./com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/BugChecker.CompilationUnitTreeInfo.html#create(com.sun.source.tree.CompilationUnitTree)">create(CompilationUnitTree)</a></span> - Static method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/BugChecker.CompilationUnitTreeInfo.html" title="class in com.google.errorprone.bugpatterns">BugChecker.CompilationUnitTreeInfo</a></dt>
 <dd>&nbsp;</dd>
@@ -849,6 +862,8 @@
 </dd>
 <dt><span class="strong"><a href="./com/google/errorprone/analysis/BugCheckerLocalAnalysis.html#customSuppressionAnnotation()">customSuppressionAnnotation()</a></span> - Method in class com.google.errorprone.analysis.<a href="./com/google/errorprone/analysis/BugCheckerLocalAnalysis.html" title="class in com.google.errorprone.analysis">BugCheckerLocalAnalysis</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/BugCheckerInfo.html#customSuppressionAnnotation()">customSuppressionAnnotation()</a></span> - Method in class com.google.errorprone.<a href="./com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/BugPattern.Instance.html#customSuppressionAnnotation">customSuppressionAnnotation</a></span> - Variable in class com.google.errorprone.<a href="./com/google/errorprone/BugPattern.Instance.html" title="class in com.google.errorprone">BugPattern.Instance</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/BugChecker.html#customSuppressionAnnotation()">customSuppressionAnnotation()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></dt>
@@ -892,6 +907,8 @@
 <dd>
 <div class="block">Returns a <a href="./com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with the <a href="./com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>s that are in the ENABLED lists.</div>
 </dd>
+<dt><span class="strong"><a href="./com/google/errorprone/BugCheckerInfo.html#defaultSeverity()">defaultSeverity()</a></span> - Method in class com.google.errorprone.<a href="./com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/BugChecker.html#defaultSeverity()">defaultSeverity()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/fixes/SuggestedFix.Builder.html#delete(com.sun.source.tree.Tree)">delete(Tree)</a></span> - Method in class com.google.errorprone.fixes.<a href="./com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></dt>
@@ -1010,6 +1027,10 @@
 <dd>
 <div class="block">Matches an Annotation AST node if an argument to the annotation does not exist.</div>
 </dd>
+<dt><a href="./com/google/errorprone/bugpatterns/threadsafety/DoubleCheckedLocking.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><span class="strong">DoubleCheckedLocking</span></a> - Class in <a href="./com/google/errorprone/bugpatterns/threadsafety/package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/threadsafety/DoubleCheckedLocking.html#DoubleCheckedLocking()">DoubleCheckedLocking()</a></span> - Constructor for class com.google.errorprone.bugpatterns.threadsafety.<a href="./com/google/errorprone/bugpatterns/threadsafety/DoubleCheckedLocking.html" title="class in com.google.errorprone.bugpatterns.threadsafety">DoubleCheckedLocking</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <a name="_E_">
 <!--   -->
@@ -1092,6 +1113,8 @@
 <div class="block">Matches an enhanced for loop if all the given matchers match.</div>
 </dd>
 <dt><span class="strong"><a href="./com/google/errorprone/util/ASTHelpers.html#enumValues(com.sun.tools.javac.code.Symbol.TypeSymbol)">enumValues(Symbol.TypeSymbol)</a></span> - Static method in class com.google.errorprone.util.<a href="./com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/BugCheckerInfo.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class com.google.errorprone.<a href="./com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/BugChecker.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></dt>
 <dd>&nbsp;</dd>
@@ -1224,7 +1247,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/FallThroughSuppression.html#FallThroughSuppression()">FallThroughSuppression()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/FallThroughSuppression.html" title="class in com.google.errorprone.bugpatterns">FallThroughSuppression</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="strong"><a href="./com/google/errorprone/scanner/ScannerSupplier.html#filter(com.google.common.base.Predicate)">filter(Predicate&lt;? super BugChecker&gt;)</a></span> - Method in class com.google.errorprone.scanner.<a href="./com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></dt>
+<dt><span class="strong"><a href="./com/google/errorprone/scanner/ScannerSupplier.html#filter(com.google.common.base.Predicate)">filter(Predicate&lt;? super BugCheckerInfo&gt;)</a></span> - Method in class com.google.errorprone.scanner.<a href="./com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></dt>
 <dd>
 <div class="block">Filters this <a href="./com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> based on the provided predicate.</div>
 </dd>
@@ -1313,13 +1336,9 @@
 <dd>
 <div class="block">Returns a <a href="./com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with a specific list of <a href="./com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> classes.</div>
 </dd>
-<dt><span class="strong"><a href="./com/google/errorprone/scanner/ScannerSupplier.html#fromBugCheckers(com.google.errorprone.bugpatterns.BugChecker...)">fromBugCheckers(BugChecker...)</a></span> - Static method in class com.google.errorprone.scanner.<a href="./com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></dt>
+<dt><span class="strong"><a href="./com/google/errorprone/scanner/ScannerSupplier.html#fromBugCheckerInfos(java.lang.Iterable)">fromBugCheckerInfos(Iterable&lt;BugCheckerInfo&gt;)</a></span> - Static method in class com.google.errorprone.scanner.<a href="./com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></dt>
 <dd>
-<div class="block">Returns a <a href="./com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> built from a list of <a href="./com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> instances.</div>
-</dd>
-<dt><span class="strong"><a href="./com/google/errorprone/scanner/ScannerSupplier.html#fromBugCheckers(java.lang.Iterable)">fromBugCheckers(Iterable&lt;? extends BugChecker&gt;)</a></span> - Static method in class com.google.errorprone.scanner.<a href="./com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></dt>
-<dd>
-<div class="block">Returns a <a href="./com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> built from a list of <a href="./com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> instances.</div>
+<div class="block">Returns a <a href="./com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> built from a list of <a href="./com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone"><code>BugCheckerInfo</code></a>s.</div>
 </dd>
 <dt><span class="strong"><a href="./com/google/errorprone/scanner/ScannerSupplier.html#fromScanner(com.google.errorprone.scanner.Scanner)">fromScanner(Scanner)</a></span> - Static method in class com.google.errorprone.scanner.<a href="./com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></dt>
 <dd>
@@ -1357,8 +1376,8 @@
 </dd>
 <dt><span class="strong"><a href="./com/google/errorprone/scanner/ScannerSupplier.html#getAllChecks()">getAllChecks()</a></span> - Method in class com.google.errorprone.scanner.<a href="./com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></dt>
 <dd>
-<div class="block">Returns a map of check name to <a href="./com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> for all <a href="./com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>s
- in this <a href="./com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>, including disabled ones.</div>
+<div class="block">Returns a map of check name to <a href="./com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone"><code>BugCheckerInfo</code></a> for all <a href="./com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone"><code>BugCheckerInfo</code></a>s in this
+ <a href="./com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>, including disabled ones.</div>
 </dd>
 <dt><span class="strong"><a href="./com/google/errorprone/dataflow/DataFlow.Result.html#getAnalysis()">getAnalysis()</a></span> - Method in interface com.google.errorprone.dataflow.<a href="./com/google/errorprone/dataflow/DataFlow.Result.html" title="interface in com.google.errorprone.dataflow">DataFlow.Result</a></dt>
 <dd>&nbsp;</dd>
@@ -1403,7 +1422,7 @@
 </dd>
 <dt><span class="strong"><a href="./com/google/errorprone/scanner/ScannerSupplier.html#getEnabledChecks()">getEnabledChecks()</a></span> - Method in class com.google.errorprone.scanner.<a href="./com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></dt>
 <dd>
-<div class="block">Returns the set of <a href="./com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>s that are enabled in this <a href="./com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>.</div>
+<div class="block">Returns the set of <a href="./com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone"><code>BugCheckerInfo</code></a>s that are enabled in this <a href="./com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>.</div>
 </dd>
 <dt><span class="strong"><a href="./com/google/errorprone/fixes/AdjustedPosition.html#getEndPosition(com.sun.tools.javac.tree.EndPosTable)">getEndPosition(EndPosTable)</a></span> - Method in class com.google.errorprone.fixes.<a href="./com/google/errorprone/fixes/AdjustedPosition.html" title="class in com.google.errorprone.fixes">AdjustedPosition</a></dt>
 <dd>&nbsp;</dd>
@@ -1507,6 +1526,8 @@
 <dt><span class="strong"><a href="./com/google/errorprone/fixes/AdjustedPosition.html#getStartPosition()">getStartPosition()</a></span> - Method in class com.google.errorprone.fixes.<a href="./com/google/errorprone/fixes/AdjustedPosition.html" title="class in com.google.errorprone.fixes">AdjustedPosition</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/fixes/IndexedPosition.html#getStartPosition()">getStartPosition()</a></span> - Method in class com.google.errorprone.fixes.<a href="./com/google/errorprone/fixes/IndexedPosition.html" title="class in com.google.errorprone.fixes">IndexedPosition</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/scanner/BuiltInCheckerSuppliers.html#getSuppliers(java.lang.Class...)">getSuppliers(Class&lt;? extends BugChecker&gt;...)</a></span> - Static method in class com.google.errorprone.scanner.<a href="./com/google/errorprone/scanner/BuiltInCheckerSuppliers.html" title="class in com.google.errorprone.scanner">BuiltInCheckerSuppliers</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/DocGenProcessor.html#getSupportedSourceVersion()">getSupportedSourceVersion()</a></span> - Method in class com.google.errorprone.<a href="./com/google/errorprone/DocGenProcessor.html" title="class in com.google.errorprone">DocGenProcessor</a></dt>
 <dd>&nbsp;</dd>
@@ -1727,6 +1748,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/dataflow/LocalStore.html#hasDOToutput()">hasDOToutput()</a></span> - Method in class com.google.errorprone.dataflow.<a href="./com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/BugCheckerInfo.html#hashCode()">hashCode()</a></span> - Method in class com.google.errorprone.<a href="./com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/BugChecker.html#hashCode()">hashCode()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/dataflow/LocalStore.html#hashCode()">hashCode()</a></span> - Method in class com.google.errorprone.dataflow.<a href="./com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a></dt>
@@ -1871,6 +1894,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/InjectScopeOrQualifierAnnotationRetention.html#InjectScopeOrQualifierAnnotationRetention()">InjectScopeOrQualifierAnnotationRetention()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/InjectScopeOrQualifierAnnotationRetention.html" title="class in com.google.errorprone.bugpatterns">InjectScopeOrQualifierAnnotationRetention</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/matchers/Matchers.html#inLoop()">inLoop()</a></span> - Static method in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
+<dd>
+<div class="block">Matches if the given tree is inside a loop.</div>
+</dd>
 <dt><a href="./com/google/errorprone/matchers/InstanceMethod.html" title="class in com.google.errorprone.matchers"><span class="strong">InstanceMethod</span></a> - Class in <a href="./com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a></dt>
 <dd>
 <div class="block">Matches an instance method expression.</div>
@@ -2115,6 +2142,8 @@
 </a>
 <h2 class="title">J</h2>
 <dl>
+<dt><span class="strong"><a href="./com/google/errorprone/suppliers/Suppliers.html#JAVA_LANG_BOOLEAN_TYPE">JAVA_LANG_BOOLEAN_TYPE</a></span> - Static variable in class com.google.errorprone.suppliers.<a href="./com/google/errorprone/suppliers/Suppliers.html" title="class in com.google.errorprone.suppliers">Suppliers</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/suppliers/Suppliers.html#JAVA_LANG_VOID_TYPE">JAVA_LANG_VOID_TYPE</a></span> - Static variable in class com.google.errorprone.suppliers.<a href="./com/google/errorprone/suppliers/Suppliers.html" title="class in com.google.errorprone.suppliers">Suppliers</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="./com/google/errorprone/JavacErrorDescriptionListener.html" title="class in com.google.errorprone"><span class="strong">JavacErrorDescriptionListener</span></a> - Class in <a href="./com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
@@ -2210,6 +2239,8 @@
 <dt><span class="strong"><a href="./com/google/errorprone/dataflow/LocalStore.html#leastUpperBound(com.google.errorprone.dataflow.LocalStore)">leastUpperBound(LocalStore&lt;V&gt;)</a></span> - Method in class com.google.errorprone.dataflow.<a href="./com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/dataflow/nullnesspropagation/Nullness.html#leastUpperBound(com.google.errorprone.dataflow.nullnesspropagation.Nullness)">leastUpperBound(Nullness)</a></span> - Method in enum com.google.errorprone.dataflow.nullnesspropagation.<a href="./com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/BugCheckerInfo.html#linkUrl()">linkUrl()</a></span> - Method in class com.google.errorprone.<a href="./com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/BugChecker.html#linkUrl()">linkUrl()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></dt>
 <dd>&nbsp;</dd>
@@ -2451,8 +2482,6 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/NoAllocationChecker.html#matchEnhancedForLoop(com.sun.source.tree.EnhancedForLoopTree,%20com.google.errorprone.VisitorState)">matchEnhancedForLoop(EnhancedForLoopTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/NoAllocationChecker.html" title="class in com.google.errorprone.bugpatterns">NoAllocationChecker</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/CovariantEquals.html#MATCHER">MATCHER</a></span> - Static variable in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/CovariantEquals.html" title="class in com.google.errorprone.bugpatterns">CovariantEquals</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/DeadException.html#MATCHER">MATCHER</a></span> - Static variable in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/DeadException.html" title="class in com.google.errorprone.bugpatterns">DeadException</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/GuiceAssistedInjectScoping.html#MATCHER">MATCHER</a></span> - Static variable in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/GuiceAssistedInjectScoping.html" title="class in com.google.errorprone.bugpatterns">GuiceAssistedInjectScoping</a></dt>
@@ -2541,6 +2570,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/BugChecker.IfTreeMatcher.html#matchIf(com.sun.source.tree.IfTree,%20com.google.errorprone.VisitorState)">matchIf(IfTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/BugChecker.IfTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.IfTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/threadsafety/DoubleCheckedLocking.html#matchIf(com.sun.source.tree.IfTree,%20com.google.errorprone.VisitorState)">matchIf(IfTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="./com/google/errorprone/bugpatterns/threadsafety/DoubleCheckedLocking.html" title="class in com.google.errorprone.bugpatterns.threadsafety">DoubleCheckedLocking</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/BugChecker.ImportTreeMatcher.html#matchImport(com.sun.source.tree.ImportTree,%20com.google.errorprone.VisitorState)">matchImport(ImportTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/BugChecker.ImportTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ImportTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/NonCanonicalStaticImport.html#matchImport(com.sun.source.tree.ImportTree,%20com.google.errorprone.VisitorState)">matchImport(ImportTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/NonCanonicalStaticImport.html" title="class in com.google.errorprone.bugpatterns">NonCanonicalStaticImport</a></dt>
@@ -2574,12 +2605,6 @@
 <div class="block">Validate <a href="http://docs.oracle.com/javase/7/docs/api/javax/annotation/CheckReturnValue.html?is-external=true" title="class or interface in javax.annotation"><code>CheckReturnValue</code></a> and <a href="./com/google/errorprone/annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations"><code>CanIgnoreReturnValue</code></a> usage on
  methods.</div>
 </dd>
-<dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/CovariantEquals.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/CovariantEquals.html" title="class in com.google.errorprone.bugpatterns">CovariantEquals</a></dt>
-<dd>
-<div class="block">Matches any method definitions that fit the following:
- 1) Defined method is named "equals."
- 2) Defined method returns a boolean.</div>
-</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/DepAnn.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/DepAnn.html" title="class in com.google.errorprone.bugpatterns">DepAnn</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/ForOverrideChecker.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/ForOverrideChecker.html" title="class in com.google.errorprone.bugpatterns">ForOverrideChecker</a></dt>
@@ -2605,6 +2630,8 @@
  1) The method appears to be a JUnit 3 test case.</div>
 </dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/NonFinalCompileTimeConstant.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/NonFinalCompileTimeConstant.html" title="class in com.google.errorprone.bugpatterns">NonFinalCompileTimeConstant</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/NonOverridingEquals.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/NonOverridingEquals.html" title="class in com.google.errorprone.bugpatterns">NonOverridingEquals</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/Overrides.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/Overrides.html" title="class in com.google.errorprone.bugpatterns">Overrides</a></dt>
 <dd>&nbsp;</dd>
@@ -2781,9 +2808,13 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/BugChecker.WildcardTreeMatcher.html#matchWildcard(com.sun.source.tree.WildcardTree,%20com.google.errorprone.VisitorState)">matchWildcard(WildcardTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/BugChecker.WildcardTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.WildcardTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/BugCheckerInfo.html#maturity()">maturity()</a></span> - Method in class com.google.errorprone.<a href="./com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/BugPattern.Instance.html#maturity">maturity</a></span> - Variable in class com.google.errorprone.<a href="./com/google/errorprone/BugPattern.Instance.html" title="class in com.google.errorprone">BugPattern.Instance</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/BugChecker.html#maturity()">maturity()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/BugCheckerInfo.html#message()">message()</a></span> - Method in class com.google.errorprone.<a href="./com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/BugChecker.html#message()">message()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></dt>
 <dd>&nbsp;</dd>
@@ -3030,6 +3061,12 @@
 <dd>
 <div class="block">Matches an AST node if it is a literal other than null.</div>
 </dd>
+<dt><a href="./com/google/errorprone/bugpatterns/NonOverridingEquals.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">NonOverridingEquals</span></a> - Class in <a href="./com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">Bug checker for equals methods that don't actually override equals.</div>
+</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/NonOverridingEquals.html#NonOverridingEquals()">NonOverridingEquals()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/NonOverridingEquals.html" title="class in com.google.errorprone.bugpatterns">NonOverridingEquals</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="./com/google/errorprone/bugpatterns/NonRuntimeAnnotation.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">NonRuntimeAnnotation</span></a> - Class in <a href="./com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/NonRuntimeAnnotation.html#NonRuntimeAnnotation()">NonRuntimeAnnotation()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/NonRuntimeAnnotation.html" title="class in com.google.errorprone.bugpatterns">NonRuntimeAnnotation</a></dt>
@@ -3486,6 +3523,8 @@
 </dd>
 <dt><span class="strong"><a href="./com/google/errorprone/scanner/ScannerSupplier.html#severities()">severities()</a></span> - Method in class com.google.errorprone.scanner.<a href="./com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/BugCheckerInfo.html#severity(java.util.Map)">severity(Map&lt;String, BugPattern.SeverityLevel&gt;)</a></span> - Method in class com.google.errorprone.<a href="./com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/BugPattern.Instance.html#severity">severity</a></span> - Variable in class com.google.errorprone.<a href="./com/google/errorprone/BugPattern.Instance.html" title="class in com.google.errorprone">BugPattern.Instance</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/BugChecker.html#severity(java.util.Map)">severity(Map&lt;String, BugPattern.SeverityLevel&gt;)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></dt>
@@ -3593,6 +3632,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/analysis/BugCheckerLocalAnalysis.html#suppressibility()">suppressibility()</a></span> - Method in class com.google.errorprone.analysis.<a href="./com/google/errorprone/analysis/BugCheckerLocalAnalysis.html" title="class in com.google.errorprone.analysis">BugCheckerLocalAnalysis</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/BugCheckerInfo.html#suppressibility()">suppressibility()</a></span> - Method in class com.google.errorprone.<a href="./com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/BugPattern.Instance.html#suppressibility">suppressibility</a></span> - Variable in class com.google.errorprone.<a href="./com/google/errorprone/BugPattern.Instance.html" title="class in com.google.errorprone">BugPattern.Instance</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/BugChecker.html#suppressibility()">suppressibility()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></dt>
@@ -3675,6 +3716,8 @@
  <code>ErrorProneOptions</code> in updating the severity level.</div>
 </dd>
 <dt><span class="strong"><a href="./com/google/errorprone/analysis/TopLevelAnalysisWithSeverity.html#TopLevelAnalysisWithSeverity()">TopLevelAnalysisWithSeverity()</a></span> - Constructor for class com.google.errorprone.analysis.<a href="./com/google/errorprone/analysis/TopLevelAnalysisWithSeverity.html" title="class in com.google.errorprone.analysis">TopLevelAnalysisWithSeverity</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/BugCheckerInfo.html#toString()">toString()</a></span> - Method in class com.google.errorprone.<a href="./com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.html#toString()">toString()</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="./com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a></dt>
 <dd>&nbsp;</dd>
@@ -4127,11 +4170,22 @@ the order they are declared.</div>
 </a>
 <h2 class="title">W</h2>
 <dl>
-<dt><a href="./com/google/errorprone/bugpatterns/WaitNotInLoop.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">WaitNotInLoop</span></a> - Class in <a href="./com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dt><a href="./com/google/errorprone/matchers/WaitMatchers.html" title="class in com.google.errorprone.matchers"><span class="strong">WaitMatchers</span></a> - Class in <a href="./com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a></dt>
 <dd>
-<div class="block">TODO(user): Doesn't handle the case that the enclosing method is intended to be called
- in a loop.</div>
+<div class="block">Matchers for method invocations related to Object.wait() and Condition.await();</div>
 </dd>
+<dt><span class="strong"><a href="./com/google/errorprone/matchers/WaitMatchers.html#WaitMatchers()">WaitMatchers()</a></span> - Constructor for class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/WaitMatchers.html" title="class in com.google.errorprone.matchers">WaitMatchers</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/matchers/WaitMatchers.html#waitMethod">waitMethod</a></span> - Static variable in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/WaitMatchers.html" title="class in com.google.errorprone.matchers">WaitMatchers</a></dt>
+<dd>
+<div class="block">Matches any wait/await method.</div>
+</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/matchers/WaitMatchers.html#waitMethodWithTimeout">waitMethodWithTimeout</a></span> - Static variable in class com.google.errorprone.matchers.<a href="./com/google/errorprone/matchers/WaitMatchers.html" title="class in com.google.errorprone.matchers">WaitMatchers</a></dt>
+<dd>
+<div class="block">Matches wait/await methods that have a timeout.</div>
+</dd>
+<dt><a href="./com/google/errorprone/bugpatterns/WaitNotInLoop.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">WaitNotInLoop</span></a> - Class in <a href="./com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/WaitNotInLoop.html#WaitNotInLoop()">WaitNotInLoop()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/WaitNotInLoop.html" title="class in com.google.errorprone.bugpatterns">WaitNotInLoop</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="./com/google/errorprone/bugpatterns/WildcardImport.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">WildcardImport</span></a> - Class in <a href="./com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>

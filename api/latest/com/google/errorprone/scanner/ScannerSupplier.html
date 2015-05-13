@@ -147,7 +147,7 @@ implements com.google.common.base.Supplier&lt;<a href="../../../../com/google/er
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></code></td>
-<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html#filter(com.google.common.base.Predicate)">filter</a></strong>(com.google.common.base.Predicate&lt;? super <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&gt;&nbsp;predicate)</code>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html#filter(com.google.common.base.Predicate)">filter</a></strong>(com.google.common.base.Predicate&lt;? super <a href="../../../../com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a>&gt;&nbsp;predicate)</code>
 <div class="block">Filters this <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> based on the provided predicate.</div>
 </td>
 </tr>
@@ -159,48 +159,42 @@ implements com.google.common.base.Supplier&lt;<a href="../../../../com/google/er
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></code></td>
-<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html#fromBugCheckerClasses(java.lang.Iterable)">fromBugCheckerClasses</a></strong>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang">Iterable</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&gt;&gt;&nbsp;checkerClasses)</code>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html#fromBugCheckerClasses(java.lang.Iterable)">fromBugCheckerClasses</a></strong>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang">Iterable</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&gt;&gt;&nbsp;checkers)</code>
 <div class="block">Returns a <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with a specific list of <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> classes.</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></code></td>
-<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html#fromBugCheckers(com.google.errorprone.bugpatterns.BugChecker...)">fromBugCheckers</a></strong>(<a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>...&nbsp;checkers)</code>
-<div class="block">Returns a <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> built from a list of <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> instances.</div>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html#fromBugCheckerInfos(java.lang.Iterable)">fromBugCheckerInfos</a></strong>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang">Iterable</a>&lt;<a href="../../../../com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a>&gt;&nbsp;checkers)</code>
+<div class="block">Returns a <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> built from a list of <a href="../../../../com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone"><code>BugCheckerInfo</code></a>s.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>static <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></code></td>
-<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html#fromBugCheckers(java.lang.Iterable)">fromBugCheckers</a></strong>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang">Iterable</a>&lt;? extends <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&gt;&nbsp;checkers)</code>
-<div class="block">Returns a <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> built from a list of <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> instances.</div>
-</td>
-</tr>
-<tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></code></td>
 <td class="colLast"><code><strong><a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html#fromScanner(com.google.errorprone.scanner.Scanner)">fromScanner</a></strong>(<a href="../../../../com/google/errorprone/scanner/Scanner.html" title="class in com.google.errorprone.scanner">Scanner</a>&nbsp;scanner)</code>
 <div class="block">Returns a <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> that just returns the <a href="../../../../com/google/errorprone/scanner/Scanner.html" title="class in com.google.errorprone.scanner"><code>Scanner</code></a> that was passed in.</div>
 </td>
 </tr>
-<tr class="rowColor">
-<td class="colFirst"><code>protected abstract com.google.common.collect.ImmutableBiMap&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&gt;</code></td>
+<tr class="altColor">
+<td class="colFirst"><code>protected abstract com.google.common.collect.ImmutableBiMap&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="../../../../com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a>&gt;</code></td>
 <td class="colLast"><code><strong><a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html#getAllChecks()">getAllChecks</a></strong>()</code>
-<div class="block">Returns a map of check name to <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> for all <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>s
- in this <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>, including disabled ones.</div>
+<div class="block">Returns a map of check name to <a href="../../../../com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone"><code>BugCheckerInfo</code></a> for all <a href="../../../../com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone"><code>BugCheckerInfo</code></a>s in this
+ <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>, including disabled ones.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected abstract com.google.common.collect.ImmutableSet&lt;<a href="../../../../com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a>&gt;</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html#getEnabledChecks()">getEnabledChecks</a></strong>()</code>
+<div class="block">Returns the set of <a href="../../../../com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone"><code>BugCheckerInfo</code></a>s that are enabled in this <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>.</div>
 </td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>protected abstract com.google.common.collect.ImmutableSet&lt;<a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&gt;</code></td>
-<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html#getEnabledChecks()">getEnabledChecks</a></strong>()</code>
-<div class="block">Returns the set of <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>s that are enabled in this <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>.</div>
-</td>
-</tr>
-<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></code></td>
 <td class="colLast"><code><strong><a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html#plus(com.google.errorprone.scanner.ScannerSupplier)">plus</a></strong>(<a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a>&nbsp;other)</code>
 <div class="block">Composes this <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with the <code>other</code> <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected abstract org.pcollections.PMap&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="../../../../com/google/errorprone/BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a>&gt;</code></td>
 <td class="colLast"><code><strong><a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html#severities()">severities</a></strong>()</code>&nbsp;</td>
 </tr>
@@ -267,28 +261,18 @@ public static&nbsp;<a href="../../../../com/google/errorprone/scanner/ScannerSup
 <ul class="blockList">
 <li class="blockList">
 <h4>fromBugCheckerClasses</h4>
-<pre>public static&nbsp;<a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a>&nbsp;fromBugCheckerClasses(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang">Iterable</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&gt;&gt;&nbsp;checkerClasses)</pre>
+<pre>public static&nbsp;<a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a>&nbsp;fromBugCheckerClasses(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang">Iterable</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&gt;&gt;&nbsp;checkers)</pre>
 <div class="block">Returns a <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with a specific list of <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> classes.</div>
 </li>
 </ul>
-<a name="fromBugCheckers(com.google.errorprone.bugpatterns.BugChecker...)">
+<a name="fromBugCheckerInfos(java.lang.Iterable)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>fromBugCheckers</h4>
-<pre>public static&nbsp;<a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a>&nbsp;fromBugCheckers(<a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>...&nbsp;checkers)</pre>
-<div class="block">Returns a <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> built from a list of <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> instances.</div>
-</li>
-</ul>
-<a name="fromBugCheckers(java.lang.Iterable)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>fromBugCheckers</h4>
-<pre>public static&nbsp;<a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a>&nbsp;fromBugCheckers(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang">Iterable</a>&lt;? extends <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&gt;&nbsp;checkers)</pre>
-<div class="block">Returns a <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> built from a list of <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> instances.</div>
+<h4>fromBugCheckerInfos</h4>
+<pre>public static&nbsp;<a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a>&nbsp;fromBugCheckerInfos(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang">Iterable</a>&lt;<a href="../../../../com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a>&gt;&nbsp;checkers)</pre>
+<div class="block">Returns a <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> built from a list of <a href="../../../../com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone"><code>BugCheckerInfo</code></a>s.</div>
 </li>
 </ul>
 <a name="fromScanner(com.google.errorprone.scanner.Scanner)">
@@ -309,9 +293,9 @@ public static&nbsp;<a href="../../../../com/google/errorprone/scanner/ScannerSup
 <ul class="blockList">
 <li class="blockList">
 <h4>getAllChecks</h4>
-<pre>protected abstract&nbsp;com.google.common.collect.ImmutableBiMap&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&gt;&nbsp;getAllChecks()</pre>
-<div class="block">Returns a map of check name to <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> for all <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>s
- in this <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>, including disabled ones.</div>
+<pre>protected abstract&nbsp;com.google.common.collect.ImmutableBiMap&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="../../../../com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a>&gt;&nbsp;getAllChecks()</pre>
+<div class="block">Returns a map of check name to <a href="../../../../com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone"><code>BugCheckerInfo</code></a> for all <a href="../../../../com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone"><code>BugCheckerInfo</code></a>s in this
+ <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>, including disabled ones.</div>
 </li>
 </ul>
 <a name="getEnabledChecks()">
@@ -320,8 +304,8 @@ public static&nbsp;<a href="../../../../com/google/errorprone/scanner/ScannerSup
 <ul class="blockList">
 <li class="blockList">
 <h4>getEnabledChecks</h4>
-<pre>protected abstract&nbsp;com.google.common.collect.ImmutableSet&lt;<a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&gt;&nbsp;getEnabledChecks()</pre>
-<div class="block">Returns the set of <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>s that are enabled in this <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>.</div>
+<pre>protected abstract&nbsp;com.google.common.collect.ImmutableSet&lt;<a href="../../../../com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a>&gt;&nbsp;getEnabledChecks()</pre>
+<div class="block">Returns the set of <a href="../../../../com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone"><code>BugCheckerInfo</code></a>s that are enabled in this <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>.</div>
 </li>
 </ul>
 <a name="severities()">
@@ -365,8 +349,8 @@ public&nbsp;<a href="../../../../com/google/errorprone/scanner/ScannerSupplier.h
 <h4>plus</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/annotation/CheckReturnValue.html?is-external=true" title="class or interface in javax.annotation">@CheckReturnValue</a>
 public&nbsp;<a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a>&nbsp;plus(<a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a>&nbsp;other)</pre>
-<div class="block">Composes this <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with the <code>other</code> <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>.  The
- set of checks that are turned on is the union of the set of checks on in <code>this</code> and
+<div class="block">Composes this <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with the <code>other</code> <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>. The set
+ of checks that are turned on is the union of the set of checks on in <code>this</code> and
  <code>other</code>.</div>
 </li>
 </ul>
@@ -377,8 +361,8 @@ public&nbsp;<a href="../../../../com/google/errorprone/scanner/ScannerSupplier.h
 <li class="blockList">
 <h4>filter</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/annotation/CheckReturnValue.html?is-external=true" title="class or interface in javax.annotation">@CheckReturnValue</a>
-public&nbsp;<a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a>&nbsp;filter(com.google.common.base.Predicate&lt;? super <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&gt;&nbsp;predicate)</pre>
-<div class="block">Filters this <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> based on the provided predicate.  Returns a
+public&nbsp;<a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a>&nbsp;filter(com.google.common.base.Predicate&lt;? super <a href="../../../../com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a>&gt;&nbsp;predicate)</pre>
+<div class="block">Filters this <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> based on the provided predicate. Returns a
  <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with only the checks enabled that satisfy the predicate.</div>
 </li>
 </ul>

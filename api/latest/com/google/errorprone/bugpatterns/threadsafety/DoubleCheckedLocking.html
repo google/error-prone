@@ -3,13 +3,13 @@
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>AbstractLockMethodChecker (Maven parent POM 2.0.3-SNAPSHOT API)</title>
+<title>DoubleCheckedLocking (Maven parent POM 2.0.3-SNAPSHOT API)</title>
 <link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
 </head>
 <body>
 <script type="text/javascript"><!--
     if (location.href.indexOf('is-external=true') == -1) {
-        parent.document.title="AbstractLockMethodChecker (Maven parent POM 2.0.3-SNAPSHOT API)";
+        parent.document.title="DoubleCheckedLocking (Maven parent POM 2.0.3-SNAPSHOT API)";
     }
 //-->
 </script>
@@ -26,7 +26,7 @@
 <li><a href="../../../../../overview-summary.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
-<li><a href="class-use/AbstractLockMethodChecker.html">Use</a></li>
+<li><a href="class-use/DoubleCheckedLocking.html">Use</a></li>
 <li><a href="package-tree.html">Tree</a></li>
 <li><a href="../../../../../deprecated-list.html">Deprecated</a></li>
 <li><a href="../../../../../index-all.html">Index</a></li>
@@ -35,12 +35,12 @@
 </div>
 <div class="subNav">
 <ul class="navList">
-<li>Prev Class</li>
-<li><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/DoubleCheckedLocking.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><span class="strong">Next Class</span></a></li>
+<li><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><span class="strong">Prev Class</span></a></li>
+<li><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByBinder.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><span class="strong">Next Class</span></a></li>
 </ul>
 <ul class="navList">
-<li><a href="../../../../../index.html?com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html" target="_top">Frames</a></li>
-<li><a href="AbstractLockMethodChecker.html" target="_top">No Frames</a></li>
+<li><a href="../../../../../index.html?com/google/errorprone/bugpatterns/threadsafety/DoubleCheckedLocking.html" target="_top">Frames</a></li>
+<li><a href="DoubleCheckedLocking.html" target="_top">No Frames</a></li>
 </ul>
 <ul class="navList" id="allclasses_navbar_top">
 <li><a href="../../../../../allclasses-noframe.html">All Classes</a></li>
@@ -79,7 +79,7 @@
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="subTitle">com.google.errorprone.bugpatterns.threadsafety</div>
-<h2 title="Class AbstractLockMethodChecker" class="title">Class AbstractLockMethodChecker</h2>
+<h2 title="Class DoubleCheckedLocking" class="title">Class DoubleCheckedLocking</h2>
 </div>
 <div class="contentContainer">
 <ul class="inheritance">
@@ -89,7 +89,7 @@
 <li><a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.BugChecker</a></li>
 <li>
 <ul class="inheritance">
-<li>com.google.errorprone.bugpatterns.threadsafety.AbstractLockMethodChecker</li>
+<li>com.google.errorprone.bugpatterns.threadsafety.DoubleCheckedLocking</li>
 </ul>
 </li>
 </ul>
@@ -100,21 +100,16 @@
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a>, <a href="../../../../../com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io">Serializable</a></dd>
-</dl>
-<dl>
-<dt>Direct Known Subclasses:</dt>
-<dd><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/LockMethodChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">LockMethodChecker</a>, <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/UnlockMethodChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">UnlockMethodChecker</a></dd>
+<dd><a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.IfTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.IfTreeMatcher</a>, <a href="../../../../../com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io">Serializable</a></dd>
 </dl>
 <hr>
 <br>
-<pre>public abstract class <span class="strong">AbstractLockMethodChecker</span>
+<pre>public class <span class="strong">DoubleCheckedLocking</span>
 extends <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
-implements <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a></pre>
-<div class="block">Abstract implementation of checkers for @LockMethod and @UnlockMethod.</div>
+implements <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.IfTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.IfTreeMatcher</a></pre>
 <dl><dt><span class="strong">Author:</span></dt>
   <dd>cushon@google.com (Liam Miller-Cushon)</dd>
-<dt><span class="strong">See Also:</span></dt><dd><a href="../../../../../serialized-form.html#com.google.errorprone.bugpatterns.threadsafety.AbstractLockMethodChecker">Serialized Form</a></dd></dl>
+<dt><span class="strong">See Also:</span></dt><dd><a href="../../../../../serialized-form.html#com.google.errorprone.bugpatterns.threadsafety.DoubleCheckedLocking">Serialized Form</a></dd></dl>
 </li>
 </ul>
 </div>
@@ -148,7 +143,7 @@ implements <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html#AbstractLockMethodChecker()">AbstractLockMethodChecker</a></strong>()</code>&nbsp;</td>
+<td class="colOne"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/DoubleCheckedLocking.html#DoubleCheckedLocking()">DoubleCheckedLocking</a></strong>()</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -166,35 +161,9 @@ implements <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>protected abstract <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html#buildMessage(java.lang.String)">buildMessage</a></strong>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;unhandled)</code>
-<div class="block">Builds the error message, given the list of locks that were not handled.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>protected abstract <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></td>
-<td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html#getActual(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">getActual</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
-         <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
-<div class="block">Searches the method body for locks that are acquired/released.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>protected abstract com.google.common.collect.ImmutableList&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
-<td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html#getLockExpressions(com.sun.source.tree.MethodTree)">getLockExpressions</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree)</code>
-<div class="block">Returns the lock expressions in the @LockMethod/@UnlockMethod annotation, if any.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>protected abstract <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></td>
-<td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html#getUnwanted(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">getUnwanted</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
-           <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
-<div class="block">Searches the method body for the incorrect lock operation (e.g.</div>
-</td>
-</tr>
-<tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;tree,
-           <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+<td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/DoubleCheckedLocking.html#matchIf(com.sun.source.tree.IfTree,%20com.google.errorprone.VisitorState)">matchIf</a></strong>(com.sun.source.tree.IfTree&nbsp;outerIf,
+       <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -232,13 +201,13 @@ implements <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="AbstractLockMethodChecker()">
+<a name="DoubleCheckedLocking()">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>AbstractLockMethodChecker</h4>
-<pre>public&nbsp;AbstractLockMethodChecker()</pre>
+<h4>DoubleCheckedLocking</h4>
+<pre>public&nbsp;DoubleCheckedLocking()</pre>
 </li>
 </ul>
 </li>
@@ -249,59 +218,17 @@ implements <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="getLockExpressions(com.sun.source.tree.MethodTree)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getLockExpressions</h4>
-<pre>protected abstract&nbsp;com.google.common.collect.ImmutableList&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;getLockExpressions(com.sun.source.tree.MethodTree&nbsp;tree)</pre>
-<div class="block">Returns the lock expressions in the @LockMethod/@UnlockMethod annotation, if any.</div>
-</li>
-</ul>
-<a name="getActual(com.sun.source.tree.MethodTree, com.google.errorprone.VisitorState)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getActual</h4>
-<pre>protected abstract&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;&nbsp;getActual(com.sun.source.tree.MethodTree&nbsp;tree,
-                                 <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
-<div class="block">Searches the method body for locks that are acquired/released.</div>
-</li>
-</ul>
-<a name="getUnwanted(com.sun.source.tree.MethodTree, com.google.errorprone.VisitorState)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getUnwanted</h4>
-<pre>protected abstract&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;&nbsp;getUnwanted(com.sun.source.tree.MethodTree&nbsp;tree,
-                                   <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
-<div class="block">Searches the method body for the incorrect lock operation (e.g. releasing a lock in</div>
-</li>
-</ul>
-<a name="buildMessage(java.lang.String)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>buildMessage</h4>
-<pre>protected abstract&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;buildMessage(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;unhandled)</pre>
-<div class="block">Builds the error message, given the list of locks that were not handled.</div>
-</li>
-</ul>
-<a name="matchMethod(com.sun.source.tree.MethodTree, com.google.errorprone.VisitorState)">
+<a name="matchIf(com.sun.source.tree.IfTree, com.google.errorprone.VisitorState)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>matchMethod</h4>
-<pre>public&nbsp;<a href="../../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;matchMethod(com.sun.source.tree.MethodTree&nbsp;tree,
-                      <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
+<h4>matchIf</h4>
+<pre>public&nbsp;<a href="../../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;matchIf(com.sun.source.tree.IfTree&nbsp;outerIf,
+                  <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
 <dl>
 <dt><strong>Specified by:</strong></dt>
-<dd><code><a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.MethodTreeMatcher.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a></code></dd>
+<dd><code><a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.IfTreeMatcher.html#matchIf(com.sun.source.tree.IfTree,%20com.google.errorprone.VisitorState)">matchIf</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.IfTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.IfTreeMatcher</a></code></dd>
 </dl>
 </li>
 </ul>
@@ -322,7 +249,7 @@ implements <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.
 <li><a href="../../../../../overview-summary.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
-<li><a href="class-use/AbstractLockMethodChecker.html">Use</a></li>
+<li><a href="class-use/DoubleCheckedLocking.html">Use</a></li>
 <li><a href="package-tree.html">Tree</a></li>
 <li><a href="../../../../../deprecated-list.html">Deprecated</a></li>
 <li><a href="../../../../../index-all.html">Index</a></li>
@@ -331,12 +258,12 @@ implements <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.
 </div>
 <div class="subNav">
 <ul class="navList">
-<li>Prev Class</li>
-<li><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/DoubleCheckedLocking.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><span class="strong">Next Class</span></a></li>
+<li><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><span class="strong">Prev Class</span></a></li>
+<li><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByBinder.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><span class="strong">Next Class</span></a></li>
 </ul>
 <ul class="navList">
-<li><a href="../../../../../index.html?com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html" target="_top">Frames</a></li>
-<li><a href="AbstractLockMethodChecker.html" target="_top">No Frames</a></li>
+<li><a href="../../../../../index.html?com/google/errorprone/bugpatterns/threadsafety/DoubleCheckedLocking.html" target="_top">Frames</a></li>
+<li><a href="DoubleCheckedLocking.html" target="_top">No Frames</a></li>
 </ul>
 <ul class="navList" id="allclasses_navbar_bottom">
 <li><a href="../../../../../allclasses-noframe.html">All Classes</a></li>

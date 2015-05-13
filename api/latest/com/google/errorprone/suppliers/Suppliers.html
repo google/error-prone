@@ -135,13 +135,17 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;</code></td>
-<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/suppliers/Suppliers.html#JAVA_LANG_VOID_TYPE">JAVA_LANG_VOID_TYPE</a></strong></code>&nbsp;</td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/suppliers/Suppliers.html#JAVA_LANG_BOOLEAN_TYPE">JAVA_LANG_BOOLEAN_TYPE</a></strong></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;</code></td>
-<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/suppliers/Suppliers.html#OBJECT_TYPE">OBJECT_TYPE</a></strong></code>&nbsp;</td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/suppliers/Suppliers.html#JAVA_LANG_VOID_TYPE">JAVA_LANG_VOID_TYPE</a></strong></code>&nbsp;</td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>static <a href="../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/suppliers/Suppliers.html#OBJECT_TYPE">OBJECT_TYPE</a></strong></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;</code></td>
 <td class="colLast"><code><strong><a href="../../../../com/google/errorprone/suppliers/Suppliers.html#VOID_TYPE">VOID_TYPE</a></strong></code>&nbsp;</td>
 </tr>
@@ -255,6 +259,15 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <pre>public static final&nbsp;<a href="../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt; VOID_TYPE</pre>
 </li>
 </ul>
+<a name="JAVA_LANG_BOOLEAN_TYPE">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>JAVA_LANG_BOOLEAN_TYPE</h4>
+<pre>public static final&nbsp;<a href="../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt; JAVA_LANG_BOOLEAN_TYPE</pre>
+</li>
+</ul>
 <a name="BOOLEAN_TYPE">
 <!--   -->
 </a>
@@ -333,7 +346,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <h4>genericTypeOf</h4>
 <pre>public static&nbsp;<a href="../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;genericTypeOf(<a href="../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;expressionSupplier,
                                                     int&nbsp;n)</pre>
-<div class="block">Supplies the n'th generic type of the given expression. For example, in <code>Map&lt;A,B&gt; c;</code> for 
+<div class="block">Supplies the n'th generic type of the given expression. For example, in <code>Map&lt;A,B&gt; c;</code> for
  the expression c and n=1, the result is the type of <code>B</code>. If there are an insufficient number of
  type arguments, this method will return the <code>java.lang.Object</code> type from symbol table.</div>
 <dl><dt><span class="strong">Parameters:</span></dt><dd><code>expressionSupplier</code> - a supplier of the expression which has a generic type</dd><dd><code>n</code> - the position of the generic argument</dd></dl>

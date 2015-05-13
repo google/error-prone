@@ -75,20 +75,24 @@
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colFirst"><a href="#com.google.errorprone.analysis">com.google.errorprone.analysis</a></td>
+<td class="colFirst"><a href="#com.google.errorprone">com.google.errorprone</a></td>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><a href="#com.google.errorprone.analysis">com.google.errorprone.analysis</a></td>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><a href="#com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns</a></td>
 <td class="colLast">
 <div class="block">Checks added to the java compiler which detect common bug patterns.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><a href="#com.google.errorprone.bugpatterns.threadsafety">com.google.errorprone.bugpatterns.threadsafety</a></td>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><a href="#com.google.errorprone.scanner">com.google.errorprone.scanner</a></td>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -97,6 +101,53 @@
 </li>
 <li class="blockList">
 <ul class="blockList">
+<li class="blockList"><a name="com.google.errorprone">
+<!--   -->
+</a>
+<h3>Uses of <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> in <a href="../../../../../com/google/errorprone/package-summary.html">com.google.errorprone</a></h3>
+<table border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
+<caption><span>Methods in <a href="../../../../../com/google/errorprone/package-summary.html">com.google.errorprone</a> that return types with arguments of type <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&gt;</code></td>
+<td class="colLast"><span class="strong">BugCheckerInfo.</span><code><strong><a href="../../../../../com/google/errorprone/BugCheckerInfo.html#checkerClass()">checkerClass</a></strong>()</code>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<table border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
+<caption><span>Methods in <a href="../../../../../com/google/errorprone/package-summary.html">com.google.errorprone</a> with parameters of type <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></code></td>
+<td class="colLast"><span class="strong">BugCheckerInfo.</span><code><strong><a href="../../../../../com/google/errorprone/BugCheckerInfo.html#buildDescriptionFromChecker(com.sun.source.tree.Tree,%20com.google.errorprone.bugpatterns.BugChecker)">buildDescriptionFromChecker</a></strong>(com.sun.source.tree.Tree&nbsp;node,
+                           <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&nbsp;checker)</code>
+<div class="block">Returns a new builder for <a href="../../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers"><code>Description</code></a>s.</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
+<caption><span>Method parameters in <a href="../../../../../com/google/errorprone/package-summary.html">com.google.errorprone</a> with type arguments of type <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a></code></td>
+<td class="colLast"><span class="strong">BugCheckerInfo.</span><code><strong><a href="../../../../../com/google/errorprone/BugCheckerInfo.html#create(java.lang.Class)">create</a></strong>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&gt;&nbsp;checker)</code>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</li>
 <li class="blockList"><a name="com.google.errorprone.analysis">
 <!--   -->
 </a>
@@ -252,63 +303,59 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/CovariantEquals.html" title="class in com.google.errorprone.bugpatterns">CovariantEquals</a></strong></code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/DeadException.html" title="class in com.google.errorprone.bugpatterns">DeadException</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/DepAnn.html" title="class in com.google.errorprone.bugpatterns">DepAnn</a></strong></code>
 <div class="block">Matches the behaviour of the javac dep-ann Xlint warning.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/DivZero.html" title="class in com.google.errorprone.bugpatterns">DivZero</a></strong></code>
 <div class="block">Matches the behaviour of javac's divzero xlint warning.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/ElementsCountedInLoop.html" title="class in com.google.errorprone.bugpatterns">ElementsCountedInLoop</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/EmptyIfStatement.html" title="class in com.google.errorprone.bugpatterns">EmptyIfStatement</a></strong></code>
 <div class="block">This checker finds and fixes empty statements after an if, with no else
  part.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/EqualsHashCode.html" title="class in com.google.errorprone.bugpatterns">EqualsHashCode</a></strong></code>
 <div class="block">Classes that override equals should also override hashCode.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/EqualsNaN.html" title="class in com.google.errorprone.bugpatterns">EqualsNaN</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/FallThroughSuppression.html" title="class in com.google.errorprone.bugpatterns">FallThroughSuppression</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/Finally.html" title="class in com.google.errorprone.bugpatterns">Finally</a></strong></code>
 <div class="block">Matches the behaviour of javac's finally Xlint warning.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/ForOverrideChecker.html" title="class in com.google.errorprone.bugpatterns">ForOverrideChecker</a></strong></code>
 <div class="block">Verifies that methods marked <a href="../../../../../com/google/errorprone/annotations/ForOverride.html" title="annotation in com.google.errorprone.annotations"><code>ForOverride</code></a> are only
  called from the defining class.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/GuiceAssistedInjectScoping.html" title="class in com.google.errorprone.bugpatterns">GuiceAssistedInjectScoping</a></strong></code>
 <div class="block">This checker matches iff *both* of the following conditions are true:
@@ -317,15 +364,15 @@
       one parameter that is annotated with @Assisted.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/GuiceAssistedParameters.html" title="class in com.google.errorprone.bugpatterns">GuiceAssistedParameters</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/GuiceInjectOnFinalField.html" title="class in com.google.errorprone.bugpatterns">GuiceInjectOnFinalField</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/GuiceOverridesGuiceInjectableMethod.html" title="class in com.google.errorprone.bugpatterns">GuiceOverridesGuiceInjectableMethod</a></strong></code>
 <div class="block">This checker matches methods that 
@@ -334,7 +381,7 @@
    2) descend from a method that is annotated with @com.google.inject.Inject</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/GuiceOverridesJavaxInjectableMethod.html" title="class in com.google.errorprone.bugpatterns">GuiceOverridesJavaxInjectableMethod</a></strong></code>
 <div class="block">This checker matches methods that
@@ -343,153 +390,159 @@
    3) do not descent from a method that is annotated with @com.google.inject.Inject</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/IncompatibleModifiersChecker.html" title="class in com.google.errorprone.bugpatterns">IncompatibleModifiersChecker</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/InjectAssistedInjectAndInjectOnConstructors.html" title="class in com.google.errorprone.bugpatterns">InjectAssistedInjectAndInjectOnConstructors</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/InjectAssistedInjectAndInjectOnSameConstructor.html" title="class in com.google.errorprone.bugpatterns">InjectAssistedInjectAndInjectOnSameConstructor</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/InjectedConstructorAnnotations.html" title="class in com.google.errorprone.bugpatterns">InjectedConstructorAnnotations</a></strong></code>
 <div class="block">A checker for injected constructors with @Inject(optional=true) or binding annotations.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/InjectInvalidTargetingOnScopingAnnotation.html" title="class in com.google.errorprone.bugpatterns">InjectInvalidTargetingOnScopingAnnotation</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/InjectJavaxInjectOnAbstractMethod.html" title="class in com.google.errorprone.bugpatterns">InjectJavaxInjectOnAbstractMethod</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/InjectJavaxInjectOnFinalField.html" title="class in com.google.errorprone.bugpatterns">InjectJavaxInjectOnFinalField</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/InjectMoreThanOneInjectableConstructor.html" title="class in com.google.errorprone.bugpatterns">InjectMoreThanOneInjectableConstructor</a></strong></code>
 <div class="block">Matches classes that have two or more constructors annotated with @Inject.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/InjectMoreThanOneQualifier.html" title="class in com.google.errorprone.bugpatterns">InjectMoreThanOneQualifier</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/InjectMoreThanOneScopeAnnotationOnClass.html" title="class in com.google.errorprone.bugpatterns">InjectMoreThanOneScopeAnnotationOnClass</a></strong></code>
 <div class="block">This checker matches if a class has more than one annotation that is a scope annotation(that is,
  the annotation is either annotated with Guice's @ScopeAnnotation or Javax's @Scope).</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/InjectOverlappingQualifierAndScopeAnnotation.html" title="class in com.google.errorprone.bugpatterns">InjectOverlappingQualifierAndScopeAnnotation</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/InjectScopeAnnotationOnInterfaceOrAbstractClass.html" title="class in com.google.errorprone.bugpatterns">InjectScopeAnnotationOnInterfaceOrAbstractClass</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/InjectScopeOrQualifierAnnotationRetention.html" title="class in com.google.errorprone.bugpatterns">InjectScopeOrQualifierAnnotationRetention</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/InvalidPatternSyntax.html" title="class in com.google.errorprone.bugpatterns">InvalidPatternSyntax</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/JMockTestWithoutRunWithOrRuleAnnotation.html" title="class in com.google.errorprone.bugpatterns">JMockTestWithoutRunWithOrRuleAnnotation</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/JUnit3TestNotRun.html" title="class in com.google.errorprone.bugpatterns">JUnit3TestNotRun</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/JUnit4SetUpNotRun.html" title="class in com.google.errorprone.bugpatterns">JUnit4SetUpNotRun</a></strong></code>
 <div class="block">Checks for the existence of a JUnit3 style setUp() method in a JUnit4 test class.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/JUnit4TearDownNotRun.html" title="class in com.google.errorprone.bugpatterns">JUnit4TearDownNotRun</a></strong></code>
 <div class="block">Checks for the existence of a JUnit3 style tearDown() method in a JUnit4 test class.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/JUnit4TestNotRun.html" title="class in com.google.errorprone.bugpatterns">JUnit4TestNotRun</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/JUnitAmbiguousTestClass.html" title="class in com.google.errorprone.bugpatterns">JUnitAmbiguousTestClass</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/LongLiteralLowerCaseSuffix.html" title="class in com.google.errorprone.bugpatterns">LongLiteralLowerCaseSuffix</a></strong></code>
 <div class="block">Matcher for a <code>long</code> literal with a lower-case ell for a suffix (e.g.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/MalformedFormatString.html" title="class in com.google.errorprone.bugpatterns">MalformedFormatString</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/MissingCasesInEnumSwitch.html" title="class in com.google.errorprone.bugpatterns">MissingCasesInEnumSwitch</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/MissingFail.html" title="class in com.google.errorprone.bugpatterns">MissingFail</a></strong></code>
 <div class="block">A bug checker for the following code pattern:</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/MisusedWeekYear.html" title="class in com.google.errorprone.bugpatterns">MisusedWeekYear</a></strong></code>
 <div class="block">Ban use of YYYY in a SimpleDateFormat pattern, unless it is being used for a week date.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/ModifyingCollectionWithItself.html" title="class in com.google.errorprone.bugpatterns">ModifyingCollectionWithItself</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/NarrowingCompoundAssignment.html" title="class in com.google.errorprone.bugpatterns">NarrowingCompoundAssignment</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/NoAllocationChecker.html" title="class in com.google.errorprone.bugpatterns">NoAllocationChecker</a></strong></code>
 <div class="block">Checks methods annotated with @NoAllocation to ensure they really do not allocate.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/NonAtomicVolatileUpdate.html" title="class in com.google.errorprone.bugpatterns">NonAtomicVolatileUpdate</a></strong></code>
 <div class="block">Detects non-atomic updates to volatile variables.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/NonCanonicalStaticImport.html" title="class in com.google.errorprone.bugpatterns">NonCanonicalStaticImport</a></strong></code>
 <div class="block">Types shouldn't be statically by their non-canonical name.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/NonFinalCompileTimeConstant.html" title="class in com.google.errorprone.bugpatterns">NonFinalCompileTimeConstant</a></strong></code>
 <div class="block">Enforce that @CompileTimeConstant parameters are final.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/NonOverridingEquals.html" title="class in com.google.errorprone.bugpatterns">NonOverridingEquals</a></strong></code>
+<div class="block">Bug checker for equals methods that don't actually override equals.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -619,10 +672,7 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/WaitNotInLoop.html" title="class in com.google.errorprone.bugpatterns">WaitNotInLoop</a></strong></code>
-<div class="block">TODO(user): Doesn't handle the case that the enclosing method is intended to be called
- in a loop.</div>
-</td>
+<td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/WaitNotInLoop.html" title="class in com.google.errorprone.bugpatterns">WaitNotInLoop</a></strong></code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
@@ -680,21 +730,25 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByChecker</a></strong></code>&nbsp;</td>
+<td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/DoubleCheckedLocking.html" title="class in com.google.errorprone.bugpatterns.threadsafety">DoubleCheckedLocking</a></strong></code>&nbsp;</td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByChecker</a></strong></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByValidator.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByValidator</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/LockMethodChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">LockMethodChecker</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/SynchronizeOnNonFinalField.html" title="class in com.google.errorprone.bugpatterns.threadsafety">SynchronizeOnNonFinalField</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/UnlockMethodChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">UnlockMethodChecker</a></strong></code>&nbsp;</td>
 </tr>
@@ -706,43 +760,6 @@
 </a>
 <h3>Uses of <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> in <a href="../../../../../com/google/errorprone/scanner/package-summary.html">com.google.errorprone.scanner</a></h3>
 <table border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
-<caption><span>Methods in <a href="../../../../../com/google/errorprone/scanner/package-summary.html">com.google.errorprone.scanner</a> that return types with arguments of type <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colLast" scope="col">Method and Description</th>
-</tr>
-<tbody>
-<tr class="altColor">
-<td class="colFirst"><code>protected abstract com.google.common.collect.ImmutableBiMap&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&gt;</code></td>
-<td class="colLast"><span class="strong">ScannerSupplier.</span><code><strong><a href="../../../../../com/google/errorprone/scanner/ScannerSupplier.html#getAllChecks()">getAllChecks</a></strong>()</code>
-<div class="block">Returns a map of check name to <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> for all <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>s
- in this <a href="../../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>, including disabled ones.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>protected abstract com.google.common.collect.ImmutableSet&lt;<a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&gt;</code></td>
-<td class="colLast"><span class="strong">ScannerSupplier.</span><code><strong><a href="../../../../../com/google/errorprone/scanner/ScannerSupplier.html#getEnabledChecks()">getEnabledChecks</a></strong>()</code>
-<div class="block">Returns the set of <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>s that are enabled in this <a href="../../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>.</div>
-</td>
-</tr>
-</tbody>
-</table>
-<table border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
-<caption><span>Methods in <a href="../../../../../com/google/errorprone/scanner/package-summary.html">com.google.errorprone.scanner</a> with parameters of type <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colLast" scope="col">Method and Description</th>
-</tr>
-<tbody>
-<tr class="altColor">
-<td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></code></td>
-<td class="colLast"><span class="strong">ScannerSupplier.</span><code><strong><a href="../../../../../com/google/errorprone/scanner/ScannerSupplier.html#fromBugCheckers(com.google.errorprone.bugpatterns.BugChecker...)">fromBugCheckers</a></strong>(<a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>...&nbsp;checkers)</code>
-<div class="block">Returns a <a href="../../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> built from a list of <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> instances.</div>
-</td>
-</tr>
-</tbody>
-</table>
-<table border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
 <caption><span>Method parameters in <a href="../../../../../com/google/errorprone/scanner/package-summary.html">com.google.errorprone.scanner</a> with type arguments of type <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
@@ -750,21 +767,9 @@
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colFirst"><code><a href="../../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></code></td>
-<td class="colLast"><span class="strong">ScannerSupplier.</span><code><strong><a href="../../../../../com/google/errorprone/scanner/ScannerSupplier.html#filter(com.google.common.base.Predicate)">filter</a></strong>(com.google.common.base.Predicate&lt;? super <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&gt;&nbsp;predicate)</code>
-<div class="block">Filters this <a href="../../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> based on the provided predicate.</div>
-</td>
-</tr>
-<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></code></td>
-<td class="colLast"><span class="strong">ScannerSupplier.</span><code><strong><a href="../../../../../com/google/errorprone/scanner/ScannerSupplier.html#fromBugCheckerClasses(java.lang.Iterable)">fromBugCheckerClasses</a></strong>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang">Iterable</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&gt;&gt;&nbsp;checkerClasses)</code>
+<td class="colLast"><span class="strong">ScannerSupplier.</span><code><strong><a href="../../../../../com/google/errorprone/scanner/ScannerSupplier.html#fromBugCheckerClasses(java.lang.Iterable)">fromBugCheckerClasses</a></strong>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang">Iterable</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&gt;&gt;&nbsp;checkers)</code>
 <div class="block">Returns a <a href="../../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with a specific list of <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> classes.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></code></td>
-<td class="colLast"><span class="strong">ScannerSupplier.</span><code><strong><a href="../../../../../com/google/errorprone/scanner/ScannerSupplier.html#fromBugCheckers(java.lang.Iterable)">fromBugCheckers</a></strong>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang">Iterable</a>&lt;? extends <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&gt;&nbsp;checkers)</code>
-<div class="block">Returns a <a href="../../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> built from a list of <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> instances.</div>
 </td>
 </tr>
 </tbody>
