@@ -3,13 +3,13 @@
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>InvalidPatternSyntax (Maven parent POM 2.0.3-SNAPSHOT API)</title>
+<title>JMockTestWithoutRunWithOrRuleAnnotation (Maven parent POM 2.0.3-SNAPSHOT API)</title>
 <link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
 </head>
 <body>
 <script type="text/javascript"><!--
     if (location.href.indexOf('is-external=true') == -1) {
-        parent.document.title="InvalidPatternSyntax (Maven parent POM 2.0.3-SNAPSHOT API)";
+        parent.document.title="JMockTestWithoutRunWithOrRuleAnnotation (Maven parent POM 2.0.3-SNAPSHOT API)";
     }
 //-->
 </script>
@@ -26,7 +26,7 @@
 <li><a href="../../../../overview-summary.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
-<li><a href="class-use/InvalidPatternSyntax.html">Use</a></li>
+<li><a href="class-use/JMockTestWithoutRunWithOrRuleAnnotation.html">Use</a></li>
 <li><a href="package-tree.html">Tree</a></li>
 <li><a href="../../../../deprecated-list.html">Deprecated</a></li>
 <li><a href="../../../../index-all.html">Index</a></li>
@@ -35,12 +35,12 @@
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../com/google/errorprone/bugpatterns/InjectScopeOrQualifierAnnotationRetention.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">Prev Class</span></a></li>
-<li><a href="../../../../com/google/errorprone/bugpatterns/JMockTestWithoutRunWithOrRuleAnnotation.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">Next Class</span></a></li>
+<li><a href="../../../../com/google/errorprone/bugpatterns/InvalidPatternSyntax.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">Prev Class</span></a></li>
+<li><a href="../../../../com/google/errorprone/bugpatterns/JUnit3TestNotRun.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">Next Class</span></a></li>
 </ul>
 <ul class="navList">
-<li><a href="../../../../index.html?com/google/errorprone/bugpatterns/InvalidPatternSyntax.html" target="_top">Frames</a></li>
-<li><a href="InvalidPatternSyntax.html" target="_top">No Frames</a></li>
+<li><a href="../../../../index.html?com/google/errorprone/bugpatterns/JMockTestWithoutRunWithOrRuleAnnotation.html" target="_top">Frames</a></li>
+<li><a href="JMockTestWithoutRunWithOrRuleAnnotation.html" target="_top">No Frames</a></li>
 </ul>
 <ul class="navList" id="allclasses_navbar_top">
 <li><a href="../../../../allclasses-noframe.html">All Classes</a></li>
@@ -79,7 +79,7 @@
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="subTitle">com.google.errorprone.bugpatterns</div>
-<h2 title="Class InvalidPatternSyntax" class="title">Class InvalidPatternSyntax</h2>
+<h2 title="Class JMockTestWithoutRunWithOrRuleAnnotation" class="title">Class JMockTestWithoutRunWithOrRuleAnnotation</h2>
 </div>
 <div class="contentContainer">
 <ul class="inheritance">
@@ -89,7 +89,7 @@
 <li><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.BugChecker</a></li>
 <li>
 <ul class="inheritance">
-<li>com.google.errorprone.bugpatterns.InvalidPatternSyntax</li>
+<li>com.google.errorprone.bugpatterns.JMockTestWithoutRunWithOrRuleAnnotation</li>
 </ul>
 </li>
 </ul>
@@ -100,16 +100,14 @@
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a>, <a href="../../../../com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io">Serializable</a></dd>
+<dd><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.VariableTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.VariableTreeMatcher</a>, <a href="../../../../com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io">Serializable</a></dd>
 </dl>
 <hr>
 <br>
-<pre>public class <span class="strong">InvalidPatternSyntax</span>
+<pre>public class <span class="strong">JMockTestWithoutRunWithOrRuleAnnotation</span>
 extends <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
-implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></pre>
-<dl><dt><span class="strong">Author:</span></dt>
-  <dd>mdempsky@google.com (Matthew Dempsky)</dd>
-<dt><span class="strong">See Also:</span></dt><dd><a href="../../../../serialized-form.html#com.google.errorprone.bugpatterns.InvalidPatternSyntax">Serialized Form</a></dd></dl>
+implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.VariableTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.VariableTreeMatcher</a></pre>
+<dl><dt><span class="strong">See Also:</span></dt><dd><a href="../../../../serialized-form.html#com.google.errorprone.bugpatterns.JMockTestWithoutRunWithOrRuleAnnotation">Serialized Form</a></dd></dl>
 </li>
 </ul>
 </div>
@@ -143,7 +141,7 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><strong><a href="../../../../com/google/errorprone/bugpatterns/InvalidPatternSyntax.html#InvalidPatternSyntax()">InvalidPatternSyntax</a></strong>()</code>&nbsp;</td>
+<td class="colOne"><code><strong><a href="../../../../com/google/errorprone/bugpatterns/JMockTestWithoutRunWithOrRuleAnnotation.html#JMockTestWithoutRunWithOrRuleAnnotation()">JMockTestWithoutRunWithOrRuleAnnotation</a></strong>()</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -162,8 +160,8 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/bugpatterns/InvalidPatternSyntax.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
-                     <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/bugpatterns/JMockTestWithoutRunWithOrRuleAnnotation.html#matchVariable(com.sun.source.tree.VariableTree,%20com.google.errorprone.VisitorState)">matchVariable</a></strong>(com.sun.source.tree.VariableTree&nbsp;tree,
+             <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -201,13 +199,13 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="InvalidPatternSyntax()">
+<a name="JMockTestWithoutRunWithOrRuleAnnotation()">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>InvalidPatternSyntax</h4>
-<pre>public&nbsp;InvalidPatternSyntax()</pre>
+<h4>JMockTestWithoutRunWithOrRuleAnnotation</h4>
+<pre>public&nbsp;JMockTestWithoutRunWithOrRuleAnnotation()</pre>
 </li>
 </ul>
 </li>
@@ -218,17 +216,17 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="matchMethodInvocation(com.sun.source.tree.MethodInvocationTree, com.google.errorprone.VisitorState)">
+<a name="matchVariable(com.sun.source.tree.VariableTree, com.google.errorprone.VisitorState)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>matchMethodInvocation</h4>
-<pre>public&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;matchMethodInvocation(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
-                                <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
+<h4>matchVariable</h4>
+<pre>public&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;matchVariable(com.sun.source.tree.VariableTree&nbsp;tree,
+                        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
 <dl>
 <dt><strong>Specified by:</strong></dt>
-<dd><code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20com.google.errorprone.VisitorState)">matchMethodInvocation</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></code></dd>
+<dd><code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.VariableTreeMatcher.html#matchVariable(com.sun.source.tree.VariableTree,%20com.google.errorprone.VisitorState)">matchVariable</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.VariableTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.VariableTreeMatcher</a></code></dd>
 </dl>
 </li>
 </ul>
@@ -249,7 +247,7 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <li><a href="../../../../overview-summary.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
-<li><a href="class-use/InvalidPatternSyntax.html">Use</a></li>
+<li><a href="class-use/JMockTestWithoutRunWithOrRuleAnnotation.html">Use</a></li>
 <li><a href="package-tree.html">Tree</a></li>
 <li><a href="../../../../deprecated-list.html">Deprecated</a></li>
 <li><a href="../../../../index-all.html">Index</a></li>
@@ -258,12 +256,12 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../com/google/errorprone/bugpatterns/InjectScopeOrQualifierAnnotationRetention.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">Prev Class</span></a></li>
-<li><a href="../../../../com/google/errorprone/bugpatterns/JMockTestWithoutRunWithOrRuleAnnotation.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">Next Class</span></a></li>
+<li><a href="../../../../com/google/errorprone/bugpatterns/InvalidPatternSyntax.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">Prev Class</span></a></li>
+<li><a href="../../../../com/google/errorprone/bugpatterns/JUnit3TestNotRun.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">Next Class</span></a></li>
 </ul>
 <ul class="navList">
-<li><a href="../../../../index.html?com/google/errorprone/bugpatterns/InvalidPatternSyntax.html" target="_top">Frames</a></li>
-<li><a href="InvalidPatternSyntax.html" target="_top">No Frames</a></li>
+<li><a href="../../../../index.html?com/google/errorprone/bugpatterns/JMockTestWithoutRunWithOrRuleAnnotation.html" target="_top">Frames</a></li>
+<li><a href="JMockTestWithoutRunWithOrRuleAnnotation.html" target="_top">No Frames</a></li>
 </ul>
 <ul class="navList" id="allclasses_navbar_bottom">
 <li><a href="../../../../allclasses-noframe.html">All Classes</a></li>

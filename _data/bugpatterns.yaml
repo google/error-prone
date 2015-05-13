@@ -105,6 +105,9 @@
 - {name: InjectScopeAnnotationOnInterfaceOrAbstractClass, summary: Scope annotation on an interface or abstact class is not allowed}
 - {name: InjectScopeOrQualifierAnnotationRetention, summary: Scoping and qualifier annotations must have runtime retention.}
 - {name: InjectedConstructorAnnotations, summary: Injected constructors cannot be optional nor have binding annotations}
+- {name: JMockTestWithoutRunWithOrRuleAnnotation, summary: 'jMock tests must have
+    a @RunWith(JMock.class) annotation, or the Mockery field must have a @Rule JUnit
+    annotation'}
 - {name: JavaxInjectOnAbstractMethod, summary: Abstract methods are not injectable with javax.inject.Inject.}
 - {name: JavaxInjectOnFinalField, summary: '@javac.inject.Inject cannot be put on
     a final field.'}
