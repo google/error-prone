@@ -61,8 +61,8 @@ public class JUnitMatchers {
   public static final String JUNIT_AFTER_ANNOTATION = "org.junit.After";
   public static final String JUNIT_BEFORE_CLASS_ANNOTATION = "org.junit.BeforeClass";
   public static final String JUNIT_AFTER_CLASS_ANNOTATION = "org.junit.AfterClass";
+  public static final String JUNIT4_RUN_WITH_ANNOTATION = "org.junit.runner.RunWith";
   private static final String JUNIT3_TEST_CASE_CLASS = "junit.framework.TestCase";
-  private static final String JUNIT4_RUN_WITH_ANNOTATION = "org.junit.runner.RunWith";
   private static final String JUNIT4_IGNORE_ANNOTATION = "org.junit.Ignore";
 
 

@@ -25,30 +25,133 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class JMockTestWithoutRunWithOrRuleAnnotationTest {
 
-    private CompilationTestHelper compilationTestHelper;
+  private CompilationTestHelper compilationTestHelper;
 
-    @Before
-    public void setup() {
-        compilationTestHelper =CompilationTestHelper.newInstance(new JMockTestWithoutRunWithOrRuleAnnotation(),
-                getClass());
-    }
-
-    @Test
-    public void testPositiveCase() throws Exception {
-        compilationTestHelper.
-                addSourceFile("JMockTestWithoutRunWithOrRuleAnnotationPositiveCase1.java").
-                addSourceFile("JMockTestWithoutRunWithOrRuleAnnotationPositiveCase2.java").
-                addSourceFile("JMockTestWithoutRunWithOrRuleAnnotationPositiveCase3.java").
-                doTest();
-    }
-
-    @Test
-    public void testNegativeCase() throws Exception {
-        compilationTestHelper.
-                addSourceFile("JMockTestWithoutRunWithOrRuleAnnotationNegativeCase1.java").
-                addSourceFile("JMockTestWithoutRunWithOrRuleAnnotationNegativeCase2.java").
-                addSourceFile("JMockTestWithoutRunWithOrRuleAnnotationNegativeCase3.java").
-                addSourceFile("JMockTestWithoutRunWithOrRuleAnnotationNegativeCase4.java").
-                doTest();
-    }
+  @Before
+  public void setup() {
+    compilationTestHelper = CompilationTestHelper.newInstance(
+        new JMockTestWithoutRunWithOrRuleAnnotation(), getClass());
+  }
+  
+  @Test
+  public void testShouldFlagNoRuleAndNoRunWith() {
+    compilationTestHelper
+        .addSourceLines("Test.java",
+            "import org.jmock.Mockery;", 
+            "public class Test {", 
+            "  // BUG: Diagnostic contains:", 
+            "  private final Mockery mockery = new Mockery();", 
+            "}")
+        .doTest();
+  }
+  
+  @Test
+  public void testShouldFlagWrongRunWith() {
+    compilationTestHelper
+        .addSourceLines("Test.java",
+            "import org.jmock.Mockery;", 
+            "import org.junit.runner.RunWith;", 
+            "import org.junit.runners.Parameterized;", 
+            "@RunWith(Parameterized.class)", 
+            "public class Test {", 
+            "  // BUG: Diagnostic contains:", 
+            "  private final Mockery mockery = new Mockery();", 
+            "}")
+        .doTest();
+  }
+  
+  @Test
+  public void testShouldFlagJUnitRuleMockery() {
+    compilationTestHelper
+        .addSourceLines("Test.java",
+            "import org.jmock.integration.junit4.JUnitRuleMockery;", 
+            "public class Test {", 
+            "  // BUG: Diagnostic contains:", 
+            "  public final JUnitRuleMockery mockery = new JUnitRuleMockery();",
+            "}")
+        .doTest();
+  }
+  
+  @Test
+  public void testShouldNotFlagWithRuleAnnotation() {
+    compilationTestHelper
+        .addSourceLines("Test.java",
+            "import org.jmock.Mockery;", 
+            "import org.jmock.integration.junit4.JUnitRuleMockery;", 
+            "import org.junit.Rule;", 
+            "public class Test {", 
+            "  @Rule", 
+            "  private final Mockery mockery = new Mockery();", 
+            "  @Rule", 
+            "  public final JUnitRuleMockery mockery2 = new JUnitRuleMockery();", 
+            "}")
+        .doTest();
+  }
+  
+  @Test
+  public void testShouldNotFlagWithRuleAnnotationAndWrongRunWith() {
+    compilationTestHelper
+        .addSourceLines("Test.java",
+            "import org.jmock.Mockery;", 
+            "import org.jmock.integration.junit4.JUnitRuleMockery;", 
+            "import org.junit.Rule;", 
+            "import org.junit.runner.RunWith;", 
+            "import org.junit.runners.Parameterized;", 
+            "@RunWith(Parameterized.class)", 
+            "public class Test {", 
+            "  @Rule", 
+            "  private final Mockery mockery = new Mockery();", 
+            "  @Rule", 
+            "  public final JUnitRuleMockery mockery2 = new JUnitRuleMockery();", 
+            "}")
+        .doTest();
+  }
+  
+  @Test
+  public void testShouldNotFlagRunWithJMock() {
+    compilationTestHelper
+        .addSourceLines("Test.java",
+            "import org.jmock.Mockery;", 
+            "import org.jmock.integration.junit4.JMock;", 
+            "import org.jmock.integration.junit4.JUnitRuleMockery;", 
+            "import org.junit.runner.RunWith;", 
+            "@RunWith(JMock.class)", 
+            "public class Test {", 
+            "  private final Mockery mockery = new org.jmock.Mockery();", 
+            "  public final JUnitRuleMockery mockery2 = new JUnitRuleMockery();", 
+            "}")
+        .doTest();
+  }
+  
+  @Test
+  public void testShouldNotFlagWithRuleAnnotationAndRunWithJMock() {
+    compilationTestHelper
+        .addSourceLines("Test.java",
+            "import org.jmock.Mockery;", 
+            "import org.jmock.integration.junit4.JMock;", 
+            "import org.jmock.integration.junit4.JUnitRuleMockery;", 
+            "import org.junit.Rule;", 
+            "import org.junit.runner.RunWith;", 
+            "@RunWith(JMock.class)", 
+            "public class Test {", 
+            "  @Rule", 
+            "  private final Mockery mockery = new Mockery();", 
+            "  @Rule", 
+            "  public final JUnitRuleMockery mockery2 = new JUnitRuleMockery();", 
+            "}")
+        .doTest();
+  }
+  
+  @Test
+  public void testShouldNotFlagSingleFieldWithRuleAnnotation() {
+    compilationTestHelper
+        .addSourceLines("Test.java",
+            "import org.junit.Rule;", 
+            "import org.jmock.Mockery;", 
+            "public class Test {", 
+            "  @Rule", 
+            "  final Mockery mockery = new Mockery();", 
+            "}")
+        .doTest();
+  }
 }
