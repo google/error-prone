@@ -37,6 +37,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import javax.tools.Diagnostic;
 import javax.tools.JavaCompiler;
@@ -185,6 +186,11 @@ public class CompilationTestHelper {
     Preconditions.checkState(!sources.isEmpty(), "No source files to compile");
     List<String> allArgs = buildArguments(args);
     Result result = compile(sources, allArgs.toArray(new String[allArgs.size()]));
+    for (Diagnostic<? extends JavaFileObject> diagnostic : diagnosticHelper.getDiagnostics()) {
+      if (diagnostic.getCode().contains("error.prone.crash")) {
+        fail(diagnostic.getMessage(Locale.ENGLISH));
+      }
+    }
     if (expectNoDiagnostics) {
       List<Diagnostic<? extends JavaFileObject>> diagnostics = diagnosticHelper.getDiagnostics();
       assertWithMessage(String.format(

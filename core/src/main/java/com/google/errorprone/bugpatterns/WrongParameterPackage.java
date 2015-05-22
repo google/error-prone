@@ -55,9 +55,18 @@ public class WrongParameterPackage extends BugChecker implements MethodTreeMatch
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
-    MethodSymbol method = (MethodSymbol) ASTHelpers.getSymbol(tree);
+    MethodSymbol method = ASTHelpers.getSymbol(tree);
+    if (method == null) {
+      return Description.NO_MATCH;
+    }
     ClassSymbol classSym = method.enclClass();
+    if (classSym == null) {
+      return Description.NO_MATCH;
+    }
     TypeSymbol superClass = classSym.getSuperclass().tsym;
+    if (superClass == null) {
+      return Description.NO_MATCH;
+    }
 
     for (Symbol s : superClass.members().getSymbols()) {
       if (s.name.contentEquals(method.name) && s.getKind() == ElementKind.METHOD) {

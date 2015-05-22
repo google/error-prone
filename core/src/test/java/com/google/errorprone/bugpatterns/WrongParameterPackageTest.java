@@ -49,4 +49,16 @@ public class WrongParameterPackageTest {
     compilationHelper.addSourceFile("WrongParameterPackageNegativeCases.java").doTest();
   }
 
+  // regression test for https://github.com/google/error-prone/issues/330
+  @Test
+  public void testNPE() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "foo/Bar.java",
+            "package foo;",
+            "public interface Bar {",
+            "    void bar();",
+            "}")
+        .doTest();
+  }
 }
