@@ -9,7 +9,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 <tr><td>Maturity</td><td>MATURE</td></tr>
 </table></div>
 
-# Bug pattern: DeadException
+# DeadException
 __Exception created but not thrown__
 
 _Alternate names: ThrowableInstanceNeverThrown_
@@ -22,7 +22,7 @@ Suppress false positives by adding an `@SuppressWarnings("DeadException")` annot
 
 ----------
 
-# Examples
+## Examples
 __DeadExceptionPositiveCase.java__
 
 ```java
