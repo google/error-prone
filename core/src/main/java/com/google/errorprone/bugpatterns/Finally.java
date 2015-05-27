@@ -59,7 +59,7 @@ import com.sun.tools.javac.util.Name;
  * @author eaftan@google.com (Eddie Aftandilian)
  * @author cushon@google.com (Liam Miller-Cushon)
  */
-@BugPattern(name = "Finally", altNames = "finally",
+@BugPattern(name = "Finally", altNames = {"finally", "ThrowFromFinallyBlock"},
     summary = "If you return or throw from a finally, then values returned or thrown from the"
         + " try-catch block will be ignored",
     explanation = "Terminating a finally block abruptly preempts the outcome of the try block,"
