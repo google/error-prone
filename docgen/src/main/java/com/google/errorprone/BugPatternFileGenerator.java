@@ -100,6 +100,7 @@ class BugPatternFileGenerator implements LineProcessor<List<Instance>> {
     if (generateFrontMatter) {
       result.append("---\n"
           + "title: {1}\n"
+          + "summary: \"{8}\"\n"
           + "layout: bugpattern\n"
           + "category: {3}\n"
           + "severity: {4}\n"
@@ -114,18 +115,21 @@ class BugPatternFileGenerator implements LineProcessor<List<Instance>> {
         + " docs/bugpattern.\n"
         + "-->\n\n");
 
-    result.append("<div style=\"float:right;\"><table id=\"metadata\">\n"
-        + "<tr><td>Category</td><td>{3}</td></tr>\n"
-        + "<tr><td>Severity</td><td>{4}</td></tr>\n"
-        + "<tr><td>Maturity</td><td>{5}</td></tr>\n"
-        + "</table></div>\n\n"
-        + "# Bug pattern: {1}\n"
-        + "__{8}__\n");
-    if (pattern.altNames.length() > 0) {
-      result.append("\n_Alternate names: {2}_\n");
+    if (!generateFrontMatter) {
+      result.append("<div style=\"float:right;\"><table id=\"metadata\">\n"
+          + "<tr><td>Category</td><td>{3}</td></tr>\n"
+          + "<tr><td>Severity</td><td>{4}</td></tr>\n"
+          + "<tr><td>Maturity</td><td>{5}</td></tr>\n"
+          + "</table></div>\n\n"
+          + "# {1}\n"
+          + "__{8}__\n\n");
     }
-    result.append("\n"
-        + "## The problem\n"
+
+    if (pattern.altNames.length() > 0) {
+      result.append("_Alternate names: {2}_\n\n");
+    }
+    result.append(
+        "## The problem\n"
         + "{9}\n"
         + "\n"
         + "## Suppression\n");
@@ -191,7 +195,7 @@ class BugPatternFileGenerator implements LineProcessor<List<Instance>> {
       Collections.sort(examples);
       if (examples.size() > 0) {
         writer.write("\n----------\n\n");
-        writer.write("# Examples\n");
+        writer.write("## Examples\n");
   
         for (Path example: examples) {
           writer.write("__" + example.getFileName() + "__\n\n");
