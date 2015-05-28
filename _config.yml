@@ -1,4 +1,4 @@
 kramdown:
   input: GFM
   hard_wrap: false
-baseurl: /error-prone
+baseurl:
