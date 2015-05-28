@@ -1,6 +1,6 @@
 ---
-title: Installing Error Prone
-layout: master
+title: Installation
+layout: documentation
 ---
 
 Our goal is to make it simple to add Error Prone checks to your existing Java

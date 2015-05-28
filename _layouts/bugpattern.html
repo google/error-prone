@@ -4,58 +4,29 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>{{page.title}}</title>
-
-    <link rel="stylesheet" href="../stylesheets/styles.css">
-    <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
-    <script src="../javascripts/scale.fix.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+    <link href="{{ site.baseurl }}/stylesheets/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ site.baseurl }}/stylesheets/styles.css" rel="stylesheet">
   </head>
   <body>
-	
-    <div class="wrapper">
-      <header>
-        <a href="../"><h1>Error Prone</h1></a>
-        <p>Catch common Java mistakes as compile-time errors</p>
-        <p class="view"><a href="https://github.com/google/error-prone">View the Project on GitHub <small>google/error-prone</small></a></p>
-        <ul>
-          <li><a href="../bugpatterns">List of bug <strong>Patterns</strong></a></li>
-          <li><a href="../installation">How to <strong>Install</strong></a></li>
-          <li><a href="../flags">Command-line <strong>Flags</strong></a></li>
-          <li><a href="https://github.com/google/error-prone">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-
-      <section>
-			<div style="float:right;">
-<table>
-	<tr><th>Category:</th><td>{{page.category}}</td></tr>
-		<tr><th>Severity:</th><td>{{page.severity}}</td></tr>
-			<tr><th>Maturity:</th><td>{{page.maturity}}</td></tr>
-	</table>
-			</div>
-	
-        {{ content }}
-      </section>
+    {% include nav.html active="bugpatterns" %}
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-10 col-md-10">
+          <h1>
+            {{page.title}}<br>
+            <small>{{page.summary}}</small>
+          </h1>
+        </div>
+        <div class="col-lg-1 col-md-2">
+          <dl>
+            <dt>Category</dt><dd>{{page.category}}</dd>
+            <dt>Severity</dt><dd>{{page.severity}}</dd>
+            <dt>Maturity</dt><dd>{{page.maturity}}</dd>
+          </dl>
+        </div>
+      </div>
+      {{ content }}
     </div>
-    <footer>
-      <p>Project maintained by <a href="https://github.com/google">google</a></p>
-      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
-    </footer>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-              <script type="text/javascript">
-            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-          </script>
-          <script type="text/javascript">
-            try {
-              var pageTracker = _gat._getTracker("UA-34425814-2");
-            pageTracker._trackPageview();
-            } catch(err) {}
-          </script>
-
+    {% include footer.html %}
   </body>
 </html>

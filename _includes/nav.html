@@ -1,0 +1,25 @@
+<nav id="common-nav" class="navbar navbar-inverse navbar-fixed-top">
+<div class="container-fluid">
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand" href="{{ site.baseurl }}">Error Prone</a>
+  </div>
+
+  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    <ul class = "nav navbar-nav navbar-right">
+      <li {% if include.active == 'bugpatterns' %} class="active" {% endif %}>
+        <a href="{{ site.baseurl }}/bugpatterns">Bug Patterns</a>
+      </li>
+      <li {% if include.active == 'docs' %} class="active" {% endif %}>
+        <a href="{{ site.baseurl }}/docs/installation">Docs</a>
+      </li>
+      <li><a href="http://github.com/google/error-prone">GitHub</a></li>
+    </ul>
+  </div>
+</div>
+</nav>

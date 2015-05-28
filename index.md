@@ -3,9 +3,16 @@ title: Error Prone
 layout: master
 ---
 
-### It's common for even the best programmers to make simple mistakes. And sometimes a refactoring which seems safe can leave behind code which will never do what's intended.
+# Error Prone
 
-We're used to getting help from the compiler, but it doesn't do much beyond static type checking. Using Error Prone to augment the compiler's type analysis, you can catch more mistakes before they cost you time, or end up as bugs in production. We use Error Prone in Google's Java build system to eliminate classes of serious bugs from entering our code, and we've open-sourced it, so you can too!
+It's common for even the best programmers to make simple mistakes. And sometimes a refactoring which seems safe can leave behind code which will never do what's intended.
+
+We're used to getting help from the compiler, but it doesn't do much beyond
+static type checking. Using Error Prone to augment the compiler's type
+analysis, you can catch more mistakes before they cost you time, or end up as
+bugs in production. We use Error Prone in Google's Java build system to
+eliminate classes of serious bugs from entering our code, and we've
+open-sourced it, so you can too!
 
 __Error Prone ...__
 
@@ -14,8 +21,10 @@ __Error Prone ...__
 * __produces suggested fixes, allowing you to build tooling on it__
 
 ## How it works
+
 __src/Main.java__
-{% highlight java linenos %}
+
+```java
 public class Main {
   public static void main(String[] args) {
     if (args.length < 1) {
@@ -23,19 +32,18 @@ public class Main {
     }
   }
 }
-{% endhighlight %}
-{% highlight bash %}
-$ ant
-Buildfile: ./error-prone/examples/ant/build.xml
+```
 
-compile:
-    [javac] Compiling 1 source file to ./src/error-prone/examples/ant/build
-    [javac] src/Main.java:20: error: [DeadException] Exception created but not thrown
-    [javac]       new IllegalArgumentException("Missing required argument");
-    [javac]       ^
-    [javac]     (see http://errorprone.info/bugpattern/DeadException)
-    [javac]   Did you mean 'throw new IllegalArgumentException("Missing required argument");'?
-    [javac] 1 error
-
-BUILD FAILED
-{% endhighlight %}
+```bash
+../examples/maven/error_prone_should_flag$ mvn compile
+[INFO] Compiling 1 source file to .../examples/maven/error_prone_should_flag/target/classes
+.../examples/maven/error_prone_should_flag/src/main/java/Main.java:20: error: [DeadException] Exception created but not thrown
+    new Exception();
+    ^
+    (see http://errorprone.info/bugpattern/DeadException)
+  Did you mean 'throw new Exception();'?
+1 error
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+```
