@@ -1,5 +1,6 @@
 ---
 title: UnnecessaryTypeArgument
+summary: "Non-generic methods should not be invoked with type arguments"
 layout: bugpattern
 category: JDK
 severity: ERROR
@@ -10,15 +11,6 @@ maturity: MATURE
 *** AUTO-GENERATED, DO NOT MODIFY ***
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
-
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JDK</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>MATURE</td></tr>
-</table></div>
-
-# Bug pattern: UnnecessaryTypeArgument
-__Non-generic methods should not be invoked with type arguments__
 
 ## The problem
 Surprisingly, JLS §15.12.2.1 allows non-generic methods to be invoked with type

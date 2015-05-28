@@ -1,5 +1,6 @@
 ---
 title: InjectedConstructorAnnotations
+summary: "Injected constructors cannot be optional nor have binding annotations"
 layout: bugpattern
 category: INJECT
 severity: ERROR
@@ -11,15 +12,6 @@ maturity: EXPERIMENTAL
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>INJECT</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>EXPERIMENTAL</td></tr>
-</table></div>
-
-# Bug pattern: InjectedConstructorAnnotations
-__Injected constructors cannot be optional nor have binding annotations__
-
 ## The problem
 The constructor is annotated with @Inject(optional=true), or it is annotated with @Inject and a binding annotation. This will cause a Guice runtime error.
 
@@ -30,7 +22,7 @@ Suppress false positives by adding an `@SuppressWarnings("InjectedConstructorAnn
 
 ----------
 
-# Examples
+## Examples
 __InjectedConstructorAnnotationsNegativeCases.java__
 
 {% highlight java %}

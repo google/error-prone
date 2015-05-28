@@ -1,5 +1,6 @@
 ---
 title: PrimitiveArrayPassedToVarargsMethod
+summary: "Passing a primitive array to a varargs method is usually wrong"
 layout: bugpattern
 category: JDK
 severity: WARNING
@@ -11,15 +12,6 @@ maturity: EXPERIMENTAL
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JDK</td></tr>
-<tr><td>Severity</td><td>WARNING</td></tr>
-<tr><td>Maturity</td><td>EXPERIMENTAL</td></tr>
-</table></div>
-
-# Bug pattern: PrimitiveArrayPassedToVarargsMethod
-__Passing a primitive array to a varargs method is usually wrong__
-
 ## The problem
 When you pass a primitive array as the only argument to a varargs method, the primitive array is autoboxed into a single-element Object array. This is usually not what was intended.
 
@@ -28,7 +20,7 @@ Suppress false positives by adding an `@SuppressWarnings("PrimitiveArrayPassedTo
 
 ----------
 
-# Examples
+## Examples
 __PrimitiveArrayPassedToVarargsMethodNegativeCases.java__
 
 {% highlight java %}

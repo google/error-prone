@@ -1,5 +1,6 @@
 ---
 title: ElementsCountedInLoop
+summary: "This code, which counts elements using a loop, can be replaced by a simpler library method"
 layout: bugpattern
 category: JDK
 severity: WARNING
@@ -11,15 +12,6 @@ maturity: MATURE
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JDK</td></tr>
-<tr><td>Severity</td><td>WARNING</td></tr>
-<tr><td>Maturity</td><td>MATURE</td></tr>
-</table></div>
-
-# Bug pattern: ElementsCountedInLoop
-__This code, which counts elements using a loop, can be replaced by a simpler library method__
-
 ## The problem
 This code counts elements using a loop.  You can use various library methods (Guava's Iterables.size(), Collection.size(), array.length) to achieve the same thing in a cleaner way.
 
@@ -28,7 +20,7 @@ Suppress false positives by adding an `@SuppressWarnings("ElementsCountedInLoop"
 
 ----------
 
-# Examples
+## Examples
 __ElementsCountedInLoopNegativeCases.java__
 
 {% highlight java %}

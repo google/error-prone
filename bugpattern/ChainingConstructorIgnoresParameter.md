@@ -1,5 +1,6 @@
 ---
 title: ChainingConstructorIgnoresParameter
+summary: "The called constructor accepts a parameter with the same name and type as one of its caller's parameters, but its caller doesn't pass that parameter to it.  It's likely that it was intended to."
 layout: bugpattern
 category: JDK
 severity: ERROR
@@ -11,15 +12,6 @@ maturity: MATURE
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JDK</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>MATURE</td></tr>
-</table></div>
-
-# Bug pattern: ChainingConstructorIgnoresParameter
-__The called constructor accepts a parameter with the same name and type as one of its caller's parameters, but its caller doesn't pass that parameter to it.  It's likely that it was intended to.__
-
 ## The problem
 A constructor parameter might not be being used as expected
 
@@ -28,7 +20,7 @@ Suppress false positives by adding an `@SuppressWarnings("ChainingConstructorIgn
 
 ----------
 
-# Examples
+## Examples
 __ChainingConstructorIgnoresParameterNegativeCases.java__
 
 {% highlight java %}

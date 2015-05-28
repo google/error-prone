@@ -1,5 +1,6 @@
 ---
 title: InjectInvalidTargetingOnScopingAnnotation
+summary: "The target of a scoping annotation must be set to METHOD and/or TYPE."
 layout: bugpattern
 category: INJECT
 severity: ERROR
@@ -11,15 +12,6 @@ maturity: EXPERIMENTAL
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>INJECT</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>EXPERIMENTAL</td></tr>
-</table></div>
-
-# Bug pattern: InjectInvalidTargetingOnScopingAnnotation
-__The target of a scoping annotation must be set to METHOD and/or TYPE.__
-
 ## The problem
 Scoping annotations are only appropriate for provision and therefore are only appropriate on @Provides methods and classes that will be provided just-in-time.
 
@@ -28,7 +20,7 @@ Suppress false positives by adding an `@SuppressWarnings("InjectInvalidTargeting
 
 ----------
 
-# Examples
+## Examples
 __InjectInvalidTargetingOnScopingAnnotationNegativeCases.java__
 
 {% highlight java %}

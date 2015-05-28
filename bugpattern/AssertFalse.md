@@ -1,5 +1,6 @@
 ---
 title: AssertFalse
+summary: "Assertions may be disabled at runtime and do not guarantee that execution will halt here; consider throwing an exception instead"
 layout: bugpattern
 category: JDK
 severity: WARNING
@@ -11,15 +12,6 @@ maturity: EXPERIMENTAL
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JDK</td></tr>
-<tr><td>Severity</td><td>WARNING</td></tr>
-<tr><td>Maturity</td><td>EXPERIMENTAL</td></tr>
-</table></div>
-
-# Bug pattern: AssertFalse
-__Assertions may be disabled at runtime and do not guarantee that execution will halt here; consider throwing an exception instead__
-
 ## The problem
 Java assertions do not necessarily execute at runtime; they may be enabled and disabled depending on which options are passed to the JVM invocation. An assert false statement may be intended to ensure that the program never proceeds beyond that statement. If the correct execution of the program depends on that being the case, consider throwing an exception instead, so that execution is halted regardless of runtime configuration.
 
@@ -28,7 +20,7 @@ Suppress false positives by adding an `@SuppressWarnings("AssertFalse")` annotat
 
 ----------
 
-# Examples
+## Examples
 __AssertFalseNegativeCases.java__
 
 {% highlight java %}

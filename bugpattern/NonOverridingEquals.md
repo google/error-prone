@@ -1,5 +1,6 @@
 ---
 title: NonOverridingEquals
+summary: "equals method doesn't override Object.equals"
 layout: bugpattern
 category: JDK
 severity: WARNING
@@ -10,15 +11,6 @@ maturity: MATURE
 *** AUTO-GENERATED, DO NOT MODIFY ***
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
-
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JDK</td></tr>
-<tr><td>Severity</td><td>WARNING</td></tr>
-<tr><td>Maturity</td><td>MATURE</td></tr>
-</table></div>
-
-# Bug pattern: NonOverridingEquals
-__equals method doesn't override Object.equals__
 
 ## The problem
 Defining a method that looks like `Object#equals` but doesn't actually override

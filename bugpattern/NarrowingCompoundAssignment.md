@@ -1,5 +1,6 @@
 ---
 title: NarrowingCompoundAssignment
+summary: "Compound assignments to bytes, shorts, chars, and floats hide dangerous casts"
 layout: bugpattern
 category: JDK
 severity: ERROR
@@ -10,15 +11,6 @@ maturity: MATURE
 *** AUTO-GENERATED, DO NOT MODIFY ***
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
-
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JDK</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>MATURE</td></tr>
-</table></div>
-
-# Bug pattern: NarrowingCompoundAssignment
-__Compound assignments to bytes, shorts, chars, and floats hide dangerous casts__
 
 ## The problem
 The compound assignment E1 op= E2 could be mistaken for being equivalent to  E1 = E1 op E2. However, this is not the case: compound  assignment operators automatically cast the result of the computation to the type on the left hand side. So E1 op= E2 is actually equivalent to E1 = (T) (E1 op E2), where T is the type of E1. If the type of the expression is wider than the type of the variable (i.e. the variable is a byte, char, short, or float), then the compound assignment will perform a narrowing primitive conversion. Attempting to perform the equivalent simple assignment would generate a compilation error.

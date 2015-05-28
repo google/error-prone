@@ -1,5 +1,6 @@
 ---
 title: ProtoFieldPreconditionsCheckNotNull
+summary: "Protobuf fields cannot be null, so this check is redundant"
 layout: bugpattern
 category: GUAVA
 severity: WARNING
@@ -11,15 +12,6 @@ maturity: MATURE
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>GUAVA</td></tr>
-<tr><td>Severity</td><td>WARNING</td></tr>
-<tr><td>Maturity</td><td>MATURE</td></tr>
-</table></div>
-
-# Bug pattern: ProtoFieldPreconditionsCheckNotNull
-__Protobuf fields cannot be null, so this check is redundant__
-
 ## The problem
 This checker looks for comparisons of protocol buffer fields with null via the com.google.common.base.Preconditions.checkNotNull method. If a proto field is not specified, its field accessor will return a non-null default value. Thus, the result of calling one of these accessors can never be null, and comparisons like these often indicate a nearby error.
 
@@ -30,7 +22,7 @@ Suppress false positives by adding an `@SuppressWarnings("ProtoFieldPrecondition
 
 ----------
 
-# Examples
+## Examples
 __ProtoFieldPreconditionsCheckNotNullNegativeCases.java__
 
 {% highlight java %}

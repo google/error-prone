@@ -1,5 +1,6 @@
 ---
 title: NullablePrimitive
+summary: "@Nullable should not be used for primitive types."
 layout: bugpattern
 category: JDK
 severity: WARNING
@@ -11,15 +12,6 @@ maturity: EXPERIMENTAL
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JDK</td></tr>
-<tr><td>Severity</td><td>WARNING</td></tr>
-<tr><td>Maturity</td><td>EXPERIMENTAL</td></tr>
-</table></div>
-
-# Bug pattern: NullablePrimitive
-__@Nullable should not be used for primitive types.__
-
 ## The problem
 Primitives can never be null, annotating a primitive with @Nullable may be hinting at an intent that cannot be fulfilled.
 
@@ -28,7 +20,7 @@ Suppress false positives by adding an `@SuppressWarnings("NullablePrimitive")` a
 
 ----------
 
-# Examples
+## Examples
 __NullablePrimitiveNegativeCases.java__
 
 {% highlight java %}

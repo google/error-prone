@@ -1,5 +1,6 @@
 ---
 title: InjectScopeAnnotationOnInterfaceOrAbstractClass
+summary: "Scope annotation on an interface or abstact class is not allowed"
 layout: bugpattern
 category: INJECT
 severity: ERROR
@@ -11,15 +12,6 @@ maturity: EXPERIMENTAL
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>INJECT</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>EXPERIMENTAL</td></tr>
-</table></div>
-
-# Bug pattern: InjectScopeAnnotationOnInterfaceOrAbstractClass
-__Scope annotation on an interface or abstact class is not allowed__
-
 ## The problem
 Scoping annotations are not allowed on abstract types.
 
@@ -28,7 +20,7 @@ Suppress false positives by adding an `@SuppressWarnings("InjectScopeAnnotationO
 
 ----------
 
-# Examples
+## Examples
 __InjectScopeAnnotationOnInterfaceOrAbstractClassNegativeCases.java__
 
 {% highlight java %}

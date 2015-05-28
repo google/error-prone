@@ -1,5 +1,6 @@
 ---
 title: PreconditionsCheckNotNull
+summary: "Literal passed as first argument to Preconditions.checkNotNull() can never be null"
 layout: bugpattern
 category: GUAVA
 severity: ERROR
@@ -11,15 +12,6 @@ maturity: MATURE
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>GUAVA</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>MATURE</td></tr>
-</table></div>
-
-# Bug pattern: PreconditionsCheckNotNull
-__Literal passed as first argument to Preconditions.checkNotNull() can never be null__
-
 ## The problem
 Preconditions.checkNotNull() takes two arguments. The first is the reference that should be non-null. The second is the error message to print (usually a string literal). Often the order of the two arguments is swapped, and the reference is never actually checked for nullity. This check ensures that the first argument to Preconditions.checkNotNull() is not a literal.
 
@@ -28,7 +20,7 @@ Suppress false positives by adding an `@SuppressWarnings("PreconditionsCheckNotN
 
 ----------
 
-# Examples
+## Examples
 __PreconditionsCheckNotNullNegativeCase1.java__
 
 {% highlight java %}

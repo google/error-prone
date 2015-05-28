@@ -1,5 +1,6 @@
 ---
 title: NonAtomicVolatileUpdate
+summary: "This update of a volatile variable is non-atomic"
 layout: bugpattern
 category: JDK
 severity: WARNING
@@ -10,15 +11,6 @@ maturity: MATURE
 *** AUTO-GENERATED, DO NOT MODIFY ***
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
-
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JDK</td></tr>
-<tr><td>Severity</td><td>WARNING</td></tr>
-<tr><td>Maturity</td><td>MATURE</td></tr>
-</table></div>
-
-# Bug pattern: NonAtomicVolatileUpdate
-__This update of a volatile variable is non-atomic__
 
 ## The problem
 The volatile modifier ensures that updates to a variable are propagated predictably to other threads.  A read of a volatile variable always returns the most recent write by any thread.
@@ -32,7 +24,7 @@ Suppress false positives by adding an `@SuppressWarnings("NonAtomicVolatileUpdat
 
 ----------
 
-# Examples
+## Examples
 __NonAtomicVolatileUpdateNegativeCases.java__
 
 {% highlight java %}

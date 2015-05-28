@@ -1,5 +1,6 @@
 ---
 title: GuiceInjectOnFinalField
+summary: "Although Guice allows injecting final fields, doing so is not recommended because the injected value may not be visible to other threads."
 layout: bugpattern
 category: GUICE
 severity: WARNING
@@ -11,15 +12,6 @@ maturity: EXPERIMENTAL
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>GUICE</td></tr>
-<tr><td>Severity</td><td>WARNING</td></tr>
-<tr><td>Maturity</td><td>EXPERIMENTAL</td></tr>
-</table></div>
-
-# Bug pattern: GuiceInjectOnFinalField
-__Although Guice allows injecting final fields, doing so is not recommended because the injected value may not be visible to other threads.__
-
 ## The problem
 See https://code.google.com/p/google-guice/wiki/InjectionPoints
 
@@ -28,7 +20,7 @@ Suppress false positives by adding an `@SuppressWarnings("GuiceInjectOnFinalFiel
 
 ----------
 
-# Examples
+## Examples
 __GuiceInjectOnFinalFieldNegativeCases.java__
 
 {% highlight java %}

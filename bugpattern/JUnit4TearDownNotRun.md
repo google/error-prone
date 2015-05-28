@@ -1,5 +1,6 @@
 ---
 title: JUnit4TearDownNotRun
+summary: "tearDown() method will not be run; Please add an @After annotation"
 layout: bugpattern
 category: JUNIT
 severity: ERROR
@@ -10,15 +11,6 @@ maturity: MATURE
 *** AUTO-GENERATED, DO NOT MODIFY ***
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
-
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JUNIT</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>MATURE</td></tr>
-</table></div>
-
-# Bug pattern: JUnit4TearDownNotRun
-__tearDown() method will not be run; Please add an @After annotation__
 
 ## The problem
 JUnit 3 provides the overridable method tearDown(), to be overridden by  subclasses when the test needs to perform some post-test de-initialization.  In JUnit 4, this is accomplished by annotating such a method with @After. The method that triggered this error matches the definition of tearDown() from JUnit3, but was not annotated with @After and thus won't be run by the JUnit4 runner.
@@ -32,7 +24,7 @@ Suppress false positives by adding an `@SuppressWarnings("JUnit4TearDownNotRun")
 
 ----------
 
-# Examples
+## Examples
 __JUnit4TearDownNotRunNegativeCases.java__
 
 {% highlight java %}

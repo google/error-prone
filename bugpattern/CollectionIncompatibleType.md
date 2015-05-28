@@ -1,5 +1,6 @@
 ---
 title: CollectionIncompatibleType
+summary: "Incompatible type as argument to non-generic Java collections method."
 layout: bugpattern
 category: JDK
 severity: ERROR
@@ -11,15 +12,6 @@ maturity: EXPERIMENTAL
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JDK</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>EXPERIMENTAL</td></tr>
-</table></div>
-
-# Bug pattern: CollectionIncompatibleType
-__Incompatible type as argument to non-generic Java collections method.__
-
 ## The problem
 Java Collections API has non-generic methods such as Collection.contains(Object). If an argument is given which isn't of a type that may appear in the collection, these methods always return false. This commonly happens when the type of a collection is refactored and the developer relies on the Java compiler to detect callsites where the collection access needs to be updated.
 
@@ -28,7 +20,7 @@ Suppress false positives by adding an `@SuppressWarnings("CollectionIncompatible
 
 ----------
 
-# Examples
+## Examples
 __CollectionIncompatibleTypeNegativeCases.java__
 
 {% highlight java %}

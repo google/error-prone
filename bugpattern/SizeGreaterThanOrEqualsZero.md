@@ -1,5 +1,6 @@
 ---
 title: SizeGreaterThanOrEqualsZero
+summary: "Comparison of a size >= 0 is always true, did you intend to check for non-emptiness?"
 layout: bugpattern
 category: JDK
 severity: ERROR
@@ -11,15 +12,6 @@ maturity: EXPERIMENTAL
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JDK</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>EXPERIMENTAL</td></tr>
-</table></div>
-
-# Bug pattern: SizeGreaterThanOrEqualsZero
-__Comparison of a size >= 0 is always true, did you intend to check for non-emptiness?__
-
 ## The problem
 A standard means of checking non-emptiness of an array or collection is to test if the size of that collection is greater than 0. However, one may accidentally check if the size is greater than or equal to 0, which is always true.
 
@@ -28,7 +20,7 @@ Suppress false positives by adding an `@SuppressWarnings("SizeGreaterThanOrEqual
 
 ----------
 
-# Examples
+## Examples
 __SizeGreaterThanOrEqualsZeroNegativeCases.java__
 
 {% highlight java %}

@@ -1,5 +1,6 @@
 ---
 title: JUnit4TestNotRun
+summary: "Test method will not be run; please add @Test annotation"
 layout: bugpattern
 category: JUNIT
 severity: ERROR
@@ -11,15 +12,6 @@ maturity: MATURE
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JUNIT</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>MATURE</td></tr>
-</table></div>
-
-# Bug pattern: JUnit4TestNotRun
-__Test method will not be run; please add @Test annotation__
-
 ## The problem
 JUnit 3 required that test methods be named in a special way to be run as part of a test case. JUnit 4 requires that test methods be annotated with @Test. The test method that triggered this error is named like a JUnit 3 test, but is in a JUnit 4 test class.  Thus, it will not be run unless you annotate it with @Test.
 
@@ -30,7 +22,7 @@ Suppress false positives by adding an `@SuppressWarnings("JUnit4TestNotRun")` an
 
 ----------
 
-# Examples
+## Examples
 __JUnit4TestNotRunNegativeCase1.java__
 
 {% highlight java %}

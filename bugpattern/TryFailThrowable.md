@@ -1,5 +1,6 @@
 ---
 title: TryFailThrowable
+summary: "Catching Throwable masks failures from fail() or assert*() in the try block"
 layout: bugpattern
 category: JUNIT
 severity: ERROR
@@ -10,15 +11,6 @@ maturity: MATURE
 *** AUTO-GENERATED, DO NOT MODIFY ***
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
-
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JUNIT</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>MATURE</td></tr>
-</table></div>
-
-# Bug pattern: TryFailThrowable
-__Catching Throwable masks failures from fail() or assert*() in the try block__
 
 ## The problem
 When testing that a line of code throws an expected exception, it is typical to execute that line in a try block with a `fail()` or `assert*()` on the line following.  The expectation is that the expected exception will be thrown, and execution will continue in the catch block, and the `fail()` or `assert*()` will not be executed.
@@ -32,7 +24,7 @@ Suppress false positives by adding an `@SuppressWarnings("TryFailThrowable")` an
 
 ----------
 
-# Examples
+## Examples
 __TryFailThrowableNegativeCases.java__
 
 {% highlight java %}

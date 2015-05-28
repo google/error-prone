@@ -1,5 +1,6 @@
 ---
 title: ArrayEquals
+summary: "Reference equality used to compare arrays"
 layout: bugpattern
 category: JDK
 severity: ERROR
@@ -11,15 +12,6 @@ maturity: MATURE
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JDK</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>MATURE</td></tr>
-</table></div>
-
-# Bug pattern: ArrayEquals
-__Reference equality used to compare arrays__
-
 ## The problem
 Generally when comparing arrays for equality, the programmer intends to check that the the contents of the arrays are equal rather than that they are actually the same object.  But many commonly used equals methods compare arrays for reference equality rather than content equality. These include the instance .equals() method, Guava's com.google.common.base.Objects#equal(), and the JDK's java.util.Objects#equals().
 
@@ -30,7 +22,7 @@ Suppress false positives by adding an `@SuppressWarnings("ArrayEquals")` annotat
 
 ----------
 
-# Examples
+## Examples
 __ArrayEqualsNegativeCases.java__
 
 {% highlight java %}

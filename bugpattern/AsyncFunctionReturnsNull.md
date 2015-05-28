@@ -1,5 +1,6 @@
 ---
 title: AsyncFunctionReturnsNull
+summary: "AsyncFunction should not return a null Future, only a Future whose result is null."
 layout: bugpattern
 category: GUAVA
 severity: ERROR
@@ -11,15 +12,6 @@ maturity: EXPERIMENTAL
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>GUAVA</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>EXPERIMENTAL</td></tr>
-</table></div>
-
-# Bug pattern: AsyncFunctionReturnsNull
-__AsyncFunction should not return a null Future, only a Future whose result is null.__
-
 ## The problem
 Methods like Futures.transformAsync and Futures.catchingAsync will throw a NullPointerException if the provided AsyncFunction returns a null Future. To produce a Future with an output of null, instead return immediateFuture(null).
 
@@ -28,7 +20,7 @@ Suppress false positives by adding an `@SuppressWarnings("AsyncFunctionReturnsNu
 
 ----------
 
-# Examples
+## Examples
 __AsyncFunctionReturnsNullNegativeCases.java__
 
 {% highlight java %}

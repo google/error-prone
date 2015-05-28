@@ -1,5 +1,6 @@
 ---
 title: PreconditionsInvalidPlaceholder
+summary: "Preconditions only accepts the %s placeholder in error message strings"
 layout: bugpattern
 category: GUAVA
 severity: WARNING
@@ -11,15 +12,6 @@ maturity: MATURE
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>GUAVA</td></tr>
-<tr><td>Severity</td><td>WARNING</td></tr>
-<tr><td>Maturity</td><td>MATURE</td></tr>
-</table></div>
-
-# Bug pattern: PreconditionsInvalidPlaceholder
-__Preconditions only accepts the %s placeholder in error message strings__
-
 ## The problem
 The Guava Preconditions checks take error message template strings that look similar to format strings but only accept %s as a placeholder. This check points out places where there is a non-%s placeholder in a Preconditions error message template string and the number of arguments does not match the number of %s placeholders.
 
@@ -28,7 +20,7 @@ Suppress false positives by adding an `@SuppressWarnings("PreconditionsInvalidPl
 
 ----------
 
-# Examples
+## Examples
 __PreconditionsInvalidPlaceholderNegativeCase1.java__
 
 {% highlight java %}

@@ -1,5 +1,6 @@
 ---
 title: NonCanonicalStaticImport
+summary: "Static import of type uses non-canonical name"
 layout: bugpattern
 category: JDK
 severity: WARNING
@@ -10,15 +11,6 @@ maturity: MATURE
 *** AUTO-GENERATED, DO NOT MODIFY ***
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
-
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JDK</td></tr>
-<tr><td>Severity</td><td>WARNING</td></tr>
-<tr><td>Maturity</td><td>MATURE</td></tr>
-</table></div>
-
-# Bug pattern: NonCanonicalStaticImport
-__Static import of type uses non-canonical name__
 
 ## The problem
 Types should always be imported by their canonical name. The canonical name of a top-level class is the fully-qualified name of the package, followed by a '.', followed by the name of the class. The canonical name of a member class is the canonical name of its declaring class, followed by a '.', followed by the name of the member class.

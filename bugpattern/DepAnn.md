@@ -1,5 +1,6 @@
 ---
 title: DepAnn
+summary: "Deprecated item is not annotated with @Deprecated"
 layout: bugpattern
 category: JDK
 severity: ERROR
@@ -11,15 +12,6 @@ maturity: MATURE
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JDK</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>MATURE</td></tr>
-</table></div>
-
-# Bug pattern: DepAnn
-__Deprecated item is not annotated with @Deprecated__
-
 _Alternate names: dep-ann_
 
 ## The problem
@@ -30,7 +22,7 @@ Suppress false positives by adding an `@SuppressWarnings("DepAnn")` annotation t
 
 ----------
 
-# Examples
+## Examples
 __DepAnnNegativeCase1.java__
 
 {% highlight java %}

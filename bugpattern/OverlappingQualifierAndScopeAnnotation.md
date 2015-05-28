@@ -1,5 +1,6 @@
 ---
 title: OverlappingQualifierAndScopeAnnotation
+summary: "Annotations cannot be both Qualifiers/BindingAnnotations and Scopes"
 layout: bugpattern
 category: INJECT
 severity: ERROR
@@ -11,15 +12,6 @@ maturity: EXPERIMENTAL
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>INJECT</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>EXPERIMENTAL</td></tr>
-</table></div>
-
-# Bug pattern: OverlappingQualifierAndScopeAnnotation
-__Annotations cannot be both Qualifiers/BindingAnnotations and Scopes__
-
 ## The problem
 Qualifiers and Scoping annotations have different semantic meanings and a single annotation should not be both a qualifier and a scoping annotation
 
@@ -28,7 +20,7 @@ Suppress false positives by adding an `@SuppressWarnings("OverlappingQualifierAn
 
 ----------
 
-# Examples
+## Examples
 __InjectOverlappingQualifierAndScopeAnnotationNegativeCases.java__
 
 {% highlight java %}

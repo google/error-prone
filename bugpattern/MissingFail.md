@@ -1,5 +1,6 @@
 ---
 title: MissingFail
+summary: "Not calling fail() when expecting an exception masks bugs"
 layout: bugpattern
 category: JUNIT
 severity: WARNING
@@ -10,15 +11,6 @@ maturity: EXPERIMENTAL
 *** AUTO-GENERATED, DO NOT MODIFY ***
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
-
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JUNIT</td></tr>
-<tr><td>Severity</td><td>WARNING</td></tr>
-<tr><td>Maturity</td><td>EXPERIMENTAL</td></tr>
-</table></div>
-
-# Bug pattern: MissingFail
-__Not calling fail() when expecting an exception masks bugs__
 
 _Alternate names: missing-fail_
 
@@ -39,7 +31,7 @@ Suppress false positives by adding an `@SuppressWarnings("MissingFail")` annotat
 
 ----------
 
-# Examples
+## Examples
 __MissingFailNegativeCases.java__
 
 {% highlight java %}

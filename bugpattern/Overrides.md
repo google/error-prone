@@ -1,5 +1,6 @@
 ---
 title: Overrides
+summary: "Varargs doesn't agree for overridden method"
 layout: bugpattern
 category: JDK
 severity: ERROR
@@ -11,15 +12,6 @@ maturity: MATURE
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JDK</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>MATURE</td></tr>
-</table></div>
-
-# Bug pattern: Overrides
-__Varargs doesn't agree for overridden method__
-
 _Alternate names: overrides_
 
 ## The problem
@@ -30,7 +22,7 @@ Suppress false positives by adding an `@SuppressWarnings("Overrides")` annotatio
 
 ----------
 
-# Examples
+## Examples
 __OverridesNegativeCase1.java__
 
 {% highlight java %}

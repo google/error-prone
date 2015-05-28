@@ -1,5 +1,6 @@
 ---
 title: NumericEquality
+summary: "Numeric comparison using reference equality instead of value equality"
 layout: bugpattern
 category: JDK
 severity: ERROR
@@ -11,15 +12,6 @@ maturity: EXPERIMENTAL
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JDK</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>EXPERIMENTAL</td></tr>
-</table></div>
-
-# Bug pattern: NumericEquality
-__Numeric comparison using reference equality instead of value equality__
-
 ## The problem
 Numbers are compared for reference equality/inequality using == or != instead of for value equality using .equals()
 
@@ -28,7 +20,7 @@ Suppress false positives by adding an `@SuppressWarnings("NumericEquality")` ann
 
 ----------
 
-# Examples
+## Examples
 __NumericEqualityNegativeCases.java__
 
 {% highlight java %}

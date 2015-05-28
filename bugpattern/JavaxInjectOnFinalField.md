@@ -1,5 +1,6 @@
 ---
 title: JavaxInjectOnFinalField
+summary: "@javac.inject.Inject cannot be put on a final field."
 layout: bugpattern
 category: INJECT
 severity: ERROR
@@ -11,15 +12,6 @@ maturity: EXPERIMENTAL
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>INJECT</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>EXPERIMENTAL</td></tr>
-</table></div>
-
-# Bug pattern: JavaxInjectOnFinalField
-__@javac.inject.Inject cannot be put on a final field.__
-
 ## The problem
 According to the JSR-330 spec, the @javax.inject.Inject annotation cannot go on final fields.)
 
@@ -28,7 +20,7 @@ Suppress false positives by adding an `@SuppressWarnings("JavaxInjectOnFinalFiel
 
 ----------
 
-# Examples
+## Examples
 __InjectJavaxInjectOnFinalFieldNegativeCases.java__
 
 {% highlight java %}

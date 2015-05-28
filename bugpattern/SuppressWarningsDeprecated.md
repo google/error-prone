@@ -1,5 +1,6 @@
 ---
 title: SuppressWarningsDeprecated
+summary: "Suppressing "deprecated" is probably a typo for "deprecation""
 layout: bugpattern
 category: JDK
 severity: ERROR
@@ -10,15 +11,6 @@ maturity: MATURE
 *** AUTO-GENERATED, DO NOT MODIFY ***
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
-
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JDK</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>MATURE</td></tr>
-</table></div>
-
-# Bug pattern: SuppressWarningsDeprecated
-__Suppressing "deprecated" is probably a typo for "deprecation"__
 
 ## The problem
 To suppress warnings to deprecated methods, you should add the annotation
@@ -31,7 +23,7 @@ Suppress false positives by adding an `@SuppressWarnings("SuppressWarningsDeprec
 
 ----------
 
-# Examples
+## Examples
 __SuppressWarningsDeprecatedNegativeCases.java__
 
 {% highlight java %}

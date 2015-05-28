@@ -1,5 +1,6 @@
 ---
 title: OverridesJavaxInjectableMethod
+summary: "This method is not annotated with @Inject, but it overrides a  method that is  annotated with @javax.inject.Inject."
 layout: bugpattern
 category: GUICE
 severity: ERROR
@@ -11,15 +12,6 @@ maturity: EXPERIMENTAL
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>GUICE</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>EXPERIMENTAL</td></tr>
-</table></div>
-
-# Bug pattern: OverridesJavaxInjectableMethod
-__This method is not annotated with @Inject, but it overrides a  method that is  annotated with @javax.inject.Inject.__
-
 ## The problem
 According to the JSR-330 spec, a method that overrides a method annotated with javax.inject.Inject will not be injected unless it iself is annotated with  @Inject
 
@@ -28,7 +20,7 @@ Suppress false positives by adding an `@SuppressWarnings("OverridesJavaxInjectab
 
 ----------
 
-# Examples
+## Examples
 __GuiceOverridesJavaxInjectableMethodNegativeCases.java__
 
 {% highlight java %}

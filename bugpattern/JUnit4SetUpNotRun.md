@@ -1,5 +1,6 @@
 ---
 title: JUnit4SetUpNotRun
+summary: "setUp() method will not be run; Please add a @Before annotation"
 layout: bugpattern
 category: JUNIT
 severity: ERROR
@@ -10,15 +11,6 @@ maturity: MATURE
 *** AUTO-GENERATED, DO NOT MODIFY ***
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
-
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JUNIT</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>MATURE</td></tr>
-</table></div>
-
-# Bug pattern: JUnit4SetUpNotRun
-__setUp() method will not be run; Please add a @Before annotation__
 
 ## The problem
 JUnit 3 provides the method setUp(), to be overridden by subclasses when the test needs to perform some pre-test initialization. In JUnit 4, this is accomplished by annotating such a method with @Before.
@@ -34,7 +26,7 @@ Suppress false positives by adding an `@SuppressWarnings("JUnit4SetUpNotRun")` a
 
 ----------
 
-# Examples
+## Examples
 __JUnit4SetUpNotRunNegativeCases.java__
 
 {% highlight java %}

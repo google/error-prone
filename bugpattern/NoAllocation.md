@@ -1,5 +1,6 @@
 ---
 title: NoAllocation
+summary: "@NoAllocation was specified on this method, but something was found that would trigger an allocation"
 layout: bugpattern
 category: JDK
 severity: ERROR
@@ -10,15 +11,6 @@ maturity: EXPERIMENTAL
 *** AUTO-GENERATED, DO NOT MODIFY ***
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
-
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JDK</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>EXPERIMENTAL</td></tr>
-</table></div>
-
-# Bug pattern: NoAllocation
-__@NoAllocation was specified on this method, but something was found that would trigger an allocation__
 
 ## The problem
 Like many other languages, Java provides automatic memory management. In Java, this feature incurs an runtime cost, and can also lead to unpredictable execution pauses. In most cases, this is a reasonable tradeoff, but sometimes the loss of performance or predictability is unacceptable. Examples include pause-sensitive user interface handlers, high query rate server response handlers, or other soft-realtime applications.
@@ -32,7 +24,7 @@ Suppress false positives by adding an `@SuppressWarnings("NoAllocation")` annota
 
 ----------
 
-# Examples
+## Examples
 __NoAllocationCheckerNegativeCases.java__
 
 {% highlight java %}

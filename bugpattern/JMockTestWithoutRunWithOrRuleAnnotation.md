@@ -1,5 +1,6 @@
 ---
 title: JMockTestWithoutRunWithOrRuleAnnotation
+summary: "jMock tests must have a @RunWith(JMock.class) annotation, or the Mockery field must have a @Rule JUnit annotation"
 layout: bugpattern
 category: JMOCK
 severity: ERROR
@@ -10,15 +11,6 @@ maturity: EXPERIMENTAL
 *** AUTO-GENERATED, DO NOT MODIFY ***
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
-
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JMOCK</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>EXPERIMENTAL</td></tr>
-</table></div>
-
-# Bug pattern: JMockTestWithoutRunWithOrRuleAnnotation
-__jMock tests must have a @RunWith(JMock.class) annotation, or the Mockery field must have a @Rule JUnit annotation__
 
 ## The problem
 jMock tests must have a @RunWith(JMock.class) annotation, or the Mockery field must have a @Rule JUnit annotation. If this is not done, then all of your jMock tests will run and pass, but none of your assertions will actually be evaluated. Your tests will pass even if they shouldn't.

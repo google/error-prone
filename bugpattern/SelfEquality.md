@@ -1,5 +1,6 @@
 ---
 title: SelfEquality
+summary: "Variable compared to itself"
 layout: bugpattern
 category: JDK
 severity: ERROR
@@ -11,15 +12,6 @@ maturity: EXPERIMENTAL
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JDK</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>EXPERIMENTAL</td></tr>
-</table></div>
-
-# Bug pattern: SelfEquality
-__Variable compared to itself__
-
 ## The problem
 There is no good reason to test a primitive value or reference for equality with itself.
 
@@ -28,7 +20,7 @@ Suppress false positives by adding an `@SuppressWarnings("SelfEquality")` annota
 
 ----------
 
-# Examples
+## Examples
 __SelfEqualityNegativeCases.java__
 
 {% highlight java %}

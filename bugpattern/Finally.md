@@ -1,5 +1,6 @@
 ---
 title: Finally
+summary: "If you return or throw from a finally, then values returned or thrown from the try-catch block will be ignored"
 layout: bugpattern
 category: JDK
 severity: WARNING
@@ -11,15 +12,6 @@ maturity: MATURE
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JDK</td></tr>
-<tr><td>Severity</td><td>WARNING</td></tr>
-<tr><td>Maturity</td><td>MATURE</td></tr>
-</table></div>
-
-# Bug pattern: Finally
-__If you return or throw from a finally, then values returned or thrown from the try-catch block will be ignored__
-
 _Alternate names: finally, ThrowFromFinallyBlock_
 
 ## The problem
@@ -30,7 +22,7 @@ Suppress false positives by adding an `@SuppressWarnings("Finally")` annotation 
 
 ----------
 
-# Examples
+## Examples
 __FinallyNegativeCase1.java__
 
 {% highlight java %}

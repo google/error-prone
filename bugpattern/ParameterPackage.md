@@ -1,5 +1,6 @@
 ---
 title: ParameterPackage
+summary: "Method parameter has wrong package"
 layout: bugpattern
 category: JDK
 severity: ERROR
@@ -11,15 +12,6 @@ maturity: EXPERIMENTAL
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JDK</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>EXPERIMENTAL</td></tr>
-</table></div>
-
-# Bug pattern: ParameterPackage
-__Method parameter has wrong package__
-
 ## The problem
 Method does not override method in superclass due to wrong package for parameter. For example, defining a method void foo(alpha.Foo x) when the superclass contains a method void foo(beta.Foo x). The defined method was probably meant to override the superclass method.
 
@@ -28,7 +20,7 @@ Suppress false positives by adding an `@SuppressWarnings("ParameterPackage")` an
 
 ----------
 
-# Examples
+## Examples
 __WrongParameterPackageNegativeCases.java__
 
 {% highlight java %}

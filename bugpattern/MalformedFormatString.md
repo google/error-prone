@@ -1,5 +1,6 @@
 ---
 title: MalformedFormatString
+summary: "Printf-like format string does not match its arguments"
 layout: bugpattern
 category: JDK
 severity: ERROR
@@ -11,15 +12,6 @@ maturity: EXPERIMENTAL
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JDK</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>EXPERIMENTAL</td></tr>
-</table></div>
-
-# Bug pattern: MalformedFormatString
-__Printf-like format string does not match its arguments__
-
 ## The problem
 Format strings for printf family of functions contain format specifiers (placeholders) which must match amount and type of arguments that follow them. If there are more arguments then specifiers, redundant ones are silently ignored. If there are less, or their types don't match, runtime exception is thrown.
 
@@ -28,7 +20,7 @@ Suppress false positives by adding an `@SuppressWarnings("MalformedFormatString"
 
 ----------
 
-# Examples
+## Examples
 __MalformedFormatStringNegativeCases.java__
 
 {% highlight java %}

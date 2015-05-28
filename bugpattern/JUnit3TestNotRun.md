@@ -1,5 +1,6 @@
 ---
 title: JUnit3TestNotRun
+summary: "Test method will not be run; please prefix name with "test""
 layout: bugpattern
 category: JUNIT
 severity: ERROR
@@ -11,15 +12,6 @@ maturity: MATURE
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JUNIT</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>MATURE</td></tr>
-</table></div>
-
-# Bug pattern: JUnit3TestNotRun
-__Test method will not be run; please prefix name with "test"__
-
 ## The problem
 JUnit 3 requires that test method names start with "test". The method that triggered this error looks like it is supposed to be the test, but either misspells the required prefix, or has @Test annotation, but no prefix. As a consequence, JUnit 3 will ignore it.
 
@@ -30,7 +22,7 @@ Suppress false positives by adding an `@SuppressWarnings("JUnit3TestNotRun")` an
 
 ----------
 
-# Examples
+## Examples
 __JUnit3TestNotRunNegativeCase1.java__
 
 {% highlight java %}

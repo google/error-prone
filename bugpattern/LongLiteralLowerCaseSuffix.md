@@ -1,5 +1,6 @@
 ---
 title: LongLiteralLowerCaseSuffix
+summary: "Prefer 'L' to 'l' for the suffix to long literals"
 layout: bugpattern
 category: JDK
 severity: ERROR
@@ -11,15 +12,6 @@ maturity: MATURE
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JDK</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>MATURE</td></tr>
-</table></div>
-
-# Bug pattern: LongLiteralLowerCaseSuffix
-__Prefer 'L' to 'l' for the suffix to long literals__
-
 ## The problem
 A long literal can have a suffix of 'L' or 'l', but the former is less likely to be confused with a '1' in most fonts.
 
@@ -28,7 +20,7 @@ Suppress false positives by adding an `@SuppressWarnings("LongLiteralLowerCaseSu
 
 ----------
 
-# Examples
+## Examples
 __LongLiteralLowerCaseSuffixNegativeCases.java__
 
 {% highlight java %}

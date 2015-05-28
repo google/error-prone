@@ -1,5 +1,6 @@
 ---
 title: EqualsNaN
+summary: "== NaN always returns false; use the isNaN methods instead"
 layout: bugpattern
 category: JDK
 severity: ERROR
@@ -11,15 +12,6 @@ maturity: MATURE
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JDK</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>MATURE</td></tr>
-</table></div>
-
-# Bug pattern: EqualsNaN
-__== NaN always returns false; use the isNaN methods instead__
-
 ## The problem
 As per JLS 15.21.1, == NaN comparisons always return false, even NaN == NaN. Instead, use the isNaN methods to check for NaN.
 
@@ -28,7 +20,7 @@ Suppress false positives by adding an `@SuppressWarnings("EqualsNaN")` annotatio
 
 ----------
 
-# Examples
+## Examples
 __EqualsNaNNegativeCases.java__
 
 {% highlight java %}

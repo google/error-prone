@@ -1,5 +1,6 @@
 ---
 title: InvalidPatternSyntax
+summary: "Invalid syntax used for a regular expression"
 layout: bugpattern
 category: JDK
 severity: ERROR
@@ -11,15 +12,6 @@ maturity: MATURE
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JDK</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>MATURE</td></tr>
-</table></div>
-
-# Bug pattern: InvalidPatternSyntax
-__Invalid syntax used for a regular expression__
-
 ## The problem
 This error is triggered by calls to regex-accepting methods with invalid string literals.  These calls would cause a PatternSyntaxException at runtime.
 
@@ -30,7 +22,7 @@ Suppress false positives by adding an `@SuppressWarnings("InvalidPatternSyntax")
 
 ----------
 
-# Examples
+## Examples
 __InvalidPatternSyntaxNegativeCases.java__
 
 {% highlight java %}

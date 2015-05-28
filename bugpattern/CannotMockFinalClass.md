@@ -1,5 +1,6 @@
 ---
 title: CannotMockFinalClass
+summary: "Mockito cannot mock final classes"
 layout: bugpattern
 category: MOCKITO
 severity: WARNING
@@ -11,15 +12,6 @@ maturity: MATURE
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>MOCKITO</td></tr>
-<tr><td>Severity</td><td>WARNING</td></tr>
-<tr><td>Maturity</td><td>MATURE</td></tr>
-</table></div>
-
-# Bug pattern: CannotMockFinalClass
-__Mockito cannot mock final classes__
-
 ## The problem
 Mockito cannot mock final classes. See https://github.com/mockito/mockito/wiki/FAQ for details.
 
@@ -28,7 +20,7 @@ Suppress false positives by adding an `@SuppressWarnings("CannotMockFinalClass")
 
 ----------
 
-# Examples
+## Examples
 __CannotMockFinalClassNegativeCases.java__
 
 {% highlight java %}

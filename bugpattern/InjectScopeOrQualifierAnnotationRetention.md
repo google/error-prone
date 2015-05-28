@@ -1,5 +1,6 @@
 ---
 title: InjectScopeOrQualifierAnnotationRetention
+summary: "Scoping and qualifier annotations must have runtime retention."
 layout: bugpattern
 category: INJECT
 severity: ERROR
@@ -11,15 +12,6 @@ maturity: EXPERIMENTAL
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>INJECT</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>EXPERIMENTAL</td></tr>
-</table></div>
-
-# Bug pattern: InjectScopeOrQualifierAnnotationRetention
-__Scoping and qualifier annotations must have runtime retention.__
-
 ## The problem
 The JSR-330 spec allows use of reflection. Not having runtime retention on scoping or qualifer annotations will cause unexpected behavior in frameworks that use reflection.
 
@@ -28,7 +20,7 @@ Suppress false positives by adding an `@SuppressWarnings("InjectScopeOrQualifier
 
 ----------
 
-# Examples
+## Examples
 __InjectScopeOrQualifierAnnotationRetentionNegativeCases.java__
 
 {% highlight java %}

@@ -1,5 +1,6 @@
 ---
 title: ProtoFieldNullComparison
+summary: "Protobuf fields cannot be null"
 layout: bugpattern
 category: ONE_OFF
 severity: ERROR
@@ -11,15 +12,6 @@ maturity: MATURE
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>ONE_OFF</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>MATURE</td></tr>
-</table></div>
-
-# Bug pattern: ProtoFieldNullComparison
-__Protobuf fields cannot be null__
-
 ## The problem
 This checker looks for comparisons of protocol buffer fields with null. If a proto field is not specified, its field accessor will return a non-null default value. Thus, the result of calling one of these accessors can never be null, and comparisons like these often indicate a nearby error.
 
@@ -30,7 +22,7 @@ Suppress false positives by adding an `@SuppressWarnings("ProtoFieldNullComparis
 
 ----------
 
-# Examples
+## Examples
 __ProtoFieldNullComparisonNegativeCases.java__
 
 {% highlight java %}

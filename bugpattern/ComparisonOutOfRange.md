@@ -1,5 +1,6 @@
 ---
 title: ComparisonOutOfRange
+summary: "Comparison to value that is out of range for the compared type"
 layout: bugpattern
 category: JDK
 severity: ERROR
@@ -11,15 +12,6 @@ maturity: MATURE
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JDK</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>MATURE</td></tr>
-</table></div>
-
-# Bug pattern: ComparisonOutOfRange
-__Comparison to value that is out of range for the compared type__
-
 ## The problem
 This checker looks for equality comparisons to values that are out of range for the compared type.  For example, bytes may have a value in the range -128 to 127. Comparing a byte for equality with a value outside that range will always evaluate to false and usually indicates an error in the code.
 
@@ -30,7 +22,7 @@ Suppress false positives by adding an `@SuppressWarnings("ComparisonOutOfRange")
 
 ----------
 
-# Examples
+## Examples
 __ComparisonOutOfRangeNegativeCases.java__
 
 {% highlight java %}

@@ -1,5 +1,6 @@
 ---
 title: AssistedInjectAndInjectOnConstructors
+summary: "@AssistedInject and @Inject should not be used on different constructors in the same class."
 layout: bugpattern
 category: INJECT
 severity: WARNING
@@ -11,15 +12,6 @@ maturity: EXPERIMENTAL
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>INJECT</td></tr>
-<tr><td>Severity</td><td>WARNING</td></tr>
-<tr><td>Maturity</td><td>EXPERIMENTAL</td></tr>
-</table></div>
-
-# Bug pattern: AssistedInjectAndInjectOnConstructors
-__@AssistedInject and @Inject should not be used on different constructors in the same class.__
-
 ## The problem
 Mixing @Inject and @AssistedInject leads to confusing code and the documentation specifies not to do it. See http://google-guice.googlecode.com/git/javadoc/com/google/inject/assistedinject/AssistedInject.html
 
@@ -28,7 +20,7 @@ Suppress false positives by adding an `@SuppressWarnings("AssistedInjectAndInjec
 
 ----------
 
-# Examples
+## Examples
 __InjectAssistedInjectAndInjectOnConstructorsNegativeCases.java__
 
 {% highlight java %}

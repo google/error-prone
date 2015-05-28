@@ -1,5 +1,6 @@
 ---
 title: PreconditionsErrorMessageEagerEvaluation
+summary: "Second argument to Preconditions.* is a call to String.format(), which can be unwrapped"
 layout: bugpattern
 category: GUAVA
 severity: WARNING
@@ -11,15 +12,6 @@ maturity: EXPERIMENTAL
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>GUAVA</td></tr>
-<tr><td>Severity</td><td>WARNING</td></tr>
-<tr><td>Maturity</td><td>EXPERIMENTAL</td></tr>
-</table></div>
-
-# Bug pattern: PreconditionsErrorMessageEagerEvaluation
-__Second argument to Preconditions.* is a call to String.format(), which can be unwrapped__
-
 ## The problem
 Preconditions checks take an error message to display if the check fails. The error message is rarely needed, so it should either be cheap to construct or constructed only when needed. This check ensures that these error messages are not constructed using expensive methods that are evaluated eagerly.
 
@@ -28,7 +20,7 @@ Suppress false positives by adding an `@SuppressWarnings("PreconditionsErrorMess
 
 ----------
 
-# Examples
+## Examples
 __PreconditionsExpensiveStringNegativeCase1.java__
 
 {% highlight java %}

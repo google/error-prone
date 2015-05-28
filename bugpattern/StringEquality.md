@@ -1,5 +1,6 @@
 ---
 title: StringEquality
+summary: "String comparison using reference equality instead of value equality"
 layout: bugpattern
 category: JDK
 severity: WARNING
@@ -11,15 +12,6 @@ maturity: MATURE
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JDK</td></tr>
-<tr><td>Severity</td><td>WARNING</td></tr>
-<tr><td>Maturity</td><td>MATURE</td></tr>
-</table></div>
-
-# Bug pattern: StringEquality
-__String comparison using reference equality instead of value equality__
-
 ## The problem
 Strings are compared for reference equality/inequality using == or !=instead of for value equality using .equals()
 
@@ -28,7 +20,7 @@ Suppress false positives by adding an `@SuppressWarnings("StringEquality")` anno
 
 ----------
 
-# Examples
+## Examples
 __StringEqualityNegativeCases.java__
 
 {% highlight java %}

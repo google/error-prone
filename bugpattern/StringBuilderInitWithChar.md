@@ -1,5 +1,6 @@
 ---
 title: StringBuilderInitWithChar
+summary: "StringBuilder does not have a char constructor; this invokes the int constructor."
 layout: bugpattern
 category: JDK
 severity: ERROR
@@ -11,15 +12,6 @@ maturity: MATURE
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JDK</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>MATURE</td></tr>
-</table></div>
-
-# Bug pattern: StringBuilderInitWithChar
-__StringBuilder does not have a char constructor; this invokes the int constructor.__
-
 ## The problem
 StringBuilder does not have a char constructor, so instead this code creates a StringBuilder with initial size equal to the code point of the specified char.
 
@@ -28,7 +20,7 @@ Suppress false positives by adding an `@SuppressWarnings("StringBuilderInitWithC
 
 ----------
 
-# Examples
+## Examples
 __StringBuilderInitWithCharNegativeCases.java__
 
 {% highlight java %}

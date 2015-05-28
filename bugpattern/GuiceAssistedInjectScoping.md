@@ -1,5 +1,6 @@
 ---
 title: GuiceAssistedInjectScoping
+summary: "Scope annotation on implementation class of AssistedInject factory is not allowed"
 layout: bugpattern
 category: GUICE
 severity: ERROR
@@ -11,15 +12,6 @@ maturity: MATURE
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>GUICE</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>MATURE</td></tr>
-</table></div>
-
-# Bug pattern: GuiceAssistedInjectScoping
-__Scope annotation on implementation class of AssistedInject factory is not allowed__
-
 ## The problem
 Classes that AssistedInject factories create may not be annotated with scope annotations, such as @Singleton.  This will cause a Guice error at runtime.
 
@@ -30,7 +22,7 @@ Suppress false positives by adding an `@SuppressWarnings("GuiceAssistedInjectSco
 
 ----------
 
-# Examples
+## Examples
 __GuiceAssistedInjectScopingNegativeCases.java__
 
 {% highlight java %}

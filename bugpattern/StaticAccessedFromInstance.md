@@ -1,5 +1,6 @@
 ---
 title: StaticAccessedFromInstance
+summary: "A static variable or method should not be accessed from an object instance"
 layout: bugpattern
 category: JDK
 severity: WARNING
@@ -11,15 +12,6 @@ maturity: MATURE
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JDK</td></tr>
-<tr><td>Severity</td><td>WARNING</td></tr>
-<tr><td>Maturity</td><td>MATURE</td></tr>
-</table></div>
-
-# Bug pattern: StaticAccessedFromInstance
-__A static variable or method should not be accessed from an object instance__
-
 _Alternate names: static_
 
 ## The problem
@@ -30,7 +22,7 @@ Suppress false positives by adding an `@SuppressWarnings("StaticAccessedFromInst
 
 ----------
 
-# Examples
+## Examples
 __StaticAccessedFromInstanceNegativeCases.java__
 
 {% highlight java %}

@@ -1,5 +1,6 @@
 ---
 title: CheckReturnValue
+summary: "Ignored return value of method that is annotated with @CheckReturnValue"
 layout: bugpattern
 category: JDK
 severity: ERROR
@@ -10,15 +11,6 @@ maturity: MATURE
 *** AUTO-GENERATED, DO NOT MODIFY ***
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
-
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JDK</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>MATURE</td></tr>
-</table></div>
-
-# Bug pattern: CheckReturnValue
-__Ignored return value of method that is annotated with @CheckReturnValue__
 
 _Alternate names: ResultOfMethodCallIgnored, ReturnValueIgnored_
 
@@ -32,7 +24,7 @@ Suppress false positives by adding an `@SuppressWarnings("CheckReturnValue")` an
 
 ----------
 
-# Examples
+## Examples
 __CheckReturnValueNegativeCases.java__
 
 {% highlight java %}

@@ -1,5 +1,6 @@
 ---
 title: JavaxInjectOnAbstractMethod
+summary: "Abstract methods are not injectable with javax.inject.Inject."
 layout: bugpattern
 category: INJECT
 severity: ERROR
@@ -10,15 +11,6 @@ maturity: EXPERIMENTAL
 *** AUTO-GENERATED, DO NOT MODIFY ***
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
-
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>INJECT</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>EXPERIMENTAL</td></tr>
-</table></div>
-
-# Bug pattern: JavaxInjectOnAbstractMethod
-__Abstract methods are not injectable with javax.inject.Inject.__
 
 ## The problem
 The javax.inject.Inject annotation cannot go on an abstract method as per the JSR-330 spec. This is in line with the fact that if a class overrides a method that was annotated with javax.inject.Inject, and the subclass methodis not annotated, the subclass method will not be injected.
@@ -31,7 +23,7 @@ Suppress false positives by adding an `@SuppressWarnings("JavaxInjectOnAbstractM
 
 ----------
 
-# Examples
+## Examples
 __InjectJavaxInjectOnAbstractMethodNegativeCases.java__
 
 {% highlight java %}

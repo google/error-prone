@@ -1,5 +1,6 @@
 ---
 title: InjectMoreThanOneScopeAnnotationOnClass
+summary: "A class can be annotated with at most one scope annotation"
 layout: bugpattern
 category: INJECT
 severity: ERROR
@@ -11,15 +12,6 @@ maturity: EXPERIMENTAL
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>INJECT</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>EXPERIMENTAL</td></tr>
-</table></div>
-
-# Bug pattern: InjectMoreThanOneScopeAnnotationOnClass
-__A class can be annotated with at most one scope annotation__
-
 ## The problem
 Annotating a class with more than one scope annotation is invalid according to the JSR-330 specification.
 
@@ -28,7 +20,7 @@ Suppress false positives by adding an `@SuppressWarnings("InjectMoreThanOneScope
 
 ----------
 
-# Examples
+## Examples
 __InjectMoreThanOneScopeAnnotationOnClassNegativeCases.java__
 
 {% highlight java %}

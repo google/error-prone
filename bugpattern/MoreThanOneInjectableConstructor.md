@@ -1,5 +1,6 @@
 ---
 title: MoreThanOneInjectableConstructor
+summary: "A class may not have more than one injectable constructor."
 layout: bugpattern
 category: INJECT
 severity: ERROR
@@ -11,15 +12,6 @@ maturity: EXPERIMENTAL
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>INJECT</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>EXPERIMENTAL</td></tr>
-</table></div>
-
-# Bug pattern: MoreThanOneInjectableConstructor
-__A class may not have more than one injectable constructor.__
-
 ## The problem
 Having more than one injectable constructor will throw a runtime error in compliant JSR-330 frameworks such as Guice or Dagger
 
@@ -28,7 +20,7 @@ Suppress false positives by adding an `@SuppressWarnings("MoreThanOneInjectableC
 
 ----------
 
-# Examples
+## Examples
 __InjectMoreThanOneInjectableConstructorNegativeCases.java__
 
 {% highlight java %}

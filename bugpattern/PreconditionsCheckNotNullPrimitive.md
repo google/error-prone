@@ -1,5 +1,6 @@
 ---
 title: PreconditionsCheckNotNullPrimitive
+summary: "First argument to Preconditions.checkNotNull() is a primitive rather than an object reference"
 layout: bugpattern
 category: GUAVA
 severity: ERROR
@@ -11,15 +12,6 @@ maturity: MATURE
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>GUAVA</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>MATURE</td></tr>
-</table></div>
-
-# Bug pattern: PreconditionsCheckNotNullPrimitive
-__First argument to Preconditions.checkNotNull() is a primitive rather than an object reference__
-
 ## The problem
 Preconditions.checkNotNull() takes as an argument a reference that should be non-null. Often a primitive is passed as the argument to check. The primitive will be [http://docs.oracle.com/javase/7/docs/technotes/guides/language/autoboxing.html autoboxed] into a boxed object, which is non-null, causing the check to always pass without the condition being evaluated.
 If the intent was to ensure that the primitive met some criterion (e.g., a boolean that should be non-null), please use Precondtions.checkState() or Preconditions.checkArgument() instead.
@@ -29,7 +21,7 @@ Suppress false positives by adding an `@SuppressWarnings("PreconditionsCheckNotN
 
 ----------
 
-# Examples
+## Examples
 __PreconditionsCheckNotNullPrimitiveNegativeCases.java__
 
 {% highlight java %}

@@ -1,5 +1,6 @@
 ---
 title: ClassCanBeStatic
+summary: "Inner class is non-static but does not reference enclosing class"
 layout: bugpattern
 category: JDK
 severity: ERROR
@@ -11,15 +12,6 @@ maturity: EXPERIMENTAL
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-<div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JDK</td></tr>
-<tr><td>Severity</td><td>ERROR</td></tr>
-<tr><td>Maturity</td><td>EXPERIMENTAL</td></tr>
-</table></div>
-
-# Bug pattern: ClassCanBeStatic
-__Inner class is non-static but does not reference enclosing class__
-
 ## The problem
 An inner class should be static unless it references membersof its enclosing class. An inner class that is made non-static unnecessarilyuses more memory and does not make the intent of the class clear.
 
@@ -28,7 +20,7 @@ Suppress false positives by adding an `@SuppressWarnings("ClassCanBeStatic")` an
 
 ----------
 
-# Examples
+## Examples
 __ClassCanBeStaticNegativeCases.java__
 
 {% highlight java %}
