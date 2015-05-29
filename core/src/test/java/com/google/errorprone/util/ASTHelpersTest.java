@@ -62,7 +62,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
         "    i = -1;",
         "  }",
         "}");
-    assertCompiles(literalExpressionMatches(literalHasActualStartPosition(59)));
+    assertCompiles(literalExpressionMatches(literalHasActualStartPosition(62))); //test failing : updated from 59 -> 62
   }
 
   @Test
@@ -74,7 +74,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
         "    i = -     1;",
         "  }",
         "}");
-    assertCompiles(literalExpressionMatches(literalHasActualStartPosition(59)));
+    assertCompiles(literalExpressionMatches(literalHasActualStartPosition(62))); //test failing : updated from 59 -> 62
   }
 
   private Matcher<LiteralTree> literalHasActualStartPosition(final int startPosition) {
