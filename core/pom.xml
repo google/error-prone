@@ -215,7 +215,7 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.18</version>
         <configuration>
-          <!-- seat heap size to work around http://github.com/travis-ci/travis-ci/issues/3396 -->
+          <!-- set heap size to work around http://github.com/travis-ci/travis-ci/issues/3396 -->
           <!-- put javac.jar on bootclasspath when executing tests -->
           <argLine>-Xmx1024m -Xbootclasspath/p:${settings.localRepository}/com/google/errorprone/javac/1.9.0-dev-r2644-1/javac-1.9.0-dev-r2644-1.jar</argLine>
         </configuration>
