@@ -44,6 +44,12 @@ import java.util.List;
 
 @RunWith(JUnit4.class)
 public class ASTHelpersTest extends CompilerBasedAbstractTest {
+  
+  // For tests that expect a specific offset in the file, we test with both Windows and UNIX
+  // line separators, but we hardcode the line separator in the tests to ensure the tests are 
+  // hermetic and do not depend on the platform on which they are run.
+  private static final Joiner UNIX_LINE_JOINER = Joiner.on("\n");
+  private static final Joiner WINDOWS_LINE_JOINER = Joiner.on("\r\n");
 
   final List<TestScanner> tests = new ArrayList<>();
 
@@ -55,37 +61,55 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void testGetActualStartPosition() {
-    // Join the file content strings with the platform line separator, then get the index of the
-    // '-' character, which is the start of the literal.  Lets this test pass on platforms with 
-    // line separators of different lengths.
-    String fileContent = Joiner.on(System.lineSeparator()).join(
+  public void testGetActualStartPositionUnix() {
+    String fileContent = UNIX_LINE_JOINER.join(
         "public class A { ",
         "  public void foo() {",
         "    int i;",
         "    i = -1;",
         "  }",
         "}");
-    int expectedIndex = fileContent.indexOf('-');
     writeFile("A.java", fileContent);
-    assertCompiles(literalExpressionMatches(literalHasActualStartPosition(expectedIndex)));
+    assertCompiles(literalExpressionMatches(literalHasActualStartPosition(59)));
+  }
+  
+  @Test
+  public void testGetActualStartPositionWindows() {
+    String fileContent = WINDOWS_LINE_JOINER.join(
+        "public class A { ",
+        "  public void foo() {",
+        "    int i;",
+        "    i = -1;",
+        "  }",
+        "}");
+    writeFile("A.java", fileContent);
+    assertCompiles(literalExpressionMatches(literalHasActualStartPosition(62)));
   }
 
   @Test
-  public void testGetActualStartPositionWithWhitespace() {
-    // Join the file content strings with the platform line separator, then get the index of the
-    // '-' character, which is the start of the literal.  Lets this test pass on platforms with 
-    // line separators of different lengths.
-    String fileContent = Joiner.on(System.lineSeparator()).join(
+  public void testGetActualStartPositionWithWhitespaceUnix() {
+    String fileContent = UNIX_LINE_JOINER.join(
         "public class A { ",
         "  public void foo() {",
         "    int i;",
         "    i = -     1;",
         "  }",
         "}");
-    int expectedIndex = fileContent.indexOf('-');
     writeFile("A.java", fileContent);
-    assertCompiles(literalExpressionMatches(literalHasActualStartPosition(expectedIndex)));
+    assertCompiles(literalExpressionMatches(literalHasActualStartPosition(59)));
+  }
+  
+  @Test
+  public void testGetActualStartPositionWithWhitespaceWindows() {
+    String fileContent = WINDOWS_LINE_JOINER.join(
+        "public class A { ",
+        "  public void foo() {",
+        "    int i;",
+        "    i = -     1;",
+        "  }",
+        "}");
+    writeFile("A.java", fileContent);
+    assertCompiles(literalExpressionMatches(literalHasActualStartPosition(62)));
   }
 
   private Matcher<LiteralTree> literalHasActualStartPosition(final int startPosition) {
