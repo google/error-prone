@@ -19,6 +19,7 @@ package com.google.errorprone.util;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import com.google.common.base.Joiner;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.CompilerBasedAbstractTest;
 import com.google.errorprone.matchers.Matcher;
@@ -55,26 +56,36 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
 
   @Test
   public void testGetActualStartPosition() {
-    writeFile("A.java",
+    // Join the file content strings with the platform line separator, then get the index of the
+    // '-' character, which is the start of the literal.  Lets this test pass on platforms with 
+    // line separators of different lengths.
+    String fileContent = Joiner.on(System.lineSeparator()).join(
         "public class A { ",
         "  public void foo() {",
         "    int i;",
         "    i = -1;",
         "  }",
         "}");
-    assertCompiles(literalExpressionMatches(literalHasActualStartPosition(59)));
+    int expectedIndex = fileContent.indexOf('-');
+    writeFile("A.java", fileContent);
+    assertCompiles(literalExpressionMatches(literalHasActualStartPosition(expectedIndex)));
   }
 
   @Test
   public void testGetActualStartPositionWithWhitespace() {
-    writeFile("A.java",
+    // Join the file content strings with the platform line separator, then get the index of the
+    // '-' character, which is the start of the literal.  Lets this test pass on platforms with 
+    // line separators of different lengths.
+    String fileContent = Joiner.on(System.lineSeparator()).join(
         "public class A { ",
         "  public void foo() {",
         "    int i;",
         "    i = -     1;",
         "  }",
         "}");
-    assertCompiles(literalExpressionMatches(literalHasActualStartPosition(59)));
+    int expectedIndex = fileContent.indexOf('-');
+    writeFile("A.java", fileContent);
+    assertCompiles(literalExpressionMatches(literalHasActualStartPosition(expectedIndex)));
   }
 
   private Matcher<LiteralTree> literalHasActualStartPosition(final int startPosition) {
