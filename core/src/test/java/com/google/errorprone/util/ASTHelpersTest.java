@@ -19,6 +19,7 @@ package com.google.errorprone.util;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import com.google.common.base.Joiner;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.CompilerBasedAbstractTest;
 import com.google.errorprone.matchers.Matcher;
@@ -43,6 +44,12 @@ import java.util.List;
 
 @RunWith(JUnit4.class)
 public class ASTHelpersTest extends CompilerBasedAbstractTest {
+  
+  // For tests that expect a specific offset in the file, we test with both Windows and UNIX
+  // line separators, but we hardcode the line separator in the tests to ensure the tests are 
+  // hermetic and do not depend on the platform on which they are run.
+  private static final Joiner UNIX_LINE_JOINER = Joiner.on("\n");
+  private static final Joiner WINDOWS_LINE_JOINER = Joiner.on("\r\n");
 
   final List<TestScanner> tests = new ArrayList<>();
 
@@ -54,27 +61,55 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void testGetActualStartPosition() {
-    writeFile("A.java",
+  public void testGetActualStartPositionUnix() {
+    String fileContent = UNIX_LINE_JOINER.join(
         "public class A { ",
         "  public void foo() {",
         "    int i;",
         "    i = -1;",
         "  }",
         "}");
+    writeFile("A.java", fileContent);
     assertCompiles(literalExpressionMatches(literalHasActualStartPosition(59)));
+  }
+  
+  @Test
+  public void testGetActualStartPositionWindows() {
+    String fileContent = WINDOWS_LINE_JOINER.join(
+        "public class A { ",
+        "  public void foo() {",
+        "    int i;",
+        "    i = -1;",
+        "  }",
+        "}");
+    writeFile("A.java", fileContent);
+    assertCompiles(literalExpressionMatches(literalHasActualStartPosition(62)));
   }
 
   @Test
-  public void testGetActualStartPositionWithWhitespace() {
-    writeFile("A.java",
+  public void testGetActualStartPositionWithWhitespaceUnix() {
+    String fileContent = UNIX_LINE_JOINER.join(
         "public class A { ",
         "  public void foo() {",
         "    int i;",
         "    i = -     1;",
         "  }",
         "}");
+    writeFile("A.java", fileContent);
     assertCompiles(literalExpressionMatches(literalHasActualStartPosition(59)));
+  }
+  
+  @Test
+  public void testGetActualStartPositionWithWhitespaceWindows() {
+    String fileContent = WINDOWS_LINE_JOINER.join(
+        "public class A { ",
+        "  public void foo() {",
+        "    int i;",
+        "    i = -     1;",
+        "  }",
+        "}");
+    writeFile("A.java", fileContent);
+    assertCompiles(literalExpressionMatches(literalHasActualStartPosition(62)));
   }
 
   private Matcher<LiteralTree> literalHasActualStartPosition(final int startPosition) {
