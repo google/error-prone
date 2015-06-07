@@ -22,6 +22,7 @@ import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static org.junit.Assert.fail;
 
+import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
@@ -93,6 +94,24 @@ public class CompilationTestHelperTest {
   }
 
   @Test
+  public void fileWithBugMatcherAndNoErrorsFails() {
+    try {
+      compilationHelper
+          .addSourceLines(
+              "Test.java",
+              "public class Test {",
+              "  // BUG: Diagnostic matches: X",
+              "  public void doIt() {}",
+              "}")
+          .expectErrorMessage("X", Predicates.containsPattern(""))
+          .doTest();
+      fail();
+    } catch (AssertionError expected) {
+      assertThat(expected.getMessage()).contains("Did not see an error on line 3");
+    }
+  }
+
+  @Test
   public void fileWithBugMarkerAndMatchingErrorSucceeds() {
     compilationHelper
         .addSourceLines(
@@ -103,6 +122,21 @@ public class CompilationTestHelperTest {
             "    return true;",
             "  }",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void fileWithBugMatcherAndMatchingErrorSucceeds() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "public class Test {",
+            "  public boolean doIt() {",
+            "    // BUG: Diagnostic matches: X",
+            "    return true;",
+            "  }",
+            "}")
+        .expectErrorMessage("X", Predicates.containsPattern("Method may return normally"))
         .doTest();
   }
 
@@ -126,6 +160,26 @@ public class CompilationTestHelperTest {
   }
 
   @Test
+  public void fileWithBugMatcherAndErrorOnWrongLineFails() {
+    try {
+      compilationHelper
+          .addSourceLines(
+              "Test.java",
+              "public class Test {",
+              "  // BUG: Diagnostic matches: X",
+              "  public boolean doIt() {",
+              "    return true;",
+              "  }",
+              "}")
+          .expectErrorMessage("X", Predicates.containsPattern(""))
+          .doTest();
+      fail();
+    } catch (AssertionError expected) {
+      assertThat(expected.getMessage()).contains("Did not see an error on line 3");
+    }
+  }
+
+  @Test
   public void fileWithMultipleBugMarkersAndMatchingErrorsSucceeds() {
     compilationHelper
         .addSourceLines(
@@ -140,6 +194,45 @@ public class CompilationTestHelperTest {
             "    return null;",
             "  }",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void fileWithMultipleSameBugMatchersAndMatchingErrorsSucceeds() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "public class Test {",
+            "  public boolean doIt() {",
+            "    // BUG: Diagnostic matches: X",
+            "    return true;",
+            "  }",
+            "  public String doItAgain() {",
+            "    // BUG: Diagnostic matches: X",
+            "    return null;",
+            "  }",
+            "}")
+        .expectErrorMessage("X", Predicates.containsPattern("Method may return normally"))
+        .doTest();
+  }
+
+  @Test
+  public void fileWithMultipleDifferentBugMatchersAndMatchingErrorsSucceeds() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "public class Test {",
+            "  public boolean doIt() {",
+            "    // BUG: Diagnostic matches: X",
+            "    return true;",
+            "  }",
+            "  public String doItAgain() {",
+            "    // BUG: Diagnostic matches: Y",
+            "    return null;",
+            "  }",
+            "}")
+        .expectErrorMessage("X", Predicates.containsPattern("Method may return normally"))
+        .expectErrorMessage("Y", Predicates.containsPattern("Method may return normally"))
         .doTest();
   }
 
@@ -200,6 +293,18 @@ public class CompilationTestHelperTest {
   }
 
   @Test
+  public void expectNoDiagnoticsAndNoDiagnosticsProducedSucceedsWithMatches() {
+    compilationHelper
+        .expectNoDiagnostics()
+        .addSourceLines(
+            "Test.java",
+            "// BUG: Diagnostic matches: X",
+            "public class Test {}")
+        .expectErrorMessage("X", Predicates.containsPattern(""))
+        .doTest();
+  }
+
+  @Test
   public void expectNoDiagnoticsButDiagnosticsProducedFails() {
     try {
     compilationHelper
@@ -212,6 +317,27 @@ public class CompilationTestHelperTest {
             "    return true;",
             "  }",
             "}")
+        .doTest();
+    fail();
+    } catch (AssertionError expected) {
+      assertThat(expected.getMessage()).contains("Expected no diagnostics produced, but found 1");
+    }
+  }
+
+  @Test
+  public void expectNoDiagnoticsButDiagnosticsProducedFailsWithMatches() {
+    try {
+    compilationHelper
+        .expectNoDiagnostics()
+        .addSourceLines(
+            "Test.java",
+            "public class Test {",
+            "  public boolean doIt() {",
+            "    // BUG: Diagnostic matches: X",
+            "    return true;",
+            "  }",
+            "}")
+        .expectErrorMessage("X", Predicates.containsPattern(""))
         .doTest();
     fail();
     } catch (AssertionError expected) {
@@ -235,6 +361,20 @@ public class CompilationTestHelperTest {
         .doTest();
   }
 
+  @Test
+  public void missingExpectErrorFails() {
+    try {
+      compilationHelper
+          .addSourceLines(
+              "Test.java",
+              " // BUG: Diagnostic matches: X",
+              "public class Test {}")
+          .doTest();
+      fail();
+    } catch(AssertionError expected) {
+      assertThat(expected.getMessage()).contains("No expected error message with key [X]");
+    }
+  }
 
   @BugPattern(name = "ReturnTreeChecker",
       summary = "Method may return normally.",

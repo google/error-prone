@@ -17,10 +17,12 @@
 package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertWithMessage;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.DiagnosticTestHelper.LookForCheckNameInDiagnostic;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -130,7 +132,9 @@ public class CompilationTestHelper {
    * each line of the test file that contains the bug marker pattern "// BUG: Diagnostic contains:
    * foo", we expect to see a diagnostic on that line containing "foo". For each line of the test
    * file that does <i>not</i> contain the bug marker pattern, we expect no diagnostic to be
-   * generated.
+   * generated.  You can also use "// BUG: Diagnostic matches: X" in tandem with
+   * {@code expectErrorMessage("X", "foo")} to allow you to programatically construct the
+   * error message.
    *
    * @param path a path for the source file
    * @param lines the content of the source file
@@ -204,6 +208,23 @@ public class CompilationTestHelper {
     expectedResult = Optional.of(result);
     return this;
   }
+  
+  /**
+   * Expects an error message matching {@code matcher} at the line below a comment matching the key.
+   * For example, given the source
+   * <pre>
+   *   // BUG: Diagnostic matches: X
+   *   a = b + c;
+   * </pre>
+   * ... you can use
+   * {@code expectErrorMessage("X", Predicates.containsPattern("Can't add b to c"));}
+   *
+   * <p>Error message keys that don't match any diagnostics will cause test to fail.
+   */
+  public CompilationTestHelper expectErrorMessage(String key, Predicate<CharSequence> matcher) {
+    diagnosticHelper.expectErrorMessage(key, matcher);
+    return this;
+  }
 
   /**
    * Performs a compilation and checks that the diagnostics and result match the expectations.
@@ -233,7 +254,9 @@ public class CompilationTestHelper {
         } catch (IOException e) {
           throw new IOError(e);
         }
-      }
+      }      
+      assertTrue("Unused error keys: " + diagnosticHelper.getUnusedLookupKeys(),
+          diagnosticHelper.getUnusedLookupKeys().isEmpty());
     }
 
     if (expectedResult.isPresent()) {

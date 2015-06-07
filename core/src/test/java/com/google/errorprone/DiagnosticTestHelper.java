@@ -24,7 +24,9 @@ import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Sets;
 import com.google.common.io.CharSource;
 
 import org.hamcrest.Description;
@@ -36,8 +38,12 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticListener;
@@ -53,6 +59,8 @@ public class DiagnosticTestHelper {
   // When testing a single error-prone check, the name of the check. Used to validate diagnostics.
   // Null if not testing a single error-prone check.
   private final String checkName;
+  
+  private final Map<String, Predicate<CharSequence>> expectedErrorMsgs = new HashMap<>();
 
   /**
    * Construct a {@link DiagnosticTestHelper} not associated with a specific check.
@@ -167,7 +175,7 @@ public class DiagnosticTestHelper {
   }
 
   public static Matcher<Diagnostic<? extends JavaFileObject>> diagnosticOnLine(
-      final URI fileURI, final long line, final String message) {
+      final URI fileURI, final long line, final Predicate<CharSequence> matcher) {
     return new TypeSafeDiagnosingMatcher<Diagnostic<? extends JavaFileObject>>() {
       @Override
       public boolean matchesSafely(Diagnostic<? extends JavaFileObject> item,
@@ -189,8 +197,8 @@ public class DiagnosticTestHelper {
           return false;
         }
 
-        if (!item.getMessage(Locale.getDefault()).contains(message)) {
-          mismatchDescription.appendText("diagnostic does not contain ").appendValue(message);
+        if (!matcher.apply(item.getMessage(Locale.getDefault()))) {
+          mismatchDescription.appendText("diagnostic does not match ").appendValue(matcher);
           return false;
         }
 
@@ -202,8 +210,8 @@ public class DiagnosticTestHelper {
         description
             .appendText("a diagnostic on line ")
             .appendValue(line)
-            .appendText(" that contains \n")
-            .appendValue(message)
+            .appendText(" that matches \n")
+            .appendValue(matcher)
             .appendText("\n");
       }
     };
@@ -240,11 +248,29 @@ public class DiagnosticTestHelper {
    * // bar.baz()
    * // baz.foo()
    */
-  private static final String BUG_MARKER_COMMENT = "// BUG: Diagnostic contains:";
+  private static final String BUG_MARKER_COMMENT_INLINE = "// BUG: Diagnostic contains:";
+  private static final String BUG_MARKER_COMMENT_LOOKUP = "// BUG: Diagnostic matches:";
+  private final Set<String> usedLookupKeys = new HashSet<>();
 
   enum LookForCheckNameInDiagnostic {
     YES,
     NO;
+  }
+  
+  /**
+   * Expects an error message matching {@code matcher} at the line below a comment matching the key.
+   * For example, given the source
+   * <pre>
+   *   // BUG: Diagnostic matches: X
+   *   a = b + c;
+   * </pre>
+   * ... you can use
+   * {@code expectErrorMessage("X", Predicates.containsPattern("Can't add b to c"));}
+   *
+   * <p>Error message keys that don't match any diagnostics will cause test to fail.
+   */
+  public void expectErrorMessage(String key, Predicate<CharSequence> matcher) {
+    expectedErrorMsgs.put(key, matcher);
   }
 
   /**
@@ -267,15 +293,35 @@ public class DiagnosticTestHelper {
         break;
       }
 
-      if (line.contains(BUG_MARKER_COMMENT)) {
+      List<Predicate<CharSequence>> predicates = null;
+      if (line.contains(BUG_MARKER_COMMENT_INLINE)) {
         // Diagnostic must contain all patterns from the bug marker comment.
-        List<String> patterns = extractPatterns(line, reader);
-        int lineNumber = reader.getLineNumber();
+        List<String> patterns = extractPatterns(line, reader, BUG_MARKER_COMMENT_INLINE);
+        predicates = new ArrayList<>(patterns.size());
         for (String pattern : patterns) {
-          Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> patternMatcher =
-              hasItem(diagnosticOnLine(source.toUri(), lineNumber, pattern));
+          predicates.add(new SimpleStringContains(pattern));
+        }
+      } else if (line.contains(BUG_MARKER_COMMENT_LOOKUP)) {
+        int markerLineNumber = reader.getLineNumber();
+        List<String> lookupKeys = extractPatterns(line, reader, BUG_MARKER_COMMENT_LOOKUP);
+        predicates = new ArrayList<>(lookupKeys.size());
+        for (String lookupKey : lookupKeys) {
           assertTrue(
-              "Did not see an error on line " + lineNumber + " containing " + pattern
+              "No expected error message with key [" + lookupKey + "] as expected from line ["
+              + markerLineNumber + "] with diagnostic [" + line.trim() + "]",
+              expectedErrorMsgs.containsKey(lookupKey));
+          predicates.add(expectedErrorMsgs.get(lookupKey));
+          usedLookupKeys.add(lookupKey);
+        }
+      }
+      
+      if (predicates != null) {
+        int lineNumber = reader.getLineNumber();
+        for (Predicate<CharSequence> predicate : predicates) {
+          Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> patternMatcher =
+              hasItem(diagnosticOnLine(source.toUri(), lineNumber, predicate));
+          assertTrue(
+              "Did not see an error on line " + lineNumber + " matching " + predicate
                   + ". All errors:\n" + diagnostics,
               patternMatcher.matches(diagnostics));
         }
@@ -283,7 +329,8 @@ public class DiagnosticTestHelper {
         if (checkName != null && lookForCheckNameInDiagnostic == LookForCheckNameInDiagnostic.YES) {
           // Diagnostic must contain check name.
           Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> checkNameMatcher =
-              hasItem(diagnosticOnLine(source.toUri(), lineNumber, "[" + checkName + "]"));
+              hasItem(diagnosticOnLine(
+                  source.toUri(), lineNumber, new SimpleStringContains("[" + checkName + "]")));
           assertTrue(
               "Did not see an error on line " + lineNumber + " containing [" + checkName
                   + "]. All errors:\n" + diagnostics,
@@ -301,23 +348,30 @@ public class DiagnosticTestHelper {
     } while (true);
     reader.close();
   }
+  
+  /** Returns the lookup keys that weren't used. */
+  public Set<String> getUnusedLookupKeys() {    
+    return Sets.difference(expectedErrorMsgs.keySet(), usedLookupKeys);
+  }
 
   /**
    * Extracts the patterns from a bug marker comment.
    *
    * @param line The first line of the bug marker comment
    * @param reader A reader for the test file
+   * @param matchString The bug marker comment match string.
    * @return A list of patterns that the diagnostic is expected to contain
    * @throws IOException
    */
-  private static List<String> extractPatterns(String line, BufferedReader reader)
+  private static List<String> extractPatterns(
+      String line, BufferedReader reader, String matchString)
       throws IOException {
-    int bugMarkerIndex = line.indexOf(BUG_MARKER_COMMENT);
+    int bugMarkerIndex = line.indexOf(matchString);
     if (bugMarkerIndex < 0) {
       throw new IllegalArgumentException("Line must contain bug marker prefix");
     }
     List<String> result = new ArrayList<String>();
-    String restOfLine = line.substring(bugMarkerIndex + BUG_MARKER_COMMENT.length()).trim();
+    String restOfLine = line.substring(bugMarkerIndex + matchString.length()).trim();
     result.add(restOfLine);
     line = reader.readLine().trim();
     while (line.startsWith("//")) {
@@ -327,6 +381,24 @@ public class DiagnosticTestHelper {
     }
 
     return result;
+  }
+  
+  private static class SimpleStringContains implements Predicate<CharSequence>  {
+    private final String pattern;
+
+    SimpleStringContains(String pattern) {
+      this.pattern = pattern;
+    }
+    
+    @Override
+    public boolean apply(CharSequence input) {
+      return input.toString().contains(pattern);
+    }
+    
+    @Override
+    public String toString() {
+      return pattern;
+    }
   }
 
   private static class ClearableDiagnosticCollector<S> implements DiagnosticListener<S> {
