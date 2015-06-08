@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.Suppressibility.UNSUPPRESSIBLE;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
@@ -48,7 +49,7 @@ import javax.annotation.Nullable;
         + " name of the package. For example, classes in the package"
         + " `edu.oswego.cs.dl.util.concurrent` should be located in:"
         + " `.../edu/oswego/cs/dl/util/concurrent`.",
-    category = JDK, severity = ERROR, maturity = MATURE)
+    category = JDK, severity = ERROR, maturity = MATURE, suppressibility = UNSUPPRESSIBLE)
 public class PackageLocation extends BugChecker implements CompilationUnitTreeMatcher {
 
   private static final Joiner DOT_JOINER = Joiner.on('.');
