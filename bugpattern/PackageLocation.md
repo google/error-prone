@@ -16,4 +16,4 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 Java files should be located in a directory that matches the fully qualified name of the package. For example, classes in the package `edu.oswego.cs.dl.util.concurrent` should be located in: `.../edu/oswego/cs/dl/util/concurrent`.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("PackageLocation")` annotation to the enclosing element.
+This check may not be suppressed.
