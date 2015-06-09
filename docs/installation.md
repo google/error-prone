@@ -22,12 +22,23 @@ Edit your `pom.xml` file to add settings to the maven-compiler-plugin:
       <configuration>
         <compilerId>javac-with-errorprone</compilerId>
         <forceJavacCompilerUse>true</forceJavacCompilerUse>
+        <!-- maven-compiler-plugin defaults to targeting Java 5, but our javac
+             only supports >=6 -->
+        <source>7</source>
+        <target>7</target>
       </configuration>
       <dependencies>
         <dependency>
           <groupId>org.codehaus.plexus</groupId>
           <artifactId>plexus-compiler-javac-errorprone</artifactId>
           <version>2.5</version>
+        </dependency>
+        <!-- override plexus-compiler-javac-errorprone's dependency on
+             Error Prone with the latest version -->
+        <dependency>
+          <groupId>com.google.errorprone</groupId>
+          <artifactId>error_prone_core</artifactId>
+          <version>2.0.3</version>
         </dependency>
       </dependencies>
     </plugin>
