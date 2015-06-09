@@ -18,7 +18,7 @@ Edit your `pom.xml` file to add settings to the maven-compiler-plugin:
     <plugin>
       <groupId>org.apache.maven.plugins</groupId>
       <artifactId>maven-compiler-plugin</artifactId>
-      <version>3.1</version>
+      <version>3.3</version>
       <configuration>
         <compilerId>javac-with-errorprone</compilerId>
         <forceJavacCompilerUse>true</forceJavacCompilerUse>
