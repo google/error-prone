@@ -97,7 +97,8 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 
-import java.util.HashSet;
+import java.util.Collections;
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -163,21 +164,20 @@ public class NoAllocationChecker extends BugChecker
 
   private static Matcher<ExpressionTree> primitiveArrayExpression = isPrimitiveArrayType();
 
-  private static Set<Kind> allCompoundOperators = new HashSet<>(11);
-
-  static {
-    allCompoundOperators.add(AND_ASSIGNMENT);
-    allCompoundOperators.add(DIVIDE_ASSIGNMENT);
-    allCompoundOperators.add(LEFT_SHIFT_ASSIGNMENT);
-    allCompoundOperators.add(MINUS_ASSIGNMENT);
-    allCompoundOperators.add(MULTIPLY_ASSIGNMENT);
-    allCompoundOperators.add(OR_ASSIGNMENT);
-    allCompoundOperators.add(PLUS_ASSIGNMENT);
-    allCompoundOperators.add(REMAINDER_ASSIGNMENT);
-    allCompoundOperators.add(RIGHT_SHIFT_ASSIGNMENT);
-    allCompoundOperators.add(UNSIGNED_RIGHT_SHIFT_ASSIGNMENT);
-    allCompoundOperators.add(XOR_ASSIGNMENT);
-  }
+  private static final Set<Kind> ALL_COMPOUND_OPERATORS =
+      Collections.unmodifiableSet(
+          EnumSet.of(
+              AND_ASSIGNMENT,
+              DIVIDE_ASSIGNMENT,
+              LEFT_SHIFT_ASSIGNMENT,
+              MINUS_ASSIGNMENT,
+              MULTIPLY_ASSIGNMENT,
+              OR_ASSIGNMENT,
+              PLUS_ASSIGNMENT,
+              REMAINDER_ASSIGNMENT,
+              RIGHT_SHIFT_ASSIGNMENT,
+              UNSIGNED_RIGHT_SHIFT_ASSIGNMENT,
+              XOR_ASSIGNMENT));
 
   /**
    * Matches if a Tree has a ThrowTree before any MethodTree in its hierarchy. We don't want
@@ -250,13 +250,11 @@ public class NoAllocationChecker extends BugChecker
    */
   private static Matcher<CompoundAssignmentTree> compoundAssignmentMatcher =
       allOf(
-        not(withinThrow),
-        enclosingMethod(noAllocationMethodMatcher),
-        anyOf(
-          compoundAssignment(PLUS_ASSIGNMENT, isString, anyExpression),
-          compoundAssignment(allCompoundOperators, not(primitiveExpression), anyExpression)
-        )
-      );
+          not(withinThrow),
+          enclosingMethod(noAllocationMethodMatcher),
+          anyOf(
+              compoundAssignment(PLUS_ASSIGNMENT, isString, anyExpression),
+              compoundAssignment(ALL_COMPOUND_OPERATORS, not(primitiveExpression), anyExpression)));
 
   /**
    * Matches if foreach is used on a non-array or if boxing occurs with an array.
