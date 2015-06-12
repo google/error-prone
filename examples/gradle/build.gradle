@@ -1,17 +1,21 @@
-apply plugin: 'java'
-
 // See https://github.com/tbroyer/gradle-errorprone-plugin
-apply plugin: 'errorprone'
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.7.1'
+  }
+}
+
+apply plugin: 'java'
+apply plugin: 'net.ltgt.errorprone'
 
 repositories {
-    mavenCentral()
+  mavenCentral()
 }
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'net.ltgt.gradle:gradle-errorprone-plugin:latest.release'
-    }
+configurations.errorprone {
+  resolutionStrategy.force 'com.google.errorprone:error_prone_core:2.0.3'
 }
-
