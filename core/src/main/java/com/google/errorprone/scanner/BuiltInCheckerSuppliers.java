@@ -49,6 +49,7 @@ import com.google.errorprone.bugpatterns.EqualsNaN;
 import com.google.errorprone.bugpatterns.FallThroughSuppression;
 import com.google.errorprone.bugpatterns.Finally;
 import com.google.errorprone.bugpatterns.ForOverrideChecker;
+import com.google.errorprone.bugpatterns.GetClassOnClass;
 import com.google.errorprone.bugpatterns.GuiceAssistedInjectScoping;
 import com.google.errorprone.bugpatterns.GuiceAssistedParameters;
 import com.google.errorprone.bugpatterns.GuiceInjectOnFinalField;
@@ -243,6 +244,7 @@ public class BuiltInCheckerSuppliers {
           DoubleCheckedLocking.class,
           EmptyIfStatement.class,
           FallThroughSuppression.class,
+          GetClassOnClass.class,
           GuiceAssistedParameters.class,
           GuiceInjectOnFinalField.class,
           GuiceOverridesGuiceInjectableMethod.class,
