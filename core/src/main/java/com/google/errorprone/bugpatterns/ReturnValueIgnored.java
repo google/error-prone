@@ -58,8 +58,7 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
   // See a list of the FindBugs checks here:
   // http://code.google.com/searchframe#Fccnll6ERQ0/trunk/findbugs/src/java/edu/umd/cs/findbugs/ba/CheckReturnAnnotationDatabase.java
   private static final Set<String> typesToCheck = new HashSet<>(Arrays.asList(
-      "java.lang.String", "java.math.BigInteger", "java.math.BigDecimal"));
-
+      "java.lang.String", "java.math.BigInteger", "java.math.BigDecimal", "java.nio.file.Path"));
   /**
    * Return a matcher for method invocations in which the method being called is on an instance of
    * a type in the typesToCheck set and returns the same type (e.g. String.trim() returns a
