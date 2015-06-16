@@ -36,6 +36,10 @@ public class NoAllocationCheckerNegativeCases {
   }
 
   @NoAllocation
+  @SuppressWarnings({"foo, bar"})
+  public void annotatedWithArray() {}
+
+  @NoAllocation
   public boolean arrayComparison(int[] a) {
     return a.length > 0 && a[0] > 1;
   }
