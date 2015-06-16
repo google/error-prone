@@ -51,9 +51,8 @@ import com.sun.source.tree.MethodInvocationTree;
     maturity = MATURE)
 public class GetClassOnClass extends BugChecker implements MethodInvocationTreeMatcher {
 
-  // TODO(eaftan): Switch to .onExactClass() after b/21814228 is fixed.
   private static final Matcher<ExpressionTree> getClassMethodMatcher =
-      instanceMethod().onDescendantOf("java.lang.Class").named("getClass");
+      instanceMethod().onExactClass("java.lang.Class").named("getClass");
 
   /**
    * Suggests removing getClass().

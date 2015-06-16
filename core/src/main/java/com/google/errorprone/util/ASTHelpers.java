@@ -545,6 +545,15 @@ public class ASTHelpers {
     return types.isSubtype(types.erasure(s), types.erasure(t));
   }
 
+  /** Returns true if erasure(s) == erasure(t). */
+  public static boolean isSameType(Type s, Type t, VisitorState state) {
+    if (s == null || t == null) {
+      return false;
+    }
+    Types types = state.getTypes();
+    return types.isSameType(types.erasure(s), types.erasure(t));
+  }
+
   /** Returns the modifiers tree of the given class, method, or variable declaration. */
   @Nullable
   public static ModifiersTree getModifiers(Tree tree) {

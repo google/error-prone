@@ -19,6 +19,7 @@ package com.google.errorprone.predicates.type;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.predicates.TypePredicate;
 import com.google.errorprone.suppliers.Supplier;
+import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.tools.javac.code.Type;
 
@@ -41,7 +42,7 @@ public class ExactAny implements TypePredicate {
       if (expected == null) {
         continue;
       }
-      if (state.getTypes().isSameType(expected, type)) {
+      if (ASTHelpers.isSameType(expected, type, state)) {
         return true;
       }
     }
