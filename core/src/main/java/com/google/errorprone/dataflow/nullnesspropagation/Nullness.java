@@ -34,7 +34,7 @@ public enum Nullness implements AbstractValue<Nullness> {
    *        \      /
    *         Bottom
    */
-  NULLABLE("Nullable"),     // TODO(user): Rename to POSSIBLY_NULL?
+  NULLABLE("Nullable"),     // TODO(eaftan): Rename to POSSIBLY_NULL?
   NULL("Null"),
   NONNULL("Non-null"),
   BOTTOM("Bottom");

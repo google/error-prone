@@ -167,7 +167,7 @@ public class CompileTimeConstantExpressionMatcherTest {
     assertCompilerMatchesOnAssignment(expectedMatches, lines);
   }
 
-  // TODO(user): We'd like to eventually support other cases, but I first need
+  // TODO(xtof): We'd like to eventually support other cases, but I first need
   // to determine with confidence that the checker can ensure all initializations
   // and assignments to such variables are compile-time-constant.
   // For now, the annotation's target is restricted to ElementType.PARAMETER.

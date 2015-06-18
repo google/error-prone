@@ -329,7 +329,7 @@ public class GuardedByCheckerTest {
         .doTest();
   }
 
-  @Ignore // TODO(user): support read/write lock copies
+  @Ignore // TODO(cushon): support read/write lock copies
   @Test
   public void testReadWriteLockCopy() throws Exception {
     compilationHelper
@@ -917,7 +917,7 @@ public class GuardedByCheckerTest {
         .doTest();
   }
 
-  // TODO(user): make the diagnostic comprehensible...
+  // TODO(cushon): make the diagnostic comprehensible...
   @Test
   public void wrongInnerClassInstance() throws Exception {
     compilationHelper
@@ -944,7 +944,7 @@ public class GuardedByCheckerTest {
 
   // (This currently passes because the analysis ignores try-with-resources, not because it
   // understands why this example is safe.)
-  @Ignore // TODO(user): support try-with-resources
+  @Ignore // TODO(cushon): support try-with-resources
   @Test
   public void tryWithResources() throws Exception {
     compilationHelper
@@ -978,7 +978,7 @@ public class GuardedByCheckerTest {
   }
 
   // Test that the contents of try-with-resources are ignored (for now).
-  // TODO(user): support try-with-resources
+  // TODO(cushon): support try-with-resources
   @Test
   public void tryWithResourcesAreUnsupported() throws Exception {
     compilationHelper
@@ -1029,7 +1029,7 @@ public class GuardedByCheckerTest {
         .doTest();
   }
 
-  // TODO(user): allowing @GuardedBy on overridden methods is unsound.
+  // TODO(cushon): allowing @GuardedBy on overridden methods is unsound.
   @Test
   public void testLexicalScopingExampleTwo() throws Exception {
     compilationHelper

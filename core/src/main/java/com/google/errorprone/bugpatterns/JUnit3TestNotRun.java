@@ -68,7 +68,7 @@ public class JUnit3TestNotRun extends BugChecker implements MethodTreeMatcher {
    * There are some ambiguities in this regex that lead to bad corrections
    * (i.e. tets -> tests, tesst -> testst), but the error is still found
    * (those could be improved with regex lookahead, but I prefer simpler regex).
-   *  TODO(user): see if we can cleanup intentional ".test" misspellings
+   *  TODO(rburny): see if we can cleanup intentional ".test" misspellings
    */
   private static final Pattern MISSPELLED_NAME = Pattern.compile(
       "t.est|te.st|"    +  // letter inserted

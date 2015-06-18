@@ -237,7 +237,7 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
   private static final Matcher<Tree> THROW_OR_FAIL_IN_BLOCK = new Contains(
       Matchers.anyOf(
           toType(StatementTree.class, THROW_STATEMENT),
-          // TODO(user): Include Preconditions.checkState(false)?
+          // TODO(schmitt): Include Preconditions.checkState(false)?
           toType(ExpressionTree.class, ASSERT_TRUE_FALSE),
           toType(ExpressionTree.class, ASSERT_FALSE_TRUE),
           toType(ExpressionTree.class, ASSERT_UNEQUAL),
@@ -495,7 +495,7 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
       return JUnitMatchers.looksLikeJUnit3SetUp.matches(enclosingMethodTree, state)
           || JUnitMatchers.looksLikeJUnit3TearDown.matches(enclosingMethodTree, state)
           || name.contentEquals("main")
-          // TODO(user): Move to JUnitMatchers?
+          // TODO(schmitt): Move to JUnitMatchers?
           || name.contentEquals("suite")
           || Matchers.hasAnnotation(JUNIT_BEFORE_ANNOTATION).matches(enclosingMethodTree, state)
           || Matchers.hasAnnotation(JUNIT_AFTER_ANNOTATION).matches(enclosingMethodTree, state);

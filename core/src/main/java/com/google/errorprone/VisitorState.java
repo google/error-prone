@@ -106,7 +106,7 @@ public class VisitorState {
   }
 
   public void reportMatch(Description description) {
-    // TODO(user): creating Descriptions with the default severity and updating them here isn't
+    // TODO(cushon): creating Descriptions with the default severity and updating them here isn't
     // ideal (we could forget to do the update), so consider removing severity from Description.
     // Instead, there could be another method on the listener that took a description and a
     // (separate) SeverityLevel. Adding the method to the interface would require updating the

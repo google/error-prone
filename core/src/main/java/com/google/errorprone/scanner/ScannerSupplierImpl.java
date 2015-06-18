@@ -49,7 +49,7 @@ class ScannerSupplierImpl extends ScannerSupplier {
     this.severities = severities;
   }
 
-  // TODO(user): BugCheckerSupplier::get
+  // TODO(cushon): BugCheckerSupplier::get
   private static final Function<BugCheckerInfo, BugChecker> INSTANTIATE_CHECKER =
       new Function<BugCheckerInfo, BugChecker>() {
         @Override

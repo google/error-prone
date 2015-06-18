@@ -271,5 +271,5 @@ public class NullnessPropagationTransferCases4 {
     triggerNullnessChecker(str2);
   }
   
-  // TODO(user): tests for bottom?
+  // TODO(eaftan): tests for bottom?
 }

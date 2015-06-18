@@ -53,14 +53,14 @@ import javax.lang.model.element.TypeElement;
     + "is incompatible with a set of provided modifiers. This check ensures that all "
     + "annotations respect their @IncompatibleModifiers specifications.",
     linkType = NONE, category = JDK, severity = WARNING, maturity = MATURE)
-// TODO(user): merge the implementation with RequiredModifiersChecker
+// TODO(cushon): merge the implementation with RequiredModifiersChecker
 public class IncompatibleModifiersChecker extends BugChecker implements AnnotationTreeMatcher {
 
   private static final String MESSAGE_TEMPLATE = "%s has specified that it should not be used"
       + " together with the following modifiers: %s";
 
 
-  // TODO(user): deprecate and remove
+  // TODO(cushon): deprecate and remove
   private static final String GUAVA_ANNOTATION =
       "com.google.common.annotations.IncompatibleModifiers";
 

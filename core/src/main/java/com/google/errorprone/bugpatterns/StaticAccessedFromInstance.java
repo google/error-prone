@@ -91,7 +91,7 @@ public class StaticAccessedFromInstance extends BugChecker implements MemberSele
       // If the static member is defined in the enclosing class and the member is a method, then
       // just use the bare method name. Don't do this for fields, because they may share a simple
       // name with a local in the same scope.
-      // TODO(user): If we had access to name resolution info, we could do this in all applicable
+      // TODO(eaftan): If we had access to name resolution info, we could do this in all applicable
       // cases.  Investigate Scope.Entry for this.
       replacement = tree.getIdentifier().toString();
     } else {
@@ -99,7 +99,7 @@ public class StaticAccessedFromInstance extends BugChecker implements MemberSele
       replacement = ownerSym.getSimpleName() + "." + tree.getIdentifier();
 
       // Don't import implicitly imported packages (java.lang.* and current package).
-      // TODO(user): move this logic into addImport?
+      // TODO(cushon): move this logic into addImport?
       Symbol packageSym = ownerSym.packge();
       if (!packageSym.toString().equals("java.lang")
           && !packageSym.equals(whereAccessedSym.packge())) {

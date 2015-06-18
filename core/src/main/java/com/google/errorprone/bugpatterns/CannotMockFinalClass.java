@@ -59,7 +59,7 @@ import javax.lang.model.element.Modifier;
     severity = SeverityLevel.WARNING)
 public class CannotMockFinalClass extends BugChecker implements MethodInvocationTreeMatcher,
     VariableTreeMatcher {
-  // TODO(user): consider stopping mocks of primitive types here or in its own checker
+  // TODO(lowasser): consider stopping mocks of primitive types here or in its own checker
 
   // Runners like GwtMockito allow mocking final types, so we conservatively stick to JUnit4.
   private static final Matcher<AnnotationTree> runWithJunit4 = allOf(

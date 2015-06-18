@@ -94,7 +94,7 @@ public class ErrorProneAnalyzer implements TaskListener {
       // One TaskEvent is created per class declaration after FLOW is finished, but the TaskEvent
       // only provides the CompilationUnitTree and the symbol (element) for the class declaration.
       // We have to search for the class decl manually...
-      // TODO(user): suggest to upstream that TaskEvents provide a TreePath?
+      // TODO(cushon): suggest to upstream that TaskEvents provide a TreePath?
       JCClassDecl currentClassTree = null;
       for (Tree declTree : taskEvent.getCompilationUnit().getTypeDecls()) {
         if (declTree instanceof JCClassDecl) {

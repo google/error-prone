@@ -162,7 +162,7 @@ public class HeldLockAnalyzer {
       List<? extends Tree> resources = tree.getResources();
       scan(resources, locks);
 
-      // TODO(user) - recognize common try-with-resources patterns. Currently there is no standard
+      // TODO(cushon) - recognize common try-with-resources patterns. Currently there is no standard
       // implementation of an AutoCloseable lock resource to detect.
       if (!resources.isEmpty()) {
         // Bail out! We don't know what to do with try-with-resources.
@@ -344,7 +344,7 @@ public class HeldLockAnalyzer {
      * Checks for locks that are released directly. Currently only
      * {@link java.util.concurrent.locks.Lock#unlock()} is supported.
      *
-     * TODO(user): Semaphores, CAS, ... ?
+     * TODO(cushon): Semaphores, CAS, ... ?
      */
     private void handleReleasedLocks(MethodInvocationTree tree) {
       if (!lockOperationMatcher.matches(tree, state)) {
@@ -362,7 +362,7 @@ public class HeldLockAnalyzer {
         // writing to the guarded member and the read lock should be used for all other accesses,
         // but in practice the write lock is frequently held while performing a mutating operation
         // on the object stored in the field (e.g. inserting into a List).
-        // TODO(user): investigate a better way to specify the contract for ReadWriteLocks.
+        // TODO(cushon): investigate a better way to specify the contract for ReadWriteLocks.
         if ((tree.getMethodSelect() instanceof MemberSelectTree)
             && READ_WRITE_ACCESSOR_MATCHER.matches(ASTHelpers.getReceiver(tree), state)) {
           locks.add(((Select) receiver).base());
@@ -381,7 +381,7 @@ public class HeldLockAnalyzer {
       for (String lockString : annotation.value()) {
         Optional<GuardedByExpression> guard = GuardedByBinder.bindString(
             lockString, GuardedBySymbolResolver.from(tree, state));
-        // TODO(user): http://docs.oracle.com/javase/8/docs/api/java/util/Optional.html#ifPresent
+        // TODO(cushon): http://docs.oracle.com/javase/8/docs/api/java/util/Optional.html#ifPresent
         if (guard.isPresent()) {
           Optional<GuardedByExpression> lock =
             ExpectedLockCalculator.from((JCExpression) tree, guard.get(), state);

@@ -86,7 +86,7 @@ public class PreconditionsExpensiveString
         methodInvocationTree.getArguments();
     MethodInvocationTree stringFormat = (MethodInvocationTree) arguments.get(1);
 
-    // TODO(user): Figure out how to get a suggested fix. Basically we
+    // TODO(sjnickerson): Figure out how to get a suggested fix. Basically we
     // remove the String.format() wrapper, but I don't know how to express
     // this.
     return describeMatch(arguments.get(1));

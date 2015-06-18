@@ -34,7 +34,7 @@ public class ParameterMatcherImpl extends AbstractChainedMatcher<MatchState, Mat
 
   private final ImmutableList<Supplier<Type>> expected;
 
-  // TODO(user): Suppliers::typeFromString
+  // TODO(cushon): Suppliers::typeFromString
   private static final Function<String, Supplier<Type>> GET_SUPPLIER =
       new Function<String, Supplier<Type>>() {
         @Override public Supplier<Type> apply(String input) {

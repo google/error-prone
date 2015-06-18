@@ -115,7 +115,7 @@ public class SuppressionHelper {
     Set<String> newSuppressions = null;
     // Iterate over annotations on this symbol, looking for SuppressWarnings
     for (Attribute.Compound attr : sym.getAnnotationMirrors()) {
-      // TODO(user): use JavacElements.getAnnotation instead
+      // TODO(eaftan): use JavacElements.getAnnotation instead
       if (attr.type.tsym == suppressWarningsType.tsym) {
         for (List<Pair<MethodSymbol,Attribute>> v = attr.values;
             v.nonEmpty(); v = v.tail) {
@@ -126,7 +126,7 @@ public class SuppressionHelper {
                 if (newSuppressions == null) {
                   newSuppressions = new HashSet<>(suppressionsOnCurrentPath);
                 }
-                // TODO(user): check return value to see if this was a new warning?
+                // TODO(eaftan): check return value to see if this was a new warning?
                 newSuppressions.add((String) suppress.getValue());
               }
             } else {

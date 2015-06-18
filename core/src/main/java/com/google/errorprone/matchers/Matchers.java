@@ -219,7 +219,7 @@ public class Matchers {
    * @param methodName either name or full signature of the static method which is a member of the
    * class, like "compile" or "compile(java.lang.String)"
    */
-  // TODO(user): expunge
+  // TODO(cushon): expunge
   public static StaticMethod staticMethod(String fullClassName, String methodName) {
     return new StaticMethod(fullClassName, methodName);
   }
@@ -229,7 +229,7 @@ public class Matchers {
    * @param receiverMatcher Used to determine if the part of the expression before the dot matches.
    * @param methodName The name of the method to match, e.g., "equals"
    */
-  // TODO(user): expunge
+  // TODO(cushon): expunge
   public static InstanceMethod instanceMethod(Matcher<? super ExpressionTree> receiverMatcher, String methodName) {
     return new InstanceMethod(receiverMatcher, methodName);
   }
@@ -238,7 +238,7 @@ public class Matchers {
    * Matches an AST node which is an expression yielding the indicated non-static method.
    * @param receiverMatcher Used to determine if the part of the expression before the dot matches.
    */
-  // TODO(user): expunge
+  // TODO(cushon): expunge
   public static InstanceMethod methodReceiver(Matcher<? super ExpressionTree> receiverMatcher) {
     return InstanceMethod.methodReceiverMatcher(receiverMatcher);
   }
@@ -352,7 +352,7 @@ public class Matchers {
   /**
    * Matches a constructor with the given class name and parameter types.
    */
-  // TODO(user): expunge
+  // TODO(cushon): expunge
   public static Constructor constructor(String className, List<String> parameterTypes) {
     return new Constructor(className, parameterTypes);
   }
@@ -365,12 +365,12 @@ public class Matchers {
     return new ConstructorOfClass(matchType, constructorMatcher);
   }
 
-  // TODO(user): expunge
+  // TODO(cushon): expunge
   public static Matcher<MethodInvocationTree> methodSelect(Matcher<ExpressionTree> methodSelectMatcher) {
     return new MethodInvocationMethodSelect(methodSelectMatcher);
   }
 
-  // TODO(user): expunge
+  // TODO(cushon): expunge
   public static Matcher<ExpressionTree> expressionMethodSelect(Matcher<ExpressionTree> methodSelectMatcher) {
     return new ExpressionMethodSelect(methodSelectMatcher);
   }
@@ -578,11 +578,11 @@ public class Matchers {
   /**
    * Matches an AST node that is enclosed by some node that matches the given matcher.
    *
-   * TODO(user): This could be used instead of enclosingBlock and enclosingClass.
+   * TODO(eaftan): This could be used instead of enclosingBlock and enclosingClass.
    */
   public static <T extends Tree> Matcher<Tree> enclosingNode(final Matcher<T> matcher) {
     return new Matcher<Tree>() {
-      @SuppressWarnings("unchecked")  // TODO(user): this should take a Class<T>
+      @SuppressWarnings("unchecked")  // TODO(cushon): this should take a Class<T>
       @Override
       public boolean matches(Tree t, VisitorState state) {
         TreePath path = state.getPath().getParentPath();
@@ -880,7 +880,7 @@ public class Matchers {
    *
    * @param methodName The name of the method to match, e.g., "equals"
    */
-  // TODO(user): expunge
+  // TODO(cushon): expunge
   public static Matcher<MethodTree> methodIsNamed(final String methodName) {
     return new Matcher<MethodTree>() {
       @Override
@@ -1044,7 +1044,7 @@ public class Matchers {
    * @param methodName The name of the method to match, including arguments, e.g.,
    * "get(java.lang.Object)"
    */
-  // TODO(user): expunge
+  // TODO(cushon): expunge
   public static Matcher<ExpressionTree> isDescendantOfMethod(String fullClassName, String methodName) {
     return new DescendantOf(fullClassName, methodName);
   }
@@ -1086,7 +1086,7 @@ public class Matchers {
       @Override
       public boolean matches(ExpressionTree expr, VisitorState state) {
         if (!(expr instanceof JCFieldAccess)) {
-          // TODO(user): throw IllegalArgumentException?
+          // TODO(cushon): throw IllegalArgumentException?
           return false;
         }
         JCExpression selected = ((JCFieldAccess) expr).getExpression();

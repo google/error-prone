@@ -98,7 +98,7 @@ public class CompilationTestHelper {
    * Pass -proc:none unless annotation processing is explicitly enabled, to avoid picking up
    * annotation processors via service loading.
    */
-  // TODO(user): test compilations should be isolated so they can't pick things up from the
+  // TODO(cushon): test compilations should be isolated so they can't pick things up from the
   // ambient classpath.
   static List<String> disableImplicitProcessing(List<String> args) {
     if (args.indexOf("-processor") != -1
@@ -131,7 +131,7 @@ public class CompilationTestHelper {
    * @param path a path for the source file
    * @param lines the content of the source file
    */
-  // TODO(user): We could eliminate this path parameter and just infer the path from the
+  // TODO(eaftan): We could eliminate this path parameter and just infer the path from the
   // package and class name
   public CompilationTestHelper addSourceLines(String path, String... lines) {
     this.sources.add(fileManager.forSourceLines(path, lines));
@@ -181,7 +181,7 @@ public class CompilationTestHelper {
   /**
    * Performs a compilation and checks that the diagnostics and result match the expectations.
    */
-  // TODO(user): any way to ensure that this is actually called?
+  // TODO(eaftan): any way to ensure that this is actually called?
   public void doTest() {
     Preconditions.checkState(!sources.isEmpty(), "No source files to compile");
     List<String> allArgs = buildArguments(args);

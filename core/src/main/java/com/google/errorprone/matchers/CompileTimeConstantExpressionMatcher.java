@@ -45,13 +45,13 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
   private static final String COMPILE_TIME_CONSTANT_ANNOTATION =
       CompileTimeConstant.class.getName();
 
-  // TODO(user): remove once the migration is done
+  // TODO(cushon): remove once the migration is done
   private static final String GUAVA_COMPILE_TIME_CONSTANT_ANNOTATION =
       "com.google.common.annotations.CompileTimeConstant";
 
   @SuppressWarnings("unchecked")
   private final Matcher<ExpressionTree> matcher = Matchers.anyOf(
-      // TODO(user): Consider utilising mdempksy's closed-over-addition matcher (perhaps extended
+      // TODO(xtof): Consider utilising mdempksy's closed-over-addition matcher (perhaps extended
       // for other arithmetic operations).
       new ExpressionWithConstValueMatcher(),
       Matchers.kindIs(Tree.Kind.NULL_LITERAL),
@@ -63,7 +63,7 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
     return matcher.matches(t, state);
   }
 
-  // TODO(user): Perhaps some of these matchers could be generally useful, in which case they should
+  // TODO(xtof): Perhaps some of these matchers could be generally useful, in which case they should
   // be moved into c.g.errorprone.matchers.
 
   /**

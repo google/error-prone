@@ -59,7 +59,7 @@ public class RequiredModifiersChecker extends BugChecker implements AnnotationTr
   private static final String MESSAGE_TEMPLATE = "%s has specified that it must be used"
       + " together with the following modifiers: %s";
 
-  // TODO(user): deprecate and remove
+  // TODO(cushon): deprecate and remove
   private static final String GUAVA_ANNOTATION =
       "com.google.common.annotations.RequiredModifiers";
 

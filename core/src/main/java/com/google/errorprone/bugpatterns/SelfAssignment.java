@@ -56,7 +56,7 @@ import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 
 /**
- * TODO(user): Consider cases where the parent is not a statement or there is no parent?
+ * TODO(eaftan): Consider cases where the parent is not a statement or there is no parent?
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  * @author scottjohnson@google.com (Scott Johnson)
@@ -108,7 +108,7 @@ public class SelfAssignment extends BugChecker
    * If the given expression is a call to checkNotNull(x), returns x.
    * Otherwise, returns the given expression.
    *
-   * TODO(user): Also match calls to Java 7's Objects.requireNonNull() method.
+   * TODO(eaftan): Also match calls to Java 7's Objects.requireNonNull() method.
    */
   private ExpressionTree stripCheckNotNull(ExpressionTree expression, VisitorState state) {
     if (expression != null

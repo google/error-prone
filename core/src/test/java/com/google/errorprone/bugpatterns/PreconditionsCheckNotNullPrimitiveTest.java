@@ -106,7 +106,7 @@ public class PreconditionsCheckNotNullPrimitiveTest extends CompilerBasedAbstrac
     scanner.assertFoundAll();
   }
 
-  // TODO(user): Make this more reusable.
+  // TODO(mdempsky): Make this more reusable.
   private static class TestScanner extends Scanner {
     private static class Match {
       private final ImmutableList<String> expected;

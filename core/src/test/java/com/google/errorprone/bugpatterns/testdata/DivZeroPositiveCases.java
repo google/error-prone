@@ -75,7 +75,7 @@ public class DivZeroPositiveCases {
     x = f() /  0;
   }
   
-  // TODO(user): write a check for self-references via qualified names in field initializers, 
+  // TODO(cushon): write a check for self-references via qualified names in field initializers,
   // even if JLS 8.3.2.3 permits it.
   
   // BUG: Diagnostic contains: DivZero

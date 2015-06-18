@@ -14,7 +14,9 @@
 
 package com.google.errorprone.bugpatterns;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 /**
  * Test that the suggested fix is correct in the presence of whitespace, comments.
@@ -38,7 +40,7 @@ public class OverridesPositiveCase4 {
 
   abstract class Child2 extends Base {
     @Override
-    //TODO(user): improve testing infrastructure so we can enforce that no fix is suggested.
+    //TODO(cushon): improve testing infrastructure so we can enforce that no fix is suggested.
     // BUG: Diagnostic contains: Varargs
     abstract void varargsMethod(@Note final Map<Object, Object>  /*dsa*/ [ /* [ */ ] /* dsa */ xs);
   }

@@ -175,7 +175,7 @@ public class MalformedFormatString extends BugChecker implements MethodInvocatio
           .addFix(fix)
           .build();
     } catch (Exception e) {
-      // TODO(user): provide fixes for other problems
+      // TODO(rburny): provide fixes for other problems
     }
     return Description.NO_MATCH;
   }

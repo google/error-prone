@@ -36,7 +36,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * TODO(user): I'm worried about this performance of this code,
+ * TODO(eaftan): I'm worried about this performance of this code,
  * specifically the part that handles SuppressWarnings.  We should
  * profile it and see where the hotspots are.
  *
@@ -162,7 +162,7 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
   }
 
   /** Performs a non-recursive visit of a {@link CompilationUnitTree}. */
-  // TODO(user): refactor callers to use ErrorProneScanner directly, and remove it here?
+  // TODO(cushon): refactor callers to use ErrorProneScanner directly, and remove it here?
   public void matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
   }
 }

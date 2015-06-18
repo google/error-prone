@@ -77,7 +77,7 @@ public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
     /*
      * Add the @Test annotation.  If the method is static, also make the method non-static.
      *
-     * TODO(user): The static case here relies on having tree end positions available.  Come up
+     * TODO(eaftan): The static case here relies on having tree end positions available.  Come up
      * with a better way of doing this that doesn't require tree end positions.  Maybe we should
      * just not provide suggested fixes for these few cases when the javac infrastructure gets in
      * the way.

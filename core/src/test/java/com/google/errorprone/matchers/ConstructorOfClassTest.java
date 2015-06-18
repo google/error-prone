@@ -39,7 +39,7 @@ import java.util.List;
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  *
- * TODO(user): Add test for correct matching of nodes.
+ * TODO(eaftan): Add test for correct matching of nodes.
  */
 @RunWith(JUnit4.class)
 public class ConstructorOfClassTest extends CompilerBasedAbstractTest {

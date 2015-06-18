@@ -39,7 +39,7 @@ public abstract class TopLevelAnalysisWithSeverity implements TopLevelAnalysis {
         disableable, analysis);
   }
 
-  // TODO(user): consider eliminating this and respecting all configs on knownAnalysisNames
+  // TODO(lowasser): consider eliminating this and respecting all configs on knownAnalysisNames
   abstract String canonicalName();
 
   abstract boolean onByDefault();

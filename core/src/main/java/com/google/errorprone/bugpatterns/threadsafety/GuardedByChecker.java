@@ -74,7 +74,7 @@ public class GuardedByChecker extends GuardedByValidator implements BugChecker.V
   protected Description checkGuardedAccess(Tree tree, GuardedByExpression guard,
       HeldLockSet locks, VisitorState state) {
 
-    // TODO(user): support ReadWriteLocks
+    // TODO(cushon): support ReadWriteLocks
     //
     // A common pattern with ReadWriteLocks is to create a copy (either a field or a local
     // variable) to refer to the read and write locks. The analysis currently can't
@@ -140,7 +140,7 @@ public class GuardedByChecker extends GuardedByValidator implements BugChecker.V
     return state.getTypes().isSubtype(guardType, rwLockSymbol.type);
   }
 
-  // TODO(user) - this is a hack. Provide an abstraction for matchers that need to do
+  // TODO(cushon) - this is a hack. Provide an abstraction for matchers that need to do
   // stateful visiting? (e.g. a traversal that passes along a set of held locks...)
   private void report(Description description, VisitorState state) {
     if (description == null || description == Description.NO_MATCH) {

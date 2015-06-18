@@ -61,7 +61,7 @@ import javax.lang.model.element.Modifier;
 /**
  * @author cushon@google.com (Liam Miller-Cushon)
  */
-// TODO(user): allow @LazyInit on fields as a suppression mechanism?
+// TODO(cushon): allow @LazyInit on fields as a suppression mechanism?
 @BugPattern(
     name = "DoubleCheckedLocking",
     summary = "Double-checked locking on non-volatile fields is unsafe",
@@ -229,7 +229,7 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
    */
   @Nullable
   static DCLInfo findDCL(IfTree outerIf) {
-    // TODO(user): Optional.ifPresent...
+    // TODO(cushon): Optional.ifPresent...
     ExpressionTree outerIfTest = getNullCheckedExpression(outerIf.getCondition());
     if (outerIfTest == null) {
       return null;

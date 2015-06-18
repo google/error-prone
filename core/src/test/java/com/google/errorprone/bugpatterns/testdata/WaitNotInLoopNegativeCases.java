@@ -19,7 +19,7 @@ package com.google.errorprone.bugpatterns.testdata;
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  *
- * TODO(user): Add test cases for enhanced for loop, loop outside synchronized block.
+ * TODO(eaftan): Add test cases for enhanced for loop, loop outside synchronized block.
  */
 public class WaitNotInLoopNegativeCases {
 

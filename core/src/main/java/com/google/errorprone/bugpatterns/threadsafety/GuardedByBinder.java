@@ -231,7 +231,7 @@ public class GuardedByBinder {
             throw new IllegalGuardedBy("Instance access on static: " + base + ", " + sym);
           }
 
-          // TODO(user) - forbid static access on instance?
+          // TODO(cushon) - forbid static access on instance?
 
           return F.select(base, sym);
         }

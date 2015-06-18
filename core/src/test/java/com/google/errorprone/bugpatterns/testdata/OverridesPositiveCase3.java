@@ -14,11 +14,13 @@
 
 package com.google.errorprone.bugpatterns;
 
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This tests the case where there is a chain of method overrides where the varargs constraint is
  * not met, and the root has an array parameter.
- * TODO(user): The original implementation tried to be clever and make this consistent, but
+ * TODO(cushon): The original implementation tried to be clever and make this consistent, but
  * didn't handle multiple interface inheritance.
  *
  * @author cushon@google.com (Liam Miller-Cushon)

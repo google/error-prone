@@ -41,7 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * NOTE(user): This test does two rounds of compilation and relies on the first round producing
+ * NOTE(cushon): This test does two rounds of compilation and relies on the first round producing
  * classes that appear on the second round's class path. I'm not aware of any good ways to do this
  * without creating actual files on disk.
  *

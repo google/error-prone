@@ -42,7 +42,7 @@ public class Constructor implements Matcher<NewClassTree>{
 
   @Override
   public boolean matches(NewClassTree newClassTree, VisitorState state) {
-    /* TODO(user): Don't catch NullPointerException.  Need to do this right now
+    /* TODO(eaftan): Don't catch NullPointerException.  Need to do this right now
      * for internal use, but remember to remove later. */
     try {
       JCNewClass newClass = (JCNewClass) newClassTree;

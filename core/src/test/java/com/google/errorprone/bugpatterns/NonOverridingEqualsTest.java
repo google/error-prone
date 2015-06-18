@@ -26,7 +26,7 @@ import org.junit.runners.JUnit4;
 /**
  * Tests for {@link NonOverridingEquals}.
  */
-// TODO(user): Tests for correctness of suggested fix
+// TODO(eaftan): Tests for correctness of suggested fix
 @RunWith(JUnit4.class)
 public class NonOverridingEqualsTest {
   private CompilationTestHelper compilationHelper;

@@ -161,14 +161,14 @@ public class TryFailThrowable extends BugChecker implements TryTreeMatcher {
     // Verify that the only catch clause catches Throwable
     List<? extends CatchTree> catches = tryTree.getCatches();
     if (catches.size() != 1) {
-      // TODO(user): this could be supported - only the last catch would need
+      // TODO(adamwos): this could be supported - only the last catch would need
       // to be checked - it would either be Throwable or Error.
       return false;
     }
     CatchTree catchTree = catches.get(0);
     VariableTree catchType = catchTree.getParameter();
     if (!javaLangThrowable.matches(catchType, state)) {
-      // TODO(user): Error could be supported
+      // TODO(adamwos): Error could be supported
       return false;
     }
 

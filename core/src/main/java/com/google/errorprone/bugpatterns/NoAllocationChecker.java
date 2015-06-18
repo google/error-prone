@@ -187,7 +187,7 @@ public class NoAllocationChecker extends BugChecker
   private static Matcher<Tree> withinThrowOrAnnotation = new Matcher<Tree>() {
     @Override
     public boolean matches(Tree tree, VisitorState state) {
-      // TODO(user): Make this accept statements in a block that definitely will lead to a throw.
+      // TODO(agoode): Make this accept statements in a block that definitely will lead to a throw.
       TreePath path = state.getPath().getParentPath();
       while (path != null) {
         Tree node = path.getLeaf();

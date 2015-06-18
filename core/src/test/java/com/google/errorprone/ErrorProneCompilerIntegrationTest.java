@@ -297,7 +297,7 @@ public class ErrorProneCompilerIntegrationTest {
     }
   }
 
-  // TODO(user) - how can we distinguish between synthetic super() calls and real ones?
+  // TODO(cushon) - how can we distinguish between synthetic super() calls and real ones?
   @Ignore
   @Test
   public void ignoreGeneratedSuperInvocations() throws Exception {

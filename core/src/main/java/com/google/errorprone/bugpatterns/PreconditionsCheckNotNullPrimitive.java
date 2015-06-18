@@ -170,7 +170,7 @@ public class PreconditionsCheckNotNullPrimitive
    * Determines whether the expression contains a reference to one of the
    * enclosing method's parameters.
    *
-   * TODO(user): Extract this to ASTHelpers.
+   * TODO(eaftan): Extract this to ASTHelpers.
    *
    * @param path the path to the current tree node
    * @param tree the node to compare against the parameters

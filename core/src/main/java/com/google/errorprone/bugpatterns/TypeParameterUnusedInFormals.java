@@ -116,7 +116,7 @@ public class TypeParameterUnusedInFormals extends BugChecker implements MethodTr
     // e.g. <A, B> B f(A a) { return (B) a; } -> <A> Object f(A a) { return (Object) a; }
     String qualifiedName = retType.bound != null ? retType.bound.toString() : "Object";
     // Always use simple names.
-    // TODO(user) - this isn't always correct, but it's better than defaulting to
+    // TODO(cushon) - this isn't always correct, but it's better than defaulting to
     // fully-qualified names. There should be a better way to do this.
     String newType = Iterables.getLast(Splitter.on('.').split(qualifiedName));
 

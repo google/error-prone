@@ -66,7 +66,7 @@ public class ForOverrideChecker extends BugChecker
   private static final String FOR_OVERRIDE = "com.google.errorprone.annotations.ForOverride";
   private static final String MESSAGE_BASE = "Method annotated @ForOverride ";
 
-  //TODO(user): remove
+  //TODO(cushon): remove
   private static final String GUAVA_FOR_OVERRIDE = "com.google.common.annotations.ForOverride";
 
   @Override

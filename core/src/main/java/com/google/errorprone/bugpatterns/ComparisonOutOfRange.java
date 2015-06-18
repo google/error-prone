@@ -46,7 +46,7 @@ import java.util.List;
  * @author bill.pugh@gmail.com (Bill Pugh)
  * @author eaftan@google.com (Eddie Aftandilian)
  *
- * TODO(user): Support other types of comparisons?  Are there likely to be errors in those?
+ * TODO(eaftan): Support other types of comparisons?  Are there likely to be errors in those?
  */
 @BugPattern(name = "ComparisonOutOfRange",
     summary = "Comparison to value that is out of range for the compared type",
@@ -182,7 +182,7 @@ public class ComparisonOutOfRange extends BugChecker implements BinaryTreeMatche
    * comparison with "true"/"false" since it's not clear what was intended and that is
    * semantically equivalent.
    *
-   * TODO(user): Suggested fixes don't handle side-effecting expressions, such as
+   * TODO(eaftan): Suggested fixes don't handle side-effecting expressions, such as
    * (d = reader.read()) == -1.  Maybe add special case handling for assignments.
    */
   public Description describe(BinaryTree tree, VisitorState state) {

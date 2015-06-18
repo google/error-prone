@@ -238,7 +238,7 @@ public class SuggestedFix implements Fix {
 
     public Builder swap(Tree node1, Tree node2) {
       // calling Tree.toString() is kind of cheesy, but we don't currently have a better option
-      // TODO(user): consider an approach that doesn't rewrite the original tokens
+      // TODO(cushon): consider an approach that doesn't rewrite the original tokens
       fixes.add(new ReplacementFix((DiagnosticPosition) node1, node2.toString()));
       fixes.add(new ReplacementFix((DiagnosticPosition) node2, node1.toString()));
       return this;
@@ -358,7 +358,7 @@ public class SuggestedFix implements Fix {
         return 3;
       case ABSTRACT:
         return 4;
-      // TODO(user): requires JDK8
+      // TODO(cushon): requires JDK8
       // case DEFAULT:
       //   return 5;
       case STATIC:
@@ -422,7 +422,7 @@ public class SuggestedFix implements Fix {
         return Modifier.NATIVE;
       case STRICTFP:
         return Modifier.STRICTFP;
-      // TODO(user):
+      // TODO(cushon):
       // case DEFAULT:
       //   return Modifier.DEFAULT;
       default:

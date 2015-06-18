@@ -36,7 +36,7 @@ public class DescendantOf implements TypePredicate {
   public boolean apply(Type type, VisitorState state) {
     Type bound = expected.get(state);
     if (bound == null || type == null) {
-      // TODO(user): type suppliers are allowed to return null :(
+      // TODO(cushon): type suppliers are allowed to return null :(
       return false;
     }
     return ASTHelpers.isSubtype(type, bound, state);

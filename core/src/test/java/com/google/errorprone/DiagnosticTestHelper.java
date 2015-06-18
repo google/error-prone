@@ -248,7 +248,7 @@ public class DiagnosticTestHelper {
    * look for in the diagnostic.
    * @param source File in which to find matching lines
    *
-   * TODO(user): Switch to use assertThat instead of assertTrue.
+   * TODO(eaftan): Switch to use assertThat instead of assertTrue.
    */
   public void assertHasDiagnosticOnAllMatchingLines(JavaFileObject source)
       throws IOException {

@@ -34,7 +34,7 @@ public class ConstructorMatcherImpl extends AbstractSimpleMatcher<MatchState>
 
   @Override
   protected Optional<MatchState> matchResult(ExpressionTree tree, VisitorState state) {
-    // TODO(user): Don't catch NullPointerException. Need to do this right now
+    // TODO(eaftan): Don't catch NullPointerException. Need to do this right now
     // for internal use, but remember to remove later.
     try {
       if (!(tree instanceof JCNewClass)) {

@@ -71,7 +71,7 @@ public class WildcardImport extends BugChecker implements ClassTreeMatcher {
    * don't have a good way to test import-only fixes, so it pretty-prints the replacements as a
    * suffix of each on-demand import being deleted.
    */
-  // TODO(user): create a way to test import-only fixes.
+  // TODO(cushon): create a way to test import-only fixes.
   private final FixStrategy fixStrategy;
 
   public WildcardImport() {
@@ -151,7 +151,7 @@ public class WildcardImport extends BugChecker implements ClassTreeMatcher {
     // Generate fixes.
     fixStrategy.apply(tree, state, wildcardImports, toFix, this);
 
-    // TODO(user): this is kind of a hack. We allow the fix strategy to generate multiple small
+    // TODO(cushon): this is kind of a hack. We allow the fix strategy to generate multiple small
     // fixes, so by the time we get here all of the fixes were emitted and there's nothing to do.
     return Description.NO_MATCH;
   }
