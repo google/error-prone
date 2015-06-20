@@ -45,6 +45,7 @@
 - {name: DoubleCheckedLocking, summary: Double-checked locking on non-volatile fields is unsafe}
 - {name: EqualsNaN, summary: == NaN always returns false; use the isNaN methods instead}
 - {name: ForOverride, summary: Method annotated @ForOverride must be protected or package-private and only invoked from declaring class}
+- {name: GetClassOnClass, summary: Calling getClass() on an object of type Class returns the Class object for java.lang.Class; you probably meant to operate on the object directly}
 - {name: GuardedByChecker, summary: Checks for unguarded accesses to fields and methods with @GuardedBy annotations}
 - {name: GuiceAssistedInjectScoping, summary: Scope annotation on implementation class of AssistedInject factory is not allowed}
 - {name: InvalidPatternSyntax, summary: Invalid syntax used for a regular expression}

@@ -99,11 +99,11 @@ __ReturnValueIgnoredPositiveCases.java__
 
 package com.google.errorprone.bugpatterns;
 
-import java.awt.Color;
-import java.awt.Font;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.net.URI;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Locale;
 
 /**
@@ -178,6 +178,38 @@ public class ReturnValueIgnoredPositiveCases {
     new BigDecimal("10").add(c);
   }
   
+  Path p = Paths.get("foo/bar/baz");
+  { // Path methods
+    // BUG: Diagnostic contains: p = p.getFileName();
+    p.getFileName();
+    // BUG: Diagnostic contains: p = p.getName(0);
+    p.getName(0);
+    // BUG: Diagnostic contains: p = p.getParent();
+    p.getParent();
+    // BUG: Diagnostic contains: p = p.getRoot();
+    p.getRoot();
+    // BUG: Diagnostic contains: p = p.normalize();
+    p.normalize();
+    // BUG: Diagnostic contains: p = p.relativize(p);
+    p.relativize(p);
+    // BUG: Diagnostic contains: p = p.resolve(p);
+    p.resolve(p);
+    // BUG: Diagnostic contains: p = p.resolve("string");
+    p.resolve("string");
+    // BUG: Diagnostic contains: p = p.resolveSibling(p);
+    p.resolveSibling(p);
+    // BUG: Diagnostic contains: p = p.resolveSibling("string");
+    p.resolveSibling("string");
+    // BUG: Diagnostic contains: p = p.subpath(0, 1);
+    p.subpath(0, 1);
+    // BUG: Diagnostic contains: p = p.toAbsolutePath();
+    p.toAbsolutePath();
+    try {
+      // BUG: Diagnostic contains: p = p.toRealPath();
+      p.toRealPath();
+    } catch (IOException e) {
+    }
+  }
 }
 {% endhighlight %}
 
