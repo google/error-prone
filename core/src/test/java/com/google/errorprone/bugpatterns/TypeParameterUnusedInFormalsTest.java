@@ -23,7 +23,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-
 @RunWith(JUnit4.class)
 public class TypeParameterUnusedInFormalsTest {
 
@@ -43,7 +42,7 @@ public class TypeParameterUnusedInFormalsTest {
             "package foo.bar;",
             "class Test {",
             "  // BUG: Diagnostic contains:",
-            "  // static Object doCast(Object o) { Object t = (Object) o; return t; }",
+            "  // static Object doCast(Object o) { Object t = o; return t; }",
             "  static <T> T doCast(Object o) { T t = (T) o; return t; }",
             "}")
         .doTest();
@@ -57,7 +56,7 @@ public class TypeParameterUnusedInFormalsTest {
             "package foo.bar;",
             "class Test {",
             "  // BUG: Diagnostic contains:",
-            "  // static <U extends Object> Object doCast(U o) { Object t = (Object) o; return t; }",
+            "  // static <U extends Object> Object doCast(U o) { Object t = o; return t; }",
             "  static <U extends Object, T> T doCast(U o) { T t = (T) o; return t; }",
             "}")
         .doTest();
@@ -71,7 +70,7 @@ public class TypeParameterUnusedInFormalsTest {
             "package foo.bar;",
             "class Test {",
             "  // BUG: Diagnostic contains:",
-            "  // static <U extends Object> Object doCast(U o) { Object t = (Object) o; return t; }",
+            "  // static <U extends Object> Object doCast(U o) { Object t = o; return t; }",
             "  static <T, U extends Object> T doCast(U o) { T t = (T) o; return t; }",
             "}")
         .doTest();
@@ -85,7 +84,7 @@ public class TypeParameterUnusedInFormalsTest {
             "package foo.bar;",
             "class Test {",
             "  // BUG: Diagnostic contains:",
-            "  // static <V extends Object, U extends Object> Object doCast(U o, V v) { Object t = (Object) o; return t; }",
+            "  // static <V extends Object, U extends Object> Object doCast(U o, V v) { Object t = o; return t; }",
             "  static <V extends Object, T, U extends Object> T doCast(U o, V v) { T t = (T) o; return t; }",
             "}")
         .doTest();
@@ -177,6 +176,37 @@ public class TypeParameterUnusedInFormalsTest {
             "abstract class Test {",
             "  // BUG: Diagnostic contains:",
             "  abstract <T> T badMethod();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void objectCast() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  // BUG: Diagnostic contains: return s",
+            "  <T> T badMethod(String s) { return (T) s; }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void issue343() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "interface Test {",
+            "  interface Visitor1<X, Y> {}",
+            "  interface Visitor2<X, Y> {}",
+            "  <R,",
+            "    R1 extends R,",
+            "    R2 extends R,",
+            "    X1 extends Exception,",
+            "    X2 extends Exception,",
+            "    V extends Visitor1<R1, X1> & Visitor2<R2, X2>>",
+            "  R accept_(V v) throws X1, X2;",
             "}")
         .doTest();
   }

@@ -39,10 +39,10 @@ import com.sun.tools.javac.code.Type.TypeVar;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
+import com.sun.tools.javac.tree.JCTree.JCTypeCast;
 import com.sun.tools.javac.tree.JCTree.JCTypeParameter;
 import com.sun.tools.javac.tree.TreeScanner;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -120,8 +120,8 @@ public class TypeParameterUnusedInFormals extends BugChecker implements MethodTr
     // fully-qualified names. There should be a better way to do this.
     String newType = Iterables.getLast(Splitter.on('.').split(qualifiedName));
 
-    fix = rewriteTypeUsages(retType, tree.getBody(), newType, fix);
-    fix = rewriteTypeUsages(retType, tree.getReturnType(), newType, fix);
+    rewriteTypeUsages(retType, tree.getBody(), newType, fix, state);
+    rewriteTypeUsages(retType, tree.getReturnType(), newType, fix, state);
 
     return describeMatch(tree, fix.build());
   }
@@ -159,26 +159,36 @@ public class TypeParameterUnusedInFormals extends BugChecker implements MethodTr
     return fix;
   }
 
-  private static SuggestedFix.Builder rewriteTypeUsages(
-      final TypeVar retType, Tree tree, String newType, SuggestedFix.Builder fix) {
+  private static void rewriteTypeUsages(
+      final TypeVar retType,
+      Tree tree,
+      final String newType,
+      final SuggestedFix.Builder fix,
+      final VisitorState state) {
     if (tree == null) {
       // e.g. abstract methods without bodies.
-      return fix;
+      return;
     }
-    final List<Tree> toReplace = new ArrayList<>();
-    ((JCTree) tree).accept(
-        new TreeScanner() {
-          @Override
-          public void visitIdent(JCIdent node) {
-            if (retType.tsym.equals(node.sym)) {
-              toReplace.add(node);
-            }
-          }
-        });
-    for (Tree typeParam : toReplace) {
-      fix = fix.replace(typeParam, newType);
-    }
-    return fix;
+    ((JCTree) tree)
+        .accept(
+            new TreeScanner() {
+              @Override
+              public void visitIdent(JCIdent node) {
+                if (retType.tsym.equals(node.sym)) {
+                  fix.replace(node, newType);
+                }
+              }
+
+              @Override
+              public void visitTypeCast(JCTypeCast node) {
+                if (ASTHelpers.isSameType(retType.tsym.type, node.type.tsym.type, state)
+                    && newType.equals("Object")) {
+                  fix.replace(node, state.getSourceForNode(node.getExpression()).toString());
+                } else {
+                  super.visitTypeCast(node);
+                }
+              }
+            });
   }
 
   /**
@@ -197,10 +207,22 @@ public class TypeParameterUnusedInFormals extends BugChecker implements MethodTr
 
     @Override
     public Void visitClassType(Type.ClassType type, Void unused) {
-      for (Type t : type.getTypeArguments()) {
-        t.accept(this, null);
+      if (type instanceof Type.IntersectionClassType) {
+        // TypeVisitor doesn't support intersection types natively, so we have
+        // to handle visiting them manually.
+        visitIntersectionClassType((Type.IntersectionClassType) type);
+      } else {
+        for (Type t : type.getTypeArguments()) {
+          t.accept(this, null);
+        }
       }
       return null;
+    }
+
+    public void visitIntersectionClassType(Type.IntersectionClassType type) {
+      for (Type component : type.getComponents()) {
+        component.accept(this, null);
+      }
     }
 
     @Override
