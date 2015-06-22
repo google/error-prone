@@ -126,7 +126,7 @@ public class MisusedWeekYearPositiveCases {
   }
 
   void testConstructorWithLiteralPatternWithFolding() {
-    // TODO(user): javac has a bug in that when it folds string literals, the start position of
+    // TODO(eaftan): javac has a bug in that when it folds string literals, the start position of
     // the folded string literal node is set as the start position of the + operator.  We have
     // fixed this in our internal javac, but haven't pushed the change to our external javac mirror.
     // We should push that fix to the javac mirror repo, and then we can test that the suggested

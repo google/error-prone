@@ -332,11 +332,13 @@ __OverridesPositiveCase2.java__
 
 package com.google.errorprone.bugpatterns;
 
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This tests the case where there is a chain of method overrides where the varargs constraint is
  * not met, and the root is a varargs parameter.
- * TODO(user): The original implementation tried to be clever and make this consistent, but
+ * TODO(cushon): The original implementation tried to be clever and make this consistent, but
  * didn't handle multiple interface inheritance.
  *
  * @author cushon@google.com (Liam Miller-Cushon)
@@ -385,11 +387,13 @@ __OverridesPositiveCase3.java__
 
 package com.google.errorprone.bugpatterns;
 
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This tests the case where there is a chain of method overrides where the varargs constraint is
  * not met, and the root has an array parameter.
- * TODO(user): The original implementation tried to be clever and make this consistent, but
+ * TODO(cushon): The original implementation tried to be clever and make this consistent, but
  * didn't handle multiple interface inheritance.
  *
  * @author cushon@google.com (Liam Miller-Cushon)
@@ -438,7 +442,9 @@ __OverridesPositiveCase4.java__
 
 package com.google.errorprone.bugpatterns;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 /**
  * Test that the suggested fix is correct in the presence of whitespace, comments.
@@ -462,7 +468,7 @@ public class OverridesPositiveCase4 {
 
   abstract class Child2 extends Base {
     @Override
-    //TODO(user): improve testing infrastructure so we can enforce that no fix is suggested.
+    //TODO(cushon): improve testing infrastructure so we can enforce that no fix is suggested.
     // BUG: Diagnostic contains: Varargs
     abstract void varargsMethod(@Note final Map<Object, Object>  /*dsa*/ [ /* [ */ ] /* dsa */ xs);
   }
