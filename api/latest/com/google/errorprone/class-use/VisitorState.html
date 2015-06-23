@@ -3,13 +3,13 @@
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Uses of Class com.google.errorprone.VisitorState (Maven parent POM 2.0.4 API)</title>
+<title>Uses of Class com.google.errorprone.VisitorState (Maven parent POM 2.0.5-SNAPSHOT API)</title>
 <link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
 </head>
 <body>
 <script type="text/javascript"><!--
     if (location.href.indexOf('is-external=true') == -1) {
-        parent.document.title="Uses of Class com.google.errorprone.VisitorState (Maven parent POM 2.0.4 API)";
+        parent.document.title="Uses of Class com.google.errorprone.VisitorState (Maven parent POM 2.0.5-SNAPSHOT API)";
     }
 //-->
 </script>
@@ -1609,12 +1609,12 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><span class="strong">AnnotationType.</span><code><strong><a href="../../../../com/google/errorprone/matchers/AnnotationType.html#matches(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.AnnotationTree&nbsp;annotationTree,
+<td class="colLast"><span class="strong">AnnotationDoesNotHaveArgument.</span><code><strong><a href="../../../../com/google/errorprone/matchers/AnnotationDoesNotHaveArgument.html#matches(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.AnnotationTree&nbsp;annotationTree,
        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><span class="strong">AnnotationDoesNotHaveArgument.</span><code><strong><a href="../../../../com/google/errorprone/matchers/AnnotationDoesNotHaveArgument.html#matches(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.AnnotationTree&nbsp;annotationTree,
+<td class="colLast"><span class="strong">AnnotationType.</span><code><strong><a href="../../../../com/google/errorprone/matchers/AnnotationType.html#matches(com.sun.source.tree.AnnotationTree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.AnnotationTree&nbsp;annotationTree,
        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
@@ -1654,22 +1654,22 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><span class="strong">StaticMethod.</span><code><strong><a href="../../../../com/google/errorprone/matchers/StaticMethod.html#matches(com.sun.source.tree.ExpressionTree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.ExpressionTree&nbsp;item,
-       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><span class="strong">NewInstanceAnonymousInnerClass.</span><code><strong><a href="../../../../com/google/errorprone/matchers/NewInstanceAnonymousInnerClass.html#matches(com.sun.source.tree.ExpressionTree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.ExpressionTree&nbsp;t,
        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><span class="strong">DescendantOf.</span><code><strong><a href="../../../../com/google/errorprone/matchers/DescendantOf.html#matches(com.sun.source.tree.ExpressionTree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.ExpressionTree&nbsp;expressionTree,
        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><span class="strong">InstanceMethod.</span><code><strong><a href="../../../../com/google/errorprone/matchers/InstanceMethod.html#matches(com.sun.source.tree.ExpressionTree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.ExpressionTree&nbsp;item,
+       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><span class="strong">StaticMethod.</span><code><strong><a href="../../../../com/google/errorprone/matchers/StaticMethod.html#matches(com.sun.source.tree.ExpressionTree,%20com.google.errorprone.VisitorState)">matches</a></strong>(com.sun.source.tree.ExpressionTree&nbsp;item,
        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
@@ -1733,8 +1733,18 @@
        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>abstract boolean</code></td>
+<td class="colLast"><span class="strong">AbstractTypeMatcher.</span><code><strong><a href="../../../../com/google/errorprone/matchers/AbstractTypeMatcher.html#matches(T,%20com.google.errorprone.VisitorState)">matches</a></strong>(<a href="../../../../com/google/errorprone/matchers/AbstractTypeMatcher.html" title="type parameter in AbstractTypeMatcher">T</a>&nbsp;tree,
+       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><span class="strong">NextStatement.</span><code><strong><a href="../../../../com/google/errorprone/matchers/NextStatement.html#matches(T,%20com.google.errorprone.VisitorState)">matches</a></strong>(<a href="../../../../com/google/errorprone/matchers/NextStatement.html" title="type parameter in NextStatement">T</a>&nbsp;stmt,
+       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><span class="strong">Enclosing.BlockOrCase.</span><code><strong><a href="../../../../com/google/errorprone/matchers/Enclosing.BlockOrCase.html#matches(T,%20com.google.errorprone.VisitorState)">matches</a></strong>(<a href="../../../../com/google/errorprone/matchers/Enclosing.BlockOrCase.html" title="type parameter in Enclosing.BlockOrCase">T</a>&nbsp;unused,
        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
@@ -1745,16 +1755,6 @@
 <tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><span class="strong">ChildMultiMatcher.</span><code><strong><a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.html#matches(T,%20com.google.errorprone.VisitorState)">matches</a></strong>(<a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.html" title="type parameter in ChildMultiMatcher">T</a>&nbsp;tree,
-       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>abstract boolean</code></td>
-<td class="colLast"><span class="strong">AbstractTypeMatcher.</span><code><strong><a href="../../../../com/google/errorprone/matchers/AbstractTypeMatcher.html#matches(T,%20com.google.errorprone.VisitorState)">matches</a></strong>(<a href="../../../../com/google/errorprone/matchers/AbstractTypeMatcher.html" title="type parameter in AbstractTypeMatcher">T</a>&nbsp;tree,
-       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><span class="strong">Enclosing.BlockOrCase.</span><code><strong><a href="../../../../com/google/errorprone/matchers/Enclosing.BlockOrCase.html#matches(T,%20com.google.errorprone.VisitorState)">matches</a></strong>(<a href="../../../../com/google/errorprone/matchers/Enclosing.BlockOrCase.html" title="type parameter in Enclosing.BlockOrCase">T</a>&nbsp;unused,
        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 </tbody>
