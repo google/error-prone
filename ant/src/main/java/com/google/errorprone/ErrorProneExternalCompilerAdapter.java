@@ -97,7 +97,6 @@ public class ErrorProneExternalCompilerAdapter extends DefaultCompilerAdapter {
       // Usually redundant, but check two resources in case Ant stuff is in a different jar
       addResourceSource(classpath, "com/google/errorprone/ErrorProneExternalCompilerAdapter.class");
       addResourceSource(classpath, "com/google/errorprone/ErrorProneCompiler.class");
-      addResourceSource(classpath, "com/sun/tools/javac/Main.class");
       cmd.createArgument().setPath(classpath);
       cmd.createArgument().setValue(ErrorProneCompiler.class.getName());
       setupModernJavacCommandlineSwitches(cmd);
