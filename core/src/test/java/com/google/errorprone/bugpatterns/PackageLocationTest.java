@@ -39,8 +39,19 @@ public class PackageLocationTest {
     compilationHelper
         .addSourceLines(
             "src/main/java/a/b/A.java",
-            "// BUG: Diagnostic contains: a does not match expected package b",
+            "// BUG: Diagnostic contains: Expected package a to be declared in a directory ending with a, instead found /src/main/java/a/b",
             "package a;",
+            "class A {}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveTooLong() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "src/main/java/A.java",
+            "// BUG: Diagnostic contains: Expected package a.b.c to be declared in a directory ending with a/b/c, instead found /src/main/java",
+            "package a.b.c;",
             "class A {}")
         .doTest();
   }
@@ -50,7 +61,7 @@ public class PackageLocationTest {
     compilationHelper
         .addSourceLines(
             "b/c/d/A.java",
-            "// BUG: Diagnostic contains: a.b.c.d does not match expected package b.c.d",
+            "// BUG: Diagnostic contains: Expected package a.b.c.d to be declared in a directory ending with a/b/c/d, instead found /b/c/d",
             "package a.b.c.d;",
             "class A {}")
         .doTest();
