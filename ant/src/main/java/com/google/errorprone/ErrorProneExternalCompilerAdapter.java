@@ -101,8 +101,9 @@ public class ErrorProneExternalCompilerAdapter extends DefaultCompilerAdapter {
       cmd.createArgument().setPath(classpath);
       cmd.createArgument().setValue(ErrorProneCompiler.class.getName());
       setupModernJavacCommandlineSwitches(cmd);
+      int firstFile = cmd.size();
       logAndAddFilesToCompile(cmd);
-      return executeExternalCompile(cmd.getCommandline(), cmd.size(), true) == 0;
+      return executeExternalCompile(cmd.getCommandline(), firstFile, true) == 0;
     } else {
       attributes.log("You must set fork=\"yes\" to use the external error-prone compiler",
           Project.MSG_ERR);
