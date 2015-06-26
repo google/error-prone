@@ -46,6 +46,7 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
@@ -65,7 +66,10 @@ import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Nullable;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.QualifiedNameable;
 import javax.lang.model.type.TypeKind;
 
 /**
@@ -431,6 +435,14 @@ public class ASTHelpers {
   @SuppressWarnings("deprecation")
   public static <T extends Annotation> T getAnnotation(Symbol sym, Class<T> annotationType) {
     return sym == null ? null : sym.getAnnotation(annotationType);
+  }
+
+  public static AnnotationMirror getAnnotationMirror(AnnotationTree tree) {
+    return ((JCAnnotation) tree).attribute;
+  }
+
+  public static String getQualifiedName(Element element) {
+    return ((QualifiedNameable) element).getQualifiedName().toString();
   }
 
   /** @return all values of the given enum type, in declaration order. */
