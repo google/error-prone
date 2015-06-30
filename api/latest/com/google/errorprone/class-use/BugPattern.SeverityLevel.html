@@ -147,6 +147,26 @@ the order they are declared.</div>
 </tbody>
 </table>
 <table border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
+<caption><span>Methods in <a href="../../../../com/google/errorprone/package-summary.html">com.google.errorprone</a> with parameters of type <a href="../../../../com/google/errorprone/BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>static boolean</code></td>
+<td class="colLast"><span class="strong">SuppressionHelper.</span><code><strong><a href="../../../../com/google/errorprone/SuppressionHelper.html#isSuppressed(com.google.errorprone.matchers.Suppressible,%20java.util.Set,%20java.util.Set,%20com.google.errorprone.BugPattern.SeverityLevel,%20boolean,%20boolean)">isSuppressed</a></strong>(<a href="../../../../com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>&nbsp;suppressible,
+            <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;suppressionsOnCurrentPath,
+            <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&gt;&nbsp;customSuppressionsOnCurrentPath,
+            <a href="../../../../com/google/errorprone/BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a>&nbsp;severityLevel,
+            boolean&nbsp;inGeneratedCode,
+            boolean&nbsp;disableWarningsInGeneratedCode)</code>
+<div class="block">Returns true if this checker should be suppressed on the current tree path.</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
 <caption><span>Method parameters in <a href="../../../../com/google/errorprone/package-summary.html">com.google.errorprone</a> with type arguments of type <a href="../../../../com/google/errorprone/BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
@@ -166,9 +186,10 @@ the order they are declared.</div>
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/VisitorState.html#VisitorState(com.sun.tools.javac.util.Context,%20com.google.errorprone.DescriptionListener,%20java.util.Map)">VisitorState</a></strong>(com.sun.tools.javac.util.Context&nbsp;context,
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/VisitorState.html#VisitorState(com.sun.tools.javac.util.Context,%20com.google.errorprone.DescriptionListener,%20java.util.Map,%20com.google.errorprone.ErrorProneOptions)">VisitorState</a></strong>(com.sun.tools.javac.util.Context&nbsp;context,
             <a href="../../../../com/google/errorprone/DescriptionListener.html" title="interface in com.google.errorprone">DescriptionListener</a>&nbsp;listener,
-            <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="../../../../com/google/errorprone/BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a>&gt;&nbsp;severityMap)</code>&nbsp;</td>
+            <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="../../../../com/google/errorprone/BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a>&gt;&nbsp;severityMap,
+            <a href="../../../../com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a>&nbsp;errorProneOptions)</code>&nbsp;</td>
 </tr>
 </tbody>
 </table>

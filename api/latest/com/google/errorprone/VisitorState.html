@@ -143,9 +143,10 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
             <a href="../../../com/google/errorprone/DescriptionListener.html" title="interface in com.google.errorprone">DescriptionListener</a>&nbsp;listener)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><strong><a href="../../../com/google/errorprone/VisitorState.html#VisitorState(com.sun.tools.javac.util.Context,%20com.google.errorprone.DescriptionListener,%20java.util.Map)">VisitorState</a></strong>(com.sun.tools.javac.util.Context&nbsp;context,
+<td class="colOne"><code><strong><a href="../../../com/google/errorprone/VisitorState.html#VisitorState(com.sun.tools.javac.util.Context,%20com.google.errorprone.DescriptionListener,%20java.util.Map,%20com.google.errorprone.ErrorProneOptions)">VisitorState</a></strong>(com.sun.tools.javac.util.Context&nbsp;context,
             <a href="../../../com/google/errorprone/DescriptionListener.html" title="interface in com.google.errorprone">DescriptionListener</a>&nbsp;listener,
-            <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="../../../com/google/errorprone/BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a>&gt;&nbsp;severityMap)</code>&nbsp;</td>
+            <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="../../../com/google/errorprone/BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a>&gt;&nbsp;severityMap,
+            <a href="../../../com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a>&nbsp;errorProneOptions)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -163,62 +164,66 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code><a href="../../../com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a></code></td>
+<td class="colLast"><code><strong><a href="../../../com/google/errorprone/VisitorState.html#errorProneOptions()">errorProneOptions</a></strong>()</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>&lt;T extends com.sun.source.tree.Tree&gt;&nbsp;<br>T</code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/VisitorState.html#findEnclosing(java.lang.Class...)">findEnclosing</a></strong>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends T&gt;...&nbsp;classes)</code>
 <div class="block">Find the first enclosing tree node of one of the given types.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>com.sun.source.util.TreePath</code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/VisitorState.html#findPathToEnclosing(java.lang.Class...)">findPathToEnclosing</a></strong>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends com.sun.source.tree.Tree&gt;...&nbsp;classes)</code>
 <div class="block">Returns the <code>TreePath</code> to the nearest tree node of one of the given types.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/VisitorState.html#getEndPosition(com.sun.tools.javac.tree.JCTree)">getEndPosition</a></strong>(com.sun.tools.javac.tree.JCTree&nbsp;node)</code>
 <div class="block">Gets the end position of the given node.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>com.sun.tools.javac.util.Name</code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/VisitorState.html#getName(java.lang.String)">getName</a></strong>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;nameStr)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>com.sun.source.util.TreePath</code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/VisitorState.html#getPath()">getPath</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a></code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/VisitorState.html#getSourceCode()">getSourceCode</a></strong>()</code>
 <div class="block">Gets the current source file.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a></code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/VisitorState.html#getSourceForNode(com.sun.tools.javac.tree.JCTree)">getSourceForNode</a></strong>(com.sun.tools.javac.tree.JCTree&nbsp;node)</code>
 <div class="block">Gets the original source code that represents the given node.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>com.sun.tools.javac.code.Symbol</code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/VisitorState.html#getSymbolFromString(java.lang.String)">getSymbolFromString</a></strong>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;symStr)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>com.sun.tools.javac.code.Symtab</code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/VisitorState.html#getSymtab()">getSymtab</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>com.google.common.collect.ImmutableList&lt;com.sun.tools.javac.parser.Tokens.Token&gt;</code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/VisitorState.html#getTokensForNode(com.sun.tools.javac.tree.JCTree)">getTokensForNode</a></strong>(com.sun.tools.javac.tree.JCTree&nbsp;tree)</code>
 <div class="block">Returns the list of <code>Tokens.Token</code>s for the given <code>JCTree</code>.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>com.sun.tools.javac.tree.TreeMaker</code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/VisitorState.html#getTreeMaker()">getTreeMaker</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>com.sun.tools.javac.code.Type</code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/VisitorState.html#getType(com.sun.tools.javac.code.Type,%20boolean,%20com.sun.tools.javac.util.List)">getType</a></strong>(com.sun.tools.javac.code.Type&nbsp;baseType,
        boolean&nbsp;isArray,
@@ -226,7 +231,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <div class="block">Build an instance of a Type.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>com.sun.tools.javac.code.Type</code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/VisitorState.html#getType(com.sun.tools.javac.code.Type,%20boolean,%20java.util.List)">getType</a></strong>(com.sun.tools.javac.code.Type&nbsp;baseType,
        boolean&nbsp;isArray,
@@ -234,22 +239,22 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <div class="block">Build an instance of a Type.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>com.sun.tools.javac.code.Type</code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/VisitorState.html#getTypeFromString(java.lang.String)">getTypeFromString</a></strong>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;typeStr)</code>
 <div class="block">Given the string representation of a simple (non-array, non-generic) type, return the
  matching Type.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>com.sun.tools.javac.code.Types</code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/VisitorState.html#getTypes()">getTypes</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/VisitorState.html#reportMatch(com.google.errorprone.matchers.Description)">reportMatch</a></strong>(<a href="../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;description)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/VisitorState.html#withPath(com.sun.source.util.TreePath)">withPath</a></strong>(com.sun.source.util.TreePath&nbsp;path)</code>&nbsp;</td>
 </tr>
@@ -311,7 +316,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
             <a href="../../../com/google/errorprone/DescriptionListener.html" title="interface in com.google.errorprone">DescriptionListener</a>&nbsp;listener)</pre>
 </li>
 </ul>
-<a name="VisitorState(com.sun.tools.javac.util.Context, com.google.errorprone.DescriptionListener, java.util.Map)">
+<a name="VisitorState(com.sun.tools.javac.util.Context, com.google.errorprone.DescriptionListener, java.util.Map, com.google.errorprone.ErrorProneOptions)">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -319,7 +324,8 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <h4>VisitorState</h4>
 <pre>public&nbsp;VisitorState(com.sun.tools.javac.util.Context&nbsp;context,
             <a href="../../../com/google/errorprone/DescriptionListener.html" title="interface in com.google.errorprone">DescriptionListener</a>&nbsp;listener,
-            <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="../../../com/google/errorprone/BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a>&gt;&nbsp;severityMap)</pre>
+            <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="../../../com/google/errorprone/BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a>&gt;&nbsp;severityMap,
+            <a href="../../../com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a>&nbsp;errorProneOptions)</pre>
 </li>
 </ul>
 </li>
@@ -373,6 +379,15 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <li class="blockList">
 <h4>getSymtab</h4>
 <pre>public&nbsp;com.sun.tools.javac.code.Symtab&nbsp;getSymtab()</pre>
+</li>
+</ul>
+<a name="errorProneOptions()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>errorProneOptions</h4>
+<pre>public&nbsp;<a href="../../../com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a>&nbsp;errorProneOptions()</pre>
 </li>
 </ul>
 <a name="reportMatch(com.google.errorprone.matchers.Description)">

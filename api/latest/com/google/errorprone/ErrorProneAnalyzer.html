@@ -131,13 +131,15 @@ implements com.sun.source.util.TaskListener</pre>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../com/google/errorprone/ErrorProneAnalyzer.html" title="class in com.google.errorprone">ErrorProneAnalyzer</a></code></td>
-<td class="colLast"><code><strong><a href="../../../com/google/errorprone/ErrorProneAnalyzer.html#init(com.sun.tools.javac.util.Context)">init</a></strong>(com.sun.tools.javac.util.Context&nbsp;context)</code>
+<td class="colLast"><code><strong><a href="../../../com/google/errorprone/ErrorProneAnalyzer.html#init(com.sun.tools.javac.util.Context,%20com.google.errorprone.ErrorProneOptions)">init</a></strong>(com.sun.tools.javac.util.Context&nbsp;context,
+    <a href="../../../com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a>&nbsp;errorProneOptions)</code>
 <div class="block">Initializes the analyzer with the current compilation context.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../com/google/errorprone/ErrorProneAnalyzer.html" title="class in com.google.errorprone">ErrorProneAnalyzer</a></code></td>
-<td class="colLast"><code><strong><a href="../../../com/google/errorprone/ErrorProneAnalyzer.html#register(com.sun.tools.javac.util.Context)">register</a></strong>(com.sun.tools.javac.util.Context&nbsp;context)</code>&nbsp;</td>
+<td class="colLast"><code><strong><a href="../../../com/google/errorprone/ErrorProneAnalyzer.html#register(com.sun.tools.javac.util.Context,%20com.google.errorprone.ErrorProneOptions)">register</a></strong>(com.sun.tools.javac.util.Context&nbsp;context,
+        <a href="../../../com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a>&nbsp;errorProneOptions)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
@@ -182,24 +184,26 @@ implements com.sun.source.util.TaskListener</pre>
 <pre>public static&nbsp;<a href="../../../com/google/errorprone/ErrorProneAnalyzer.html" title="class in com.google.errorprone">ErrorProneAnalyzer</a>&nbsp;create(<a href="../../../com/google/errorprone/scanner/Scanner.html" title="class in com.google.errorprone.scanner">Scanner</a>&nbsp;scanner)</pre>
 </li>
 </ul>
-<a name="init(com.sun.tools.javac.util.Context)">
+<a name="init(com.sun.tools.javac.util.Context, com.google.errorprone.ErrorProneOptions)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>init</h4>
-<pre>public&nbsp;<a href="../../../com/google/errorprone/ErrorProneAnalyzer.html" title="class in com.google.errorprone">ErrorProneAnalyzer</a>&nbsp;init(com.sun.tools.javac.util.Context&nbsp;context)</pre>
+<pre>public&nbsp;<a href="../../../com/google/errorprone/ErrorProneAnalyzer.html" title="class in com.google.errorprone">ErrorProneAnalyzer</a>&nbsp;init(com.sun.tools.javac.util.Context&nbsp;context,
+                      <a href="../../../com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a>&nbsp;errorProneOptions)</pre>
 <div class="block">Initializes the analyzer with the current compilation context. (E.g. for the current
  annotation processing round.)</div>
 </li>
 </ul>
-<a name="register(com.sun.tools.javac.util.Context)">
+<a name="register(com.sun.tools.javac.util.Context, com.google.errorprone.ErrorProneOptions)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>register</h4>
-<pre>public&nbsp;<a href="../../../com/google/errorprone/ErrorProneAnalyzer.html" title="class in com.google.errorprone">ErrorProneAnalyzer</a>&nbsp;register(com.sun.tools.javac.util.Context&nbsp;context)</pre>
+<pre>public&nbsp;<a href="../../../com/google/errorprone/ErrorProneAnalyzer.html" title="class in com.google.errorprone">ErrorProneAnalyzer</a>&nbsp;register(com.sun.tools.javac.util.Context&nbsp;context,
+                          <a href="../../../com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a>&nbsp;errorProneOptions)</pre>
 </li>
 </ul>
 <a name="started(com.sun.source.util.TaskEvent)">

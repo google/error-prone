@@ -141,8 +141,7 @@ implements com.google.common.base.Supplier&lt;<a href="../../../../com/google/er
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></code></td>
 <td class="colLast"><code><strong><a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html#applyOverrides(com.google.errorprone.ErrorProneOptions)">applyOverrides</a></strong>(<a href="../../../../com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a>&nbsp;errorProneOptions)</code>
-<div class="block">Applies an override map (from command-line options) to this <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> and
- returns the resulting <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>.</div>
+<div class="block">Applies options to this <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -326,8 +325,9 @@ public static&nbsp;<a href="../../../../com/google/errorprone/scanner/ScannerSup
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/annotation/CheckReturnValue.html?is-external=true" title="class or interface in javax.annotation">@CheckReturnValue</a>
 public&nbsp;<a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a>&nbsp;applyOverrides(<a href="../../../../com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a>&nbsp;errorProneOptions)
                                throws <a href="../../../../com/google/errorprone/InvalidCommandLineOptionException.html" title="class in com.google.errorprone">InvalidCommandLineOptionException</a></pre>
-<div class="block">Applies an override map (from command-line options) to this <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> and
- returns the resulting <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>.  The overrides may do any of the following:
+<div class="block">Applies options to this <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>.
+
+ <p>Command-line options to override check severities may do any of the following:
  <ul>
  <li>Enable a check that is currently off</li>
  <li>Disable a check that is currently on</li>
