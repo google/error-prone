@@ -56,16 +56,17 @@ public class ErrorProneAnalyzer implements TaskListener {
    * Initializes the analyzer with the current compilation context. (E.g. for the current
    * annotation processing round.)
    */
-  public ErrorProneAnalyzer init(Context context) {
+  public ErrorProneAnalyzer init(Context context, ErrorProneOptions errorProneOptions) {
     this.initialized = true;
     this.context = context;
+    this.errorProneOptions = errorProneOptions;
     this.log = Log.instance(context);
     this.compiler = JavaCompiler.instance(context);
     return this;
   }
 
-  public ErrorProneAnalyzer register(Context context) {
-    init(context);
+  public ErrorProneAnalyzer register(Context context, ErrorProneOptions errorProneOptions) {
+    init(context, errorProneOptions);
     MultiTaskListener.instance(context).add(this);
     return this;
   }
@@ -75,6 +76,7 @@ public class ErrorProneAnalyzer implements TaskListener {
   private final Set<Tree> seen = new HashSet<>();
 
   private Context context;
+  private ErrorProneOptions errorProneOptions;
   private Log log;
   private JavaCompiler compiler;
   private boolean initialized = false;
@@ -188,6 +190,7 @@ public class ErrorProneAnalyzer implements TaskListener {
         log,
         ((JCCompilationUnit) compilation).endPositions,
         compilation.getSourceFile());
-    return new VisitorState(context, logReporter, errorProneScanner.severityMap());
+    return new VisitorState(
+        context, logReporter, errorProneScanner.severityMap(), errorProneOptions);
   }
 }

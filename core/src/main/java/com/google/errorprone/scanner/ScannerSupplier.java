@@ -116,8 +116,9 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
   protected abstract PMap<String, BugPattern.SeverityLevel> severities();
 
   /**
-   * Applies an override map (from command-line options) to this {@link ScannerSupplier} and
-   * returns the resulting {@link ScannerSupplier}.  The overrides may do any of the following:
+   * Applies options to this {@link ScannerSupplier}.
+   *
+   * <p>Command-line options to override check severities may do any of the following:
    * <ul>
    * <li>Enable a check that is currently off</li>
    * <li>Disable a check that is currently on</li>

@@ -57,6 +57,7 @@ public class VisitorState {
   public final Context context;
   private final TreePath path;
   private final Map<String, SeverityLevel> severityMap;
+  private final ErrorProneOptions errorProneOptions;
 
   // The default no-op implementation of DescriptionListener. We use this instead of null so callers
   // of getDescriptionListener() don't have to do null-checking.
@@ -65,28 +66,46 @@ public class VisitorState {
   };
 
   public VisitorState(Context context) {
-    this(context, null, NULL_LISTENER, ImmutableMap.<String, SeverityLevel>of());
+    this(
+        context,
+        null,
+        NULL_LISTENER,
+        ImmutableMap.<String, SeverityLevel>of(),
+        ErrorProneOptions.empty());
   }
 
   public VisitorState(Context context, DescriptionListener listener) {
-    this(context, null, listener, Collections.<String, SeverityLevel>emptyMap());
+    this(
+        context,
+        null,
+        listener,
+        Collections.<String, SeverityLevel>emptyMap(),
+        ErrorProneOptions.empty());
   }
 
-  public VisitorState(Context context, DescriptionListener listener,
-      Map<String, SeverityLevel> severityMap) {
-    this(context, null, listener, severityMap);
+  public VisitorState(
+      Context context,
+      DescriptionListener listener,
+      Map<String, SeverityLevel> severityMap,
+      ErrorProneOptions errorProneOptions) {
+    this(context, null, listener, severityMap, errorProneOptions);
   }
 
-  private VisitorState(Context context, TreePath path,
-      DescriptionListener descriptionListener, Map<String, SeverityLevel> severityMap) {
+  private VisitorState(
+      Context context,
+      TreePath path,
+      DescriptionListener descriptionListener,
+      Map<String, SeverityLevel> severityMap,
+      ErrorProneOptions errorProneOptions) {
     this.context = context;
     this.path = path;
     this.descriptionListener = descriptionListener;
     this.severityMap = severityMap;
+    this.errorProneOptions = errorProneOptions;
   }
 
   public VisitorState withPath(TreePath path) {
-    return new VisitorState(context, path, descriptionListener, severityMap);
+    return new VisitorState(context, path, descriptionListener, severityMap, errorProneOptions);
   }
 
   public TreePath getPath() {
@@ -103,6 +122,10 @@ public class VisitorState {
 
   public Symtab getSymtab() {
     return Symtab.instance(context);
+  }
+  
+  public ErrorProneOptions errorProneOptions() {
+    return errorProneOptions;
   }
 
   public void reportMatch(Description description) {

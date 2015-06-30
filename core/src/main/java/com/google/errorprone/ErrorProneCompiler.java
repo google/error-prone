@@ -203,7 +203,7 @@ public class ErrorProneCompiler {
 
     setupMessageBundle(context);
     enableEndPositions(context);
-    ErrorProneJavacJavaCompiler.preRegister(context, scanner);
+    ErrorProneJavacJavaCompiler.preRegister(context, scanner, epOptions);
 
     return argv;
   }

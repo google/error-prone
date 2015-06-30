@@ -152,6 +152,11 @@ public final class BugCheckerLocalAnalysis extends SimpleTreeVisitor<Void, Visit
   }
 
   @Override
+  public String canonicalName() {
+    return checker.canonicalName();
+  }
+
+  @Override
   public Class<? extends Annotation> customSuppressionAnnotation() {
     return checker.customSuppressionAnnotation();
   }

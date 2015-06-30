@@ -55,13 +55,17 @@ public class ErrorProneOptions {
 
   private static final String IGNORE_UNKNOWN_CHECKS_FLAG = "-XepIgnoreUnknownCheckNames";
   private static final String FLAG_PREFIX = "-Xep:";
+  private static final String DISABLE_WARNINGS_IN_GENERATED_CODE_FLAG =
+      "-XepDisableWarningsInGeneratedCode";
 
   /**
    * see {@link javax.tools.OptionChecker#isSupportedOption(String)}
    */
   public static int isSupportedOption(String option) {
-    boolean isSupported = option.startsWith(FLAG_PREFIX)
-        || option.equals(IGNORE_UNKNOWN_CHECKS_FLAG);
+    boolean isSupported =
+        option.startsWith(FLAG_PREFIX)
+            || option.equals(IGNORE_UNKNOWN_CHECKS_FLAG)
+            || option.equals(DISABLE_WARNINGS_IN_GENERATED_CODE_FLAG);
     return isSupported ? 0 : -1;
   }
 
@@ -79,12 +83,17 @@ public class ErrorProneOptions {
   private final ImmutableList<String> remainingArgs;
   private final ImmutableMap<String, Severity> severityMap;
   private final boolean ignoreUnknownChecks;
+  private final boolean disableWarningsInGeneratedCode;
 
-  private ErrorProneOptions(ImmutableMap<String, Severity> severityMap,
-      ImmutableList<String> remainingArgs, boolean ignoreUnknownChecks) {
+  private ErrorProneOptions(
+      ImmutableMap<String, Severity> severityMap,
+      ImmutableList<String> remainingArgs,
+      boolean ignoreUnknownChecks,
+      boolean disableWarningsInGeneratedCode) {
     this.severityMap = severityMap;
     this.remainingArgs = remainingArgs;
     this.ignoreUnknownChecks = ignoreUnknownChecks;
+    this.disableWarningsInGeneratedCode = disableWarningsInGeneratedCode;
   }
 
   public String[] getRemainingArgs() {
@@ -99,6 +108,42 @@ public class ErrorProneOptions {
     return ignoreUnknownChecks;
   }
 
+  public boolean disableWarningsInGeneratedCode() {
+    return disableWarningsInGeneratedCode;
+  }
+
+  private static class Builder {
+    private boolean ignoreUnknownChecks = false;
+    private boolean disableWarningsInGeneratedCode = false;
+    private Map<String, Severity> severityMap = new HashMap<>();
+
+    public void setIgnoreUnknownChecks(boolean ignoreUnknownChecks) {
+      this.ignoreUnknownChecks = ignoreUnknownChecks;
+    }
+
+    public void setDisableWarningsInGeneratedCode(boolean disableWarningsInGeneratedCode) {
+      this.disableWarningsInGeneratedCode = disableWarningsInGeneratedCode;
+    }
+
+    public void putSeverity(String checkName, Severity severity) {
+      severityMap.put(checkName, severity);
+    }
+
+    public ErrorProneOptions build(ImmutableList<String> outputArgs) {
+      return new ErrorProneOptions(
+          ImmutableMap.copyOf(severityMap),
+          outputArgs,
+          ignoreUnknownChecks,
+          disableWarningsInGeneratedCode);
+    }
+  }
+
+  private static final ErrorProneOptions EMPTY = new Builder().build(ImmutableList.<String>of());
+
+  public static ErrorProneOptions empty() {
+    return EMPTY;
+  }
+
   /**
    * Given a list of command-line arguments, produce the corresponding {@link ErrorProneOptions}
    * instance.
@@ -111,7 +156,6 @@ public class ErrorProneOptions {
       throws InvalidCommandLineOptionException {
     Preconditions.checkNotNull(args);
     ImmutableList.Builder<String> outputArgs = ImmutableList.builder();
-    Map<String, Severity> severityMap = new HashMap<>();
 
     /* By default, we throw an error when an unknown option is passed in, if for example you
      * try to disable a check that doesn't match any of the known checks.  This catches typos from
@@ -120,10 +164,12 @@ public class ErrorProneOptions {
      * You can pass the IGNORE_UNKNOWN_CHECKS_FLAG to opt-out of that checking.  This allows you to
      * use command lines from different versions of error-prone interchangably.
      */
-    boolean ignoreUnknownChecks = false;
+    Builder builder = new Builder();
     for (String arg : args) {
       if (arg.equals(IGNORE_UNKNOWN_CHECKS_FLAG)) {
-        ignoreUnknownChecks = true;
+        builder.setIgnoreUnknownChecks(true);
+      } else if (arg.equals(DISABLE_WARNINGS_IN_GENERATED_CODE_FLAG)) {
+        builder.setDisableWarningsInGeneratedCode(true);
       } else if (arg.startsWith(FLAG_PREFIX)) {
         // Strip prefix
         String remaining = arg.substring(FLAG_PREFIX.length());
@@ -143,14 +189,13 @@ public class ErrorProneOptions {
             throw new InvalidCommandLineOptionException("invalid flag: " + arg);
           }
         }
-        severityMap.put(checkName, severity);
+        builder.putSeverity(checkName, severity);
       } else {
         outputArgs.add(arg);
       }
     }
 
-    return new ErrorProneOptions(
-        ImmutableMap.copyOf(severityMap), outputArgs.build(), ignoreUnknownChecks);
+    return builder.build(outputArgs.build());
   }
 
   /**

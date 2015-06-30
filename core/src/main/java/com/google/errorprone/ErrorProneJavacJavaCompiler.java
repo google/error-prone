@@ -44,6 +44,7 @@ import java.util.Queue;
 public class ErrorProneJavacJavaCompiler extends JavaCompiler {
 
   private final ErrorProneAnalyzer errorProneAnalyzer;
+  private final ErrorProneOptions errorProneOptions;
 
   /**
    * Registers our message bundle.
@@ -52,15 +53,18 @@ public class ErrorProneJavacJavaCompiler extends JavaCompiler {
     JavacMessages.instance(context).add("com.google.errorprone.errors");
   }
 
-  private ErrorProneJavacJavaCompiler(Context context, Scanner scanner) {
+  private ErrorProneJavacJavaCompiler(
+      Context context, Scanner scanner, ErrorProneOptions errorProneOptions) {
     super(context);
     checkNotNull(scanner);
+    
+    this.errorProneOptions = errorProneOptions;
 
     // Setup message bundle.
     setupMessageBundle(context);
 
     // Create ErrorProneAnalyzer.
-    errorProneAnalyzer = ErrorProneAnalyzer.create(scanner).init(context);
+    errorProneAnalyzer = ErrorProneAnalyzer.create(scanner).init(context, errorProneOptions);
   }
 
   /**
@@ -71,14 +75,17 @@ public class ErrorProneJavacJavaCompiler extends JavaCompiler {
    * be requested for later stages of the compilation (annotation processing),
    * within the same Context.
    */
-  public static void preRegister(Context context, final Scanner scanner) {
-    context.put(compilerKey, new Factory<JavaCompiler>() {
-      @Override
-      public JavaCompiler make(Context ctx) {
-        // Ensure that future processing rounds continue to use the same Scanner.
-        return new ErrorProneJavacJavaCompiler(ctx, scanner);
-      }
-    });
+  public static void preRegister(
+      Context context, final Scanner scanner, final ErrorProneOptions errorProneOptions) {
+    context.put(
+        compilerKey,
+        new Factory<JavaCompiler>() {
+          @Override
+          public JavaCompiler make(Context ctx) {
+            // Ensure that future processing rounds continue to use the same Scanner.
+            return new ErrorProneJavacJavaCompiler(ctx, scanner, errorProneOptions);
+          }
+        });
   }
 
   @Override

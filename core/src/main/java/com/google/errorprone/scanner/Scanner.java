@@ -48,32 +48,46 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
   private Set<String> suppressions = new HashSet<>();
   private Set<Class<? extends Annotation>> customSuppressions =
       new HashSet<>();
+  private boolean inGeneratedCode = false;
   // This must be lazily initialized, because the list of custom suppression annotations will
   // not be available until after the subclass's constructor has run.
   private SuppressionHelper suppressionHelper;
+
+  private void initSuppressionHelper(VisitorState state) {
+    if (suppressionHelper == null) {
+      suppressionHelper = new SuppressionHelper(getCustomSuppressionAnnotations(), state);
+    }
+  }
 
   /**
    * Scan a tree from a position identified by a TreePath.
    */
   @Override
   public Void scan(TreePath path, VisitorState state) {
-    if (suppressionHelper == null) {
-      suppressionHelper = new SuppressionHelper(getCustomSuppressionAnnotations());
-    }
+    initSuppressionHelper(state);
 
     // Record previous suppression info so we can restore it when going up the tree.
     Set<String> prevSuppressions = suppressions;
     Set<Class<? extends Annotation>> prevCustomSuppressions = customSuppressions;
+    boolean preInGeneratedCode = inGeneratedCode;
 
     Symbol sym = ASTHelpers.getSymbol(path.getLeaf());
     if (sym != null) {
-      SuppressionHelper.NewSuppressions newSuppressions = suppressionHelper.extendSuppressionSets(
-          sym, state.getSymtab().suppressWarningsType, suppressions, customSuppressions);
+      SuppressionHelper.NewSuppressions newSuppressions =
+          suppressionHelper.extendSuppressionSets(
+              sym,
+              state.getSymtab().suppressWarningsType,
+              suppressions,
+              customSuppressions,
+              inGeneratedCode);
       if (newSuppressions.suppressWarningsStrings != null) {
         suppressions = newSuppressions.suppressWarningsStrings;
       }
       if (newSuppressions.customSuppressions != null) {
         customSuppressions = newSuppressions.customSuppressions;
+      }
+      if (newSuppressions.inGeneratedCode) {
+        inGeneratedCode = true;
       }
     }
 
@@ -83,6 +97,7 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
       // Restore old suppression state.
       suppressions = prevSuppressions;
       customSuppressions = prevCustomSuppressions;
+      inGeneratedCode = preInGeneratedCode;
     }
   }
 
@@ -96,9 +111,7 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
       return null;
     }
 
-    if (suppressionHelper == null) {
-      suppressionHelper = new SuppressionHelper(getCustomSuppressionAnnotations());
-    }
+    initSuppressionHelper(state);
 
     // Record previous suppression info so we can restore it when going up the tree.
     Set<String> prevSuppressions = suppressions;
@@ -106,8 +119,13 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
 
     Symbol sym = ASTHelpers.getSymbol(tree);
     if (sym != null) {
-      SuppressionHelper.NewSuppressions newSuppressions = suppressionHelper.extendSuppressionSets(
-          sym, state.getSymtab().suppressWarningsType, suppressions, customSuppressions);
+      SuppressionHelper.NewSuppressions newSuppressions =
+          suppressionHelper.extendSuppressionSets(
+              sym,
+              state.getSymtab().suppressWarningsType,
+              suppressions,
+              customSuppressions,
+              inGeneratedCode);
       if (newSuppressions.suppressWarningsStrings != null) {
         suppressions = newSuppressions.suppressWarningsStrings;
       }
@@ -130,12 +148,16 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
    *
    * @param suppressible holds information about the suppressibilty of a checker
    */
-  protected boolean isSuppressed(Suppressible suppressible) {
-    if (suppressionHelper == null) {
-      suppressionHelper = new SuppressionHelper(getCustomSuppressionAnnotations());
-    }
+  protected boolean isSuppressed(Suppressible suppressible, VisitorState state) {
+    initSuppressionHelper(state);
 
-    return SuppressionHelper.isSuppressed(suppressible, suppressions, customSuppressions);
+    return SuppressionHelper.isSuppressed(
+        suppressible,
+        suppressions,
+        customSuppressions,
+        severityMap().get(suppressible.canonicalName()),
+        inGeneratedCode,
+        state.errorProneOptions().disableWarningsInGeneratedCode());
   }
 
   /**

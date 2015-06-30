@@ -64,6 +64,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -216,8 +217,9 @@ public class ErrorProneCompilerIntegrationTest {
 
   @Test
   public void propagatesScannerThroughAnnotationProcessingRounds() throws Exception {
-    final ErrorProneScanner scanner = new ErrorProneScanner(Collections.<BugChecker>emptyList(),
-        Collections.<String, SeverityLevel>emptyMap());
+    final ErrorProneScanner scanner =
+        new ErrorProneScanner(
+            Collections.<BugChecker>emptyList(), Collections.<String, SeverityLevel>emptyMap());
     compilerBuilder.report(ScannerSupplier.fromScanner(scanner));
     compiler = compilerBuilder.build();
     Result exitCode = compiler.compile(
@@ -408,5 +410,68 @@ public class ErrorProneCompilerIntegrationTest {
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
     assertThat(diagnosticHelper.getDiagnostics()).isEmpty();
+  }
+  
+  @Test
+  public void suppressGeneratedWarning() throws Exception {
+    String[] generatedFile = {
+      "@javax.annotation.Generated(\"Foo\")",
+      "class Generated {",
+      "  public Generated() {",
+      "    if (true);",
+      "  }",
+      "}"
+    };
+
+    {
+      String[] args = {"-Xep:EmptyIf:WARN"};
+      Result exitCode =
+          compiler.compile(
+              args,
+              Arrays.asList(
+                  compiler.fileManager().forSourceLines("Generated.java", generatedFile)));
+      outputStream.flush();
+      assertThat(diagnosticHelper.getDiagnostics()).hasSize(1);
+      assertThat(diagnosticHelper.getDiagnostics().get(0).getMessage(Locale.ENGLISH))
+          .contains("[EmptyIf]");
+      assertThat(outputStream.toString(), exitCode, is(Result.OK));
+    }
+
+    diagnosticHelper.clearDiagnostics();
+
+    {
+      String[] args = {"-Xep:EmptyIf:WARN", "-XepDisableWarningsInGeneratedCode"};
+      Result exitCode =
+          compiler.compile(
+              args,
+              Arrays.asList(
+                  compiler.fileManager().forSourceLines("Generated.java", generatedFile)));
+      outputStream.flush();
+      assertThat(diagnosticHelper.getDiagnostics()).hasSize(0);
+      assertThat(outputStream.toString(), exitCode, is(Result.OK));
+    }
+  }
+
+  @Test
+  public void cannotSuppressGeneratedError() throws Exception {
+    String[] generatedFile = {
+      "@javax.annotation.Generated(\"Foo\")",
+      "class Generated {",
+      "  public Generated() {",
+      "    if (true);",
+      "  }",
+      "}"
+    };
+
+    String[] args = {"-Xep:EmptyIf:ERROR", "-XepDisableWarningsInGeneratedCode"};
+    Result exitCode =
+        compiler.compile(
+            args,
+            Arrays.asList(compiler.fileManager().forSourceLines("Generated.java", generatedFile)));
+    outputStream.flush();
+    assertThat(diagnosticHelper.getDiagnostics()).hasSize(1);
+    assertThat(diagnosticHelper.getDiagnostics().get(0).getMessage(Locale.ENGLISH))
+        .contains("[EmptyIf]");
+    assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
   }
 }

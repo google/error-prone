@@ -32,6 +32,11 @@ public interface Suppressible {
   Set<String> allNames();
 
   /**
+   * The canonical name of the check.
+   */
+  String canonicalName();
+
+  /**
    * Returns how this checker can be suppressed (e.g., via {@code @SuppressWarnings} or a custom
    * suppression annotation.
    */

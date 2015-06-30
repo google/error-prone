@@ -16,6 +16,8 @@
 
 package com.google.errorprone;
 
+import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.errorprone.matchers.Suppressible;
 import com.google.errorprone.util.ASTHelpers;
 
@@ -30,6 +32,8 @@ import java.lang.annotation.Annotation;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.annotation.Generated;
 
 /**
  * Encapsulates the logic of handling suppressions, both via {@code @SuppressWarnings} and via
@@ -49,8 +53,10 @@ public class SuppressionHelper {
   /**
    * @param customSuppressionAnnotations The set of custom suppression annotations that this
    * SuppressionHelper should look for.
+   * @param state the {@link VisitorState} of the current analysis.
    */
-  public SuppressionHelper(Set<Class<? extends Annotation>> customSuppressionAnnotations) {
+  public SuppressionHelper(
+      Set<Class<? extends Annotation>> customSuppressionAnnotations, VisitorState state) {
     if (customSuppressionAnnotations == null) {
       throw new IllegalArgumentException("customSuppressionAnnotations must be non-null");
     }
@@ -61,16 +67,19 @@ public class SuppressionHelper {
    * Used for the return type of {@code handleSuppressions()}.  Either field may be null, which
    * indicates that the suppression sets are unchanged.
    */
-  public class NewSuppressions {
+  public static class NewSuppressions {
     public Set<String> suppressWarningsStrings;
     public Set<Class<? extends Annotation>> customSuppressions;
+    public boolean inGeneratedCode;
 
-    public NewSuppressions(Set<String> suppressWarningsStrings,
-        Set<Class<? extends Annotation>> customSuppressions) {
+    public NewSuppressions(
+        Set<String> suppressWarningsStrings,
+        Set<Class<? extends Annotation>> customSuppressions,
+        boolean inGeneratedCode) {
       this.suppressWarningsStrings = suppressWarningsStrings;
       this.customSuppressions = customSuppressions;
+      this.inGeneratedCode = inGeneratedCode;
     }
-
   }
 
   /**
@@ -89,12 +98,15 @@ public class SuppressionHelper {
    * @param suppressionsOnCurrentPath The set of strings in all {@code @SuppressWarnings}
    *        annotations on the current path through the AST
    * @param customSuppressionsOnCurrentPath The set of all custom suppression annotations
-   *        on the current path through the AST
    */
-  public NewSuppressions extendSuppressionSets(Symbol sym,
+  public NewSuppressions extendSuppressionSets(
+      Symbol sym,
       Type suppressWarningsType,
       Set<String> suppressionsOnCurrentPath,
-      Set<Class<? extends Annotation>> customSuppressionsOnCurrentPath) {
+      Set<Class<? extends Annotation>> customSuppressionsOnCurrentPath,
+      boolean inGeneratedCode) {
+
+    boolean newInGeneratedCode = inGeneratedCode || ASTHelpers.hasAnnotation(sym, Generated.class);
 
     /**
      * Handle custom suppression annotations.
@@ -136,7 +148,7 @@ public class SuppressionHelper {
       }
     }
 
-    return new NewSuppressions(newSuppressions, newCustomSuppressions);
+    return new NewSuppressions(newSuppressions, newCustomSuppressions, newInGeneratedCode);
   }
 
   /**
@@ -147,17 +159,26 @@ public class SuppressionHelper {
    *        annotations on the current path through the AST
    * @param customSuppressionsOnCurrentPath The set of all custom suppression annotations
    *        on the current path through the AST
+   * @param severityLevel of the check to be suppressed
+   * @param inGeneratedCode true if the current code is generated
+   * @param disableWarningsInGeneratedCode true if warnings in generated code should be suppressed
    */
   public static boolean isSuppressed(
       Suppressible suppressible,
       Set<String> suppressionsOnCurrentPath,
-      Set<Class<? extends Annotation>> customSuppressionsOnCurrentPath) {
+      Set<Class<? extends Annotation>> customSuppressionsOnCurrentPath,
+      SeverityLevel severityLevel,
+      boolean inGeneratedCode,
+      boolean disableWarningsInGeneratedCode) {
+    if (suppressible.suppressibility() == Suppressibility.UNSUPPRESSIBLE) {
+      return false;
+    }
+    if (inGeneratedCode && disableWarningsInGeneratedCode && severityLevel != SeverityLevel.ERROR) {
+      return true;
+    }
     switch (suppressible.suppressibility()) {
-      case UNSUPPRESSIBLE:
-        return false;
       case CUSTOM_ANNOTATION:
-        return customSuppressionsOnCurrentPath.contains(
-            suppressible.customSuppressionAnnotation());
+        return customSuppressionsOnCurrentPath.contains(suppressible.customSuppressionAnnotation());
       case SUPPRESS_WARNINGS:
         return !Collections.disjoint(suppressible.allNames(), suppressionsOnCurrentPath);
       default:
