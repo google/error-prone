@@ -40,7 +40,7 @@ import com.sun.source.tree.VariableTree;
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
 @BugPattern(name = "JavaxInjectOnFinalField",
-    summary = "@javac.inject.Inject cannot be put on a final field.", explanation =
+    summary = "@javax.inject.Inject cannot be put on a final field.", explanation =
         "According to the JSR-330 spec, the @javax.inject.Inject annotation "
         + "cannot go on final fields.)", category = INJECT, severity = ERROR,
     maturity = EXPERIMENTAL)
