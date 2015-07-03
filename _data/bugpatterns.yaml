@@ -112,7 +112,7 @@
     a @RunWith(JMock.class) annotation, or the Mockery field must have a @Rule JUnit
     annotation'}
 - {name: JavaxInjectOnAbstractMethod, summary: Abstract methods are not injectable with javax.inject.Inject.}
-- {name: JavaxInjectOnFinalField, summary: '@javac.inject.Inject cannot be put on
+- {name: JavaxInjectOnFinalField, summary: '@javax.inject.Inject cannot be put on
     a final field.'}
 - {name: LockMethodChecker, summary: This method does not acquire the locks specified by its @LockMethod annotation}
 - {name: MalformedFormatString, summary: Printf-like format string does not match its arguments}
