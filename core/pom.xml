@@ -97,7 +97,7 @@
     <dependency>
       <groupId>com.google.auto.value</groupId>
       <artifactId>auto-value</artifactId>
-      <version>1.0</version>
+      <version>1.1</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -256,7 +256,7 @@
                   <arguments>
                     <argument>-bug_patterns=${basedir}/target/generated-sources/annotations/bugPatterns.txt</argument>
                     <argument>-docs_repository=${basedir}/target/generated-wiki/</argument>
-                    <argument>-examples=${basedir}/src/test/java/</argument>
+                    <argument>-examplesDir=${basedir}/src/test/java/</argument>
                     <argument>-explanations=${basedir}/../docs/bugpattern/</argument>
                   </arguments>
                 </configuration>

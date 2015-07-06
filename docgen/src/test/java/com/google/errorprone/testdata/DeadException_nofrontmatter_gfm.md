@@ -22,7 +22,7 @@ Suppress false positives by adding an `@SuppressWarnings("DeadException")` annot
 
 ----------
 
-## Examples
+### Positive examples
 __DeadExceptionPositiveCase.java__
 
 ```java

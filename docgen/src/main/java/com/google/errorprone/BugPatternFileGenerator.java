@@ -16,9 +16,14 @@
 
 package com.google.errorprone;
 
+import static com.google.common.base.Predicates.not;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.FluentIterable;
 import com.google.common.io.LineProcessor;
 import com.google.errorprone.BugPattern.Instance;
 import com.google.errorprone.BugPattern.MaturityLevel;
@@ -26,9 +31,11 @@ import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.common.collect.ImmutableMap;
 
+import java.io.IOError;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.DirectoryStream;
+import java.nio.file.DirectoryStream.Filter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.yaml.snakeyaml.DumperOptions;
@@ -37,7 +44,8 @@ import org.yaml.snakeyaml.Yaml;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -69,8 +77,8 @@ class BugPatternFileGenerator implements LineProcessor<List<Instance>> {
   public BugPatternFileGenerator(
       Path bugpatternDir,
       Path exampleDirBase,
-      Path explanationDir, 
-      boolean generateFrontMatter, 
+      Path explanationDir,
+      boolean generateFrontMatter,
       boolean usePygments) {
     this.outputDir = bugpatternDir;
     this.exampleDirBase = exampleDirBase;
@@ -144,6 +152,50 @@ class BugPatternFileGenerator implements LineProcessor<List<Instance>> {
     return new MessageFormat(result.toString(), Locale.ENGLISH);
   }
 
+  /**
+   * A function to convert a test case file into an {@link ExampleInfo}.
+   */
+  private static class PathToExampleInfo implements Function<Path, ExampleInfo> {
+
+    private final String checkerClass;
+
+    public PathToExampleInfo(String checkerClass) {
+      this.checkerClass = checkerClass;
+    }
+
+    @Override
+    public ExampleInfo apply(Path path) {
+      ExampleInfo.ExampleKind posOrNeg = null;
+      String fileName = path.getFileName().toString();
+      if (fileName.contains("Positive")) {
+        posOrNeg = ExampleInfo.ExampleKind.POSITIVE;
+      } else if (fileName.contains("Negative")) {
+        posOrNeg = ExampleInfo.ExampleKind.NEGATIVE;
+      } else {
+        // ExampleFilter enforces this
+        throw new AssertionError(
+            "Example filename must contain \"Positive\" or \"Negative\", but was " + fileName);
+      }
+
+      String code;
+      try {
+        code = new String(Files.readAllBytes(path), UTF_8).trim();
+      } catch (IOException e) {
+        throw new IOError(e);
+      }
+
+      return ExampleInfo.create(posOrNeg, checkerClass, fileName, code);
+    }
+  }
+
+  private static final Predicate<ExampleInfo> IS_POSITIVE =
+      new Predicate<ExampleInfo>() {
+        @Override
+        public boolean apply(ExampleInfo input) {
+          return input.type() == ExampleInfo.ExampleKind.POSITIVE;
+        }
+      };
+
   @Override
   public boolean processLine(String line) throws IOException {
     ArrayList<String> parts = new ArrayList<>(Splitter.on('\t').trimResults().splitToList(line));
@@ -165,7 +217,7 @@ class BugPatternFileGenerator implements LineProcessor<List<Instance>> {
         outputDir.resolve(checkPath), UTF_8)) {
       // replace "\n" with a carriage return for explanation
       parts.set(9, parts.get(9).replace("\\n", "\n"));
-      
+
       // load side-car explanation file, if it exists
       Path sidecarExplanation = explanationDir.resolve(checkPath);
       if (Files.exists(sidecarExplanation)) {
@@ -177,7 +229,7 @@ class BugPatternFileGenerator implements LineProcessor<List<Instance>> {
         }
         parts.set(9, new String(Files.readAllBytes(sidecarExplanation), UTF_8).trim());
       }
-  
+
       MessageFormat wikiPageTemplate = constructPageTemplate(pattern, generateFrontMatter);
 
       if (generateFrontMatter) {
@@ -199,36 +251,62 @@ class BugPatternFileGenerator implements LineProcessor<List<Instance>> {
       }
 
       writer.write(wikiPageTemplate.format(parts.toArray()));
-  
-      Iterable<String> classNameParts = Splitter.on('.').split(parts.get(0));
+
       // Example filename must match example pattern.
-      List<Path> examples = new ArrayList<>();
-      ExampleFilter filter =
+      List<Path> examplePaths = new ArrayList<>();
+      Filter<Path> filter =
           new ExampleFilter(parts.get(0).substring(parts.get(0).lastIndexOf('.') + 1));
-      findExamples(examples, exampleDirBase, filter);
-      Collections.sort(examples);
-      if (examples.size() > 0) {
+      findExamples(examplePaths, exampleDirBase, filter);
+
+      List<ExampleInfo> exampleInfos =
+          FluentIterable.from(examplePaths)
+              .transform(new PathToExampleInfo(parts.get(0)))
+              .toSortedList( // sort by name
+                  new Comparator<ExampleInfo>() {
+                    @Override
+                    public int compare(ExampleInfo first, ExampleInfo second) {
+                      return first.name().compareTo(second.name());
+                    }
+                  });
+      Collection<ExampleInfo> positiveExamples = Collections2.filter(exampleInfos, IS_POSITIVE);
+      Collection<ExampleInfo> negativeExamples =
+          Collections2.filter(exampleInfos, not(IS_POSITIVE));
+
+      if (!exampleInfos.isEmpty()) {
         writer.write("\n----------\n\n");
-        writer.write("## Examples\n");
-  
-        for (Path example: examples) {
-          writer.write("__" + example.getFileName() + "__\n\n");
-          if (usePygments) {
-            writer.write("{% highlight java %}\n");
-          } else {
-            writer.write("```java\n");
+
+        if (!positiveExamples.isEmpty()) {
+          writer.write("### Positive examples\n");
+          for (ExampleInfo positiveExample : positiveExamples) {
+            writeExample(positiveExample, writer);
           }
-          writer.write(new String(Files.readAllBytes(example), UTF_8).trim() + "\n");
-          if (usePygments) {
-            writer.write("{% endhighlight %}\n");
-          } else {
-            writer.write("```\n");
+        }
+
+        if (!negativeExamples.isEmpty()) {
+          writer.write("### Negative examples\n");
+          for (ExampleInfo negativeExample : negativeExamples) {
+            writeExample(negativeExample, writer);
           }
-          writer.write("\n");
         }
       }
     }
     return true;
+  }
+
+  private void writeExample(ExampleInfo example, Writer writer) throws IOException {
+    writer.write("__" + example.name() + "__\n\n");
+    if (usePygments) {
+      writer.write("{% highlight java %}\n");
+    } else {
+      writer.write("```java\n");
+    }
+    writer.write(example.code() + "\n");
+    if (usePygments) {
+      writer.write("{% endhighlight %}\n");
+    } else {
+      writer.write("```\n");
+    }
+    writer.write("\n");
   }
 
   private static void findExamples(

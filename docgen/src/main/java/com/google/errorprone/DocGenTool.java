@@ -50,8 +50,12 @@ public class DocGenTool {
         required = true)
     private String docsRepository;
 
-    @Parameter(names = {"-examples"}, description = "Path to examples", required = true)
-    private String examples;
+    @Parameter(
+      names = {"-examplesDir"},
+      description = "Path to examples directory",
+      required = true
+    )
+    private String examplesDir;
 
     @Parameter(names = {"-generate_frontmatter"}, description = "Generate yaml front-matter",
         arity = 1)
@@ -76,16 +80,16 @@ public class DocGenTool {
     }
     Path wikiDir = Paths.get(options.docsRepository);
     Files.createDirectories(wikiDir);
-    Path exampleDirBase = Paths.get(options.examples);
+    Path exampleDirBase = Paths.get(options.examplesDir);
     if (!Files.exists(exampleDirBase)) {
-      usage("Cannot find example directory: " + options.examples);
+      usage("Cannot find example directory: " + options.examplesDir);
     }
     Path bugpatternDir = wikiDir.resolve("bugpattern");
     if (!Files.exists(bugpatternDir)) {
       Files.createDirectories(bugpatternDir);
     }
     Files.createDirectories(wikiDir.resolve("_data"));
-    BugPatternFileGenerator generator = 
+    BugPatternFileGenerator generator =
         new BugPatternFileGenerator(
             bugpatternDir,
             exampleDirBase,
@@ -97,7 +101,7 @@ public class DocGenTool {
       new BugPatternIndexYamlWriter().dump(readLines(bugPatterns.toFile(), UTF_8, generator), w);
     }
   }
-  
+
   private static void usage(String err) {
     System.err.println(err);
     System.exit(1);
