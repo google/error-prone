@@ -19,8 +19,8 @@
     <mkdir dir="build"/>
     <!-- external compile (fork="yes") -->
     <componentdef name="errorprone" classname="com.google.errorprone.ErrorProneExternalCompilerAdapter"
-      classpath="../../../ant/target/error_prone_ant-2.0.2-SNAPSHOT.jar"/>
-    <javac srcdir="src" destdir="build" fork="yes" includeantruntime="no">
+      classpath="../../../ant/target/error_prone_ant-2.0.5-SNAPSHOT.jar"/>
+    <javac srcdir="src" destdir="build" fork="yes" executable="javac-1.9.0-dev-r2644-2.jar" includeantruntime="no">
       <errorprone/>
     </javac>
   </target>

@@ -1,0 +1,11 @@
+This example runs the version of the ant integration that forks Error Prone
+into a different process.  To run:
+
+1) Go into the error-prone/ant directory and run "mvn package" to build the
+   error_prone_ant snapshot jar.
+
+2) Download the latest verson of our javac jar from Maven Central into this 
+   directory.  The latest version is available under:
+   https://repo1.maven.org/maven2/com/google/errorprone/javac/
+
+Now you should be able to build by typing "ant" at the prompt.
