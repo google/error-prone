@@ -67,7 +67,7 @@ public class ErrorProneExternalCompilerAdapter extends DefaultCompilerAdapter {
   @Override
   public boolean execute() throws BuildException {
     if (getJavac().isForkedJavac()) {
-      attributes.log("Using external error-prone compiler", Project.MSG_VERBOSE);
+      attributes.log("Using external Error Prone compiler", Project.MSG_VERBOSE);
       Commandline cmd = new Commandline();
       cmd.setExecutable(JavaEnvUtils.getJdkExecutable("java"));
       if (memoryStackSize != null) {
@@ -90,6 +90,18 @@ public class ErrorProneExternalCompilerAdapter extends DefaultCompilerAdapter {
         }
       }
 
+      // Put javac.jar on bootclasspath to avoid version skew between Error Prone's javac and the
+      // system javac.
+      String javacJar = getJavac().getExecutable();
+      if (javacJar == null) {
+        attributes.log(
+            "You must set the executable attribute of the javac task to the path to the Error "
+                + "Prone javac jar to use the external Error Prone compiler",
+            Project.MSG_ERR);
+        return false;
+      }
+      cmd.createArgument().setValue("-Xbootclasspath/p:" + javacJar);
+
       cmd.createArgument().setValue("-classpath");
       if (classpath == null) {
         classpath = new Path(getProject());
@@ -104,7 +116,7 @@ public class ErrorProneExternalCompilerAdapter extends DefaultCompilerAdapter {
       logAndAddFilesToCompile(cmd);
       return executeExternalCompile(cmd.getCommandline(), cmd.size(), true) == 0;
     } else {
-      attributes.log("You must set fork=\"yes\" to use the external error-prone compiler",
+      attributes.log("You must set fork=\"yes\" to use the external Error Prone compiler",
           Project.MSG_ERR);
       return false;
     }
