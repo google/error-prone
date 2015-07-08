@@ -67,7 +67,7 @@ public class ErrorProneExternalCompilerAdapter extends DefaultCompilerAdapter {
   @Override
   public boolean execute() throws BuildException {
     if (getJavac().isForkedJavac()) {
-      attributes.log("Using external error-prone compiler", Project.MSG_VERBOSE);
+      attributes.log("Using external Error Prone compiler", Project.MSG_VERBOSE);
       Commandline cmd = new Commandline();
       cmd.setExecutable(JavaEnvUtils.getJdkExecutable("java"));
       if (memoryStackSize != null) {
@@ -90,21 +90,22 @@ public class ErrorProneExternalCompilerAdapter extends DefaultCompilerAdapter {
         }
       }
 
-      cmd.createArgument().setValue("-classpath");
-      if (classpath == null) {
-        classpath = new Path(getProject());
+      Path bootclasspath = new Path(getProject());
+      addResourceSource(bootclasspath, "com/google/errorprone/ErrorProneExternalCompilerAdapter.class");
+      cmd.createArgument().setValue("-Xbootclasspath/p:" + bootclasspath);
+
+      if (classpath != null) {
+        cmd.createArgument().setValue("-classpath");
+        cmd.createArgument().setPath(classpath);
       }
-      // Usually redundant, but check two resources in case Ant stuff is in a different jar
-      addResourceSource(classpath, "com/google/errorprone/ErrorProneExternalCompilerAdapter.class");
-      addResourceSource(classpath, "com/google/errorprone/ErrorProneCompiler.class");
-      cmd.createArgument().setPath(classpath);
+
       cmd.createArgument().setValue(ErrorProneCompiler.class.getName());
       setupModernJavacCommandlineSwitches(cmd);
       int firstFile = cmd.size();
       logAndAddFilesToCompile(cmd);
       return executeExternalCompile(cmd.getCommandline(), firstFile, true) == 0;
     } else {
-      attributes.log("You must set fork=\"yes\" to use the external error-prone compiler",
+      attributes.log("You must set fork=\"yes\" to use the external Error Prone compiler",
           Project.MSG_ERR);
       return false;
     }

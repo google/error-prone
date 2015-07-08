@@ -19,10 +19,7 @@ package com.google.errorprone;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.StandardSystemProperty.JAVA_SPECIFICATION_VERSION;
 
-import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import com.google.errorprone.internal.NonDelegatingClassLoader;
 import com.google.errorprone.scanner.BuiltInCheckerSuppliers;
 import com.google.errorprone.scanner.Scanner;
 import com.google.errorprone.scanner.ScannerSupplier;
@@ -39,8 +36,6 @@ import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JavacMessages;
 
 import java.io.PrintWriter;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -57,12 +52,6 @@ import javax.tools.JavaFileObject;
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class ErrorProneCompiler {
-  public static class AntRunner implements Function<String[], Integer> {
-    @Override
-    public Integer apply(String[] args) {
-      return ErrorProneCompiler.compile(args).exitCode;
-    }
-  }
 
   /**
    * Entry point for compiling Java code with error-prone enabled.
@@ -71,25 +60,7 @@ public class ErrorProneCompiler {
    * @param args the same args which could be passed to javac on the command line
    */
   public static void main(String[] args) {
-    ClassLoader originalLoader = ErrorProneCompiler.class.getClassLoader();
-    if (originalLoader instanceof URLClassLoader) {
-      URL[] urls = ((URLClassLoader) originalLoader).getURLs();
-      ClassLoader loader = NonDelegatingClassLoader.create(
-          ImmutableSet.of(Function.class.getName()), urls, originalLoader);
-
-      try {
-        Class<?> runnerClass = Class.forName(AntRunner.class.getName(), true, loader);
-        @SuppressWarnings("unchecked")
-        Function<String[], Integer> runner = (Function<String[], Integer>) runnerClass.newInstance();
-        Integer exitCode = runner.apply(args);
-        System.exit(exitCode == null ? -1 : exitCode);
-      } catch (ReflectiveOperationException e) {
-        throw new LinkageError("Unable to create runner.", e);
-      }
-    } else {
-      System.err.println("Unexpected ClassLoader: " + originalLoader.getClass());
-      System.exit(1);
-    }
+    System.exit(compile(args).exitCode);
   }
 
   /**
