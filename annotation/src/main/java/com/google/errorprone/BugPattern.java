@@ -85,6 +85,10 @@ public @interface BugPattern {
      */
     GUICE,
     /**
+     * Errors specific to Dagger.
+     */
+    DAGGER,
+    /**
      * Errors specific to JUnit.
      */
     JUNIT,
