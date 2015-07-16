@@ -55,7 +55,7 @@ public class GetClassOnClass extends BugChecker implements MethodInvocationTreeM
       instanceMethod().onExactClass("java.lang.Class").named("getClass");
 
   /**
-   * Suggests removing getClass().
+   * Suggests removing getClass() or changing to Class.class.
    */
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
