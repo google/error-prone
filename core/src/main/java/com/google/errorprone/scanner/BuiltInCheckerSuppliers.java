@@ -175,6 +175,7 @@ public class BuiltInCheckerSuppliers {
           ArrayToString.class,
           ArrayToStringCompoundAssignment.class,
           ArrayToStringConcatenation.class,
+          AsyncFunctionReturnsNull.class,
           BadShiftAmount.class,
           ChainingConstructorIgnoresParameter.class,
           CheckReturnValue.class,
@@ -237,7 +238,6 @@ public class BuiltInCheckerSuppliers {
       getSuppliers(
           ArraysAsListPrimitiveArray.class,
           AssertFalse.class,
-          AsyncFunctionReturnsNull.class,
           ClassCanBeStatic.class,
           CollectionIncompatibleType.class,
           DivZero.class,

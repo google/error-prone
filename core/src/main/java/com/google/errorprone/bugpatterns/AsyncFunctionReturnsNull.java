@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.GUAVA;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.util.concurrent.AsyncFunction;
@@ -31,7 +31,7 @@ import com.google.errorprone.BugPattern;
     explanation = "Methods like Futures.transformAsync and Futures.catchingAsync will throw a "
         + "NullPointerException if the provided AsyncFunction returns a null Future. To produce a "
         + "Future with an output of null, instead return immediateFuture(null).",
-    category = GUAVA, severity = ERROR, maturity = EXPERIMENTAL)
+    category = GUAVA, severity = ERROR, maturity = MATURE)
 public final class AsyncFunctionReturnsNull extends AbstractAsyncTypeReturnsNull {
   public AsyncFunctionReturnsNull() {
     super(AsyncFunction.class);
