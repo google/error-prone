@@ -98,7 +98,7 @@ import javax.tools.JavaFileObject;
 /**
  * A base class for implementing bug checkers. The {@code BugChecker} supplies a Scanner
  * implementation for this checker, making it easy to use a single checker. Subclasses should also
- * implement one or more of the {@code *Checker} interfaces in this class to declare which tree node
+ * implement one or more of the {@code *Matcher} interfaces in this class to declare which tree node
  * types to match against.
  *
  * @author Colin Decker
