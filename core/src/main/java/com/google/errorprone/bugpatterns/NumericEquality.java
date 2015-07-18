@@ -81,11 +81,11 @@ public class NumericEquality extends BugChecker implements BinaryTreeMatcher {
       fixedExpression.append("!");
     }
     fixedExpression.append(
-        "Objects.equal(" + leftOperand + ", " + rightOperand + ")");
+        "Objects.equals(" + leftOperand + ", " + rightOperand + ")");
 
     Fix fix = SuggestedFix.builder()
         .replace(tree, fixedExpression.toString())
-        .addImport("com.google.common.base.Objects")
+        .addImport("java.util.Objects")
         .build();
     return describeMatch(tree, fix);
   }
