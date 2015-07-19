@@ -155,7 +155,7 @@ public class Matchers {
 
   @SafeVarargs
   public static <T extends Tree> Matcher<T> anyOf(final Matcher<? super T>... matchers) {
-    return anyOf(Arrays.asList(matchers));
+    return anyOf(Arrays.<Matcher<? super T>>asList(matchers));
   }
 
   /**
