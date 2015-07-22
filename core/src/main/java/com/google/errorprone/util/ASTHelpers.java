@@ -470,13 +470,10 @@ public class ASTHelpers {
    * {@link VariableTree#getType()} or {@link MethodTree#getReturnType()}.
    */
   public static Type getType(Tree tree) {
-    if (tree instanceof JCFieldAccess) {
-      return ((JCFieldAccess) tree).sym.type;
-    } else if (tree instanceof JCTree) {
+    if (tree instanceof JCTree) {
       return ((JCTree) tree).type;
-    } else {
-      return null;
     }
+    return null;
   }
 
   public static String getAnnotationName(AnnotationTree tree) {
