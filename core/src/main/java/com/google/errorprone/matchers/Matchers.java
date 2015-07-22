@@ -1323,7 +1323,7 @@ public class Matchers {
   /**
    * Matches an assertion AST node if the given matcher matches its condition.
    *
-   * @param conditionMatcher the matcher to apply to the condition in the assertion, e.g. in
+   * @param conditionMatcher The matcher to apply to the condition in the assertion, e.g. in
    * "assert false", the "false" part of the statement
    */
   public static Matcher<AssertTree> assertionWithCondition(
@@ -1334,5 +1334,15 @@ public class Matchers {
         return conditionMatcher.matches(tree.getCondition(), state);
       }
     };
+  }
+  
+  /**
+   * Applies the given matcher recursively to all descendants of an AST node, and matches if
+   * any matching descendant node is found.
+   *
+   * @param treeMatcher The matcher to apply recursively to the tree.
+   */
+  public static Matcher<Tree> contains(Matcher<Tree> treeMatcher) {
+    return new Contains(treeMatcher);
   }
 }

@@ -25,6 +25,7 @@ import static com.google.errorprone.matchers.Matchers.assertStatement;
 import static com.google.errorprone.matchers.Matchers.assignment;
 import static com.google.errorprone.matchers.Matchers.booleanConstant;
 import static com.google.errorprone.matchers.Matchers.booleanLiteral;
+import static com.google.errorprone.matchers.Matchers.contains;
 import static com.google.errorprone.matchers.Matchers.continueStatement;
 import static com.google.errorprone.matchers.Matchers.ignoreParens;
 import static com.google.errorprone.matchers.Matchers.isInstanceField;
@@ -69,7 +70,6 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
-import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 
 import java.util.HashSet;
@@ -214,7 +214,7 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
 
   private static final Matcher<ExpressionTree> LOG_CALL = methodInvocation(new LogMethodMatcher());
   private static final Matcher<Tree> LOG_IN_BLOCK =
-      new Contains(toType(ExpressionTree.class, LOG_CALL));
+      contains(toType(ExpressionTree.class, LOG_CALL));
 
   private static final Pattern FAIL_PATTERN = Pattern.compile(".*(?i:fail).*");
   private static final Matcher<ExpressionTree> FAIL =
@@ -228,26 +228,28 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
   private static final Matcher<ExpressionTree> VERIFY_CALL =
       methodInvocation(staticMethod().onClass("org.mockito.Mockito").named("verify"));
   private static final MultiMatcher<TryTree, Tree> ASSERT_LAST_CALL_IN_TRY =
-      new ChildOfTryMatcher(MatchType.LAST, new Contains(toType(ExpressionTree.class,
-          Matchers.anyOf(REAL_ASSERT_CALL, VERIFY_CALL))));
+      new ChildOfTryMatcher(
+          MatchType.LAST,
+          contains(toType(ExpressionTree.class, Matchers.anyOf(REAL_ASSERT_CALL, VERIFY_CALL))));
   private static final Matcher<Tree> ASSERT_IN_BLOCK =
-      new Contains(toType(ExpressionTree.class, REAL_ASSERT_CALL));
+      contains(toType(ExpressionTree.class, REAL_ASSERT_CALL));
 
   private static final Matcher<StatementTree> THROW_STATEMENT = throwStatement(Matchers.anything());
-  private static final Matcher<Tree> THROW_OR_FAIL_IN_BLOCK = new Contains(
-      Matchers.anyOf(
-          toType(StatementTree.class, THROW_STATEMENT),
-          // TODO(schmitt): Include Preconditions.checkState(false)?
-          toType(ExpressionTree.class, ASSERT_TRUE_FALSE),
-          toType(ExpressionTree.class, ASSERT_FALSE_TRUE),
-          toType(ExpressionTree.class, ASSERT_UNEQUAL),
-          toType(StatementTree.class, JAVA_ASSERT_FALSE),
-          toType(ExpressionTree.class, FAIL)));
+  private static final Matcher<Tree> THROW_OR_FAIL_IN_BLOCK =
+      contains(
+          Matchers.anyOf(
+              toType(StatementTree.class, THROW_STATEMENT),
+              // TODO(schmitt): Include Preconditions.checkState(false)?
+              toType(ExpressionTree.class, ASSERT_TRUE_FALSE),
+              toType(ExpressionTree.class, ASSERT_FALSE_TRUE),
+              toType(ExpressionTree.class, ASSERT_UNEQUAL),
+              toType(StatementTree.class, JAVA_ASSERT_FALSE),
+              toType(ExpressionTree.class, FAIL)));
 
   private static final Matcher<TryTree> NON_TEST_METHOD = new IgnoredEnclosingMethodMatcher();
 
-  private static final Matcher<Tree> RETURN_IN_BLOCK = new Contains(
-      toType(StatementTree.class, returnStatement(Matchers.anything())));
+  private static final Matcher<Tree> RETURN_IN_BLOCK =
+      contains(toType(StatementTree.class, returnStatement(Matchers.anything())));
   private static final NextStatement<StatementTree> RETURN_AFTER =
       nextStatement(returnStatement(Matchers.anything()));
 
@@ -260,22 +262,22 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
   private static final InLoopMatcher IN_LOOP = new InLoopMatcher();
 
   private static final Matcher<Tree> WHILE_TRUE_IN_BLOCK =
-      new Contains(toType(WhileLoopTree.class, new WhileTrueLoopMatcher()));
+      contains(toType(WhileLoopTree.class, new WhileTrueLoopMatcher()));
 
   private static final Matcher<Tree> CONTINUE_IN_BLOCK =
-      new Contains(toType(StatementTree.class, continueStatement()));
+      contains(toType(StatementTree.class, continueStatement()));
 
   private static final Matcher<AssignmentTree> FIELD_ASSIGNMENT =
       assignment(isInstanceField(), Matchers.<ExpressionTree>anything());
   private static final Matcher<Tree> FIELD_ASSIGNMENT_IN_BLOCK =
-      new Contains(toType(AssignmentTree.class, FIELD_ASSIGNMENT));
+      contains(toType(AssignmentTree.class, FIELD_ASSIGNMENT));
 
   private static final Matcher<ExpressionTree> BOOLEAN_ASSERT_VAR = methodInvocation(
       Matchers.anyOf(ASSERT_FALSE, ASSERT_TRUE),
       MatchType.AT_LEAST_ONE,
       Matchers.anyOf(isInstanceField(), isVariable()));
   private static final Matcher<Tree> BOOLEAN_ASSERT_VAR_IN_BLOCK =
-      new Contains(toType(ExpressionTree.class, BOOLEAN_ASSERT_VAR));
+      contains(toType(ExpressionTree.class, BOOLEAN_ASSERT_VAR));
 
   // Subtly different from JUnitMatchers: We want to match test base classes too.
   private static final Matcher<ClassTree> JUNIT3_TEST_CLASS =
@@ -539,56 +541,6 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
     @Override
     public ExpressionTree getMatchingNode() {
       throw new UnsupportedOperationException();
-    }
-  }
-
-  /**
-   * A matcher that recursively inspects a tree, applying the given matcher to all levels of each
-   * tree and returning {@code true} if any match is found.
-   */
-  private static class Contains implements Matcher<Tree> {
-
-    private final Matcher<Tree> matcher;
-
-    /**
-     * Creates a new matcher that will recursively apply {@code matcher} to the input tree.
-     */
-    public Contains(Matcher<Tree> matcher) {
-      this.matcher = matcher;
-    }
-
-    @Override
-    public boolean matches(Tree tree, VisitorState state) {
-      Boolean matchFound = tree.accept(new FirstMatchingScanner(state, matcher), false);
-      return matchFound != null && matchFound;
-    }
-
-    private class FirstMatchingScanner extends TreeScanner<Boolean, Boolean> {
-
-      private final VisitorState state;
-      private final Matcher<Tree> matcher;
-
-      public FirstMatchingScanner(VisitorState state, Matcher<Tree> matcher) {
-        this.state = state;
-        this.matcher = matcher;
-      }
-
-      @Override
-      public Boolean scan(Tree tree, Boolean matchFound) {
-        if (matchFound) {
-          return true;
-        }
-
-        if (matcher.matches(tree, state)) {
-          return true;
-        }
-        return super.scan(tree, false);
-      }
-
-      @Override
-      public Boolean reduce(Boolean left, Boolean right) {
-        return (left != null && left) || (right != null && right);
-      }
     }
   }
 
