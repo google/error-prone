@@ -242,6 +242,11 @@ public class DiagnosticTestHelper {
    */
   private static final String BUG_MARKER_COMMENT = "// BUG: Diagnostic contains:";
 
+  enum LookForCheckNameInDiagnostic {
+    YES,
+    NO;
+  }
+
   /**
    * Asserts that the diagnostics contain a diagnostic on each line of the source file that
    * matches our bug marker pattern.  Parses the bug marker pattern for the specific string to
@@ -250,7 +255,8 @@ public class DiagnosticTestHelper {
    *
    * TODO(eaftan): Switch to use assertThat instead of assertTrue.
    */
-  public void assertHasDiagnosticOnAllMatchingLines(JavaFileObject source)
+  public void assertHasDiagnosticOnAllMatchingLines(
+      JavaFileObject source, LookForCheckNameInDiagnostic lookForCheckNameInDiagnostic)
       throws IOException {
     final List<Diagnostic<? extends JavaFileObject>> diagnostics = getDiagnostics();
     final LineNumberReader reader = new LineNumberReader(
@@ -274,7 +280,7 @@ public class DiagnosticTestHelper {
               patternMatcher.matches(diagnostics));
         }
 
-        if (checkName != null) {
+        if (checkName != null && lookForCheckNameInDiagnostic == LookForCheckNameInDiagnostic.YES) {
           // Diagnostic must contain check name.
           Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> checkNameMatcher =
               hasItem(diagnosticOnLine(source.toUri(), lineNumber, "[" + checkName + "]"));

@@ -93,6 +93,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import javax.annotation.CheckReturnValue;
+import javax.lang.model.element.Modifier;
 import javax.tools.JavaFileObject;
 
 /**
@@ -261,9 +262,11 @@ public abstract class BugChecker implements Suppressible, Serializable {
     public abstract static class DeclarationInfo {
       public abstract String name();
       public abstract Tree.Kind kind();
+      public abstract Set<Modifier> modifiers();
 
-      public static DeclarationInfo create(String name, Tree.Kind kind) {
-        return new AutoValue_BugChecker_CompilationUnitTreeInfo_DeclarationInfo(name, kind);
+      public static DeclarationInfo create(String name, Tree.Kind kind, Set<Modifier> modifiers) {
+        return new AutoValue_BugChecker_CompilationUnitTreeInfo_DeclarationInfo(
+            name, kind, modifiers);
       }
     }
 
@@ -288,7 +291,10 @@ public abstract class BugChecker implements Suppressible, Serializable {
         if (tree instanceof ClassTree) {
           ClassTree classTree = (ClassTree) tree;
           members.add(
-              DeclarationInfo.create(classTree.getSimpleName().toString(), classTree.getKind()));
+              DeclarationInfo.create(
+                  classTree.getSimpleName().toString(),
+                  classTree.getKind(),
+                  classTree.getModifiers().getFlags()));
         }
       }
       return new AutoValue_BugChecker_CompilationUnitTreeInfo(

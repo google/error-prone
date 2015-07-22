@@ -143,4 +143,18 @@ public class ClassNameTest {
               "}")
           .doTest();
   }
+  
+  @Test
+  public void negativeIsPublic() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "b/B.java",
+            "package b;",
+            "// BUG: Diagnostic contains: should be declared in a file named Test.java",
+            "public class Test {",
+            "}")
+        .ignoreJavacErrors()
+        .matchAllDiagnostics()
+        .doTest();
+  }
 }

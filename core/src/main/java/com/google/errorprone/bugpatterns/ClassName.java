@@ -31,14 +31,21 @@ import com.google.errorprone.matchers.Description;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.lang.model.element.Modifier;
+
 /**
  * @author cushon@google.com (Liam Miller-Cushon)
  */
-@BugPattern(name = "ClassName",
-    summary = "The source file name should match the name of the top-level class it contains",
-    explanation = "Google Java Style Guide § 2.1 states, \"The source file name consists of the"
-        + " case-sensitive name of the top-level class it contains, plus the .java extension.\"",
-    category = JDK, severity = ERROR, maturity = MATURE)
+@BugPattern(
+  name = "ClassName",
+  summary = "The source file name should match the name of the top-level class it contains",
+  explanation =
+      "Google Java Style Guide § 2.1 states, \"The source file name consists of the"
+          + " case-sensitive name of the top-level class it contains, plus the .java extension.\"",
+  category = JDK,
+  severity = ERROR,
+  maturity = MATURE
+)
 public class ClassName extends BugChecker implements CompilationUnitTreeMatcher {
 
   @Override
@@ -55,6 +62,12 @@ public class ClassName extends BugChecker implements CompilationUnitTreeMatcher 
         case ANNOTATION_TYPE:
         case ENUM:
           if (member.name().equals(filename)) {
+            return Description.NO_MATCH;
+          }
+          if (member.modifiers().contains(Modifier.PUBLIC)) {
+            // If any of the top-level types are public, javac will complain
+            // if the filename doesn't match. We don't want to double-report
+            // the error.
             return Description.NO_MATCH;
           }
           names.add(member.name());
