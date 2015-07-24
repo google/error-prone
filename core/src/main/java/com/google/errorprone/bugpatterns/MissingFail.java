@@ -80,106 +80,35 @@ import java.util.regex.Pattern;
 import javax.lang.model.element.Name;
 
 /**
- * A bug checker for the following code pattern:
- *
- * <pre>
- * try {
- *   ... do something that should throw ...
- *   // forget to call Assert.fail()
- * } catch (SomeException expected) {
- *   // asserts on the exception or comments
- * }
- * </pre>
- *
- * <h1>Detection</h1>
- * This checker uses heuristics that identify as many occurrences of the problem as possible while
- * keeping the false positive rate low (low single-digit percentages).
- *
- * <h2>Synonyms</h2>
- * Many test writers don't seem to know about {@code fail()}. They instead use synonyms of varying
- * complexity instead. A large class of synonyms replaces {@code fail()} with a single, equivalent
- * statement such as {@code assertTrue(false)}, {@code assertFalse(true)} or {@code throw
- * new AssertionError()}. In these cases we will simply skip any further analysis, they work
- * perfectly fine.
- *
- * <p>Other, more complex synonyms tend to use boolean variables, like such:
- * <pre>
- * boolean thrown = false;
- * try {
- *   throwingExpression();
- * } catch (SomeException e) {
- *   thrown = true;
- * }
- * assertTrue(thrown);
- * </pre>
- *
- * <p>In these complex cases, the checker treats them as if they contained no detection of the
- * missing exception and shows the usual suggestion to use {@code fail()} instead. This should alert
- * the writer that their test can be simplified.
- *
- * <h2>Heuristics</h2>
- * Five methods were explored to detect missing {@code fail()} calls, triggering if no {@code
- * fail()} is used in a {@code try/catch} statement within a JUnit test class:
- *
- * <ul>
- *   <li>Cases in which the caught exception is called "expected".
- *   <li>Cases in which there is a call to an {@code assert*()} method in the catch block.
- *   <li>Cases in which "expected" shows up in a comment inside the {@code catch} block.
- *   <li>Cases in which the {@code catch} block is empty.
- *   <li>Cases in which the {@code try} block contains only a single statement.
- * </ul>
- *
- * <p>Only the first three yield useful results and also required some more refinement to reduce
- * false positives. In addition, the checker does not trigger on comments in the {@code catch} block
- * due to implementation complexity.
- *
- * <p>To reduce false positives, no match is found if any of the following is true:
- *
- * <ul>
- *   <li>Any method with {@code fail} in its name is present in either catch or try block.
- *   <li>A {@code throw} statement or synonym ({@code assertTrue(false)}, etc.) is present in either
- *       {@code catch} or {@code try} block.
- *   <li>The occurrence happens inside a {@code setUp}, {@code tearDown},
- *       {@literal @}{@code Before}, {@literal @}{@code After}, {@code suite} or{@code main} method.
- *   <li>The method returns from the {@code try} or {@code catch} block or immediately after.
- *   <li>The exception caught is of type {@link InterruptedException}, {@link AssertionError},
- *       {@link junit.framework.AssertionFailedError} or {@link Throwable}.
- *   <li>The occurrence is inside a loop.
- *   <li>The try block contains a {@code while\(true\)} loop.
- *   <li>The {@code try} or {@code catch} block contains a {@code continue;} statement.
- *   <li>The {@code try/catch} statement also contains a {@code finally} statement.
- *   <li>A logging call is present in the {@code catch} block.
- * </ul>
- *
- * <p>In addition, for occurrences which matched because they have a call to an {@code assert*()}
- * method in the catch block, no match is found if any of the following characteristics are present:
- *
- * <ul>
- *   <li>A field assignment in the catch block.
- *   <li>A call to {@code assertTrue/False(boolean variable or field)} in the catch block.
- *   <li>The last statement in the {@code try} block is an {@code assert*()} (that is not a noop:
- *       {@code assertFalse(false)}, {@code assertTrue(true))} or {@code Mockito.verify()} call.
- * </ul>
- *
  * @author schmitt@google.com (Peter Schmitt)
  */
 @BugPattern(name = "MissingFail",
     altNames = "missing-fail",
     summary = "Not calling fail() when expecting an exception masks bugs",
-    explanation =
-          "When testing for exceptions in junit, it is easy to forget the call to `fail()`:\n\n"
-        + "    try {\n"
-        + "      ... do something that should throw ...\n"
-        + "      // forget to call Assert.fail()\n"
-        + "    } catch (SomeException expected) {\n"
-        + "      // asserts on the exception or comments\n"
-        + "    }\n\n"
-        + "Without this call, this test will always pass, regardless of whether an exception is "
-        + "thrown or not: It is a noop.",
     category = JUNIT,
     maturity = EXPERIMENTAL,
     severity = WARNING)
 public class MissingFail extends BugChecker implements TryTreeMatcher {
+
+  // Many test writers don't seem to know about `fail()`. They instead use synonyms of varying
+  // complexity instead.
+  //
+  // One category of synonyms replaces `fail()` with a single, equivalent statement
+  // such as `assertTrue(false)`, `assertFalse(true)` or `throw new
+  // AssertionError()`. In these cases we will simply skip any further analysis, they
+  // work perfectly fine.
+  //
+  // Other, more complex synonyms tend to use boolean variables, like such:
+  //
+  // ```java
+  // boolean thrown = false;
+  // try {
+  //   throwingExpression();
+  // } catch (SomeException e) {
+  //   thrown = true;
+  // }
+  // assertTrue(thrown);
+  // ```
 
   private static final Matcher<ExpressionTree> ASSERT_EQUALS = Matchers.anyOf(
       staticMethod().onClass("org.junit.Assert").named("assertEquals"),
