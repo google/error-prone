@@ -159,7 +159,7 @@ public class ErrorProneCompilerIntegrationTest {
         diagnosticMessage(containsString("[SelfAssignment]")));
     assertTrue("Warning should be found. " + diagnosticHelper.describe(),
         matcher.matches(diagnosticHelper.getDiagnostics()));
-    assertThat(diagnosticHelper.getDiagnostics()).hasSize(3);
+    assertThat(diagnosticHelper.getDiagnostics()).hasSize(4);
   }
 
   @BugPattern(

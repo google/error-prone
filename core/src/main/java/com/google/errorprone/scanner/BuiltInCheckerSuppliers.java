@@ -81,6 +81,7 @@ import com.google.errorprone.bugpatterns.MissingCasesInEnumSwitch;
 import com.google.errorprone.bugpatterns.MissingFail;
 import com.google.errorprone.bugpatterns.MisusedWeekYear;
 import com.google.errorprone.bugpatterns.ModifyingCollectionWithItself;
+import com.google.errorprone.bugpatterns.MultipleTopLevelClasses;
 import com.google.errorprone.bugpatterns.NarrowingCompoundAssignment;
 import com.google.errorprone.bugpatterns.NoAllocationChecker;
 import com.google.errorprone.bugpatterns.NonAtomicVolatileUpdate;
@@ -223,6 +224,7 @@ public class BuiltInCheckerSuppliers {
           EqualsHashCode.class,
           Finally.class,
           IncompatibleModifiersChecker.class,
+          MultipleTopLevelClasses.class,
           NonAtomicVolatileUpdate.class,
           NonOverridingEquals.class,
           PreconditionsInvalidPlaceholder.class,
