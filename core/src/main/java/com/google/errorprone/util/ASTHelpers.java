@@ -394,6 +394,32 @@ public class ASTHelpers {
   }
 
   /**
+   * Determines whether a symbol has an annotation of the given type.
+   * This includes annotations inherited from superclasses due to @Inherited.
+   *
+   * @param annotationType The type of the annotation to look for (e.g, "javax.annotation.Nullable")
+   */
+  public static boolean hasAnnotation(Symbol sym, String annotationType, VisitorState state) {
+    Symbol annotationSym = state.getSymbolFromString(annotationType);
+    Symbol inheritedSym = state.getSymtab().inheritedType.tsym;
+
+    if ((sym == null) || (annotationSym == null)) {
+      return false;
+    }
+    if ((sym instanceof ClassSymbol) && (annotationSym.attribute(inheritedSym) != null)) {
+      while (sym != null) {
+        if (sym.attribute(annotationSym) != null) {
+          return true;
+        }
+        sym = ((ClassSymbol) sym).getSuperclass().tsym;
+      }
+      return false;
+    } else {
+      return sym.attribute(annotationSym) != null;
+    }
+  }
+
+  /**
    * Check for the presence of an annotation, considering annotation inheritance.
    *
    * @return true if the symbol is annotated with given type.

@@ -770,24 +770,7 @@ public class Matchers {
     return new Matcher<T>() {
       @Override
       public boolean matches (T tree, VisitorState state) {
-        Symbol sym = ASTHelpers.getSymbol(tree);
-        Symbol annotationSym = state.getSymbolFromString(annotationType);
-        Symbol inheritedSym = state.getSymtab().inheritedType.tsym;
-
-        if ((sym == null) || (annotationSym == null)) {
-          return false;
-        }
-        if ((sym instanceof ClassSymbol) && (annotationSym.attribute(inheritedSym) != null)) {
-          while (sym != null) {
-            if (sym.attribute(annotationSym) != null) {
-              return true;
-            }
-            sym = ((ClassSymbol) sym).getSuperclass().tsym;
-          }
-          return false;
-        } else {
-          return sym.attribute(annotationSym) != null;
-        }
+        return ASTHelpers.hasAnnotation(ASTHelpers.getSymbol(tree), annotationType, state);
       }
     };
   }
