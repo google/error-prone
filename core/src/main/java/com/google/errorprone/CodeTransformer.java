@@ -18,7 +18,7 @@ package com.google.errorprone;
 
 import com.google.common.collect.ImmutableClassToInstanceMap;
 
-import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.util.TreePath;
 import com.sun.tools.javac.util.Context;
 
 import java.lang.annotation.Annotation;
@@ -29,7 +29,10 @@ import java.lang.annotation.Annotation;
  * @author lowasser@google.com (Louis Wasserman)
  */
 public interface CodeTransformer {
-  void apply(CompilationUnitTree tree, Context context, DescriptionListener listener);
+  /**
+   * Apply recursively from the leaf node in the given {@link TreePath}.
+   */
+  void apply(TreePath path, Context context, DescriptionListener listener);
   
   ImmutableClassToInstanceMap<Annotation> annotations();
 }
