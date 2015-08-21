@@ -69,6 +69,7 @@ import com.google.errorprone.bugpatterns.InjectScopeAnnotationOnInterfaceOrAbstr
 import com.google.errorprone.bugpatterns.InjectScopeOrQualifierAnnotationRetention;
 import com.google.errorprone.bugpatterns.InjectedConstructorAnnotations;
 import com.google.errorprone.bugpatterns.InvalidPatternSyntax;
+import com.google.errorprone.bugpatterns.IsInstanceOfClass;
 import com.google.errorprone.bugpatterns.JMockTestWithoutRunWithOrRuleAnnotation;
 import com.google.errorprone.bugpatterns.JUnit3TestNotRun;
 import com.google.errorprone.bugpatterns.JUnit4SetUpNotRun;
@@ -189,6 +190,7 @@ public class BuiltInCheckerSuppliers {
           EqualsNaN.class,
           ForOverrideChecker.class,
           GetClassOnClass.class,
+          IsInstanceOfClass.class,
           GuiceAssistedInjectScoping.class,
           GuardedByValidator.class,
           GuardedByChecker.class,
