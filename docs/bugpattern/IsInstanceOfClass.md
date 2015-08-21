@@ -13,12 +13,13 @@ equal to `Class` (i.e. lhs is equal to `Class.class`).
 
 ```java
 <A, B> boolean f(Class<A> lhs, Class<B> rhs) {
-  return lhs.instanceOf(rhs); // equivalent to 'A instanceof Class'
+  return lhs.instanceOf(rhs); // equivalent to 'lhs == Class.class'
 }
 ```
 
-To test if the type represented by a class literal is a subtype of some other
-class literal, `isAssignableFrom` should be used instead:
+To test if the type represented by a class literal is a subtype of the type
+reprsented by some other class literal, `isAssignableFrom` should be used
+instead:
 
 ```java
 <A, B> boolean f(Class<A> lhs, Class<B> rhs) {
