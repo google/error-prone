@@ -64,15 +64,15 @@ public class SuppressionHelper {
   }
 
   /**
-   * Used for the return type of {@code handleSuppressions()}.  Either field may be null, which
+   * Container for information about suppressions.  Either reference field may be null, which
    * indicates that the suppression sets are unchanged.
    */
-  public static class NewSuppressions {
+  public static class SuppressionInfo {
     public Set<String> suppressWarningsStrings;
     public Set<Class<? extends Annotation>> customSuppressions;
     public boolean inGeneratedCode;
 
-    public NewSuppressions(
+    public SuppressionInfo(
         Set<String> suppressWarningsStrings,
         Set<Class<? extends Annotation>> customSuppressions,
         boolean inGeneratedCode) {
@@ -99,7 +99,7 @@ public class SuppressionHelper {
    *        annotations on the current path through the AST
    * @param customSuppressionsOnCurrentPath The set of all custom suppression annotations
    */
-  public NewSuppressions extendSuppressionSets(
+  public SuppressionInfo extendSuppressionSets(
       Symbol sym,
       Type suppressWarningsType,
       Set<String> suppressionsOnCurrentPath,
@@ -148,7 +148,7 @@ public class SuppressionHelper {
       }
     }
 
-    return new NewSuppressions(newSuppressions, newCustomSuppressions, newInGeneratedCode);
+    return new SuppressionInfo(newSuppressions, newCustomSuppressions, newInGeneratedCode);
   }
 
   /**

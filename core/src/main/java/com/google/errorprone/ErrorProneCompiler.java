@@ -19,7 +19,7 @@ package com.google.errorprone;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.StandardSystemProperty.JAVA_SPECIFICATION_VERSION;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.errorprone.scanner.BuiltInCheckerSuppliers;
 import com.google.errorprone.scanner.Scanner;
 import com.google.errorprone.scanner.ScannerSupplier;
@@ -163,7 +163,7 @@ public class ErrorProneCompiler {
    *
    * <p>This prevents, e.g., targeting Java 8 by default when using error-prone on JDK7.
    */
-  private List<String> defaultToLatestSupportedLanguageLevel(String[] argv) {
+  private Iterable<String> defaultToLatestSupportedLanguageLevel(Iterable<String> args) {
 
     String overrideLanguageLevel;
     switch (JAVA_SPECIFICATION_VERSION.value()) {
@@ -174,23 +174,50 @@ public class ErrorProneCompiler {
         overrideLanguageLevel = "8";
         break;
       default:
-        return ImmutableList.copyOf(argv);
+        return args;
     }
 
-    return ImmutableList.<String>builder()
-        // suppress xlint 'options' warnings to avoid diagnostics like:
-        // 'bootstrap class path not set in conjunction with -source 1.7'
-        .add("-Xlint:-options")
-        .add("-source").add(overrideLanguageLevel)
-        .add("-target").add(overrideLanguageLevel)
-        .add(argv)
-        .build();
+    return Iterables.concat(
+        Arrays.asList(
+          // suppress xlint 'options' warnings to avoid diagnostics like:
+          // 'bootstrap class path not set in conjunction with -source 1.7'
+          "-Xlint:-options",
+          "-source", overrideLanguageLevel,
+          "-target", overrideLanguageLevel),
+        args);
+  }
+
+  /**
+   * Sets javac's {@code -XDcompilePolicy} flag to {@code byfile}.  This ensures that all classes in
+   * a file are attributed before any of them are lowered.  Error Prone depends on this behavior
+   * when analyzing files that contain multiple classes.
+   *
+   * @throws InvalidCommandLineOptionException if the {@code -XDcompilePolicy} flag is passed
+   * in the existing arguments with a value other than {@code byfile}
+   */
+  private Iterable<String> setCompilePolicyToByFile(Iterable<String> args)
+      throws InvalidCommandLineOptionException {
+    for (String arg : args) {
+      if (arg.startsWith("-XDcompilePolicy")) {
+        String value = arg.substring(arg.indexOf('=') + 1);
+        if (!value.equals("byfile")) {
+          throw new InvalidCommandLineOptionException(
+              "-XDcompilePolicy must be byfile for Error Prone to work properly");
+        }
+        // If there is already an "-XDcompilePolicy=byfile" flag, don't do anything.
+        return args;
+      }
+    }
+    return Iterables.concat(
+        args,
+        Arrays.asList("-XDcompilePolicy=byfile"));
   }
 
   private String[] prepareCompilation(String[] argv, Context context)
       throws InvalidCommandLineOptionException {
 
-    List<String> newArgs = defaultToLatestSupportedLanguageLevel(argv);
+    Iterable<String> newArgs = defaultToLatestSupportedLanguageLevel(Arrays.asList(argv));
+    newArgs = setCompilePolicyToByFile(newArgs);
     ErrorProneOptions epOptions = ErrorProneOptions.processArgs(newArgs);
 
     argv = epOptions.getRemainingArgs();

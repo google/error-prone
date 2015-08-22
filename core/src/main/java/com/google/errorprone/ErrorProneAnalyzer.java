@@ -25,7 +25,6 @@ import com.google.common.base.Throwables;
 import com.google.errorprone.scanner.Scanner;
 
 import com.sun.source.tree.CompilationUnitTree;
-import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TaskEvent;
 import com.sun.source.util.TaskEvent.Kind;
@@ -136,34 +135,18 @@ public class ErrorProneAnalyzer implements TaskListener {
     try {
       // Assert that the event is unique and scan the current tree.
       verify(seen.add(path.getLeaf()), "Duplicate FLOW event for: %s", taskEvent.getTypeElement());
-      errorProneScanner.scan(path, createVisitorState(path.getCompilationUnit()));
 
-      // We only get TaskEvents for compilation units if they contain no package declarations
-      // (e.g. package-info.java files). Otherwise there are events for each individual
-      // declaration. Once we've processed all of the declarations we manually start a post-order
-      // visit of the compilation unit.
-      if (path.getLeaf().getKind() != Tree.Kind.COMPILATION_UNIT
-          && finishedCompilation(path.getCompilationUnit())) {
-        CompilationUnitTree tree = path.getCompilationUnit();
-        VisitorState visitorState = createVisitorState(path.getCompilationUnit());
-
-
-        errorProneScanner.matchCompilationUnit(tree, visitorState);
-
-        // Manually traverse into the components of the compilation tree we are interested in, and
-        // skip type decls: top-level declarations are visited separately first, and at this point
-        // parts of the classes could be lowered away.
-        if (tree.getPackage() != null) {
-          errorProneScanner.scan(new TreePath(path, tree.getPackage()), visitorState);
-        }
-        for (ImportTree importTree : tree.getImports()) {
-          if (importTree == null) {
-            continue;
-          }
-          errorProneScanner.scan(new TreePath(path, importTree), visitorState);
-        }
+      VisitorState state = createVisitorState(path.getCompilationUnit());
+      if (path.getLeaf().getKind() == Tree.Kind.COMPILATION_UNIT) {
+        // We only get TaskEvents for compilation units if they contain no package declarations
+        // (e.g. package-info.java files).  In this case it's safe to analyze the
+        // CompilationUnitTree immediately.
+        errorProneScanner.scan(path, state);
+      } else if (finishedCompilation(path.getCompilationUnit())) {
+        // Otherwise this TaskEvent is for a ClassTree, and we can scan the whole
+        // CompilationUnitTree once we've seen all the enclosed classes.
+        errorProneScanner.scan(new TreePath(path.getCompilationUnit()), state);
       }
-
     } catch (CompletionFailure e) {
       // A CompletionFailure can be triggered when error-prone tries to complete a symbol
       // that isn't on the compilation classpath. This can occur when a check performs an

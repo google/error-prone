@@ -24,9 +24,12 @@ import com.google.common.base.Joiner;
 import com.google.common.io.Files;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeInfo.DeclarationInfo;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.matchers.Description;
+
+import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.Tree;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,36 +52,30 @@ import javax.lang.model.element.Modifier;
 public class ClassName extends BugChecker implements CompilationUnitTreeMatcher {
 
   @Override
-  public Description matchCompilationUnit(CompilationUnitTreeInfo info, VisitorState state) {
-    if (info.typeDeclarations().isEmpty() || !info.packageName().isPresent()) {
+  public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
+    if (tree.getTypeDecls().isEmpty() || tree.getPackageName() == null) {
       return Description.NO_MATCH;
     }
-    String filename = Files.getNameWithoutExtension(info.sourceFile().getName());
+    String filename = Files.getNameWithoutExtension(tree.getSourceFile().getName());
     List<String> names = new ArrayList<>();
-    for (DeclarationInfo member : info.typeDeclarations()) {
-      switch (member.kind()) {
-        case CLASS:
-        case INTERFACE:
-        case ANNOTATION_TYPE:
-        case ENUM:
-          if (member.name().equals(filename)) {
-            return Description.NO_MATCH;
-          }
-          if (member.modifiers().contains(Modifier.PUBLIC)) {
-            // If any of the top-level types are public, javac will complain
-            // if the filename doesn't match. We don't want to double-report
-            // the error.
-            return Description.NO_MATCH;
-          }
-          names.add(member.name());
-          break;
-        default:
-          break;
+    for (Tree member : tree.getTypeDecls()) {
+      if (member instanceof ClassTree) {
+        ClassTree classMember = (ClassTree) member;
+        if (classMember.getSimpleName().toString().equals(filename)) {
+          return Description.NO_MATCH;
+        }
+        if (classMember.getModifiers().getFlags().contains(Modifier.PUBLIC)) {
+          // If any of the top-level types are public, javac will complain
+          // if the filename doesn't match. We don't want to double-report
+          // the error.
+          return Description.NO_MATCH;
+        }
+        names.add(classMember.getSimpleName().toString());
       }
     }
     String message = String.format(
         "Expected a class declaration named %s inside %s.java, instead found: %s",
         filename, filename, Joiner.on(", ").join(names));
-    return buildDescription(info.packageName().get()).setMessage(message).build();
+    return buildDescription(tree.getPackageName()).setMessage(message).build();
   }
 }

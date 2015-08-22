@@ -36,20 +36,14 @@ public class ClassNameTest {
 
   @Test
   public void twoClasses() throws Exception {
-      compilationHelper
-          .addSourceLines(
-              "a/A.java",
-              "// BUG: Diagnostic contains: A inside A.java, instead found: One, Two",
-              "package a;",
-              "class One {}",
-              "class Two {}")
-          .addSourceLines(
-              "b/B.java",
-              "// BUG: Diagnostic contains: B inside B.java, instead found: Three, Four",
-              "package b;",
-              "class Three {}",
-              "class Four {}")
-          .doTest();
+    compilationHelper
+        .addSourceLines(
+            "a/A.java",
+            "// BUG: Diagnostic contains: A inside A.java, instead found: One, Two",
+            "package a;",
+            "class One {}",
+            "class Two {}")
+        .doTest();
   }
 
   @Test
@@ -143,7 +137,7 @@ public class ClassNameTest {
               "}")
           .doTest();
   }
-  
+
   @Test
   public void negativeIsPublic() throws Exception {
     compilationHelper

@@ -23,9 +23,12 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import com.google.common.base.Joiner;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeInfo.DeclarationInfo;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.matchers.Description;
+
+import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.Tree;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,33 +49,36 @@ import java.util.List;
 public class MultipleTopLevelClasses extends BugChecker implements CompilationUnitTreeMatcher {
 
   @Override
-  public Description matchCompilationUnit(CompilationUnitTreeInfo info, VisitorState state) {
-    if (info.typeDeclarations().size() <= 1) {
+  public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
+    if (tree.getTypeDecls().size() <= 1) {
       // package-info.java files have zero top-level declarations, everything
       // else should have exactly one.
       return Description.NO_MATCH;
     }
-    if (!info.packageName().isPresent()) {
+    if (tree.getPackageName() == null) {
       // Real code doesn't use the default package.
       return Description.NO_MATCH;
     }
     List<String> names = new ArrayList<>();
-    for (DeclarationInfo member : info.typeDeclarations()) {
-      switch (member.kind()) {
-        case CLASS:
-        case INTERFACE:
-        case ANNOTATION_TYPE:
-        case ENUM:
-          names.add(member.name());
-          break;
-        default:
-          break;
+    for (Tree member : tree.getTypeDecls()) {
+      if (member instanceof ClassTree) {
+        ClassTree classMember = (ClassTree) member;
+        switch (classMember.getKind()) {
+          case CLASS:
+          case INTERFACE:
+          case ANNOTATION_TYPE:
+          case ENUM:
+            names.add(classMember.getSimpleName().toString());
+            break;
+          default:
+            break;
+        }
       }
     }
     String message =
         String.format(
             "Expected at most one top-level class declaration, instead found: %s",
             Joiner.on(", ").join(names));
-    return buildDescription(info.packageName().get()).setMessage(message).build();
+    return buildDescription(tree.getPackageName()).setMessage(message).build();
   }
 }

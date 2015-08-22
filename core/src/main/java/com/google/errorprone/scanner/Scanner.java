@@ -23,7 +23,6 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Suppressible;
 import com.google.errorprone.util.ASTHelpers;
 
-import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
@@ -64,40 +63,16 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
    */
   @Override
   public Void scan(TreePath path, VisitorState state) {
-    initSuppressionHelper(state);
-
-    // Record previous suppression info so we can restore it when going up the tree.
-    Set<String> prevSuppressions = suppressions;
-    Set<Class<? extends Annotation>> prevCustomSuppressions = customSuppressions;
-    boolean preInGeneratedCode = inGeneratedCode;
-
-    Symbol sym = ASTHelpers.getSymbol(path.getLeaf());
-    if (sym != null) {
-      SuppressionHelper.NewSuppressions newSuppressions =
-          suppressionHelper.extendSuppressionSets(
-              sym,
-              state.getSymtab().suppressWarningsType,
-              suppressions,
-              customSuppressions,
-              inGeneratedCode);
-      if (newSuppressions.suppressWarningsStrings != null) {
-        suppressions = newSuppressions.suppressWarningsStrings;
-      }
-      if (newSuppressions.customSuppressions != null) {
-        customSuppressions = newSuppressions.customSuppressions;
-      }
-      if (newSuppressions.inGeneratedCode) {
-        inGeneratedCode = true;
-      }
-    }
+    SuppressionHelper.SuppressionInfo prevSuppressionInfo =
+        updateSuppressions(path.getLeaf(), state);
 
     try {
       return super.scan(path, state);
     } finally {
       // Restore old suppression state.
-      suppressions = prevSuppressions;
-      customSuppressions = prevCustomSuppressions;
-      inGeneratedCode = preInGeneratedCode;
+      suppressions = prevSuppressionInfo.suppressWarningsStrings;
+      customSuppressions = prevSuppressionInfo.customSuppressions;
+      inGeneratedCode = prevSuppressionInfo.inGeneratedCode;
     }
   }
 
@@ -111,15 +86,30 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
       return null;
     }
 
-    initSuppressionHelper(state);
+    SuppressionHelper.SuppressionInfo prevSuppressionInfo = updateSuppressions(tree, state);
+    try {
+      return super.scan(tree, state);
+    } finally {
+      // Restore old suppression state.
+      suppressions = prevSuppressionInfo.suppressWarningsStrings;
+      customSuppressions = prevSuppressionInfo.customSuppressions;
+      inGeneratedCode = prevSuppressionInfo.inGeneratedCode;
+    }
+  }
 
-    // Record previous suppression info so we can restore it when going up the tree.
-    Set<String> prevSuppressions = suppressions;
-    Set<Class<? extends Annotation>> prevCustomSuppressions = customSuppressions;
+  /**
+   * Updates current suppression state with information for the given {@code tree}.  Returns
+   * the previous suppression state so that it can be restored when going up the tree.
+   */
+  private SuppressionHelper.SuppressionInfo updateSuppressions(Tree tree, VisitorState state) {
+    SuppressionHelper.SuppressionInfo prevSuppressionInfo =
+        new SuppressionHelper.SuppressionInfo(suppressions, customSuppressions, inGeneratedCode);
+
+    initSuppressionHelper(state);
 
     Symbol sym = ASTHelpers.getSymbol(tree);
     if (sym != null) {
-      SuppressionHelper.NewSuppressions newSuppressions =
+      SuppressionHelper.SuppressionInfo newSuppressions =
           suppressionHelper.extendSuppressionSets(
               sym,
               state.getSymtab().suppressWarningsType,
@@ -132,15 +122,10 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
       if (newSuppressions.customSuppressions != null) {
         customSuppressions = newSuppressions.customSuppressions;
       }
+      inGeneratedCode = newSuppressions.inGeneratedCode;
     }
 
-    try {
-      return super.scan(tree, state);
-    } finally {
-      // Restore old suppression state.
-      suppressions = prevSuppressions;
-      customSuppressions = prevCustomSuppressions;
-    }
+    return prevSuppressionInfo;
   }
 
   /**
@@ -181,10 +166,5 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
    */
   public Map<String, SeverityLevel> severityMap() {
     return Collections.emptyMap();
-  }
-
-  /** Performs a non-recursive visit of a {@link CompilationUnitTree}. */
-  // TODO(cushon): refactor callers to use ErrorProneScanner directly, and remove it here?
-  public void matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
   }
 }

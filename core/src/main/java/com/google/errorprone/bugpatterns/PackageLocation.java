@@ -23,9 +23,10 @@ import static com.google.errorprone.BugPattern.Suppressibility.UNSUPPRESSIBLE;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeInfo;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.matchers.Description;
+
+import com.sun.source.tree.CompilationUnitTree;
 
 import java.io.IOException;
 import java.net.JarURLConnection;
@@ -48,13 +49,13 @@ import javax.annotation.Nullable;
 public class PackageLocation extends BugChecker implements CompilationUnitTreeMatcher {
 
   @Override
-  public Description matchCompilationUnit(CompilationUnitTreeInfo info, VisitorState state) {
-    if (!info.packageName().isPresent()) {
+  public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
+    if (tree.getPackageName() == null) {
       return Description.NO_MATCH;
     }
 
-    String packageName = info.packageName().get().toString();
-    Path directory = getFilePath(info.sourceFile().toUri()).getParent();
+    String packageName = tree.getPackageName().toString();
+    Path directory = getFilePath(tree.getSourceFile().toUri()).getParent();
     Path expected = Paths.get(packageName.replace('.', '/'));
 
     if (directory.endsWith(expected)) {
@@ -66,7 +67,7 @@ public class PackageLocation extends BugChecker implements CompilationUnitTreeMa
         packageName,
         expected,
         directory);
-    return buildDescription(info.packageName().get()).setMessage(message).build();
+    return buildDescription(tree.getPackageName()).setMessage(message).build();
   }
 
   /** Extract the filename from the URI, with special handling for jar files. */
