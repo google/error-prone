@@ -22,6 +22,7 @@ import static com.google.common.base.Verify.verify;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Throwables;
+import com.google.errorprone.scanner.ErrorProneScannerTransformer;
 import com.google.errorprone.scanner.Scanner;
 
 import com.sun.source.tree.CompilationUnitTree;
@@ -48,7 +49,7 @@ public class ErrorProneAnalyzer implements TaskListener {
 
   public static ErrorProneAnalyzer create(Scanner scanner) {
     checkNotNull(scanner);
-    return new ErrorProneAnalyzer(scanner);
+    return new ErrorProneAnalyzer(ErrorProneScannerTransformer.create(scanner));
   }
 
   /**
@@ -70,7 +71,7 @@ public class ErrorProneAnalyzer implements TaskListener {
     return this;
   }
 
-  private final Scanner errorProneScanner;
+  private final CodeTransformer transformer;
   // The set of trees that have already been scanned.
   private final Set<Tree> seen = new HashSet<>();
 
@@ -80,8 +81,8 @@ public class ErrorProneAnalyzer implements TaskListener {
   private JavaCompiler compiler;
   private boolean initialized = false;
 
-  private ErrorProneAnalyzer(Scanner scanner) {
-    this.errorProneScanner = scanner;
+  private ErrorProneAnalyzer(CodeTransformer transformer) {
+    this.transformer = checkNotNull(transformer);
   }
 
   @Override
@@ -117,12 +118,7 @@ public class ErrorProneAnalyzer implements TaskListener {
    * Returns true if all declarations inside the given compilation unit have been visited.
    */
   private boolean finishedCompilation(CompilationUnitTree tree) {
-    for (Tree type : tree.getTypeDecls()) {
-      if (!seen.contains(type)) {
-        return false;
-      }
-    }
-    return true;
+    return seen.containsAll(tree.getTypeDecls());
   }
 
   /**
@@ -135,18 +131,24 @@ public class ErrorProneAnalyzer implements TaskListener {
     try {
       // Assert that the event is unique and scan the current tree.
       verify(seen.add(path.getLeaf()), "Duplicate FLOW event for: %s", taskEvent.getTypeElement());
-
-      VisitorState state = createVisitorState(path.getCompilationUnit());
+      Context subContext = new SubContext(context);
+      subContext.put(ErrorProneOptions.class, errorProneOptions);
+      CompilationUnitTree compilation = path.getCompilationUnit();
+      DescriptionListener logReporter = new JavacErrorDescriptionListener(
+          log,
+          ((JCCompilationUnit) compilation).endPositions,
+          compilation.getSourceFile());
       if (path.getLeaf().getKind() == Tree.Kind.COMPILATION_UNIT) {
         // We only get TaskEvents for compilation units if they contain no package declarations
         // (e.g. package-info.java files).  In this case it's safe to analyze the
         // CompilationUnitTree immediately.
-        errorProneScanner.scan(path, state);
+        transformer.apply(path, subContext, logReporter);
       } else if (finishedCompilation(path.getCompilationUnit())) {
         // Otherwise this TaskEvent is for a ClassTree, and we can scan the whole
         // CompilationUnitTree once we've seen all the enclosed classes.
-        errorProneScanner.scan(new TreePath(path.getCompilationUnit()), state);
+        transformer.apply(new TreePath(compilation), subContext, logReporter);
       }
+
     } catch (CompletionFailure e) {
       // A CompletionFailure can be triggered when error-prone tries to complete a symbol
       // that isn't on the compilation classpath. This can occur when a check performs an
@@ -163,17 +165,5 @@ public class ErrorProneAnalyzer implements TaskListener {
         throw e;
       }
     }
-  }
-
-  /**
-   * Create a VisitorState object from a compilation unit.
-   */
-  private VisitorState createVisitorState(CompilationUnitTree compilation) {
-    DescriptionListener logReporter = new JavacErrorDescriptionListener(
-        log,
-        ((JCCompilationUnit) compilation).endPositions,
-        compilation.getSourceFile());
-    return new VisitorState(
-        context, logReporter, errorProneScanner.severityMap(), errorProneOptions);
   }
 }
