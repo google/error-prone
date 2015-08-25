@@ -17,6 +17,7 @@
 package com.google.errorprone;
 
 import com.google.errorprone.scanner.BuiltInCheckerSuppliers;
+import com.google.errorprone.scanner.ErrorProneScannerTransformer;
 import com.google.errorprone.scanner.Scanner;
 import com.google.errorprone.scanner.ScannerSupplier;
 
@@ -85,11 +86,12 @@ public class ErrorProneJavaCompiler implements JavaCompiler {
     } catch (InvalidCommandLineOptionException e) {
       throw new RuntimeException(e);
     }
+    CodeTransformer transformer = ErrorProneScannerTransformer.create(scanner);
     List<String> remainingOptions = Arrays.asList(errorProneOptions.getRemainingArgs());
     CompilationTask task = javacTool.getTask(
         out, fileManager, diagnosticListener, remainingOptions, classes, compilationUnits);
     Context context = ((JavacTaskImpl) task).getContext();
-    ErrorProneJavacJavaCompiler.preRegister(context, scanner, errorProneOptions);
+    ErrorProneJavacJavaCompiler.preRegister(context, transformer, errorProneOptions);
     return task;
   }
 

@@ -20,7 +20,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
-import com.google.errorprone.scanner.Scanner;
 
 import com.sun.source.util.TaskEvent;
 import com.sun.source.util.TaskEvent.Kind;
@@ -44,7 +43,6 @@ import java.util.Queue;
 public class ErrorProneJavacJavaCompiler extends JavaCompiler {
 
   private final ErrorProneAnalyzer errorProneAnalyzer;
-  private final ErrorProneOptions errorProneOptions;
 
   /**
    * Registers our message bundle.
@@ -54,17 +52,15 @@ public class ErrorProneJavacJavaCompiler extends JavaCompiler {
   }
 
   private ErrorProneJavacJavaCompiler(
-      Context context, Scanner scanner, ErrorProneOptions errorProneOptions) {
+      Context context, CodeTransformer transformer, ErrorProneOptions errorProneOptions) {
     super(context);
-    checkNotNull(scanner);
-    
-    this.errorProneOptions = errorProneOptions;
+    checkNotNull(transformer);
 
     // Setup message bundle.
     setupMessageBundle(context);
 
     // Create ErrorProneAnalyzer.
-    errorProneAnalyzer = ErrorProneAnalyzer.create(scanner).init(context, errorProneOptions);
+    errorProneAnalyzer = ErrorProneAnalyzer.create(transformer).init(context, errorProneOptions);
   }
 
   /**
@@ -76,14 +72,16 @@ public class ErrorProneJavacJavaCompiler extends JavaCompiler {
    * within the same Context.
    */
   public static void preRegister(
-      Context context, final Scanner scanner, final ErrorProneOptions errorProneOptions) {
+      Context context, 
+      final CodeTransformer transformer, 
+      final ErrorProneOptions errorProneOptions) {
     context.put(
         compilerKey,
         new Factory<JavaCompiler>() {
           @Override
           public JavaCompiler make(Context ctx) {
             // Ensure that future processing rounds continue to use the same Scanner.
-            return new ErrorProneJavacJavaCompiler(ctx, scanner, errorProneOptions);
+            return new ErrorProneJavacJavaCompiler(ctx, transformer, errorProneOptions);
           }
         });
   }

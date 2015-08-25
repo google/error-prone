@@ -21,6 +21,7 @@ import static com.google.common.base.StandardSystemProperty.JAVA_SPECIFICATION_V
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.scanner.BuiltInCheckerSuppliers;
+import com.google.errorprone.scanner.ErrorProneScannerTransformer;
 import com.google.errorprone.scanner.Scanner;
 import com.google.errorprone.scanner.ScannerSupplier;
 
@@ -227,10 +228,11 @@ public class ErrorProneCompiler {
     }
 
     Scanner scanner = scannerSupplier.applyOverrides(epOptions).get();
+    CodeTransformer transformer = ErrorProneScannerTransformer.create(scanner);
 
     setupMessageBundle(context);
     enableEndPositions(context);
-    ErrorProneJavacJavaCompiler.preRegister(context, scanner, epOptions);
+    ErrorProneJavacJavaCompiler.preRegister(context, transformer, epOptions);
 
     return argv;
   }

@@ -46,10 +46,12 @@ import java.util.Set;
  * Used to run an error-prone analysis as a phase in the javac compiler.
  */
 public class ErrorProneAnalyzer implements TaskListener {
-
   public static ErrorProneAnalyzer create(Scanner scanner) {
-    checkNotNull(scanner);
-    return new ErrorProneAnalyzer(ErrorProneScannerTransformer.create(scanner));
+    return create(ErrorProneScannerTransformer.create(scanner));
+  }
+
+  public static ErrorProneAnalyzer create(CodeTransformer transformer) {
+    return new ErrorProneAnalyzer(transformer);
   }
 
   /**
