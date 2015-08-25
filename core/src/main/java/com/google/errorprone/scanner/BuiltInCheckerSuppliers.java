@@ -117,6 +117,7 @@ import com.google.errorprone.bugpatterns.TryFailThrowable;
 import com.google.errorprone.bugpatterns.TypeParameterUnusedInFormals;
 import com.google.errorprone.bugpatterns.UnnecessaryStaticImport;
 import com.google.errorprone.bugpatterns.UnnecessaryTypeArgument;
+import com.google.errorprone.bugpatterns.UnusedAnonymousClass;
 import com.google.errorprone.bugpatterns.WaitNotInLoop;
 import com.google.errorprone.bugpatterns.WildcardImport;
 import com.google.errorprone.bugpatterns.WrongParameterPackage;
@@ -256,7 +257,6 @@ public class BuiltInCheckerSuppliers {
           GuiceOverridesJavaxInjectableMethod.class,
           InjectAssistedInjectAndInjectOnConstructors.class,
           InjectAssistedInjectAndInjectOnSameConstructor.class,
-          InjectedConstructorAnnotations.class,
           InjectInvalidTargetingOnScopingAnnotation.class,
           InjectJavaxInjectOnAbstractMethod.class,
           InjectJavaxInjectOnFinalField.class,
@@ -266,6 +266,7 @@ public class BuiltInCheckerSuppliers {
           InjectOverlappingQualifierAndScopeAnnotation.class,
           InjectScopeAnnotationOnInterfaceOrAbstractClass.class,
           InjectScopeOrQualifierAnnotationRetention.class,
+          InjectedConstructorAnnotations.class,
           IsInstanceOfClass.class,
           JMockTestWithoutRunWithOrRuleAnnotation.class,
           JUnitAmbiguousTestClass.class,
@@ -289,6 +290,7 @@ public class BuiltInCheckerSuppliers {
           UnlockMethodChecker.class,
           UnnecessaryStaticImport.class,
           UnnecessaryTypeArgument.class,
+          UnusedAnonymousClass.class,
           WildcardImport.class,
           WrongParameterPackage.class);
 
