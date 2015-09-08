@@ -60,7 +60,7 @@ public class DiagnosticTestHelper {
   // Null if not testing a single error-prone check.
   private final String checkName;
   
-  private final Map<String, Predicate<CharSequence>> expectedErrorMsgs = new HashMap<>();
+  private final Map<String, Predicate<? super String>> expectedErrorMsgs = new HashMap<>();
 
   /**
    * Construct a {@link DiagnosticTestHelper} not associated with a specific check.
@@ -175,7 +175,7 @@ public class DiagnosticTestHelper {
   }
 
   public static Matcher<Diagnostic<? extends JavaFileObject>> diagnosticOnLine(
-      final URI fileURI, final long line, final Predicate<CharSequence> matcher) {
+      final URI fileURI, final long line, final Predicate<? super String> matcher) {
     return new TypeSafeDiagnosingMatcher<Diagnostic<? extends JavaFileObject>>() {
       @Override
       public boolean matchesSafely(Diagnostic<? extends JavaFileObject> item,
@@ -269,7 +269,7 @@ public class DiagnosticTestHelper {
    *
    * <p>Error message keys that don't match any diagnostics will cause test to fail.
    */
-  public void expectErrorMessage(String key, Predicate<CharSequence> matcher) {
+  public void expectErrorMessage(String key, Predicate<? super String> matcher) {
     expectedErrorMsgs.put(key, matcher);
   }
 
@@ -293,7 +293,7 @@ public class DiagnosticTestHelper {
         break;
       }
 
-      List<Predicate<CharSequence>> predicates = null;
+      List<Predicate<? super String>> predicates = null;
       if (line.contains(BUG_MARKER_COMMENT_INLINE)) {
         // Diagnostic must contain all patterns from the bug marker comment.
         List<String> patterns = extractPatterns(line, reader, BUG_MARKER_COMMENT_INLINE);
@@ -317,7 +317,7 @@ public class DiagnosticTestHelper {
       
       if (predicates != null) {
         int lineNumber = reader.getLineNumber();
-        for (Predicate<CharSequence> predicate : predicates) {
+        for (Predicate<? super String> predicate : predicates) {
           Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> patternMatcher =
               hasItem(diagnosticOnLine(source.toUri(), lineNumber, predicate));
           assertTrue(
@@ -383,7 +383,7 @@ public class DiagnosticTestHelper {
     return result;
   }
   
-  private static class SimpleStringContains implements Predicate<CharSequence>  {
+  private static class SimpleStringContains implements Predicate<String>  {
     private final String pattern;
 
     SimpleStringContains(String pattern) {
@@ -391,8 +391,8 @@ public class DiagnosticTestHelper {
     }
     
     @Override
-    public boolean apply(CharSequence input) {
-      return input.toString().contains(pattern);
+    public boolean apply(String input) {
+      return input.contains(pattern);
     }
     
     @Override

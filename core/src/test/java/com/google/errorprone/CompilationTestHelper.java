@@ -221,7 +221,7 @@ public class CompilationTestHelper {
    *
    * <p>Error message keys that don't match any diagnostics will cause test to fail.
    */
-  public CompilationTestHelper expectErrorMessage(String key, Predicate<CharSequence> matcher) {
+  public CompilationTestHelper expectErrorMessage(String key, Predicate<? super String> matcher) {
     diagnosticHelper.expectErrorMessage(key, matcher);
     return this;
   }
