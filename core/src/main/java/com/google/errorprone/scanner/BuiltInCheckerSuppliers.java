@@ -214,7 +214,8 @@ public class BuiltInCheckerSuppliers {
           SizeGreaterThanOrEqualsZero.class,
           StringBuilderInitWithChar.class,
           SuppressWarningsDeprecated.class,
-          TryFailThrowable.class);
+          TryFailThrowable.class,
+          UnusedAnonymousClass.class);
 
   /**
    * A list of all checks with severity WARNING that are on by default.
@@ -290,7 +291,6 @@ public class BuiltInCheckerSuppliers {
           UnlockMethodChecker.class,
           UnnecessaryStaticImport.class,
           UnnecessaryTypeArgument.class,
-          UnusedAnonymousClass.class,
           WildcardImport.class,
           WrongParameterPackage.class);
 
