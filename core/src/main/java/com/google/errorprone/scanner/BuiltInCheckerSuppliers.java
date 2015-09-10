@@ -55,6 +55,7 @@ import com.google.errorprone.bugpatterns.GuiceAssistedParameters;
 import com.google.errorprone.bugpatterns.GuiceInjectOnFinalField;
 import com.google.errorprone.bugpatterns.GuiceOverridesGuiceInjectableMethod;
 import com.google.errorprone.bugpatterns.GuiceOverridesJavaxInjectableMethod;
+import com.google.errorprone.bugpatterns.HashtableContains;
 import com.google.errorprone.bugpatterns.IncompatibleModifiersChecker;
 import com.google.errorprone.bugpatterns.InjectAssistedInjectAndInjectOnConstructors;
 import com.google.errorprone.bugpatterns.InjectAssistedInjectAndInjectOnSameConstructor;
@@ -257,6 +258,7 @@ public class BuiltInCheckerSuppliers {
           GuiceInjectOnFinalField.class,
           GuiceOverridesGuiceInjectableMethod.class,
           GuiceOverridesJavaxInjectableMethod.class,
+          HashtableContains.class,
           InjectAssistedInjectAndInjectOnConstructors.class,
           InjectAssistedInjectAndInjectOnSameConstructor.class,
           InjectInvalidTargetingOnScopingAnnotation.class,
