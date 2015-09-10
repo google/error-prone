@@ -24,18 +24,23 @@ import com.google.errorprone.BugPattern.Instance;
 import com.google.errorprone.BugPattern.MaturityLevel;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.BugPattern.Suppressibility;
+import com.google.common.collect.ImmutableMap;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.Yaml;
+
 import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -94,19 +99,8 @@ class BugPatternFileGenerator implements LineProcessor<List<Instance>> {
    * there are any, and explain the correct way to suppress.
    */
   private static MessageFormat constructPageTemplate(
-      Instance pattern,  boolean generateFrontMatter) {
+      Instance pattern, boolean generateFrontMatter) {
     StringBuilder result = new StringBuilder();
-
-    if (generateFrontMatter) {
-      result.append("---\n"
-          + "title: {1}\n"
-          + "summary: \"{8}\"\n"
-          + "layout: bugpattern\n"
-          + "category: {3}\n"
-          + "severity: {4}\n"
-          + "maturity: {5}\n"
-          + "---\n\n");
-    }
 
     result.append(
         "<!--\n"
@@ -156,6 +150,7 @@ class BugPatternFileGenerator implements LineProcessor<List<Instance>> {
     Instance pattern = new Instance();
     pattern.name = parts.get(1);
     pattern.altNames = parts.get(2);
+    pattern.category = BugPattern.Category.valueOf(parts.get(3));
     pattern.maturity = MaturityLevel.valueOf(parts.get(5));
     pattern.summary = parts.get(8);
     pattern.severity = SeverityLevel.valueOf(parts.get(4));
@@ -184,6 +179,25 @@ class BugPatternFileGenerator implements LineProcessor<List<Instance>> {
       }
   
       MessageFormat wikiPageTemplate = constructPageTemplate(pattern, generateFrontMatter);
+
+      if (generateFrontMatter) {
+        writer.write("---\n");
+        Map<String, String> data =
+            ImmutableMap.<String, String>builder()
+                .put("title", pattern.name)
+                .put("summary", pattern.summary)
+                .put("layout", "bugpattern")
+                .put("category", pattern.category.toString())
+                .put("severity", pattern.severity.toString())
+                .put("maturity", pattern.maturity.toString())
+                .build();
+        DumperOptions options = new DumperOptions();
+        options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+        Yaml yaml = new Yaml(options);
+        yaml.dump(data, writer);
+        writer.write("---\n\n");
+      }
+
       writer.write(wikiPageTemplate.format(parts.toArray()));
   
       Iterable<String> classNameParts = Splitter.on('.').split(parts.get(0));

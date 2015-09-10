@@ -204,6 +204,7 @@ public @interface BugPattern {
     public String name;
     public String summary;
     public String altNames;
+    public Category category;
     public MaturityLevel maturity;
     public SeverityLevel severity;
     public Suppressibility suppressibility;
