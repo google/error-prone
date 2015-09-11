@@ -1,6 +1,6 @@
 ---
 title: FallthroughSuppression
-summary: "Fallthrough warning suppression has no effect if warning is suppressed"
+summary: Fallthrough warning suppression has no effect if warning is suppressed
 layout: bugpattern
 category: ONE_OFF
 severity: NOT_A_PROBLEM

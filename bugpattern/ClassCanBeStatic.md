@@ -1,6 +1,6 @@
 ---
 title: ClassCanBeStatic
-summary: "Inner class is non-static but does not reference enclosing class"
+summary: Inner class is non-static but does not reference enclosing class
 layout: bugpattern
 category: JDK
 severity: ERROR

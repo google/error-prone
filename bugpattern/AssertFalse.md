@@ -1,6 +1,6 @@
 ---
 title: AssertFalse
-summary: "Assertions may be disabled at runtime and do not guarantee that execution will halt here; consider throwing an exception instead"
+summary: Assertions may be disabled at runtime and do not guarantee that execution will halt here; consider throwing an exception instead
 layout: bugpattern
 category: JDK
 severity: WARNING

@@ -1,6 +1,6 @@
 ---
 title: CheckReturnValue
-summary: "Ignored return value of method that is annotated with @CheckReturnValue"
+summary: Ignored return value of method that is annotated with @CheckReturnValue
 layout: bugpattern
 category: JDK
 severity: ERROR

@@ -1,6 +1,6 @@
 ---
 title: ModifyingCollectionWithItself
-summary: "Modifying a collection with itself"
+summary: Modifying a collection with itself
 layout: bugpattern
 category: JDK
 severity: ERROR

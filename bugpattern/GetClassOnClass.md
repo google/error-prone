@@ -1,6 +1,6 @@
 ---
 title: GetClassOnClass
-summary: "Calling getClass() on an object of type Class returns the Class object for java.lang.Class; you probably meant to operate on the object directly"
+summary: Calling getClass() on an object of type Class returns the Class object for java.lang.Class; you probably meant to operate on the object directly
 layout: bugpattern
 category: JDK
 severity: ERROR

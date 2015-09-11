@@ -1,6 +1,6 @@
 ---
 title: ArrayToStringConcatenation
-summary: "Implicit toString used on an array (String + Array)"
+summary: Implicit toString used on an array (String + Array)
 layout: bugpattern
 category: JDK
 severity: ERROR

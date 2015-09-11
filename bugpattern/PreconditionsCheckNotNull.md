@@ -1,6 +1,6 @@
 ---
 title: PreconditionsCheckNotNull
-summary: "Literal passed as first argument to Preconditions.checkNotNull() can never be null"
+summary: Literal passed as first argument to Preconditions.checkNotNull() can never be null
 layout: bugpattern
 category: GUAVA
 severity: ERROR

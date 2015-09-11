@@ -1,6 +1,6 @@
 ---
 title: NullablePrimitive
-summary: "@Nullable should not be used for primitive types."
+summary: '@Nullable should not be used for primitive types.'
 layout: bugpattern
 category: JDK
 severity: WARNING

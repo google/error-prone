@@ -1,6 +1,6 @@
 ---
 title: ProtoStringFieldReferenceEquality
-summary: "Comparing protobuf fields of type String using reference equality"
+summary: Comparing protobuf fields of type String using reference equality
 layout: bugpattern
 category: ONE_OFF
 severity: ERROR

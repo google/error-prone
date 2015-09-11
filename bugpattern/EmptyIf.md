@@ -1,6 +1,6 @@
 ---
 title: EmptyIf
-summary: "Empty statement after if"
+summary: Empty statement after if
 layout: bugpattern
 category: JDK
 severity: ERROR

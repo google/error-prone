@@ -1,6 +1,6 @@
 ---
 title: NonOverridingEquals
-summary: "equals method doesn't override Object.equals"
+summary: equals method doesn't override Object.equals
 layout: bugpattern
 category: JDK
 severity: WARNING

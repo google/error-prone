@@ -1,6 +1,6 @@
 ---
 title: InjectMoreThanOneQualifier
-summary: "Using more than one qualifier annotation on the same element is not allowed."
+summary: Using more than one qualifier annotation on the same element is not allowed.
 layout: bugpattern
 category: INJECT
 severity: ERROR

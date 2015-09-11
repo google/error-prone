@@ -1,6 +1,6 @@
 ---
 title: StringEquality
-summary: "String comparison using reference equality instead of value equality"
+summary: String comparison using reference equality instead of value equality
 layout: bugpattern
 category: JDK
 severity: WARNING

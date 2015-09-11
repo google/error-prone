@@ -1,6 +1,6 @@
 ---
 title: JUnit4TestNotRun
-summary: "Test method will not be run; please add @Test annotation"
+summary: Test method will not be run; please add @Test annotation
 layout: bugpattern
 category: JUNIT
 severity: ERROR

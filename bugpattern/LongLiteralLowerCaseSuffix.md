@@ -1,6 +1,6 @@
 ---
 title: LongLiteralLowerCaseSuffix
-summary: "Prefer 'L' to 'l' for the suffix to long literals"
+summary: Prefer 'L' to 'l' for the suffix to long literals
 layout: bugpattern
 category: JDK
 severity: ERROR

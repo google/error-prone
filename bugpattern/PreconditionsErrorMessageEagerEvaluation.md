@@ -1,6 +1,6 @@
 ---
 title: PreconditionsErrorMessageEagerEvaluation
-summary: "Second argument to Preconditions.* is a call to String.format(), which can be unwrapped"
+summary: Second argument to Preconditions.* is a call to String.format(), which can be unwrapped
 layout: bugpattern
 category: GUAVA
 severity: WARNING

@@ -1,6 +1,6 @@
 ---
 title: EqualsHashCode
-summary: "Classes that override equals should also override hashCode."
+summary: Classes that override equals should also override hashCode.
 layout: bugpattern
 category: JDK
 severity: WARNING

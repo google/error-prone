@@ -1,6 +1,6 @@
 ---
 title: Overrides
-summary: "Varargs doesn't agree for overridden method"
+summary: Varargs doesn't agree for overridden method
 layout: bugpattern
 category: JDK
 severity: ERROR

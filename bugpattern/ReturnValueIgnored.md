@@ -1,6 +1,6 @@
 ---
 title: ReturnValueIgnored
-summary: "Return value of this method must be used"
+summary: Return value of this method must be used
 layout: bugpattern
 category: JDK
 severity: ERROR

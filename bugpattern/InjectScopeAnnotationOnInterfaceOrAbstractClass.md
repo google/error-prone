@@ -1,6 +1,6 @@
 ---
 title: InjectScopeAnnotationOnInterfaceOrAbstractClass
-summary: "Scope annotation on an interface or abstact class is not allowed"
+summary: Scope annotation on an interface or abstact class is not allowed
 layout: bugpattern
 category: INJECT
 severity: ERROR

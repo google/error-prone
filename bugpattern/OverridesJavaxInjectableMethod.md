@@ -1,6 +1,6 @@
 ---
 title: OverridesJavaxInjectableMethod
-summary: "This method is not annotated with @Inject, but it overrides a  method that is  annotated with @javax.inject.Inject."
+summary: This method is not annotated with @Inject, but it overrides a  method that is  annotated with @javax.inject.Inject.
 layout: bugpattern
 category: GUICE
 severity: ERROR

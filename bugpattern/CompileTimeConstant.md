@@ -1,6 +1,6 @@
 ---
 title: CompileTimeConstant
-summary: "Non-compile-time constant expression passed to parameter with @CompileTimeConstant type annotation."
+summary: Non-compile-time constant expression passed to parameter with @CompileTimeConstant type annotation.
 layout: bugpattern
 category: GUAVA
 severity: ERROR

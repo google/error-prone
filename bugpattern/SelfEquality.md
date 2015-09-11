@@ -1,6 +1,6 @@
 ---
 title: SelfEquality
-summary: "Variable compared to itself"
+summary: Variable compared to itself
 layout: bugpattern
 category: JDK
 severity: ERROR

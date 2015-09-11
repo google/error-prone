@@ -1,6 +1,6 @@
 ---
 title: GuardedByValidator
-summary: "Invalid @GuardedBy expression"
+summary: Invalid @GuardedBy expression
 layout: bugpattern
 category: JDK
 severity: ERROR

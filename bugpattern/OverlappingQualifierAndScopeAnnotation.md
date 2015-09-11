@@ -1,6 +1,6 @@
 ---
 title: OverlappingQualifierAndScopeAnnotation
-summary: "Annotations cannot be both Qualifiers/BindingAnnotations and Scopes"
+summary: Annotations cannot be both Qualifiers/BindingAnnotations and Scopes
 layout: bugpattern
 category: INJECT
 severity: ERROR

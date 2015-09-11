@@ -1,6 +1,6 @@
 ---
 title: ParameterPackage
-summary: "Method parameter has wrong package"
+summary: Method parameter has wrong package
 layout: bugpattern
 category: JDK
 severity: ERROR

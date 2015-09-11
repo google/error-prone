@@ -1,6 +1,6 @@
 ---
 title: SelfEquals
-summary: "An object is tested for equality to itself"
+summary: An object is tested for equality to itself
 layout: bugpattern
 category: GUAVA
 severity: ERROR

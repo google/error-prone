@@ -1,6 +1,6 @@
 ---
 title: InjectInvalidTargetingOnScopingAnnotation
-summary: "The target of a scoping annotation must be set to METHOD and/or TYPE."
+summary: The target of a scoping annotation must be set to METHOD and/or TYPE.
 layout: bugpattern
 category: INJECT
 severity: ERROR

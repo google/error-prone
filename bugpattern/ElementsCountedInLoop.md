@@ -1,6 +1,6 @@
 ---
 title: ElementsCountedInLoop
-summary: "This code, which counts elements using a loop, can be replaced by a simpler library method"
+summary: This code, which counts elements using a loop, can be replaced by a simpler library method
 layout: bugpattern
 category: JDK
 severity: WARNING

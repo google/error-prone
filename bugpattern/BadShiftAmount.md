@@ -1,6 +1,6 @@
 ---
 title: BadShiftAmount
-summary: "Shift by an amount that is out of range"
+summary: Shift by an amount that is out of range
 layout: bugpattern
 category: JDK
 severity: ERROR

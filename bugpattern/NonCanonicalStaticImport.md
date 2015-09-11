@@ -1,6 +1,6 @@
 ---
 title: NonCanonicalStaticImport
-summary: "Static import of type uses non-canonical name"
+summary: Static import of type uses non-canonical name
 layout: bugpattern
 category: JDK
 severity: WARNING

@@ -1,6 +1,6 @@
 ---
 title: NumericEquality
-summary: "Numeric comparison using reference equality instead of value equality"
+summary: Numeric comparison using reference equality instead of value equality
 layout: bugpattern
 category: JDK
 severity: ERROR

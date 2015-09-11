@@ -1,6 +1,6 @@
 ---
 title: GuardedByChecker
-summary: "Checks for unguarded accesses to fields and methods with @GuardedBy annotations"
+summary: Checks for unguarded accesses to fields and methods with @GuardedBy annotations
 layout: bugpattern
 category: JDK
 severity: ERROR

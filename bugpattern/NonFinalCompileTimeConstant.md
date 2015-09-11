@@ -1,6 +1,6 @@
 ---
 title: NonFinalCompileTimeConstant
-summary: "@CompileTimeConstant parameters should be final"
+summary: '@CompileTimeConstant parameters should be final'
 layout: bugpattern
 category: JDK
 severity: ERROR

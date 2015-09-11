@@ -1,6 +1,6 @@
 ---
 title: MissingFail
-summary: "Not calling fail() when expecting an exception masks bugs"
+summary: Not calling fail() when expecting an exception masks bugs
 layout: bugpattern
 category: JUNIT
 severity: WARNING

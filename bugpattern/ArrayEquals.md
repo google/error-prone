@@ -1,6 +1,6 @@
 ---
 title: ArrayEquals
-summary: "Reference equality used to compare arrays"
+summary: Reference equality used to compare arrays
 layout: bugpattern
 category: JDK
 severity: ERROR

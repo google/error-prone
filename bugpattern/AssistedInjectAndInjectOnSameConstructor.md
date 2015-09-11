@@ -1,6 +1,6 @@
 ---
 title: AssistedInjectAndInjectOnSameConstructor
-summary: "@AssistedInject and @Inject cannot be used on the same constructor."
+summary: '@AssistedInject and @Inject cannot be used on the same constructor.'
 layout: bugpattern
 category: INJECT
 severity: ERROR

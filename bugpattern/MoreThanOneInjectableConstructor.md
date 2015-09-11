@@ -1,6 +1,6 @@
 ---
 title: MoreThanOneInjectableConstructor
-summary: "A class may not have more than one injectable constructor."
+summary: A class may not have more than one injectable constructor.
 layout: bugpattern
 category: INJECT
 severity: ERROR

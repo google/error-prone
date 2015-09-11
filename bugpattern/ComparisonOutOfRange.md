@@ -1,6 +1,6 @@
 ---
 title: ComparisonOutOfRange
-summary: "Comparison to value that is out of range for the compared type"
+summary: Comparison to value that is out of range for the compared type
 layout: bugpattern
 category: JDK
 severity: ERROR

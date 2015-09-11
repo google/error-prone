@@ -1,6 +1,6 @@
 ---
 title: DivZero
-summary: "Division by integer literal zero"
+summary: Division by integer literal zero
 layout: bugpattern
 category: JDK
 severity: ERROR

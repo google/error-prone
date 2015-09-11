@@ -1,6 +1,6 @@
 ---
 title: GuiceAssistedInjectScoping
-summary: "Scope annotation on implementation class of AssistedInject factory is not allowed"
+summary: Scope annotation on implementation class of AssistedInject factory is not allowed
 layout: bugpattern
 category: GUICE
 severity: ERROR

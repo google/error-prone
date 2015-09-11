@@ -1,6 +1,6 @@
 ---
 title: GuiceInjectOnFinalField
-summary: "Although Guice allows injecting final fields, doing so is not recommended because the injected value may not be visible to other threads."
+summary: Although Guice allows injecting final fields, doing so is not recommended because the injected value may not be visible to other threads.
 layout: bugpattern
 category: GUICE
 severity: WARNING

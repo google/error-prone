@@ -1,6 +1,6 @@
 ---
 title: RequiredModifiers
-summary: "This annotation is missing required modifiers as specified by its @RequiredModifiers annotation"
+summary: This annotation is missing required modifiers as specified by its @RequiredModifiers annotation
 layout: bugpattern
 category: JDK
 severity: WARNING

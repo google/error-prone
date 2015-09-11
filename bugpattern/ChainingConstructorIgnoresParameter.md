@@ -1,6 +1,6 @@
 ---
 title: ChainingConstructorIgnoresParameter
-summary: "The called constructor accepts a parameter with the same name and type as one of its caller's parameters, but its caller doesn't pass that parameter to it.  It's likely that it was intended to."
+summary: The called constructor accepts a parameter with the same name and type as one of its caller's parameters, but its caller doesn't pass that parameter to it.  It's likely that it was intended to.
 layout: bugpattern
 category: JDK
 severity: ERROR

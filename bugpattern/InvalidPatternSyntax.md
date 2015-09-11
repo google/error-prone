@@ -1,6 +1,6 @@
 ---
 title: InvalidPatternSyntax
-summary: "Invalid syntax used for a regular expression"
+summary: Invalid syntax used for a regular expression
 layout: bugpattern
 category: JDK
 severity: ERROR

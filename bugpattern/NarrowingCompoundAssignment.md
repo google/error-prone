@@ -1,6 +1,6 @@
 ---
 title: NarrowingCompoundAssignment
-summary: "Compound assignments to bytes, shorts, chars, and floats hide dangerous casts"
+summary: Compound assignments to bytes, shorts, chars, and floats hide dangerous casts
 layout: bugpattern
 category: JDK
 severity: ERROR

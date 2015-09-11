@@ -1,6 +1,6 @@
 ---
 title: SelfAssignment
-summary: "Variable assigned to itself"
+summary: Variable assigned to itself
 layout: bugpattern
 category: JDK
 severity: ERROR

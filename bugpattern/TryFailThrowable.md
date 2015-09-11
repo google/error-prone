@@ -1,6 +1,6 @@
 ---
 title: TryFailThrowable
-summary: "Catching Throwable masks failures from fail() or assert*() in the try block"
+summary: Catching Throwable masks failures from fail() or assert*() in the try block
 layout: bugpattern
 category: JUNIT
 severity: ERROR

@@ -1,6 +1,6 @@
 ---
 title: WildcardImport
-summary: "Use of wildcard imports is forbidden"
+summary: Use of wildcard imports is forbidden
 layout: bugpattern
 category: GUAVA
 severity: ERROR

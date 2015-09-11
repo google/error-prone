@@ -1,6 +1,6 @@
 ---
 title: ProtoFieldPreconditionsCheckNotNull
-summary: "Protobuf fields cannot be null, so this check is redundant"
+summary: Protobuf fields cannot be null, so this check is redundant
 layout: bugpattern
 category: GUAVA
 severity: WARNING

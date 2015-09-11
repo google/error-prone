@@ -1,6 +1,6 @@
 ---
 title: Finally
-summary: "If you return or throw from a finally, then values returned or thrown from the try-catch block will be ignored"
+summary: If you return or throw from a finally, then values returned or thrown from the try-catch block will be ignored
 layout: bugpattern
 category: JDK
 severity: WARNING

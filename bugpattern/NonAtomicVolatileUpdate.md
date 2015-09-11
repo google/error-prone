@@ -1,6 +1,6 @@
 ---
 title: NonAtomicVolatileUpdate
-summary: "This update of a volatile variable is non-atomic"
+summary: This update of a volatile variable is non-atomic
 layout: bugpattern
 category: JDK
 severity: WARNING

@@ -1,6 +1,6 @@
 ---
 title: CollectionIncompatibleType
-summary: "Incompatible type as argument to non-generic Java collections method."
+summary: Incompatible type as argument to non-generic Java collections method.
 layout: bugpattern
 category: JDK
 severity: ERROR

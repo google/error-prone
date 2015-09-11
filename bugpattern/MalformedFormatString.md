@@ -1,6 +1,6 @@
 ---
 title: MalformedFormatString
-summary: "Printf-like format string does not match its arguments"
+summary: Printf-like format string does not match its arguments
 layout: bugpattern
 category: JDK
 severity: ERROR

@@ -1,6 +1,6 @@
 ---
 title: DoubleCheckedLocking
-summary: "Double-checked locking on non-volatile fields is unsafe"
+summary: Double-checked locking on non-volatile fields is unsafe
 layout: bugpattern
 category: JDK
 severity: ERROR

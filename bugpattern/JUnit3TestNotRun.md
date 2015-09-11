@@ -1,6 +1,6 @@
 ---
 title: JUnit3TestNotRun
-summary: "Test method will not be run; please prefix name with "test""
+summary: Test method will not be run; please prefix name with "test"
 layout: bugpattern
 category: JUNIT
 severity: ERROR

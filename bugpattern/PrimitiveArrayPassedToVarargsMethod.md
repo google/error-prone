@@ -1,6 +1,6 @@
 ---
 title: PrimitiveArrayPassedToVarargsMethod
-summary: "Passing a primitive array to a varargs method is usually wrong"
+summary: Passing a primitive array to a varargs method is usually wrong
 layout: bugpattern
 category: JDK
 severity: WARNING

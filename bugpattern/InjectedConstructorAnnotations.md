@@ -1,6 +1,6 @@
 ---
 title: InjectedConstructorAnnotations
-summary: "Injected constructors cannot be optional nor have binding annotations"
+summary: Injected constructors cannot be optional nor have binding annotations
 layout: bugpattern
 category: INJECT
 severity: ERROR

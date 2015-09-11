@@ -1,6 +1,6 @@
 ---
 title: JUnitAmbiguousTestClass
-summary: "Test class mixes JUnit 3 and JUnit 4 idioms"
+summary: Test class mixes JUnit 3 and JUnit 4 idioms
 layout: bugpattern
 category: JUNIT
 severity: WARNING

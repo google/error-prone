@@ -1,6 +1,6 @@
 ---
 title: MissingCasesInEnumSwitch
-summary: "Enum switch statement is missing cases"
+summary: Enum switch statement is missing cases
 layout: bugpattern
 category: JDK
 severity: ERROR

@@ -1,6 +1,6 @@
 ---
 title: GuiceAssistedParameters
-summary: "A constructor cannot have two @Assisted parameters of the same type unless they are disambiguated with named @Assisted annotations."
+summary: A constructor cannot have two @Assisted parameters of the same type unless they are disambiguated with named @Assisted annotations.
 layout: bugpattern
 category: GUICE
 severity: ERROR

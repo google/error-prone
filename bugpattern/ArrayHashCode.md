@@ -1,6 +1,6 @@
 ---
 title: ArrayHashCode
-summary: "hashcode method on array does not hash array contents"
+summary: hashcode method on array does not hash array contents
 layout: bugpattern
 category: JDK
 severity: ERROR

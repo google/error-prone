@@ -1,6 +1,7 @@
 ---
 title: SynchronizeOnNonFinalField
-summary: "Synchronizing on non-final fields is not safe: if the field is ever updated, different threads may end up locking on different objects."
+summary: 'Synchronizing on non-final fields is not safe: if the field is ever updated,
+  different threads may end up locking on different objects.'
 layout: bugpattern
 category: JDK
 severity: WARNING

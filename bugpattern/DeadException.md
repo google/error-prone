@@ -1,6 +1,6 @@
 ---
 title: DeadException
-summary: "Exception created but not thrown"
+summary: Exception created but not thrown
 layout: bugpattern
 category: JDK
 severity: ERROR

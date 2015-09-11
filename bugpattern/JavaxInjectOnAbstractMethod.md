@@ -1,6 +1,6 @@
 ---
 title: JavaxInjectOnAbstractMethod
-summary: "Abstract methods are not injectable with javax.inject.Inject."
+summary: Abstract methods are not injectable with javax.inject.Inject.
 layout: bugpattern
 category: INJECT
 severity: ERROR

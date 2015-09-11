@@ -1,6 +1,6 @@
 ---
 title: InjectScopeOrQualifierAnnotationRetention
-summary: "Scoping and qualifier annotations must have runtime retention."
+summary: Scoping and qualifier annotations must have runtime retention.
 layout: bugpattern
 category: INJECT
 severity: ERROR

@@ -1,6 +1,6 @@
 ---
 title: StaticAccessedFromInstance
-summary: "A static variable or method should not be accessed from an object instance"
+summary: A static variable or method should not be accessed from an object instance
 layout: bugpattern
 category: JDK
 severity: WARNING
