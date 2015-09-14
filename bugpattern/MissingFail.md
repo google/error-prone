@@ -17,21 +17,319 @@ _Alternate names: missing-fail_
 ## The problem
 When testing for exceptions in junit, it is easy to forget the call to `fail()`:
 
-    try {
-      ... do something that should throw ...
-      // forget to call Assert.fail()
-    } catch (SomeException expected) {
-      // asserts on the exception or comments
-    }
+```java
+try {
+  someOperationThatShouldThrow();
+  // forget to call Assert.fail()
+} catch (SomeException expected) {
+  assertThat(expected).hasMessage("Operation failed");
+}
+```
 
-Without this call, this test will always pass, regardless of whether an exception is thrown or not: It is a noop.
+Without the call to `fail()`, the test is broken: it will pass if the exception
+is never thrown *or* if the exception is thrown with the expected message.
+
+If the try/catch block is defensive and the exception may not always be thrown,
+then the exception should not be named 'tolerated' instead of 'expected'.
+
+## Detection
+
+This checker uses heuristics that identify as many occurrences of the problem as
+possible while keeping the false positive rate low (low single-digit
+percentages).
+
+## Heuristics
+
+Five methods were explored to detect missing `fail()` calls, triggering if no
+`fail()` is used in a `try/catch` statement within a JUnit test class:
+
+* Cases in which the caught exception is called "expected".
+* Cases in which there is a call to an `assert*()` method in the catch block.
+* Cases in which "expected" shows up in a comment inside the `catch` block.
+* Cases in which the `catch` block is empty.
+* Cases in which the `try` block contains only a single statement.
+
+Only the first three yield useful results and also required some more refinement
+to reduce false positives. In addition, the checker does not trigger on comments
+in the `catch` block due to implementation complexity.
+
+To reduce false positives, no match is found if any of the following is true:
+
+* Any method with `fail` in its name is present in either catch or try block.
+* A `throw` statement or synonym (`assertTrue(false)`, etc.) is present in
+  either `catch` or `try` block.
+* The occurrence happens inside a `setUp`, `tearDown`, `@Before`, `@After`,
+  `suite` or`main` method.
+* The method returns from the `try` or `catch` block or immediately after.
+* The exception caught is of type `InterruptedException`, `AssertionError`,
+  `junit.framework.AssertionFailedError` or `Throwable`.
+* The occurrence is inside a loop.
+* The try block contains a `while(true)` loop.
+* The `try` or `catch` block contains a `continue;` statement.
+* The `try/catch` statement also contains a `finally` statement.
+* A logging call is present in the `catch` block.
+
+In addition, for occurrences which matched because they have a call to an
+`assert*()` method in the catch block, no match is found if any of the following
+characteristics are present:
+
+* A field assignment in the catch block.
+* A call to `assertTrue/False(boolean variable or field)` in the catch block.
+* The last statement in the `try` block is an `assert*()` (that is not a noop:
+  `assertFalse(false)`, `assertTrue(true))` or `Mockito.verify()` call.
 
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("MissingFail")` annotation to the enclosing element.
 
 ----------
 
-## Examples
+### Positive examples
+__MissingFailPositiveCases.java__
+
+{% highlight java %}
+/*
+ * Copyright 2015 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.google.errorprone.bugpatterns;
+
+import junit.framework.TestCase;
+
+import org.junit.Assert;
+import org.mockito.Mockito;
+
+/** Test cases for missing fail */
+public class MissingFailPositiveCases extends TestCase {
+
+  private boolean foo = true;
+
+  public void expectedException_emptyCatch() {
+    try {
+      // BUG: Diagnostic contains: fail()
+      dummyMethod();
+    } catch (Exception expected) {}
+  }
+
+  public void catchAssert() {
+    try {
+      // BUG: Diagnostic contains: fail()
+      dummyMethod();
+    } catch (Exception e) {
+      assertDummy();
+    }
+  }
+
+  public void expectedException_throwOutsideTryTree() throws Exception {
+    try {
+      // BUG: Diagnostic contains: fail()
+      dummyMethod();
+    } catch (Exception expected) {}
+    throw new Exception();
+  }
+
+  public void expectedException_assertLastCall() throws Exception {
+    try {
+      dummyMethod();
+      // BUG: Diagnostic contains: fail()
+      assertDummy();
+    } catch (Exception expected) {}
+    throw new Exception();
+  }
+
+  public void expectedException_fieldAssignmentInCatch() {
+    try {
+      // BUG: Diagnostic contains: fail()
+      dummyMethod();
+    } catch (Exception expected) {
+      foo = true;
+    }
+  }
+
+  public void catchAssert_noopAssertLastCall() {
+    try {
+      dummyMethod();
+      // BUG: Diagnostic contains: fail()
+      Assert.assertTrue(true);
+    } catch (Exception e) {
+      assertDummy();
+    }
+  }
+
+  public void assertInCatch_verifyNotLastStatement() {
+    try {
+      Mockito.verify(new Dummy()).dummy();
+      // BUG: Diagnostic contains: fail()
+      dummyMethod();
+    } catch (Exception e) {
+      assertDummy();
+    }
+  }
+
+  public void assertInCatch_verifyInCatch() {
+    try {
+      // BUG: Diagnostic contains: fail()
+      dummyMethod();
+    } catch (Exception e) {
+      assertDummy();
+      Mockito.verify(new Dummy()).dummy();
+    }
+  }
+
+  public void expectedException_logInTry() {
+    try {
+      new Logger().log();
+      // BUG: Diagnostic contains: fail()
+      dummyMethod();
+    } catch (Exception expected) {
+      foo = true;
+    }
+  }
+
+  /** Sameple inner class. */
+  public static class Inner {
+    public void expectedException_emptyCatch() {
+      try {
+        // BUG: Diagnostic contains: fail()
+        dummyMethod();
+      } catch (Exception expected) {}
+    }
+  }
+
+  private static class Dummy {
+
+    String dummy() { return ""; }
+  }
+
+  private static class Logger {
+
+    void log() {};
+
+    void info() {};
+  }
+
+  private static void dummyMethod() {}
+
+  private static void assertDummy() {}
+}
+{% endhighlight %}
+
+__MissingFailPositiveCases2.java__
+
+{% highlight java %}
+/*
+ * Copyright 2015 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.google.errorprone.bugpatterns;
+
+// unused import to make sure we don't introduce an import conflict.
+import static junit.framework.Assert.fail;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+
+/** Test cases for missing fail */
+@RunWith(JUnit4.class)
+public class MissingFailPositiveCases2 {
+
+  @Test
+  public void expectedException() {
+    try {
+      // BUG: Diagnostic contains: fail()
+      dummyMethod();
+    } catch (Exception expected) {}
+  }
+
+  public void expectedException_helperMethod() {
+    try {
+      // BUG: Diagnostic contains: fail()
+      dummyMethod();
+    } catch (Exception expected) {}
+  }
+
+  private static void dummyMethod() {}
+}
+{% endhighlight %}
+
+__MissingFailPositiveCases3.java__
+
+{% highlight java %}
+/*
+ * Copyright 2015 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.google.errorprone.bugpatterns;
+
+import junit.framework.TestCase;
+
+/** Examples of an inner test case. */
+public class MissingFailPositiveCases3 {
+
+  /** Sample inner class. */
+  public static class Inner extends TestCase {
+
+    public void expectedException_emptyCatch() {
+      try {
+        // BUG: Diagnostic contains: fail()
+        dummyMethod();
+      } catch (Exception expected) {}
+    }
+
+    public void catchAssert() {
+      try {
+        // BUG: Diagnostic contains: fail()
+        dummyMethod();
+      } catch (Exception e) {
+        assertDummy();
+      }
+    }
+  }
+
+  private static void dummyMethod() {}
+
+  private static void assertDummy() {}
+
+}
+{% endhighlight %}
+
+### Negative examples
 __MissingFailNegativeCases.java__
 
 {% highlight java %}
@@ -530,251 +828,6 @@ public class MissingFailNegativeCases2 {
   private static void dummyMethod() {}
 
   private static void assertDummy() {}
-}
-{% endhighlight %}
-
-__MissingFailPositiveCases.java__
-
-{% highlight java %}
-/*
- * Copyright 2015 Google Inc. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package com.google.errorprone.bugpatterns;
-
-import junit.framework.TestCase;
-
-import org.junit.Assert;
-import org.mockito.Mockito;
-
-/** Test cases for missing fail */
-public class MissingFailPositiveCases extends TestCase {
-
-  private boolean foo = true;
-
-  public void expectedException_emptyCatch() {
-    try {
-      // BUG: Diagnostic contains: fail()
-      dummyMethod();
-    } catch (Exception expected) {}
-  }
-
-  public void catchAssert() {
-    try {
-      // BUG: Diagnostic contains: fail()
-      dummyMethod();
-    } catch (Exception e) {
-      assertDummy();
-    }
-  }
-
-  public void expectedException_throwOutsideTryTree() throws Exception {
-    try {
-      // BUG: Diagnostic contains: fail()
-      dummyMethod();
-    } catch (Exception expected) {}
-    throw new Exception();
-  }
-
-  public void expectedException_assertLastCall() throws Exception {
-    try {
-      dummyMethod();
-      // BUG: Diagnostic contains: fail()
-      assertDummy();
-    } catch (Exception expected) {}
-    throw new Exception();
-  }
-
-  public void expectedException_fieldAssignmentInCatch() {
-    try {
-      // BUG: Diagnostic contains: fail()
-      dummyMethod();
-    } catch (Exception expected) {
-      foo = true;
-    }
-  }
-
-  public void catchAssert_noopAssertLastCall() {
-    try {
-      dummyMethod();
-      // BUG: Diagnostic contains: fail()
-      Assert.assertTrue(true);
-    } catch (Exception e) {
-      assertDummy();
-    }
-  }
-
-  public void assertInCatch_verifyNotLastStatement() {
-    try {
-      Mockito.verify(new Dummy()).dummy();
-      // BUG: Diagnostic contains: fail()
-      dummyMethod();
-    } catch (Exception e) {
-      assertDummy();
-    }
-  }
-
-  public void assertInCatch_verifyInCatch() {
-    try {
-      // BUG: Diagnostic contains: fail()
-      dummyMethod();
-    } catch (Exception e) {
-      assertDummy();
-      Mockito.verify(new Dummy()).dummy();
-    }
-  }
-
-  public void expectedException_logInTry() {
-    try {
-      new Logger().log();
-      // BUG: Diagnostic contains: fail()
-      dummyMethod();
-    } catch (Exception expected) {
-      foo = true;
-    }
-  }
-
-  /** Sameple inner class. */
-  public static class Inner {
-    public void expectedException_emptyCatch() {
-      try {
-        // BUG: Diagnostic contains: fail()
-        dummyMethod();
-      } catch (Exception expected) {}
-    }
-  }
-
-  private static class Dummy {
-
-    String dummy() { return ""; }
-  }
-
-  private static class Logger {
-
-    void log() {};
-
-    void info() {};
-  }
-
-  private static void dummyMethod() {}
-
-  private static void assertDummy() {}
-}
-{% endhighlight %}
-
-__MissingFailPositiveCases2.java__
-
-{% highlight java %}
-/*
- * Copyright 2015 Google Inc. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package com.google.errorprone.bugpatterns;
-
-// unused import to make sure we don't introduce an import conflict.
-import static junit.framework.Assert.fail;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-
-/** Test cases for missing fail */
-@RunWith(JUnit4.class)
-public class MissingFailPositiveCases2 {
-
-  @Test
-  public void expectedException() {
-    try {
-      // BUG: Diagnostic contains: fail()
-      dummyMethod();
-    } catch (Exception expected) {}
-  }
-
-  public void expectedException_helperMethod() {
-    try {
-      // BUG: Diagnostic contains: fail()
-      dummyMethod();
-    } catch (Exception expected) {}
-  }
-
-  private static void dummyMethod() {}
-}
-{% endhighlight %}
-
-__MissingFailPositiveCases3.java__
-
-{% highlight java %}
-/*
- * Copyright 2015 Google Inc. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package com.google.errorprone.bugpatterns;
-
-import junit.framework.TestCase;
-
-/** Examples of an inner test case. */
-public class MissingFailPositiveCases3 {
-
-  /** Sample inner class. */
-  public static class Inner extends TestCase {
-
-    public void expectedException_emptyCatch() {
-      try {
-        // BUG: Diagnostic contains: fail()
-        dummyMethod();
-      } catch (Exception expected) {}
-    }
-
-    public void catchAssert() {
-      try {
-        // BUG: Diagnostic contains: fail()
-        dummyMethod();
-      } catch (Exception e) {
-        assertDummy();
-      }
-    }
-  }
-
-  private static void dummyMethod() {}
-
-  private static void assertDummy() {}
-
 }
 {% endhighlight %}
 

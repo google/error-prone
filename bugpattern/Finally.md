@@ -22,195 +22,7 @@ Suppress false positives by adding an `@SuppressWarnings("Finally")` annotation 
 
 ----------
 
-## Examples
-__FinallyNegativeCase1.java__
-
-{% highlight java %}
-/*
- * Copyright 2013 Google Inc. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package com.google.errorprone.bugpatterns;
-
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
-public class FinallyNegativeCase1 {
-
-  public static void test1() {
-    while (true) {
-      try {
-        break;
-      } finally {
-      }
-    }
-  }
-
-  public static void test2() {
-    while (true) {
-      try {
-        continue;
-      } finally {
-      }
-    }
-  }
-
-  public static void test3() {
-    try {
-      return;
-    } finally {
-    }
-  }
-
-  public static void test4() throws Exception {
-    try {
-      throw new Exception();
-    } catch (Exception e) {
-    } finally {
-    }
-  }
-  
-  /**
-   * break inner loop. 
-   */
-  public void test5() {
-  label:
-    while (true) {
-      try {
-      } finally {
-        while (true) {
-          break;
-        }
-      }
-    }
-  }
-  
-  /**
-   * continue statement jumps out of inner for. 
-   */
-  public void test6() {
-  label:
-    for (;;) {
-      try {
-      } finally {
-        for (;;) {
-          continue;
-        }
-      }
-    }
-  }
-  
-  /**
-   * break statement jumps out of switch. 
-   */
-  public void test7() {
-    int i = 10;
-    while (true) {
-      try {
-      } finally {
-        switch (i) {
-          case 10: 
-            break;
-        }
-      }
-    }
-  }
-}
-{% endhighlight %}
-
-__FinallyNegativeCase2.java__
-
-{% highlight java %}
-/*
- * Copyright 2013 Google Inc. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package com.google.errorprone.bugpatterns;
-
-import java.io.IOException;
-
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- */
-public class FinallyNegativeCase2 {
-  public void test1(boolean flag) {
-    try {
-      return;
-    } finally {
-    }
-  }
-  
-  public void test2() throws Exception {
-    try {
-    } catch (Exception e) {
-      throw new Exception();
-    } finally {
-    }
-  }
-  
-  public void returnInAnonymousClass(boolean flag) {
-    try {
-    } finally {
-      new Object() {
-        void foo() {
-          return;
-        }
-      };
-    }
-  }
-  
-  public void throwFromNestedTryInFinally() throws Exception {
-    try {
-    } finally {
-      try {
-        throw new Exception();
-      } catch (Exception e) {
-      } finally {
-      }
-    }
-  }
-  
-  public void nestedTryInFinally2() throws Exception {
-    try {
-    } finally {
-      try {
-        // This exception will propogate out through the enclosing finally,
-        // but we don't do exception analysis and have no way of knowing that.
-        // Xlint:finally doesn't handle this either, since it only reports
-        // situations where the end of a finally block is unreachable as
-        // definied by JLS 14.21.
-        throw new IOException();
-      } catch(Exception e) {
-      }
-    }
-  }
-}
-{% endhighlight %}
-
+### Positive examples
 __FinallyPositiveCase1.java__
 
 {% highlight java %}
@@ -493,6 +305,195 @@ public class FinallyPositiveCase2 {
         // BUG: Diagnostic contains: 
         throw new Exception();
       } finally {
+      }
+    }
+  }
+}
+{% endhighlight %}
+
+### Negative examples
+__FinallyNegativeCase1.java__
+
+{% highlight java %}
+/*
+ * Copyright 2013 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.google.errorprone.bugpatterns;
+
+/**
+ * @author eaftan@google.com (Eddie Aftandilian)
+ */
+public class FinallyNegativeCase1 {
+
+  public static void test1() {
+    while (true) {
+      try {
+        break;
+      } finally {
+      }
+    }
+  }
+
+  public static void test2() {
+    while (true) {
+      try {
+        continue;
+      } finally {
+      }
+    }
+  }
+
+  public static void test3() {
+    try {
+      return;
+    } finally {
+    }
+  }
+
+  public static void test4() throws Exception {
+    try {
+      throw new Exception();
+    } catch (Exception e) {
+    } finally {
+    }
+  }
+  
+  /**
+   * break inner loop. 
+   */
+  public void test5() {
+  label:
+    while (true) {
+      try {
+      } finally {
+        while (true) {
+          break;
+        }
+      }
+    }
+  }
+  
+  /**
+   * continue statement jumps out of inner for. 
+   */
+  public void test6() {
+  label:
+    for (;;) {
+      try {
+      } finally {
+        for (;;) {
+          continue;
+        }
+      }
+    }
+  }
+  
+  /**
+   * break statement jumps out of switch. 
+   */
+  public void test7() {
+    int i = 10;
+    while (true) {
+      try {
+      } finally {
+        switch (i) {
+          case 10: 
+            break;
+        }
+      }
+    }
+  }
+}
+{% endhighlight %}
+
+__FinallyNegativeCase2.java__
+
+{% highlight java %}
+/*
+ * Copyright 2013 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.google.errorprone.bugpatterns;
+
+import java.io.IOException;
+
+/**
+ * @author cushon@google.com (Liam Miller-Cushon)
+ */
+public class FinallyNegativeCase2 {
+  public void test1(boolean flag) {
+    try {
+      return;
+    } finally {
+    }
+  }
+  
+  public void test2() throws Exception {
+    try {
+    } catch (Exception e) {
+      throw new Exception();
+    } finally {
+    }
+  }
+  
+  public void returnInAnonymousClass(boolean flag) {
+    try {
+    } finally {
+      new Object() {
+        void foo() {
+          return;
+        }
+      };
+    }
+  }
+  
+  public void throwFromNestedTryInFinally() throws Exception {
+    try {
+    } finally {
+      try {
+        throw new Exception();
+      } catch (Exception e) {
+      } finally {
+      }
+    }
+  }
+  
+  public void nestedTryInFinally2() throws Exception {
+    try {
+    } finally {
+      try {
+        // This exception will propogate out through the enclosing finally,
+        // but we don't do exception analysis and have no way of knowing that.
+        // Xlint:finally doesn't handle this either, since it only reports
+        // situations where the end of a finally block is unreachable as
+        // definied by JLS 14.21.
+        throw new IOException();
+      } catch(Exception e) {
       }
     }
   }

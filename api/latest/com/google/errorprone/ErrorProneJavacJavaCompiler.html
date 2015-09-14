@@ -98,6 +98,10 @@
 <div class="description">
 <ul class="blockList">
 <li class="blockList">
+<dl>
+<dt>All Implemented Interfaces:</dt>
+<dd>com.sun.tools.javac.jvm.ClassReader.SourceCompleter</dd>
+</dl>
 <hr>
 <br>
 <pre>public class <span class="strong">ErrorProneJavacJavaCompiler</span>
@@ -121,7 +125,7 @@ extends com.sun.tools.javac.main.JavaCompiler</pre>
 <!--   -->
 </a>
 <h3>Nested classes/interfaces inherited from class&nbsp;com.sun.tools.javac.main.JavaCompiler</h3>
-<code>com.sun.tools.javac.main.JavaCompiler.CompilePolicy, com.sun.tools.javac.main.JavaCompiler.ImplicitSourcePolicy</code></li>
+<code>com.sun.tools.javac.main.JavaCompiler.CompilePolicy, com.sun.tools.javac.main.JavaCompiler.CompileState, com.sun.tools.javac.main.JavaCompiler.CompileStates, com.sun.tools.javac.main.JavaCompiler.ImplicitSourcePolicy</code></li>
 </ul>
 </li>
 </ul>
@@ -136,7 +140,7 @@ extends com.sun.tools.javac.main.JavaCompiler</pre>
 <!--   -->
 </a>
 <h3>Fields inherited from class&nbsp;com.sun.tools.javac.main.JavaCompiler</h3>
-<code>annotate, annotationProcessingOccurred, attr, attrParseOnly, chk, closeables, compilePolicy, compilerKey, compileStates, completionFailureName, context, devVerbose, elapsed_msec, encoding, enter, explicitAnnotationProcessingRequested, fileManager, finder, flow, gen, genEndPos, implicitSourceFilesRead, implicitSourcePolicy, inputFiles, jniWriter, keepComments, lineDebugInfo, log, lower, make, names, needRootClasses, options, parserFactory, printFlat, processPcks, reader, shouldStopPolicyIfError, shouldStopPolicyIfNoError, source, sourceCompleter, sourceOutput, stubOutput, syms, taskListener, todo, transTypes, types, verbose, verboseCompilePolicy, werror, writer</code></li>
+<code>annotate, annotationProcessingOccurred, attr, attrParseOnly, chk, compilePolicy, compilerKey, completionFailureName, context, delegateCompiler, devVerbose, elapsed_msec, encoding, enter, explicitAnnotationProcessingRequested, fileManager, flow, gen, genEndPos, implicitSourceFilesRead, implicitSourcePolicy, inputFiles, keepComments, lineDebugInfo, log, lower, make, names, options, parserFactory, printFlat, processPcks, reader, shouldStopPolicy, source, sourceOutput, stubOutput, syms, taskListener, todo, transTypes, types, verbose, verboseCompilePolicy, werror, writer</code></li>
 </ul>
 </li>
 </ul>
@@ -165,8 +169,8 @@ extends com.sun.tools.javac.main.JavaCompiler</pre>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static void</code></td>
-<td class="colLast"><code><strong><a href="../../../com/google/errorprone/ErrorProneJavacJavaCompiler.html#preRegister(com.sun.tools.javac.util.Context,%20com.google.errorprone.scanner.Scanner,%20com.google.errorprone.ErrorProneOptions)">preRegister</a></strong>(com.sun.tools.javac.util.Context&nbsp;context,
-           <a href="../../../com/google/errorprone/scanner/Scanner.html" title="class in com.google.errorprone.scanner">Scanner</a>&nbsp;scanner,
+<td class="colLast"><code><strong><a href="../../../com/google/errorprone/ErrorProneJavacJavaCompiler.html#preRegister(com.sun.tools.javac.util.Context,%20com.google.errorprone.CodeTransformer,%20com.google.errorprone.ErrorProneOptions)">preRegister</a></strong>(com.sun.tools.javac.util.Context&nbsp;context,
+           <a href="../../../com/google/errorprone/CodeTransformer.html" title="interface in com.google.errorprone">CodeTransformer</a>&nbsp;transformer,
            <a href="../../../com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a>&nbsp;errorProneOptions)</code>
 <div class="block">Adds an initialization hook to the Context, such that each subsequent
  request for a JavaCompiler (i.e., a lookup for 'compilerKey' of our
@@ -185,7 +189,7 @@ extends com.sun.tools.javac.main.JavaCompiler</pre>
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;com.sun.tools.javac.main.JavaCompiler</h3>
-<code>attribute, attribute, close, compile, compile, desugar, desugar, enterTrees, enterTreesIfNeeded, errorCount, flow, flow, fullVersion, generate, generate, initProcessAnnotations, instance, keepComments, newRound, parse, parse, parse, parseFiles, printCount, printNote, processAnnotations, processAnnotations, readSource, readSourceFile, reportDeferredDiagnostics, reportPublicApi, resolveBinaryNameOrIdent, resolveIdent, setDeferredDiagnosticHandler, shouldStop, stopIfError, stopIfError, version, warningCount</code></li>
+<code>attribute, attribute, close, close, compile, compile, complete, desugar, desugar, enableLogging, enterTrees, errorCount, flow, flow, fullVersion, generate, generate, initProcessAnnotations, initRound, instance, keepComments, parse, parse, parse, parseFiles, printCount, printNote, processAnnotations, processAnnotations, readSource, reportDeferredDiagnostics, resolveBinaryNameOrIdent, resolveIdent, shouldStop, stopIfError, stopIfError, version, warningCount</code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods_inherited_from_class_java.lang.Object">
@@ -218,14 +222,14 @@ extends com.sun.tools.javac.main.JavaCompiler</pre>
 <div class="block">Registers our message bundle.</div>
 </li>
 </ul>
-<a name="preRegister(com.sun.tools.javac.util.Context, com.google.errorprone.scanner.Scanner, com.google.errorprone.ErrorProneOptions)">
+<a name="preRegister(com.sun.tools.javac.util.Context, com.google.errorprone.CodeTransformer, com.google.errorprone.ErrorProneOptions)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>preRegister</h4>
 <pre>public static&nbsp;void&nbsp;preRegister(com.sun.tools.javac.util.Context&nbsp;context,
-               <a href="../../../com/google/errorprone/scanner/Scanner.html" title="class in com.google.errorprone.scanner">Scanner</a>&nbsp;scanner,
+               <a href="../../../com/google/errorprone/CodeTransformer.html" title="interface in com.google.errorprone">CodeTransformer</a>&nbsp;transformer,
                <a href="../../../com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a>&nbsp;errorProneOptions)</pre>
 <div class="block">Adds an initialization hook to the Context, such that each subsequent
  request for a JavaCompiler (i.e., a lookup for 'compilerKey' of our

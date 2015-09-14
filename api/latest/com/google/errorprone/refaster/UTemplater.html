@@ -1,0 +1,1405 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- NewPage -->
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>UTemplater (Maven parent POM 2.0.5-SNAPSHOT API)</title>
+<link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<script type="text/javascript"><!--
+    if (location.href.indexOf('is-external=true') == -1) {
+        parent.document.title="UTemplater (Maven parent POM 2.0.5-SNAPSHOT API)";
+    }
+//-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+<!-- ========= START OF TOP NAVBAR ======= -->
+<div class="topNav"><a name="navbar_top">
+<!--   -->
+</a><a href="#skip-navbar_top" title="Skip navigation links"></a><a name="navbar_top_firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="class-use/UTemplater.html">Use</a></li>
+<li><a href="package-tree.html">Tree</a></li>
+<li><a href="../../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../../index-all.html">Index</a></li>
+<li><a href="../../../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList">
+<li><a href="../../../../com/google/errorprone/refaster/UStaticIdent.html" title="class in com.google.errorprone.refaster"><span class="strong">Prev Class</span></a></li>
+<li><a href="../../../../com/google/errorprone/refaster/UTree.html" title="class in com.google.errorprone.refaster"><span class="strong">Next Class</span></a></li>
+</ul>
+<ul class="navList">
+<li><a href="../../../../index.html?com/google/errorprone/refaster/UTemplater.html" target="_top">Frames</a></li>
+<li><a href="UTemplater.html" target="_top">No Frames</a></li>
+</ul>
+<ul class="navList" id="allclasses_navbar_top">
+<li><a href="../../../../allclasses-noframe.html">All Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#field_summary">Field</a>&nbsp;|&nbsp;</li>
+<li><a href="#constructor_summary">Constr</a>&nbsp;|&nbsp;</li>
+<li><a href="#method_summary">Method</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li><a href="#field_detail">Field</a>&nbsp;|&nbsp;</li>
+<li><a href="#constructor_detail">Constr</a>&nbsp;|&nbsp;</li>
+<li><a href="#method_detail">Method</a></li>
+</ul>
+</div>
+<a name="skip-navbar_top">
+<!--   -->
+</a></div>
+<!-- ========= END OF TOP NAVBAR ========= -->
+<!-- ======== START OF CLASS DATA ======== -->
+<div class="header">
+<div class="subTitle">com.google.errorprone.refaster</div>
+<h2 title="Class UTemplater" class="title">Class UTemplater</h2>
+</div>
+<div class="contentContainer">
+<ul class="inheritance">
+<li><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">java.lang.Object</a></li>
+<li>
+<ul class="inheritance">
+<li>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</li>
+<li>
+<ul class="inheritance">
+<li>com.google.errorprone.refaster.UTemplater</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="description">
+<ul class="blockList">
+<li class="blockList">
+<dl>
+<dt>All Implemented Interfaces:</dt>
+<dd>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</dd>
+</dl>
+<hr>
+<br>
+<pre>public class <span class="strong">UTemplater</span>
+extends com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</pre>
+<div class="block">Converts a type-checked syntax tree to a portable <code>UTree</code> template.</div>
+<dl><dt><span class="strong">Author:</span></dt>
+  <dd>lowasser@google.com (Louis Wasserman)</dd></dl>
+</li>
+</ul>
+</div>
+<div class="summary">
+<ul class="blockList">
+<li class="blockList">
+<!-- =========== FIELD SUMMARY =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="field_summary">
+<!--   -->
+</a>
+<h3>Field Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Field Summary table, listing fields, and an explanation">
+<caption><span>Fields</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Field and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static com.sun.tools.javac.util.Context.Key&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang">Boolean</a>&gt;</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#REQUIRE_BLOCK_KEY">REQUIRE_BLOCK_KEY</a></strong></code>
+<div class="block">Context key to indicate that templates should be treated as BlockTemplates, regardless
+ of their structure.</div>
+</td>
+</tr>
+</table>
+<ul class="blockList">
+<li class="blockList"><a name="fields_inherited_from_class_com.sun.source.util.SimpleTreeVisitor">
+<!--   -->
+</a>
+<h3>Fields inherited from class&nbsp;com.sun.source.util.SimpleTreeVisitor</h3>
+<code>DEFAULT_VALUE</code></li>
+</ul>
+</li>
+</ul>
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="constructor_summary">
+<!--   -->
+</a>
+<h3>Constructor Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Constructor Summary table, listing constructors, and an explanation">
+<caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colOne" scope="col">Constructor and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colOne"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#UTemplater(java.util.Map,%20com.sun.tools.javac.util.Context)">UTemplater</a></strong>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,com.sun.tools.javac.code.Symbol.VarSymbol&gt;&nbsp;freeVariables,
+          com.sun.tools.javac.util.Context&nbsp;context)</code>&nbsp;</td>
+</tr>
+</table>
+</li>
+</ul>
+<!-- ========== METHOD SUMMARY =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method_summary">
+<!--   -->
+</a>
+<h3>Method Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
+<caption><span>Methods</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static com.google.common.collect.ImmutableClassToInstanceMap&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#annotationMap(com.sun.tools.javac.code.Symbol)">annotationMap</a></strong>(com.sun.tools.javac.code.Symbol&nbsp;symbol)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static <a href="../../../../com/google/errorprone/refaster/Template.html" title="class in com.google.errorprone.refaster">Template</a>&lt;?&gt;</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#createTemplate(com.sun.tools.javac.util.Context,%20com.sun.source.tree.MethodTree)">createTemplate</a></strong>(com.sun.tools.javac.util.Context&nbsp;context,
+              com.sun.source.tree.MethodTree&nbsp;decl)</code>
+<div class="block">Returns a template based on a method.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected <a href="../../../../com/google/errorprone/refaster/UTree.html" title="class in com.google.errorprone.refaster">UTree</a>&lt;?&gt;</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#defaultAction(com.sun.source.tree.Tree,%20java.lang.Void)">defaultAction</a></strong>(com.sun.source.tree.Tree&nbsp;tree,
+             <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static com.google.common.collect.ImmutableMap&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,com.sun.tools.javac.code.Symbol.VarSymbol&gt;</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#freeExpressionVariables(com.sun.source.tree.MethodTree)">freeExpressionVariables</a></strong>(com.sun.source.tree.MethodTree&nbsp;templateMethodDecl)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/refaster/UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a></code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#template(com.sun.source.tree.ExpressionTree)">template</a></strong>(com.sun.source.tree.ExpressionTree&nbsp;tree)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/refaster/UStatement.html" title="interface in com.google.errorprone.refaster">UStatement</a></code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#template(com.sun.source.tree.StatementTree)">template</a></strong>(com.sun.source.tree.StatementTree&nbsp;tree)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>com.sun.source.tree.Tree</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#template(com.sun.source.tree.Tree)">template</a></strong>(com.sun.source.tree.Tree&nbsp;tree)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/refaster/UType.html" title="class in com.google.errorprone.refaster">UType</a></code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#template(com.sun.tools.javac.code.Type)">template</a></strong>(com.sun.tools.javac.code.Type&nbsp;type)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/refaster/UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a></code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#templateType(com.sun.source.tree.Tree)">templateType</a></strong>(com.sun.source.tree.Tree&nbsp;tree)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UAnnotatedType</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree,%20java.lang.Void)">visitAnnotatedType</a></strong>(com.sun.source.tree.AnnotatedTypeTree&nbsp;tree,
+                  <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UAnnotation</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitAnnotation(com.sun.source.tree.AnnotationTree,%20java.lang.Void)">visitAnnotation</a></strong>(com.sun.source.tree.AnnotationTree&nbsp;tree,
+               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UArrayAccess</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitArrayAccess(com.sun.source.tree.ArrayAccessTree,%20java.lang.Void)">visitArrayAccess</a></strong>(com.sun.source.tree.ArrayAccessTree&nbsp;tree,
+                <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UArrayTypeTree</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitArrayType(com.sun.source.tree.ArrayTypeTree,%20java.lang.Void)">visitArrayType</a></strong>(com.sun.source.tree.ArrayTypeTree&nbsp;tree,
+              <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UAssert</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitAssert(com.sun.source.tree.AssertTree,%20java.lang.Void)">visitAssert</a></strong>(com.sun.source.tree.AssertTree&nbsp;tree,
+           <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UAssign</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitAssignment(com.sun.source.tree.AssignmentTree,%20java.lang.Void)">visitAssignment</a></strong>(com.sun.source.tree.AssignmentTree&nbsp;tree,
+               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UBinary</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitBinary(com.sun.source.tree.BinaryTree,%20java.lang.Void)">visitBinary</a></strong>(com.sun.source.tree.BinaryTree&nbsp;tree,
+           <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UBlock</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitBlock(com.sun.source.tree.BlockTree,%20java.lang.Void)">visitBlock</a></strong>(com.sun.source.tree.BlockTree&nbsp;tree,
+          <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UBreak</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitBreak(com.sun.source.tree.BreakTree,%20java.lang.Void)">visitBreak</a></strong>(com.sun.source.tree.BreakTree&nbsp;tree,
+          <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UCatch</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitCatch(com.sun.source.tree.CatchTree,%20java.lang.Void)">visitCatch</a></strong>(com.sun.source.tree.CatchTree&nbsp;tree,
+          <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UClassDecl</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitClass(com.sun.source.tree.ClassTree,%20java.lang.Void)">visitClass</a></strong>(com.sun.source.tree.ClassTree&nbsp;tree,
+          <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UAssignOp</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitCompoundAssignment(com.sun.source.tree.CompoundAssignmentTree,%20java.lang.Void)">visitCompoundAssignment</a></strong>(com.sun.source.tree.CompoundAssignmentTree&nbsp;tree,
+                       <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/refaster/UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a></code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitConditionalExpression(com.sun.source.tree.ConditionalExpressionTree,%20java.lang.Void)">visitConditionalExpression</a></strong>(com.sun.source.tree.ConditionalExpressionTree&nbsp;tree,
+                          <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UContinue</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitContinue(com.sun.source.tree.ContinueTree,%20java.lang.Void)">visitContinue</a></strong>(com.sun.source.tree.ContinueTree&nbsp;tree,
+             <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UDoWhileLoop</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitDoWhileLoop(com.sun.source.tree.DoWhileLoopTree,%20java.lang.Void)">visitDoWhileLoop</a></strong>(com.sun.source.tree.DoWhileLoopTree&nbsp;tree,
+                <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.USkip</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitEmptyStatement(com.sun.source.tree.EmptyStatementTree,%20java.lang.Void)">visitEmptyStatement</a></strong>(com.sun.source.tree.EmptyStatementTree&nbsp;tree,
+                   <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UEnhancedForLoop</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitEnhancedForLoop(com.sun.source.tree.EnhancedForLoopTree,%20java.lang.Void)">visitEnhancedForLoop</a></strong>(com.sun.source.tree.EnhancedForLoopTree&nbsp;tree,
+                    <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/refaster/UStatement.html" title="interface in com.google.errorprone.refaster">UStatement</a></code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitExpressionStatement(com.sun.source.tree.ExpressionStatementTree,%20java.lang.Void)">visitExpressionStatement</a></strong>(com.sun.source.tree.ExpressionStatementTree&nbsp;tree,
+                        <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UForLoop</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitForLoop(com.sun.source.tree.ForLoopTree,%20java.lang.Void)">visitForLoop</a></strong>(com.sun.source.tree.ForLoopTree&nbsp;tree,
+            <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/refaster/UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a></code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitIdentifier(com.sun.source.tree.IdentifierTree,%20java.lang.Void)">visitIdentifier</a></strong>(com.sun.source.tree.IdentifierTree&nbsp;tree,
+               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UIf</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitIf(com.sun.source.tree.IfTree,%20java.lang.Void)">visitIf</a></strong>(com.sun.source.tree.IfTree&nbsp;tree,
+       <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UInstanceOf</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitInstanceOf(com.sun.source.tree.InstanceOfTree,%20java.lang.Void)">visitInstanceOf</a></strong>(com.sun.source.tree.InstanceOfTree&nbsp;tree,
+               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UIntersectionType</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitIntersectionType(com.sun.source.tree.IntersectionTypeTree,%20java.lang.Void)">visitIntersectionType</a></strong>(com.sun.source.tree.IntersectionTypeTree&nbsp;tree,
+                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.ULabeledStatement</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitLabeledStatement(com.sun.source.tree.LabeledStatementTree,%20java.lang.Void)">visitLabeledStatement</a></strong>(com.sun.source.tree.LabeledStatementTree&nbsp;tree,
+                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.ULambda</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitLambdaExpression(com.sun.source.tree.LambdaExpressionTree,%20java.lang.Void)">visitLambdaExpression</a></strong>(com.sun.source.tree.LambdaExpressionTree&nbsp;tree,
+                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/refaster/ULiteral.html" title="class in com.google.errorprone.refaster">ULiteral</a></code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitLiteral(com.sun.source.tree.LiteralTree,%20java.lang.Void)">visitLiteral</a></strong>(com.sun.source.tree.LiteralTree&nbsp;tree,
+            <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UMemberReference</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitMemberReference(com.sun.source.tree.MemberReferenceTree,%20java.lang.Void)">visitMemberReference</a></strong>(com.sun.source.tree.MemberReferenceTree&nbsp;tree,
+                    <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/refaster/UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a></code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitMemberSelect(com.sun.source.tree.MemberSelectTree,%20java.lang.Void)">visitMemberSelect</a></strong>(com.sun.source.tree.MemberSelectTree&nbsp;tree,
+                 <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UMethodDecl</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitMethod(com.sun.source.tree.MethodTree,%20java.lang.Void)">visitMethod</a></strong>(com.sun.source.tree.MethodTree&nbsp;decl,
+           <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/refaster/UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a></code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitMethodInvocation(com.sun.source.tree.MethodInvocationTree,%20java.lang.Void)">visitMethodInvocation</a></strong>(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
+                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UModifiers</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitModifiers(com.sun.source.tree.ModifiersTree,%20java.lang.Void)">visitModifiers</a></strong>(com.sun.source.tree.ModifiersTree&nbsp;modifiers,
+              <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UNewArray</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitNewArray(com.sun.source.tree.NewArrayTree,%20java.lang.Void)">visitNewArray</a></strong>(com.sun.source.tree.NewArrayTree&nbsp;tree,
+             <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UNewClass</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitNewClass(com.sun.source.tree.NewClassTree,%20java.lang.Void)">visitNewClass</a></strong>(com.sun.source.tree.NewClassTree&nbsp;tree,
+             <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UTypeApply</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitParameterizedType(com.sun.source.tree.ParameterizedTypeTree,%20java.lang.Void)">visitParameterizedType</a></strong>(com.sun.source.tree.ParameterizedTypeTree&nbsp;tree,
+                      <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UParens</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitParenthesized(com.sun.source.tree.ParenthesizedTree,%20java.lang.Void)">visitParenthesized</a></strong>(com.sun.source.tree.ParenthesizedTree&nbsp;tree,
+                  <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UPrimitiveTypeTree</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitPrimitiveType(com.sun.source.tree.PrimitiveTypeTree,%20java.lang.Void)">visitPrimitiveType</a></strong>(com.sun.source.tree.PrimitiveTypeTree&nbsp;tree,
+                  <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/refaster/UStatement.html" title="interface in com.google.errorprone.refaster">UStatement</a></code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitReturn(com.sun.source.tree.ReturnTree,%20java.lang.Void)">visitReturn</a></strong>(com.sun.source.tree.ReturnTree&nbsp;tree,
+           <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.USynchronized</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitSynchronized(com.sun.source.tree.SynchronizedTree,%20java.lang.Void)">visitSynchronized</a></strong>(com.sun.source.tree.SynchronizedTree&nbsp;tree,
+                 <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UThrow</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitThrow(com.sun.source.tree.ThrowTree,%20java.lang.Void)">visitThrow</a></strong>(com.sun.source.tree.ThrowTree&nbsp;tree,
+          <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UTry</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitTry(com.sun.source.tree.TryTree,%20java.lang.Void)">visitTry</a></strong>(com.sun.source.tree.TryTree&nbsp;tree,
+        <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UTypeCast</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitTypeCast(com.sun.source.tree.TypeCastTree,%20java.lang.Void)">visitTypeCast</a></strong>(com.sun.source.tree.TypeCastTree&nbsp;tree,
+             <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UTypeParameter</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitTypeParameter(com.sun.source.tree.TypeParameterTree,%20java.lang.Void)">visitTypeParameter</a></strong>(com.sun.source.tree.TypeParameterTree&nbsp;tree,
+                  <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UUnary</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitUnary(com.sun.source.tree.UnaryTree,%20java.lang.Void)">visitUnary</a></strong>(com.sun.source.tree.UnaryTree&nbsp;tree,
+          <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UUnionType</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitUnionType(com.sun.source.tree.UnionTypeTree,%20java.lang.Void)">visitUnionType</a></strong>(com.sun.source.tree.UnionTypeTree&nbsp;tree,
+              <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/refaster/UVariableDecl.html" title="class in com.google.errorprone.refaster">UVariableDecl</a></code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitVariable(com.sun.source.tree.VariableTree,%20java.lang.Void)">visitVariable</a></strong>(com.sun.source.tree.VariableTree&nbsp;tree,
+             <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UWhileLoop</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitWhileLoop(com.sun.source.tree.WhileLoopTree,%20java.lang.Void)">visitWhileLoop</a></strong>(com.sun.source.tree.WhileLoopTree&nbsp;tree,
+              <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>com.google.errorprone.refaster.UWildcard</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/refaster/UTemplater.html#visitWildcard(com.sun.source.tree.WildcardTree,%20java.lang.Void)">visitWildcard</a></strong>(com.sun.source.tree.WildcardTree&nbsp;tree,
+             <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</code>&nbsp;</td>
+</tr>
+</table>
+<ul class="blockList">
+<li class="blockList"><a name="methods_inherited_from_class_com.sun.source.util.SimpleTreeVisitor">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;com.sun.source.util.SimpleTreeVisitor</h3>
+<code>visit, visit, visitCase, visitCompilationUnit, visitErroneous, visitImport, visitOther, visitSwitch</code></li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="methods_inherited_from_class_java.lang.Object">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;java.lang.<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></h3>
+<code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#clone()" title="class or interface in java.lang">clone</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#equals(java.lang.Object)" title="class or interface in java.lang">equals</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#finalize()" title="class or interface in java.lang">finalize</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#getClass()" title="class or interface in java.lang">getClass</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#hashCode()" title="class or interface in java.lang">hashCode</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#notify()" title="class or interface in java.lang">notify</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#notifyAll()" title="class or interface in java.lang">notifyAll</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#toString()" title="class or interface in java.lang">toString</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#wait()" title="class or interface in java.lang">wait</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#wait(long)" title="class or interface in java.lang">wait</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#wait(long,%20int)" title="class or interface in java.lang">wait</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="details">
+<ul class="blockList">
+<li class="blockList">
+<!-- ============ FIELD DETAIL =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="field_detail">
+<!--   -->
+</a>
+<h3>Field Detail</h3>
+<a name="REQUIRE_BLOCK_KEY">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>REQUIRE_BLOCK_KEY</h4>
+<pre>public static final&nbsp;com.sun.tools.javac.util.Context.Key&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang">Boolean</a>&gt; REQUIRE_BLOCK_KEY</pre>
+<div class="block">Context key to indicate that templates should be treated as BlockTemplates, regardless
+ of their structure.</div>
+</li>
+</ul>
+</li>
+</ul>
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="constructor_detail">
+<!--   -->
+</a>
+<h3>Constructor Detail</h3>
+<a name="UTemplater(java.util.Map, com.sun.tools.javac.util.Context)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>UTemplater</h4>
+<pre>public&nbsp;UTemplater(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,com.sun.tools.javac.code.Symbol.VarSymbol&gt;&nbsp;freeVariables,
+          com.sun.tools.javac.util.Context&nbsp;context)</pre>
+</li>
+</ul>
+</li>
+</ul>
+<!-- ============ METHOD DETAIL ========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method_detail">
+<!--   -->
+</a>
+<h3>Method Detail</h3>
+<a name="createTemplate(com.sun.tools.javac.util.Context, com.sun.source.tree.MethodTree)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>createTemplate</h4>
+<pre>public static&nbsp;<a href="../../../../com/google/errorprone/refaster/Template.html" title="class in com.google.errorprone.refaster">Template</a>&lt;?&gt;&nbsp;createTemplate(com.sun.tools.javac.util.Context&nbsp;context,
+                         com.sun.source.tree.MethodTree&nbsp;decl)</pre>
+<div class="block">Returns a template based on a method. One-line methods starting with a <code>return</code> statement
+ are guessed to be expression templates, and all other methods are guessed to be block
+ templates.</div>
+</li>
+</ul>
+<a name="freeExpressionVariables(com.sun.source.tree.MethodTree)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>freeExpressionVariables</h4>
+<pre>public static&nbsp;com.google.common.collect.ImmutableMap&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,com.sun.tools.javac.code.Symbol.VarSymbol&gt;&nbsp;freeExpressionVariables(com.sun.source.tree.MethodTree&nbsp;templateMethodDecl)</pre>
+</li>
+</ul>
+<a name="template(com.sun.source.tree.Tree)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>template</h4>
+<pre>public&nbsp;com.sun.source.tree.Tree&nbsp;template(com.sun.source.tree.Tree&nbsp;tree)</pre>
+</li>
+</ul>
+<a name="visitMethod(com.sun.source.tree.MethodTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitMethod</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UMethodDecl&nbsp;visitMethod(com.sun.source.tree.MethodTree&nbsp;decl,
+                                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitMethod</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitMethod</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitModifiers(com.sun.source.tree.ModifiersTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitModifiers</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UModifiers&nbsp;visitModifiers(com.sun.source.tree.ModifiersTree&nbsp;modifiers,
+                                                       <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitModifiers</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitModifiers</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="template(com.sun.source.tree.ExpressionTree)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>template</h4>
+<pre>public&nbsp;<a href="../../../../com/google/errorprone/refaster/UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>&nbsp;template(com.sun.source.tree.ExpressionTree&nbsp;tree)</pre>
+</li>
+</ul>
+<a name="templateType(com.sun.source.tree.Tree)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>templateType</h4>
+<pre>public&nbsp;<a href="../../../../com/google/errorprone/refaster/UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>&nbsp;templateType(com.sun.source.tree.Tree&nbsp;tree)</pre>
+</li>
+</ul>
+<a name="visitInstanceOf(com.sun.source.tree.InstanceOfTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitInstanceOf</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UInstanceOf&nbsp;visitInstanceOf(com.sun.source.tree.InstanceOfTree&nbsp;tree,
+                                                         <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitInstanceOf</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitInstanceOf</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitPrimitiveType(com.sun.source.tree.PrimitiveTypeTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitPrimitiveType</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UPrimitiveTypeTree&nbsp;visitPrimitiveType(com.sun.source.tree.PrimitiveTypeTree&nbsp;tree,
+                                                                   <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitPrimitiveType</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitPrimitiveType</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitLiteral(com.sun.source.tree.LiteralTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitLiteral</h4>
+<pre>public&nbsp;<a href="../../../../com/google/errorprone/refaster/ULiteral.html" title="class in com.google.errorprone.refaster">ULiteral</a>&nbsp;visitLiteral(com.sun.source.tree.LiteralTree&nbsp;tree,
+                    <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitLiteral</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitLiteral</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitParenthesized(com.sun.source.tree.ParenthesizedTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitParenthesized</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UParens&nbsp;visitParenthesized(com.sun.source.tree.ParenthesizedTree&nbsp;tree,
+                                                        <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitParenthesized</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitParenthesized</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitAssignment(com.sun.source.tree.AssignmentTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitAssignment</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UAssign&nbsp;visitAssignment(com.sun.source.tree.AssignmentTree&nbsp;tree,
+                                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitAssignment</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitAssignment</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitArrayAccess(com.sun.source.tree.ArrayAccessTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitArrayAccess</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UArrayAccess&nbsp;visitArrayAccess(com.sun.source.tree.ArrayAccessTree&nbsp;tree,
+                                                           <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitArrayAccess</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitArrayAccess</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitAnnotation(com.sun.source.tree.AnnotationTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitAnnotation</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UAnnotation&nbsp;visitAnnotation(com.sun.source.tree.AnnotationTree&nbsp;tree,
+                                                         <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitAnnotation</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitAnnotation</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitAnnotatedType</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UAnnotatedType&nbsp;visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree&nbsp;tree,
+                                                               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+</li>
+</ul>
+<a name="visitMemberSelect(com.sun.source.tree.MemberSelectTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitMemberSelect</h4>
+<pre>public&nbsp;<a href="../../../../com/google/errorprone/refaster/UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>&nbsp;visitMemberSelect(com.sun.source.tree.MemberSelectTree&nbsp;tree,
+                            <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitMemberSelect</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitMemberSelect</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitMethodInvocation(com.sun.source.tree.MethodInvocationTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitMethodInvocation</h4>
+<pre>public&nbsp;<a href="../../../../com/google/errorprone/refaster/UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>&nbsp;visitMethodInvocation(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
+                                <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitMethodInvocation</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitMethodInvocation</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitBinary(com.sun.source.tree.BinaryTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitBinary</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UBinary&nbsp;visitBinary(com.sun.source.tree.BinaryTree&nbsp;tree,
+                                                 <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitBinary</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitBinary</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitCompoundAssignment(com.sun.source.tree.CompoundAssignmentTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitCompoundAssignment</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UAssignOp&nbsp;visitCompoundAssignment(com.sun.source.tree.CompoundAssignmentTree&nbsp;tree,
+                                                               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitCompoundAssignment</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitCompoundAssignment</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitUnary(com.sun.source.tree.UnaryTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitUnary</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UUnary&nbsp;visitUnary(com.sun.source.tree.UnaryTree&nbsp;tree,
+                                               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitUnary</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitUnary</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitConditionalExpression(com.sun.source.tree.ConditionalExpressionTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitConditionalExpression</h4>
+<pre>public&nbsp;<a href="../../../../com/google/errorprone/refaster/UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>&nbsp;visitConditionalExpression(com.sun.source.tree.ConditionalExpressionTree&nbsp;tree,
+                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitConditionalExpression</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitConditionalExpression</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitNewArray(com.sun.source.tree.NewArrayTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitNewArray</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UNewArray&nbsp;visitNewArray(com.sun.source.tree.NewArrayTree&nbsp;tree,
+                                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitNewArray</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitNewArray</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitNewClass(com.sun.source.tree.NewClassTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitNewClass</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UNewClass&nbsp;visitNewClass(com.sun.source.tree.NewClassTree&nbsp;tree,
+                                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitNewClass</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitNewClass</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitClass(com.sun.source.tree.ClassTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitClass</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UClassDecl&nbsp;visitClass(com.sun.source.tree.ClassTree&nbsp;tree,
+                                                   <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitClass</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitClass</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitArrayType(com.sun.source.tree.ArrayTypeTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitArrayType</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UArrayTypeTree&nbsp;visitArrayType(com.sun.source.tree.ArrayTypeTree&nbsp;tree,
+                                                           <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitArrayType</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitArrayType</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitParameterizedType(com.sun.source.tree.ParameterizedTypeTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitParameterizedType</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UTypeApply&nbsp;visitParameterizedType(com.sun.source.tree.ParameterizedTypeTree&nbsp;tree,
+                                                               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitParameterizedType</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitParameterizedType</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitUnionType(com.sun.source.tree.UnionTypeTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitUnionType</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UUnionType&nbsp;visitUnionType(com.sun.source.tree.UnionTypeTree&nbsp;tree,
+                                                       <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitUnionType</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitUnionType</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitWildcard(com.sun.source.tree.WildcardTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitWildcard</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UWildcard&nbsp;visitWildcard(com.sun.source.tree.WildcardTree&nbsp;tree,
+                                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitWildcard</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitWildcard</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitIntersectionType(com.sun.source.tree.IntersectionTypeTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitIntersectionType</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UIntersectionType&nbsp;visitIntersectionType(com.sun.source.tree.IntersectionTypeTree&nbsp;tree,
+                                                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+</li>
+</ul>
+<a name="visitTypeParameter(com.sun.source.tree.TypeParameterTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitTypeParameter</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UTypeParameter&nbsp;visitTypeParameter(com.sun.source.tree.TypeParameterTree&nbsp;tree,
+                                                               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitTypeParameter</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitTypeParameter</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitTypeCast(com.sun.source.tree.TypeCastTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitTypeCast</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UTypeCast&nbsp;visitTypeCast(com.sun.source.tree.TypeCastTree&nbsp;tree,
+                                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitTypeCast</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitTypeCast</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitLambdaExpression(com.sun.source.tree.LambdaExpressionTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitLambdaExpression</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.ULambda&nbsp;visitLambdaExpression(com.sun.source.tree.LambdaExpressionTree&nbsp;tree,
+                                                           <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+</li>
+</ul>
+<a name="visitMemberReference(com.sun.source.tree.MemberReferenceTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitMemberReference</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UMemberReference&nbsp;visitMemberReference(com.sun.source.tree.MemberReferenceTree&nbsp;tree,
+                                                                   <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+</li>
+</ul>
+<a name="visitIdentifier(com.sun.source.tree.IdentifierTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitIdentifier</h4>
+<pre>public&nbsp;<a href="../../../../com/google/errorprone/refaster/UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>&nbsp;visitIdentifier(com.sun.source.tree.IdentifierTree&nbsp;tree,
+                          <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitIdentifier</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitIdentifier</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="template(com.sun.source.tree.StatementTree)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>template</h4>
+<pre>public&nbsp;<a href="../../../../com/google/errorprone/refaster/UStatement.html" title="interface in com.google.errorprone.refaster">UStatement</a>&nbsp;template(com.sun.source.tree.StatementTree&nbsp;tree)</pre>
+</li>
+</ul>
+<a name="visitTry(com.sun.source.tree.TryTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitTry</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UTry&nbsp;visitTry(com.sun.source.tree.TryTree&nbsp;tree,
+                                           <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitTry</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitTry</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitCatch(com.sun.source.tree.CatchTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitCatch</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UCatch&nbsp;visitCatch(com.sun.source.tree.CatchTree&nbsp;tree,
+                                               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitCatch</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitCatch</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitExpressionStatement(com.sun.source.tree.ExpressionStatementTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitExpressionStatement</h4>
+<pre>public&nbsp;<a href="../../../../com/google/errorprone/refaster/UStatement.html" title="interface in com.google.errorprone.refaster">UStatement</a>&nbsp;visitExpressionStatement(com.sun.source.tree.ExpressionStatementTree&nbsp;tree,
+                                  <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitExpressionStatement</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitExpressionStatement</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitReturn(com.sun.source.tree.ReturnTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitReturn</h4>
+<pre>public&nbsp;<a href="../../../../com/google/errorprone/refaster/UStatement.html" title="interface in com.google.errorprone.refaster">UStatement</a>&nbsp;visitReturn(com.sun.source.tree.ReturnTree&nbsp;tree,
+                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitReturn</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitReturn</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitWhileLoop(com.sun.source.tree.WhileLoopTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitWhileLoop</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UWhileLoop&nbsp;visitWhileLoop(com.sun.source.tree.WhileLoopTree&nbsp;tree,
+                                                       <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitWhileLoop</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitWhileLoop</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitVariable(com.sun.source.tree.VariableTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitVariable</h4>
+<pre>public&nbsp;<a href="../../../../com/google/errorprone/refaster/UVariableDecl.html" title="class in com.google.errorprone.refaster">UVariableDecl</a>&nbsp;visitVariable(com.sun.source.tree.VariableTree&nbsp;tree,
+                          <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitVariable</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitVariable</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitEmptyStatement(com.sun.source.tree.EmptyStatementTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitEmptyStatement</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.USkip&nbsp;visitEmptyStatement(com.sun.source.tree.EmptyStatementTree&nbsp;tree,
+                                                       <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitEmptyStatement</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitEmptyStatement</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitForLoop(com.sun.source.tree.ForLoopTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitForLoop</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UForLoop&nbsp;visitForLoop(com.sun.source.tree.ForLoopTree&nbsp;tree,
+                                                   <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitForLoop</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitForLoop</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitLabeledStatement(com.sun.source.tree.LabeledStatementTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitLabeledStatement</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.ULabeledStatement&nbsp;visitLabeledStatement(com.sun.source.tree.LabeledStatementTree&nbsp;tree,
+                                                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitLabeledStatement</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitLabeledStatement</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitBreak(com.sun.source.tree.BreakTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitBreak</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UBreak&nbsp;visitBreak(com.sun.source.tree.BreakTree&nbsp;tree,
+                                               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitBreak</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitBreak</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitContinue(com.sun.source.tree.ContinueTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitContinue</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UContinue&nbsp;visitContinue(com.sun.source.tree.ContinueTree&nbsp;tree,
+                                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitContinue</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitContinue</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitBlock(com.sun.source.tree.BlockTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitBlock</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UBlock&nbsp;visitBlock(com.sun.source.tree.BlockTree&nbsp;tree,
+                                               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitBlock</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitBlock</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitThrow(com.sun.source.tree.ThrowTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitThrow</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UThrow&nbsp;visitThrow(com.sun.source.tree.ThrowTree&nbsp;tree,
+                                               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitThrow</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitThrow</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitDoWhileLoop(com.sun.source.tree.DoWhileLoopTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitDoWhileLoop</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UDoWhileLoop&nbsp;visitDoWhileLoop(com.sun.source.tree.DoWhileLoopTree&nbsp;tree,
+                                                           <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitDoWhileLoop</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitDoWhileLoop</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitEnhancedForLoop(com.sun.source.tree.EnhancedForLoopTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitEnhancedForLoop</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UEnhancedForLoop&nbsp;visitEnhancedForLoop(com.sun.source.tree.EnhancedForLoopTree&nbsp;tree,
+                                                                   <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitEnhancedForLoop</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitEnhancedForLoop</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitSynchronized(com.sun.source.tree.SynchronizedTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitSynchronized</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.USynchronized&nbsp;visitSynchronized(com.sun.source.tree.SynchronizedTree&nbsp;tree,
+                                                             <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitSynchronized</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitSynchronized</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitIf(com.sun.source.tree.IfTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitIf</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UIf&nbsp;visitIf(com.sun.source.tree.IfTree&nbsp;tree,
+                                         <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitIf</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitIf</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitAssert(com.sun.source.tree.AssertTree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitAssert</h4>
+<pre>public&nbsp;com.google.errorprone.refaster.UAssert&nbsp;visitAssert(com.sun.source.tree.AssertTree&nbsp;tree,
+                                                 <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code>visitAssert</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.TreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>visitAssert</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="defaultAction(com.sun.source.tree.Tree, java.lang.Void)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>defaultAction</h4>
+<pre>protected&nbsp;<a href="../../../../com/google/errorprone/refaster/UTree.html" title="class in com.google.errorprone.refaster">UTree</a>&lt;?&gt;&nbsp;defaultAction(com.sun.source.tree.Tree&nbsp;tree,
+                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&nbsp;v)</pre>
+<dl>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>defaultAction</code>&nbsp;in class&nbsp;<code>com.sun.source.util.SimpleTreeVisitor&lt;com.sun.source.tree.Tree,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="template(com.sun.tools.javac.code.Type)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>template</h4>
+<pre>public&nbsp;<a href="../../../../com/google/errorprone/refaster/UType.html" title="class in com.google.errorprone.refaster">UType</a>&nbsp;template(com.sun.tools.javac.code.Type&nbsp;type)</pre>
+</li>
+</ul>
+<a name="annotationMap(com.sun.tools.javac.code.Symbol)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>annotationMap</h4>
+<pre>public static&nbsp;com.google.common.collect.ImmutableClassToInstanceMap&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;annotationMap(com.sun.tools.javac.code.Symbol&nbsp;symbol)</pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<!-- ========= END OF CLASS DATA ========= -->
+<!-- ======= START OF BOTTOM NAVBAR ====== -->
+<div class="bottomNav"><a name="navbar_bottom">
+<!--   -->
+</a><a href="#skip-navbar_bottom" title="Skip navigation links"></a><a name="navbar_bottom_firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="class-use/UTemplater.html">Use</a></li>
+<li><a href="package-tree.html">Tree</a></li>
+<li><a href="../../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../../index-all.html">Index</a></li>
+<li><a href="../../../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList">
+<li><a href="../../../../com/google/errorprone/refaster/UStaticIdent.html" title="class in com.google.errorprone.refaster"><span class="strong">Prev Class</span></a></li>
+<li><a href="../../../../com/google/errorprone/refaster/UTree.html" title="class in com.google.errorprone.refaster"><span class="strong">Next Class</span></a></li>
+</ul>
+<ul class="navList">
+<li><a href="../../../../index.html?com/google/errorprone/refaster/UTemplater.html" target="_top">Frames</a></li>
+<li><a href="UTemplater.html" target="_top">No Frames</a></li>
+</ul>
+<ul class="navList" id="allclasses_navbar_bottom">
+<li><a href="../../../../allclasses-noframe.html">All Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_bottom");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#field_summary">Field</a>&nbsp;|&nbsp;</li>
+<li><a href="#constructor_summary">Constr</a>&nbsp;|&nbsp;</li>
+<li><a href="#method_summary">Method</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li><a href="#field_detail">Field</a>&nbsp;|&nbsp;</li>
+<li><a href="#constructor_detail">Constr</a>&nbsp;|&nbsp;</li>
+<li><a href="#method_detail">Method</a></li>
+</ul>
+</div>
+<a name="skip-navbar_bottom">
+<!--   -->
+</a></div>
+<!-- ======== END OF BOTTOM NAVBAR ======= -->
+<p class="legalCopy"><small>Copyright &#169; 2015. All rights reserved.</small></p>
+</body>
+</html>

@@ -13,134 +13,44 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-Computing a hashcode for an array is tricky.  Typically you want a hashcode that depends on the value of each element in the array, but many of the common ways to do this actually return a hashcode based on the _identity_ of the array rather than its contents.
+Computing a hashcode for an array is tricky.  Typically you want a hashcode that
+depends on the value of each element in the array, but many of the common ways
+to do this actually return a hashcode based on the _identity_ of the array
+rather than its contents.
 
-This check flags attempts to compute a hashcode from an array that do not take the contents of the array into account. There are several ways to mess this up:
-  * Call the instance .hashCode() method on an array.
-  * Call the JDK method java.util.Objects#hashCode() with an argument of array type.
-  * Call the JDK method java.util.Objects#hash() or the Guava method com.google.common.base.Objects#hashCode() with multiple arguments, at least one of which is an array.
-  * Call the JDK method java.util.Objects#hash() or the Guava method com.google.common.base.Objects#hashCode() with a single argument of _primitive_ array type. Because these are varags methods that take Object..., the primitive array is autoboxed into a single-element Object array, and these methods use the identity hashcode of the primitive array rather than examining its contents. Note that calling these methods on an argument of _Object_ array type actually does the right thing because no boxing is needed.
+This check flags attempts to compute a hashcode from an array that do not take
+the contents of the array into account. There are several ways to mess this up:
 
-Please use either java.util.Arrays#hashCode() (for single-dimensional arrays) or java.util.Arrays#deepHashCode() (for multidimensional arrays) to compute a hash value that depends on the contents of the array. If you really intended to compute the identity hash code, consider using java.lang.System#identityHashCode() instead for clarity.
+  * Call the instance `.hashCode()` method on an array.
+
+  * Call the JDK method `java.util.Objects#hashCode()` with an argument of array
+    type.
+
+  * Call the JDK method `java.util.Objects#hash()` or the Guava method
+    `com.google.common.base.Objects#hashCode()` with multiple arguments, at
+    least one of which is an array.
+
+  * Call the JDK method `java.util.Objects#hash()` or the Guava method
+    `com.google.common.base.Objects#hashCode()` with a single argument of
+    _primitive_ array type. Because these are varags methods that take 
+    `Object...`, the primitive array is autoboxed into a single-element Object
+    array, and these methods use the identity hashcode of the primitive array
+    rather than examining its contents. Note that calling these methods on an
+    argument of _Object_ array type actually does the right thing because no
+    boxing is needed.
+
+Please use either `java.util.Arrays#hashCode()` (for single-dimensional arrays)
+or `java.util.Arrays#deepHashCode()` (for multidimensional arrays) to compute a
+hash value that depends on the contents of the array. If you really intended to
+compute the identity hash code, consider using
+`java.lang.System#identityHashCode()` instead for clarity.
 
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("ArrayHashCode")` annotation to the enclosing element.
 
 ----------
 
-## Examples
-__ArrayHashCodeNegativeCases.java__
-
-{% highlight java %}
-/*
- * Copyright 2014 Google Inc. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package com.google.errorprone.bugpatterns;
-
-import com.google.common.base.Objects;
-
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
-public class ArrayHashCodeNegativeCases {
-  
-  private Object[] objArray = {1, 2, 3};
-  private String[] stringArray = {"1", "2", "3"};
-  private int[] intArray = {1, 2, 3};
-  private byte[] byteArray = {1, 2, 3};
-  private Object obj = new Object();
-  private String str = "foo";
-  
-  public void objectHashCodeOnNonArrayType() {
-    int hashCode;
-    hashCode = obj.hashCode();
-    hashCode = str.hashCode();
-  }
-  
-  public void varagsHashCodeOnNonArrayType() {
-    int hashCode;
-    hashCode = Objects.hashCode(obj);    
-    hashCode = Objects.hashCode(str);
-  }
-  
-  public void varagsHashCodeOnObjectOrStringArray() {
-    int hashCode;
-    hashCode = Objects.hashCode(objArray);
-    hashCode = Objects.hashCode((Object[]) stringArray);
-  }
-}
-{% endhighlight %}
-
-__ArrayHashCodeNegativeCases2.java__
-
-{% highlight java %}
-/*
- * Copyright 2014 Google Inc. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package com.google.errorprone.bugpatterns;
-
-import java.util.Objects;
-
-/**
- * Java 7 specific tests
- * 
- * @author eaftan@google.com (Eddie Aftandilian)
- */
-public class ArrayHashCodeNegativeCases2 {
-  
-  private Object[] objArray = {1, 2, 3};
-  private String[] stringArray = {"1", "2", "3"};
-  private int[] intArray = {1, 2, 3};
-  private byte[] byteArray = {1, 2, 3};
-  private Object obj = new Object();
-  private String str = "foo";
-    
-  public void nonVaragsHashCodeOnNonArrayType() {
-    int hashCode;
-    hashCode = Objects.hashCode(obj);    
-    hashCode = Objects.hashCode(str);
-  }
-    
-  public void varagsHashCodeOnNonArrayType() {
-    int hashCode;
-    hashCode = Objects.hash(obj);
-    hashCode = Objects.hash(str);
-  }
-  
-  public void varagsHashCodeOnObjectOrStringArray() {
-    int hashCode;
-    hashCode = Objects.hash(objArray);  
-    hashCode = Objects.hash((Object[]) stringArray);    
-  }
-}
-{% endhighlight %}
-
+### Positive examples
 __ArrayHashCodePositiveCases.java__
 
 {% highlight java %}
@@ -312,6 +222,119 @@ public class ArrayHashCodePositiveCases2 {
     hashCode = Objects.hash(obj1, obj2, multidimensionalIntArray);
     // BUG: Diagnostic contains: Objects.hash(obj1, obj2, Arrays.deepHashCode(multidimensionalStringArray))
     hashCode = Objects.hash(obj1, obj2, multidimensionalStringArray);
+  }
+}
+{% endhighlight %}
+
+### Negative examples
+__ArrayHashCodeNegativeCases.java__
+
+{% highlight java %}
+/*
+ * Copyright 2014 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.google.errorprone.bugpatterns;
+
+import com.google.common.base.Objects;
+
+/**
+ * @author eaftan@google.com (Eddie Aftandilian)
+ */
+public class ArrayHashCodeNegativeCases {
+  
+  private Object[] objArray = {1, 2, 3};
+  private String[] stringArray = {"1", "2", "3"};
+  private int[] intArray = {1, 2, 3};
+  private byte[] byteArray = {1, 2, 3};
+  private Object obj = new Object();
+  private String str = "foo";
+  
+  public void objectHashCodeOnNonArrayType() {
+    int hashCode;
+    hashCode = obj.hashCode();
+    hashCode = str.hashCode();
+  }
+  
+  public void varagsHashCodeOnNonArrayType() {
+    int hashCode;
+    hashCode = Objects.hashCode(obj);    
+    hashCode = Objects.hashCode(str);
+  }
+  
+  public void varagsHashCodeOnObjectOrStringArray() {
+    int hashCode;
+    hashCode = Objects.hashCode(objArray);
+    hashCode = Objects.hashCode((Object[]) stringArray);
+  }
+}
+{% endhighlight %}
+
+__ArrayHashCodeNegativeCases2.java__
+
+{% highlight java %}
+/*
+ * Copyright 2014 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.google.errorprone.bugpatterns;
+
+import java.util.Objects;
+
+/**
+ * Java 7 specific tests
+ * 
+ * @author eaftan@google.com (Eddie Aftandilian)
+ */
+public class ArrayHashCodeNegativeCases2 {
+  
+  private Object[] objArray = {1, 2, 3};
+  private String[] stringArray = {"1", "2", "3"};
+  private int[] intArray = {1, 2, 3};
+  private byte[] byteArray = {1, 2, 3};
+  private Object obj = new Object();
+  private String str = "foo";
+    
+  public void nonVaragsHashCodeOnNonArrayType() {
+    int hashCode;
+    hashCode = Objects.hashCode(obj);    
+    hashCode = Objects.hashCode(str);
+  }
+    
+  public void varagsHashCodeOnNonArrayType() {
+    int hashCode;
+    hashCode = Objects.hash(obj);
+    hashCode = Objects.hash(str);
+  }
+  
+  public void varagsHashCodeOnObjectOrStringArray() {
+    int hashCode;
+    hashCode = Objects.hash(objArray);  
+    hashCode = Objects.hash((Object[]) stringArray);    
   }
 }
 {% endhighlight %}

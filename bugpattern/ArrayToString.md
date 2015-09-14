@@ -20,46 +20,7 @@ Suppress false positives by adding an `@SuppressWarnings("ArrayToString")` annot
 
 ----------
 
-## Examples
-__ArrayToStringNegativeCases.java__
-
-{% highlight java %}
-/*
- * Copyright 2012 Google Inc. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package com.google.errorprone.bugpatterns;
-
-import java.util.*;
-
-/**
- * @author adgar@google.com (Mike Edgar)
- */
-public class ArrayToStringNegativeCases {
-  public void objectEquals() {
-    Object a = new Object();
-
-    if (a.toString().isEmpty()) {
-      System.out.println("string is empty!");
-    } else {
-      System.out.println("string is not empty!");
-    }
-  }
-}
-{% endhighlight %}
-
+### Positive examples
 __ArrayToStringPositiveCases.java__
 
 {% highlight java %}
@@ -136,6 +97,46 @@ public class ArrayToStringPositiveCases {
     Exception e = new RuntimeException();
     // BUG: Diagnostic contains: Throwables.getStackTraceAsString(e)
     System.out.println(e.getStackTrace().toString());
+  }
+}
+{% endhighlight %}
+
+### Negative examples
+__ArrayToStringNegativeCases.java__
+
+{% highlight java %}
+/*
+ * Copyright 2012 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.google.errorprone.bugpatterns;
+
+import java.util.*;
+
+/**
+ * @author adgar@google.com (Mike Edgar)
+ */
+public class ArrayToStringNegativeCases {
+  public void objectEquals() {
+    Object a = new Object();
+
+    if (a.toString().isEmpty()) {
+      System.out.println("string is empty!");
+    } else {
+      System.out.println("string is not empty!");
+    }
   }
 }
 {% endhighlight %}

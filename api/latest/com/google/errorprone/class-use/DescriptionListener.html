@@ -82,6 +82,18 @@
 <td class="colFirst"><a href="#com.google.errorprone.analysis">com.google.errorprone.analysis</a></td>
 <td class="colLast">&nbsp;</td>
 </tr>
+<tr class="altColor">
+<td class="colFirst"><a href="#com.google.errorprone.apply">com.google.errorprone.apply</a></td>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><a href="#com.google.errorprone.refaster">com.google.errorprone.refaster</a></td>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><a href="#com.google.errorprone.scanner">com.google.errorprone.scanner</a></td>
+<td class="colLast">&nbsp;</td>
+</tr>
 </tbody>
 </table>
 </li>
@@ -102,6 +114,29 @@
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../../com/google/errorprone/JavacErrorDescriptionListener.html" title="class in com.google.errorprone">JavacErrorDescriptionListener</a></strong></code>
 <div class="block">Making our errors appear to the user and break their build.</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
+<caption><span>Methods in <a href="../../../../com/google/errorprone/package-summary.html">com.google.errorprone</a> with parameters of type <a href="../../../../com/google/errorprone/DescriptionListener.html" title="interface in com.google.errorprone">DescriptionListener</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><span class="strong">CompositeCodeTransformer.</span><code><strong><a href="../../../../com/google/errorprone/CompositeCodeTransformer.html#apply(com.sun.source.util.TreePath,%20com.sun.tools.javac.util.Context,%20com.google.errorprone.DescriptionListener)">apply</a></strong>(com.sun.source.util.TreePath&nbsp;path,
+     com.sun.tools.javac.util.Context&nbsp;context,
+     <a href="../../../../com/google/errorprone/DescriptionListener.html" title="interface in com.google.errorprone">DescriptionListener</a>&nbsp;listener)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><span class="strong">CodeTransformer.</span><code><strong><a href="../../../../com/google/errorprone/CodeTransformer.html#apply(com.sun.source.util.TreePath,%20com.sun.tools.javac.util.Context,%20com.google.errorprone.DescriptionListener)">apply</a></strong>(com.sun.source.util.TreePath&nbsp;path,
+     com.sun.tools.javac.util.Context&nbsp;context,
+     <a href="../../../../com/google/errorprone/DescriptionListener.html" title="interface in com.google.errorprone">DescriptionListener</a>&nbsp;listener)</code>
+<div class="block">Apply recursively from the leaf node in the given <code>TreePath</code>.</div>
 </td>
 </tr>
 </tbody>
@@ -187,6 +222,67 @@
        com.sun.tools.javac.util.Context&nbsp;context,
        <a href="../../../../com/google/errorprone/analysis/AnalysesConfig.html" title="class in com.google.errorprone.analysis">AnalysesConfig</a>&nbsp;configuration,
        <a href="../../../../com/google/errorprone/DescriptionListener.html" title="interface in com.google.errorprone">DescriptionListener</a>&nbsp;listener)</code>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList"><a name="com.google.errorprone.apply">
+<!--   -->
+</a>
+<h3>Uses of <a href="../../../../com/google/errorprone/DescriptionListener.html" title="interface in com.google.errorprone">DescriptionListener</a> in <a href="../../../../com/google/errorprone/apply/package-summary.html">com.google.errorprone.apply</a></h3>
+<table border="0" cellpadding="3" cellspacing="0" summary="Use table, listing classes, and an explanation">
+<caption><span>Classes in <a href="../../../../com/google/errorprone/apply/package-summary.html">com.google.errorprone.apply</a> that implement <a href="../../../../com/google/errorprone/DescriptionListener.html" title="interface in com.google.errorprone">DescriptionListener</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Class and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/apply/DescriptionBasedDiff.html" title="class in com.google.errorprone.apply">DescriptionBasedDiff</a></strong></code>
+<div class="block">Implementation of a <a href="../../../../com/google/errorprone/apply/Diff.html" title="interface in com.google.errorprone.apply"><code>Diff</code></a> that performs the modifications that are passed to its
+ <a href="../../../../com/google/errorprone/apply/DescriptionBasedDiff.html#onDescribed(com.google.errorprone.matchers.Description)"><code>DescriptionBasedDiff.onDescribed(com.google.errorprone.matchers.Description)</code></a> method, with no formatting.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList"><a name="com.google.errorprone.refaster">
+<!--   -->
+</a>
+<h3>Uses of <a href="../../../../com/google/errorprone/DescriptionListener.html" title="interface in com.google.errorprone">DescriptionListener</a> in <a href="../../../../com/google/errorprone/refaster/package-summary.html">com.google.errorprone.refaster</a></h3>
+<table border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
+<caption><span>Methods in <a href="../../../../com/google/errorprone/refaster/package-summary.html">com.google.errorprone.refaster</a> with parameters of type <a href="../../../../com/google/errorprone/DescriptionListener.html" title="interface in com.google.errorprone">DescriptionListener</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><span class="strong">RefasterRule.</span><code><strong><a href="../../../../com/google/errorprone/refaster/RefasterRule.html#apply(com.sun.source.util.TreePath,%20com.sun.tools.javac.util.Context,%20com.google.errorprone.DescriptionListener)">apply</a></strong>(com.sun.source.util.TreePath&nbsp;path,
+     com.sun.tools.javac.util.Context&nbsp;context,
+     <a href="../../../../com/google/errorprone/DescriptionListener.html" title="interface in com.google.errorprone">DescriptionListener</a>&nbsp;listener)</code>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList"><a name="com.google.errorprone.scanner">
+<!--   -->
+</a>
+<h3>Uses of <a href="../../../../com/google/errorprone/DescriptionListener.html" title="interface in com.google.errorprone">DescriptionListener</a> in <a href="../../../../com/google/errorprone/scanner/package-summary.html">com.google.errorprone.scanner</a></h3>
+<table border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
+<caption><span>Methods in <a href="../../../../com/google/errorprone/scanner/package-summary.html">com.google.errorprone.scanner</a> with parameters of type <a href="../../../../com/google/errorprone/DescriptionListener.html" title="interface in com.google.errorprone">DescriptionListener</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><span class="strong">ErrorProneScannerTransformer.</span><code><strong><a href="../../../../com/google/errorprone/scanner/ErrorProneScannerTransformer.html#apply(com.sun.source.util.TreePath,%20com.sun.tools.javac.util.Context,%20com.google.errorprone.DescriptionListener)">apply</a></strong>(com.sun.source.util.TreePath&nbsp;tree,
+     com.sun.tools.javac.util.Context&nbsp;context,
+     <a href="../../../../com/google/errorprone/DescriptionListener.html" title="interface in com.google.errorprone">DescriptionListener</a>&nbsp;listener)</code>&nbsp;</td>
 </tr>
 </tbody>
 </table>

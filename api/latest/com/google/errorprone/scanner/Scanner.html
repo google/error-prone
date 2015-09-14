@@ -35,7 +35,7 @@
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../com/google/errorprone/scanner/ErrorProneScanner.html" title="class in com.google.errorprone.scanner"><span class="strong">Prev Class</span></a></li>
+<li><a href="../../../../com/google/errorprone/scanner/ErrorProneScannerTransformer.html" title="class in com.google.errorprone.scanner"><span class="strong">Prev Class</span></a></li>
 <li><a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><span class="strong">Next Class</span></a></li>
 </ul>
 <ul class="navList">
@@ -170,33 +170,26 @@ extends com.sun.source.util.TreePathScanner&lt;<a href="http://docs.oracle.com/j
 </td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/scanner/Scanner.html#matchCompilationUnit(com.sun.source.tree.CompilationUnitTree,%20com.google.errorprone.VisitorState)">matchCompilationUnit</a></strong>(com.sun.source.tree.CompilationUnitTree&nbsp;tree,
-                    <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
-<div class="block">Performs a non-recursive visit of a <code>CompilationUnitTree</code>.</div>
-</td>
-</tr>
-<tr class="rowColor">
 <td class="colFirst"><code>protected &lt;T extends com.sun.source.tree.Tree&gt;&nbsp;<br>void</code></td>
 <td class="colLast"><code><strong><a href="../../../../com/google/errorprone/scanner/Scanner.html#reportMatch(com.google.errorprone.matchers.Description,%20T,%20com.google.errorprone.VisitorState)">reportMatch</a></strong>(<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;description,
            T&nbsp;match,
            <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a></code></td>
 <td class="colLast"><code><strong><a href="../../../../com/google/errorprone/scanner/Scanner.html#scan(com.sun.source.util.TreePath,%20com.google.errorprone.VisitorState)">scan</a></strong>(com.sun.source.util.TreePath&nbsp;path,
     <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
 <div class="block">Scan a tree from a position identified by a TreePath.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a></code></td>
 <td class="colLast"><code><strong><a href="../../../../com/google/errorprone/scanner/Scanner.html#scan(com.sun.source.tree.Tree,%20com.google.errorprone.VisitorState)">scan</a></strong>(com.sun.source.tree.Tree&nbsp;tree,
     <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
 <div class="block">Scan a single node.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="../../../../com/google/errorprone/BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a>&gt;</code></td>
 <td class="colLast"><code><strong><a href="../../../../com/google/errorprone/scanner/Scanner.html#severityMap()">severityMap</a></strong>()</code>
 <div class="block">Returns a mapping between the canonical names of checks and their <a href="../../../../com/google/errorprone/BugPattern.SeverityLevel.html" title="enum in com.google.errorprone"><code>BugPattern.SeverityLevel</code></a>.</div>
@@ -215,7 +208,7 @@ extends com.sun.source.util.TreePathScanner&lt;<a href="http://docs.oracle.com/j
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;com.sun.source.util.TreeScanner</h3>
-<code>reduce, scan, visitAnnotatedType, visitAnnotation, visitArrayAccess, visitArrayType, visitAssert, visitAssignment, visitBinary, visitBlock, visitBreak, visitCase, visitCatch, visitClass, visitCompilationUnit, visitCompoundAssignment, visitConditionalExpression, visitContinue, visitDoWhileLoop, visitEmptyStatement, visitEnhancedForLoop, visitErroneous, visitExpressionStatement, visitForLoop, visitIdentifier, visitIf, visitImport, visitInstanceOf, visitIntersectionType, visitLabeledStatement, visitLambdaExpression, visitLiteral, visitMemberReference, visitMemberSelect, visitMethod, visitMethodInvocation, visitModifiers, visitNewArray, visitNewClass, visitOther, visitPackage, visitParameterizedType, visitParenthesized, visitPrimitiveType, visitReturn, visitSwitch, visitSynchronized, visitThrow, visitTry, visitTypeCast, visitTypeParameter, visitUnary, visitUnionType, visitVariable, visitWhileLoop, visitWildcard</code></li>
+<code>reduce, scan, visitAnnotation, visitArrayAccess, visitArrayType, visitAssert, visitAssignment, visitBinary, visitBlock, visitBreak, visitCase, visitCatch, visitClass, visitCompilationUnit, visitCompoundAssignment, visitConditionalExpression, visitContinue, visitDoWhileLoop, visitEmptyStatement, visitEnhancedForLoop, visitErroneous, visitExpressionStatement, visitForLoop, visitIdentifier, visitIf, visitImport, visitInstanceOf, visitLabeledStatement, visitLiteral, visitMemberSelect, visitMethod, visitMethodInvocation, visitModifiers, visitNewArray, visitNewClass, visitOther, visitParameterizedType, visitParenthesized, visitPrimitiveType, visitReturn, visitSwitch, visitSynchronized, visitThrow, visitTry, visitTypeCast, visitTypeParameter, visitUnary, visitUnionType, visitVariable, visitWhileLoop, visitWildcard</code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods_inherited_from_class_java.lang.Object">
@@ -325,22 +318,11 @@ extends com.sun.source.util.TreePathScanner&lt;<a href="http://docs.oracle.com/j
 <a name="severityMap()">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>severityMap</h4>
 <pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="../../../../com/google/errorprone/BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a>&gt;&nbsp;severityMap()</pre>
 <div class="block">Returns a mapping between the canonical names of checks and their <a href="../../../../com/google/errorprone/BugPattern.SeverityLevel.html" title="enum in com.google.errorprone"><code>BugPattern.SeverityLevel</code></a>.</div>
-</li>
-</ul>
-<a name="matchCompilationUnit(com.sun.source.tree.CompilationUnitTree, com.google.errorprone.VisitorState)">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>matchCompilationUnit</h4>
-<pre>public&nbsp;void&nbsp;matchCompilationUnit(com.sun.source.tree.CompilationUnitTree&nbsp;tree,
-                        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
-<div class="block">Performs a non-recursive visit of a <code>CompilationUnitTree</code>.</div>
 </li>
 </ul>
 </li>
@@ -369,7 +351,7 @@ extends com.sun.source.util.TreePathScanner&lt;<a href="http://docs.oracle.com/j
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../com/google/errorprone/scanner/ErrorProneScanner.html" title="class in com.google.errorprone.scanner"><span class="strong">Prev Class</span></a></li>
+<li><a href="../../../../com/google/errorprone/scanner/ErrorProneScannerTransformer.html" title="class in com.google.errorprone.scanner"><span class="strong">Prev Class</span></a></li>
 <li><a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><span class="strong">Next Class</span></a></li>
 </ul>
 <ul class="navList">

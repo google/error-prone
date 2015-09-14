@@ -2,6 +2,7 @@ com.google.errorprone
 com.google.errorprone.analysis
 com.google.errorprone.annotations
 com.google.errorprone.annotations.concurrent
+com.google.errorprone.apply
 com.google.errorprone.bugpatterns
 com.google.errorprone.bugpatterns.threadsafety
 com.google.errorprone.dataflow
@@ -12,6 +13,8 @@ com.google.errorprone.matchers
 com.google.errorprone.matchers.method
 com.google.errorprone.predicates
 com.google.errorprone.predicates.type
+com.google.errorprone.refaster
+com.google.errorprone.refaster.annotation
 com.google.errorprone.scanner
 com.google.errorprone.suppliers
 com.google.errorprone.util

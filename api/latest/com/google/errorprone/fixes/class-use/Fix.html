@@ -92,6 +92,10 @@
 <div class="block">A predicate DSL for matching javac AST nodes.</div>
 </td>
 </tr>
+<tr class="rowColor">
+<td class="colFirst"><a href="#com.google.errorprone.refaster">com.google.errorprone.refaster</a></td>
+<td class="colLast">&nbsp;</td>
+</tr>
 </tbody>
 </table>
 </li>
@@ -284,6 +288,40 @@
            <a href="../../../../../com/google/errorprone/BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a>&nbsp;severity)</code>
 <div class="block">TODO(cushon): Remove this constructor and ensure that there's always a check name.</div>
 </td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList"><a name="com.google.errorprone.refaster">
+<!--   -->
+</a>
+<h3>Uses of <a href="../../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a> in <a href="../../../../../com/google/errorprone/refaster/package-summary.html">com.google.errorprone.refaster</a></h3>
+<table border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
+<caption><span>Methods in <a href="../../../../../com/google/errorprone/refaster/package-summary.html">com.google.errorprone.refaster</a> that return <a href="../../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>protected static <a href="../../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></td>
+<td class="colLast"><span class="strong">Template.</span><code><strong><a href="../../../../../com/google/errorprone/refaster/Template.html#addImports(com.google.errorprone.refaster.Inliner,%20com.google.errorprone.fixes.SuggestedFix.Builder)">addImports</a></strong>(<a href="../../../../../com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a>&nbsp;inliner,
+          <a href="../../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fix)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></td>
+<td class="colLast"><span class="strong">BlockTemplate.</span><code><strong><a href="../../../../../com/google/errorprone/refaster/BlockTemplate.html#replace(com.google.errorprone.refaster.BlockTemplateMatch)">replace</a></strong>(com.google.errorprone.refaster.BlockTemplateMatch&nbsp;match)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></td>
+<td class="colLast"><span class="strong">ExpressionTemplate.</span><code><strong><a href="../../../../../com/google/errorprone/refaster/ExpressionTemplate.html#replace(com.google.errorprone.refaster.ExpressionTemplateMatch)">replace</a></strong>(com.google.errorprone.refaster.ExpressionTemplateMatch&nbsp;match)</code>
+<div class="block">Generates a <a href="../../../../../com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes"><code>SuggestedFix</code></a> replacing the specified match (usually of another template)
+ with this template.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>abstract <a href="../../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></td>
+<td class="colLast"><span class="strong">Template.</span><code><strong><a href="../../../../../com/google/errorprone/refaster/Template.html#replace(M)">replace</a></strong>(<a href="../../../../../com/google/errorprone/refaster/Template.html" title="type parameter in Template">M</a>&nbsp;match)</code>&nbsp;</td>
 </tr>
 </tbody>
 </table>

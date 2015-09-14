@@ -20,7 +20,61 @@ Suppress false positives by adding an `@SuppressWarnings("OverlappingQualifierAn
 
 ----------
 
-## Examples
+### Positive examples
+__InjectOverlappingQualifierAndScopeAnnotationPositiveCases.java__
+
+{% highlight java %}
+/*
+ * Copyright 2013 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.google.errorprone.bugpatterns;
+
+/**
+ * @author sgoldfeder@google.com (Steven Goldfeder)
+ */
+public class InjectOverlappingQualifierAndScopeAnnotationPositiveCases {
+ 
+  // BUG: Diagnostic contains: remove
+  @javax.inject.Scope
+  // BUG: Diagnostic contains: remove
+  @javax.inject.Qualifier
+  @interface JavaxScopeAndJavaxQualifier {}
+    
+  // BUG: Diagnostic contains: remove
+  @com.google.inject.ScopeAnnotation
+  // BUG: Diagnostic contains: remove
+  @javax.inject.Qualifier
+  @interface GuiceScopeAndJavaxQualifier {}
+
+  // BUG: Diagnostic contains: remove
+  @com.google.inject.ScopeAnnotation
+  // BUG: Diagnostic contains: remove
+  @com.google.inject.BindingAnnotation
+  @interface GuiceScopeAndGuiceBindingAnnotation {}
+    
+  // BUG: Diagnostic contains: remove
+  @javax.inject.Scope
+  // BUG: Diagnostic contains: remove
+  @com.google.inject.BindingAnnotation
+  @interface JavaxScopeAndGuiceBindingAnnotation {}
+
+}
+{% endhighlight %}
+
+### Negative examples
 __InjectOverlappingQualifierAndScopeAnnotationNegativeCases.java__
 
 {% highlight java %}
@@ -80,59 +134,6 @@ public class InjectOverlappingQualifierAndScopeAnnotationNegativeCases {
   @com.google.inject.BindingAnnotation
   @interface JavaxScopeAndGuiceBindingAnnotation {}
   
-}
-{% endhighlight %}
-
-__InjectOverlappingQualifierAndScopeAnnotationPositiveCases.java__
-
-{% highlight java %}
-/*
- * Copyright 2013 Google Inc. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package com.google.errorprone.bugpatterns;
-
-/**
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
-public class InjectOverlappingQualifierAndScopeAnnotationPositiveCases {
- 
-  // BUG: Diagnostic contains: remove
-  @javax.inject.Scope
-  // BUG: Diagnostic contains: remove
-  @javax.inject.Qualifier
-  @interface JavaxScopeAndJavaxQualifier {}
-    
-  // BUG: Diagnostic contains: remove
-  @com.google.inject.ScopeAnnotation
-  // BUG: Diagnostic contains: remove
-  @javax.inject.Qualifier
-  @interface GuiceScopeAndJavaxQualifier {}
-
-  // BUG: Diagnostic contains: remove
-  @com.google.inject.ScopeAnnotation
-  // BUG: Diagnostic contains: remove
-  @com.google.inject.BindingAnnotation
-  @interface GuiceScopeAndGuiceBindingAnnotation {}
-    
-  // BUG: Diagnostic contains: remove
-  @javax.inject.Scope
-  // BUG: Diagnostic contains: remove
-  @com.google.inject.BindingAnnotation
-  @interface JavaxScopeAndGuiceBindingAnnotation {}
-
 }
 {% endhighlight %}
 

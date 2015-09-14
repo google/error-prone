@@ -22,69 +22,7 @@ Suppress false positives by adding an `@SuppressWarnings("MisusedWeekYear")` ann
 
 ----------
 
-## Examples
-__MisusedWeekYearNegativeCases.java__
-
-{% highlight java %}
-/*
- * Copyright 2015 Google Inc. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package com.google.errorprone.bugpatterns;
-
-import java.text.DateFormatSymbols;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-
-public class MisusedWeekYearNegativeCases {
-  void testLiteralPattern() {
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    simpleDateFormat = new SimpleDateFormat("MM-dd");
-    simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", DateFormatSymbols.getInstance());
-    simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-    
-    // Don't flag if the pattern contains "ww", the week-in-year specifier.
-    simpleDateFormat = new SimpleDateFormat("YYYY-ww");
-  }
-  
-  void testLiteralPatternWithFolding() {
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy" + "-MM-dd");
-  }
-  
-  private static final String WEEK_YEAR_PATTERN = "yyyy-MM-dd";
-  
-  void testConstantPattern() {
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(WEEK_YEAR_PATTERN);
-  }
-  
-  private static class MySimpleDateFormat extends SimpleDateFormat {
-    public MySimpleDateFormat(String pattern) {
-      super(pattern);
-    }
-  }
-  
-  // Don't match on subtypes, since we don't know what their applyPattern and 
-  // applyLocalizedPattern methods might do.
-  void testSubtype() {
-    MySimpleDateFormat mySdf = new MySimpleDateFormat("YYYY-MM-dd");
-    mySdf.applyPattern("YYYY-MM-dd");
-    mySdf.applyLocalizedPattern("YYYY-MM-dd");
-  }
-}
-{% endhighlight %}
-
+### Positive examples
 __MisusedWeekYearPositiveCases.java__
 
 {% highlight java %}
@@ -161,6 +99,69 @@ public class MisusedWeekYearPositiveCases {
     sdf.applyPattern(WEEK_YEAR_PATTERN);
     // BUG: Diagnostic contains:
     sdf.applyLocalizedPattern(WEEK_YEAR_PATTERN);
+  }
+}
+{% endhighlight %}
+
+### Negative examples
+__MisusedWeekYearNegativeCases.java__
+
+{% highlight java %}
+/*
+ * Copyright 2015 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.google.errorprone.bugpatterns;
+
+import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
+public class MisusedWeekYearNegativeCases {
+  void testLiteralPattern() {
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    simpleDateFormat = new SimpleDateFormat("MM-dd");
+    simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", DateFormatSymbols.getInstance());
+    simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+    
+    // Don't flag if the pattern contains "ww", the week-in-year specifier.
+    simpleDateFormat = new SimpleDateFormat("YYYY-ww");
+  }
+  
+  void testLiteralPatternWithFolding() {
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy" + "-MM-dd");
+  }
+  
+  private static final String WEEK_YEAR_PATTERN = "yyyy-MM-dd";
+  
+  void testConstantPattern() {
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(WEEK_YEAR_PATTERN);
+  }
+  
+  private static class MySimpleDateFormat extends SimpleDateFormat {
+    public MySimpleDateFormat(String pattern) {
+      super(pattern);
+    }
+  }
+  
+  // Don't match on subtypes, since we don't know what their applyPattern and 
+  // applyLocalizedPattern methods might do.
+  void testSubtype() {
+    MySimpleDateFormat mySdf = new MySimpleDateFormat("YYYY-MM-dd");
+    mySdf.applyPattern("YYYY-MM-dd");
+    mySdf.applyLocalizedPattern("YYYY-MM-dd");
   }
 }
 {% endhighlight %}

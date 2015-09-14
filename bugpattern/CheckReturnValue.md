@@ -15,55 +15,34 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 _Alternate names: ResultOfMethodCallIgnored, ReturnValueIgnored_
 
 ## The problem
-The JSR 305 @CheckReturnValue annotation marks methods whose return values should be checked.  This error is triggered when one of these methods is called but the result is not used.
+The JSR 305 `@CheckReturnValue` annotation marks methods whose return values
+should be checked.  This error is triggered when one of these methods is called
+but the result is not used.
 
-@CheckReturnValue may be applied to a class or package to indicate that all methods in that class or package must have their return values checked.  For convenience, we provide an annotation, @CanIgnoreReturnValue, to exempt specific methods or classes from this behavior.  @CanIgnoreReturnValue is available from the Error Prone annotations package, `com.google.errorprone.annotations`.
+`@CheckReturnValue` may be applied to a class or package to indicate that all
+methods in that class or package must have their return values checked.  For
+convenience, we provide an annotation, `@CanIgnoreReturnValue`, to exempt
+specific methods or classes from this behavior.  `@CanIgnoreReturnValue` is
+available from the Error Prone annotations package,
+`com.google.errorprone.annotations`.
+
+If you really want to ignore the return value of a method annotated with
+`@CheckReturnValue`, a cleaner alternative to `@SuppressWarnings` is to assign
+the result to a variable named `unused`:
+
+```java
+public void setNameFormat(String nameFormat) {
+  String unused = format(nameFormat, 0); // fail fast if the format is bad or null
+  this.nameFormat = nameFormat;
+}
+```
 
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("CheckReturnValue")` annotation to the enclosing element.
 
 ----------
 
-## Examples
-__CheckReturnValueNegativeCases.java__
-
-{% highlight java %}
-/*
- * Copyright 2012 Google Inc. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package com.google.errorprone.bugpatterns;
-
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
-public class CheckReturnValueNegativeCases {
-  
-  public void test1() {
-    test2();
-    Object obj = new String();
-    obj.toString();
-  }
-  
-  @SuppressWarnings("foo")  // wrong annotation
-  public void test2() { 
-  }
-  
-}
-{% endhighlight %}
-
+### Positive examples
 __CheckReturnValuePositiveCases.java__
 
 {% highlight java %}
@@ -196,6 +175,46 @@ public class CheckReturnValuePositiveCases {
       return lb1();
     }
   }
+}
+{% endhighlight %}
+
+### Negative examples
+__CheckReturnValueNegativeCases.java__
+
+{% highlight java %}
+/*
+ * Copyright 2012 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.google.errorprone.bugpatterns;
+
+/**
+ * @author eaftan@google.com (Eddie Aftandilian)
+ */
+public class CheckReturnValueNegativeCases {
+  
+  public void test1() {
+    test2();
+    Object obj = new String();
+    obj.toString();
+  }
+  
+  @SuppressWarnings("foo")  // wrong annotation
+  public void test2() { 
+  }
+  
 }
 {% endhighlight %}
 
