@@ -18,69 +18,127 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.argument;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
-import static com.google.errorprone.suppliers.Suppliers.genericTypeOfType;
-import static com.google.errorprone.suppliers.Suppliers.receiverType;
 
+import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
-import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
+import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.tools.javac.code.Type;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
- * @author alexeagle@google.com (Alex Eagle)
+ * Checker for calling Object-accepting methods with types that don't match the type arguments of
+ * their container types.  Currently this checker detects problems with the following methods on
+ * all their subtypes and subinterfaces:
+ * <ul>
+ * <li>{@link Collection#contains}
+ * <li>{@link Collection#remove}
+ * <li>{@link List#indexOf}
+ * <li>{@link List#lastIndexOf}
+ * <li>{@link Map#get}
+ * <li>{@link Map#containsKey}
+ * <li>{@link Map#remove}
+ * <li>{@link Map#containsValue}
+ * </ul>
  */
-@BugPattern(name = "CollectionIncompatibleType",
-    summary = "Incompatible type as argument to non-generic Java collections method.",
-    explanation = "Java Collections API has non-generic methods such as Collection.contains(Object). " +
-        "If an argument is given which isn't of a type that may appear in the collection, these " +
-        "methods always return false. This commonly happens when the type of a collection is refactored " +
-        "and the developer relies on the Java compiler to detect callsites where the collection access " +
-        "needs to be updated.",
-    category = JDK, maturity = EXPERIMENTAL, severity = ERROR)
+@BugPattern(
+  name = "CollectionIncompatibleType",
+  summary = "Incompatible type as argument to Object-accepting Java collections method",
+  category = JDK,
+  maturity = EXPERIMENTAL,
+  severity = WARNING
+)
 public class CollectionIncompatibleType extends BugChecker implements MethodInvocationTreeMatcher {
 
-  private static final Matcher<ExpressionTree> isGenericCollectionsMethod =
-      Matchers.<ExpressionTree>anyOf(
-          instanceMethod().onDescendantOf("java.util.Collection").withSignature("contains(java.lang.Object)"),
-          instanceMethod().onDescendantOf("java.util.Collection").withSignature("remove(java.lang.Object)"),
-          instanceMethod().onDescendantOf("java.util.List").withSignature("indexOf(java.lang.Object)"),
-          instanceMethod().onDescendantOf("java.util.List").withSignature("lastIndexOf(java.lang.Object)"));
+  /* TODO(eaftan):
+   * 1) Run over the Google codebase to see how robust this check is.
+   * 2) Can we construct a suggested fix?  Anything reasonable to do?
+   * 3) Add new methods.  The list is in Issue 106.  It might be easier to do it incrementally.
+   * 4) Consider whether there is a subset of these that can/should be errors rather than warnings.
+   * 5) Bump maturity to MATURE.
+   */
 
-  private static Matcher<MethodInvocationTree> argCastableToMethodReceiverTypeParam(int argNumber,
-      int typeParamNumber) {
-    return argument(argNumber, Matchers.<ExpressionTree>not(
-        Matchers.<ExpressionTree>isCastableTo(genericTypeOfType(receiverType(), typeParamNumber))));
-  }
+  private static final Matcher<ExpressionTree> METHOD_ARG_0_SHOULD_MATCH_TYPE_ARG_0 =
+      anyOf(
+          instanceMethod()
+              .onDescendantOf("java.util.Collection")
+              .withSignature("contains(java.lang.Object)"),
+          instanceMethod()
+              .onDescendantOf("java.util.Collection")
+              .withSignature("remove(java.lang.Object)"),
+          instanceMethod()
+              .onDescendantOf("java.util.List")
+              .withSignature("indexOf(java.lang.Object)"),
+          instanceMethod()
+              .onDescendantOf("java.util.List")
+              .withSignature("lastIndexOf(java.lang.Object)"),
+          instanceMethod().onDescendantOf("java.util.Map").withSignature("get(java.lang.Object)"),
+          instanceMethod()
+              .onDescendantOf("java.util.Map")
+              .withSignature("containsKey(java.lang.Object)"),
+          instanceMethod()
+              .onDescendantOf("java.util.Map")
+              .withSignature("remove(java.lang.Object)"));
 
-  private static final Matcher<MethodInvocationTree> matcher = anyOf(
-      allOf(isGenericCollectionsMethod, argCastableToMethodReceiverTypeParam(0, 0)),
-      allOf(
-          anyOf(
-            instanceMethod().onDescendantOf("java.util.Map").withSignature("get(java.lang.Object)"),
-            instanceMethod().onDescendantOf("java.util.Map").withSignature("containsKey(java.lang.Object)"),
-            instanceMethod().onDescendantOf("java.util.Map").withSignature("remove(java.lang.Object)")),
-          argCastableToMethodReceiverTypeParam(0, 0)),
-      allOf(
-          instanceMethod().onDescendantOf("java.util.Map").withSignature("containsValue(java.lang.Object)"),
-          argCastableToMethodReceiverTypeParam(0, 1))
-  );
+  private static final Matcher<ExpressionTree> METHOD_ARG_0_SHOULD_MATCH_TYPE_ARG_1 =
+      anyOf(
+          instanceMethod()
+              .onDescendantOf("java.util.Map")
+              .withSignature("containsValue(java.lang.Object)"));
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (!matcher.matches(tree, state)) {
+
+    int methodArgIndex;
+    int typeArgIndex;
+
+    if (METHOD_ARG_0_SHOULD_MATCH_TYPE_ARG_0.matches(tree, state)) {
+      methodArgIndex = 0;
+      typeArgIndex = 0;
+    } else if (METHOD_ARG_0_SHOULD_MATCH_TYPE_ARG_1.matches(tree, state)) {
+      methodArgIndex = 0;
+      typeArgIndex = 1;
+    } else {
       return Description.NO_MATCH;
     }
-    return describeMatch(tree, SuggestedFix.replace(tree, "false"));
+
+    com.sun.tools.javac.util.List<Type> tyargs =
+        ASTHelpers.getReceiverType(tree).getTypeArguments();
+    if (tyargs.size() <= typeArgIndex) {
+      // Collection is raw, nothing we can do.
+      return Description.NO_MATCH;
+    }
+
+    Type typeArg = tyargs.get(typeArgIndex);
+    ExpressionTree methodArg = Iterables.get(tree.getArguments(), methodArgIndex);
+    Type methodArgType = ASTHelpers.getType(methodArg);
+    // TODO(eaftan): Allow cases when the lower bound of the type argument is assignable to
+    // the method argument type.
+    Type typeArgUpperBound = ASTHelpers.getUpperBound(typeArg, state.getTypes());
+    if (state.getTypes().isAssignable(methodArgType, typeArgUpperBound)) {
+      return Description.NO_MATCH;
+    }
+
+    return buildDescription(tree)
+        .setMessage(
+            String.format(
+                "Argument '%s' should not be passed to this method; its type %s is not compatible "
+                    + "with its collection's type argument %s",
+                methodArg,
+                methodArgType,
+                typeArg))
+        .build();
   }
 }

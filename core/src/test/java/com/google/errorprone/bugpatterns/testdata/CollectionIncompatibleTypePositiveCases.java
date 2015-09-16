@@ -16,45 +16,88 @@
 
 package com.google.errorprone.bugpatterns;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentNavigableMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
- * @author alexeagle@google.com (Alex Eagle)
+ * Positive test cases for {@link CollectionIncompatibleType}.
  */
 public class CollectionIncompatibleTypePositiveCases {
-  Collection<String> collection = new ArrayList<String>();
-
-  public boolean bug() {
-    // BUG: Diagnostic contains: return false
-    return collection.contains(this);
+  
+  public boolean collection() {
+    Collection<Integer> collection = new ArrayList<>();
+    // BUG: Diagnostic contains:
+    boolean result = collection.contains("bad");
+    // BUG: Diagnostic contains:
+    return result && collection.remove("bad");
   }
 
-  public boolean bug2() {
-    // BUG: Diagnostic contains: return false
-    return new ArrayList<String>().remove(new Date());
+  public boolean collectionSubtype() {
+    ArrayList<Integer> arrayList = new ArrayList<>();
+    // BUG: Diagnostic contains:
+    boolean result = arrayList.contains("bad");
+    // BUG: Diagnostic contains:
+    return result && arrayList.remove("bad");
   }
 
-  public boolean bug3() {
-    List<String> list = new ArrayList<String>(collection);
-    // BUG: Diagnostic contains: false
-    System.out.println(list.indexOf(new Integer(0)));
-    // BUG: Diagnostic contains: false
-    System.out.println(list.lastIndexOf(new Integer(0)));
-    // BUG: Diagnostic contains: return false
-    return list.contains(new Exception());
+  public int list() {
+    List<String> list = new ArrayList<String>();
+    // BUG: Diagnostic contains:
+    int result = list.indexOf(1);
+    // BUG: Diagnostic contains:
+    return result + list.lastIndexOf(1);
   }
 
-  public String bug4() {
-    Map<Integer, String> map = new HashMap<Integer, String>();
-    // BUG: Diagnostic contains: false
-    System.out.println(map.containsKey("not an integer"));
+  public void listSubtype() {
+    ArrayList<String> arrayList = new ArrayList<>();
+    // BUG: Diagnostic contains:
+    int result = arrayList.indexOf(1);
+    // BUG: Diagnostic contains:
+    result = arrayList.lastIndexOf(1);
+  }
 
-    Integer notAString = null;
-    // BUG: Diagnostic contains: false
-    System.out.println(map.containsValue(notAString));
-    // BUG: Diagnostic contains: false
-    System.out.println(map.remove("not an integer"));
-    // BUG: Diagnostic contains: return false
-    return map.get("not an integer");
+  public boolean map() {
+    Map<Integer, String> map = new HashMap<>();
+    // BUG: Diagnostic contains:
+    String result = map.get("bad");
+    // BUG: Diagnostic contains:
+    boolean result2 = map.containsKey("bad");
+    // BUG: Diagnostic contains:
+    result2 = map.containsValue(1);
+    // BUG: Diagnostic contains:
+    result = map.remove("bad");
+    return false;
+  }
+
+  public boolean mapSubtype() {
+    ConcurrentNavigableMap<Integer, String> concurrentNavigableMap = new ConcurrentSkipListMap<>();
+    // BUG: Diagnostic contains:
+    String result = concurrentNavigableMap.get("bad");
+    // BUG: Diagnostic contains:
+    boolean result2 = concurrentNavigableMap.containsKey("bad");
+    // BUG: Diagnostic contains:
+    result2 = concurrentNavigableMap.containsValue(1);
+    // BUG: Diagnostic contains:
+    result = concurrentNavigableMap.remove("bad");
+    return false;
+  }
+
+  public boolean boundedWildcard() {
+    Collection<? extends Date> collection = new ArrayList<>();
+    // BUG: Diagnostic contains:
+    return collection.contains("bad");
+  }
+  
+  private static class MyHashMap<K extends Integer, V extends String> extends HashMap<K, V> {}
+  
+  public boolean boundedTypeParameters(MyHashMap<?, ?> myHashMap) {
+    // BUG: Diagnostic contains:
+    return myHashMap.containsKey("bad");
   }
 }
