@@ -35,6 +35,7 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.List;
 
@@ -45,14 +46,13 @@ import java.util.concurrent.ConcurrentHashMap;
 @BugPattern(
   name = "HashtableContains",
   summary = "contains() is a legacy method that is equivalent to containsValue()",
-  explanation = "",
   category = JDK,
   severity = ERROR,
   maturity = MATURE
 )
 public class HashtableContains extends BugChecker implements MethodInvocationTreeMatcher {
 
-  private static final Matcher<ExpressionTree> CONTAINS_MATCHER =
+  static final Matcher<ExpressionTree> CONTAINS_MATCHER =
       anyOf(
           instanceMethod().onDescendantOf(Hashtable.class.getName()).named("contains"),
           instanceMethod().onDescendantOf(ConcurrentHashMap.class.getName()).named("contains"));
@@ -67,14 +67,15 @@ public class HashtableContains extends BugChecker implements MethodInvocationTre
 
     // If the collection is not raw, try to figure out if the argument looks like a key
     // or a value.
-    List<Type> tyargs = ASTHelpers.getType(ASTHelpers.getReceiver(tree)).getTypeArguments();
+    List<Type> tyargs = ASTHelpers.getReceiverType(tree).getTypeArguments();
     if (tyargs.size() == 2) {
       // map capture variables to their bounds, e.g. `? extends Number` -> `Number`
-      Type key = state.getTypes().wildUpperBound(tyargs.get(0));
-      Type value = state.getTypes().wildUpperBound(tyargs.get(1));
+      Types types = state.getTypes();
+      Type key = ASTHelpers.getUpperBound(tyargs.get(0), types);
+      Type value = ASTHelpers.getUpperBound(tyargs.get(1), types);
       Type arg = ASTHelpers.getType(Iterables.getOnlyElement(tree.getArguments()));
-      boolean valueShaped = state.getTypes().isAssignable(arg, value);
-      boolean keyShaped = state.getTypes().isAssignable(arg, key);
+      boolean valueShaped = types.isAssignable(arg, value);
+      boolean keyShaped = types.isAssignable(arg, key);
 
       if (keyShaped && !valueShaped) {
         // definitely a key

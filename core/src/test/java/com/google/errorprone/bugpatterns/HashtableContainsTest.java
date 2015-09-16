@@ -34,7 +34,7 @@ public class HashtableContainsTest {
   }
 
   @Test
-  public void positive_CHM() throws Exception {
+  public void positive_CHM() {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
@@ -50,7 +50,7 @@ public class HashtableContainsTest {
   }
 
   @Test
-  public void positive_Hashtable() throws Exception {
+  public void positive_Hashtable() {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
@@ -64,9 +64,9 @@ public class HashtableContainsTest {
             "}")
         .doTest();
   }
-  
+
   @Test
-  public void positive_wildcardUpperBound() throws Exception {
+  public void positive_wildcardUpperBound() {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
@@ -80,9 +80,9 @@ public class HashtableContainsTest {
             "}")
         .doTest();
   }
-  
+
   @Test
-  public void positive_wildcardLowerBound() throws Exception {
+  public void positive_wildcardLowerBound() {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
@@ -96,9 +96,9 @@ public class HashtableContainsTest {
             "}")
         .doTest();
   }
-  
+
   @Test
-  public void positive_wildcard() throws Exception {
+  public void positive_wildcard() {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
@@ -115,7 +115,7 @@ public class HashtableContainsTest {
   }
 
   @Test
-  public void positive_containsKey() throws Exception {
+  public void positive_containsKey() {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
@@ -133,7 +133,24 @@ public class HashtableContainsTest {
   }
 
   @Test
-  public void negative_containsAmbiguous() throws Exception {
+  public void positive_extendsHashtable() {
+    compilationHelper
+        .addSourceLines(
+            "test/Test.java",
+            "package test;",
+            "import java.util.Hashtable;",
+            "class MyHashTable<K, V> extends Hashtable<K, V> {",
+            "  @Override public boolean contains(Object v) {",
+            "    // BUG: Diagnostic contains:",
+            "    // Did you mean 'return containsValue(v);' or 'return containsKey(v);'?",
+            "    return contains(v);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negative_containsAmbiguous() {
     compilationHelper
         .addSourceLines(
             "test/Test.java",

@@ -44,6 +44,8 @@ import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.Type.TypeVar;
+import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
@@ -290,8 +292,11 @@ public class ASTHelpers {
     } else if (expressionTree instanceof MemberSelectTree) {
       return ((MemberSelectTree) expressionTree).getExpression();
     } else {
-      throw new IllegalStateException("Expected expression to be a method invocation or "
-          + "field access, but was " + expressionTree.getKind());
+      throw new IllegalStateException(
+          String.format(
+              "Expected expression '%s' to be a method invocation or field access, but was %s",
+              expressionTree,
+              expressionTree.getKind()));
     }
   }
 
@@ -592,5 +597,26 @@ public class ASTHelpers {
     } else {
       return null;
     }
+  }
+
+  /**
+   * Returns the upper bound of a type if it has one, or the type itself if not.  Correctly handles
+   * wildcards and capture variables.
+   */
+  public static Type getUpperBound(Type type, Types types) {
+    if (type.hasTag(TypeTag.WILDCARD)) {
+      return types.wildUpperBound(type);
+    }
+
+    if (type.hasTag(TypeTag.TYPEVAR) && ((TypeVar) type).isCaptured()) {
+      return types.cvarUpperBound(type);
+    }
+
+    if (type.getUpperBound() != null) {
+      return type.getUpperBound();
+    }
+
+    // concrete type, e.g. java.lang.String, or a case we haven't considered
+    return type;
   }
 }

@@ -16,6 +16,7 @@
 
 package com.google.errorprone.util;
 
+import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -30,8 +31,11 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.Type.TypeVar;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
 
 import org.junit.After;
@@ -44,9 +48,9 @@ import java.util.List;
 
 @RunWith(JUnit4.class)
 public class ASTHelpersTest extends CompilerBasedAbstractTest {
-  
+
   // For tests that expect a specific offset in the file, we test with both Windows and UNIX
-  // line separators, but we hardcode the line separator in the tests to ensure the tests are 
+  // line separators, but we hardcode the line separator in the tests to ensure the tests are
   // hermetic and do not depend on the platform on which they are run.
   private static final Joiner UNIX_LINE_JOINER = Joiner.on("\n");
   private static final Joiner WINDOWS_LINE_JOINER = Joiner.on("\r\n");
@@ -72,7 +76,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
     writeFile("A.java", fileContent);
     assertCompiles(literalExpressionMatches(literalHasActualStartPosition(59)));
   }
-  
+
   @Test
   public void testGetActualStartPositionWindows() {
     String fileContent = WINDOWS_LINE_JOINER.join(
@@ -98,7 +102,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
     writeFile("A.java", fileContent);
     assertCompiles(literalExpressionMatches(literalHasActualStartPosition(59)));
   }
-  
+
   @Test
   public void testGetActualStartPositionWithWhitespaceWindows() {
     String fileContent = WINDOWS_LINE_JOINER.join(
@@ -266,6 +270,116 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
     tests.add(scanner);
     assertCompiles(scanner);
   }
+
+
+  /* Tests for ASTHelpers#getUpperBound */
+
+  private TestScanner getUpperBoundScanner(final String expectedBound) {
+    return new TestScanner() {
+      @Override
+      public Void visitVariable(VariableTree tree, VisitorState state) {
+        setAssertionsComplete();
+        Type varType = ASTHelpers.getType(tree.getType());
+        assertThat(
+                ASTHelpers.getUpperBound(varType.getTypeArguments().get(0), state.getTypes())
+                    .toString())
+            .isEqualTo(expectedBound);
+        return super.visitVariable(tree, state);
+      }
+    };
+  }
+
+  @Test
+  public void testGetUpperBoundConcreteType() {
+    writeFile(
+        "A.java",
+        "import java.lang.Number;",
+        "import java.util.List;",
+        "public class A {",
+        "  public List<Number> myList;",
+        "}");
+    TestScanner scanner = getUpperBoundScanner("java.lang.Number");
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
+  @Test
+  public void testGetUpperBoundUpperBoundedWildcard() {
+    writeFile(
+        "A.java",
+        "import java.lang.Number;",
+        "import java.util.List;",
+        "public class A {",
+        "  public List<? extends Number> myList;",
+        "}");
+    TestScanner scanner = getUpperBoundScanner("java.lang.Number");
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
+  @Test
+  public void testGetUpperBoundUnboundedWildcard() {
+    writeFile(
+        "A.java", "import java.util.List;", "public class A {", "  public List<?> myList;", "}");
+    TestScanner scanner = getUpperBoundScanner("java.lang.Object");
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
+  @Test
+  public void testGetUpperBoundLowerBoundedWildcard() {
+    writeFile(
+        "A.java",
+        "import java.lang.Number;",
+        "import java.util.List;",
+        "public class A {",
+        "  public List<? super Number> myList;",
+        "}");
+    TestScanner scanner = getUpperBoundScanner("java.lang.Object");
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
+  @Test
+  public void testGetUpperBoundTypeVariable() {
+    writeFile(
+        "A.java", "import java.util.List;", "public class A<T> {", "  public List<T> myList;", "}");
+    TestScanner scanner = getUpperBoundScanner("java.lang.Object");
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
+  @Test
+  public void testGetUpperBoundCapturedTypeVariable() {
+    writeFile(
+        "A.java",
+        "import java.lang.Number;",
+        "import java.util.List;",
+        "public class A {",
+        "  public void doSomething(List<? extends Number> list) {",
+        "    list.get(0);",
+        "  }",
+        "}");
+    TestScanner scanner =
+        new TestScanner() {
+          @Override
+          public Void visitMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+            if (!"super()".equals(tree.toString())) {  // ignore synthetic super call
+              setAssertionsComplete();
+              Type type = ASTHelpers.getType(tree);
+              assertThat(type instanceof TypeVar).isTrue();
+              assertThat(((TypeVar) type).isCaptured()).isTrue();
+              assertThat(ASTHelpers.getUpperBound(type, state.getTypes()).toString())
+                  .isEqualTo("java.lang.Number");
+            }
+            return super.visitMethodInvocation(tree, state);
+          }
+        };
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
+  /* Test infrastructure */
 
   private static abstract class TestScanner extends Scanner {
     private boolean assertionsComplete = false;
