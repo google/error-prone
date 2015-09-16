@@ -118,6 +118,7 @@ import com.google.errorprone.bugpatterns.TryFailThrowable;
 import com.google.errorprone.bugpatterns.TypeParameterUnusedInFormals;
 import com.google.errorprone.bugpatterns.UnnecessaryStaticImport;
 import com.google.errorprone.bugpatterns.UnnecessaryTypeArgument;
+import com.google.errorprone.bugpatterns.UnsynchronizedOverridesSynchronized;
 import com.google.errorprone.bugpatterns.UnusedAnonymousClass;
 import com.google.errorprone.bugpatterns.WaitNotInLoop;
 import com.google.errorprone.bugpatterns.WildcardImport;
@@ -293,6 +294,7 @@ public class BuiltInCheckerSuppliers {
           UnlockMethodChecker.class,
           UnnecessaryStaticImport.class,
           UnnecessaryTypeArgument.class,
+          UnsynchronizedOverridesSynchronized.class,
           WildcardImport.class,
           WrongParameterPackage.class);
 
