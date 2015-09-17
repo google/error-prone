@@ -19,12 +19,14 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.BugPattern.Suppressibility.UNSUPPRESSIBLE;
+import static com.google.errorprone.BugPattern.Suppressibility.CUSTOM_ANNOTATION;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.annotations.SuppressPackageLocation;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.CompilationUnitTree;
 
@@ -39,18 +41,31 @@ import javax.annotation.Nullable;
 /**
  * @author cushon@google.com (Liam Miller-Cushon)
  */
-@BugPattern(name = "PackageLocation",
-    summary = "Package names should match the directory they are declared in",
-    explanation = "Java files should be located in a directory that matches the fully qualified"
-        + " name of the package. For example, classes in the package"
-        + " `edu.oswego.cs.dl.util.concurrent` should be located in:"
-        + " `.../edu/oswego/cs/dl/util/concurrent`.",
-    category = JDK, severity = ERROR, maturity = MATURE, suppressibility = UNSUPPRESSIBLE)
+@BugPattern(
+  name = "PackageLocation",
+  summary = "Package names should match the directory they are declared in",
+  explanation =
+      "Java files should be located in a directory that matches the fully qualified"
+          + " name of the package. For example, classes in the package"
+          + " `edu.oswego.cs.dl.util.concurrent` should be located in:"
+          + " `.../edu/oswego/cs/dl/util/concurrent`.",
+  category = JDK,
+  severity = ERROR,
+  maturity = MATURE,
+  suppressibility = CUSTOM_ANNOTATION,
+  customSuppressionAnnotation = SuppressPackageLocation.class
+)
 public class PackageLocation extends BugChecker implements CompilationUnitTreeMatcher {
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
     if (tree.getPackageName() == null) {
+      return Description.NO_MATCH;
+    }
+
+    // package-info annotations are special
+    // TODO(cushon): fix the core suppression logic handle this
+    if (ASTHelpers.hasAnnotation(tree.getPackage(), SuppressPackageLocation.class)) {
       return Description.NO_MATCH;
     }
 

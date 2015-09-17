@@ -31,6 +31,7 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
+import com.sun.source.tree.PackageTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
@@ -55,6 +56,7 @@ import com.sun.tools.javac.tree.JCTree.JCLiteral;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
+import com.sun.tools.javac.tree.JCTree.JCPackageDecl;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 
 import java.lang.annotation.Annotation;
@@ -145,12 +147,20 @@ public class ASTHelpers {
     if (tree instanceof AnnotationTree) {
       return getSymbol(((AnnotationTree) tree).getAnnotationType());
     }
+    if (tree instanceof PackageTree) {
+      return getSymbol((PackageTree) tree);
+    }
     return null;
   }
 
   /** Gets the symbol for a class. */
   public static ClassSymbol getSymbol(ClassTree tree) {
     return ((JCClassDecl) tree).sym;
+  }
+
+  /** Gets the symbol for a package. */
+  public static PackageSymbol getSymbol(PackageTree tree) {
+    return ((JCPackageDecl) tree).packge;
   }
 
   /** Gets the symbol for a method. */

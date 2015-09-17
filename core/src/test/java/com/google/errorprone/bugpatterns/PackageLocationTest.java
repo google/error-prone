@@ -96,4 +96,18 @@ public class PackageLocationTest {
             "class A {}")
         .doTest();
   }
+
+  @Test
+  public void suppression() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "java/com/google/foo/package-info.java",
+            "@com.google.errorprone.annotations.SuppressPackageLocation",
+            "package xyz.abc.foo;")
+        .addSourceLines(
+            "java/com/google/foo/A.java",
+            "package xyz.abc.foo;",
+            "class A {}")
+        .doTest();
+  }
 }
