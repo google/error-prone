@@ -478,6 +478,8 @@ public class NoAllocationCheckerPositiveCases {
         // BUG: Diagnostic contains: @NoAllocation
         // Iterating
         for (Object o : a) {
+          // BUG: Diagnostic contains: @NoAllocation
+          // Calling a method
           a.toString();
         }
       }

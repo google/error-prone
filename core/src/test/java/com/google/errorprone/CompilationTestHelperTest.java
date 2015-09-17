@@ -25,9 +25,11 @@ import static org.junit.Assert.fail;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.matchers.Description;
 
+import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.tools.javac.main.Main.Result;
 
@@ -384,6 +386,36 @@ public class CompilationTestHelperTest {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {
       return describeMatch(tree);
+    }
+  }
+
+  @Test
+  public void unexpectedDiagnosticOnFirstLine() {
+    try {
+      CompilationTestHelper.newInstance(PackageTreeChecker.class, getClass())
+          .addSourceLines("test/Test.java", "package test;", "public class Test {}")
+          .doTest();
+      fail();
+    } catch (AssertionError expected) {
+      assertThat(expected.getMessage()).contains("Package declaration found");
+    }
+  }
+
+  @BugPattern(
+    name = "PackageTreeChecker",
+    summary = "Package declaration found",
+    explanation = "Prefer to use the default package for everything.",
+    category = JDK,
+    severity = ERROR,
+    maturity = EXPERIMENTAL
+  )
+  public static class PackageTreeChecker extends BugChecker implements CompilationUnitTreeMatcher {
+    @Override
+    public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
+      if (tree.getPackage() != null) {
+        return describeMatch(tree.getPackage());
+      }
+      return Description.NO_MATCH;
     }
   }
 }

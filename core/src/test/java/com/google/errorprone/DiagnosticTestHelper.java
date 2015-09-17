@@ -20,7 +20,6 @@ import static java.util.Locale.ENGLISH;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -338,10 +337,10 @@ public class DiagnosticTestHelper {
         }
 
       } else {
-        int lineNumber = reader.getLineNumber() + 1;
+        int lineNumber = reader.getLineNumber();
         Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
-            not(hasItem(diagnosticOnLine(source.toUri(), lineNumber)));
-        if (!matcher.matches(diagnostics)) {
+            hasItem(diagnosticOnLine(source.toUri(), lineNumber));
+        if (matcher.matches(diagnostics)) {
           fail("Saw unexpected error on line " + lineNumber + ". All errors:\n" + diagnostics);
         }
       }
