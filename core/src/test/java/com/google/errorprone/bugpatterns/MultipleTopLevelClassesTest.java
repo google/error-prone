@@ -58,4 +58,15 @@ public class MultipleTopLevelClassesTest {
   public void defaultPackage() throws Exception {
     compilationHelper.addSourceLines("a/A.java", "class A {}", "class B {}").doTest();
   }
+
+  @Test
+  public void suppression() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "a/A.java",
+            "package a;",
+            "class One {}",
+            "@SuppressWarnings(\"TopLevel\") class Other {}")
+        .doTest();
+  }
 }

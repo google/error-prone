@@ -25,23 +25,24 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 @BugPattern(
-  name = "TopLevel",
+  name = "MultipleTopLevelClasses",
+  altNames = {"TopLevel"},
   summary = "Source files should not contain multiple top-level class declarations",
-  explanation =
-      "The Google Java Style Guide §3.4.1 requires each source file to contain"
-          + " \"exactly one top-level class\".",
   category = JDK,
   severity = WARNING,
   maturity = MATURE
@@ -68,6 +69,16 @@ public class MultipleTopLevelClasses extends BugChecker implements CompilationUn
           case INTERFACE:
           case ANNOTATION_TYPE:
           case ENUM:
+            SuppressWarnings suppression =
+                ASTHelpers.getAnnotation(classMember, SuppressWarnings.class);
+            if (suppression != null
+                && !Collections.disjoint(Arrays.asList(suppression.value()), allNames())) {
+              // If any top-level classes have @SuppressWarnings("TopLevel"), ignore
+              // this compilation unit. We can't rely on the normal suppression
+              // mechanism because the only enclosing element is the package declaration,
+              // and @SuppressWarnings can't be applied to packages.
+              return Description.NO_MATCH;
+            }
             names.add(classMember.getSimpleName().toString());
             break;
           default:
