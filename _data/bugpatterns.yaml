@@ -107,7 +107,9 @@
 - {name: DivZero, summary: Division by integer literal zero}
 - {name: EmptyIf, summary: Empty statement after if}
 - {name: GuardedByValidator, summary: Invalid @GuardedBy expression}
-- {name: GuiceAssistedParameters, summary: A constructor cannot have two @Assisted parameters of the same type unless they are disambiguated with named @Assisted annotations.}
+- {name: GuiceAssistedParameters, summary: 'A constructor cannot have two @Assisted
+    parameters of the same type unless they are disambiguated with named @Assisted
+    annotations. '}
 - {name: InjectInvalidTargetingOnScopingAnnotation, summary: The target of a scoping annotation must be set to METHOD and/or TYPE.}
 - {name: InjectMoreThanOneQualifier, summary: Using more than one qualifier annotation on the same element is not allowed.}
 - {name: InjectMoreThanOneScopeAnnotationOnClass, summary: A class can be annotated with at most one scope annotation}

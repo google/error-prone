@@ -20,7 +20,5 @@ If a method's formal parameter is annotated with @CompileTimeConstant, the metho
       f(x); // x is not a constant, did you mean to declare it as final?
     }
 
-
-
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("NonFinalCompileTimeConstant")` annotation to the enclosing element.

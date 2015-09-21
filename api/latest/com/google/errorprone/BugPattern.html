@@ -163,24 +163,30 @@ public @interface <span class="strong">BugPattern</span></pre>
 </td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><strong><a href="../../../com/google/errorprone/BugPattern.html#documentSuppression()">documentSuppression</a></strong></code>
+<div class="block">Generate an explanation of how to suppress the check.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/BugPattern.html#explanation()">explanation</a></strong></code>
 <div class="block">A longer explanation of the problem that this checker detects.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/BugPattern.html#link()">link</a></strong></code>
 <div class="block">The link URL to use if linkType() is LinkType.CUSTOM.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../com/google/errorprone/BugPattern.LinkType.html" title="enum in com.google.errorprone">BugPattern.LinkType</a></code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/BugPattern.html#linkType()">linkType</a></strong></code>
 <div class="block">The type of link to generate in the compiler error message.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../com/google/errorprone/BugPattern.Suppressibility.html" title="enum in com.google.errorprone">BugPattern.Suppressibility</a></code></td>
 <td class="colLast"><code><strong><a href="../../../com/google/errorprone/BugPattern.html#suppressibility()">suppressibility</a></strong></code>
 <div class="block">Whether this checker should be suppressible, and if so, by what means.</div>
@@ -330,7 +336,7 @@ public @interface <span class="strong">BugPattern</span></pre>
 <a name="customSuppressionAnnotation()">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>customSuppressionAnnotation</h4>
 <pre>public abstract&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;customSuppressionAnnotation</pre>
@@ -339,6 +345,25 @@ public @interface <span class="strong">BugPattern</span></pre>
 <dl>
 <dt>Default:</dt>
 <dd>com.google.errorprone.BugPattern.NoCustomSuppression.class</dd>
+</dl>
+</li>
+</ul>
+<a name="documentSuppression()">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>documentSuppression</h4>
+<pre>public abstract&nbsp;boolean&nbsp;documentSuppression</pre>
+<div class="block">Generate an explanation of how to suppress the check.
+
+ <p>This should only be disabled if the check has a non-standard suppression
+ mechanism that requires additional explanation. For example,
+ <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/SuppressWarnings.html?is-external=true" title="class or interface in java.lang"><code>SuppressWarnings</code></a> cannot be applied to packages, so checks that operate
+ at the package level need special treatment.</div>
+<dl>
+<dt>Default:</dt>
+<dd>true</dd>
 </dl>
 </li>
 </ul>
