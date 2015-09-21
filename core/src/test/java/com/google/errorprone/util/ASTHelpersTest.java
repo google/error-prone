@@ -32,6 +32,7 @@ import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Type;
@@ -224,6 +225,8 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
     assertCompiles(scanner);
   }
 
+  /* Tests for ASTHelpers#getType */
+
   @Test
   public void testGetTypeOnNestedAnnotationType() {
     writeFile("A.java",
@@ -271,6 +274,34 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
     assertCompiles(scanner);
   }
 
+  @Test
+  public void testGetTypeOnParameterizedType() {
+    writeFile(
+        "Pair.java",
+        "public class Pair<A, B> { ",
+        "  public A first;",
+        "  public B second;",
+        "}");
+    writeFile(
+        "Test.java",
+        "public class Test {",
+        "  public Integer doSomething(Pair<Integer, String> pair) {",
+        "    return pair.first;",
+        "  }",
+        "}");
+    TestScanner scanner =
+        new TestScanner() {
+          @Override
+          public Void visitReturn(ReturnTree tree, VisitorState state) {
+            setAssertionsComplete();
+            assertThat(ASTHelpers.getType(tree.getExpression()).toString())
+                  .isEqualTo("java.lang.Integer");
+            return super.visitReturn(tree, state);
+          }
+        };
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
 
   /* Tests for ASTHelpers#getUpperBound */
 
@@ -320,7 +351,11 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   @Test
   public void testGetUpperBoundUnboundedWildcard() {
     writeFile(
-        "A.java", "import java.util.List;", "public class A {", "  public List<?> myList;", "}");
+        "A.java",
+        "import java.util.List;",
+        "public class A {",
+        "  public List<?> myList;",
+        "}");
     TestScanner scanner = getUpperBoundScanner("java.lang.Object");
     tests.add(scanner);
     assertCompiles(scanner);
@@ -343,7 +378,11 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   @Test
   public void testGetUpperBoundTypeVariable() {
     writeFile(
-        "A.java", "import java.util.List;", "public class A<T> {", "  public List<T> myList;", "}");
+        "A.java",
+        "import java.util.List;",
+        "public class A<T> {",
+        "  public List<T> myList;",
+        "}");
     TestScanner scanner = getUpperBoundScanner("java.lang.Object");
     tests.add(scanner);
     assertCompiles(scanner);
