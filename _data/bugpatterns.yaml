@@ -6,6 +6,7 @@
 - {name: Finally, summary: 'If you return or throw from a finally, then values returned
     or thrown from the try-catch block will be ignored'}
 - {name: IncompatibleModifiers, summary: This annotation has incompatible modifiers as specified by its @IncompatibleModifiers annotation}
+- {name: MultipleTopLevelClasses, summary: Source files should not contain multiple top-level class declarations}
 - {name: NonAtomicVolatileUpdate, summary: This update of a volatile variable is non-atomic}
 - {name: NonCanonicalStaticMemberImport, summary: Static import of member uses non-canonical name}
 - {name: NonOverridingEquals, summary: equals method doesn't override Object.equals}
@@ -18,7 +19,6 @@
 - {name: SynchronizeOnNonFinalField, summary: 'Synchronizing on non-final fields is
     not safe: if the field is ever updated, different threads may end up locking on
     different objects.'}
-- {name: TopLevel, summary: Source files should not contain multiple top-level class declarations}
 - {name: TypeParameterUnusedInFormals, summary: 'Declaring a type parameter that is
     only used in the return type is a misuse of generics: operations on the type parameter
     are unchecked, it hides unsafe casts at invocations of the method, and it interacts
@@ -77,11 +77,13 @@
 - {name: SuppressWarningsDeprecated, summary: Suppressing "deprecated" is probably a typo for "deprecation"}
 - {name: TryFailThrowable, summary: Catching Throwable masks failures from fail() or assert*() in the try block}
 - {name: UnnecessaryTypeArgument, summary: Non-generic methods should not be invoked with type arguments}
+- {name: UnsynchronizedOverridesSynchronized, summary: Unsynchronized method overrides a synchronized method.}
 - {name: UnusedAnonymousClass, summary: Instance created but never used}
 'Experimental : WARNING':
 - {name: AssertFalse, summary: Assertions may be disabled at runtime and do not guarantee that execution will halt here; consider throwing an exception instead}
 - {name: AssistedInjectAndInjectOnConstructors, summary: '@AssistedInject and @Inject
     should not be used on different constructors in the same class.'}
+- {name: CollectionIncompatibleType, summary: Incompatible type as argument to Object-accepting Java collections method}
 - {name: GuiceInjectOnFinalField, summary: 'Although Guice allows injecting final
     fields, doing so is not recommended because the injected value may not be visible
     to other threads.'}
@@ -102,7 +104,6 @@
 - {name: AssistedInjectAndInjectOnSameConstructor, summary: '@AssistedInject and @Inject
     cannot be used on the same constructor.'}
 - {name: ClassCanBeStatic, summary: Inner class is non-static but does not reference enclosing class}
-- {name: CollectionIncompatibleType, summary: Incompatible type as argument to non-generic Java collections method.}
 - {name: DivZero, summary: Division by integer literal zero}
 - {name: EmptyIf, summary: Empty statement after if}
 - {name: GuardedByValidator, summary: Invalid @GuardedBy expression}

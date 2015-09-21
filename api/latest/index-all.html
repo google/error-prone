@@ -786,7 +786,10 @@
 <div class="block">Interface for a transformation over Java source.</div>
 </dd>
 <dt><a href="./com/google/errorprone/bugpatterns/CollectionIncompatibleType.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">CollectionIncompatibleType</span></a> - Class in <a href="./com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Checker for calling Object-accepting methods with types that don't match the type arguments of
+ their container types.</div>
+</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/CollectionIncompatibleType.html#CollectionIncompatibleType()">CollectionIncompatibleType()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/CollectionIncompatibleType.html" title="class in com.google.errorprone.bugpatterns">CollectionIncompatibleType</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="./com/google/errorprone/package-summary.html">com.google.errorprone</a> - package com.google.errorprone</dt>
@@ -2093,6 +2096,10 @@
 <dd>
 <div class="block">Gets the symbol for a class.</div>
 </dd>
+<dt><span class="strong"><a href="./com/google/errorprone/util/ASTHelpers.html#getSymbol(com.sun.source.tree.PackageTree)">getSymbol(PackageTree)</a></span> - Static method in class com.google.errorprone.util.<a href="./com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dd>
+<div class="block">Gets the symbol for a package.</div>
+</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/util/ASTHelpers.html#getSymbol(com.sun.source.tree.MethodTree)">getSymbol(MethodTree)</a></span> - Static method in class com.google.errorprone.util.<a href="./com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
 <div class="block">Gets the symbol for a method.</div>
@@ -2159,6 +2166,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/refaster/UTypeVar.html#getUpperBound()">getUpperBound()</a></span> - Method in class com.google.errorprone.refaster.<a href="./com/google/errorprone/refaster/UTypeVar.html" title="class in com.google.errorprone.refaster">UTypeVar</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/util/ASTHelpers.html#getUpperBound(com.sun.tools.javac.code.Type,%20com.sun.tools.javac.code.Types)">getUpperBound(Type, Types)</a></span> - Static method in class com.google.errorprone.util.<a href="./com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dd>
+<div class="block">Returns the upper bound of a type if it has one, or the type itself if not.</div>
+</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/refaster/ULiteral.html#getValue()">getValue()</a></span> - Method in class com.google.errorprone.refaster.<a href="./com/google/errorprone/refaster/ULiteral.html" title="class in com.google.errorprone.refaster">ULiteral</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/dataflow/nullnesspropagation/Nullness.html#greatestLowerBound(com.google.errorprone.dataflow.nullnesspropagation.Nullness)">greatestLowerBound(Nullness)</a></span> - Method in enum com.google.errorprone.dataflow.nullnesspropagation.<a href="./com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a></dt>
@@ -3333,6 +3344,8 @@
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/threadsafety/GuardedByValidator.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="./com/google/errorprone/bugpatterns/threadsafety/GuardedByValidator.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByValidator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/TypeParameterUnusedInFormals.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/TypeParameterUnusedInFormals.html" title="class in com.google.errorprone.bugpatterns">TypeParameterUnusedInFormals</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/UnsynchronizedOverridesSynchronized.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/UnsynchronizedOverridesSynchronized.html" title="class in com.google.errorprone.bugpatterns">UnsynchronizedOverridesSynchronized</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/WrongParameterPackage.html#matchMethod(com.sun.source.tree.MethodTree,%20com.google.errorprone.VisitorState)">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/WrongParameterPackage.html" title="class in com.google.errorprone.bugpatterns">WrongParameterPackage</a></dt>
 <dd>&nbsp;</dd>
@@ -4536,6 +4549,11 @@
 </dd>
 <dt><span class="strong"><a href="./com/google/errorprone/SuppressionHelper.SuppressionInfo.html#SuppressionHelper.SuppressionInfo(java.util.Set,%20java.util.Set,%20boolean)">SuppressionHelper.SuppressionInfo(Set&lt;String&gt;, Set&lt;Class&lt;? extends Annotation&gt;&gt;, boolean)</a></span> - Constructor for class com.google.errorprone.<a href="./com/google/errorprone/SuppressionHelper.SuppressionInfo.html" title="class in com.google.errorprone">SuppressionHelper.SuppressionInfo</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="./com/google/errorprone/annotations/SuppressPackageLocation.html" title="annotation in com.google.errorprone.annotations"><span class="strong">SuppressPackageLocation</span></a> - Annotation Type in <a href="./com/google/errorprone/annotations/package-summary.html">com.google.errorprone.annotations</a></dt>
+<dd>
+<div class="block">Indicates that the PackageLocation warning should be suppressed for this
+ package.</div>
+</dd>
 <dt><a href="./com/google/errorprone/bugpatterns/SuppressWarningsDeprecated.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">SuppressWarningsDeprecated</span></a> - Class in <a href="./com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">Find uses of SuppressWarnings with "deprecated".</div>
@@ -4858,6 +4876,10 @@
 <dt><a href="./com/google/errorprone/bugpatterns/UnnecessaryTypeArgument.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">UnnecessaryTypeArgument</span></a> - Class in <a href="./com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/UnnecessaryTypeArgument.html#UnnecessaryTypeArgument()">UnnecessaryTypeArgument()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/UnnecessaryTypeArgument.html" title="class in com.google.errorprone.bugpatterns">UnnecessaryTypeArgument</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="./com/google/errorprone/bugpatterns/UnsynchronizedOverridesSynchronized.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">UnsynchronizedOverridesSynchronized</span></a> - Class in <a href="./com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/errorprone/bugpatterns/UnsynchronizedOverridesSynchronized.html#UnsynchronizedOverridesSynchronized()">UnsynchronizedOverridesSynchronized()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="./com/google/errorprone/bugpatterns/UnsynchronizedOverridesSynchronized.html" title="class in com.google.errorprone.bugpatterns">UnsynchronizedOverridesSynchronized</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="./com/google/errorprone/bugpatterns/UnusedAnonymousClass.html" title="class in com.google.errorprone.bugpatterns"><span class="strong">UnusedAnonymousClass</span></a> - Class in <a href="./com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>

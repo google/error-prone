@@ -107,9 +107,20 @@
 <pre>public class <span class="strong">CollectionIncompatibleType</span>
 extends <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
 implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></pre>
-<dl><dt><span class="strong">Author:</span></dt>
-  <dd>alexeagle@google.com (Alex Eagle)</dd>
-<dt><span class="strong">See Also:</span></dt><dd><a href="../../../../serialized-form.html#com.google.errorprone.bugpatterns.CollectionIncompatibleType">Serialized Form</a></dd></dl>
+<div class="block">Checker for calling Object-accepting methods with types that don't match the type arguments of
+ their container types.  Currently this checker detects problems with the following methods on
+ all their subtypes and subinterfaces:
+ <ul>
+ <li><a href="http://docs.oracle.com/javase/7/docs/api/java/util/Collection.html?is-external=true#contains(java.lang.Object)" title="class or interface in java.util"><code>Collection.contains(java.lang.Object)</code></a>
+ <li><a href="http://docs.oracle.com/javase/7/docs/api/java/util/Collection.html?is-external=true#remove(java.lang.Object)" title="class or interface in java.util"><code>Collection.remove(java.lang.Object)</code></a>
+ <li><a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true#indexOf(java.lang.Object)" title="class or interface in java.util"><code>List.indexOf(java.lang.Object)</code></a>
+ <li><a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true#lastIndexOf(java.lang.Object)" title="class or interface in java.util"><code>List.lastIndexOf(java.lang.Object)</code></a>
+ <li><a href="http://docs.oracle.com/javase/7/docs/api/java/util/Map.html?is-external=true#get(java.lang.Object)" title="class or interface in java.util"><code>Map.get(java.lang.Object)</code></a>
+ <li><a href="http://docs.oracle.com/javase/7/docs/api/java/util/Map.html?is-external=true#containsKey(java.lang.Object)" title="class or interface in java.util"><code>Map.containsKey(java.lang.Object)</code></a>
+ <li><a href="http://docs.oracle.com/javase/7/docs/api/java/util/Map.html?is-external=true#remove(java.lang.Object)" title="class or interface in java.util"><code>Map.remove(java.lang.Object)</code></a>
+ <li><a href="http://docs.oracle.com/javase/7/docs/api/java/util/Map.html?is-external=true#containsValue(java.lang.Object)" title="class or interface in java.util"><code>Map.containsValue(java.lang.Object)</code></a>
+ </ul></div>
+<dl><dt><span class="strong">See Also:</span></dt><dd><a href="../../../../serialized-form.html#com.google.errorprone.bugpatterns.CollectionIncompatibleType">Serialized Form</a></dd></dl>
 </li>
 </ul>
 </div>

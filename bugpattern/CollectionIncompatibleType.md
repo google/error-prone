@@ -1,9 +1,9 @@
 ---
 title: CollectionIncompatibleType
-summary: Incompatible type as argument to non-generic Java collections method.
+summary: Incompatible type as argument to Object-accepting Java collections method
 layout: bugpattern
 category: JDK
-severity: ERROR
+severity: WARNING
 maturity: EXPERIMENTAL
 ---
 
@@ -13,7 +13,14 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-Java Collections API has non-generic methods such as Collection.contains(Object). If an argument is given which isn't of a type that may appear in the collection, these methods always return false. This commonly happens when the type of a collection is refactored and the developer relies on the Java compiler to detect callsites where the collection access needs to be updated.
+Various Collections APIs have methods that take `Object` rather than
+the proper type parameter. If an argument is given whose type is incompatible
+with the appropriate type argument, it's unlikely that the method call is
+going to do what you intended.
+
+To learn why Collections APIs have these non-generic methods, see Kevin
+Bourillion's blog post, "[Why does Set.contains() take an Object, not an E?]
+(http://smallwig.blogspot.com/2007/12/why-does-setcontains-take-object-not-e.html)".
 
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("CollectionIncompatibleType")` annotation to the enclosing element.
@@ -42,46 +49,89 @@ __CollectionIncompatibleTypePositiveCases.java__
 
 package com.google.errorprone.bugpatterns;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentNavigableMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
- * @author alexeagle@google.com (Alex Eagle)
+ * Positive test cases for {@link CollectionIncompatibleType}.
  */
 public class CollectionIncompatibleTypePositiveCases {
-  Collection<String> collection = new ArrayList<String>();
-
-  public boolean bug() {
-    // BUG: Diagnostic contains: return false
-    return collection.contains(this);
+  
+  public boolean collection() {
+    Collection<Integer> collection = new ArrayList<>();
+    // BUG: Diagnostic contains:
+    boolean result = collection.contains("bad");
+    // BUG: Diagnostic contains:
+    return result && collection.remove("bad");
   }
 
-  public boolean bug2() {
-    // BUG: Diagnostic contains: return false
-    return new ArrayList<String>().remove(new Date());
+  public boolean collectionSubtype() {
+    ArrayList<Integer> arrayList = new ArrayList<>();
+    // BUG: Diagnostic contains:
+    boolean result = arrayList.contains("bad");
+    // BUG: Diagnostic contains:
+    return result && arrayList.remove("bad");
   }
 
-  public boolean bug3() {
-    List<String> list = new ArrayList<String>(collection);
-    // BUG: Diagnostic contains: false
-    System.out.println(list.indexOf(new Integer(0)));
-    // BUG: Diagnostic contains: false
-    System.out.println(list.lastIndexOf(new Integer(0)));
-    // BUG: Diagnostic contains: return false
-    return list.contains(new Exception());
+  public int list() {
+    List<String> list = new ArrayList<String>();
+    // BUG: Diagnostic contains:
+    int result = list.indexOf(1);
+    // BUG: Diagnostic contains:
+    return result + list.lastIndexOf(1);
   }
 
-  public String bug4() {
-    Map<Integer, String> map = new HashMap<Integer, String>();
-    // BUG: Diagnostic contains: false
-    System.out.println(map.containsKey("not an integer"));
+  public void listSubtype() {
+    ArrayList<String> arrayList = new ArrayList<>();
+    // BUG: Diagnostic contains:
+    int result = arrayList.indexOf(1);
+    // BUG: Diagnostic contains:
+    result = arrayList.lastIndexOf(1);
+  }
 
-    Integer notAString = null;
-    // BUG: Diagnostic contains: false
-    System.out.println(map.containsValue(notAString));
-    // BUG: Diagnostic contains: false
-    System.out.println(map.remove("not an integer"));
-    // BUG: Diagnostic contains: return false
-    return map.get("not an integer");
+  public boolean map() {
+    Map<Integer, String> map = new HashMap<>();
+    // BUG: Diagnostic contains:
+    String result = map.get("bad");
+    // BUG: Diagnostic contains:
+    boolean result2 = map.containsKey("bad");
+    // BUG: Diagnostic contains:
+    result2 = map.containsValue(1);
+    // BUG: Diagnostic contains:
+    result = map.remove("bad");
+    return false;
+  }
+
+  public boolean mapSubtype() {
+    ConcurrentNavigableMap<Integer, String> concurrentNavigableMap = new ConcurrentSkipListMap<>();
+    // BUG: Diagnostic contains:
+    String result = concurrentNavigableMap.get("bad");
+    // BUG: Diagnostic contains:
+    boolean result2 = concurrentNavigableMap.containsKey("bad");
+    // BUG: Diagnostic contains:
+    result2 = concurrentNavigableMap.containsValue(1);
+    // BUG: Diagnostic contains:
+    result = concurrentNavigableMap.remove("bad");
+    return false;
+  }
+
+  public boolean boundedWildcard() {
+    Collection<? extends Date> collection = new ArrayList<>();
+    // BUG: Diagnostic contains:
+    return collection.contains("bad");
+  }
+  
+  private static class MyHashMap<K extends Integer, V extends String> extends HashMap<K, V> {}
+  
+  public boolean boundedTypeParameters(MyHashMap<?, ?> myHashMap) {
+    // BUG: Diagnostic contains:
+    return myHashMap.containsKey("bad");
   }
 }
 {% endhighlight %}
@@ -109,41 +159,111 @@ __CollectionIncompatibleTypeNegativeCases.java__
 package com.google.errorprone.bugpatterns;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentNavigableMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
- * @author alexeagle@google.com (Alex Eagle)
+ * Negative test cases for {@link CollectionIncompatibleType}.
  */
 public class CollectionIncompatibleTypeNegativeCases {
-
-  public boolean ok1() {
-    return new ArrayList<String>().contains("ok");
+  
+  /* Tests for API coverage */
+  
+  public boolean collection() {
+    Collection<String> collection = new ArrayList<>();
+    boolean result = collection.contains("ok");
+    return result && collection.remove("ok");
   }
 
-  class B extends Date {}
-
-  public boolean ok2() {
-    return new ArrayList<Date>().contains(new B());
+  public boolean collectionSubtype() {
+    ArrayList<String> arrayList = new ArrayList<>();
+    boolean result = arrayList.contains("ok");
+    return result && arrayList.remove("ok");
   }
 
-  public boolean ok3() {
-    return new OtherCollection<String>().contains(new B());
+  public int list() {
+    List<String> list = new ArrayList<String>();
+    int result = list.indexOf("ok");
+    return result + list.lastIndexOf("ok");
   }
 
-  public void ok4() {
-    Map<Integer, String> map = new HashMap<Integer, String>();
-    Object notAString = null;
-    System.out.println(map.containsValue(notAString));
+  public void listSubtype() {
+    ArrayList<String> arrayList = new ArrayList<>();
+    int result = arrayList.indexOf("ok");
+    result = arrayList.lastIndexOf("ok");
+  }
 
-    System.out.println(map.containsKey(new Object()));
+  public boolean map() {
+    Map<Integer, String> map = new HashMap<>();
+    String result = map.get(1);
+    boolean result2 = map.containsKey(1);
+    result2 = map.containsValue("ok");
+    result = map.remove(1);
+    return false;
+  }
+
+  public boolean mapSubtype() {
+    ConcurrentNavigableMap<Integer, String> concurrentNavigableMap = new ConcurrentSkipListMap<>();
+    String result = concurrentNavigableMap.get(1);
+    boolean result2 = concurrentNavigableMap.containsKey(1);
+    result2 = concurrentNavigableMap.containsValue("ok");
+    result = concurrentNavigableMap.remove(1);
+    return false;
+  }
+
+  /* Tests for behavior */
+  
+  private class B extends Date {}
+  
+  public boolean extendsContainedType() {
+    Collection<Date> collection = new ArrayList<>();
+    return collection.contains(new B());
   }
   
-  private class OtherCollection<E> {
+  public boolean boundedWildcard() {
+    Collection<? extends Date> collection = new ArrayList<>();
+    return collection.contains(new Date()) || collection.contains(new B());
+  }
+
+  public boolean unboundedWildcard() {
+    Collection<?> collection = new ArrayList<>();
+    return collection.contains("ok") || collection.contains(new Object());
+  }
+
+  public boolean rawType() {
+    Collection collection = new ArrayList();
+    return collection.contains("ok");
+  }
+
+  private class DoesntExtendCollection<E> {
     public boolean contains(Object o) {
       return true;
     }
+  }
+  public boolean doesntExtendCollection() {
+    DoesntExtendCollection<String> collection = new DoesntExtendCollection<>();
+    return collection.contains(new Date());
+  }
+
+  // Ensure we don't match Hashtable.contains and ConcurrentHashtable.contains because there is a
+  // separate check, HashtableContains, specifically for them.
+  public boolean hashtableContains() {
+    Hashtable<Integer, String> hashtable = new Hashtable<>();
+    ConcurrentHashMap<Integer, String> concurrentHashMap = new ConcurrentHashMap<>();
+    return hashtable.contains(1) || concurrentHashMap.contains(1);
+  }
+  
+  private static class MyHashMap<K extends Integer, V extends String> extends HashMap<K, V> {}
+  
+  public boolean boundedTypeParameters(MyHashMap<?, ?> myHashMap) {
+    return myHashMap.containsKey(1);
   }
 }
 {% endhighlight %}

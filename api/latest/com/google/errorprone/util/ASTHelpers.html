@@ -266,22 +266,35 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>static com.sun.tools.javac.code.Symbol.PackageSymbol</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/util/ASTHelpers.html#getSymbol(com.sun.source.tree.PackageTree)">getSymbol</a></strong>(com.sun.source.tree.PackageTree&nbsp;tree)</code>
+<div class="block">Gets the symbol for a package.</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>static com.sun.tools.javac.code.Symbol</code></td>
 <td class="colLast"><code><strong><a href="../../../../com/google/errorprone/util/ASTHelpers.html#getSymbol(com.sun.source.tree.Tree)">getSymbol</a></strong>(com.sun.source.tree.Tree&nbsp;tree)</code>
 <div class="block">Gets the symbol for a tree.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static com.sun.tools.javac.code.Symbol.VarSymbol</code></td>
 <td class="colLast"><code><strong><a href="../../../../com/google/errorprone/util/ASTHelpers.html#getSymbol(com.sun.source.tree.VariableTree)">getSymbol</a></strong>(com.sun.source.tree.VariableTree&nbsp;tree)</code>
 <div class="block">Gets the symbol for a variable.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static com.sun.tools.javac.code.Type</code></td>
 <td class="colLast"><code><strong><a href="../../../../com/google/errorprone/util/ASTHelpers.html#getType(com.sun.source.tree.Tree)">getType</a></strong>(com.sun.source.tree.Tree&nbsp;tree)</code>
 <div class="block">Returns the <code>Type</code> for the given type <code>Tree</code> or <code>null</code> if the type could not
  be determined.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static com.sun.tools.javac.code.Type</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/errorprone/util/ASTHelpers.html#getUpperBound(com.sun.tools.javac.code.Type,%20com.sun.tools.javac.code.Types)">getUpperBound</a></strong>(com.sun.tools.javac.code.Type&nbsp;type,
+             com.sun.tools.javac.code.Types&nbsp;types)</code>
+<div class="block">Returns the upper bound of a type if it has one, or the type itself if not.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -422,6 +435,16 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <h4>getSymbol</h4>
 <pre>public static&nbsp;com.sun.tools.javac.code.Symbol.ClassSymbol&nbsp;getSymbol(com.sun.source.tree.ClassTree&nbsp;tree)</pre>
 <div class="block">Gets the symbol for a class.</div>
+</li>
+</ul>
+<a name="getSymbol(com.sun.source.tree.PackageTree)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getSymbol</h4>
+<pre>public static&nbsp;com.sun.tools.javac.code.Symbol.PackageSymbol&nbsp;getSymbol(com.sun.source.tree.PackageTree&nbsp;tree)</pre>
+<div class="block">Gets the symbol for a package.</div>
 </li>
 </ul>
 <a name="getSymbol(com.sun.source.tree.MethodTree)">
@@ -781,12 +804,24 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <a name="getModifiers(com.sun.source.tree.Tree)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getModifiers</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
 public static&nbsp;com.sun.source.tree.ModifiersTree&nbsp;getModifiers(com.sun.source.tree.Tree&nbsp;tree)</pre>
 <div class="block">Returns the modifiers tree of the given class, method, or variable declaration.</div>
+</li>
+</ul>
+<a name="getUpperBound(com.sun.tools.javac.code.Type, com.sun.tools.javac.code.Types)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>getUpperBound</h4>
+<pre>public static&nbsp;com.sun.tools.javac.code.Type&nbsp;getUpperBound(com.sun.tools.javac.code.Type&nbsp;type,
+                                          com.sun.tools.javac.code.Types&nbsp;types)</pre>
+<div class="block">Returns the upper bound of a type if it has one, or the type itself if not.  Correctly handles
+ wildcards and capture variables.</div>
 </li>
 </ul>
 </li>
