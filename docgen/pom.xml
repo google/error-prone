@@ -27,6 +27,17 @@
   <name>JSR-269 annotation processor for @BugPattern annotation</name>
   <artifactId>error_prone_docgen</artifactId>
 
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/java</directory>
+        <includes>
+          <include>**/*.mustache</include>
+        </includes>
+      </resource>
+    </resources>
+  </build>
+
   <dependencies>
     <dependency>
       <groupId>com.google.errorprone</groupId>
@@ -65,6 +76,22 @@
       <artifactId>auto-value</artifactId>
       <version>1.1</version>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.github.spullara.mustache.java</groupId>
+      <artifactId>compiler</artifactId>
+      <version>0.8.18</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.3.1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.truth</groupId>
+      <artifactId>truth</artifactId>
+      <version>0.27</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>

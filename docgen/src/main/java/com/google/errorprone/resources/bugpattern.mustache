@@ -1,0 +1,30 @@
+{{#frontmatter}}
+{{{frontmatter}}}
+{{/frontmatter}}
+<!--
+*** AUTO-GENERATED, DO NOT MODIFY ***
+To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
+-->
+{{^frontmatter}}
+
+<div style="float:right;"><table id="metadata">
+<tr><td>Category</td><td>{{category}}</td></tr>
+<tr><td>Severity</td><td>{{severity}}</td></tr>
+<tr><td>Maturity</td><td>{{maturity}}</td></tr>
+</table></div>
+
+# {{name}}
+__{{{summary}}}__
+{{/frontmatter}}
+{{#altNames}}
+
+_Alternate names: {{altNames}}_
+{{/altNames}}
+
+## The problem
+{{{explanation}}}
+
+{{#suppression}}
+## Suppression
+{{{suppression}}}
+{{/suppression}}

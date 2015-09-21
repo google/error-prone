@@ -45,7 +45,8 @@ import java.util.List;
   summary = "Source files should not contain multiple top-level class declarations",
   category = JDK,
   severity = WARNING,
-  maturity = MATURE
+  maturity = MATURE,
+  documentSuppression = false
 )
 public class MultipleTopLevelClasses extends BugChecker implements CompilationUnitTreeMatcher {
 

@@ -20,34 +20,34 @@ import static com.google.common.base.Predicates.not;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.google.common.base.Function;
+import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
-import com.google.common.base.Splitter;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.FluentIterable;
-import com.google.common.io.LineProcessor;
-import com.google.errorprone.BugPattern.Instance;
-import com.google.errorprone.BugPattern.MaturityLevel;
-import com.google.errorprone.BugPattern.SeverityLevel;
-import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.io.LineProcessor;
+import com.google.gson.Gson;
+
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
+
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOError;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.file.DirectoryStream;
 import java.nio.file.DirectoryStream.Filter;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.Yaml;
-
 import java.nio.file.Paths;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -57,11 +57,11 @@ import java.util.regex.Pattern;
  *
  * @author alexeagle@google.com (Alex Eagle)
  */
-class BugPatternFileGenerator implements LineProcessor<List<Instance>> {
+class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>> {
   private final Path outputDir;
   private final Path exampleDirBase;
   private final Path explanationDir;
-  private List<Instance> result;
+  private List<BugPatternInstance> result;
 
   /**
    * Enables pygments-style code highlighting blocks instead of github flavoured markdown style
@@ -100,56 +100,6 @@ class BugPatternFileGenerator implements LineProcessor<List<Instance>> {
       return Files.isDirectory(entry)
           || matchPattern.matcher(entry.getFileName().toString()).matches();
     }
-  }
-
-  /**
-   * Construct an appropriate page template for this {@code BugPattern}.  Include altNames if
-   * there are any, and explain the correct way to suppress.
-   */
-  private static MessageFormat constructPageTemplate(
-      Instance pattern, boolean generateFrontMatter) {
-    StringBuilder result = new StringBuilder();
-
-    result.append(
-        "<!--\n"
-        + "*** AUTO-GENERATED, DO NOT MODIFY ***\n"
-        + "To make changes, edit the @BugPattern annotation or the explanation in"
-        + " docs/bugpattern.\n"
-        + "-->\n\n");
-
-    if (!generateFrontMatter) {
-      result.append("<div style=\"float:right;\"><table id=\"metadata\">\n"
-          + "<tr><td>Category</td><td>{3}</td></tr>\n"
-          + "<tr><td>Severity</td><td>{4}</td></tr>\n"
-          + "<tr><td>Maturity</td><td>{5}</td></tr>\n"
-          + "</table></div>\n\n"
-          + "# {1}\n"
-          + "__{8}__\n\n");
-    }
-
-    if (pattern.altNames.length() > 0) {
-      result.append("_Alternate names: {2}_\n\n");
-    }
-    result.append(
-        "## The problem\n"
-        + "{9}\n"
-        + "\n"
-        + "## Suppression\n");
-
-    switch (pattern.suppressibility) {
-      case SUPPRESS_WARNINGS:
-        result.append("Suppress false positives by adding an `@SuppressWarnings(\"{1}\")` "
-            + "annotation to the enclosing element.\n");
-        break;
-      case CUSTOM_ANNOTATION:
-        result.append("Suppress false positives by adding the custom suppression annotation "
-            + "`@{7}` to the enclosing element.\n");
-        break;
-      case UNSUPPRESSIBLE:
-        result.append("This check may not be suppressed.\n");
-        break;
-    }
-    return new MessageFormat(result.toString(), Locale.ENGLISH);
   }
 
   /**
@@ -198,16 +148,7 @@ class BugPatternFileGenerator implements LineProcessor<List<Instance>> {
 
   @Override
   public boolean processLine(String line) throws IOException {
-    ArrayList<String> parts = new ArrayList<>(Splitter.on('\t').trimResults().splitToList(line));
-    Instance pattern = new Instance();
-    pattern.name = parts.get(1);
-    pattern.altNames = parts.get(2);
-    pattern.category = BugPattern.Category.valueOf(parts.get(3));
-    pattern.maturity = MaturityLevel.valueOf(parts.get(5));
-    pattern.summary = parts.get(8);
-    pattern.severity = SeverityLevel.valueOf(parts.get(4));
-    pattern.suppressibility = Suppressibility.valueOf(parts.get(6));
-    pattern.customSuppressionAnnotation = parts.get(7);
+    BugPatternInstance pattern = new Gson().fromJson(line, BugPatternInstance.class);
     result.add(pattern);
 
     // replace spaces in filename with underscores
@@ -215,26 +156,33 @@ class BugPatternFileGenerator implements LineProcessor<List<Instance>> {
 
     try (Writer writer = Files.newBufferedWriter(
         outputDir.resolve(checkPath), UTF_8)) {
-      // replace "\n" with a carriage return for explanation
-      parts.set(9, parts.get(9).replace("\\n", "\n"));
 
       // load side-car explanation file, if it exists
       Path sidecarExplanation = explanationDir.resolve(checkPath);
       if (Files.exists(sidecarExplanation)) {
-        if (!parts.get(9).isEmpty()) {
+        if (!pattern.explanation.isEmpty()) {
           throw new AssertionError(
               String.format(
-                  "%s specifies an explanation via @BugPattern and side-car",
-                  pattern.name));
+                  "%s specifies an explanation via @BugPattern and side-car", pattern.name));
         }
-        parts.set(9, new String(Files.readAllBytes(sidecarExplanation), UTF_8).trim());
+        pattern.explanation = new String(Files.readAllBytes(sidecarExplanation), UTF_8).trim();
       }
 
-      MessageFormat wikiPageTemplate = constructPageTemplate(pattern, generateFrontMatter);
+      // Construct an appropriate page for this {@code BugPattern}. Include altNames if
+      // there are any, and explain the correct way to suppress.
+
+      ImmutableMap.Builder<String, Object> templateData =
+          ImmutableMap.<String, Object>builder()
+              .put("category", pattern.category)
+              .put("severity", pattern.severity)
+              .put("maturity", pattern.maturity)
+              .put("name", pattern.name)
+              .put("summary", pattern.summary.trim())
+              .put("altNames", Joiner.on(", ").join(pattern.altNames))
+              .put("explanation", pattern.explanation.trim());
 
       if (generateFrontMatter) {
-        writer.write("---\n");
-        Map<String, String> data =
+        Map<String, String> frontmatterData =
             ImmutableMap.<String, String>builder()
                 .put("title", pattern.name)
                 .put("summary", pattern.summary)
@@ -246,21 +194,52 @@ class BugPatternFileGenerator implements LineProcessor<List<Instance>> {
         DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         Yaml yaml = new Yaml(options);
-        yaml.dump(data, writer);
-        writer.write("---\n\n");
+        Writer yamlWriter = new StringWriter();
+        yamlWriter.write("---\n");
+        yaml.dump(frontmatterData, yamlWriter);
+        yamlWriter.write("---\n");
+        templateData.put("frontmatter", yamlWriter.toString());
       }
 
-      writer.write(wikiPageTemplate.format(parts.toArray()));
+      if (pattern.documentSuppression) {
+        String suppression;
+        switch (pattern.suppressibility) {
+          case SUPPRESS_WARNINGS:
+            suppression =
+                String.format(
+                    "Suppress false positives by adding an `@SuppressWarnings(\"%s\")` "
+                        + "annotation to the enclosing element.",
+                    pattern.name);
+            break;
+          case CUSTOM_ANNOTATION:
+            suppression =
+                String.format(
+                    "Suppress false positives by adding the custom suppression annotation "
+                        + "`@%s` to the enclosing element.",
+                    pattern.customSuppressionAnnotation);
+            break;
+          case UNSUPPRESSIBLE:
+            suppression = "This check may not be suppressed.";
+            break;
+          default:
+            throw new AssertionError(pattern.suppressibility);
+        }
+        templateData.put("suppression", suppression);
+      }
+
+      MustacheFactory mf = new DefaultMustacheFactory();
+      Mustache mustache = mf.compile("com/google/errorprone/resources/bugpattern.mustache");
+      mustache.execute(writer, templateData.build());
 
       // Example filename must match example pattern.
       List<Path> examplePaths = new ArrayList<>();
       Filter<Path> filter =
-          new ExampleFilter(parts.get(0).substring(parts.get(0).lastIndexOf('.') + 1));
+          new ExampleFilter(pattern.className.substring(pattern.className.lastIndexOf('.') + 1));
       findExamples(examplePaths, exampleDirBase, filter);
 
       List<ExampleInfo> exampleInfos =
           FluentIterable.from(examplePaths)
-              .transform(new PathToExampleInfo(parts.get(0)))
+              .transform(new PathToExampleInfo(pattern.className))
               .toSortedList( // sort by name
                   new Comparator<ExampleInfo>() {
                     @Override
@@ -323,7 +302,7 @@ class BugPatternFileGenerator implements LineProcessor<List<Instance>> {
   }
 
   @Override
-  public List<BugPattern.Instance> getResult() {
+  public List<BugPatternInstance> getResult() {
     return result;
   }
 }

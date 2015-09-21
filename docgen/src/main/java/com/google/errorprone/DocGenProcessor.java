@@ -19,7 +19,7 @@ package com.google.errorprone;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.google.auto.service.AutoService;
-import com.google.common.base.Joiner;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -34,7 +34,6 @@ import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.MirroredTypeException;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 
@@ -54,13 +53,15 @@ public class DocGenProcessor extends AbstractProcessor {
     return SourceVersion.latest();
   }
 
+  private final Gson gson = new Gson();
+
   private PrintWriter pw;
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public void init(ProcessingEnvironment processingEnv) {
+  public synchronized void init(ProcessingEnvironment processingEnv) {
     super.init(processingEnv);
     try {
       FileObject manifest = processingEnv.getFiler()
@@ -77,30 +78,8 @@ public class DocGenProcessor extends AbstractProcessor {
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     for (Element element : roundEnv.getElementsAnnotatedWith(BugPattern.class)) {
-      pw.print(element.toString() + "\t");    //0
-      BugPattern annotation = element.getAnnotation(BugPattern.class);
-      pw.print(annotation.name() + "\t");     //1
-      pw.print(Joiner.on(", ").join(annotation.altNames()) + "\t"); //2
-      try {
-        pw.print(annotation.category() + "\t"); //3
-      } catch (EnumConstantNotPresentException e) {
-        // TODO(cushon): awful hack to deal with skew between @BugPattern at head and @BugPattern
-        // in last release.
-        pw.print(e.constantName() + "\t"); //3
-      }
-      pw.print(annotation.severity() + "\t"); //4
-      pw.print(annotation.maturity() + "\t"); //5
-      pw.print(annotation.suppressibility() + "\t"); //6
-      // This is ugly, but you always get a MirroredTypeException when you try to access this
-      // element. See https://community.oracle.com/thread/1184190.
-      try {
-        annotation.customSuppressionAnnotation();
-        throw new IllegalStateException("Expected a MirroredTypeException");
-      } catch (MirroredTypeException e) {
-        pw.print(e.getTypeMirror().toString() + "\t"); //7
-      }
-      pw.print(annotation.summary() + "\t");  //8
-      pw.println(annotation.explanation().replace("\n", "\\n")); //9
+      gson.toJson(BugPatternInstance.fromElement(element), pw);
+      pw.write("\n");
     }
 
     if (roundEnv.processingOver()) {

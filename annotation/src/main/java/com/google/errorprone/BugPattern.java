@@ -20,7 +20,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Retention;
-import java.util.Comparator;
 
 /**
  * Describes a bug pattern detected by error-prone.  Used to generate compiler error messages,
@@ -204,28 +203,13 @@ public @interface BugPattern {
    */
   public @interface NoCustomSuppression {}
 
-  public class Instance {
-    public String name;
-    public String summary;
-    public String altNames;
-    public Category category;
-    public MaturityLevel maturity;
-    public SeverityLevel severity;
-    public Suppressibility suppressibility;
-    public String customSuppressionAnnotation;
-
-    public static final Comparator<Instance> BY_SEVERITY = new Comparator<Instance>() {
-      @Override
-      public int compare(Instance o1, Instance o2) {
-        return o1.severity.compareTo(o2.severity);
-      }
-    };
-
-    public static final Comparator<Instance> BY_NAME = new Comparator<Instance>() {
-      @Override
-      public int compare(Instance o1, Instance o2) {
-        return o1.name.compareTo(o2.name);
-      }
-    };
-  }
+  /**
+   * Generate an explanation of how to suppress the check.
+   *
+   * <p>This should only be disabled if the check has a non-standard suppression
+   * mechanism that requires additional explanation. For example,
+   * {@link SuppressWarnings} cannot be applied to packages, so checks that operate
+   * at the package level need special treatment.
+   */
+  public boolean documentSuppression() default true;
 }

@@ -16,10 +16,15 @@
 
 package com.google.errorprone;
 
+import static com.google.common.truth.Truth.assertThat;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.Assert.assertEquals;
 
 import com.google.common.io.CharStreams;
+import com.google.errorprone.BugPattern.Category;
+import com.google.errorprone.BugPattern.MaturityLevel;
+import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.BugPattern.Suppressibility;
+import com.google.gson.Gson;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -55,18 +60,36 @@ public class BugPatternFileGeneratorTest {
         Arrays.asList("here is an example"), UTF_8);
   }
 
-  private static final String BUGPATTERN_LINE =
-      "com.google.errorprone.bugpatterns.DeadException\t"
-      + "DeadException\tThrowableInstanceNeverThrown\tJDK\tERROR\tMATURE\tSUPPRESS_WARNINGS\t"
-      + "com.google.errorprone.BugPattern.NoCustomSuppression\t"
-      + "Exception created but not thrown\t"
-      + "The exception is created with new, but is not thrown, and the reference is lost.\n";
-  
-  private static final String BUGPATTERN_LINE_SIDECAR =
-      "com.google.errorprone.bugpatterns.DeadException\t"
-      + "DeadException\tThrowableInstanceNeverThrown\tJDK\tERROR\tMATURE\tSUPPRESS_WARNINGS\t"
-      + "com.google.errorprone.BugPattern.NoCustomSuppression\t"
-      + "Exception created but not thrown\t\n";
+  private static BugPatternInstance deadExceptionTestInfo() {
+    BugPatternInstance instance = new BugPatternInstance();
+    instance.className = "com.google.errorprone.bugpatterns.DeadException";
+    instance.name = "DeadException";
+    instance.summary = "Exception created but not thrown";
+    instance.explanation =
+        "The exception is created with new, but is not thrown, and the reference is lost.";
+    instance.altNames = new String[] {"ThrowableInstanceNeverThrown"};
+    instance.category = Category.JDK;
+    instance.severity = SeverityLevel.ERROR;
+    instance.maturity = MaturityLevel.MATURE;
+    instance.suppressibility = Suppressibility.SUPPRESS_WARNINGS;
+    instance.customSuppressionAnnotation = "com.google.errorprone.BugPattern.NoCustomSuppression";
+    return instance;
+  }
+
+  private static final String BUGPATTERN_LINE;
+
+  static {
+    BugPatternInstance instance = deadExceptionTestInfo();
+    BUGPATTERN_LINE = new Gson().toJson(instance);
+  }
+
+  private static final String BUGPATTERN_LINE_SIDECAR;
+
+  static {
+    BugPatternInstance instance = deadExceptionTestInfo();
+    instance.explanation = "";
+    BUGPATTERN_LINE_SIDECAR = new Gson().toJson(instance);
+  }
 
   // Assert that the generator produces the same output it did before.
   // This is brittle, but you can open the golden file
@@ -81,7 +104,7 @@ public class BugPatternFileGeneratorTest {
         getClass().getResourceAsStream("testdata/DeadException_frontmatter_pygments.md"), UTF_8));
     String actual = CharStreams.toString(
         Files.newBufferedReader(wikiDir.resolve("DeadException.md"), UTF_8));
-    assertEquals(expected.trim(), actual.trim());
+    assertThat(expected.trim()).isEqualTo(actual.trim());
   }
 
   @Test
@@ -92,7 +115,7 @@ public class BugPatternFileGeneratorTest {
     String expected = CharStreams.toString(new InputStreamReader(
         getClass().getResourceAsStream("testdata/DeadException_nofrontmatter_gfm.md"), UTF_8));
     String actual = new String(Files.readAllBytes(wikiDir.resolve("DeadException.md")), UTF_8);
-    assertEquals(expected.trim(), actual.trim());
+    assertThat(expected.trim()).isEqualTo(actual.trim());
   }
 
   @Test
@@ -107,6 +130,6 @@ public class BugPatternFileGeneratorTest {
     String expected = CharStreams.toString(new InputStreamReader(
         getClass().getResourceAsStream("testdata/DeadException_nofrontmatter_gfm.md"), UTF_8));
     String actual = new String(Files.readAllBytes(wikiDir.resolve("DeadException.md")), UTF_8);
-    assertEquals(expected.trim(), actual.trim());
+    assertThat(expected.trim()).isEqualTo(actual.trim());
   }
 }

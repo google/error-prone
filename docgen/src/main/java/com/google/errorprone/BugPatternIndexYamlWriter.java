@@ -23,11 +23,9 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Ordering;
-import com.google.errorprone.BugPattern.Instance;
 
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
 import java.util.List;
@@ -40,32 +38,37 @@ import java.util.TreeMap;
  */
 public class BugPatternIndexYamlWriter {
 
-  void dump(Collection<Instance> patterns, Writer w)
-      throws IOException {
+  void dump(Collection<BugPatternInstance> patterns, Writer w) {
     Map<String, List<Map<String, String>>> data = new TreeMap<>(Ordering.natural().reverse());
 
-   ListMultimap<String, BugPattern.Instance> index =
-       index(patterns, new Function<Instance, String>() {
-         @Override public String apply(Instance input) {
-           return input.maturity.description + " : " + input.severity;
-         }
-       });
+    ListMultimap<String, BugPatternInstance> index =
+        index(
+            patterns,
+            new Function<BugPatternInstance, String>() {
+              @Override
+              public String apply(BugPatternInstance input) {
+                return input.maturity.description + " : " + input.severity;
+              }
+            });
 
-    for (Entry<String, Collection<Instance>> entry : index.asMap().entrySet()) {
-      data.put(entry.getKey(), FluentIterable
-          .from(entry.getValue())
-          .transform(new Function<Instance, Map<String, String>>() {
-            @Override
-            public Map<String, String> apply(Instance input) {
-              return ImmutableMap.of("name", input.name, "summary", input.summary);
-            }
-          })
-          .toSortedList(new Ordering<Map<String, String>>() {
-            @Override
-            public int compare(Map<String, String> left, Map<String, String> right) {
-              return left.get("name").compareTo(right.get("name"));
-            }
-          }));
+    for (Entry<String, Collection<BugPatternInstance>> entry : index.asMap().entrySet()) {
+      data.put(
+          entry.getKey(),
+          FluentIterable.from(entry.getValue())
+              .transform(
+                  new Function<BugPatternInstance, Map<String, String>>() {
+                    @Override
+                    public Map<String, String> apply(BugPatternInstance input) {
+                      return ImmutableMap.of("name", input.name, "summary", input.summary);
+                    }
+                  })
+              .toSortedList(
+                  new Ordering<Map<String, String>>() {
+                    @Override
+                    public int compare(Map<String, String> left, Map<String, String> right) {
+                      return left.get("name").compareTo(right.get("name"));
+                    }
+                  }));
     }
     new Yaml().dump(data, w);
   }

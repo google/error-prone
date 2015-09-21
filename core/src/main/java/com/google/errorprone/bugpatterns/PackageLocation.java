@@ -44,16 +44,12 @@ import javax.annotation.Nullable;
 @BugPattern(
   name = "PackageLocation",
   summary = "Package names should match the directory they are declared in",
-  explanation =
-      "Java files should be located in a directory that matches the fully qualified"
-          + " name of the package. For example, classes in the package"
-          + " `edu.oswego.cs.dl.util.concurrent` should be located in:"
-          + " `.../edu/oswego/cs/dl/util/concurrent`.",
   category = JDK,
   severity = ERROR,
   maturity = MATURE,
   suppressibility = CUSTOM_ANNOTATION,
-  customSuppressionAnnotation = SuppressPackageLocation.class
+  customSuppressionAnnotation = SuppressPackageLocation.class,
+  documentSuppression = false
 )
 public class PackageLocation extends BugChecker implements CompilationUnitTreeMatcher {
 
