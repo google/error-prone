@@ -19,11 +19,13 @@ package com.google.errorprone.refaster;
 import static com.google.common.base.Preconditions.checkState;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Ascii;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableClassToInstanceMap;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.errorprone.CodeTransformer;
 import com.google.errorprone.DescriptionListener;
 import com.google.errorprone.SubContext;
@@ -124,14 +126,19 @@ public abstract class RefasterRule<M extends TemplateMatch, T extends Template<M
     return context;
   }
 
-  @Override
-  public String toString() {
-    List<String> path = Splitter.on('.').splitToList(qualifiedTemplateClass());
+  @VisibleForTesting
+  static String fromSecondLevel(String qualifiedTemplateClass) {
+    List<String> path = Splitter.on('.').splitToList(qualifiedTemplateClass);
     for (int topLevel = 0; topLevel < path.size() - 1; topLevel++) {
       if (Ascii.isUpperCase(path.get(topLevel).charAt(0))) {
         return Joiner.on('_').join(path.subList(topLevel + 1, path.size()));
       }
     }
-    return qualifiedTemplateClass();
+    return Iterables.getLast(path);
+  }
+
+  @Override
+  public String toString() {
+    return fromSecondLevel(qualifiedTemplateClass());
   }
 }
