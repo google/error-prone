@@ -80,4 +80,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 public @interface Placeholder {
   // TODO(lowasser): consider putting forbiddenKinds here as an annotation parameter
+  
+  /**
+   * Identifies whether the placeholder is allowed to match an expression which simply returns one
+   * of the placeholder arguments unchanged.
+   */
+  boolean allowsIdentity() default false;  
 }

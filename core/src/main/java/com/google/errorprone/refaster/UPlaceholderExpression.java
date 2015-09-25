@@ -24,6 +24,7 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.errorprone.refaster.annotation.Placeholder;
 
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.Tree;
@@ -177,8 +178,12 @@ abstract class UPlaceholderExpression extends UExpression {
                     ? Optional.of(resultUnifier) : Optional.<Unifier>absent();
               }
               JCExpression result = state.result();
+              if (!placeholder().annotations().getInstance(Placeholder.class).allowsIdentity()
+                  && result instanceof PlaceholderParamIdent) {
+                return Optional.absent();
+              }
               result.type = expr.type;
-              resultUnifier.putBinding(placeholder().exprKey(), state.result());
+              resultUnifier.putBinding(placeholder().exprKey(), result);
               return Optional.of(resultUnifier);
             } else {
               return Optional.absent();

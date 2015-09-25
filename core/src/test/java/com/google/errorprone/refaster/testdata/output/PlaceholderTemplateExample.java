@@ -36,6 +36,15 @@ public class PlaceholderTemplateExample {
 });
     
   }
+  
+  public void negativeIdentityExample(List<Boolean> list) {
+    Iterator<Boolean> itr = list.iterator();
+    while (itr.hasNext()) {
+      if (itr.next()) {
+        itr.remove();
+      }
+    }
+  }
 
   public void refersToForbiddenVariable(List<Integer> list) {
     Iterator<Integer> itr = list.iterator();

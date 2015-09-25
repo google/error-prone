@@ -16,29 +16,32 @@
 
 package com.google.errorprone.refaster.testdata;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+
 import java.util.Iterator;
 import java.util.List;
 
 /**
  * Test data for {@code PlaceholderTemplate}.
  */
-public class PlaceholderTemplateExample {
+public class PlaceholderAllowsIdentityTemplateExample {
   public void positiveExample(List<Integer> list) {
-    Iterator<Integer> itr = list.iterator();
-    while (itr.hasNext()) {
-      if (itr.next() < 0) {
-        itr.remove();
+    Iterables.removeIf(list, new Predicate<Integer>(){
+      @Override
+      public boolean apply(Integer input) {
+        return input < 0;
       }
-    }
+    }); 
   }
   
-  public void negativeIdentityExample(List<Boolean> list) {
-    Iterator<Boolean> itr = list.iterator();
-    while (itr.hasNext()) {
-      if (itr.next()) {
-        itr.remove();
+  public void positiveIdentityExample(List<Boolean> list) {
+    Iterables.removeIf(list, new Predicate<Boolean>(){
+      @Override
+      public boolean apply(Boolean input) {
+          return input;
       }
-    }
+    });
   }
 
   public void refersToForbiddenVariable(List<Integer> list) {

@@ -23,8 +23,8 @@ import com.google.errorprone.refaster.annotation.Placeholder;
  * Example use of placeholder methods in a {@code ComparisonChain} refactoring.
  */
 public abstract class ComparisonChainTemplate<A extends Comparable<A>, B extends Comparable<B>> {
-  @Placeholder abstract <T> A propertyA(T t);
-  @Placeholder abstract <T> B propertyB(T t);
+  @Placeholder(allowsIdentity = true) abstract <T> A propertyA(T t);
+  @Placeholder(allowsIdentity = true) abstract <T> B propertyB(T t);
   
   @BeforeTemplate <T> int before(T left, T right) {
     int cmp = propertyA(left).compareTo(propertyA(right));

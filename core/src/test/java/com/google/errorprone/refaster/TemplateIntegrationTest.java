@@ -212,6 +212,11 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
   }
   
   @Test
+  public void expressionPlaceholderAllowsIdentity() throws IOException {
+    runTest("PlaceholderAllowsIdentityTemplate");
+  }
+  
+  @Test
   public void blockPlaceholder() throws IOException {
     runTest("BlockPlaceholderTemplate");
   }

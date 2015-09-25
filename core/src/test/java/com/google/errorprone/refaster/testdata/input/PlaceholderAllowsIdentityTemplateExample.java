@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * Test data for {@code PlaceholderTemplate}.
  */
-public class PlaceholderTemplateExample {
+public class PlaceholderAllowsIdentityTemplateExample {
   public void positiveExample(List<Integer> list) {
     Iterator<Integer> itr = list.iterator();
     while (itr.hasNext()) {
@@ -32,7 +32,7 @@ public class PlaceholderTemplateExample {
     }
   }
   
-  public void negativeIdentityExample(List<Boolean> list) {
+  public void positiveIdentityExample(List<Boolean> list) {
     Iterator<Boolean> itr = list.iterator();
     while (itr.hasNext()) {
       if (itr.next()) {
