@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JUNIT;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.JUnitMatchers.hasJUnit4TestCases;
@@ -39,8 +39,9 @@ import com.sun.source.tree.ClassTree;
     name = "JUnitAmbiguousTestClass",
     summary = "Test class mixes JUnit 3 and JUnit 4 idioms",
     explanation = "The test class could execute either as a JUnit 3 class or a JUnit 4 class, "
-        + "and tests could behave differently depending on whether it runs in JUnit 3 or JUnit 4. ",
-    category = JUNIT, maturity = EXPERIMENTAL, severity = WARNING)
+        + "and tests could behave differently depending on whether it runs in JUnit 3 or JUnit 4. "
+        + "In particular, as a JUnit 4 class, it may not work as intended.",
+    category = JUNIT, maturity = MATURE, severity = WARNING)
 public class JUnitAmbiguousTestClass extends BugChecker implements ClassTreeMatcher {
 
   private static final Matcher<ClassTree> matcher = allOf(
