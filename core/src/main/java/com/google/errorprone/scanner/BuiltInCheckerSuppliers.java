@@ -82,6 +82,7 @@ import com.google.errorprone.bugpatterns.MalformedFormatString;
 import com.google.errorprone.bugpatterns.MissingCasesInEnumSwitch;
 import com.google.errorprone.bugpatterns.MissingFail;
 import com.google.errorprone.bugpatterns.MisusedWeekYear;
+import com.google.errorprone.bugpatterns.MockitoUsage;
 import com.google.errorprone.bugpatterns.ModifyingCollectionWithItself;
 import com.google.errorprone.bugpatterns.MultipleTopLevelClasses;
 import com.google.errorprone.bugpatterns.NarrowingCompoundAssignment;
@@ -278,6 +279,7 @@ public class BuiltInCheckerSuppliers {
           MalformedFormatString.class,
           MissingCasesInEnumSwitch.class,
           MissingFail.class,
+          MockitoUsage.class,
           ModifyingCollectionWithItself.class,
           NarrowingCompoundAssignment.class,
           NoAllocationChecker.class,

@@ -298,13 +298,14 @@ public class VisitorState {
    *
    * @return the source code that represents the node.
    */
-  public CharSequence getSourceForNode(JCTree node) {
+  public String getSourceForNode(Tree tree) {
+    JCTree node = (JCTree) tree;
     int start = node.getStartPosition();
     int end = getEndPosition(node);
     if (end < 0) {
       return null;
     }
-    return getSourceCode().subSequence(start, end);
+    return getSourceCode().subSequence(start, end).toString();
   }
 
   /**
