@@ -155,4 +155,23 @@ public class CollectionIncompatibleTypeNegativeCases {
   public boolean boundedTypeParameters(MyHashMap<?, ?> myHashMap) {
     return myHashMap.containsKey(1);
   }
+  
+  interface Interface1 {}
+  interface Interface2 {}
+  private static class NonFinalClass {}
+  
+  public boolean bothInterfaces(Collection<Interface1> collection, Interface2 iface2) {
+    return collection.contains(iface2);
+  }
+  
+  public boolean oneInterfaceAndOneNonFinalClass(
+      Collection<Interface1> collection, NonFinalClass nonFinalClass) {
+    return collection.contains(nonFinalClass);
+  }
+  
+  public boolean oneNonFinalClassAndOneInterface(
+      Collection<NonFinalClass> collection, Interface1 iface) {
+    return collection.contains(iface);
+  }
+  
 }

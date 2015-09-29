@@ -100,14 +100,61 @@ public class CollectionIncompatibleTypePositiveCases {
     public A first;
     public B second;
   }
-  
+
   public boolean declaredTypeVsExpressionType(Pair<Integer, String> pair, List<Integer> list) {
     // BUG: Diagnostic contains:
     return list.contains(pair.second);
   }
-
+  
   public String subclassHasDifferentTypeParameters(ClassToInstanceMap<String> map, String s) {
     // BUG: Diagnostic contains:
     return map.get(s);
+  }
+  
+  private static class IncompatibleBounds<K extends String, V extends Number> {
+    private boolean function(Map<K, V> map, K key) {
+      // BUG: Diagnostic contains:
+      return map.containsValue(key);
+    }
+  }
+  
+  interface Interface {}
+  private static final class FinalClass1 {}
+  private static final class FinalClass2 {}
+  private static class NonFinalClass1 {}
+  private static class NonFinalClass2 {}
+  
+  public boolean oneInterfaceAndOneFinalClass(
+      Collection<Interface> collection, FinalClass1 finalClass1) {
+    // BUG: Diagnostic contains:
+    return collection.contains(finalClass1);
+  }
+  
+  public boolean oneFinalClassAndOneInterface(Collection<FinalClass1> collection, Interface iface) {
+    // BUG: Diagnostic contains:
+    return collection.contains(iface);
+  }
+  
+  public boolean bothNonFinalClasses(
+      Collection<NonFinalClass1> collection, NonFinalClass2 nonFinalClass2) {
+    // BUG: Diagnostic contains:
+    return collection.contains(nonFinalClass2);
+  }
+  
+  public boolean bothFinalClasses(Collection<FinalClass1> collection, FinalClass2 finalClass2) {
+    // BUG: Diagnostic contains:
+    return collection.contains(finalClass2);
+  }
+  
+  public boolean oneNonFinalClassAndOneFinalClass(
+      Collection<NonFinalClass1> collection, FinalClass1 finalClass1) {
+    // BUG: Diagnostic contains:
+    return collection.contains(finalClass1);
+  }
+  
+  public boolean oneFinalClassAndOneNonFinalClass(
+      Collection<FinalClass1> collection, NonFinalClass1 nonFinalClass1) {
+    // BUG: Diagnostic contains:
+    return collection.contains(nonFinalClass1);
   }
 }

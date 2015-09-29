@@ -93,12 +93,9 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
     }
 
     Types types = state.getTypes();
-
-    Type methodArgTypeErased = types.erasure(result.methodArgType());
-    Type typeArgUpperBoundErased =
-        types.erasure(ASTHelpers.getUpperBound(result.typeArgType(), types));
-    if (state.getTypes().isAssignable(methodArgTypeErased, typeArgUpperBoundErased)
-        || state.getTypes().isAssignable(typeArgUpperBoundErased, methodArgTypeErased)) {
+    if (types.isCastable(
+        result.methodArgType(),
+        types.erasure(ASTHelpers.getUpperBound(result.typeArgType(), types)))) {
       return Description.NO_MATCH;
     }
 
