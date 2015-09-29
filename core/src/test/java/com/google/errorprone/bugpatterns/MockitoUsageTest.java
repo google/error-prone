@@ -107,7 +107,7 @@ public class MockitoUsageTest {
             "    Foo mock = mock(Foo.class);",
             "    // BUG: Diagnostic contains:",
             "    // Missing method call for when(mock.get()) here",
-            "    // when(mock).get();",
+            "    // remove this line",
             "    when(mock.get());",
             "  }",
             "}")

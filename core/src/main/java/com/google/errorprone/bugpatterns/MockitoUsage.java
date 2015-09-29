@@ -68,24 +68,25 @@ public class MockitoUsage extends BugChecker implements MethodInvocationTreeMatc
     return buildDescription(tree).addFix(buildFix(tree, state)).setMessage(message).build();
   }
 
-  /** Rewrite `when(foo.bar())` to `when(foo).bar()`, or delete the call. */
+  /** Rewrite `verify(foo.bar())` to `verify(foo).bar()`, or delete the call. */
   private Fix buildFix(MethodInvocationTree tree, VisitorState state) {
     MethodInvocationTree mockitoCall = tree;
     Tree argument = Iterables.getOnlyElement(mockitoCall.getArguments());
-    if (argument.getKind() != Kind.METHOD_INVOCATION) {
-      // delete the expression, or the enclosing expression statement
-      Tree parent = state.getPath().getParentPath().getLeaf();
-      if (parent.getKind() == Kind.EXPRESSION_STATEMENT) {
-        return SuggestedFix.delete(parent);
-      } else {
-        return SuggestedFix.delete(tree);
-      }
+    if (argument.getKind() == Kind.METHOD_INVOCATION
+        && ASTHelpers.getSymbol(tree).getSimpleName().contentEquals("verify")) {
+      MethodInvocationTree invocation = (MethodInvocationTree) argument;
+      String mockitoPart = state.getSourceForNode(mockitoCall.getMethodSelect());
+      String receiver = state.getSourceForNode(ASTHelpers.getReceiver(invocation));
+      String call = state.getSourceForNode(invocation).substring(receiver.length());
+      return SuggestedFix.replace(tree, String.format("%s(%s)%s", mockitoPart, receiver, call));
     }
 
-    MethodInvocationTree invocation = (MethodInvocationTree) argument;
-    String mockitoPart = state.getSourceForNode(mockitoCall.getMethodSelect());
-    String receiver = state.getSourceForNode(ASTHelpers.getReceiver(invocation));
-    String call = state.getSourceForNode(invocation).substring(receiver.length());
-    return SuggestedFix.replace(tree, String.format("%s(%s)%s", mockitoPart, receiver, call));
+    // delete entire expression statement
+    Tree parent = state.getPath().getParentPath().getLeaf();
+    if (parent.getKind() == Kind.EXPRESSION_STATEMENT) {
+      return SuggestedFix.delete(parent);
+    }
+
+    return SuggestedFix.delete(tree);
   }
 }
