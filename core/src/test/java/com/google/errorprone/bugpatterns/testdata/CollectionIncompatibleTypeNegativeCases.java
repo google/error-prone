@@ -16,6 +16,9 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.common.base.Optional;
+import com.google.common.collect.ClassToInstanceMap;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -80,9 +83,15 @@ public class CollectionIncompatibleTypeNegativeCases {
   
   private class B extends Date {}
   
-  public boolean extendsContainedType() {
+  public boolean argTypeExtendsContainedType() {
     Collection<Date> collection = new ArrayList<>();
     return collection.contains(new B());
+  }
+  
+  public boolean containedTypeExtendsArgType() {
+    Collection<String> collection = new ArrayList<>();
+    Object actuallyAString = "ok";
+    return collection.contains(actuallyAString);
   }
   
   public boolean boundedWildcard() {
@@ -109,7 +118,30 @@ public class CollectionIncompatibleTypeNegativeCases {
     DoesntExtendCollection<String> collection = new DoesntExtendCollection<>();
     return collection.contains(new Date());
   }
+  
+  private static class Pair<A, B> {
+    public A first;
+    public B second;
+  }
+  
+  public boolean declaredTypeVsExpressionType(Pair<Integer, String> pair, List<Integer> list) {
+    return list.contains(pair.first);
+  }
 
+  public boolean containsParameterizedType(
+      Collection<Class<? extends String>> collection, Class<?> clazz) {
+    return collection.contains(clazz);
+  }
+
+  public boolean containsWildcard(Collection<String> collection, Optional<?> optional) {
+    return collection.contains(optional.get());
+  }
+
+  public <T extends String> T subclassHasDifferentTypeParameters(
+      ClassToInstanceMap<String> map, Class<T> klass) {
+    return klass.cast(map.get(klass));
+  }
+  
   // Ensure we don't match Hashtable.contains and ConcurrentHashtable.contains because there is a
   // separate check, HashtableContains, specifically for them.
   public boolean hashtableContains() {

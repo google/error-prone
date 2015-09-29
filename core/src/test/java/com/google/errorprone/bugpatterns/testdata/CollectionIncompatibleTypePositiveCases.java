@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.common.collect.ClassToInstanceMap;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -94,10 +96,18 @@ public class CollectionIncompatibleTypePositiveCases {
     return collection.contains("bad");
   }
   
-  private static class MyHashMap<K extends Integer, V extends String> extends HashMap<K, V> {}
+  private static class Pair<A, B> {
+    public A first;
+    public B second;
+  }
   
-  public boolean boundedTypeParameters(MyHashMap<?, ?> myHashMap) {
+  public boolean declaredTypeVsExpressionType(Pair<Integer, String> pair, List<Integer> list) {
     // BUG: Diagnostic contains:
-    return myHashMap.containsKey("bad");
+    return list.contains(pair.second);
+  }
+
+  public String subclassHasDifferentTypeParameters(ClassToInstanceMap<String> map, String s) {
+    // BUG: Diagnostic contains:
+    return map.get(s);
   }
 }

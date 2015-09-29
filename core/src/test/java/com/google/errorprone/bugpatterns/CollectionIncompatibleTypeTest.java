@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -38,22 +39,41 @@ public class CollectionIncompatibleTypeTest {
   }
 
   @Test
-  public void testPositiveCase() throws Exception {
+  public void testPositiveCase() {
     compilationHelper.addSourceFile("CollectionIncompatibleTypePositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper.addSourceFile("CollectionIncompatibleTypeNegativeCases.java").doTest();
   }
 
   @Test
-  public void testOutOfBounds() throws Exception {
+  public void testOutOfBounds() {
     compilationHelper.addSourceFile("CollectionIncompatibleTypeOutOfBounds.java").doTest();
   }
 
   @Test
-  public void testClassCast() throws Exception {
+  public void testClassCast() {
     compilationHelper.addSourceFile("CollectionIncompatibleTypeClassCast.java").doTest();
+  }
+
+  // This test is disabled because calling Types#asSuper in the check removes the upper bound on K.
+  @Test
+  @Ignore
+  public void testBoundedTypeParameters() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.HashMap;",
+            "public class Test {",
+            "  private static class MyHashMap<K extends Integer, V extends String>",
+            "      extends HashMap<K, V> {}",
+            "  public boolean boundedTypeParameters(MyHashMap<?, ?> myHashMap) {",
+            "    // BUG: Diagnostic contains:",
+            "    return myHashMap.containsKey(\"bad\");",
+            "  }",
+            "}")
+        .doTest();
   }
 }
