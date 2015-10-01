@@ -37,7 +37,6 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.Tree;
-import com.sun.tools.javac.code.Kinds;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Type;
@@ -253,14 +252,14 @@ public class WildcardImport extends BugChecker implements ClassTreeMatcher {
     public void visitIdent(JCTree.JCIdent tree) {
       if (tree.sym != null) {
         switch (tree.sym.kind) {
-          case Kinds.TYP:
+          case TYP:
             addType(tree.sym.type);
             break;
-          case Kinds.VAR:
-          case Kinds.MTH:
+          case VAR:
+          case MTH:
             addStaticMember(tree.sym);
             break;
-          default:  // falls through
+          default: // falls through
         }
       }
     }

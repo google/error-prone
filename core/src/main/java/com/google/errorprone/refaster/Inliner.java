@@ -24,7 +24,6 @@ import com.google.errorprone.SubContext;
 import com.google.errorprone.refaster.Bindings.Key;
 import com.google.errorprone.refaster.UTypeVar.TypeWithExpression;
 
-import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
@@ -228,7 +227,7 @@ public final class Inliner {
     }
     Name name = asName(var.getName());
     TypeSymbol sym = new TypeVariableSymbol(0, name, null, symtab().noSymbol);
-    typeVar = new TypeVar(sym, null, null, List.<Attribute.TypeCompound>nil());
+    typeVar = new TypeVar(sym, null, null);
     sym.type = typeVar;
     typeVarCache.put(var.getName(), typeVar);
     // Any recursive uses of var will point to the same TypeVar object generated above.

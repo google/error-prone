@@ -25,7 +25,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 
-import com.sun.tools.javac.nio.JavacPathFileManager;
+import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.util.Context;
 
 import java.io.IOException;
@@ -39,9 +39,9 @@ import java.util.List;
 import javax.tools.JavaFileObject;
 
 /**
- * An in-memory file manager for testing that uses {@link JavacPathFileManager} and {@link Jimfs}.
+ * An in-memory file manager for testing that uses {@link JavacFileManager} and {@link Jimfs}.
  */
-public class ErrorProneInMemoryFileManager extends JavacPathFileManager {
+public class ErrorProneInMemoryFileManager extends JavacFileManager {
   private final FileSystem fileSystem;
   private final Optional<Class<?>> clazz;
 
@@ -70,7 +70,6 @@ public class ErrorProneInMemoryFileManager extends JavacPathFileManager {
     super(new Context(), false, UTF_8);
     this.fileSystem = Jimfs.newFileSystem(Configuration.unix());
     this.clazz = clazz;
-    setDefaultFileSystem(fileSystem);
   }
 
   /**
