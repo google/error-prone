@@ -26,6 +26,7 @@ import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
@@ -66,6 +67,14 @@ import javax.annotation.Nullable;
 )
 public class CollectionIncompatibleType extends BugChecker implements MethodInvocationTreeMatcher {
 
+  private static enum FixType {
+    NONE,
+    CAST_TO_OBJECT,
+    PRINT_TYPES_AS_COMMENT,
+  }
+
+  private static final FixType fixType = FixType.NONE;
+
   /* TODO(eaftan):
    * 1) Add new methods.  The list is in Issue 106.  It might be easier to do it incrementally.
    * 2) Consider whether there is a subset of these that can/should be errors rather than warnings.
@@ -99,15 +108,35 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
       return Description.NO_MATCH;
     }
 
-    return buildDescription(tree)
+    Description.Builder description = buildDescription(tree)
         .setMessage(
             String.format(
                 "Argument '%s' should not be passed to this method; its type %s is not compatible "
                     + "with its collection's type argument %s",
                 result.methodArg(),
                 result.methodArgType(),
-                result.typeArgType()))
-        .build();
+                result.typeArgType()));
+
+    switch (fixType) {
+      case PRINT_TYPES_AS_COMMENT:
+        description.addFix(
+            SuggestedFix.prefixWith(
+                tree,
+                String.format(
+                    "/* expected: %s, actual: %s */",
+                    ASTHelpers.getUpperBound(result.typeArgType(), types),
+                    result.methodArgType())));
+        break;
+      case CAST_TO_OBJECT:
+        description.addFix(SuggestedFix.prefixWith(result.methodArg(), "(Object) "));
+        break;
+      case NONE:
+        // No fix
+        break;
+
+    }
+
+    return description.build();
   }
 
   @AutoValue
