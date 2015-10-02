@@ -154,6 +154,22 @@ public class CollectionIncompatibleTypePositiveCases {
 
   /* Tests for behavior */
 
+  public boolean errorMessageUsesSimpleNames(Collection<Integer> collection) {
+    // BUG: Diagnostic contains: Argument '"bad"' should not be passed to this method
+    // its type String is not compatible with its collection's type argument Integer
+    return collection.contains("bad");
+  }
+
+  private static class Optional<T> {}
+
+  public boolean errorMessageUsesFullyQualifedNamesWhenSimpleNamesAreTheSame(
+      Collection<com.google.common.base.Optional<?>> collection) {
+    // BUG: Diagnostic contains: Argument 'new Optional<>()' should not be passed to this method
+    // its type com.google.errorprone.bugpatterns.CollectionIncompatibleTypePositiveCases.Optional<java.lang.Object> is not compatible with its collection's type argument com.google.common.base.Optional<?>
+    return collection.contains(new Optional<>());
+  }
+
+  
   public boolean boundedWildcard() {
     Collection<? extends Date> collection = new ArrayList<>();
     // BUG: Diagnostic contains:

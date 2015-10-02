@@ -35,6 +35,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
+import com.sun.tools.javac.util.Name;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -113,14 +114,28 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
       return Description.NO_MATCH;
     }
 
+    // For error message, use simple names instead of fully qualified names unless they are
+    // identical.
+    String methodArgType;
+    String typeArgType;
+    Name methodArgTypeSimpleName = result.methodArgType().tsym.getSimpleName();
+    Name typeArgTypeSimpleName = result.typeArgType().tsym.getSimpleName();
+    if (methodArgTypeSimpleName.contentEquals(typeArgTypeSimpleName)) {
+      methodArgType = result.methodArgType().toString();
+      typeArgType = result.typeArgType().toString();
+    } else {
+      methodArgType = methodArgTypeSimpleName.toString();
+      typeArgType = typeArgTypeSimpleName.toString();
+    }
+
     Description.Builder description = buildDescription(tree)
         .setMessage(
             String.format(
                 "Argument '%s' should not be passed to this method; its type %s is not compatible "
                     + "with its collection's type argument %s",
                 result.methodArg(),
-                result.methodArgType(),
-                result.typeArgType()));
+                methodArgType,
+                typeArgType));
 
     switch (fixType) {
       case PRINT_TYPES_AS_COMMENT:
