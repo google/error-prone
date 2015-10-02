@@ -21,9 +21,15 @@ import com.google.common.collect.ClassToInstanceMap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Deque;
+import java.util.Dictionary;
 import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
+import java.util.Vector;
 import java.util.concurrent.ConcurrentNavigableMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
@@ -31,7 +37,9 @@ import java.util.concurrent.ConcurrentSkipListMap;
  * Positive test cases for {@link CollectionIncompatibleType}.
  */
 public class CollectionIncompatibleTypePositiveCases {
-  
+
+  /* Tests for API coverage */
+
   public boolean collection() {
     Collection<Integer> collection = new ArrayList<>();
     // BUG: Diagnostic contains:
@@ -46,6 +54,34 @@ public class CollectionIncompatibleTypePositiveCases {
     boolean result = arrayList.contains("bad");
     // BUG: Diagnostic contains:
     return result && arrayList.remove("bad");
+  }
+  
+  public boolean deque(Deque<Integer> deque) {
+    // BUG: Diagnostic contains:
+    boolean result = deque.removeFirstOccurrence("bad");
+    // BUG: Diagnostic contains:
+    return result && deque.removeLastOccurrence("bad");
+  }
+
+  public boolean dequeSubtype(LinkedList<Integer> linkedList) {
+    // BUG: Diagnostic contains:
+    boolean result = linkedList.removeFirstOccurrence("bad");
+    // BUG: Diagnostic contains:
+    return result && linkedList.removeLastOccurrence("bad");
+  }
+
+  public String dictionary(Dictionary<Integer, String> dictionary) {
+    // BUG: Diagnostic contains:
+    String result = dictionary.get("bad");
+    // BUG: Diagnostic contains:
+    return result + dictionary.remove("bad");
+  }
+
+  public String dictionarySubtype(Hashtable<Integer, String> hashtable) {
+    // BUG: Diagnostic contains:
+    String result = hashtable.get("bad");
+    // BUG: Diagnostic contains:
+    return result + hashtable.remove("bad");
   }
 
   public int list() {
@@ -89,6 +125,34 @@ public class CollectionIncompatibleTypePositiveCases {
     result = concurrentNavigableMap.remove("bad");
     return false;
   }
+  
+  public int stack(Stack<Integer> stack) {
+    // BUG: Diagnostic contains:
+    return stack.search("bad");
+  }
+
+  private static class MyStack<E> extends Stack<E> {}
+
+  public int stackSubtype(MyStack<Integer> myStack) {
+    // BUG: Diagnostic contains:
+    return myStack.search("bad");
+  }
+
+  public int vector(Vector<Integer> vector) {
+    // BUG: Diagnostic contains:
+    int result = vector.indexOf("bad", 0);
+    // BUG: Diagnostic contains:
+    return result + vector.lastIndexOf("bad", 0);
+  }
+
+  public int vectorSubtype(Stack<Integer> stack) {
+    // BUG: Diagnostic contains:
+    int result = stack.indexOf("bad", 0);
+    // BUG: Diagnostic contains:
+    return result + stack.lastIndexOf("bad", 0);
+  }
+
+  /* Tests for behavior */
 
   public boolean boundedWildcard() {
     Collection<? extends Date> collection = new ArrayList<>();

@@ -22,10 +22,15 @@ import com.google.common.collect.ClassToInstanceMap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Deque;
+import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
+import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentNavigableMap;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -47,6 +52,26 @@ public class CollectionIncompatibleTypeNegativeCases {
     ArrayList<String> arrayList = new ArrayList<>();
     boolean result = arrayList.contains("ok");
     return result && arrayList.remove("ok");
+  }
+  
+  public boolean deque(Deque<String> deque) {
+    boolean result = deque.removeFirstOccurrence("ok");
+    return result && deque.removeLastOccurrence("ok");
+  }
+
+  public boolean dequeSubtype(LinkedList<String> linkedList) {
+    boolean result = linkedList.removeFirstOccurrence("ok");
+    return result && linkedList.removeLastOccurrence("ok");
+  }
+
+  public int dictionary(Dictionary<String, Integer> dictionary) {
+    int result = dictionary.get("ok");
+    return result + dictionary.remove("ok");
+  }
+
+  public int dictionarySubtype(Hashtable<String, Integer> hashtable) {
+    int result = hashtable.get("ok");
+    return result + hashtable.remove("ok");
   }
 
   public int list() {
@@ -77,6 +102,26 @@ public class CollectionIncompatibleTypeNegativeCases {
     result2 = concurrentNavigableMap.containsValue("ok");
     result = concurrentNavigableMap.remove(1);
     return false;
+  }
+  
+  public int stack(Stack<String> stack) {
+    return stack.search("ok");
+  }
+
+  private static class MyStack<E> extends Stack<E> {}
+
+  public int stackSubtype(MyStack<String> myStack) {
+    return myStack.search("ok");
+  }
+
+  public int vector(Vector<String> vector) {
+    int result = vector.indexOf("ok", 0);
+    return result + vector.lastIndexOf("ok", 0);
+  }
+
+  public int vectorSubtype(Stack<String> stack) {
+    int result = stack.indexOf("ok", 0);
+    return result + stack.lastIndexOf("ok", 0);
   }
 
   /* Tests for behavior */

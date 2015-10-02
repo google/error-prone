@@ -75,23 +75,28 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
 
   private static final FixType fixType = FixType.NONE;
 
-  /* TODO(eaftan):
-   * 1) Add new methods.  The list is in Issue 106.  It might be easier to do it incrementally.
-   * 2) Consider whether there is a subset of these that can/should be errors rather than warnings.
-   * 3) Bump maturity to MATURE.
-   */
+  // TODO(eaftan): Support an @CompatibleWith("K") annotation for non-JDK code, particularly Guava.
 
   private static final Iterable<MatcherWithTypeInfo> MATCHERS =
       Arrays.asList(
           new MatcherWithTypeInfo("java.util.Collection", "contains(java.lang.Object)", 0, 0),
           new MatcherWithTypeInfo("java.util.Collection", "remove(java.lang.Object)", 0, 0),
+          new MatcherWithTypeInfo(
+              "java.util.Deque", "removeFirstOccurrence(java.lang.Object)", 0, 0),
+          new MatcherWithTypeInfo(
+              "java.util.Deque", "removeLastOccurrence(java.lang.Object)", 0, 0),
+          new MatcherWithTypeInfo("java.util.Dictionary", "get(java.lang.Object)", 0, 0),
+          new MatcherWithTypeInfo("java.util.Dictionary", "remove(java.lang.Object)", 0, 0),
           new MatcherWithTypeInfo("java.util.List", "indexOf(java.lang.Object)", 0, 0),
           new MatcherWithTypeInfo("java.util.List", "lastIndexOf(java.lang.Object)", 0, 0),
-          new MatcherWithTypeInfo("java.util.Map", "get(java.lang.Object)", 0, 0),
           new MatcherWithTypeInfo("java.util.Map", "containsKey(java.lang.Object)", 0, 0),
+          new MatcherWithTypeInfo("java.util.Map", "containsValue(java.lang.Object)", 1, 0),
+          new MatcherWithTypeInfo("java.util.Map", "get(java.lang.Object)", 0, 0),
           new MatcherWithTypeInfo("java.util.Map", "remove(java.lang.Object)", 0, 0),
-          new MatcherWithTypeInfo("java.util.Map", "containsValue(java.lang.Object)", 1, 0));
-
+          new MatcherWithTypeInfo("java.util.Stack", "search(java.lang.Object)", 0, 0),
+          new MatcherWithTypeInfo("java.util.Vector", "indexOf(java.lang.Object,int)", 0, 0),
+          new MatcherWithTypeInfo("java.util.Vector", "lastIndexOf(java.lang.Object,int)", 0, 0),
+          new MatcherWithTypeInfo("java.util.Vector", "removeElement(java.lang.Object)", 0, 0));
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
