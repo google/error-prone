@@ -38,6 +38,7 @@ import com.google.errorprone.bugpatterns.CheckReturnValue;
 import com.google.errorprone.bugpatterns.ClassCanBeStatic;
 import com.google.errorprone.bugpatterns.ClassName;
 import com.google.errorprone.bugpatterns.CollectionIncompatibleType;
+import com.google.errorprone.bugpatterns.OptionalEquality;
 import com.google.errorprone.bugpatterns.ComparisonOutOfRange;
 import com.google.errorprone.bugpatterns.CompileTimeConstantChecker;
 import com.google.errorprone.bugpatterns.DeadException;
@@ -289,6 +290,7 @@ public class BuiltInCheckerSuppliers {
           NonRuntimeAnnotation.class,
           NullablePrimitive.class,
           NumericEquality.class,
+          OptionalEquality.class,
           PackageLocation.class,
           PreconditionsExpensiveString.class,
           PrimitiveArrayPassedToVarargsMethod.class,
