@@ -87,6 +87,11 @@ public class MultipleTopLevelClasses extends BugChecker implements CompilationUn
         }
       }
     }
+    if (names.size() <= 1) {
+      // this can happen with multiple type declarations if some of them are
+      // empty (e.g. ";" at the top level counts as an empty type decl)
+      return Description.NO_MATCH;
+    }
     String message =
         String.format(
             "Expected at most one top-level class declaration, instead found: %s",

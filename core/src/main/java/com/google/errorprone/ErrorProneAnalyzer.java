@@ -120,7 +120,16 @@ public class ErrorProneAnalyzer implements TaskListener {
    * Returns true if all declarations inside the given compilation unit have been visited.
    */
   private boolean finishedCompilation(CompilationUnitTree tree) {
-    return seen.containsAll(tree.getTypeDecls());
+    for (Tree decl : tree.getTypeDecls()) {
+      if (decl.getKind() == Tree.Kind.EMPTY_STATEMENT) {
+        // ignore ";" at the top level, which counts as an empty type decl
+        continue;
+      }
+      if (!seen.contains(decl)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /**

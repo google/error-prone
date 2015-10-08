@@ -69,4 +69,14 @@ public class MultipleTopLevelClassesTest {
             "@SuppressWarnings(\"TopLevel\") class Other {}")
         .doTest();
   }
+
+  @Test
+  public void emptyDeclaration() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "a/A.java",
+            "package a;",
+            "class Test {};")
+        .doTest();
+  }
 }
