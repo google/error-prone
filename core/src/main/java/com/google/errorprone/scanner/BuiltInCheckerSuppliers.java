@@ -25,6 +25,7 @@ import com.google.errorprone.bugpatterns.ArrayEquals;
 import com.google.errorprone.bugpatterns.ArrayHashCode;
 import com.google.errorprone.bugpatterns.ArrayToString;
 import com.google.errorprone.bugpatterns.ArrayToStringCompoundAssignment;
+import com.google.errorprone.bugpatterns.EmptyTopLevelDeclaration;
 import com.google.errorprone.bugpatterns.ArrayToStringConcatenation;
 import com.google.errorprone.bugpatterns.ArraysAsListPrimitiveArray;
 import com.google.errorprone.bugpatterns.AssertFalse;
@@ -256,6 +257,7 @@ public class BuiltInCheckerSuppliers {
           DivZero.class,
           DoubleCheckedLocking.class,
           EmptyIfStatement.class,
+          EmptyTopLevelDeclaration.class,
           FallThroughSuppression.class,
           GuiceAssistedParameters.class,
           GuiceInjectOnFinalField.class,
