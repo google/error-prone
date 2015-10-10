@@ -49,4 +49,27 @@ public class NumericEqualityNegativeCases {
     return retVal;
   }
 
+  public boolean testComparisons(Integer x, Integer y) {
+    boolean retVal;
+
+    retVal = x <= y;
+    retVal = x < y;
+    retVal = x >= y;
+    retVal = x > y;
+
+    return retVal;
+  }
+
+  public boolean testUnboxing(Integer x, int y) {
+    boolean retVal;
+
+    retVal = (x == y);
+    retVal = (x != y);
+
+    final int constValue = 1000;
+    retVal = (x == constValue);
+    retVal = (x != constValue);
+
+    return retVal;
+  }
 }

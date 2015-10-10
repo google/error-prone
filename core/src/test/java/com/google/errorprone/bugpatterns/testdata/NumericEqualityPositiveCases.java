@@ -21,23 +21,60 @@ package com.google.errorprone.bugpatterns;
  */
 public class NumericEqualityPositiveCases {
 
-  public boolean testEquality(Integer x, Integer y) {
+  public boolean testIntegers(Integer x, Integer y) {
     boolean retVal;
 
     // BUG: Diagnostic contains: Objects.equal(x, y)
     retVal = (x == y);
-    
+
     // BUG: Diagnostic contains: !Objects.equal(x, y)
     retVal = (x != y);
     final Integer constValue = new Integer(1000);
-    
+
     // BUG: Diagnostic contains: Objects.equal(x, constValue)
     retVal = (x == constValue);
-    
+
     // BUG: Diagnostic contains: !Objects.equal(x, constValue)
     retVal = (x != constValue);
 
     return retVal;
   }
 
+  public boolean testLongs(Long x, Long y) {
+    boolean retVal;
+
+    // BUG: Diagnostic contains: Objects.equal(x, y)
+    retVal = (x == y);
+
+    // BUG: Diagnostic contains: !Objects.equal(x, y)
+    retVal = (x != y);
+    final Long constValue = new Long(1000L);
+
+    // BUG: Diagnostic contains: Objects.equal(x, constValue)
+    retVal = (x == constValue);
+
+    // BUG: Diagnostic contains: !Objects.equal(x, constValue)
+    retVal = (x != constValue);
+
+    return retVal;
+  }
+
+  public boolean testMixed(Integer x, Number y) {
+    boolean retVal;
+
+    // BUG: Diagnostic contains: Objects.equal(x, y)
+    retVal = (x == y);
+
+    // BUG: Diagnostic contains: !Objects.equal(x, y)
+    retVal = (x != y);
+    final Number constValue = new Long(1000L);
+
+    // BUG: Diagnostic contains: Objects.equal(x, constValue)
+    retVal = (x == constValue);
+
+    // BUG: Diagnostic contains: !Objects.equal(x, constValue)
+    retVal = (x != constValue);
+
+    return retVal;
+  }
 }
