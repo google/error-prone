@@ -475,4 +475,34 @@ public class SuggestedFix implements Fix {
       return SuggestedFix.prefixWith(posTree, modifier + " ");
     }
   }
+
+  /**
+   * Removes a modifier from the given class, method, or field declaration.
+   */
+  @Nullable
+  public static Fix removeModifier(Tree tree, Modifier modifier, VisitorState state) {
+    ModifiersTree originalModifiers = ASTHelpers.getModifiers(tree);
+    if (originalModifiers == null) {
+      return null;
+    }
+    ImmutableList<Token> tokens = state.getTokensForNode((JCTree) originalModifiers);
+    Token toRemove = null;
+    for (Token tok : tokens) {
+      Modifier mod = getTokModifierKind(tok);
+      if (mod == modifier) {
+        toRemove = tok;
+        break;
+      }
+    }
+    if (toRemove == null) {
+      return null;
+    }
+    JCTree posTree = (JCTree) originalModifiers;
+    // the start pos of the re-lexed tokens is relative to the start of the tree
+    int startPosition = posTree.getStartPosition() + toRemove.pos;
+    int endPosition = posTree.getStartPosition() + toRemove.endPos;
+    // This will leave at least one extra whitespace character,  presumably the autoformatter will
+    // eliminate it.
+    return replace(startPosition, endPosition, "");
+  }
 }
