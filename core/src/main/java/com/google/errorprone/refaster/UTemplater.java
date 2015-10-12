@@ -583,7 +583,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
    * {@link Matches} annotation.  This roundabout solution is recommended and explained by
    * {@link Element#getAnnotation(Class)}.
    */
-  private Class<? extends Matcher<? super ExpressionTree>> getValue(Matches matches) {
+  static Class<? extends Matcher<? super ExpressionTree>> getValue(Matches matches) {
     String name;
     try {
       matches.value();
@@ -604,7 +604,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
    * {@link NotMatches} annotation.  This roundabout solution is recommended and explained by
    * {@link Element#getAnnotation(Class)}.
    */
-  private Class<? extends Matcher<? super ExpressionTree>> getValue(NotMatches matches) {
+  static Class<? extends Matcher<? super ExpressionTree>> getValue(NotMatches matches) {
     String name;
     try {
       matches.value();
@@ -625,8 +625,8 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
    * generics better.
    */
   @SuppressWarnings("unchecked")
-  private <T> Class<? extends T> asSubclass(Class<?> klass, TypeToken<T> token)
-      throws ClassCastException{
+  private static <T> Class<? extends T> asSubclass(Class<?> klass, TypeToken<T> token)
+      throws ClassCastException {
     if (!token.isAssignableFrom(klass)) {
       throw new ClassCastException(klass + " is not assignable to " + token);
     }

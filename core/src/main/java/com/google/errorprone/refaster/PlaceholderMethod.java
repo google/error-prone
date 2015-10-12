@@ -16,19 +16,31 @@ package com.google.errorprone.refaster;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.ImmutableClassToInstanceMap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
+import com.google.errorprone.VisitorState;
+import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.refaster.annotation.Matches;
 import com.google.errorprone.refaster.annotation.MayOptionallyUse;
+import com.google.errorprone.refaster.annotation.NotMatches;
+import com.google.errorprone.refaster.annotation.OfKind;
+import com.google.errorprone.refaster.annotation.Placeholder;
 
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.Tree;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.util.List;
 
+import com.google.errorprone.refaster.UPlaceholderExpression.PlaceholderParamIdent;
+
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
+import java.util.Arrays;
 import java.util.Set;
 
 /**
@@ -42,9 +54,38 @@ abstract class PlaceholderMethod implements Serializable {
   static PlaceholderMethod create(CharSequence name, UType returnType,
       ImmutableMap<UVariableDecl, ImmutableClassToInstanceMap<Annotation>> parameters, 
       ClassToInstanceMap<Annotation> annotations) {
-    return new AutoValue_PlaceholderMethod(StringName.of(name), 
+    final boolean allowsIdentity = annotations.getInstance(Placeholder.class).allowsIdentity();
+    final Class<? extends Matcher<? super ExpressionTree>> matchesClass =
+        annotations.containsKey(Matches.class)
+            ? UTemplater.getValue(annotations.getInstance(Matches.class))
+            : null;
+    final Class<? extends Matcher<? super ExpressionTree>> notMatchesClass =
+        annotations.containsKey(NotMatches.class)
+            ? UTemplater.getValue(annotations.getInstance(NotMatches.class))
+            : null;
+    final Predicate<Tree.Kind> allowedKinds =
+        annotations.containsKey(OfKind.class)
+            ? Predicates.<Tree.Kind>in(Arrays.asList(annotations.getInstance(OfKind.class).value()))
+            : Predicates.<Tree.Kind>alwaysTrue();
+    class PlaceholderMatcher implements Serializable, Matcher<ExpressionTree> {
+
+      @Override
+      public boolean matches(ExpressionTree t, VisitorState state) {
+        try {
+          return (allowsIdentity || !(t instanceof PlaceholderParamIdent))
+              && (matchesClass == null || matchesClass.newInstance().matches(t, state))
+              && (notMatchesClass == null || !notMatchesClass.newInstance().matches(t, state))
+              && allowedKinds.apply(t.getKind());
+        } catch (InstantiationException | IllegalAccessException e) {
+          throw new RuntimeException(e);
+        }
+      }
+    }
+    return new AutoValue_PlaceholderMethod(
+        StringName.of(name),
         returnType,
         parameters,
+        new PlaceholderMatcher(),
         ImmutableClassToInstanceMap.<Annotation, Annotation>copyOf(annotations));
   }
 
@@ -54,6 +95,8 @@ abstract class PlaceholderMethod implements Serializable {
 
   abstract ImmutableMap<UVariableDecl, ImmutableClassToInstanceMap<Annotation>> 
       annotatedParameters();
+  
+  abstract Matcher<ExpressionTree> matcher();
 
   abstract ImmutableClassToInstanceMap<Annotation> annotations();
 

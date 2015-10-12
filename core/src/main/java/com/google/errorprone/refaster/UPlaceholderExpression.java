@@ -24,7 +24,6 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.errorprone.refaster.annotation.Placeholder;
 
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.Tree;
@@ -46,7 +45,7 @@ import java.util.Map;
  * @author lowasser@google.com (Louis Wasserman)
  */
 @AutoValue
-abstract class UPlaceholderExpression extends UExpression {
+public abstract class UPlaceholderExpression extends UExpression {
 
   static UPlaceholderExpression create(
       PlaceholderMethod placeholder, Iterable<? extends UExpression> arguments) {
@@ -63,7 +62,7 @@ abstract class UPlaceholderExpression extends UExpression {
 
   abstract ImmutableMap<UVariableDecl, UExpression> arguments();
 
-  static class PlaceholderParamIdent extends JCIdent {
+  public static final class PlaceholderParamIdent extends JCIdent {
     final UVariableDecl param;
 
     PlaceholderParamIdent(UVariableDecl param, Context context) {
@@ -170,16 +169,18 @@ abstract class UPlaceholderExpression extends UExpression {
           public Optional<Unifier> apply(
               PlaceholderUnificationVisitor.State<? extends JCExpression> state) {
             if (ImmutableSet.copyOf(state.seenParameters())
-                    .containsAll(placeholder().requiredParameters())) {
+                .containsAll(placeholder().requiredParameters())) {
               Unifier resultUnifier = state.unifier();
               JCExpression prevBinding = resultUnifier.getBinding(placeholder().exprKey());
               if (prevBinding != null) {
                 return prevBinding.toString().equals(state.result().toString())
-                    ? Optional.of(resultUnifier) : Optional.<Unifier>absent();
+                    ? Optional.of(resultUnifier)
+                    : Optional.<Unifier>absent();
               }
               JCExpression result = state.result();
-              if (!placeholder().annotations().getInstance(Placeholder.class).allowsIdentity()
-                  && result instanceof PlaceholderParamIdent) {
+              if (!placeholder()
+                  .matcher()
+                  .matches(result, UMatches.makeVisitorState(expr, resultUnifier))) {
                 return Optional.absent();
               }
               result.type = expr.type;

@@ -29,7 +29,7 @@ import java.lang.annotation.Target;
  * Specify an error-prone {@link Matcher} to further restrict what expressions are matched
  * by the annotated parameter.
  */
-@Target(ElementType.PARAMETER)
+@Target({ElementType.PARAMETER, ElementType.METHOD})
 @Retention(RetentionPolicy.SOURCE)
 public @interface NotMatches {
   Class<? extends Matcher<? super ExpressionTree>> value();

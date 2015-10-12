@@ -88,7 +88,7 @@ abstract class UMatches extends UExpression {
         && matcher.matches((ExpressionTree) target, makeVisitorState(target, unifier));
   }
 
-  private static <T> T makeMatcher(Class<T> klass) {
+  static <T> T makeMatcher(Class<T> klass) {
     try {
       return klass.newInstance();
     } catch (IllegalAccessException|InstantiationException e) {
@@ -96,7 +96,7 @@ abstract class UMatches extends UExpression {
     }
   }
 
-  private static VisitorState makeVisitorState(Tree target, Unifier unifier) {
+  static VisitorState makeVisitorState(Tree target, Unifier unifier) {
     Context context = unifier.getContext();
     TreePath path = TreePath.getPath(context.get(JCCompilationUnit.class), target);
     return new VisitorState(context).withPath(path);
