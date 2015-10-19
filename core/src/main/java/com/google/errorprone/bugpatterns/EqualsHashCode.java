@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.isSameType;
+import static com.google.errorprone.matchers.Matchers.methodHasArity;
 import static com.google.errorprone.matchers.Matchers.methodHasParameters;
 import static com.google.errorprone.matchers.Matchers.methodHasVisibility;
 import static com.google.errorprone.matchers.Matchers.methodIsNamed;
@@ -54,17 +55,7 @@ import com.sun.source.tree.Tree;
     + " object in a collection. See Effective Java 3.9 for more information and a discussion of"
     + " how to correctly implement hashCode().",
     category = JDK, severity = WARNING, maturity = MATURE)
-public class EqualsHashCode extends BugChecker
-    implements ClassTreeMatcher{
-
-  public static Matcher<MethodTree> methodHasArity(final int arity) {
-    return new Matcher<MethodTree>() {
-      @Override
-      public boolean matches(MethodTree methodTree, VisitorState state) {
-        return methodTree.getParameters().size() == arity;
-      }
-    };
-  }
+public class EqualsHashCode extends BugChecker implements ClassTreeMatcher {
 
   private static final Matcher<MethodTree> EQUALS_MATCHER = allOf(
       methodIsNamed("equals"),
@@ -84,6 +75,8 @@ public class EqualsHashCode extends BugChecker
     MethodTree equals = null;
     MethodTree hashCode = null;
 
+    // TODO(eaftan): borrow logic from BadAnnotationImplementation to find equals/hashCode methods
+    // that are defined higher up in the class hierarchy
     for (Tree member : classTree.getMembers()) {
       if (member instanceof MethodTree) {
         MethodTree methodTree = (MethodTree) member;

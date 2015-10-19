@@ -171,6 +171,14 @@ public class Suppliers {
       }
     };
 
+  public static final Supplier<Type> ANNOTATION_TYPE =
+      new Supplier<Type>() {
+        @Override
+        public Type get(VisitorState state) {
+          return state.getSymtab().annotationType;
+        }
+      };
+
   /**
    * Supplies what was given. Useful for adapting to methods that require a supplier.
    *

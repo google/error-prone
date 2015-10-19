@@ -1318,7 +1318,7 @@ public class Matchers {
       }
     };
   }
-  
+
   /**
    * Applies the given matcher recursively to all descendants of an AST node, and matches if
    * any matching descendant node is found.
@@ -1327,5 +1327,19 @@ public class Matchers {
    */
   public static Matcher<Tree> contains(Matcher<Tree> treeMatcher) {
     return new Contains(treeMatcher);
+  }
+
+  /**
+   * Matches if the method accepts the given number of arguments.
+   *
+   * @param arity the number of arguments the method should accept
+   */
+  public static Matcher<MethodTree> methodHasArity(final int arity) {
+    return new Matcher<MethodTree>() {
+      @Override
+      public boolean matches(MethodTree methodTree, VisitorState state) {
+        return methodTree.getParameters().size() == arity;
+      }
+    };
   }
 }
