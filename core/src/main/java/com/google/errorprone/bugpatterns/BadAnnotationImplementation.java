@@ -48,8 +48,6 @@ import com.sun.tools.javac.util.Name;
 
 import java.lang.annotation.Annotation;
 
-import javax.annotation.Nullable;
-
 /**
  * Checker that ensures implementations of {@link Annotation} override equals and hashCode.
  * Otherwise, the implementation inherits equals and hashCode from {@link Object}, and those do not
@@ -95,7 +93,7 @@ public class BadAnnotationImplementation extends BugChecker implements ClassTree
     final Types types = state.getTypes();
     Name equalsName = state.getName("equals");
     Predicate<MethodSymbol> equalsPredicate = new Predicate<MethodSymbol>() {
-      @Override public boolean apply(@Nullable MethodSymbol methodSymbol) {
+      @Override public boolean apply(MethodSymbol methodSymbol) {
         return !methodSymbol.isStatic()
             && ((methodSymbol.flags() & Flags.SYNTHETIC) == 0)
             && ((methodSymbol.flags() & Flags.ABSTRACT) == 0)
@@ -107,7 +105,7 @@ public class BadAnnotationImplementation extends BugChecker implements ClassTree
     };
     Name hashCodeName = state.getName("hashCode");
     Predicate<MethodSymbol> hashCodePredicate = new Predicate<MethodSymbol>() {
-      @Override public boolean apply(@Nullable MethodSymbol methodSymbol) {
+      @Override public boolean apply(MethodSymbol methodSymbol) {
         return !methodSymbol.isStatic()
             && ((methodSymbol.flags() & Flags.SYNTHETIC) == 0)
             && ((methodSymbol.flags() & Flags.ABSTRACT) == 0)
