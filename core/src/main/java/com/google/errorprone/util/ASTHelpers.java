@@ -502,7 +502,7 @@ public class ASTHelpers {
     if (!(tree instanceof JCMethodDecl)) {
         return false;
     }
-    return (((JCMethodDecl) tree).mods.flags & Flags.GENERATEDCONSTR) != 0;
+    return (((JCMethodDecl) tree).mods.flags & Flags.GENERATEDCONSTR) == Flags.GENERATEDCONSTR;
   }
 
   /**

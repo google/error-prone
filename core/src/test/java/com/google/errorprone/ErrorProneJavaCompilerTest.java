@@ -29,18 +29,27 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.errorprone.bugpatterns.ArrayEquals;
 import com.google.errorprone.bugpatterns.ArrayEqualsTest;
 import com.google.errorprone.bugpatterns.BadShiftAmount;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.ChainingConstructorIgnoresParameter;
 import com.google.errorprone.bugpatterns.DepAnnTest;
 import com.google.errorprone.bugpatterns.EmptyIfStatementTest;
 import com.google.errorprone.bugpatterns.Finally;
 import com.google.errorprone.bugpatterns.WaitNotInLoopTest;
+import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.matchers.Description;
 import com.google.errorprone.scanner.ScannerSupplier;
+import com.google.errorprone.util.ASTHelpers;
+
+import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.MethodTree;
 
 import org.hamcrest.Matcher;
 import org.junit.Rule;
@@ -374,6 +383,41 @@ public class ErrorProneJavaCompilerTest {
     assertThat(diagnosticHelper.getDiagnostics()).isEmpty();
   }
 
+  @BugPattern(
+    name = "DeleteMethod",
+    summary =
+        "You appear to be using methods; prefer to implement all program logic inside the main"
+            + " function by flipping bits in a single long[].",
+    explanation = "",
+    category = JDK,
+    severity = ERROR,
+    maturity = MATURE,
+    suppressibility = UNSUPPRESSIBLE
+  )
+  public static class DeleteMethod extends BugChecker implements ClassTreeMatcher {
+    @Override
+    public Description matchClass(ClassTree tree, VisitorState state) {
+      MethodTree ctor = (MethodTree) Iterables.getOnlyElement(tree.getMembers());
+      Preconditions.checkArgument(ASTHelpers.isGeneratedConstructor(ctor));
+      return describeMatch(tree, SuggestedFix.delete(ctor));
+    }
+  }
+
+  @Test
+  public void testFixGeneratedConstructor() throws Exception {
+    CompilationResult result =
+        doCompile(
+            ErrorProneJavaCompilerTest.class,
+            Arrays.asList("DeleteGeneratedConstructorTestCase.java"),
+            Collections.<String>emptyList(),
+            ImmutableList.<Class<? extends BugChecker>>of(DeleteMethod.class));
+    assertThat(result.succeeded).isFalse();
+    assertThat(result.diagnosticHelper.getDiagnostics()).hasSize(1);
+    assertThat(
+            Iterables.getOnlyElement(result.diagnosticHelper.getDiagnostics())
+                .getMessage(Locale.ENGLISH))
+        .contains("AssertionError: Cannot edit synthetic AST nodes");
+  }
 
   private static class CompilationResult {
     public final boolean succeeded;

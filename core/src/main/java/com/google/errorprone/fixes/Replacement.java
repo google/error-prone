@@ -16,6 +16,8 @@
 
 package com.google.errorprone.fixes;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.google.auto.value.AutoValue;
 
 /**
@@ -26,6 +28,11 @@ import com.google.auto.value.AutoValue;
 @AutoValue
 public abstract class Replacement {
   public static Replacement create(int startPosition, int endPosition, String replaceWith) {
+    checkArgument(
+        0 <= startPosition && startPosition <= endPosition,
+        "Illegal range [%s, %s]",
+        startPosition,
+        endPosition);
     return new AutoValue_Replacement(startPosition, endPosition, replaceWith);
   }
 

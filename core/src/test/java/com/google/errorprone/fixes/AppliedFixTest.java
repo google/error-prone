@@ -108,4 +108,10 @@ public class AppliedFixTest {
         .apply(SuggestedFix.builder().addImport("foo.bar.Baz").build());
     assertNull(fix);
   }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void shouldThrowExceptionOnIllegalRange() {
+    AppliedFix.fromSource("public class Foo {}", endPositions)
+        .apply(SuggestedFix.replace(0, -1, ""));
+  }
 }

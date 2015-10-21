@@ -21,8 +21,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
 
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.Tree;
+import com.sun.tools.javac.code.Flags;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.parser.Tokens.Token;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
@@ -188,6 +191,7 @@ public class SuggestedFix implements Fix {
     }
 
     public Builder replace(Tree node, String replaceWith) {
+      checkNotSyntheticConstructor(node);
       return with(new ReplacementFix((DiagnosticPosition) node, replaceWith));
     }
 
@@ -217,26 +221,32 @@ public class SuggestedFix implements Fix {
      * @param startPosAdjustment The adjustment to add to the start position (negative is OK)
      * @param endPosAdjustment The adjustment to add to the end position (negative is OK)
      */
-    public Builder replace(Tree node, String replaceWith, int startPosAdjustment,
-                           int endPosAdjustment) {
+    public Builder replace(
+        Tree node, String replaceWith, int startPosAdjustment, int endPosAdjustment) {
+      checkNotSyntheticConstructor(node);
       return with(new ReplacementFix(
           new AdjustedPosition((JCTree) node, startPosAdjustment, endPosAdjustment),
           replaceWith));
     }
 
     public Builder prefixWith(Tree node, String prefix) {
+      checkNotSyntheticConstructor(node);
       return with(new PrefixInsertion((DiagnosticPosition) node, prefix));
     }
 
     public Builder postfixWith(Tree node, String postfix) {
+      checkNotSyntheticConstructor(node);
       return with(new PostfixInsertion((DiagnosticPosition) node, postfix));
     }
 
     public Builder delete(Tree node) {
+      checkNotSyntheticConstructor(node);
       return replace(node, "");
     }
 
     public Builder swap(Tree node1, Tree node2) {
+      checkNotSyntheticConstructor(node1);
+      checkNotSyntheticConstructor(node2);
       // calling Tree.toString() is kind of cheesy, but we don't currently have a better option
       // TODO(cushon): consider an approach that doesn't rewrite the original tokens
       fixes.add(new ReplacementFix((DiagnosticPosition) node1, node2.toString()));
@@ -278,6 +288,17 @@ public class SuggestedFix implements Fix {
     public Builder removeStaticImport(String importString) {
       importsToRemove.add("import static " + importString);
       return this;
+    }
+    
+    /**
+     * Implicit default constructors are one of the few synthetic constructs
+     * added to the AST early enough to be visible from Error Prone, so we
+     * do a sanity-check here to prevent attempts to edit them.
+     */
+    private static void checkNotSyntheticConstructor(Tree tree) {
+      if (tree instanceof MethodTree && ASTHelpers.isGeneratedConstructor((MethodTree) tree)) {
+        throw new AssertionError("Cannot edit synthetic AST nodes");
+      }
     }
   }
 
