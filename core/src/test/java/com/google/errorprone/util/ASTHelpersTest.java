@@ -21,6 +21,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Verify;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.CompilerBasedAbstractTest;
 import com.google.errorprone.matchers.Matcher;
@@ -32,11 +33,14 @@ import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.TypeVar;
+import com.sun.tools.javac.parser.Tokens.Comment;
+import com.sun.tools.javac.parser.Tokens.Token;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
 
 import org.junit.After;
@@ -412,6 +416,46 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
                   .isEqualTo("java.lang.Number");
             }
             return super.visitMethodInvocation(tree, state);
+          }
+        };
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+  
+  @Test
+  public void testCommentTokens() {
+    writeFile(
+        "A.java",
+        "public class A {",
+        "  Runnable theRunnable = new Runnable() {",
+        "    /**",
+        "     * foo",
+        "     */",
+        "    public void run() {",
+        "      /* bar */",
+        "      System.err.println(\"Hi\");",
+        "    }",
+        "    // baz",
+        "  };",
+        "}");
+    TestScanner scanner =
+        new TestScanner() {
+          @Override
+          public Void visitNewClass(NewClassTree tree, VisitorState state) {
+            setAssertionsComplete();
+            List<String> comments = new ArrayList<>();
+            for (Token t : state.getTokensForNode(tree)) {
+              if (t.comments != null) {
+                for (Comment c : t.comments) {
+                  Verify.verify(c.getSourcePos(0) >= 0);
+                  comments.add(c.getText());
+                }
+              }
+            }
+            assertThat(comments)
+                .containsExactly("/**\n     * foo\n     */", "/* bar */", "// baz")
+                .inOrder();
+            return super.visitNewClass(tree, state);
           }
         };
     tests.add(scanner);

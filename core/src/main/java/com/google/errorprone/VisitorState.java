@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.Tokens;
 
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
@@ -32,10 +33,7 @@ import com.sun.tools.javac.code.Type.ArrayType;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.main.JavaCompiler;
-import com.sun.tools.javac.parser.Scanner;
-import com.sun.tools.javac.parser.ScannerFactory;
 import com.sun.tools.javac.parser.Tokens.Token;
-import com.sun.tools.javac.parser.Tokens.TokenKind;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.TreeMaker;
@@ -314,19 +312,8 @@ public class VisitorState {
    * <p>This is moderately expensive (the source of the node has to be re-lexed), so it should
    * only be used if a fix is already going to be emitted.
    */
-  public ImmutableList<Token> getTokensForNode(JCTree tree) {
-    CharSequence source = getSourceForNode(tree);
-    if (source == null) {
-      return ImmutableList.of();
-    }
-    ScannerFactory fac = ScannerFactory.instance(context);
-    Scanner scanner = fac.newScanner(source, true);
-    ImmutableList.Builder<Token> tokens = ImmutableList.builder();
-    while (scanner.token().kind != TokenKind.EOF) {
-      tokens.add(scanner.token());
-      scanner.nextToken();
-    }
-    return tokens.build();
+  public ImmutableList<Token> getTokensForNode(Tree tree) {
+    return Tokens.getTokens(getSourceForNode(tree), context);
   }
 
   /**
