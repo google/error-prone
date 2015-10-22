@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
-import java.util.Properties;
+import java.util.HashMap;
 
 /**
  * This is a regression test for Issue 222.
  */
-public class CollectionIncompatibleTypeOutOfBounds {
-  public void test() {
-    Properties properties = new Properties();
-    properties.get("");
+public class CollectionIncompatibleTypeClassCast<K, V> extends HashMap<K, V> {
+  public void test(K k) {
+    get(k);
   }
 }

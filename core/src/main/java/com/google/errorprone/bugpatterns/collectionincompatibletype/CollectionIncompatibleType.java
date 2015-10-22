@@ -1,0 +1,226 @@
+/*
+ * Copyright 2012 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.google.errorprone.bugpatterns.collectionincompatibletype;
+
+import static com.google.errorprone.BugPattern.Category.JDK;
+import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+
+import com.google.errorprone.BugPattern;
+import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.bugpatterns.collectionincompatibletype.AbstractCollectionIncompatibleTypeMatcher.MatchResult;
+import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.ASTHelpers;
+
+import com.sun.source.tree.MethodInvocationTree;
+import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.Types;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nullable;
+
+/**
+ * Checker for calling Object-accepting methods with types that don't match the type arguments of
+ * their container types.  Currently this checker detects problems with the following methods on
+ * all their subtypes and subinterfaces:
+ * <ul>
+ * <li>{@link Collection#contains}
+ * <li>{@link Collection#remove}
+ * <li>{@link List#indexOf}
+ * <li>{@link List#lastIndexOf}
+ * <li>{@link Map#get}
+ * <li>{@link Map#containsKey}
+ * <li>{@link Map#remove}
+ * <li>{@link Map#containsValue}
+ * </ul>
+ */
+@BugPattern(
+  name = "CollectionIncompatibleType",
+  summary = "Incompatible type as argument to Object-accepting Java collections method",
+  category = JDK,
+  maturity = EXPERIMENTAL,
+  severity = WARNING
+)
+public class CollectionIncompatibleType extends BugChecker implements MethodInvocationTreeMatcher {
+
+  private static enum FixType {
+    NONE,
+    CAST_TO_OBJECT,
+    PRINT_TYPES_AS_COMMENT,
+  }
+
+  private static final FixType fixType = FixType.NONE;
+
+  // TODO(eaftan): Support an @CompatibleWith("K") annotation for non-JDK code, particularly Guava.
+
+  private static final Iterable<? extends AbstractCollectionIncompatibleTypeMatcher> MATCHERS =
+      Arrays.asList(
+          // "Normal" cases, e.g. Collection#remove(Object)
+          new MethodArgMatcher("java.util.Collection", "contains(java.lang.Object)", 0, 0),
+          new MethodArgMatcher("java.util.Collection", "remove(java.lang.Object)", 0, 0),
+          new MethodArgMatcher("java.util.Deque", "removeFirstOccurrence(java.lang.Object)", 0, 0),
+          new MethodArgMatcher("java.util.Deque", "removeLastOccurrence(java.lang.Object)", 0, 0),
+          new MethodArgMatcher("java.util.Dictionary", "get(java.lang.Object)", 0, 0),
+          new MethodArgMatcher("java.util.Dictionary", "remove(java.lang.Object)", 0, 0),
+          new MethodArgMatcher("java.util.List", "indexOf(java.lang.Object)", 0, 0),
+          new MethodArgMatcher("java.util.List", "lastIndexOf(java.lang.Object)", 0, 0),
+          new MethodArgMatcher("java.util.Map", "containsKey(java.lang.Object)", 0, 0),
+          new MethodArgMatcher("java.util.Map", "containsValue(java.lang.Object)", 1, 0),
+          new MethodArgMatcher("java.util.Map", "get(java.lang.Object)", 0, 0),
+          new MethodArgMatcher("java.util.Map", "remove(java.lang.Object)", 0, 0),
+          new MethodArgMatcher("java.util.Stack", "search(java.lang.Object)", 0, 0),
+          new MethodArgMatcher("java.util.Vector", "indexOf(java.lang.Object,int)", 0, 0),
+          new MethodArgMatcher("java.util.Vector", "lastIndexOf(java.lang.Object,int)", 0, 0),
+          new MethodArgMatcher("java.util.Vector", "removeElement(java.lang.Object)", 0, 0),
+
+          // Cases where we need to extract the type argument from a method argument, e.g.
+          // Collection#containsAll(Collection<?>)
+          new TypeArgOfMethodArgMatcher(
+              "java.util.Collection", // class that defines the method
+              "containsAll(java.util.Collection<?>)", // method signature
+              0, // index of the owning class's type argument to extract
+              0, // index of the method argument whose type argument to extract
+              "java.util.Collection", // type of the method argument
+              0), // index of the method argument's type argument to extract
+          new TypeArgOfMethodArgMatcher(
+              "java.util.Collection", // class that defines the method
+              "removeAll(java.util.Collection<?>)", // method signature
+              0, // index of the owning class's type argument to extract
+              0, // index of the method argument whose type argument to extract
+              "java.util.Collection", // type of the method argument
+              0), // index of the method argument's type argument to extract
+          new TypeArgOfMethodArgMatcher(
+              "java.util.Collection", // class that defines the method
+              "retainAll(java.util.Collection<?>)", // method signature
+              0, // index of the owning class's type argument to extract
+              0, // index of the method argument whose type argument to extract
+              "java.util.Collection", // type of the method argument
+              0)); // index of the method argument's type argument to extract
+
+
+  @Override
+  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+
+    MatchResult result = firstNonNullMatchResult(MATCHERS, tree, state);
+    if (result == null) {
+      return Description.NO_MATCH;
+    }
+
+    Types types = state.getTypes();
+    if (types.isCastable(
+        result.sourceType(), types.erasure(ASTHelpers.getUpperBound(result.targetType(), types)))) {
+      return Description.NO_MATCH;
+    }
+
+    boolean useMessageTemplateWithGenerics = !types.isSameType(
+        ASTHelpers.getType(result.sourceTree()),
+        result.sourceType());
+
+    // For error message, use simple names instead of fully qualified names unless they are
+    // identical.
+    String sourceTreeType = getSimpleName(ASTHelpers.getType(result.sourceTree()));
+    String sourceType = getSimpleName(result.sourceType());
+    String targetType = getSimpleName(result.targetType());
+    if (sourceType.equals(targetType)) {
+      sourceType = result.sourceType().toString();
+      targetType = result.targetType().toString();
+    }
+
+    Description.Builder description = buildDescription(tree);
+    if (useMessageTemplateWithGenerics) {
+      description.setMessage(
+          String.format(
+              "Argument '%s' should not be passed to this method; its type %s has a type argument "
+                  + "%s that is not compatible with its collection's type argument %s",
+              result.sourceTree(),
+              sourceTreeType,
+              sourceType,
+              targetType));
+    } else {
+      description.setMessage(
+          String.format(
+              "Argument '%s' should not be passed to this method; its type %s is not compatible "
+                  + "with its collection's type argument %s",
+              result.sourceTree(),
+              sourceType,
+              targetType));
+    }
+
+    switch (fixType) {
+      case PRINT_TYPES_AS_COMMENT:
+        description.addFix(
+            SuggestedFix.prefixWith(
+                tree,
+                String.format(
+                    "/* expected: %s, actual: %s */",
+                    ASTHelpers.getUpperBound(result.targetType(), types),
+                    result.sourceType())));
+        break;
+      case CAST_TO_OBJECT:
+        description.addFix(SuggestedFix.prefixWith(result.sourceTree(), "(Object) "));
+        break;
+      case NONE:
+        // No fix
+        break;
+
+    }
+
+    return description.build();
+  }
+
+  @Nullable
+  private static MatchResult firstNonNullMatchResult(
+      Iterable<? extends AbstractCollectionIncompatibleTypeMatcher> matchers,
+      MethodInvocationTree tree,
+      VisitorState state) {
+    for (AbstractCollectionIncompatibleTypeMatcher matcher : matchers) {
+      MatchResult result = matcher.matches(tree, state);
+      if (result != null) {
+        return result;
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Computes the simple name for a type.  Handles parameterized types, e.g. {@code
+   * Collection<String>}.
+   */
+  private static String getSimpleName(Type type) {
+    StringBuilder sb = new StringBuilder(type.tsym.getSimpleName());
+    List<Type> typeArgs = type.getTypeArguments();
+    if (!typeArgs.isEmpty()) {
+      sb.append('<');
+      Type typeArg = typeArgs.get(0);
+      sb.append(getSimpleName(typeArg));
+      for (int i = 1; i < typeArgs.size(); i++) {
+        sb.append(", ");
+        sb.append(getSimpleName(typeArg));
+      }
+      sb.append('>');
+    }
+    return sb.toString();
+  }
+}

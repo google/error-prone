@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
 import com.google.common.collect.ClassToInstanceMap;
 
@@ -40,22 +40,36 @@ public class CollectionIncompatibleTypePositiveCases {
 
   /* Tests for API coverage */
 
-  public boolean collection() {
-    Collection<Integer> collection = new ArrayList<>();
+  public void collection(Collection<Integer> collection1, Collection<String> collection2) {
+    // BUG: Diagnostic contains: Argument '"bad"' should not be passed to this method
+    // its type String is not compatible with its collection's type argument Integer
+    collection1.contains("bad");
     // BUG: Diagnostic contains:
-    boolean result = collection.contains("bad");
+    collection1.remove("bad");
+    // BUG: Diagnostic contains: Argument 'collection2' should not be passed to this method
+    // its type Collection<String> has a type argument String that is not compatible with its collection's type argument Integer
+    collection1.containsAll(collection2);
     // BUG: Diagnostic contains:
-    return result && collection.remove("bad");
+    collection1.removeAll(collection2);
+    // BUG: Diagnostic contains:
+    collection1.retainAll(collection2);
   }
 
-  public boolean collectionSubtype() {
-    ArrayList<Integer> arrayList = new ArrayList<>();
+  public void collectionSubtype(ArrayList<Integer> arrayList1, ArrayList<String> arrayList2) {
+    // BUG: Diagnostic contains: Argument '"bad"' should not be passed to this method
+    // its type String is not compatible with its collection's type argument Integer
+    arrayList1.contains("bad");
     // BUG: Diagnostic contains:
-    boolean result = arrayList.contains("bad");
+    arrayList1.remove("bad");
+    // BUG: Diagnostic contains: Argument 'arrayList2' should not be passed to this method
+    // its type ArrayList<String> has a type argument String that is not compatible with its collection's type argument Integer
+    arrayList1.containsAll(arrayList2);
     // BUG: Diagnostic contains:
-    return result && arrayList.remove("bad");
+    arrayList1.removeAll(arrayList2);
+    // BUG: Diagnostic contains:
+    arrayList1.retainAll(arrayList2);
   }
-  
+
   public boolean deque(Deque<Integer> deque) {
     // BUG: Diagnostic contains:
     boolean result = deque.removeFirstOccurrence("bad");
@@ -125,7 +139,7 @@ public class CollectionIncompatibleTypePositiveCases {
     result = concurrentNavigableMap.remove("bad");
     return false;
   }
-  
+
   public int stack(Stack<Integer> stack) {
     // BUG: Diagnostic contains:
     return stack.search("bad");
@@ -160,22 +174,21 @@ public class CollectionIncompatibleTypePositiveCases {
     return collection.contains("bad");
   }
 
-  private static class Optional<T> {}
+  private static class Date {}
 
   public boolean errorMessageUsesFullyQualifedNamesWhenSimpleNamesAreTheSame(
-      Collection<com.google.common.base.Optional<?>> collection) {
-    // BUG: Diagnostic contains: Argument 'new Optional<>()' should not be passed to this method
-    // its type com.google.errorprone.bugpatterns.CollectionIncompatibleTypePositiveCases.Optional<java.lang.Object> is not compatible with its collection's type argument com.google.common.base.Optional<?>
-    return collection.contains(new Optional<>());
+      Collection<java.util.Date> collection1, Collection<Date> collection2) {
+    // BUG: Diagnostic contains: Argument 'new Date()' should not be passed to this method
+    // its type com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionIncompatibleTypePositiveCases.Date is not compatible with its collection's type argument java.util.Date
+    return collection1.contains(new Date());
   }
 
-  
   public boolean boundedWildcard() {
     Collection<? extends Date> collection = new ArrayList<>();
     // BUG: Diagnostic contains:
     return collection.contains("bad");
   }
-  
+
   private static class Pair<A, B> {
     public A first;
     public B second;
@@ -185,53 +198,60 @@ public class CollectionIncompatibleTypePositiveCases {
     // BUG: Diagnostic contains:
     return list.contains(pair.second);
   }
-  
+
   public String subclassHasDifferentTypeParameters(ClassToInstanceMap<String> map, String s) {
     // BUG: Diagnostic contains:
     return map.get(s);
   }
   
+  private static class MyArrayList extends ArrayList<Integer> {}
+  public void methodArgumentIsSubclassWithDifferentTypeParameters(
+      Collection<String> collection, MyArrayList myArrayList) {
+    // BUG: Diagnostic contains:
+    collection.containsAll(myArrayList);
+  }
+
   private static class IncompatibleBounds<K extends String, V extends Number> {
     private boolean function(Map<K, V> map, K key) {
       // BUG: Diagnostic contains:
       return map.containsValue(key);
     }
   }
-  
+
   interface Interface {}
   private static final class FinalClass1 {}
   private static final class FinalClass2 {}
   private static class NonFinalClass1 {}
   private static class NonFinalClass2 {}
-  
+
   public boolean oneInterfaceAndOneFinalClass(
       Collection<Interface> collection, FinalClass1 finalClass1) {
     // BUG: Diagnostic contains:
     return collection.contains(finalClass1);
   }
-  
+
   public boolean oneFinalClassAndOneInterface(Collection<FinalClass1> collection, Interface iface) {
     // BUG: Diagnostic contains:
     return collection.contains(iface);
   }
-  
+
   public boolean bothNonFinalClasses(
       Collection<NonFinalClass1> collection, NonFinalClass2 nonFinalClass2) {
     // BUG: Diagnostic contains:
     return collection.contains(nonFinalClass2);
   }
-  
+
   public boolean bothFinalClasses(Collection<FinalClass1> collection, FinalClass2 finalClass2) {
     // BUG: Diagnostic contains:
     return collection.contains(finalClass2);
   }
-  
+
   public boolean oneNonFinalClassAndOneFinalClass(
       Collection<NonFinalClass1> collection, FinalClass1 finalClass1) {
     // BUG: Diagnostic contains:
     return collection.contains(finalClass1);
   }
-  
+
   public boolean oneFinalClassAndOneNonFinalClass(
       Collection<FinalClass1> collection, NonFinalClass1 nonFinalClass1) {
     // BUG: Diagnostic contains:

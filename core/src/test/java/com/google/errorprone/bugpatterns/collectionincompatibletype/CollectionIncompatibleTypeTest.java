@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
 import com.google.errorprone.CompilationTestHelper;
 
@@ -39,12 +39,12 @@ public class CollectionIncompatibleTypeTest {
   }
 
   @Test
-  public void testPositiveCase() {
+  public void testPositiveCases() {
     compilationHelper.addSourceFile("CollectionIncompatibleTypePositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void testNegativeCases() {
     compilationHelper.addSourceFile("CollectionIncompatibleTypeNegativeCases.java").doTest();
   }
 
