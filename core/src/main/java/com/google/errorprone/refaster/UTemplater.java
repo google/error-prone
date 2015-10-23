@@ -682,7 +682,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
   @Override
   public UStatement visitExpressionStatement(ExpressionStatementTree tree, Void v) {
     PlaceholderMethod placeholderMethod = placeholder(tree.getExpression());
-    if (placeholderMethod != null) {
+    if (placeholderMethod != null && placeholderMethod.returnType().equals(UPrimitiveType.VOID)) {
       MethodInvocationTree invocation = (MethodInvocationTree) tree.getExpression();
       return UPlaceholderStatement.create(placeholderMethod,
           templateExpressions(invocation.getArguments()), ControlFlowVisitor.Result.NEVER_EXITS);
