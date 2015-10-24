@@ -68,7 +68,7 @@ public class BugPatternFileGeneratorTest {
     instance.explanation =
         "The exception is created with new, but is not thrown, and the reference is lost.";
     instance.altNames = new String[] {"ThrowableInstanceNeverThrown"};
-    instance.category = Category.JDK;
+    instance.category = Category.JDK.toString();
     instance.severity = SeverityLevel.ERROR;
     instance.maturity = MaturityLevel.MATURE;
     instance.suppressibility = Suppressibility.SUPPRESS_WARNINGS;

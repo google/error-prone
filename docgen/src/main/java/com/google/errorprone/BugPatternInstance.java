@@ -17,6 +17,7 @@
 package com.google.errorprone;
 
 import static com.google.common.base.MoreObjects.firstNonNull;
+import static com.google.common.base.Verify.verifyNotNull;
 
 import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.MaturityLevel;
@@ -38,7 +39,7 @@ public final class BugPatternInstance {
   public String summary;
   public String explanation;
   public String[] altNames;
-  public Category category;
+  public String category;
   public MaturityLevel maturity;
   public SeverityLevel severity;
   public Suppressibility suppressibility;
@@ -52,22 +53,17 @@ public final class BugPatternInstance {
     BugPattern annotation = element.getAnnotation(BugPattern.class);
     instance.name = annotation.name();
     instance.altNames = annotation.altNames();
-    instance.category = annotation.category();
     instance.maturity = annotation.maturity();
     instance.severity = annotation.severity();
     instance.suppressibility = annotation.suppressibility();
     instance.summary = annotation.summary();
     instance.explanation = annotation.explanation();
+    instance.documentSuppression = annotation.documentSuppression();
 
     Map<String, Object> keyValues = getAnnotation(element, BugPattern.class.getName());
-    // Avoid MirroredTypeException hacks:
+    instance.category = verifyNotNull(keyValues.get("category")).toString();
     instance.customSuppressionAnnotation =
         firstNonNull(keyValues.get("customSuppressionAnnotation"), "").toString();
-    // TODO(cushon): access directly once documentSuppression is in the released BugPattern
-    if (keyValues.containsKey("documentSuppression")) {
-      instance.documentSuppression =
-          Boolean.parseBoolean(keyValues.get("documentSuppression").toString());
-    }
 
     return instance;
   }
