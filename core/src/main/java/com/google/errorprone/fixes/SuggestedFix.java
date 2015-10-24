@@ -521,9 +521,8 @@ public class SuggestedFix implements Fix {
     JCTree posTree = (JCTree) originalModifiers;
     // the start pos of the re-lexed tokens is relative to the start of the tree
     int startPosition = posTree.getStartPosition() + toRemove.pos;
-    int endPosition = posTree.getStartPosition() + toRemove.endPos;
-    // This will leave at least one extra whitespace character,  presumably the autoformatter will
-    // eliminate it.
+    // add one to endPosition for whitespace character after the modifier
+    int endPosition = posTree.getStartPosition() + toRemove.endPos + 1;
     return replace(startPosition, endPosition, "");
   }
 }
