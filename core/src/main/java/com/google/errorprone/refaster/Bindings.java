@@ -18,6 +18,7 @@ package com.google.errorprone.refaster;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ForwardingMap;
 import com.google.common.collect.Maps;
@@ -71,7 +72,7 @@ public class Bindings extends ForwardingMap<Bindings.Key<?>, Object> {
 
     @Override
     public String toString() {
-      return Objects.toStringHelper(this).add("identifier", identifier).toString();
+      return MoreObjects.toStringHelper(this).add("identifier", identifier).toString();
     }
   }
   
