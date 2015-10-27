@@ -96,4 +96,8 @@ class TypeArgOfMethodArgMatcher extends AbstractCollectionIncompatibleTypeMatche
         receiverTypeArgIndex,
         state.getTypes());
   }
+
+  String getMethodArgTypeName() {
+    return methodArgTypeName;
+  }
 }

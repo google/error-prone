@@ -237,5 +237,10 @@ public class CollectionIncompatibleTypeNegativeCases {
       Collection<? extends Number> collection1, Collection<? extends Integer> collection2) {
     collection1.containsAll(collection2);
   }
+  
+  public void methodArgCastToCollectionWildcard(
+      Collection<Integer> collection1, Collection<String> collection2) {
+    collection1.containsAll((Collection<?>) collection2);
+  }
 
 }

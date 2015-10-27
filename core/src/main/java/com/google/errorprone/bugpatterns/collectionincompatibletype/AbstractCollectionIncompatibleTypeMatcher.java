@@ -99,10 +99,15 @@ abstract class AbstractCollectionIncompatibleTypeMatcher {
     public abstract ExpressionTree sourceTree();
     public abstract Type sourceType();
     public abstract Type targetType();
+    public abstract AbstractCollectionIncompatibleTypeMatcher matcher();
 
-    public static MatchResult create(ExpressionTree sourceTree, Type sourceType, Type targetType) {
+    public static MatchResult create(
+        ExpressionTree sourceTree,
+        Type sourceType,
+        Type targetType,
+        AbstractCollectionIncompatibleTypeMatcher matcher) {
       return new AutoValue_AbstractCollectionIncompatibleTypeMatcher_MatchResult(
-          sourceTree, sourceType, targetType);
+          sourceTree, sourceType, targetType, matcher);
     }
   }
 
@@ -123,7 +128,8 @@ abstract class AbstractCollectionIncompatibleTypeMatcher {
     return MatchResult.create(
         extractSourceTree(tree, state),
         extractSourceType(tree, state),
-        extractTargetType(tree, state));
+        extractTargetType(tree, state),
+        this);
   }
 
   /**

@@ -20,11 +20,16 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Splitter;
+import com.google.common.base.Verify;
+import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.AbstractCollectionIncompatibleTypeMatcher.MatchResult;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
@@ -64,17 +69,32 @@ import javax.annotation.Nullable;
 )
 public class CollectionIncompatibleType extends BugChecker implements MethodInvocationTreeMatcher {
 
-  private static enum FixType {
+  public static enum FixType {
     NONE,
-    CAST_TO_OBJECT,
+    CAST,
     PRINT_TYPES_AS_COMMENT,
   }
 
-  private static final FixType fixType = FixType.NONE;
+  private final FixType fixType;
+
+  /**
+   * Creates a new {@link CollectionIncompatibleType} checker that provides no fix.
+   */
+  public CollectionIncompatibleType() {
+    this(FixType.NONE);
+  }
+
+  /**
+   * Creates a new {@link CollectionIncompatibleType} checker with the given {@code fixType}.
+   */
+  public CollectionIncompatibleType(FixType fixType) {
+    this.fixType = fixType;
+  }
 
   // TODO(eaftan): Support an @CompatibleWith("K") annotation for non-JDK code, particularly Guava.
 
-  private static final Iterable<? extends AbstractCollectionIncompatibleTypeMatcher> MATCHERS =
+  // The "normal" case of extracting the type of a method argument
+  private static final Iterable<MethodArgMatcher> DIRECT_MATCHERS =
       Arrays.asList(
           // "Normal" cases, e.g. Collection#remove(Object)
           new MethodArgMatcher("java.util.Collection", "contains(java.lang.Object)", 0, 0),
@@ -92,10 +112,12 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
           new MethodArgMatcher("java.util.Stack", "search(java.lang.Object)", 0, 0),
           new MethodArgMatcher("java.util.Vector", "indexOf(java.lang.Object,int)", 0, 0),
           new MethodArgMatcher("java.util.Vector", "lastIndexOf(java.lang.Object,int)", 0, 0),
-          new MethodArgMatcher("java.util.Vector", "removeElement(java.lang.Object)", 0, 0),
+          new MethodArgMatcher("java.util.Vector", "removeElement(java.lang.Object)", 0, 0));
 
-          // Cases where we need to extract the type argument from a method argument, e.g.
-          // Collection#containsAll(Collection<?>)
+  // Cases where we need to extract the type argument from a method argument, e.g.
+  // Collection#containsAll(Collection<?>)
+  private static final Iterable<TypeArgOfMethodArgMatcher> TYPE_ARG_MATCHERS =
+      Arrays.asList(
           new TypeArgOfMethodArgMatcher(
               "java.util.Collection", // class that defines the method
               "containsAll(java.util.Collection<?>)", // method signature
@@ -122,20 +144,22 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
 
-    MatchResult result = firstNonNullMatchResult(MATCHERS, tree, state);
-    if (result == null) {
+    MatchResult directResult = firstNonNullMatchResult(DIRECT_MATCHERS, tree, state);
+    MatchResult typeArgResult = null;
+    if (directResult == null) {
+      typeArgResult = firstNonNullMatchResult(TYPE_ARG_MATCHERS, tree, state);
+    }
+    if (directResult == null && typeArgResult == null) {
       return Description.NO_MATCH;
     }
+    Verify.verify(directResult == null ^ typeArgResult == null);
+    MatchResult result = MoreObjects.firstNonNull(directResult, typeArgResult);
 
     Types types = state.getTypes();
     if (types.isCastable(
         result.sourceType(), types.erasure(ASTHelpers.getUpperBound(result.targetType(), types)))) {
       return Description.NO_MATCH;
     }
-
-    boolean useMessageTemplateWithGenerics = !types.isSameType(
-        ASTHelpers.getType(result.sourceTree()),
-        result.sourceType());
 
     // For error message, use simple names instead of fully qualified names unless they are
     // identical.
@@ -148,7 +172,7 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
     }
 
     Description.Builder description = buildDescription(tree);
-    if (useMessageTemplateWithGenerics) {
+    if (typeArgResult != null) {
       description.setMessage(
           String.format(
               "Argument '%s' should not be passed to this method; its type %s has a type argument "
@@ -177,11 +201,22 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
                     ASTHelpers.getUpperBound(result.targetType(), types),
                     result.sourceType())));
         break;
-      case CAST_TO_OBJECT:
-        description.addFix(SuggestedFix.prefixWith(result.sourceTree(), "(Object) "));
+      case CAST:
+        Fix fix;
+        if (typeArgResult != null) {
+          TypeArgOfMethodArgMatcher matcher = (TypeArgOfMethodArgMatcher) typeArgResult.matcher();
+          String fullyQualifiedType = matcher.getMethodArgTypeName();
+          String simpleType = Iterables.getLast(Splitter.on('.').split(fullyQualifiedType));
+          fix = SuggestedFix.builder()
+              .prefixWith(result.sourceTree(), String.format("(%s<?>) ", simpleType))
+              .addImport(fullyQualifiedType)
+              .build();
+        } else {
+          fix = SuggestedFix.prefixWith(result.sourceTree(), "(Object) ");
+        }
+        description.addFix(fix);
         break;
       case NONE:
-        // No fix
         break;
 
     }

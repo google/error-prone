@@ -17,6 +17,9 @@
 package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionIncompatibleType.FixType;
+import com.google.errorprone.scanner.ErrorProneScanner;
+import com.google.errorprone.scanner.ScannerSupplier;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -56,6 +59,28 @@ public class CollectionIncompatibleTypeTest {
   @Test
   public void testClassCast() {
     compilationHelper.addSourceFile("CollectionIncompatibleTypeClassCast.java").doTest();
+  }
+
+  @Test
+  public void testCastFixes() {
+    CompilationTestHelper compilationHelperWithCastFix =
+        CompilationTestHelper.newInstance(
+            ScannerSupplier.fromScanner(
+                new ErrorProneScanner(new CollectionIncompatibleType(FixType.CAST))),
+            getClass());
+    compilationHelperWithCastFix
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Collection;",
+            "public class Test {",
+            "  public void doIt(Collection<String> c1, Collection<Integer> c2) {",
+            "    // BUG: Diagnostic contains: c1.contains((Object) 1);",
+            "    c1.contains(1);",
+            "    // BUG: Diagnostic contains: c1.containsAll((Collection<?>) c2);",
+            "    c1.containsAll(c2);",
+            "  }",
+            "}")
+        .doTest();
   }
 
   // This test is disabled because calling Types#asSuper in the check removes the upper bound on K.
