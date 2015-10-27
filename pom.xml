@@ -148,6 +148,13 @@
         <artifactId>maven-project-info-reports-plugin</artifactId>
         <version>2.7</version>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <additionalparam>-Xdoclint:none</additionalparam>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 </project>
