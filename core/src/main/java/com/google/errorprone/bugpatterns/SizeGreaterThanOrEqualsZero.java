@@ -19,7 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
@@ -68,7 +68,7 @@ import java.util.List;
     explanation = "A standard means of checking non-emptiness of an array or collection is to "
         + "test if the size of that collection is greater than 0. However, one may accidentally "
         + "check if the size is greater than or equal to 0, which is always true.",
-    category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
+    category = JDK, severity = ERROR, maturity = MATURE)
 public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTreeMatcher {
 
   private enum MethodName { LENGTH, SIZE }
