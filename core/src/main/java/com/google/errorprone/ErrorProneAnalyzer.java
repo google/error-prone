@@ -120,10 +120,22 @@ public class ErrorProneAnalyzer implements TaskListener {
    * Returns true if all declarations inside the given compilation unit have been visited.
    */
   private boolean finishedCompilation(CompilationUnitTree tree) {
+    OUTER:
     for (Tree decl : tree.getTypeDecls()) {
-      if (decl.getKind() == Tree.Kind.EMPTY_STATEMENT) {
-        // ignore ";" at the top level, which counts as an empty type decl
-        continue;
+      switch (decl.getKind()) {
+        case EMPTY_STATEMENT:
+          // ignore ";" at the top level, which counts as an empty type decl
+          continue OUTER;
+        case IMPORT:
+          // The spec disallows mixing imports and empty top-level declarations (";"), but
+          // javac has a bug that causes it to accept empty declarations interspersed with imports:
+          // http://mail.openjdk.java.net/pipermail/compiler-dev/2013-August/006968.html
+          //
+          // Any import declarations after the first semi are incorrectly added to the list
+          // of type declarations, so we have to skip over them here.
+          continue OUTER;
+        default:
+          break;
       }
       if (!seen.contains(decl)) {
         return false;

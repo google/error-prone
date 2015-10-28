@@ -79,4 +79,21 @@ public class MultipleTopLevelClassesTest {
             "class Test {};")
         .doTest();
   }
+
+  @Test
+  public void semiInImportList() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "a/A.java",
+            "// BUG: Diagnostic contains:",
+            "// one top-level class declaration, instead found: Test, Extra",
+            "package a;",
+            "import java.util.List;;",
+            "import java.util.ArrayList;",
+            "class Test {",
+            "  List<String> xs = new ArrayList<>();",
+            "}",
+            "class Extra {}")
+        .doTest();
+  }
 }
