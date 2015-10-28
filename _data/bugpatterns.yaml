@@ -1,11 +1,14 @@
 'On by default : WARNING':
+- {name: BadAnnotationImplementation, summary: Classes that implement Annotation must override equals and hashCode. Consider using AutoAnnotation instead of implementing Annotation by hand.}
 - {name: CannotMockFinalClass, summary: Mockito cannot mock final classes}
 - {name: ElementsCountedInLoop, summary: 'This code, which counts elements using a
     loop, can be replaced by a simpler library method'}
+- {name: EmptyTopLevelDeclaration, summary: Empty top-level type declaration}
 - {name: EqualsHashCode, summary: Classes that override equals should also override hashCode.}
 - {name: Finally, summary: 'If you return or throw from a finally, then values returned
     or thrown from the try-catch block will be ignored'}
 - {name: IncompatibleModifiers, summary: This annotation has incompatible modifiers as specified by its @IncompatibleModifiers annotation}
+- {name: JUnitAmbiguousTestClass, summary: Test class inherits from JUnit 3's TestCase but has JUnit 4 @Test annotations.}
 - {name: MultipleTopLevelClasses, summary: Source files should not contain multiple top-level class declarations}
 - {name: NonAtomicVolatileUpdate, summary: This update of a volatile variable is non-atomic}
 - {name: NonCanonicalStaticMemberImport, summary: Static import of member uses non-canonical name}
@@ -60,11 +63,13 @@
 - {name: JUnit4TestNotRun, summary: Test method will not be run; please add @Test annotation}
 - {name: LongLiteralLowerCaseSuffix, summary: Prefer 'L' to 'l' for the suffix to long literals}
 - {name: MisusedWeekYear, summary: Use of "YYYY" (week year) in a date pattern without "ww" (week in year). You probably meant to use "yyyy" (year) instead.}
+- {name: MockitoUsage, summary: Missing method call for verify(mock) here}
 - {name: NarrowingCompoundAssignment, summary: 'Compound assignments to bytes, shorts,
     chars, and floats hide dangerous casts'}
 - {name: NonCanonicalStaticImport, summary: Static import of type uses non-canonical name}
 - {name: NonFinalCompileTimeConstant, summary: '@CompileTimeConstant parameters should
     be final'}
+- {name: OptionalEquality, summary: Comparison using reference equality instead of value equality}
 - {name: Overrides, summary: Varargs doesn't agree for overridden method}
 - {name: PackageLocation, summary: Package names should match the directory they are declared in}
 - {name: PreconditionsCheckNotNull, summary: Literal passed as first argument to Preconditions.checkNotNull() can never be null}
@@ -87,7 +92,6 @@
 - {name: GuiceInjectOnFinalField, summary: 'Although Guice allows injecting final
     fields, doing so is not recommended because the injected value may not be visible
     to other threads.'}
-- {name: JUnitAmbiguousTestClass, summary: Test class mixes JUnit 3 and JUnit 4 idioms}
 - {name: MissingFail, summary: Not calling fail() when expecting an exception masks bugs}
 - {name: NullablePrimitive, summary: '@Nullable should not be used for primitive types.'}
 - {name: OverridesGuiceInjectableMethod, summary: 'This method is not annotated with

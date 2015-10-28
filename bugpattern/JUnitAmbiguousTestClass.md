@@ -1,10 +1,10 @@
 ---
 title: JUnitAmbiguousTestClass
-summary: Test class mixes JUnit 3 and JUnit 4 idioms
+summary: Test class inherits from JUnit 3's TestCase but has JUnit 4 @Test annotations.
 layout: bugpattern
 category: JUNIT
 severity: WARNING
-maturity: EXPERIMENTAL
+maturity: MATURE
 ---
 
 <!--
@@ -13,7 +13,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-The test class could execute either as a JUnit 3 class or a JUnit 4 class, and tests could behave differently depending on whether it runs in JUnit 3 or JUnit 4.
+JUnit 3 uses inheritance, whereas JUnit 4 uses composition. Mixing these two design patterns historically has been a source of test bugs and unexpected behavior (e.g.: teardown logic and/or verification does not run). Error Prone also cannot infer whether the test class runs with JUnit 3 or JUnit 4. Thus, even if the test class runs with JUnit 4, Error Prone will not run additional checks which can catch common errors with JUnit 4 test classes. Either use only JUnit 4 and remove the inheritance from TestCase, or use only JUnit 3 and remove the @Test annotations.
 
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("JUnitAmbiguousTestClass")` annotation to the enclosing element.

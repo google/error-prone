@@ -4,6 +4,7 @@ com.google.errorprone.annotations
 com.google.errorprone.annotations.concurrent
 com.google.errorprone.apply
 com.google.errorprone.bugpatterns
+com.google.errorprone.bugpatterns.collectionincompatibletype
 com.google.errorprone.bugpatterns.threadsafety
 com.google.errorprone.dataflow
 com.google.errorprone.dataflow.nullnesspropagation
