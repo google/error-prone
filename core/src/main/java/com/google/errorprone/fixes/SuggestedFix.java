@@ -20,13 +20,11 @@ import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.ErrorProneToken;
 
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.Tree;
-import com.sun.tools.javac.code.Flags;
-import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.parser.Tokens.Token;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
@@ -404,10 +402,10 @@ public class SuggestedFix implements Fix {
   /** Info about a modifier token. */
   @AutoValue
   abstract static class TokInfo implements Comparable<TokInfo> {
-    abstract Token token();
+    abstract ErrorProneToken token();
     abstract Modifier mod();
 
-    public static TokInfo create(Token tree, Modifier mod) {
+    public static TokInfo create(ErrorProneToken tree, Modifier mod) {
       return new AutoValue_SuggestedFix_TokInfo(tree, mod);
     }
 
@@ -419,8 +417,8 @@ public class SuggestedFix implements Fix {
 
   /** Parse a modifier token into a {@link Modifier}. */
   @Nullable
-  private static Modifier getTokModifierKind(Token tok) {
-    switch (tok.kind) {
+  private static Modifier getTokModifierKind(ErrorProneToken tok) {
+    switch (tok.kind()) {
       case PUBLIC:
         return Modifier.PUBLIC;
       case PROTECTED:
@@ -462,9 +460,9 @@ public class SuggestedFix implements Fix {
     if (originalModifiers == null) {
       return null;
     }
-    ImmutableList<Token> tokens = state.getTokensForNode((JCTree) originalModifiers);
+    ImmutableList<ErrorProneToken> tokens = state.getTokensForNode((JCTree) originalModifiers);
     ArrayList<TokInfo> infos = new ArrayList<>();
-    for (Token tok : tokens) {
+    for (ErrorProneToken tok : tokens) {
       Modifier mod = getTokModifierKind(tok);
       if (mod != null) {
         infos.add(TokInfo.create(tok, mod));
@@ -489,7 +487,7 @@ public class SuggestedFix implements Fix {
     if (prev != null) {
       // insert the new modifier after an existing modifier
       // the start pos of the re-lexed tokens is relative to the start of the tree
-      int pos = posTree.getStartPosition() + prev.token().pos + prev.mod().toString().length();
+      int pos = posTree.getStartPosition() + prev.token().pos() + prev.mod().toString().length();
       return SuggestedFix.replace(pos, pos, " " + modifier);
     } else {
       // the new modifier is first
@@ -506,9 +504,9 @@ public class SuggestedFix implements Fix {
     if (originalModifiers == null) {
       return null;
     }
-    ImmutableList<Token> tokens = state.getTokensForNode((JCTree) originalModifiers);
-    Token toRemove = null;
-    for (Token tok : tokens) {
+    ImmutableList<ErrorProneToken> tokens = state.getTokensForNode((JCTree) originalModifiers);
+    ErrorProneToken toRemove = null;
+    for (ErrorProneToken tok : tokens) {
       Modifier mod = getTokModifierKind(tok);
       if (mod == modifier) {
         toRemove = tok;
@@ -520,9 +518,9 @@ public class SuggestedFix implements Fix {
     }
     JCTree posTree = (JCTree) originalModifiers;
     // the start pos of the re-lexed tokens is relative to the start of the tree
-    int startPosition = posTree.getStartPosition() + toRemove.pos;
+    int startPosition = posTree.getStartPosition() + toRemove.pos();
     // add one to endPosition for whitespace character after the modifier
-    int endPosition = posTree.getStartPosition() + toRemove.endPos + 1;
+    int endPosition = posTree.getStartPosition() + toRemove.endPos() + 1;
     return replace(startPosition, endPosition, "");
   }
 }

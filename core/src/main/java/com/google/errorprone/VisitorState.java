@@ -20,7 +20,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.util.Tokens;
+import com.google.errorprone.util.ErrorProneToken;
+import com.google.errorprone.util.ErrorProneTokens;
 
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
@@ -312,8 +313,8 @@ public class VisitorState {
    * <p>This is moderately expensive (the source of the node has to be re-lexed), so it should
    * only be used if a fix is already going to be emitted.
    */
-  public ImmutableList<Token> getTokensForNode(Tree tree) {
-    return Tokens.getTokens(getSourceForNode(tree), context);
+  public ImmutableList<ErrorProneToken> getTokensForNode(Tree tree) {
+    return ErrorProneTokens.getTokens(getSourceForNode(tree), context);
   }
 
   /**

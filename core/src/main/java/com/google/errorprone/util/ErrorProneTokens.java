@@ -25,16 +25,15 @@ import com.sun.tools.javac.parser.Scanner;
 import com.sun.tools.javac.parser.ScannerFactory;
 import com.sun.tools.javac.parser.Tokens.Comment;
 import com.sun.tools.javac.parser.Tokens.Comment.CommentStyle;
-import com.sun.tools.javac.parser.Tokens.Token;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
 import com.sun.tools.javac.parser.UnicodeReader;
 import com.sun.tools.javac.util.Context;
 
 /** A utility for tokenizing and preserving comments. */
-public class Tokens {
+public class ErrorProneTokens {
 
   /** Returns the tokens for the given source text, including comments. */
-  public static ImmutableList<Token> getTokens(String source, Context context) {
+  public static ImmutableList<ErrorProneToken> getTokens(String source, Context context) {
     if (source == null) {
       return ImmutableList.of();
     }
@@ -42,9 +41,9 @@ public class Tokens {
     char[] buffer = source.toCharArray();
     Scanner scanner =
         new AccessibleScanner(fac, new CommentSavingTokenizer(fac, buffer, buffer.length));
-    ImmutableList.Builder<Token> tokens = ImmutableList.builder();
+    ImmutableList.Builder<ErrorProneToken> tokens = ImmutableList.builder();
     while (scanner.token().kind != TokenKind.EOF) {
-      tokens.add(scanner.token());
+      tokens.add(new ErrorProneToken(scanner.token()));
       scanner.nextToken();
     }
     return tokens.build();
@@ -115,7 +114,7 @@ public class Tokens {
 
     /**
      * We don't care about {@code @deprecated} javadoc tags (see the DepAnn check).
-     * 
+     *
      * @return false
      */
     @Override

@@ -40,7 +40,6 @@ import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.TypeVar;
 import com.sun.tools.javac.parser.Tokens.Comment;
-import com.sun.tools.javac.parser.Tokens.Token;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
 
 import org.junit.After;
@@ -432,10 +431,12 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
         "     * foo",
         "     */",
         "    public void run() {",
-        "      /* bar */",
+        "      /* bar1 */",
+        "      /* bar2 */",
         "      System.err.println(\"Hi\");",
         "    }",
-        "    // baz",
+        "    // baz number 1",
+        "    // baz number 2",
         "  };",
         "}");
     TestScanner scanner =
@@ -444,16 +445,21 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
           public Void visitNewClass(NewClassTree tree, VisitorState state) {
             setAssertionsComplete();
             List<String> comments = new ArrayList<>();
-            for (Token t : state.getTokensForNode(tree)) {
-              if (t.comments != null) {
-                for (Comment c : t.comments) {
+            for (ErrorProneToken t : state.getTokensForNode(tree)) {
+              if (!t.comments().isEmpty()) {
+                for (Comment c : t.comments()) {
                   Verify.verify(c.getSourcePos(0) >= 0);
                   comments.add(c.getText());
                 }
               }
             }
             assertThat(comments)
-                .containsExactly("/**\n     * foo\n     */", "/* bar */", "// baz")
+                .containsExactly(
+                    "/**\n     * foo\n     */",
+                    "/* bar1 */",
+                    "/* bar2 */",
+                    "// baz number 1",
+                    "// baz number 2")
                 .inOrder();
             return super.visitNewClass(tree, state);
           }
