@@ -122,6 +122,11 @@ public class Tokens {
     public boolean isDeprecated() {
       return false;
     }
+
+    @Override
+    public String toString() {
+      return String.format("Comment: '%s'", getText());
+    }
   }
 
   // Scanner(ScannerFactory, JavaTokenizer) is package-private
