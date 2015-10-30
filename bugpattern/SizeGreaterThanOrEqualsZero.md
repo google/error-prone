@@ -4,7 +4,7 @@ summary: Comparison of a size >= 0 is always true, did you intend to check for n
 layout: bugpattern
 category: JDK
 severity: ERROR
-maturity: EXPERIMENTAL
+maturity: MATURE
 ---
 
 <!--

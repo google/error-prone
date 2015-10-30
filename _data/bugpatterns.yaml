@@ -78,6 +78,8 @@
 - {name: ReturnValueIgnored, summary: Return value of this method must be used}
 - {name: SelfAssignment, summary: Variable assigned to itself}
 - {name: SelfEquals, summary: An object is tested for equality to itself}
+- {name: SizeGreaterThanOrEqualsZero, summary: 'Comparison of a size >= 0 is always
+    true, did you intend to check for non-emptiness?'}
 - {name: StringBuilderInitWithChar, summary: StringBuilder does not have a char constructor; this invokes the int constructor.}
 - {name: SuppressWarningsDeprecated, summary: Suppressing "deprecated" is probably a typo for "deprecation"}
 - {name: TryFailThrowable, summary: Catching Throwable masks failures from fail() or assert*() in the try block}
@@ -141,7 +143,5 @@
 - {name: ParameterPackage, summary: Method parameter has wrong package}
 - {name: ProtoStringFieldReferenceEquality, summary: Comparing protobuf fields of type String using reference equality}
 - {name: SelfEquality, summary: Variable compared to itself}
-- {name: SizeGreaterThanOrEqualsZero, summary: 'Comparison of a size >= 0 is always
-    true, did you intend to check for non-emptiness?'}
 - {name: UnlockMethod, summary: This method does not acquire the locks specified by its @UnlockMethod annotation}
 - {name: WildcardImport, summary: Use of wildcard imports is forbidden}
