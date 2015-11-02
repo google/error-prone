@@ -280,4 +280,9 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
   public void samePackageImports() throws IOException {
     runTest("SamePackageImportsTemplate");
   }
+
+  @Test
+  public void ifFallthrough() throws IOException {
+    runTest("IfFallthroughTemplate");
+  }
 }

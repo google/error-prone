@@ -20,6 +20,8 @@ import static com.google.common.truth.Truth.assertWithMessage;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.argThat;
 
+import com.google.common.base.Joiner;
+
 import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.parser.Parser;
 import com.sun.tools.javac.parser.ParserFactory;
@@ -66,6 +68,17 @@ public abstract class AbstractUTreeTest {
       assertEquals(
           String.format("Expected template %s to inline to expression %s", template, expression),
           expression, template.inline(inliner).toString());
+    } catch (CouldNotResolveImportException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public void assertInlines(String expression, UStatement template) {
+    try {
+      assertEquals(
+          String.format("Expected template %s to inline to expression %s", template, expression),
+          expression,
+          Joiner.on('\n').join(template.inlineStatements(inliner)));
     } catch (CouldNotResolveImportException e) {
       throw new RuntimeException(e);
     }

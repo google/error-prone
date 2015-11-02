@@ -16,39 +16,41 @@
 
 package com.google.errorprone.refaster;
 
-import static com.google.errorprone.refaster.Unifier.unifications;
-
 import com.google.auto.value.AutoValue;
+import com.google.common.base.Function;
+import com.google.common.base.Optional;
+import com.google.common.collect.Iterables;
+import com.google.errorprone.refaster.ControlFlowVisitor.Result;
 
 import com.sun.source.tree.IfTree;
+import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.TreeVisitor;
-import com.sun.tools.javac.tree.JCTree.JCIf;
+import com.sun.tools.javac.tree.JCTree.JCStatement;
+import com.sun.tools.javac.util.List;
 
 import javax.annotation.Nullable;
 
 /**
  * {@link UTree} representation of an {@link IfTree}.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @AutoValue
-abstract class UIf extends USimpleStatement implements IfTree {
+abstract class UIf implements UStatement, IfTree {
   public static UIf create(
       UExpression condition, UStatement thenStatement, UStatement elseStatement) {
-    return new AutoValue_UIf(condition, 
-        (USimpleStatement) thenStatement, 
-        (USimpleStatement) elseStatement);
+    return new AutoValue_UIf(condition, thenStatement, elseStatement);
   }
 
   @Override
   public abstract UExpression getCondition();
 
   @Override
-  public abstract USimpleStatement getThenStatement();
+  public abstract UStatement getThenStatement();
 
   @Override
   @Nullable
-  public abstract USimpleStatement getElseStatement();
+  public abstract UStatement getElseStatement();
 
   @Override
   public <R, D> R accept(TreeVisitor<R, D> visitor, D data) {
@@ -60,23 +62,167 @@ abstract class UIf extends USimpleStatement implements IfTree {
     return Kind.IF;
   }
 
-  @Override
-  @Nullable
-  public Choice<Unifier> visitIf(IfTree ifTree, @Nullable Unifier unifier) {
-    return getCondition().unify(ifTree.getCondition(), unifier.fork())
-        .thenChoose(unifications(getThenStatement(), ifTree.getThenStatement()))
-        .thenChoose(unifications(getElseStatement(), ifTree.getElseStatement()))
-        .or(getCondition().negate().unify(ifTree.getCondition(), unifier.fork())
-            .thenChoose(unifications(getElseStatement(), ifTree.getThenStatement()))
-                // if getElseStatement() == null, this will fail
-            .thenChoose(unifications(getThenStatement(), ifTree.getElseStatement())));
+  private static Function<Unifier, Choice<Unifier>> unifyUStatementWithSingleStatement(
+      @Nullable final UStatement toUnify, @Nullable final StatementTree target) {
+    return new Function<Unifier, Choice<Unifier>>() {
+      @Override
+      public Choice<Unifier> apply(Unifier unifier) {
+        if (toUnify == null) {
+          return (target == null) ? Choice.of(unifier) : Choice.<Unifier>none();
+        }
+        List<StatementTree> list = (target == null) ? List.<StatementTree>nil() : List.of(target);
+        return toUnify
+            .apply(UnifierWithUnconsumedStatements.create(unifier, list))
+            .thenOption(
+                new Function<UnifierWithUnconsumedStatements, Optional<Unifier>>() {
+                  @Override
+                  public Optional<Unifier> apply(UnifierWithUnconsumedStatements state) {
+                    return state.unconsumedStatements().isEmpty()
+                        ? Optional.of(state.unifier())
+                        : Optional.<Unifier>absent();
+                  }
+                });
+      }
+    };
   }
 
   @Override
-  public JCIf inline(Inliner inliner) throws CouldNotResolveImportException {
-    return inliner.maker().If(
-        getCondition().inline(inliner),
-        getThenStatement().inline(inliner),
-        (getElseStatement() == null) ? null : getElseStatement().inline(inliner));
+  @Nullable
+  public Choice<UnifierWithUnconsumedStatements> apply(UnifierWithUnconsumedStatements state) {
+    java.util.List<? extends StatementTree> unconsumedStatements = state.unconsumedStatements();
+    if (unconsumedStatements.isEmpty()) {
+      return Choice.none();
+    }
+    final java.util.List<? extends StatementTree> unconsumedStatementsTail =
+        unconsumedStatements.subList(1, unconsumedStatements.size());
+    StatementTree firstStatement = unconsumedStatements.get(0);
+    if (firstStatement.getKind() != Kind.IF) {
+      return Choice.none();
+    }
+    final IfTree ifTree = (IfTree) firstStatement;
+    Unifier unifier = state.unifier();
+    Choice<UnifierWithUnconsumedStatements> forwardMatch =
+        getCondition()
+            .unify(ifTree.getCondition(), unifier.fork())
+            .thenChoose(
+                unifyUStatementWithSingleStatement(getThenStatement(), ifTree.getThenStatement()))
+            .thenChoose(
+                new Function<Unifier, Choice<UnifierWithUnconsumedStatements>>() {
+                  @Override
+                  public Choice<UnifierWithUnconsumedStatements> apply(Unifier unifier) {
+                    if (getElseStatement() != null
+                        && ifTree.getElseStatement() == null
+                        && ControlFlowVisitor.INSTANCE.visitStatement(ifTree.getThenStatement())
+                            == Result.ALWAYS_RETURNS) {
+                      Choice<UnifierWithUnconsumedStatements> result =
+                          getElseStatement()
+                              .apply(
+                                  UnifierWithUnconsumedStatements.create(
+                                      unifier.fork(), unconsumedStatementsTail));
+                      if (getElseStatement() instanceof UBlock) {
+                        Choice<UnifierWithUnconsumedStatements> alternative =
+                            Choice.of(
+                                UnifierWithUnconsumedStatements.create(
+                                    unifier.fork(), unconsumedStatementsTail));
+                        for (UStatement stmt : ((UBlock) getElseStatement()).getStatements()) {
+                          alternative = alternative.thenChoose(stmt);
+                        }
+                        result = result.or(alternative);
+                      }
+                      return result;
+                    } else {
+                      return unifyUStatementWithSingleStatement(
+                              getElseStatement(), ifTree.getElseStatement())
+                          .apply(unifier)
+                          .transform(
+                              new Function<Unifier, UnifierWithUnconsumedStatements>() {
+                                @Override
+                                public UnifierWithUnconsumedStatements apply(Unifier unifier) {
+                                  return UnifierWithUnconsumedStatements.create(
+                                      unifier, unconsumedStatementsTail);
+                                }
+                              });
+                    }
+                  }
+                });
+    Choice<UnifierWithUnconsumedStatements> backwardMatch =
+        getCondition()
+            .negate()
+            .unify(ifTree.getCondition(), unifier.fork())
+            .thenChoose(
+                new Function<Unifier, Choice<Unifier>>() {
+                  @Override
+                  public Choice<Unifier> apply(Unifier unifier) {
+                    if (getElseStatement() == null) {
+                      return Choice.none();
+                    }
+                    return getElseStatement()
+                        .apply(
+                            UnifierWithUnconsumedStatements.create(
+                                unifier, List.of(ifTree.getThenStatement())))
+                        .thenOption(
+                            new Function<UnifierWithUnconsumedStatements, Optional<Unifier>>() {
+                              @Override
+                              public Optional<Unifier> apply(
+                                  UnifierWithUnconsumedStatements state) {
+                                return state.unconsumedStatements().isEmpty()
+                                    ? Optional.of(state.unifier())
+                                    : Optional.<Unifier>absent();
+                              }
+                            });
+                  }
+                })
+            .thenChoose(
+                new Function<Unifier, Choice<UnifierWithUnconsumedStatements>>() {
+                  @Override
+                  public Choice<UnifierWithUnconsumedStatements> apply(Unifier unifier) {
+                    if (ifTree.getElseStatement() == null
+                        && ControlFlowVisitor.INSTANCE.visitStatement(ifTree.getThenStatement())
+                            == Result.ALWAYS_RETURNS) {
+                      Choice<UnifierWithUnconsumedStatements> result =
+                          getThenStatement()
+                              .apply(
+                                  UnifierWithUnconsumedStatements.create(
+                                      unifier.fork(), unconsumedStatementsTail));
+                      if (getThenStatement() instanceof UBlock) {
+                        Choice<UnifierWithUnconsumedStatements> alternative =
+                            Choice.of(
+                                UnifierWithUnconsumedStatements.create(
+                                    unifier.fork(), unconsumedStatementsTail));
+                        for (UStatement stmt : ((UBlock) getThenStatement()).getStatements()) {
+                          alternative = alternative.thenChoose(stmt);
+                        }
+                        result = result.or(alternative);
+                      }
+                      return result;
+                    } else {
+                      return unifyUStatementWithSingleStatement(
+                              getThenStatement(), ifTree.getElseStatement())
+                          .apply(unifier)
+                          .transform(
+                              new Function<Unifier, UnifierWithUnconsumedStatements>() {
+                                @Override
+                                public UnifierWithUnconsumedStatements apply(Unifier unifier) {
+                                  return UnifierWithUnconsumedStatements.create(
+                                      unifier, unconsumedStatementsTail);
+                                }
+                              });
+                    }
+                  }
+                });
+    return forwardMatch.or(backwardMatch);
+  }
+
+  @Override
+  public List<JCStatement> inlineStatements(Inliner inliner) throws CouldNotResolveImportException {
+    return List.<JCStatement>of(
+        inliner
+            .maker()
+            .If(
+                getCondition().inline(inliner),
+                Iterables.getOnlyElement(getThenStatement().inlineStatements(inliner)),
+                (getElseStatement() == null)
+                    ? null
+                    : Iterables.getOnlyElement(getElseStatement().inlineStatements(inliner))));
   }
 }
