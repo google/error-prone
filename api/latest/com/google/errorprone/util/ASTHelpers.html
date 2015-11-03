@@ -344,7 +344,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#isSameType-com.sun.tools.javac.code.Type-com.sun.tools.javac.code.Type-com.google.errorprone.VisitorState-">isSameType</a></span>(com.sun.tools.javac.code.Type&nbsp;s,
           com.sun.tools.javac.code.Type&nbsp;t,
           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
-<div class="block">Returns true if erasure(s) == erasure(t).</div>
+<div class="block">Returns true if <code>erasure(s) == erasure(t)</code>.</div>
 </td>
 </tr>
 <tr id="i31" class="rowColor">
@@ -352,7 +352,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#isSubtype-com.sun.tools.javac.code.Type-com.sun.tools.javac.code.Type-com.google.errorprone.VisitorState-">isSubtype</a></span>(com.sun.tools.javac.code.Type&nbsp;s,
          com.sun.tools.javac.code.Type&nbsp;t,
          <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
-<div class="block">Returns true if erasure(s) <: erasure(t).</div>
+<div class="block">Returns true if <code>erasure(s) &lt;: erasure(t)</code>.</div>
 </td>
 </tr>
 <tr id="i32" class="altColor">
@@ -525,14 +525,18 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <div class="block">Find the root assignable expression of a chain of field accesses.  If there is no root
  (i.e, a bare method call or a static method call), return null.
 
- Examples:
-    a.trim().intern() ==> a
-    a.b.trim().intern() ==> a.b
-    this.intValue.foo() ==> this.intValue
-    this.foo() ==> this
-    intern() ==> null
-    String.format() ==> null
-    java.lang.String.format() ==> null</div>
+ <p>Examples:
+ <pre>
+ <code>
+    a.trim().intern() ==&gt; a
+    a.b.trim().intern() ==&gt; a.b
+    this.intValue.foo() ==&gt; this.intValue
+    this.foo() ==&gt; this
+    intern() ==&gt; null
+    String.format() ==&gt; null
+    java.lang.String.format() ==&gt; null
+ </code>
+ </pre></div>
 </li>
 </ul>
 <a name="getReturnType-com.sun.source.tree.ExpressionTree-">
@@ -557,10 +561,14 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <div class="block">Returns the type of a receiver of a method call expression.
  Precondition: the expressionTree corresponds to a method call.
 
- Examples:
-    a.b.foo() ==> type of a.b
-    a.bar().foo() ==> type of a.bar()
-    this.foo() ==> type of this</div>
+ <p>Examples:
+ <pre>
+ <code>
+    a.b.foo() ==&gt; type of a.b
+    a.bar().foo() ==&gt; type of a.bar()
+    this.foo() ==&gt; type of this
+ </code>
+ </pre></div>
 </li>
 </ul>
 <a name="getReceiver-com.sun.source.tree.ExpressionTree-">
@@ -572,12 +580,16 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <pre>public static&nbsp;com.sun.source.tree.ExpressionTree&nbsp;getReceiver(com.sun.source.tree.ExpressionTree&nbsp;expressionTree)</pre>
 <div class="block">Returns the receiver of an expression.
 
- Examples:
-    a.foo() ==> a
-    a.b.foo() ==> a.b
-    a.bar().foo() ==> a.bar()
-    a.b.c ==> a.b
-    a.b().c ==> a.b()</div>
+ <p>Examples:
+ <pre>
+ <code>
+    a.foo() ==&gt; a
+    a.b.foo() ==&gt; a.b
+    a.bar().foo() ==&gt; a.bar()
+    a.b.c ==&gt; a.b
+    a.b().c ==&gt; a.b()
+ </code>
+ </pre></div>
 </li>
 </ul>
 <a name="matchBinaryTree-com.sun.source.tree.BinaryTree-java.util.List-com.google.errorprone.VisitorState-">
@@ -830,7 +842,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <pre>public static&nbsp;boolean&nbsp;isSubtype(com.sun.tools.javac.code.Type&nbsp;s,
                                 com.sun.tools.javac.code.Type&nbsp;t,
                                 <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
-<div class="block">Returns true if erasure(s) <: erasure(t).</div>
+<div class="block">Returns true if <code>erasure(s) &lt;: erasure(t)</code>.</div>
 </li>
 </ul>
 <a name="isSameType-com.sun.tools.javac.code.Type-com.sun.tools.javac.code.Type-com.google.errorprone.VisitorState-">
@@ -842,7 +854,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <pre>public static&nbsp;boolean&nbsp;isSameType(com.sun.tools.javac.code.Type&nbsp;s,
                                  com.sun.tools.javac.code.Type&nbsp;t,
                                  <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
-<div class="block">Returns true if erasure(s) == erasure(t).</div>
+<div class="block">Returns true if <code>erasure(s) == erasure(t)</code>.</div>
 </li>
 </ul>
 <a name="getModifiers-com.sun.source.tree.Tree-">

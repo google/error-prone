@@ -125,7 +125,10 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Cla
  1) The class is assisted:
    a) If there is a constructor that is annotated with @Inject and that constructor has at least
       one parameter that is annotated with @Assisted.
-   b) If there is no @Inject constructor and at least one constructor is annotated with</div>
+   b) If there is no @Inject constructor and at least one constructor is annotated with
+      <code>@AssistedInject</code>.
+ 2) There is an annotation on the class, and the annotation is itself annotated with
+    <code>@ScopeAnnotation</code>.</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
 <dd>eaftan@google.com (Eddie Aftandilian)</dd>

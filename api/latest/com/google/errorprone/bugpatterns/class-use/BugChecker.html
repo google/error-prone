@@ -97,14 +97,18 @@
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><a href="#com.google.errorprone.bugpatterns.collectionincompatibletype">com.google.errorprone.bugpatterns.collectionincompatibletype</a></td>
+<td class="colFirst"><a href="#com.google.errorprone.bugpatterns.android">com.google.errorprone.bugpatterns.android</a></td>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><a href="#com.google.errorprone.bugpatterns.threadsafety">com.google.errorprone.bugpatterns.threadsafety</a></td>
+<td class="colFirst"><a href="#com.google.errorprone.bugpatterns.collectionincompatibletype">com.google.errorprone.bugpatterns.collectionincompatibletype</a></td>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><a href="#com.google.errorprone.bugpatterns.threadsafety">com.google.errorprone.bugpatterns.threadsafety</a></td>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><a href="#com.google.errorprone.scanner">com.google.errorprone.scanner</a></td>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -459,8 +463,9 @@
 <tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/InjectMoreThanOneScopeAnnotationOnClass.html" title="class in com.google.errorprone.bugpatterns">InjectMoreThanOneScopeAnnotationOnClass</a></span></code>
-<div class="block">This checker matches if a class has more than one annotation that is a scope annotation(that is,
- the annotation is either annotated with Guice's @ScopeAnnotation or Javax's @Scope).</div>
+<div class="block">This checker matches if a class has more than one annotation that is a scope
+ annotation(that is, the annotation is either annotated with Guice's
+ <code>@ScopeAnnotation</code> or Javax's <code>@Scope</code>).</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -554,7 +559,7 @@
 <tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/NoAllocationChecker.html" title="class in com.google.errorprone.bugpatterns">NoAllocationChecker</a></span></code>
-<div class="block">Checks methods annotated with @NoAllocation to ensure they really do not allocate.</div>
+<div class="block">Checks methods annotated with <code>@NoAllocation</code> to ensure they really do not allocate.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -765,6 +770,28 @@
 </tbody>
 </table>
 </li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.android">
+<!--   -->
+</a>
+<h3>Uses of <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> in <a href="../../../../../com/google/errorprone/bugpatterns/android/package-summary.html">com.google.errorprone.bugpatterns.android</a></h3>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing subclasses, and an explanation">
+<caption><span>Subclasses of <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> in <a href="../../../../../com/google/errorprone/bugpatterns/android/package-summary.html">com.google.errorprone.bugpatterns.android</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Class and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/android/MislabeledAndroidString.html" title="class in com.google.errorprone.bugpatterns.android">MislabeledAndroidString</a></span></code>
+<div class="block">Replacement of misleading
+ <a href="http://developer.android.com/reference/android/R.string.html">android.R.string</a>
+ constants with more intuitive ones.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.collectionincompatibletype">
 <!--   -->
 </a>
@@ -800,7 +827,7 @@
 <tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AbstractLockMethodChecker</a></span></code>
-<div class="block">Abstract implementation of checkers for @LockMethod and @UnlockMethod.</div>
+<div class="block">Abstract implementation of checkers for <code>@LockMethod</code> and<code>@UnlockMethod</code>.</div>
 </td>
 </tr>
 <tr class="rowColor">

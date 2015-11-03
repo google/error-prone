@@ -230,7 +230,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getSymtab--">getSymtab</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i10" class="altColor">
-<td class="colFirst"><code>com.google.common.collect.ImmutableList&lt;com.sun.tools.javac.parser.Tokens.Token&gt;</code></td>
+<td class="colFirst"><code>com.google.common.collect.ImmutableList&lt;<a href="../../../com/google/errorprone/util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getTokensForNode-com.sun.source.tree.Tree-">getTokensForNode</a></span>(com.sun.source.tree.Tree&nbsp;tree)</code>
 <div class="block">Returns the list of <code>Tokens.Token</code>s for the given <code>JCTree</code>.</div>
 </td>
@@ -554,7 +554,7 @@ public final&nbsp;&lt;T extends com.sun.source.tree.Tree&gt;&nbsp;T&nbsp;findEnc
 <ul class="blockList">
 <li class="blockList">
 <h4>getTokensForNode</h4>
-<pre>public&nbsp;com.google.common.collect.ImmutableList&lt;com.sun.tools.javac.parser.Tokens.Token&gt;&nbsp;getTokensForNode(com.sun.source.tree.Tree&nbsp;tree)</pre>
+<pre>public&nbsp;com.google.common.collect.ImmutableList&lt;<a href="../../../com/google/errorprone/util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;&nbsp;getTokensForNode(com.sun.source.tree.Tree&nbsp;tree)</pre>
 <div class="block">Returns the list of <code>Tokens.Token</code>s for the given <code>JCTree</code>.
 
  <p>This is moderately expensive (the source of the node has to be re-lexed), so it should

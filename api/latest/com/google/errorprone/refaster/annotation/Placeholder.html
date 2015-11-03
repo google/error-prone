@@ -96,13 +96,63 @@
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Target.html?is-external=true" title="class or interface in java.lang.annotation">@Target</a>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Target.html?is-external=true#value--" title="class or interface in java.lang.annotation">value</a>=<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/ElementType.html?is-external=true#METHOD" title="class or interface in java.lang.annotation">METHOD</a>)
  <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Retention.html?is-external=true" title="class or interface in java.lang.annotation">@Retention</a>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Retention.html?is-external=true#value--" title="class or interface in java.lang.annotation">value</a>=<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/RetentionPolicy.html?is-external=true#SOURCE" title="class or interface in java.lang.annotation">SOURCE</a>)
 public @interface <span class="memberNameLabel">Placeholder</span></pre>
-<div class="block">Annotation to indicate a placeholder method.  
- 
+<div class="block">Annotation to indicate a placeholder method.
+
  <p>A placeholder method is an abstract method in a Refaster template class which can represent
  an arbitrary expression (if the return type is nonvoid), or zero or more statements
- (if the return type is void), in terms of its arguments.  For example,<pre>   {@code
- 
- abstract class ComputeIfAbsent<K, V> {</div>
+ (if the return type is void), in terms of its arguments.  For example,
+
+ <pre><code>
+ abstract class ComputeIfAbsent&lt;K, V&gt; {
+   @Placeholder abstract V computeValue(K key);
+
+   @BeforeTemplate void getOrCompute(Map&lt;K, V&gt; map, K key) {
+     V value = map.get(key);
+     if (value == null) {
+       map.put(key, value = computeValue(key));
+     }
+   }
+
+   @AfterTemplate void computeIfAbsent(Map&lt;K, V&gt; map, K key) {
+     V value = map.computeIfAbsent(key, (K k) -&gt; computeValue(k));
+   }
+ }
+ </code></pre>
+
+ <p>Here, <code>computeValue</code> represents an arbitrary expression in terms of <code>key</code>,
+ and the <code>@AfterTemplate</code> rewrites that same expression in terms of the parameter of a
+ lambda expression.
+
+ <p>For a multi-line example, consider
+
+ <pre><code>
+ abstract class TryWithResources&lt;T extends AutoCloseable&gt; {
+   @Placeholder abstract T open();
+   @Placeholder void process(T resource);
+
+   @BeforeTemplate void tryFinallyClose() {
+     T resource = open();
+     try {
+       process(resource);
+     } finally {
+       resource.close();
+     }
+   }
+
+   @AfterTemplate void tryWithResource() {
+     try (T resource = open()) {
+       process(resource);
+     }
+   }
+ }
+ </code></pre>
+
+ <p>Here, <code>process</code> is any block, though it must refer to <code>resource</code> in some way;
+ it is not permitted to reassign the contents of <code>resource</code>.
+
+ <p>Placeholder methods are not permitted to refer to any local variables or parameters of the
+ <code>@BeforeTemplate</code> that are not passed to them as arguments, and must currently contain
+ references to all arguments that <em>are</em> passed to them.</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
 <dd>lowasser@google.com (Louis Wasserman)</dd>

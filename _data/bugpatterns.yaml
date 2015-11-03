@@ -62,6 +62,7 @@
 - {name: JUnit4TearDownNotRun, summary: tearDown() method will not be run; Please add an @After annotation}
 - {name: JUnit4TestNotRun, summary: Test method will not be run; please add @Test annotation}
 - {name: LongLiteralLowerCaseSuffix, summary: Prefer 'L' to 'l' for the suffix to long literals}
+- {name: MislabeledAndroidString, summary: Certain resources in `android.R.string` have names that do not match their content}
 - {name: MisusedWeekYear, summary: Use of "YYYY" (week year) in a date pattern without "ww" (week in year). You probably meant to use "yyyy" (year) instead.}
 - {name: MockitoUsage, summary: Missing method call for verify(mock) here}
 - {name: NarrowingCompoundAssignment, summary: 'Compound assignments to bytes, shorts,

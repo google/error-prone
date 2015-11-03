@@ -125,7 +125,7 @@ var activeTableTab = "activeTableTab";
 <pre>public abstract class <span class="typeNameLabel">AbstractLockMethodChecker</span>
 extends <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
 implements <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a></pre>
-<div class="block">Abstract implementation of checkers for @LockMethod and @UnlockMethod.</div>
+<div class="block">Abstract implementation of checkers for <code>@LockMethod</code> and<code>@UnlockMethod</code>.</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
 <dd>cushon@google.com (Liam Miller-Cushon)</dd>
@@ -198,7 +198,8 @@ implements <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>protected abstract com.google.common.collect.ImmutableList&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html#getLockExpressions-com.sun.source.tree.MethodTree-">getLockExpressions</a></span>(com.sun.source.tree.MethodTree&nbsp;tree)</code>
-<div class="block">Returns the lock expressions in the @LockMethod/@UnlockMethod annotation, if any.</div>
+<div class="block">Returns the lock expressions in the <code>@LockMethod</code>/<code>@UnlockMethod</code>
+ annotation, if any.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
@@ -273,7 +274,8 @@ implements <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.
 <li class="blockList">
 <h4>getLockExpressions</h4>
 <pre>protected abstract&nbsp;com.google.common.collect.ImmutableList&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;getLockExpressions(com.sun.source.tree.MethodTree&nbsp;tree)</pre>
-<div class="block">Returns the lock expressions in the @LockMethod/@UnlockMethod annotation, if any.</div>
+<div class="block">Returns the lock expressions in the <code>@LockMethod</code>/<code>@UnlockMethod</code>
+ annotation, if any.</div>
 </li>
 </ul>
 <a name="getActual-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">
@@ -295,7 +297,8 @@ implements <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.
 <h4>getUnwanted</h4>
 <pre>protected abstract&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;&nbsp;getUnwanted(com.sun.source.tree.MethodTree&nbsp;tree,
                                                         <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
-<div class="block">Searches the method body for the incorrect lock operation (e.g. releasing a lock in</div>
+<div class="block">Searches the method body for the incorrect lock operation (e.g. releasing a lock in
+ <code>@LockMethod</code>, or acquiring a lock in <code>@UnlockMethod</code>).</div>
 </li>
 </ul>
 <a name="buildMessage-java.lang.String-">

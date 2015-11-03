@@ -202,8 +202,27 @@ public static&nbsp;&lt;T&gt;&nbsp;T&nbsp;anyOf(T...&nbsp;expressions)</pre>
  specified template expressions, in order, and succeed at the first match.
 
  <p>This method should only be used in Refaster templates, but should never actually be run.
- 
- <p>For example, instead of writing <pre></div>
+
+ <p>For example, instead of writing
+
+ <pre><code>
+ @BeforeTemplate &lt;E&gt; List&lt;E&gt; copyOfSingleton(E element) {
+   return ImmutableList.copyOf(Collections.singletonList(element));
+ }
+ @BeforeTemplate &lt;E&gt; List&lt;E&gt; copyOfArrayList(E element) {
+   return ImmutableList.copyOf(Lists.newArrayList(element));
+ }
+ </code></pre>
+
+ <p>one could alternately write
+
+ <pre><code>
+ @BeforeTemplate &lt;E&gt; List&lt;E&gt; singleton(E element) {
+   return ImmutableList.copyOf(Refaster.anyOf(
+     Collections.singletonList(element),
+     Lists.newArrayList(element)));
+ }
+ </code></pre></div>
 </li>
 </ul>
 <a name="isInstance-java.lang.Object-">
@@ -216,8 +235,22 @@ public static&nbsp;&lt;T&gt;&nbsp;T&nbsp;anyOf(T...&nbsp;expressions)</pre>
 <div class="block">This is a placeholder for the Java instanceof operator that can be used with Refaster
  type variables.  The type argument must always be specified explicitly, e.g.
  <code>Refaster.&lt;String&gt;isInstance(o)</code>.
- 
- <p>For example, instead of writing the broken  <pre></div>
+
+ <p>For example, instead of writing the broken
+
+ <pre><code>
+ @AfterTemplate &lt;T&gt; boolean instanceOf(Object o) {
+   return o instanceof T; // you want to match this, but it won't compile
+ }
+ </code></pre>
+
+ <p>you would instead write
+
+ <pre><code>
+ @AfterTemplate &lt;T&gt; boolean instanceOf(Object o) {
+   return Refaster.&lt;T&gt;isInstance(o); // generates the replacement "o instanceof T"
+ }
+ </code></pre></div>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</a></code> - if T is not specified explicitly.</dd>
@@ -233,8 +266,22 @@ public static&nbsp;&lt;T&gt;&nbsp;T&nbsp;anyOf(T...&nbsp;expressions)</pre>
 <pre>public static&nbsp;&lt;T&gt;&nbsp;T[]&nbsp;newArray(int&nbsp;size)</pre>
 <div class="block">This is a placeholder for <code>new T[size]</code>. The type argument must always be specified
  explicitly, e.g. <code>Refaster.&lt;String&gt;newArray(10)</code>.
- 
- <p>For example, instead of writing the broken  <pre></div>
+
+ <p>For example, instead of writing the broken
+
+ <pre><code>
+ @AfterTemplate &lt;T&gt; T[] newTArray(int size) {
+   return new T[size]; // you want to generate this code, but it won't compile
+ }
+ </code></pre>
+
+ <p>you would instead write
+
+ <pre><code>
+ @AfterTemplate &lt;T&gt; T[] newTArray(int size) {
+   return Refaster.&lt;T&gt;newArray(size);
+ }
+ </code></pre></div>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</a></code> - if T is not specified explicitly.</dd>
@@ -250,8 +297,22 @@ public static&nbsp;&lt;T&gt;&nbsp;T&nbsp;anyOf(T...&nbsp;expressions)</pre>
 <pre>public static&nbsp;&lt;T&gt;&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;T&gt;&nbsp;clazz()</pre>
 <div class="block">This is a placeholder for the expression T.class.  The type argument must always
  be specified explicitly, e.g. <code>Refaster.&lt;String&gt;clazz()</code>.
- 
- <p>For example, instead of writing the broken  <pre></div>
+
+ <p>For example, instead of writing the broken
+
+ <pre><code>
+ @AfterTemplate &lt;T&gt; T[] getEnumConstants() {
+   return T.class.getEnumConstants(); // you want to inline this, but it won't compile
+ }
+ </code></pre>
+
+ you would instead write
+
+ <pre><code>
+ @AfterTemplate &lt;T&gt; T[] getEnumConstants() {
+   return Refaster.&lt;T&gt;clazz().getEnumConstants();
+ }
+ </code></pre></div>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</a></code> - if T is not specified explicitly.</dd>
@@ -267,8 +328,22 @@ public static&nbsp;&lt;T&gt;&nbsp;T&nbsp;anyOf(T...&nbsp;expressions)</pre>
 <pre>public static&nbsp;&lt;E extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Enum.html?is-external=true" title="class or interface in java.lang">Enum</a>&lt;E&gt;&gt;&nbsp;E&nbsp;enumValueOf(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;string)</pre>
 <div class="block">This is a placeholder for the expression E.valueOf(string).  The type argument must always
  be specified explicitly, e.g. <code>Refaster.&lt;RoundingMode&gt;valueOf(string)</code>.
- 
- <p>For example, instead of writing the broken  <pre></div>
+
+ <p>For example, instead of writing the broken
+
+ <pre><code>
+ @BeforeTemplate &lt;E extends Enum&lt;E&gt;&gt; E valueOf(String str) {
+   return E.valueOf(str);
+ }
+ </code></pre>
+
+ <p>you would instead write
+
+ <pre><code>
+ @BeforeTemplate &lt;E extends Enum&lt;E&gt;&gt; E valueOf(String str) {
+   return Refaster.&lt;E&gt;enumValueOf(str);
+ }
+ </code></pre></div>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</a></code> - if E is not specified explicitly.</dd>

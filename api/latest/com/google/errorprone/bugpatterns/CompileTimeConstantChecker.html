@@ -127,7 +127,7 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
  <p>
  This type annotation checker enforces that for all method and constructor invocations, for all
  formal parameters of the invoked method/constructor that are annotated with the
- <code>com.google.common.annotations.CompileTimeConstant</code> type annotation, the
+ <a href="../../../../com/google/errorprone/annotations/CompileTimeConstant.html" title="annotation in com.google.errorprone.annotations"><code>CompileTimeConstant</code></a> type annotation, the
  corresponding actual parameter is an expression that satisfies one of the following conditions:
  <ol>
  <li>The expression is one for which the Java compiler can determine a constant value at compile
@@ -135,7 +135,7 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
  <li>the expression consists of the literal <code>null</code>, or</li>
  <li>the expression consists of a single identifier, where the identifier is a formal method
  parameter that is declared <code>final</code> and has the
- <code>com.google.common.annotations.CompileTimeConstant</code> annotation.</li>
+ <a href="../../../../com/google/errorprone/annotations/CompileTimeConstant.html" title="annotation in com.google.errorprone.annotations"><code>CompileTimeConstant</code></a> annotation.</li>
  </ol></div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>

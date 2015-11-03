@@ -197,7 +197,8 @@ extends <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/A
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>protected com.google.common.collect.ImmutableList&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/UnlockMethodChecker.html#getLockExpressions-com.sun.source.tree.MethodTree-">getLockExpressions</a></span>(com.sun.source.tree.MethodTree&nbsp;tree)</code>
-<div class="block">Returns the lock expressions in the @LockMethod/@UnlockMethod annotation, if any.</div>
+<div class="block">Returns the lock expressions in the <code>@LockMethod</code>/<code>@UnlockMethod</code>
+ annotation, if any.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
@@ -275,7 +276,8 @@ extends <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/A
 <h4>getLockExpressions</h4>
 <pre>protected&nbsp;com.google.common.collect.ImmutableList&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;getLockExpressions(com.sun.source.tree.MethodTree&nbsp;tree)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html#getLockExpressions-com.sun.source.tree.MethodTree-">AbstractLockMethodChecker</a></code></span></div>
-<div class="block">Returns the lock expressions in the @LockMethod/@UnlockMethod annotation, if any.</div>
+<div class="block">Returns the lock expressions in the <code>@LockMethod</code>/<code>@UnlockMethod</code>
+ annotation, if any.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html#getLockExpressions-com.sun.source.tree.MethodTree-">getLockExpressions</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AbstractLockMethodChecker</a></code></dd>
@@ -307,7 +309,8 @@ extends <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/A
 <pre>protected&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;&nbsp;getUnwanted(com.sun.source.tree.MethodTree&nbsp;tree,
                                                <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html#getUnwanted-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">AbstractLockMethodChecker</a></code></span></div>
-<div class="block">Searches the method body for the incorrect lock operation (e.g. releasing a lock in</div>
+<div class="block">Searches the method body for the incorrect lock operation (e.g. releasing a lock in
+ <code>@LockMethod</code>, or acquiring a lock in <code>@UnlockMethod</code>).</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html#getUnwanted-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">getUnwanted</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AbstractLockMethodChecker</a></code></dd>
