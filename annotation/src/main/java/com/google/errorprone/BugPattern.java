@@ -104,9 +104,13 @@ public @interface BugPattern {
      */
     MOCKITO,
     /**
-     * Errors specific to JMock
+     * Errors specific to JMock.
      */
-    JMOCK;
+    JMOCK,
+    /**
+     * Errors specific to Android.
+     */
+    ANDROID;
   }
 
   /**
