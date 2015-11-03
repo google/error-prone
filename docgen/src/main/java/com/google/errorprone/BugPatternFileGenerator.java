@@ -231,40 +231,42 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
       Mustache mustache = mf.compile("com/google/errorprone/resources/bugpattern.mustache");
       mustache.execute(writer, templateData.build());
 
-      // Example filename must match example pattern.
-      List<Path> examplePaths = new ArrayList<>();
-      Filter<Path> filter =
-          new ExampleFilter(pattern.className.substring(pattern.className.lastIndexOf('.') + 1));
-      findExamples(examplePaths, exampleDirBase, filter);
+      if (pattern.generateExamplesFromTestCases) {
+        // Example filename must match example pattern.
+        List<Path> examplePaths = new ArrayList<>();
+        Filter<Path> filter =
+            new ExampleFilter(pattern.className.substring(pattern.className.lastIndexOf('.') + 1));
+        findExamples(examplePaths, exampleDirBase, filter);
 
-      List<ExampleInfo> exampleInfos =
-          FluentIterable.from(examplePaths)
-              .transform(new PathToExampleInfo(pattern.className))
-              .toSortedList( // sort by name
-                  new Comparator<ExampleInfo>() {
-                    @Override
-                    public int compare(ExampleInfo first, ExampleInfo second) {
-                      return first.name().compareTo(second.name());
-                    }
-                  });
-      Collection<ExampleInfo> positiveExamples = Collections2.filter(exampleInfos, IS_POSITIVE);
-      Collection<ExampleInfo> negativeExamples =
-          Collections2.filter(exampleInfos, not(IS_POSITIVE));
+        List<ExampleInfo> exampleInfos =
+            FluentIterable.from(examplePaths)
+                .transform(new PathToExampleInfo(pattern.className))
+                .toSortedList( // sort by name
+                    new Comparator<ExampleInfo>() {
+                      @Override
+                      public int compare(ExampleInfo first, ExampleInfo second) {
+                        return first.name().compareTo(second.name());
+                      }
+                    });
+        Collection<ExampleInfo> positiveExamples = Collections2.filter(exampleInfos, IS_POSITIVE);
+        Collection<ExampleInfo> negativeExamples =
+            Collections2.filter(exampleInfos, not(IS_POSITIVE));
 
-      if (!exampleInfos.isEmpty()) {
-        writer.write("\n----------\n\n");
+        if (!exampleInfos.isEmpty()) {
+          writer.write("\n----------\n\n");
 
-        if (!positiveExamples.isEmpty()) {
-          writer.write("### Positive examples\n");
-          for (ExampleInfo positiveExample : positiveExamples) {
-            writeExample(positiveExample, writer);
+          if (!positiveExamples.isEmpty()) {
+            writer.write("### Positive examples\n");
+            for (ExampleInfo positiveExample : positiveExamples) {
+              writeExample(positiveExample, writer);
+            }
           }
-        }
 
-        if (!negativeExamples.isEmpty()) {
-          writer.write("### Negative examples\n");
-          for (ExampleInfo negativeExample : negativeExamples) {
-            writeExample(negativeExample, writer);
+          if (!negativeExamples.isEmpty()) {
+            writer.write("### Negative examples\n");
+            for (ExampleInfo negativeExample : negativeExamples) {
+              writeExample(negativeExample, writer);
+            }
           }
         }
       }

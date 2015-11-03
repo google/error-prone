@@ -45,6 +45,7 @@ public final class BugPatternInstance {
   public Suppressibility suppressibility;
   public String customSuppressionAnnotation;
   public boolean documentSuppression = true;
+  public boolean generateExamplesFromTestCases = true;
 
   public static BugPatternInstance fromElement(Element element) {
     BugPatternInstance instance = new BugPatternInstance();
@@ -64,6 +65,9 @@ public final class BugPatternInstance {
     instance.category = verifyNotNull(keyValues.get("category")).toString();
     instance.customSuppressionAnnotation =
         firstNonNull(keyValues.get("customSuppressionAnnotation"), "").toString();
+    instance.generateExamplesFromTestCases =
+        !keyValues.containsKey("generateExamplesFromTestCases")
+            || (boolean) keyValues.get("generateExamplesFromTestCases");
 
     return instance;
   }

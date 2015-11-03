@@ -59,14 +59,22 @@ import com.sun.tools.javac.util.Name;
  * @author eaftan@google.com (Eddie Aftandilian)
  * @author cushon@google.com (Liam Miller-Cushon)
  */
-@BugPattern(name = "Finally", altNames = {"finally", "ThrowFromFinallyBlock"},
-    summary = "If you return or throw from a finally, then values returned or thrown from the"
-        + " try-catch block will be ignored",
-    explanation = "Terminating a finally block abruptly preempts the outcome of the try block,"
-        + " and will cause the result of any previously executed return or throw statements to"
-        + " be ignored. This is very confusing. Please refactor this code to ensure that the"
-        + " finally block will always complete normally.",
-    category = JDK, severity = WARNING, maturity = MATURE)
+@BugPattern(
+  name = "Finally",
+  altNames = {"finally", "ThrowFromFinallyBlock"},
+  summary =
+      "If you return or throw from a finally, then values returned or thrown from the"
+          + " try-catch block will be ignored",
+  explanation =
+      "Terminating a finally block abruptly preempts the outcome of the try block,"
+          + " and will cause the result of any previously executed return or throw statements to"
+          + " be ignored. This is very confusing. Please refactor this code to ensure that the"
+          + " finally block will always complete normally.",
+  category = JDK,
+  severity = WARNING,
+  maturity = MATURE,
+  generateExamplesFromTestCases = false
+)
 public class Finally extends BugChecker
     implements ContinueTreeMatcher, ThrowTreeMatcher, BreakTreeMatcher, ReturnTreeMatcher {
 
