@@ -95,15 +95,18 @@ public class PreconditionsCheckNotNullPrimitive
   /**
    * If the call to Preconditions.checkNotNull is part of an expression (assignment, return, etc.),
    * we substitute the argument for the method call. E.g.:
-   *   bar = Preconditions.checkNotNull(foo); ==> bar = foo;
-   * If the argument to Preconditions.checkNotNull is a comparison using == or != and one of the
+   * {@code bar = Preconditions.checkNotNull(foo); ==> bar = foo;}
+   *
+   * <p>If the argument to Preconditions.checkNotNull is a comparison using == or != and one of the
    * operands is null, we call checkNotNull on the non-null operand. E.g.:
-   *   checkNotNull(a == null); ==> checkNotNull(a);
-   * If the argument is a method call or binary tree and its return type is boolean, change it to a
+   * {@code checkNotNull(a == null); ==> checkNotNull(a);}
+   *
+   * <p>If the argument is a method call or binary tree and its return type is boolean, change it to a
    * checkArgument/checkState. E.g.:
-   *   Preconditions.checkNotNull(foo.hasFoo()) ==> Preconditions.checkArgument(foo.hasFoo())
-   * Otherwise, delete the checkNotNull call. E.g.:
-   *   Preconditions.checkNotNull(foo); ==> [delete the line]
+   * {@code Preconditions.checkNotNull(foo.hasFoo()) ==> Preconditions.checkArgument(foo.hasFoo())}
+   *
+   * <p>Otherwise, delete the checkNotNull call. E.g.:
+   * {@code Preconditions.checkNotNull(foo); ==> [delete the line]}
    */
   public Description describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
     ExpressionTree arg1 = methodInvocationTree.getArguments().get(0);

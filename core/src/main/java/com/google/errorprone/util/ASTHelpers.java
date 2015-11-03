@@ -208,7 +208,9 @@ public class ASTHelpers {
    * Find the root assignable expression of a chain of field accesses.  If there is no root
    * (i.e, a bare method call or a static method call), return null.
    *
-   * Examples:
+   * <p>Examples:
+   * <pre>
+   * {@code
    *    a.trim().intern() ==> a
    *    a.b.trim().intern() ==> a.b
    *    this.intValue.foo() ==> this.intValue
@@ -216,6 +218,8 @@ public class ASTHelpers {
    *    intern() ==> null
    *    String.format() ==> null
    *    java.lang.String.format() ==> null
+   * }
+   * </pre>
    */
   public static ExpressionTree getRootAssignable(MethodInvocationTree methodInvocationTree) {
     if (!(methodInvocationTree instanceof JCMethodInvocation)) {
@@ -267,10 +271,14 @@ public class ASTHelpers {
    * Returns the type of a receiver of a method call expression.
    * Precondition: the expressionTree corresponds to a method call.
    *
-   * Examples:
+   * <p>Examples:
+   * <pre>
+   * {@code
    *    a.b.foo() ==> type of a.b
    *    a.bar().foo() ==> type of a.bar()
    *    this.foo() ==> type of this
+   * }
+   * </pre>
    */
   public static Type getReceiverType(ExpressionTree expressionTree) {
     if (expressionTree instanceof JCFieldAccess) {
@@ -289,12 +297,16 @@ public class ASTHelpers {
   /**
    * Returns the receiver of an expression.
    *
-   * Examples:
+   * <p>Examples:
+   * <pre>
+   * {@code
    *    a.foo() ==> a
    *    a.b.foo() ==> a.b
    *    a.bar().foo() ==> a.bar()
    *    a.b.c ==> a.b
    *    a.b().c ==> a.b()
+   * }
+   * </pre>
    */
   public static ExpressionTree getReceiver(ExpressionTree expressionTree) {
     if (expressionTree instanceof MethodInvocationTree) {
@@ -574,7 +586,7 @@ public class ASTHelpers {
   }
 
   /**
-   * Returns true if erasure(s) <: erasure(t).
+   * Returns true if {@code erasure(s) <: erasure(t)}.
    */
   public static boolean isSubtype(Type s, Type t, VisitorState state) {
     if (s == null || t == null) {
@@ -584,7 +596,7 @@ public class ASTHelpers {
     return types.isSubtype(types.erasure(s), types.erasure(t));
   }
 
-  /** Returns true if erasure(s) == erasure(t). */
+  /** Returns true if {@code erasure(s) == erasure(t)}. */
   public static boolean isSameType(Type s, Type t, VisitorState state) {
     if (s == null || t == null) {
       return false;

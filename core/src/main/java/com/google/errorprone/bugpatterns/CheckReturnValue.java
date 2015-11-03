@@ -78,7 +78,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
     return shouldCheckReturnValue(enclosingPackage(method));
   }
 
-  private static final Matcher<MethodInvocationTree> MATCHER = 
+  private static final Matcher<MethodInvocationTree> MATCHER =
       new Matcher<MethodInvocationTree>() {
         @Override
         public boolean matches(MethodInvocationTree tree, VisitorState state) {
@@ -109,7 +109,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
 
   /**
    * Return a matcher for method invocations in which the method being called has the
-   * @CheckReturnValue annotation.
+   * {@code @CheckReturnValue} annotation.
    */
   @Override
   public Matcher<MethodInvocationTree> specializedMatcher() {
@@ -136,7 +136,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
     boolean canIgnore = hasAnnotation(method, CanIgnoreReturnValue.class);
 
     if (checkReturn && canIgnore) {
-      return buildDescription(tree).setMessage(String.format(BOTH_ERROR, "method")).build();  
+      return buildDescription(tree).setMessage(String.format(BOTH_ERROR, "method")).build();
     }
 
     String annotationToValidate;

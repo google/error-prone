@@ -34,14 +34,15 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ModifiersTree;
 
 /**
- * This checker matches if a class has more than one annotation that is a scope annotation(that is,
- * the annotation is either annotated with Guice's @ScopeAnnotation or Javax's @Scope).
+ * This checker matches if a class has more than one annotation that is a scope
+ * annotation(that is, the annotation is either annotated with Guice's
+ * {@code @ScopeAnnotation} or Javax's {@code @Scope}).
  *
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
 
 @BugPattern(name = "InjectMoreThanOneScopeAnnotationOnClass",
-    summary = "A class can be annotated with at most one scope annotation", 
+    summary = "A class can be annotated with at most one scope annotation",
     explanation = "Annotating a class with more than one scope annotation is "
         + "invalid according to the JSR-330 specification. ", category = INJECT, severity = ERROR,
     maturity = EXPERIMENTAL)
@@ -52,8 +53,8 @@ public class InjectMoreThanOneScopeAnnotationOnClass extends BugChecker
   private static final String JAVAX_SCOPE_ANNOTATION = "javax.inject.Scope";
 
   /**
-   * Matches annotations that are themselves annotated with with @ScopeAnnotation(Guice) or
-   * @Scope(Javax).
+   * Matches annotations that are themselves annotated with with
+   * {@code @ScopeAnnotation(Guice)} or {@code @Scope(Javax)}.
    */
   private Matcher<AnnotationTree> scopeAnnotationMatcher = Matchers.<AnnotationTree>anyOf(
       hasAnnotation(GUICE_SCOPE_ANNOTATION), hasAnnotation(JAVAX_SCOPE_ANNOTATION));

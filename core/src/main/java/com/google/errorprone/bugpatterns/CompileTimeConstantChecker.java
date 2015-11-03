@@ -48,7 +48,7 @@ import java.util.Iterator;
  * <p>
  * This type annotation checker enforces that for all method and constructor invocations, for all
  * formal parameters of the invoked method/constructor that are annotated with the
- * {@link com.google.common.annotations.CompileTimeConstant} type annotation, the
+ * {@link com.google.errorprone.annotations.CompileTimeConstant} type annotation, the
  * corresponding actual parameter is an expression that satisfies one of the following conditions:
  * <ol>
  * <li>The expression is one for which the Java compiler can determine a constant value at compile
@@ -56,7 +56,7 @@ import java.util.Iterator;
  * <li>the expression consists of the literal {@code null}, or</li>
  * <li>the expression consists of a single identifier, where the identifier is a formal method
  * parameter that is declared {@code final} and has the
- * {@link com.google.common.annotations.CompileTimeConstant} annotation.</li>
+ * {@link com.google.errorprone.annotations.CompileTimeConstant} annotation.</li>
  * </ol>
  *
  * @see CompileTimeConstantExpressionMatcher

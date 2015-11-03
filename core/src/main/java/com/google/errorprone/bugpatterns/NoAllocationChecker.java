@@ -104,17 +104,17 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Checks methods annotated with @NoAllocation to ensure they really do not allocate.
+ * Checks methods annotated with {@code @NoAllocation} to ensure they really do not allocate.
  *
  * <ol>
  *   <li>Calls to new are disallowed.
  *   <li>Methods statically determined to be reachable from this method must also be annotated
- *       with @NoAllocation.
+ *       with {@code @NoAllocation}.
  *   <li>Autoboxing is disallowed.
  *   <li>String concatenation and conversions are disallowed.
  *   <li>To make it easier to use exceptions, allocations are always allowed within a throw
  *       statement. (But not in the methods of nested classes if they are annotated with
- *       @NoAllocation.)
+ *       {@code NoAllocation}.)
  *   <li>The check is done at the source level. The compiler or runtime may perform optimizations
  *       or transformations that add or remove allocations in a way not visible to this check.
  * </ol>
@@ -181,8 +181,8 @@ public class NoAllocationChecker extends BugChecker
 
   /**
    * Matches if a Tree has a ThrowTree or an AnnotationTree before any MethodTree in its hierarchy.
-   * We don't want the throw to nullify any @NoAnnotation in a method in an anonymous class below
-   * it.
+   * We don't want the throw to nullify any {@code @NoAnnotation} in a method in an anonymous
+   * class below it.
    */
   private static Matcher<Tree> withinThrowOrAnnotation = new Matcher<Tree>() {
     @Override
@@ -208,7 +208,8 @@ public class NoAllocationChecker extends BugChecker
   };
 
   /**
-   * Matches a new array statement if the enclosing method is annotated with @NoAllocation.
+   * Matches a new array statement if the enclosing method is annotated with
+   * {@code @NoAllocation}.
    */
   private static Matcher<NewArrayTree> newArrayMatcher =
       allOf(
@@ -217,7 +218,7 @@ public class NoAllocationChecker extends BugChecker
       );
 
   /**
-   * Matches a new statement if the enclosing method is annotated with @NoAllocation.
+   * Matches a new statement if the enclosing method is annotated with {@code @NoAllocation}.
    */
   private static Matcher<NewClassTree> newClassMatcher =
       allOf(
@@ -226,7 +227,8 @@ public class NoAllocationChecker extends BugChecker
       );
 
   /**
-   * Matches if a method without @NoAllocation is invoked from a method with @NoAllocation.
+   * Matches if a method without {@code @NoAllocation} is invoked from a method with
+   * {@code @NoAllocation}.
    */
   private static Matcher<MethodInvocationTree> methodMatcher =
       allOf(

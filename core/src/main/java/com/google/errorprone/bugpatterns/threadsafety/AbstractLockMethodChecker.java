@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Abstract implementation of checkers for @LockMethod and @UnlockMethod.
+ * Abstract implementation of checkers for {@code @LockMethod} and{@code @UnlockMethod}.
  *
  * @author cushon@google.com (Liam Miller-Cushon)
  */
@@ -44,7 +44,8 @@ public abstract class AbstractLockMethodChecker extends BugChecker
     implements BugChecker.MethodTreeMatcher {
 
   /**
-   * Returns the lock expressions in the @LockMethod/@UnlockMethod annotation, if any.
+   * Returns the lock expressions in the {@code @LockMethod}/{@code @UnlockMethod}
+   * annotation, if any.
    */
   protected abstract ImmutableList<String> getLockExpressions(MethodTree tree);
 
@@ -55,7 +56,7 @@ public abstract class AbstractLockMethodChecker extends BugChecker
 
   /**
    * Searches the method body for the incorrect lock operation (e.g. releasing a lock in
-   * @LockMethod, or acquiring a lock in @UnlockMethod).
+   * {@code @LockMethod}, or acquiring a lock in {@code @UnlockMethod}).
    */
   protected abstract Set<GuardedByExpression> getUnwanted(MethodTree tree, VisitorState state);
 

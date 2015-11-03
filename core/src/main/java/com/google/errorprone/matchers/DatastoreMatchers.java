@@ -146,11 +146,11 @@ public class DatastoreMatchers {
   /**
    * Matches methods that fit the following requirements:
    * <ol>
-   * <li>contains method call {@link DatastoreService#prepare}
+   * <li>contains method call {@code DatastoreService#prepare}
    * <li>contains an instance method call on an Entity object
    * <li>no parameters of type Query, Entity, or Iterable
    * <li>does not contain a method call that takes an Entity or Iterable&lt;Entity&gt;
-   * <li>does not contain a method call other than {@link DatastoreService#prepare} that takes a
+   * <li>does not contain a method call other than {@code DatastoreService#prepare} that takes a
    *     Query
    * </ol>
    */

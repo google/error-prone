@@ -46,9 +46,9 @@ import com.sun.source.tree.VariableTree;
  *   a) If there is a constructor that is annotated with @Inject and that constructor has at least
  *      one parameter that is annotated with @Assisted.
  *   b) If there is no @Inject constructor and at least one constructor is annotated with
- *      @AssistedInject.
+ *      {@code @AssistedInject}.
  * 2) There is an annotation on the class, and the annotation is itself annotated with
- *    @ScopeAnnotation.
+ *    {@code @ScopeAnnotation}.
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */

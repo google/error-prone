@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
 /**
  * Indicates that the return value of the annotated method can be safely ignored.
  *
- * <p>This is the opposite of {@link javax.annotation.CheckReturnValue}. It can be used inside
+ * <p>This is the opposite of {@code javax.annotation.CheckReturnValue}. It can be used inside
  * classes or packages annotated with {@code @CheckReturnValue} to exempt specific methods from
  * the default.
  */

@@ -29,47 +29,55 @@ public class Refaster {
    * specified template expressions, in order, and succeed at the first match.
    *
    * <p>This method should only be used in Refaster templates, but should never actually be run.
-   * 
-   * <p>For example, instead of writing <pre>
    *
-   *   @BeforeTemplate &lt;E&gt; List&lt;E&gt; copyOfSingleton(E element) {
-   *     return ImmutableList.copyOf(Collections.singletonList(element));
-   *   }
-   *   @BeforeTemplate &lt;E&gt; List&lt;E&gt; copyOfArrayList(E element) {
-   *     return ImmutableList.copyOf(Lists.newArrayList(element));
-   *   }}</pre>
-   * 
-   * one could alternately write  <pre>
-   * 
-   *   @BeforeTemplate &lt;E&gt; List&lt;E&gt; singleton(E element) {
-   *     return ImmutableList.copyOf(Refaster.anyOf(
-   *       Collections.singletonList(element),
-   *       Lists.newArrayList(element)));
-   *   }}</pre>
+   * <p>For example, instead of writing
+   *
+   * <pre><code>
+   *{@literal @}BeforeTemplate &lt;E&gt; List&lt;E&gt; copyOfSingleton(E element) {
+   *   return ImmutableList.copyOf(Collections.singletonList(element));
+   * }
+   *{@literal @}BeforeTemplate &lt;E&gt; List&lt;E&gt; copyOfArrayList(E element) {
+   *   return ImmutableList.copyOf(Lists.newArrayList(element));
+   * }
+   * </code></pre>
+   *
+   * <p>one could alternately write
+   *
+   * <pre><code>
+   *{@literal @}BeforeTemplate &lt;E&gt; List&lt;E&gt; singleton(E element) {
+   *   return ImmutableList.copyOf(Refaster.anyOf(
+   *     Collections.singletonList(element),
+   *     Lists.newArrayList(element)));
+   * }
+   * </code></pre>
    */
   @SafeVarargs
   public static <T> T anyOf(T... expressions) {
     throw new UnsupportedOperationException();
   }
-  
+
   /**
    * This is a placeholder for the Java instanceof operator that can be used with Refaster
    * type variables.  The type argument must always be specified explicitly, e.g.
    * {@code Refaster.<String>isInstance(o)}.
-   * 
-   * <p>For example, instead of writing the broken  <pre>
    *
-   *   @AfterTemplate &lt;T&gt; boolean instanceOf(Object o) {
-   *     return o instanceof T; // you want to match this, but it won't compile
-   *   }}</pre>
-   *   
-   * you would instead write <pre>   {@code
+   * <p>For example, instead of writing the broken
    *
-   *   @AfterTemplate &lt;T&gt; boolean instanceOf(Object o) {
-   *     return Refaster.<T>isInstance(o); // generates the replacement "o instanceof T"
-   *   }}</pre> 
-   *   
-   * @throws IllegalArgumentException if T is not specified explicitly.   
+   * <pre><code>
+   *{@literal @}AfterTemplate &lt;T&gt; boolean instanceOf(Object o) {
+   *   return o instanceof T; // you want to match this, but it won't compile
+   * }
+   * </code></pre>
+   *
+   * <p>you would instead write
+   *
+   * <pre><code>
+   *{@literal @}AfterTemplate &lt;T&gt; boolean instanceOf(Object o) {
+   *   return Refaster.&lt;T&gt;isInstance(o); // generates the replacement "o instanceof T"
+   * }
+   * </code></pre>
+   *
+   * @throws IllegalArgumentException if T is not specified explicitly.
    */
   public static <T> boolean isInstance(Object o) {
     // real code wouldn't have an unused type parameter (T) or an unused argument (o)
@@ -79,18 +87,22 @@ public class Refaster {
   /**
    * This is a placeholder for {@code new T[size]}. The type argument must always be specified
    * explicitly, e.g. {@code Refaster.<String>newArray(10)}.
-   * 
-   * <p>For example, instead of writing the broken  <pre>
    *
-   *   @AfterTemplate &lt;T&gt; T[] newTArray(int size) {
-   *     return new T[size]; // you want to generate this code, but it won't compile
-   *   }}</pre>
-   *   
-   * you would instead write <pre>   {@code
+   * <p>For example, instead of writing the broken
    *
-   *   @AfterTemplate &lt;T&gt; T[] newTArray(int size) {
-   *     return Refaster.<T>newArray(size);
-   *   }}</pre>
+   * <pre><code>
+   *{@literal @}AfterTemplate &lt;T&gt; T[] newTArray(int size) {
+   *   return new T[size]; // you want to generate this code, but it won't compile
+   * }
+   * </code></pre>
+   *
+   * <p>you would instead write
+   *
+   * <pre><code>
+   *{@literal @}AfterTemplate &lt;T&gt; T[] newTArray(int size) {
+   *   return Refaster.&lt;T&gt;newArray(size);
+   * }
+   * </code></pre>
    *
    * @throws IllegalArgumentException if T is not specified explicitly.
    */
@@ -101,41 +113,49 @@ public class Refaster {
   /**
    * This is a placeholder for the expression T.class.  The type argument must always
    * be specified explicitly, e.g. {@code Refaster.<String>clazz()}.
-   * 
-   * <p>For example, instead of writing the broken  <pre>
    *
-   *   @AfterTemplate <T> T[] getEnumConstants() {
-   *     return T.class.getEnumConstants(); // you want to inline this, but it won't compile
-   *   }}</pre>
-   *   
-   * you would instead write <pre>   {@code
+   * <p>For example, instead of writing the broken
    *
-   *   @AfterTemplate <T> T[] getEnumConstants() {
-   *     return Refaster.<T>clazz().getEnumConstants();
-   *   }}</pre> 
-   *   
-   * @throws IllegalArgumentException if T is not specified explicitly.   
+   * <pre><code>
+   *{@literal @}AfterTemplate &lt;T&gt; T[] getEnumConstants() {
+   *   return T.class.getEnumConstants(); // you want to inline this, but it won't compile
+   * }
+   * </code></pre>
+   *
+   * you would instead write
+   *
+   * <pre><code>
+   *{@literal @}AfterTemplate &lt;T&gt; T[] getEnumConstants() {
+   *   return Refaster.&lt;T&gt;clazz().getEnumConstants();
+   * }
+   * </code></pre>
+   *
+   * @throws IllegalArgumentException if T is not specified explicitly.
    */
   public static <T> Class<T> clazz() {
     throw new UnsupportedOperationException();
   }
-  
+
   /**
    * This is a placeholder for the expression E.valueOf(string).  The type argument must always
    * be specified explicitly, e.g. {@code Refaster.<RoundingMode>valueOf(string)}.
-   * 
-   * <p>For example, instead of writing the broken  <pre>
-   * 
-   *   @BeforeTemplate <E extends Enum<E>> E valueOf(String str) {
-   *     return E.valueOf(str);
-   *   }</pre>
-   * 
-   * you would instead write <pre>   {@code
-   *   
-   *   @BeforeTemplate <E extends Enum<E>> E valueOf(String str) {
-   *     return Refaster.<E>enumValueOf(str);
-   *   }}</pre>
-   *   
+   *
+   * <p>For example, instead of writing the broken
+   *
+   * <pre><code>
+   *{@literal @}BeforeTemplate &lt;E extends Enum&lt;E&gt;&gt; E valueOf(String str) {
+   *   return E.valueOf(str);
+   * }
+   * </code></pre>
+   *
+   * <p>you would instead write
+   *
+   * <pre><code>
+   *{@literal @}BeforeTemplate &lt;E extends Enum&lt;E&gt;&gt; E valueOf(String str) {
+   *   return Refaster.&lt;E&gt;enumValueOf(str);
+   * }
+   * </code></pre>
+   *
    * @throws IllegalArgumentException if E is not specified explicitly.
    */
   public static <E extends Enum<E>> E enumValueOf(String string) {
