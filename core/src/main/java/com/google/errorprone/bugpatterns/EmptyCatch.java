@@ -86,7 +86,7 @@ import java.util.List;
 @BugPattern(name = "EmptyCatch",
     summary = "Empty catch blocks that ignore exceptions",
     explanation = "Ignoring exception is a bad practice.",
-    category = JDK, maturity = MATURE, severity = ERROR)
+    category = JDK, maturity = MATURE, severity = WARNING)
 public class EmptyCatch extends BugChecker implements TryTreeMatcher {
   /* If one of the following exceptions is ignored, we suppress the warning. */
   String[] harmlessExceptions = {
