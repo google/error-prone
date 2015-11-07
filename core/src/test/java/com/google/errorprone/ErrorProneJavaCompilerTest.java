@@ -16,6 +16,48 @@
 
 package com.google.errorprone;
 
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.errorprone.bugpatterns.ArrayEquals;
+import com.google.errorprone.bugpatterns.ArrayEqualsTest;
+import com.google.errorprone.bugpatterns.BadShiftAmount;
+import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
+import com.google.errorprone.bugpatterns.ChainingConstructorIgnoresParameter;
+import com.google.errorprone.bugpatterns.EmptyIfStatementTest;
+import com.google.errorprone.bugpatterns.EqualsNaNTest;
+import com.google.errorprone.bugpatterns.Finally;
+import com.google.errorprone.bugpatterns.WaitNotInLoopTest;
+import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.matchers.Description;
+import com.google.errorprone.scanner.ScannerSupplier;
+import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.MethodTree;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import javax.lang.model.SourceVersion;
+import javax.tools.Diagnostic;
+import javax.tools.DiagnosticListener;
+import javax.tools.JavaCompiler;
+import javax.tools.JavaFileObject;
+import org.hamcrest.Matcher;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
@@ -28,52 +70,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.errorprone.bugpatterns.ArrayEquals;
-import com.google.errorprone.bugpatterns.ArrayEqualsTest;
-import com.google.errorprone.bugpatterns.BadShiftAmount;
-import com.google.errorprone.bugpatterns.BugChecker;
-import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
-import com.google.errorprone.bugpatterns.ChainingConstructorIgnoresParameter;
-import com.google.errorprone.bugpatterns.DepAnnTest;
-import com.google.errorprone.bugpatterns.EmptyIfStatementTest;
-import com.google.errorprone.bugpatterns.Finally;
-import com.google.errorprone.bugpatterns.WaitNotInLoopTest;
-import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.Description;
-import com.google.errorprone.scanner.ScannerSupplier;
-import com.google.errorprone.util.ASTHelpers;
-
-import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.MethodTree;
-
-import org.hamcrest.Matcher;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-
-import javax.lang.model.SourceVersion;
-import javax.tools.Diagnostic;
-import javax.tools.DiagnosticListener;
-import javax.tools.JavaCompiler;
-import javax.tools.JavaFileObject;
 
 /**
  * @author cushon@google.com (Liam Miller-Cushon)
@@ -137,29 +133,29 @@ public class ErrorProneJavaCompilerTest {
   @Test
   public void fileWithErrorIntegrationTest() throws Exception {
     CompilationResult result = doCompile(
-        DepAnnTest.class,
-        Arrays.asList("DepAnnPositiveCases.java"),
+        EqualsNaNTest.class,
+        Arrays.asList("EqualsNaNPositiveCases.java"),
         Collections.<String>emptyList(),
         Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isFalse();
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
-        hasItem(diagnosticMessage(containsString("[DepAnn]")));
+        hasItem(diagnosticMessage(containsString("[EqualsNaN]")));
     assertTrue(matcher.matches(result.diagnosticHelper.getDiagnostics()));
   }
 
   @Test
   public void testWithDisabledCheck() throws Exception {
     CompilationResult result = doCompile(
-        DepAnnTest.class,
-        Arrays.asList("DepAnnPositiveCases.java"),
+        EqualsNaNTest.class,
+        Arrays.asList("EqualsNaNPositiveCases.java"),
         Collections.<String>emptyList(),
         Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isFalse();
 
     result = doCompile(
-        DepAnnTest.class,
-        Arrays.asList("DepAnnPositiveCases.java"),
-        Arrays.asList("-Xep:DepAnn:OFF"),
+        EqualsNaNTest.class,
+        Arrays.asList("EqualsNaNPositiveCases.java"),
+        Arrays.asList("-Xep:EqualsNaN:OFF"),
         Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isTrue();
   }
@@ -190,20 +186,20 @@ public class ErrorProneJavaCompilerTest {
   @Test
   public void testWithCheckDemotedToWarning() throws Exception {
     CompilationResult result = doCompile(
-        DepAnnTest.class,
-        Arrays.asList("DepAnnPositiveCases.java"),
+        EqualsNaNTest.class,
+        Arrays.asList("EqualsNaNPositiveCases.java"),
         Collections.<String>emptyList(),
         Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isFalse();
     assertThat(result.diagnosticHelper.getDiagnostics().size()).isGreaterThan(0);
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
-        hasItem(diagnosticMessage(containsString("[DepAnn]")));
+        hasItem(diagnosticMessage(containsString("[EqualsNaN]")));
     assertTrue(matcher.matches(result.diagnosticHelper.getDiagnostics()));
 
     result = doCompile(
-        DepAnnTest.class,
-        Arrays.asList("DepAnnPositiveCases.java"),
-        Arrays.asList("-Xep:DepAnn:WARN"),
+        EqualsNaNTest.class,
+        Arrays.asList("EqualsNaNPositiveCases.java"),
+        Arrays.asList("-Xep:EqualsNaN:WARN"),
         Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isTrue();
     assertThat(result.diagnosticHelper.getDiagnostics().size()).isGreaterThan(0);
@@ -283,8 +279,8 @@ public class ErrorProneJavaCompilerTest {
   @Test
   public void testWithCustomCheckNegative() throws Exception {
     CompilationResult result = doCompile(
-        DepAnnTest.class,
-        Arrays.asList("DepAnnPositiveCases.java"),
+        EqualsNaNTest.class,
+        Arrays.asList("EqualsNaNPositiveCases.java"),
         Collections.<String>emptyList(),
         Arrays.<Class<? extends BugChecker>>asList(Finally.class));
     assertThat(result.succeeded).isTrue();

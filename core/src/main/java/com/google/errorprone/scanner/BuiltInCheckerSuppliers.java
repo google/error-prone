@@ -40,7 +40,6 @@ import com.google.errorprone.bugpatterns.ClassName;
 import com.google.errorprone.bugpatterns.ComparisonOutOfRange;
 import com.google.errorprone.bugpatterns.CompileTimeConstantChecker;
 import com.google.errorprone.bugpatterns.DeadException;
-import com.google.errorprone.bugpatterns.DepAnn;
 import com.google.errorprone.bugpatterns.DivZero;
 import com.google.errorprone.bugpatterns.ElementsCountedInLoop;
 import com.google.errorprone.bugpatterns.EmptyIfStatement;
@@ -194,7 +193,6 @@ public class BuiltInCheckerSuppliers {
           ComparisonOutOfRange.class,
           CompileTimeConstantChecker.class,
           DeadException.class,
-          DepAnn.class,
           EqualsNaN.class,
           ForOverrideChecker.class,
           GetClassOnClass.class,

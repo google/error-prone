@@ -16,10 +16,7 @@
 
 package com.google.errorprone.util;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import com.google.common.collect.ImmutableList;
-
 import com.sun.tools.javac.parser.JavaTokenizer;
 import com.sun.tools.javac.parser.Scanner;
 import com.sun.tools.javac.parser.ScannerFactory;
@@ -28,6 +25,8 @@ import com.sun.tools.javac.parser.Tokens.Comment.CommentStyle;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
 import com.sun.tools.javac.parser.UnicodeReader;
 import com.sun.tools.javac.util.Context;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 /** A utility for tokenizing and preserving comments. */
 public class ErrorProneTokens {
@@ -113,7 +112,7 @@ public class ErrorProneTokens {
     }
 
     /**
-     * We don't care about {@code @deprecated} javadoc tags (see the DepAnn check).
+     * We don't care about {@code @deprecated} javadoc tags.
      *
      * @return false
      */
