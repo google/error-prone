@@ -64,12 +64,7 @@ import com.sun.tools.javac.util.Name;
   altNames = {"finally", "ThrowFromFinallyBlock"},
   summary =
       "If you return or throw from a finally, then values returned or thrown from the"
-          + " try-catch block will be ignored",
-  explanation =
-      "Terminating a finally block abruptly preempts the outcome of the try block,"
-          + " and will cause the result of any previously executed return or throw statements to"
-          + " be ignored. This is very confusing. Please refactor this code to ensure that the"
-          + " finally block will always complete normally.",
+          + " try-catch block will be ignored. Consider using try-with-resources instead.",
   category = JDK,
   severity = WARNING,
   maturity = MATURE,
