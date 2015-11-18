@@ -20,8 +20,10 @@ package com.google.errorprone.bugpatterns;
  * @author yuan@ece.toronto.edu (Ding Yuan)
  */
 public class TODOInCatchNegativeCases {
+  static final int FIXME = 0;
+
   public void error() throws IllegalArgumentException {
-	throw new IllegalArgumentException("Fake exception.");
+    throw new IllegalArgumentException("Fake exception.");
   }
 
   public void noTodoInCatch() {
@@ -31,6 +33,30 @@ public class TODOInCatchNegativeCases {
     } catch (Throwable t) {
       // Handled!
       a++;
+    }
+  }
+  
+  public void todoNotInCatch() {
+    int a = 0; // TODO
+    try {
+      error();
+      // TODO
+      /* FIXME */
+    } catch (Throwable t) {
+      // Handled!
+      a++;
+    }
+  }
+  
+  public void todoAsSymbol() {
+    int TODO = FIXME;
+    int a;
+    try {
+      error();
+    } catch (Throwable t) {
+      // Handled!
+      TODO++;
+      a = FIXME + 1;
     }
   }
 }

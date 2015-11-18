@@ -39,16 +39,12 @@ public class AbortInOvercatchTest {
 
   @Test
   public void testPositiveCase() throws Exception {
- //   compilationHelper.assertCompileFailsWithMessages(
- //       sources(getClass(), "AbortInOvercatchPositiveCases.java"));
     compilationHelper.addSourceFile("AbortInOvercatchPositiveCases.java").doTest();
   }
 
 
   @Test
   public void testNegativeCase() throws Exception {
-//    compilationHelper.assertCompileSucceeds(
-//        sources(getClass(), "AbortInOvercatchNegativeCases.java"));
     compilationHelper.addSourceFile("AbortInOvercatchNegativeCases.java").doTest();
   }
 }

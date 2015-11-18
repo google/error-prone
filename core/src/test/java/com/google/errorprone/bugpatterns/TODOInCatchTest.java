@@ -38,18 +38,12 @@ public class TODOInCatchTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-//    compilationHelper.assertCompileFailsWithMessages(
-//        sources(getClass(), "TODOInCatchPositiveCases.java"));
     compilationHelper.addSourceFile("TODOInCatchPositiveCases.java").doTest();
   }
 
 
   @Test
   public void testNegativeCase() throws Exception {
-//    compilationHelper.assertCompileSucceeds(
-//        sources(getClass(), "TODOInCatchNegativeCases.java"));
     compilationHelper.addSourceFile("TODOInCatchNegativeCases.java").doTest();
   }
-  
-
 }

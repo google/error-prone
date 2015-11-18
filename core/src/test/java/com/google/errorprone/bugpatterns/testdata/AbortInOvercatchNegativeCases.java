@@ -24,6 +24,10 @@ public class AbortInOvercatchNegativeCases {
 	throw new IllegalArgumentException("Fake exception.");
   }
   
+  public void abor() {
+    System.out.println("Not an abort");
+  }
+  
   public void abortInPreciseCatch() {
     int a = 0;
     try {
@@ -40,6 +44,7 @@ public class AbortInOvercatchNegativeCases {
     } catch (Exception e) {
       System.out.println("here...");
       a++; // This is an overcatch, but it does not abort, therefore it's OK.
+      abor();
     }
   }
 }

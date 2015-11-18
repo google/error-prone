@@ -38,18 +38,11 @@ public class EmptyCatchTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-   /* compilationHelper.assertCompileFailsWithMessages(
-        sources(getClass(), "EmptyCatchPositiveCases.java")); */
    compilationHelper.addSourceFile("EmptyCatchPositiveCases.java").doTest();
   }
 
-
   @Test
   public void testNegativeCase() throws Exception {
-   /* compilationHelper.assertCompileSucceeds(
-        sources(getClass(), "EmptyCatchNegativeCases.java")); */
    compilationHelper.addSourceFile("EmptyCatchNegativeCases.java").doTest();
   }
-  
-
 }

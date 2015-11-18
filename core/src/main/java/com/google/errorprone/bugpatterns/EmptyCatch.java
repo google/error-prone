@@ -17,17 +17,15 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.TryTreeMatcher;
-import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
-import com.sun.source.tree.LineMap;
 
 import static com.sun.source.tree.Tree.Kind;
 import static com.sun.source.tree.Tree.Kind.RETURN;
@@ -58,8 +56,6 @@ import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.TreeInfo;
 
 import java.util.List;
 
@@ -67,14 +63,16 @@ import java.util.List;
  * A bug checker for empty exception handling block:
  *
  * <pre>
+ * {@code
  * try {
  *   // do something
  * } catch (XX e) {
  *   // empty, only comment, or only log printing statements
  * }
+ * }
  * </pre>
  * We also implement a variety of false positive suppression heuristics.
- * 
+ * <p>
  * For more detail, refer to the paper:
  * "Simple Testing Can Prevent Most Critical Failures: 
  *  An Analysis of Production Failures in Distributed Data-intensive Systems"
@@ -84,17 +82,24 @@ import java.util.List;
  * @author yuan@eecg.utoronto.ca (Ding Yuan)
  */
 @BugPattern(name = "EmptyCatch",
-    summary = "Empty catch blocks that ignore exceptions",
-    explanation = "Ignoring exception is a bad practice.",
-    category = JDK, maturity = MATURE, severity = WARNING)
+    summary = "Exception handling block is empty",
+    explanation = "It is rarely correct to do nothing in response to a caught exception. In production systems, "
+            + "Murphy's law often applies: Anything that can go wrong, will go wrong. "
+            + "Therefore it is particularly important to properly handle the exceptions "
+            + "regardless how rarely they are likely to occur.\n\n"
+            + "Read Effective Java, Item 65, \"Don't ignore exceptions\"; "
+            + "[Google Java Style guide section 6.2] "
+            + "(https://google.github.io/styleguide/javaguide.html#s6.2-caught-exceptions); and "
+            + "\"[Simple Testing Can Prevent Most Critical Failures] "
+            + "(http://www.eecg.toronto.edu/~yuan/papers/failure_analysis_osdi14.pdf)\" "
+            + "for more detailed discussions on the harm of swallowing the exceptions. ",
+    category = JDK, maturity = EXPERIMENTAL, severity = WARNING)
 public class EmptyCatch extends BugChecker implements TryTreeMatcher {
   /* If one of the following exceptions is ignored, we suppress the warning. */
-  String[] harmlessExceptions = {
-    "FileNotFoundException", "ReflectiveOperationException", 
-    "ClassNotFoundException", "InvocationTargetException", 
-    "NoSuchFieldException", "NoSuchMethodException", "InstantiationException",
-    "InvocationTargetException"
-  };
+  ImmutableSet<String> harmlessExceptions = ImmutableSet.of("java.io.FileNotFoundException", 
+    "java.lang.ReflectiveOperationException", "java.lang.ClassNotFoundException",
+    "java.lang.reflect.InvocationTargetException", "java.lang.NoSuchFieldException",
+    "java.lang.NoSuchMethodException", "java.lang.InstantiationException");
   
   /* If the method is one of the following, we allow it to ignore exceptions. */
   String[] whitelistedMethods = {
@@ -108,8 +113,6 @@ public class EmptyCatch extends BugChecker implements TryTreeMatcher {
       BlockTree bt = tree.getFinallyBlock();
       if (bt == null || bt.getStatements().size() == 0) {
         CatchTree lastCatch = tree.getCatches().get(tree.getCatches().size() - 1);
-        LineMap lineMap = state.getPath().getCompilationUnit().getLineMap();
-
         return describeMatch(lastCatch);
 
       }
@@ -129,29 +132,29 @@ public class EmptyCatch extends BugChecker implements TryTreeMatcher {
     /* If there are multiple catch blocks with a try tree, we only check the last catch block. */
     if (isCatchEmpty(catchTree, state)) {
       if (exceptionWhitelisted(catchTree, state)) {
-        // System.out.println("   *** Not a problem b/c the excpetion is harmless.");
+        // Not a problem b/c the exception is harmless.
         return false;
       }
 
       if (handledByControlflow(tryTree, state)) {
-        // System.out.println("   *** Not a problem b/c the excpetion is handled by control flow.");
+        // Not a problem b/c the exception is handled by control flow.
         return false;
       }
       
       if (alreadyInCatch(tryTree, state)) {
-        // System.out.println("   *** Not a problem b/c the try block is already in error handling block.");
+        // Not a problem b/c the try block is already in error handling block.
         return false;
       }
       
       if (handledByDataflow(tryTree, state)) {
-        // System.out.println("   *** Not a problem b/c handled by data-flow.");
+        // Not a problem b/c handled by data-flow.
         return false;
       }
       
       /* We check if this method is a white listed method. If so, we allow 
        * it to ignore exceptions. */
       if (methodWhitelisted(tryTree, state)) {
-        // System.out.println("   *** Not a problem b/c the method is whitelisted.");
+        // Not a problem b/c the method is whitelisted.
         return false;
       }
       return true;
@@ -193,10 +196,9 @@ public class EmptyCatch extends BugChecker implements TryTreeMatcher {
      * block has a kind = TRY, therefore, we will simply ignore the empty catch
      * blocks from try as well! */
     if (kind == TRY) {
-      // System.out.println("DEBUG: The parent of the try tree is TRY or FINALLY, will ignore!");
+      // The parent of the try tree is TRY or FINALLY, will ignore!
       return true;
     }
-    // System.out.println("DEBUG: parent of the try tree, kind: " + kind);
       
     return false;
   }
@@ -219,7 +221,6 @@ public class EmptyCatch extends BugChecker implements TryTreeMatcher {
       return false;
     }
     Kind lastTrystmtKind = statements.get(statements.size() - 1).getKind();
-    // System.out.println("DEBUG: control flow check; last stmt in try: " + lastTrystmtKind);
     if (lastTrystmtKind == RETURN ||
            lastTrystmtKind == CONTINUE ||
            lastTrystmtKind == BREAK) {
@@ -237,7 +238,6 @@ public class EmptyCatch extends BugChecker implements TryTreeMatcher {
       String enclosingMethodName = enclosingMethod.getName().toString();
       for (String whitelistedMethod : whitelistedMethods) {
         if (enclosingMethodName.contains(whitelistedMethod)) {
-          // System.out.println("DEBUG: whitelisted method: " + enclosingMethodName + " ignores exception!");
           return true; // it's OK for a cleanup method to ignore exceptions...
         }
       }
@@ -258,7 +258,6 @@ public class EmptyCatch extends BugChecker implements TryTreeMatcher {
       String lastTrystmt = statements.get(statements.size() - 1).toString();
       for (String whitelistedMethod : whitelistedMethods) {
         if (lastTrystmt.contains(whitelistedMethod)) {
-           // System.out.println("DEBUG: whitelisted method as invocation target: " + lastTrystmt + " ignores exception!");
            return true; // it's OK for a cleanup method to ignore exceptions...
         }
       }
@@ -269,41 +268,30 @@ public class EmptyCatch extends BugChecker implements TryTreeMatcher {
   /* Checks if this exception is harmless (white listed)*/
   private boolean exceptionWhitelisted (CatchTree catchTree, VisitorState state) {
     /* We further check the exception type, and ignore these exceptions. */
-    String caughtException = catchTree.getParameter().toString();
-    boolean canBeIgnored = false;
-    for (String harmlessExp : harmlessExceptions) {
-      if (caughtException.contains(harmlessExp)) {
-        canBeIgnored = true;
-        break;
-      }
-    }
-    if (canBeIgnored) {
-      // System.out.println("DEBUG: found empty handler for an harmless exception: " + caughtException);
+    String caughtException = ASTHelpers.getSymbol(catchTree.getParameter().getType()).getQualifiedName().toString();
+
+    if (harmlessExceptions.contains(caughtException)) {
       return true;
     }
-    // System.out.println("DEBUG: catchType = " + caughtException);
     return false;
   }
 
   private boolean isCatchEmpty(CatchTree catchTree, VisitorState state) {
     List<? extends StatementTree> statements = catchTree.getBlock().getStatements();
     if (statements.isEmpty()) {
-      // System.out.println("DEBUG: found an purely empty catch block " + catchTree);
       return true;
     }
  
     for (StatementTree stmt : statements) {
-      // System.out.println("DEBUG: statement in catch: " + stmt + ", kind: " + stmt.getKind());
 
       if (isLoggingStmt(stmt, state)) {
-        // System.out.println("DEBUG: logging statement: " + stmt);
+        // logging statement
         continue;
       } else if (stmt.getKind() == EMPTY_STATEMENT) {
         continue;
       }
       // if we falls to here, it means that this statement is neither a logging
       // stmt or an empty one, therefore, it's a meaningful stmt!
-      // System.out.println("DEBUG: statement: " + stmt + " is a meaningful stmt!");
       return false;
     }
     // We didn't return from the loop body above, so this is an empty
@@ -315,29 +303,25 @@ public class EmptyCatch extends BugChecker implements TryTreeMatcher {
   private boolean isLoggingStmt(StatementTree stmt, VisitorState state) {
     // Turns out, a logging statement is first an expression_stmt
     if (stmt.getKind() == EXPRESSION_STATEMENT) {
-    ExpressionTree et = ((ExpressionStatementTree) stmt).getExpression();
+      ExpressionTree et = ((ExpressionStatementTree) stmt).getExpression();
 
-    /* System.out.println("stmt: " + stmt + " is EXPRESSION_STMT, expression: " 
-        + et + ", et.kind: " + et.getKind()); */
-    Symbol sym = ASTHelpers.getSymbol(et);
-    if (sym == null || !(sym instanceof MethodSymbol)) {
-      return false;
-    }
-     
-    String methodName = sym.getQualifiedName().toString();
-    String className = sym.owner.getQualifiedName().toString();
+      Symbol sym = ASTHelpers.getSymbol(et);
+      if (sym == null || !(sym instanceof MethodSymbol)) {
+        return false;
+      }
+
+      String methodName = sym.getQualifiedName().toString();
+      String className = sym.owner.getQualifiedName().toString();
           
-    // System.out.println("  methodName: " + methodName + ", className: " + className);
-    return ((methodName.contains("print")
-    		&& className.equals("java.io.PrintStream"))
-    		|| 
-    		((methodName.equals("debug") 
-          || methodName.equals("error")
-          || methodName.equals("info")
-          || methodName.equals("warn")
-          || methodName.equals("trace"))
-          && (className.contains("log") // this includes log4j
-              || className.contains("sl4j")))); // we assume "fatal" is a proper handling...
+      return ((methodName.contains("print")
+               && className.equals("java.io.PrintStream"))  
+               || ((methodName.equals("debug") 
+                   || methodName.equals("error")
+                   || methodName.equals("info")
+                   || methodName.equals("warn")
+                   || methodName.equals("trace"))
+                  && (className.contains("log") // this includes log4j
+                  || className.contains("sl4j")))); // we assume "fatal" is a proper handling...
     }
     return false;
   }
@@ -383,7 +367,6 @@ public class EmptyCatch extends BugChecker implements TryTreeMatcher {
         // This could be a vairable declaration followed by assignment
         return true;
       }
-      // System.out.println("DEBUG: data-flow check, the last stmt in try: " + lastTrystmt + ", KIND: " + lastTrystmt.getKind());
       return false;
   }
 }

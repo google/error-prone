@@ -19,28 +19,114 @@ package com.google.errorprone.bugpatterns;
 /**
  * @author yuan@ece.toronto.edu (Ding Yuan)
  */
-public class AbortInOvercatchPositiveCases {
+public class AbortInOvercatchPositiveCases {  
+  class ExitMethods {
+      public void iwillabortNOW () {
+        System.out.println("I am about to abort.");
+      }
+    
+      public void willShutDownSoon () {
+        System.out.println("About to shut down.");
+      }
+      
+      public void abort() {
+        System.out.println("Aborting..");
+      }
+  }
+  
+  static class StaticExitMethods {
+      public static void willABORTnow () {
+        System.out.println("I am about to abort.");
+      }
+
+      public static void willSHUTDOWNnow () {
+        System.out.println("About to shut down.");
+      }
+  }
+  
+  ExitMethods exitMethods = new ExitMethods();
+
   public void error() throws IllegalArgumentException {
-	throw new IllegalArgumentException("Fake exception.");
+    throw new IllegalArgumentException("Fake exception.");
   }
   
   public void abortInThrowable() {
-    int a = 0;
     try {
       error();
     } // BUG: Diagnostic contains: 
     catch (Throwable t) {
       System.exit(1);
     }
+    
+    try {
+        error();
+    } // BUG: Diagnostic contains: 
+    catch (Throwable t) {
+        exitMethods.iwillabortNOW();
+    }
+    try {
+        error();
+    } // BUG: Diagnostic contains:
+    catch (Throwable t) {
+       exitMethods.willShutDownSoon();
+    }
+
+    try {
+      error();
+    } // BUG: Diagnostic contains:
+    catch (Throwable t) {
+      StaticExitMethods.willABORTnow();
+    }
+
+    try {
+      error();
+    } // BUG: Diagnostic contains:
+    catch (Throwable t) {
+      StaticExitMethods.willSHUTDOWNnow();
+    }    
   }
   
   public void abortInException() {
-    int a = 0;
     try {
       error();
     } // BUG: Diagnostic contains: 
     catch (Exception e) {
       System.exit(1);
+    }
+    
+    try {
+      error();
+    } // BUG: Diagnostic contains:
+    catch (Exception e) {
+      exitMethods.iwillabortNOW();
+    }
+    
+    try {
+        error();
+    } // BUG: Diagnostic contains:
+    catch (Exception e) {
+       exitMethods.willShutDownSoon();
+    }
+
+    try {
+      error();
+    } // BUG: Diagnostic contains:
+    catch (Exception e) {
+      StaticExitMethods.willABORTnow();
+    }
+
+    try {
+      error();
+    } // BUG: Diagnostic contains:
+    catch (Exception e) {
+      StaticExitMethods.willSHUTDOWNnow();
+    }
+
+    try {
+        error();
+    } // BUG: Diagnostic contains:
+    catch (Exception e) {
+       exitMethods.abort();
     }
   }
 }

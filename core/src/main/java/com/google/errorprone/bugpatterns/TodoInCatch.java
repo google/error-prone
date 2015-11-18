@@ -17,32 +17,24 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CatchTreeMatcher;
-
-import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.util.ErrorProneToken;
 
 import com.google.errorprone.matchers.Description;
-import com.sun.source.tree.LineMap;
 
 import com.sun.source.tree.CatchTree;
-import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.TreeInfo;
+import com.sun.tools.javac.parser.Tokens.Comment;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 
 /**
  * "TODO" and "FIXME" should not appear in the error handling
  * logic, because it is often the last line of defense.
- * 
+ * <p>
  * For more detail, refer to the paper:
  * "Simple Testing Can Prevent Most Critical Failures: 
  *  An Analysis of Production Failures in Distributed Data-intensive Systems"
@@ -52,32 +44,32 @@ import java.io.IOException;
  * @author yuan@eecg.utoronto.ca (Ding Yuan)
  */
 @BugPattern(name = "TodoInCatch",
-    summary = "TODO or FIXME in the catch block.",
-    explanation = "TODO or FIXME should not appear in the error handling blocks as"
-                  + " they are often the last line of defense.",
-    category = JDK, maturity = MATURE, severity = ERROR)
+    summary = "TODO or FIXME is found in the catch block, indicating "
+            + "potential incorrect handling of the exception",
+    explanation = "TODO or FIXME is found in the catch block, indicating "
+            + "potential incorrect handling of the exception. In production systems, "
+            + "Murphy's law often applies: Anything that can go wrong, will go wrong. "
+            + "Therefore it is particularly important to properly handle the exceptions "
+            + "regardless how rarely they are likely to occur, especially given that they "
+            + "are often the last line of defense.\n\n"
+            + "Read \"[Simple Testing Can Prevent Most Critical Failures] "
+            + "(http://www.eecg.toronto.edu/~yuan/papers/failure_analysis_osdi14.pdf)\" "
+            + "for more detailed discussions on the harm of this pattern. ",
+    category = JDK, maturity = EXPERIMENTAL, severity = WARNING)
 public class TodoInCatch extends BugChecker implements CatchTreeMatcher {
   @Override
-  public Description matchCatch (CatchTree tree, VisitorState state) {
-    LineMap lineMap = state.getPath().getCompilationUnit().getLineMap();
-    long startLN = lineMap.getLineNumber(TreeInfo.getStartPos((JCTree) tree));
-    long endLN = lineMap.getLineNumber(TreeInfo.endPos((JCTree) (tree.getBlock())));
-    String filename = state.getPath().getCompilationUnit().getSourceFile().getName();
-    String codeStrs[] = state.getSourceCode().toString().split("\\r?\\n");
-    
-    boolean foundError = false;
-    for (int i = (int) (startLN - 1); i < endLN; i++) {
-      // System.out.println("DEBUG: line " + (i+1) + ": " + codeStrs[i]);
-      if (codeStrs[i].contains("TODO") || codeStrs[i].contains("FIXME")) {
-        foundError = true;
-        break;
+  public Description matchCatch (CatchTree catchTree, VisitorState state) {
+    String catchSource = state.getSourceForNode(catchTree);
+    if (catchSource.contains("TODO") || catchSource.contains("FIXME")) {
+      // Getting the tokens for a node is expensive, so we only do it if we think there is a match here
+      for (ErrorProneToken token : state.getTokensForNode(catchTree)) {
+        for (Comment comment : token.comments()) {
+          if (comment.getText().contains("TODO") || comment.getText().contains("FIXME")) {
+            return describeMatch(catchTree);
+          }
+        }
       }
     }
-    
-    if (foundError == true) {
-      return describeMatch(tree);
-    }
-
     return Description.NO_MATCH;
   }
 }
