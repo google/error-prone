@@ -45,6 +45,7 @@ import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.Type.TypeVar;
 import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.code.Types;
@@ -529,6 +530,22 @@ public class ASTHelpers {
       return null;
     }
   }
+  
+  /**
+   * Returns the {@code ClassType} for the given type {@code ClassTree} or {@code null} if the type
+   * could not be determined.
+   */
+  public static ClassType getType(ClassTree tree) {
+    if (!(tree instanceof JCClassDecl)) {
+      return null;
+    }
+    Type type = ((JCClassDecl) tree).type;
+    if (!(type instanceof ClassType)) {
+      return null;
+    }
+    return (ClassType) type;
+  }
+
 
   public static String getAnnotationName(AnnotationTree tree) {
     Symbol sym = getSymbol(tree);

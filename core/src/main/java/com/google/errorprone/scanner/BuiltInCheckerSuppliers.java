@@ -131,6 +131,7 @@ import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionIn
 import com.google.errorprone.bugpatterns.threadsafety.DoubleCheckedLocking;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByChecker;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByValidator;
+import com.google.errorprone.bugpatterns.threadsafety.ImmutableChecker;
 import com.google.errorprone.bugpatterns.threadsafety.LockMethodChecker;
 import com.google.errorprone.bugpatterns.threadsafety.SynchronizeOnNonFinalField;
 import com.google.errorprone.bugpatterns.threadsafety.UnlockMethodChecker;
@@ -270,6 +271,7 @@ public class BuiltInCheckerSuppliers {
           GuiceInjectOnFinalField.class,
           GuiceOverridesGuiceInjectableMethod.class,
           GuiceOverridesJavaxInjectableMethod.class,
+          ImmutableChecker.class,
           InjectAssistedInjectAndInjectOnConstructors.class,
           InjectAssistedInjectAndInjectOnSameConstructor.class,
           InjectInvalidTargetingOnScopingAnnotation.class,
