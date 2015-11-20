@@ -31,7 +31,7 @@ import java.io.StringWriter;
 import java.util.Arrays;
 
 @RunWith(JUnit4.class)
-public class BugPatternIndexYamlWriterTest {
+public class BugPatternIndexWriterTest {
   @Test
   public void dump() throws Exception {
     StringWriter writer = new StringWriter();
@@ -54,15 +54,35 @@ public class BugPatternIndexYamlWriterTest {
     pattern3.name = "BugPatternC";
     pattern3.summary = "mature";
 
-    new BugPatternIndexYamlWriter().dump(Arrays.asList(pattern3, pattern2, pattern1), writer);
+    new BugPatternIndexWriter().dump(Arrays.asList(pattern3, pattern2, pattern1), writer, false);
     assertThat(
         writer.toString(),
         is(
-            "'On by default : ERROR':\n"
-                + "- {name: BugPatternC, summary: mature}\n"
-                + "'Experimental : ERROR':\n"
-                + "- {name: BugPatternA, summary: Here's the \"interesting\" summary}\n"
-                + "- {name: BugPatternB, summary: '{summary2}'}\n"));
+            "\n"
+                + "# Bug patterns\n"
+                + "\n"
+                + "This list is auto-generated from our sources. Each bug pattern includes code\n"
+                + "examples of both positive and negative cases; these examples are used in our\n"
+                + "regression test suite.\n"
+                + "\n"
+                + "Patterns which are marked __Experimental__ will not be evaluated against your\n"
+                + "code, unless you specifically configure Error Prone. The default checks are\n"
+                + "marked __On by default__, and each release promotes some experimental checks\n"
+                + "after we've vetted them against Google's codebase.\n"
+                + "\n"
+                + "## On by default : ERROR\n"
+                + "\n"
+                + "__[BugPatternC](bugpattern/BugPatternC)__\\\n"
+                + "mature\n"
+                + "\n"
+                + "## Experimental : ERROR\n"
+                + "\n"
+                + "__[BugPatternA](bugpattern/BugPatternA)__\\\n"
+                + "Here&#39;s the &quot;interesting&quot; summary\n"
+                + "\n"
+                + "__[BugPatternB](bugpattern/BugPatternB)__\\\n"
+                + "{summary2}\n"
+                + "\n"));
 
   }
 }

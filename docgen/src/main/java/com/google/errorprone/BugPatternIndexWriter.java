@@ -24,10 +24,19 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Ordering;
 
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
+
+import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -36,9 +45,11 @@ import java.util.TreeMap;
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class BugPatternIndexYamlWriter {
+public class BugPatternIndexWriter {
 
-  void dump(Collection<BugPatternInstance> patterns, Writer w) {
+  void dump(Collection<BugPatternInstance> patterns, Writer w, boolean generateFrontMatter)
+      throws IOException {
+
     Map<String, List<Map<String, String>>> data = new TreeMap<>(Ordering.natural().reverse());
 
     ListMultimap<String, BugPatternInstance> index =
@@ -47,7 +58,7 @@ public class BugPatternIndexYamlWriter {
             new Function<BugPatternInstance, String>() {
               @Override
               public String apply(BugPatternInstance input) {
-                return input.maturity.description + " : " + input.severity;
+                return (input.maturity.description + " : " + input.severity).replace("_", "\\_");
               }
             });
 
@@ -70,6 +81,33 @@ public class BugPatternIndexYamlWriter {
                     }
                   }));
     }
-    new Yaml().dump(data, w);
+
+    Map<String, Object> templateData = new HashMap<>();
+
+    if (generateFrontMatter) {
+      Map<String, String> frontmatterData =
+          ImmutableMap.<String, String>builder()
+              .put("title", "Bug Patterns")
+              .put("layout", "master")
+              .build();
+      DumperOptions options = new DumperOptions();
+      options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+      Yaml yaml = new Yaml(options);
+      Writer yamlWriter = new StringWriter();
+      yamlWriter.write("---\n");
+      yaml.dump(frontmatterData, yamlWriter);
+      yamlWriter.write("---\n");
+      templateData.put("frontmatter", yamlWriter.toString());
+    }
+
+    List<Map<String, Object>> entryData = new ArrayList<>();
+    for (Entry<String, List<Map<String, String>>> entry : data.entrySet()) {
+      entryData.add(ImmutableMap.of("category", entry.getKey(), "checks", entry.getValue()));
+    }
+    templateData.put("bugpatterns", entryData);
+
+    MustacheFactory mf = new DefaultMustacheFactory();
+    Mustache mustache = mf.compile("com/google/errorprone/resources/bugpatterns.mustache");
+    mustache.execute(w, templateData);
   }
 }

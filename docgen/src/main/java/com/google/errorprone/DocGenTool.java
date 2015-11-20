@@ -96,9 +96,10 @@ public class DocGenTool {
             explanationDir,
             options.generateFrontMatter,
             options.usePygments);
-    try (Writer w = Files.newBufferedWriter(
-        wikiDir.resolve("_data/bugpatterns.yaml"), StandardCharsets.UTF_8)) {
-      new BugPatternIndexYamlWriter().dump(readLines(bugPatterns.toFile(), UTF_8, generator), w);
+    try (Writer w =
+            Files.newBufferedWriter(wikiDir.resolve("bugpatterns.md"), StandardCharsets.UTF_8)) {
+      new BugPatternIndexWriter()
+          .dump(readLines(bugPatterns.toFile(), UTF_8, generator), w, options.generateFrontMatter);
     }
   }
 
