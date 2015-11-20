@@ -68,6 +68,11 @@ public final class NullnessAnalysis implements Serializable {
    * that, in those cases, it will always return {@code NONNULL}.
    */
   public Nullness getNullness(TreePath exprPath, Context context) {
-    return DataFlow.expressionDataflow(exprPath, context, nullnessPropagation);
+    try {
+      nullnessPropagation.setContext(context).setCompilationUnit(exprPath.getCompilationUnit());
+      return DataFlow.expressionDataflow(exprPath, context, nullnessPropagation);
+    } finally {
+      nullnessPropagation.setContext(null).setCompilationUnit(null);
+    }
   }
 }

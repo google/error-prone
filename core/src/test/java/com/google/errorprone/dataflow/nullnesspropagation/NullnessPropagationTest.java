@@ -116,6 +116,11 @@ public class NullnessPropagationTest {
 
   public static void triggerNullnessCheckerOnPrimitive(short s) {}
 
+  /** For {@link #testConstantsDefinedInOtherCompilationUnits}. */
+  public static final String COMPILE_TIME_CONSTANT = "not null";
+  /** For {@link #testConstantsDefinedInOtherCompilationUnits} as constant outside compilation. */
+  public static final Integer NOT_COMPILE_TIME_CONSTANT = 421;
+
   @Before
   public void setUp() {
     compilationHelper =
@@ -158,6 +163,58 @@ public class NullnessPropagationTest {
   }
 
   /**
+   * Tests nullness propagation for references to constants defined in other compilation units. Enum
+   * constants and compile-time constants are still known to be non-null; other constants are
+   * assumed nullable.  It doesn't matter whether the referenced compilation unit is part of the
+   * same compilation or not.  Note we often do better when constants are defined in the same
+   * compilation unit.  Circular initialization dependencies between compilation units are also not
+   * recognized while we do recognize them inside a compilation unit.
+   */
+  @Test
+  public void testConstantsDefinedInOtherCompilationUnits() throws Exception {
+    compilationHelper
+        .addSourceLines("AnotherEnum.java",
+            "package com.google.errorprone.dataflow.nullnesspropagation;",
+            "public enum AnotherEnum {",
+            "  INSTANCE;",
+            "  public static final String COMPILE_TIME_CONSTANT = \"not null\";",
+            "  public static final AnotherEnum NOT_COMPILE_TIME_CONSTANT = INSTANCE;",
+            "  public static final String CIRCULAR = ConstantsFromOtherCompilationUnits.CIRCULAR;",
+            "}")
+        .addSourceLines("ConstantsFromOtherCompilationUnits.java",
+            "package com.google.errorprone.dataflow.nullnesspropagation;",
+            "import static com.google.errorprone.dataflow.nullnesspropagation."
+            + "NullnessPropagationTest.triggerNullnessChecker;",
+            "public class ConstantsFromOtherCompilationUnits {",
+            "  public static final String CIRCULAR = AnotherEnum.CIRCULAR;",
+            "  public void referenceInsideCompilation() {",
+            "    // BUG: Diagnostic contains: (Non-null)",
+            "    triggerNullnessChecker(AnotherEnum.INSTANCE);",
+            "    // BUG: Diagnostic contains: (Non-null)",
+            "    triggerNullnessChecker(AnotherEnum.COMPILE_TIME_CONSTANT);",
+            "    // BUG: Diagnostic contains: (Nullable)",
+            "    triggerNullnessChecker(AnotherEnum.NOT_COMPILE_TIME_CONSTANT);",
+            "    // BUG: Diagnostic contains: (Nullable)",
+            "    triggerNullnessChecker(CIRCULAR);",
+            "    // BUG: Diagnostic contains: (Nullable)",
+            "    triggerNullnessChecker(AnotherEnum.CIRCULAR);",
+            "  }",
+            "",
+            "  public void referenceOutsideCompilation() {",
+            "    // BUG: Diagnostic contains: (Non-null)",
+            "    triggerNullnessChecker(NullnessPropagationTest.COMPILE_TIME_CONSTANT);",
+            "    // BUG: Diagnostic contains: (Nullable)",
+            "    triggerNullnessChecker(NullnessPropagationTest.NOT_COMPILE_TIME_CONSTANT);",
+            "    // BUG: Diagnostic contains: (Nullable)",
+            "    triggerNullnessChecker(System.out);",
+            "    // BUG: Diagnostic contains: (Non-null)",
+            "    triggerNullnessChecker(java.math.RoundingMode.UNNECESSARY);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  /**
    * BugPattern to test dataflow analysis using nullness propagation
    */
   @BugPattern(name = "NullnessPropagationChecker",
@@ -167,7 +224,7 @@ public class NullnessPropagationTest {
       category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
   public static final class NullnessPropagationChecker
       extends BugChecker implements MethodInvocationTreeMatcher {
-    private static final NullnessPropagationTransfer NULLNESS_PROPAGATION =
+    private final NullnessPropagationTransfer nullnessPropagation =
         new NullnessPropagationTransfer();
 
     private static final String AMBIGUOUS_CALL_MESSAGE = "AMBIGUOUS CALL: use "
@@ -200,7 +257,9 @@ public class NullnessPropagationTest {
       List<Object> values = new ArrayList<>();
       for (Tree arg : methodInvocation.getArguments()) {
         TreePath argPath = new TreePath(root, arg);
-        values.add(expressionDataflow(argPath, state.context, NULLNESS_PROPAGATION));
+        nullnessPropagation.setContext(state.context).setCompilationUnit(root.getCompilationUnit());
+        values.add(expressionDataflow(argPath, state.context, nullnessPropagation));
+        nullnessPropagation.setContext(null).setCompilationUnit(null);
       }
 
       String fixString = "(" + Joiner.on(", ").join(values) + ")";

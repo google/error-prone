@@ -34,7 +34,8 @@ import java.io.IOException;
 import java.math.BigInteger;
 
 /**
- * Dataflow analysis cases for testing transfer functions in nullness propagation
+ * Dataflow analysis cases for testing transfer functions in nullness propagation around constants
+ * and built-in knowledge.
  */
 @SuppressWarnings("deprecation")  // test cases include deprecated JUnit methods
 public class NullnessPropagationTransferCases2 {
@@ -46,24 +47,59 @@ public class NullnessPropagationTransferCases2 {
 
   static final int CONSTANT_INT = 1;
   static final Integer CONSTANT_BOXED_INTEGER = 1;
+  static final Integer CONSTANT_DERIVED_INTEGER = (Integer) (CONSTANT_INT);
+  static final Boolean CONSTANT_DERIVED_BOOLEAN = CONSTANT_INT == 1;
   static final String CONSTANT_STRING = "foo";
   static final String CONSTANT_NULL_STRING = null;
+  static final String CONSTANT_DERIVED_STRING = CONSTANT_DERIVED_BOOLEAN ? CONSTANT_STRING : "";
   static final MyClass CONSTANT_OTHER_CLASS = new MyClass();
+  static final Integer[] CONSTANT_OBJECT_ARRAY = new Integer[7];
+  static final Integer[] CONSTANT_ARRAY_INITIALIZER = { new Integer(5) };
+  static final Object CONSTANT_NO_INITIALIZER;
+  static {
+    CONSTANT_NO_INITIALIZER = new Object();
+  }
 
   public void constants() {
     // BUG: Diagnostic contains: (Non-null)
     triggerNullnessCheckerOnPrimitive(CONSTANT_INT);
-    // BUG: Diagnostic contains: (Nullable)
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(CONSTANT_BOXED_INTEGER);
     // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(CONSTANT_DERIVED_INTEGER);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(CONSTANT_DERIVED_BOOLEAN);
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(CONSTANT_STRING);
-    // BUG: Diagnostic contains: (Nullable)
+    // BUG: Diagnostic contains: (Null)
     triggerNullnessChecker(CONSTANT_NULL_STRING);
-    // BUG: Diagnostic contains: (Nullable)
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(CONSTANT_DERIVED_STRING);
+    // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(CONSTANT_OTHER_CLASS);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(CONSTANT_OBJECT_ARRAY);
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(CONSTANT_OBJECT_ARRAY[0]);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(CONSTANT_ARRAY_INITIALIZER);
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(CONSTANT_NO_INITIALIZER);
+  }
+
+  public static final MyBigInteger CIRCULAR = MyBigInteger.CIRCLE;
+
+  public void circularInitialization() {
+    // BUG: Diagnostic contains: (Null)
+    triggerNullnessChecker(MyBigInteger.CIRCLE);
   }
 
   static class MyBigInteger extends BigInteger {
+    // Shadows BigInteger.ONE.
+    public static final MyBigInteger ONE = null;
+    // Creates circular initializer dependency.
+    public static final MyBigInteger CIRCLE = NullnessPropagationTransferCases2.CIRCULAR;
+
     MyBigInteger(String val) {
       super(val);
     }
@@ -74,6 +110,17 @@ public class NullnessPropagationTransferCases2 {
     }
   }
 
+  public void builtInConstants() {
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(BigInteger.ZERO);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(MyBigInteger.ZERO);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(BigInteger.ONE);
+    // BUG: Diagnostic contains: (Null)
+    triggerNullnessChecker(MyBigInteger.ONE);
+  }
+
   enum MyEnum {
     ENUM_INSTANCE;
 
@@ -81,7 +128,23 @@ public class NullnessPropagationTransferCases2 {
       return null;
     }
 
-    public static final MyEnum NOT_AN_ENUM_CONSTANT = ENUM_INSTANCE;
+    public static final MyEnum NOT_COMPILE_TIME_CONSTANT = ENUM_INSTANCE;
+    public static final MyEnum UNKNOWN_VALUE_CONSTANT = instance();
+
+    public static MyEnum instance() {
+      return ENUM_INSTANCE;
+    }
+  }
+
+  public void enumConstants() {
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(MyEnum.ENUM_INSTANCE);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(ENUM_INSTANCE);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(MyEnum.NOT_COMPILE_TIME_CONSTANT);
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(MyEnum.UNKNOWN_VALUE_CONSTANT);
   }
 
   public void explicitValueOf() {
@@ -104,127 +167,6 @@ public class NullnessPropagationTransferCases2 {
     triggerNullnessChecker(MyBigInteger.valueOf(3));
     // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(MyEnum.valueOf('a'));
-  }
-
-  public void parameter(String str, int i) {
-    // BUG: Diagnostic contains: (Nullable)
-    triggerNullnessChecker(str);
-
-    // A call to plain triggerNullnessChecker() would implicitly call Integer.valueOf(i).
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessCheckerOnPrimitive(i);
-  }
-
-  public void assignment(String nullableParam) {
-    String str = nullableParam;
-    // BUG: Diagnostic contains: (Nullable)
-    triggerNullnessChecker(str);
-    
-    str = "a string";
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessChecker(str);
-
-    String otherStr = str;
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessChecker(str);
-    
-    str = null;
-    // BUG: Diagnostic contains: (Null)
-    triggerNullnessChecker(str);
-
-    otherStr = str;
-    // BUG: Diagnostic contains: (Null)
-    triggerNullnessChecker(str);
-  }
-
-  public void assignmentExpressionValue() {
-    String str = "foo";
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessChecker(str);
-    // BUG: Diagnostic contains: (Null)
-    triggerNullnessChecker(str = null);
-    // BUG: Diagnostic contains: (Null)
-    triggerNullnessChecker(str);
-
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessChecker(str = "bar");
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessChecker(str);
-
-    str = null;
-    String str2 = null;
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessChecker(str = str2 = "bar");
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessChecker(str);
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessChecker(str2);
-
-    // BUG: Diagnostic contains: (Null)
-    triggerNullnessChecker(str = str2 = null);
-    // BUG: Diagnostic contains: (Null)
-    triggerNullnessChecker(str);
-    // BUG: Diagnostic contains: (Null)
-    triggerNullnessChecker(str2);
-  }
-  
-  public void localVariable() {
-    short s;
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessCheckerOnPrimitive(s = 1000); // narrowing conversion
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessCheckerOnPrimitive(s);
-    int i = 2;
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessCheckerOnPrimitive(i);
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessCheckerOnPrimitive(i = s); // widening conversion
-    String str = "a string literal";
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessChecker(str);
-    Object obj = null;
-    // BUG: Diagnostic contains: (Null)
-    triggerNullnessChecker(obj);
-
-    ++i;
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessCheckerOnPrimitive(i);
-  }
-
-  public void boxedPrimitives() {
-    Short s = 1000;
-    // BUG: Diagnostic contains: (Non-null)
-    NullnessPropagationTest.triggerNullnessChecker(s);
-
-    Integer i = 2;
-    // BUG: Diagnostic contains: (Non-null)
-    NullnessPropagationTest.triggerNullnessChecker(i);
-  }
-
-  public void nullableAssignmentToPrimitiveVariableExpressionValue() {
-    int i;
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessCheckerOnPrimitive(i = boxedIntReturningMethod());
-  }
-
-  public void methodInvocation() {
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessCheckerOnPrimitive(intReturningMethod());
-
-    // BUG: Diagnostic contains: (Nullable)
-    triggerNullnessChecker(stringReturningMethod());
-  }
-
-  private Integer boxedIntReturningMethod() {
-    return null;
-  }
-
-  private int intReturningMethod() {
-    return 0;
-  }
-
-  private String stringReturningMethod() {
-    return null;
   }
 
   public void methodInvocationIsDereference(String nullableParam) {
@@ -264,33 +206,6 @@ public class NullnessPropagationTransferCases2 {
     s = s.valueOf(true);
     // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(s);
-  }
-
-  public void objectCreation(Object nullableParam) {
-    Object obj = nullableParam;
-    obj = new Object();
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessChecker(obj);
-  }
-
-  public void inc() {
-    int i = 0;
-    short s = 0;
-
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessCheckerOnPrimitive(i++);
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessCheckerOnPrimitive(s++);
-
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessCheckerOnPrimitive(++i);
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessCheckerOnPrimitive(++s);
-
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessCheckerOnPrimitive(i += 5);
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessCheckerOnPrimitive(s += 5);
   }
 
   public void filesToStringReturnNonNull() throws IOException {

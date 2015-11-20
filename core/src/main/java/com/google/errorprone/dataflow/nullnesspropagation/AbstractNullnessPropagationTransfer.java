@@ -717,14 +717,14 @@ abstract class AbstractNullnessPropagationTransfer
   @Override
   public final TransferResult<Nullness, LocalStore<Nullness>> visitTernaryExpression(
       TernaryExpressionNode node, TransferInput<Nullness, LocalStore<Nullness>> input) {
-    ReadableLocalVariableUpdates updates = new ReadableLocalVariableUpdates();
-    Nullness result = visitTernaryExpression(node, values(input), updates);
-    return updateRegularStore(result, input, updates);
+    Nullness result = visitTernaryExpression(node, values(input));
+    // TODO(kmb): Return conditional result if node itself is of boolean type, as for method calls
+    return noStoreChanges(result, input);
   }
 
-  Nullness visitTernaryExpression(TernaryExpressionNode node, SubNodeValues inputs,
-      LocalVariableUpdates updates) {
-    return NULLABLE;
+  Nullness visitTernaryExpression(TernaryExpressionNode node, SubNodeValues inputs) {
+    return inputs.valueOfSubNode(node.getThenOperand())
+        .leastUpperBound(inputs.valueOfSubNode(node.getElseOperand()));
   }
 
   @Override

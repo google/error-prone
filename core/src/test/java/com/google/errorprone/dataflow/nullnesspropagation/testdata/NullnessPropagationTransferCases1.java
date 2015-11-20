@@ -20,7 +20,8 @@ import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropaga
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessCheckerOnPrimitive;
 
 /**
- * Dataflow analysis cases for testing transfer functions in nullness propagation
+ * Dataflow analysis cases for testing transfer functions in nullness propagation, primarily
+ * around conditionals.
  */
 public class NullnessPropagationTransferCases1 {
 
@@ -89,6 +90,20 @@ public class NullnessPropagationTransferCases1 {
 
     // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(foo);
+  }
+
+  public void ternary1(String nullable) {
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(nullable == null ? "" : nullable);
+    // BUG: Diagnostic contains: (Null)
+    triggerNullnessChecker(nullable != null ? null : nullable);
+  }
+
+  public void ternary2(boolean test, String nullable) {
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(test ? "yes" : "no");
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(test ? nullable : "");
   }
 
   public void valueOfComparisonItself() {

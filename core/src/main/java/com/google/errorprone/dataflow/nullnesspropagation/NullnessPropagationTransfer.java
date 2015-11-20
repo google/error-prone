@@ -21,6 +21,7 @@ import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NULL;
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NULLABLE;
 import static com.sun.tools.javac.code.TypeTag.BOOLEAN;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
@@ -31,17 +32,32 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSetMultimap;
 import com.google.common.io.Files;
+import com.google.common.primitives.UnsignedInteger;
+import com.google.common.primitives.UnsignedLong;
+import com.google.errorprone.dataflow.LocalStore;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis.MethodInfo;
 
+import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePath;
+import com.sun.source.util.Trees;
+import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
+import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
+import com.sun.tools.javac.util.Context;
 
 import org.checkerframework.dataflow.analysis.Analysis;
+import org.checkerframework.dataflow.cfg.CFGBuilder;
+import org.checkerframework.dataflow.cfg.ControlFlowGraph;
+import org.checkerframework.dataflow.cfg.UnderlyingAST;
+import org.checkerframework.dataflow.cfg.node.ArrayCreationNode;
 import org.checkerframework.dataflow.cfg.node.AssignmentNode;
 import org.checkerframework.dataflow.cfg.node.EqualToNode;
 import org.checkerframework.dataflow.cfg.node.FieldAccessNode;
@@ -51,14 +67,20 @@ import org.checkerframework.dataflow.cfg.node.Node;
 import org.checkerframework.dataflow.cfg.node.NotEqualNode;
 import org.checkerframework.dataflow.cfg.node.TypeCastNode;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.annotation.Nullable;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.VariableElement;
 
@@ -106,17 +128,24 @@ import javax.lang.model.element.VariableElement;
 class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     implements Serializable {
 
+  private static final long serialVersionUID = -2413953917354086984L;
+
   /**
    * Matches methods that are statically known never to return null.
    */
   private static class ReturnValueIsNonNull implements Predicate<MethodInfo>, Serializable {
+
+    private static final long serialVersionUID = -6277529478866058532L;
+
     private static final ImmutableSet<MemberName> METHODS_WITH_NON_NULLABLE_RETURNS =
         ImmutableSet.of(
           // We would love to include all the methods of Files, but readFirstLine can return null.
           member(Files.class.getName(), "toString"),
           // Some methods of Class can return null, e.g. getAnnotation, getCanonicalName
           member(Class.class.getName(), "getName"),
-          member(Class.class.getName(), "getSimpleName"));
+          member(Class.class.getName(), "getSimpleName"),
+          member(Class.class.getName(), "forName"),
+          member(Charset.class.getName(), "forName"));
     // TODO(cpovirk): respect nullness annotations (and also check them to ensure correctness!)
 
     private static final ImmutableSet<String> CLASSES_WITH_NON_NULLABLE_RETURNS =
@@ -124,7 +153,11 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
             Optional.class.getName(),
             Preconditions.class.getName(),
             Verify.class.getName(),
-            String.class.getName());
+            String.class.getName(),
+            BigInteger.class.getName(),
+            BigDecimal.class.getName(),
+            UnsignedInteger.class.getName(),
+            UnsignedLong.class.getName());
 
     private static final ImmutableSet<String> CLASSES_WITH_NON_NULLABLE_VALUE_OF_METHODS =
         ImmutableSet.of(
@@ -139,8 +172,6 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
             Short.class.getName(),
 
             // Other types.
-            BigDecimal.class.getName(),
-            BigInteger.class.getName(),
             // TODO(cpovirk): recognize the compiler-generated valueOf() methods on Enum subclasses
             Enum.class.getName(),
             String.class.getName());
@@ -174,7 +205,19 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     }
   }
 
+  private final transient Set<VarSymbol> traversed = new HashSet<>();
   private final Predicate<MethodInfo> methodReturnsNonNull;
+
+  /**
+   * Javac context so we can {@link #fieldInitializerNullnessIfAvailable find and analyze field
+   * initializers}.
+   */
+  private transient Context context;
+
+  /**
+   * Compilation unit to limit evaluating field initializers to.
+   */
+  private transient CompilationUnitTree compilationUnit;
 
   /**
    * Constructs a {@link NullnessPropagationTransfer} instance with the built-in set of non-null
@@ -192,6 +235,30 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   public NullnessPropagationTransfer(Predicate<MethodInfo> additionalNonNullReturningMethods) {
     this.methodReturnsNonNull = Predicates.or(
         new ReturnValueIsNonNull(), additionalNonNullReturningMethods);
+  }
+
+  /**
+   * Stores the given Javac context to find and analyze field initializers. Set before analyzing a
+   * method and reset after.
+   */
+  NullnessPropagationTransfer setContext(@Nullable Context context) {
+    // This is a best-effort check (similar to ArrayList iterators, for instance), no guarantee
+    Preconditions.checkArgument(context == null || this.context == null,
+        "Context already set: reset after use and don't use this class concurrently");
+    this.context = context;
+    // Clear traversed set just-in-case as this marks the beginning or end of analyzing a method
+    this.traversed.clear();
+    return this;
+  }
+
+  /**
+   * Set compilation unit being analyzed, to limit analyzing field initializers to that compilation
+   * unit.  Analyzing initializers from other compilation units tends to fail because type
+   * information is sometimes missing on nodes returned from {@link Trees}.
+   */
+  NullnessPropagationTransfer setCompilationUnit(@Nullable CompilationUnitTree compilationUnit) {
+    this.compilationUnit = compilationUnit;
+    return this;
   }
 
   // Literals
@@ -358,6 +425,12 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     return NONNULL;
   }
 
+  @Override
+  Nullness visitArrayCreation(ArrayCreationNode node, SubNodeValues inputs,
+      LocalVariableUpdates updates) {
+    return NONNULL;
+  }
+
   /**
    * Refines the {@code Nullness} of {@code LocalVariableNode}s used in an equality comparison using
    * the greatest lower bound.
@@ -442,7 +515,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     return null;
   }
 
-  private static Nullness fieldNullness(ClassAndField accessed) {
+  private Nullness fieldNullness(@Nullable ClassAndField accessed) {
     if (accessed == null) {
       return NULLABLE;
     }
@@ -450,25 +523,77 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     if (accessed.field.equals("class")) {
       return NONNULL;
     }
-    if (accessed.isEnumConstant) {
+    if (accessed.isEnumConstant()) {
       return NONNULL;
     }
-    if (accessed.isPrimitive) {
+    if (accessed.isPrimitive()) {
       return NONNULL;
     }
-    if (accessed.hasNonNullConstantValue) {
+    if (accessed.hasNonNullConstantValue()) {
       return NONNULL;
+    }
+    if (accessed.isStatic() && accessed.isFinal()) {
+      if (CLASSES_WITH_NON_NULL_CONSTANTS.contains(accessed.clazz)){
+        return NONNULL;
+      }
+      // Try to evaluate initializer.
+      // TODO(kmb): Consider handling final instance fields as well
+      Nullness initializer = fieldInitializerNullnessIfAvailable(accessed);
+      if (initializer != null) {
+        return initializer;
+      }
     }
 
     return NULLABLE;
   }
 
-  private Nullness returnValueNullness(ClassAndMethod callee) {
+  private Nullness returnValueNullness(@Nullable ClassAndMethod callee) {
     if (callee == null) {
       return NULLABLE;
     }
 
     return methodReturnsNonNull.apply(callee) ? NONNULL : NULLABLE;
+  }
+
+  @Nullable
+  private Nullness fieldInitializerNullnessIfAvailable(ClassAndField accessed) {
+    if (!traversed.add(accessed.symbol)) {
+      // Circular dependency between initializers results in null.  Note static fields can also be
+      // null if they're observed before initialized, but we're ignoring that case for simplicity.
+      // TODO(kmb): Try to recognize problems with initialization order
+      return NULL;
+    }
+
+    try {
+      JavacProcessingEnvironment javacEnv = JavacProcessingEnvironment.instance(context);
+      TreePath fieldDeclPath = Trees.instance(javacEnv).getPath(accessed.symbol);
+      // Skip initializers in other compilation units as analysis of such nodes can fail due to
+      // missing types.
+      if (fieldDeclPath == null
+          || fieldDeclPath.getCompilationUnit() != compilationUnit
+          || !(fieldDeclPath.getLeaf() instanceof VariableTree)) {
+        return null;
+      }
+
+      ExpressionTree initializer = ((VariableTree) fieldDeclPath.getLeaf()).getInitializer();
+      if (initializer == null) {
+        return null;
+      }
+
+      // Run flow analysis on field initializer.  This is inefficient compared to just walking
+      // the initializer expression tree but it avoids duplicating the logic from this transfer
+      // function into a method that operates on Javac Nodes.
+      TreePath initializerPath = TreePath.getPath(fieldDeclPath, initializer);
+      UnderlyingAST ast = new UnderlyingAST.CFGStatement(initializerPath.getLeaf());
+      ControlFlowGraph cfg = CFGBuilder.build(initializerPath, javacEnv, ast,
+          /* assumeAssertionsEnabled */ false, /* assumeAssertionsDisabled */ false);
+      Analysis<Nullness, LocalStore<Nullness>, NullnessPropagationTransfer> analysis =
+          new Analysis<>(javacEnv, this);
+      analysis.performAnalysis(cfg);
+      return analysis.getValue(initializerPath.getLeaf());
+    } finally {
+      traversed.remove(accessed.symbol);
+    }
   }
 
   private static void setReceiverNullness(
@@ -534,7 +659,14 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     return new MemberName(clazz, member);
   }
 
-  private static final class MemberName {
+  private void writeObject(ObjectOutputStream out) throws IOException {
+    Preconditions.checkState(context == null, "Can't serialize while analyzing a method");
+    Preconditions.checkState(compilationUnit == null, "Can't serialize while analyzing a method");
+    out.defaultWriteObject();
+  }
+
+  @VisibleForTesting
+  static final class MemberName {
     final String clazz;
     final String member;
 
@@ -621,41 +753,61 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   }
 
   private static final class ClassAndField implements Member {
+    final VarSymbol symbol;
     final String clazz;
     final String field;
-    final boolean isStatic;
-    final boolean isPrimitive;
-    final boolean isEnumConstant;
-    final boolean hasNonNullConstantValue;
 
-    private ClassAndField(String clazz, String field, boolean isStatic, boolean isPrimitive,
-        boolean isEnumConstant, boolean hasNonNullConstantValue) {
-      this.clazz = clazz;
-      this.field = field;
-      this.isStatic = isStatic;
-      this.isPrimitive = isPrimitive;
-      this.isEnumConstant = isEnumConstant;
-      this.hasNonNullConstantValue = hasNonNullConstantValue;
+    private ClassAndField(VarSymbol symbol) {
+      this.symbol = symbol;
+      this.clazz = symbol.owner.getQualifiedName().toString();
+      this.field = symbol.getSimpleName().toString();
     }
 
     static ClassAndField make(VarSymbol symbol) {
-      return new ClassAndField(symbol.owner.getQualifiedName().toString(),
-          symbol.getSimpleName().toString(), symbol.isStatic(), symbol.type.isPrimitive(),
-          symbol.isEnum(), symbol.getConstantValue() != null);
+      return new ClassAndField(symbol);
     }
 
     @Override
     public boolean isStatic() {
-      return isStatic;
+      return symbol.isStatic();
+    }
+
+    public boolean isFinal() {
+      return (symbol.flags() & Flags.FINAL) == Flags.FINAL;
+    }
+
+    public boolean isPrimitive() {
+      return symbol.type.isPrimitive();
+    }
+
+    public boolean isEnumConstant() {
+      return symbol.isEnum();
+    }
+
+    public boolean hasNonNullConstantValue() {
+      return symbol.getConstValue() != null;
     }
   }
+
+  /**
+   * Classes where we know that all static final fields are non-null.
+   */
+  @VisibleForTesting
+  static final ImmutableSet<String> CLASSES_WITH_NON_NULL_CONSTANTS =
+      ImmutableSet.of(
+          BigInteger.class.getName(),
+          BigDecimal.class.getName(),
+          UnsignedInteger.class.getName(),
+          UnsignedLong.class.getName(),
+          StandardCharsets.class.getName());
 
   /**
    * Maps from the names of null-rejecting methods to the indexes of the arguments that aren't
    * permitted to be null. Indexes may be negative to indicate a position relative to the end of the
    * argument list. For example, "-1" means "the final parameter."
    */
-  private static final ImmutableSetMultimap<MemberName, Integer>
+  @VisibleForTesting
+  static final ImmutableSetMultimap<MemberName, Integer>
       REQUIRED_NON_NULL_PARAMETERS = new ImmutableSetMultimap.Builder<MemberName, Integer>()
           .put(member(Preconditions.class, "checkNotNull"), 0)
           .put(member(Verify.class, "verifyNotNull"), 0)
@@ -668,7 +820,8 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    * against null. Indexes may be negative to indicate a position relative to the end of the
    * argument list. For example, "-1" means "the final parameter."
    */
-  private static final ImmutableSetMultimap<MemberName, Integer>
+  @VisibleForTesting
+  static final ImmutableSetMultimap<MemberName, Integer>
       NULL_IMPLIES_TRUE_PARAMETERS = new ImmutableSetMultimap.Builder<MemberName, Integer>()
           .put(member(Strings.class, "isNullOrEmpty"), 0)
           .build();

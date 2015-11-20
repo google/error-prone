@@ -19,10 +19,10 @@ package com.google.errorprone.dataflow.nullnesspropagation;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessCheckerOnBoxed;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessCheckerOnPrimitive;
-import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTransferCases3.MyEnum.ENUM_INSTANCE;
 
 /**
- * Dataflow analysis cases for testing transfer functions in nullness propagation
+ * Dataflow analysis cases for testing transfer functions in nullness propagation around various
+ * kinds of expressions, method parameter and call handling, and loops.
  */
 public class NullnessPropagationTransferCases3 {
   public void casts() {
@@ -62,12 +62,6 @@ public class NullnessPropagationTransferCases3 {
     triggerNullnessChecker("a string literal");
     // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(String.class);
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessChecker(MyEnum.ENUM_INSTANCE);
-    // BUG: Diagnostic contains: (Non-null)
-    triggerNullnessChecker(ENUM_INSTANCE);
-    // BUG: Diagnostic contains: (Nullable)
-    triggerNullnessChecker(MyEnum.NOT_AN_ENUM_CONSTANT);
     // BUG: Diagnostic contains: (Null)
     triggerNullnessChecker(null);
   }
@@ -93,8 +87,162 @@ public class NullnessPropagationTransferCases3 {
 
   public void autounbox() {
     Integer i = null;
+    // BUG: Diagnostic contains: (Null)
+    triggerNullnessChecker(i);
     // BUG: Diagnostic contains: (Non-null)
     triggerNullnessCheckerOnPrimitive(i);
+  }
+
+  public void parameter(String str, int i) {
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(str);
+
+    // A call to plain triggerNullnessChecker() would implicitly call Integer.valueOf(i).
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(i);
+  }
+
+  public void assignment(String nullableParam) {
+    String str = nullableParam;
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(str);
+
+    str = "a string";
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(str);
+
+    String otherStr = str;
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(str);
+
+    str = null;
+    // BUG: Diagnostic contains: (Null)
+    triggerNullnessChecker(str);
+
+    otherStr = str;
+    // BUG: Diagnostic contains: (Null)
+    triggerNullnessChecker(str);
+  }
+
+  public void assignmentExpressionValue() {
+    String str = "foo";
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(str);
+    // BUG: Diagnostic contains: (Null)
+    triggerNullnessChecker(str = null);
+    // BUG: Diagnostic contains: (Null)
+    triggerNullnessChecker(str);
+
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(str = "bar");
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(str);
+
+    str = null;
+    String str2 = null;
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(str = str2 = "bar");
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(str);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(str2);
+
+    // BUG: Diagnostic contains: (Null)
+    triggerNullnessChecker(str = str2 = null);
+    // BUG: Diagnostic contains: (Null)
+    triggerNullnessChecker(str);
+    // BUG: Diagnostic contains: (Null)
+    triggerNullnessChecker(str2);
+  }
+
+  public void localVariable() {
+    short s;
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(s = 1000); // narrowing conversion
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(s);
+    int i = 2;
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(i);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(i = s); // widening conversion
+    String str = "a string literal";
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(str);
+    Object obj = null;
+    // BUG: Diagnostic contains: (Null)
+    triggerNullnessChecker(obj);
+
+    ++i;
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(i);
+  }
+
+  public void boxedPrimitives() {
+    Short s = 1000;
+    // BUG: Diagnostic contains: (Non-null)
+    NullnessPropagationTest.triggerNullnessChecker(s);
+
+    Integer i = 2;
+    // BUG: Diagnostic contains: (Non-null)
+    NullnessPropagationTest.triggerNullnessChecker(i);
+  }
+
+  public void nullableAssignmentToPrimitiveVariableExpressionValue() {
+    int i;
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(i = boxedIntReturningMethod());
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(boxedIntReturningMethod());
+  }
+
+  public void methodInvocation() {
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(intReturningMethod());
+
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(stringReturningMethod());
+  }
+
+  private Integer boxedIntReturningMethod() {
+    return null;
+  }
+
+  private int intReturningMethod() {
+    return 0;
+  }
+
+  private String stringReturningMethod() {
+    return null;
+  }
+
+  public void objectCreation(Object nullableParam) {
+    Object obj = nullableParam;
+    obj = new Object();
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(obj);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(new Object[0]);
+  }
+
+  public void inc() {
+    int i = 0;
+    short s = 0;
+
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(i++);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(s++);
+
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(++i);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(++s);
+
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(i += 5);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessCheckerOnPrimitive(s += 5);
   }
 
   public void loop1() {
@@ -116,15 +264,5 @@ public class NullnessPropagationTransferCases3 {
       o = comingValue;
       comingValue = new Object();
     }
-  }
-
-  enum MyEnum {
-    ENUM_INSTANCE;
-
-    static MyEnum valueOf(char c) {
-      return null;
-    }
-
-    public static final MyEnum NOT_AN_ENUM_CONSTANT = ENUM_INSTANCE;
   }
 }
