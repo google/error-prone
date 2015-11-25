@@ -24,6 +24,13 @@ import static com.google.errorprone.matchers.Matchers.inLoop;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.MatcherChecker;
+import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
+import com.google.errorprone.scanner.ErrorProneScanner;
+import com.google.errorprone.scanner.ScannerSupplier;
+
+import com.sun.source.tree.MethodTree;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -159,6 +166,24 @@ public class MatchersTest {
         .doTest();
   }
 
+  @Test
+  public void methodWithClassAndName() {
+    ScannerSupplier scannerSupplier =
+        ScannerSupplier.fromScanner(
+            new ErrorProneScanner(
+                new MethodWithClassAndNameChecker(
+                    "com.google.errorprone.foo.bar.Test", "myMethod")));
+    CompilationTestHelper.newInstance(scannerSupplier, getClass())
+        .addSourceLines(
+            "com/google/errorprone/foo/bar/Test.java",
+            "package com.google.errorprone.foo.bar;",
+            "public class Test {",
+            "  // BUG: Diagnostic contains:",
+            "  public void myMethod() {}",
+            "}")
+        .doTest();
+  }
+
   @BugPattern(
       name = "InLoopChecker",
       summary = "Checker that flags the given expression statement if the given matcher matches",
@@ -166,6 +191,30 @@ public class MatchersTest {
   public static class InLoopChecker extends MatcherChecker {
     public InLoopChecker() {
       super("System.out.println();", inLoop());
+    }
+  }
+
+  /**
+   * {@link BugChecker} to use for {@link Matchers#methodWithClassAndName} tests.
+   */
+  @BugPattern(
+    name = "MethodWithClassAndNameChecker",
+    summary = "Checker that flags the given method declaration if the given matcher matches",
+    category = ONE_OFF,
+    maturity = MATURE,
+    severity = ERROR
+  )
+  public static class MethodWithClassAndNameChecker extends BugChecker
+      implements MethodTreeMatcher {
+    private final Matcher<MethodTree> matcher;
+
+    public MethodWithClassAndNameChecker(String className, String methodName) {
+      matcher = Matchers.methodWithClassAndName(className, methodName);
+    }
+
+    @Override
+    public Description matchMethod(MethodTree tree, VisitorState state) {
+      return matcher.matches(tree, state) ? describeMatch(tree) : Description.NO_MATCH;
     }
   }
 }

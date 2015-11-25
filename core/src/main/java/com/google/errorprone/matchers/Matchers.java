@@ -888,6 +888,27 @@ public class Matchers {
   }
 
   /**
+   * Match a method declaration with a specific enclosing class and method name.
+   *
+   * @param className The fully-qualified name of the enclosing class, e.g.
+   *        "com.google.common.base.Preconditions"
+   * @param methodName The name of the method to match, e.g., "checkNotNull"
+   */
+  public static Matcher<MethodTree> methodWithClassAndName(
+      final String className, final String methodName) {
+    return new Matcher<MethodTree>() {
+      @Override
+      public boolean matches(MethodTree methodTree, VisitorState state) {
+        return ASTHelpers.getSymbol(methodTree)
+                .getEnclosingElement()
+                .getQualifiedName()
+                .contentEquals(className)
+            && methodTree.getName().contentEquals(methodName);
+      }
+    };
+  }
+
+  /**
    * Matches an AST node that represents a method declaration, based on the list of
    * variableMatchers.  Applies the variableMatcher at index n to the parameter at index n
    * and returns true iff they all match.  Returns false if the number of variableMatchers provided
