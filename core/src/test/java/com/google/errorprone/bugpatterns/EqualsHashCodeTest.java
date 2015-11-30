@@ -42,4 +42,72 @@ public class EqualsHashCodeTest {
   public void testNegativeCase() throws Exception {
     compilationHelper.addSourceFile("EqualsHashCodeTestNegativeCases.java").doTest();
   }
+
+  @Test
+  public void superClassWithoutHashCode() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Super.java",
+            "abstract class Super {}")
+        .addSourceLines(
+            "Test.java",
+            "class Test extends Super {",
+            "  // BUG: Diagnostic contains:",
+            "  public boolean equals(Object o) { return false; }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void inherited() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Super.java",
+            "class Super {",
+            "  public int hashCode() {",
+            "    return 42;",
+            "  }",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "class Test extends Super {",
+            "  public boolean equals(Object o) { return false; }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void interfaceEquals() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "I.java",
+            "interface I {",
+            "  boolean equals(Object o);",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void abstractHashCode() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Super.java",
+            "abstract class Super {",
+            "  public abstract boolean equals(Object o);",
+            "  public abstract int hashCode();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void abstractNoHashCode() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Super.java",
+            "abstract class Super {",
+            "  // BUG: Diagnostic contains:",
+            "  public abstract boolean equals(Object o);",
+            "}")
+        .doTest();
+  }
 }
