@@ -72,7 +72,8 @@ public class BugPatternFileGeneratorTest {
     instance.severity = SeverityLevel.ERROR;
     instance.maturity = MaturityLevel.MATURE;
     instance.suppressibility = Suppressibility.SUPPRESS_WARNINGS;
-    instance.customSuppressionAnnotation = "com.google.errorprone.BugPattern.NoCustomSuppression";
+    instance.customSuppressionAnnotations =
+        new String[] {"com.google.errorprone.BugPattern.NoCustomSuppression.class"};
     return instance;
   }
 
@@ -122,10 +123,11 @@ public class BugPatternFileGeneratorTest {
   public void regressionTest_sidecar() throws Exception {
     BugPatternFileGenerator generator =
         new BugPatternFileGenerator(wikiDir, exampleDirBase, explanationDirBase, false, false);
-    Files.write(explanationDirBase.resolve("DeadException.md"),
+    Files.write(
+        explanationDirBase.resolve("DeadException.md"),
         Arrays.asList(
-            "The exception is created with new, but is not thrown, and the reference is lost."), 
-            UTF_8);
+            "The exception is created with new, but is not thrown, and the reference is lost."),
+        UTF_8);
     generator.processLine(BUGPATTERN_LINE_SIDECAR);
     String expected = CharStreams.toString(new InputStreamReader(
         getClass().getResourceAsStream("testdata/DeadException_nofrontmatter_gfm.md"), UTF_8));

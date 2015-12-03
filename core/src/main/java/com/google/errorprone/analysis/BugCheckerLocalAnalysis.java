@@ -156,8 +156,8 @@ public final class BugCheckerLocalAnalysis extends SimpleTreeVisitor<Void, Visit
   }
 
   @Override
-  public Class<? extends Annotation> customSuppressionAnnotation() {
-    return checker.customSuppressionAnnotation();
+  public Set<Class<? extends Annotation>> customSuppressionAnnotations() {
+    return checker.customSuppressionAnnotations();
   }
 
   @Override

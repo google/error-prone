@@ -23,13 +23,17 @@ import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.BugPattern.Suppressibility;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
+@RunWith(JUnit4.class)
 public class BugPatternValidatorTest {
 
   private @interface CustomSuppressionAnnotation {}
+  private @interface CustomSuppressionAnnotation2 {}
 
   @Test
   public void basicBugPattern() throws Exception {
@@ -103,13 +107,15 @@ public class BugPatternValidatorTest {
   @Test(expected = ValidationException.class)
   public void suppressWarningsButIncludesCustomAnnotation() throws Exception {
     @BugPattern(
-        name = "SuppressWarningsButIncludesCustomAnnotation",
-        summary = "Uses SuppressWarnings but includes custom suppression annotation",
-        explanation = "Uses SuppressWarnings but includes custom suppression annotation",
-        category = Category.ONE_OFF, maturity = MaturityLevel.EXPERIMENTAL,
-        severity = SeverityLevel.ERROR,
-        suppressibility = Suppressibility.SUPPRESS_WARNINGS,
-        customSuppressionAnnotation = CustomSuppressionAnnotation.class)
+      name = "SuppressWarningsButIncludesCustomAnnotation",
+      summary = "Uses SuppressWarnings but includes custom suppression annotation",
+      explanation = "Uses SuppressWarnings but includes custom suppression annotation",
+      category = Category.ONE_OFF,
+      maturity = MaturityLevel.EXPERIMENTAL,
+      severity = SeverityLevel.ERROR,
+      suppressibility = Suppressibility.SUPPRESS_WARNINGS,
+      customSuppressionAnnotations = CustomSuppressionAnnotation.class
+    )
     final class BugPatternTestClass {}
 
     BugPattern annotation = BugPatternTestClass.class.getAnnotation(BugPattern.class);
@@ -134,13 +140,15 @@ public class BugPatternValidatorTest {
   @Test(expected = ValidationException.class)
   public void unsuppressibleButIncludesCustomAnnotation() throws Exception {
     @BugPattern(
-        name = "unsuppressibleButIncludesCustomAnnotation",
-        summary = "Unsuppressible but includes custom suppression annotation",
-        explanation = "Unsuppressible but includes custom suppression annotation",
-        category = Category.ONE_OFF, maturity = MaturityLevel.EXPERIMENTAL,
-        severity = SeverityLevel.ERROR,
-        suppressibility = Suppressibility.UNSUPPRESSIBLE,
-        customSuppressionAnnotation = CustomSuppressionAnnotation.class)
+      name = "unsuppressibleButIncludesCustomAnnotation",
+      summary = "Unsuppressible but includes custom suppression annotation",
+      explanation = "Unsuppressible but includes custom suppression annotation",
+      category = Category.ONE_OFF,
+      maturity = MaturityLevel.EXPERIMENTAL,
+      severity = SeverityLevel.ERROR,
+      suppressibility = Suppressibility.UNSUPPRESSIBLE,
+      customSuppressionAnnotations = CustomSuppressionAnnotation.class
+    )
     final class BugPatternTestClass {}
 
     BugPattern annotation = BugPatternTestClass.class.getAnnotation(BugPattern.class);
@@ -150,13 +158,36 @@ public class BugPatternValidatorTest {
   @Test
   public void customSuppressionAnnotation() throws Exception {
     @BugPattern(
-        name = "customSuppressionAnnotation",
-        summary = "Uses a custom suppression annotation",
-        explanation = "Uses a custom suppression annotation",
-        category = Category.ONE_OFF, maturity = MaturityLevel.EXPERIMENTAL,
-        severity = SeverityLevel.ERROR,
-        suppressibility = Suppressibility.CUSTOM_ANNOTATION,
-        customSuppressionAnnotation = CustomSuppressionAnnotation.class)
+      name = "customSuppressionAnnotation",
+      summary = "Uses a custom suppression annotation",
+      explanation = "Uses a custom suppression annotation",
+      category = Category.ONE_OFF,
+      maturity = MaturityLevel.EXPERIMENTAL,
+      severity = SeverityLevel.ERROR,
+      suppressibility = Suppressibility.CUSTOM_ANNOTATION,
+      customSuppressionAnnotations = CustomSuppressionAnnotation.class
+    )
+    final class BugPatternTestClass {}
+
+    BugPattern annotation = BugPatternTestClass.class.getAnnotation(BugPattern.class);
+    BugPatternValidator.validate(annotation);
+  }
+
+  @Test
+  public void multipleCustomSuppressionAnnotations() throws Exception {
+    @BugPattern(
+      name = "customSuppressionAnnotation",
+      summary = "Uses multiple custom suppression annotations",
+      explanation = "Uses multiple custom suppression annotations",
+      category = Category.ONE_OFF,
+      maturity = MaturityLevel.EXPERIMENTAL,
+      severity = SeverityLevel.ERROR,
+      suppressibility = Suppressibility.CUSTOM_ANNOTATION,
+      customSuppressionAnnotations = {
+        CustomSuppressionAnnotation.class,
+        CustomSuppressionAnnotation2.class
+      }
+    )
     final class BugPatternTestClass {}
 
     BugPattern annotation = BugPatternTestClass.class.getAnnotation(BugPattern.class);
@@ -166,13 +197,33 @@ public class BugPatternValidatorTest {
   @Test(expected = ValidationException.class)
   public void customSuppressionAnnotationButSuppressWarnings() throws Exception {
     @BugPattern(
-        name = "customSuppressionAnnotationButSuppressWarnings",
-        summary = "Specifies a custom suppression annotation of @SuppressWarnings",
-        explanation = "Specifies a custom suppression annotation of @SuppressWarnings",
-        category = Category.ONE_OFF, maturity = MaturityLevel.EXPERIMENTAL,
-        severity = SeverityLevel.ERROR,
-        suppressibility = Suppressibility.CUSTOM_ANNOTATION,
-        customSuppressionAnnotation = SuppressWarnings.class)
+      name = "customSuppressionAnnotationButSuppressWarnings",
+      summary = "Specifies a custom suppression annotation of @SuppressWarnings",
+      explanation = "Specifies a custom suppression annotation of @SuppressWarnings",
+      category = Category.ONE_OFF,
+      maturity = MaturityLevel.EXPERIMENTAL,
+      severity = SeverityLevel.ERROR,
+      suppressibility = Suppressibility.CUSTOM_ANNOTATION,
+      customSuppressionAnnotations = SuppressWarnings.class
+    )
+    final class BugPatternTestClass {}
+
+    BugPattern annotation = BugPatternTestClass.class.getAnnotation(BugPattern.class);
+    BugPatternValidator.validate(annotation);
+  }
+
+  @Test(expected = ValidationException.class)
+  public void customSuppressionAnnotationsIncludesSuppressWarnings() throws Exception {
+    @BugPattern(
+      name = "customSuppressionAnnotationButSuppressWarnings",
+      summary = "Specifies multiple custom suppression annotations including @SuppressWarnings",
+      explanation = "Specifies multiple custom suppression annotations including @SuppressWarnings",
+      category = Category.ONE_OFF,
+      maturity = MaturityLevel.EXPERIMENTAL,
+      severity = SeverityLevel.ERROR,
+      suppressibility = Suppressibility.CUSTOM_ANNOTATION,
+      customSuppressionAnnotations = {CustomSuppressionAnnotation.class, SuppressWarnings.class}
+    )
     final class BugPatternTestClass {}
 
     BugPattern annotation = BugPatternTestClass.class.getAnnotation(BugPattern.class);

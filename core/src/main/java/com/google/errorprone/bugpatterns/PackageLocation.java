@@ -48,7 +48,7 @@ import javax.annotation.Nullable;
   severity = ERROR,
   maturity = MATURE,
   suppressibility = CUSTOM_ANNOTATION,
-  customSuppressionAnnotation = SuppressPackageLocation.class,
+  customSuppressionAnnotations = SuppressPackageLocation.class,
   documentSuppression = false
 )
 public class PackageLocation extends BugChecker implements CompilationUnitTreeMatcher {

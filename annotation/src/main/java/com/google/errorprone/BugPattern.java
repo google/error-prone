@@ -196,10 +196,10 @@ public @interface BugPattern {
   }
 
   /**
-   * A custom suppression annotation type to use if suppressibility is
+   * A set of custom suppression annotation types to use if suppressibility is
    * Suppressibility.CUSTOM_ANNOTATION.
    */
-  Class<? extends Annotation> customSuppressionAnnotation() default NoCustomSuppression.class;
+  Class<? extends Annotation>[] customSuppressionAnnotations() default NoCustomSuppression.class;
 
   /**
    * A dummy annotation to use when there is no custom suppression annotation.  The JLS does not

@@ -43,7 +43,7 @@ public interface Suppressible {
   BugPattern.Suppressibility suppressibility();
 
   /**
-   * Returns the custom suppression annotation for this checker, if custom suppression is used.
+   * Returns the custom suppression annotations for this checker, if custom suppression is used.
    */
-  Class<? extends Annotation> customSuppressionAnnotation();
+  Set<Class<? extends Annotation>> customSuppressionAnnotations();
 }

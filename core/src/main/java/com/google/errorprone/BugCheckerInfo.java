@@ -32,6 +32,9 @@ import com.sun.source.tree.Tree;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -92,11 +95,11 @@ public class BugCheckerInfo implements Serializable {
   private final Suppressibility suppressibility;
 
   /**
-   * A custom suppression annotation for this check. Computed from the {@code suppressibility} and
-   * {@code customSuppressionAnnotation} attributes from its {@code BugPattern}. May be null if
-   * there is no custom suppression annotation for this check.
+   * A set of custom suppression annotations for this check. Computed from the
+   * {@code suppressibility} and {@code customSuppressionAnnotations} attributes from its {@code
+   * BugPattern}.  May be empty if there are no custom suppression annotations for this check.
    */
-  private final Class<? extends Annotation> customSuppressionAnnotation;
+  private final Set<Class<? extends Annotation>> customSuppressionAnnotations;
 
   public static BugCheckerInfo create(Class<? extends BugChecker> checker) {
     BugPattern pattern = checkNotNull(checker.getAnnotation(BugPattern.class));
@@ -118,9 +121,10 @@ public class BugCheckerInfo implements Serializable {
     linkUrl = createLinkUrl(pattern);
     suppressibility = pattern.suppressibility();
     if (suppressibility == Suppressibility.CUSTOM_ANNOTATION) {
-      customSuppressionAnnotation = pattern.customSuppressionAnnotation();
+      customSuppressionAnnotations =
+          new HashSet<>(Arrays.asList(pattern.customSuppressionAnnotations()));
     } else {
-      customSuppressionAnnotation = null;
+      customSuppressionAnnotations = Collections.<Class<? extends Annotation>>emptySet();
     }
   }
 
@@ -194,8 +198,8 @@ public class BugCheckerInfo implements Serializable {
     return suppressibility;
   }
 
-  public Class<? extends Annotation> customSuppressionAnnotation() {
-    return customSuppressionAnnotation;
+  public Set<Class<? extends Annotation>> customSuppressionAnnotations() {
+    return customSuppressionAnnotations;
   }
 
   public Class<? extends BugChecker> checkerClass() {

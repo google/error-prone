@@ -21,10 +21,12 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import com.google.common.io.LineProcessor;
 import com.google.gson.Gson;
 
@@ -45,6 +47,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
@@ -58,6 +61,19 @@ import java.util.regex.Pattern;
  * @author alexeagle@google.com (Alex Eagle)
  */
 class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>> {
+
+  private static final Joiner COMMA_JOINER = Joiner.on(", ");
+  private static final Function<String, String> ANNOTATE_AND_CODIFY =
+      new Function<String, String>() {
+        @Override
+        public String apply(String annotationName) {
+          Preconditions.checkState(annotationName.endsWith(".class"));
+          return "`@"
+              + annotationName.substring(0, annotationName.length() - ".class".length())
+              + "`";
+        }
+      };
+
   private final Path outputDir;
   private final Path exampleDirBase;
   private final Path explanationDir;
@@ -212,11 +228,22 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
                     pattern.name);
             break;
           case CUSTOM_ANNOTATION:
-            suppression =
-                String.format(
-                    "Suppress false positives by adding the custom suppression annotation "
-                        + "`@%s` to the enclosing element.",
-                    pattern.customSuppressionAnnotation);
+            if (pattern.customSuppressionAnnotations.length == 1) {
+              suppression =
+                  String.format(
+                      "Suppress false positives by adding the custom suppression annotation "
+                          + "`@%s` to the enclosing element.",
+                      pattern.customSuppressionAnnotations[0]);
+            } else {
+              suppression =
+                  String.format(
+                      "Suppress false positives by adding one of these custom suppression "
+                          + "annotations to the enclosing element: %s",
+                      COMMA_JOINER.join(
+                          Lists.transform(
+                              Arrays.asList(pattern.customSuppressionAnnotations),
+                              ANNOTATE_AND_CODIFY)));
+            }
             break;
           case UNSUPPRESSIBLE:
             suppression = "This check may not be suppressed.";

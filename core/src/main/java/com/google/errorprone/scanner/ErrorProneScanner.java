@@ -296,7 +296,7 @@ public class ErrorProneScanner extends Scanner {
 
   private void registerNodeTypes(BugChecker checker) {
     if (checker.suppressibility() == Suppressibility.CUSTOM_ANNOTATION) {
-      customSuppressionAnnotations.add(checker.customSuppressionAnnotation());
+      customSuppressionAnnotations.addAll(checker.customSuppressionAnnotations());
     }
 
     if (checker instanceof AnnotationTreeMatcher) {

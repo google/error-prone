@@ -178,7 +178,8 @@ public class SuppressionHelper {
     }
     switch (suppressible.suppressibility()) {
       case CUSTOM_ANNOTATION:
-        return customSuppressionsOnCurrentPath.contains(suppressible.customSuppressionAnnotation());
+        return !Collections.disjoint(
+            suppressible.customSuppressionAnnotations(), customSuppressionsOnCurrentPath);
       case SUPPRESS_WARNINGS:
         return !Collections.disjoint(suppressible.allNames(), suppressionsOnCurrentPath);
       default:

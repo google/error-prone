@@ -184,8 +184,8 @@ public abstract class BugChecker implements Suppressible, Serializable {
   }
 
   @Override
-  public Class<? extends Annotation> customSuppressionAnnotation() {
-    return info.customSuppressionAnnotation();
+  public Set<Class<? extends Annotation>> customSuppressionAnnotations() {
+    return info.customSuppressionAnnotations();
   }
 
   public static interface AnnotationTreeMatcher extends Suppressible {

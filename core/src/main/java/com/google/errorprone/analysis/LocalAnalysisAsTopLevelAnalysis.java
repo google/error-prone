@@ -24,6 +24,7 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.util.Context;
 
+import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
@@ -54,7 +55,13 @@ public abstract class LocalAnalysisAsTopLevelAnalysis implements TopLevelAnalysi
       case UNSUPPRESSIBLE:
         return false;
       case CUSTOM_ANNOTATION:
-        return ASTHelpers.hasAnnotation(tree, analysis().customSuppressionAnnotation());
+        for (Class<? extends Annotation> customSuppressionAnnotation :
+            analysis().customSuppressionAnnotations()) {
+          if (ASTHelpers.hasAnnotation(tree, customSuppressionAnnotation)) {
+            return true;
+          }
+        }
+        return false;
       case SUPPRESS_WARNINGS:
         SuppressWarnings suppressions = ASTHelpers.getAnnotation(tree, SuppressWarnings.class);
         return suppressions != null
