@@ -134,11 +134,10 @@
  its <code>BugPattern</code>.</div>
 </li>
 <li class="blockListLast">
-<h4>customSuppressionAnnotation</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">T</a>&gt; customSuppressionAnnotation</pre>
-<div class="block">A custom suppression annotation for this check. Computed from the <code>suppressibility</code> and
- <code>customSuppressionAnnotation</code> attributes from its <code>BugPattern</code>. May be null if
- there is no custom suppression annotation for this check.</div>
+<h4>customSuppressionAnnotations</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">E</a>&gt; customSuppressionAnnotations</pre>
+<div class="block">A set of custom suppression annotations for this check. Computed from the
+ <code>suppressibility</code> and <code>customSuppressionAnnotations</code> attributes from its <code>BugPattern</code>.  May be empty if there are no custom suppression annotations for this check.</div>
 </li>
 </ul>
 </li>
@@ -965,6 +964,11 @@
 <!--   -->
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/threadsafety/IllegalGuardedBy.html" title="class in com.google.errorprone.bugpatterns.threadsafety">com.google.errorprone.bugpatterns.threadsafety.IllegalGuardedBy</a> extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/RuntimeException.html?is-external=true" title="class or interface in java.lang">RuntimeException</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.threadsafety.ImmutableChecker">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">com.google.errorprone.bugpatterns.threadsafety.ImmutableChecker</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
 </li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.threadsafety.LockMethodChecker">
 <!--   -->

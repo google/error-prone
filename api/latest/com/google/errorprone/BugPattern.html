@@ -168,9 +168,9 @@ public @interface <span class="memberNameLabel">BugPattern</span></pre>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/BugPattern.html#customSuppressionAnnotation--">customSuppressionAnnotation</a></span></code>
-<div class="block">A custom suppression annotation type to use if suppressibility is
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;[]</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/BugPattern.html#customSuppressionAnnotations--">customSuppressionAnnotations</a></span></code>
+<div class="block">A set of custom suppression annotation types to use if suppressibility is
  Suppressibility.CUSTOM_ANNOTATION.</div>
 </td>
 </tr>
@@ -382,14 +382,14 @@ public @interface <span class="memberNameLabel">BugPattern</span></pre>
 </li>
 </ul>
 <ul class="blockList">
-<li class="blockList"><a name="customSuppressionAnnotation--">
+<li class="blockList"><a name="customSuppressionAnnotations--">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>customSuppressionAnnotation</h4>
-<pre>public abstract&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;customSuppressionAnnotation</pre>
-<div class="block">A custom suppression annotation type to use if suppressibility is
+<h4>customSuppressionAnnotations</h4>
+<pre>public abstract&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;[]&nbsp;customSuppressionAnnotations</pre>
+<div class="block">A set of custom suppression annotation types to use if suppressibility is
  Suppressibility.CUSTOM_ANNOTATION.</div>
 <dl>
 <dt>Default:</dt>
