@@ -31,14 +31,19 @@ import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Matchers;
+import com.google.errorprone.matchers.method.MethodMatchers;
 import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
+import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 
 import javax.lang.model.element.ElementKind;
 
@@ -88,6 +93,10 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
             return false;
           }
 
+          if (mockitoInvocation(tree, state)) {
+            return false;
+          }
+
           Optional<Boolean> result = shouldCheckReturnValue(method);
           if (result.isPresent()) {
             return result.get();
@@ -106,6 +115,12 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
           return false;
         }
       };
+
+  private static final Matcher<ExpressionTree> MOCKITO_MATCHER = Matchers.anyOf(
+      // Mockido.verify(t).xx();
+      MethodMatchers.staticMethod().onClass("org.mockito.Mockito").named("verify"),
+      // doReturn(val).when(t).xx();
+      MethodMatchers.instanceMethod().onExactClass("org.mockito.stubbing.Stubber").named("when"));
 
   /**
    * Return a matcher for method invocations in which the method being called has the
@@ -170,5 +185,20 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
       return buildDescription(tree).setMessage(String.format(BOTH_ERROR, "class")).build();
     }
     return Description.NO_MATCH;
+  }
+
+  /**
+   * Don't match the method that is invoked through {@code Mockito.verify(t)} or
+   * {@code doReturn(val).when(t)}.
+   */
+  private static boolean mockitoInvocation(MethodInvocationTree tree, VisitorState state) {
+    if (tree instanceof JCMethodInvocation
+        && ((JCMethodInvocation) tree).getMethodSelect() instanceof JCFieldAccess) {
+      ExpressionTree receiver = ASTHelpers.getReceiver(tree);
+      if (MOCKITO_MATCHER.matches(receiver, state)) {
+          return true;
+      }
+    }
+    return false;
   }
 }

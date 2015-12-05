@@ -147,6 +147,36 @@ public class CheckReturnValueTest {
         .doTest();
   }
 
+  // Don't match methods invoked through {@link org.mockito.Mockito}.
+  @Test
+  public void testIgnoreCRVOnMockito() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "package lib;",
+            "public class Test {",
+            "  @javax.annotation.CheckReturnValue",
+            " public static int f() {",
+            "    return 0;",
+            "  }",
+            "}")
+        .addSourceLines(
+            "TestCase.java",
+            "import static org.mockito.Mockito.verify;",
+            "import static org.mockito.Mockito.doReturn;",
+            "import org.mockito.Mockito;",
+            "class TestCase {",
+            "  void m() {",
+            "    lib.Test t = new lib.Test();",
+            "    Mockito.verify(t).f();",
+            "    verify(t).f();",
+            "    doReturn(1).when(t).f();",
+            "    Mockito.doReturn(1).when(t).f();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
   @Test
   public void testPackageAnnotationButCanIgnoreReturnValue() throws Exception {
     compilationHelper
