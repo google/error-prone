@@ -70,6 +70,7 @@ import com.google.errorprone.bugpatterns.InjectOverlappingQualifierAndScopeAnnot
 import com.google.errorprone.bugpatterns.InjectScopeAnnotationOnInterfaceOrAbstractClass;
 import com.google.errorprone.bugpatterns.InjectScopeOrQualifierAnnotationRetention;
 import com.google.errorprone.bugpatterns.InjectedConstructorAnnotations;
+import com.google.errorprone.bugpatterns.InsecureCipherMode;
 import com.google.errorprone.bugpatterns.InvalidPatternSyntax;
 import com.google.errorprone.bugpatterns.IsInstanceOfClass;
 import com.google.errorprone.bugpatterns.JMockTestWithoutRunWithOrRuleAnnotation;
@@ -284,6 +285,7 @@ public class BuiltInCheckerSuppliers {
           InjectScopeAnnotationOnInterfaceOrAbstractClass.class,
           InjectScopeOrQualifierAnnotationRetention.class,
           InjectedConstructorAnnotations.class,
+          InsecureCipherMode.class,
           JMockTestWithoutRunWithOrRuleAnnotation.class,
           JUnitAmbiguousTestClass.class,
           LockMethodChecker.class,
