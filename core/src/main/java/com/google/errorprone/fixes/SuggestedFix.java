@@ -16,6 +16,8 @@
 
 package com.google.errorprone.fixes;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
@@ -287,7 +289,16 @@ public class SuggestedFix implements Fix {
       importsToRemove.add("import static " + importString);
       return this;
     }
-    
+
+    /** Merges all edits from {@code other} into {@code this}. */
+    public Builder merge(Builder other) {
+      checkNotNull(other);
+      fixes.addAll(other.fixes);
+      importsToAdd.addAll(other.importsToAdd);
+      importsToRemove.addAll(other.importsToRemove);
+      return this;
+    }
+
     /**
      * Implicit default constructors are one of the few synthetic constructs
      * added to the AST early enough to be visible from Error Prone, so we
