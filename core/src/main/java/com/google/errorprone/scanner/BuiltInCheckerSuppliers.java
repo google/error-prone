@@ -83,6 +83,7 @@ import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
 import com.google.errorprone.bugpatterns.MalformedFormatString;
 import com.google.errorprone.bugpatterns.MissingCasesInEnumSwitch;
 import com.google.errorprone.bugpatterns.MissingFail;
+import com.google.errorprone.bugpatterns.MissingOverride;
 import com.google.errorprone.bugpatterns.MisusedWeekYear;
 import com.google.errorprone.bugpatterns.MockitoUsage;
 import com.google.errorprone.bugpatterns.ModifyingCollectionWithItself;
@@ -292,6 +293,7 @@ public class BuiltInCheckerSuppliers {
           MalformedFormatString.class,
           MissingCasesInEnumSwitch.class,
           MissingFail.class,
+          MissingOverride.class,
           ModifyingCollectionWithItself.class,
           NarrowingCompoundAssignment.class,
           NoAllocationChecker.class,
