@@ -30,6 +30,7 @@ import com.google.errorprone.bugpatterns.ArraysAsListPrimitiveArray;
 import com.google.errorprone.bugpatterns.AssertFalse;
 import com.google.errorprone.bugpatterns.AsyncFunctionReturnsNull;
 import com.google.errorprone.bugpatterns.BadAnnotationImplementation;
+import com.google.errorprone.bugpatterns.BadComparable;
 import com.google.errorprone.bugpatterns.BadShiftAmount;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.CannotMockFinalClass;
@@ -190,6 +191,7 @@ public class BuiltInCheckerSuppliers {
           ArrayToStringCompoundAssignment.class,
           ArrayToStringConcatenation.class,
           AsyncFunctionReturnsNull.class,
+          BadComparable.class,
           BadShiftAmount.class,
           ChainingConstructorIgnoresParameter.class,
           CheckReturnValue.class,
