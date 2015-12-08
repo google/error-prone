@@ -77,6 +77,19 @@ public class InsecureCipherModeNegativeCases {
     }
   }
 
+  static Cipher rc4CipherJsch;
+  static {
+    try {
+      rc4CipherJsch = Cipher.getInstance("RC4", "JSch");
+    } catch (NoSuchAlgorithmException e) {
+      // We don't handle any exception as this code is not meant to be executed.
+    } catch (NoSuchPaddingException e) {
+      // We don't handle any exception as this code is not meant to be executed.
+    } catch (NoSuchProviderException e) {
+      // We don't handle any exception as this code is not meant to be executed.
+    }
+  }
+
   static Cipher arcfourCipherSunJce;
   static {
     try {

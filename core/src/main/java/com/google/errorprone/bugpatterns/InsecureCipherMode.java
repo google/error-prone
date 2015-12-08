@@ -78,7 +78,9 @@ public class InsecureCipherMode extends BugChecker implements MethodInvocationTr
 
     // We exclude stream ciphers (this check only makes sense for block ciphers), i.e., the RC4
     // cipher. The name of this algorithm is "ARCFOUR" in the SunJce and "ARC4" in Conscrypt.
-    if (transformation.matches("ARCFOUR.*") || transformation.matches("ARC4.*")) {
+    // Some other providers like JCraft also seem to use the name "RC4".
+    if (transformation.matches("ARCFOUR.*") || transformation.matches("ARC4.*")
+        || transformation.matches("RC4.*")) {
       return Description.NO_MATCH;
     }
 
