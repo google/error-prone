@@ -37,6 +37,12 @@ public void setNameFormat(String nameFormat) {
 }
 ```
 
+NOTE: `@CheckReturnValue` is ignored on calls from Mockito.verify and
+Stubber.when(), e.g. `Mockito.verify(t).foo()` or `doReturn(val).when(t).foo()`
+where `foo()` is annotated with `@CheckReturnValue`. This is because such tests
+meant to check if a method is invoked, rather than consuming the return value.
+We save people from adding `@SuppressWarnings` in these cases.
+
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("CheckReturnValue")` annotation to the enclosing element.
 

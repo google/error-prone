@@ -41,6 +41,9 @@ This annotation has incompatible modifiers as specified by its @IncompatibleModi
 __[JUnitAmbiguousTestClass](bugpattern/JUnitAmbiguousTestClass)__\
 Test class inherits from JUnit 3&#39;s TestCase but has JUnit 4 @Test annotations.
 
+__[MissingOverride](bugpattern/MissingOverride)__\
+method overrides method in supertype; expected @Override
+
 __[MultipleTopLevelClasses](bugpattern/MultipleTopLevelClasses)__\
 Source files should not contain multiple top-level class declarations
 
@@ -99,6 +102,9 @@ Implicit toString used on an array (String + Array)
 
 __[AsyncFunctionReturnsNull](bugpattern/AsyncFunctionReturnsNull)__\
 AsyncFunction should not return a null Future, only a Future whose result is null.
+
+__[BadComparable](bugpattern/BadComparable)__\
+Possible sign flip from narrowing conversion
 
 __[BadShiftAmount](bugpattern/BadShiftAmount)__\
 Shift by an amount that is out of range
@@ -309,6 +315,9 @@ Scoping and qualifier annotations must have runtime retention.
 
 __[InjectedConstructorAnnotations](bugpattern/InjectedConstructorAnnotations)__\
 Injected constructors cannot be optional nor have binding annotations
+
+__[InsecureCipherMode](bugpattern/InsecureCipherMode)__\
+Cipher.getInstance() is invoked using either the default settings or ECB mode
 
 __[JMockTestWithoutRunWithOrRuleAnnotation](bugpattern/JMockTestWithoutRunWithOrRuleAnnotation)__\
 jMock tests must have a @RunWith(JMock.class) annotation, or the Mockery field must have a @Rule JUnit annotation

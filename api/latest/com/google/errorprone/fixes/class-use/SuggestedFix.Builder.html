@@ -130,27 +130,33 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></td>
+<td class="colLast"><span class="typeNameLabel">SuggestedFix.Builder.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html#merge-com.google.errorprone.fixes.SuggestedFix.Builder-">merge</a></span>(<a href="../../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;other)</code>
+<div class="block">Merges all edits from <code>other</code> into <code>this</code>.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></td>
 <td class="colLast"><span class="typeNameLabel">SuggestedFix.Builder.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html#postfixWith-com.sun.source.tree.Tree-java.lang.String-">postfixWith</a></span>(com.sun.source.tree.Tree&nbsp;node,
            <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;postfix)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></td>
 <td class="colLast"><span class="typeNameLabel">SuggestedFix.Builder.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html#prefixWith-com.sun.source.tree.Tree-java.lang.String-">prefixWith</a></span>(com.sun.source.tree.Tree&nbsp;node,
           <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;prefix)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></td>
 <td class="colLast"><span class="typeNameLabel">SuggestedFix.Builder.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html#removeImport-java.lang.String-">removeImport</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;importString)</code>
 <div class="block">Remove an import statement as part of this SuggestedFix.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></td>
 <td class="colLast"><span class="typeNameLabel">SuggestedFix.Builder.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html#removeStaticImport-java.lang.String-">removeStaticImport</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;importString)</code>
 <div class="block">Remove a static import statement as part of this SuggestedFix.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></td>
 <td class="colLast"><span class="typeNameLabel">SuggestedFix.Builder.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html#replace-int-int-java.lang.String-">replace</a></span>(int&nbsp;startPos,
        int&nbsp;endPos,
@@ -159,12 +165,12 @@
  given string.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></td>
 <td class="colLast"><span class="typeNameLabel">SuggestedFix.Builder.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html#replace-com.sun.source.tree.Tree-java.lang.String-">replace</a></span>(com.sun.source.tree.Tree&nbsp;node,
        <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;replaceWith)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></td>
 <td class="colLast"><span class="typeNameLabel">SuggestedFix.Builder.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html#replace-com.sun.source.tree.Tree-java.lang.String-int-int-">replace</a></span>(com.sun.source.tree.Tree&nbsp;node,
        <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;replaceWith,
@@ -173,10 +179,25 @@
 <div class="block">Replace a tree node with a string, but adjust the start and end positions as well.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></td>
 <td class="colLast"><span class="typeNameLabel">SuggestedFix.Builder.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html#swap-com.sun.source.tree.Tree-com.sun.source.tree.Tree-">swap</a></span>(com.sun.source.tree.Tree&nbsp;node1,
     com.sun.source.tree.Tree&nbsp;node2)</code>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
+<caption><span>Methods in <a href="../../../../../com/google/errorprone/fixes/package-summary.html">com.google.errorprone.fixes</a> with parameters of type <a href="../../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></td>
+<td class="colLast"><span class="typeNameLabel">SuggestedFix.Builder.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html#merge-com.google.errorprone.fixes.SuggestedFix.Builder-">merge</a></span>(<a href="../../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;other)</code>
+<div class="block">Merges all edits from <code>other</code> into <code>this</code>.</div>
+</td>
 </tr>
 </tbody>
 </table>
