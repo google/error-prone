@@ -199,13 +199,7 @@ public @interface BugPattern {
    * A set of custom suppression annotation types to use if suppressibility is
    * Suppressibility.CUSTOM_ANNOTATION.
    */
-  Class<? extends Annotation>[] customSuppressionAnnotations() default NoCustomSuppression.class;
-
-  /**
-   * A dummy annotation to use when there is no custom suppression annotation.  The JLS does not
-   * allow null as a legal element value, so we have to use a sentinel value.
-   */
-  public @interface NoCustomSuppression {}
+  Class<? extends Annotation>[] customSuppressionAnnotations() default {};
 
   /**
    * Generate an explanation of how to suppress the check.

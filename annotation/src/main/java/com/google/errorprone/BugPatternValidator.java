@@ -66,22 +66,17 @@ public class BugPatternValidator {
         new HashSet<>(Arrays.asList(pattern.customSuppressionAnnotations()));
     switch (pattern.suppressibility()) {
       case CUSTOM_ANNOTATION:
-        if (customSuppressionAnnotations.size() == 1
-            && customSuppressionAnnotations.contains(BugPattern.NoCustomSuppression.class)) {
-          throw new ValidationException("Expected a custom suppression annotation but none was "
-              + "provided");
-        } else if (customSuppressionAnnotations.contains(BugPattern.NoCustomSuppression.class)) {
+        if (customSuppressionAnnotations.isEmpty()) {
           throw new ValidationException(
-              "Custom suppression annotation may not use " + "@NoCustomSuppression");
+              "Expected a custom suppression annotation but none was provided");
         } else if (customSuppressionAnnotations.contains(SuppressWarnings.class)) {
           throw new ValidationException(
-              "Custom suppression annotation may not use " + "@SuppressWarnings");
+              "Custom suppression annotation may not use @SuppressWarnings");
         }
         break;
       case SUPPRESS_WARNINGS:
       case UNSUPPRESSIBLE:
-        if (!(customSuppressionAnnotations.size() == 1
-            && customSuppressionAnnotations.contains(BugPattern.NoCustomSuppression.class))) {
+        if (!customSuppressionAnnotations.isEmpty()) {
           throw new ValidationException(
               String.format(
                   "Expected no custom suppression annotations but found these: %s",
