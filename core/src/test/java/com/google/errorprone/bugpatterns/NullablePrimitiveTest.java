@@ -44,4 +44,28 @@ public class NullablePrimitiveTest {
   public void testNegativeCase() {
     compilationHelper.addSourceFile("NullablePrimitiveNegativeCases.java").doTest();
   }
+  
+  @Test
+  public void negativeConstructor() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import javax.annotation.Nullable;",
+            "class Test {",
+            "  @Nullable public Test() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeVoid() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import javax.annotation.Nullable;",
+            "class Test {",
+            "  @Nullable void f() {}",
+            "}")
+        .doTest();
+  }
 }
