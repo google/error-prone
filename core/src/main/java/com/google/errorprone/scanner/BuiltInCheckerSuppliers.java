@@ -97,7 +97,9 @@ import com.google.errorprone.bugpatterns.NonCanonicalStaticMemberImport;
 import com.google.errorprone.bugpatterns.NonFinalCompileTimeConstant;
 import com.google.errorprone.bugpatterns.NonOverridingEquals;
 import com.google.errorprone.bugpatterns.NonRuntimeAnnotation;
+import com.google.errorprone.bugpatterns.NullableConstructor;
 import com.google.errorprone.bugpatterns.NullablePrimitive;
+import com.google.errorprone.bugpatterns.NullableVoid;
 import com.google.errorprone.bugpatterns.NumericEquality;
 import com.google.errorprone.bugpatterns.OptionalEquality;
 import com.google.errorprone.bugpatterns.Overrides;
@@ -247,6 +249,8 @@ public class BuiltInCheckerSuppliers {
           MultipleTopLevelClasses.class,
           NonAtomicVolatileUpdate.class,
           NonOverridingEquals.class,
+          NullableConstructor.class,
+          NullableVoid.class,
           PreconditionsInvalidPlaceholder.class,
           RequiredModifiersChecker.class,
           StaticAccessedFromInstance.class,
