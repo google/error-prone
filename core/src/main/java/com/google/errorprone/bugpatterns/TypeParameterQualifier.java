@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -40,7 +40,7 @@ import javax.lang.model.element.ElementKind;
   name = "TypeParameterQualifier",
   summary = "Type parameter used as type qualifier",
   category = JDK,
-  severity = WARNING,
+  severity = ERROR,
   maturity = MATURE
 )
 public class TypeParameterQualifier extends BugChecker implements MemberSelectTreeMatcher {

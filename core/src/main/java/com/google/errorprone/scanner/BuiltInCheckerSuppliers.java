@@ -233,6 +233,7 @@ public class BuiltInCheckerSuppliers {
           StringBuilderInitWithChar.class,
           SuppressWarningsDeprecated.class,
           TryFailThrowable.class,
+          TypeParameterQualifier.class,
           UnusedAnonymousClass.class);
 
   /**
@@ -256,7 +257,6 @@ public class BuiltInCheckerSuppliers {
           RequiredModifiersChecker.class,
           StaticAccessedFromInstance.class,
           StringEquality.class,
-          TypeParameterQualifier.class,
           WaitNotInLoop.class,
           SynchronizeOnNonFinalField.class,
           TypeParameterUnusedInFormals.class);
