@@ -121,6 +121,7 @@ import com.google.errorprone.bugpatterns.StringBuilderInitWithChar;
 import com.google.errorprone.bugpatterns.StringEquality;
 import com.google.errorprone.bugpatterns.SuppressWarningsDeprecated;
 import com.google.errorprone.bugpatterns.TryFailThrowable;
+import com.google.errorprone.bugpatterns.TypeParameterQualifier;
 import com.google.errorprone.bugpatterns.TypeParameterUnusedInFormals;
 import com.google.errorprone.bugpatterns.UnnecessaryStaticImport;
 import com.google.errorprone.bugpatterns.UnnecessaryTypeArgument;
@@ -250,6 +251,7 @@ public class BuiltInCheckerSuppliers {
           RequiredModifiersChecker.class,
           StaticAccessedFromInstance.class,
           StringEquality.class,
+          TypeParameterQualifier.class,
           WaitNotInLoop.class,
           SynchronizeOnNonFinalField.class,
           TypeParameterUnusedInFormals.class);
