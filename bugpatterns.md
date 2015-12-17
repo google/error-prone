@@ -56,6 +56,15 @@ Static import of member uses non-canonical name
 __[NonOverridingEquals](bugpattern/NonOverridingEquals)__\
 equals method doesn&#39;t override Object.equals
 
+__[NullableConstructor](bugpattern/NullableConstructor)__\
+Constructors should be annotated with @Nullable since they cannot return null
+
+__[NullablePrimitive](bugpattern/NullablePrimitive)__\
+@Nullable should not be used for primitive types since they cannot be null
+
+__[NullableVoid](bugpattern/NullableVoid)__\
+void-returning methods should not be annotated with @Nullable, since they cannot return null
+
 __[PreconditionsInvalidPlaceholder](bugpattern/PreconditionsInvalidPlaceholder)__\
 Preconditions only accepts the %s placeholder in error message strings
 
@@ -229,6 +238,9 @@ Suppressing &quot;deprecated&quot; is probably a typo for &quot;deprecation&quot
 __[TryFailThrowable](bugpattern/TryFailThrowable)__\
 Catching Throwable masks failures from fail() or assert*() in the try block
 
+__[TypeParameterQualifier](bugpattern/TypeParameterQualifier)__\
+Type parameter used as type qualifier
+
 __[UnnecessaryTypeArgument](bugpattern/UnnecessaryTypeArgument)__\
 Non-generic methods should not be invoked with type arguments
 
@@ -254,9 +266,6 @@ Although Guice allows injecting final fields, doing so is not recommended becaus
 
 __[MissingFail](bugpattern/MissingFail)__\
 Not calling fail() when expecting an exception masks bugs
-
-__[NullablePrimitive](bugpattern/NullablePrimitive)__\
-@Nullable should not be used for primitive types.
 
 __[OverridesGuiceInjectableMethod](bugpattern/OverridesGuiceInjectableMethod)__\
 This method is not annotated with @Inject, but it overrides a method that is annotated with @com.google.inject.Inject. Guice will inject this method,and it is recommended to annotate it explicitly.

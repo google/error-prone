@@ -1,10 +1,10 @@
 ---
 title: NullablePrimitive
-summary: '@Nullable should not be used for primitive types.'
+summary: '@Nullable should not be used for primitive types since they cannot be null'
 layout: bugpattern
 category: JDK
 severity: WARNING
-maturity: EXPERIMENTAL
+maturity: MATURE
 ---
 
 <!--
@@ -13,7 +13,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-Primitives can never be null, annotating a primitive with @Nullable may be hinting at an intent that cannot be fulfilled.
+Primitives can never be null.
 
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("NullablePrimitive")` annotation to the enclosing element.
