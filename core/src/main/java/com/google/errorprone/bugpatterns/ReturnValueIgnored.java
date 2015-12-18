@@ -19,12 +19,11 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
+import static com.google.errorprone.matchers.Matchers.allOf;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.ExpressionTree;
@@ -41,14 +40,13 @@ import java.util.Set;
 @BugPattern(name = "ReturnValueIgnored",
     altNames = {"ResultOfMethodCallIgnored", "CheckReturnValue"},
     summary = "Return value of this method must be used",
-    explanation = "Certain library methods do nothing useful if their return value is ignored. " +
-        "For example, String.trim() has no side effects, and you must store the return value " +
-        "of String.intern() to access the interned string.  This check encodes a list of " +
-        "methods in the JDK whose return value must be used and issues an error if they " +
-        "are not.",
+    explanation = "Certain library methods do nothing useful if their return value is ignored. "
+        + "For example, String.trim() has no side effects, and you must store the return value "
+        + "of String.intern() to access the interned string.  This check encodes a list of "
+        + "methods in the JDK whose return value must be used and issues an error if they "
+        + "are not.",
     category = JDK, severity = ERROR, maturity = MATURE)
 public class ReturnValueIgnored extends AbstractReturnValueIgnored {
-
   /**
    * A set of types which this checker should examine method calls on.
    */
@@ -65,10 +63,8 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
    * String).
    */
   @Override
-  public Matcher<MethodInvocationTree> specializedMatcher() {
-    return methodSelect(Matchers.<ExpressionTree>allOf(
-        methodReceiverHasType(typesToCheck),
-        methodReturnsSameTypeAsReceiver()));
+  public Matcher<? super MethodInvocationTree> specializedMatcher() {
+    return allOf(methodReceiverHasType(typesToCheck), methodReturnsSameTypeAsReceiver());
   }
 
   /**
@@ -78,8 +74,8 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
     return new Matcher<ExpressionTree>() {
       @Override
       public boolean matches(ExpressionTree expressionTree, VisitorState state) {
-        return state.getTypes().isSameType(ASTHelpers.getReceiverType(expressionTree),
-            ASTHelpers.getReturnType(expressionTree));
+        return state.getTypes().isSameType(
+            ASTHelpers.getReceiverType(expressionTree), ASTHelpers.getReturnType(expressionTree));
       }
     };
   }
@@ -96,5 +92,4 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
       }
     };
   }
-
 }

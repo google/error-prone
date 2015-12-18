@@ -133,6 +133,7 @@ import com.google.errorprone.bugpatterns.WaitNotInLoop;
 import com.google.errorprone.bugpatterns.WildcardImport;
 import com.google.errorprone.bugpatterns.WrongParameterPackage;
 import com.google.errorprone.bugpatterns.android.MislabeledAndroidString;
+import com.google.errorprone.bugpatterns.android.RectIntersectReturnValueIgnored;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionIncompatibleType;
 import com.google.errorprone.bugpatterns.threadsafety.DoubleCheckedLocking;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByChecker;
@@ -314,6 +315,7 @@ public class BuiltInCheckerSuppliers {
           PrimitiveArrayPassedToVarargsMethod.class,
           ProtoFieldPreconditionsCheckNotNull.class,
           ProtoStringFieldReferenceEquality.class,
+          RectIntersectReturnValueIgnored.class,
           SelfEquality.class,
           UnlockMethodChecker.class,
           UnnecessaryStaticImport.class,

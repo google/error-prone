@@ -46,7 +46,7 @@ import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-abstract class AbstractReturnValueIgnored extends BugChecker
+public abstract class AbstractReturnValueIgnored extends BugChecker
     implements MethodInvocationTreeMatcher {
 
   @Override
@@ -67,7 +67,7 @@ abstract class AbstractReturnValueIgnored extends BugChecker
    * Match whatever additional conditions concrete subclasses want to match (a list of known
    * side-effect-free methods, has a @CheckReturnValue annotation, etc.).
    */
-  public abstract Matcher<MethodInvocationTree> specializedMatcher();
+  public abstract Matcher<? super MethodInvocationTree> specializedMatcher();
 
   private static Matcher<ExpressionTree> identifierHasName(final String name) {
     return new Matcher<ExpressionTree>() {
