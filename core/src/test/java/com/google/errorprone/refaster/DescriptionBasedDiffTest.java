@@ -40,6 +40,8 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
 
   private static final String[] lines = {
     "package foo.bar;",
+    "import com.foo.Bar;",
+    "",
     "class Foo {",
     "  public static void main(String[] args) {",
     "    System.out.println(\"foo\");",
@@ -62,12 +64,14 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
   @Test
   public void oneDiff() {
     DescriptionBasedDiff diff = DescriptionBasedDiff.create(compilationUnit);
-    diff.onDescribed(new Description(null, "message", SuggestedFix.replace(96, 99, "bar"),
+    diff.onDescribed(new Description(null, "message", SuggestedFix.replace(117, 120, "bar"),
         SeverityLevel.NOT_A_PROBLEM));
     diff.applyDifferences(sourceFile);
     assertThat(sourceFile.getLines())
         .containsExactly(
             "package foo.bar;",
+            "import com.foo.Bar;",
+            "",
             "class Foo {",
             "  public static void main(String[] args) {",
             "    System.out.println(\"bar\");",
@@ -81,14 +85,16 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
     DescriptionBasedDiff diff = DescriptionBasedDiff.create(compilationUnit);
     diff.onDescribed(new Description(null, "message", 
         SuggestedFix.builder()
-            .replace(83, 86, "longer")
-            .replace(96, 99, "bar")
+            .replace(104, 107, "longer")
+            .replace(117, 120, "bar")
             .build(),
         SeverityLevel.NOT_A_PROBLEM));
     diff.applyDifferences(sourceFile);
     assertThat(sourceFile.getLines())
         .containsExactly(
             "package foo.bar;",
+            "import com.foo.Bar;",
+            "",
             "class Foo {",
             "  public static void main(String[] args) {",
             "    System.longer.println(\"bar\");",
@@ -107,8 +113,30 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
     assertThat(sourceFile.getLines())
         .containsExactly(
             "package foo.bar;",
-            "",
             "import com.google.foo.Bar;",
+            "",
+            "import com.foo.Bar;",
+            "",
+            "class Foo {",
+            "  public static void main(String[] args) {",
+            "    System.out.println(\"foo\");",
+            "  }",
+            "}")
+        .inOrder();
+  }
+
+  @Test
+  public void removeImport() {
+    DescriptionBasedDiff diff = DescriptionBasedDiff.create(compilationUnit);
+    diff.onDescribed(new Description(null, "message",
+        SuggestedFix.builder().removeImport("com.foo.Bar").build(),
+        SeverityLevel.NOT_A_PROBLEM));
+    diff.applyDifferences(sourceFile);
+    assertThat(sourceFile.getLines())
+        .containsExactly(
+            "package foo.bar;",
+            "",
+            "",
             "class Foo {",
             "  public static void main(String[] args) {",
             "    System.out.println(\"foo\");",
@@ -122,8 +150,8 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
     DescriptionBasedDiff diff = DescriptionBasedDiff.create(compilationUnit);
     diff.onDescribed(new Description(null, "message", 
         SuggestedFix.builder()
-            .replace(83, 86, "longer")
-            .replace(96, 99, "bar")
+            .replace(104, 107, "longer")
+            .replace(117, 120, "bar")
             .addImport("com.google.foo.Bar")
             .build(),
         SeverityLevel.NOT_A_PROBLEM));
@@ -131,8 +159,10 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
     assertThat(sourceFile.getLines())
         .containsExactly(
             "package foo.bar;",
-            "",
             "import com.google.foo.Bar;",
+            "",
+            "import com.foo.Bar;",
+            "",
             "class Foo {",
             "  public static void main(String[] args) {",
             "    System.longer.println(\"bar\");",
