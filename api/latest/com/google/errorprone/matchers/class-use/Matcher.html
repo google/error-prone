@@ -89,16 +89,20 @@
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><a href="#com.google.errorprone.bugpatterns.android">com.google.errorprone.bugpatterns.android</a></td>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><a href="#com.google.errorprone.matchers">com.google.errorprone.matchers</a></td>
 <td class="colLast">
 <div class="block">A predicate DSL for matching javac AST nodes.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><a href="#com.google.errorprone.matchers.method">com.google.errorprone.matchers.method</a></td>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><a href="#com.google.errorprone.util">com.google.errorprone.util</a></td>
 <td class="colLast">
 <div class="block">Utility code.</div>
@@ -162,18 +166,43 @@
 <td class="colLast"><span class="typeNameLabel">JUnit4TearDownNotRun.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/JUnit4TearDownNotRun.html#methodMatcher--">methodMatcher</a></span>()</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code><a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodInvocationTree&gt;</code></td>
+<td class="colFirst"><code><a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super com.sun.source.tree.MethodInvocationTree&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">ReturnValueIgnored.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ReturnValueIgnored.html#specializedMatcher--">specializedMatcher</a></span>()</code>
 <div class="block">Return a matcher for method invocations in which the method being called is on an instance of
  a type in the typesToCheck set and returns the same type (e.g.</div>
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>abstract <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super com.sun.source.tree.MethodInvocationTree&gt;</code></td>
+<td class="colLast"><span class="typeNameLabel">AbstractReturnValueIgnored.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html#specializedMatcher--">specializedMatcher</a></span>()</code>
+<div class="block">Match whatever additional conditions concrete subclasses want to match (a list of known
+ side-effect-free methods, has a @CheckReturnValue annotation, etc.).</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodInvocationTree&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">CheckReturnValue.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/CheckReturnValue.html#specializedMatcher--">specializedMatcher</a></span>()</code>
 <div class="block">Return a matcher for method invocations in which the method being called has the
  <code>@CheckReturnValue</code> annotation.</div>
 </td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.android">
+<!--   -->
+</a>
+<h3>Uses of <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a> in <a href="../../../../../com/google/errorprone/bugpatterns/android/package-summary.html">com.google.errorprone.bugpatterns.android</a></h3>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
+<caption><span>Methods in <a href="../../../../../com/google/errorprone/bugpatterns/android/package-summary.html">com.google.errorprone.bugpatterns.android</a> that return <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super com.sun.source.tree.MethodInvocationTree&gt;</code></td>
+<td class="colLast"><span class="typeNameLabel">RectIntersectReturnValueIgnored.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/android/RectIntersectReturnValueIgnored.html#specializedMatcher--">specializedMatcher</a></span>()</code>&nbsp;</td>
 </tr>
 </tbody>
 </table>

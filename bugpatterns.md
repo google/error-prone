@@ -373,6 +373,9 @@ Method parameter has wrong package
 __[ProtoStringFieldReferenceEquality](bugpattern/ProtoStringFieldReferenceEquality)__\
 Comparing protobuf fields of type String using reference equality
 
+__[RectIntersectReturnValueIgnored](bugpattern/RectIntersectReturnValueIgnored)__\
+Return value of android.graphics.Rect.intersect() must be checked
+
 __[SelfEquality](bugpattern/SelfEquality)__\
 Variable compared to itself
 
