@@ -20,6 +20,9 @@ import static com.google.errorprone.BugPattern.Category.ONE_OFF;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.inLoop;
+import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
+import static com.google.errorprone.matchers.Matchers.methodReturns;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
@@ -168,18 +171,72 @@ public class MatchersTest {
 
   @Test
   public void methodWithClassAndName() {
-    ScannerSupplier scannerSupplier =
-        ScannerSupplier.fromScanner(
-            new ErrorProneScanner(
-                new MethodWithClassAndNameChecker(
-                    "com.google.errorprone.foo.bar.Test", "myMethod")));
-    CompilationTestHelper.newInstance(scannerSupplier, getClass())
+    Matcher<MethodTree> matcher =
+        Matchers.methodWithClassAndName("com.google.errorprone.foo.bar.Test", "myMethod");
+    CompilationTestHelper.newInstance(methodTreeCheckerSupplier(matcher), getClass())
         .addSourceLines(
             "com/google/errorprone/foo/bar/Test.java",
             "package com.google.errorprone.foo.bar;",
             "public class Test {",
             "  // BUG: Diagnostic contains:",
             "  public void myMethod() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void methodReturnsSubtype() {
+    Matcher<MethodTree> matcher = methodReturns(isSubtypeOf("java.util.List"));
+    CompilationTestHelper.newInstance(methodTreeCheckerSupplier(matcher), getClass())
+        .addSourceLines(
+            "test/MethodReturnsSubtypeTest.java",
+            "package test;",
+            "public class MethodReturnsSubtypeTest {",
+            "  // BUG: Diagnostic contains:",
+            "  public java.util.ArrayList<String> matches() {",
+            "    return null;",
+            "  }",
+            "  public java.util.HashSet<String> doesntMatch() {",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void methodReturnsType() {
+    Matcher<MethodTree> matcher = methodReturns(typeFromString("java.lang.Number"));
+    CompilationTestHelper.newInstance(methodTreeCheckerSupplier(matcher), getClass())
+        .addSourceLines(
+            "test/MethodReturnsSubtypeTest.java",
+            "package test;",
+            "public class MethodReturnsSubtypeTest {",
+            "  public java.lang.Integer doesntMatch() {",
+            "    return 0;",
+            "  }",
+            "  // BUG: Diagnostic contains:",
+            "  public java.lang.Number matches() {",
+            "    return 0;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void methodReturnsNonPrimitiveType() {
+    Matcher<MethodTree> matcher = Matchers.methodReturnsNonPrimitiveType();
+    CompilationTestHelper.newInstance(methodTreeCheckerSupplier(matcher), getClass())
+        .addSourceLines(
+            "test/MethodReturnsSubtypeTest.java",
+            "package test;",
+            "public class MethodReturnsSubtypeTest {",
+            "  public int doesntMatch() {",
+            "    return 0;",
+            "  }",
+            "  // BUG: Diagnostic contains:",
+            "  public String matches() {",
+            "    return \"\";",
+            "  }",
             "}")
         .doTest();
   }
@@ -194,22 +251,23 @@ public class MatchersTest {
     }
   }
 
-  /**
-   * {@link BugChecker} to use for {@link Matchers#methodWithClassAndName} tests.
-   */
+  private static ScannerSupplier methodTreeCheckerSupplier(Matcher<MethodTree> matcher) {
+    return ScannerSupplier.fromScanner(new ErrorProneScanner(new MethodTreeChecker(matcher)));
+  }
+
   @BugPattern(
-    name = "MethodWithClassAndNameChecker",
+    name = "MethodTreeChecker",
     summary = "Checker that flags the given method declaration if the given matcher matches",
     category = ONE_OFF,
     maturity = MATURE,
     severity = ERROR
   )
-  public static class MethodWithClassAndNameChecker extends BugChecker
+  static class MethodTreeChecker extends BugChecker
       implements MethodTreeMatcher {
     private final Matcher<MethodTree> matcher;
 
-    public MethodWithClassAndNameChecker(String className, String methodName) {
-      matcher = Matchers.methodWithClassAndName(className, methodName);
+    public MethodTreeChecker(Matcher<MethodTree> matcher) {
+      this.matcher = matcher;
     }
 
     @Override

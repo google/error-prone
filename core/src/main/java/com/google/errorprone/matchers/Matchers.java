@@ -813,7 +813,7 @@ public class Matchers {
     );
   }
 
-  public static Matcher<MethodTree> methodReturns(final Type returnType) {
+  public static Matcher<MethodTree> methodReturns(final Matcher<? super Tree> returnTypeMatcher) {
     return new Matcher<MethodTree>() {
       @Override
       public boolean matches(MethodTree methodTree, VisitorState state) {
@@ -822,35 +822,24 @@ public class Matchers {
           // This is a constructor, it has no return type.
           return false;
         }
-        Type methodReturnType = ASTHelpers.getType(returnTree);
-        if (methodReturnType == null) {
-          return false;
-        }
-        return state.getTypes().isSameType(methodReturnType, returnType);
+        return returnTypeMatcher.matches(returnTree, state);
       }
     };
   }
 
+  public static Matcher<MethodTree> methodReturns(final Type returnType) {
+    return methodReturns(isSameType(returnType));
+  }
+
   public static Matcher<MethodTree> methodReturns(final Supplier<Type> returnType) {
-    return new Matcher<MethodTree>() {
-      @Override
-      public boolean matches(MethodTree methodTree, VisitorState state) {
-        return methodReturns(returnType.get(state)).matches(methodTree, state);
-      }
-    };
+    return methodReturns(isSameType(returnType));
   }
 
   /**
    * Match a method that returns a non-primitive type.
    */
   public static Matcher<MethodTree> methodReturnsNonPrimitiveType() {
-    return new Matcher<MethodTree>() {
-      @Override
-      public boolean matches(MethodTree methodTree, VisitorState state) {
-        Tree returnTree = methodTree.getReturnType();
-        return returnTree == null ? false : !((JCTree) returnTree).type.isPrimitive();
-      }
-    };
+    return methodReturns(not(isPrimitiveType()));
   }
 
   /**
