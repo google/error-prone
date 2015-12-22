@@ -47,6 +47,7 @@ import com.google.errorprone.bugpatterns.ElementsCountedInLoop;
 import com.google.errorprone.bugpatterns.EmptyIfStatement;
 import com.google.errorprone.bugpatterns.EmptyTopLevelDeclaration;
 import com.google.errorprone.bugpatterns.EqualsHashCode;
+import com.google.errorprone.bugpatterns.EqualsIncompatibleType;
 import com.google.errorprone.bugpatterns.EqualsNaN;
 import com.google.errorprone.bugpatterns.FallThroughSuppression;
 import com.google.errorprone.bugpatterns.Finally;
@@ -278,6 +279,7 @@ public class BuiltInCheckerSuppliers {
           DoubleCheckedLocking.class,
           EmptyIfStatement.class,
           EmptyTopLevelDeclaration.class,
+          EqualsIncompatibleType.class,
           FallThroughSuppression.class,
           GuiceAssistedParameters.class,
           GuiceInjectOnFinalField.class,

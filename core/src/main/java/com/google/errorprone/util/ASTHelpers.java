@@ -16,7 +16,10 @@
 
 package com.google.errorprone.util;
 
+import static com.sun.tools.javac.code.Scope.LookupKind.NON_RECURSIVE;
+
 import com.google.common.base.CharMatcher;
+import com.google.common.base.Predicate;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis;
@@ -59,6 +62,8 @@ import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import com.sun.tools.javac.tree.JCTree.JCPackageDecl;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
+import com.sun.tools.javac.util.Filter;
+import com.sun.tools.javac.util.Name;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayDeque;
@@ -77,7 +82,6 @@ import javax.lang.model.type.TypeKind;
  * This class contains utility methods to work with the javac AST.
  */
 public class ASTHelpers {
-
   /**
    * Determines whether two expressions refer to the same variable. Note that returning false
    * doesn't necessarily mean the expressions do *not* refer to the same field. We don't attempt
@@ -85,8 +89,8 @@ public class ASTHelpers {
    */
   public static boolean sameVariable(ExpressionTree expr1, ExpressionTree expr2) {
     // Throw up our hands if we're not comparing identifiers and/or field accesses.
-    if ((expr1.getKind() != Kind.IDENTIFIER && expr1.getKind() != Kind.MEMBER_SELECT) ||
-        (expr2.getKind() != Kind.IDENTIFIER && expr2.getKind() != Kind.MEMBER_SELECT)) {
+    if ((expr1.getKind() != Kind.IDENTIFIER && expr1.getKind() != Kind.MEMBER_SELECT)
+        || (expr2.getKind() != Kind.IDENTIFIER && expr2.getKind() != Kind.MEMBER_SELECT)) {
       return false;
     }
 
@@ -103,8 +107,8 @@ public class ASTHelpers {
       return sym1.equals(sym2);
     } else if (expr1.getKind() == Kind.MEMBER_SELECT && expr2.getKind() == Kind.MEMBER_SELECT) {
       // foo.baz.bar == foo.baz.bar?
-      return sym1.equals(sym2) &&
-          sameVariable(((JCFieldAccess) expr1).selected,((JCFieldAccess) expr2).selected);
+      return sym1.equals(sym2)
+          && sameVariable(((JCFieldAccess) expr1).selected, ((JCFieldAccess) expr2).selected);
     } else {
       // this.foo == foo?
       ExpressionTree selected = null;
@@ -189,8 +193,7 @@ public class ASTHelpers {
    * the path from that node to the top-level node in the path (typically a
    * {@code CompilationUnitTree}).
    */
-  public static <T> TreePath findPathFromEnclosingNodeToTopLevel(TreePath path,
-        Class<T> klass) {
+  public static <T> TreePath findPathFromEnclosingNodeToTopLevel(TreePath path, Class<T> klass) {
     while (path != null && !(klass.isInstance(path.getLeaf()))) {
       path = path.getParentPath();
     }
@@ -224,8 +227,8 @@ public class ASTHelpers {
    */
   public static ExpressionTree getRootAssignable(MethodInvocationTree methodInvocationTree) {
     if (!(methodInvocationTree instanceof JCMethodInvocation)) {
-      throw new IllegalArgumentException("Expected type to be JCMethodInvocation, but was "
-          + methodInvocationTree.getClass());
+      throw new IllegalArgumentException(
+          "Expected type to be JCMethodInvocation, but was " + methodInvocationTree.getClass());
     }
 
     // Check for bare method call, e.g. intern().
@@ -315,11 +318,9 @@ public class ASTHelpers {
     } else if (expressionTree instanceof MemberSelectTree) {
       return ((MemberSelectTree) expressionTree).getExpression();
     } else {
-      throw new IllegalStateException(
-          String.format(
-              "Expected expression '%s' to be a method invocation or field access, but was %s",
-              expressionTree,
-              expressionTree.getKind()));
+      throw new IllegalStateException(String.format(
+          "Expected expression '%s' to be a method invocation or field access, but was %s",
+          expressionTree, expressionTree.getKind()));
     }
   }
 
@@ -333,15 +334,15 @@ public class ASTHelpers {
    * @param state the VisitorState
    * @return a list of matched operands, or null if at least one did not match
    */
-  public static List<ExpressionTree> matchBinaryTree(BinaryTree tree,
-      List<Matcher<ExpressionTree>> matchers, VisitorState state) {
+  public static List<ExpressionTree> matchBinaryTree(
+      BinaryTree tree, List<Matcher<ExpressionTree>> matchers, VisitorState state) {
     ExpressionTree leftOperand = tree.getLeftOperand();
     ExpressionTree rightOperand = tree.getRightOperand();
-    if (matchers.get(0).matches(leftOperand, state) &&
-        matchers.get(1).matches(rightOperand, state)) {
+    if (matchers.get(0).matches(leftOperand, state)
+        && matchers.get(1).matches(rightOperand, state)) {
       return Arrays.asList(leftOperand, rightOperand);
-    } else if (matchers.get(0).matches(rightOperand, state) &&
-        matchers.get(1).matches(leftOperand, state)) {
+    } else if (matchers.get(0).matches(rightOperand, state)
+        && matchers.get(1).matches(leftOperand, state)) {
       return Arrays.asList(rightOperand, leftOperand);
     }
     return null;
@@ -403,6 +404,38 @@ public class ASTHelpers {
   }
 
   /**
+   * Finds all methods in any superclass of {@code startClass} with a certain {@code name} that
+   * match the given {@code predicate}.
+   *
+   * @return The (possibly empty) set of methods in any superclass that match {@code predicate} and
+   * have the given {@code name}.
+   */
+  public static Set<MethodSymbol> findMatchingMethods(
+      Name name, final Predicate<MethodSymbol> predicate, Type startClass, Types types) {
+    final Filter<Symbol> filter = new Filter<Symbol>() {
+      @Override
+      public boolean accepts(Symbol symbol) {
+        if (!(symbol instanceof MethodSymbol)) {
+          return false;
+        }
+        return predicate.apply((MethodSymbol) symbol);
+      }
+    };
+    Set<MethodSymbol> matchingMethods = new HashSet<>();
+    // Iterate over all classes and interfaces that startClass inherits from.
+    for (Type superClass : types.closure(startClass)) {
+      TypeSymbol superClassSymbol = superClass.tsym;
+      // Iterate over all the methods declared in superClass.
+      for (Symbol symbol :
+          superClassSymbol.members().getSymbolsByName(name, filter, NON_RECURSIVE)) {
+        // By definition of the filter, we know that the symbol is a MethodSymbol.
+        matchingMethods.add((MethodSymbol) symbol);
+      }
+    }
+    return matchingMethods;
+  }
+
+  /**
    * Find a method in the enclosing class's superclass that this method overrides.
    *
    * @return A superclass method that is overridden by {@code method}
@@ -413,8 +446,7 @@ public class ASTHelpers {
       return null;
     }
     for (Symbol sym : superClass.members().getSymbols()) {
-      if (sym.name.contentEquals(method.name)
-          && method.overrides(sym, superClass, types, true)) {
+      if (sym.name.contentEquals(method.name) && method.overrides(sym, superClass, types, true)) {
         return (MethodSymbol) sym;
       }
     }
@@ -513,14 +545,14 @@ public class ASTHelpers {
   /** Returns true if the given tree is a generated constructor. **/
   public static boolean isGeneratedConstructor(MethodTree tree) {
     if (!(tree instanceof JCMethodDecl)) {
-        return false;
+      return false;
     }
     return (((JCMethodDecl) tree).mods.flags & Flags.GENERATEDCONSTR) == Flags.GENERATEDCONSTR;
   }
 
   /**
-   * Returns the {@code Type} for the given type {@code Tree} or {@code null} if the type could not
-   * be determined. The input {@code Tree} typically comes from a method like
+   * Returns the {@code Type} for the given type {@code Tree} or {@code null} if the type could
+   * not be determined. The input {@code Tree} typically comes from a method like
    * {@link VariableTree#getType()} or {@link MethodTree#getReturnType()}.
    */
   public static Type getType(Tree tree) {
@@ -530,10 +562,10 @@ public class ASTHelpers {
       return null;
     }
   }
-  
+
   /**
-   * Returns the {@code ClassType} for the given type {@code ClassTree} or {@code null} if the type
-   * could not be determined.
+   * Returns the {@code ClassType} for the given type {@code ClassTree} or {@code null} if the
+   * type could not be determined.
    */
   public static ClassType getType(ClassTree tree) {
     if (!(tree instanceof JCClassDecl)) {
@@ -545,7 +577,6 @@ public class ASTHelpers {
     }
     return (ClassType) type;
   }
-
 
   public static String getAnnotationName(AnnotationTree tree) {
     Symbol sym = getSymbol(tree);
@@ -576,8 +607,8 @@ public class ASTHelpers {
    * Returns the {@link Nullness} for an expression as determined by the nullness dataflow
    * analysis.
    */
-  public static Nullness getNullnessValue(ExpressionTree expr, VisitorState state,
-      NullnessAnalysis nullnessAnalysis) {
+  public static Nullness getNullnessValue(
+      ExpressionTree expr, VisitorState state, NullnessAnalysis nullnessAnalysis) {
     TreePath pathToExpr = new TreePath(state.getPath(), expr);
     return nullnessAnalysis.getNullness(pathToExpr, state.context);
   }
@@ -586,9 +617,7 @@ public class ASTHelpers {
    * Returns the constant value of a tree, if it has one, or null otherwise.
    */
   public static Object constValue(JCTree tree) {
-    return (tree instanceof JCLiteral)
-        ? ((JCLiteral) tree).value
-        : tree.type.constValue();
+    return (tree instanceof JCLiteral) ? ((JCLiteral) tree).value : tree.type.constValue();
   }
 
   /**
@@ -611,6 +640,17 @@ public class ASTHelpers {
     }
     Types types = state.getTypes();
     return types.isSubtype(types.erasure(s), types.erasure(t));
+  }
+
+  /**
+   * Returns true if {@code erasure(s)} is castable to {@code erasure(t)}.
+   */
+  public static boolean isCastable(Type s, Type t, VisitorState state) {
+    if (s == null || t == null) {
+      return false;
+    }
+    Types types = state.getTypes();
+    return types.isCastable(types.erasure(s), types.erasure(t));
   }
 
   /** Returns true if {@code erasure(s) == erasure(t)}. */
@@ -637,8 +677,8 @@ public class ASTHelpers {
   }
 
   /**
-   * Returns the upper bound of a type if it has one, or the type itself if not.  Correctly handles
-   * wildcards and capture variables.
+   * Returns the upper bound of a type if it has one, or the type itself if not. Correctly
+   * handles wildcards and capture variables.
    */
   public static Type getUpperBound(Type type, Types types) {
     if (type.hasTag(TypeTag.WILDCARD)) {
