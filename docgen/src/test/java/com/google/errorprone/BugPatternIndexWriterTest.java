@@ -72,15 +72,15 @@ public class BugPatternIndexWriterTest {
                 + "\n"
                 + "## On by default : ERROR\n"
                 + "\n"
-                + "__[BugPatternC](bugpattern/BugPatternC)__\\\n"
+                + "__[BugPatternC](bugpattern/BugPatternC)__ \\\n"
                 + "mature\n"
                 + "\n"
                 + "## Experimental : ERROR\n"
                 + "\n"
-                + "__[BugPatternA](bugpattern/BugPatternA)__\\\n"
+                + "__[BugPatternA](bugpattern/BugPatternA)__ \\\n"
                 + "Here&#39;s the &quot;interesting&quot; summary\n"
                 + "\n"
-                + "__[BugPatternB](bugpattern/BugPatternB)__\\\n"
+                + "__[BugPatternB](bugpattern/BugPatternB)__ \\\n"
                 + "{summary2}\n"
                 + "\n"));
 
