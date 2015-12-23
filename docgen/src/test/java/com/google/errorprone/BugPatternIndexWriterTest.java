@@ -16,12 +16,11 @@
 
 package com.google.errorprone;
 
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static com.google.common.truth.Truth.assertThat;
 
 import com.google.errorprone.BugPattern.MaturityLevel;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.DocGenTool.Target;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,8 +31,9 @@ import java.util.Arrays;
 
 @RunWith(JUnit4.class)
 public class BugPatternIndexWriterTest {
+
   @Test
-  public void dump() throws Exception {
+  public void dumpInternal() throws Exception {
     StringWriter writer = new StringWriter();
 
     BugPatternInstance pattern1 = new BugPatternInstance();
@@ -54,11 +54,66 @@ public class BugPatternIndexWriterTest {
     pattern3.name = "BugPatternC";
     pattern3.summary = "mature";
 
-    new BugPatternIndexWriter().dump(Arrays.asList(pattern3, pattern2, pattern1), writer, false);
-    assertThat(
-        writer.toString(),
-        is(
-            "\n"
+    new BugPatternIndexWriter()
+        .dump(Arrays.asList(pattern3, pattern2, pattern1), writer, Target.INTERNAL);
+    assertThat(writer.toString())
+        .isEqualTo(
+            "# Bug patterns\n"
+                + "\n"
+                + "This list is auto-generated from our sources. Each bug pattern includes code\n"
+                + "examples of both positive and negative cases; these examples are used in our\n"
+                + "regression test suite.\n"
+                + "\n"
+                + "Patterns which are marked __Experimental__ will not be evaluated against your\n"
+                + "code, unless you specifically configure Error Prone. The default checks are\n"
+                + "marked __On by default__, and each release promotes some experimental checks\n"
+                + "after we've vetted them against Google's codebase.\n"
+                + "\n"
+                + "## On by default : ERROR\n"
+                + "\n"
+                + "__[BugPatternC](bugpattern/BugPatternC.md)__ \\\n"
+                + "mature\n"
+                + "\n"
+                + "## Experimental : ERROR\n"
+                + "\n"
+                + "__[BugPatternA](bugpattern/BugPatternA.md)__ \\\n"
+                + "Here&#39;s the &quot;interesting&quot; summary\n"
+                + "\n"
+                + "__[BugPatternB](bugpattern/BugPatternB.md)__ \\\n"
+                + "{summary2}\n"
+                + "\n");
+  }
+
+  @Test
+  public void dumpExternal() throws Exception {
+    StringWriter writer = new StringWriter();
+
+    BugPatternInstance pattern1 = new BugPatternInstance();
+    pattern1.severity = SeverityLevel.ERROR;
+    pattern1.maturity = MaturityLevel.EXPERIMENTAL;
+    pattern1.name = "BugPatternA";
+    pattern1.summary = "Here's the \"interesting\" summary";
+
+    BugPatternInstance pattern2 = new BugPatternInstance();
+    pattern2.severity = SeverityLevel.ERROR;
+    pattern2.maturity = MaturityLevel.EXPERIMENTAL;
+    pattern2.name = "BugPatternB";
+    pattern2.summary = "{summary2}";
+
+    BugPatternInstance pattern3 = new BugPatternInstance();
+    pattern3.severity = SeverityLevel.ERROR;
+    pattern3.maturity = MaturityLevel.MATURE;
+    pattern3.name = "BugPatternC";
+    pattern3.summary = "mature";
+
+    new BugPatternIndexWriter()
+        .dump(Arrays.asList(pattern3, pattern2, pattern1), writer, Target.EXTERNAL);
+    assertThat(writer.toString())
+        .isEqualTo(
+            "---\n"
+                + "title: Bug Patterns\n"
+                + "layout: master\n"
+                + "---\n\n\n"
                 + "# Bug patterns\n"
                 + "\n"
                 + "This list is auto-generated from our sources. Each bug pattern includes code\n"
@@ -82,7 +137,8 @@ public class BugPatternIndexWriterTest {
                 + "\n"
                 + "__[BugPatternB](bugpattern/BugPatternB)__ \\\n"
                 + "{summary2}\n"
-                + "\n"));
+                + "\n");
 
   }
+
 }

@@ -23,6 +23,7 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Ordering;
+import com.google.errorprone.DocGenTool.Target;
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
@@ -47,8 +48,7 @@ import java.util.TreeMap;
  */
 public class BugPatternIndexWriter {
 
-  void dump(Collection<BugPatternInstance> patterns, Writer w, boolean generateFrontMatter)
-      throws IOException {
+  void dump(Collection<BugPatternInstance> patterns, Writer w, Target target) throws IOException {
 
     Map<String, List<Map<String, String>>> data = new TreeMap<>(Ordering.natural().reverse());
 
@@ -84,7 +84,13 @@ public class BugPatternIndexWriter {
 
     Map<String, Object> templateData = new HashMap<>();
 
-    if (generateFrontMatter) {
+    List<Map<String, Object>> entryData = new ArrayList<>();
+    for (Entry<String, List<Map<String, String>>> entry : data.entrySet()) {
+      entryData.add(ImmutableMap.of("category", entry.getKey(), "checks", entry.getValue()));
+    }
+    templateData.put("bugpatterns", entryData);
+
+    if (target == Target.EXTERNAL) {
       Map<String, String> frontmatterData =
           ImmutableMap.<String, String>builder()
               .put("title", "Bug Patterns")
@@ -98,16 +104,16 @@ public class BugPatternIndexWriter {
       yaml.dump(frontmatterData, yamlWriter);
       yamlWriter.write("---\n");
       templateData.put("frontmatter", yamlWriter.toString());
-    }
 
-    List<Map<String, Object>> entryData = new ArrayList<>();
-    for (Entry<String, List<Map<String, String>>> entry : data.entrySet()) {
-      entryData.add(ImmutableMap.of("category", entry.getKey(), "checks", entry.getValue()));
+      MustacheFactory mf = new DefaultMustacheFactory();
+      Mustache mustache =
+          mf.compile("com/google/errorprone/resources/bugpatterns_external.mustache");
+      mustache.execute(w, templateData);
+    } else {
+      MustacheFactory mf = new DefaultMustacheFactory();
+      Mustache mustache =
+          mf.compile("com/google/errorprone/resources/bugpatterns_internal.mustache");
+      mustache.execute(w, templateData);
     }
-    templateData.put("bugpatterns", entryData);
-
-    MustacheFactory mf = new DefaultMustacheFactory();
-    Mustache mustache = mf.compile("com/google/errorprone/resources/bugpatterns.mustache");
-    mustache.execute(w, templateData);
   }
 }

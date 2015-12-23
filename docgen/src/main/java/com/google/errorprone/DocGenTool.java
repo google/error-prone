@@ -19,6 +19,7 @@ package com.google.errorprone;
 import static com.google.common.io.Files.readLines;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+import com.beust.jcommander.IStringConverter;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
@@ -38,32 +39,48 @@ public class DocGenTool {
 
   @Parameters(separators = "=")
   static class Options {
-    @Parameter(names = {"-bug_patterns"}, description = "Path to bugPatterns.txt",
-        required = true)
+    @Parameter(names = "-bug_patterns", description = "Path to bugPatterns.txt", required = true)
     private String bugPatterns;
 
-    @Parameter(names = {"-explanations"}, description = "Path to side-car explanations",
-        required = true)
-    private String explanations;
-
-    @Parameter(names = {"-docs_repository"}, description = "Path to docs repository",
-        required = true)
-    private String docsRepository;
-
     @Parameter(
-      names = {"-examplesDir"},
-      description = "Path to examples directory",
+      names = "-explanations",
+      description = "Path to side-car explanations",
       required = true
     )
+    private String explanations;
+
+    @Parameter(names = "-docs_repository", description = "Path to docs repository", required = true)
+    private String docsRepository;
+
+    @Parameter(names = "-examplesDir", description = "Path to examples directory", required = true)
     private String examplesDir;
 
-    @Parameter(names = {"-generate_frontmatter"}, description = "Generate yaml front-matter",
-        arity = 1)
-    private boolean generateFrontMatter = true;
+    @Parameter(
+      names = "-target",
+      description = "Whether to target the internal or external site",
+      converter = TargetEnumConverter.class,
+      required = true
+    )
+    private Target target;
 
-    @Parameter(names = {"-use_pygments_highlighting"},
-        description = "Use pygments for highlighting", arity = 1)
+    @Parameter(
+      names = "-use_pygments_highlighting",
+      description = "Use pygments for highlighting",
+      arity = 1
+    )
     private boolean usePygments = true;
+  }
+
+  enum Target {
+    INTERNAL,
+    EXTERNAL
+  }
+
+  public static class TargetEnumConverter implements IStringConverter<Target> {
+    @Override
+    public Target convert(String arg) {
+      return Target.valueOf(arg.toUpperCase());
+    }
   }
 
   public static void main(String[] args) throws IOException {
@@ -94,12 +111,12 @@ public class DocGenTool {
             bugpatternDir,
             exampleDirBase,
             explanationDir,
-            options.generateFrontMatter,
+            options.target == Target.EXTERNAL,
             options.usePygments);
     try (Writer w =
             Files.newBufferedWriter(wikiDir.resolve("bugpatterns.md"), StandardCharsets.UTF_8)) {
       new BugPatternIndexWriter()
-          .dump(readLines(bugPatterns.toFile(), UTF_8, generator), w, options.generateFrontMatter);
+          .dump(readLines(bugPatterns.toFile(), UTF_8, generator), w, options.target);
     }
   }
 
