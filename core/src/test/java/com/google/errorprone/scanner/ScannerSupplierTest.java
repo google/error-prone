@@ -16,10 +16,6 @@
 
 package com.google.errorprone.scanner;
 
-import static com.google.common.truth.Truth.assertThat;
-import static com.google.errorprone.scanner.BuiltInCheckerSuppliers.getSuppliers;
-import static org.junit.Assert.fail;
-
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
@@ -32,19 +28,21 @@ import com.google.errorprone.InvalidCommandLineOptionException;
 import com.google.errorprone.bugpatterns.ArrayEquals;
 import com.google.errorprone.bugpatterns.BadShiftAmount;
 import com.google.errorprone.bugpatterns.ChainingConstructorIgnoresParameter;
-import com.google.errorprone.bugpatterns.DepAnn;
 import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
+import com.google.errorprone.bugpatterns.Overrides;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNull;
 import com.google.errorprone.bugpatterns.StaticAccessedFromInstance;
 import com.google.errorprone.bugpatterns.StringEquality;
-
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
+import static com.google.common.truth.Truth.assertThat;
+import static com.google.errorprone.scanner.BuiltInCheckerSuppliers.getSuppliers;
+import static org.junit.Assert.fail;
 
 /**
  * Tests for {@link ScannerSupplier}.
@@ -131,7 +129,7 @@ public class ScannerSupplierTest {
     ScannerSupplier ss =
         ScannerSupplier.fromBugCheckerClasses(
             ChainingConstructorIgnoresParameter.class,
-            DepAnn.class,
+            Overrides.class,
             LongLiteralLowerCaseSuffix.class);
     ErrorProneOptions epOptions = ErrorProneOptions.processArgs(Collections.<String>emptyList());
 
@@ -160,14 +158,14 @@ public class ScannerSupplierTest {
     ScannerSupplier ss =
         ScannerSupplier.fromBugCheckerClasses(
             ChainingConstructorIgnoresParameter.class,
-            DepAnn.class,
+            Overrides.class,
             LongLiteralLowerCaseSuffix.class);
     ErrorProneOptions epOptions = ErrorProneOptions.processArgs(
         ImmutableList.of(
             "-Xep:LongLiteralLowerCaseSuffix:OFF",
             "-Xep:ChainingConstructorIgnoresParameter:OFF"));
 
-    Set<BugCheckerInfo> expected = getSuppliers(DepAnn.class);
+    Set<BugCheckerInfo> expected = getSuppliers(Overrides.class);
 
     assertThat(ss.applyOverrides(epOptions).getEnabledChecks()).isEqualTo(expected);
   }
