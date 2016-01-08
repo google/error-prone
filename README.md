@@ -29,6 +29,13 @@ Add the following configuration to your `pom.xml`.
           <artifactId>plexus-compiler-javac-errorprone</artifactId>
           <version>2.5</version>
         </dependency>
+        <!-- override plexus-compiler-javac-errorprone's dependency on
+             Error Prone with the latest version -->
+        <dependency>
+          <groupId>com.google.errorprone</groupId>
+          <artifactId>error_prone_core</artifactId>
+          <version>2.0.7</version>
+        </dependency>
       </dependencies>
     </plugin>
   </plugins>
