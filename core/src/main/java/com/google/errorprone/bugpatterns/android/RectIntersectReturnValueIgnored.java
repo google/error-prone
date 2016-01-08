@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns.android;
 
 import static com.google.errorprone.BugPattern.Category.ANDROID;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 
@@ -41,7 +41,7 @@ import com.sun.source.tree.MethodInvocationTree;
         + "indicate that this has happened.\n\n"
         + "If you don’t check the return value of these methods, you may end up drawing the "
         + "wrong rectangle.",
-    category = ANDROID, severity = ERROR, maturity = EXPERIMENTAL)
+    category = ANDROID, severity = ERROR, maturity = MATURE)
 public class RectIntersectReturnValueIgnored extends AbstractReturnValueIgnored {
   @Override
   public Matcher<? super MethodInvocationTree> specializedMatcher() {
