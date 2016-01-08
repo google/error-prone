@@ -112,6 +112,7 @@ import com.google.errorprone.bugpatterns.ProtoFieldNullComparison;
 import com.google.errorprone.bugpatterns.ProtoFieldPreconditionsCheckNotNull;
 import com.google.errorprone.bugpatterns.ProtoStringFieldReferenceEquality;
 import com.google.errorprone.bugpatterns.RandomModInteger;
+import com.google.errorprone.bugpatterns.RedundantThrows;
 import com.google.errorprone.bugpatterns.ReferenceEquality;
 import com.google.errorprone.bugpatterns.RemoveUnusedImports;
 import com.google.errorprone.bugpatterns.RequiredModifiersChecker;
@@ -192,9 +193,7 @@ public class BuiltInCheckerSuppliers {
     return result.build();
   }
 
-  /**
-   * Returns a {@link ScannerSupplier} with all {@link BugChecker}s in Error Prone.
-   */
+  /** Returns a {@link ScannerSupplier} with all {@link BugChecker}s in Error Prone. */
   public static ScannerSupplier allChecks() {
     return ScannerSupplier.fromBugCheckerInfos(
         Iterables.concat(ENABLED_ERRORS, ENABLED_WARNINGS, DISABLED_CHECKS));
@@ -370,6 +369,7 @@ public class BuiltInCheckerSuppliers {
           PrivateConstructorForUtilityClass.class,
           PrivateConstructorForNoninstantiableModule.class,
           ProtoStringFieldReferenceEquality.class,
+          RedundantThrows.class,
           RemoveUnusedImports.class,
           ScopeAnnotationOnInterfaceOrAbstractClass.class,
           ScopeOrQualifierAnnotationRetention.class,
