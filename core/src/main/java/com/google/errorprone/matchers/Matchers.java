@@ -943,6 +943,23 @@ public class Matchers {
   }
 
   /**
+   * Matches a constructor declaration in a specific enclosing class.
+   *
+   * @param className The fully-qualified name of the enclosing class, e.g.
+   *        "com.google.common.base.Preconditions"
+   */
+  public static Matcher<MethodTree> constructorOfClass(final String className) {
+    return new Matcher<MethodTree>() {
+      @Override
+      public boolean matches(MethodTree methodTree, VisitorState state) {
+        Symbol symbol = ASTHelpers.getSymbol(methodTree);
+        return symbol.getEnclosingElement().getQualifiedName().contentEquals(className)
+            && symbol.isConstructor();
+      }
+    };
+  }
+
+  /**
    * Matches a class in which at least one method matches the given methodMatcher.
    *
    * @param methodMatcher A matcher on MethodTrees to run against all methods in this class.

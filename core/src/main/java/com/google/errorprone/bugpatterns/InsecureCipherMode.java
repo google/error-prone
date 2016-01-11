@@ -20,13 +20,13 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-
 
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -54,6 +54,7 @@ public class InsecureCipherMode extends BugChecker implements MethodInvocationTr
   private static final Matcher<ExpressionTree> GETINSTANCE_MATCHER =
       staticMethod().onClass("javax.crypto.Cipher").named("getInstance");
 
+
   private Description buildErrorMessage(MethodInvocationTree tree, String explanation) {
     Description.Builder description = buildDescription(tree);
     description.setMessage(MESSAGE_BASE + explanation + ".");
@@ -65,6 +66,7 @@ public class InsecureCipherMode extends BugChecker implements MethodInvocationTr
     if (!GETINSTANCE_MATCHER.matches(tree, state)) {
       return Description.NO_MATCH;
     }
+
 
     // We analyze the first argument of all the overloads of Cipher.getInstance().
     Object argument = ASTHelpers.constValue((JCTree) tree.getArguments().get(0));
