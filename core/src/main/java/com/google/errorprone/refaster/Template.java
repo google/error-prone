@@ -31,6 +31,7 @@ import com.google.errorprone.refaster.UTypeVar.TypeWithExpression;
 import com.google.errorprone.refaster.annotation.NoAutoboxing;
 
 import com.sun.source.tree.Tree.Kind;
+import com.sun.tools.javac.code.Kinds.KindSelector;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symtab;
@@ -38,6 +39,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ForAll;
 import com.sun.tools.javac.code.Type.MethodType;
 import com.sun.tools.javac.code.Types;
+import com.sun.tools.javac.comp.Attr;
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Enter;
 import com.sun.tools.javac.comp.Env;
@@ -63,6 +65,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.Writer;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -363,12 +366,26 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
       throw new LinkageError(e.getMessage(), e);
     }
 
+    Object resultInfo;
+    try {
+      Class<?> resultInfoClass = Class.forName("com.sun.tools.javac.comp.Attr$ResultInfo");
+      Constructor<?> resultInfoCtor =
+          resultInfoClass.getDeclaredConstructor(Attr.class, KindSelector.class, Type.class);
+      resultInfoCtor.setAccessible(true);
+      resultInfo =
+          resultInfoCtor.newInstance(
+              Attr.instance(inliner.getContext()), KindSelector.PCK, Type.noType);
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage(), e);
+    }
+
     // Type inference sometimes produces diagnostics, so we need to catch them to avoid interfering
     // with the enclosing compilation.
     Log.DeferredDiagnosticHandler handler =
         new Log.DeferredDiagnosticHandler(Log.instance(inliner.getContext()));
     try {
-      MethodType result = callCheckMethod(warner, inliner, actualArgTypes, methodSymbol, site, env);
+      MethodType result =
+          callCheckMethod(warner, inliner, resultInfo, actualArgTypes, methodSymbol, site, env);
       if (!handler.getDiagnostics().isEmpty()) {
         throw new InferException(handler.getDiagnostics());
       }
@@ -401,6 +418,7 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
    */
   private MethodType callCheckMethod(Warner warner,
       Inliner inliner,
+      Object resultInfo,
       List<Type> actualArgTypes,
       MethodSymbol methodSymbol,
       Type site,
@@ -421,7 +439,7 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
         env,
         site,
         methodSymbol,
-        /*resultInfo=*/null,
+        resultInfo,
         actualArgTypes,
         /*freeTypeVariables=*/List.<Type>nil(),
         warner);
