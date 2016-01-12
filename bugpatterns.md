@@ -217,6 +217,9 @@ First argument to `Preconditions.checkNotNull()` is a primitive rather than an o
 __[ProtoFieldNullComparison](bugpattern/ProtoFieldNullComparison)__<br>
 Protobuf fields cannot be null
 
+__[RectIntersectReturnValueIgnored](bugpattern/RectIntersectReturnValueIgnored)__<br>
+Return value of android.graphics.Rect.intersect() must be checked
+
 __[ReturnValueIgnored](bugpattern/ReturnValueIgnored)__<br>
 Return value of this method must be used
 
@@ -375,9 +378,6 @@ Method parameter has wrong package
 
 __[ProtoStringFieldReferenceEquality](bugpattern/ProtoStringFieldReferenceEquality)__<br>
 Comparing protobuf fields of type String using reference equality
-
-__[RectIntersectReturnValueIgnored](bugpattern/RectIntersectReturnValueIgnored)__<br>
-Return value of android.graphics.Rect.intersect() must be checked
 
 __[SelfEquality](bugpattern/SelfEquality)__<br>
 Variable compared to itself
