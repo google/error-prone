@@ -130,6 +130,7 @@ import com.google.errorprone.bugpatterns.UnnecessaryStaticImport;
 import com.google.errorprone.bugpatterns.UnnecessaryTypeArgument;
 import com.google.errorprone.bugpatterns.UnsynchronizedOverridesSynchronized;
 import com.google.errorprone.bugpatterns.UnusedAnonymousClass;
+import com.google.errorprone.bugpatterns.VarChecker;
 import com.google.errorprone.bugpatterns.WaitNotInLoop;
 import com.google.errorprone.bugpatterns.WildcardImport;
 import com.google.errorprone.bugpatterns.WrongParameterPackage;
@@ -323,6 +324,7 @@ public class BuiltInCheckerSuppliers {
           UnnecessaryStaticImport.class,
           UnnecessaryTypeArgument.class,
           UnsynchronizedOverridesSynchronized.class,
+          VarChecker.class,
           WildcardImport.class,
           WrongParameterPackage.class);
 
