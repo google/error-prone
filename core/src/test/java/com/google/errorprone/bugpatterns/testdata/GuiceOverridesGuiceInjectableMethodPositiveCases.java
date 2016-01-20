@@ -70,4 +70,17 @@ public class GuiceOverridesGuiceInjectableMethodPositiveCases {
     // BUG: Diagnostic contains: @Inject
     public void foo() {}
   }
+
+  /** Class that extends a class with an injected method, but doesn't override it. */
+  public class TestClass6 extends TestClass1 {}
+
+  /**
+   * Class that extends a class with an injected method, but it was declared in a supertype that
+   * isn't a direct supertype.
+   */
+  public class TestClass7 extends TestClass1 {
+    @Override
+    // BUG: Diagnostic contains: @Inject
+    public void foo() {}
+  }
 }

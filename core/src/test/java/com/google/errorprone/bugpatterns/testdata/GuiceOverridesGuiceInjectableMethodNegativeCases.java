@@ -73,5 +73,7 @@ public class GuiceOverridesGuiceInjectableMethodNegativeCases {
     @Override 
     public void foo() {}
   }
-  
+
+  /** Class that extends a class with an injected method, but doesn't override it. */
+  public class TestClass7 extends TestClass1 {}
 }
