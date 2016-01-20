@@ -42,10 +42,12 @@ public class DescendantOf implements Matcher<ExpressionTree> {
   @Override
   public boolean matches(ExpressionTree expressionTree, VisitorState state) {
     Symbol sym = ASTHelpers.getSymbol(expressionTree);
+    if (sym == null) {
+      return false;
+    }
     if (!(sym instanceof MethodSymbol)) {
-      String symInfo = (sym == null ? "null" : sym.getClass().toString());
       throw new IllegalArgumentException("DescendantOf matcher expects a method call but found "
-          + symInfo + ". Expression: " + expressionTree);
+          + sym.getClass() + ". Expression: " + expressionTree);
     }
     if (sym.isStatic()) {
       return false;
