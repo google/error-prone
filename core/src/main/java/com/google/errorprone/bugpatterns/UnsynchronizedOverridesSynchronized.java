@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -32,9 +33,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
 import javax.lang.model.element.Modifier;
 
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
   name = "UnsynchronizedOverridesSynchronized",
   summary = "Unsynchronized method overrides a synchronized method.",
@@ -50,11 +49,21 @@ public class UnsynchronizedOverridesSynchronized extends BugChecker implements M
     if (isSynchronized(methodSymbol)) {
       return Description.NO_MATCH;
     }
-
     for (MethodSymbol s : ASTHelpers.findSuperMethods(methodSymbol, state.getTypes())) {
       if (isSynchronized(s)) {
-        return describeMatch(
-            methodTree, SuggestedFix.addModifier(methodTree, Modifier.SYNCHRONIZED, state));
+        // Input streams are typically not used across threads, so this case isn't
+        // worth enforcing.
+        if (isSameType(s.owner.type, state.getTypeFromString("java.io.InputStream"), state)) {
+          continue;
+        }
+        return buildDescription(methodTree)
+            .addFix(SuggestedFix.addModifier(methodTree, Modifier.SYNCHRONIZED, state))
+            .setMessage(
+                String.format(
+                    "Unsynchronized method %s overrides synchronized method in %s",
+                    methodSymbol.getSimpleName(),
+                    s.enclClass().getSimpleName()))
+            .build();
       }
     }
     return Description.NO_MATCH;
