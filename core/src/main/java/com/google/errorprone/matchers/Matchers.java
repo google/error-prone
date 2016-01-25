@@ -37,6 +37,7 @@ import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ContinueTree;
 import com.sun.source.tree.EnhancedForLoopTree;
+import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LiteralTree;
@@ -1170,6 +1171,17 @@ public class Matchers {
       @Override
       public boolean matches(StatementTree statementTree, VisitorState state) {
         return statementTree instanceof ContinueTree;
+      }
+    };
+  }
+
+  /** Matches an {@link ExpressionStatementTree} based on its {@link ExpressionTree}. */
+  public static Matcher<StatementTree> expressionStatement(final Matcher<ExpressionTree> matcher) {
+    return new Matcher<StatementTree>() {
+      @Override
+      public boolean matches(StatementTree statementTree, VisitorState state) {
+        return statementTree instanceof ExpressionStatementTree
+            && matcher.matches(((ExpressionStatementTree) statementTree).getExpression(), state);
       }
     };
   }

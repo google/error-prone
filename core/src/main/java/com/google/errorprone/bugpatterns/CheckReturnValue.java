@@ -19,6 +19,12 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.enclosingNode;
+import static com.google.errorprone.matchers.Matchers.expressionStatement;
+import static com.google.errorprone.matchers.Matchers.kindIs;
+import static com.google.errorprone.matchers.Matchers.nextStatement;
+import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
@@ -39,6 +45,8 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -94,6 +102,20 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
           }
 
           if (mockitoInvocation(tree, state)) {
+            return false;
+          }
+
+          // Allow unused return values in tests that check for thrown exceptions, e.g.:
+          //
+          // try {
+          //   Foo.newFoo(-1);
+          //   fail();
+          // } catch (IllegalArgumentException expected) {
+          // }
+          //
+          StatementTree statement =
+              ASTHelpers.findEnclosingNode(state.getPath(), StatementTree.class);
+          if (statement != null && EXPECTED_EXCEPTION_MATCHER.matches(statement, state)) {
             return false;
           }
 
@@ -201,4 +223,10 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
     }
     return false;
   }
+
+  public static final Matcher<StatementTree> EXPECTED_EXCEPTION_MATCHER =
+      allOf(
+          enclosingNode(kindIs(Kind.TRY)),
+          nextStatement(
+              expressionStatement(staticMethod().onClass("org.junit.Assert").named("fail"))));
 }

@@ -361,4 +361,54 @@ public class CheckReturnValueTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void ignoreInTests() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Foo.java",
+            "@javax.annotation.CheckReturnValue",
+            "public class Foo {",
+            "  public static int f() {",
+            "    return 42;",
+            "  }",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "import static org.junit.Assert.fail;",
+            "class Test {",
+            "  void f(Foo foo) {",
+            "    try {",
+            "      foo.f();",
+            "      fail();",
+            "    } catch (Exception expected) {",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void onlyIgnoreWithEnclosingTryCatch() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Foo.java",
+            "@javax.annotation.CheckReturnValue",
+            "public class Foo {",
+            "  public static int f() {",
+            "    return 42;",
+            "  }",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "import static org.junit.Assert.fail;",
+            "class Test {",
+            "  void f(Foo foo) {",
+            "    // BUG: Diagnostic contains: Ignored return value",
+            "    foo.f();",
+            "    fail();",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
