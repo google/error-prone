@@ -310,7 +310,7 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
         // accumulating the path to the error from the top-level class being checked
         state.reportMatch(
             buildDescription(tree.get())
-                .setMessage("@Immutable classes cannot have non-final field")
+                .setMessage("@Immutable classes cannot have non-final fields")
                 .addFix(SuggestedFix.addModifier(tree.get(), Modifier.FINAL, state))
                 .build());
         return Violation.absent();
@@ -463,29 +463,15 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
 
   // Anonymous classes
 
-  /** Check anonymous classes whose direct supertype is {@code @Immutable}. */
+  /** Check anonymous implementations of {@code @Immutable} types. */
   private Description handleAnonymousClass(ClassTree tree, VisitorState state) {
-    Violation info = checkAnonymous(tree, state);
-    if (!info.isPresent()) {
-      return Description.NO_MATCH;
-    }
-    String message = "Mutable because " + Joiner.on(", ").join(info.path());
-    return buildDescription(tree).setMessage(message).build();
-  }
-
-  private Violation checkAnonymous(ClassTree tree, VisitorState state) {
     ClassSymbol sym = ASTHelpers.getSymbol(tree);
     if (sym == null) {
-      return Violation.absent();
+      return Description.NO_MATCH;
     }
-    ImmutableSet<String> typarams = immutableTypeParametersInScope(sym);
-    Type superClass = sym.getSuperclass();
-    if (superClass == null) {
-      return Violation.absent();
-    }
-    ImmutableAnnotationInfo annotation = getImmutableAnnotation(superClass.tsym);
-    if (annotation == null) {
-      return Violation.absent();
+    Type superType = immutableSupertype(sym, state);
+    if (superType == null) {
+      return Description.NO_MATCH;
     }
     // We don't need to check that the superclass has an immutable instantiation.
     // The anonymous instance can only be referred to using a superclass type, so
@@ -497,7 +483,16 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
     // public static <@Immutable T> ImmutableBox<T> create(T t) {
     //   return new ImmutableBox<>(t);
     // }
-    return areFieldsImmutable(Optional.of(tree), typarams, ASTHelpers.getType(tree), state);
+    ImmutableSet<String> typarams = immutableTypeParametersInScope(sym);
+    Violation info =
+        areFieldsImmutable(Optional.of(tree), typarams, ASTHelpers.getType(tree), state);
+    if (!info.isPresent()) {
+      return Description.NO_MATCH;
+    }
+    String reason = Joiner.on(", ").join(info.path());
+    String message = String.format(
+        "Class extends @Immutable type %s, but is not immutable: %s", superType, reason);
+    return buildDescription(tree).setMessage(message).build();
   }
 
   // Strong behavioural subtyping

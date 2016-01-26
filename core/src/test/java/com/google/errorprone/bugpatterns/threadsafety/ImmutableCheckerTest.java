@@ -756,6 +756,31 @@ public class ImmutableCheckerTest {
   }
 
   @Test
+  public void positiveAnonymousInterface() {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Super.java",
+            "package threadsafety;",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable interface Super {",
+            "}")
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import com.google.errorprone.annotations.Immutable;",
+            "class Test {{",
+            "  new Super() {",
+            "    // BUG: Diagnostic contains: non-final",
+            "    int x = 0;",
+            "    {",
+            "      x++;",
+            "    }",
+            "  };",
+            "}}")
+        .doTest();
+  }
+
+  @Test
   public void negativeParametricAnonymous() {
     compilationHelper
         .addSourceLines(

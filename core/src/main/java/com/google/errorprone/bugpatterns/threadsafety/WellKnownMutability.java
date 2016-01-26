@@ -96,6 +96,7 @@ final class WellKnownMutability {
         .add("org.joda.time.Instant")
         .add("org.joda.time.LocalDate")
         .add("org.joda.time.LocalDateTime")
+        .add("org.joda.time.format.DateTimeFormatter")
         .add(com.google.common.primitives.UnsignedLong.class)
         .add(com.google.common.base.Converter.class)
         .add("com.google.protobuf.ByteString")
@@ -113,10 +114,13 @@ final class WellKnownMutability {
         .add(com.google.common.collect.ImmutableList.class, "E")
         .add(com.google.common.collect.ImmutableMultiset.class, "E")
         .add(com.google.common.collect.ImmutableMap.class, "K", "V")
+        .add(com.google.common.collect.ImmutableBiMap.class, "K", "V")
         .add(com.google.common.collect.ImmutableMultimap.class, "K", "V")
         .add(com.google.common.collect.ImmutableRangeMap.class, "K", "V")
         .add(com.google.common.collect.ImmutableTable.class, "R", "C", "V")
         .add(com.google.common.base.Optional.class, "T")
+        .add(com.google.common.base.Splitter.class)
+        .add(com.google.common.base.Joiner.class)
         .add(com.google.common.collect.Range.class, "C")
         .build();
   }
