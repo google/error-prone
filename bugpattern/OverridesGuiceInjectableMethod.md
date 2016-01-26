@@ -1,6 +1,6 @@
 ---
 title: OverridesGuiceInjectableMethod
-summary: This method is not annotated with @Inject, but it overrides a method that is annotated with @com.google.inject.Inject. Guice will inject this method,and it is recommended to annotate it explicitly.
+summary: This method is not annotated with @Inject, but it overrides a method that is annotated with @com.google.inject.Inject. Guice will inject this method, and it is recommended to annotate it explicitly.
 layout: bugpattern
 category: GUICE
 severity: WARNING
@@ -13,7 +13,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-Unlike with @javax.inject.Inject, if a method overrides a method annoatated with @com.google.inject.Inject, Guice will inject it even if it itself is not annotated. This differs from the behavior of methods that override @javax.inject.Inject methods since according to the JSR-330 spec, a method that overrides a method annotated with javax.inject.Inject will not be injected unless it iself is annotated with @Inject. Because of this difference, it is recommended that you annotate this method explicitly.
+Unlike with `@javax.inject.Inject`, if a method overrides a method annotated with `@com.google.inject.Inject`, Guice will inject it even if it itself is not annotated. This differs from the behavior of methods that override `@javax.inject.Inject` methods since according to the JSR-330 spec, a method that overrides a method annotated with `@javax.inject.Inject` will not be injected unless it iself is annotated with `@Inject`. Because of this difference, it is recommended that you annotate this method explicitly.
 
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("OverridesGuiceInjectableMethod")` annotation to the enclosing element.
@@ -92,6 +92,19 @@ public class GuiceOverridesGuiceInjectableMethodPositiveCases {
    * annoatated with @com.google.inject.Inject.
    */
   public class TestClass5 extends TestClass4 {
+    @Override
+    // BUG: Diagnostic contains: @Inject
+    public void foo() {}
+  }
+
+  /** Class that extends a class with an injected method, but doesn't override it. */
+  public class TestClass6 extends TestClass1 {}
+
+  /**
+   * Class that extends a class with an injected method, but it was declared in a supertype that
+   * isn't a direct supertype.
+   */
+  public class TestClass7 extends TestClass1 {
     @Override
     // BUG: Diagnostic contains: @Inject
     public void foo() {}
@@ -178,7 +191,9 @@ public class GuiceOverridesGuiceInjectableMethodNegativeCases {
     @Override 
     public void foo() {}
   }
-  
+
+  /** Class that extends a class with an injected method, but doesn't override it. */
+  public class TestClass7 extends TestClass1 {}
 }
 {% endhighlight %}
 

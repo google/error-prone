@@ -271,13 +271,16 @@ __[MissingFail](bugpattern/MissingFail)__<br>
 Not calling fail() when expecting an exception masks bugs
 
 __[OverridesGuiceInjectableMethod](bugpattern/OverridesGuiceInjectableMethod)__<br>
-This method is not annotated with @Inject, but it overrides a method that is annotated with @com.google.inject.Inject. Guice will inject this method,and it is recommended to annotate it explicitly.
+This method is not annotated with @Inject, but it overrides a method that is annotated with @com.google.inject.Inject. Guice will inject this method, and it is recommended to annotate it explicitly.
 
 __[PreconditionsErrorMessageEagerEvaluation](bugpattern/PreconditionsErrorMessageEagerEvaluation)__<br>
 Second argument to Preconditions.* is a call to String.format(), which can be unwrapped
 
 __[PrimitiveArrayPassedToVarargsMethod](bugpattern/PrimitiveArrayPassedToVarargsMethod)__<br>
 Passing a primitive array to a varargs method is usually wrong
+
+__[Var](bugpattern/Var)__<br>
+Non-constant variable missing @Var annotation
 
 ## Experimental : NOT\_A\_PROBLEM
 
