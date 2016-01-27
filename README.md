@@ -34,7 +34,7 @@ Add the following configuration to your `pom.xml`.
         <dependency>
           <groupId>com.google.errorprone</groupId>
           <artifactId>error_prone_core</artifactId>
-          <version>2.0.7</version>
+          <version>2.0.8</version>
         </dependency>
       </dependencies>
     </plugin>
