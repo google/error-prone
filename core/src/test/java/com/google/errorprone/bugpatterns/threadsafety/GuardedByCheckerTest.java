@@ -24,10 +24,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-
 /** {@link GuardedByChecker}Test */
 @RunWith(JUnit4.class)
 public class GuardedByCheckerTest {
@@ -1177,8 +1173,27 @@ public class GuardedByCheckerTest {
         .doTest();
   }
 
+  // regression test for issue 387
   @Test
-  public void serializable() throws IOException {
-    new ObjectOutputStream(new ByteArrayOutputStream()).writeObject(new GuardedByChecker());
+  public void enclosingBlockScope() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "public class Test {",
+            "  public final Object mu = new Object();",
+            "  @GuardedBy(\"mu\") int x = 1;",
+            "  {",
+            "    new Object() {",
+            "      void f() {",
+            "        synchronized (mu) {",
+            "          x++;",
+            "        }",
+            "      }",
+            "    };",
+            "  }",
+            "}")
+        .doTest();
   }
 }

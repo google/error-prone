@@ -284,7 +284,7 @@ public class GuardedByBinder {
         private GuardedByExpression normalizeBase(BinderContext context, Symbol symbol,
             GuardedByExpression base) {
           if (symbol.isStatic()) {
-            return F.typeLiteral(symbol.owner);
+            return F.typeLiteral(symbol.owner.enclClass());
           }
 
           if (base != null && base.kind() != GuardedByExpression.Kind.THIS) {
@@ -307,10 +307,10 @@ public class GuardedByBinder {
          * Returns the owner if the given member is declared in a lexically enclosing scope, and
          * @{code null} otherwise.
          */
-        private Symbol isEnclosedIn(ClassSymbol startingClass, Symbol member, Types types) {
-          for (Symbol scope = startingClass.owner;
-               scope != null && scope.type.tsym instanceof ClassSymbol;
-               scope = scope.owner) {
+        private ClassSymbol isEnclosedIn(ClassSymbol startingClass, Symbol member, Types types) {
+          for (ClassSymbol scope = startingClass.owner.enclClass();
+              scope != null;
+              scope = scope.owner.enclClass()) {
             if (member.isMemberOf(scope.type.tsym, types)) {
               return scope;
             }

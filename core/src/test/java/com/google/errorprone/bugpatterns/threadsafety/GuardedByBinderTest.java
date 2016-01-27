@@ -411,6 +411,33 @@ public class GuardedByBinderTest {
               )));
   }
 
+  // regression test for issue 387
+  @Test
+  public void enclosingBlockScope() throws Exception {
+    assertEquals(
+        "(SELECT (SELECT (THIS) outer$threadsafety.Test) mu)",
+        bind(
+            "",
+            "mu",
+            fileManager.forSourceLines(
+                "threadsafety/Test.java",
+                "package threadsafety;",
+                "import javax.annotation.concurrent.GuardedBy;",
+                "public class Test {",
+                "  public final Object mu = new Object();",
+                "  @GuardedBy(\"mu\") int x = 1;",
+                "  {",
+                "    new Object() {",
+                "      void f() {",
+                "        synchronized (mu) {",
+                "          x++;",
+                "        }",
+                "      }",
+                "    };",
+                "  }",
+                "}")));
+  }
+
   //TODO(cushon): disallow non-final lock expressions
   @Ignore
   @Test

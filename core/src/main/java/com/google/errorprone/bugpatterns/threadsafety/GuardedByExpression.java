@@ -156,7 +156,7 @@ public abstract class GuardedByExpression {
       GuardedByExpression base = thisliteral();
       Symbol curr = access;
       do {
-        curr = curr.owner;
+        curr = curr.owner.enclClass();
         if (curr == null) {
           break;
         }
