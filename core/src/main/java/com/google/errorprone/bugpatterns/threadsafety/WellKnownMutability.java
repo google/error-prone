@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -156,9 +158,16 @@ final class WellKnownMutability {
    * {@code com.google.io.protocol.ProtocolSupport#isProto2MessageClass}.
    */
   private static boolean isProto2MessageClass(VisitorState state, Type type) {
+    checkNotNull(type);
     // ProtocolSupport matches Message (not MessageLite) for legacy reasons
     Type messageType = state.getTypeFromString("com.google.protobuf.MessageLite");
+    if (messageType == null) {
+      return false;
+    }
     Type protocolMessageType = state.getTypeFromString("com.google.io.protocol.ProtocolMessage");
+    if (protocolMessageType == null) {
+      return false;
+    }
     Types types = state.getTypes();
     return types.isAssignable(type, messageType) && !types.isAssignable(type, protocolMessageType);
   }
@@ -168,9 +177,16 @@ final class WellKnownMutability {
    * {@code com.google.io.protocol.ProtocolSupport#isProto2MutableMessageClass}.
    */
   private static boolean isProto2MutableMessageClass(VisitorState state, Type type) {
+    checkNotNull(type);
     // ProtocolSupport matches MutableMessage (not MutableMessageLite) for legacy reasons
     Type mutableMessageType = state.getTypeFromString("com.google.protobuf.MutableMessageLite");
+    if (mutableMessageType == null) {
+      return false;
+    }
     Type protocolMessageType = state.getTypeFromString("com.google.io.protocol.ProtocolMessage");
+    if (protocolMessageType == null) {
+      return false;
+    }
     Types types = state.getTypes();
     return types.isAssignable(type, mutableMessageType)
         && !types.isAssignable(type, protocolMessageType);

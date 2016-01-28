@@ -23,6 +23,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.util.Arrays;
+
 /** {@link ImmutableChecker}Test */
 @RunWith(JUnit4.class)
 public class ImmutableCheckerTest {
@@ -1151,6 +1153,33 @@ public class ImmutableCheckerTest {
             "  // BUG: Diagnostic contains: arrays are mutable",
             "  final int[] ys = {1};",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void protosNotOnClasspath() {
+    compilationHelper
+        .addSourceLines(
+            "com/google/errorprone/annotations/Immutable.java",
+            "package com.google.errorprone.annotations;",
+            "import static java.lang.annotation.ElementType.TYPE;",
+            "import static java.lang.annotation.RetentionPolicy.RUNTIME;",
+            "import java.lang.annotation.Retention;",
+            "import java.lang.annotation.Target;",
+            "@Target(TYPE)",
+            "@Retention(RUNTIME)",
+            "public @interface Immutable {",
+            "  String[] containerOf() default {};",
+            "}")
+        .addSourceLines("Foo.java", "class Foo {}")
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable class Test {",
+            "  // BUG: Diagnostic contains: 'Foo' is not annotated @Immutable",
+            "  final Foo f = null;",
+            "}")
+        .setArgs(Arrays.asList("-cp", "NOSUCH"))
         .doTest();
   }
 }
