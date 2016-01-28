@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.BugPattern.Suppressibility;
+import com.google.errorprone.ErrorProneError;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotatedTypeTreeMatcher;
@@ -118,6 +119,7 @@ import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.SynchronizedTree;
 import com.sun.source.tree.ThrowTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.TypeParameterTree;
@@ -126,6 +128,8 @@ import com.sun.source.tree.UnionTypeTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
+import com.sun.source.util.TreePath;
+import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -1024,6 +1028,32 @@ public class ErrorProneScanner extends Scanner {
       }
     }
     return super.visitWildcard(tree, visitorState);
+  }
+
+  @Override
+  public Void scan(TreePath path, VisitorState state) {
+    try {
+      return super.scan(path, state);
+    } catch (ErrorProneError e) {
+      throw e;
+    } catch (Throwable t) {
+      throw new ErrorProneError(
+          t,
+          (DiagnosticPosition) path.getLeaf(),
+          state.getPath().getCompilationUnit().getSourceFile());
+    }
+  }
+
+  @Override
+  public Void scan(Tree tree, VisitorState state) {
+    try {
+      return super.scan(tree, state);
+    } catch (ErrorProneError e) {
+      throw e;
+    } catch (Throwable t) {
+      throw new ErrorProneError(
+          t, (DiagnosticPosition) tree, state.getPath().getCompilationUnit().getSourceFile());
+    }
   }
 
   @Override

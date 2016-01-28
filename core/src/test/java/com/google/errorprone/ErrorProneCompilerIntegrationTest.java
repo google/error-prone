@@ -29,12 +29,14 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.bugpatterns.BadShiftAmount;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ExpressionStatementTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.bugpatterns.NonAtomicVolatileUpdate;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.scanner.ErrorProneScanner;
@@ -46,6 +48,7 @@ import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.main.Main.Result;
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
@@ -179,7 +182,7 @@ public class ErrorProneCompilerIntegrationTest {
     Result exitCode = compiler.compile(
         compiler.fileManager().forResources(getClass(), "MultipleTopLevelClassesWithErrors.java",
             "ExtendedMultipleTopLevelClassesWithErrors.java"));
-    assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
+    assertThat(outputStream.toString(), exitCode, is(Result.ABNORMAL));
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher = hasItem(
         diagnosticMessage(CoreMatchers.<String>allOf(
             containsString("IllegalStateException: test123"),
@@ -473,5 +476,48 @@ public class ErrorProneCompilerIntegrationTest {
     assertThat(diagnosticHelper.getDiagnostics().get(0).getMessage(Locale.ENGLISH))
         .contains("[EmptyIf]");
     assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
+  }
+
+  @BugPattern(
+    name = "CrashOnReturn",
+    explanation = "",
+    summary = "",
+    maturity = EXPERIMENTAL,
+    severity = ERROR,
+    category = ONE_OFF
+  )
+  public static class CrashOnReturn extends BugChecker implements ReturnTreeMatcher {
+    @Override
+    public Description matchReturn(ReturnTree tree, VisitorState state) {
+      throw new NullPointerException();
+    }
+  }
+
+  @Test
+  public void crashSourcePosition() throws Exception {
+    compiler =
+        compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(CrashOnReturn.class)).build();
+    Result exitCode =
+        compiler.compile(
+            Arrays.asList(
+                compiler
+                    .fileManager()
+                    .forSourceLines(
+                        "test/Test.java",
+                        "package Test;",
+                        "class Test {",
+                        "  void f() {",
+                        "    return;",
+                        "  }",
+                        "}")));
+    assertThat(exitCode).named(outputStream.toString()).isEqualTo(Result.ABNORMAL);
+    assertThat(diagnosticHelper.getDiagnostics()).hasSize(1);
+    Diagnostic<? extends JavaFileObject> diag =
+        Iterables.getOnlyElement(diagnosticHelper.getDiagnostics());
+    assertThat(diag.getLineNumber()).isEqualTo(4);
+    assertThat(diag.getColumnNumber()).isEqualTo(5);
+    assertThat(diag.getSource().toUri().toString()).endsWith("test/Test.java");
+    assertThat(diag.getMessage(Locale.ENGLISH))
+        .contains("An unhandled exception was thrown by the Error Prone static analysis plugin");
   }
 }

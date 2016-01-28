@@ -36,6 +36,8 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.Queue;
 
+import javax.tools.JavaFileObject;
+
 /**
  *
  * @author alexeagle@google.com (Alex Eagle)
@@ -95,6 +97,17 @@ public class ErrorProneJavacJavaCompiler extends JavaCompiler {
     super.flow(env, results);
     try {
       postFlow(env);
+    } catch (ErrorProneError e) {
+      String version = loadVersionFromPom().or("unknown version");
+      JavaFileObject prev = log.currentSourceFile();
+      try {
+        log.useSource(e.source());
+        log.error(
+            e.pos(), "error.prone.crash", Throwables.getStackTraceAsString(e.cause()), version);
+      } finally {
+        log.useSource(prev);
+      }
+      throw e;
     } catch (Throwable e) {
       String version = loadVersionFromPom().or("unknown version");
       log.error("error.prone.crash", Throwables.getStackTraceAsString(e), version);
