@@ -96,15 +96,16 @@ public class ImmutableCheckerTest {
         .doTest();
   }
 
-  // TODO(cushon): this is a bug; see the comment in ImmutableChecker#immutableSupertype()
+  @Ignore("b/25630189") // don't check annotations for immutability yet
   @Test
-  public void customImplementionsOfImplicitlyImmutableAnnotationsAreStillMutable() {
+  public void customImplementionsOfImplicitlyImmutableAnnotationsMustBeImmutable() {
     compilationHelper
         .addSourceLines("Anno.java", "@interface Anno {}")
         .addSourceLines(
             "MyAnno.java",
             "import java.lang.annotation.Annotation;",
             "final class MyAnno implements Anno {",
+            "  // BUG: Diagnostic contains:",
             "  public Object[] xs = {};",
             "  public Class<? extends Annotation> annotationType() {",
             "    return null;",
@@ -141,14 +142,26 @@ public class ImmutableCheckerTest {
   }
 
   @Test
-  public void enumsDefaultToMutable() {
+  public void annotationsDefaultToImmutable() {
     compilationHelper
         .addSourceLines(
             "Test.java",
             "import javax.lang.model.element.ElementKind;",
             "import com.google.errorprone.annotations.Immutable;",
             "@Immutable class Test {",
-            "  // BUG: Diagnostic contains: is not annotated",
+            "  private final Override override = null;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void enumsDefaultToImmutable() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import javax.lang.model.element.ElementKind;",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable class Test {",
             "  private final ElementKind ek = null;",
             "}")
         .doTest();
@@ -1180,6 +1193,53 @@ public class ImmutableCheckerTest {
             "  final Foo f = null;",
             "}")
         .setArgs(Arrays.asList("-cp", "NOSUCH"))
+        .doTest();
+  }
+
+  @Ignore("b/25630186") // don't check enums for immutability yet
+  @Test
+  public void mutableEnum() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "enum Test {",
+            "  ;",
+            "  // BUG: Diagnostic contains: @Immutable class has mutable field",
+            "  private final Object o = null;",
+            "}")
+        .doTest();
+  }
+
+  @Ignore("b/25630186") // don't check enums for immutability yet
+  @Test
+  public void mutableEnumMember() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "enum Test {",
+            "  ONE {",
+            "    // BUG: Diagnostic contains: @Immutable class has mutable field",
+            "    private final Object o = null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Ignore("b/25630189") // don't check annotations for immutability yet
+  @Test
+  public void mutableExtendsAnnotation() {
+    compilationHelper
+        .addSourceLines(
+            "Anno.java",
+            "@interface Anno {}")
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test implements Anno {",
+            "  // BUG: Diagnostic contains: @Immutable class has mutable field",
+            "  final Object o = null;",
+            "}")
         .doTest();
   }
 }

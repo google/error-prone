@@ -436,10 +436,14 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
     public Violation visitType(Type type, Void s) {
       switch (type.tsym.getKind()) {
         case ANNOTATION_TYPE:
-          // annotations are always immutable
+          // assume annotations are always immutable
+          // TODO(b/25630189): add enforcement
+          return Violation.absent();
+        case ENUM:
+          // assume enums are always immutable
+          // TODO(b/25630186): add enforcement
           return Violation.absent();
         case INTERFACE:
-        case ENUM: // TODO(b/25630186): enums aren't always immutable, but they should be
         case CLASS:
           break;
         default:
