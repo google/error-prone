@@ -1196,4 +1196,61 @@ public class GuardedByCheckerTest {
             "}")
         .doTest();
   }
+
+  @Ignore("TODO(b/26834754): fix resolution of qualified type names")
+  @Test
+  public void qualfiedType() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "lib/Lib.java",
+            "package lib;",
+            "public class Lib {",
+            "  public static class Inner {",
+            "    public static final Object mu = new Object();",
+            "  }",
+            "}")
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "public class Test {",
+            "  public final Object mu = new Object();",
+            "  @GuardedBy(\"lib.Lib.Inner.mu\") int x = 1;",
+            "  void f() {",
+            "    synchronized (lib.Lib.Inner.mu) {",
+            "      x++;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Ignore("TODO(b/26834754): fix resolution of qualified type names")
+  @Test
+  public void innerClassTypeQualifier() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "lib/Lib.java",
+            "package lib;",
+            "public class Lib {",
+            "  public static class Inner {",
+            "    public static final Object mu = new Object();",
+            "  }",
+            "}")
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "import lib.Lib;",
+            "public class Test {",
+            "  public final Object mu = new Object();",
+            "  @GuardedBy(\"Lib.Inner.mu\") int x = 1;",
+            "  void f() {",
+            "    synchronized (Lib.Inner.mu) {",
+            "      x++;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
