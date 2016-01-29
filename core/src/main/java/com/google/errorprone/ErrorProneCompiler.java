@@ -19,6 +19,7 @@ package com.google.errorprone;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.StandardSystemProperty.JAVA_SPECIFICATION_VERSION;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.scanner.BuiltInCheckerSuppliers;
 import com.google.errorprone.scanner.ErrorProneScannerTransformer;
@@ -36,10 +37,13 @@ import com.sun.tools.javac.main.Main.Result;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JavacMessages;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 
 import javax.annotation.processing.Processor;
 import javax.tools.DiagnosticListener;
@@ -292,6 +296,23 @@ public class ErrorProneCompiler {
    */
   public static void setupMessageBundle(Context context) {
     JavacMessages.instance(context).add("com.google.errorprone.errors");
+  }
+
+  private static final String PROPERTIES_RESOURCE =
+      "/META-INF/maven/com.google.errorprone/error_prone_core/pom.properties";
+
+  /** Loads the Error Prone version. */
+  public static Optional<String> loadVersionFromPom() {
+    try (InputStream stream = ErrorProneCompiler.class.getResourceAsStream(PROPERTIES_RESOURCE)) {
+      if (stream == null) {
+        return Optional.absent();
+      }
+      Properties mavenProperties = new Properties();
+      mavenProperties.load(stream);
+      return Optional.of(mavenProperties.getProperty("version"));
+    } catch (IOException expected) {
+      return Optional.absent();
+    }
   }
 
   private static final TaskListener EMPTY_LISTENER = new TaskListener() {

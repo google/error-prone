@@ -16,7 +16,10 @@
 
 package com.google.errorprone;
 
+import com.google.common.base.Throwables;
+
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
+import com.sun.tools.javac.util.Log;
 
 import javax.tools.JavaFileObject;
 
@@ -36,15 +39,15 @@ public class ErrorProneError extends Error {
     this.source = source;
   }
 
-  public DiagnosticPosition pos() {
-    return pos;
-  }
-
-  public JavaFileObject source() {
-    return source;
-  }
-
-  public Throwable cause() {
-    return cause;
+  public void logFatalError(Log log) {
+    String version = ErrorProneCompiler.loadVersionFromPom().or("unknown version");
+    JavaFileObject prev = log.currentSourceFile();
+    try {
+      log.useSource(source);
+      log.error(
+          pos, "error.prone.crash", Throwables.getStackTraceAsString(cause), version);
+    } finally {
+      log.useSource(prev);
+    }
   }
 }

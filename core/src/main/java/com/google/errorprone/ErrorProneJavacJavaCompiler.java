@@ -18,7 +18,6 @@ package com.google.errorprone;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
 
 import com.sun.source.util.TaskEvent;
@@ -31,12 +30,7 @@ import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Context.Factory;
 import com.sun.tools.javac.util.JavacMessages;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
 import java.util.Queue;
-
-import javax.tools.JavaFileObject;
 
 /**
  *
@@ -98,35 +92,14 @@ public class ErrorProneJavacJavaCompiler extends JavaCompiler {
     try {
       postFlow(env);
     } catch (ErrorProneError e) {
-      String version = loadVersionFromPom().or("unknown version");
-      JavaFileObject prev = log.currentSourceFile();
-      try {
-        log.useSource(e.source());
-        log.error(
-            e.pos(), "error.prone.crash", Throwables.getStackTraceAsString(e.cause()), version);
-      } finally {
-        log.useSource(prev);
-      }
+      e.logFatalError(log);
+      // let the exception propagate to javac's main, where it will cause the compilation to
+      // terminate with Result.ABNORMAL
       throw e;
     } catch (Throwable e) {
-      String version = loadVersionFromPom().or("unknown version");
+      String version = ErrorProneCompiler.loadVersionFromPom().or("unknown version");
       log.error("error.prone.crash", Throwables.getStackTraceAsString(e), version);
     }
-  }
-
-  private Optional<String> loadVersionFromPom() {
-    InputStream stream = getClass().getResourceAsStream(
-        "/META-INF/maven/com.google.errorprone/error_prone_core/pom.properties");
-    if (stream == null) {
-      return Optional.absent();
-    }
-    Properties mavenProperties = new Properties();
-    try {
-      mavenProperties.load(stream);
-    } catch (IOException expected) {
-      return Optional.absent();
-    }
-    return Optional.of(mavenProperties.getProperty("version"));
   }
 
   /**
