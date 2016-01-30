@@ -37,18 +37,24 @@ import com.sun.tools.javac.code.Type;
 /**
  * @author cushon@google.com (Liam Miller-Cushon)
  */
-@BugPattern(name = "GuardedByChecker", altNames = "GuardedBy",
-    summary = "Checks for unguarded accesses to fields and methods with @GuardedBy annotations",
-    category = JDK, severity = ERROR, maturity = MATURE)
-public class GuardedByChecker extends GuardedByValidator implements BugChecker.VariableTreeMatcher,
-    BugChecker.MethodTreeMatcher {
+@BugPattern(
+  name = "GuardedByChecker",
+  altNames = "GuardedBy",
+  summary = "Checks for unguarded accesses to fields and methods with @GuardedBy annotations",
+  category = JDK,
+  severity = ERROR,
+  maturity = MATURE
+)
+public class GuardedByChecker extends GuardedByValidator
+    implements BugChecker.VariableTreeMatcher, BugChecker.MethodTreeMatcher {
 
   private static final String JUC_READ_WRITE_LOCK = "java.util.concurrent.locks.ReadWriteLock";
 
   @Override
   public Description matchMethod(MethodTree tree, final VisitorState state) {
-    // Constructors are free to mutate guarded state without holding the necessary locks. It is
-    // assumed that all objects are thread-local during initialization.
+    // Constructors (and field initializers, instance initalizers, and class initalizers) are free
+    // to mutate guarded state without holding the necessary locks. It is assumed that all objects
+    // (and classes) are thread-local during initialization.
     if (ASTHelpers.getSymbol(tree).isConstructor()) {
       return Description.NO_MATCH;
     }
@@ -66,8 +72,10 @@ public class GuardedByChecker extends GuardedByValidator implements BugChecker.V
 
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
-    // We only want to check field declarations. The VariableTree might be for a local or a
-    // parameter, but they won't have @GuardedBy annotations.
+    // We only want to check field declarations for @GuardedBy usage. The VariableTree might be
+    // for a local or a parameter, but they won't have @GuardedBy annotations.
+    //
+    // Field initializers (like constructors) are not checked for accesses of guarded fields.
     return GuardedByValidator.validate(this, tree, state);
   }
 

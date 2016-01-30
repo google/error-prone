@@ -1197,7 +1197,7 @@ public class GuardedByCheckerTest {
         .doTest();
   }
 
-  @Ignore("TODO(b/26834754): fix resolution of qualified type names")
+  @Ignore("b/26834754") // fix resolution of qualified type names
   @Test
   public void qualfiedType() throws Exception {
     compilationHelper
@@ -1225,7 +1225,7 @@ public class GuardedByCheckerTest {
         .doTest();
   }
 
-  @Ignore("TODO(b/26834754): fix resolution of qualified type names")
+  @Ignore("b/26834754") // fix resolution of qualified type names
   @Test
   public void innerClassTypeQualifier() throws Exception {
     compilationHelper
@@ -1250,6 +1250,82 @@ public class GuardedByCheckerTest {
             "      x++;",
             "    }",
             "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void instanceInitializersAreUnchecked() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "public class Test {",
+            "  public final Object mu1 = new Object();",
+            "  public final Object mu2 = new Object();",
+            "  @GuardedBy(\"mu1\") int x = 1;",
+            "  {",
+            "    synchronized (mu2) {",
+            "      x++;",
+            "    }",
+            "    synchronized (mu1) {",
+            "      x++;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void classInitializersAreUnchecked() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "public class Test {",
+            "  public static final Object mu1 = new Object();",
+            "  public static final Object mu2 = new Object();",
+            "  @GuardedBy(\"mu1\") static int x = 1;",
+            "  static {",
+            "    synchronized (mu2) {",
+            "      x++;",
+            "    }",
+            "    synchronized (mu1) {",
+            "      x++;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void staticFieldInitializersAreUnchecked() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "public class Test {",
+            "  public static final Object mu = new Object();",
+            "  @GuardedBy(\"mu\") static int x0 = 1;",
+            "  static int x1 = x0++;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void instanceFieldInitializersAreUnchecked() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "public class Test {",
+            "  public final Object mu = new Object();",
+            "  @GuardedBy(\"mu\") int x0 = 1;",
+            "  int x1 = x0++;",
             "}")
         .doTest();
   }
