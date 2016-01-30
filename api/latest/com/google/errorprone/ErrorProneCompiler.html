@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":10,"i5":10,"i6":10,"i7":9};
+var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":10,"i6":10,"i7":10,"i8":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -175,16 +175,22 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </td>
 </tr>
 <tr id="i3" class="rowColor">
+<td class="colFirst"><code>static com.google.common.base.Optional&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneCompiler.html#loadVersionFromPom--">loadVersionFromPom</a></span>()</code>
+<div class="block">Loads the Error Prone version.</div>
+</td>
+</tr>
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneCompiler.html#main-java.lang.String:A-">main</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;args)</code>
 <div class="block">Entry point for compiling Java code with error-prone enabled.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>com.sun.tools.javac.main.Main.Result</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneCompiler.html#run-java.lang.String:A-">run</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;args)</code>&nbsp;</td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>com.sun.tools.javac.main.Main.Result</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneCompiler.html#run-java.lang.String:A-com.sun.tools.javac.util.Context-javax.tools.JavaFileManager-java.util.List-java.lang.Iterable-">run</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;argv,
    com.sun.tools.javac.util.Context&nbsp;context,
@@ -192,12 +198,12 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
    <a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/JavaFileObject.html?is-external=true" title="class or interface in javax.tools">JavaFileObject</a>&gt;&nbsp;javaFileObjects,
    <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang">Iterable</a>&lt;? extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/annotation/processing/Processor.html?is-external=true" title="class or interface in javax.annotation.processing">Processor</a>&gt;&nbsp;processors)</code>&nbsp;</td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>com.sun.tools.javac.main.Main.Result</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneCompiler.html#run-java.lang.String:A-java.util.List-">run</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;argv,
    <a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/JavaFileObject.html?is-external=true" title="class or interface in javax.tools">JavaFileObject</a>&gt;&nbsp;javaFileObjects)</code>&nbsp;</td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneCompiler.html#setupMessageBundle-com.sun.tools.javac.util.Context-">setupMessageBundle</a></span>(com.sun.tools.javac.util.Context&nbsp;context)</code>
 <div class="block">Registers our message bundle.</div>
@@ -327,11 +333,21 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <a name="setupMessageBundle-com.sun.tools.javac.util.Context-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>setupMessageBundle</h4>
 <pre>public static&nbsp;void&nbsp;setupMessageBundle(com.sun.tools.javac.util.Context&nbsp;context)</pre>
 <div class="block">Registers our message bundle.</div>
+</li>
+</ul>
+<a name="loadVersionFromPom--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>loadVersionFromPom</h4>
+<pre>public static&nbsp;com.google.common.base.Optional&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;loadVersionFromPom()</pre>
+<div class="block">Loads the Error Prone version.</div>
 </li>
 </ul>
 </li>

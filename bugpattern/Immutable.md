@@ -14,9 +14,12 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 
 ## The problem
 This check validates that all classes annotated with Error Prone's `@Immutable`
-annotation are deeply immutable. It also checks that any class extending an
-`@Immutable`-annotated class or implementing an `@Immutable`-annotated interface
-are also immutable.
+annotation (`com.google.errorprone.annotations.Immutable`) are deeply immutable.
+It also checks that any class extending an `@Immutable`-annotated class or
+implementing an `@Immutable`-annotated interface are also immutable.
+
+Other versions of the annotation, such as
+`javax.annotation.concurrent.Immutable`, are currently *not* enforced.
 
 An object is immutable if its state cannot be observed to change after
 construction. Immutable objects are inherently thread-safe.

@@ -160,6 +160,9 @@ Scope annotation on implementation class of AssistedInject factory is not allowe
 __[HashtableContains](bugpattern/HashtableContains)__<br>
 contains() is a legacy method that is equivalent to containsValue()
 
+__[InsecureCipherMode](bugpattern/InsecureCipherMode)__<br>
+Cipher.getInstance() is invoked using either the default settings or ECB mode
+
 __[InvalidPatternSyntax](bugpattern/InvalidPatternSyntax)__<br>
 Invalid syntax used for a regular expression
 
@@ -333,9 +336,6 @@ Scoping and qualifier annotations must have runtime retention.
 
 __[InjectedConstructorAnnotations](bugpattern/InjectedConstructorAnnotations)__<br>
 Injected constructors cannot be optional nor have binding annotations
-
-__[InsecureCipherMode](bugpattern/InsecureCipherMode)__<br>
-Cipher.getInstance() is invoked using either the default settings or ECB mode
 
 __[JMockTestWithoutRunWithOrRuleAnnotation](bugpattern/JMockTestWithoutRunWithOrRuleAnnotation)__<br>
 jMock tests must have a @RunWith(JMock.class) annotation, or the Mockery field must have a @Rule JUnit annotation

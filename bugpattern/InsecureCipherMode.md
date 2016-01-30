@@ -4,7 +4,7 @@ summary: Cipher.getInstance() is invoked using either the default settings or EC
 layout: bugpattern
 category: JDK
 severity: ERROR
-maturity: EXPERIMENTAL
+maturity: MATURE
 ---
 
 <!--

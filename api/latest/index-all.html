@@ -1595,6 +1595,13 @@
 </dd>
 <dt><a href="com/google/errorprone/ErrorProneCompiler.Builder.html" title="class in com.google.errorprone"><span class="typeNameLink">ErrorProneCompiler.Builder</span></a> - Class in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/ErrorProneError.html" title="class in com.google.errorprone"><span class="typeNameLink">ErrorProneError</span></a> - Error in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
+<dd>
+<div class="block">Wraps an unrecoverable error that occurrs during analysis with the source
+ position that triggered the crash.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneError.html#ErrorProneError-java.lang.Throwable-com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition-javax.tools.JavaFileObject-">ErrorProneError(Throwable, JCDiagnostic.DiagnosticPosition, JavaFileObject)</a></span> - Constructor for error com.google.errorprone.<a href="com/google/errorprone/ErrorProneError.html" title="class in com.google.errorprone">ErrorProneError</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/ErrorProneExternalCompilerAdapter.html" title="class in com.google.errorprone"><span class="typeNameLink">ErrorProneExternalCompilerAdapter</span></a> - Class in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
 <dd>
 <div class="block">Ant component to launch an external javac with error-prone enabled.</div>
@@ -3056,6 +3063,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/internal/NonDelegatingClassLoader.html#loadClass-java.lang.String-boolean-">loadClass(String, boolean)</a></span> - Method in class com.google.errorprone.internal.<a href="com/google/errorprone/internal/NonDelegatingClassLoader.html" title="class in com.google.errorprone.internal">NonDelegatingClassLoader</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneCompiler.html#loadVersionFromPom--">loadVersionFromPom()</a></span> - Static method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneCompiler.html" title="class in com.google.errorprone">ErrorProneCompiler</a></dt>
+<dd>
+<div class="block">Loads the Error Prone version.</div>
+</dd>
 <dt><a href="com/google/errorprone/analysis/LocalAnalysis.html" title="interface in com.google.errorprone.analysis"><span class="typeNameLink">LocalAnalysis</span></a> - Interface in <a href="com/google/errorprone/analysis/package-summary.html">com.google.errorprone.analysis</a></dt>
 <dd>
 <div class="block">A non-recursive analysis analyzing the specific AST node argument and reporting zero or more
@@ -3089,6 +3100,8 @@
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/LockMethodChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><span class="typeNameLink">LockMethodChecker</span></a> - Class in <a href="com/google/errorprone/bugpatterns/threadsafety/package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/LockMethodChecker.html#LockMethodChecker--">LockMethodChecker()</a></span> - Constructor for class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/LockMethodChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">LockMethodChecker</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneError.html#logFatalError-com.sun.tools.javac.util.Log-">logFatalError(Log)</a></span> - Method in error com.google.errorprone.<a href="com/google/errorprone/ErrorProneError.html" title="class in com.google.errorprone">ErrorProneError</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/ULiteral.html#longLit-long-">longLit(long)</a></span> - Static method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ULiteral.html" title="class in com.google.errorprone.refaster">ULiteral</a></dt>
 <dd>&nbsp;</dd>
@@ -4536,6 +4549,10 @@
 <dd>
 <div class="block">Determines whether two expressions refer to the same variable.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/scanner/ErrorProneScanner.html#scan-com.sun.source.util.TreePath-com.google.errorprone.VisitorState-">scan(TreePath, VisitorState)</a></span> - Method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ErrorProneScanner.html" title="class in com.google.errorprone.scanner">ErrorProneScanner</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/scanner/ErrorProneScanner.html#scan-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-">scan(Tree, VisitorState)</a></span> - Method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ErrorProneScanner.html" title="class in com.google.errorprone.scanner">ErrorProneScanner</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/scanner/Scanner.html#scan-com.sun.source.util.TreePath-com.google.errorprone.VisitorState-">scan(TreePath, VisitorState)</a></span> - Method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/Scanner.html" title="class in com.google.errorprone.scanner">Scanner</a></dt>
 <dd>
 <div class="block">Scan a tree from a position identified by a TreePath.</div>
