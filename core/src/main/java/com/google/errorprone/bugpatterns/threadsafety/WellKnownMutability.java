@@ -104,6 +104,7 @@ final class WellKnownMutability {
         .add("com.google.protobuf.ByteString")
         .add("com.google.protobuf.Descriptors$Descriptor")
         .add("com.google.protobuf.Descriptors$EnumDescriptor")
+        .add("com.google.protobuf.Descriptors$EnumValueDescriptor")
         .add("com.google.protobuf.Descriptors$FieldDescriptor")
         .add("com.google.protobuf.Descriptors$FileDescriptor")
         .add("com.google.protobuf.Descriptors$ServiceDescriptor")
