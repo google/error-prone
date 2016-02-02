@@ -156,7 +156,7 @@ public class CheckReturnValueTest {
             "package lib;",
             "public class Test {",
             "  @javax.annotation.CheckReturnValue",
-            " public static int f() {",
+            " public int f() {",
             "    return 0;",
             "  }",
             "}")
@@ -369,20 +369,83 @@ public class CheckReturnValueTest {
             "Foo.java",
             "@javax.annotation.CheckReturnValue",
             "public class Foo {",
-            "  public static int f() {",
+            "  public int f() {",
             "    return 42;",
             "  }",
             "}")
         .addSourceLines(
             "Test.java",
-            "import static org.junit.Assert.fail;",
             "class Test {",
             "  void f(Foo foo) {",
             "    try {",
             "      foo.f();",
-            "      fail();",
-            "    } catch (Exception expected) {",
-            "    }",
+            "      org.junit.Assert.fail();",
+            "    } catch (Exception expected) {}",
+            "    try {",
+            "      foo.f();",
+            "      junit.framework.Assert.fail();",
+            "    } catch (Exception expected) {}",
+            "    try {",
+            "      foo.f();",
+            "      junit.framework.TestCase.fail();",
+            "    } catch (Exception expected) {}",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void ignoreInTestsWithFailureMessage() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Foo.java",
+            "@javax.annotation.CheckReturnValue",
+            "public class Foo {",
+            "  public int f() {",
+            "    return 42;",
+            "  }",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f(Foo foo) {",
+            "    try {",
+            "      foo.f();",
+            "      org.junit.Assert.fail(\"message\");",
+            "    } catch (Exception expected) {}",
+            "    try {",
+            "      foo.f();",
+            "      junit.framework.Assert.fail(\"message\");",
+            "    } catch (Exception expected) {}",
+            "    try {",
+            "      foo.f();",
+            "      junit.framework.TestCase.fail(\"message\");",
+            "    } catch (Exception expected) {}",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void ignoreTruthFailure() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Foo.java",
+            "@javax.annotation.CheckReturnValue",
+            "public class Foo {",
+            "  public int f() {",
+            "    return 42;",
+            "  }",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assert_;",
+            "class Test {",
+            "  void f(Foo foo) {",
+            "    try {",
+            "      foo.f();",
+            "      assert_().fail();",
+            "    } catch (Exception expected) {}",
             "  }",
             "}")
         .doTest();
@@ -395,7 +458,7 @@ public class CheckReturnValueTest {
             "Foo.java",
             "@javax.annotation.CheckReturnValue",
             "public class Foo {",
-            "  public static int f() {",
+            "  public int f() {",
             "    return 42;",
             "  }",
             "}")
@@ -406,7 +469,13 @@ public class CheckReturnValueTest {
             "  void f(Foo foo) {",
             "    // BUG: Diagnostic contains: Ignored return value",
             "    foo.f();",
-            "    fail();",
+            "    org.junit.Assert.fail();",
+            "    // BUG: Diagnostic contains: Ignored return value",
+            "    foo.f();",
+            "    junit.framework.Assert.fail();",
+            "    // BUG: Diagnostic contains: Ignored return value",
+            "    foo.f();",
+            "    junit.framework.TestCase.fail();",
             "  }",
             "}")
         .doTest();

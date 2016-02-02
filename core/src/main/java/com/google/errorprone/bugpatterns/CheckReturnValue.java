@@ -20,8 +20,10 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.enclosingNode;
 import static com.google.errorprone.matchers.Matchers.expressionStatement;
+import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.matchers.Matchers.nextStatement;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
@@ -224,9 +226,13 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
     return false;
   }
 
-  public static final Matcher<StatementTree> EXPECTED_EXCEPTION_MATCHER =
-      allOf(
-          enclosingNode(kindIs(Kind.TRY)),
-          nextStatement(
-              expressionStatement(staticMethod().onClass("org.junit.Assert").named("fail"))));
+  static final Matcher<ExpressionTree> FAIL_METHOD =
+      anyOf(
+          instanceMethod().onDescendantOf("com.google.common.truth.AbstractVerb").named("fail"),
+          staticMethod().onClass("org.junit.Assert").named("fail"),
+          staticMethod().onClass("junit.framework.Assert").named("fail"),
+          staticMethod().onClass("junit.framework.TestCase").named("fail"));
+
+  static final Matcher<StatementTree> EXPECTED_EXCEPTION_MATCHER =
+      allOf(enclosingNode(kindIs(Kind.TRY)), nextStatement(expressionStatement(FAIL_METHOD)));
 }
