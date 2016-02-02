@@ -1052,7 +1052,7 @@ public class ErrorProneScanner extends Scanner {
       throw e;
     } catch (Throwable t) {
       throw new ErrorProneError(
-          t, (DiagnosticPosition) tree, state.getPath().getCompilationUnit().getSourceFile());
+          t, (DiagnosticPosition) tree, getCurrentPath().getCompilationUnit().getSourceFile());
     }
   }
 

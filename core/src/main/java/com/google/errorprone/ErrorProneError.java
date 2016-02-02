@@ -16,15 +16,17 @@
 
 package com.google.errorprone;
 
+import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 
+import com.sun.tools.javac.util.DiagnosticSource;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Log;
 
 import javax.tools.JavaFileObject;
 
 /**
- * Wraps an unrecoverable error that occurrs during analysis with the source
+ * Wraps an unrecoverable error that occurs during analysis with the source
  * position that triggered the crash.
  */
 public class ErrorProneError extends Error {
@@ -34,6 +36,7 @@ public class ErrorProneError extends Error {
   private final JavaFileObject source;
 
   public ErrorProneError(Throwable cause, DiagnosticPosition pos, JavaFileObject source) {
+    super(formatMessage(source, pos), cause);
     this.cause = cause;
     this.pos = pos;
     this.source = source;
@@ -49,5 +52,21 @@ public class ErrorProneError extends Error {
     } finally {
       log.useSource(prev);
     }
+  }
+
+  private static String formatMessage(JavaFileObject file, DiagnosticPosition pos) {
+    DiagnosticSource source = new DiagnosticSource(file, /*log=*/ null);
+    int column = source.getColumnNumber(pos.getStartPosition(), /*expandTabs=*/ true);
+    int line = source.getLineNumber(pos.getStartPosition());
+    String snippet = source.getLine(pos.getStartPosition());
+    StringBuilder sb = new StringBuilder();
+    sb.append(
+        String.format(
+            "\n%s:%d: An unhandled exception was thrown by Error Prone\n",
+            source.getFile().getName(),
+            line));
+    sb.append(snippet).append('\n');
+    sb.append(Strings.repeat(" ", column - 1)).append("^\n");
+    return sb.toString();
   }
 }
