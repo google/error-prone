@@ -480,4 +480,26 @@ public class CheckReturnValueTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void ignoreInOrderVerification() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Lib.java",
+            "public class Lib {",
+            "  @javax.annotation.CheckReturnValue",
+            "  public int f() {",
+            "    return 0;",
+            "  }",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "import static org.mockito.Mockito.inOrder;",
+            "class Test {",
+            "  void m() {",
+            "    inOrder().verify(new Lib()).f();",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

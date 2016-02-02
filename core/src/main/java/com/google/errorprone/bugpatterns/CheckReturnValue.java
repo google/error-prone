@@ -23,9 +23,9 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.enclosingNode;
 import static com.google.errorprone.matchers.Matchers.expressionStatement;
-import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.matchers.Matchers.nextStatement;
+import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
@@ -39,8 +39,6 @@ import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
-import com.google.errorprone.matchers.method.MethodMatchers;
 import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.ClassTree;
@@ -60,10 +58,14 @@ import javax.lang.model.element.ElementKind;
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-@BugPattern(name = "CheckReturnValue",
-    altNames = {"ResultOfMethodCallIgnored", "ReturnValueIgnored"},
-    summary = "Ignored return value of method that is annotated with @CheckReturnValue",
-    category = JDK, severity = ERROR, maturity = MATURE)
+@BugPattern(
+  name = "CheckReturnValue",
+  altNames = {"ResultOfMethodCallIgnored", "ReturnValueIgnored"},
+  summary = "Ignored return value of method that is annotated with @CheckReturnValue",
+  category = JDK,
+  severity = ERROR,
+  maturity = MATURE
+)
 public class CheckReturnValue extends AbstractReturnValueIgnored
     implements MethodTreeMatcher, ClassTreeMatcher {
 
@@ -140,11 +142,11 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
         }
       };
 
-  private static final Matcher<ExpressionTree> MOCKITO_MATCHER = Matchers.anyOf(
-      // Mockido.verify(t).xx();
-      MethodMatchers.staticMethod().onClass("org.mockito.Mockito").named("verify"),
-      // doReturn(val).when(t).xx();
-      MethodMatchers.instanceMethod().onExactClass("org.mockito.stubbing.Stubber").named("when"));
+  private static final Matcher<ExpressionTree> MOCKITO_MATCHER =
+      anyOf(
+          staticMethod().onClass("org.mockito.Mockito").named("verify"),
+          instanceMethod().onDescendantOf("org.mockito.stubbing.Stubber").named("when"),
+          instanceMethod().onDescendantOf("org.mockito.InOrder").named("verify"));
 
   /**
    * Return a matcher for method invocations in which the method being called has the
