@@ -1,5 +1,8 @@
 # Conversion
-markdown: redcarpet
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
 
 # Serving
 baseurl:
