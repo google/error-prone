@@ -33,7 +33,7 @@ import com.sun.tools.javac.code.Symbol;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
   name = "NullableConstructor",
-  summary = "Constructors should be annotated with @Nullable since they cannot return null",
+  summary = "Constructors should not be annotated with @Nullable since they cannot return null",
   explanation = "Constructors never return null.",
   category = JDK,
   severity = WARNING,

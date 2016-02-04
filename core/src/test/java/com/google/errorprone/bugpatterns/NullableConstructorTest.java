@@ -41,7 +41,7 @@ public class NullableConstructorTest {
             "Test.java",
             "import javax.annotation.Nullable;",
             "class Test {",
-            "  // BUG: Diagnostic contains: Constructors should be annotated with @Nullable",
+            "  // BUG: Diagnostic contains: Constructors should not be annotated with @Nullable",
             "  @Nullable public Test() {}",
             "}")
         .doTest();
