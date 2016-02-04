@@ -51,8 +51,12 @@ import javax.tools.JavaFileObject;
  * Helps test Error Prone bug checkers and compilations.
  */
 public class CompilationTestHelper {
-  private static final List<String> DEFAULT_ARGS = ImmutableList.of(
-      "-encoding", "UTF-8");
+  private static final List<String> DEFAULT_ARGS =
+      ImmutableList.of(
+          "-encoding",
+          "UTF-8",
+          // print stack traces for completion failures
+          "-XDdev");
 
   private final DiagnosticTestHelper diagnosticHelper;
   private final ErrorProneCompiler compiler;
