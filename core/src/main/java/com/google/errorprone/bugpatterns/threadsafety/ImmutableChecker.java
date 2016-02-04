@@ -458,7 +458,11 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
         return Violation.of(
             String.format("'%s' is known to be mutable", type.tsym.getSimpleName()));
       }
-      if (WellKnownMutability.isImmutableProto(state, type)) {
+      if (WellKnownMutability.isProto2MessageClass(state, type)) {
+        if (WellKnownMutability.isProto2MutableMessageClass(state, type)) {
+          return Violation.of(
+              String.format("'%s' is a mutable proto message", type.tsym.getSimpleName()));
+        }
         return Violation.absent();
       }
       return Violation.of(String.format("'%s' is not annotated @Immutable", type));

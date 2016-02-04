@@ -25,9 +25,10 @@ import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.common.primitives.Primitives;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.suppliers.Supplier;
+import com.google.errorprone.suppliers.Suppliers;
 
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.Types;
 
 import java.lang.reflect.TypeVariable;
 import java.util.HashSet;
@@ -149,47 +150,42 @@ final class WellKnownMutability {
     return result.build();
   }
 
-  /** @return true if the type is an immutable proto. */
-  public static boolean isImmutableProto(VisitorState state, Type type) {
-    return isProto2MessageClass(state, type) && !isProto2MutableMessageClass(state, type);
+  // ProtocolSupport matches Message (not MessageLite) for legacy reasons
+  private static final Supplier<Type> MESSAGE_TYPE =
+      Suppliers.typeFromString("com.google.protobuf.MessageLite");
+
+  private static final Supplier<Type> MUTABLE_MESSAGE_TYPE =
+      Suppliers.typeFromString("com.google.protobuf.MutableMessageLite");
+
+  private static final Supplier<Type> PROTOCOL_MESSAGE_TYPE =
+      Suppliers.typeFromString("com.google.io.protocol.ProtocolMessage");
+
+  private static boolean isAssignableTo(Type type, Supplier<Type> supplier, VisitorState state) {
+    Type to = supplier.get(state);
+    if (to == null) {
+      // the type couldn't be loaded
+      return false;
+    }
+    return state.getTypes().isAssignable(type, to);
   }
 
   /**
    * Compile-time equivalent of
    * {@code com.google.io.protocol.ProtocolSupport#isProto2MessageClass}.
    */
-  private static boolean isProto2MessageClass(VisitorState state, Type type) {
+  static boolean isProto2MessageClass(VisitorState state, Type type) {
     checkNotNull(type);
-    // ProtocolSupport matches Message (not MessageLite) for legacy reasons
-    Type messageType = state.getTypeFromString("com.google.protobuf.MessageLite");
-    if (messageType == null) {
-      return false;
-    }
-    Type protocolMessageType = state.getTypeFromString("com.google.io.protocol.ProtocolMessage");
-    if (protocolMessageType == null) {
-      return false;
-    }
-    Types types = state.getTypes();
-    return types.isAssignable(type, messageType) && !types.isAssignable(type, protocolMessageType);
+    return isAssignableTo(type, MESSAGE_TYPE, state)
+        && !isAssignableTo(type, PROTOCOL_MESSAGE_TYPE, state);
   }
 
   /**
    * Compile-time equivalent of
    * {@code com.google.io.protocol.ProtocolSupport#isProto2MutableMessageClass}.
    */
-  private static boolean isProto2MutableMessageClass(VisitorState state, Type type) {
+  static boolean isProto2MutableMessageClass(VisitorState state, Type type) {
     checkNotNull(type);
-    // ProtocolSupport matches MutableMessage (not MutableMessageLite) for legacy reasons
-    Type mutableMessageType = state.getTypeFromString("com.google.protobuf.MutableMessageLite");
-    if (mutableMessageType == null) {
-      return false;
-    }
-    Type protocolMessageType = state.getTypeFromString("com.google.io.protocol.ProtocolMessage");
-    if (protocolMessageType == null) {
-      return false;
-    }
-    Types types = state.getTypes();
-    return types.isAssignable(type, mutableMessageType)
-        && !types.isAssignable(type, protocolMessageType);
+    return isAssignableTo(type, MUTABLE_MESSAGE_TYPE, state)
+        && !isAssignableTo(type, PROTOCOL_MESSAGE_TYPE, state);
   }
 }
