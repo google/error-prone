@@ -484,6 +484,20 @@ public class ASTHelpers {
    *
    * @return true if the symbol is annotated with given type.
    */
+  public static boolean hasAnnotation(
+      Symbol sym, Class<? extends Annotation> annotationType, VisitorState state) {
+    return hasAnnotation(sym, annotationType.getName(), state);
+  }
+
+  /**
+   * Check for the presence of an annotation, considering annotation inheritance.
+   *
+   * <p>NOTE: If found, the annotation type will always be loaded. If the annotation cannot be
+   * loaded from the classpath, this will result in a completion failure.
+   *
+   * @return true if the symbol is annotated with given type.
+   */
+  // TODO(cushon): consider migrating to hasAnnotation(Symbol, String, VisitorState)
   public static boolean hasAnnotation(Symbol sym, Class<? extends Annotation> annotationType) {
     return getAnnotation(sym, annotationType) != null;
   }
@@ -491,8 +505,12 @@ public class ASTHelpers {
   /**
    * Check for the presence of an annotation, considering annotation inheritance.
    *
+   * <p>NOTE: If found, the annotation type will always be loaded. If the annotation cannot be
+   * loaded from the classpath, this will result in a completion failure.
+   *
    * @return true if the tree's symbol has an annotation of the given type.
    */
+  // TODO(cushon): consider migrating to hasAnnotation(Symbol, String, VisitorState)
   public static boolean hasAnnotation(Tree tree, Class<? extends Annotation> annotationType) {
     return getAnnotation(tree, annotationType) != null;
   }

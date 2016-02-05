@@ -16,12 +16,23 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.common.io.ByteStreams;
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.jar.JarEntry;
+import java.util.jar.JarOutputStream;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
@@ -500,6 +511,44 @@ public class CheckReturnValueTest {
             "    inOrder().verify(new Lib()).f();",
             "  }",
             "}")
+        .doTest();
+  }
+
+  @Rule public TemporaryFolder tempFolder = new TemporaryFolder();
+
+  /** Test class containing a method annotated with @CRV. */
+  public static class CRVTest {
+    @javax.annotation.CheckReturnValue
+    public static int f() {
+      return 42;
+    }
+  }
+
+  static void addClassToJar(JarOutputStream jos, Class<?> clazz) throws IOException {
+    String entryPath = clazz.getName().replace('.', '/') + ".class";
+    try (InputStream is = clazz.getClassLoader().getResourceAsStream(entryPath)) {
+      jos.putNextEntry(new JarEntry(entryPath));
+      ByteStreams.copy(is, jos);
+    }
+  }
+
+  @Test
+  public void noCRVonClasspath() throws Exception {
+    File libJar = tempFolder.newFile("lib.jar");
+    try (FileOutputStream fis = new FileOutputStream(libJar);
+        JarOutputStream jos = new JarOutputStream(fis)) {
+      addClassToJar(jos, CRVTest.class);
+      addClassToJar(jos, CheckReturnValueTest.class);
+    }
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void m() {",
+            "    com.google.errorprone.bugpatterns.CheckReturnValueTest.CRVTest.f();",
+            "  }",
+            "}")
+        .setArgs(Arrays.asList("-cp", libJar.toString()))
         .doTest();
   }
 }

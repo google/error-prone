@@ -228,6 +228,44 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
     assertCompiles(scanner);
   }
 
+  // verify that hasAnnotation(Symbol, String, VisitorState) uses binary names for inner classes
+  @Test
+  public void testInnerAnnotationType() {
+    writeFile("test/Lib.java",
+        "package test;",
+        "public class Lib {",
+        "  public @interface MyAnnotation {}",
+        "}");
+    writeFile("test/Test.java",
+        "package test;",
+        "import test.Lib.MyAnnotation;",
+        "@MyAnnotation",
+        "public class Test {}");
+
+    TestScanner scanner =
+        new TestScanner() {
+          @Override
+          public Void visitClass(ClassTree tree, VisitorState state) {
+            if (tree.getSimpleName().toString().equals("Test")) {
+              assertMatch(
+                  tree,
+                  state,
+                  new Matcher<ClassTree>() {
+                    @Override
+                    public boolean matches(ClassTree t, VisitorState state) {
+                      return ASTHelpers.hasAnnotation(
+                          ASTHelpers.getSymbol(t), "test.Lib$MyAnnotation", state);
+                    }
+                  });
+              setAssertionsComplete();
+            }
+            return super.visitClass(tree, state);
+          }
+        };
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
   /* Tests for ASTHelpers#getType */
 
   @Test

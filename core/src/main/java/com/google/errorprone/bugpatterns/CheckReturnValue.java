@@ -69,20 +69,20 @@ import javax.lang.model.element.ElementKind;
 public class CheckReturnValue extends AbstractReturnValueIgnored
     implements MethodTreeMatcher, ClassTreeMatcher {
 
-  private static Optional<Boolean> shouldCheckReturnValue(Symbol sym) {
-    if (hasAnnotation(sym, CanIgnoreReturnValue.class)) {
+  private static Optional<Boolean> shouldCheckReturnValue(Symbol sym, VisitorState state) {
+    if (hasAnnotation(sym, CanIgnoreReturnValue.class, state)) {
       return Optional.of(false);
     }
-    if (hasAnnotation(sym, javax.annotation.CheckReturnValue.class)) {
+    if (hasAnnotation(sym, javax.annotation.CheckReturnValue.class, state)) {
       return Optional.of(true);
     }
     return Optional.absent();
   }
 
-  private static Optional<Boolean> checkEnclosingClasses(MethodSymbol method) {
+  private static Optional<Boolean> checkEnclosingClasses(MethodSymbol method, VisitorState state) {
     Symbol enclosingClass = enclosingClass(method);
     while (enclosingClass instanceof ClassSymbol) {
-      Optional<Boolean> result = shouldCheckReturnValue(enclosingClass);
+      Optional<Boolean> result = shouldCheckReturnValue(enclosingClass, state);
       if (result.isPresent()) {
         return result;
       }
@@ -91,8 +91,8 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
     return Optional.absent();
   }
 
-  private static Optional<Boolean> checkPackage(MethodSymbol method) {
-    return shouldCheckReturnValue(enclosingPackage(method));
+  private static Optional<Boolean> checkPackage(MethodSymbol method, VisitorState state) {
+    return shouldCheckReturnValue(enclosingPackage(method), state);
   }
 
   private static final Matcher<MethodInvocationTree> MATCHER =
@@ -123,17 +123,17 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
             return false;
           }
 
-          Optional<Boolean> result = shouldCheckReturnValue(method);
+          Optional<Boolean> result = shouldCheckReturnValue(method, state);
           if (result.isPresent()) {
             return result.get();
           }
 
-          result = checkEnclosingClasses(method);
+          result = checkEnclosingClasses(method, state);
           if (result.isPresent()) {
             return result.get();
           }
 
-          result = checkPackage(method);
+          result = checkPackage(method, state);
           if (result.isPresent()) {
             return result.get();
           }
