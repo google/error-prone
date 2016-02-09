@@ -209,21 +209,25 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
     writeFile("C.java",
         "public class C extends B {}");
 
-    TestScanner scanner = new TestScanner() {
-      @Override
-      public Void visitClass(ClassTree tree, VisitorState state) {
-        if (tree.getSimpleName().toString().equals("C")) {
-          assertMatch(tree, state, new Matcher<ClassTree>() {
-            @Override
-            public boolean matches(ClassTree t, VisitorState state) {
-              return ASTHelpers.hasAnnotation(t, InheritedAnnotation.class);
+    TestScanner scanner =
+        new TestScanner() {
+          @Override
+          public Void visitClass(ClassTree tree, VisitorState state) {
+            if (tree.getSimpleName().toString().equals("C")) {
+              assertMatch(
+                  tree,
+                  state,
+                  new Matcher<ClassTree>() {
+                    @Override
+                    public boolean matches(ClassTree t, VisitorState state) {
+                      return ASTHelpers.hasAnnotation(t, InheritedAnnotation.class, state);
+                    }
+                  });
+              setAssertionsComplete();
             }
-          });
-          setAssertionsComplete();
-        }
-        return super.visitClass(tree, state);
-      }
-    };
+            return super.visitClass(tree, state);
+          }
+        };
     tests.add(scanner);
     assertCompiles(scanner);
   }

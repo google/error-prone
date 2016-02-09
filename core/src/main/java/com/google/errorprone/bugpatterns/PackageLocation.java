@@ -61,7 +61,7 @@ public class PackageLocation extends BugChecker implements CompilationUnitTreeMa
 
     // package-info annotations are special
     // TODO(cushon): fix the core suppression logic handle this
-    if (ASTHelpers.hasAnnotation(tree.getPackage(), SuppressPackageLocation.class)) {
+    if (ASTHelpers.hasAnnotation(tree.getPackage(), SuppressPackageLocation.class, state)) {
       return Description.NO_MATCH;
     }
 

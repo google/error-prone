@@ -16,6 +16,7 @@ package com.google.errorprone.analysis;
 
 import com.google.auto.value.AutoValue;
 import com.google.errorprone.DescriptionListener;
+import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.CompilationUnitTree;
@@ -50,14 +51,15 @@ public abstract class LocalAnalysisAsTopLevelAnalysis implements TopLevelAnalysi
     return analysis().allNames();
   }
 
-  private boolean suppressed(Tree tree) {
+  private boolean suppressed(Tree tree, Context context) {
     switch (analysis().suppressibility()) {
       case UNSUPPRESSIBLE:
         return false;
       case CUSTOM_ANNOTATION:
         for (Class<? extends Annotation> customSuppressionAnnotation :
             analysis().customSuppressionAnnotations()) {
-          if (ASTHelpers.hasAnnotation(tree, customSuppressionAnnotation)) {
+          if (ASTHelpers.hasAnnotation(
+              tree, customSuppressionAnnotation, new VisitorState(context))) {
             return true;
           }
         }
@@ -77,7 +79,7 @@ public abstract class LocalAnalysisAsTopLevelAnalysis implements TopLevelAnalysi
     new TreePathScanner<Void, DescriptionListener>() {
       @Override
       public Void scan(Tree tree, DescriptionListener listener) {
-        if (!suppressed(tree)) {
+        if (!suppressed(tree, context)) {
           analysis().analyze(getCurrentPath(), context, configuration, listener);
           super.scan(tree, listener);
         }

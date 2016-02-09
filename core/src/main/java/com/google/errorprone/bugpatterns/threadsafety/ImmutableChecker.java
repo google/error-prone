@@ -537,7 +537,7 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
       }
       // Don't use getImmutableAnnotation here: subtypes of trusted types are
       // also trusted, only check for explicitly annotated supertypes.
-      if (ASTHelpers.hasAnnotation(superType.tsym, Immutable.class)) {
+      if (ASTHelpers.hasAnnotation(superType.tsym, Immutable.class, state)) {
         return superType;
       }
       // We currently trust that @interface annotations are immutable, but don't enforce that

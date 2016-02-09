@@ -104,16 +104,18 @@ public class SuppressionHelper {
       Type suppressWarningsType,
       Set<String> suppressionsOnCurrentPath,
       Set<Class<? extends Annotation>> customSuppressionsOnCurrentPath,
-      boolean inGeneratedCode) {
+      boolean inGeneratedCode,
+      VisitorState state) {
 
-    boolean newInGeneratedCode = inGeneratedCode || ASTHelpers.hasAnnotation(sym, Generated.class);
+    boolean newInGeneratedCode =
+        inGeneratedCode || ASTHelpers.hasAnnotation(sym, Generated.class, state);
 
     /**
      * Handle custom suppression annotations.
      */
     Set<Class<? extends Annotation>> newCustomSuppressions = null;
     for (Class<? extends Annotation> annotationType : customSuppressionAnnotations) {
-      if (ASTHelpers.hasAnnotation(sym, annotationType)) {
+      if (ASTHelpers.hasAnnotation(sym, annotationType, state)) {
         if (newCustomSuppressions == null) {
           newCustomSuppressions = new HashSet<>(customSuppressionsOnCurrentPath);
         }

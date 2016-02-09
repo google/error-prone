@@ -173,8 +173,8 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
   public Description matchMethod(MethodTree tree, VisitorState state) {
     MethodSymbol method = ASTHelpers.getSymbol(tree);
 
-    boolean checkReturn = hasAnnotation(method, javax.annotation.CheckReturnValue.class);
-    boolean canIgnore = hasAnnotation(method, CanIgnoreReturnValue.class);
+    boolean checkReturn = hasAnnotation(method, javax.annotation.CheckReturnValue.class, state);
+    boolean canIgnore = hasAnnotation(method, CanIgnoreReturnValue.class, state);
 
     if (checkReturn && canIgnore) {
       return buildDescription(tree).setMessage(String.format(BOTH_ERROR, "method")).build();
@@ -206,8 +206,8 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
    */
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
-    if (hasAnnotation(tree, javax.annotation.CheckReturnValue.class)
-        && hasAnnotation(tree, CanIgnoreReturnValue.class)) {
+    if (hasAnnotation(tree, javax.annotation.CheckReturnValue.class, state)
+        && hasAnnotation(tree, CanIgnoreReturnValue.class, state)) {
       return buildDescription(tree).setMessage(String.format(BOTH_ERROR, "class")).build();
     }
     return Description.NO_MATCH;

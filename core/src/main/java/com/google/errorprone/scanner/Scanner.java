@@ -115,7 +115,8 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
               state.getSymtab().suppressWarningsType,
               suppressions,
               customSuppressions,
-              inGeneratedCode);
+              inGeneratedCode,
+              state);
       if (newSuppressions.suppressWarningsStrings != null) {
         suppressions = newSuppressions.suppressWarningsStrings;
       }

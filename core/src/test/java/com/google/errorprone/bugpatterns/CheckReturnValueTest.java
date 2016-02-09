@@ -545,6 +545,7 @@ public class CheckReturnValueTest {
             "Test.java",
             "class Test {",
             "  void m() {",
+            "    // BUG: Diagnostic contains: Ignored return value",
             "    com.google.errorprone.bugpatterns.CheckReturnValueTest.CRVTest.f();",
             "  }",
             "}")

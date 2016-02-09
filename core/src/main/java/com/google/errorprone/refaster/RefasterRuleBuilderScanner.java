@@ -27,6 +27,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Ordering;
 import com.google.errorprone.CodeTransformer;
 import com.google.errorprone.SubContext;
+import com.google.errorprone.VisitorState;
 import com.google.errorprone.refaster.annotation.AfterTemplate;
 import com.google.errorprone.refaster.annotation.AllowCodeBetweenLines;
 import com.google.errorprone.refaster.annotation.AlsoNegation;
@@ -108,8 +109,9 @@ public final class RefasterRuleBuilderScanner extends SimpleTreeVisitor<Void, Vo
   @Override
   public Void visitMethod(MethodTree tree, Void v) {
     try {
+      VisitorState state = new VisitorState(context);
       logger.log(FINE, "Discovered method with name {0}", tree.getName());
-      if (ASTHelpers.hasAnnotation(tree, Placeholder.class)) {
+      if (ASTHelpers.hasAnnotation(tree, Placeholder.class, state)) {
         checkArgument(tree.getModifiers().getFlags().contains(Modifier.ABSTRACT),
             "@Placeholder methods are expected to be abstract");
         UTemplater templater = new UTemplater(context);
@@ -123,14 +125,14 @@ public final class RefasterRuleBuilderScanner extends SimpleTreeVisitor<Void, Vo
         placeholderMethods.put(sym, PlaceholderMethod.create(tree.getName(),
             templater.template(sym.getReturnType()), params.build(),
             UTemplater.annotationMap(sym)));
-      } else if (ASTHelpers.hasAnnotation(tree, BeforeTemplate.class)) {
+      } else if (ASTHelpers.hasAnnotation(tree, BeforeTemplate.class, state)) {
         checkState(afterTemplates.isEmpty(), "BeforeTemplate must come before AfterTemplate");
         Template<?> template = UTemplater.createTemplate(context, tree);
         beforeTemplates.add(template);
         if (template instanceof BlockTemplate) {
           context.put(UTemplater.REQUIRE_BLOCK_KEY, true);
         }
-      } else if (ASTHelpers.hasAnnotation(tree, AfterTemplate.class)) {
+      } else if (ASTHelpers.hasAnnotation(tree, AfterTemplate.class, state)) {
         afterTemplates.add(UTemplater.createTemplate(context, tree));
       } else if (tree.getModifiers().getFlags().contains(Modifier.ABSTRACT)) {
         throw new IllegalArgumentException(
