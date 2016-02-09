@@ -1597,7 +1597,7 @@
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/ErrorProneError.html" title="class in com.google.errorprone"><span class="typeNameLink">ErrorProneError</span></a> - Error in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
 <dd>
-<div class="block">Wraps an unrecoverable error that occurrs during analysis with the source
+<div class="block">Wraps an unrecoverable error that occurs during analysis with the source
  position that triggered the crash.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneError.html#ErrorProneError-java.lang.Throwable-com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition-javax.tools.JavaFileObject-">ErrorProneError(Throwable, JCDiagnostic.DiagnosticPosition, JavaFileObject)</a></span> - Constructor for error com.google.errorprone.<a href="com/google/errorprone/ErrorProneError.html" title="class in com.google.errorprone">ErrorProneError</a></dt>
@@ -1723,7 +1723,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/ExpressionTemplate.html#ExpressionTemplate--">ExpressionTemplate()</a></span> - Constructor for class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ExpressionTemplate.html" title="class in com.google.errorprone.refaster">ExpressionTemplate</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/SuppressionHelper.html#extendSuppressionSets-com.sun.tools.javac.code.Symbol-com.sun.tools.javac.code.Type-java.util.Set-java.util.Set-boolean-">extendSuppressionSets(Symbol, Type, Set&lt;String&gt;, Set&lt;Class&lt;? extends Annotation&gt;&gt;, boolean)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/SuppressionHelper.html" title="class in com.google.errorprone">SuppressionHelper</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/SuppressionHelper.html#extendSuppressionSets-com.sun.tools.javac.code.Symbol-com.sun.tools.javac.code.Type-java.util.Set-java.util.Set-boolean-com.google.errorprone.VisitorState-">extendSuppressionSets(Symbol, Type, Set&lt;String&gt;, Set&lt;Class&lt;? extends Annotation&gt;&gt;, boolean, VisitorState)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/SuppressionHelper.html" title="class in com.google.errorprone">SuppressionHelper</a></dt>
 <dd>
 <div class="block">Extend suppression sets for both <code>@SuppressWarnings</code> and custom suppression annotations.</div>
 </dd>
@@ -2401,11 +2401,11 @@
 <dd>
 <div class="block">Determines whether a symbol has an annotation of the given type.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation-com.sun.tools.javac.code.Symbol-java.lang.Class-">hasAnnotation(Symbol, Class&lt;? extends Annotation&gt;)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation-com.sun.tools.javac.code.Symbol-java.lang.Class-com.google.errorprone.VisitorState-">hasAnnotation(Symbol, Class&lt;? extends Annotation&gt;, VisitorState)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
 <div class="block">Check for the presence of an annotation, considering annotation inheritance.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation-com.sun.source.tree.Tree-java.lang.Class-">hasAnnotation(Tree, Class&lt;? extends Annotation&gt;)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation-com.sun.source.tree.Tree-java.lang.Class-com.google.errorprone.VisitorState-">hasAnnotation(Tree, Class&lt;? extends Annotation&gt;, VisitorState)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
 <div class="block">Check for the presence of an annotation, considering annotation inheritance.</div>
 </dd>

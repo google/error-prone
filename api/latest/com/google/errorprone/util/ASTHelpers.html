@@ -330,8 +330,9 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </tr>
 <tr id="i28" class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#hasAnnotation-com.sun.tools.javac.code.Symbol-java.lang.Class-">hasAnnotation</a></span>(com.sun.tools.javac.code.Symbol&nbsp;sym,
-             <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;annotationType)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#hasAnnotation-com.sun.tools.javac.code.Symbol-java.lang.Class-com.google.errorprone.VisitorState-">hasAnnotation</a></span>(com.sun.tools.javac.code.Symbol&nbsp;sym,
+             <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;annotationType,
+             <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
 <div class="block">Check for the presence of an annotation, considering annotation inheritance.</div>
 </td>
 </tr>
@@ -345,8 +346,9 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </tr>
 <tr id="i30" class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#hasAnnotation-com.sun.source.tree.Tree-java.lang.Class-">hasAnnotation</a></span>(com.sun.source.tree.Tree&nbsp;tree,
-             <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;annotationType)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#hasAnnotation-com.sun.source.tree.Tree-java.lang.Class-com.google.errorprone.VisitorState-">hasAnnotation</a></span>(com.sun.source.tree.Tree&nbsp;tree,
+             <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;annotationType,
+             <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
 <div class="block">Check for the presence of an annotation, considering annotation inheritance.</div>
 </td>
 </tr>
@@ -719,14 +721,15 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </dl>
 </li>
 </ul>
-<a name="hasAnnotation-com.sun.tools.javac.code.Symbol-java.lang.Class-">
+<a name="hasAnnotation-com.sun.tools.javac.code.Symbol-java.lang.Class-com.google.errorprone.VisitorState-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>hasAnnotation</h4>
 <pre>public static&nbsp;boolean&nbsp;hasAnnotation(com.sun.tools.javac.code.Symbol&nbsp;sym,
-                                    <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;annotationType)</pre>
+                                    <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;annotationType,
+                                    <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
 <div class="block">Check for the presence of an annotation, considering annotation inheritance.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -734,18 +737,19 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </dl>
 </li>
 </ul>
-<a name="hasAnnotation-com.sun.source.tree.Tree-java.lang.Class-">
+<a name="hasAnnotation-com.sun.source.tree.Tree-java.lang.Class-com.google.errorprone.VisitorState-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>hasAnnotation</h4>
 <pre>public static&nbsp;boolean&nbsp;hasAnnotation(com.sun.source.tree.Tree&nbsp;tree,
-                                    <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;annotationType)</pre>
+                                    <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;annotationType,
+                                    <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
 <div class="block">Check for the presence of an annotation, considering annotation inheritance.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>true if the tree's symbol has an annotation of the given type.</dd>
+<dd>the annotation of given type on the tree's symbol, or null.</dd>
 </dl>
 </li>
 </ul>

@@ -171,6 +171,26 @@
 </tr>
 </tbody>
 </table>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
+<caption><span>Methods in <a href="../../../../com/google/errorprone/package-summary.html">com.google.errorprone</a> with parameters of type <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/SuppressionHelper.SuppressionInfo.html" title="class in com.google.errorprone">SuppressionHelper.SuppressionInfo</a></code></td>
+<td class="colLast"><span class="typeNameLabel">SuppressionHelper.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/SuppressionHelper.html#extendSuppressionSets-com.sun.tools.javac.code.Symbol-com.sun.tools.javac.code.Type-java.util.Set-java.util.Set-boolean-com.google.errorprone.VisitorState-">extendSuppressionSets</a></span>(com.sun.tools.javac.code.Symbol&nbsp;sym,
+                     com.sun.tools.javac.code.Type&nbsp;suppressWarningsType,
+                     <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;suppressionsOnCurrentPath,
+                     <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&gt;&nbsp;customSuppressionsOnCurrentPath,
+                     boolean&nbsp;inGeneratedCode,
+                     <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
+<div class="block">Extend suppression sets for both <code>@SuppressWarnings</code> and custom suppression annotations.</div>
+</td>
+</tr>
+</tbody>
+</table>
 <table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing constructors, and an explanation">
 <caption><span>Constructors in <a href="../../../../com/google/errorprone/package-summary.html">com.google.errorprone</a> with parameters of type <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
@@ -2382,10 +2402,26 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static boolean</code></td>
+<td class="colLast"><span class="typeNameLabel">ASTHelpers.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#hasAnnotation-com.sun.tools.javac.code.Symbol-java.lang.Class-com.google.errorprone.VisitorState-">hasAnnotation</a></span>(com.sun.tools.javac.code.Symbol&nbsp;sym,
+             <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;annotationType,
+             <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
+<div class="block">Check for the presence of an annotation, considering annotation inheritance.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><span class="typeNameLabel">ASTHelpers.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#hasAnnotation-com.sun.tools.javac.code.Symbol-java.lang.String-com.google.errorprone.VisitorState-">hasAnnotation</a></span>(com.sun.tools.javac.code.Symbol&nbsp;sym,
              <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;annotationType,
              <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
 <div class="block">Determines whether a symbol has an annotation of the given type.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static boolean</code></td>
+<td class="colLast"><span class="typeNameLabel">ASTHelpers.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#hasAnnotation-com.sun.source.tree.Tree-java.lang.Class-com.google.errorprone.VisitorState-">hasAnnotation</a></span>(com.sun.source.tree.Tree&nbsp;tree,
+             <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;annotationType,
+             <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
+<div class="block">Check for the presence of an annotation, considering annotation inheritance.</div>
 </td>
 </tr>
 <tr class="altColor">

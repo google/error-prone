@@ -57,7 +57,7 @@ __[NonOverridingEquals](bugpattern/NonOverridingEquals)__<br>
 equals method doesn&#39;t override Object.equals
 
 __[NullableConstructor](bugpattern/NullableConstructor)__<br>
-Constructors should be annotated with @Nullable since they cannot return null
+Constructors should not be annotated with @Nullable since they cannot return null
 
 __[NullablePrimitive](bugpattern/NullablePrimitive)__<br>
 @Nullable should not be used for primitive types since they cannot be null

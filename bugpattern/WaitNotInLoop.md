@@ -110,16 +110,18 @@ synchronized (this) {
 }
 ```
 
-A spurious wakeup could this to proceed to 
-`doStuffAssumingConditionIsTrueOrTimeoutHasOccurred()` even if the condition
-is still false and time less than the timeout has elapsed.  Instead, you should
+A spurious wakeup could cause this to proceed to
+`doStuffAssumingConditionIsTrueOrTimeoutHasOccurred()` even if the condition is
+still false and time less than the timeout has elapsed. Instead, you should
 write:
 
 ```java
 synchronized (this) {
-  int deadline = System.currentTimeMillis() + timeout; 
-  while (!condition && System.currentTimeMillis() < deadline) {
-    wait(deadline - System.currentTimeMillis());
+  long now = System.currentTimeMillis();
+  long deadline = now + timeout;
+  while (!condition && now < deadline) {
+    wait(deadline - now);
+    now = System.currentTimeMillis();
   }
   doStuffAssumingConditionIsTrueOrTimeoutHasOccurred();
 }
