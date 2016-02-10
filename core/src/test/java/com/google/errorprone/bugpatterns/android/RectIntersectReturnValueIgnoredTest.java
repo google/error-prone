@@ -34,8 +34,6 @@ public class RectIntersectReturnValueIgnoredTest {
   public void setUp() {
     compilationHelper =
         CompilationTestHelper.newInstance(RectIntersectReturnValueIgnored.class, getClass());
-    compilationHelper.addSourceFile("stubs/android/graphics/Rect.java");
-
   }
 
   @Test
