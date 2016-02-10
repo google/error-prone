@@ -8,6 +8,30 @@ compilation. Please join our [mailing
 list](http://groups.google.com/group/error-prone-announce) to know when a new
 version is released!
 
+# Bazel
+
+Error Prone works out of the box with [Bazel](http://bazel.io).
+
+```
+java_library(
+    name = "hello",
+    srcs = ["Hello.java"],
+)
+```
+
+```
+$ bazel build :hello
+ERROR: example/myproject/BUILD:29:1: Java compilation in rule '//example/myproject:hello'
+examples/maven/error_prone_should_flag/src/main/java/Main.java:20: error: [DeadException] Exception created but not thrown
+    new Exception();
+    ^
+    (see http://errorprone.info/bugpattern/DeadException)
+  Did you mean 'throw new Exception();'?
+1 error
+BazelJavaBuilder threw exception: java compilation returned status ERROR
+INFO: Elapsed time: 1.989s, Critical Path: 1.69s
+```
+
 # Maven
 
 Edit your `pom.xml` file to add settings to the maven-compiler-plugin:
