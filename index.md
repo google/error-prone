@@ -5,7 +5,9 @@ layout: master
 
 # Error Prone
 
-It's common for even the best programmers to make simple mistakes. And sometimes a refactoring which seems safe can leave behind code which will never do what's intended.
+It's common for even the best programmers to make simple mistakes. And
+sometimes a refactoring which seems safe can leave behind code which will never
+do what's intended.
 
 We're used to getting help from the compiler, but it doesn't do much beyond
 static type checking. Using Error Prone to augment the compiler's type
@@ -22,28 +24,26 @@ __Error Prone ...__
 
 ## How it works
 
-__src/Main.java__
-
 ```java
-public class Main {
-  public static void main(String[] args) {
-    if (args.length < 1) {
-      new IllegalArgumentException("Missing required argument");
+public class ShortSet {
+  public static void main (String[] args) {
+    Set<Short> s = new HashSet<>();
+    for (short i = 0; i < 100; i++) {
+      s.add(i);
+      s.remove(i - 1);
     }
+    System.out.println(s.size());
   }
 }
 ```
 
-```bash
-../examples/maven/error_prone_should_flag$ mvn compile
-[INFO] Compiling 1 source file to .../examples/maven/error_prone_should_flag/target/classes
-.../examples/maven/error_prone_should_flag/src/main/java/Main.java:20: error: [DeadException] Exception created but not thrown
-    new Exception();
-    ^
-    (see http://errorprone.info/bugpattern/DeadException)
-  Did you mean 'throw new Exception();'?
+```
+$ bazel build :hello
+ERROR: example/myproject/BUILD:29:1: Java compilation in rule '//example/myproject:hello'
+ShortSet.java:6: error: [CollectionIncompatibleType] Argument 'i - 1' should not be passed to this method;
+its type int is not compatible with its collection's type argument Short
+      s.remove(i - 1);
+              ^
+    (see http://errorprone.info/bugpattern/CollectionIncompatibleType)
 1 error
-[INFO] ------------------------------------------------------------------------
-[INFO] BUILD FAILURE
-[INFO] ------------------------------------------------------------------------
 ```
