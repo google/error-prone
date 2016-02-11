@@ -20,6 +20,7 @@ import static com.google.common.truth.Truth.assertAbout;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.io.CharStreams;
@@ -118,8 +119,8 @@ public class BugCheckerRefactoringTestHelper {
 
   private void runTestOnPair(JavaFileObject input, JavaFileObject output, TestMode testMode)
       throws IOException {
-    JavacTaskImpl task = createJavacTask(input);
-    JCCompilationUnit tree = parseAndAnalyze(task);
+    JavacTaskImpl task = createJavacTask();
+    JCCompilationUnit tree = parseAndAnalyze(task, input);
     JavaFileObject transformed = applyDiff(input, task, tree);
 
     testMode.verifyMatch(transformed, output);
@@ -140,27 +141,37 @@ public class BugCheckerRefactoringTestHelper {
     return transformed;
   }
 
-  private JCCompilationUnit parseAndAnalyze(JavacTaskImpl task) {
+  private JCCompilationUnit parseAndAnalyze(JavacTaskImpl task, final JavaFileObject input) {
     Iterable<? extends CompilationUnitTree> trees = task.parse();
     task.analyze();
-    return Iterables.getOnlyElement(Iterables.filter(trees, JCCompilationUnit.class));
+    return Iterables.getOnlyElement(
+        Iterables.filter(
+            Iterables.filter(trees, JCCompilationUnit.class),
+            new Predicate<JCCompilationUnit>() {
+              @Override
+              public boolean apply(JCCompilationUnit compilation) {
+                return compilation.getSourceFile() == input;
+              }
+            }));
   }
 
-  private JavacTaskImpl createJavacTask(JavaFileObject sourceFileObject) {
+  private JavacTaskImpl createJavacTask() {
     JavacTool tool = JavacTool.create();
     DiagnosticCollector<JavaFileObject> diagnosticsCollector = new DiagnosticCollector<>();
     Context context = new Context();
 
     context.put(ErrorProneOptions.class, ErrorProneOptions.empty());
 
-    JavacTaskImpl task = (JavacTaskImpl) tool.getTask(
-        CharStreams.nullWriter(),
-        fileManager,
-        diagnosticsCollector,
-        ImmutableList.<String>of(),
-        null,
-        ImmutableList.of(sourceFileObject),
-        context);
+    JavacTaskImpl task =
+        (JavacTaskImpl)
+            tool.getTask(
+                CharStreams.nullWriter(),
+                fileManager,
+                diagnosticsCollector,
+                ImmutableList.<String>of(),
+                null,
+                ImmutableList.copyOf(sources.keySet()),
+                context);
 
     return task;
   }
@@ -186,6 +197,10 @@ public class BugCheckerRefactoringTestHelper {
 
     public BugCheckerRefactoringTestHelper addOutput(String outputFilename) {
       return addInputAndOutput(input, fileManager.forResource(outputFilename));
+    }
+    
+    public BugCheckerRefactoringTestHelper expectUnchanged() {
+      return addInputAndOutput(input, input);
     }
   }
 }
