@@ -84,6 +84,14 @@ public class Description {
   }
 
   /**
+   * Returns link to be included in the error message or null if there is no link.
+   */
+  @Nullable
+  public String getLink() {
+    return link;
+  }
+
+  /**
    * Returns the message, not including the check name but including the link.
    */
   public String getMessageWithoutCheckName() {
