@@ -56,7 +56,7 @@ public abstract class MethodNameMatcherImpl extends AbstractChainedMatcher<Match
     @Override
     protected Optional<MatchState> matchResult(ExpressionTree item, MatchState method,
         VisitorState state) {
-      if (!method.sym().getSimpleName().toString().equals(name)) {
+      if (!method.sym().getSimpleName().contentEquals(name)) {
         return Optional.absent();
       }
       return Optional.of(method);

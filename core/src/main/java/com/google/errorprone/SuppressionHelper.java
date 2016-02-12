@@ -134,8 +134,8 @@ public class SuppressionHelper {
         for (List<Pair<MethodSymbol,Attribute>> v = attr.values;
             v.nonEmpty(); v = v.tail) {
           Pair<MethodSymbol,Attribute> value = v.head;
-          if (value.fst.name.toString().equals("value"))
-            if (value.snd instanceof Attribute.Array) {  // SuppressWarnings takes an array
+          if (value.fst.name.contentEquals("value"))
+            if (value.snd instanceof Attribute.Array) { // SuppressWarnings takes an array
               for (Attribute suppress : ((Attribute.Array) value.snd).values) {
                 if (newSuppressions == null) {
                   newSuppressions = new HashSet<>(suppressionsOnCurrentPath);

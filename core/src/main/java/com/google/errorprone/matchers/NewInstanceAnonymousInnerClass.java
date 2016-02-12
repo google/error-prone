@@ -43,7 +43,7 @@ public class NewInstanceAnonymousInnerClass implements Matcher<ExpressionTree> {
     if (t instanceof JCNewClass) {
       JCNewClass invocation = (JCNewClass)t;
       Type type = invocation.getIdentifier().type;
-      if (type.tsym.getQualifiedName().toString().equals(superClass)) {
+      if (type.tsym.getQualifiedName().contentEquals(superClass)) {
         return true;
       }
     }

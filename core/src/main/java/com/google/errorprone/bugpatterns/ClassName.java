@@ -61,7 +61,7 @@ public class ClassName extends BugChecker implements CompilationUnitTreeMatcher 
     for (Tree member : tree.getTypeDecls()) {
       if (member instanceof ClassTree) {
         ClassTree classMember = (ClassTree) member;
-        if (classMember.getSimpleName().toString().equals(filename)) {
+        if (classMember.getSimpleName().contentEquals(filename)) {
           return Description.NO_MATCH;
         }
         if (classMember.getModifiers().getFlags().contains(Modifier.PUBLIC)) {

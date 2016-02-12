@@ -340,7 +340,7 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
 
   private boolean hasExpectedException(TryTree tree) {
     for (CatchTree catchTree : tree.getCatches()) {
-      if (catchTree.getParameter().getName().toString().equals("expected")) {
+      if (catchTree.getParameter().getName().contentEquals("expected")) {
         return true;
       }
     }

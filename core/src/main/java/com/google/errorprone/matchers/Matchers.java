@@ -618,7 +618,7 @@ public class Matchers {
       public boolean matches(ExpressionTree tree, VisitorState state) {
         switch (tree.getKind()) {
           case MEMBER_SELECT:
-            return ((MemberSelectTree) tree).getIdentifier().toString().equals("class");
+            return ((MemberSelectTree) tree).getIdentifier().contentEquals("class");
           case INT_LITERAL:
           case LONG_LITERAL:
           case FLOAT_LITERAL:
@@ -853,7 +853,7 @@ public class Matchers {
     return new Matcher<MethodTree>() {
       @Override
       public boolean matches(MethodTree methodTree, VisitorState state) {
-        return methodTree.getName().toString().equals(methodName);
+        return methodTree.getName().contentEquals(methodName);
       }
     };
   }

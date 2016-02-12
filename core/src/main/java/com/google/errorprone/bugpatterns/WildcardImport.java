@@ -217,7 +217,7 @@ public class WildcardImport extends BugChecker implements ClassTreeMatcher {
         continue;
       }
       MemberSelectTree select = (MemberSelectTree) ident;
-      if (select.getIdentifier().toString().equals(ASTERISK)) {
+      if (select.getIdentifier().contentEquals(ASTERISK)) {
         result.add(tree);
       }
     }

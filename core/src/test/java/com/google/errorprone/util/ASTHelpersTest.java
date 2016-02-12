@@ -213,7 +213,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
         new TestScanner() {
           @Override
           public Void visitClass(ClassTree tree, VisitorState state) {
-            if (tree.getSimpleName().toString().equals("C")) {
+            if (tree.getSimpleName().contentEquals("C")) {
               assertMatch(
                   tree,
                   state,
@@ -250,7 +250,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
         new TestScanner() {
           @Override
           public Void visitClass(ClassTree tree, VisitorState state) {
-            if (tree.getSimpleName().toString().equals("Test")) {
+            if (tree.getSimpleName().contentEquals("Test")) {
               assertMatch(
                   tree,
                   state,
