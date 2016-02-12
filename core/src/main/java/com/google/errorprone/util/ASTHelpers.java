@@ -67,6 +67,7 @@ import com.sun.tools.javac.util.Name;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashSet;
@@ -551,6 +552,20 @@ public class ASTHelpers {
       return false;
     }
     return (((JCMethodDecl) tree).mods.flags & Flags.GENERATEDCONSTR) == Flags.GENERATEDCONSTR;
+  }
+
+  /** Returns the list of all constructors defined in the class (including generated ones). */
+  public static List<MethodTree> getConstructors(ClassTree classTree, VisitorState state) {
+    List<MethodTree> constructors = new ArrayList<>();
+    for (Tree member : classTree.getMembers()) {
+      if (member instanceof MethodTree) {
+        MethodTree methodTree = (MethodTree) member;
+        if (getSymbol(methodTree).isConstructor()) {
+          constructors.add(methodTree);
+        }
+      }
+    }
+    return constructors;
   }
 
   /**

@@ -134,6 +134,7 @@ import com.google.errorprone.bugpatterns.VarChecker;
 import com.google.errorprone.bugpatterns.WaitNotInLoop;
 import com.google.errorprone.bugpatterns.WildcardImport;
 import com.google.errorprone.bugpatterns.WrongParameterPackage;
+import com.google.errorprone.bugpatterns.android.FragmentNotInstantiable;
 import com.google.errorprone.bugpatterns.android.MislabeledAndroidString;
 import com.google.errorprone.bugpatterns.android.RectIntersectReturnValueIgnored;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionIncompatibleType;
@@ -284,6 +285,7 @@ public class BuiltInCheckerSuppliers {
           EmptyTopLevelDeclaration.class,
           EqualsIncompatibleType.class,
           FallThroughSuppression.class,
+          FragmentNotInstantiable.class,
           GuiceAssistedParameters.class,
           GuiceInjectOnFinalField.class,
           GuiceOverridesGuiceInjectableMethod.class,
