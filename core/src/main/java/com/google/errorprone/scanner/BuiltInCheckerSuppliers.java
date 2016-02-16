@@ -40,6 +40,7 @@ import com.google.errorprone.bugpatterns.ClassCanBeStatic;
 import com.google.errorprone.bugpatterns.ClassName;
 import com.google.errorprone.bugpatterns.ComparisonOutOfRange;
 import com.google.errorprone.bugpatterns.CompileTimeConstantChecker;
+import com.google.errorprone.bugpatterns.DaggerProvidesNull;
 import com.google.errorprone.bugpatterns.DeadException;
 import com.google.errorprone.bugpatterns.DepAnn;
 import com.google.errorprone.bugpatterns.DivZero;
@@ -321,6 +322,7 @@ public class BuiltInCheckerSuppliers {
           PrimitiveArrayPassedToVarargsMethod.class,
           ProtoFieldPreconditionsCheckNotNull.class,
           ProtoStringFieldReferenceEquality.class,
+          DaggerProvidesNull.class,
           SelfEquality.class,
           UnlockMethodChecker.class,
           UnnecessaryStaticImport.class,
