@@ -36,20 +36,20 @@ public class VarCheckerTest {
     compilationHelper = CompilationTestHelper.newInstance(VarChecker.class, getClass());
   }
 
+  // fields are ignored
   @Test
-  public void positiveField() {
+  public void nonFinalField() {
     compilationHelper
         .addSourceLines(
             "Test.java",
             "class Test {",
-            "  // BUG: Diagnostic contains: @Var public int x = 42;",
             "  public int x = 42;",
             "}")
         .doTest();
   }
 
   @Test
-  public void negativeField() {
+  public void finalField() {
     compilationHelper
         .addSourceLines(
             "Test.java",

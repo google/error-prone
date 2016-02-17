@@ -64,18 +64,9 @@ public class VarChecker extends BugChecker implements VariableTreeMatcher {
       case PARAMETER:
       case LOCAL_VARIABLE:
         return handleLocalOrParam(tree, state, sym);
-      case FIELD:
-        return handleField(tree, sym);
       default:
         return Description.NO_MATCH;
     }
-  }
-
-  private Description handleField(VariableTree tree, Symbol sym) {
-    if ((sym.flags() & Flags.FINAL) == Flags.FINAL) {
-      return Description.NO_MATCH;
-    }
-    return describeMatch(tree, addVarAnnotation(tree));
   }
 
   private Description handleLocalOrParam(VariableTree tree, VisitorState state, Symbol sym) {
