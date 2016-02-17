@@ -19,6 +19,7 @@ package com.google.errorprone.fixes;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
@@ -27,20 +28,28 @@ import com.google.errorprone.util.ErrorProneToken;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.Tree;
+import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
+import com.sun.tools.javac.tree.JCTree.JCExpression;
+import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
+import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 import javax.annotation.Nullable;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 
 /**
@@ -471,7 +480,7 @@ public class SuggestedFix implements Fix {
     if (originalModifiers == null) {
       return null;
     }
-    ImmutableList<ErrorProneToken> tokens = state.getTokensForNode((JCTree) originalModifiers);
+    ImmutableList<ErrorProneToken> tokens = state.getTokensForNode(originalModifiers);
     ArrayList<TokInfo> infos = new ArrayList<>();
     for (ErrorProneToken tok : tokens) {
       Modifier mod = getTokModifierKind(tok);
@@ -515,7 +524,7 @@ public class SuggestedFix implements Fix {
     if (originalModifiers == null) {
       return null;
     }
-    ImmutableList<ErrorProneToken> tokens = state.getTokensForNode((JCTree) originalModifiers);
+    ImmutableList<ErrorProneToken> tokens = state.getTokensForNode(originalModifiers);
     ErrorProneToken toRemove = null;
     for (ErrorProneToken tok : tokens) {
       Modifier mod = getTokModifierKind(tok);
@@ -533,5 +542,57 @@ public class SuggestedFix implements Fix {
     // add one to endPosition for whitespace character after the modifier
     int endPosition = posTree.getStartPosition() + toRemove.endPos() + 1;
     return replace(startPosition, endPosition, "");
+  }
+
+  /** Returns a human-friendly name of the given {@link TypeSymbol} for use in fixes. */
+  public static String qualifyType(VisitorState state, SuggestedFix.Builder fix, TypeSymbol sym) {
+    TreeMaker make =
+        TreeMaker.instance(state.context)
+            .forToplevel((JCCompilationUnit) state.getPath().getCompilationUnit());
+    return qualifyType(make, fix, sym);
+  }
+
+  /**
+   * Returns a human-friendly name of the given {@link TypeSymbol} for use in fixes.
+   *
+   * <ul>
+   * <li>If the type is already imported, its simple name is used.
+   * <li>If an enclosing type is imported, that enclosing type is used as a qualified.
+   * <li>Otherwise the outermost enclosing type is imported and used as a qualifier.
+   * </ul>
+   */
+  public static String qualifyType(TreeMaker make, SuggestedFix.Builder fix, TypeSymbol sym) {
+    // let javac figure out whether the type is already imported
+    JCExpression qual = make.QualIdent(sym);
+    if (!selectsPackage(qual)) {
+      return qual.toString();
+    }
+    Deque<String> names = new ArrayDeque<>();
+    Symbol curr = sym;
+    while (true) {
+      names.addFirst(curr.getSimpleName().toString());
+      if (curr.owner == null || curr.owner.getKind() == ElementKind.PACKAGE) {
+        break;
+      }
+      curr = curr.owner;
+    }
+    fix.addImport(curr.toString());
+    return Joiner.on('.').join(names);
+  }
+
+  /** Returns true iff the given expression is qualified by a package. */
+  private static boolean selectsPackage(JCExpression qual) {
+    JCExpression curr = qual;
+    while (true) {
+      Symbol sym = ASTHelpers.getSymbol(curr);
+      if (sym != null && sym.getKind() == ElementKind.PACKAGE) {
+        return true;
+      }
+      if (!(curr instanceof JCFieldAccess)) {
+        break;
+      }
+      curr = ((JCFieldAccess) curr).getExpression();
+    }
+    return false;
   }
 }
