@@ -482,9 +482,13 @@ public class SuggestedFix implements Fix {
     }
     ImmutableList<ErrorProneToken> tokens = state.getTokensForNode(originalModifiers);
     ArrayList<TokInfo> infos = new ArrayList<>();
+    int firstTokPos = -1;
     for (ErrorProneToken tok : tokens) {
       Modifier mod = getTokModifierKind(tok);
       if (mod != null) {
+        if (firstTokPos == -1) {
+          firstTokPos = ((JCTree) originalModifiers).getStartPosition() + tok.pos();
+        }
         infos.add(TokInfo.create(tok, mod));
       }
     }
@@ -499,19 +503,32 @@ public class SuggestedFix implements Fix {
         return null;
       }
     }
-    JCTree posTree = (JCTree) originalModifiers;
-    if (posTree.getStartPosition() < 0) {
-      // if the modifier tree is empty, it won't have a position
-      posTree = (JCTree) tree;
-    }
     if (prev != null) {
+      int startPos = ((JCTree) originalModifiers).getStartPosition();
+      if (startPos < 0) {
+        // if the modifier tree is empty, start at the beginning of the tree
+        startPos = ((JCTree) tree).getStartPosition();
+      }
       // insert the new modifier after an existing modifier
       // the start pos of the re-lexed tokens is relative to the start of the tree
-      int pos = posTree.getStartPosition() + prev.token().pos() + prev.mod().toString().length();
+      int pos = startPos + prev.token().pos() + prev.mod().toString().length();
       return SuggestedFix.replace(pos, pos, " " + modifier);
     } else {
-      // the new modifier is first
-      return SuggestedFix.prefixWith(posTree, modifier + " ");
+      String replacement = modifier.toString();
+      // try to insert before existing modifiers
+      int pos = firstTokPos;
+      if (pos < 0) {
+        // there were no existing modifers, but there may have been annotations
+        pos = state.getEndPosition((JCTree) originalModifiers);
+        if (pos >= 0) {
+          pos++;
+        }
+      }
+      if (pos < 0) {
+        // there were no annotations or modifiers, insert at the beginning of the tree
+        pos = ((JCTree) tree).getStartPosition();
+      }
+      return SuggestedFix.replace(pos, pos, replacement + " ");
     }
   }
 
