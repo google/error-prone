@@ -95,14 +95,15 @@ public class SelfEquals extends BugChecker implements MethodInvocationTreeMatche
   /**
    * Should this matcher check for Objects.equal(foo, foo)?
    */
-  private boolean checkGuava = true;
+  private final boolean checkGuava;
 
   /**
    * Should this matcher check for foo.equals(foo)?
    */
-  private boolean checkEquals = false;
+  private final boolean checkEquals;
 
   public SelfEquals() {
+    this(true, false);
   }
 
   /**
