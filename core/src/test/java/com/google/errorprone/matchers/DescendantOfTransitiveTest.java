@@ -50,9 +50,9 @@ import java.util.List;
 @RunWith(JUnit4.class)
 public class DescendantOfTransitiveTest extends DescendantOfAbstractTest {
 
-  @Rule public TemporaryFolder tempDir = new TemporaryFolder();
+  @Rule public final TemporaryFolder tempDir = new TemporaryFolder();
   final List<ScannerTest> tests = new ArrayList<ScannerTest>();
-  List<String> filesToCompile = new ArrayList<String>();
+  final List<String> filesToCompile = new ArrayList<String>();
 
   private void writeFileToLocalDisk(String fileName, String... lines) throws IOException {
     File source = new File(tempDir.getRoot(), fileName);

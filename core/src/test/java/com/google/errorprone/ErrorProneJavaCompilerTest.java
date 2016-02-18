@@ -81,7 +81,7 @@ import javax.tools.JavaFileObject;
 @RunWith(JUnit4.class)
 public class ErrorProneJavaCompilerTest {
 
-  @Rule public TemporaryFolder tempDir = new TemporaryFolder();
+  @Rule public final TemporaryFolder tempDir = new TemporaryFolder();
 
   @Test
   public void testIsSupportedOption() {

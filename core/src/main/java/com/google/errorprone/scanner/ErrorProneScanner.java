@@ -145,7 +145,7 @@ import java.util.Set;
  */
 public class ErrorProneScanner extends Scanner {
 
-  private Set<Class<? extends Annotation>> customSuppressionAnnotations =
+  private final Set<Class<? extends Annotation>> customSuppressionAnnotations =
       new HashSet<>();
 
   private final Map<String, SeverityLevel> severities;

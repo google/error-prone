@@ -185,7 +185,7 @@ public class BugCheckerRefactoringTestHelper {
    * To assert the proper {@code .addInput().addOutput()} chain.
    */
   public class ExpectOutput {
-    private JavaFileObject input;
+    private final JavaFileObject input;
 
     public ExpectOutput(JavaFileObject input) {
       this.input = input;

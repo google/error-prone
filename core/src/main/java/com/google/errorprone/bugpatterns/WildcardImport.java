@@ -230,7 +230,7 @@ public class WildcardImport extends BugChecker implements ClassTreeMatcher {
    */
   static class ImportCollector extends TreeScanner {
 
-    private Set<TypeToImport> seen = new LinkedHashSet<>();
+    private final Set<TypeToImport> seen = new LinkedHashSet<>();
 
     public static Set<TypeToImport> collect(JCClassDecl tree) {
       ImportCollector collector = new ImportCollector();

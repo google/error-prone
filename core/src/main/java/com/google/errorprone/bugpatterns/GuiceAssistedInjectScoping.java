@@ -73,14 +73,14 @@ public class GuiceAssistedInjectScoping extends BugChecker implements ClassTreeM
   /**
    * Matches classes that have an annotation that itself is annotated with @ScopeAnnotation.
    */
-  private static MultiMatcher<ClassTree, AnnotationTree> classAnnotationMatcher =
+  private static final MultiMatcher<ClassTree, AnnotationTree> classAnnotationMatcher =
      annotations(AT_LEAST_ONE, Matchers.<AnnotationTree>anyOf(hasAnnotation(GUICE_SCOPE_ANNOTATION),
          hasAnnotation(JAVAX_SCOPE_ANNOTATION)));
 
   /**
    * Matches if any constructor of a class is annotated with an @Inject annotation.
    */
-  private static MultiMatcher<ClassTree, MethodTree> constructorWithInjectMatcher =
+  private static final MultiMatcher<ClassTree, MethodTree> constructorWithInjectMatcher =
       constructor(AT_LEAST_ONE, Matchers.<MethodTree>anyOf(hasAnnotation(GUICE_INJECT_ANNOTATION),
           hasAnnotation(JAVAX_INJECT_ANNOTATION)));
 
@@ -91,7 +91,7 @@ public class GuiceAssistedInjectScoping extends BugChecker implements ClassTreeM
    * 2) If there is no @Inject constructor and at least one constructor is annotated with
    *    @AssistedInject.
    */
-  private static Matcher<ClassTree> assistedMatcher = new Matcher<ClassTree>() {
+  private static final Matcher<ClassTree> assistedMatcher = new Matcher<ClassTree>() {
     @Override
     public boolean matches(ClassTree classTree, VisitorState state) {
       if (constructorWithInjectMatcher.matches(classTree, state)) {

@@ -158,7 +158,7 @@ public class Description {
     private final String name;
     private final String linkUrl;
     private final SeverityLevel severity;
-    private ImmutableList.Builder<Fix> fixListBuilder = ImmutableList.builder();
+    private final ImmutableList.Builder<Fix> fixListBuilder = ImmutableList.builder();
     private String rawMessage;
 
     private Builder(

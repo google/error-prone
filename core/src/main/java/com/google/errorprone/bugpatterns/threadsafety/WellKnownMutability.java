@@ -43,7 +43,7 @@ final class WellKnownMutability {
       getBootstrapClasses();
 
   static class Builder {
-    ImmutableMap.Builder<String, ImmutableAnnotationInfo> mapBuilder = ImmutableMap.builder();
+    final ImmutableMap.Builder<String, ImmutableAnnotationInfo> mapBuilder = ImmutableMap.builder();
 
     public Builder addAll(Set<Class<?>> clazzs) {
       for (Class<?> clazz : clazzs) {

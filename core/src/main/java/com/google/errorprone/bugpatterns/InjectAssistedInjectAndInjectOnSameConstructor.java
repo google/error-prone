@@ -54,26 +54,28 @@ public class InjectAssistedInjectAndInjectOnSameConstructor extends BugChecker
   /**
    * Matches a method/constructor that is annotated with an @Inject annotation.
    */
-  private Matcher<MethodTree> constructorWithInjectMatcher = Matchers.<MethodTree>anyOf(
+  private final Matcher<MethodTree> constructorWithInjectMatcher = Matchers.<MethodTree>anyOf(
           hasAnnotation(GUICE_INJECT_ANNOTATION), hasAnnotation(JAVAX_INJECT_ANNOTATION));
 
   /**
    * Matches a method/constructor that is annotated with an @AssistedInject annotation.
    */
-  private Matcher<MethodTree> constructorWithAssistedInjectMatcher =
+  private final Matcher<MethodTree> constructorWithAssistedInjectMatcher =
       Matchers.<MethodTree>hasAnnotation(ASSISTED_INJECT_ANNOTATION);
   
   /**
    * Matches the @Inject and @Assisted inject annotations.
    */
-  private Matcher<AnnotationTree> injectOrAssistedInjectMatcher = new Matcher<AnnotationTree>() {
-    @Override public boolean matches(AnnotationTree annotationTree, VisitorState state) {
-      Symbol annotationSymbol = ASTHelpers.getSymbol(annotationTree);
-      return (annotationSymbol.equals(state.getSymbolFromString(JAVAX_INJECT_ANNOTATION))
-          || annotationSymbol.equals(state.getSymbolFromString(GUICE_INJECT_ANNOTATION))
-          || annotationSymbol.equals(state.getSymbolFromString(ASSISTED_INJECT_ANNOTATION)));
-    }
-  };
+  private final Matcher<AnnotationTree> injectOrAssistedInjectMatcher =
+      new Matcher<AnnotationTree>() {
+        @Override
+        public boolean matches(AnnotationTree annotationTree, VisitorState state) {
+          Symbol annotationSymbol = ASTHelpers.getSymbol(annotationTree);
+          return (annotationSymbol.equals(state.getSymbolFromString(JAVAX_INJECT_ANNOTATION))
+              || annotationSymbol.equals(state.getSymbolFromString(GUICE_INJECT_ANNOTATION))
+              || annotationSymbol.equals(state.getSymbolFromString(ASSISTED_INJECT_ANNOTATION)));
+        }
+      };
       
   @Override
   public Description matchAnnotation(AnnotationTree annotationTree, VisitorState state) {

@@ -205,7 +205,7 @@ public class TypeParameterUnusedInFormals extends BugChecker implements MethodTr
       return visitor.seen;
     }
 
-    private Set<Type.TypeVar> seen = new HashSet<Type.TypeVar>();
+    private final Set<Type.TypeVar> seen = new HashSet<Type.TypeVar>();
 
     @Override
     public Void visitClassType(Type.ClassType type, Void unused) {

@@ -37,7 +37,7 @@ public class ErrorProneTestCompiler {
   /** Wraps {@link com.google.errorprone.ErrorProneCompiler.Builder} */
   public static class Builder {
 
-    ErrorProneCompiler.Builder wrappedCompilerBuilder = new ErrorProneCompiler.Builder();
+    final ErrorProneCompiler.Builder wrappedCompilerBuilder = new ErrorProneCompiler.Builder();
 
     public ErrorProneTestCompiler build() {
       return new ErrorProneTestCompiler(wrappedCompilerBuilder.build());

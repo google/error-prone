@@ -144,25 +144,25 @@ public class NoAllocationChecker extends BugChecker
   private static final String COMMON_MESSAGE_SUFFIX =
       "is disallowed in methods annotated with @NoAllocation";
 
-  private static Matcher<MethodTree> noAllocationMethodMatcher =
+  private static final Matcher<MethodTree> noAllocationMethodMatcher =
       hasAnnotation(NoAllocation.class.getName());
 
-  private static Matcher<MethodInvocationTree> noAllocationMethodInvocationMatcher =
+  private static final Matcher<MethodInvocationTree> noAllocationMethodInvocationMatcher =
       hasAnnotation(NoAllocation.class.getName());
 
-  private static Matcher<ExpressionTree> anyExpression = anything();
+  private static final Matcher<ExpressionTree> anyExpression = anything();
 
-  private static Matcher<StatementTree> anyStatement = anything();
+  private static final Matcher<StatementTree> anyStatement = anything();
 
-  private static Matcher<VariableTree> anyVariable = anything();
+  private static final Matcher<VariableTree> anyVariable = anything();
 
-  private static Matcher<ExpressionTree> isString = isSameType("java.lang.String");
+  private static final Matcher<ExpressionTree> isString = isSameType("java.lang.String");
 
-  private static Matcher<ExpressionTree> arrayExpression = isArrayType();
+  private static final Matcher<ExpressionTree> arrayExpression = isArrayType();
 
-  private static Matcher<ExpressionTree> primitiveExpression = isPrimitiveType();
+  private static final Matcher<ExpressionTree> primitiveExpression = isPrimitiveType();
 
-  private static Matcher<ExpressionTree> primitiveArrayExpression = isPrimitiveArrayType();
+  private static final Matcher<ExpressionTree> primitiveArrayExpression = isPrimitiveArrayType();
 
   private static final Set<Kind> ALL_COMPOUND_OPERATORS =
       Collections.unmodifiableSet(
@@ -184,7 +184,7 @@ public class NoAllocationChecker extends BugChecker
    * We don't want the throw to nullify any {@code @NoAnnotation} in a method in an anonymous
    * class below it.
    */
-  private static Matcher<Tree> withinThrowOrAnnotation = new Matcher<Tree>() {
+  private static final Matcher<Tree> withinThrowOrAnnotation = new Matcher<Tree>() {
     @Override
     public boolean matches(Tree tree, VisitorState state) {
       // TODO(agoode): Make this accept statements in a block that definitely will lead to a throw.
@@ -211,7 +211,7 @@ public class NoAllocationChecker extends BugChecker
    * Matches a new array statement if the enclosing method is annotated with
    * {@code @NoAllocation}.
    */
-  private static Matcher<NewArrayTree> newArrayMatcher =
+  private static final Matcher<NewArrayTree> newArrayMatcher =
       allOf(
         not(withinThrowOrAnnotation),
         enclosingMethod(noAllocationMethodMatcher)
@@ -220,7 +220,7 @@ public class NoAllocationChecker extends BugChecker
   /**
    * Matches a new statement if the enclosing method is annotated with {@code @NoAllocation}.
    */
-  private static Matcher<NewClassTree> newClassMatcher =
+  private static final Matcher<NewClassTree> newClassMatcher =
       allOf(
         not(withinThrowOrAnnotation),
         enclosingMethod(noAllocationMethodMatcher)
@@ -230,7 +230,7 @@ public class NoAllocationChecker extends BugChecker
    * Matches if a method without {@code @NoAllocation} is invoked from a method with
    * {@code @NoAllocation}.
    */
-  private static Matcher<MethodInvocationTree> methodMatcher =
+  private static final Matcher<MethodInvocationTree> methodMatcher =
       allOf(
         not(withinThrowOrAnnotation),
         enclosingMethod(noAllocationMethodMatcher),
@@ -240,7 +240,7 @@ public class NoAllocationChecker extends BugChecker
   /**
    * Matches string concatenation. Includes all string conversions.
    */
-  private static Matcher<BinaryTree> stringConcatenationMatcher =
+  private static final Matcher<BinaryTree> stringConcatenationMatcher =
       allOf(
         not(withinThrowOrAnnotation),
         enclosingMethod(noAllocationMethodMatcher),
@@ -251,7 +251,7 @@ public class NoAllocationChecker extends BugChecker
   /**
    * Matches string and boxing compound assignment.
    */
-  private static Matcher<CompoundAssignmentTree> compoundAssignmentMatcher =
+  private static final Matcher<CompoundAssignmentTree> compoundAssignmentMatcher =
       allOf(
           not(withinThrowOrAnnotation),
           enclosingMethod(noAllocationMethodMatcher),
@@ -262,7 +262,7 @@ public class NoAllocationChecker extends BugChecker
   /**
    * Matches if foreach is used on a non-array or if boxing occurs with an array.
    */
-  private static Matcher<EnhancedForLoopTree> foreachMatcher =
+  private static final Matcher<EnhancedForLoopTree> foreachMatcher =
       allOf(
         not(withinThrowOrAnnotation),
         enclosingMethod(noAllocationMethodMatcher),
@@ -276,7 +276,7 @@ public class NoAllocationChecker extends BugChecker
   /**
    * Matches boxing assignment.
    */
-  private static Matcher<AssignmentTree> boxingAssignment =
+  private static final Matcher<AssignmentTree> boxingAssignment =
       allOf(
         not(withinThrowOrAnnotation),
         enclosingMethod(noAllocationMethodMatcher),
@@ -286,7 +286,7 @@ public class NoAllocationChecker extends BugChecker
   /**
    * Matches boxing during variable initialization.
    */
-  private static Matcher<VariableTree> boxingInitialization =
+  private static final Matcher<VariableTree> boxingInitialization =
       allOf(
         not(withinThrowOrAnnotation),
         enclosingMethod(noAllocationMethodMatcher),
@@ -297,7 +297,7 @@ public class NoAllocationChecker extends BugChecker
   /**
    * Matches boxing by explicit cast.
    */
-  private static Matcher<TypeCastTree> boxingCast =
+  private static final Matcher<TypeCastTree> boxingCast =
       allOf(
         not(withinThrowOrAnnotation),
         enclosingMethod(noAllocationMethodMatcher),
@@ -307,7 +307,7 @@ public class NoAllocationChecker extends BugChecker
   /**
    * Matches boxing by return.
    */
-  private static Matcher<ReturnTree> boxingReturn = new Matcher<ReturnTree>() {
+  private static final Matcher<ReturnTree> boxingReturn = new Matcher<ReturnTree>() {
     @Override
     public boolean matches(ReturnTree tree, VisitorState state) {
       return allOf(
@@ -321,7 +321,7 @@ public class NoAllocationChecker extends BugChecker
   /**
    * Matches boxing by method invocation, including varargs.
    */
-  private static Matcher<MethodInvocationTree> boxingInvocation =
+  private static final Matcher<MethodInvocationTree> boxingInvocation =
       new Matcher<MethodInvocationTree>() {
     @Override
     public boolean matches(MethodInvocationTree tree, VisitorState state) {
@@ -372,7 +372,7 @@ public class NoAllocationChecker extends BugChecker
   /**
    * Matches boxing by unary operator.
    */
-  private static Matcher<UnaryTree> boxingUnary = new Matcher<UnaryTree>() {
+  private static final Matcher<UnaryTree> boxingUnary = new Matcher<UnaryTree>() {
     @Override
     public boolean matches(UnaryTree tree, VisitorState state) {
       return allOf(

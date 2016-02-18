@@ -51,7 +51,7 @@ public class InjectJavaxInjectOnAbstractMethod extends BugChecker
 
   private static final String JAVAX_INJECT_ANNOTATION = "javax.inject.Inject";
 
-  Matcher<AnnotationTree> javaxInjectAnnotationMatcher = new Matcher<AnnotationTree>() {
+  final Matcher<AnnotationTree> javaxInjectAnnotationMatcher = new Matcher<AnnotationTree>() {
     @Override
     public boolean matches(AnnotationTree annotationTree, VisitorState state) {
       return (ASTHelpers.getSymbol(annotationTree).equals(

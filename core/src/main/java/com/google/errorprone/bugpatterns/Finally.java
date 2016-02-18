@@ -160,8 +160,8 @@ public class Finally extends BugChecker
    * Ancestor matcher for statements that break or continue out of a finally block.
    */
   private static class FinallyJumpMatcher extends FinallyCompletionMatcher<StatementTree> {
-    private Name label;
-    private JumpType jumpType;
+    private final Name label;
+    private final JumpType jumpType;
 
     private enum JumpType {
       BREAK,

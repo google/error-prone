@@ -70,7 +70,7 @@ public class ComparisonOutOfRange extends BugChecker implements BinaryTreeMatche
     /**
      * The type of bad comparison matcher to create. Must be either Byte.TYPE or Character.TYPE.
      */
-    private Class<?> type;
+    private final Class<?> type;
 
     private boolean initialized = false;
     private Type comparisonType;

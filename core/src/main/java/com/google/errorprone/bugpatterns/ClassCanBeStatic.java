@@ -67,7 +67,7 @@ public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
    * <li> Has no references to variables defined in enclosing class
    * </ol>
    */
-  private static Matcher<ClassTree> classTreeMatcher = new Matcher<ClassTree>() {
+  private static final Matcher<ClassTree> classTreeMatcher = new Matcher<ClassTree>() {
       @Override
       public boolean matches(ClassTree classTree, VisitorState state) {
         return allOf(

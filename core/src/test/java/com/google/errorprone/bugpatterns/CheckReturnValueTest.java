@@ -514,7 +514,7 @@ public class CheckReturnValueTest {
         .doTest();
   }
 
-  @Rule public TemporaryFolder tempFolder = new TemporaryFolder();
+  @Rule public final TemporaryFolder tempFolder = new TemporaryFolder();
 
   /** Test class containing a method annotated with @CRV. */
   public static class CRVTest {

@@ -47,7 +47,7 @@ import javax.tools.JavaFileObject;
 @RunWith(JUnit4.class)
 public class GuardedByBinderTest {
 
-  private ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
+  private final ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
 
   @Test
   public void testInherited() throws Exception {
@@ -507,7 +507,7 @@ public class GuardedByBinderTest {
 
   private static class FindClass extends TreeScanner {
 
-    private List<JCTree.JCClassDecl> decls = new ArrayList<JCTree.JCClassDecl>();
+    private final List<JCTree.JCClassDecl> decls = new ArrayList<JCTree.JCClassDecl>();
 
     @Override
     public void visitClassDef(JCTree.JCClassDecl classDecl) {

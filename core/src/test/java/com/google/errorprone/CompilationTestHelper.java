@@ -62,7 +62,7 @@ public class CompilationTestHelper {
   private final ErrorProneCompiler compiler;
   private final ByteArrayOutputStream outputStream;
   private final ErrorProneInMemoryFileManager fileManager;
-  private List<JavaFileObject> sources = new ArrayList<>();
+  private final List<JavaFileObject> sources = new ArrayList<>();
   private List<String> args = ImmutableList.of();
   private boolean expectNoDiagnostics = false;
   private Optional<Result> expectedResult = Optional.absent();

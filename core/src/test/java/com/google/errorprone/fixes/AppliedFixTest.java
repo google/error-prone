@@ -41,7 +41,7 @@ public class AppliedFixTest {
   @Mock JCTree node;
   final EndPosTable endPositions = new EndPosTable() {
     
-    Map<JCTree, Integer> map = new HashMap<>();
+    final Map<JCTree, Integer> map = new HashMap<>();
     
     @Override
     public void storeEnd(JCTree tree, int endpos) {

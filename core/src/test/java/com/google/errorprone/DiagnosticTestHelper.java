@@ -75,7 +75,7 @@ public class DiagnosticTestHelper {
     this.checkName = checkName;
   }
 
-  public ClearableDiagnosticCollector<JavaFileObject> collector =
+  public final ClearableDiagnosticCollector<JavaFileObject> collector =
       new ClearableDiagnosticCollector<JavaFileObject>();
 
   public static Matcher<Diagnostic<? extends JavaFileObject>> suggestsRemovalOfLine(

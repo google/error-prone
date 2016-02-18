@@ -167,9 +167,9 @@ public class NonOverridingEquals extends BugChecker implements MethodTreeMatcher
   }
 
   private static class CastState {
-    Name name;
-    String castToType;
-    SuggestedFix.Builder fix;
+    final Name name;
+    final String castToType;
+    final SuggestedFix.Builder fix;
 
     public CastState(Name name, String castToType, SuggestedFix.Builder fix) {
       this.name = name;

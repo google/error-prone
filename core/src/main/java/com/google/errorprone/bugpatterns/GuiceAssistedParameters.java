@@ -48,14 +48,16 @@ public class GuiceAssistedParameters extends BugChecker implements VariableTreeM
 
   private static final String ASSISTED_ANNOTATION = "com.google.inject.assistedinject.Assisted";
 
-  private Matcher<VariableTree> constructorAssistedParameterMatcher = new Matcher<VariableTree>() {
-    @Override
-    public boolean matches(VariableTree t, VisitorState state) {
-      Symbol modified = ASTHelpers.getSymbol(state.getPath().getParentPath().getLeaf());
-      return modified != null && modified.isConstructor()
-          && Matchers.<VariableTree>hasAnnotation(ASSISTED_ANNOTATION).matches(t, state);
-    }
-  };
+  private final Matcher<VariableTree> constructorAssistedParameterMatcher =
+      new Matcher<VariableTree>() {
+        @Override
+        public boolean matches(VariableTree t, VisitorState state) {
+          Symbol modified = ASTHelpers.getSymbol(state.getPath().getParentPath().getLeaf());
+          return modified != null
+              && modified.isConstructor()
+              && Matchers.<VariableTree>hasAnnotation(ASSISTED_ANNOTATION).matches(t, state);
+        }
+      };
 
   @Override
   public final Description matchVariable(VariableTree variableTree, VisitorState state) {
