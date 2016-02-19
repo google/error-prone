@@ -91,6 +91,7 @@ final class WellKnownMutability {
         .addAll(Primitives.allWrapperTypes())
         .add(java.lang.Class.class)
         .add(java.lang.String.class)
+        .add(java.math.BigDecimal.class)
         .add(java.net.InetAddress.class)
         .add(java.util.Locale.class)
         .add("org.joda.time.DateTime")
