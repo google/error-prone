@@ -193,6 +193,9 @@ Certain resources in `android.R.string` have names that do not match their conte
 __[MisusedWeekYear](bugpattern/MisusedWeekYear)__<br>
 Use of &quot;YYYY&quot; (week year) in a date pattern without &quot;ww&quot; (week in year). You probably meant to use &quot;yyyy&quot; (year) instead.
 
+__[MockitoCast](bugpattern/MockitoCast)__<br>
+A bug in Mockito will cause this test to fail at runtime with a ClassCastException
+
 __[MockitoUsage](bugpattern/MockitoUsage)__<br>
 Missing method call for verify(mock) here
 
