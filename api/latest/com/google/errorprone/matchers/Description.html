@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":9,"i2":10,"i3":10,"i4":10};
+var methods = {"i0":10,"i1":9,"i2":10,"i3":10,"i4":10,"i5":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -243,11 +243,17 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/Description.html#getLink--">getLink</a></span>()</code>
+<div class="block">Returns link to be included in the error message or null if there is no link.</div>
+</td>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/Description.html#getMessage--">getMessage</a></span>()</code>
 <div class="block">Returns the message to be printed by the compiler when a match is found in interactive use.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/Description.html#getMessageWithoutCheckName--">getMessageWithoutCheckName</a></span>()</code>
 <div class="block">Returns the message, not including the check name but including the link.</div>
@@ -364,6 +370,17 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getMessage()</pre>
 <div class="block">Returns the message to be printed by the compiler when a match is found in interactive use.
  Includes the name of the check and a link for more information.</div>
+</li>
+</ul>
+<a name="getLink--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getLink</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getLink()</pre>
+<div class="block">Returns link to be included in the error message or null if there is no link.</div>
 </li>
 </ul>
 <a name="getMessageWithoutCheckName--">

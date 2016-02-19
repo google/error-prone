@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9,"i3":10,"i4":10,"i5":10,"i6":10,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":10};
+var methods = {"i0":9,"i1":9,"i2":9,"i3":10,"i4":10,"i5":10,"i6":10,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -208,6 +208,22 @@ implements <a href="../../../../com/google/errorprone/fixes/Fix.html" title="int
 </td>
 </tr>
 <tr id="i9" class="rowColor">
+<td class="colFirst"><code>static <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/SuggestedFix.html#qualifyType-com.sun.tools.javac.tree.TreeMaker-com.google.errorprone.fixes.SuggestedFix.Builder-com.sun.tools.javac.code.Symbol.TypeSymbol-">qualifyType</a></span>(com.sun.tools.javac.tree.TreeMaker&nbsp;make,
+           <a href="../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fix,
+           com.sun.tools.javac.code.Symbol.TypeSymbol&nbsp;sym)</code>
+<div class="block">Returns a human-friendly name of the given <code>Symbol.TypeSymbol</code> for use in fixes.</div>
+</td>
+</tr>
+<tr id="i10" class="altColor">
+<td class="colFirst"><code>static <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/SuggestedFix.html#qualifyType-com.google.errorprone.VisitorState-com.google.errorprone.fixes.SuggestedFix.Builder-com.sun.tools.javac.code.Symbol.TypeSymbol-">qualifyType</a></span>(<a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+           <a href="../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fix,
+           com.sun.tools.javac.code.Symbol.TypeSymbol&nbsp;sym)</code>
+<div class="block">Returns a human-friendly name of the given <code>Symbol.TypeSymbol</code> for use in fixes.</div>
+</td>
+</tr>
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/SuggestedFix.html#removeModifier-com.sun.source.tree.Tree-javax.lang.model.element.Modifier-com.google.errorprone.VisitorState-">removeModifier</a></span>(com.sun.source.tree.Tree&nbsp;tree,
               <a href="http://docs.oracle.com/javase/7/docs/api/javax/lang/model/element/Modifier.html?is-external=true" title="class or interface in javax.lang.model.element">Modifier</a>&nbsp;modifier,
@@ -215,7 +231,7 @@ implements <a href="../../../../com/google/errorprone/fixes/Fix.html" title="int
 <div class="block">Removes a modifier from the given class, method, or field declaration.</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/SuggestedFix.html#replace-int-int-java.lang.String-">replace</a></span>(int&nbsp;startPos,
        int&nbsp;endPos,
@@ -224,14 +240,14 @@ implements <a href="../../../../com/google/errorprone/fixes/Fix.html" title="int
  given string.</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/SuggestedFix.html#replace-com.sun.source.tree.Tree-java.lang.String-">replace</a></span>(com.sun.source.tree.Tree&nbsp;tree,
        <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;replaceWith)</code>
 <div class="block"><a href="../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html#replace-com.sun.source.tree.Tree-java.lang.String-"><code>SuggestedFix.Builder.replace(Tree, String)</code></a></div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/SuggestedFix.html#replace-com.sun.source.tree.Tree-java.lang.String-int-int-">replace</a></span>(com.sun.source.tree.Tree&nbsp;node,
        <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;replaceWith,
@@ -240,14 +256,14 @@ implements <a href="../../../../com/google/errorprone/fixes/Fix.html" title="int
 <div class="block">Replace a tree node with a string, but adjust the start and end positions as well.</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/SuggestedFix.html#swap-com.sun.source.tree.Tree-com.sun.source.tree.Tree-">swap</a></span>(com.sun.source.tree.Tree&nbsp;node1,
     com.sun.source.tree.Tree&nbsp;node2)</code>
 <div class="block"><a href="../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html#swap-com.sun.source.tree.Tree-com.sun.source.tree.Tree-"><code>SuggestedFix.Builder.swap(Tree, Tree)</code></a></div>
 </td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/SuggestedFix.html#toString-com.sun.tools.javac.tree.JCTree.JCCompilationUnit-">toString</a></span>(com.sun.tools.javac.tree.JCTree.JCCompilationUnit&nbsp;compilationUnit)</code>&nbsp;</td>
 </tr>
@@ -463,7 +479,7 @@ public static&nbsp;<a href="../../../../com/google/errorprone/fixes/Fix.html" ti
 <a name="removeModifier-com.sun.source.tree.Tree-javax.lang.model.element.Modifier-com.google.errorprone.VisitorState-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>removeModifier</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
@@ -471,6 +487,36 @@ public static&nbsp;<a href="../../../../com/google/errorprone/fixes/Fix.html" ti
                                            <a href="http://docs.oracle.com/javase/7/docs/api/javax/lang/model/element/Modifier.html?is-external=true" title="class or interface in javax.lang.model.element">Modifier</a>&nbsp;modifier,
                                            <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
 <div class="block">Removes a modifier from the given class, method, or field declaration.</div>
+</li>
+</ul>
+<a name="qualifyType-com.google.errorprone.VisitorState-com.google.errorprone.fixes.SuggestedFix.Builder-com.sun.tools.javac.code.Symbol.TypeSymbol-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>qualifyType</h4>
+<pre>public static&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;qualifyType(<a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+                                 <a href="../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fix,
+                                 com.sun.tools.javac.code.Symbol.TypeSymbol&nbsp;sym)</pre>
+<div class="block">Returns a human-friendly name of the given <code>Symbol.TypeSymbol</code> for use in fixes.</div>
+</li>
+</ul>
+<a name="qualifyType-com.sun.tools.javac.tree.TreeMaker-com.google.errorprone.fixes.SuggestedFix.Builder-com.sun.tools.javac.code.Symbol.TypeSymbol-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>qualifyType</h4>
+<pre>public static&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;qualifyType(com.sun.tools.javac.tree.TreeMaker&nbsp;make,
+                                 <a href="../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fix,
+                                 com.sun.tools.javac.code.Symbol.TypeSymbol&nbsp;sym)</pre>
+<div class="block">Returns a human-friendly name of the given <code>Symbol.TypeSymbol</code> for use in fixes.
+
+ <ul>
+ <li>If the type is already imported, its simple name is used.
+ <li>If an enclosing type is imported, that enclosing type is used as a qualified.
+ <li>Otherwise the outermost enclosing type is imported and used as a qualifier.
+ </ul></div>
 </li>
 </ul>
 </li>

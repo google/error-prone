@@ -133,6 +133,9 @@ Comparison to value that is out of range for the compared type
 __[CompileTimeConstant](bugpattern/CompileTimeConstant)__<br>
 Non-compile-time constant expression passed to parameter with @CompileTimeConstant type annotation.
 
+__[DaggerProvidesNull](bugpattern/DaggerProvidesNull)__<br>
+Dagger @Provides methods may not return null unless annotated with @Nullable
+
 __[DeadException](bugpattern/DeadException)__<br>
 Exception created but not thrown
 
@@ -266,6 +269,9 @@ __[AssistedInjectAndInjectOnConstructors](bugpattern/AssistedInjectAndInjectOnCo
 
 __[CollectionIncompatibleType](bugpattern/CollectionIncompatibleType)__<br>
 Incompatible type as argument to Object-accepting Java collections method
+
+__[FragmentNotInstantiable](bugpattern/FragmentNotInstantiable)__<br>
+Subclasses of Fragment must be instantiable via Class#newInstance(): the class must be public, static and have a public nullary constructor
 
 __[GuiceInjectOnFinalField](bugpattern/GuiceInjectOnFinalField)__<br>
 Although Guice allows injecting final fields, doing so is not recommended because the injected value may not be visible to other threads.
