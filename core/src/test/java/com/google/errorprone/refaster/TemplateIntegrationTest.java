@@ -72,8 +72,8 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
     assert_().about(javaSource()).that(transformedInput).compilesWithoutError();
     String expectedSource = expectedOutput.getCharContent(false).toString();
     String actualSource = transformedInput.getCharContent(false).toString();
-    assertThat(CharMatcher.WHITESPACE.collapseFrom(actualSource, ' '))
-        .isEqualTo(CharMatcher.WHITESPACE.collapseFrom(expectedSource, ' '));
+    assertThat(CharMatcher.whitespace().collapseFrom(actualSource, ' '))
+        .isEqualTo(CharMatcher.whitespace().collapseFrom(expectedSource, ' '));
   }
   
   private static final String TEMPLATE_DIR = "com/google/errorprone/refaster/testdata/template";
