@@ -226,7 +226,9 @@ class ControlFlowVisitor extends SimpleTreeVisitor<Result, BreakContext> {
       for (CaseTree caseTree : node.getCases()) {
         if (caseTree.getExpression() == null) {
           seenDefault = true;
-        } else if (result == null) {
+        }
+        
+        if (result == null) {
           result = caseTree.accept(this, cxt);
         } else {
           result = result.or(caseTree.accept(this, cxt));
