@@ -29,6 +29,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.CatchTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree.Kind;
@@ -63,7 +64,8 @@ public class DaggerProvidesNull extends BugChecker implements ReturnTreeMatcher 
   // TODO(eaftan): Use nullness dataflow analysis when it's ready
   @Override
   public Description matchReturn(ReturnTree returnTree, VisitorState state) {
-    if (returnTree.getExpression().getKind() != Kind.NULL_LITERAL) {
+    ExpressionTree returnExpression = returnTree.getExpression();
+    if (returnExpression == null || returnExpression.getKind() != Kind.NULL_LITERAL) {
       return Description.NO_MATCH;
     }
 

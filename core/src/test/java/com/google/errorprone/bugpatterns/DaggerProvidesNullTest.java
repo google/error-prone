@@ -143,4 +143,18 @@ public class DaggerProvidesNullTest {
             "}")
         .doTest();
   }
+  
+  @Test
+  public void returnWithNoExpression() {
+    compilationHelper
+    .addSourceLines(
+        "Test.java",
+        "import dagger.Provides;",
+        "public class Test {",
+        "  public void doNothing() {",
+        "    return;",
+        "  }",
+        "}")
+    .doTest();
+  }
 }
