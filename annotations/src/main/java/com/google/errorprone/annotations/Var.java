@@ -26,22 +26,22 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * The field, parameter, or local variable to which this annotation is applied
+ * The parameter or local variable to which this annotation is applied
  * is non-final.
  *
  * <p>Most references are never modified, and accidentally modifying a reference
  * is a potential source of bugs. To prevent accidental modifications, the
  * accompanying Error Prone <a href="http://errorprone.info/bugpattern/VarChecker">check</a>
- * prevents fields, parameters, and local variables from being modified unless
+ * prevents parameters and local variables from being modified unless
  * they are explicitly annotated with @Var.
- *
- * <p>Every field declaration should be explicitly marked either {@code final}
- * or {@code @Var}.
  *
  * <p>Since Java 8 can infer whether a local variable or parameter is effectively
  * {@code final}, and {@code @Var} makes it clear whether any variable is non-
  * {@code final}, explicitly marking local variables and parameters as
  * {@code final} is discouraged.
+ *
+ * <p>The annotation can also be applied to fields, to indicate that the field is
+ * deliberately non-final.
  */
 @Target({FIELD, PARAMETER, LOCAL_VARIABLE})
 @Retention(RUNTIME)
