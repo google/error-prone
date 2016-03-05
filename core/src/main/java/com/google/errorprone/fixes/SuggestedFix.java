@@ -563,6 +563,9 @@ public class SuggestedFix implements Fix {
 
   /** Returns a human-friendly name of the given {@link TypeSymbol} for use in fixes. */
   public static String qualifyType(VisitorState state, SuggestedFix.Builder fix, TypeSymbol sym) {
+    if (sym.getKind() == ElementKind.TYPE_PARAMETER) {
+      return sym.getSimpleName().toString();
+    }
     TreeMaker make =
         TreeMaker.instance(state.context)
             .forToplevel((JCCompilationUnit) state.getPath().getCompilationUnit());

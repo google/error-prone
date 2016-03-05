@@ -160,11 +160,6 @@ public class SuggestedFixTest {
         .doTest();
   }
 
-  @Retention(RUNTIME)
-  public @interface TypeToCast {
-    String value();
-  }
-
   @BugPattern(
     category = Category.ONE_OFF,
     maturity = MaturityLevel.EXPERIMENTAL,
@@ -179,12 +174,10 @@ public class SuggestedFixTest {
       if (tree.getExpression() == null) {
         return Description.NO_MATCH;
       }
-      TypeToCast typeToCast =
-          ASTHelpers.getAnnotation(
-              ASTHelpers.findEnclosingNode(state.getPath(), MethodTree.class), TypeToCast.class);
+      Type type =
+          ASTHelpers.getSymbol(
+              ASTHelpers.findEnclosingNode(state.getPath(), MethodTree.class)).getReturnType();
       SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
-      Type type = state.getTypeFromString(typeToCast.value());
-      Verify.verifyNotNull(type, "could not find type: %s", typeToCast.value());
       String qualifiedTargetType = SuggestedFix.qualifyType(state, fixBuilder, type.tsym);
       fixBuilder.prefixWith(tree.getExpression(), String.format("(%s) ", qualifiedTargetType));
       return describeMatch(tree, fixBuilder.build());
@@ -196,9 +189,7 @@ public class SuggestedFixTest {
     CompilationTestHelper.newInstance(CastReturn.class, getClass())
         .addSourceLines(
             "Test.java",
-            String.format("import %s;", TypeToCast.class.getCanonicalName()),
             "class Test {",
-            "  @TypeToCast(\"java.lang.Object\")",
             "  Object f() {",
             "    // BUG: Diagnostic contains: return (Object) null;",
             "    return null;",
@@ -213,10 +204,8 @@ public class SuggestedFixTest {
         .addSourceLines(
             "Test.java",
             "import java.util.Map.Entry;",
-            String.format("import %s;", TypeToCast.class.getCanonicalName()),
             "class Test {",
-            "  @TypeToCast(\"java.util.Map.Entry\")",
-            "  Object f() {",
+            "  java.util.Map.Entry f() {",
             "    // BUG: Diagnostic contains: return (Entry) null;",
             "    return null;",
             "  }",
@@ -229,11 +218,23 @@ public class SuggestedFixTest {
     CompilationTestHelper.newInstance(CastReturn.class, getClass())
         .addSourceLines(
             "Test.java",
-            String.format("import %s;", TypeToCast.class.getCanonicalName()),
             "class Test {",
-            "  @TypeToCast(\"java.util.Map.Entry\")",
-            "  Object f() {",
+            "  java.util.Map.Entry f() {",
             "    // BUG: Diagnostic contains: return (Map.Entry) null;",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void qualifiedName_typeVariable() {
+    CompilationTestHelper.newInstance(CastReturn.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "class Test<T> {",
+            "  T f() {",
+            "    // BUG: Diagnostic contains: return (T) null;",
             "    return null;",
             "  }",
             "}")
