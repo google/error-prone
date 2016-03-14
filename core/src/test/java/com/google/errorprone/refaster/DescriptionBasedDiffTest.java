@@ -79,6 +79,26 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
             "}")
         .inOrder();
   }
+  
+  @Test
+  public void prefixDiff() {
+    DescriptionBasedDiff diff = DescriptionBasedDiff.create(compilationUnit);
+    diff.onDescribed(new Description(null, "message", SuggestedFix.replace(120, 120, "bar"),
+        SeverityLevel.NOT_A_PROBLEM));
+    diff.applyDifferences(sourceFile);
+    assertThat(sourceFile.getLines())
+        .containsExactly(
+            "package foo.bar;",
+            "import com.foo.Bar;",
+            "",
+            "class Foo {",
+            "  public static void main(String[] args) {",
+            "    System.out.println(\"foobar\");",
+            "  }",
+            "}")
+        .inOrder();
+  }
+
 
   @Test
   public void twoDiffs() {

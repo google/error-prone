@@ -90,8 +90,26 @@ public final class DescriptionBasedDiff implements DescriptionListener, Diff {
 
   private void addReplacement(Replacement replacement) {
     checkNotNull(replacement);
-    Range<Integer> range = Range.closedOpen(replacement.startPosition(), replacement.endPosition());
-
+    Range<Integer> range;
+    if (replacement.startPosition() == replacement.endPosition()) {
+      /*
+       * 1) Inserting Range.closedOpen(N,N) into a RangeMap is a no-op, leading to pure insertions
+       *    being discarded. Therefore, we create a fake range [n,n+1), which has a non-zero 
+       *    measure and therefore won't be discarded.
+       * 2) The RangeMap is only used for ordering insertions, not for removing or inserting text.
+       *    The Replacement still contains the right range (N,N), so no extra characters will be 
+       *    deleted.
+       * 3) This does not work when insertions overlap with replacements or other insertions 
+       *    (and will raise an Exception below in that case).
+       *    There is no general solution for this case, e.g. when inserting '(' and '[' at the same 
+       *    position, we can't tell whether to insert "([" or "[(". Therefore, insertions cannot 
+       *    overlap with replacements, and there can only be one insertion at each position.
+       *    This class is only used in tests, and overlapping replacements do not occur. 
+       */
+      range = Range.closedOpen(replacement.startPosition(), replacement.endPosition() + 1);
+    } else {
+      range = Range.closedOpen(replacement.startPosition(), replacement.endPosition());
+    }
     RangeMap<Integer, Replacement> overlaps = replacements.subRangeMap(range);
     checkArgument(overlaps.asMapOfRanges().isEmpty(), "Replacement %s overlaps with %s",
         replacement, overlaps);
