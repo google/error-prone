@@ -855,7 +855,7 @@ public class GuardedByCheckerTest {
             "          Outer.this.x++;",
             "        }",
             "        // BUG: Diagnostic contains:",
-            "      // should be guarded by 'Outer.this'",
+            "        // should be guarded by 'Outer.this'",
             "        Outer.this.x++;",
             "      }",
             "    }",
@@ -913,7 +913,6 @@ public class GuardedByCheckerTest {
         .doTest();
   }
 
-  // TODO(cushon): make the diagnostic comprehensible...
   @Test
   public void wrongInnerClassInstance() throws Exception {
     compilationHelper
@@ -928,8 +927,8 @@ public class GuardedByCheckerTest {
             "    void m(Inner i) {",
             "      synchronized (WrongInnerClassInstance.this.lock) {",
             "        // BUG: Diagnostic contains:",
-            "        // should be guarded by 'WrongInnerClassInstance.this.lock'; instead found:"
-            + " 'WrongInnerClassInstance.this.lock'",
+            "        // guarded by 'lock' in enclosing instance"
+                + " 'threadsafety.WrongInnerClassInstance' of 'i'",
             "        i.x++;",
             "      }",
             "    }",
@@ -1326,6 +1325,75 @@ public class GuardedByCheckerTest {
             "  public final Object mu = new Object();",
             "  @GuardedBy(\"mu\") int x0 = 1;",
             "  int x1 = x0++;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void innerClassMethod() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "public class Test {",
+            "  public final Object mu = new Object();",
+            "  class Inner {",
+            "    @GuardedBy(\"mu\") int x;",
+            "    @GuardedBy(\"Test.this\") int y;",
+            "  }",
+            "  void f(Inner i) {",
+            "    synchronized (mu) {",
+            "      // BUG: Diagnostic contains:",
+            "      // guarded by 'mu' in enclosing instance 'threadsafety.Test' of 'i'",
+            "      i.x++;",
+            "    }",
+            "  }",
+            "  synchronized void g(Inner i) {",
+            "      // BUG: Diagnostic contains:",
+            "      // guarded by enclosing instance 'threadsafety.Test' of 'i'",
+            "    i.y++;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void innerClassMethod_classBoundary() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Outer.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "public class Outer {",
+            "  public final Object mu = new Object();",
+            "  class Inner {",
+            "    @GuardedBy(\"mu\") int x;",
+            "    @GuardedBy(\"Outer.this\") int y;",
+            "  }",
+            "}")
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "public class Test {",
+            "  void f() {",
+            "    Outer a = new Outer();",
+            "    Outer b = new Outer();",
+            "    Outer.Inner ai = a.new Inner();",
+            "    synchronized (b.mu) {",
+            "      // BUG: Diagnostic contains:",
+            "      // Access should be guarded by 'mu' in enclosing instance 'threadsafety.Outer'"
+                + " of 'ai', which is not accessible in this scope; instead found: 'b.mu'",
+            "      ai.x++;",
+            "    }",
+            "    synchronized (b) {",
+            "      // BUG: Diagnostic contains:",
+            "      // Access should be guarded by enclosing instance 'threadsafety.Outer' of 'ai',"
+                + " which is not accessible in this scope; instead found: 'b'",
+            "      ai.y++;",
+            "    }",
+            "  }",
             "}")
         .doTest();
   }

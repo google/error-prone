@@ -24,6 +24,8 @@ import com.google.common.base.Joiner;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Kind;
+import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Select;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 
@@ -59,13 +61,15 @@ public class GuardedByChecker extends GuardedByValidator
       return Description.NO_MATCH;
     }
 
-    HeldLockAnalyzer.analyze(state, new HeldLockAnalyzer.LockEventListener() {
-      @Override
-      public void handleGuardedAccess(
-          ExpressionTree tree, GuardedByExpression guard, HeldLockSet live) {
-        report(GuardedByChecker.this.checkGuardedAccess(tree, guard, live, state), state);
-      }
-    });
+    HeldLockAnalyzer.analyze(
+        state,
+        new HeldLockAnalyzer.LockEventListener() {
+          @Override
+          public void handleGuardedAccess(
+              ExpressionTree tree, GuardedByExpression guard, HeldLockSet live) {
+            report(GuardedByChecker.this.checkGuardedAccess(tree, guard, live, state), state);
+          }
+        });
 
     return GuardedByValidator.validate(this, tree, state);
   }
@@ -79,8 +83,8 @@ public class GuardedByChecker extends GuardedByValidator
     return GuardedByValidator.validate(this, tree, state);
   }
 
-  protected Description checkGuardedAccess(Tree tree, GuardedByExpression guard,
-      HeldLockSet locks, VisitorState state) {
+  protected Description checkGuardedAccess(
+      Tree tree, GuardedByExpression guard, HeldLockSet locks, VisitorState state) {
 
     // TODO(cushon): support ReadWriteLocks
     //
@@ -114,20 +118,61 @@ public class GuardedByChecker extends GuardedByValidator
    * </ul>
    */
   private String buildMessage(GuardedByExpression guard, HeldLockSet locks) {
-    StringBuilder message = new StringBuilder();
-    message.append(
-        String.format(
-            "This access should be guarded by '%s'",
-            guard));
     int heldLocks = locks.allLocks().size();
+    StringBuilder message = new StringBuilder();
+    Select enclosing = findOuterInstance(guard);
+    if (enclosing != null && !enclosingInstance(guard)) {
+      if (guard == enclosing) {
+        message.append(
+            String.format(
+                "Access should be guarded by enclosing instance '%s' of '%s',"
+                    + " which is not accessible in this scope",
+                enclosing.sym().owner,
+                enclosing.base()));
+      } else {
+        message.append(
+            String.format(
+                "Access should be guarded by '%s' in enclosing instance '%s' of '%s',"
+                    + " which is not accessible in this scope",
+                guard.sym(),
+                enclosing.sym().owner,
+                enclosing.base()));
+      }
+      if (heldLocks > 0) {
+        message.append(
+            String.format("; instead found: '%s'", Joiner.on("', '").join(locks.allLocks())));
+      }
+      return message.toString();
+    }
+    message.append(String.format("This access should be guarded by '%s'", guard));
     if (heldLocks == 0) {
       message.append(", which is not currently held");
     } else {
-      message.append(String.format("; instead found: '%s'",
-          Joiner.on("', '").join(locks.allLocks())));
+      message.append(
+          String.format("; instead found: '%s'", Joiner.on("', '").join(locks.allLocks())));
     }
-    String content = message.toString();
-    return content;
+    return message.toString();
+  }
+
+  private static Select findOuterInstance(GuardedByExpression expr) {
+    while (expr.kind() == Kind.SELECT) {
+      Select select = (Select) expr;
+      if (select.sym().name.contentEquals(GuardedByExpression.ENCLOSING_INSTANCE_NAME)) {
+        return select;
+      }
+      expr = select.base();
+    }
+    return null;
+  }
+  
+  private boolean enclosingInstance(GuardedByExpression expr) {
+    while (expr.kind() == Kind.SELECT) {
+      expr = ((Select) expr).base();
+      if (expr.kind() == Kind.THIS) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
@@ -141,7 +186,7 @@ public class GuardedByChecker extends GuardedByValidator
     }
 
     Symbol rwLockSymbol = state.getSymbolFromString(JUC_READ_WRITE_LOCK);
-    if (rwLockSymbol  == null) {
+    if (rwLockSymbol == null) {
       return false;
     }
 

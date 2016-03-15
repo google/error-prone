@@ -44,7 +44,7 @@ public abstract class GuardedByExpression {
   public abstract Symbol sym();
   public abstract Type type();
   
-  private static final String ENCLOSING_INSTANCE_NAME = "outer$";
+  static final String ENCLOSING_INSTANCE_NAME = "outer$";
   
   /**
    * A 'class' literal: ClassName.class
@@ -253,7 +253,19 @@ public abstract class GuardedByExpression {
 
     private static void pprintSelect(Select exp, StringBuilder sb) {
       if (exp.sym().name.contentEquals(ENCLOSING_INSTANCE_NAME)) {
-        sb.append(String.format("%s.this", exp.sym().owner.name));
+        GuardedByExpression curr = exp.base();
+        while (curr.kind() == Kind.SELECT) {
+          curr = ((Select) curr).base();
+          if (curr.kind() == Kind.THIS) {
+            break;
+          }
+        }
+        if (curr.kind() == Kind.THIS) {
+          sb.append(String.format("%s.this", exp.sym().owner.name));
+        } else {
+          pprint(exp.base(), sb);
+          sb.append(".this$0");
+        }
       } else {
         pprint(exp.base(), sb);
         sb.append(String.format(".%s", exp.sym().name));
