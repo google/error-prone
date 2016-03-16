@@ -1397,4 +1397,32 @@ public class GuardedByCheckerTest {
             "}")
         .doTest();
   }
+
+  @Ignore("b/27686620")
+  @Test
+  public void regression_b27686620() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "A.java",
+            "class A extends One {",
+            "  void g() {}",
+            "}")
+        .addSourceLines(
+            "B.java",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "class One {",
+            "  @GuardedBy(\"One.class\") static int x = 1;",
+            "  static void f() { synchronized (One.class) { x++; } }",
+            "}",
+            "class Two {",
+            "  @GuardedBy(\"Two.class\") static int x = 1;",
+            "  static void f() { synchronized (Two.class) { x++; } }",
+            "}")
+        .addSourceLines(
+            "C.java",
+            "class B extends Two {",
+            "  void g() {}",
+            "}")
+        .doTest();
+  }
 }
