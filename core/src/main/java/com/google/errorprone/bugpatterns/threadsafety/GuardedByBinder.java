@@ -28,6 +28,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
@@ -266,6 +267,12 @@ public class GuardedByBinder {
             }
           }
           throw new IllegalGuardedBy(symbol.getClass().toString());
+        }
+
+        @Override
+        public GuardedByExpression visitParenthesized(
+            ParenthesizedTree node, BinderContext context) {
+          return node.getExpression().accept(this, context);
         }
 
         /**

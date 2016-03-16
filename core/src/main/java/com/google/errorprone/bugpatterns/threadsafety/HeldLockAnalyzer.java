@@ -183,8 +183,9 @@ public class HeldLockAnalyzer {
     @Override
     public Void visitSynchronized(SynchronizedTree tree, HeldLockSet locks) {
       // The synchronized expression is held in the body of the synchronized statement:
-      Optional<GuardedByExpression> lockExpression = GuardedByBinder.bindExpression(
-          ((JCTree.JCParens) tree.getExpression()).getExpression(), visitorState);
+      Optional<GuardedByExpression> lockExpression =
+          GuardedByBinder.bindExpression(
+              (JCExpression) tree.getExpression(), visitorState);
       scan(tree.getBlock(), lockExpression.isPresent()
           ? locks.plus(lockExpression.get())
           : locks);

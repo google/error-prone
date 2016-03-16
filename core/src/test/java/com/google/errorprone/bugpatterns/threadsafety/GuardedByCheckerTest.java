@@ -1398,7 +1398,6 @@ public class GuardedByCheckerTest {
         .doTest();
   }
 
-  @Ignore("b/27686620")
   @Test
   public void regression_b27686620() throws Exception {
     compilationHelper
