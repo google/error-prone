@@ -21,6 +21,15 @@ name of the package. For example, classes in the package
 ## Suppression
 
 If necessary, the check may be suppressed by annotating the enclosing package
-declaration with `@com.google.errorprone.annotations.SuppressPackageLocation`.
-Note that package annotations must be located in a `package-info.java` file.
+declaration with `@com.google.errorprone.annotations.SuppressPackageLocation`,
+for example:
+
+```java
+// package-info.java
+@com.google.errorprone.annotations.SuppressPackageLocation
+package com.google.my.pkg;
+```
+
+Note that package annotations must be located in a `package-info.java` file
+that must be built together with the package.
 
