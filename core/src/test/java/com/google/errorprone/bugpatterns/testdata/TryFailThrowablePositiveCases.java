@@ -24,7 +24,7 @@ import junit.framework.TestCase;
 
 import org.junit.Assert;
 
-import java.util.LinkedList;
+import java.util.Arrays;
 
 /**
  * @author adamwos@google.com (Adam Wos)
@@ -137,4 +137,63 @@ public class TryFailThrowablePositiveCases {
   private static void dummyRecover() {}
 
   private static void dummyMethod() {}
+
+  public static void catchesAssertionError() {
+    try {
+      dummyMethod();
+      Assert.fail();
+      // BUG: Diagnostic contains: remove this line
+    } catch (AssertionError e) {
+    }
+  }
+
+  public static void hasMessage() {
+    try {
+      dummyMethod();
+      Assert.fail("foo");
+      // BUG: Diagnostic contains: remove this line
+    } catch (AssertionError e) {
+    }
+  }
+
+  public static void catchesError_lastStatement() {
+    try {
+      dummyMethod();
+      Assert.fail();
+      // BUG: Diagnostic contains: remove this line
+    } catch (Error e) {
+    }
+  }
+
+  public static void catchesError_notLastStatement() {
+    try {
+      dummyMethod();
+      Assert.fail();
+      // BUG: Diagnostic contains: boolean threw = false;
+    } catch (Error e) {
+    }
+
+    assertTrue(true);
+  }
+
+  public static void catchesError_nested() {
+    for (Object o : Arrays.asList()) {
+      try {
+        dummyMethod();
+        Assert.fail();
+        // BUG: Diagnostic contains: boolean threw = false;
+      } catch (Error e) {
+      }
+    }
+  }
+
+  public static void catchesError_nestedNoBlock() {
+    for (Object o : Arrays.asList())
+      try {
+        dummyMethod();
+        Assert.fail();
+        // BUG: Diagnostic contains: boolean threw = false;
+      } catch (Error e) {
+      }
+  }
 }
