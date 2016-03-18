@@ -145,6 +145,7 @@ import com.google.errorprone.bugpatterns.threadsafety.GuardedByChecker;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByValidator;
 import com.google.errorprone.bugpatterns.threadsafety.ImmutableChecker;
 import com.google.errorprone.bugpatterns.threadsafety.LockMethodChecker;
+import com.google.errorprone.bugpatterns.threadsafety.StaticGuardedByInstance;
 import com.google.errorprone.bugpatterns.threadsafety.SynchronizeOnNonFinalField;
 import com.google.errorprone.bugpatterns.threadsafety.UnlockMethodChecker;
 
@@ -265,6 +266,7 @@ public class BuiltInCheckerSuppliers {
           PreconditionsInvalidPlaceholder.class,
           RequiredModifiersChecker.class,
           StaticAccessedFromInstance.class,
+          StaticGuardedByInstance.class,
           StringEquality.class,
           WaitNotInLoop.class,
           SynchronizeOnNonFinalField.class,
