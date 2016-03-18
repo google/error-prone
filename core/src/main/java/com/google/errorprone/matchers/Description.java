@@ -91,6 +91,11 @@ public class Description {
     return link;
   }
 
+  /** Returns the raw message, not including a link or check name. */
+  public String getRawMessage() {
+    return rawMessage;
+  }
+
   /**
    * Returns the message, not including the check name but including the link.
    */
