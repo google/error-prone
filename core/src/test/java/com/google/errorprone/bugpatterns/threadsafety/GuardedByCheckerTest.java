@@ -1424,4 +1424,24 @@ public class GuardedByCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void qualifiedMethod() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "public class Test {",
+            "  @GuardedBy(\"this\") void f() {}",
+            "  void main() {",
+            "    // BUG: Diagnostic contains: 'this', which could not be resolved",
+            "    new Test().f();",
+            "    Test t = new Test();",
+            "    // BUG: Diagnostic contains: guarded by 't'",
+            "    t.f();",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

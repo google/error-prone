@@ -145,6 +145,10 @@ public class GuardedByChecker extends GuardedByValidator
       return message.toString();
     }
     message.append(String.format("This access should be guarded by '%s'", guard));
+    if (guard.kind() == GuardedByExpression.Kind.ERROR) {
+      message.append(", which could not be resolved");
+      return message.toString();
+    }
     if (heldLocks == 0) {
       message.append(", which is not currently held");
     } else {

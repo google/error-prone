@@ -79,6 +79,35 @@ public abstract class GuardedByExpression {
     }
   }
 
+  /** A guarded by expression that could not be resolved. */
+  public static class Erroneous extends GuardedByExpression {
+
+    private final String guardString;
+
+    Erroneous(String guardString) {
+      this.guardString = guardString;
+    }
+
+    @Override
+    public Kind kind() {
+      return Kind.ERROR;
+    }
+
+    @Override
+    public Symbol sym() {
+      return null;
+    }
+
+    @Override
+    public Type type() {
+      return null;
+    }
+
+    public String guardString() {
+      return guardString;
+    }
+  }
+
   /**
    * A simple 'this literal.
    */
@@ -206,11 +235,20 @@ public abstract class GuardedByExpression {
     LocalVariable localVariable(Symbol.VarSymbol varSymbol) {
       return LocalVariable.create(varSymbol);
     }
+
+    Erroneous error(String guardString) {
+      return new Erroneous(guardString);
+    }
   }
 
   /** {@link GuardedByExpression} kind. */
   public static enum Kind {
-    THIS, CLASS_LITERAL, TYPE_LITERAL, LOCAL_VARIABLE, SELECT;
+    THIS,
+    CLASS_LITERAL,
+    TYPE_LITERAL,
+    LOCAL_VARIABLE,
+    SELECT,
+    ERROR;
   }
 
   @Override
@@ -247,6 +285,9 @@ public abstract class GuardedByExpression {
           break;
         case SELECT:
           pprintSelect((Select) exp, sb);
+          break;
+        case ERROR:
+          sb.append(((Erroneous) exp).guardString());
           break;
       }
     }
@@ -298,6 +339,9 @@ public abstract class GuardedByExpression {
           break;
         case SELECT:
           pprintSelect((Select) exp, sb);
+          break;
+        case ERROR:
+          sb.append("(ERROR)");
           break;
       }
     }

@@ -261,6 +261,10 @@ public class HeldLockAnalyzer {
       Optional<GuardedByExpression> boundGuard =
           ExpectedLockCalculator.from((JCTree.JCExpression) tree, guard.get(), visitorState);
       if (!boundGuard.isPresent()) {
+        // We couldn't resolve a guarded by expression in the current scope, so we can't
+        // guarantee the access is protected and must report an error to be safe.
+        listener.handleGuardedAccess(
+            tree, new GuardedByExpression.Factory().error(guardString), locks);
         return;
       }
       listener.handleGuardedAccess(tree, boundGuard.get(), locks);
