@@ -12,14 +12,14 @@ version is released!
 
 Error Prone works out of the box with [Bazel](http://bazel.io).
 
-```
+```json
 java_library(
     name = "hello",
     srcs = ["Hello.java"],
 )
 ```
 
-```
+```bash
 $ bazel build :hello
 ERROR: example/myproject/BUILD:29:1: Java compilation in rule '//example/myproject:hello'
 examples/maven/error_prone_should_flag/src/main/java/Main.java:20: error: [DeadException] Exception created but not thrown
@@ -36,7 +36,7 @@ INFO: Elapsed time: 1.989s, Critical Path: 1.69s
 
 Edit your `pom.xml` file to add settings to the maven-compiler-plugin:
 
-{% highlight xml %}
+```xaml
 <build>
   <plugins>
     <plugin>
@@ -55,7 +55,7 @@ Edit your `pom.xml` file to add settings to the maven-compiler-plugin:
         <dependency>
           <groupId>org.codehaus.plexus</groupId>
           <artifactId>plexus-compiler-javac-errorprone</artifactId>
-          <version>2.5</version>
+          <version>2.7</version>
         </dependency>
         <!-- override plexus-compiler-javac-errorprone's dependency on
              Error Prone with the latest version -->
@@ -68,13 +68,13 @@ Edit your `pom.xml` file to add settings to the maven-compiler-plugin:
     </plugin>
   </plugins>
 </build>
-{% endhighlight %}
+```
 
 See the
 [examples/maven](https://github.com/google/error-prone/tree/master/examples/maven)
 directory for a working example:
 
-{% highlight bash %}
+```bash
 ../examples/maven/error_prone_should_flag$ mvn compile
 [INFO] Compiling 1 source file to .../examples/maven/error_prone_should_flag/target/classes
 .../examples/maven/error_prone_should_flag/src/main/java/Main.java:20: error: [DeadException] Exception created but not thrown
@@ -86,7 +86,7 @@ directory for a working example:
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD FAILURE
 [INFO] ------------------------------------------------------------------------
-{% endhighlight %}
+```
 
 # Gradle
 The gradle plugin is an external contribution. The documentation and code is at
@@ -96,7 +96,7 @@ See the
 [examples/gradle](https://github.com/google/error-prone/tree/master/examples/gradle)
 directory for a working example:
 
-{% highlight bash %}
+```bash
 $ gradle compileJava
 .../examples/gradle/src/main/java/Main.java:20: error: [DeadException] Exception created but not thrown
     new Exception();
@@ -107,14 +107,14 @@ $ gradle compileJava
 :compileJava FAILED
 
 FAILURE: Build failed with an exception.
-{% endhighlight %}
+```
 
 # Ant
 
 Download the [latest release of Error Prone](https://repo1.maven.org/maven2/com/google/errorprone/error_prone_ant)
 from maven, and add the following javac task to your project's `build.xml` file.
 
-{% highlight bash %}
+```xaml
 <javac destdir="build"
   compiler="com.google.errorprone.ErrorProneAntCompilerAdapter"
   encoding="UTF-8" debug="true"
@@ -124,11 +124,11 @@ from maven, and add the following javac task to your project's `build.xml` file.
     <pathelement location="./path/to/error_prone_ant.jar"/>
   </compilerclasspath>
 </javac>
-{% endhighlight %}
+```
 
 See [examples/ant](https://github.com/google/error-prone/tree/master/examples/ant) for alternate ant configurations.
 
-{% highlight bash %}
+```bash
 examples/ant/compilerclasspath$ ant
 Buildfile: .../examples/ant/compilerclasspath/build.xml
 
@@ -142,7 +142,7 @@ compile:
     [javac] 1 error
 
 BUILD FAILED
-{% endhighlight %}
+```
 
 # IntelliJ IDEA
 
