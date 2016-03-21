@@ -18,6 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NONNULL;
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NULLABLE;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTransfer.tryGetMethodSymbol;
+import static org.checkerframework.javacutil.TreeUtils.elementFromDeclaration;
 
 import com.google.errorprone.dataflow.LocalStore;
 
@@ -102,6 +103,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.annotation.CheckReturnValue;
+import javax.lang.model.element.Element;
 
 /**
  * A default implementation of a transfer function for nullability analysis with more convenient
@@ -156,6 +158,8 @@ abstract class AbstractNullnessPropagationTransfer
   interface LocalVariableUpdates {
     // TODO(cpovirk): consider the API setIfLocalVariable(Node, Nullness)
     void set(LocalVariableNode node, Nullness value);
+
+    void set(VariableDeclarationNode node, Nullness value);
   }
 
   /** "Summary" method called by default for every {@code ValueLiteralNode}. */
@@ -730,11 +734,13 @@ abstract class AbstractNullnessPropagationTransfer
   @Override
   public final TransferResult<Nullness, LocalStore<Nullness>> visitVariableDeclaration(
       VariableDeclarationNode node, TransferInput<Nullness, LocalStore<Nullness>> input) {
-    Nullness value = visitVariableDeclaration();
-    return noStoreChanges(value, input);
+    ReadableLocalVariableUpdates updates = new ReadableLocalVariableUpdates();
+    Nullness result = visitVariableDeclaration(node, values(input), updates);
+    return updateRegularStore(result, input, updates);
   }
 
-  Nullness visitVariableDeclaration() {
+  Nullness visitVariableDeclaration(
+      VariableDeclarationNode node, SubNodeValues inputs, LocalVariableUpdates updates) {
     return NULLABLE;
   }
 
@@ -982,11 +988,16 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   private static final class ReadableLocalVariableUpdates implements LocalVariableUpdates {
-    final Map<LocalVariableNode, Nullness> values = new HashMap<>();
+    final Map<Element, Nullness> values = new HashMap<>();
 
     @Override
     public void set(LocalVariableNode node, Nullness value) {
-      values.put(checkNotNull(node), checkNotNull(value));
+      values.put(node.getElement(), checkNotNull(value));
+    }
+
+    @Override
+    public void set(VariableDeclarationNode node, Nullness value) {
+      values.put(elementFromDeclaration(node.getTree()), checkNotNull(value));
     }
   }
 
@@ -995,7 +1006,7 @@ abstract class AbstractNullnessPropagationTransfer
       LocalStore<Nullness> oldStore, ReadableLocalVariableUpdates... updates) {
     LocalStore.Builder<Nullness> builder = oldStore.toBuilder();
     for (ReadableLocalVariableUpdates update : updates) {
-      for (Entry<LocalVariableNode, Nullness> entry : update.values.entrySet()) {
+      for (Entry<Element, Nullness> entry : update.values.entrySet()) {
         builder.setInformation(entry.getKey(), entry.getValue());
       }
     }
@@ -1017,7 +1028,7 @@ abstract class AbstractNullnessPropagationTransfer
     return new LocalVariableValues() {
       @Override
       public Nullness valueOfLocalVariable(LocalVariableNode node) {
-        return orNullable(store.getInformation(node));
+        return orNullable(store.getInformation(node.getElement()));
       }
     };
   }

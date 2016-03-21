@@ -162,6 +162,11 @@ public class NullnessPropagationTest {
     compilationHelper.addSourceFile("NullnessPropagationTransferCases7.java").doTest();
   }
 
+  @Test
+  public void testTransferFunctions8() throws Exception {
+    compilationHelper.addSourceFile("NullnessPropagationTransferCases8.java").doTest();
+  }
+
   /**
    * Tests nullness propagation for references to constants defined in other compilation units. Enum
    * constants and compile-time constants are still known to be non-null; other constants are

@@ -20,6 +20,8 @@ import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NONNUL
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NULL;
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NULLABLE;
 import static com.sun.tools.javac.code.TypeTag.BOOLEAN;
+import static javax.lang.model.element.ElementKind.EXCEPTION_PARAMETER;
+import static org.checkerframework.javacutil.TreeUtils.elementFromDeclaration;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
@@ -66,6 +68,7 @@ import org.checkerframework.dataflow.cfg.node.MethodInvocationNode;
 import org.checkerframework.dataflow.cfg.node.Node;
 import org.checkerframework.dataflow.cfg.node.NotEqualNode;
 import org.checkerframework.dataflow.cfg.node.TypeCastNode;
+import org.checkerframework.dataflow.cfg.node.VariableDeclarationNode;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -429,6 +432,28 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   Nullness visitArrayCreation(ArrayCreationNode node, SubNodeValues inputs,
       LocalVariableUpdates updates) {
     return NONNULL;
+  }
+
+  @Override
+  Nullness visitVariableDeclaration(
+      VariableDeclarationNode node, SubNodeValues inputs, LocalVariableUpdates updates) {
+    /*
+     * We could try to handle primitives here instead of in visitLocalVariable, but it won't be
+     * enough because we don't see method parameters here.
+     */
+    if (isCatchVariable(node)) {
+      updates.set(node, NONNULL);
+    }
+    /*
+     * We can return whatever we want here because a variable declaration is not an expression and
+     * thus no one can use its value directly. We've already made any updates to the value of the
+     * variable in the store above.
+     */
+    return NULLABLE;
+  }
+
+  private static boolean isCatchVariable(VariableDeclarationNode node) {
+    return elementFromDeclaration(node.getTree()).getKind() == EXCEPTION_PARAMETER;
   }
 
   /**

@@ -16,17 +16,21 @@
 
 package com.google.errorprone.dataflow;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Sets.intersection;
+import static javax.lang.model.element.ElementKind.EXCEPTION_PARAMETER;
+import static javax.lang.model.element.ElementKind.LOCAL_VARIABLE;
+import static javax.lang.model.element.ElementKind.PARAMETER;
 
-import com.google.common.base.Equivalence;
 import com.google.common.collect.ImmutableMap;
 
 import org.checkerframework.dataflow.analysis.AbstractValue;
 import org.checkerframework.dataflow.analysis.FlowExpressions;
 import org.checkerframework.dataflow.analysis.Store;
 import org.checkerframework.dataflow.cfg.node.LocalVariableNode;
-import org.checkerframework.dataflow.cfg.node.Node;
+import org.checkerframework.dataflow.cfg.node.VariableDeclarationNode;
+import org.checkerframework.javacutil.TreeUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,14 +57,21 @@ public final class LocalStore<V extends AbstractValue<V>> implements Store<Local
     return (LocalStore<V>) EMPTY;
   }
 
-  private final ImmutableMap<Equivalence.Wrapper<Node>, V> contents;
+  private final ImmutableMap<Element, V> contents;
 
-  private LocalStore(Map<Equivalence.Wrapper<Node>, V> contents) {
+  private LocalStore(Map<Element, V> contents) {
     this.contents = ImmutableMap.copyOf(contents);
   }
 
-  public V getInformation(Node node) {
-    return contents.get(NodeEquivalance.INSTANCE.wrap(node));
+  /**
+   * Returns the value for the given variable. {@code element} must come from a call to
+   * {@link LocalVariableNode#getElement()} or
+   * {@link TreeUtils#elementFromDeclaration(com.sun.source.tree.VariableTree)}(
+   * {@link VariableDeclarationNode#getTree()}).
+   */
+  public V getInformation(Element element) {
+    checkElementType(element);
+    return contents.get(checkNotNull(element));
   }
 
   public Builder<V> toBuilder() {
@@ -73,19 +84,22 @@ public final class LocalStore<V extends AbstractValue<V>> implements Store<Local
    * it.
    */
   public static final class Builder<V extends AbstractValue<V>> {
-    private final Map<Equivalence.Wrapper<Node>, V> contents;
+    private final Map<Element, V> contents;
 
     Builder(LocalStore<V> prototype) {
       contents = new HashMap<>(prototype.contents);
     }
 
-    public Builder<V> setInformation(Node node, V value) {
-      contents.put(NodeEquivalance.INSTANCE.wrap(node), checkNotNull(value));
+    /**
+     * Sets the value for the given variable. {@code element} must come from a call to
+     * {@link LocalVariableNode#getElement()} or
+     * {@link TreeUtils#elementFromDeclaration(com.sun.source.tree.VariableTree)}(
+     * {@link VariableDeclarationNode#getTree()}).
+     */
+    public Builder<V> setInformation(Element element, V value) {
+      checkElementType(element);
+      contents.put(checkNotNull(element), checkNotNull(value));
       return this;
-    }
-
-    public V getInformation(Node node) {
-      return contents.get(NodeEquivalance.INSTANCE.wrap(node));
     }
 
     public LocalStore<V> build() {
@@ -102,7 +116,7 @@ public final class LocalStore<V extends AbstractValue<V>> implements Store<Local
   @Override
   public LocalStore<V> leastUpperBound(LocalStore<V> other) {
     Builder<V> result = LocalStore.<V>empty().toBuilder();
-    for (Equivalence.Wrapper<Node> var : intersection(contents.keySet(), other.contents.keySet())) {
+    for (Element var : intersection(contents.keySet(), other.contents.keySet())) {
       result.contents.put(var, contents.get(var).leastUpperBound(other.contents.get(var)));
     }
     return result.build();
@@ -142,27 +156,13 @@ public final class LocalStore<V extends AbstractValue<V>> implements Store<Local
     throw new UnsupportedOperationException("DOT output not supported");
   }
 
-  private static class NodeEquivalance extends Equivalence<Node> {
-    static final NodeEquivalance INSTANCE = new NodeEquivalance();
-
-    @Override
-    protected boolean doEquivalent(Node a, Node b) {
-      // TODO(cpovirk): Remove equiv wrapper & hack if LocalVariableNode.equals is fixed to use
-      // the variable's declaring element instead of its name.
-      if (a instanceof LocalVariableNode && b instanceof LocalVariableNode) {
-        Element aEl = ((LocalVariableNode) a).getElement();
-        Element bEl = ((LocalVariableNode) b).getElement();
-        return aEl.equals(bEl);
-      }
-      return a.equals(b);
-    }
-
-    @Override
-    protected int doHash(Node n) {
-      if (n instanceof LocalVariableNode) {
-        return ((LocalVariableNode) n).getElement().hashCode();
-      }
-      return n.hashCode();
-    }
+  private static void checkElementType(Element element) {
+    checkArgument(
+        element.getKind() == LOCAL_VARIABLE
+            || element.getKind() == PARAMETER
+            || element.getKind() == EXCEPTION_PARAMETER,
+        "unexpected element type: %s (%s)",
+        element.getKind(),
+        element);
   }
 }
