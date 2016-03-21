@@ -105,6 +105,11 @@ public class GuardedByChecker extends GuardedByValidator
       return Description.NO_MATCH;
     }
 
+    // TODO(cushon): re-enable once the clean-up is done
+    if (guard.kind() == GuardedByExpression.Kind.ERROR) {
+      return Description.NO_MATCH;
+    }
+
     return buildDescription(tree).setMessage(buildMessage(guard, locks)).build();
   }
 

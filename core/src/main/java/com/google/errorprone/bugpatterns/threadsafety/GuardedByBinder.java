@@ -223,8 +223,9 @@ public class GuardedByBinder {
           checkGuardedBy(base != null, "Bad expression: %s", node.getExpression());
           Symbol sym = context.resolver.resolveSelect(base, node);
           checkGuardedBy(sym != null, "Could not resolve: %s", node);
+          // TODO(cushon): allow MethodSymbol here once clean-up is done
           checkGuardedBy(
-              sym instanceof Symbol.VarSymbol || sym instanceof Symbol.MethodSymbol,
+              sym instanceof Symbol.VarSymbol /* || sym instanceof Symbol.MethodSymbol*/,
               "Bad member symbol: %s",
               sym.getClass());
           return bindSelect(normalizeBase(context, sym, base), sym);
