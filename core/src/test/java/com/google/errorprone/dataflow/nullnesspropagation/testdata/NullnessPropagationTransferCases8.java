@@ -16,6 +16,9 @@ package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+
 /**
  * Tests for caught exceptions.
  */
@@ -27,5 +30,21 @@ public class NullnessPropagationTransferCases8 {
       // BUG: Diagnostic contains: (Non-null)
       triggerNullnessChecker(t);
     }
+  }
+
+  void tryWithResources() throws Exception {
+    try (OutputStream out = something()) {
+      // BUG: Diagnostic contains: (Nullable)
+      triggerNullnessChecker(out);
+    }
+
+    try (OutputStream out = new ByteArrayOutputStream()) {
+      // BUG: Diagnostic contains: (Non-null)
+      triggerNullnessChecker(out);
+    }
+  }
+
+  OutputStream something() {
+    return new ByteArrayOutputStream();
   }
 }

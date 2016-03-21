@@ -22,6 +22,7 @@ import static com.google.common.collect.Sets.intersection;
 import static javax.lang.model.element.ElementKind.EXCEPTION_PARAMETER;
 import static javax.lang.model.element.ElementKind.LOCAL_VARIABLE;
 import static javax.lang.model.element.ElementKind.PARAMETER;
+import static javax.lang.model.element.ElementKind.RESOURCE_VARIABLE;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -160,7 +161,8 @@ public final class LocalStore<V extends AbstractValue<V>> implements Store<Local
     checkArgument(
         element.getKind() == LOCAL_VARIABLE
             || element.getKind() == PARAMETER
-            || element.getKind() == EXCEPTION_PARAMETER,
+            || element.getKind() == EXCEPTION_PARAMETER
+            || element.getKind() == RESOURCE_VARIABLE,
         "unexpected element type: %s (%s)",
         element.getKind(),
         element);
