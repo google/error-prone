@@ -104,9 +104,6 @@ public abstract class ChildMultiMatcher<T extends Tree, N extends Tree>
   private static class AllMatcher<N extends Tree> extends ListMatcher<N> {
     @Override
     public MatchResult<N> matches(List<Matchable<N>> matchables, Matcher<N> nodeMatcher) {
-      if (matchables.isEmpty()) {
-        return MatchResult.none();
-      }
       for (Matchable<N> matchable : matchables) {
         if (!nodeMatcher.matches(matchable.tree(), matchable.state())) {
           return MatchResult.none();
