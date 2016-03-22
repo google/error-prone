@@ -106,16 +106,14 @@ public class MissingCasesInEnumSwitchTest {
             "  enum Case { ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT }",
             "  void m(Case c) {",
             "    // BUG: Diagnostic contains:",
-            "    // Non-exhaustive switch, expected cases for: TWO, THREE, FOUR, and 4 others."
-                + " Did you mean to include a 'default' case?",
+            "    // Non-exhaustive switch, expected cases for: TWO, THREE, FOUR, and 4 others",
             "    switch (c) {",
             "      case ONE:",
             "        System.err.println(\"found it!\");",
             "        break;",
             "    }",
             "  }",
-            "}"
-        )
+            "}")
         .doTest();
   }
 
@@ -131,6 +129,24 @@ public class MissingCasesInEnumSwitchTest {
             "      case 2:",
             "        System.err.println(\"found it!\");",
             "        break;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void empty() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Case { ONE, TWO }",
+            "  void m(Case e) {",
+            "    // BUG: Diagnostic contains:",
+            "    // mean 'default: throw new AssertionError(\"unexpected case: \" + e);'"
+                + " or 'case ONE: case TWO: break;' or 'default: break;'?",
+            "    switch (e) {",
             "    }",
             "  }",
             "}")

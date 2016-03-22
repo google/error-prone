@@ -30,7 +30,7 @@ public abstract class Replacement {
   public static Replacement create(int startPosition, int endPosition, String replaceWith) {
     checkArgument(
         0 <= startPosition && startPosition <= endPosition,
-        "Illegal range [%s, %s]",
+        "Illegal range [%s, %s)",
         startPosition,
         endPosition);
     return new AutoValue_Replacement(startPosition, endPosition, replaceWith);
