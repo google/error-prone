@@ -20,7 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
 /**
- * Tests for caught exceptions.
+ * Tests for {@code try} blocks.
  */
 public class NullnessPropagationTransferCases8 {
   public void caughtException() {
@@ -28,6 +28,10 @@ public class NullnessPropagationTransferCases8 {
       System.out.println();
     } catch (Throwable t) {
       // BUG: Diagnostic contains: (Non-null)
+      triggerNullnessChecker(t);
+
+      t = something();
+      // BUG: Diagnostic contains: (Nullable)
       triggerNullnessChecker(t);
     }
   }
@@ -44,7 +48,7 @@ public class NullnessPropagationTransferCases8 {
     }
   }
 
-  OutputStream something() {
-    return new ByteArrayOutputStream();
+  <T> T something() {
+    return null;
   }
 }
