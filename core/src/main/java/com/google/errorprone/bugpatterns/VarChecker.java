@@ -29,7 +29,10 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 
+import com.sun.source.tree.ForLoopTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Source;
 import com.sun.tools.javac.code.Symbol;
@@ -60,6 +63,11 @@ public class VarChecker extends BugChecker implements VariableTreeMatcher {
     if (ASTHelpers.hasAnnotation(sym, Var.class, state)) {
       return Description.NO_MATCH;
     }
+    if (forLoopVariable(tree, state.getPath())) {
+      // for loop indices are implicitly @Var
+      // TODO(cushon): consider requiring @Var if the index is modified in the body of the loop
+      return Description.NO_MATCH;
+    }
     switch (sym.getKind()) {
       case PARAMETER:
       case LOCAL_VARIABLE:
@@ -67,6 +75,15 @@ public class VarChecker extends BugChecker implements VariableTreeMatcher {
       default:
         return Description.NO_MATCH;
     }
+  }
+  
+  boolean forLoopVariable(VariableTree tree, TreePath path) {
+    Tree parent = path.getParentPath().getLeaf();
+    if (!(parent instanceof ForLoopTree)) {
+      return false;
+    }
+    ForLoopTree forLoop = (ForLoopTree) parent;
+    return forLoop.getInitializer().contains(tree);
   }
 
   private Description handleLocalOrParam(VariableTree tree, VisitorState state, Symbol sym) {
