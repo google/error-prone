@@ -76,6 +76,7 @@ import com.google.errorprone.bugpatterns.InjectedConstructorAnnotations;
 import com.google.errorprone.bugpatterns.InsecureCipherMode;
 import com.google.errorprone.bugpatterns.InvalidPatternSyntax;
 import com.google.errorprone.bugpatterns.IsInstanceOfClass;
+import com.google.errorprone.bugpatterns.IterableAndIterator;
 import com.google.errorprone.bugpatterns.JMockTestWithoutRunWithOrRuleAnnotation;
 import com.google.errorprone.bugpatterns.JUnit3TestNotRun;
 import com.google.errorprone.bugpatterns.JUnit4SetUpNotRun;
@@ -310,6 +311,7 @@ public class BuiltInCheckerSuppliers {
           InjectScopeOrQualifierAnnotationRetention.class,
           InjectedConstructorAnnotations.class,
           InsecureCipherMode.class,
+          IterableAndIterator.class,
           JMockTestWithoutRunWithOrRuleAnnotation.class,
           JUnitAmbiguousTestClass.class,
           LockMethodChecker.class,
