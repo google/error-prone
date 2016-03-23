@@ -41,6 +41,9 @@ This annotation has incompatible modifiers as specified by its @IncompatibleModi
 __[JUnitAmbiguousTestClass](bugpattern/JUnitAmbiguousTestClass)__<br>
 Test class inherits from JUnit 3&#39;s TestCase but has JUnit 4 @Test annotations.
 
+__[MissingCasesInEnumSwitch](bugpattern/MissingCasesInEnumSwitch)__<br>
+Enum switch statement is missing cases
+
 __[MissingOverride](bugpattern/MissingOverride)__<br>
 method overrides method in supertype; expected @Override
 
@@ -76,6 +79,9 @@ This annotation is missing required modifiers as specified by its @RequiredModif
 
 __[StaticAccessedFromInstance](bugpattern/StaticAccessedFromInstance)__<br>
 A static variable or method should not be accessed from an object instance
+
+__[StaticGuardedByInstance](bugpattern/StaticGuardedByInstance)__<br>
+Writes to static fields should not be guarded by instance locks
 
 __[StringEquality](bugpattern/StringEquality)__<br>
 String comparison using reference equality instead of value equality
@@ -248,7 +254,7 @@ __[SuppressWarningsDeprecated](bugpattern/SuppressWarningsDeprecated)__<br>
 Suppressing &quot;deprecated&quot; is probably a typo for &quot;deprecation&quot;
 
 __[TryFailThrowable](bugpattern/TryFailThrowable)__<br>
-Catching Throwable masks failures from fail() or assert*() in the try block
+Catching Throwable/Error masks failures from fail() or assert*() in the try block
 
 __[TypeParameterQualifier](bugpattern/TypeParameterQualifier)__<br>
 Type parameter used as type qualifier
@@ -360,9 +366,6 @@ This method does not acquire the locks specified by its @LockMethod annotation
 
 __[MalformedFormatString](bugpattern/MalformedFormatString)__<br>
 Printf-like format string does not match its arguments
-
-__[MissingCasesInEnumSwitch](bugpattern/MissingCasesInEnumSwitch)__<br>
-Enum switch statement is missing cases
 
 __[ModifyingCollectionWithItself](bugpattern/ModifyingCollectionWithItself)__<br>
 Modifying a collection with itself

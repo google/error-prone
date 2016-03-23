@@ -191,7 +191,9 @@ implements org.checkerframework.dataflow.analysis.Store&lt;<a href="../../../../
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="type parameter in LocalStore">V</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/dataflow/LocalStore.html#getInformation-org.checkerframework.dataflow.cfg.node.Node-">getInformation</a></span>(org.checkerframework.dataflow.cfg.node.Node&nbsp;node)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/dataflow/LocalStore.html#getInformation-javax.lang.model.element.Element-">getInformation</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/javax/lang/model/element/Element.html?is-external=true" title="class or interface in javax.lang.model.element">Element</a>&nbsp;element)</code>
+<div class="block">Returns the value for the given variable.</div>
+</td>
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
@@ -248,13 +250,17 @@ implements org.checkerframework.dataflow.analysis.Store&lt;<a href="../../../../
 <pre>public static&nbsp;&lt;V extends org.checkerframework.dataflow.analysis.AbstractValue&lt;V&gt;&gt;&nbsp;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a>&lt;V&gt;&nbsp;empty()</pre>
 </li>
 </ul>
-<a name="getInformation-org.checkerframework.dataflow.cfg.node.Node-">
+<a name="getInformation-javax.lang.model.element.Element-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getInformation</h4>
-<pre>public&nbsp;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="type parameter in LocalStore">V</a>&nbsp;getInformation(org.checkerframework.dataflow.cfg.node.Node&nbsp;node)</pre>
+<pre>public&nbsp;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="type parameter in LocalStore">V</a>&nbsp;getInformation(<a href="http://docs.oracle.com/javase/7/docs/api/javax/lang/model/element/Element.html?is-external=true" title="class or interface in javax.lang.model.element">Element</a>&nbsp;element)</pre>
+<div class="block">Returns the value for the given variable. <code>element</code> must come from a call to
+ <code>LocalVariableNode.getElement()</code> or
+ <code>TreeUtils.elementFromDeclaration(com.sun.source.tree.VariableTree)</code>(
+ <code>VariableDeclarationNode.getTree()</code>).</div>
 </li>
 </ul>
 <a name="toBuilder--">

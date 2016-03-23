@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10};
+var methods = {"i0":10,"i1":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -141,13 +141,11 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/dataflow/LocalStore.Builder.html#build--">build</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/dataflow/LocalStore.Builder.html" title="type parameter in LocalStore.Builder">V</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/dataflow/LocalStore.Builder.html#getInformation-org.checkerframework.dataflow.cfg.node.Node-">getInformation</a></span>(org.checkerframework.dataflow.cfg.node.Node&nbsp;node)</code>&nbsp;</td>
-</tr>
-<tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/dataflow/LocalStore.Builder.html" title="class in com.google.errorprone.dataflow">LocalStore.Builder</a>&lt;<a href="../../../../com/google/errorprone/dataflow/LocalStore.Builder.html" title="type parameter in LocalStore.Builder">V</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/dataflow/LocalStore.Builder.html#setInformation-org.checkerframework.dataflow.cfg.node.Node-V-">setInformation</a></span>(org.checkerframework.dataflow.cfg.node.Node&nbsp;node,
-              <a href="../../../../com/google/errorprone/dataflow/LocalStore.Builder.html" title="type parameter in LocalStore.Builder">V</a>&nbsp;value)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/dataflow/LocalStore.Builder.html#setInformation-javax.lang.model.element.Element-V-">setInformation</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/javax/lang/model/element/Element.html?is-external=true" title="class or interface in javax.lang.model.element">Element</a>&nbsp;element,
+              <a href="../../../../com/google/errorprone/dataflow/LocalStore.Builder.html" title="type parameter in LocalStore.Builder">V</a>&nbsp;value)</code>
+<div class="block">Sets the value for the given variable.</div>
+</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -171,25 +169,20 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="setInformation-org.checkerframework.dataflow.cfg.node.Node-org.checkerframework.dataflow.analysis.AbstractValue-">
+<a name="setInformation-javax.lang.model.element.Element-org.checkerframework.dataflow.analysis.AbstractValue-">
 <!--   -->
-</a><a name="setInformation-org.checkerframework.dataflow.cfg.node.Node-V-">
+</a><a name="setInformation-javax.lang.model.element.Element-V-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>setInformation</h4>
-<pre>public&nbsp;<a href="../../../../com/google/errorprone/dataflow/LocalStore.Builder.html" title="class in com.google.errorprone.dataflow">LocalStore.Builder</a>&lt;<a href="../../../../com/google/errorprone/dataflow/LocalStore.Builder.html" title="type parameter in LocalStore.Builder">V</a>&gt;&nbsp;setInformation(org.checkerframework.dataflow.cfg.node.Node&nbsp;node,
+<pre>public&nbsp;<a href="../../../../com/google/errorprone/dataflow/LocalStore.Builder.html" title="class in com.google.errorprone.dataflow">LocalStore.Builder</a>&lt;<a href="../../../../com/google/errorprone/dataflow/LocalStore.Builder.html" title="type parameter in LocalStore.Builder">V</a>&gt;&nbsp;setInformation(<a href="http://docs.oracle.com/javase/7/docs/api/javax/lang/model/element/Element.html?is-external=true" title="class or interface in javax.lang.model.element">Element</a>&nbsp;element,
                                             <a href="../../../../com/google/errorprone/dataflow/LocalStore.Builder.html" title="type parameter in LocalStore.Builder">V</a>&nbsp;value)</pre>
-</li>
-</ul>
-<a name="getInformation-org.checkerframework.dataflow.cfg.node.Node-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getInformation</h4>
-<pre>public&nbsp;<a href="../../../../com/google/errorprone/dataflow/LocalStore.Builder.html" title="type parameter in LocalStore.Builder">V</a>&nbsp;getInformation(org.checkerframework.dataflow.cfg.node.Node&nbsp;node)</pre>
+<div class="block">Sets the value for the given variable. <code>element</code> must come from a call to
+ <code>LocalVariableNode.getElement()</code> or
+ <code>TreeUtils.elementFromDeclaration(com.sun.source.tree.VariableTree)</code>(
+ <code>VariableDeclarationNode.getTree()</code>).</div>
 </li>
 </ul>
 <a name="build--">

@@ -1,6 +1,6 @@
 ---
 title: TryFailThrowable
-summary: Catching Throwable masks failures from fail() or assert*() in the try block
+summary: Catching Throwable/Error masks failures from fail() or assert*() in the try block
 layout: bugpattern
 category: JUNIT
 severity: ERROR
@@ -54,7 +54,7 @@ import junit.framework.TestCase;
 
 import org.junit.Assert;
 
-import java.util.LinkedList;
+import java.util.Arrays;
 
 /**
  * @author adamwos@google.com (Adam Wos)
@@ -167,6 +167,65 @@ public class TryFailThrowablePositiveCases {
   private static void dummyRecover() {}
 
   private static void dummyMethod() {}
+
+  public static void catchesAssertionError() {
+    try {
+      dummyMethod();
+      Assert.fail();
+      // TODO: Diagnostic contains: remove this line
+    } catch (AssertionError e) {
+    }
+  }
+
+  public static void hasMessage() {
+    try {
+      dummyMethod();
+      Assert.fail("foo");
+      // TODO: Diagnostic contains: remove this line
+    } catch (AssertionError e) {
+    }
+  }
+
+  public static void catchesError_lastStatement() {
+    try {
+      dummyMethod();
+      Assert.fail();
+      // TODO: Diagnostic contains: remove this line
+    } catch (Error e) {
+    }
+  }
+
+  public static void catchesError_notLastStatement() {
+    try {
+      dummyMethod();
+      Assert.fail();
+      // TODO: Diagnostic contains: boolean threw = false;
+    } catch (Error e) {
+    }
+
+    assertTrue(true);
+  }
+
+  public static void catchesError_nested() {
+    for (Object o : Arrays.asList()) {
+      try {
+        dummyMethod();
+        Assert.fail();
+        // TODO: Diagnostic contains: boolean threw = false;
+      } catch (Error e) {
+      }
+    }
+  }
+
+  public static void catchesError_nestedNoBlock() {
+    for (Object o : Arrays.asList())
+      try {
+        dummyMethod();
+        Assert.fail();
+        // TODO: Diagnostic contains: boolean threw = false;
+      } catch (Error e) {
+      }
+  }
 }
 {% endhighlight %}
 
