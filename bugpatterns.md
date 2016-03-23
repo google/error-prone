@@ -285,6 +285,9 @@ Subclasses of Fragment must be instantiable via Class#newInstance(): the class m
 __[GuiceInjectOnFinalField](bugpattern/GuiceInjectOnFinalField)__<br>
 Although Guice allows injecting final fields, doing so is not recommended because the injected value may not be visible to other threads.
 
+__[IterableAndIterator](bugpattern/IterableAndIterator)__<br>
+Class should not implement both `Iterable` and `Iterator`
+
 __[MissingFail](bugpattern/MissingFail)__<br>
 Not calling fail() when expecting an exception masks bugs
 
