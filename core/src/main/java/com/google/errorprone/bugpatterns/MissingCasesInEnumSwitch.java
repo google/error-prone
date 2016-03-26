@@ -51,7 +51,7 @@ import javax.lang.model.element.ElementKind;
   name = "MissingCasesInEnumSwitch",
   summary = "Enum switch statement is missing cases",
   explanation =
-      "Enums on switches should either handle all possible values of the enum, or"
+      "Switches on enums should either handle all possible values of the enum, or"
           + " have an explicit default case",
   category = JDK,
   severity = WARNING,
