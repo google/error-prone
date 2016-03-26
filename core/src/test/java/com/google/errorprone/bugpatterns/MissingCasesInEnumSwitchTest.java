@@ -144,8 +144,9 @@ public class MissingCasesInEnumSwitchTest {
             "  enum Case { ONE, TWO }",
             "  void m(Case e) {",
             "    // BUG: Diagnostic contains:",
-            "    // mean 'default: throw new AssertionError(\"unexpected case: \" + e);'"
-                + " or 'case ONE: case TWO: break;' or 'default: break;'?",
+            "    // mean 'case ONE: case TWO: break;' or"
+                + " 'default: throw new AssertionError(\"unexpected case: \" + e);'"
+                + " or 'default: break;'?",
             "    switch (e) {",
             "    }",
             "  }",

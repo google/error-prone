@@ -88,6 +88,13 @@ public class MissingCasesInEnumSwitch extends BugChecker implements SwitchTreeMa
 
     int idx = state.getEndPosition((JCTree) tree) - 1; // preserve closing '}'
 
+    StringBuilder sb = new StringBuilder();
+    for (String label : unhandled) {
+      sb.append(String.format("case %s: ", label));
+    }
+    sb.append("break;\n");
+    description.addFix(SuggestedFix.replace(idx, idx, sb.toString()));
+
     description.addFix(
         SuggestedFix.replace(
             idx,
@@ -95,13 +102,6 @@ public class MissingCasesInEnumSwitch extends BugChecker implements SwitchTreeMa
             String.format(
                 "default: throw new AssertionError(\"unexpected case: \" + %s);\n",
                 state.getSourceForNode(TreeInfo.skipParens((JCTree) tree.getExpression())))));
-
-    StringBuilder sb = new StringBuilder();
-    for (String label : unhandled) {
-      sb.append(String.format("case %s: ", label));
-    }
-    sb.append("break;\n");
-    description.addFix(SuggestedFix.replace(idx, idx, sb.toString()));
 
     description.addFix(SuggestedFix.replace(idx, idx, "default: break;\n"));
   }
