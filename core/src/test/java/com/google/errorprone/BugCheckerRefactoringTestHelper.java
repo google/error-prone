@@ -98,6 +98,7 @@ public class BugCheckerRefactoringTestHelper {
   }
 
   public BugCheckerRefactoringTestHelper.ExpectOutput addInputLines(String path, String... input) {
+    assertThat(fileManager.exists(path)).isFalse();
     return new ExpectOutput(fileManager.forSourceLines(path, input));
   }
 
@@ -192,6 +193,7 @@ public class BugCheckerRefactoringTestHelper {
     }
 
     public BugCheckerRefactoringTestHelper addOutputLines(String path, String ... output) {
+      assertThat(fileManager.exists(path)).isFalse();
       return addInputAndOutput(input, fileManager.forSourceLines(path,  output));
     }
 

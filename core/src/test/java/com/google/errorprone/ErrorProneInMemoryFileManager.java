@@ -115,14 +115,18 @@ public class ErrorProneInMemoryFileManager extends JavacFileManager {
     return forResource(clazz.get(), fileName);
   }
 
+  private Path resolvePath(String fileName) {
+    if (!fileName.startsWith("/")) {
+      fileName = "/" + fileName;
+    }
+    return fileSystem.getPath(fileName);
+  }
+
   /**
    * Creates a {@link JavaFileObject} with the given name and content.
    */
   public JavaFileObject forSourceLines(String fileName, String... lines) {
-    if (!fileName.startsWith("/")) {
-      fileName = "/" + fileName;
-    }
-    Path path = fileSystem.getPath(fileName);
+    Path path = resolvePath(fileName);
     try {
       Files.createDirectories(path.getParent());
       Files.write(path, Arrays.asList(lines), UTF_8);
@@ -130,5 +134,9 @@ public class ErrorProneInMemoryFileManager extends JavacFileManager {
       throw new AssertionError(e);
     }
     return Iterables.getOnlyElement(getJavaFileObjects(path));
+  }
+
+  public boolean exists(String fileName) {
+    return Files.exists(resolvePath(fileName));
   }
 }
