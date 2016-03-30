@@ -888,8 +888,8 @@ public class ImmutableCheckerTest {
         .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
-            "// BUG: Diagnostic contains: extends @Immutable",
             "class Test extends Super {",
+            "  // BUG: Diagnostic contains: non-final",
             "  public int x = 0;",
             "}")
         .doTest();
