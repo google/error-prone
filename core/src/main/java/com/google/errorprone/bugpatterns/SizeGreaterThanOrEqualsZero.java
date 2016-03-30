@@ -189,6 +189,7 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
 
   private static Matcher<MemberSelectTree> arrayLengthMatcher() {
     return new Matcher<MemberSelectTree>() {
+      @Override
       public boolean matches(MemberSelectTree tree, VisitorState state) {
         return ASTHelpers.getSymbol(tree) == state.getSymtab().lengthVar;
       }

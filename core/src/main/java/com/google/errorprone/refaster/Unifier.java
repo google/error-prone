@@ -102,6 +102,7 @@ public final class Unifier {
     return context;
   }
   
+  @Override
   public String toString() {
     return "Unifier{" + bindings + "}";
   }

@@ -79,6 +79,7 @@ public class DescendantOfTransitiveTest extends DescendantOfAbstractTest {
     Assert.assertThat(compiler.run(args.toArray(new String[0])), is(Result.OK));
   }
 
+  @Override
   @Before
   public void setUp() throws IOException {
     writeFileToLocalDisk("A.java",
@@ -94,6 +95,7 @@ public class DescendantOfTransitiveTest extends DescendantOfAbstractTest {
     );
   }
 
+  @Override
   @After
   public void tearDown() {
     for (ScannerTest test : tests) {
