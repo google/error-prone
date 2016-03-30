@@ -1037,10 +1037,7 @@ public class ErrorProneScanner extends Scanner {
     } catch (ErrorProneError e) {
       throw e;
     } catch (Throwable t) {
-      throw new ErrorProneError(
-          t,
-          (DiagnosticPosition) path.getLeaf(),
-          state.getPath().getCompilationUnit().getSourceFile());
+      throw wrapWithPosition(t, path);
     }
   }
 
@@ -1051,9 +1048,13 @@ public class ErrorProneScanner extends Scanner {
     } catch (ErrorProneError e) {
       throw e;
     } catch (Throwable t) {
-      throw new ErrorProneError(
-          t, (DiagnosticPosition) tree, getCurrentPath().getCompilationUnit().getSourceFile());
+      throw wrapWithPosition(t, new TreePath(getCurrentPath(), tree));
     }
+  }
+
+  static ErrorProneError wrapWithPosition(Throwable t, TreePath path) {
+    return new ErrorProneError(
+        t, (DiagnosticPosition) path.getLeaf(), path.getCompilationUnit().getSourceFile());
   }
 
   @Override
