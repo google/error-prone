@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
  *
  * <p>Most references are never modified, and accidentally modifying a reference
  * is a potential source of bugs. To prevent accidental modifications, the
- * accompanying Error Prone <a href="http://errorprone.info/bugpattern/VarChecker">check</a>
+ * accompanying Error Prone <a href="http://errorprone.info/bugpattern/Var">check</a>
  * prevents parameters and local variables from being modified unless
  * they are explicitly annotated with @Var.
  *
