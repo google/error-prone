@@ -16,6 +16,7 @@
 
 package com.google.errorprone.dataflow;
 
+import com.google.auto.value.AutoValue;
 import com.google.common.base.Preconditions;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -39,8 +40,6 @@ import org.checkerframework.dataflow.cfg.CFGBuilder;
 import org.checkerframework.dataflow.cfg.ControlFlowGraph;
 import org.checkerframework.dataflow.cfg.UnderlyingAST;
 
-import java.util.Objects;
-
 import javax.annotation.processing.ProcessingEnvironment;
 
 /**
@@ -49,13 +48,13 @@ import javax.annotation.processing.ProcessingEnvironment;
  * @author konne@google.com (Konstantin Weitz)
  */
 public final class DataFlow {
+
   /**
    * A pair of Analysis and ControlFlowGraph.
    */
   public static interface Result<A extends AbstractValue<A>, S extends Store<S>,
       T extends TransferFunction<A, S>> {
     Analysis<A, S, T> getAnalysis();
-
     ControlFlowGraph getControlFlowGraph();
   }
 
@@ -70,45 +69,47 @@ public final class DataFlow {
    *
    * TODO(user): Write a test that checks these assumptions
    */
-  private static LoadingCache<AnalysisParams, Analysis<?, ?, ?>> analysisCache =
-      CacheBuilder.newBuilder().build(
-          new CacheLoader<AnalysisParams, Analysis<?, ?, ?>>() {
-            @Override
-            public Analysis<?, ?, ?> load(AnalysisParams key) {
-              final ProcessingEnvironment env = key.getEnvironment();
-              final ControlFlowGraph cfg = key.getCFG();
-              final TransferFunction<?, ?> transfer = key.getTransferFunction();
+  private static final LoadingCache<AnalysisParams, Analysis<?, ?, ?>> analysisCache =
+      CacheBuilder.newBuilder()
+          .build(
+              new CacheLoader<AnalysisParams, Analysis<?, ?, ?>>() {
+                @Override
+                public Analysis<?, ?, ?> load(AnalysisParams key) {
+                  final ProcessingEnvironment env = key.environment();
+                  final ControlFlowGraph cfg = key.cfg();
+                  final TransferFunction<?, ?> transfer = key.transferFunction();
 
-              @SuppressWarnings({"unchecked", "rawtypes"})
-              final Analysis<?, ?, ?> analysis = new Analysis(env, transfer);
-              analysis.performAnalysis(cfg);
-              return analysis;
-            }
-          });
+                  @SuppressWarnings({"unchecked", "rawtypes"})
+                  final Analysis<?, ?, ?> analysis = new Analysis(env, transfer);
+                  analysis.performAnalysis(cfg);
+                  return analysis;
+                }
+              });
 
-  private static LoadingCache<CFGParams, ControlFlowGraph> cfgCache =
-      CacheBuilder.newBuilder().maximumSize(1).build(
-          new CacheLoader<CFGParams, ControlFlowGraph>() {
-            @Override
-            public ControlFlowGraph load(CFGParams key) {
-              final TreePath methodPath = key.getMethodPath();
-              final MethodTree method = (MethodTree) methodPath.getLeaf();
-              final BlockTree body = method.getBody();
-              final TreePath bodyPath = new TreePath(methodPath, body);
-              final ClassTree classTree = null;
-              final UnderlyingAST ast = new UnderlyingAST.CFGMethod(method, classTree);
-              final ProcessingEnvironment env = key.getEnvironment();
+  private static final LoadingCache<CfgParams, ControlFlowGraph> cfgCache =
+      CacheBuilder.newBuilder()
+          .maximumSize(1)
+          .build(
+              new CacheLoader<CfgParams, ControlFlowGraph>() {
+                @Override
+                public ControlFlowGraph load(CfgParams key) {
+                  final TreePath methodPath = key.methodPath();
+                  final MethodTree method = (MethodTree) methodPath.getLeaf();
+                  final BlockTree body = method.getBody();
+                  final TreePath bodyPath = new TreePath(methodPath, body);
+                  final ClassTree classTree = null;
+                  final UnderlyingAST ast = new UnderlyingAST.CFGMethod(method, classTree);
+                  final ProcessingEnvironment env = key.environment();
 
-              analysisCache.invalidateAll();
-              CompilationUnitTree root = bodyPath.getCompilationUnit();
-              // TODO(user), replace with faster build(bodyPath, env, ast, false, false);
-              return CFGBuilder.build(root, env, ast, false, false);
-            }
-          });
+                  analysisCache.invalidateAll();
+                  CompilationUnitTree root = bodyPath.getCompilationUnit();
+                  // TODO(user), replace with faster build(bodyPath, env, ast, false, false);
+                  return CFGBuilder.build(root, env, ast, false, false);
+                }
+              });
 
   // TODO(user), remove once we merge jdk8 specific's with core
-  public static <T> TreePath findPathFromEnclosingNodeToTopLevel(TreePath path,
-      Class<T> klass) {
+  public static <T> TreePath findPathFromEnclosingNodeToTopLevel(TreePath path, Class<T> klass) {
     while (path != null && !(klass.isInstance(path.getLeaf()))) {
       path = path.getParentPath();
     }
@@ -125,12 +126,13 @@ public final class DataFlow {
    *   the analysis result is the same.
    * - for all contexts, the analysis result is the same.
    */
-  public static <A extends AbstractValue<A>, S extends Store<S>,
-                 T extends TransferFunction<A, S>> Result<A, S, T>
-      methodDataflow(TreePath methodPath, Context context, T transfer) {
+  public static <A extends AbstractValue<A>, S extends Store<S>, T extends TransferFunction<A, S>>
+      Result<A, S, T> methodDataflow(TreePath methodPath, Context context, T transfer) {
     final Tree leaf = methodPath.getLeaf();
-    Preconditions.checkArgument(leaf instanceof MethodTree,
-        "Leaf of methodPath must be of type MethodTree, but was %s", leaf.getClass().getName());
+    Preconditions.checkArgument(
+        leaf instanceof MethodTree,
+        "Leaf of methodPath must be of type MethodTree, but was %s",
+        leaf.getClass().getName());
 
     final MethodTree method = (MethodTree) leaf;
     Preconditions.checkNotNull(method.getBody(),
@@ -139,8 +141,8 @@ public final class DataFlow {
         methodPath.getCompilationUnit().getSourceFile().getName());
 
     final ProcessingEnvironment env = JavacProcessingEnvironment.instance(context);
-    final ControlFlowGraph cfg = cfgCache.getUnchecked(new CFGParams(methodPath, env));
-    final AnalysisParams aparams = new AnalysisParams(transfer, cfg, env);
+    final ControlFlowGraph cfg = cfgCache.getUnchecked(CfgParams.create(methodPath, env));
+    final AnalysisParams aparams = AnalysisParams.create(transfer, cfg, env);
     @SuppressWarnings("unchecked")
     final Analysis<A, S, T> analysis = (Analysis<A, S, T>) analysisCache.getUnchecked(aparams);
 
@@ -165,8 +167,10 @@ public final class DataFlow {
                  T extends TransferFunction<A, S>> A
       expressionDataflow(TreePath exprPath, Context context, T transfer) {
     final Tree leaf = exprPath.getLeaf();
-    Preconditions.checkArgument(leaf instanceof ExpressionTree,
-        "Leaf of exprPath must be of type ExpressionTree, but was %s", leaf.getClass().getName());
+    Preconditions.checkArgument(
+        leaf instanceof ExpressionTree,
+        "Leaf of exprPath must be of type ExpressionTree, but was %s",
+        leaf.getClass().getName());
 
     final ExpressionTree expr = (ExpressionTree) leaf;
     final TreePath enclosingMethodPath =
@@ -189,88 +193,45 @@ public final class DataFlow {
     return methodDataflow(enclosingMethodPath, context, transfer).getAnalysis().getValue(expr);
   }
 
-  private static final class CFGParams {
-    final ProcessingEnvironment env;
-    final TreePath methodPath;
+  @AutoValue
+  abstract static class CfgParams {
+    abstract TreePath methodPath();
 
-    public ProcessingEnvironment getEnvironment() {
-      return env;
+    // Should not be used for hashCode or equals
+    private ProcessingEnvironment environment;
+
+    private static CfgParams create(TreePath methodPath, ProcessingEnvironment environment) {
+      CfgParams cp = new AutoValue_DataFlow_CfgParams(methodPath);
+      cp.environment = environment;
+      return cp;
     }
 
-    public TreePath getMethodPath() {
-      return methodPath;
-    }
-
-    public CFGParams(TreePath methodPath, ProcessingEnvironment env) {
-      this.env = env;
-      this.methodPath = methodPath;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(methodPath);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-      if (this == obj) {
-        return true;
-      }
-      if (obj == null) {
-        return false;
-      }
-      if (getClass() != obj.getClass()) {
-        return false;
-      }
-      CFGParams other = (CFGParams) obj;
-      return Objects.equals(methodPath, other.methodPath);
+    ProcessingEnvironment environment() {
+      return environment;
     }
   }
 
-  private static final class AnalysisParams {
-    private final ProcessingEnvironment env;
-    private final ControlFlowGraph cfg;
-    private final TransferFunction<?, ?> transfer;
+  @AutoValue
+  abstract static class AnalysisParams {
 
-    public AnalysisParams(TransferFunction<?, ?> trans, ControlFlowGraph cfg,
-        ProcessingEnvironment env) {
-      this.env = env;
-      this.cfg = cfg;
-      this.transfer = trans;
+    abstract TransferFunction<?, ?> transferFunction();
+
+    abstract ControlFlowGraph cfg();
+
+    // Should not be used for hashCode or equals
+    private ProcessingEnvironment environment;
+
+    private static AnalysisParams create(
+        TransferFunction<?, ?> transferFunction,
+        ControlFlowGraph cfg,
+        ProcessingEnvironment environment) {
+      AnalysisParams ap = new AutoValue_DataFlow_AnalysisParams(transferFunction, cfg);
+      ap.environment = environment;
+      return ap;
     }
 
-    public ProcessingEnvironment getEnvironment() {
-      return env;
-    }
-
-    public ControlFlowGraph getCFG() {
-      return cfg;
-    }
-
-    @SuppressWarnings("rawtypes")
-    public TransferFunction getTransferFunction() {
-      return transfer;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(cfg, transfer);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-      if (this == obj) {
-        return true;
-      }
-      if (obj == null) {
-        return false;
-      }
-      if (getClass() != obj.getClass()) {
-        return false;
-      }
-      AnalysisParams other = (AnalysisParams) obj;
-      return Objects.equals(cfg, other.cfg)
-          && Objects.equals(transfer, other.transfer);
+    ProcessingEnvironment environment() {
+      return environment;
     }
   }
 }
