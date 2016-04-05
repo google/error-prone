@@ -23,6 +23,7 @@ import com.google.common.base.Predicate;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis;
+import com.google.errorprone.matchers.JUnitMatchers;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Suppliers;
 
@@ -715,5 +716,23 @@ public class ASTHelpers {
 
     // concrete type, e.g. java.lang.String, or a case we haven't considered
     return type;
+  }
+  
+  /**
+   * Returns true if {@code tree} sits somewhere underneath a class or method that is marked as
+   * JUnit 3 or 4 test code.
+   */
+  public static boolean isJUnitTestCode(Tree tree, VisitorState state) {
+    for (Tree ancestor : state.getPath()) {
+      if (ancestor instanceof MethodTree
+          && JUnitMatchers.hasJUnitAnnotation.matches((MethodTree) ancestor, state)) {
+        return true;
+      }
+      if (ancestor instanceof ClassTree
+          && JUnitMatchers.isTestCaseDescendant.matches((ClassTree) ancestor, state)) {
+        return true;
+      }
+    }
+    return false;
   }
 }
