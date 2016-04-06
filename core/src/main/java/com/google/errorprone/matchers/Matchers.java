@@ -68,6 +68,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -641,6 +642,14 @@ public class Matchers {
    */
   public static Matcher<ExpressionTree> stringLiteral(String value) {
     return new StringLiteral(value);
+  }
+
+  /**
+   * Matches a Literal AST node if it is a string literal which matches the given {@link Pattern}.
+   * @see #stringLiteral(String)
+   */
+  public static Matcher<ExpressionTree> stringLiteral(Pattern pattern) {
+    return new StringLiteral(pattern);
   }
 
   public static Matcher<ExpressionTree> booleanLiteral(final boolean value) {
