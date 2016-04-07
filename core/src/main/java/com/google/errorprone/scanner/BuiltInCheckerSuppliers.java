@@ -38,6 +38,7 @@ import com.google.errorprone.bugpatterns.ChainingConstructorIgnoresParameter;
 import com.google.errorprone.bugpatterns.CheckReturnValue;
 import com.google.errorprone.bugpatterns.ClassCanBeStatic;
 import com.google.errorprone.bugpatterns.ClassName;
+import com.google.errorprone.bugpatterns.ComparisonContractViolated;
 import com.google.errorprone.bugpatterns.ComparisonOutOfRange;
 import com.google.errorprone.bugpatterns.CompileTimeConstantChecker;
 import com.google.errorprone.bugpatterns.DaggerProvidesNull;
@@ -287,6 +288,7 @@ public class BuiltInCheckerSuppliers {
           BadComparable.class,
           ClassCanBeStatic.class,
           CollectionIncompatibleType.class,
+          ComparisonContractViolated.class,
           DaggerProvidesNull.class,
           DivZero.class,
           DoubleCheckedLocking.class,
