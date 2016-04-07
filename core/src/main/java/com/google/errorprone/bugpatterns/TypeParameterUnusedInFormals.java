@@ -66,6 +66,10 @@ public class TypeParameterUnusedInFormals extends BugChecker implements MethodTr
         return Description.NO_MATCH;
     }
 
+    if (!methodSymbol.equals(retType.tsym.owner)) {
+      return Description.NO_MATCH;
+    }
+
     // Ignore f-bounds.
     // e.g.: <T extends Enum<T>> T unsafeEnumDeserializer();
     if (retType.bound != null && TypeParameterFinder.visit(retType.bound).contains(retType)) {

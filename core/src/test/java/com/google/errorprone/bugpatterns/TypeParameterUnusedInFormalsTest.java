@@ -204,4 +204,16 @@ public class TypeParameterUnusedInFormalsTest {
             "}")
         .doTest();
   }
+
+  // regression test for b/28055418
+  @Test
+  public void classTypeParameter() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test<T> {",
+            "  abstract T get(String s);",
+            "}")
+        .doTest();
+  }
 }
