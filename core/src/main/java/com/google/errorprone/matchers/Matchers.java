@@ -18,7 +18,6 @@ package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
-import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis;
 import com.google.errorprone.matchers.ChildMultiMatcher.MatchType;
 import com.google.errorprone.matchers.MethodVisibility.Visibility;
 import com.google.errorprone.matchers.method.MethodMatchers;
@@ -1250,15 +1249,15 @@ public class Matchers {
   /**
    * Matches if the expression is provably non-null.
    */
-  public static Matcher<ExpressionTree> isNonNull(NullnessAnalysis nullnessAnalysis) {
-    return new NullnessMatcher(nullnessAnalysis, Nullness.NONNULL);
+  public static Matcher<ExpressionTree> isNonNull() {
+    return new NullnessMatcher(Nullness.NONNULL);
   }
 
   /**
    * Matches if the expression is provably null.
    */
-  public static Matcher<ExpressionTree> isNull(NullnessAnalysis nullnessAnalysis) {
-    return new NullnessMatcher(nullnessAnalysis, Nullness.NULL);
+  public static Matcher<ExpressionTree> isNull() {
+    return new NullnessMatcher(Nullness.NULL);
   }
 
   /**

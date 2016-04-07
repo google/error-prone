@@ -18,26 +18,24 @@ package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
-import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis;
 
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.util.TreePath;
 
 /**
- * Matches an expression based on the result of the nullness dataflow analysis. 
+ * Matches an expression based on the result of the nullness dataflow analysis.
  */
 public class NullnessMatcher implements Matcher<ExpressionTree> {
-  private final NullnessAnalysis nullnessAnalysis;
   private final Nullness expectedNullnessValue;
-  
-  public NullnessMatcher(NullnessAnalysis nullnessAnalysis, Nullness expectedNullnessValue) {
-    this.nullnessAnalysis = nullnessAnalysis;
+
+  public NullnessMatcher(Nullness expectedNullnessValue) {
     this.expectedNullnessValue = expectedNullnessValue;
   }
 
   @Override
   public boolean matches(ExpressionTree expr, VisitorState state) {
     TreePath exprPath = new TreePath(state.getPath(), expr);
-    return nullnessAnalysis.getNullness(exprPath, state.context) == expectedNullnessValue;
+    return state.getNullnessAnalysis().getNullness(exprPath, state.context)
+        == expectedNullnessValue;
   }
 }

@@ -31,7 +31,6 @@ import com.google.common.base.Joiner;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
-import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -52,8 +51,6 @@ import com.sun.tools.javac.tree.JCTree;
         + "instead of for value equality using .equals()",
     category = JDK, severity = WARNING, maturity = MATURE)
 public class StringEquality extends BugChecker implements BinaryTreeMatcher {
-
-  private final NullnessAnalysis nullnessAnalysis = new NullnessAnalysis();
 
   /**
    *  A {@link Matcher} that matches whether the operands in a {@link BinaryTree} are
@@ -138,7 +135,7 @@ public class StringEquality extends BugChecker implements BinaryTreeMatcher {
 
   private boolean isNonNull(ExpressionTree expr, VisitorState state) {
     TreePath pathToExpr = new TreePath(state.getPath(), expr);
-    return nullnessAnalysis.getNullness(pathToExpr, state.context) == NONNULL;
+    return state.getNullnessAnalysis().getNullness(pathToExpr, state.context) == NONNULL;
   }
 
   /**

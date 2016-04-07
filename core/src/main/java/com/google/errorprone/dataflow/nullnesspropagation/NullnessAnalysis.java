@@ -16,48 +16,38 @@
 
 package com.google.errorprone.dataflow.nullnesspropagation;
 
-import com.google.common.base.Predicate;
 import com.google.errorprone.dataflow.DataFlow;
 
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.util.Context;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * An interface to the nullness analysis.
  */
 public final class NullnessAnalysis implements Serializable {
 
-  /**
-   * Represents a Java method.  Used for custom predicates to match non-null-returning methods.
-   */
-  public interface MethodInfo {
-    String clazz();
-    String method();
-    List<String> annotations();
-    boolean isStatic();
-    boolean isPrimitive();
-  }
+  private static final Context.Key<NullnessAnalysis> NULLNESS_ANALYSIS_KEY = new Context.Key<>();
 
   private final NullnessPropagationTransfer nullnessPropagation;
 
   /**
-   * Initializes a nullness analysis with a built-in set of non-null returning methods.
+   * Retrieve an instance of {@link NullnessAnalysis} from the {@code context}.  If there is no
+   * {@link NullnessAnalysis} currently in the {@code context}, create one, insert it, and return
+   * it.
    */
-  public NullnessAnalysis() {
-    nullnessPropagation = new NullnessPropagationTransfer();
+  public static NullnessAnalysis instance(Context context) {
+    NullnessAnalysis instance = context.get(NULLNESS_ANALYSIS_KEY);
+    if (instance == null) {
+      instance = new NullnessAnalysis();
+      context.put(NULLNESS_ANALYSIS_KEY, instance);
+    }
+    return instance;
   }
 
-  /**
-   * Initializes a nullness analysis with an additional set of non-null returning methods that
-   * are or'ed with the built-in set of non-null returning methods.
-   *
-   * @param additionalNonNullReturningMethods A predicate matching methods that never return null
-   */
-  public NullnessAnalysis(Predicate<MethodInfo> additionalNonNullReturningMethods) {
-    nullnessPropagation = new NullnessPropagationTransfer(additionalNonNullReturningMethods);
+  private NullnessAnalysis() {
+    nullnessPropagation = new NullnessPropagationTransfer();
   }
 
   /**

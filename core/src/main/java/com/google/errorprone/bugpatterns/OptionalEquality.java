@@ -26,8 +26,6 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
-import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis;
-import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
@@ -50,8 +48,6 @@ import com.sun.tools.javac.code.Type;
   maturity = MATURE
 )
 public class OptionalEquality extends BugChecker implements BinaryTreeMatcher {
-
-  private final NullnessAnalysis nullnessAnalysis = new NullnessAnalysis();
 
   @Override
   public final Description matchBinary(BinaryTree tree, VisitorState state) {
@@ -100,7 +96,7 @@ public class OptionalEquality extends BugChecker implements BinaryTreeMatcher {
 
   private Nullness getNullness(ExpressionTree expr, VisitorState state) {
     TreePath pathToExpr = new TreePath(state.getPath(), expr);
-    return nullnessAnalysis.getNullness(pathToExpr, state.context);
+    return state.getNullnessAnalysis().getNullness(pathToExpr, state.context);
   }
 
   private static boolean isOptionalType(Type type, VisitorState state) {

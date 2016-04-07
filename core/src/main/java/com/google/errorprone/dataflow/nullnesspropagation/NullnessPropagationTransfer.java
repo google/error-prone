@@ -37,7 +37,6 @@ import com.google.common.io.Files;
 import com.google.common.primitives.UnsignedInteger;
 import com.google.common.primitives.UnsignedLong;
 import com.google.errorprone.dataflow.LocalStore;
-import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis.MethodInfo;
 
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;

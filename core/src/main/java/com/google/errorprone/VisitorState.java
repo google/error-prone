@@ -19,6 +19,7 @@ package com.google.errorprone;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ErrorProneToken;
 import com.google.errorprone.util.ErrorProneTokens;
@@ -122,7 +123,11 @@ public class VisitorState {
   public Symtab getSymtab() {
     return Symtab.instance(context);
   }
-  
+
+  public NullnessAnalysis getNullnessAnalysis() {
+    return NullnessAnalysis.instance(context);
+  }
+
   public ErrorProneOptions errorProneOptions() {
     return errorProneOptions;
   }
