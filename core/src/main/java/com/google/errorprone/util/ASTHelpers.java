@@ -558,7 +558,7 @@ public class ASTHelpers {
   }
 
   /** Returns the list of all constructors defined in the class (including generated ones). */
-  public static List<MethodTree> getConstructors(ClassTree classTree, VisitorState state) {
+  public static List<MethodTree> getConstructors(ClassTree classTree) {
     List<MethodTree> constructors = new ArrayList<>();
     for (Tree member : classTree.getMembers()) {
       if (member instanceof MethodTree) {

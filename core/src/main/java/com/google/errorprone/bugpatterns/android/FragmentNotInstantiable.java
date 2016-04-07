@@ -101,7 +101,7 @@ public class FragmentNotInstantiable extends BugChecker implements ClassTreeMatc
       return buildErrorMessage(classTree, "a fragment inner class must be static");
     }
 
-    List<MethodTree> constructors = ASTHelpers.getConstructors(classTree, state);
+    List<MethodTree> constructors = ASTHelpers.getConstructors(classTree);
     for (MethodTree constructor : constructors) {
       if (constructor.getParameters().isEmpty()) {
         // The nullary constructor exists. We must make sure that it is public.
