@@ -719,10 +719,10 @@ public class ASTHelpers {
   }
   
   /**
-   * Returns true if {@code tree} sits somewhere underneath a class or method that is marked as
-   * JUnit 3 or 4 test code.
+   * Returns true if the leaf node in the {@link TreePath} from {@code state} sits somewhere
+   * underneath a class or method that is marked as JUnit 3 or 4 test code.
    */
-  public static boolean isJUnitTestCode(Tree tree, VisitorState state) {
+  public static boolean isJUnitTestCode(VisitorState state) {
     for (Tree ancestor : state.getPath()) {
       if (ancestor instanceof MethodTree
           && JUnitMatchers.hasJUnitAnnotation.matches((MethodTree) ancestor, state)) {

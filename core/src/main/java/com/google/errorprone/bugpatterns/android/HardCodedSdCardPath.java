@@ -74,7 +74,7 @@ public class HardCodedSdCardPath extends BugChecker implements LiteralTreeMatche
 
     // Hard-coded paths may come handy when writing tests. Therefore, we suppress the check
     // for code located under 'javatests'.
-    if (ASTHelpers.isJUnitTestCode(tree, state)) {
+    if (ASTHelpers.isJUnitTestCode(state)) {
       return Description.NO_MATCH;
     }
 
