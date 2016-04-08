@@ -13,7 +13,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-Enums on switches should either handle all possible values of the enum, or have an explicit default case
+Switches on enums should either handle all possible values of the enum, or have an explicit default case
 
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("MissingCasesInEnumSwitch")` annotation to the enclosing element.

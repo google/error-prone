@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -206,40 +206,44 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getName-java.lang.String-">getName</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;nameStr)</code>&nbsp;</td>
 </tr>
 <tr id="i5" class="rowColor">
+<td class="colFirst"><code><a href="../../../com/google/errorprone/dataflow/nullnesspropagation/NullnessAnalysis.html" title="class in com.google.errorprone.dataflow.nullnesspropagation">NullnessAnalysis</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getNullnessAnalysis--">getNullnessAnalysis</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>com.sun.source.util.TreePath</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getPath--">getPath</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getSourceCode--">getSourceCode</a></span>()</code>
 <div class="block">Gets the current source file.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getSourceForNode-com.sun.source.tree.Tree-">getSourceForNode</a></span>(com.sun.source.tree.Tree&nbsp;tree)</code>
 <div class="block">Gets the original source code that represents the given node.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>com.sun.tools.javac.code.Symbol</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getSymbolFromString-java.lang.String-">getSymbolFromString</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;symStr)</code>&nbsp;</td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>com.sun.tools.javac.code.Symtab</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getSymtab--">getSymtab</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>com.google.common.collect.ImmutableList&lt;<a href="../../../com/google/errorprone/util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getTokensForNode-com.sun.source.tree.Tree-">getTokensForNode</a></span>(com.sun.source.tree.Tree&nbsp;tree)</code>
 <div class="block">Returns the list of <code>Tokens.Token</code>s for the given <code>JCTree</code>.</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>com.sun.tools.javac.tree.TreeMaker</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getTreeMaker--">getTreeMaker</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>com.sun.tools.javac.code.Type</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getType-com.sun.tools.javac.code.Type-boolean-com.sun.tools.javac.util.List-">getType</a></span>(com.sun.tools.javac.code.Type&nbsp;baseType,
        boolean&nbsp;isArray,
@@ -247,7 +251,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <div class="block">Build an instance of a Type.</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>com.sun.tools.javac.code.Type</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getType-com.sun.tools.javac.code.Type-boolean-java.util.List-">getType</a></span>(com.sun.tools.javac.code.Type&nbsp;baseType,
        boolean&nbsp;isArray,
@@ -255,22 +259,22 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <div class="block">Build an instance of a Type.</div>
 </td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>com.sun.tools.javac.code.Type</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getTypeFromString-java.lang.String-">getTypeFromString</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;typeStr)</code>
 <div class="block">Given the string representation of a simple (non-array, non-generic) type, return the
  matching Type.</div>
 </td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code>com.sun.tools.javac.code.Types</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getTypes--">getTypes</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i16" class="altColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#reportMatch-com.google.errorprone.matchers.Description-">reportMatch</a></span>(<a href="../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;description)</code>&nbsp;</td>
 </tr>
-<tr id="i17" class="rowColor">
+<tr id="i18" class="altColor">
 <td class="colFirst"><code><a href="../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#withPath-com.sun.source.util.TreePath-">withPath</a></span>(com.sun.source.util.TreePath&nbsp;path)</code>&nbsp;</td>
 </tr>
@@ -395,6 +399,15 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <li class="blockList">
 <h4>getSymtab</h4>
 <pre>public&nbsp;com.sun.tools.javac.code.Symtab&nbsp;getSymtab()</pre>
+</li>
+</ul>
+<a name="getNullnessAnalysis--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getNullnessAnalysis</h4>
+<pre>public&nbsp;<a href="../../../com/google/errorprone/dataflow/nullnesspropagation/NullnessAnalysis.html" title="class in com.google.errorprone.dataflow.nullnesspropagation">NullnessAnalysis</a>&nbsp;getNullnessAnalysis()</pre>
 </li>
 </ul>
 <a name="errorProneOptions--">

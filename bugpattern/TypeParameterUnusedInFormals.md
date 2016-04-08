@@ -2,9 +2,7 @@
 title: TypeParameterUnusedInFormals
 summary: 'Declaring a type parameter that is only used in the return type is a misuse
   of generics: operations on the type parameter are unchecked, it hides unsafe casts
-  at invocations of the method, and it interacts badly with method overload resolution.
-  NOTE: correcting this issue is often an incompatible API change; you should check
-  that all dependent code still compiles succesfully.'
+  at invocations of the method, and it interacts badly with method overload resolution.'
 layout: bugpattern
 category: JDK
 severity: WARNING

@@ -797,13 +797,13 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">Matchers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/Matchers.html#isNonNull-com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis-">isNonNull</a></span>(<a href="../../../../../com/google/errorprone/dataflow/nullnesspropagation/NullnessAnalysis.html" title="class in com.google.errorprone.dataflow.nullnesspropagation">NullnessAnalysis</a>&nbsp;nullnessAnalysis)</code>
+<td class="colLast"><span class="typeNameLabel">Matchers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/Matchers.html#isNonNull--">isNonNull</a></span>()</code>
 <div class="block">Matches if the expression is provably non-null.</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">Matchers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/Matchers.html#isNull-com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis-">isNull</a></span>(<a href="../../../../../com/google/errorprone/dataflow/nullnesspropagation/NullnessAnalysis.html" title="class in com.google.errorprone.dataflow.nullnesspropagation">NullnessAnalysis</a>&nbsp;nullnessAnalysis)</code>
+<td class="colLast"><span class="typeNameLabel">Matchers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/Matchers.html#isNull--">isNull</a></span>()</code>
 <div class="block">Matches if the expression is provably null.</div>
 </td>
 </tr>
@@ -1043,18 +1043,24 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;</code></td>
+<td class="colLast"><span class="typeNameLabel">Matchers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/Matchers.html#stringLiteral-java.util.regex.Pattern-">stringLiteral</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html?is-external=true" title="class or interface in java.util.regex">Pattern</a>&nbsp;pattern)</code>
+<div class="block">Matches a Literal AST node if it is a string literal which matches the given <a href="http://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html?is-external=true" title="class or interface in java.util.regex"><code>Pattern</code></a>.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">Matchers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/Matchers.html#stringLiteral-java.lang.String-">stringLiteral</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;value)</code>
 <div class="block">Matches a Literal AST node if it is a string literal with the given value.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.StatementTree&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">Matchers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/Matchers.html#throwStatement-com.google.errorprone.matchers.Matcher-">throwStatement</a></span>(<a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super com.sun.source.tree.ExpressionTree&gt;&nbsp;thrownMatcher)</code>
 <div class="block">Matches a <code>throw</code> statement where the thrown item is matched by the passed
  <code>thrownMatcher</code>.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static &lt;T extends com.sun.source.tree.Tree&gt;<br><a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.Tree&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">Matchers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/Matchers.html#toType-java.lang.Class-com.google.errorprone.matchers.Matcher-">toType</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;T&gt;&nbsp;type,
       <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super T&gt;&nbsp;matcher)</code>
@@ -1062,20 +1068,20 @@
  run on a tree of <code>type</code> and returns <code>false</code> for all other tree types.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.TypeCastTree&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">Matchers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/Matchers.html#typeCast-com.google.errorprone.matchers.Matcher-com.google.errorprone.matchers.Matcher-">typeCast</a></span>(<a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.Tree&gt;&nbsp;typeMatcher,
         <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;expressionMatcher)</code>
 <div class="block">Matches a type cast AST node if both of the given matchers match.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.VariableTree&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">Matchers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/Matchers.html#variableInitializer-com.google.errorprone.matchers.Matcher-">variableInitializer</a></span>(<a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;expressionTreeMatcher)</code>
 <div class="block">Matches on the initializer of a VariableTree AST node.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.VariableTree&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">Matchers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/Matchers.html#variableType-com.google.errorprone.matchers.Matcher-">variableType</a></span>(<a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.Tree&gt;&nbsp;treeMatcher)</code>
 <div class="block">Matches on the type of a VariableTree AST node.</div>

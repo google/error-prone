@@ -90,7 +90,7 @@ __[SynchronizeOnNonFinalField](bugpattern/SynchronizeOnNonFinalField)__<br>
 Synchronizing on non-final fields is not safe: if the field is ever updated, different threads may end up locking on different objects.
 
 __[TypeParameterUnusedInFormals](bugpattern/TypeParameterUnusedInFormals)__<br>
-Declaring a type parameter that is only used in the return type is a misuse of generics: operations on the type parameter are unchecked, it hides unsafe casts at invocations of the method, and it interacts badly with method overload resolution. NOTE: correcting this issue is often an incompatible API change; you should check that all dependent code still compiles succesfully.
+Declaring a type parameter that is only used in the return type is a misuse of generics: operations on the type parameter are unchecked, it hides unsafe casts at invocations of the method, and it interacts badly with method overload resolution.
 
 __[UnnecessaryStaticImport](bugpattern/UnnecessaryStaticImport)__<br>
 Using static imports for types is unnecessary
@@ -285,6 +285,9 @@ Subclasses of Fragment must be instantiable via Class#newInstance(): the class m
 __[GuiceInjectOnFinalField](bugpattern/GuiceInjectOnFinalField)__<br>
 Although Guice allows injecting final fields, doing so is not recommended because the injected value may not be visible to other threads.
 
+__[HardCodedSdCardPath](bugpattern/HardCodedSdCardPath)__<br>
+Hardcoded reference to /sdcard
+
 __[IterableAndIterator](bugpattern/IterableAndIterator)__<br>
 Class should not implement both `Iterable` and `Iterator`
 
@@ -318,6 +321,9 @@ __[AssistedInjectAndInjectOnSameConstructor](bugpattern/AssistedInjectAndInjectO
 
 __[ClassCanBeStatic](bugpattern/ClassCanBeStatic)__<br>
 Inner class is non-static but does not reference enclosing class
+
+__[ComparisonContractViolated](bugpattern/ComparisonContractViolated)__<br>
+This comparison method violates the contract
 
 __[DivZero](bugpattern/DivZero)__<br>
 Division by integer literal zero

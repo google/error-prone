@@ -30,7 +30,7 @@ Without the call to `fail()`, the test is broken: it will pass if the exception
 is never thrown *or* if the exception is thrown with the expected message.
 
 If the try/catch block is defensive and the exception may not always be thrown,
-then the exception should not be named 'tolerated' instead of 'expected'.
+then the exception should be named 'tolerated'.
 
 ## Detection
 
