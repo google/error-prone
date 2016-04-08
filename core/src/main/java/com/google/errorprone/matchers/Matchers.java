@@ -347,7 +347,7 @@ public class Matchers {
    */
   public static <T extends Tree> MultiMatcher<T, AnnotationTree> annotations(MatchType matchType,
       Matcher<AnnotationTree> annotationMatcher) {
-    return new Annotation<>(matchType, annotationMatcher);
+    return new AnnotationMatcher<>(matchType, annotationMatcher);
   }
 
   /**

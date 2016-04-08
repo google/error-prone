@@ -32,9 +32,9 @@ import com.sun.source.tree.VariableTree;
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class Annotation<T extends Tree> extends ChildMultiMatcher<T, AnnotationTree> {
+public class AnnotationMatcher<T extends Tree> extends ChildMultiMatcher<T, AnnotationTree> {
 
-  public Annotation(MatchType matchType, Matcher<AnnotationTree> nodeMatcher) {
+  public AnnotationMatcher(MatchType matchType, Matcher<AnnotationTree> nodeMatcher) {
     super(matchType, nodeMatcher);
   }
 
