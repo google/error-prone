@@ -241,21 +241,21 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/Annotation.html" title="class in com.google.errorprone.matchers">Annotation</a>&lt;T extends com.sun.source.tree.Tree&gt;</span></code>
-<div class="block">Matches if the given annotation matcher matches all of or any of the annotations on the tree
- node.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/AnnotationDoesNotHaveArgument.html" title="class in com.google.errorprone.matchers">AnnotationDoesNotHaveArgument</a></span></code>
 <div class="block">Matches an annotation that does not have a particular argument,
  possibly because the default value is being used.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/AnnotationHasArgumentWithValue.html" title="class in com.google.errorprone.matchers">AnnotationHasArgumentWithValue</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/AnnotationMatcher.html" title="class in com.google.errorprone.matchers">AnnotationMatcher</a>&lt;T extends com.sun.source.tree.Tree&gt;</span></code>
+<div class="block">Matches if the given annotation matcher matches all of or any of the annotations on the tree
+ node.</div>
+</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
@@ -1458,12 +1458,12 @@
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/Annotation.html#Annotation-com.google.errorprone.matchers.ChildMultiMatcher.MatchType-com.google.errorprone.matchers.Matcher-">Annotation</a></span>(<a href="../../../../../com/google/errorprone/matchers/ChildMultiMatcher.MatchType.html" title="enum in com.google.errorprone.matchers">ChildMultiMatcher.MatchType</a>&nbsp;matchType,
-          <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.AnnotationTree&gt;&nbsp;nodeMatcher)</code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/AnnotationHasArgumentWithValue.html#AnnotationHasArgumentWithValue-java.lang.String-com.google.errorprone.matchers.Matcher-">AnnotationHasArgumentWithValue</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;element,
                               <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;valueMatcher)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/AnnotationMatcher.html#AnnotationMatcher-com.google.errorprone.matchers.ChildMultiMatcher.MatchType-com.google.errorprone.matchers.Matcher-">AnnotationMatcher</a></span>(<a href="../../../../../com/google/errorprone/matchers/ChildMultiMatcher.MatchType.html" title="enum in com.google.errorprone.matchers">ChildMultiMatcher.MatchType</a>&nbsp;matchType,
+                 <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.AnnotationTree&gt;&nbsp;nodeMatcher)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/Asserts.html#Asserts-com.google.errorprone.matchers.Matcher-">Asserts</a></span>(<a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;expressionMatcher)</code>&nbsp;</td>
