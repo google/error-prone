@@ -63,6 +63,7 @@ import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import com.sun.tools.javac.tree.TreeInfo;
 
+import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -778,6 +779,23 @@ public class Matchers {
       }
     };
   }
+
+  /**
+   * Determines whether an expression has an annotation of the given class.
+   * This includes annotations inherited from superclasses due to @Inherited.
+   *
+   * @param inputClass The class of the annotation to look for (e.g, Produces.class).
+   */
+  public static <T extends Tree> Matcher<T> hasAnnotation(
+      final Class<? extends Annotation> inputClass) {
+    return new Matcher<T>() {
+      @Override
+      public boolean matches(T tree, VisitorState state) {
+        return ASTHelpers.hasAnnotation(ASTHelpers.getSymbol(tree), inputClass, state);
+      }
+    };
+  }
+
 
   /**
    * Matches if a method or any method it overrides has an annotation of the given type.

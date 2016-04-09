@@ -122,6 +122,11 @@ public class Suppliers {
     };
   }
 
+  /** Given the class representation of a type, supplies the corresponding type. */
+  public static Supplier<Type> typeFromClass(Class<?> inputClass) {
+    return typeFromString(inputClass.getName());
+  }
+
   public static final Supplier<Type> JAVA_LANG_VOID_TYPE = new Supplier<Type>() {
       @Override
       public Type get(VisitorState state) {
