@@ -26,12 +26,15 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.lang.model.element.Modifier;
@@ -42,12 +45,10 @@ import javax.lang.model.element.Modifier;
 @BugPattern(
   name = "ClassName",
   summary = "The source file name should match the name of the top-level class it contains",
-  explanation =
-      "Google Java Style Guide § 2.1 states, \"The source file name consists of the"
-          + " case-sensitive name of the top-level class it contains, plus the .java extension.\"",
   category = JDK,
   severity = ERROR,
-  maturity = MATURE
+  maturity = MATURE,
+  documentSuppression = false
 )
 public class ClassName extends BugChecker implements CompilationUnitTreeMatcher {
 
@@ -61,6 +62,16 @@ public class ClassName extends BugChecker implements CompilationUnitTreeMatcher 
     for (Tree member : tree.getTypeDecls()) {
       if (member instanceof ClassTree) {
         ClassTree classMember = (ClassTree) member;
+        SuppressWarnings suppression =
+            ASTHelpers.getAnnotation(classMember, SuppressWarnings.class);
+        if (suppression != null
+            && !Collections.disjoint(Arrays.asList(suppression.value()), allNames())) {
+          // If any top-level classes have @SuppressWarnings("ClassName"), ignore
+          // this compilation unit. We can't rely on the normal suppression
+          // mechanism because the only enclosing element is the package declaration,
+          // and @SuppressWarnings can't be applied to packages.
+          return Description.NO_MATCH;
+        }
         if (classMember.getSimpleName().contentEquals(filename)) {
           return Description.NO_MATCH;
         }

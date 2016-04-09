@@ -61,7 +61,6 @@ public class ClassNameTest {
           .doTest();
   }
 
-
   @Test
   public void negative() throws Exception {
       compilationHelper
@@ -149,6 +148,17 @@ public class ClassNameTest {
             "}")
         .ignoreJavacErrors()
         .matchAllDiagnostics()
+        .doTest();
+  }
+  
+  @Test
+  public void suppression() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "b/Test.java", //
+            "package b;",
+            "@SuppressWarnings(\"ClassName\")",
+            "class Green {}")
         .doTest();
   }
 }
