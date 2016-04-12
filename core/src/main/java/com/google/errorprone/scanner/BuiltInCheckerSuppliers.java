@@ -42,7 +42,6 @@ import com.google.errorprone.bugpatterns.ClassName;
 import com.google.errorprone.bugpatterns.ComparisonContractViolated;
 import com.google.errorprone.bugpatterns.ComparisonOutOfRange;
 import com.google.errorprone.bugpatterns.CompileTimeConstantChecker;
-import com.google.errorprone.bugpatterns.DaggerProvidesNull;
 import com.google.errorprone.bugpatterns.DeadException;
 import com.google.errorprone.bugpatterns.DepAnn;
 import com.google.errorprone.bugpatterns.DivZero;
@@ -56,25 +55,8 @@ import com.google.errorprone.bugpatterns.FallThroughSuppression;
 import com.google.errorprone.bugpatterns.Finally;
 import com.google.errorprone.bugpatterns.ForOverrideChecker;
 import com.google.errorprone.bugpatterns.GetClassOnClass;
-import com.google.errorprone.bugpatterns.GuiceAssistedInjectScoping;
-import com.google.errorprone.bugpatterns.GuiceAssistedParameters;
-import com.google.errorprone.bugpatterns.GuiceInjectOnFinalField;
-import com.google.errorprone.bugpatterns.GuiceOverridesGuiceInjectableMethod;
-import com.google.errorprone.bugpatterns.GuiceOverridesJavaxInjectableMethod;
 import com.google.errorprone.bugpatterns.HashtableContains;
 import com.google.errorprone.bugpatterns.IncompatibleModifiersChecker;
-import com.google.errorprone.bugpatterns.InjectAssistedInjectAndInjectOnConstructors;
-import com.google.errorprone.bugpatterns.InjectAssistedInjectAndInjectOnSameConstructor;
-import com.google.errorprone.bugpatterns.InjectInvalidTargetingOnScopingAnnotation;
-import com.google.errorprone.bugpatterns.InjectJavaxInjectOnAbstractMethod;
-import com.google.errorprone.bugpatterns.InjectJavaxInjectOnFinalField;
-import com.google.errorprone.bugpatterns.InjectMoreThanOneInjectableConstructor;
-import com.google.errorprone.bugpatterns.InjectMoreThanOneQualifier;
-import com.google.errorprone.bugpatterns.InjectMoreThanOneScopeAnnotationOnClass;
-import com.google.errorprone.bugpatterns.InjectOverlappingQualifierAndScopeAnnotation;
-import com.google.errorprone.bugpatterns.InjectScopeAnnotationOnInterfaceOrAbstractClass;
-import com.google.errorprone.bugpatterns.InjectScopeOrQualifierAnnotationRetention;
-import com.google.errorprone.bugpatterns.InjectedConstructorAnnotations;
 import com.google.errorprone.bugpatterns.InsecureCipherMode;
 import com.google.errorprone.bugpatterns.InvalidPatternSyntax;
 import com.google.errorprone.bugpatterns.IsInstanceOfClass;
@@ -144,6 +126,24 @@ import com.google.errorprone.bugpatterns.android.HardCodedSdCardPath;
 import com.google.errorprone.bugpatterns.android.MislabeledAndroidString;
 import com.google.errorprone.bugpatterns.android.RectIntersectReturnValueIgnored;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionIncompatibleType;
+import com.google.errorprone.bugpatterns.inject.AssistedInjectAndInjectOnConstructors;
+import com.google.errorprone.bugpatterns.inject.AssistedInjectAndInjectOnSameConstructor;
+import com.google.errorprone.bugpatterns.inject.InjectedConstructorAnnotations;
+import com.google.errorprone.bugpatterns.inject.InvalidTargetingOnScopingAnnotation;
+import com.google.errorprone.bugpatterns.inject.JavaxInjectOnAbstractMethod;
+import com.google.errorprone.bugpatterns.inject.JavaxInjectOnFinalField;
+import com.google.errorprone.bugpatterns.inject.MoreThanOneInjectableConstructor;
+import com.google.errorprone.bugpatterns.inject.MoreThanOneQualifier;
+import com.google.errorprone.bugpatterns.inject.MoreThanOneScopeAnnotationOnClass;
+import com.google.errorprone.bugpatterns.inject.OverlappingQualifierAndScopeAnnotation;
+import com.google.errorprone.bugpatterns.inject.ScopeAnnotationOnInterfaceOrAbstractClass;
+import com.google.errorprone.bugpatterns.inject.ScopeOrQualifierAnnotationRetention;
+import com.google.errorprone.bugpatterns.inject.dagger.ProvidesNull;
+import com.google.errorprone.bugpatterns.inject.guice.AssistedInjectScoping;
+import com.google.errorprone.bugpatterns.inject.guice.AssistedParameters;
+import com.google.errorprone.bugpatterns.inject.guice.InjectOnFinalField;
+import com.google.errorprone.bugpatterns.inject.guice.OverridesGuiceInjectableMethod;
+import com.google.errorprone.bugpatterns.inject.guice.OverridesJavaxInjectableMethod;
 import com.google.errorprone.bugpatterns.threadsafety.DoubleCheckedLocking;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByChecker;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByValidator;
@@ -179,10 +179,8 @@ public class BuiltInCheckerSuppliers {
    * Returns a {@link ScannerSupplier} with the {@link BugChecker}s that are in the ENABLED lists.
    */
   public static ScannerSupplier defaultChecks() {
-    return allChecks().filter(
-        Predicates.or(
-            Predicates.in(ENABLED_ERRORS),
-            Predicates.in(ENABLED_WARNINGS)));
+    return allChecks()
+        .filter(Predicates.or(Predicates.in(ENABLED_ERRORS), Predicates.in(ENABLED_WARNINGS)));
   }
 
   /**
@@ -204,6 +202,7 @@ public class BuiltInCheckerSuppliers {
           ArrayToString.class,
           ArrayToStringCompoundAssignment.class,
           ArrayToStringConcatenation.class,
+          AssistedInjectScoping.class,
           AsyncFunctionReturnsNull.class,
           BadShiftAmount.class,
           ChainingConstructorIgnoresParameter.class,
@@ -216,7 +215,6 @@ public class BuiltInCheckerSuppliers {
           EqualsNaN.class,
           ForOverrideChecker.class,
           GetClassOnClass.class,
-          GuiceAssistedInjectScoping.class,
           GuardedByValidator.class,
           GuardedByChecker.class,
           HashtableContains.class,
@@ -285,13 +283,15 @@ public class BuiltInCheckerSuppliers {
       getSuppliers(
           ArraysAsListPrimitiveArray.class,
           AssertFalse.class,
+          AssistedInjectAndInjectOnConstructors.class,
+          AssistedInjectAndInjectOnSameConstructor.class,
+          AssistedParameters.class,
           BadAnnotationImplementation.class,
           BadComparable.class,
           BigDecimalLiteralDouble.class,
           ClassCanBeStatic.class,
           CollectionIncompatibleType.class,
           ComparisonContractViolated.class,
-          DaggerProvidesNull.class,
           DivZero.class,
           DoubleCheckedLocking.class,
           EmptyIfStatement.class,
@@ -299,25 +299,14 @@ public class BuiltInCheckerSuppliers {
           EqualsIncompatibleType.class,
           FallThroughSuppression.class,
           FragmentNotInstantiable.class,
-          GuiceAssistedParameters.class,
-          GuiceInjectOnFinalField.class,
-          GuiceOverridesGuiceInjectableMethod.class,
-          GuiceOverridesJavaxInjectableMethod.class,
           HardCodedSdCardPath.class,
-          InjectAssistedInjectAndInjectOnConstructors.class,
-          InjectAssistedInjectAndInjectOnSameConstructor.class,
-          InjectInvalidTargetingOnScopingAnnotation.class,
-          InjectJavaxInjectOnAbstractMethod.class,
-          InjectJavaxInjectOnFinalField.class,
-          InjectMoreThanOneInjectableConstructor.class,
-          InjectMoreThanOneQualifier.class,
-          InjectMoreThanOneScopeAnnotationOnClass.class,
-          InjectOverlappingQualifierAndScopeAnnotation.class,
-          InjectScopeAnnotationOnInterfaceOrAbstractClass.class,
-          InjectScopeOrQualifierAnnotationRetention.class,
           InjectedConstructorAnnotations.class,
+          InjectOnFinalField.class,
           InsecureCipherMode.class,
+          InvalidTargetingOnScopingAnnotation.class,
           IterableAndIterator.class,
+          JavaxInjectOnAbstractMethod.class,
+          JavaxInjectOnFinalField.class,
           JMockTestWithoutRunWithOrRuleAnnotation.class,
           JUnitAmbiguousTestClass.class,
           LockMethodChecker.class,
@@ -325,16 +314,25 @@ public class BuiltInCheckerSuppliers {
           MissingFail.class,
           MissingOverride.class,
           ModifyingCollectionWithItself.class,
+          MoreThanOneInjectableConstructor.class,
+          MoreThanOneQualifier.class,
+          MoreThanOneScopeAnnotationOnClass.class,
           NarrowingCompoundAssignment.class,
           NoAllocationChecker.class,
           NonCanonicalStaticMemberImport.class,
           NonRuntimeAnnotation.class,
           NumericEquality.class,
+          OverlappingQualifierAndScopeAnnotation.class,
+          OverridesGuiceInjectableMethod.class,
+          OverridesJavaxInjectableMethod.class,
           PackageLocation.class,
           PreconditionsExpensiveString.class,
           PrimitiveArrayPassedToVarargsMethod.class,
           ProtoFieldPreconditionsCheckNotNull.class,
           ProtoStringFieldReferenceEquality.class,
+          ProvidesNull.class,
+          ScopeAnnotationOnInterfaceOrAbstractClass.class,
+          ScopeOrQualifierAnnotationRetention.class,
           SelfEquality.class,
           UnlockMethodChecker.class,
           UnnecessaryStaticImport.class,
