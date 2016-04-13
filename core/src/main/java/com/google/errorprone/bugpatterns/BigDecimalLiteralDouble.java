@@ -45,7 +45,7 @@ import java.math.BigInteger;
  * @author endobson@google.com (Eric Dobson)
  */
 @BugPattern(
-  name = "BigDoubleValueOfLiteralDouble",
+  name = "BigDecimalLiteralDouble",
   summary = "BigDecimal(double) and BigDecimal.valueOf(double) may lose precision, "
              + "prefer BigDecimal(String) or BigDecimal(long)",
   category = JDK,
