@@ -62,6 +62,7 @@ import com.google.errorprone.bugpatterns.InvalidPatternSyntax;
 import com.google.errorprone.bugpatterns.IsInstanceOfClass;
 import com.google.errorprone.bugpatterns.IterableAndIterator;
 import com.google.errorprone.bugpatterns.JMockTestWithoutRunWithOrRuleAnnotation;
+import com.google.errorprone.bugpatterns.JUnit3FloatingPointComparisonWithoutDelta;
 import com.google.errorprone.bugpatterns.JUnit3TestNotRun;
 import com.google.errorprone.bugpatterns.JUnit4SetUpNotRun;
 import com.google.errorprone.bugpatterns.JUnit4TearDownNotRun;
@@ -308,6 +309,7 @@ public class BuiltInCheckerSuppliers {
           JavaxInjectOnAbstractMethod.class,
           JavaxInjectOnFinalField.class,
           JMockTestWithoutRunWithOrRuleAnnotation.class,
+          JUnit3FloatingPointComparisonWithoutDelta.class,
           JUnitAmbiguousTestClass.class,
           LockMethodChecker.class,
           MalformedFormatString.class,
