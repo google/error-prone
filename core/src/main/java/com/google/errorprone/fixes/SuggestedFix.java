@@ -16,6 +16,7 @@
 
 package com.google.errorprone.fixes;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.auto.value.AutoValue;
@@ -330,11 +331,12 @@ public class SuggestedFix implements Fix {
   private abstract static class InsertionFix implements FixOperation {
     protected abstract int getInsertionIndex(EndPosTable endPositions);
 
-    protected final DiagnosticPosition tree;
+    protected final DiagnosticPosition position;
     protected final String insertion;
 
-    protected InsertionFix(DiagnosticPosition tree, String insertion) {
-      this.tree = tree;
+    protected InsertionFix(DiagnosticPosition position, String insertion) {
+      checkArgument(position.getStartPosition() >= 0, "invalid start position");
+      this.position = position;
       this.insertion = insertion;
     }
 
@@ -352,7 +354,7 @@ public class SuggestedFix implements Fix {
 
     @Override
     protected int getInsertionIndex(EndPosTable endPositions) {
-      return tree.getEndPosition(endPositions);
+      return position.getEndPosition(endPositions);
     }
   }
 
@@ -363,7 +365,7 @@ public class SuggestedFix implements Fix {
 
     @Override
     protected int getInsertionIndex(EndPosTable endPositions) {
-      return tree.getStartPosition();
+      return position.getStartPosition();
     }
   }
 
@@ -373,6 +375,7 @@ public class SuggestedFix implements Fix {
     private final String replacement;
 
     public ReplacementFix(DiagnosticPosition original, String replacement) {
+      checkArgument(original.getStartPosition() >= 0, "invalid start position");
       this.original = original;
       this.replacement = replacement;
     }
