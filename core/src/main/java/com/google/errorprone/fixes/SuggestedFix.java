@@ -43,11 +43,9 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Deque;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
@@ -103,17 +101,11 @@ public class SuggestedFix implements Fix {
       throw new IllegalArgumentException(
           "Cannot produce correct replacements without endPositions.");
     }
-    TreeSet<Replacement> replacements = new TreeSet<>(
-      new Comparator<Replacement>() {
-        @Override
-        public int compare(Replacement o1, Replacement o2) {
-        return Integer.compare(o2.startPosition(), o1.startPosition());
-        }
-      });
+    Replacements replacements = new Replacements();
     for (FixOperation fix : fixes) {
       replacements.add(fix.getReplacement(endPositions));
     }
-    return replacements;
+    return replacements.descending();
   }
 
   /** {@link Builder#replace(Tree, String)} */

@@ -16,24 +16,18 @@
 
 package com.google.errorprone.apply;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.google.common.collect.Range;
-import com.google.common.collect.RangeMap;
-import com.google.common.collect.TreeRangeMap;
 import com.google.errorprone.DescriptionListener;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.Replacement;
+import com.google.errorprone.fixes.Replacements;
 import com.google.errorprone.matchers.Description;
 
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -45,12 +39,13 @@ import java.util.Set;
  * @author lowasser@google.com (Louis Wasserman)
  */
 public final class DescriptionBasedDiff implements DescriptionListener, Diff {
+
   private final String sourcePath;
   private final JCCompilationUnit compilationUnit;
   private final Set<String> importsToAdd;
   private final Set<String> importsToRemove;
   private final EndPosTable endPositions;
-  private final RangeMap<Integer, Replacement> replacements;
+  private final Replacements replacements = new Replacements();
 
   public static DescriptionBasedDiff create(JCCompilationUnit compilationUnit) {
     return new DescriptionBasedDiff(compilationUnit);
@@ -59,10 +54,9 @@ public final class DescriptionBasedDiff implements DescriptionListener, Diff {
   private DescriptionBasedDiff(JCCompilationUnit compilationUnit) {
     this.compilationUnit = checkNotNull(compilationUnit);
     this.sourcePath = compilationUnit.getSourceFile().toUri().getPath();
-    this.importsToAdd = new HashSet<>();
-    this.importsToRemove = new HashSet<>();
+    this.importsToAdd = new LinkedHashSet<>();
+    this.importsToRemove = new LinkedHashSet<>();
     this.endPositions = compilationUnit.endPositions;
-    this.replacements = TreeRangeMap.create();
   }
 
   @Override
@@ -71,8 +65,7 @@ public final class DescriptionBasedDiff implements DescriptionListener, Diff {
   }
   
   public boolean isEmpty() {
-    return importsToAdd.isEmpty() && importsToRemove.isEmpty()
-        && replacements.asMapOfRanges().isEmpty();
+    return importsToAdd.isEmpty() && importsToRemove.isEmpty() && replacements.isEmpty();
   }
 
   @Override
@@ -83,57 +76,24 @@ public final class DescriptionBasedDiff implements DescriptionListener, Diff {
       importsToAdd.addAll(fix.getImportsToAdd());
       importsToRemove.addAll(fix.getImportsToRemove());
       for (Replacement replacement : fix.getReplacements(endPositions)) {
-        addReplacement(replacement);
+        replacements.add(replacement);
       }
     }
   }
 
-  private void addReplacement(Replacement replacement) {
-    checkNotNull(replacement);
-    Range<Integer> range;
-    if (replacement.startPosition() == replacement.endPosition()) {
-      /*
-       * 1) Inserting Range.closedOpen(N,N) into a RangeMap is a no-op, leading to pure insertions
-       *    being discarded. Therefore, we create a fake range [n,n+1), which has a non-zero 
-       *    measure and therefore won't be discarded.
-       * 2) The RangeMap is only used for ordering insertions, not for removing or inserting text.
-       *    The Replacement still contains the right range (N,N), so no extra characters will be 
-       *    deleted.
-       * 3) This does not work when insertions overlap with replacements or other insertions 
-       *    (and will raise an Exception below in that case).
-       *    There is no general solution for this case, e.g. when inserting '(' and '[' at the same 
-       *    position, we can't tell whether to insert "([" or "[(". Therefore, insertions cannot 
-       *    overlap with replacements, and there can only be one insertion at each position.
-       *    This class is only used in tests, and overlapping replacements do not occur. 
-       */
-      range = Range.closedOpen(replacement.startPosition(), replacement.endPosition() + 1);
-    } else {
-      range = Range.closedOpen(replacement.startPosition(), replacement.endPosition());
-    }
-    RangeMap<Integer, Replacement> overlaps = replacements.subRangeMap(range);
-    checkArgument(overlaps.asMapOfRanges().isEmpty(), "Replacement %s overlaps with %s",
-        replacement, overlaps);
-
-    replacements.put(range, replacement);
-  }
-
   @Override
   public void applyDifferences(SourceFile sourceFile) throws DiffNotApplicableException {
-    /*
-     * We want to apply replacements in reverse order of start position, and we know that imports
-     * come before all the other replacements.
-     */
-    List<Replacement> replacementsInOrder = new ArrayList<>(replacements.asMapOfRanges().values());
-    Collections.reverse(replacementsInOrder);
     if (!importsToAdd.isEmpty() || !importsToRemove.isEmpty()) {
       ImportStatements importStatements = ImportStatements.create(compilationUnit);
       importStatements.addAll(importsToAdd);
       importStatements.removeAll(importsToRemove);
-      replacementsInOrder.add(Replacement.create(importStatements.getStartPos(),
-          importStatements.getEndPos(), importStatements.toString()));
+      replacements.add(
+          Replacement.create(
+              importStatements.getStartPos(),
+              importStatements.getEndPos(),
+              importStatements.toString()));
     }
-
-    for (Replacement replacement : replacementsInOrder) {
+    for (Replacement replacement : replacements.descending()) {
       sourceFile.replaceChars(replacement.startPosition(), replacement.endPosition(),
           replacement.replaceWith());
     }

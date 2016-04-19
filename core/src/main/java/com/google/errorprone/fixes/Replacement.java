@@ -19,25 +19,39 @@ package com.google.errorprone.fixes;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.collect.Range;
 
-/**
- * A single replaced section of a source file. When multiple replacements are to be made in a file,
- * these should be applied in reverse order of startPosition.
- * @author alexeagle@google.com (Alex Eagle)
- */
+/** A replaced section of a source file. */
 @AutoValue
 public abstract class Replacement {
+
+  /**
+   * Creates a {@link Replacement}. Start and end positions are represented as code unit indices
+   * in a Unicode 16-bit string.
+   *
+   * @param startPosition the beginning of the replacement
+   * @param endPosition the end of the replacement, exclusive
+   * @param replaceWith the replacement text
+   */
   public static Replacement create(int startPosition, int endPosition, String replaceWith) {
-    checkArgument(
-        0 <= startPosition && startPosition <= endPosition,
-        "Illegal range [%s, %s)",
-        startPosition,
-        endPosition);
-    return new AutoValue_Replacement(startPosition, endPosition, replaceWith);
+    checkArgument(startPosition >= 0, "invalid startPosition: %s", startPosition);
+    return new AutoValue_Replacement(Range.closedOpen(startPosition, endPosition), replaceWith);
   }
 
-  // positions are character offset from beginning of the source file
-  public abstract int startPosition();
-  public abstract int endPosition();
+  /** The beginning of the replacement range. */
+  public int startPosition() {
+    return range().lowerEndpoint();
+  }
+
+  /** The end of the replacement range, exclusive. */
+  public int endPosition() {
+    return range().upperEndpoint();
+  }
+
+  /** The {@link Range} to be replaced. */
+  public abstract Range<Integer> range();
+
+  /** The source text to appear in the output. */
   public abstract String replaceWith();
 }
+
