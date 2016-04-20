@@ -16,6 +16,8 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.errorprone.suppliers.Suppliers.typeFromClass;
+
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.matchers.ChildMultiMatcher.MatchType;
@@ -468,6 +470,15 @@ public class Matchers {
     return new IsSubtypeOf<>(type);
   }
 
+  /**
+   * Matches an AST node if its type is a subtype of the given type.
+   *
+   * @param clazz a class representation of the type, e.g., Action.class.
+   */
+  public static <T extends Tree> Matcher<T> isSubtypeOf(Class<?> clazz) {
+    return new IsSubtypeOf<>(typeFromClass(clazz));
+  }
+  
   /**
    * Matches an AST node if its type is castable to the given type.
    *
