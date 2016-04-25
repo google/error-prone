@@ -21,7 +21,7 @@ Suppress false positives by adding an `@SuppressWarnings("GuiceInjectOnFinalFiel
 ----------
 
 ### Positive examples
-__GuiceInjectOnFinalFieldPositiveCases.java__
+__InjectOnFinalFieldPositiveCases.java__
 
 {% highlight java %}
 /*
@@ -40,7 +40,7 @@ __GuiceInjectOnFinalFieldPositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.inject.guice.testdata;
 
 import com.google.inject.Inject;
 
@@ -51,7 +51,7 @@ import javax.annotation.Nullable;
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-public class GuiceInjectOnFinalFieldPositiveCases {
+public class InjectOnFinalFieldPositiveCases {
   /**
    * Class has a final injectable(com.google.inject.Inject) field.
    */
@@ -72,7 +72,7 @@ public class GuiceInjectOnFinalFieldPositiveCases {
 {% endhighlight %}
 
 ### Negative examples
-__GuiceInjectOnFinalFieldNegativeCases.java__
+__InjectOnFinalFieldNegativeCases.java__
 
 {% highlight java %}
 /*
@@ -91,14 +91,14 @@ __GuiceInjectOnFinalFieldNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.inject.guice.testdata;
 
 import com.google.inject.Inject;
 
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-public class GuiceInjectOnFinalFieldNegativeCases {
+public class InjectOnFinalFieldNegativeCases {
   
   /**
    * Class has no final fields or @Inject annotations.

@@ -178,6 +178,9 @@ Invalid syntax used for a regular expression
 __[IsInstanceOfClass](bugpattern/IsInstanceOfClass)__<br>
 The argument to Class#isInstance(Object) should not be a class literal
 
+__[JUnit3FloatingPointComparisonWithoutDelta](bugpattern/JUnit3FloatingPointComparisonWithoutDelta)__<br>
+Floating-point comparison without error tolerance
+
 __[JUnit3TestNotRun](bugpattern/JUnit3TestNotRun)__<br>
 Test method will not be run; please prefix name with &quot;test&quot;
 
@@ -275,6 +278,9 @@ Assertions may be disabled at runtime and do not guarantee that execution will h
 
 __[AssistedInjectAndInjectOnConstructors](bugpattern/AssistedInjectAndInjectOnConstructors)__<br>
 @AssistedInject and @Inject should not be used on different constructors in the same class.
+
+__[BigDecimalLiteralDouble](bugpattern/BigDecimalLiteralDouble)__<br>
+BigDecimal(double) and BigDecimal.valueOf(double) may lose precision, prefer BigDecimal(String) or BigDecimal(long)
 
 __[CollectionIncompatibleType](bugpattern/CollectionIncompatibleType)__<br>
 Incompatible type as argument to Object-accepting Java collections method

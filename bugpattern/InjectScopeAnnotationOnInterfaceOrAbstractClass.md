@@ -21,7 +21,7 @@ Suppress false positives by adding an `@SuppressWarnings("InjectScopeAnnotationO
 ----------
 
 ### Positive examples
-__InjectScopeAnnotationOnInterfaceOrAbstractClassPositiveCases.java__
+__ScopeAnnotationOnInterfaceOrAbstractClassPositiveCases.java__
 
 {% highlight java %}
 /*
@@ -40,7 +40,7 @@ __InjectScopeAnnotationOnInterfaceOrAbstractClassPositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.inject.testdata;
 
 import com.google.inject.Singleton;
 
@@ -50,7 +50,7 @@ import com.google.inject.Singleton;
  * 
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-public class InjectScopeAnnotationOnInterfaceOrAbstractClassPositiveCases {
+public class ScopeAnnotationOnInterfaceOrAbstractClassPositiveCases {
 
   /**
    * An abstract class that has scoping annotation.
@@ -71,7 +71,7 @@ public class InjectScopeAnnotationOnInterfaceOrAbstractClassPositiveCases {
 {% endhighlight %}
 
 ### Negative examples
-__InjectScopeAnnotationOnInterfaceOrAbstractClassNegativeCases.java__
+__ScopeAnnotationOnInterfaceOrAbstractClassNegativeCases.java__
 
 {% highlight java %}
 /*
@@ -90,7 +90,7 @@ __InjectScopeAnnotationOnInterfaceOrAbstractClassNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.inject.testdata;
 
 import com.google.inject.Singleton;
 
@@ -99,7 +99,7 @@ import com.google.inject.Singleton;
  * 
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-public class InjectScopeAnnotationOnInterfaceOrAbstractClassNegativeCases {
+public class ScopeAnnotationOnInterfaceOrAbstractClassNegativeCases {
   
   /**
    * A concrete class that has no scoping annotation.

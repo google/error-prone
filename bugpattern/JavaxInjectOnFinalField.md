@@ -21,7 +21,7 @@ Suppress false positives by adding an `@SuppressWarnings("JavaxInjectOnFinalFiel
 ----------
 
 ### Positive examples
-__InjectJavaxInjectOnFinalFieldPositiveCases.java__
+__JavaxInjectOnFinalFieldPositiveCases.java__
 
 {% highlight java %}
 /*
@@ -40,14 +40,14 @@ __InjectJavaxInjectOnFinalFieldPositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.inject.testdata;
 
 import javax.inject.Inject;
 
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-public class InjectJavaxInjectOnFinalFieldPositiveCases {
+public class JavaxInjectOnFinalFieldPositiveCases {
   
   /**
    * Class has a final injectable(javax.inject.Inject) field.
@@ -61,7 +61,7 @@ public class InjectJavaxInjectOnFinalFieldPositiveCases {
 {% endhighlight %}
 
 ### Negative examples
-__InjectJavaxInjectOnFinalFieldNegativeCases.java__
+__JavaxInjectOnFinalFieldNegativeCases.java__
 
 {% highlight java %}
 /*
@@ -80,14 +80,14 @@ __InjectJavaxInjectOnFinalFieldNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.inject.testdata;
 
 import javax.inject.Inject;
 
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-public class InjectJavaxInjectOnFinalFieldNegativeCases {
+public class JavaxInjectOnFinalFieldNegativeCases {
 
   /**
    * Class has no final fields or @Inject annotations.

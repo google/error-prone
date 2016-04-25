@@ -22,7 +22,7 @@ Suppress false positives by adding an `@SuppressWarnings("AssistedInjectAndInjec
 ----------
 
 ### Positive examples
-__InjectAssistedInjectAndInjectOnConstructorsPositiveCases.java__
+__AssistedInjectAndInjectOnConstructorsPositiveCases.java__
 
 {% highlight java %}
 /*
@@ -41,14 +41,14 @@ __InjectAssistedInjectAndInjectOnConstructorsPositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.inject.testdata;
 
 import com.google.inject.assistedinject.AssistedInject;
 
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-public class InjectAssistedInjectAndInjectOnConstructorsPositiveCases {
+public class AssistedInjectAndInjectOnConstructorsPositiveCases {
   /**
    * Class has a constructor annotated with @javax.inject.Inject and another constructor annotated
    * with @AssistedInject.
@@ -96,7 +96,7 @@ public class InjectAssistedInjectAndInjectOnConstructorsPositiveCases {
 {% endhighlight %}
 
 ### Negative examples
-__InjectAssistedInjectAndInjectOnConstructorsNegativeCases.java__
+__AssistedInjectAndInjectOnConstructorsNegativeCases.java__
 
 {% highlight java %}
 /*
@@ -115,14 +115,14 @@ __InjectAssistedInjectAndInjectOnConstructorsNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.inject.testdata;
 
 import com.google.inject.assistedinject.AssistedInject;
 
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-public class InjectAssistedInjectAndInjectOnConstructorsNegativeCases {
+public class AssistedInjectAndInjectOnConstructorsNegativeCases {
   /**
    * Class has a single constructor with no annotation.
    */

@@ -21,7 +21,7 @@ Suppress false positives by adding an `@SuppressWarnings("OverridesJavaxInjectab
 ----------
 
 ### Positive examples
-__GuiceOverridesJavaxInjectableMethodPositiveCases.java__
+__OverridesJavaxInjectableMethodPositiveCases.java__
 
 {% highlight java %}
 /*
@@ -40,12 +40,12 @@ __GuiceOverridesJavaxInjectableMethodPositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.inject.guice.testdata;
 
 /**
  * @author sgoldfeder@gooogle.com (Steven Goldfeder)
  */
-public class GuiceOverridesJavaxInjectableMethodPositiveCases {
+public class OverridesJavaxInjectableMethodPositiveCases {
 
   /**
    * Class with a method foo() that is annotated with @javax.inject.Inject. Other test classes will
@@ -79,7 +79,7 @@ public class GuiceOverridesJavaxInjectableMethodPositiveCases {
 {% endhighlight %}
 
 ### Negative examples
-__GuiceOverridesJavaxInjectableMethodNegativeCases.java__
+__OverridesJavaxInjectableMethodNegativeCases.java__
 
 {% highlight java %}
 /*
@@ -98,12 +98,12 @@ __GuiceOverridesJavaxInjectableMethodNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.inject.guice.testdata;
 
 /**
  * @author sgoldfeder@gooogle.com (Steven Goldfeder)
  */
-public class GuiceOverridesJavaxInjectableMethodNegativeCases {
+public class OverridesJavaxInjectableMethodNegativeCases {
   /**
    * Class with a method foo() with no annotations.
    */

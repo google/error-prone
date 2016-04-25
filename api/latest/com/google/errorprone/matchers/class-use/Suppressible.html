@@ -105,10 +105,29 @@
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><a href="#com.google.errorprone.bugpatterns.inject">com.google.errorprone.bugpatterns.inject</a></td>
+<td class="colLast">
+<div class="block">Bug patterns related to <a href="http://en.wikipedia.org/wiki/Dependency_injection">dependency
+ injection</a> and <a href="https://jcp.org/en/jsr/detail?id=330">JSR 330</a>.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><a href="#com.google.errorprone.bugpatterns.inject.dagger">com.google.errorprone.bugpatterns.inject.dagger</a></td>
+<td class="colLast">
+<div class="block">Bug patterns related to <a href="http://google.github.io/dagger/">Dagger</a>.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><a href="#com.google.errorprone.bugpatterns.inject.guice">com.google.errorprone.bugpatterns.inject.guice</a></td>
+<td class="colLast">
+<div class="block">Bug patterns related to <a href="https://github.com/google/guice">Guice</a>.</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><a href="#com.google.errorprone.bugpatterns.threadsafety">com.google.errorprone.bugpatterns.threadsafety</a></td>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><a href="#com.google.errorprone.scanner">com.google.errorprone.scanner</a></td>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -458,55 +477,52 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/BigDecimalLiteralDouble.html" title="class in com.google.errorprone.bugpatterns">BigDecimalLiteralDouble</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></span></code>
 <div class="block">A base class for implementing bug checkers.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/CannotMockFinalClass.html" title="class in com.google.errorprone.bugpatterns">CannotMockFinalClass</a></span></code>
 <div class="block">Bug pattern to recognize attempts to mock final types.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ChainingConstructorIgnoresParameter.html" title="class in com.google.errorprone.bugpatterns">ChainingConstructorIgnoresParameter</a></span></code>
 <div class="block">Checks, if two constructors in a class both accept <code>Foo foo</code> and one calls the other, that
  the caller passes <code>foo</code> as a parameter.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/CheckReturnValue.html" title="class in com.google.errorprone.bugpatterns">CheckReturnValue</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ClassCanBeStatic.html" title="class in com.google.errorprone.bugpatterns">ClassCanBeStatic</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ClassName.html" title="class in com.google.errorprone.bugpatterns">ClassName</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ComparisonContractViolated.html" title="class in com.google.errorprone.bugpatterns">ComparisonContractViolated</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ComparisonOutOfRange.html" title="class in com.google.errorprone.bugpatterns">ComparisonOutOfRange</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/CompileTimeConstantChecker.html" title="class in com.google.errorprone.bugpatterns">CompileTimeConstantChecker</a></span></code>
 <div class="block">Detects invocations of methods with a parameter annotated <code>@CompileTimeConstant</code> such that
  the corresponding actual parameter is not a compile-time constant expression.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/DaggerProvidesNull.html" title="class in com.google.errorprone.bugpatterns">DaggerProvidesNull</a></span></code>
-<div class="block">Bug checker for null-returning methods annotated with <code>@Provides</code> but not
- <code>@Nullable</code>.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -577,122 +593,37 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/GuiceAssistedInjectScoping.html" title="class in com.google.errorprone.bugpatterns">GuiceAssistedInjectScoping</a></span></code>
-<div class="block">This checker matches iff *both* of the following conditions are true:
- 1) The class is assisted:
-   a) If there is a constructor that is annotated with @Inject and that constructor has at least
-      one parameter that is annotated with @Assisted.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/GuiceAssistedParameters.html" title="class in com.google.errorprone.bugpatterns">GuiceAssistedParameters</a></span></code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/GuiceInjectOnFinalField.html" title="class in com.google.errorprone.bugpatterns">GuiceInjectOnFinalField</a></span></code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/GuiceOverridesGuiceInjectableMethod.html" title="class in com.google.errorprone.bugpatterns">GuiceOverridesGuiceInjectableMethod</a></span></code>
-<div class="block">This checker matches methods that
-   1) are not themselves annotated with @Inject
-     (neither javax.inject.Inject nor com.google.inject.Inject)
-   2) descend from a method that is annotated with @com.google.inject.Inject</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/GuiceOverridesJavaxInjectableMethod.html" title="class in com.google.errorprone.bugpatterns">GuiceOverridesJavaxInjectableMethod</a></span></code>
-<div class="block">This checker matches methods that
-   1) are not themselves annotated with @Inject
-   2) descend from a method that is annotated with @javax.inject.Inject
-   3) do not descent from a method that is annotated with @com.google.inject.Inject</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/HashtableContains.html" title="class in com.google.errorprone.bugpatterns">HashtableContains</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/IncompatibleModifiersChecker.html" title="class in com.google.errorprone.bugpatterns">IncompatibleModifiersChecker</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/InjectAssistedInjectAndInjectOnConstructors.html" title="class in com.google.errorprone.bugpatterns">InjectAssistedInjectAndInjectOnConstructors</a></span></code>&nbsp;</td>
-</tr>
 <tr class="rowColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/InjectAssistedInjectAndInjectOnSameConstructor.html" title="class in com.google.errorprone.bugpatterns">InjectAssistedInjectAndInjectOnSameConstructor</a></span></code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/InjectedConstructorAnnotations.html" title="class in com.google.errorprone.bugpatterns">InjectedConstructorAnnotations</a></span></code>
-<div class="block">A checker for injected constructors with @Inject(optional=true) or binding annotations.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/InjectInvalidTargetingOnScopingAnnotation.html" title="class in com.google.errorprone.bugpatterns">InjectInvalidTargetingOnScopingAnnotation</a></span></code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/InjectJavaxInjectOnAbstractMethod.html" title="class in com.google.errorprone.bugpatterns">InjectJavaxInjectOnAbstractMethod</a></span></code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/InjectJavaxInjectOnFinalField.html" title="class in com.google.errorprone.bugpatterns">InjectJavaxInjectOnFinalField</a></span></code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/InjectMoreThanOneInjectableConstructor.html" title="class in com.google.errorprone.bugpatterns">InjectMoreThanOneInjectableConstructor</a></span></code>
-<div class="block">Matches classes that have two or more constructors annotated with @Inject.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/InjectMoreThanOneQualifier.html" title="class in com.google.errorprone.bugpatterns">InjectMoreThanOneQualifier</a></span></code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/InjectMoreThanOneScopeAnnotationOnClass.html" title="class in com.google.errorprone.bugpatterns">InjectMoreThanOneScopeAnnotationOnClass</a></span></code>
-<div class="block">This checker matches if a class has more than one annotation that is a scope
- annotation(that is, the annotation is either annotated with Guice's
- <code>@ScopeAnnotation</code> or Javax's <code>@Scope</code>).</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/InjectOverlappingQualifierAndScopeAnnotation.html" title="class in com.google.errorprone.bugpatterns">InjectOverlappingQualifierAndScopeAnnotation</a></span></code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/InjectScopeAnnotationOnInterfaceOrAbstractClass.html" title="class in com.google.errorprone.bugpatterns">InjectScopeAnnotationOnInterfaceOrAbstractClass</a></span></code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/InjectScopeOrQualifierAnnotationRetention.html" title="class in com.google.errorprone.bugpatterns">InjectScopeOrQualifierAnnotationRetention</a></span></code>&nbsp;</td>
-</tr>
-<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/InsecureCipherMode.html" title="class in com.google.errorprone.bugpatterns">InsecureCipherMode</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/InvalidPatternSyntax.html" title="class in com.google.errorprone.bugpatterns">InvalidPatternSyntax</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/IsInstanceOfClass.html" title="class in com.google.errorprone.bugpatterns">IsInstanceOfClass</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/IterableAndIterator.html" title="class in com.google.errorprone.bugpatterns">IterableAndIterator</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/JMockTestWithoutRunWithOrRuleAnnotation.html" title="class in com.google.errorprone.bugpatterns">JMockTestWithoutRunWithOrRuleAnnotation</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/JUnit3FloatingPointComparisonWithoutDelta.html" title="class in com.google.errorprone.bugpatterns">JUnit3FloatingPointComparisonWithoutDelta</a></span></code>
+<div class="block">Detects floating-point assertEquals() calls that will not work in JUnit 4.</div>
+</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
@@ -1025,6 +956,146 @@
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/collectionincompatibletype/CollectionIncompatibleType.html" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">CollectionIncompatibleType</a></span></code>
 <div class="block">Checker for calling Object-accepting methods with types that don't match the type arguments of
  their container types.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.inject">
+<!--   -->
+</a>
+<h3>Uses of <a href="../../../../../com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a> in <a href="../../../../../com/google/errorprone/bugpatterns/inject/package-summary.html">com.google.errorprone.bugpatterns.inject</a></h3>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing classes, and an explanation">
+<caption><span>Classes in <a href="../../../../../com/google/errorprone/bugpatterns/inject/package-summary.html">com.google.errorprone.bugpatterns.inject</a> that implement <a href="../../../../../com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Class and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/inject/AssistedInjectAndInjectOnConstructors.html" title="class in com.google.errorprone.bugpatterns.inject">AssistedInjectAndInjectOnConstructors</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/inject/AssistedInjectAndInjectOnSameConstructor.html" title="class in com.google.errorprone.bugpatterns.inject">AssistedInjectAndInjectOnSameConstructor</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/inject/InjectedConstructorAnnotations.html" title="class in com.google.errorprone.bugpatterns.inject">InjectedConstructorAnnotations</a></span></code>
+<div class="block">A checker for injected constructors with @Inject(optional=true) or binding annotations.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/inject/InvalidTargetingOnScopingAnnotation.html" title="class in com.google.errorprone.bugpatterns.inject">InvalidTargetingOnScopingAnnotation</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/inject/JavaxInjectOnAbstractMethod.html" title="class in com.google.errorprone.bugpatterns.inject">JavaxInjectOnAbstractMethod</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/inject/JavaxInjectOnFinalField.html" title="class in com.google.errorprone.bugpatterns.inject">JavaxInjectOnFinalField</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/inject/MoreThanOneInjectableConstructor.html" title="class in com.google.errorprone.bugpatterns.inject">MoreThanOneInjectableConstructor</a></span></code>
+<div class="block">Matches classes that have two or more constructors annotated with @Inject.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/inject/MoreThanOneQualifier.html" title="class in com.google.errorprone.bugpatterns.inject">MoreThanOneQualifier</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/inject/MoreThanOneScopeAnnotationOnClass.html" title="class in com.google.errorprone.bugpatterns.inject">MoreThanOneScopeAnnotationOnClass</a></span></code>
+<div class="block">This checker matches if a class has more than one annotation that is a scope
+ annotation(that is, the annotation is either annotated with Guice's
+ <code>@ScopeAnnotation</code> or Javax's <code>@Scope</code>).</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/inject/OverlappingQualifierAndScopeAnnotation.html" title="class in com.google.errorprone.bugpatterns.inject">OverlappingQualifierAndScopeAnnotation</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/inject/ScopeAnnotationOnInterfaceOrAbstractClass.html" title="class in com.google.errorprone.bugpatterns.inject">ScopeAnnotationOnInterfaceOrAbstractClass</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/inject/ScopeOrQualifierAnnotationRetention.html" title="class in com.google.errorprone.bugpatterns.inject">ScopeOrQualifierAnnotationRetention</a></span></code>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.inject.dagger">
+<!--   -->
+</a>
+<h3>Uses of <a href="../../../../../com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a> in <a href="../../../../../com/google/errorprone/bugpatterns/inject/dagger/package-summary.html">com.google.errorprone.bugpatterns.inject.dagger</a></h3>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing classes, and an explanation">
+<caption><span>Classes in <a href="../../../../../com/google/errorprone/bugpatterns/inject/dagger/package-summary.html">com.google.errorprone.bugpatterns.inject.dagger</a> that implement <a href="../../../../../com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Class and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/inject/dagger/ProvidesNull.html" title="class in com.google.errorprone.bugpatterns.inject.dagger">ProvidesNull</a></span></code>
+<div class="block">Bug checker for null-returning methods annotated with <code>@Provides</code> but not
+ <code>@Nullable</code>.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.inject.guice">
+<!--   -->
+</a>
+<h3>Uses of <a href="../../../../../com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a> in <a href="../../../../../com/google/errorprone/bugpatterns/inject/guice/package-summary.html">com.google.errorprone.bugpatterns.inject.guice</a></h3>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing classes, and an explanation">
+<caption><span>Classes in <a href="../../../../../com/google/errorprone/bugpatterns/inject/guice/package-summary.html">com.google.errorprone.bugpatterns.inject.guice</a> that implement <a href="../../../../../com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Class and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/inject/guice/AssistedInjectScoping.html" title="class in com.google.errorprone.bugpatterns.inject.guice">AssistedInjectScoping</a></span></code>
+<div class="block">This checker matches iff *both* of the following conditions are true:
+ 1) The class is assisted:
+   a) If there is a constructor that is annotated with @Inject and that constructor has at least
+      one parameter that is annotated with @Assisted.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/inject/guice/AssistedParameters.html" title="class in com.google.errorprone.bugpatterns.inject.guice">AssistedParameters</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/inject/guice/InjectOnFinalField.html" title="class in com.google.errorprone.bugpatterns.inject.guice">InjectOnFinalField</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/inject/guice/OverridesGuiceInjectableMethod.html" title="class in com.google.errorprone.bugpatterns.inject.guice">OverridesGuiceInjectableMethod</a></span></code>
+<div class="block">This checker matches methods that
+   1) are not themselves annotated with @Inject
+     (neither javax.inject.Inject nor com.google.inject.Inject)
+   2) descend from a method that is annotated with @com.google.inject.Inject</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/inject/guice/OverridesJavaxInjectableMethod.html" title="class in com.google.errorprone.bugpatterns.inject.guice">OverridesJavaxInjectableMethod</a></span></code>
+<div class="block">This checker matches methods that
+   1) are not themselves annotated with @Inject
+   2) descend from a method that is annotated with @javax.inject.Inject
+   3) do not descent from a method that is annotated with @com.google.inject.Inject</div>
 </td>
 </tr>
 </tbody>

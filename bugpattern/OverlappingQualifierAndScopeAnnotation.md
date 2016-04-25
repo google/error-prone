@@ -21,7 +21,7 @@ Suppress false positives by adding an `@SuppressWarnings("OverlappingQualifierAn
 ----------
 
 ### Positive examples
-__InjectOverlappingQualifierAndScopeAnnotationPositiveCases.java__
+__OverlappingQualifierAndScopeAnnotationPositiveCases.java__
 
 {% highlight java %}
 /*
@@ -40,12 +40,12 @@ __InjectOverlappingQualifierAndScopeAnnotationPositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.inject.testdata;
 
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-public class InjectOverlappingQualifierAndScopeAnnotationPositiveCases {
+public class OverlappingQualifierAndScopeAnnotationPositiveCases {
  
   // BUG: Diagnostic contains: remove
   @javax.inject.Scope
@@ -75,7 +75,7 @@ public class InjectOverlappingQualifierAndScopeAnnotationPositiveCases {
 {% endhighlight %}
 
 ### Negative examples
-__InjectOverlappingQualifierAndScopeAnnotationNegativeCases.java__
+__OverlappingQualifierAndScopeAnnotationNegativeCases.java__
 
 {% highlight java %}
 /*
@@ -94,12 +94,12 @@ __InjectOverlappingQualifierAndScopeAnnotationNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.inject.testdata;
 
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-public class InjectOverlappingQualifierAndScopeAnnotationNegativeCases {
+public class OverlappingQualifierAndScopeAnnotationNegativeCases {
   
   @javax.inject.Scope
   @interface MyJavaxScope {}

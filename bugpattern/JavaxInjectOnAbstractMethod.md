@@ -24,7 +24,7 @@ Suppress false positives by adding an `@SuppressWarnings("JavaxInjectOnAbstractM
 ----------
 
 ### Positive examples
-__InjectJavaxInjectOnAbstractMethodPositiveCases.java__
+__JavaxInjectOnAbstractMethodPositiveCases.java__
 
 {% highlight java %}
 /*
@@ -43,12 +43,12 @@ __InjectJavaxInjectOnAbstractMethodPositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.inject.testdata;
 
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-public class InjectJavaxInjectOnAbstractMethodPositiveCases {
+public class JavaxInjectOnAbstractMethodPositiveCases {
 
   /**
    * Abstract class has an injectable(javax.inject.Inject) abstract method.
@@ -84,7 +84,7 @@ public class InjectJavaxInjectOnAbstractMethodPositiveCases {
 {% endhighlight %}
 
 ### Negative examples
-__InjectJavaxInjectOnAbstractMethodNegativeCases.java__
+__JavaxInjectOnAbstractMethodNegativeCases.java__
 
 {% highlight java %}
 /*
@@ -103,14 +103,14 @@ __InjectJavaxInjectOnAbstractMethodNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.inject.testdata;
 
 import javax.inject.Inject;
 
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-public class InjectJavaxInjectOnAbstractMethodNegativeCases {
+public class JavaxInjectOnAbstractMethodNegativeCases {
 
   /**
    * Concrete class has no methods or annotations.

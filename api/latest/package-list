@@ -6,6 +6,9 @@ com.google.errorprone.apply
 com.google.errorprone.bugpatterns
 com.google.errorprone.bugpatterns.android
 com.google.errorprone.bugpatterns.collectionincompatibletype
+com.google.errorprone.bugpatterns.inject
+com.google.errorprone.bugpatterns.inject.dagger
+com.google.errorprone.bugpatterns.inject.guice
 com.google.errorprone.bugpatterns.threadsafety
 com.google.errorprone.dataflow
 com.google.errorprone.dataflow.nullnesspropagation

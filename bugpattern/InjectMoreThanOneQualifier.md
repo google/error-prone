@@ -21,7 +21,7 @@ Suppress false positives by adding an `@SuppressWarnings("InjectMoreThanOneQuali
 ----------
 
 ### Positive examples
-__InjectMoreThanOneQualifierPositiveCases.java__
+__MoreThanOneQualifierPositiveCases.java__
 
 {% highlight java %}
 /*
@@ -40,7 +40,7 @@ __InjectMoreThanOneQualifierPositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.inject.testdata;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
@@ -51,7 +51,7 @@ import javax.inject.Qualifier;
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-public class InjectMoreThanOneQualifierPositiveCases {
+public class MoreThanOneQualifierPositiveCases {
 
 
   /**
@@ -174,7 +174,7 @@ public class InjectMoreThanOneQualifierPositiveCases {
 {% endhighlight %}
 
 ### Negative examples
-__InjectMoreThanOneQualifierNegativeCases.java__
+__MoreThanOneQualifierNegativeCases.java__
 
 {% highlight java %}
 /*
@@ -193,7 +193,7 @@ __InjectMoreThanOneQualifierNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.inject.testdata;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
@@ -204,7 +204,7 @@ import java.lang.annotation.Retention;
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-public class InjectMoreThanOneQualifierNegativeCases {
+public class MoreThanOneQualifierNegativeCases {
   /**
    * A class in with no annotations on any of its members.
    */

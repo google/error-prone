@@ -21,7 +21,7 @@ Suppress false positives by adding an `@SuppressWarnings("InjectMoreThanOneScope
 ----------
 
 ### Positive examples
-__InjectMoreThanOneScopeAnnotationOnClassPositiveCases.java__
+__MoreThanOneScopeAnnotationOnClassPositiveCases.java__
 
 {% highlight java %}
 /*
@@ -40,7 +40,7 @@ __InjectMoreThanOneScopeAnnotationOnClassPositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.inject.testdata;
 
 import com.google.inject.Singleton;
 import com.google.inject.servlet.SessionScoped;
@@ -48,7 +48,7 @@ import com.google.inject.servlet.SessionScoped;
 /**
  * @author sgoldfeder@google.com(Steven Goldfeder)
  */
-public class InjectMoreThanOneScopeAnnotationOnClassPositiveCases {
+public class MoreThanOneScopeAnnotationOnClassPositiveCases {
 
   /**
    * Class has two scope annotations
@@ -73,7 +73,7 @@ public class InjectMoreThanOneScopeAnnotationOnClassPositiveCases {
 {% endhighlight %}
 
 ### Negative examples
-__InjectMoreThanOneScopeAnnotationOnClassNegativeCases.java__
+__MoreThanOneScopeAnnotationOnClassNegativeCases.java__
 
 {% highlight java %}
 /*
@@ -92,14 +92,14 @@ __InjectMoreThanOneScopeAnnotationOnClassNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.inject.testdata;
 
 import com.google.inject.Singleton;
 import com.google.inject.Provides;
 /**
  * @author sgoldfeder@google.com(Steven Goldfeder)
  */
-public class InjectMoreThanOneScopeAnnotationOnClassNegativeCases {
+public class MoreThanOneScopeAnnotationOnClassNegativeCases {
 
   /**
    * Class has no annotation. 

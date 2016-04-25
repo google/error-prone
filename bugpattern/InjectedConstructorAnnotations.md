@@ -42,7 +42,7 @@ __InjectedConstructorAnnotationsPositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.inject.testdata;
 
 import com.google.inject.BindingAnnotation;
 
@@ -96,7 +96,7 @@ __InjectedConstructorAnnotationsNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.inject.testdata;
 
 import com.google.inject.BindingAnnotation;
 import com.google.inject.Inject;

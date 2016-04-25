@@ -21,7 +21,7 @@ Suppress false positives by adding an `@SuppressWarnings("OverridesGuiceInjectab
 ----------
 
 ### Positive examples
-__GuiceOverridesGuiceInjectableMethodPositiveCases.java__
+__OverridesGuiceInjectableMethodPositiveCases.java__
 
 {% highlight java %}
 /*
@@ -40,12 +40,12 @@ __GuiceOverridesGuiceInjectableMethodPositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.inject.guice.testdata;
 
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-public class GuiceOverridesGuiceInjectableMethodPositiveCases {
+public class OverridesGuiceInjectableMethodPositiveCases {
 
   /**
    * Class with a method foo() annotated with @com.google.inject.Inject.
@@ -113,7 +113,7 @@ public class GuiceOverridesGuiceInjectableMethodPositiveCases {
 {% endhighlight %}
 
 ### Negative examples
-__GuiceOverridesGuiceInjectableMethodNegativeCases.java__
+__OverridesGuiceInjectableMethodNegativeCases.java__
 
 {% highlight java %}
 /*
@@ -132,12 +132,12 @@ __GuiceOverridesGuiceInjectableMethodNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.inject.guice.testdata;
 
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-public class GuiceOverridesGuiceInjectableMethodNegativeCases {
+public class OverridesGuiceInjectableMethodNegativeCases {
 
   /**
    * Class with a method foo() annotated with @com.google.inject.Inject.

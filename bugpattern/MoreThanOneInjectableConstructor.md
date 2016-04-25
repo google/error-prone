@@ -21,7 +21,7 @@ Suppress false positives by adding an `@SuppressWarnings("MoreThanOneInjectableC
 ----------
 
 ### Positive examples
-__InjectMoreThanOneInjectableConstructorPositiveCases.java__
+__MoreThanOneInjectableConstructorPositiveCases.java__
 
 {% highlight java %}
 /*
@@ -40,7 +40,7 @@ __InjectMoreThanOneInjectableConstructorPositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.inject.testdata;
 
 import com.google.inject.Inject;
 import java.beans.ConstructorProperties;
@@ -48,7 +48,7 @@ import java.beans.ConstructorProperties;
 /**
  * @author sgoldfeder@google.com(Steven Goldfeder)
  */
-public class InjectMoreThanOneInjectableConstructorPositiveCases {
+public class MoreThanOneInjectableConstructorPositiveCases {
 
   /**
    * Class has 2 constructors, both are injectable
@@ -112,7 +112,7 @@ public class InjectMoreThanOneInjectableConstructorPositiveCases {
 {% endhighlight %}
 
 ### Negative examples
-__InjectMoreThanOneInjectableConstructorNegativeCases.java__
+__MoreThanOneInjectableConstructorNegativeCases.java__
 
 {% highlight java %}
 /*
@@ -131,7 +131,7 @@ __InjectMoreThanOneInjectableConstructorNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.inject.testdata;
 
 import com.google.inject.Inject;
 
@@ -139,7 +139,7 @@ import com.google.inject.Inject;
  * @author sgoldfeder@google.com(Steven Goldfeder)
  */
 
-public class InjectMoreThanOneInjectableConstructorNegativeCases {
+public class MoreThanOneInjectableConstructorNegativeCases {
 
   /**
    * Class has a single non-injectable constructor.

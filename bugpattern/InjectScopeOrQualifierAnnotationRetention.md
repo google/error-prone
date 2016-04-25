@@ -21,7 +21,7 @@ Suppress false positives by adding an `@SuppressWarnings("InjectScopeOrQualifier
 ----------
 
 ### Positive examples
-__InjectScopeOrQualifierAnnotationRetentionPositiveCases.java__
+__ScopeOrQualifierAnnotationRetentionPositiveCases.java__
 
 {% highlight java %}
 /*
@@ -40,7 +40,7 @@ __InjectScopeOrQualifierAnnotationRetentionPositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.inject.testdata;
 
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
@@ -58,7 +58,7 @@ import javax.inject.Scope;
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-public class InjectScopeOrQualifierAnnotationRetentionPositiveCases {
+public class ScopeOrQualifierAnnotationRetentionPositiveCases {
   /**
    * A scoping (@Scope) annotation with SOURCE retention
    */
@@ -111,7 +111,7 @@ public class InjectScopeOrQualifierAnnotationRetentionPositiveCases {
 {% endhighlight %}
 
 ### Negative examples
-__InjectScopeOrQualifierAnnotationRetentionNegativeCases.java__
+__ScopeOrQualifierAnnotationRetentionNegativeCases.java__
 
 {% highlight java %}
 /*
@@ -130,7 +130,7 @@ __InjectScopeOrQualifierAnnotationRetentionNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.inject.testdata;
 
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
@@ -149,7 +149,7 @@ import javax.inject.Scope;
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-public class InjectScopeOrQualifierAnnotationRetentionNegativeCases {
+public class ScopeOrQualifierAnnotationRetentionNegativeCases {
   /**
    * A scoping (@Scope) annotation with runtime retention
    */

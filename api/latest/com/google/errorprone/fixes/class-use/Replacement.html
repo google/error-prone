@@ -108,7 +108,9 @@
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/fixes/Replacement.html" title="class in com.google.errorprone.fixes">Replacement</a></code></td>
 <td class="colLast"><span class="typeNameLabel">Replacement.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/fixes/Replacement.html#create-int-int-java.lang.String-">create</a></span>(int&nbsp;startPosition,
       int&nbsp;endPosition,
-      <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;replaceWith)</code>&nbsp;</td>
+      <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;replaceWith)</code>
+<div class="block">Creates a <a href="../../../../../com/google/errorprone/fixes/Replacement.html" title="class in com.google.errorprone.fixes"><code>Replacement</code></a>.</div>
+</td>
 </tr>
 </tbody>
 </table>
@@ -121,11 +123,30 @@
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../../com/google/errorprone/fixes/Replacement.html" title="class in com.google.errorprone.fixes">Replacement</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">SuggestedFix.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/fixes/SuggestedFix.html#getReplacements-com.sun.tools.javac.tree.EndPosTable-">getReplacements</a></span>(com.sun.tools.javac.tree.EndPosTable&nbsp;endPositions)</code>&nbsp;</td>
+<td class="colLast"><span class="typeNameLabel">Replacements.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/fixes/Replacements.html#descending--">descending</a></span>()</code>
+<div class="block">Non-overlapping replacements, sorted in descending order by position.</div>
+</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../../com/google/errorprone/fixes/Replacement.html" title="class in com.google.errorprone.fixes">Replacement</a>&gt;</code></td>
+<td class="colLast"><span class="typeNameLabel">SuggestedFix.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/fixes/SuggestedFix.html#getReplacements-com.sun.tools.javac.tree.EndPosTable-">getReplacements</a></span>(com.sun.tools.javac.tree.EndPosTable&nbsp;endPositions)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../../com/google/errorprone/fixes/Replacement.html" title="class in com.google.errorprone.fixes">Replacement</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">Fix.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/fixes/Fix.html#getReplacements-com.sun.tools.javac.tree.EndPosTable-">getReplacements</a></span>(com.sun.tools.javac.tree.EndPosTable&nbsp;endPositions)</code>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
+<caption><span>Methods in <a href="../../../../../com/google/errorprone/fixes/package-summary.html">com.google.errorprone.fixes</a> with parameters of type <a href="../../../../../com/google/errorprone/fixes/Replacement.html" title="class in com.google.errorprone.fixes">Replacement</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../../com/google/errorprone/fixes/Replacements.html" title="class in com.google.errorprone.fixes">Replacements</a></code></td>
+<td class="colLast"><span class="typeNameLabel">Replacements.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/fixes/Replacements.html#add-com.google.errorprone.fixes.Replacement-">add</a></span>(<a href="../../../../../com/google/errorprone/fixes/Replacement.html" title="class in com.google.errorprone.fixes">Replacement</a>&nbsp;replacement)</code>&nbsp;</td>
 </tr>
 </tbody>
 </table>

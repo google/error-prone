@@ -13,7 +13,13 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-Google Java Style Guide § 2.1 states, "The source file name consists of the case-sensitive name of the top-level class it contains, plus the .java extension."
+Google Java Style Guide §2.1 states, "The source file name consists of the
+case-sensitive name of the top-level class it contains, plus the .java
+extension."
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("ClassName")` annotation to the enclosing element.
+
+Since `@SuppressWarnings` cannot be applied to package declarations, this
+warning can be suppressed by annotating any top-level class in the compilation
+unit with `@SuppressWarnings("ClassName")`.
+

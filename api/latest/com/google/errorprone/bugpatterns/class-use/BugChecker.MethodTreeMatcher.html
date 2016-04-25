@@ -89,6 +89,19 @@
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><a href="#com.google.errorprone.bugpatterns.inject">com.google.errorprone.bugpatterns.inject</a></td>
+<td class="colLast">
+<div class="block">Bug patterns related to <a href="http://en.wikipedia.org/wiki/Dependency_injection">dependency
+ injection</a> and <a href="https://jcp.org/en/jsr/detail?id=330">JSR 330</a>.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><a href="#com.google.errorprone.bugpatterns.inject.guice">com.google.errorprone.bugpatterns.inject.guice</a></td>
+<td class="colLast">
+<div class="block">Bug patterns related to <a href="https://github.com/google/guice">Guice</a>.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><a href="#com.google.errorprone.bugpatterns.threadsafety">com.google.errorprone.bugpatterns.threadsafety</a></td>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -134,36 +147,6 @@
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ForOverrideChecker.html" title="class in com.google.errorprone.bugpatterns">ForOverrideChecker</a></span></code>
 <div class="block">Verifies that methods marked <a href="../../../../../com/google/errorprone/annotations/ForOverride.html" title="annotation in com.google.errorprone.annotations"><code>ForOverride</code></a> are only
  called from the defining class.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/GuiceOverridesGuiceInjectableMethod.html" title="class in com.google.errorprone.bugpatterns">GuiceOverridesGuiceInjectableMethod</a></span></code>
-<div class="block">This checker matches methods that
-   1) are not themselves annotated with @Inject
-     (neither javax.inject.Inject nor com.google.inject.Inject)
-   2) descend from a method that is annotated with @com.google.inject.Inject</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/GuiceOverridesJavaxInjectableMethod.html" title="class in com.google.errorprone.bugpatterns">GuiceOverridesJavaxInjectableMethod</a></span></code>
-<div class="block">This checker matches methods that
-   1) are not themselves annotated with @Inject
-   2) descend from a method that is annotated with @javax.inject.Inject
-   3) do not descent from a method that is annotated with @com.google.inject.Inject</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/InjectedConstructorAnnotations.html" title="class in com.google.errorprone.bugpatterns">InjectedConstructorAnnotations</a></span></code>
-<div class="block">A checker for injected constructors with @Inject(optional=true) or binding annotations.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/InjectMoreThanOneInjectableConstructor.html" title="class in com.google.errorprone.bugpatterns">InjectMoreThanOneInjectableConstructor</a></span></code>
-<div class="block">Matches classes that have two or more constructors annotated with @Inject.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -219,6 +202,64 @@
 <tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/WrongParameterPackage.html" title="class in com.google.errorprone.bugpatterns">WrongParameterPackage</a></span></code>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.inject">
+<!--   -->
+</a>
+<h3>Uses of <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a> in <a href="../../../../../com/google/errorprone/bugpatterns/inject/package-summary.html">com.google.errorprone.bugpatterns.inject</a></h3>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing classes, and an explanation">
+<caption><span>Classes in <a href="../../../../../com/google/errorprone/bugpatterns/inject/package-summary.html">com.google.errorprone.bugpatterns.inject</a> that implement <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Class and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/inject/InjectedConstructorAnnotations.html" title="class in com.google.errorprone.bugpatterns.inject">InjectedConstructorAnnotations</a></span></code>
+<div class="block">A checker for injected constructors with @Inject(optional=true) or binding annotations.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/inject/MoreThanOneInjectableConstructor.html" title="class in com.google.errorprone.bugpatterns.inject">MoreThanOneInjectableConstructor</a></span></code>
+<div class="block">Matches classes that have two or more constructors annotated with @Inject.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.inject.guice">
+<!--   -->
+</a>
+<h3>Uses of <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a> in <a href="../../../../../com/google/errorprone/bugpatterns/inject/guice/package-summary.html">com.google.errorprone.bugpatterns.inject.guice</a></h3>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing classes, and an explanation">
+<caption><span>Classes in <a href="../../../../../com/google/errorprone/bugpatterns/inject/guice/package-summary.html">com.google.errorprone.bugpatterns.inject.guice</a> that implement <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Class and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/inject/guice/OverridesGuiceInjectableMethod.html" title="class in com.google.errorprone.bugpatterns.inject.guice">OverridesGuiceInjectableMethod</a></span></code>
+<div class="block">This checker matches methods that
+   1) are not themselves annotated with @Inject
+     (neither javax.inject.Inject nor com.google.inject.Inject)
+   2) descend from a method that is annotated with @com.google.inject.Inject</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/inject/guice/OverridesJavaxInjectableMethod.html" title="class in com.google.errorprone.bugpatterns.inject.guice">OverridesJavaxInjectableMethod</a></span></code>
+<div class="block">This checker matches methods that
+   1) are not themselves annotated with @Inject
+   2) descend from a method that is annotated with @javax.inject.Inject
+   3) do not descent from a method that is annotated with @com.google.inject.Inject</div>
+</td>
 </tr>
 </tbody>
 </table>

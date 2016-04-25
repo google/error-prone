@@ -374,10 +374,9 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </tr>
 <tr id="i34" class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#isJUnitTestCode-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-">isJUnitTestCode</a></span>(com.sun.source.tree.Tree&nbsp;tree,
-               <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
-<div class="block">Returns true if <code>tree</code> sits somewhere underneath a class or method that is marked as
- JUnit 3 or 4 test code.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#isJUnitTestCode-com.google.errorprone.VisitorState-">isJUnitTestCode</a></span>(<a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
+<div class="block">Returns true if the leaf node in the <code>TreePath</code> from <code>state</code> sits somewhere
+ underneath a class or method that is marked as JUnit 3 or 4 test code.</div>
 </td>
 </tr>
 <tr id="i35" class="rowColor">
@@ -977,16 +976,15 @@ public static&nbsp;com.sun.source.tree.ModifiersTree&nbsp;getModifiers(com.sun.s
  handles wildcards and capture variables.</div>
 </li>
 </ul>
-<a name="isJUnitTestCode-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-">
+<a name="isJUnitTestCode-com.google.errorprone.VisitorState-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>isJUnitTestCode</h4>
-<pre>public static&nbsp;boolean&nbsp;isJUnitTestCode(com.sun.source.tree.Tree&nbsp;tree,
-                                      <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
-<div class="block">Returns true if <code>tree</code> sits somewhere underneath a class or method that is marked as
- JUnit 3 or 4 test code.</div>
+<pre>public static&nbsp;boolean&nbsp;isJUnitTestCode(<a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
+<div class="block">Returns true if the leaf node in the <code>TreePath</code> from <code>state</code> sits somewhere
+ underneath a class or method that is marked as JUnit 3 or 4 test code.</div>
 </li>
 </ul>
 </li>

@@ -22,7 +22,7 @@ Suppress false positives by adding an `@SuppressWarnings("GuiceAssistedParameter
 ----------
 
 ### Positive examples
-__GuiceAssistedParametersPositiveCases.java__
+__AssistedParametersPositiveCases.java__
 
 {% highlight java %}
 /*
@@ -41,7 +41,7 @@ __GuiceAssistedParametersPositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.inject.guice.testdata;
 
 import com.google.inject.assistedinject.Assisted;
 
@@ -52,7 +52,7 @@ import javax.inject.Inject;
 /**
  * @author sgoldfeder@google.com(Steven Goldfeder)
  */
-public class GuiceAssistedParametersPositiveCases {
+public class AssistedParametersPositiveCases {
 
   /**
    * Class has constructor with two @Assisted parameters of the same type.
@@ -99,7 +99,7 @@ public class GuiceAssistedParametersPositiveCases {
 {% endhighlight %}
 
 ### Negative examples
-__GuiceAssistedParametersNegativeCases.java__
+__AssistedParametersNegativeCases.java__
 
 {% highlight java %}
 /*
@@ -116,7 +116,7 @@ __GuiceAssistedParametersNegativeCases.java__
  * the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.inject.guice.testdata;
 
 import com.google.inject.assistedinject.Assisted;
 
@@ -127,7 +127,7 @@ import javax.inject.Inject;
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-public class GuiceAssistedParametersNegativeCases {
+public class AssistedParametersNegativeCases {
 
   /**
    * Class has constructor with two @Assisted parameters of different types.

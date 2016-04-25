@@ -21,7 +21,7 @@ Suppress false positives by adding an `@SuppressWarnings("InjectInvalidTargeting
 ----------
 
 ### Positive examples
-__InjectInvalidTargetingOnScopingAnnotationPositiveCases.java__
+__InvalidTargetingOnScopingAnnotationPositiveCases.java__
 
 {% highlight java %}
 /*
@@ -40,7 +40,7 @@ __InjectInvalidTargetingOnScopingAnnotationPositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.inject.testdata;
 
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
@@ -53,7 +53,7 @@ import javax.inject.Scope;
 /**
  * @author sgoldfeder@google.com(Steven Goldfeder)
  */
-public class InjectInvalidTargetingOnScopingAnnotationPositiveCases {
+public class InvalidTargetingOnScopingAnnotationPositiveCases {
 
   /**
    * A scoping annotation with no specified target.
@@ -93,7 +93,7 @@ public class InjectInvalidTargetingOnScopingAnnotationPositiveCases {
 {% endhighlight %}
 
 ### Negative examples
-__InjectInvalidTargetingOnScopingAnnotationNegativeCases.java__
+__InvalidTargetingOnScopingAnnotationNegativeCases.java__
 
 {% highlight java %}
 /*
@@ -112,7 +112,7 @@ __InjectInvalidTargetingOnScopingAnnotationNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.inject.testdata;
 
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
@@ -125,7 +125,7 @@ import javax.inject.Scope;
 /**
  * @author sgoldfeder@google.com(Steven Goldfeder)
  */
-public class InjectInvalidTargetingOnScopingAnnotationNegativeCases {
+public class InvalidTargetingOnScopingAnnotationNegativeCases {
 
   /**
    * A scoping annotation with legal targeting.
