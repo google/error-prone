@@ -15,6 +15,7 @@
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.BOTTOM;
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NONNULL;
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NULLABLE;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTransfer.tryGetMethodSymbol;
@@ -735,13 +736,18 @@ abstract class AbstractNullnessPropagationTransfer
   public final TransferResult<Nullness, LocalStore<Nullness>> visitVariableDeclaration(
       VariableDeclarationNode node, TransferInput<Nullness, LocalStore<Nullness>> input) {
     ReadableLocalVariableUpdates updates = new ReadableLocalVariableUpdates();
-    Nullness result = visitVariableDeclaration(node, values(input), updates);
+    visitVariableDeclaration(node, values(input), updates);
+    /*
+     * We can return whatever we want here because a variable declaration is not an expression and
+     * thus no one can use its value directly. Any updates to the nullness of the variable are
+     * performed in the store so that they are available to future reads.
+     */
+    Nullness result = BOTTOM;
     return updateRegularStore(result, input, updates);
   }
 
-  Nullness visitVariableDeclaration(
+  void visitVariableDeclaration(
       VariableDeclarationNode node, SubNodeValues inputs, LocalVariableUpdates updates) {
-    return NULLABLE;
   }
 
   @Override

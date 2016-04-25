@@ -434,7 +434,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   }
 
   @Override
-  Nullness visitVariableDeclaration(
+  void visitVariableDeclaration(
       VariableDeclarationNode node, SubNodeValues inputs, LocalVariableUpdates updates) {
     /*
      * We could try to handle primitives here instead of in visitLocalVariable, but it won't be
@@ -443,12 +443,6 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     if (isCatchVariable(node)) {
       updates.set(node, NONNULL);
     }
-    /*
-     * We can return whatever we want here because a variable declaration is not an expression and
-     * thus no one can use its value directly. We've already made any updates to the value of the
-     * variable in the store above.
-     */
-    return NULLABLE;
   }
 
   private static boolean isCatchVariable(VariableDeclarationNode node) {
