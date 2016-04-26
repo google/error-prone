@@ -111,6 +111,7 @@ import com.google.errorprone.bugpatterns.StaticAccessedFromInstance;
 import com.google.errorprone.bugpatterns.StringBuilderInitWithChar;
 import com.google.errorprone.bugpatterns.StringEquality;
 import com.google.errorprone.bugpatterns.SuppressWarningsDeprecated;
+import com.google.errorprone.bugpatterns.ThrowIfUncheckedKnownChecked;
 import com.google.errorprone.bugpatterns.TryFailThrowable;
 import com.google.errorprone.bugpatterns.TypeParameterQualifier;
 import com.google.errorprone.bugpatterns.TypeParameterUnusedInFormals;
@@ -246,6 +247,7 @@ public class BuiltInCheckerSuppliers {
           SizeGreaterThanOrEqualsZero.class,
           StringBuilderInitWithChar.class,
           SuppressWarningsDeprecated.class,
+          ThrowIfUncheckedKnownChecked.class,
           TryFailThrowable.class,
           TypeParameterQualifier.class,
           UnusedAnonymousClass.class);
