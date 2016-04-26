@@ -102,6 +102,7 @@ import com.google.errorprone.bugpatterns.ProtoFieldNullComparison;
 import com.google.errorprone.bugpatterns.ProtoFieldPreconditionsCheckNotNull;
 import com.google.errorprone.bugpatterns.ProtoStringFieldReferenceEquality;
 import com.google.errorprone.bugpatterns.RequiredModifiersChecker;
+import com.google.errorprone.bugpatterns.RestrictedApiChecker;
 import com.google.errorprone.bugpatterns.ReturnValueIgnored;
 import com.google.errorprone.bugpatterns.SelfAssignment;
 import com.google.errorprone.bugpatterns.SelfEquality;
@@ -241,6 +242,7 @@ public class BuiltInCheckerSuppliers {
           ProtoFieldNullComparison.class,
           ProvidesNull.class,
           RectIntersectReturnValueIgnored.class,
+          RestrictedApiChecker.class,
           ReturnValueIgnored.class,
           SelfAssignment.class,
           SelfEquals.class,
