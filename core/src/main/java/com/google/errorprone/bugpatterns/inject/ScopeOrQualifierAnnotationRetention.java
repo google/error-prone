@@ -17,7 +17,6 @@ package com.google.errorprone.bugpatterns.inject;
 import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
