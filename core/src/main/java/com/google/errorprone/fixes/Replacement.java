@@ -43,6 +43,11 @@ public abstract class Replacement {
     return range().lowerEndpoint();
   }
 
+  /** The length of the input text to be replaced. */
+  public int length() {
+    return endPosition() - startPosition();
+  }
+
   /** The end of the replacement range, exclusive. */
   public int endPosition() {
     return range().upperEndpoint();
