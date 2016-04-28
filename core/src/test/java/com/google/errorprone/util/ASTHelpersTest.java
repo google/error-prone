@@ -25,6 +25,7 @@ import com.google.common.base.Verify;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.CompilerBasedAbstractTest;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.scanner.Scanner;
 
 import com.sun.source.tree.AnnotationTree;
@@ -146,6 +147,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   @Test
   public void testGetReceiver() {
     writeFile("A.java",
+        "package p;",
         "public class A { ",
         "  public B b;",
         "  public void foo() {}",
@@ -154,30 +156,65 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
         "  }",
         "}");
     writeFile("B.java",
+        "package p;",
         "public class B { ",
+        "  public static void bar() {}",
         "  public void foo() {}",
         "}");
-    writeFile("C.java",
+    writeFile(
+        "C.java",
+        "package p;",
+        "import static p.B.bar;",
         "public class C { ",
+        "  public static void foo() {}",
         "  public void test() {",
         "     A a = new A();",
         "     a.foo();", // a
         "     a.b.foo();", // a.b
         "     a.bar().foo();", // a.bar()
+        "     this.test();", // this
+        "     test();", // null
+        "     C.foo();", // C
+        "     foo();", // null
+        "     C c = new C();",
+        "     c.foo();", // c
+        "     bar();", // null
         "  }",
         "}");
-    assertCompiles(expressionStatementMatches("a.foo()", expressionHasReceiver("a")));
-    assertCompiles(expressionStatementMatches("a.b.foo()", expressionHasReceiver("a.b")));
-    assertCompiles(expressionStatementMatches("a.bar().foo()", expressionHasReceiver("a.bar()")));
+    assertCompiles(expressionStatementMatches("a.foo()", expressionHasReceiverAndType("a", "p.A")));
+    assertCompiles(
+        expressionStatementMatches("a.b.foo()", expressionHasReceiverAndType("a.b", "p.B")));
+    assertCompiles(
+        expressionStatementMatches(
+            "a.bar().foo()", expressionHasReceiverAndType("a.bar()", "p.B")));
+    assertCompiles(
+        expressionStatementMatches("this.test()", expressionHasReceiverAndType("this", "p.C")));
+    assertCompiles(expressionStatementMatches("test()", expressionHasReceiverAndType(null, "p.C")));
+    assertCompiles(expressionStatementMatches("C.foo()", expressionHasReceiverAndType("C", "p.C")));
+    assertCompiles(expressionStatementMatches("foo()", expressionHasReceiverAndType(null, "p.C")));
+    assertCompiles(expressionStatementMatches("c.foo()", expressionHasReceiverAndType("c", "p.C")));
+    assertCompiles(expressionStatementMatches("bar()", expressionHasReceiverAndType(null, "p.B")));
   }
 
-  private Matcher<ExpressionTree> expressionHasReceiver(final String expectedReceiver) {
-    return new Matcher<ExpressionTree>() {
-      @Override
-      public boolean matches(ExpressionTree t, VisitorState state) {
-        return ASTHelpers.getReceiver(t).toString().equals(expectedReceiver);
-      }
-    };
+  private Matcher<ExpressionTree> expressionHasReceiverAndType(
+      final String expectedReceiver, final String expectedType) {
+    return Matchers.allOf(
+        new Matcher<ExpressionTree>() {
+          @Override
+          public boolean matches(ExpressionTree t, VisitorState state) {
+            ExpressionTree receiver = ASTHelpers.getReceiver(t);
+            return expectedReceiver != null
+                ? receiver.toString().equals(expectedReceiver)
+                : receiver == null;
+          }
+        },
+        new Matcher<ExpressionTree>() {
+          @Override
+          public boolean matches(ExpressionTree t, VisitorState state) {
+            Type type = ASTHelpers.getReceiverType(t);
+            return state.getTypeFromString(expectedType).equals(type);
+          }
+        });
   }
 
   private Scanner expressionStatementMatches(final String expectedExpression,

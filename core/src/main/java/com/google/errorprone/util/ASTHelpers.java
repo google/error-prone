@@ -31,6 +31,7 @@ import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
@@ -285,6 +286,9 @@ public class ASTHelpers {
    *    a.b.foo() ==> type of a.b
    *    a.bar().foo() ==> type of a.bar()
    *    this.foo() ==> type of this
+   *    foo() ==> type of this
+   *    TheClass.aStaticMethod() ==> TheClass
+   *    aStaticMethod() ==> type of class in which method is defined
    * }
    * </pre>
    */
@@ -313,12 +317,22 @@ public class ASTHelpers {
    *    a.bar().foo() ==> a.bar()
    *    a.b.c ==> a.b
    *    a.b().c ==> a.b()
+   *    this.foo() ==> this
+   *    foo() ==> null
+   *    TheClass.aStaticMethod() ==> TheClass
+   *    aStaticMethod() ==> null
+   *    aStaticallyImportedMethod() ==> null
    * }
    * </pre>
    */
+  @Nullable
   public static ExpressionTree getReceiver(ExpressionTree expressionTree) {
     if (expressionTree instanceof MethodInvocationTree) {
-      return getReceiver(((MethodInvocationTree) expressionTree).getMethodSelect());
+      ExpressionTree methodSelect = ((MethodInvocationTree) expressionTree).getMethodSelect();
+      if (methodSelect instanceof IdentifierTree) {
+        return null;
+      }
+      return getReceiver(methodSelect);
     } else if (expressionTree instanceof MemberSelectTree) {
       return ((MemberSelectTree) expressionTree).getExpression();
     } else {
