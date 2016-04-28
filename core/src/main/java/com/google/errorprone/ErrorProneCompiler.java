@@ -193,23 +193,27 @@ public class ErrorProneCompiler {
   }
 
   /**
-   * Sets javac's {@code -XDcompilePolicy} flag to {@code byfile}.  This ensures that all classes in
-   * a file are attributed before any of them are lowered.  Error Prone depends on this behavior
-   * when analyzing files that contain multiple classes.
+   * Sets javac's {@code -XDcompilePolicy} flag to ensure that all classes in a
+   * file are attributed before any of them are lowered.  Error Prone depends on
+   * this behavior when analyzing files that contain multiple top-level classes.
    *
-   * @throws InvalidCommandLineOptionException if the {@code -XDcompilePolicy} flag is passed
-   * in the existing arguments with a value other than {@code byfile}
+   * @throws InvalidCommandLineOptionException if the {@code -XDcompilePolicy}
+   *     flag is passed in the existing arguments with an unsupported value
    */
   private Iterable<String> setCompilePolicyToByFile(Iterable<String> args)
       throws InvalidCommandLineOptionException {
     for (String arg : args) {
       if (arg.startsWith("-XDcompilePolicy")) {
         String value = arg.substring(arg.indexOf('=') + 1);
-        if (!value.equals("byfile")) {
-          throw new InvalidCommandLineOptionException(
-              "-XDcompilePolicy must be byfile for Error Prone to work properly");
+        switch (value) {
+          case "byfile":
+          case "simple":
+            break;
+          default:
+            throw new InvalidCommandLineOptionException(
+                String.format("-XDcompilePolicy=%s is not supported by Error Prone", value));
         }
-        // If there is already an "-XDcompilePolicy=byfile" flag, don't do anything.
+        // don't do anything if a valid policy is already set
         return args;
       }
     }

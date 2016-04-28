@@ -520,4 +520,34 @@ public class ErrorProneCompilerIntegrationTest {
     assertThat(diag.getMessage(Locale.ENGLISH))
         .contains("An unhandled exception was thrown by the Error Prone static analysis plugin");
   }
+
+  @Test
+  public void compilePolicy_bytodo() throws Exception {
+    Result exitCode =
+        compiler.compile(
+            new String[] {"-XDcompilePolicy=bytodo"}, Collections.<JavaFileObject>emptyList());
+    outputStream.flush();
+    assertThat(exitCode).named(outputStream.toString()).isEqualTo(Result.CMDERR);
+    assertThat(outputStream.toString()).contains("-XDcompilePolicy=bytodo is not supported");
+  }
+
+  @Test
+  public void compilePolicy_byfile() throws Exception {
+    Result exitCode =
+        compiler.compile(
+            new String[] {"-XDcompilePolicy=byfile"},
+            Arrays.asList(compiler.fileManager().forSourceLines("Test.java", "class Test {}")));
+    outputStream.flush();
+    assertThat(exitCode).named(outputStream.toString()).isEqualTo(Result.OK);
+  }
+
+  @Test
+  public void compilePolicy_simple() throws Exception {
+    Result exitCode =
+        compiler.compile(
+            new String[] {"-XDcompilePolicy=simple"},
+            Arrays.asList(compiler.fileManager().forSourceLines("Test.java", "class Test {}")));
+    outputStream.flush();
+    assertThat(exitCode).named(outputStream.toString()).isEqualTo(Result.OK);
+  }
 }
