@@ -143,6 +143,7 @@ import com.google.errorprone.bugpatterns.inject.OverlappingQualifierAndScopeAnno
 import com.google.errorprone.bugpatterns.inject.ScopeAnnotationOnInterfaceOrAbstractClass;
 import com.google.errorprone.bugpatterns.inject.ScopeOrQualifierAnnotationRetention;
 import com.google.errorprone.bugpatterns.inject.dagger.ProvidesNull;
+import com.google.errorprone.bugpatterns.inject.dagger.UseBinds;
 import com.google.errorprone.bugpatterns.inject.guice.AssistedInjectScoping;
 import com.google.errorprone.bugpatterns.inject.guice.AssistedParameters;
 import com.google.errorprone.bugpatterns.inject.guice.InjectOnFinalField;
@@ -346,6 +347,7 @@ public class BuiltInCheckerSuppliers {
           UnnecessaryStaticImport.class,
           UnnecessaryTypeArgument.class,
           UnsynchronizedOverridesSynchronized.class,
+          UseBinds.class,
           VarChecker.class,
           WildcardImport.class,
           WrongParameterPackage.class);
