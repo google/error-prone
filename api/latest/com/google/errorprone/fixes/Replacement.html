@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":10,"i2":6,"i3":6,"i4":10};
+var methods = {"i0":9,"i1":10,"i2":10,"i3":6,"i4":6,"i5":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -162,18 +162,24 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </td>
 </tr>
 <tr id="i2" class="altColor">
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/Replacement.html#length--">length</a></span>()</code>
+<div class="block">The length of the input text to be replaced.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>abstract com.google.common.collect.Range&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/Replacement.html#range--">range</a></span>()</code>
 <div class="block">The <code>Range</code> to be replaced.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>abstract <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/Replacement.html#replaceWith--">replaceWith</a></span>()</code>
 <div class="block">The source text to appear in the output.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/Replacement.html#startPosition--">startPosition</a></span>()</code>
 <div class="block">The beginning of the replacement range.</div>
@@ -245,6 +251,16 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <h4>startPosition</h4>
 <pre>public&nbsp;int&nbsp;startPosition()</pre>
 <div class="block">The beginning of the replacement range.</div>
+</li>
+</ul>
+<a name="length--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>length</h4>
+<pre>public&nbsp;int&nbsp;length()</pre>
+<div class="block">The length of the input text to be replaced.</div>
 </li>
 </ul>
 <a name="endPosition--">

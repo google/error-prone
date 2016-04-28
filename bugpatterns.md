@@ -124,6 +124,9 @@ Possible sign flip from narrowing conversion
 __[BadShiftAmount](bugpattern/BadShiftAmount)__<br>
 Shift by an amount that is out of range
 
+__[BoxedPrimitiveConstructor](bugpattern/BoxedPrimitiveConstructor)__<br>
+valueOf provides better time and space performance
+
 __[ChainingConstructorIgnoresParameter](bugpattern/ChainingConstructorIgnoresParameter)__<br>
 The called constructor accepts a parameter with the same name and type as one of its caller&#39;s parameters, but its caller doesn&#39;t pass that parameter to it.  It&#39;s likely that it was intended to.
 
@@ -237,6 +240,9 @@ Protobuf fields cannot be null
 
 __[RectIntersectReturnValueIgnored](bugpattern/RectIntersectReturnValueIgnored)__<br>
 Return value of android.graphics.Rect.intersect() must be checked
+
+__[RestrictedApiChecker](bugpattern/RestrictedApiChecker)__<br>
+ Check for non-whitelisted callers to RestrictedApiChecker.
 
 __[ReturnValueIgnored](bugpattern/ReturnValueIgnored)__<br>
 Return value of this method must be used
@@ -411,6 +417,9 @@ Comparing protobuf fields of type String using reference equality
 
 __[SelfEquality](bugpattern/SelfEquality)__<br>
 Variable compared to itself
+
+__[ThrowIfUncheckedKnownChecked](bugpattern/ThrowIfUncheckedKnownChecked)__<br>
+throwIfUnchecked(knownCheckedException) is a no-op.
 
 __[UnlockMethod](bugpattern/UnlockMethod)__<br>
 This method does not acquire the locks specified by its @UnlockMethod annotation
