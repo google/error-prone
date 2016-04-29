@@ -164,21 +164,4 @@ public class UseBindsTest {
         .doTest();
   }
 
-  @Test
-  public void daggerOneModule() {
-    compilationHelper
-    .addSourceLines(
-        "Test.java",
-        "import dagger.Module;",
-        "import dagger.Provides;",
-        "import java.security.SecureRandom;",
-        "import java.util.Random;",
-        "@Module(injects = Random.class)",
-        "class Test {",
-        "  @Provides Random provideRandom(SecureRandom impl) {",
-        "    return impl;",
-        "  }",
-        "}")
-    .doTest();
-  }
 }
