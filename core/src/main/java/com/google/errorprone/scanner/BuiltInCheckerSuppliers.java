@@ -24,8 +24,6 @@ import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.bugpatterns.ArrayEquals;
 import com.google.errorprone.bugpatterns.ArrayHashCode;
 import com.google.errorprone.bugpatterns.ArrayToString;
-import com.google.errorprone.bugpatterns.ArrayToStringCompoundAssignment;
-import com.google.errorprone.bugpatterns.ArrayToStringConcatenation;
 import com.google.errorprone.bugpatterns.ArraysAsListPrimitiveArray;
 import com.google.errorprone.bugpatterns.AssertFalse;
 import com.google.errorprone.bugpatterns.AsyncFunctionReturnsNull;
@@ -205,8 +203,6 @@ public class BuiltInCheckerSuppliers {
           ArrayEquals.class,
           ArrayHashCode.class,
           ArrayToString.class,
-          ArrayToStringCompoundAssignment.class,
-          ArrayToStringConcatenation.class,
           AssistedInjectScoping.class,
           AsyncFunctionReturnsNull.class,
           BadShiftAmount.class,

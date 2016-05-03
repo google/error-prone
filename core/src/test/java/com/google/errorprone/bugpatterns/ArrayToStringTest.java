@@ -23,9 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author adgar@google.com (Mike Edgar)
- */
+/** {@link ArrayToString}Test */
 @RunWith(JUnit4.class)
 public class ArrayToStringTest {
 
@@ -44,5 +42,88 @@ public class ArrayToStringTest {
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.addSourceFile("ArrayToStringNegativeCases.java").doTest();
+  }
+
+  @Test
+  public void stringConcat() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f(int[] xs) {",
+            "    // BUG: Diagnostic contains: (\"\" + Arrays.toString(xs));",
+            "    System.err.println(\"\" + xs);",
+            "    String s = \"\";",
+            "    // BUG: Diagnostic contains: s += Arrays.toString(xs);",
+            "    s += xs;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void printString() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  int[] g() { return null; }",
+            "  void f(int[] xs) {",
+            "    // BUG: Diagnostic contains: println(Arrays.toString(xs))",
+            "    System.err.println(xs);",
+            "    // BUG: Diagnostic contains: println(Arrays.toString(xs))",
+            "    System.err.println(String.valueOf(xs));",
+            "    // BUG: Diagnostic contains: println(Arrays.toString(g()))",
+            "    System.err.println(String.valueOf(g()));",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativePrintString() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f(char[] xs) {",
+            "    System.err.println(String.valueOf(xs));",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void stringBuilder() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f(int[] xs) {",
+            "    // BUG: Diagnostic contains: append(Arrays.toString(xs))",
+            "    new StringBuilder().append(xs);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testPositiveCompoundAssignment() throws Exception {
+    compilationHelper.addSourceFile("ArrayToStringCompoundAssignmentPositiveCases.java").doTest();
+  }
+
+  @Test
+  public void testNegativeCompoundAssignment() throws Exception {
+    compilationHelper.addSourceFile("ArrayToStringCompoundAssignmentNegativeCases.java").doTest();
+  }
+
+  @Test
+  public void testPositiveConcat() throws Exception {
+    compilationHelper.addSourceFile("ArrayStringConcatenationPositiveCases.java").doTest();
+  }
+
+  @Test
+  public void testNegativeConcat() throws Exception {
+    compilationHelper.addSourceFile("ArrayStringConcatenationNegativeCases.java").doTest();
   }
 }
