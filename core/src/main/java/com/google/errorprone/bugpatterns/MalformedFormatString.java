@@ -60,7 +60,7 @@ import javax.lang.model.type.TypeKind;
     summary = "Printf-like format string does not match its arguments",
     explanation = "Format strings for printf family of functions contain format specifiers"
         + " (placeholders) which must match amount and type of arguments that follow them. If there"
-        + " are more arguments then specifiers, redundant ones are silently ignored. If there are"
+        + " are more arguments than specifiers, redundant ones are silently ignored. If there are"
         + " less, or their types don't match, runtime exception is thrown.",
     category = JDK, maturity = EXPERIMENTAL, severity = ERROR)
 public class MalformedFormatString extends BugChecker implements MethodInvocationTreeMatcher {
