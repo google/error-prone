@@ -45,7 +45,7 @@ import com.sun.tools.javac.tree.JCTree;
  */
 @BugPattern(
   name = "IsInstanceOfClass",
-  summary = "The argument to Class#isInstance(Object) should not be a class literal",
+  summary = "The argument to Class#isInstance(Object) should not be a Class",
   category = JDK,
   severity = ERROR,
   maturity = MATURE
