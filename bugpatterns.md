@@ -109,12 +109,6 @@ hashcode method on array does not hash array contents
 __[ArrayToString](bugpattern/ArrayToString)__<br>
 Calling toString on an array does not provide useful information
 
-__[ArrayToStringCompoundAssignment](bugpattern/ArrayToStringCompoundAssignment)__<br>
-Implicit toString used on an array (String += Array)
-
-__[ArrayToStringConcatenation](bugpattern/ArrayToStringConcatenation)__<br>
-Implicit toString used on an array (String + Array)
-
 __[AsyncFunctionReturnsNull](bugpattern/AsyncFunctionReturnsNull)__<br>
 AsyncFunction should not return a null Future, only a Future whose result is null.
 
@@ -179,7 +173,7 @@ __[InvalidPatternSyntax](bugpattern/InvalidPatternSyntax)__<br>
 Invalid syntax used for a regular expression
 
 __[IsInstanceOfClass](bugpattern/IsInstanceOfClass)__<br>
-The argument to Class#isInstance(Object) should not be a class literal
+The argument to Class#isInstance(Object) should not be a Class
 
 __[JUnit3FloatingPointComparisonWithoutDelta](bugpattern/JUnit3FloatingPointComparisonWithoutDelta)__<br>
 Floating-point comparison without error tolerance
@@ -317,6 +311,11 @@ Passing a primitive array to a varargs method is usually wrong
 
 __[Var](bugpattern/Var)__<br>
 Non-constant variable missing @Var annotation
+
+## Experimental : SUGGESTION
+
+__[UseBinds](bugpattern/UseBinds)__<br>
+@Binds is a more efficient and declaritive mechanism for delegating a binding.
 
 ## Experimental : NOT\_A\_PROBLEM
 

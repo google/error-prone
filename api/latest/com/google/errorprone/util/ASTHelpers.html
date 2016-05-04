@@ -609,6 +609,9 @@ public static&nbsp;&lt;T&gt;&nbsp;T&nbsp;findEnclosingNode(com.sun.source.util.T
     a.b.foo() ==&gt; type of a.b
     a.bar().foo() ==&gt; type of a.bar()
     this.foo() ==&gt; type of this
+    foo() ==&gt; type of this
+    TheClass.aStaticMethod() ==&gt; TheClass
+    aStaticMethod() ==&gt; type of class in which method is defined
  </code>
  </pre></div>
 </li>
@@ -619,7 +622,8 @@ public static&nbsp;&lt;T&gt;&nbsp;T&nbsp;findEnclosingNode(com.sun.source.util.T
 <ul class="blockList">
 <li class="blockList">
 <h4>getReceiver</h4>
-<pre>public static&nbsp;com.sun.source.tree.ExpressionTree&nbsp;getReceiver(com.sun.source.tree.ExpressionTree&nbsp;expressionTree)</pre>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+public static&nbsp;com.sun.source.tree.ExpressionTree&nbsp;getReceiver(com.sun.source.tree.ExpressionTree&nbsp;expressionTree)</pre>
 <div class="block">Returns the receiver of an expression.
 
  <p>Examples:
@@ -630,6 +634,11 @@ public static&nbsp;&lt;T&gt;&nbsp;T&nbsp;findEnclosingNode(com.sun.source.util.T
     a.bar().foo() ==&gt; a.bar()
     a.b.c ==&gt; a.b
     a.b().c ==&gt; a.b()
+    this.foo() ==&gt; this
+    foo() ==&gt; null
+    TheClass.aStaticMethod() ==&gt; TheClass
+    aStaticMethod() ==&gt; null
+    aStaticallyImportedMethod() ==&gt; null
  </code>
  </pre></div>
 </li>

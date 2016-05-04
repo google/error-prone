@@ -1,6 +1,6 @@
 ---
 title: IsInstanceOfClass
-summary: The argument to Class#isInstance(Object) should not be a class literal
+summary: The argument to Class#isInstance(Object) should not be a Class
 layout: bugpattern
 category: JDK
 severity: ERROR
