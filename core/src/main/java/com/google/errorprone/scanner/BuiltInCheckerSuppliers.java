@@ -108,6 +108,7 @@ import com.google.errorprone.bugpatterns.SelfEquality;
 import com.google.errorprone.bugpatterns.SelfEquals;
 import com.google.errorprone.bugpatterns.SizeGreaterThanOrEqualsZero;
 import com.google.errorprone.bugpatterns.StaticAccessedFromInstance;
+import com.google.errorprone.bugpatterns.StreamToString;
 import com.google.errorprone.bugpatterns.StringBuilderInitWithChar;
 import com.google.errorprone.bugpatterns.StringEquality;
 import com.google.errorprone.bugpatterns.SuppressWarningsDeprecated;
@@ -245,6 +246,7 @@ public class BuiltInCheckerSuppliers {
           SelfAssignment.class,
           SelfEquals.class,
           SizeGreaterThanOrEqualsZero.class,
+          StreamToString.class,
           StringBuilderInitWithChar.class,
           SuppressWarningsDeprecated.class,
           ThrowIfUncheckedKnownChecked.class,
