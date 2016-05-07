@@ -19,22 +19,22 @@ package com.google.errorprone.bugpatterns;
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class SelfEqualsPositiveCase2 {
+public class SelfEqualsPositiveCase {
   
   public boolean test1() {
     Object obj = new Object();
-    // BUG: Diagnostic contains: true
+    // BUG: Diagnostic contains: An object is tested for equality to itself
     return obj.equals(obj);
   }
   
   private Object obj = new Object();
   public boolean test2() {
-    // BUG: Diagnostic contains: true
+    // BUG: Diagnostic contains: An object is tested for equality to itself
     return obj.equals(this.obj);
   }
   
   public boolean test3() {
-    // BUG: Diagnostic contains: true
+    // BUG: Diagnostic contains: An object is tested for equality to itself
     return equals(this);
   }
 }

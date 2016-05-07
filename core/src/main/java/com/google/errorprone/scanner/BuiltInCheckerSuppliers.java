@@ -54,6 +54,7 @@ import com.google.errorprone.bugpatterns.FallThroughSuppression;
 import com.google.errorprone.bugpatterns.Finally;
 import com.google.errorprone.bugpatterns.ForOverrideChecker;
 import com.google.errorprone.bugpatterns.GetClassOnClass;
+import com.google.errorprone.bugpatterns.GuavaSelfEquals;
 import com.google.errorprone.bugpatterns.HashtableContains;
 import com.google.errorprone.bugpatterns.IncompatibleModifiersChecker;
 import com.google.errorprone.bugpatterns.InsecureCipherMode;
@@ -219,6 +220,7 @@ public class BuiltInCheckerSuppliers {
           GetClassOnClass.class,
           GuardedByValidator.class,
           GuardedByChecker.class,
+          GuavaSelfEquals.class,
           HashtableContains.class,
           ImmutableChecker.class,
           InvalidPatternSyntax.class,
@@ -244,7 +246,6 @@ public class BuiltInCheckerSuppliers {
           RestrictedApiChecker.class,
           ReturnValueIgnored.class,
           SelfAssignment.class,
-          SelfEquals.class,
           SizeGreaterThanOrEqualsZero.class,
           StreamToString.class,
           StringBuilderInitWithChar.class,
@@ -341,6 +342,7 @@ public class BuiltInCheckerSuppliers {
           ScopeAnnotationOnInterfaceOrAbstractClass.class,
           ScopeOrQualifierAnnotationRetention.class,
           SelfEquality.class,
+          SelfEquals.class,
           UnlockMethodChecker.class,
           UnnecessaryStaticImport.class,
           UnnecessaryTypeArgument.class,

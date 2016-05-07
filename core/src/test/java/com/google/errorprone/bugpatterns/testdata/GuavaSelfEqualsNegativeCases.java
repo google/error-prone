@@ -16,34 +16,29 @@
 
 package com.google.errorprone.bugpatterns;
 
-import com.google.errorprone.CompilationTestHelper;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import com.google.common.base.Objects;
 
 /**
- * Unit tests for {@link SelfEquals} bug pattern.
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
-@RunWith(JUnit4.class)
-public class SelfEqualsTest {
-  CompilationTestHelper compilationHelper;
+public class GuavaSelfEqualsNegativeCases {
+  private String field;
 
-  @Before
-  public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(SelfEquals.class, getClass());
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    GuavaSelfEqualsNegativeCases other = (GuavaSelfEqualsNegativeCases) o;
+    return Objects.equal(field, other.field);
   }
 
-  @Test
-  public void testPositiveCase() throws Exception {
-    compilationHelper.addSourceFile("SelfEqualsPositiveCase.java").doTest();
+  @Override
+  public int hashCode() {
+    return field != null ? field.hashCode() : 0;
   }
-
-  @Test
-  public void testNegativeCase() throws Exception {
-    compilationHelper.addSourceFile("SelfEqualsNegativeCases.java").doTest();
-  }
-
 }

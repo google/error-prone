@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc. All Rights Reserved.
+ * Copyright 2012 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,26 +24,25 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 /**
- * Unit tests for {@link SelfEquals} bug pattern.
- * @author bhagwani@google.com (Sumit Bhagwani)
+ * Unit tests for {@link GuavaSelfEquals} bug pattern.
+ * @author eaftan@google.com (Eddie Aftandilian)
  */
 @RunWith(JUnit4.class)
-public class SelfEqualsTest {
+public class GuavaSelfEqualsTest {
   CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(SelfEquals.class, getClass());
+    compilationHelper = CompilationTestHelper.newInstance(GuavaSelfEquals.class, getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.addSourceFile("SelfEqualsPositiveCase.java").doTest();
+    compilationHelper.addSourceFile("GuavaSelfEqualsPositiveCase.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.addSourceFile("SelfEqualsNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("GuavaSelfEqualsNegativeCases.java").doTest();
   }
-
 }
