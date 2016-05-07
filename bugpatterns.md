@@ -250,6 +250,9 @@ An object is tested for equality to itself
 __[SizeGreaterThanOrEqualsZero](bugpattern/SizeGreaterThanOrEqualsZero)__<br>
 Comparison of a size &gt;= 0 is always true, did you intend to check for non-emptiness?
 
+__[StreamToString](bugpattern/StreamToString)__<br>
+Calling toString on a Stream does not provide useful information
+
 __[StringBuilderInitWithChar](bugpattern/StringBuilderInitWithChar)__<br>
 StringBuilder does not have a char constructor; this invokes the int constructor.
 

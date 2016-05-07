@@ -86,6 +86,13 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html#AbstractReturnValueIgnored--">AbstractReturnValueIgnored()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">AbstractReturnValueIgnored</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/AbstractToString.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">AbstractToString</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">An abstract matcher for implicit and explicit calls to <code>Object.toString()</code>, for use
+ on types that do not have a human-readable <code>toString()</code> implementation.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/AbstractToString.html#AbstractToString--">AbstractToString()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractToString.html" title="class in com.google.errorprone.bugpatterns">AbstractToString</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/AbstractTypeMatcher.html" title="class in com.google.errorprone.matchers"><span class="typeNameLink">AbstractTypeMatcher</span></a>&lt;<a href="com/google/errorprone/matchers/AbstractTypeMatcher.html" title="type parameter in AbstractTypeMatcher">T</a> extends com.sun.source.tree.Tree&gt; - Class in <a href="com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a></dt>
 <dd>
 <div class="block">Base class for type matchers.</div>
@@ -2578,6 +2585,14 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableChecker.html#ImmutableChecker--">ImmutableChecker()</a></span> - Constructor for class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ImmutableChecker</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/AbstractToString.html#implicitToStringFix-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">implicitToStringFix(ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractToString.html" title="class in com.google.errorprone.bugpatterns">AbstractToString</a></dt>
+<dd>
+<div class="block">Constructs a fix for an implicit toString call, e.g.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ArrayToString.html#implicitToStringFix-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">implicitToStringFix(ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ArrayToString.html" title="class in com.google.errorprone.bugpatterns">ArrayToString</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/StreamToString.html#implicitToStringFix-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">implicitToStringFix(ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StreamToString.html" title="class in com.google.errorprone.bugpatterns">StreamToString</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/ImportPolicy.html" title="enum in com.google.errorprone.refaster"><span class="typeNameLink">ImportPolicy</span></a> - Enum in <a href="com/google/errorprone/refaster/package-summary.html">com.google.errorprone.refaster</a></dt>
 <dd>
 <div class="block">Policy specifying when and how to import classes when inlining types.</div>
@@ -3464,7 +3479,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.ForLoopTreeMatcher.html#matchForLoop-com.sun.source.tree.ForLoopTree-com.google.errorprone.VisitorState-">matchForLoop(ForLoopTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.ForLoopTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ForLoopTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ArrayToString.html#matchIdentifier-com.sun.source.tree.IdentifierTree-com.google.errorprone.VisitorState-">matchIdentifier(IdentifierTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ArrayToString.html" title="class in com.google.errorprone.bugpatterns">ArrayToString</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/AbstractToString.html#matchIdentifier-com.sun.source.tree.IdentifierTree-com.google.errorprone.VisitorState-">matchIdentifier(IdentifierTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractToString.html" title="class in com.google.errorprone.bugpatterns">AbstractToString</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.IdentifierTreeMatcher.html#matchIdentifier-com.sun.source.tree.IdentifierTree-com.google.errorprone.VisitorState-">matchIdentifier(IdentifierTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.IdentifierTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.IdentifierTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
@@ -3496,9 +3511,9 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.MemberReferenceTreeMatcher.html#matchMemberReference-com.sun.source.tree.MemberReferenceTree-com.google.errorprone.VisitorState-">matchMemberReference(MemberReferenceTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.MemberReferenceTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MemberReferenceTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/android/MislabeledAndroidString.html#matchMemberSelect-com.sun.source.tree.MemberSelectTree-com.google.errorprone.VisitorState-">matchMemberSelect(MemberSelectTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.android.<a href="com/google/errorprone/bugpatterns/android/MislabeledAndroidString.html" title="class in com.google.errorprone.bugpatterns.android">MislabeledAndroidString</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/AbstractToString.html#matchMemberSelect-com.sun.source.tree.MemberSelectTree-com.google.errorprone.VisitorState-">matchMemberSelect(MemberSelectTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractToString.html" title="class in com.google.errorprone.bugpatterns">AbstractToString</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ArrayToString.html#matchMemberSelect-com.sun.source.tree.MemberSelectTree-com.google.errorprone.VisitorState-">matchMemberSelect(MemberSelectTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ArrayToString.html" title="class in com.google.errorprone.bugpatterns">ArrayToString</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/android/MislabeledAndroidString.html#matchMemberSelect-com.sun.source.tree.MemberSelectTree-com.google.errorprone.VisitorState-">matchMemberSelect(MemberSelectTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.android.<a href="com/google/errorprone/bugpatterns/android/MislabeledAndroidString.html" title="class in com.google.errorprone.bugpatterns.android">MislabeledAndroidString</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.MemberSelectTreeMatcher.html#matchMemberSelect-com.sun.source.tree.MemberSelectTree-com.google.errorprone.VisitorState-">matchMemberSelect(MemberSelectTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.MemberSelectTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MemberSelectTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
@@ -3565,6 +3580,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">AbstractReturnValueIgnored</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/AbstractToString.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractToString.html" title="class in com.google.errorprone.bugpatterns">AbstractToString</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ArrayEquals.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ArrayEquals.html" title="class in com.google.errorprone.bugpatterns">ArrayEquals</a></dt>
 <dd>
 <div class="block">Suggests replacing with Arrays.equals(a, b).</div>
@@ -3576,8 +3593,6 @@
  multidimensional.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ArraysAsListPrimitiveArray.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ArraysAsListPrimitiveArray.html" title="class in com.google.errorprone.bugpatterns">ArraysAsListPrimitiveArray</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ArrayToString.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ArrayToString.html" title="class in com.google.errorprone.bugpatterns">ArrayToString</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BigDecimalLiteralDouble.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BigDecimalLiteralDouble.html" title="class in com.google.errorprone.bugpatterns">BigDecimalLiteralDouble</a></dt>
 <dd>&nbsp;</dd>
@@ -4869,6 +4884,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/ImportPolicy.html#staticReference-com.google.errorprone.refaster.Inliner-java.lang.CharSequence-java.lang.CharSequence-java.lang.CharSequence-">staticReference(Inliner, CharSequence, CharSequence, CharSequence)</a></span> - Method in enum com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ImportPolicy.html" title="enum in com.google.errorprone.refaster">ImportPolicy</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/StreamToString.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">StreamToString</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/StreamToString.html#StreamToString--">StreamToString()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StreamToString.html" title="class in com.google.errorprone.bugpatterns">StreamToString</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/StringBuilderInitWithChar.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">StringBuilderInitWithChar</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/StringBuilderInitWithChar.html#StringBuilderInitWithChar--">StringBuilderInitWithChar()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StringBuilderInitWithChar.html" title="class in com.google.errorprone.bugpatterns">StringBuilderInitWithChar</a></dt>
@@ -5108,6 +5127,14 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/util/ErrorProneToken.html#toString--">toString()</a></span> - Method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/AbstractToString.html#toStringFix-com.sun.source.tree.Tree-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">toStringFix(Tree, ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractToString.html" title="class in com.google.errorprone.bugpatterns">AbstractToString</a></dt>
+<dd>
+<div class="block">Constructs a fix for an explicit toString call, e.g.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ArrayToString.html#toStringFix-com.sun.source.tree.Tree-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">toStringFix(Tree, ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ArrayToString.html" title="class in com.google.errorprone.bugpatterns">ArrayToString</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/StreamToString.html#toStringFix-com.sun.source.tree.Tree-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">toStringFix(Tree, ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StreamToString.html" title="class in com.google.errorprone.bugpatterns">StreamToString</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Matchers.html#toType-java.lang.Class-com.google.errorprone.matchers.Matcher-">toType(Class&lt;T&gt;, Matcher&lt;? super T&gt;)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
 <div class="block">Converts the given matcher to one that can be applied to any tree but is only executed when
@@ -5162,6 +5189,14 @@
 <dt><a href="com/google/errorprone/bugpatterns/TypeParameterUnusedInFormals.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">TypeParameterUnusedInFormals</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/TypeParameterUnusedInFormals.html#TypeParameterUnusedInFormals--">TypeParameterUnusedInFormals()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TypeParameterUnusedInFormals.html" title="class in com.google.errorprone.bugpatterns">TypeParameterUnusedInFormals</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/AbstractToString.html#typePredicate--">typePredicate()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractToString.html" title="class in com.google.errorprone.bugpatterns">AbstractToString</a></dt>
+<dd>
+<div class="block">The type to match on.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ArrayToString.html#typePredicate--">typePredicate()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ArrayToString.html" title="class in com.google.errorprone.bugpatterns">ArrayToString</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/StreamToString.html#typePredicate--">typePredicate()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StreamToString.html" title="class in com.google.errorprone.bugpatterns">StreamToString</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates"><span class="typeNameLink">TypePredicate</span></a> - Interface in <a href="com/google/errorprone/predicates/package-summary.html">com.google.errorprone.predicates</a></dt>
 <dd>

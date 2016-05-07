@@ -13,7 +13,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-Format strings for printf family of functions contain format specifiers (placeholders) which must match amount and type of arguments that follow them. If there are more arguments then specifiers, redundant ones are silently ignored. If there are less, or their types don't match, runtime exception is thrown.
+Format strings for printf family of functions contain format specifiers (placeholders) which must match amount and type of arguments that follow them. If there are more arguments than specifiers, redundant ones are silently ignored. If there are less, or their types don't match, runtime exception is thrown.
 
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("MalformedFormatString")` annotation to the enclosing element.

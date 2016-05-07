@@ -103,7 +103,12 @@ var activeTableTab = "activeTableTab";
 <li><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.BugChecker</a></li>
 <li>
 <ul class="inheritance">
+<li><a href="../../../../com/google/errorprone/bugpatterns/AbstractToString.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.AbstractToString</a></li>
+<li>
+<ul class="inheritance">
 <li>com.google.errorprone.bugpatterns.ArrayToString</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -119,8 +124,7 @@ var activeTableTab = "activeTableTab";
 <hr>
 <br>
 <pre>public class <span class="typeNameLabel">ArrayToString</span>
-extends <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
-implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a>, <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.IdentifierTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.IdentifierTreeMatcher</a>, <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MemberSelectTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MemberSelectTreeMatcher</a></pre>
+extends <a href="../../../../com/google/errorprone/bugpatterns/AbstractToString.html" title="class in com.google.errorprone.bugpatterns">AbstractToString</a></pre>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
 <dd>adgar@google.com (Mike Edgar), cushon@google.com (Liam Miller-Cushon)</dd>
@@ -178,21 +182,34 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/ArrayToString.html#matchIdentifier-com.sun.source.tree.IdentifierTree-com.google.errorprone.VisitorState-">matchIdentifier</a></span>(com.sun.source.tree.IdentifierTree&nbsp;tree,
-               <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+<td class="colFirst"><code>protected com.google.common.base.Optional&lt;<a href="../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/ArrayToString.html#implicitToStringFix-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">implicitToStringFix</a></span>(com.sun.source.tree.ExpressionTree&nbsp;tree,
+                   <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
+<div class="block">Constructs a fix for an implicit toString call, e.g.</div>
+</td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/ArrayToString.html#matchMemberSelect-com.sun.source.tree.MemberSelectTree-com.google.errorprone.VisitorState-">matchMemberSelect</a></span>(com.sun.source.tree.MemberSelectTree&nbsp;tree,
-                 <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+<td class="colFirst"><code>protected com.google.common.base.Optional&lt;<a href="../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/ArrayToString.html#toStringFix-com.sun.source.tree.Tree-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">toStringFix</a></span>(com.sun.source.tree.Tree&nbsp;parent,
+           com.sun.source.tree.ExpressionTree&nbsp;tree,
+           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
+<div class="block">Constructs a fix for an explicit toString call, e.g.</div>
+</td>
 </tr>
 <tr id="i2" class="altColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/ArrayToString.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation</a></span>(com.sun.source.tree.MethodInvocationTree&nbsp;methodTree,
-                     <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+<td class="colFirst"><code>protected <a href="../../../../com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/ArrayToString.html#typePredicate--">typePredicate</a></span>()</code>
+<div class="block">The type to match on.</div>
+</td>
 </tr>
 </table>
+<ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.com.google.errorprone.bugpatterns.AbstractToString">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;com.google.errorprone.bugpatterns.<a href="../../../../com/google/errorprone/bugpatterns/AbstractToString.html" title="class in com.google.errorprone.bugpatterns">AbstractToString</a></h3>
+<code><a href="../../../../com/google/errorprone/bugpatterns/AbstractToString.html#matchIdentifier-com.sun.source.tree.IdentifierTree-com.google.errorprone.VisitorState-">matchIdentifier</a>, <a href="../../../../com/google/errorprone/bugpatterns/AbstractToString.html#matchMemberSelect-com.sun.source.tree.MemberSelectTree-com.google.errorprone.VisitorState-">matchMemberSelect</a>, <a href="../../../../com/google/errorprone/bugpatterns/AbstractToString.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation</a></code></li>
+</ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.com.google.errorprone.bugpatterns.BugChecker">
 <!--   -->
@@ -245,45 +262,57 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">
+<a name="typePredicate--">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>matchMethodInvocation</h4>
-<pre>public&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;matchMethodInvocation(com.sun.source.tree.MethodInvocationTree&nbsp;methodTree,
-                                         <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
+<h4>typePredicate</h4>
+<pre>protected&nbsp;<a href="../../../../com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>&nbsp;typePredicate()</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/AbstractToString.html#typePredicate--">AbstractToString</a></code></span></div>
+<div class="block">The type to match on.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></code></dd>
+<dd><code><a href="../../../../com/google/errorprone/bugpatterns/AbstractToString.html#typePredicate--">typePredicate</a></code>&nbsp;in class&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/AbstractToString.html" title="class in com.google.errorprone.bugpatterns">AbstractToString</a></code></dd>
 </dl>
 </li>
 </ul>
-<a name="matchIdentifier-com.sun.source.tree.IdentifierTree-com.google.errorprone.VisitorState-">
+<a name="implicitToStringFix-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>matchIdentifier</h4>
-<pre>public&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;matchIdentifier(com.sun.source.tree.IdentifierTree&nbsp;tree,
-                                   <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
+<h4>implicitToStringFix</h4>
+<pre>protected&nbsp;com.google.common.base.Optional&lt;<a href="../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;&nbsp;implicitToStringFix(com.sun.source.tree.ExpressionTree&nbsp;tree,
+                                                                   <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/AbstractToString.html#implicitToStringFix-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">AbstractToString</a></code></span></div>
+<div class="block">Constructs a fix for an implicit toString call, e.g. from string concatenation or from
+ passing an argument to <code>println</code> or <code>StringBuilder.append</code>.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.IdentifierTreeMatcher.html#matchIdentifier-com.sun.source.tree.IdentifierTree-com.google.errorprone.VisitorState-">matchIdentifier</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.IdentifierTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.IdentifierTreeMatcher</a></code></dd>
+<dd><code><a href="../../../../com/google/errorprone/bugpatterns/AbstractToString.html#implicitToStringFix-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">implicitToStringFix</a></code>&nbsp;in class&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/AbstractToString.html" title="class in com.google.errorprone.bugpatterns">AbstractToString</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>tree</code> - the tree node for the expression being converted to a String</dd>
 </dl>
 </li>
 </ul>
-<a name="matchMemberSelect-com.sun.source.tree.MemberSelectTree-com.google.errorprone.VisitorState-">
+<a name="toStringFix-com.sun.source.tree.Tree-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>matchMemberSelect</h4>
-<pre>public&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;matchMemberSelect(com.sun.source.tree.MemberSelectTree&nbsp;tree,
-                                     <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
+<h4>toStringFix</h4>
+<pre>protected&nbsp;com.google.common.base.Optional&lt;<a href="../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;&nbsp;toStringFix(com.sun.source.tree.Tree&nbsp;parent,
+                                                           com.sun.source.tree.ExpressionTree&nbsp;tree,
+                                                           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/AbstractToString.html#toStringFix-com.sun.source.tree.Tree-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">AbstractToString</a></code></span></div>
+<div class="block">Constructs a fix for an explicit toString call, e.g. from <code>Object.toString()</code> or
+ <code>String.valueOf()</code>.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MemberSelectTreeMatcher.html#matchMemberSelect-com.sun.source.tree.MemberSelectTree-com.google.errorprone.VisitorState-">matchMemberSelect</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MemberSelectTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MemberSelectTreeMatcher</a></code></dd>
+<dd><code><a href="../../../../com/google/errorprone/bugpatterns/AbstractToString.html#toStringFix-com.sun.source.tree.Tree-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">toStringFix</a></code>&nbsp;in class&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/AbstractToString.html" title="class in com.google.errorprone.bugpatterns">AbstractToString</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>parent</code> - the expression's parent (e.g. <code>String.valueOf(expression)</code>)</dd>
 </dl>
 </li>
 </ul>
