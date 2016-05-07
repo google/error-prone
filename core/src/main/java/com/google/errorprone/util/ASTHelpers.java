@@ -74,8 +74,11 @@ import com.sun.tools.javac.tree.JCTree.JCPackageDecl;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.Filter;
 import com.sun.tools.javac.util.Name;
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.net.JarURLConnection;
+import java.net.URI;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -846,5 +849,31 @@ public class ASTHelpers {
       return false;
     }
     return simpleName.contentEquals(name);
+  }
+
+  private static final CharMatcher BACKSLASH_MATCHER = CharMatcher.is('\\');
+
+  /**
+   * Extract the filename from the URI, with special handling for jar files. The return value is
+   * normalized to always use '/' to separate elements of the path and to always have a leading '/'.
+   */
+  @Nullable
+  public static String getFileNameFromUri(URI uri) {
+    if (!uri.getScheme().equals("jar")) {
+      return uri.getPath();
+    }
+
+    try {
+      String jarEntryFileName = ((JarURLConnection) uri.toURL().openConnection()).getEntryName();
+      // It's possible (though it violates the zip file spec) for paths to zip file entries to use
+      // '\' as the separator. Normalize to use '/'.
+      jarEntryFileName = BACKSLASH_MATCHER.replaceFrom(jarEntryFileName, '/');
+      if (!jarEntryFileName.startsWith("/")) {
+        jarEntryFileName = "/" + jarEntryFileName;
+      }
+      return jarEntryFileName;
+    } catch (IOException e) {
+      return null;
+    }
   }
 }

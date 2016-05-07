@@ -29,10 +29,6 @@ import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CompilationUnitTree;
-import java.io.IOException;
-import java.net.JarURLConnection;
-import java.net.URI;
-import javax.annotation.Nullable;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
@@ -48,7 +44,6 @@ import javax.annotation.Nullable;
 public class PackageLocation extends BugChecker implements CompilationUnitTreeMatcher {
 
   private static final CharMatcher DOT_MATCHER = CharMatcher.is('.');
-  private static final CharMatcher BACKSLASH_MATCHER = CharMatcher.is('\\');
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
@@ -63,7 +58,7 @@ public class PackageLocation extends BugChecker implements CompilationUnitTreeMa
     }
 
     String packageName = tree.getPackageName().toString();
-    String actualFileName = getFileName(tree.getSourceFile().toUri());
+    String actualFileName = ASTHelpers.getFileNameFromUri(tree.getSourceFile().toUri());
     if (actualFileName == null) {
       return Description.NO_MATCH;
     }
@@ -78,29 +73,5 @@ public class PackageLocation extends BugChecker implements CompilationUnitTreeMa
             "Expected package %s to be declared in a directory ending with %s, instead found %s",
             packageName, expectedSuffix, actualPath);
     return buildDescription(tree.getPackageName()).setMessage(message).build();
-  }
-
-  /**
-   * Extract the filename from the URI, with special handling for jar files. The return value is
-   * normalized to always use '/' to separate elements of the path and to always have a leading '/'.
-   */
-  @Nullable
-  private static String getFileName(URI uri) {
-    if (!uri.getScheme().equals("jar")) {
-      return uri.getPath();
-    }
-
-    try {
-      String jarEntryFileName = ((JarURLConnection) uri.toURL().openConnection()).getEntryName();
-      // It's possible (though it violates the zip file spec) for paths to zip file entries to use
-      // '\' as the separator. Normalize to use '/'.
-      jarEntryFileName = BACKSLASH_MATCHER.replaceFrom(jarEntryFileName, '/');
-      if (!jarEntryFileName.startsWith("/")) {
-        jarEntryFileName = "/" + jarEntryFileName;
-      }
-      return jarEntryFileName;
-    } catch (IOException e) {
-      return null;
-    }
   }
 }
