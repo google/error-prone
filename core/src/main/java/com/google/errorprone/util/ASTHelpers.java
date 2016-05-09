@@ -586,31 +586,35 @@ public class ASTHelpers {
   }
 
   /**
-   * Returns the {@code Type} for the given type {@code Tree} or {@code null} if the type could
-   * not be determined. The input {@code Tree} typically comes from a method like
-   * {@link VariableTree#getType()} or {@link MethodTree#getReturnType()}.
+   * Returns the {@code Type} of the given tree, or {@code null} if the type could not be
+   * determined.
    */
+  @Nullable
   public static Type getType(Tree tree) {
-    if (tree instanceof JCTree) {
-      return ((JCTree) tree).type;
-    } else {
+    if (!(tree instanceof JCTree)) {
       return null;
     }
+    Type type = ((JCTree) tree).type;
+    if (type == null) {
+      return null;
+    }
+    try {
+      type.complete();
+    } catch (Throwable t) {
+      // ignore symbol completion failures
+      return null;
+    }
+    return type;
   }
 
   /**
    * Returns the {@code ClassType} for the given type {@code ClassTree} or {@code null} if the
    * type could not be determined.
    */
+  @Nullable
   public static ClassType getType(ClassTree tree) {
-    if (!(tree instanceof JCClassDecl)) {
-      return null;
-    }
-    Type type = ((JCClassDecl) tree).type;
-    if (!(type instanceof ClassType)) {
-      return null;
-    }
-    return (ClassType) type;
+    Type type = getType((Tree) tree);
+    return type instanceof ClassType ? (ClassType) type : null;
   }
 
   public static String getAnnotationName(AnnotationTree tree) {
@@ -648,11 +652,24 @@ public class ASTHelpers {
     return nullnessAnalysis.getNullness(pathToExpr, state.context);
   }
 
-  /**
-   * Returns the constant value of a tree, if it has one, or null otherwise.
-   */
-  public static Object constValue(JCTree tree) {
-    return (tree instanceof JCLiteral) ? ((JCLiteral) tree).value : tree.type.constValue();
+  /** Returns the compile-time constant value of a tree if it has one, or {@code null}. */
+  @Nullable
+  public static Object constValue(Tree tree) {
+    if (tree instanceof JCLiteral) {
+      return ((JCLiteral) tree).value;
+    }
+    Type type = ASTHelpers.getType(tree);
+    if (type != null) {
+      return type.constValue();
+    }
+    return null;
+  }
+
+  /** Returns the compile-time constant value of a tree if it is of type clazz, or {@code null}. */
+  @Nullable
+  public static <T> T constValue(Tree tree, Class<? extends T> clazz) {
+    Object value = constValue(tree);
+    return clazz.isInstance(value) ? clazz.cast(value) : null;
   }
 
   /**

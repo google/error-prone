@@ -130,6 +130,7 @@ import com.google.errorprone.bugpatterns.android.HardCodedSdCardPath;
 import com.google.errorprone.bugpatterns.android.MislabeledAndroidString;
 import com.google.errorprone.bugpatterns.android.RectIntersectReturnValueIgnored;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionIncompatibleType;
+import com.google.errorprone.bugpatterns.formatstring.FormatString;
 import com.google.errorprone.bugpatterns.inject.AssistedInjectAndInjectOnConstructors;
 import com.google.errorprone.bugpatterns.inject.AssistedInjectAndInjectOnSameConstructor;
 import com.google.errorprone.bugpatterns.inject.InjectedConstructorAnnotations;
@@ -306,6 +307,7 @@ public class BuiltInCheckerSuppliers {
           EmptyTopLevelDeclaration.class,
           EqualsIncompatibleType.class,
           FallThroughSuppression.class,
+          FormatString.class,
           FragmentNotInstantiable.class,
           HardCodedSdCardPath.class,
           InjectedConstructorAnnotations.class,
