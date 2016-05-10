@@ -42,6 +42,7 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Flags;
+import com.sun.tools.javac.code.Kinds.KindSelector;
 import com.sun.tools.javac.code.Scope;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
@@ -54,6 +55,11 @@ import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.Type.TypeVar;
 import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.code.Types;
+import com.sun.tools.javac.comp.AttrContext;
+import com.sun.tools.javac.comp.Enter;
+import com.sun.tools.javac.comp.Env;
+import com.sun.tools.javac.comp.MemberEnter;
+import com.sun.tools.javac.comp.Resolve;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
@@ -68,6 +74,7 @@ import com.sun.tools.javac.util.Filter;
 import com.sun.tools.javac.util.Name;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -735,7 +742,7 @@ public class ASTHelpers {
     // concrete type, e.g. java.lang.String, or a case we haven't considered
     return type;
   }
-  
+
   /**
    * Returns true if the leaf node in the {@link TreePath} from {@code state} sits somewhere
    * underneath a class or method that is marked as JUnit 3 or 4 test code.
@@ -752,5 +759,30 @@ public class ASTHelpers {
       }
     }
     return false;
+  }
+
+  /** Finds a declaration with the given name that is in scope at the current location. */
+  public static Symbol findIdent(String name, VisitorState state) {
+    ClassType enclosingClass = ASTHelpers.getType(state.findEnclosing(ClassTree.class));
+    if (enclosingClass == null || enclosingClass.tsym == null) {
+      return null;
+    }
+    Env<AttrContext> env = Enter.instance(state.context).getClassEnv(enclosingClass.tsym);
+    MethodTree enclosingMethod = state.findEnclosing(MethodTree.class);
+    if (enclosingMethod != null) {
+      env = MemberEnter.instance(state.context).getMethodEnv((JCMethodDecl) enclosingMethod, env);
+    }
+    try {
+      Method method =
+          Resolve.class.getDeclaredMethod("findIdent", Env.class, Name.class, KindSelector.class);
+      method.setAccessible(true);
+      Symbol result =
+          (Symbol)
+              method.invoke(
+                  Resolve.instance(state.context), env, state.getName(name), KindSelector.VAR);
+      return result.exists() ? result : null;
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage(), e);
+    }
   }
 }
