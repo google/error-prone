@@ -40,10 +40,14 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ArrayType;
 import com.sun.tools.javac.code.Types;
 
+import edu.umd.cs.findbugs.formatStringChecker.ExtraFormatArgumentsException;
+import edu.umd.cs.findbugs.formatStringChecker.Formatter;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayDeque;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Deque;
 import java.util.DuplicateFormatFlagsException;
@@ -237,6 +241,17 @@ public class FormatString extends BugChecker implements MethodInvocationTreeMatc
     } catch (UnknownFormatFlagsException e) {
       // TODO(cushon): I don't think the implementation ever throws this.
       return String.format("unknown format flag(s): %s", e.getFlags());
+    }
+
+    try {
+      // arguments are specified as type descriptors, and all we care about checking is the arity
+      String[] argDescriptors =
+          Collections.nCopies(Iterables.size(args), "Ljava/lang/Object;").toArray(new String[0]);
+      Formatter.check(formatString, argDescriptors);
+    } catch (ExtraFormatArgumentsException e) {
+      return String.format("extra format arguments: used %d, provided %d", e.used, e.provided);
+    } catch (Exception ignored) {
+      // everything else is validated by String.format above
     }
     return null;
   }
