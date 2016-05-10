@@ -23,6 +23,9 @@ import com.sun.tools.javac.util.DiagnosticSource;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Log;
 
+import java.io.PrintStream;
+import java.io.PrintWriter;
+
 import javax.tools.JavaFileObject;
 
 /**
@@ -36,7 +39,7 @@ public class ErrorProneError extends Error {
   private final JavaFileObject source;
 
   public ErrorProneError(Throwable cause, DiagnosticPosition pos, JavaFileObject source) {
-    super(formatMessage(source, pos), cause);
+    super(formatMessage(source, pos, cause), cause);
     this.cause = cause;
     this.pos = pos;
     this.source = source;
@@ -54,7 +57,8 @@ public class ErrorProneError extends Error {
     }
   }
 
-  private static String formatMessage(JavaFileObject file, DiagnosticPosition pos) {
+  private static String formatMessage(
+      JavaFileObject file, DiagnosticPosition pos, Throwable cause) {
     DiagnosticSource source = new DiagnosticSource(file, /*log=*/ null);
     int column = source.getColumnNumber(pos.getStartPosition(), /*expandTabs=*/ true);
     int line = source.getLineNumber(pos.getStartPosition());
@@ -62,11 +66,32 @@ public class ErrorProneError extends Error {
     StringBuilder sb = new StringBuilder();
     sb.append(
         String.format(
-            "\n%s:%d: An unhandled exception was thrown by Error Prone\n",
+            "\n%s:%d: An exception was thrown by Error Prone: %s\n",
             source.getFile().getName(),
-            line));
+            line,
+            cause.getMessage()));
     sb.append(snippet).append('\n');
     sb.append(Strings.repeat(" ", column - 1)).append("^\n");
     return sb.toString();
+  }
+
+  @Override
+  public void printStackTrace() {
+    cause.printStackTrace();
+  }
+
+  @Override
+  public void printStackTrace(PrintStream s) {
+    cause.printStackTrace(s);
+  }
+
+  @Override
+  public void printStackTrace(PrintWriter s) {
+    cause.printStackTrace(s);
+  }
+
+  @Override
+  public StackTraceElement[] getStackTrace() {
+    return cause.getStackTrace();
   }
 }
