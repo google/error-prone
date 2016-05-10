@@ -591,20 +591,7 @@ public class ASTHelpers {
    */
   @Nullable
   public static Type getType(Tree tree) {
-    if (!(tree instanceof JCTree)) {
-      return null;
-    }
-    Type type = ((JCTree) tree).type;
-    if (type == null) {
-      return null;
-    }
-    try {
-      type.complete();
-    } catch (Throwable t) {
-      // ignore symbol completion failures
-      return null;
-    }
-    return type;
+    return tree instanceof JCTree ? ((JCTree) tree).type : null;
   }
 
   /**

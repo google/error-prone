@@ -189,7 +189,12 @@ public class FormatString extends BugChecker implements MethodInvocationTreeMatc
             new Function<ExpressionTree, Object>() {
               @Override
               public Object apply(ExpressionTree input) {
-                return getInstance(input, state);
+                try {
+                  return getInstance(input, state);
+                } catch (Throwable t) {
+                  // ignore symbol completion failures
+                  return null;
+                }
               }
             });
 
