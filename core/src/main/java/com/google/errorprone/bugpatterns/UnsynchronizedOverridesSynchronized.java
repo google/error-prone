@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.errorprone.BugPattern;
@@ -38,7 +38,7 @@ import javax.lang.model.element.Modifier;
   name = "UnsynchronizedOverridesSynchronized",
   summary = "Unsynchronized method overrides a synchronized method.",
   category = JDK,
-  severity = ERROR,
+  severity = WARNING,
   maturity = MATURE
 )
 public class UnsynchronizedOverridesSynchronized extends BugChecker implements MethodTreeMatcher {
@@ -68,7 +68,7 @@ public class UnsynchronizedOverridesSynchronized extends BugChecker implements M
     }
     return Description.NO_MATCH;
   }
-  
+
   private static boolean isSynchronized(MethodSymbol sym) {
     return sym.getModifiers().contains(Modifier.SYNCHRONIZED);
   }

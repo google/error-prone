@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.BugPattern.Suppressibility.CUSTOM_ANNOTATION;
 
 import com.google.errorprone.BugPattern;
@@ -45,7 +45,7 @@ import javax.annotation.Nullable;
   name = "PackageLocation",
   summary = "Package names should match the directory they are declared in",
   category = JDK,
-  severity = ERROR,
+  severity = WARNING,
   maturity = MATURE,
   suppressibility = CUSTOM_ANNOTATION,
   customSuppressionAnnotations = SuppressPackageLocation.class,

@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
@@ -66,7 +66,7 @@ import javax.lang.model.element.Modifier;
     name = "DoubleCheckedLocking",
     summary = "Double-checked locking on non-volatile fields is unsafe",
     category = JDK,
-    severity = ERROR,
+    severity = WARNING,
     maturity = MATURE)
 public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
   @Override

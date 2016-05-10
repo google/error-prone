@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JUNIT;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
@@ -55,7 +55,7 @@ import javax.lang.model.type.TypeKind;
     // First sentence copied directly from JUnit 4.
     explanation = "Use assertEquals(expected, actual, delta) to compare floating-point numbers. "
         + "This call to assertEquals() will either fail or not compile in JUnit 4.",
-    category = JUNIT, maturity = MATURE, severity = ERROR)
+    category = JUNIT, maturity = MATURE, severity = WARNING)
 public class JUnit3FloatingPointComparisonWithoutDelta extends BugChecker
     implements MethodInvocationTreeMatcher {
 
