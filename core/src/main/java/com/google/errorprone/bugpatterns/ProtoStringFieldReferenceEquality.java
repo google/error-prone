@@ -25,49 +25,30 @@ import static com.google.errorprone.matchers.Matchers.isSameType;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
-import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 
-import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.Tree.Kind;
-import com.sun.tools.javac.tree.JCTree;
 
-@BugPattern(category = ONE_OFF, maturity = EXPERIMENTAL,
-    name = "ProtoStringFieldReferenceEquality", severity = ERROR,
-    summary = "Comparing protobuf fields of type String using reference equality",
-    explanation = "Comparing strings with == is almost always an error, but it is an error 100% "
-        + "of the time when one of the strings is a protobuf field.  Additionally, protobuf "
-        + "fields cannot be null, so Object.equals(Object) is always more correct.")
-public class ProtoStringFieldReferenceEquality extends BugChecker implements BinaryTreeMatcher {
+@BugPattern(
+  category = ONE_OFF,
+  maturity = EXPERIMENTAL,
+  name = "ProtoStringFieldReferenceEquality",
+  severity = ERROR,
+  summary = "Comparing protobuf fields of type String using reference equality",
+  explanation =
+      "Comparing strings with == is almost always an error, but it is an error 100% "
+          + "of the time when one of the strings is a protobuf field.  Additionally, protobuf "
+          + "fields cannot be null, so Object.equals(Object) is always more correct."
+)
+public class ProtoStringFieldReferenceEquality extends AbstractReferenceEquality {
 
   private static final String PROTO_SUPER_CLASS = "com.google.protobuf.GeneratedMessage";
 
-  private static final Matcher<ExpressionTree> PROTO_STRING_METHOD = allOf(
-      instanceMethod().onDescendantOf(PROTO_SUPER_CLASS),
-      isSameType("java.lang.String"));
+  private static final Matcher<ExpressionTree> PROTO_STRING_METHOD =
+      allOf(instanceMethod().onDescendantOf(PROTO_SUPER_CLASS), isSameType("java.lang.String"));
 
   @Override
-  public Description matchBinary(BinaryTree tree, VisitorState state) {
-    if (tree.getKind() != Kind.EQUAL_TO && tree.getKind() != Kind.NOT_EQUAL_TO) {
-      return Description.NO_MATCH;
-    }
-    String leftOperand = state.getSourceForNode((JCTree) tree.getLeftOperand()).toString();
-    String rightOperand = state.getSourceForNode((JCTree) tree.getRightOperand()).toString();
-    if ((PROTO_STRING_METHOD.matches(tree.getLeftOperand(), state)
-        && tree.getRightOperand().getKind() != Kind.NULL_LITERAL)
-        || (PROTO_STRING_METHOD.matches(tree.getRightOperand(), state)
-        && tree.getLeftOperand().getKind() != Kind.NULL_LITERAL)) {
-      String result = leftOperand + ".equals(" + rightOperand + ")";
-      if (tree.getKind() == Kind.NOT_EQUAL_TO) {
-        result = "!" + result;
-      }
-      return describeMatch(tree, SuggestedFix.replace(tree, result));
-    } else {
-      return Description.NO_MATCH;
-    }
+  protected boolean matchArgument(ExpressionTree tree, VisitorState state) {
+    return PROTO_STRING_METHOD.matches(tree, state);
   }
-
 }
