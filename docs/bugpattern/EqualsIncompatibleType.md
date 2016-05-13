@@ -10,3 +10,8 @@ predicates:
 * `java.lang.Object.equals(Object)`
 * `java.util.Objects.equals(Object, Object)`
 * `com.google.common.base.Objects.equal(Object, Object)`
+
+If you need to check that two objects are not equal for testing purposes,
+we recommend that you use [`EqualsTester`][equalstester] instead.
+
+[equalstester]: http://static.javadoc.io/com.google.guava/guava-testlib/19.0/com/google/common/testing/EqualsTester.html
