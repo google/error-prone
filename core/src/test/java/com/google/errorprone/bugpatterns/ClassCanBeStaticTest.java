@@ -23,9 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author alexloh@google.com (Alex Loh)
- */
+/** {@link ClassCanBeStatic}Test */
 @RunWith(JUnit4.class)
 public class ClassCanBeStaticTest {
 
@@ -54,5 +52,62 @@ public class ClassCanBeStaticTest {
   @Test
   public void testPositiveCase3() throws Exception {
     compilationHelper.addSourceFile("ClassCanBeStaticPositiveCase3.java").doTest();
+  }
+
+  @Test
+  public void positiveReference() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  // BUG: Diagnostic contains:",
+            "  private class One { int field;  }",
+            "  // BUG: Diagnostic contains:",
+            "  private class Two { String field; }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void nonMemberField() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  int x;",
+            "  private class One {",
+            "    {",
+            "      System.err.println(x);",
+            "    }",
+            "  }",
+            "  // BUG: Diagnostic contains:",
+            "  private class Two {",
+            "    void f(Test t) {",
+            "      System.err.println(t.x);",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void qualifiedThis() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private class One {",
+            "    {",
+            "      System.err.println(Test.this);",
+            "    }",
+            "  }",
+            "  // BUG: Diagnostic contains:",
+            "  private class Two {",
+            "    void f(Test t) {",
+            "      System.err.println(Test.class);",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
   }
 }
