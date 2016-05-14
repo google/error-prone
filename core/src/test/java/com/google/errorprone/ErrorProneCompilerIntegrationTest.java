@@ -550,4 +550,42 @@ public class ErrorProneCompilerIntegrationTest {
     outputStream.flush();
     assertThat(exitCode).named(outputStream.toString()).isEqualTo(Result.OK);
   }
+
+  @BugPattern(
+    name = "CPSChecker",
+    summary = "Using 'return' is considered harmful",
+    explanation = "Please refactor your code into continuation passing style.",
+    category = ONE_OFF,
+    maturity = EXPERIMENTAL,
+    severity = ERROR
+  )
+  public static class CPSChecker extends BugChecker implements ReturnTreeMatcher {
+    @Override
+    public Description matchReturn(ReturnTree tree, VisitorState state) {
+      return describeMatch(tree);
+    }
+  }
+
+  @Test
+  public void compilationWithError() throws Exception {
+    compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(CPSChecker.class));
+    compiler = compilerBuilder.build();
+    compiler.compile(
+        new String[] {
+          "-XDshouldStopPolicyIfError=LOWER",
+        },
+        Arrays.asList(
+            compiler
+                .fileManager()
+                .forSourceLines(
+                    "Test.java",
+                    "package test;",
+                    "public class Test {",
+                    "  Object f() { return new NoSuch(); }",
+                    "}")));
+    outputStream.flush();
+    String output = diagnosticHelper.getDiagnostics().toString();
+    assertThat(output).contains("error: cannot find symbol");
+    assertThat(output).doesNotContain("Using 'return' is considered harmful");
+  }
 }

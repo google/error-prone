@@ -89,6 +89,10 @@ public class ErrorProneJavacJavaCompiler extends JavaCompiler {
       return;
     }
     super.flow(env, results);
+    // don't run Error Prone if there were compilation errors
+    if (errorCount() > 0) {
+      return;
+    }
     try {
       postFlow(env);
     } catch (ErrorProneError e) {
