@@ -83,6 +83,11 @@ public abstract class Choice<T> {
       checkNotNull(predicate);
       return this;
     }
+
+    @Override
+    public String toString() {
+      return "Choice.NONE";
+    }
   };
 
   /**
@@ -128,6 +133,11 @@ public abstract class Choice<T> {
       public <R> Choice<R> transform(Function<? super T, R> function) {
         return of(function.apply(t));
       }
+
+      @Override
+      public String toString() {
+        return String.format("Choice.of(%s)", t);
+      }
     };
   }
   
@@ -145,7 +155,7 @@ public abstract class Choice<T> {
   public static <T> Choice<T> fromOptional(Optional<T> optional) {
     return optional.isPresent() ? of(optional.get()) : Choice.<T>none();
   }
-  
+
   public static <T> Choice<T> from(final Collection<T> choices) {
     switch (choices.size()) {
       case 0:
@@ -157,7 +167,12 @@ public abstract class Choice<T> {
           @Override
           protected Iterator<T> iterator() {
             return choices.iterator();
-          }      
+          }
+
+          @Override
+          public String toString() {
+            return String.format("Choice.from(%s)", choices);
+          }
         };
     }
   }
@@ -184,6 +199,11 @@ public abstract class Choice<T> {
   // Currently, this is implemented with an Iterator, but that may change in future!
   @ForOverride
   protected abstract Iterator<T> iterator();
+
+  @Override
+  public String toString() {
+    return Iterables.toString(asIterable());
+  }
 
   /**
    * Returns the first valid option from this {@code Choice}.
@@ -270,6 +290,11 @@ public abstract class Choice<T> {
         protected Iterator<T> iterator() {
           return Iterators.concat(thisChoice.iterator(), other.iterator());
         }
+
+        @Override
+        public String toString() {
+          return String.format("%s.or(%s)", thisChoice, other);
+        }
       };
     }
   }
@@ -291,6 +316,11 @@ public abstract class Choice<T> {
       @Override
       protected Iterator<T> iterator() {
         return Iterators.filter(thisChoice.iterator(), predicate);
+      }
+
+      @Override
+      public String toString() {
+        return String.format("%s.condition(%s)", thisChoice, predicate);
       }
     };
   }
