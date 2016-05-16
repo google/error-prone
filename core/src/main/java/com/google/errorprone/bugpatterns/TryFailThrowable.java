@@ -155,9 +155,6 @@ public class TryFailThrowable extends BugChecker implements TryTreeMatcher {
     if (!matchResult.matched()) {
       return NO_MATCH;
     }
-    if (matchResult.caughtType != JAVA_LANG_THROWABLE) {
-      return Description.NO_MATCH;
-    }
 
     Description.Builder builder = buildDescription(tree.getCatches().get(0).getParameter());
     if (matchResult.caughtType == JAVA_LANG_THROWABLE) {
