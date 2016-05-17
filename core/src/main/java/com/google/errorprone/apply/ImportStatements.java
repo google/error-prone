@@ -82,7 +82,10 @@ public class ImportStatements {
     if (importTrees.isEmpty()) {
       // start/end positions are just after the package expression
       hasExistingImports = false;
-      startPos = packageTree.getEndPosition(endPositions) + 2;   // +2 for semicolon and newline
+      startPos =
+          packageTree != null
+              ? packageTree.getEndPosition(endPositions) + 2 // +2 for semicolon and newline
+              : 0;
       endPos = startPos;
     } else {
       // process list of imports and find start/end positions

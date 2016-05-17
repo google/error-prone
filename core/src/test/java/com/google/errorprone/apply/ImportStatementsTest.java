@@ -484,4 +484,13 @@ public class ImportStatementsTest {
     assertEquals(82, imports.getStartPos());
     assertEquals(806, imports.getEndPos());
   }
+
+  @Test
+  public void addingToEmptyImportListInDefaultPackage() {
+    ImportStatements imports =
+        new ImportStatements(null, new ArrayList<JCImport>(), FAKE_END_POS_MAP);
+    imports.add("import java.util.List");
+    assertEquals(0, imports.getStartPos());
+    assertEquals("\nimport java.util.List;\n", imports.toString());
+  }
 }
