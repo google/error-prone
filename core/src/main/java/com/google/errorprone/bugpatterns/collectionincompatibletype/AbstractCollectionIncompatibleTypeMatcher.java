@@ -147,6 +147,9 @@ abstract class AbstractCollectionIncompatibleTypeMatcher {
   protected static final Type extractTypeArgAsMemberOfSupertype(
       Type type, Symbol superTypeSym, int typeArgIndex, Types types) {
     Type collectionType = types.asSuper(type, superTypeSym);
+    if (collectionType == null) {
+      return null;
+    }
     com.sun.tools.javac.util.List<Type> tyargs = collectionType.getTypeArguments();
     if (tyargs.size() <= typeArgIndex) {
       // Collection is raw, nothing we can do.
