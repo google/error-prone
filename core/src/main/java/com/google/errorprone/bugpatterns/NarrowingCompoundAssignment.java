@@ -155,8 +155,9 @@ public class NarrowingCompoundAssignment extends BugChecker
     // e.g. 's -= 1 - 2' -> 's = s - (1 - 2)'
     if (tree.getExpression() instanceof JCBinary) {
       Kind rhsKind = ((JCBinary) tree.getExpression()).getKind();
-      if (OperatorPrecedence.from(rhsKind) == OperatorPrecedence.from(regularAssignmentKind)) {
-        expr = String.format("(%s)", expr); 
+      if (!OperatorPrecedence.from(rhsKind)
+          .isHigher(OperatorPrecedence.from(regularAssignmentKind))) {
+        expr = String.format("(%s)", expr);
       }
     }
 

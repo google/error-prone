@@ -160,16 +160,16 @@ public class NarrowingCompoundAssignmentTest {
   @Test
   public void testPreservePrecedenceExhaustive() throws Exception {
     testPrecedence("*", "*", true);
-    testPrecedence("*", "+", false);
-    testPrecedence("*", "<<", false);
-    testPrecedence("*", "&", false);
-    testPrecedence("*", "|", false);
+    testPrecedence("*", "+", true);
+    testPrecedence("*", "<<", true);
+    testPrecedence("*", "&", true);
+    testPrecedence("*", "|", true);
 
-    testPrecedence("+", "*", true);
+    testPrecedence("+", "*", false);
     testPrecedence("+", "+", true);
-    testPrecedence("+", "<<", false);
-    testPrecedence("+", "&", false);
-    testPrecedence("+", "|", false);
+    testPrecedence("+", "<<", true);
+    testPrecedence("+", "&", true);
+    testPrecedence("+", "|", true);
 
     testPrecedence("<<", "*", false);
     testPrecedence("<<", "+", false);
@@ -187,7 +187,7 @@ public class NarrowingCompoundAssignmentTest {
     testPrecedence("|", "+", false);
     testPrecedence("|", "<<", false);
     testPrecedence("|", "&", false);
-    testPrecedence("|", "|", false);
+    testPrecedence("|", "|", true);
   }
 
   private void testPrecedence(String opA, String opB, boolean parens) throws Exception {
@@ -195,7 +195,7 @@ public class NarrowingCompoundAssignmentTest {
     if (parens) {
       rhs = "(" + rhs + ")";
     }
-    String expect = String.format("s = (short) (s %s ", opA, rhs);
+    String expect = String.format("s = (short) (s %s %s", opA, rhs);
 
     String compoundAssignment = String.format("    s %s= 1 %s 2;", opA, opB);
 
