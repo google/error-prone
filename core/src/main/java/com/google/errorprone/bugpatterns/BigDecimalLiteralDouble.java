@@ -90,7 +90,9 @@ public class BigDecimalLiteralDouble extends BugChecker
       return Description.NO_MATCH;
     }
 
-    return createDescription(tree, arg, state);
+    // Don't suggest an integral replacement in this case as it may change the scale of the
+    // resulting BigDecimal.
+    return createDescription(tree, arg, state, false);
   }
 
   @Override
@@ -104,11 +106,11 @@ public class BigDecimalLiteralDouble extends BugChecker
       return Description.NO_MATCH;
     }
 
-    return createDescription(tree, arg, state);
+    return createDescription(tree, arg, state, true);
   }
 
   public Description createDescription(
-      ExpressionTree tree, ExpressionTree arg, VisitorState state) {
+      ExpressionTree tree, ExpressionTree arg, VisitorState state, boolean suggestIntegral) {
     String literal = state.getSourceForNode(arg);
 
     if (literal == null) {
@@ -122,7 +124,7 @@ public class BigDecimalLiteralDouble extends BugChecker
     Optional<BigInteger> integralValue = asBigInteger(intendedValue);
 
     Description.Builder description = buildDescription(tree);
-    if (integralValue.isPresent() && isWithinLongRange(integralValue.get())) {
+    if (suggestIntegral && integralValue.isPresent() && isWithinLongRange(integralValue.get())) {
       long longValue = integralValue.get().longValue();
       String suggestedString;
       switch (Ints.saturatedCast(longValue)) {

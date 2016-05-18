@@ -27,14 +27,17 @@ public class BigDecimalLiteralDoublePositiveCases {
     // BUG: Diagnostic contains: BigDecimal.ZERO
     new BigDecimal(0.0);
 
-    // BUG: Diagnostic contains: BigDecimal.ONE
+    // BUG: Diagnostic contains: new BigDecimal("1.0")
     BigDecimal.valueOf(1.0);
+
+    // BUG: Diagnostic contains: BigDecimal.ONE
+    new BigDecimal(1.0);
 
     // BUG: Diagnostic contains: BigDecimal.TEN
     new BigDecimal(10.0);
 
     // BUG: Diagnostic contains: new BigDecimal(99L)
-    BigDecimal.valueOf(99.0);
+    new BigDecimal(99.0);
 
     // BUG: Diagnostic contains: new BigDecimal(123456L)
     new BigDecimal(123_456.0);
