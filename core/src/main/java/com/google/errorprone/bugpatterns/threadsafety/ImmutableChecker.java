@@ -419,9 +419,7 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
       }
       String message;
       if (immutableTyParams.isEmpty()) {
-        message =
-            String.format(
-                "'%s' is a mutable type variable", tyvar.getSimpleName(), immutableTyParams);
+        message = String.format("'%s' is a mutable type variable", tyvar.getSimpleName());
       } else {
         message =
             String.format(
