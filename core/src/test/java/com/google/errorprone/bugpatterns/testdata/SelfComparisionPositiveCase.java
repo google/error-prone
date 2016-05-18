@@ -33,37 +33,57 @@ public class SelfComparisionPositiveCase implements Comparable<Object> {
     // BUG: Diagnostic contains: An object is compared to itself
     return obj.compareTo(this.obj);
   }
-  
+
   public int test3() {
+    // BUG: Diagnostic contains: An object is compared to itself
+    return this.obj.compareTo(obj);
+  }
+
+  public int test4() {
+    // BUG: Diagnostic contains: An object is compared to itself
+    return this.obj.compareTo(this.obj);
+  }
+
+  public int test5() {
     // BUG: Diagnostic contains: An object is compared to itself
     return compareTo(this);
   }
-  
+
   @Override
   public int compareTo(Object o) {
     return 0;
   }
-  
+
   public static class ComparisionTest implements Comparable<ComparisionTest> {
     private String testField;
     @Override
     public int compareTo(ComparisionTest s) {
       return testField.compareTo(s.testField);
     }
-    
+
     public int test1() {
       ComparisionTest obj = new ComparisionTest();
       // BUG: Diagnostic contains: An object is compared to itself
       return obj.compareTo(obj);
     }
-    
+
     private ComparisionTest obj = new ComparisionTest();
     public int test2() {
       // BUG: Diagnostic contains: An object is compared to itself
       return obj.compareTo(this.obj);
     }
-    
+
     public int test3() {
+      // BUG: Diagnostic contains: An object is compared to itself
+      return this.obj.compareTo(obj);
+    }
+
+    public int test4() {
+      // BUG: Diagnostic contains: An object is compared to itself
+      return this.obj.compareTo(this.obj);
+    }
+
+    public int test5() {
       // BUG: Diagnostic contains: An object is compared to itself
       return compareTo(this);
     }
