@@ -391,52 +391,74 @@ public class CollectionIncompatibleTypeNegativeCases {
 
   /* Tests for API coverage */
 
-  public void collection(Collection<String> collection1, Collection<String> collection2) {
-    collection1.contains("ok");
-    collection1.remove("ok");
-    collection1.containsAll(collection2);
-    collection1.removeAll(collection2);
-    collection1.retainAll(collection2);
+  public boolean collection(Collection<String> collection1, Collection<String> collection2) {
+    boolean result = collection1.contains("ok");
+    result &= collection1.contains(null);
+    result &= collection1.remove("ok");
+    result &= collection1.remove(null);
+    result &= collection1.containsAll(collection2);
+    result &= collection1.containsAll(null);
+    result &= collection1.removeAll(collection2);
+    result &= collection1.removeAll(null);
+    result &= collection1.retainAll(collection2);
+    return result && collection1.retainAll(null);
   }
 
-  public void collectionSubtype(ArrayList<String> arrayList1, ArrayList<String> arrayList2) {
-    arrayList1.contains("ok");
-    arrayList1.remove("ok");
-    arrayList1.containsAll(arrayList2);
-    arrayList1.removeAll(arrayList2);
-    arrayList1.retainAll(arrayList2);
+  public boolean collectionSubtype(ArrayList<String> arrayList1, ArrayList<String> arrayList2) {
+    boolean result = arrayList1.contains("ok");
+    result &= arrayList1.contains(null);
+    result &= arrayList1.remove("ok");
+    result &= arrayList1.remove(null);
+    result &= arrayList1.containsAll(arrayList2);
+    result &= arrayList1.containsAll(null);
+    result &= arrayList1.removeAll(arrayList2);
+    result &= arrayList1.removeAll(null);
+    result &= arrayList1.retainAll(arrayList2);
+    return result && arrayList1.retainAll(null);
   }
 
   public boolean deque(Deque<String> deque) {
     boolean result = deque.removeFirstOccurrence("ok");
-    return result && deque.removeLastOccurrence("ok");
+    result &= deque.removeFirstOccurrence(null);
+    result &= deque.removeLastOccurrence("ok");
+    return result && deque.removeLastOccurrence(null);
   }
 
   public boolean dequeSubtype(LinkedList<String> linkedList) {
     boolean result = linkedList.removeFirstOccurrence("ok");
-    return result && linkedList.removeLastOccurrence("ok");
+    result &= linkedList.removeFirstOccurrence(null);
+    result &= linkedList.removeLastOccurrence("ok");
+    return result && linkedList.removeLastOccurrence(null);
   }
 
   public int dictionary(Dictionary<String, Integer> dictionary) {
     int result = dictionary.get("ok");
-    return result + dictionary.remove("ok");
+    result += dictionary.get(null);
+    result += dictionary.remove("ok");
+    return result + dictionary.remove(null);
   }
 
   public int dictionarySubtype(Hashtable<String, Integer> hashtable) {
     int result = hashtable.get("ok");
-    return result + hashtable.remove("ok");
+    result += hashtable.get(null);
+    result += hashtable.remove("ok");
+    return result + hashtable.remove(null);
   }
 
   public int list() {
     List<String> list = new ArrayList<String>();
     int result = list.indexOf("ok");
-    return result + list.lastIndexOf("ok");
+    result += list.indexOf(null);
+    result += list.lastIndexOf("ok");
+    return result + list.lastIndexOf(null);
   }
 
-  public void listSubtype() {
+  public int listSubtype() {
     ArrayList<String> arrayList = new ArrayList<>();
     int result = arrayList.indexOf("ok");
-    result = arrayList.lastIndexOf("ok");
+    result += arrayList.indexOf(null);
+    result += arrayList.lastIndexOf("ok");
+    return result + arrayList.lastIndexOf(null);
   }
 
   public boolean map() {
@@ -444,37 +466,45 @@ public class CollectionIncompatibleTypeNegativeCases {
     String result = map.get(1);
     boolean result2 = map.containsKey(1);
     result2 = map.containsValue("ok");
+    result2 &= map.containsValue(null);
     result = map.remove(1);
-    return false;
+    return result2;
   }
 
   public boolean mapSubtype() {
     ConcurrentNavigableMap<Integer, String> concurrentNavigableMap = new ConcurrentSkipListMap<>();
     String result = concurrentNavigableMap.get(1);
     boolean result2 = concurrentNavigableMap.containsKey(1);
-    result2 = concurrentNavigableMap.containsValue("ok");
+    result2 &= concurrentNavigableMap.containsValue("ok");
+    result2 &= concurrentNavigableMap.containsValue(null);
     result = concurrentNavigableMap.remove(1);
-    return false;
+    return result2;
   }
 
   public int stack(Stack<String> stack) {
-    return stack.search("ok");
+    int result = stack.search("ok");
+    return result + stack.search(null);
   }
 
   private static class MyStack<E> extends Stack<E> {}
 
   public int stackSubtype(MyStack<String> myStack) {
-    return myStack.search("ok");
+    int result = myStack.search("ok");
+    return result + myStack.search(null);
   }
 
   public int vector(Vector<String> vector) {
     int result = vector.indexOf("ok", 0);
-    return result + vector.lastIndexOf("ok", 0);
+    result += vector.indexOf(null, 0);
+    result += vector.lastIndexOf("ok", 0);
+    return result + vector.lastIndexOf(null, 0);
   }
 
   public int vectorSubtype(Stack<String> stack) {
     int result = stack.indexOf("ok", 0);
-    return result + stack.lastIndexOf("ok", 0);
+    result += stack.indexOf(null, 0);
+    result += stack.lastIndexOf("ok", 0);
+    return result + stack.lastIndexOf(null, 0);
   }
 
   /* Tests for behavior */

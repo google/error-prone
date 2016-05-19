@@ -3,7 +3,7 @@ title: JUnit3FloatingPointComparisonWithoutDelta
 summary: Floating-point comparison without error tolerance
 layout: bugpattern
 category: JUNIT
-severity: ERROR
+severity: WARNING
 maturity: MATURE
 ---
 

@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10};
+var methods = {"i0":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -121,9 +121,10 @@ var activeTableTab = "activeTableTab";
 <pre>public class <span class="typeNameLabel">SelfEquals</span>
 extends <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
 implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></pre>
+<div class="block">Points out if an object is tested for equality to itself.</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
-<dd>alexeagle@google.com (Alex Eagle)</dd>
+<dd>bhagwani@google.com (Sumit Bhagwani)</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../serialized-form.html#com.google.errorprone.bugpatterns.SelfEquals">Serialized Form</a></dd>
 </dl>
@@ -162,12 +163,6 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <tr class="altColor">
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/SelfEquals.html#SelfEquals--">SelfEquals</a></span>()</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/SelfEquals.html#SelfEquals-boolean-boolean-">SelfEquals</a></span>(boolean&nbsp;checkGuava,
-          boolean&nbsp;checkEquals)</code>
-<div class="block">Construct a new SelfEquals matcher.</div>
-</td>
-</tr>
 </table>
 </li>
 </ul>
@@ -184,11 +179,6 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/SelfEquals.html#describe-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">describe</a></span>(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
-        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/SelfEquals.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation</a></span>(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
                      <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
@@ -232,26 +222,10 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <a name="SelfEquals--">
 <!--   -->
 </a>
-<ul class="blockList">
-<li class="blockList">
-<h4>SelfEquals</h4>
-<pre>public&nbsp;SelfEquals()</pre>
-</li>
-</ul>
-<a name="SelfEquals-boolean-boolean-">
-<!--   -->
-</a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>SelfEquals</h4>
-<pre>public&nbsp;SelfEquals(boolean&nbsp;checkGuava,
-                  boolean&nbsp;checkEquals)</pre>
-<div class="block">Construct a new SelfEquals matcher.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>checkGuava</code> - Check for Guava Objects.equal(foo, foo) pattern?</dd>
-<dd><code>checkEquals</code> - Check for foo.equals(foo) pattern?</dd>
-</dl>
+<pre>public&nbsp;SelfEquals()</pre>
 </li>
 </ul>
 </li>
@@ -265,7 +239,7 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <a name="matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>matchMethodInvocation</h4>
 <pre>public&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;matchMethodInvocation(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
@@ -274,16 +248,6 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></code></dd>
 </dl>
-</li>
-</ul>
-<a name="describe-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>describe</h4>
-<pre>public&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;describe(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
-                            <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
 </li>
 </ul>
 </li>

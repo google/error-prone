@@ -3,7 +3,7 @@ title: UnsynchronizedOverridesSynchronized
 summary: Unsynchronized method overrides a synchronized method.
 layout: bugpattern
 category: JDK
-severity: ERROR
+severity: WARNING
 maturity: MATURE
 ---
 

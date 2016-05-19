@@ -23,6 +23,9 @@ Classes that implement Annotation must override equals and hashCode. Consider us
 __[CannotMockFinalClass](bugpattern/CannotMockFinalClass)__<br>
 Mockito cannot mock final classes
 
+__[DoubleCheckedLocking](bugpattern/DoubleCheckedLocking)__<br>
+Double-checked locking on non-volatile fields is unsafe
+
 __[ElementsCountedInLoop](bugpattern/ElementsCountedInLoop)__<br>
 This code, which counts elements using a loop, can be replaced by a simpler library method
 
@@ -32,11 +35,17 @@ Empty top-level type declaration
 __[EqualsHashCode](bugpattern/EqualsHashCode)__<br>
 Classes that override equals should also override hashCode.
 
+__[EqualsIncompatibleType](bugpattern/EqualsIncompatibleType)__<br>
+An equality test between objects with incompatible types always returns false
+
 __[Finally](bugpattern/Finally)__<br>
 If you return or throw from a finally, then values returned or thrown from the try-catch block will be ignored. Consider using try-with-resources instead.
 
 __[IncompatibleModifiers](bugpattern/IncompatibleModifiers)__<br>
 This annotation has incompatible modifiers as specified by its @IncompatibleModifiers annotation
+
+__[JUnit3FloatingPointComparisonWithoutDelta](bugpattern/JUnit3FloatingPointComparisonWithoutDelta)__<br>
+Floating-point comparison without error tolerance
 
 __[JUnitAmbiguousTestClass](bugpattern/JUnitAmbiguousTestClass)__<br>
 Test class inherits from JUnit 3&#39;s TestCase but has JUnit 4 @Test annotations.
@@ -68,6 +77,9 @@ __[NullablePrimitive](bugpattern/NullablePrimitive)__<br>
 __[NullableVoid](bugpattern/NullableVoid)__<br>
 void-returning methods should not be annotated with @Nullable, since they cannot return null
 
+__[PackageLocation](bugpattern/PackageLocation)__<br>
+Package names should match the directory they are declared in
+
 __[PreconditionsInvalidPlaceholder](bugpattern/PreconditionsInvalidPlaceholder)__<br>
 Preconditions only accepts the %s placeholder in error message strings
 
@@ -94,6 +106,9 @@ Declaring a type parameter that is only used in the return type is a misuse of g
 
 __[UnnecessaryStaticImport](bugpattern/UnnecessaryStaticImport)__<br>
 Using static imports for types is unnecessary
+
+__[UnsynchronizedOverridesSynchronized](bugpattern/UnsynchronizedOverridesSynchronized)__<br>
+Unsynchronized method overrides a synchronized method.
 
 __[WaitNotInLoop](bugpattern/WaitNotInLoop)__<br>
 Because of spurious wakeups, Object.wait() and Condition.await() must always be called in a loop
@@ -145,9 +160,6 @@ Exception created but not thrown
 __[DepAnn](bugpattern/DepAnn)__<br>
 Deprecated item is not annotated with @Deprecated
 
-__[DoubleCheckedLocking](bugpattern/DoubleCheckedLocking)__<br>
-Double-checked locking on non-volatile fields is unsafe
-
 __[EqualsNaN](bugpattern/EqualsNaN)__<br>
 == NaN always returns false; use the isNaN methods instead
 
@@ -159,6 +171,9 @@ Calling getClass() on an object of type Class returns the Class object for java.
 
 __[GuardedByChecker](bugpattern/GuardedByChecker)__<br>
 Checks for unguarded accesses to fields and methods with @GuardedBy annotations
+
+__[GuavaSelfEquals](bugpattern/GuavaSelfEquals)__<br>
+An object is tested for equality to itself using Guava Libraries
 
 __[GuiceAssistedInjectScoping](bugpattern/GuiceAssistedInjectScoping)__<br>
 Scope annotation on implementation class of AssistedInject factory is not allowed
@@ -174,9 +189,6 @@ Invalid syntax used for a regular expression
 
 __[IsInstanceOfClass](bugpattern/IsInstanceOfClass)__<br>
 The argument to Class#isInstance(Object) should not be a Class
-
-__[JUnit3FloatingPointComparisonWithoutDelta](bugpattern/JUnit3FloatingPointComparisonWithoutDelta)__<br>
-Floating-point comparison without error tolerance
 
 __[JUnit3TestNotRun](bugpattern/JUnit3TestNotRun)__<br>
 Test method will not be run; please prefix name with &quot;test&quot;
@@ -220,9 +232,6 @@ Comparison using reference equality instead of value equality
 __[Overrides](bugpattern/Overrides)__<br>
 Varargs doesn&#39;t agree for overridden method
 
-__[PackageLocation](bugpattern/PackageLocation)__<br>
-Package names should match the directory they are declared in
-
 __[PreconditionsCheckNotNull](bugpattern/PreconditionsCheckNotNull)__<br>
 Literal passed as first argument to Preconditions.checkNotNull() can never be null
 
@@ -243,6 +252,9 @@ Return value of this method must be used
 
 __[SelfAssignment](bugpattern/SelfAssignment)__<br>
 Variable assigned to itself
+
+__[SelfComparision](bugpattern/SelfComparision)__<br>
+An object is compared to itself
 
 __[SelfEquals](bugpattern/SelfEquals)__<br>
 An object is tested for equality to itself
@@ -267,9 +279,6 @@ Type parameter used as type qualifier
 
 __[UnnecessaryTypeArgument](bugpattern/UnnecessaryTypeArgument)__<br>
 Non-generic methods should not be invoked with type arguments
-
-__[UnsynchronizedOverridesSynchronized](bugpattern/UnsynchronizedOverridesSynchronized)__<br>
-Unsynchronized method overrides a synchronized method.
 
 __[UnusedAnonymousClass](bugpattern/UnusedAnonymousClass)__<br>
 Instance created but never used
@@ -345,8 +354,8 @@ Division by integer literal zero
 __[EmptyIf](bugpattern/EmptyIf)__<br>
 Empty statement after if
 
-__[EqualsIncompatibleType](bugpattern/EqualsIncompatibleType)__<br>
-An equality test between objects with incompatible types always returns false
+__[FormatString](bugpattern/FormatString)__<br>
+Invalid printf-style format string
 
 __[GuardedByValidator](bugpattern/GuardedByValidator)__<br>
 Invalid @GuardedBy expression

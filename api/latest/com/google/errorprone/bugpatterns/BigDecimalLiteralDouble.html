@@ -183,9 +183,10 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/BigDecimalLiteralDouble.html#createDescription-com.sun.source.tree.ExpressionTree-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">createDescription</a></span>(com.sun.source.tree.ExpressionTree&nbsp;tree,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/BigDecimalLiteralDouble.html#createDescription-com.sun.source.tree.ExpressionTree-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-boolean-">createDescription</a></span>(com.sun.source.tree.ExpressionTree&nbsp;tree,
                  com.sun.source.tree.ExpressionTree&nbsp;arg,
-                 <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+                 <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+                 boolean&nbsp;suggestIntegral)</code>&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
@@ -278,7 +279,7 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 </dl>
 </li>
 </ul>
-<a name="createDescription-com.sun.source.tree.ExpressionTree-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">
+<a name="createDescription-com.sun.source.tree.ExpressionTree-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-boolean-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -286,7 +287,8 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <h4>createDescription</h4>
 <pre>public&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;createDescription(com.sun.source.tree.ExpressionTree&nbsp;tree,
                                      com.sun.source.tree.ExpressionTree&nbsp;arg,
-                                     <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
+                                     <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+                                     boolean&nbsp;suggestIntegral)</pre>
 </li>
 </ul>
 <a name="asBigInteger-java.math.BigDecimal-">

@@ -50,7 +50,7 @@ public class StringEqualityPositiveCases {
   public boolean testEquality(String x, String y) {
     boolean retVal;
 
-    // BUG: Diagnostic contains: Objects.equals(x, y) 
+    // BUG: Diagnostic contains: Objects.equals(x, y)
     retVal = (x == y);
     // BUG: Diagnostic contains: !Objects.equals(x, y)
     retVal = (x != y);
@@ -58,16 +58,16 @@ public class StringEqualityPositiveCases {
     retVal = (x + y == y + x);
     // BUG: Diagnostic contains: !(x + y).equals(y + x)
     retVal = (x + y != y + x);
-    // BUG: Diagnostic contains: (x + "str").equals(y + "str") 
+    // BUG: Diagnostic contains: (x + "str").equals(y + "str")
     retVal = (x + "str" == y + "str");
-    // BUG: Diagnostic contains: !(x + "str").equals(y + "str") 
+    // BUG: Diagnostic contains: !(x + "str").equals(y + "str")
     retVal = (x + "str" != y + "str");
     // BUG: Diagnostic contains: "str".equals(x)
     retVal = ("str" == x);
     // BUG: Diagnostic contains: "str".equals(x)
-    retVal = (x == "str") ;
+    retVal = (x == "str");
     // BUG: Diagnostic contains: "str2".equals("str")
-    retVal = ("str2" == "str");    
+    retVal = ("str2" == "str");
     final String constValue = "str";
     // BUG: Diagnostic contains: constValue.equals(x)
     retVal = (x == constValue);
@@ -80,34 +80,11 @@ public class StringEqualityPositiveCases {
     retVal = (constValue + constValue2 == x);
     // BUG: Diagnostic contains: (constValue + constValue2).equals(x)
     retVal = (x == constValue + constValue2);
-    // BUG: Diagnostic contains: constValue.isEmpty()
-    retVal = (constValue == "");
-    // BUG: Diagnostic contains: constValue.isEmpty()
-    retVal = ("" == constValue);
-    // BUG: Diagnostic contains: !constValue.isEmpty()
-    retVal = (constValue != "");
-    // BUG: Diagnostic contains: !constValue.isEmpty()
-    retVal = ("" != constValue);
     // BUG: Diagnostic contains: "".equals(x)
     retVal = ("" == x);
-    String constEmpty = "";
-    // BUG: Diagnostic contains: constEmpty.equals(y)
-    retVal = (y == constEmpty);
-    
-    x.toString();
-    // BUG: Diagnostic contains: x.equals(y)
-    retVal = (x == y);
-    // BUG: Diagnostic contains: x.equals(y)
-    retVal = (y == x);
-    String constValue3 = "non-null";
-    // BUG: Diagnostic contains: constValue3.equals(y)
-    retVal = (constValue3 == y);
-    // BUG: Diagnostic contains: constValue3.equals(y)
-    retVal = (y == constValue3);
 
     return retVal;
   }
-
 }
 {% endhighlight %}
 

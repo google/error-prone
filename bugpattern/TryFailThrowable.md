@@ -172,7 +172,7 @@ public class TryFailThrowablePositiveCases {
     try {
       dummyMethod();
       Assert.fail();
-      // TODO: Diagnostic contains: remove this line
+      // BUG: Diagnostic contains: remove this line
     } catch (AssertionError e) {
     }
   }
@@ -181,7 +181,7 @@ public class TryFailThrowablePositiveCases {
     try {
       dummyMethod();
       Assert.fail("foo");
-      // TODO: Diagnostic contains: remove this line
+      // BUG: Diagnostic contains: remove this line
     } catch (AssertionError e) {
     }
   }
@@ -190,7 +190,7 @@ public class TryFailThrowablePositiveCases {
     try {
       dummyMethod();
       Assert.fail();
-      // TODO: Diagnostic contains: remove this line
+      // BUG: Diagnostic contains: remove this line
     } catch (Error e) {
     }
   }
@@ -199,7 +199,7 @@ public class TryFailThrowablePositiveCases {
     try {
       dummyMethod();
       Assert.fail();
-      // TODO: Diagnostic contains: boolean threw = false;
+      // BUG: Diagnostic contains: boolean threw = false;
     } catch (Error e) {
     }
 
@@ -211,7 +211,7 @@ public class TryFailThrowablePositiveCases {
       try {
         dummyMethod();
         Assert.fail();
-        // TODO: Diagnostic contains: boolean threw = false;
+        // BUG: Diagnostic contains: boolean threw = false;
       } catch (Error e) {
       }
     }
@@ -222,7 +222,7 @@ public class TryFailThrowablePositiveCases {
       try {
         dummyMethod();
         Assert.fail();
-        // TODO: Diagnostic contains: boolean threw = false;
+        // BUG: Diagnostic contains: boolean threw = false;
       } catch (Error e) {
       }
   }

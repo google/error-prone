@@ -103,7 +103,12 @@ var activeTableTab = "activeTableTab";
 <li><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.BugChecker</a></li>
 <li>
 <ul class="inheritance">
+<li><a href="../../../../com/google/errorprone/bugpatterns/AbstractReferenceEquality.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.AbstractReferenceEquality</a></li>
+<li>
+<ul class="inheritance">
 <li>com.google.errorprone.bugpatterns.OptionalEquality</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -119,8 +124,7 @@ var activeTableTab = "activeTableTab";
 <hr>
 <br>
 <pre>public class <span class="typeNameLabel">OptionalEquality</span>
-extends <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
-implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.BinaryTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.BinaryTreeMatcher</a></pre>
+extends <a href="../../../../com/google/errorprone/bugpatterns/AbstractReferenceEquality.html" title="class in com.google.errorprone.bugpatterns">AbstractReferenceEquality</a></pre>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
 <dd>cushon@google.com (Liam Miller-Cushon)</dd>
@@ -178,11 +182,18 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Bin
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/OptionalEquality.html#matchBinary-com.sun.source.tree.BinaryTree-com.google.errorprone.VisitorState-">matchBinary</a></span>(com.sun.source.tree.BinaryTree&nbsp;tree,
-           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+<td class="colFirst"><code>protected boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/OptionalEquality.html#matchArgument-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">matchArgument</a></span>(com.sun.source.tree.ExpressionTree&nbsp;tree,
+             <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 </table>
+<ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.com.google.errorprone.bugpatterns.AbstractReferenceEquality">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;com.google.errorprone.bugpatterns.<a href="../../../../com/google/errorprone/bugpatterns/AbstractReferenceEquality.html" title="class in com.google.errorprone.bugpatterns">AbstractReferenceEquality</a></h3>
+<code><a href="../../../../com/google/errorprone/bugpatterns/AbstractReferenceEquality.html#addFixes-com.google.errorprone.matchers.Description.Builder-com.sun.source.tree.BinaryTree-com.google.errorprone.VisitorState-">addFixes</a>, <a href="../../../../com/google/errorprone/bugpatterns/AbstractReferenceEquality.html#matchBinary-com.sun.source.tree.BinaryTree-com.google.errorprone.VisitorState-">matchBinary</a></code></li>
+</ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.com.google.errorprone.bugpatterns.BugChecker">
 <!--   -->
@@ -235,17 +246,17 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Bin
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="matchBinary-com.sun.source.tree.BinaryTree-com.google.errorprone.VisitorState-">
+<a name="matchArgument-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>matchBinary</h4>
-<pre>public final&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;matchBinary(com.sun.source.tree.BinaryTree&nbsp;tree,
-                                     <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
+<h4>matchArgument</h4>
+<pre>protected&nbsp;boolean&nbsp;matchArgument(com.sun.source.tree.ExpressionTree&nbsp;tree,
+                                <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.BinaryTreeMatcher.html#matchBinary-com.sun.source.tree.BinaryTree-com.google.errorprone.VisitorState-">matchBinary</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.BinaryTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.BinaryTreeMatcher</a></code></dd>
+<dd><code><a href="../../../../com/google/errorprone/bugpatterns/AbstractReferenceEquality.html#matchArgument-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">matchArgument</a></code>&nbsp;in class&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/AbstractReferenceEquality.html" title="class in com.google.errorprone.bugpatterns">AbstractReferenceEquality</a></code></dd>
 </dl>
 </li>
 </ul>

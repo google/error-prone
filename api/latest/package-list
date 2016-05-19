@@ -6,6 +6,7 @@ com.google.errorprone.apply
 com.google.errorprone.bugpatterns
 com.google.errorprone.bugpatterns.android
 com.google.errorprone.bugpatterns.collectionincompatibletype
+com.google.errorprone.bugpatterns.formatstring
 com.google.errorprone.bugpatterns.inject
 com.google.errorprone.bugpatterns.inject.dagger
 com.google.errorprone.bugpatterns.inject.guice

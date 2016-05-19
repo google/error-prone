@@ -3,8 +3,8 @@ title: EqualsIncompatibleType
 summary: An equality test between objects with incompatible types always returns false
 layout: bugpattern
 category: JDK
-severity: ERROR
-maturity: EXPERIMENTAL
+severity: WARNING
+maturity: MATURE
 ---
 
 <!--
@@ -25,6 +25,11 @@ predicates:
 * `java.lang.Object.equals(Object)`
 * `java.util.Objects.equals(Object, Object)`
 * `com.google.common.base.Objects.equal(Object, Object)`
+
+If you need to check that two objects are not equal for testing purposes,
+we recommend that you use [`EqualsTester`][equalstester] instead.
+
+[equalstester]: http://static.javadoc.io/com.google.guava/guava-testlib/19.0/com/google/common/testing/EqualsTester.html
 
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("EqualsIncompatibleType")` annotation to the enclosing element.
