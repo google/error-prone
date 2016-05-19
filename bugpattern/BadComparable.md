@@ -3,7 +3,7 @@ title: BadComparable
 summary: Possible sign flip from narrowing conversion
 layout: bugpattern
 category: JDK
-severity: ERROR
+severity: WARNING
 maturity: MATURE
 ---
 

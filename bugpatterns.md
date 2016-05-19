@@ -20,6 +20,9 @@ after we've vetted them against Google's codebase.
 __[BadAnnotationImplementation](bugpattern/BadAnnotationImplementation)__<br>
 Classes that implement Annotation must override equals and hashCode. Consider using AutoAnnotation instead of implementing Annotation by hand.
 
+__[BadComparable](bugpattern/BadComparable)__<br>
+Possible sign flip from narrowing conversion
+
 __[CannotMockFinalClass](bugpattern/CannotMockFinalClass)__<br>
 Mockito cannot mock final classes
 
@@ -126,9 +129,6 @@ Calling toString on an array does not provide useful information
 
 __[AsyncFunctionReturnsNull](bugpattern/AsyncFunctionReturnsNull)__<br>
 AsyncFunction should not return a null Future, only a Future whose result is null.
-
-__[BadComparable](bugpattern/BadComparable)__<br>
-Possible sign flip from narrowing conversion
 
 __[BadShiftAmount](bugpattern/BadShiftAmount)__<br>
 Shift by an amount that is out of range
