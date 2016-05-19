@@ -27,7 +27,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.IfTreeMatcher;
 import com.google.errorprone.fixes.Fix;
-import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 
@@ -101,7 +101,7 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
     Description.Builder builder = buildDescription(outerIf);
     JCTree fieldDecl = findFieldDeclaration(state.getPath(), sym);
     if (fieldDecl != null) {
-      Fix fix = SuggestedFix.addModifier(fieldDecl, Modifier.VOLATILE, state);
+      Fix fix = SuggestedFixes.addModifiers(fieldDecl, state, Modifier.VOLATILE);
       if (fix != null) {
         builder.addFix(fix);
       }

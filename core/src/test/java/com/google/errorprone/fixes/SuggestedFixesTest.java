@@ -36,8 +36,8 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.VariableTree;
-
 import com.sun.tools.javac.code.Type;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -48,7 +48,7 @@ import javax.lang.model.element.Modifier;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @RunWith(JUnit4.class)
-public class SuggestedFixTest {
+public class SuggestedFixesTest {
 
   @Retention(RUNTIME)
   public @interface EditModifiers {
@@ -91,10 +91,10 @@ public class SuggestedFixTest {
       Fix fix;
       switch (editModifiers.kind()) {
         case ADD:
-          fix = SuggestedFix.addModifier(tree, mod, state);
+          fix = SuggestedFixes.addModifiers(tree, state, mod);
           break;
         case REMOVE:
-          fix = SuggestedFix.removeModifier(tree, mod, state);
+          fix = SuggestedFixes.removeModifiers(tree, state, mod);
           break;
         default:
           throw new AssertionError(editModifiers.kind());
@@ -120,6 +120,25 @@ public class SuggestedFixTest {
             "  @Nullable public Object three;",
             "  // BUG: Diagnostic contains: public final Object four",
             "  public Object four;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void addModifiersComment() {
+    CompilationTestHelper.newInstance(EditModifiersChecker.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            String.format("import %s;", EditModifiers.class.getCanonicalName()),
+            "import javax.annotation.Nullable;",
+            "@EditModifiers(value=\"final\", kind=EditModifiers.EditKind.ADD)",
+            "class Test {",
+            "  // BUG: Diagnostic contains:"
+                + " private @Deprecated /*comment*/ final volatile Object one;",
+            "  private @Deprecated /*comment*/ volatile Object one;",
+            "  // BUG: Diagnostic contains:"
+                + " private @Deprecated /*comment*/ static final Object two = null;",
+            "  private @Deprecated /*comment*/ static Object two = null;",
             "}")
         .doTest();
   }
@@ -178,7 +197,7 @@ public class SuggestedFixTest {
           ASTHelpers.getSymbol(
               ASTHelpers.findEnclosingNode(state.getPath(), MethodTree.class)).getReturnType();
       SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
-      String qualifiedTargetType = SuggestedFix.qualifyType(state, fixBuilder, type.tsym);
+      String qualifiedTargetType = SuggestedFixes.qualifyType(state, fixBuilder, type.tsym);
       fixBuilder.prefixWith(tree.getExpression(), String.format("(%s) ", qualifiedTargetType));
       return describeMatch(tree, fixBuilder.build());
     }

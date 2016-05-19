@@ -33,6 +33,7 @@ import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 
@@ -311,7 +312,7 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
         state.reportMatch(
             buildDescription(tree.get())
                 .setMessage("@Immutable classes cannot have non-final fields")
-                .addFix(SuggestedFix.addModifier(tree.get(), Modifier.FINAL, state))
+                .addFix(SuggestedFixes.addModifiers(tree.get(), state, Modifier.FINAL))
                 .build());
         return Violation.absent();
       }

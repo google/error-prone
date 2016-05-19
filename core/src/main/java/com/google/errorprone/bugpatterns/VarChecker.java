@@ -26,6 +26,7 @@ import com.google.errorprone.annotations.Var;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 
@@ -93,7 +94,7 @@ public class VarChecker extends BugChecker implements VariableTreeMatcher {
         // effectively final variables can be used anywhere a final variable is required.
         return buildDescription(tree)
             .setMessage(UNNECESSARY_FINAL)
-            .addFix(SuggestedFix.removeModifier(tree, Modifier.FINAL, state))
+            .addFix(SuggestedFixes.removeModifiers(tree, state, Modifier.FINAL))
             .build();
       }
       return Description.NO_MATCH;

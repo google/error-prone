@@ -19,36 +19,24 @@ package com.google.errorprone.fixes;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.google.auto.value.AutoValue;
-import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
-import com.google.errorprone.util.ErrorProneToken;
 
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.Tree;
-import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
-import com.sun.tools.javac.tree.JCTree.JCExpression;
-import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Deque;
 import java.util.List;
 import java.util.Set;
 
-import javax.annotation.Nullable;
-import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 
 /**
@@ -381,233 +369,27 @@ public class SuggestedFix implements Fix {
     }
   }
 
-  /** Return an ordinal for the modifier, in Google Java Style order. */
-  private static int modifierOrder(Modifier mod) {
-    switch (mod) {
-      case PUBLIC:
-        return 1;
-      case PROTECTED:
-        return 2;
-      case PRIVATE:
-        return 3;
-      case ABSTRACT:
-        return 4;
-      // TODO(cushon): requires JDK8
-      // case DEFAULT:
-      //   return 5;
-      case STATIC:
-        return 6;
-      case FINAL:
-        return 7;
-      case TRANSIENT:
-        return 8;
-      case VOLATILE:
-        return 9;
-      case SYNCHRONIZED:
-        return 10;
-      case NATIVE:
-        return 11;
-      case STRICTFP:
-        return 12;
-      default:
-        throw new AssertionError(mod);
-    }
-  }
-
-  /** Info about a modifier token. */
-  @AutoValue
-  abstract static class TokInfo implements Comparable<TokInfo> {
-    abstract ErrorProneToken token();
-    abstract Modifier mod();
-
-    public static TokInfo create(ErrorProneToken tree, Modifier mod) {
-      return new AutoValue_SuggestedFix_TokInfo(tree, mod);
-    }
-
-    @Override
-    public int compareTo(TokInfo o) {
-      return Integer.compare(modifierOrder(mod()), modifierOrder(o.mod()));
-    }
-  }
-
-  /** Parse a modifier token into a {@link Modifier}. */
-  @Nullable
-  private static Modifier getTokModifierKind(ErrorProneToken tok) {
-    switch (tok.kind()) {
-      case PUBLIC:
-        return Modifier.PUBLIC;
-      case PROTECTED:
-        return Modifier.PROTECTED;
-      case PRIVATE:
-        return Modifier.PRIVATE;
-      case ABSTRACT:
-        return Modifier.ABSTRACT;
-      case STATIC:
-        return Modifier.STATIC;
-      case FINAL:
-        return Modifier.FINAL;
-      case TRANSIENT:
-        return Modifier.TRANSIENT;
-      case VOLATILE:
-        return Modifier.VOLATILE;
-      case SYNCHRONIZED:
-        return Modifier.SYNCHRONIZED;
-      case NATIVE:
-        return Modifier.NATIVE;
-      case STRICTFP:
-        return Modifier.STRICTFP;
-      // TODO(cushon):
-      // case DEFAULT:
-      //   return Modifier.DEFAULT;
-      default:
-        return null;
-    }
-  }
-
-  /**
-   * Add a modifier to the given class, method, or field declaration.
-   *
-   * <p>Preserves Google Java Style order.
-   */
-  @Nullable
+  /** @deprecated prefer {@link SuggestedFixes#addModifiers} */
+  @Deprecated
   public static Fix addModifier(Tree tree, Modifier modifier, VisitorState state) {
-    ModifiersTree originalModifiers = ASTHelpers.getModifiers(tree);
-    if (originalModifiers == null) {
-      return null;
-    }
-    ImmutableList<ErrorProneToken> tokens = state.getTokensForNode(originalModifiers);
-    ArrayList<TokInfo> infos = new ArrayList<>();
-    int firstTokPos = -1;
-    for (ErrorProneToken tok : tokens) {
-      Modifier mod = getTokModifierKind(tok);
-      if (mod != null) {
-        if (firstTokPos == -1) {
-          firstTokPos = ((JCTree) originalModifiers).getStartPosition() + tok.pos();
-        }
-        infos.add(TokInfo.create(tok, mod));
-      }
-    }
-    Collections.sort(infos);
-    TokInfo prev = null;
-    for (TokInfo info : infos) {
-      int c = info.mod().compareTo(modifier);
-      if (c < 0) {
-        prev = info;
-      } else if (c == 0) {
-        // the modifier doesn't need to be added
-        return null;
-      }
-    }
-    if (prev != null) {
-      int startPos = ((JCTree) originalModifiers).getStartPosition();
-      if (startPos < 0) {
-        // if the modifier tree is empty, start at the beginning of the tree
-        startPos = ((JCTree) tree).getStartPosition();
-      }
-      // insert the new modifier after an existing modifier
-      // the start pos of the re-lexed tokens is relative to the start of the tree
-      int pos = startPos + prev.token().pos() + prev.mod().toString().length();
-      return SuggestedFix.replace(pos, pos, " " + modifier);
-    } else {
-      String replacement = modifier.toString();
-      // try to insert before existing modifiers
-      int pos = firstTokPos;
-      if (pos < 0) {
-        // there were no existing modifers, but there may have been annotations
-        pos = state.getEndPosition((JCTree) originalModifiers);
-        if (pos >= 0) {
-          pos++;
-        }
-      }
-      if (pos < 0) {
-        // there were no annotations or modifiers, insert at the beginning of the tree
-        pos = ((JCTree) tree).getStartPosition();
-      }
-      return SuggestedFix.replace(pos, pos, replacement + " ");
-    }
+    return SuggestedFixes.addModifiers(tree, state, modifier);
   }
 
-  /**
-   * Removes a modifier from the given class, method, or field declaration.
-   */
-  @Nullable
+  /** @deprecated prefer {@link SuggestedFixes#removeModifiers} */
+  @Deprecated
   public static Fix removeModifier(Tree tree, Modifier modifier, VisitorState state) {
-    ModifiersTree originalModifiers = ASTHelpers.getModifiers(tree);
-    if (originalModifiers == null) {
-      return null;
-    }
-    ImmutableList<ErrorProneToken> tokens = state.getTokensForNode(originalModifiers);
-    ErrorProneToken toRemove = null;
-    for (ErrorProneToken tok : tokens) {
-      Modifier mod = getTokModifierKind(tok);
-      if (mod == modifier) {
-        toRemove = tok;
-        break;
-      }
-    }
-    if (toRemove == null) {
-      return null;
-    }
-    JCTree posTree = (JCTree) originalModifiers;
-    // the start pos of the re-lexed tokens is relative to the start of the tree
-    int startPosition = posTree.getStartPosition() + toRemove.pos();
-    // add one to endPosition for whitespace character after the modifier
-    int endPosition = posTree.getStartPosition() + toRemove.endPos() + 1;
-    return replace(startPosition, endPosition, "");
+    return SuggestedFixes.removeModifiers(tree, state, modifier);
   }
 
-  /** Returns a human-friendly name of the given {@link TypeSymbol} for use in fixes. */
+  /** @deprecated prefer {@link SuggestedFixes#qualifyType} */
+  @Deprecated
   public static String qualifyType(VisitorState state, SuggestedFix.Builder fix, TypeSymbol sym) {
-    if (sym.getKind() == ElementKind.TYPE_PARAMETER) {
-      return sym.getSimpleName().toString();
-    }
-    TreeMaker make =
-        TreeMaker.instance(state.context)
-            .forToplevel((JCCompilationUnit) state.getPath().getCompilationUnit());
-    return qualifyType(make, fix, sym);
+    return SuggestedFixes.qualifyType(state, fix, sym);
   }
 
-  /**
-   * Returns a human-friendly name of the given {@link TypeSymbol} for use in fixes.
-   *
-   * <ul>
-   * <li>If the type is already imported, its simple name is used.
-   * <li>If an enclosing type is imported, that enclosing type is used as a qualified.
-   * <li>Otherwise the outermost enclosing type is imported and used as a qualifier.
-   * </ul>
-   */
+  /** @deprecated prefer {@link SuggestedFixes#qualifyType} */
+  @Deprecated
   public static String qualifyType(TreeMaker make, SuggestedFix.Builder fix, TypeSymbol sym) {
-    // let javac figure out whether the type is already imported
-    JCExpression qual = make.QualIdent(sym);
-    if (!selectsPackage(qual)) {
-      return qual.toString();
-    }
-    Deque<String> names = new ArrayDeque<>();
-    Symbol curr = sym;
-    while (true) {
-      names.addFirst(curr.getSimpleName().toString());
-      if (curr.owner == null || curr.owner.getKind() == ElementKind.PACKAGE) {
-        break;
-      }
-      curr = curr.owner;
-    }
-    fix.addImport(curr.toString());
-    return Joiner.on('.').join(names);
-  }
-
-  /** Returns true iff the given expression is qualified by a package. */
-  private static boolean selectsPackage(JCExpression qual) {
-    JCExpression curr = qual;
-    while (true) {
-      Symbol sym = ASTHelpers.getSymbol(curr);
-      if (sym != null && sym.getKind() == ElementKind.PACKAGE) {
-        return true;
-      }
-      if (!(curr instanceof JCFieldAccess)) {
-        break;
-      }
-      curr = ((JCFieldAccess) curr).getExpression();
-    }
-    return false;
+    return SuggestedFixes.qualifyType(make, fix, sym);
   }
 }

@@ -28,6 +28,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
@@ -233,7 +234,7 @@ public class MockitoCast extends BugChecker implements CompilationUnitTreeMatche
       }
 
       final SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
-      String qual = SuggestedFix.qualifyType(state, fixBuilder, uninstantiatedReturnType.tsym);
+      String qual = SuggestedFixes.qualifyType(state, fixBuilder, uninstantiatedReturnType.tsym);
       fixBuilder.prefixWith(arg, String.format("(%s) ", qual));
       return describeMatch(tree, fixBuilder.build());
     }

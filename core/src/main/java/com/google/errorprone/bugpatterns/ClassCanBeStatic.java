@@ -23,7 +23,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
-import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 
@@ -79,7 +79,7 @@ public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
     if (OuterReferenceScanner.scan((JCTree) tree, currentClass, state)) {
       return Description.NO_MATCH;
     }
-    return describeMatch(tree, SuggestedFix.addModifier(tree, Modifier.STATIC, state));
+    return describeMatch(tree, SuggestedFixes.addModifiers(tree, state, Modifier.STATIC));
   }
 
   /** Is sym a non-static member of an enclosing class of currentClass? */
