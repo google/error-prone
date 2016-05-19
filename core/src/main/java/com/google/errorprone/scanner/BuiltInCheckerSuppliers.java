@@ -264,6 +264,7 @@ public class BuiltInCheckerSuppliers {
   static final ImmutableSet<BugCheckerInfo> ENABLED_WARNINGS =
       getSuppliers(
           BadAnnotationImplementation.class,
+          BadComparable.class,
           CannotMockFinalClass.class,
           CollectionIncompatibleType.class,
           DoubleCheckedLocking.class,
@@ -307,7 +308,6 @@ public class BuiltInCheckerSuppliers {
           AssistedInjectAndInjectOnConstructors.class,
           AssistedInjectAndInjectOnSameConstructor.class,
           AssistedParameters.class,
-          BadComparable.class,
           BigDecimalLiteralDouble.class,
           BoxedPrimitiveConstructor.class,
           ClassCanBeStatic.class,

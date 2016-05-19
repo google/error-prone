@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.methodHasArity;
@@ -60,7 +60,7 @@ import com.sun.tools.javac.tree.TreeInfo;
           + " the target type (JLS 5.1.3). In a compare or compareTo method, this can cause"
           + " incorrect and unstable sort orders.",
   category = JDK,
-  severity = ERROR,
+  severity = WARNING,
   maturity = MATURE
 )
 public class BadComparable extends BugChecker implements TypeCastTreeMatcher {
