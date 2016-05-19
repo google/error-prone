@@ -38,6 +38,7 @@ import com.google.errorprone.bugpatterns.ChainingConstructorIgnoresParameter;
 import com.google.errorprone.bugpatterns.CheckReturnValue;
 import com.google.errorprone.bugpatterns.ClassCanBeStatic;
 import com.google.errorprone.bugpatterns.ClassName;
+import com.google.errorprone.bugpatterns.ClassNewInstance;
 import com.google.errorprone.bugpatterns.ComparisonContractViolated;
 import com.google.errorprone.bugpatterns.ComparisonOutOfRange;
 import com.google.errorprone.bugpatterns.CompileTimeConstantChecker;
@@ -311,6 +312,7 @@ public class BuiltInCheckerSuppliers {
           BigDecimalLiteralDouble.class,
           BoxedPrimitiveConstructor.class,
           ClassCanBeStatic.class,
+          ClassNewInstance.class,
           ComparisonContractViolated.class,
           DivZero.class,
           EmptyIfStatement.class,
