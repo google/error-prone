@@ -100,7 +100,7 @@ public class WrongParameterPackage extends BugChecker implements MethodTreeMatch
   public Description describe(MethodTree tree, VisitorState state) {
     SuggestedFix.Builder builder = null;
 
-    MethodSymbol method = (MethodSymbol) ASTHelpers.getSymbol(tree);
+    MethodSymbol method = ASTHelpers.getSymbol(tree);
 
     if (supermethod == null){
       throw new IllegalStateException("Matching supermethod was not found");

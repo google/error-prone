@@ -81,7 +81,7 @@ public class OverridesGuiceInjectableMethod extends BugChecker implements Method
     // if method is itself annotated with @Inject or it has no ancestor methods, return No_MATCH;
     if (!INJECTABLE_METHOD_MATCHER.matches(methodTree, state)
         && OVERRIDE_METHOD_MATCHER.matches(methodTree, state)) {
-      MethodSymbol method = (MethodSymbol) ASTHelpers.getSymbol(methodTree);
+      MethodSymbol method = ASTHelpers.getSymbol(methodTree);
       for (MethodSymbol superMethod : ASTHelpers.findSuperMethods(method, state.getTypes())) {
         if (isAnnotatedWith(superMethod, GUICE_INJECT_ANNOTATION)) {
           return buildDescription(methodTree)

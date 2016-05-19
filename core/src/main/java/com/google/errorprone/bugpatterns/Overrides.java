@@ -32,7 +32,6 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.tree.JCTree;
 
 import java.util.Iterator;
 import java.util.List;
@@ -52,7 +51,7 @@ public class Overrides extends BugChecker implements MethodTreeMatcher {
 
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
-    MethodSymbol methodSymbol = (MethodSymbol) ASTHelpers.getSymbol(methodTree);
+    MethodSymbol methodSymbol = ASTHelpers.getSymbol(methodTree);
     boolean isVarargs = (methodSymbol.flags() & Flags.VARARGS) != 0;
 
     Set<MethodSymbol> superMethods = ASTHelpers.findSuperMethods(methodSymbol, state.getTypes());
@@ -82,7 +81,7 @@ public class Overrides extends BugChecker implements MethodTreeMatcher {
 
     List<? extends VariableTree> parameterTree = methodTree.getParameters();
     Tree paramType = parameterTree.get(parameterTree.size() - 1).getType();
-    CharSequence paramTypeSource = state.getSourceForNode((JCTree) paramType);
+    CharSequence paramTypeSource = state.getSourceForNode(paramType);
     if (paramTypeSource == null) {
       // No fix if we don't have tree end positions.
       return describeMatch(methodTree);

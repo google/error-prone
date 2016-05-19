@@ -81,7 +81,7 @@ public class OverridesJavaxInjectableMethod extends BugChecker implements Method
       return Description.NO_MATCH;
     }
     boolean foundJavaxInject = false;
-    MethodSymbol method = (MethodSymbol) ASTHelpers.getSymbol(methodTree);
+    MethodSymbol method = ASTHelpers.getSymbol(methodTree);
     MethodSymbol superMethod = null;
     for (boolean checkSuperClass = true; checkSuperClass; method = superMethod) {
       superMethod = findSuperMethod(method, state);
