@@ -37,9 +37,6 @@ import com.sun.source.tree.MethodInvocationTree;
 @BugPattern(
   name = "SelfComparision",
   summary = "An object is compared to itself",
-  explanation =
-      "The arguments to compareTo method are the same object, so it always returns "
-          + "0.  Either change the arguments to point to different objects or substitute 0.",
   category = JDK,
   severity = ERROR,
   maturity = MATURE

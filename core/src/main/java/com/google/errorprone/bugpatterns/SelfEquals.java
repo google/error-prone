@@ -37,9 +37,6 @@ import com.sun.source.tree.MethodInvocationTree;
 @BugPattern(
   name = "SelfEquals",
   summary = "An object is tested for equality to itself",
-  explanation =
-      "The arguments to equals method are the same object, so it always returns "
-          + "true.  Either change the arguments to point to different objects or substitute true.",
   category = JDK,
   severity = ERROR,
   maturity = MATURE
