@@ -156,7 +156,13 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFix.html#addModifier-com.sun.source.tree.Tree-javax.lang.model.element.Modifier-com.google.errorprone.VisitorState-">addModifier(Tree, Modifier, VisitorState)</a></span> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></dt>
 <dd>
-<div class="block">Add a modifier to the given class, method, or field declaration.</div>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">prefer <a href="com/google/errorprone/fixes/SuggestedFixes.html#addModifiers-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-javax.lang.model.element.Modifier...-"><code>SuggestedFixes.addModifiers(com.sun.source.tree.Tree, com.google.errorprone.VisitorState, javax.lang.model.element.Modifier...)</code></a></span></div>
+</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFixes.html#addModifiers-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-javax.lang.model.element.Modifier...-">addModifiers(Tree, VisitorState, Modifier...)</a></span> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.html" title="class in com.google.errorprone.fixes">SuggestedFixes</a></dt>
+<dd>
+<div class="block">Add modifiers to the given class, method, or field declaration.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFix.Builder.html#addStaticImport-java.lang.String-">addStaticImport(String)</a></span> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></dt>
 <dd>
@@ -837,6 +843,10 @@
 <dt><a href="com/google/errorprone/bugpatterns/ClassName.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">ClassName</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ClassName.html#ClassName--">ClassName()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ClassName.html" title="class in com.google.errorprone.bugpatterns">ClassName</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/ClassNewInstance.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">ClassNewInstance</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ClassNewInstance.html#ClassNewInstance--">ClassNewInstance()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ClassNewInstance.html" title="class in com.google.errorprone.bugpatterns">ClassNewInstance</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/ImportPolicy.html#classReference-com.google.errorprone.refaster.Inliner-java.lang.CharSequence-java.lang.CharSequence-">classReference(Inliner, CharSequence, CharSequence)</a></span> - Method in enum com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ImportPolicy.html" title="enum in com.google.errorprone.refaster">ImportPolicy</a></dt>
 <dd>&nbsp;</dd>
@@ -3631,6 +3641,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ChainingConstructorIgnoresParameter.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ChainingConstructorIgnoresParameter.html" title="class in com.google.errorprone.bugpatterns">ChainingConstructorIgnoresParameter</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ClassNewInstance.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ClassNewInstance.html" title="class in com.google.errorprone.bugpatterns">ClassNewInstance</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/collectionincompatibletype/CollectionIncompatibleType.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.collectionincompatibletype.<a href="com/google/errorprone/bugpatterns/collectionincompatibletype/CollectionIncompatibleType.html" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">CollectionIncompatibleType</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/CompileTimeConstantChecker.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/CompileTimeConstantChecker.html" title="class in com.google.errorprone.bugpatterns">CompileTimeConstantChecker</a></dt>
@@ -4488,9 +4500,21 @@
 <dl>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFix.html#qualifyType-com.google.errorprone.VisitorState-com.google.errorprone.fixes.SuggestedFix.Builder-com.sun.tools.javac.code.Symbol.TypeSymbol-">qualifyType(VisitorState, SuggestedFix.Builder, Symbol.TypeSymbol)</a></span> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></dt>
 <dd>
-<div class="block">Returns a human-friendly name of the given <code>Symbol.TypeSymbol</code> for use in fixes.</div>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">prefer <a href="com/google/errorprone/fixes/SuggestedFixes.html#qualifyType-com.google.errorprone.VisitorState-com.google.errorprone.fixes.SuggestedFix.Builder-com.sun.tools.javac.code.Symbol.TypeSymbol-"><code>SuggestedFixes.qualifyType(com.google.errorprone.VisitorState, com.google.errorprone.fixes.SuggestedFix.Builder, com.sun.tools.javac.code.Symbol.TypeSymbol)</code></a></span></div>
+</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFix.html#qualifyType-com.sun.tools.javac.tree.TreeMaker-com.google.errorprone.fixes.SuggestedFix.Builder-com.sun.tools.javac.code.Symbol.TypeSymbol-">qualifyType(TreeMaker, SuggestedFix.Builder, Symbol.TypeSymbol)</a></span> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">prefer <a href="com/google/errorprone/fixes/SuggestedFixes.html#qualifyType-com.google.errorprone.VisitorState-com.google.errorprone.fixes.SuggestedFix.Builder-com.sun.tools.javac.code.Symbol.TypeSymbol-"><code>SuggestedFixes.qualifyType(com.google.errorprone.VisitorState, com.google.errorprone.fixes.SuggestedFix.Builder, com.sun.tools.javac.code.Symbol.TypeSymbol)</code></a></span></div>
+</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFixes.html#qualifyType-com.google.errorprone.VisitorState-com.google.errorprone.fixes.SuggestedFix.Builder-com.sun.tools.javac.code.Symbol.TypeSymbol-">qualifyType(VisitorState, SuggestedFix.Builder, Symbol.TypeSymbol)</a></span> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.html" title="class in com.google.errorprone.fixes">SuggestedFixes</a></dt>
+<dd>
+<div class="block">Returns a human-friendly name of the given <code>Symbol.TypeSymbol</code> for use in fixes.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFixes.html#qualifyType-com.sun.tools.javac.tree.TreeMaker-com.google.errorprone.fixes.SuggestedFix.Builder-com.sun.tools.javac.code.Symbol.TypeSymbol-">qualifyType(TreeMaker, SuggestedFix.Builder, Symbol.TypeSymbol)</a></span> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.html" title="class in com.google.errorprone.fixes">SuggestedFixes</a></dt>
 <dd>
 <div class="block">Returns a human-friendly name of the given <code>Symbol.TypeSymbol</code> for use in fixes.</div>
 </dd>
@@ -4562,7 +4586,13 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFix.html#removeModifier-com.sun.source.tree.Tree-javax.lang.model.element.Modifier-com.google.errorprone.VisitorState-">removeModifier(Tree, Modifier, VisitorState)</a></span> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></dt>
 <dd>
-<div class="block">Removes a modifier from the given class, method, or field declaration.</div>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">prefer <a href="com/google/errorprone/fixes/SuggestedFixes.html#removeModifiers-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-javax.lang.model.element.Modifier...-"><code>SuggestedFixes.removeModifiers(com.sun.source.tree.Tree, com.google.errorprone.VisitorState, javax.lang.model.element.Modifier...)</code></a></span></div>
+</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFixes.html#removeModifiers-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-javax.lang.model.element.Modifier...-">removeModifiers(Tree, VisitorState, Modifier...)</a></span> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.html" title="class in com.google.errorprone.fixes">SuggestedFixes</a></dt>
+<dd>
+<div class="block">Remove modifiers from the given class, method, or field declaration.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFix.Builder.html#removeStaticImport-java.lang.String-">removeStaticImport(String)</a></span> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></dt>
 <dd>
@@ -4980,6 +5010,12 @@
 <dd>
 <div class="block">Builds <a href="com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes"><code>SuggestedFix</code></a>s.</div>
 </dd>
+<dt><a href="com/google/errorprone/fixes/SuggestedFixes.html" title="class in com.google.errorprone.fixes"><span class="typeNameLink">SuggestedFixes</span></a> - Class in <a href="com/google/errorprone/fixes/package-summary.html">com.google.errorprone.fixes</a></dt>
+<dd>
+<div class="block">Factories for constructing <a href="com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes"><code>Fix</code></a>es.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFixes.html#SuggestedFixes--">SuggestedFixes()</a></span> - Constructor for class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.html" title="class in com.google.errorprone.fixes">SuggestedFixes</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/BugPatternInstance.html#summary">summary</a></span> - Variable in class com.google.errorprone.<a href="com/google/errorprone/BugPatternInstance.html" title="class in com.google.errorprone">BugPatternInstance</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/analysis/SumTopLevelAnalysis.html" title="class in com.google.errorprone.analysis"><span class="typeNameLink">SumTopLevelAnalysis</span></a> - Class in <a href="com/google/errorprone/analysis/package-summary.html">com.google.errorprone.analysis</a></dt>

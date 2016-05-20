@@ -145,6 +145,9 @@ Ignored return value of method that is annotated with @CheckReturnValue
 __[ClassName](bugpattern/ClassName)__<br>
 The source file name should match the name of the top-level class it contains
 
+__[ClassNewInstance](bugpattern/ClassNewInstance)__<br>
+Class.newInstance() bypasses exception checking; prefer getConstructor().newInstance()
+
 __[ComparisonOutOfRange](bugpattern/ComparisonOutOfRange)__<br>
 Comparison to value that is out of range for the compared type
 
