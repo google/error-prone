@@ -144,6 +144,28 @@ public class MissingFailTest {
         .doTest();
   }
 
+  // verify that exceptions not named 'expected' are ignored
+  @Test
+  public void testToleratedExceptionWithAssert() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "test/A.java",
+            "package test;",
+            "import junit.framework.TestCase;",
+            "public class A extends TestCase {",
+            "  public void testMethod() {",
+            "    try {",
+            "      new String();",
+            "    } catch (IllegalArgumentException | IllegalStateException tolerated) {",
+            "      assertDummy();",
+            "    }",
+            "  }",
+            "  static void assertDummy() {}",
+            "}")
+        .doTest();
+  }
+
+
   private Fix getOnlyFix(TestScanner scanner) {
     Description warning = Iterables.getOnlyElement(scanner.suggestedChanges);
     return Iterables.getOnlyElement(warning.fixes);

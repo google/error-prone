@@ -255,6 +255,10 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
       return false;
     }
 
+    if (hasToleratedException(tree)) {
+      return false;
+    }
+
     boolean assertInCatch = hasAssertInCatch(tree, state);
     if (!hasExpectedException(tree) && !assertInCatch) {
       return false;
@@ -336,6 +340,15 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
 
   private boolean hasAssertInCatch(TryTree tree, VisitorState state) {
     return anyCatchBlockMatches(tree, state, ASSERT_IN_BLOCK);
+  }
+
+  private boolean hasToleratedException(TryTree tree) {
+    for (CatchTree catchTree : tree.getCatches()) {
+      if (catchTree.getParameter().getName().contentEquals("tolerated")) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private boolean hasExpectedException(TryTree tree) {
