@@ -38,7 +38,7 @@ import com.sun.tools.javac.tree.JCTree;
 @BugPattern(
   name = "BoxedPrimitiveConstructor",
   category = Category.JDK,
-  summary = "valueOf provides better time and space performance",
+  summary = "valueOf or autoboxing provides better time and space performance",
   severity = SeverityLevel.ERROR,
   maturity = MaturityLevel.MATURE
 )
