@@ -42,19 +42,19 @@ public class BoxedPrimitiveConstructorTest {
             "Test.java",
             "public class Test {",
             "  {",
-            "    // BUG: Diagnostic contains: byte b = Byte.valueOf((byte) 0);",
+            "    // BUG: Diagnostic contains: byte b = (byte) 0;",
             "    byte b = new Byte((byte) 0);",
-            "    // BUG: Diagnostic contains: char c = Character.valueOf((char) 0);",
+            "    // BUG: Diagnostic contains: char c = (char) 0;",
             "    char c = new Character((char) 0);",
-            "    // BUG: Diagnostic contains: double d = Double.valueOf(0);",
+            "    // BUG: Diagnostic contains: double d = 0;",
             "    double d = new Double(0);",
-            "    // BUG: Diagnostic contains: float f = Float.valueOf(0);",
+            "    // BUG: Diagnostic contains: float f = 0;",
             "    float f = new Float(0);",
-            "    // BUG: Diagnostic contains: int i = Integer.valueOf(0);",
+            "    // BUG: Diagnostic contains: int i = 0;",
             "    int i = new Integer(0);",
-            "    // BUG: Diagnostic contains: long j = Long.valueOf(0);",
+            "    // BUG: Diagnostic contains: long j = 0;",
             "    long j = new Long(0);",
-            "    // BUG: Diagnostic contains: short s = Short.valueOf((short) 0);",
+            "    // BUG: Diagnostic contains: short s = (short) 0;",
             "    short s = new Short((short) 0);",
             "  }",
             "}")
@@ -94,18 +94,22 @@ public class BoxedPrimitiveConstructorTest {
             "  static final Boolean CONST = true;",
             "  static final String CONST2 = null;",
             "  {",
-            "    // BUG: Diagnostic contains: boolean a = Boolean.TRUE;",
+            "    // BUG: Diagnostic contains: boolean a = true;",
             "    boolean a = new Boolean(true);",
-            "    // BUG: Diagnostic contains: boolean b = Boolean.FALSE;",
+            "    // BUG: Diagnostic contains: boolean b = false;",
             "    boolean b = new Boolean(false);",
             "    // BUG: Diagnostic contains: boolean c = Boolean.valueOf(CONST);",
             "    boolean c = new Boolean(CONST);",
-            "    // BUG: Diagnostic contains: boolean e = Boolean.TRUE;",
+            "    // BUG: Diagnostic contains: boolean e = true;",
             "    boolean e = new Boolean(\"true\");",
-            "    // BUG: Diagnostic contains: boolean f = Boolean.FALSE;",
+            "    // BUG: Diagnostic contains: boolean f = false;",
             "    boolean f = new Boolean(\"nope\");",
             "    // BUG: Diagnostic contains: boolean g = Boolean.valueOf(CONST2);",
             "    boolean g = new Boolean(CONST2);",
+            "    // BUG: Diagnostic contains: System.err.println(Boolean.TRUE);",
+            "    System.err.println(new Boolean(\"true\"));",
+            "    // BUG: Diagnostic contains: System.err.println(Boolean.FALSE);",
+            "    System.err.println(new Boolean(\"false\"));",
             "  }",
             "}")
         .doTest();
@@ -119,6 +123,25 @@ public class BoxedPrimitiveConstructorTest {
             "public class Test {",
             "  {",
             "    String s = new String((String) null);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void autoboxing() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "public abstract class Test {",
+            "  abstract int g(Integer x);",
+            "  void f(int x) {",
+            "    // BUG: Diagnostic contains: int i = x;",
+            "    int i = new Integer(x);",
+            "    // BUG: Diagnostic contains: i = g(Integer.valueOf(x));",
+            "    i = g(new Integer(x));",
+            "    // BUG: Diagnostic contains: i = (short) 0;",
+            "    i = new Integer((short) 0);",
             "  }",
             "}")
         .doTest();

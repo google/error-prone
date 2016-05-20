@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.MaturityLevel;
@@ -27,6 +28,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
@@ -60,19 +62,44 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
   }
 
   private Fix buildFix(NewClassTree tree, VisitorState state, Type type) {
+    boolean autoboxFix = shouldAutoboxFix(state);
     if (state.getTypes().isSameType(type, state.getSymtab().booleanType)) {
       Object value = literalValue(tree.getArguments().iterator().next());
       if (value instanceof Boolean) {
-        return SuggestedFix.replace(tree, (Boolean) value ? "Boolean.TRUE" : "Boolean.FALSE");
+        return SuggestedFix.replace(tree, literalFix((boolean) value, autoboxFix));
       } else if (value instanceof String) {
         return SuggestedFix.replace(
-            tree, Boolean.parseBoolean((String) value) ? "Boolean.TRUE" : "Boolean.FALSE");
+            tree, literalFix(Boolean.parseBoolean((String) value), autoboxFix));
       }
+    }
+    ExpressionTree arg = Iterables.getOnlyElement(tree.getArguments());
+    if (autoboxFix && ASTHelpers.getType(arg).isPrimitive()) {
+      return SuggestedFix.builder()
+          .replace(((JCTree) tree).getStartPosition(), ((JCTree) arg).getStartPosition(), "")
+          .replace(state.getEndPosition((JCTree) arg), state.getEndPosition((JCTree) tree), "")
+          .build();
     }
     return SuggestedFix.replace(
         ((JCTree) tree).getStartPosition(),
-        ((JCTree) tree.getArguments().iterator().next()).getStartPosition(),
+        ((JCTree) arg).getStartPosition(),
         String.format("%s.valueOf(", state.getSourceForNode(tree.getIdentifier())));
+  }
+
+  private boolean shouldAutoboxFix(VisitorState state) {
+    switch (state.getPath().getParentPath().getLeaf().getKind()) {
+      case METHOD_INVOCATION:
+        // autoboxing a method argument affects overload resolution
+        return false;
+      default:
+        return true;
+    }
+  }
+
+  private String literalFix(boolean value, boolean autoboxFix) {
+    if (autoboxFix) {
+      return value ? "true" : "false";
+    }
+    return value ? "Boolean.TRUE" : "Boolean.FALSE";
   }
 
   private Object literalValue(Tree arg) {
