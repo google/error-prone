@@ -134,7 +134,7 @@ __[BadShiftAmount](bugpattern/BadShiftAmount)__<br>
 Shift by an amount that is out of range
 
 __[BoxedPrimitiveConstructor](bugpattern/BoxedPrimitiveConstructor)__<br>
-valueOf provides better time and space performance
+valueOf or autoboxing provides better time and space performance
 
 __[ChainingConstructorIgnoresParameter](bugpattern/ChainingConstructorIgnoresParameter)__<br>
 The called constructor accepts a parameter with the same name and type as one of its caller&#39;s parameters, but its caller doesn&#39;t pass that parameter to it.  It&#39;s likely that it was intended to.
