@@ -110,7 +110,11 @@ public @interface BugPattern {
     /**
      * Errors specific to Android.
      */
-    ANDROID;
+    ANDROID,
+    /**
+     * Errors specific to SLF4J.
+     */
+    SLF4J;
   }
 
   /**
