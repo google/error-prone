@@ -8,6 +8,7 @@ import static com.google.errorprone.matchers.Matchers.isField;
 import static com.google.errorprone.matchers.Matchers.not;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,7 +24,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.VariableTree;
 
@@ -42,11 +43,14 @@ public class DoNotPublishSlf4jLogger extends BugChecker
     private static final Matcher<VariableTree> PRIVATE = new PrivateMatcher();
     private static final Matcher<VariableTree> SLF4J_LOGGER = new LoggerMatcher();
     private static final Joiner JOINER_ON_SPACE = Joiner.on(' ');
+    private static final Comparator<Modifier> MODIFIER_COMPARATOR = new ModifierComparator();
+
+    private final String lineSeparator = System.lineSeparator();
 
     @Override
     public Description matchVariable(VariableTree tree, VisitorState state) {
         if (allOf(isField(), SLF4J_LOGGER, not(PRIVATE)).matches(tree, state)) {
-            Fix fix = createSuggestedFix(tree);
+            Fix fix = createSuggestedFix(tree.getModifiers());
             return Description
                     .builder(tree, "DoNotPublishSlf4jLogger", null, WARNING, "Do not publish Logger field, it should be private")
                     .addFix(fix)
@@ -75,33 +79,31 @@ public class DoNotPublishSlf4jLogger extends BugChecker
         }
     }
 
-    private Fix createSuggestedFix(VariableTree tree) {
-        /**
-         * visibility and annotations
-         */
-        ModifiersTree modifiers = tree.getModifiers();
+    private Fix createSuggestedFix(ModifiersTree modifiers) {
+        StringBuilder replacement = new StringBuilder();
+        List<? extends AnnotationTree> annotations = modifiers.getAnnotations();
+        for (AnnotationTree annotation : annotations) {
+            replacement.append(annotation);
+            replacement.append(lineSeparator);
+        }
+        Set<Modifier> flags = createSuggestedFlags(modifiers);
+        replacement.append(stringify(flags));
+        return SuggestedFix.builder()
+            .replace(modifiers, replacement.toString())
+            .build();
+    }
+
+    private Set<Modifier> createSuggestedFlags(ModifiersTree modifiers) {
         Set<Modifier> flags = new HashSet<>(modifiers.getFlags());
         flags.add(Modifier.PRIVATE);
         flags.remove(Modifier.PUBLIC);
         flags.remove(Modifier.PROTECTED);
-        StringBuilder replacement = new StringBuilder()
-                .append(modifiers.getAnnotations())
-                .append(stringify(flags)).append(' ')
-                .append(tree.getType()).append(' ')
-                .append(tree.getName());
-        ExpressionTree initializer = tree.getInitializer();
-        if (initializer != null) {
-            replacement.append(" = ").append(initializer);
-        }
-        replacement.append(';');
-        return SuggestedFix.builder()
-            .replace(tree, replacement.toString())
-            .build();
+        return flags;
     }
 
     private String stringify(Set<Modifier> flags) {
         List<Modifier> sortedFlags = new ArrayList<>(flags);
-        sortedFlags.sort(new ModifierComparator());
+        sortedFlags.sort(MODIFIER_COMPARATOR);
         return JOINER_ON_SPACE.join(sortedFlags);
     }
 }
