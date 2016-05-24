@@ -25,9 +25,12 @@ import static com.google.errorprone.matchers.Matchers.receiverSameAsArgument;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import java.util.List;
 
 /**
  * Points out if an object is tested for equality to itself.
@@ -64,6 +67,24 @@ public class SelfEquals extends BugChecker implements MethodInvocationTreeMatche
       return Description.NO_MATCH;
     }
 
-    return describeMatch(methodInvocationTree);
+    return describe(methodInvocationTree, state);
+  }
+  
+  private Description describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
+    /**
+     * Cases:
+     * <ol>
+     * <li>foo.equals(foo) ==> foo.equals(other.foo)</li>
+     * <li>foo.equals(this.foo) ==> foo.equals(other.foo)</li>
+     * <li>this.foo.equals(foo) ==> this.foo.equals(other.foo)</li>
+     * <li>this.foo.equals(this.foo) ==> this.foo.equals(other.foo)</li>
+     * </ol>
+     */
+    GuavaSelfEquals.verifyArgsType(methodInvocationTree);
+    List<? extends ExpressionTree> args = methodInvocationTree.getArguments();
+    // Choose argument to replace.
+    ExpressionTree toReplace = args.get(0);
+    Fix fix = GuavaSelfEquals.generateFix(methodInvocationTree, state, toReplace);
+    return describeMatch(methodInvocationTree, fix);
   }
 }

@@ -83,8 +83,6 @@ public class GuavaSelfEquals extends BugChecker implements MethodInvocationTreeM
   }
 
   private Description describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
-    // If we don't find a good field to use, then just replace with "true"
-    Fix fix = SuggestedFix.replace(methodInvocationTree, "true");
     /**
      * Cases:
      * <ol>
@@ -94,19 +92,9 @@ public class GuavaSelfEquals extends BugChecker implements MethodInvocationTreeM
      * <li>Objects.equal(this.foo, this.foo) ==> Objects.equal(this.foo, other.foo)</li>
      * </ol>
      */
-    // Assumption: Both arguments are either identifiers or field accesses.
-    List<? extends ExpressionTree> args = methodInvocationTree.getArguments();
-    for (ExpressionTree arg : args) {
-      switch (arg.getKind()) {
-        case IDENTIFIER:
-        case MEMBER_SELECT:
-          break;
-        default:
-          throw new IllegalStateException(
-              "Expected arg " + arg + " to be a field access or identifier");
-      }
-    }
 
+    verifyArgsType(methodInvocationTree);
+    List<? extends ExpressionTree> args = methodInvocationTree.getArguments();  
     // Choose argument to replace.
     ExpressionTree toReplace;
     if (args.get(1).getKind() == Kind.IDENTIFIER) {
@@ -117,6 +105,29 @@ public class GuavaSelfEquals extends BugChecker implements MethodInvocationTreeM
       // If we don't have a good reason to replace one or the other, replace the second.
       toReplace = args.get(1);
     }
+
+    Fix fix = generateFix(methodInvocationTree, state, toReplace);
+    return describeMatch(methodInvocationTree, fix);
+  }
+  
+  /** Verifies arguments to be either identifiers or field accesses. */
+  protected static void verifyArgsType(MethodInvocationTree methodInvocationTree) {
+    // Assumption: Both arguments are either identifiers or field accesses.
+    for (ExpressionTree arg : methodInvocationTree.getArguments()) {
+      switch (arg.getKind()) {
+        case IDENTIFIER:
+        case MEMBER_SELECT:
+          break;
+        default:
+          throw new IllegalStateException(
+              "Expected arg " + arg + " to be a field access or identifier");
+      }
+    }
+  }
+  
+  /** Finds a replacement for toReplace expression tree is possible. */
+  protected static Fix generateFix(
+      MethodInvocationTree methodInvocationTree, VisitorState state, ExpressionTree toReplace) {
     // Find containing block
     TreePath path = state.getPath();
     while (path.getLeaf().getKind() != Kind.BLOCK) {
@@ -130,16 +141,16 @@ public class GuavaSelfEquals extends BugChecker implements MethodInvocationTreeM
 
         if (ASTHelpers.getSymbol(toReplace).isMemberOf(variableTypeSymbol, state.getTypes())) {
           if (toReplace.getKind() == Kind.IDENTIFIER) {
-            fix = SuggestedFix.prefixWith(toReplace, declaration.getName() + ".");
+            return SuggestedFix.prefixWith(toReplace, declaration.getName() + ".");
           } else {
-            fix =
+            return
                 SuggestedFix.replace(
                     ((JCFieldAccess) toReplace).getExpression(), declaration.getName().toString());
           }
         }
       }
     }
-
-    return describeMatch(methodInvocationTree, fix);
+    // If we don't find a good field to use, then just replace with "true"
+    return SuggestedFix.replace(methodInvocationTree, "true");
   }
 }

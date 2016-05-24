@@ -20,31 +20,59 @@ package com.google.errorprone.bugpatterns;
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public class SelfEqualsPositiveCase {
+  private String simpleField;
 
-  public boolean test1() {
-    Object obj = new Object();
-    // BUG: Diagnostic contains: An object is tested for equality to itself
-    return obj.equals(obj);
+  public boolean test1(Object obj) {
+    if (obj == null || getClass() != obj.getClass()) {
+      return false;
+    }
+    SelfEqualsPositiveCase other = (SelfEqualsPositiveCase) obj;
+    // BUG: Diagnostic contains: simpleField.equals(other.simpleField);
+    return simpleField.equals(simpleField);
   }
 
-  private Object obj = new Object();
-  public boolean test2() {
-    // BUG: Diagnostic contains: An object is tested for equality to itself
-    return obj.equals(this.obj);
+  public boolean test2(SelfEqualsPositiveCase obj) {
+    if (obj == null || getClass() != obj.getClass()) {
+      return false;
+    }
+    SelfEqualsPositiveCase other = (SelfEqualsPositiveCase) obj;
+    // BUG: Diagnostic contains: simpleField.equals(other.simpleField);
+    return simpleField.equals(this.simpleField);
   }
 
-  public boolean test3() {
-    // BUG: Diagnostic contains: An object is tested for equality to itself
-    return this.obj.equals(obj);
+  public boolean test3(SelfEqualsPositiveCase obj) {
+    if (obj == null || getClass() != obj.getClass()) {
+      return false;
+    }
+    SelfEqualsPositiveCase other = (SelfEqualsPositiveCase) obj;
+    // BUG: Diagnostic contains: this.simpleField.equals(other.simpleField);
+    return this.simpleField.equals(simpleField);
   }
 
-  public boolean test4() {
-    // BUG: Diagnostic contains: An object is tested for equality to itself
-    return this.obj.equals(this.obj);
+  public boolean test4(SelfEqualsPositiveCase obj) {
+    if (obj == null || getClass() != obj.getClass()) {
+      return false;
+    }
+    SelfEqualsPositiveCase other = (SelfEqualsPositiveCase) obj;
+    // BUG: Diagnostic contains: this.simpleField.equals(other.simpleField);
+    return this.simpleField.equals(this.simpleField);
   }
 
-  public boolean test5() {
+  public boolean test5(SelfEqualsPositiveCase obj) {
+    if (obj == null || getClass() != obj.getClass()) {
+      return false;
+    }
+    SelfEqualsPositiveCase other = (SelfEqualsPositiveCase) obj;
     // BUG: Diagnostic contains: An object is tested for equality to itself
     return equals(this);
+  }
+  
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null || getClass() != obj.getClass()) {
+      return false;
+    }
+    SelfEqualsPositiveCase other = (SelfEqualsPositiveCase) obj;
+    return simpleField.equals(((SelfEqualsPositiveCase)other).simpleField);
   }
 }
