@@ -39,9 +39,9 @@ import com.google.errorprone.bugpatterns.BadShiftAmount;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.ChainingConstructorIgnoresParameter;
-import com.google.errorprone.bugpatterns.DepAnnTest;
 import com.google.errorprone.bugpatterns.EmptyIfStatementTest;
 import com.google.errorprone.bugpatterns.Finally;
+import com.google.errorprone.bugpatterns.SelfAssignmentTest;
 import com.google.errorprone.bugpatterns.WaitNotInLoopTest;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
@@ -59,7 +59,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -136,31 +135,34 @@ public class ErrorProneJavaCompilerTest {
 
   @Test
   public void fileWithErrorIntegrationTest() throws Exception {
-    CompilationResult result = doCompile(
-        DepAnnTest.class,
-        Arrays.asList("DepAnnPositiveCases.java"),
-        Collections.<String>emptyList(),
-        Collections.<Class<? extends BugChecker>>emptyList());
+    CompilationResult result =
+        doCompile(
+            SelfAssignmentTest.class,
+            Arrays.asList("SelfAssignmentPositiveCases1.java"),
+            Collections.<String>emptyList(),
+            Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isFalse();
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
-        hasItem(diagnosticMessage(containsString("[DepAnn]")));
+        hasItem(diagnosticMessage(containsString("[SelfAssignment]")));
     assertTrue(matcher.matches(result.diagnosticHelper.getDiagnostics()));
   }
 
   @Test
   public void testWithDisabledCheck() throws Exception {
-    CompilationResult result = doCompile(
-        DepAnnTest.class,
-        Arrays.asList("DepAnnPositiveCases.java"),
-        Collections.<String>emptyList(),
-        Collections.<Class<? extends BugChecker>>emptyList());
+    CompilationResult result =
+        doCompile(
+            SelfAssignmentTest.class,
+            Arrays.asList("SelfAssignmentPositiveCases1.java"),
+            Collections.<String>emptyList(),
+            Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isFalse();
 
-    result = doCompile(
-        DepAnnTest.class,
-        Arrays.asList("DepAnnPositiveCases.java"),
-        Arrays.asList("-Xep:DepAnn:OFF"),
-        Collections.<Class<? extends BugChecker>>emptyList());
+    result =
+        doCompile(
+            SelfAssignmentTest.class,
+            Arrays.asList("SelfAssignmentPositiveCases1.java"),
+            Arrays.asList("-Xep:SelfAssignment:OFF"),
+            Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isTrue();
   }
 
@@ -189,22 +191,24 @@ public class ErrorProneJavaCompilerTest {
 
   @Test
   public void testWithCheckDemotedToWarning() throws Exception {
-    CompilationResult result = doCompile(
-        DepAnnTest.class,
-        Arrays.asList("DepAnnPositiveCases.java"),
-        Collections.<String>emptyList(),
-        Collections.<Class<? extends BugChecker>>emptyList());
+    CompilationResult result =
+        doCompile(
+            SelfAssignmentTest.class,
+            Arrays.asList("SelfAssignmentPositiveCases1.java"),
+            Collections.<String>emptyList(),
+            Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isFalse();
     assertThat(result.diagnosticHelper.getDiagnostics().size()).isGreaterThan(0);
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
-        hasItem(diagnosticMessage(containsString("[DepAnn]")));
+        hasItem(diagnosticMessage(containsString("[SelfAssignment]")));
     assertTrue(matcher.matches(result.diagnosticHelper.getDiagnostics()));
 
-    result = doCompile(
-        DepAnnTest.class,
-        Arrays.asList("DepAnnPositiveCases.java"),
-        Arrays.asList("-Xep:DepAnn:WARN"),
-        Collections.<Class<? extends BugChecker>>emptyList());
+    result =
+        doCompile(
+            SelfAssignmentTest.class,
+            Arrays.asList("SelfAssignmentPositiveCases1.java"),
+            Arrays.asList("-Xep:SelfAssignment:WARN"),
+            Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isTrue();
     assertThat(result.diagnosticHelper.getDiagnostics().size()).isGreaterThan(0);
     assertTrue(matcher.matches(result.diagnosticHelper.getDiagnostics()));
@@ -282,11 +286,12 @@ public class ErrorProneJavaCompilerTest {
 
   @Test
   public void testWithCustomCheckNegative() throws Exception {
-    CompilationResult result = doCompile(
-        DepAnnTest.class,
-        Arrays.asList("DepAnnPositiveCases.java"),
-        Collections.<String>emptyList(),
-        Arrays.<Class<? extends BugChecker>>asList(Finally.class));
+    CompilationResult result =
+        doCompile(
+            SelfAssignmentTest.class,
+            Arrays.asList("SelfAssignmentPositiveCases1.java"),
+            Collections.<String>emptyList(),
+            Arrays.<Class<? extends BugChecker>>asList(Finally.class));
     assertThat(result.succeeded).isTrue();
     assertThat(result.diagnosticHelper.getDiagnostics()).isEmpty();
   }
@@ -429,8 +434,11 @@ public class ErrorProneJavaCompilerTest {
     }
   }
 
-  private CompilationResult doCompile(Class<?> clazz, List<String> fileNames,
-      List<String> extraArgs, List<Class<? extends BugChecker>> customCheckers) throws IOException {
+  private CompilationResult doCompile(
+      Class<?> clazz,
+      List<String> fileNames,
+      List<String> extraArgs,
+      List<Class<? extends BugChecker>> customCheckers) {
     DiagnosticTestHelper diagnosticHelper = new DiagnosticTestHelper();
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(outputStream), true);

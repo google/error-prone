@@ -69,7 +69,7 @@ class ScannerSupplierImpl extends ScannerSupplier {
   }
 
   @Override
-  protected ImmutableBiMap<String, BugCheckerInfo> getAllChecks() {
+  public ImmutableBiMap<String, BugCheckerInfo> getAllChecks() {
     return checks;
   }
 
@@ -79,7 +79,7 @@ class ScannerSupplierImpl extends ScannerSupplier {
   }
 
   @Override
-  protected ImmutableSet<BugCheckerInfo> getEnabledChecks() {
+  public ImmutableSet<BugCheckerInfo> getEnabledChecks() {
     return FluentIterable.from(getAllChecks().values()).filter(isCheckEnabled).toSet();
   }
 

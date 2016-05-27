@@ -152,8 +152,7 @@ public class ErrorProneCompilerIntegrationTest {
    * NullPointerExceptions in the matchers.
    */
   @Test
-  public void fileWithMultipleTopLevelClassesExtendsWithError()
-      throws Exception {
+  public void fileWithMultipleTopLevelClassesExtendsWithError() throws Exception {
     Result exitCode = compiler.compile(
         compiler.fileManager().forResources(getClass(), "MultipleTopLevelClassesWithErrors.java",
             "ExtendedMultipleTopLevelClassesWithErrors.java"));
@@ -162,7 +161,7 @@ public class ErrorProneCompilerIntegrationTest {
         diagnosticMessage(containsString("[SelfAssignment]")));
     assertTrue("Warning should be found. " + diagnosticHelper.describe(),
         matcher.matches(diagnosticHelper.getDiagnostics()));
-    assertThat(diagnosticHelper.getDiagnostics()).hasSize(4);
+    assertThat(diagnosticHelper.getDiagnostics()).hasSize(3);
   }
 
   @BugPattern(
@@ -366,16 +365,19 @@ public class ErrorProneCompilerIntegrationTest {
 
   @Test
   public void severityIsResetOnNextCompilation() throws Exception {
-    String[] testFile = {"public class Test {",
-        "  long myLong = 213124l;",
+    String[] testFile = {
+        "public class Test {",
+        "  void doIt (int i) {",
+        "    i = i;",
+        "  }",
         "}"};
 
-    String[] args = {"-Xep:LongLiteralLowerCaseSuffix:WARN"};
+    String[] args = {"-Xep:SelfAssignment:WARN"};
     Result exitCode = compiler.compile(args,
         Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile)));
     outputStream.flush();
-    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher = hasItem(
-        diagnosticMessage(containsString("[LongLiteralLowerCaseSuffix]")));
+    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
+        hasItem(diagnosticMessage(containsString("[SelfAssignment]")));
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
     assertTrue(
         "Warning should be found. " + diagnosticHelper.describe(),
@@ -414,7 +416,7 @@ public class ErrorProneCompilerIntegrationTest {
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
     assertThat(diagnosticHelper.getDiagnostics()).isEmpty();
   }
-  
+
   @Test
   public void suppressGeneratedWarning() throws Exception {
     String[] generatedFile = {

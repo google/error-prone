@@ -16,7 +16,6 @@
 
 package com.google.errorprone.scanner;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
@@ -202,8 +201,7 @@ public class BuiltInCheckerSuppliers {
   /**
    * A list of all checks with severity ERROR that are on by default.
    */
-  @VisibleForTesting
-  static final ImmutableSet<BugCheckerInfo> ENABLED_ERRORS =
+  public static final ImmutableSet<BugCheckerInfo> ENABLED_ERRORS =
       getSuppliers(
           ArrayEquals.class,
           ArrayHashCode.class,
@@ -213,11 +211,9 @@ public class BuiltInCheckerSuppliers {
           BadShiftAmount.class,
           ChainingConstructorIgnoresParameter.class,
           CheckReturnValue.class,
-          ClassName.class,
           ComparisonOutOfRange.class,
           CompileTimeConstantChecker.class,
           DeadException.class,
-          DepAnn.class,
           EqualsNaN.class,
           ForOverrideChecker.class,
           FormatString.class,
@@ -233,7 +229,6 @@ public class BuiltInCheckerSuppliers {
           JUnit4SetUpNotRun.class,
           JUnit4TearDownNotRun.class,
           JUnit4TestNotRun.class,
-          LongLiteralLowerCaseSuffix.class,
           MislabeledAndroidString.class,
           MisusedWeekYear.class,
           MockitoCast.class,
@@ -262,8 +257,7 @@ public class BuiltInCheckerSuppliers {
   /**
    * A list of all checks with severity WARNING that are on by default.
    */
-  @VisibleForTesting
-  static final ImmutableSet<BugCheckerInfo> ENABLED_WARNINGS =
+  public static final ImmutableSet<BugCheckerInfo> ENABLED_WARNINGS =
       getSuppliers(
           BadAnnotationImplementation.class,
           BadComparable.class,
@@ -281,7 +275,6 @@ public class BuiltInCheckerSuppliers {
           MissingCasesInEnumSwitch.class,
           MissingFail.class,
           MissingOverride.class,
-          MultipleTopLevelClasses.class,
           NonAtomicVolatileUpdate.class,
           NonOverridingEquals.class,
           NullableConstructor.class,
@@ -292,7 +285,6 @@ public class BuiltInCheckerSuppliers {
           PreconditionsInvalidPlaceholder.class,
           ProtoFieldPreconditionsCheckNotNull.class,
           RequiredModifiersChecker.class,
-          StaticAccessedFromInstance.class,
           StaticGuardedByInstance.class,
           StringEquality.class,
           SynchronizeOnNonFinalField.class,
@@ -302,8 +294,7 @@ public class BuiltInCheckerSuppliers {
   /**
    * A list of all checks that are off by default.
    */
-  @VisibleForTesting
-  static final ImmutableSet<BugCheckerInfo> DISABLED_CHECKS =
+  public static final ImmutableSet<BugCheckerInfo> DISABLED_CHECKS =
       getSuppliers(
           ArraysAsListPrimitiveArray.class,
           AssertFalse.class,
@@ -313,8 +304,10 @@ public class BuiltInCheckerSuppliers {
           BigDecimalLiteralDouble.class,
           BoxedPrimitiveConstructor.class,
           ClassCanBeStatic.class,
+          ClassName.class,
           ClassNewInstance.class,
           ComparisonContractViolated.class,
+          DepAnn.class,
           DivZero.class,
           EmptyIfStatement.class,
           EmptyTopLevelDeclaration.class,
@@ -329,11 +322,13 @@ public class BuiltInCheckerSuppliers {
           JavaxInjectOnFinalField.class,
           JMockTestWithoutRunWithOrRuleAnnotation.class,
           LockMethodChecker.class,
+          LongLiteralLowerCaseSuffix.class,
           MalformedFormatString.class,
           ModifyingCollectionWithItself.class,
           MoreThanOneInjectableConstructor.class,
           MoreThanOneQualifier.class,
           MoreThanOneScopeAnnotationOnClass.class,
+          MultipleTopLevelClasses.class,
           NarrowingCompoundAssignment.class,
           NoAllocationChecker.class,
           NonCanonicalStaticMemberImport.class,
@@ -349,6 +344,7 @@ public class BuiltInCheckerSuppliers {
           SelfComparision.class,
           SelfEquality.class,
           SelfEquals.class,
+          StaticAccessedFromInstance.class,
           TypeParameterUnusedInFormals.class,
           UnlockMethodChecker.class,
           UnnecessaryStaticImport.class,

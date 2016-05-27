@@ -16,6 +16,7 @@
 
 package com.google.errorprone.scanner;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ArrayListMultimap;
@@ -106,12 +107,14 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
    * Returns a map of check name to {@link BugCheckerInfo} for all {@link BugCheckerInfo}s in this
    * {@link ScannerSupplier}, including disabled ones.
    */
-  protected abstract ImmutableBiMap<String, BugCheckerInfo> getAllChecks();
+  @VisibleForTesting
+  public abstract ImmutableBiMap<String, BugCheckerInfo> getAllChecks();
 
   /**
    * Returns the set of {@link BugCheckerInfo}s that are enabled in this {@link ScannerSupplier}.
    */
-  protected abstract ImmutableSet<BugCheckerInfo> getEnabledChecks();
+  @VisibleForTesting
+  public abstract ImmutableSet<BugCheckerInfo> getEnabledChecks();
 
   protected abstract PMap<String, BugPattern.SeverityLevel> severities();
 
@@ -152,7 +155,7 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
         checksByAllNames.put(name, checker);
       }
     }
-    
+
     // Process overrides
     for (Entry<String, Severity> entry : severityOverrides.entrySet()) {
       Collection<BugCheckerInfo> checksWithName = checksByAllNames.get(entry.getKey());

@@ -41,7 +41,7 @@ class InstanceReturningScannerSupplierImpl extends ScannerSupplier {
   }
 
   @Override
-  protected ImmutableBiMap<String, BugCheckerInfo> getAllChecks() {
+  public ImmutableBiMap<String, BugCheckerInfo> getAllChecks() {
     throw new UnsupportedOperationException();
   }
 
@@ -51,7 +51,7 @@ class InstanceReturningScannerSupplierImpl extends ScannerSupplier {
   }
 
   @Override
-  protected ImmutableSet<BugCheckerInfo> getEnabledChecks() {
+  public ImmutableSet<BugCheckerInfo> getEnabledChecks() {
     throw new UnsupportedOperationException();
   }
 }
