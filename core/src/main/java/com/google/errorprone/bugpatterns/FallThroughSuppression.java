@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.ONE_OFF;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
-import static com.google.errorprone.BugPattern.SeverityLevel.NOT_A_PROBLEM;
+import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.hasArgumentWithValue;
 import static com.google.errorprone.matchers.Matchers.isType;
@@ -37,15 +37,19 @@ import java.util.List;
  * @author eaftan@google.com (Eddie Aftandilian)
  * @author pepstein@google.com (Peter Epstein)
  */
-@BugPattern(name = "FallthroughSuppression",
-    summary = "Fallthrough warning suppression has no effect if warning is suppressed",
-    explanation =
-        "Remove all arguments to @SuppressWarnings annotations that suppress the Java " +
-        "compiler's fallthrough warning. If there are no more arguments in a " +
-        "@SuppressWarnings annotation, remove the whole annotation.\n\n" +
-        "Note: This checker was specific to a refactoring we performed and should not be " +
-        "used as a general error or warning.",
-    category = ONE_OFF, severity = NOT_A_PROBLEM, maturity = EXPERIMENTAL)
+@BugPattern(
+  name = "FallthroughSuppression",
+  summary = "Fallthrough warning suppression has no effect if warning is suppressed",
+  explanation =
+      "Remove all arguments to @SuppressWarnings annotations that suppress the Java "
+          + "compiler's fallthrough warning. If there are no more arguments in a "
+          + "@SuppressWarnings annotation, remove the whole annotation.\n\n"
+          + "Note: This checker was specific to a refactoring we performed and should not be "
+          + "used as a general error or warning.",
+  category = ONE_OFF,
+  severity = SUGGESTION,
+  maturity = EXPERIMENTAL
+)
 public class FallThroughSuppression extends AbstractSuppressWarningsMatcher {
 
   @SuppressWarnings({"varargs", "unchecked"})

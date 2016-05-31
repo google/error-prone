@@ -51,6 +51,11 @@ class InstanceReturningScannerSupplierImpl extends ScannerSupplier {
   }
 
   @Override
+  protected ImmutableSet<String> disabled() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
   public ImmutableSet<BugCheckerInfo> getEnabledChecks() {
     throw new UnsupportedOperationException();
   }

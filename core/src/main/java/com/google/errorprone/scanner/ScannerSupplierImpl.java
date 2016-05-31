@@ -16,8 +16,9 @@
 
 package com.google.errorprone.scanner;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.google.common.base.Function;
-import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableBiMap;
@@ -38,15 +39,21 @@ import org.pcollections.PMap;
 class ScannerSupplierImpl extends ScannerSupplier {
   private final ImmutableBiMap<String, BugCheckerInfo> checks;
   private final PMap<String, BugPattern.SeverityLevel> severities;
+  private final ImmutableSet<String> disabled;
 
   ScannerSupplierImpl(
       ImmutableBiMap<String, BugCheckerInfo> checks,
-      PMap<String, BugPattern.SeverityLevel> severities) {
-    Preconditions.checkArgument(
+      PMap<String, BugPattern.SeverityLevel> severities,
+      ImmutableSet<String> disabled) {
+    checkArgument(
         Sets.difference(severities.keySet(), checks.keySet()).isEmpty(),
         "enabledChecks must be a subset of allChecks");
+    checkArgument(
+        Sets.difference(disabled, checks.keySet()).isEmpty(),
+        "disabled must be a subset of allChecks");
     this.checks = checks;
     this.severities = severities;
+    this.disabled = disabled;
   }
 
   // TODO(cushon): BugCheckerSupplier::get
@@ -79,15 +86,20 @@ class ScannerSupplierImpl extends ScannerSupplier {
   }
 
   @Override
-  public ImmutableSet<BugCheckerInfo> getEnabledChecks() {
-    return FluentIterable.from(getAllChecks().values()).filter(isCheckEnabled).toSet();
+  protected ImmutableSet<String> disabled() {
+    return disabled;
   }
 
-  private final Predicate<BugCheckerInfo> isCheckEnabled =
-      new Predicate<BugCheckerInfo>() {
-        @Override
-        public boolean apply(BugCheckerInfo input) {
-          return input.severity(severities).enabled();
-        }
-  };
+  @Override
+  public ImmutableSet<BugCheckerInfo> getEnabledChecks() {
+    return FluentIterable.from(getAllChecks().values())
+        .filter(
+            new Predicate<BugCheckerInfo>() {
+              @Override
+              public boolean apply(BugCheckerInfo input) {
+                return !disabled.contains(input.canonicalName());
+              }
+            })
+        .toSet();
+  }
 }

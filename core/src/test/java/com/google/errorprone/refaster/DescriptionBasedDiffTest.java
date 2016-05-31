@@ -64,8 +64,9 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
   @Test
   public void oneDiff() {
     DescriptionBasedDiff diff = DescriptionBasedDiff.create(compilationUnit);
-    diff.onDescribed(new Description(null, "message", SuggestedFix.replace(117, 120, "bar"),
-        SeverityLevel.NOT_A_PROBLEM));
+    diff.onDescribed(
+        new Description(
+            null, "message", SuggestedFix.replace(117, 120, "bar"), SeverityLevel.SUGGESTION));
     diff.applyDifferences(sourceFile);
     assertThat(sourceFile.getLines())
         .containsExactly(
@@ -83,8 +84,9 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
   @Test
   public void prefixDiff() {
     DescriptionBasedDiff diff = DescriptionBasedDiff.create(compilationUnit);
-    diff.onDescribed(new Description(null, "message", SuggestedFix.replace(120, 120, "bar"),
-        SeverityLevel.NOT_A_PROBLEM));
+    diff.onDescribed(
+        new Description(
+            null, "message", SuggestedFix.replace(120, 120, "bar"), SeverityLevel.SUGGESTION));
     diff.applyDifferences(sourceFile);
     assertThat(sourceFile.getLines())
         .containsExactly(
@@ -103,12 +105,12 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
   @Test
   public void twoDiffs() {
     DescriptionBasedDiff diff = DescriptionBasedDiff.create(compilationUnit);
-    diff.onDescribed(new Description(null, "message", 
-        SuggestedFix.builder()
-            .replace(104, 107, "longer")
-            .replace(117, 120, "bar")
-            .build(),
-        SeverityLevel.NOT_A_PROBLEM));
+    diff.onDescribed(
+        new Description(
+            null,
+            "message",
+            SuggestedFix.builder().replace(104, 107, "longer").replace(117, 120, "bar").build(),
+            SeverityLevel.SUGGESTION));
     diff.applyDifferences(sourceFile);
     assertThat(sourceFile.getLines())
         .containsExactly(
@@ -126,9 +128,12 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
   @Test
   public void addImport() {
     DescriptionBasedDiff diff = DescriptionBasedDiff.create(compilationUnit);
-    diff.onDescribed(new Description(null, "message", 
-        SuggestedFix.builder().addImport("com.google.foo.Bar").build(),
-        SeverityLevel.NOT_A_PROBLEM));
+    diff.onDescribed(
+        new Description(
+            null,
+            "message",
+            SuggestedFix.builder().addImport("com.google.foo.Bar").build(),
+            SeverityLevel.SUGGESTION));
     diff.applyDifferences(sourceFile);
     assertThat(sourceFile.getLines())
         .containsExactly(
@@ -148,9 +153,12 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
   @Test
   public void removeImport() {
     DescriptionBasedDiff diff = DescriptionBasedDiff.create(compilationUnit);
-    diff.onDescribed(new Description(null, "message",
-        SuggestedFix.builder().removeImport("com.foo.Bar").build(),
-        SeverityLevel.NOT_A_PROBLEM));
+    diff.onDescribed(
+        new Description(
+            null,
+            "message",
+            SuggestedFix.builder().removeImport("com.foo.Bar").build(),
+            SeverityLevel.SUGGESTION));
     diff.applyDifferences(sourceFile);
     assertThat(sourceFile.getLines())
         .containsExactly(
@@ -168,13 +176,16 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
   @Test
   public void twoDiffsWithImport() {
     DescriptionBasedDiff diff = DescriptionBasedDiff.create(compilationUnit);
-    diff.onDescribed(new Description(null, "message", 
-        SuggestedFix.builder()
-            .replace(104, 107, "longer")
-            .replace(117, 120, "bar")
-            .addImport("com.google.foo.Bar")
-            .build(),
-        SeverityLevel.NOT_A_PROBLEM));
+    diff.onDescribed(
+        new Description(
+            null,
+            "message",
+            SuggestedFix.builder()
+                .replace(104, 107, "longer")
+                .replace(117, 120, "bar")
+                .addImport("com.google.foo.Bar")
+                .build(),
+            SeverityLevel.SUGGESTION));
     diff.applyDifferences(sourceFile);
     assertThat(sourceFile.getLines())
         .containsExactly(

@@ -133,23 +133,13 @@ public @interface BugPattern {
   SeverityLevel severity();
 
   public enum SeverityLevel {
-    ERROR(true),
-    WARNING(true),
-    SUGGESTION(true),
-    /**
-     * Should not be used for general code.
-     */
-    NOT_A_PROBLEM(false);
+    ERROR,
+    WARNING,
+    SUGGESTION,
 
-    private final boolean enabled;
-
-    SeverityLevel(boolean enabled) {
-      this.enabled = enabled;
-    }
-
-    public boolean enabled() {
-      return enabled;
-    }
+    /** @deprecated use {@link SUGGESTION} instead */
+    @Deprecated
+    NOT_A_PROBLEM
   }
 
   MaturityLevel maturity();

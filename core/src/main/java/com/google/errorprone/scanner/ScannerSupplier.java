@@ -24,6 +24,7 @@ import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
 import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
@@ -37,8 +38,10 @@ import org.pcollections.PMap;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.annotation.CheckReturnValue;
 
@@ -89,7 +92,8 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
       builder.put(checker.canonicalName(), checker);
     }
     ImmutableBiMap<String, BugCheckerInfo> allChecks = builder.build();
-    return new ScannerSupplierImpl(allChecks, defaultSeverities(allChecks.values()));
+    return new ScannerSupplierImpl(
+        allChecks, defaultSeverities(allChecks.values()), ImmutableSet.<String>of());
   }
 
   /**
@@ -118,6 +122,8 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
 
   protected abstract PMap<String, BugPattern.SeverityLevel> severities();
 
+  protected abstract ImmutableSet<String> disabled();
+
   /**
    * Applies options to this {@link ScannerSupplier}.
    *
@@ -145,6 +151,7 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
     // Initialize result allChecks map and enabledChecks set with current state of this Supplier.
     ImmutableBiMap<String, BugCheckerInfo> checks = getAllChecks();
     PMap<String, SeverityLevel> severities = severities();
+    Set<String> disabled = new HashSet<>(disabled());
 
     // Create a map from names (canonical and alternate) to checks. We could do this when the
     // supplier is created, but applyOverrides() is unlikely to be called more than once per
@@ -173,23 +180,26 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
               throw new InvalidCommandLineOptionException(
                   check.canonicalName() + " may not be disabled");
             }
-            severities = severities.plus(check.canonicalName(), SeverityLevel.NOT_A_PROBLEM);
+            disabled.add(check.canonicalName());
             break;
           case DEFAULT:
             severities = severities.plus(check.canonicalName(), check.defaultSeverity());
+            disabled.remove(check.canonicalName());
             break;
           case WARN:
             // Demoting an enabled check from an error to a warning is a form of disabling
-            if (check.severity(severities).enabled()
+            if (!disabled().contains(check.canonicalName())
                 && !check.suppressibility().disableable()
                 && check.defaultSeverity() == SeverityLevel.ERROR) {
               throw new InvalidCommandLineOptionException(check.canonicalName()
                   + " is not disableable and may not be demoted to a warning");
             }
             severities = severities.plus(check.canonicalName(), SeverityLevel.WARNING);
+            disabled.remove(check.canonicalName());
             break;
           case ERROR:
             severities = severities.plus(check.canonicalName(), SeverityLevel.ERROR);
+            disabled.remove(check.canonicalName());
             break;
           default:
             throw new IllegalStateException("Unexpected severity level: " + entry.getValue());
@@ -197,13 +207,13 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
       }
     }
 
-    return new ScannerSupplierImpl(checks, severities);
+    return new ScannerSupplierImpl(checks, severities, ImmutableSet.copyOf(disabled));
   }
 
   /**
-   * Composes this {@link ScannerSupplier} with the {@code other} {@link ScannerSupplier}. The set
-   * of checks that are turned on is the union of the set of checks on in {@code this} and
-   * {@code other}.
+   * Composes this {@link ScannerSupplier} with the {@code other}
+   * {@link ScannerSupplier}. The set of checks that are turned on is the
+   * intersection of the checks on in {@code this} and {@code other}.
    */
   @CheckReturnValue
   public ScannerSupplier plus(ScannerSupplier other) {
@@ -214,7 +224,8 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
             .build();
     PMap<String, SeverityLevel> combinedSeverities =
         this.severities().plusAll(other.severities());
-    return new ScannerSupplierImpl(combinedAllChecks, combinedSeverities);
+    ImmutableSet<String> disabled = ImmutableSet.copyOf(Sets.union(disabled(), other.disabled()));
+    return new ScannerSupplierImpl(combinedAllChecks, combinedSeverities, disabled);
   }
 
   /**
@@ -223,12 +234,12 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
    */
   @CheckReturnValue
   public ScannerSupplier filter(Predicate<? super BugCheckerInfo> predicate) {
-    PMap<String, SeverityLevel> filteredSeverities = severities();
-    for (Entry<String, SeverityLevel> entry : severities().entrySet()) {
-      if (!predicate.apply(getAllChecks().get(entry.getKey()))) {
-        filteredSeverities = filteredSeverities.plus(entry.getKey(), SeverityLevel.NOT_A_PROBLEM);
+    ImmutableSet.Builder<String> disabled = ImmutableSet.builder();
+    for (BugCheckerInfo check : getAllChecks().values()) {
+      if (!predicate.apply(check)) {
+        disabled.add(check.canonicalName());
       }
     }
-    return new ScannerSupplierImpl(getAllChecks(), filteredSeverities);
+    return new ScannerSupplierImpl(getAllChecks(), severities(), disabled.build());
   }
 }

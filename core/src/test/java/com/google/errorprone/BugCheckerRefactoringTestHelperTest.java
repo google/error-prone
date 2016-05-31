@@ -18,7 +18,7 @@ package com.google.errorprone;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
-import static com.google.errorprone.BugPattern.SeverityLevel.NOT_A_PROBLEM;
+import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -169,12 +169,13 @@ public class BugCheckerRefactoringTestHelperTest {
    * Mock {@link BugChecker} for testing only.
    */
   @BugPattern(
-      name = "ReturnNullRefactoring",
-      summary = "Mock refactoring that replaces all returns with 'return null;' statement.",
-      explanation = "For test purposes only.",
-      category = JDK,
-      severity = NOT_A_PROBLEM,
-      maturity = EXPERIMENTAL)
+    name = "ReturnNullRefactoring",
+    summary = "Mock refactoring that replaces all returns with 'return null;' statement.",
+    explanation = "For test purposes only.",
+    category = JDK,
+    severity = SUGGESTION,
+    maturity = EXPERIMENTAL
+  )
   public static class ReturnNullRefactoring extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {
@@ -189,7 +190,7 @@ public class BugCheckerRefactoringTestHelperTest {
     summary = "Mock refactoring that removes all annotations declared in package bar ",
     explanation = "For test purposes only.",
     category = JDK,
-    severity = NOT_A_PROBLEM,
+    severity = SUGGESTION,
     maturity = EXPERIMENTAL
   )
   public static class RemoveAnnotationRefactoring extends BugChecker

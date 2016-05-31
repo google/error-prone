@@ -16,7 +16,7 @@
 
 package com.google.errorprone.matchers;
 
-import static com.google.errorprone.BugPattern.SeverityLevel.NOT_A_PROBLEM;
+import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
@@ -38,8 +38,9 @@ import javax.annotation.Nullable;
  */
 public class Description {
   /** Describes the sentinel value of the case where the match failed. */
-  public static final Description NO_MATCH = new Description(null, "<no match>", "<no match>",
-      "<no match>", ImmutableList.<Fix>of(), NOT_A_PROBLEM);
+  public static final Description NO_MATCH =
+      new Description(
+          null, "<no match>", "<no match>", "<no match>", ImmutableList.<Fix>of(), SUGGESTION);
 
   private static final String UNDEFINED_CHECK_NAME = "Undefined";
 

@@ -68,7 +68,7 @@ public abstract class TopLevelAnalysisWithSeverity implements TopLevelAnalysis {
             throw new IllegalArgumentException(canonicalName() + " may not be disabled");
           }
           on = false;
-          severity = SeverityLevel.NOT_A_PROBLEM;
+          severity = SeverityLevel.SUGGESTION;
           break;
         case DEFAULT:
           on = true;
@@ -93,7 +93,7 @@ public abstract class TopLevelAnalysisWithSeverity implements TopLevelAnalysis {
     } else {
       severity = defaultSeverity();
     }
-    if (on && severity.enabled()) {
+    if (on) {
       analysis().analyze(compilationUnit, context, config, new DescriptionListener() {
         @Override
         public void onDescribed(Description description) {
