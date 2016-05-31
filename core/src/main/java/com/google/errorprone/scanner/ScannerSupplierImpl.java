@@ -55,8 +55,8 @@ class ScannerSupplierImpl extends ScannerSupplier {
         @Override
         public BugChecker apply(BugCheckerInfo checkerClass) {
           try {
-            return checkerClass.checkerClass().newInstance();
-          } catch (InstantiationException | IllegalAccessException e) {
+            return checkerClass.checkerClass().getConstructor().newInstance();
+          } catch (ReflectiveOperationException e) {
             throw new LinkageError("Could not instantiate BugChecker.", e);
           }
         }
