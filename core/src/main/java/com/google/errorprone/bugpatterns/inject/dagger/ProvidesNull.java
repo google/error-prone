@@ -31,9 +31,11 @@ import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
 import javax.lang.model.element.AnnotationMirror;
@@ -70,9 +72,17 @@ public class ProvidesNull extends BugChecker implements ReturnTreeMatcher {
       return Description.NO_MATCH;
     }
 
-    MethodTree enclosingMethod = ASTHelpers.findEnclosingNode(state.getPath(), MethodTree.class);
-    if (enclosingMethod == null) {
-      return Description.NO_MATCH;
+    TreePath path = state.getPath();
+    MethodTree enclosingMethod = null;
+    while (true) {
+      if (path == null || path.getLeaf() instanceof LambdaExpressionTree) {
+        return Description.NO_MATCH;
+      } else if (path.getLeaf() instanceof MethodTree) {
+        enclosingMethod = (MethodTree) path.getLeaf();
+        break;
+      } else {
+        path = path.getParentPath();
+      }
     }
     MethodSymbol enclosingMethodSym = ASTHelpers.getSymbol(enclosingMethod);
     if (enclosingMethodSym == null) {
