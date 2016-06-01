@@ -85,7 +85,7 @@ public class EqualsIncompatibleType extends BugChecker implements MethodInvocati
 
     // This is the type of the object on which the java.lang.Object.equals() method
     // is called, either directly or indirectly via a static utility method. In the latter,
-    // it is the type of the second argument to the static method.
+    // it is the type of the first argument to the static method.
     Type receiverType;
     // This is the type of the argument to the java.lang.Object.equals() method.
     // In case a static utility method is used, it is the type of the second argument
