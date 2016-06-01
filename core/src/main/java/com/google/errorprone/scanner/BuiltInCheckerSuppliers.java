@@ -53,7 +53,9 @@ import com.google.errorprone.bugpatterns.EqualsNaN;
 import com.google.errorprone.bugpatterns.FallThroughSuppression;
 import com.google.errorprone.bugpatterns.Finally;
 import com.google.errorprone.bugpatterns.ForOverrideChecker;
+import com.google.errorprone.bugpatterns.GetClassOnAnnotation;
 import com.google.errorprone.bugpatterns.GetClassOnClass;
+import com.google.errorprone.bugpatterns.GetClassOnEnum;
 import com.google.errorprone.bugpatterns.GuavaSelfEquals;
 import com.google.errorprone.bugpatterns.HashtableContains;
 import com.google.errorprone.bugpatterns.IncompatibleModifiersChecker;
@@ -269,6 +271,8 @@ public class BuiltInCheckerSuppliers {
           EqualsIncompatibleType.class,
           Finally.class,
           FragmentNotInstantiable.class,
+          GetClassOnAnnotation.class,
+          GetClassOnEnum.class,
           IncompatibleModifiersChecker.class,
           JUnit3FloatingPointComparisonWithoutDelta.class,
           JUnitAmbiguousTestClass.class,
