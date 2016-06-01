@@ -50,7 +50,6 @@ import com.google.errorprone.bugpatterns.EmptyTopLevelDeclaration;
 import com.google.errorprone.bugpatterns.EqualsHashCode;
 import com.google.errorprone.bugpatterns.EqualsIncompatibleType;
 import com.google.errorprone.bugpatterns.EqualsNaN;
-import com.google.errorprone.bugpatterns.FallThroughSuppression;
 import com.google.errorprone.bugpatterns.Finally;
 import com.google.errorprone.bugpatterns.ForOverrideChecker;
 import com.google.errorprone.bugpatterns.GetClassOnAnnotation;
@@ -315,7 +314,6 @@ public class BuiltInCheckerSuppliers {
           DivZero.class,
           EmptyIfStatement.class,
           EmptyTopLevelDeclaration.class,
-          FallThroughSuppression.class,
           HardCodedSdCardPath.class,
           InjectedConstructorAnnotations.class,
           InjectOnFinalField.class,
