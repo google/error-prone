@@ -22,6 +22,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableBiMap;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
@@ -29,21 +30,21 @@ import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.bugpatterns.BugChecker;
 
-import org.pcollections.PMap;
+import java.io.Serializable;
 
 /**
  * An implementation of a {@link ScannerSupplier}, abstracted as a set of all known
  * {@link BugChecker}s and a set of enabled {@link BugChecker}s. The set of enabled suppliers must
  * be a subset of all known suppliers.
  */
-class ScannerSupplierImpl extends ScannerSupplier {
+class ScannerSupplierImpl extends ScannerSupplier implements Serializable {
   private final ImmutableBiMap<String, BugCheckerInfo> checks;
-  private final PMap<String, BugPattern.SeverityLevel> severities;
+  private final ImmutableMap<String, BugPattern.SeverityLevel> severities;
   private final ImmutableSet<String> disabled;
 
   ScannerSupplierImpl(
       ImmutableBiMap<String, BugCheckerInfo> checks,
-      PMap<String, BugPattern.SeverityLevel> severities,
+      ImmutableMap<String, BugPattern.SeverityLevel> severities,
       ImmutableSet<String> disabled) {
     checkArgument(
         Sets.difference(severities.keySet(), checks.keySet()).isEmpty(),
@@ -81,7 +82,7 @@ class ScannerSupplierImpl extends ScannerSupplier {
   }
 
   @Override
-  protected PMap<String, BugPattern.SeverityLevel> severities() {
+  protected ImmutableMap<String, BugPattern.SeverityLevel> severities() {
     return severities;
   }
 

@@ -17,11 +17,10 @@
 package com.google.errorprone.scanner;
 
 import com.google.common.collect.ImmutableBiMap;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.BugPattern.SeverityLevel;
-
-import org.pcollections.PMap;
 
 /**
  * An implementation of a {@link ScannerSupplier} that just returns the {@link Scanner} that
@@ -42,11 +41,12 @@ class InstanceReturningScannerSupplierImpl extends ScannerSupplier {
 
   @Override
   public ImmutableBiMap<String, BugCheckerInfo> getAllChecks() {
-    throw new UnsupportedOperationException();
+    // TODO(cushon): migrate users off Scanner-based ScannerSuppliers, and throw UOE here
+    return ImmutableBiMap.of();
   }
 
   @Override
-  protected PMap<String, SeverityLevel> severities() {
+  protected ImmutableMap<String, SeverityLevel> severities() {
     throw new UnsupportedOperationException();
   }
 

@@ -22,6 +22,7 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
@@ -33,12 +34,10 @@ import com.google.errorprone.ErrorProneOptions.Severity;
 import com.google.errorprone.InvalidCommandLineOptionException;
 import com.google.errorprone.bugpatterns.BugChecker;
 
-import org.pcollections.HashTreePMap;
-import org.pcollections.PMap;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -62,13 +61,13 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
     return fromBugCheckerClasses(Arrays.asList(checkerClasses));
   }
 
-  private static PMap<String, BugPattern.SeverityLevel> defaultSeverities(
+  private static ImmutableMap<String, BugPattern.SeverityLevel> defaultSeverities(
       Iterable<BugCheckerInfo> checkers) {
-    PMap<String, BugPattern.SeverityLevel> severities = HashTreePMap.empty();
+    ImmutableMap.Builder<String, BugPattern.SeverityLevel> severities = ImmutableMap.builder();
     for (BugCheckerInfo check : checkers) {
-      severities = severities.plus(check.canonicalName(), check.defaultSeverity());
+      severities.put(check.canonicalName(), check.defaultSeverity());
     }
-    return severities;
+    return severities.build();
   }
 
   /**
@@ -120,7 +119,7 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
   @VisibleForTesting
   public abstract ImmutableSet<BugCheckerInfo> getEnabledChecks();
 
-  protected abstract PMap<String, BugPattern.SeverityLevel> severities();
+  protected abstract ImmutableMap<String, BugPattern.SeverityLevel> severities();
 
   protected abstract ImmutableSet<String> disabled();
 
@@ -150,7 +149,7 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
 
     // Initialize result allChecks map and enabledChecks set with current state of this Supplier.
     ImmutableBiMap<String, BugCheckerInfo> checks = getAllChecks();
-    PMap<String, SeverityLevel> severities = severities();
+    Map<String, SeverityLevel> severities = new LinkedHashMap<>(severities());
     Set<String> disabled = new HashSet<>(disabled());
 
     // Create a map from names (canonical and alternate) to checks. We could do this when the
@@ -183,7 +182,7 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
             disabled.add(check.canonicalName());
             break;
           case DEFAULT:
-            severities = severities.plus(check.canonicalName(), check.defaultSeverity());
+            severities.put(check.canonicalName(), check.defaultSeverity());
             disabled.remove(check.canonicalName());
             break;
           case WARN:
@@ -194,11 +193,11 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
               throw new InvalidCommandLineOptionException(check.canonicalName()
                   + " is not disableable and may not be demoted to a warning");
             }
-            severities = severities.plus(check.canonicalName(), SeverityLevel.WARNING);
+            severities.put(check.canonicalName(), SeverityLevel.WARNING);
             disabled.remove(check.canonicalName());
             break;
           case ERROR:
-            severities = severities.plus(check.canonicalName(), SeverityLevel.ERROR);
+            severities.put(check.canonicalName(), SeverityLevel.ERROR);
             disabled.remove(check.canonicalName());
             break;
           default:
@@ -207,7 +206,8 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
       }
     }
 
-    return new ScannerSupplierImpl(checks, severities, ImmutableSet.copyOf(disabled));
+    return new ScannerSupplierImpl(
+        checks, ImmutableMap.copyOf(severities), ImmutableSet.copyOf(disabled));
   }
 
   /**
@@ -222,8 +222,11 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
             .putAll(this.getAllChecks())
             .putAll(other.getAllChecks())
             .build();
-    PMap<String, SeverityLevel> combinedSeverities =
-        this.severities().plusAll(other.severities());
+    ImmutableMap<String, SeverityLevel> combinedSeverities =
+        ImmutableMap.<String, BugPattern.SeverityLevel>builder()
+            .putAll(severities())
+            .putAll(other.severities())
+            .build();
     ImmutableSet<String> disabled = ImmutableSet.copyOf(Sets.union(disabled(), other.disabled()));
     return new ScannerSupplierImpl(combinedAllChecks, combinedSeverities, disabled);
   }
