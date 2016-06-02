@@ -44,6 +44,12 @@ An equality test between objects with incompatible types always returns false
 __[Finally](bugpattern/Finally)__<br>
 If you return or throw from a finally, then values returned or thrown from the try-catch block will be ignored. Consider using try-with-resources instead.
 
+__[GetClassOnAnnotation](bugpattern/GetClassOnAnnotation)__<br>
+Calling getClass() on an annotation may return a proxy class
+
+__[GetClassOnEnum](bugpattern/GetClassOnEnum)__<br>
+Calling getClass() on an enum may return a subclass of the enum type
+
 __[IncompatibleModifiers](bugpattern/IncompatibleModifiers)__<br>
 This annotation has incompatible modifiers as specified by its @IncompatibleModifiers annotation
 
@@ -331,11 +337,6 @@ Non-constant variable missing @Var annotation
 
 __[UseBinds](bugpattern/UseBinds)__<br>
 @Binds is a more efficient and declaritive mechanism for delegating a binding.
-
-## Experimental : NOT\_A\_PROBLEM
-
-__[FallthroughSuppression](bugpattern/FallthroughSuppression)__<br>
-Fallthrough warning suppression has no effect if warning is suppressed
 
 ## Experimental : ERROR
 
