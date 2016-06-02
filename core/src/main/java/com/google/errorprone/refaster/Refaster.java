@@ -161,4 +161,54 @@ public class Refaster {
   public static <E extends Enum<E>> E enumValueOf(String string) {
     throw new UnsupportedOperationException();
   }
+  
+  /**
+   * This is a special method to emit a comment before an expression.  The comment argument must
+   * always be a string literal.  This method cannot be static imported.
+   *
+   * <p>For example, instead of writing
+   *
+   * <pre><code>
+   *{@literal @}AfterTemplate int lengthWithComment(String str) {
+   *   return /* comment \*\/ str.length();
+   * }
+   * </code></pre>
+   *
+   * <p>you would instead write
+   *
+   * <pre><code>
+   *{@literal @}AfterTemplate int lengthWithComment(String str) {
+   *   return Refaster.emitCommentBefore("comment", str.length());
+   * }
+   * </code></pre>
+   */
+  public static <T> T emitCommentBefore(String literal, T expression) {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * This is a special method to emit a one-line comment.  The comment argument must always
+   * be a string literal.  This method cannot be static imported.
+   *
+   * <p>For example, instead of writing
+   *
+   * <pre><code>
+   *{@literal @}AfterTemplate void printWithComment(String str) {
+   *   // comment
+   *   System.out.println(str);
+   * }
+   * </code></pre>
+   *
+   * <p>you would instead write
+   *
+   * <pre><code>
+   *{@literal @}AfterTemplate void printWithComment(String str) {
+   *   Refaster.emitComment("comment");
+   *   System.out.println(str);
+   * }
+   * </code></pre>
+   */
+  public static void emitComment(String literal) {
+    throw new UnsupportedOperationException();
+  }
 }

@@ -50,6 +50,9 @@ import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.JCTree.JCCatch;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
+import com.sun.tools.javac.tree.JCTree.JCExpressionStatement;
+import com.sun.tools.javac.tree.JCTree.JCLiteral;
+import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import com.sun.tools.javac.tree.JCTree.JCTry;
 import com.sun.tools.javac.tree.Pretty;
 import com.sun.tools.javac.tree.TreeMaker;
@@ -277,6 +280,40 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
           } else {
             super.printExpr(tree, prec);
           }
+        }
+
+        @Override
+        public void visitApply(JCMethodInvocation tree) {
+          JCExpression select = tree.getMethodSelect();
+          if (select != null && select.toString().equals("Refaster.emitCommentBefore")) {
+            String commentLiteral = (String) ((JCLiteral) tree.getArguments().get(0)).getValue();
+            JCExpression expr = tree.getArguments().get(1);
+            try {
+              print("/* " + commentLiteral + " */ ");
+            } catch (IOException e) {
+              throw new RuntimeException(e);
+            }
+            expr.accept(this);
+          } else {
+            super.visitApply(tree);
+          }
+        }
+
+        @Override
+        public void printStat(JCTree tree) throws IOException {
+          if (tree instanceof JCExpressionStatement
+              && ((JCExpressionStatement) tree).getExpression() instanceof JCMethodInvocation) {
+            JCMethodInvocation invocation =
+                (JCMethodInvocation) ((JCExpressionStatement) tree).getExpression();
+            JCExpression select = invocation.getMethodSelect();
+            if (select != null && select.toString().equals("Refaster.emitComment")) {
+              String commentLiteral =
+                  (String) ((JCLiteral) invocation.getArguments().get(0)).getValue();
+              print("// " + commentLiteral);
+              return;
+            }
+          }
+          super.printStat(tree);
         }
 
         @Override

@@ -285,4 +285,14 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
   public void ifFallthrough() throws IOException {
     runTest("IfFallthroughTemplate");
   }
+
+  @Test
+  public void emitCommentBefore() throws IOException {
+    runTest("EmitCommentBeforeTemplate");
+  }
+
+  @Test
+  public void emitComment() throws IOException {
+    runTest("EmitCommentTemplate");
+  }
 }
