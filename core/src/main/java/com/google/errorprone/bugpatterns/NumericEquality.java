@@ -48,14 +48,14 @@ public class NumericEquality extends AbstractReferenceEquality {
       return false;
     }
     Symbol sym = ASTHelpers.getSymbol(tree);
-    if (isFinal(sym) && sym.isStatic()) {
-      // Using a static final object as a sentinel is OK
+    if (sym instanceof Symbol.VarSymbol && isFinal(sym) && sym.isStatic()) {
+      // Using a static final field as a sentinel is OK
       return false;
     }
     return true;
   }
 
   public static boolean isFinal(Symbol s) {
-    return (s.flags() & Flags.FINAL) != 0;
+    return (s.flags() & Flags.FINAL) == Flags.FINAL;
   }
 }
