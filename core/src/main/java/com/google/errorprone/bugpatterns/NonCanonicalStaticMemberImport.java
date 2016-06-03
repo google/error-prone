@@ -46,7 +46,7 @@ public class NonCanonicalStaticMemberImport extends BugChecker implements Import
   @Override
   public Description matchImport(ImportTree tree, VisitorState state) {
     StaticImportInfo importInfo = StaticImports.tryCreate(tree, state);
-    if (importInfo == null || importInfo.isCanonical() || !importInfo.member().isPresent()) {
+    if (importInfo == null || importInfo.isCanonical() || importInfo.members().isEmpty()) {
       return Description.NO_MATCH;
     }
     return describeMatch(tree, SuggestedFix.replace(tree, importInfo.importStatement()));

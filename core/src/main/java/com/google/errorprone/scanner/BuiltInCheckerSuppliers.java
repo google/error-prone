@@ -101,6 +101,7 @@ import com.google.errorprone.bugpatterns.PrimitiveArrayPassedToVarargsMethod;
 import com.google.errorprone.bugpatterns.ProtoFieldNullComparison;
 import com.google.errorprone.bugpatterns.ProtoFieldPreconditionsCheckNotNull;
 import com.google.errorprone.bugpatterns.ProtoStringFieldReferenceEquality;
+import com.google.errorprone.bugpatterns.RemoveUnusedImports;
 import com.google.errorprone.bugpatterns.RequiredModifiersChecker;
 import com.google.errorprone.bugpatterns.RestrictedApiChecker;
 import com.google.errorprone.bugpatterns.ReturnValueIgnored;
@@ -339,6 +340,7 @@ public class BuiltInCheckerSuppliers {
           PreconditionsExpensiveString.class,
           PrimitiveArrayPassedToVarargsMethod.class,
           ProtoStringFieldReferenceEquality.class,
+          RemoveUnusedImports.class,
           ScopeAnnotationOnInterfaceOrAbstractClass.class,
           ScopeOrQualifierAnnotationRetention.class,
           SelfComparision.class,

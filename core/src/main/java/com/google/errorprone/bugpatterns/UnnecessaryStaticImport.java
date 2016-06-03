@@ -44,7 +44,7 @@ public class UnnecessaryStaticImport extends BugChecker implements ImportTreeMat
   @Override
   public Description matchImport(ImportTree tree, VisitorState state) {
     StaticImportInfo importInfo = StaticImports.tryCreate(tree, state);
-    if (importInfo == null || importInfo.member().isPresent()) {
+    if (importInfo == null || !importInfo.members().isEmpty()) {
       return Description.NO_MATCH;
     }
     return describeMatch(tree, SuggestedFix.replace(tree, importInfo.importStatement()));

@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
 
@@ -46,10 +47,11 @@ final class StaticImports {
     /** @return the fully-qualified canonical name of the type */
     abstract String canonicalName();
 
-    /**
-     * The field or variable symbol for a static non-type member import.
-     */
-    abstract Optional<Symbol> member();
+    /** The simple name of the imported member. */
+    abstract Optional<String> simpleName();
+
+    /** The field or variable symbol for a static non-type member import. */
+    abstract ImmutableSet<Symbol> members();
 
     /**
      * Returns true if the import is canonical, i.e. the fully qualified name used to import the
@@ -61,17 +63,22 @@ final class StaticImports {
 
     /** Builds the canonical import statement for the type. */
     public String importStatement() {
-      if (member().isPresent()) {
-        Symbol member = member().get();
-        return String.format("import static %s.%s;", canonicalName(), member.getSimpleName());
-      } else {
+      if (members().isEmpty()) {
         return String.format("import %s;", canonicalName());
+      } else {
+        return String.format("import static %s.%s;", canonicalName(), simpleName().get());
       }
     }
 
+    private static StaticImportInfo create(String importedName, String canonicalName) {
+      return new AutoValue_StaticImports_StaticImportInfo(
+          importedName, canonicalName, Optional.<String>absent(), ImmutableSet.<Symbol>of());
+    }
+
     private static StaticImportInfo create(
-        String importedName, String canonicalName, Optional<Symbol> member) {
-      return new AutoValue_StaticImports_StaticImportInfo(importedName, canonicalName, member);
+        String importedName, String canonicalName, String simpleName, Iterable<Symbol> members) {
+      return new AutoValue_StaticImports_StaticImportInfo(
+          importedName, canonicalName, Optional.of(simpleName), ImmutableSet.copyOf(members));
     }
   }
 
@@ -100,7 +107,7 @@ final class StaticImports {
     if (canonicalName == null) {
       return null;
     }
-    return StaticImportInfo.create(importedName, canonicalName, Optional.<Symbol>absent());
+    return StaticImportInfo.create(importedName, canonicalName);
   }
 
   /**
@@ -108,7 +115,8 @@ final class StaticImports {
    */
   private static StaticImportInfo tryAsStaticMember(
       JCTree.JCFieldAccess access, VisitorState state) {
-    if (access.getIdentifier().contentEquals("*")) {
+    Name identifier = access.getIdentifier();
+    if (identifier.contentEquals("*")) {
       // Java doesn't allow non-canonical types inside wildcard imports,
       // so there's nothing to do here.
       return null;
@@ -118,7 +126,10 @@ final class StaticImports {
     if (importedType == null) {
       return null;
     }
-    Type canonicalType = state.getTypes().erasure(importedType);
+
+    Types types = state.getTypes();
+
+    Type canonicalType = types.erasure(importedType);
     if (canonicalType == null) {
       return null;
     }
@@ -132,16 +143,26 @@ final class StaticImports {
     }
     Symbol.PackageSymbol pkgSym =
         ((JCTree.JCCompilationUnit) state.getPath().getCompilationUnit()).packge;
-    Symbol member = lookup(baseType, baseType, access.getIdentifier(), state.getTypes(), pkgSym);
-    if (member == null) {
+    ImmutableSet<Symbol> members = lookup(baseType, baseType, identifier, types, pkgSym);
+    if (members.isEmpty()) {
       return null;
     }
-    Type canonicalOwner = state.getTypes().erasure(member.owner.type);
+
+    /* Find the most specific subtype that defines one of the members that is imported.
+     * TODO(gak): we should instead find the most specific subtype with a member that is _used_ */
+    Type canonicalOwner = null;
+    for (Symbol member : members) {
+      Type owner = types.erasure(member.owner.type);
+      if (canonicalOwner == null || types.isSubtype(owner, canonicalOwner)) {
+        canonicalOwner = owner;
+      }
+    }
+
     if (canonicalOwner == null) {
       return null;
     }
     return StaticImportInfo.create(
-        importedTypeName, canonicalOwner.toString(), Optional.of(member));
+        importedTypeName, canonicalOwner.toString(), identifier.toString(), members);
   }
 
   /**
@@ -153,26 +174,22 @@ final class StaticImports {
   //
   // Resolve.resolveInternal{Method,Field} almost work, but we don't want
   // to filter on method signature.
-  private static Symbol lookup(
+  private static ImmutableSet<Symbol> lookup(
       Symbol.TypeSymbol typeSym,
       Symbol.TypeSymbol start,
       Name identifier,
       Types types,
       Symbol.PackageSymbol pkg) {
     if (typeSym == null) {
-      return null;
+      return ImmutableSet.of();
     }
 
-    Symbol result = lookup(types.supertype(typeSym.type).tsym, start, identifier, types, pkg);
-    if (result != null) {
-      return result;
-    }
+    ImmutableSet.Builder<Symbol> members = ImmutableSet.builder();
+
+    members.addAll(lookup(types.supertype(typeSym.type).tsym, start, identifier, types, pkg));
 
     for (Type i : types.interfaces(typeSym.type)) {
-      result = lookup(i.tsym, start, identifier, types, pkg);
-      if (result != null) {
-        return result;
-      }
+      members.addAll(lookup(i.tsym, start, identifier, types, pkg));
     }
 
     OUTER:
@@ -194,10 +211,10 @@ final class StaticImports {
           break;
       }
       if (member.isMemberOf(start, types)) {
-        return member;
+        members.add(member);
       }
     }
 
-    return null;
+    return members.build();
   }
 }
