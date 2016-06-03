@@ -16,10 +16,14 @@
 
 package com.google.errorprone.fixes;
 
+import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import com.google.common.base.Verify;
 import com.google.common.collect.ImmutableMap;
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.MaturityLevel;
@@ -32,12 +36,17 @@ import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 
+import com.sun.source.doctree.LinkTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.DocTreePath;
+import com.sun.source.util.DocTreePathScanner;
 import com.sun.tools.javac.code.Type;
 
+import com.sun.tools.javac.tree.DCTree;
+import com.sun.tools.javac.tree.JCTree;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -194,8 +203,8 @@ public class SuggestedFixesTest {
         return Description.NO_MATCH;
       }
       Type type =
-          ASTHelpers.getSymbol(
-              ASTHelpers.findEnclosingNode(state.getPath(), MethodTree.class)).getReturnType();
+          ASTHelpers.getSymbol(ASTHelpers.findEnclosingNode(state.getPath(), MethodTree.class))
+              .getReturnType();
       SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
       String qualifiedTargetType = SuggestedFixes.qualifyType(state, fixBuilder, type.tsym);
       fixBuilder.prefixWith(tree.getExpression(), String.format("(%s) ", qualifiedTargetType));
@@ -258,5 +267,61 @@ public class SuggestedFixesTest {
             "  }",
             "}")
         .doTest();
+  }
+
+  /** A test check that qualifies javadoc link. */
+  @BugPattern(
+    name = "JavadocQualifier",
+    category = BugPattern.Category.JDK,
+    summary = "all javadoc links should be qualified",
+    severity = ERROR,
+    maturity = MATURE
+  )
+  public static class JavadocQualifier extends BugChecker implements BugChecker.ClassTreeMatcher {
+    @Override
+    public Description matchClass(ClassTree tree, final VisitorState state) {
+      final DCTree.DCDocComment comment =
+          ((JCTree.JCCompilationUnit) state.getPath().getCompilationUnit())
+              .docComments.getCommentTree((JCTree) tree);
+      if (comment == null) {
+        return Description.NO_MATCH;
+      }
+      final SuggestedFix.Builder fix = SuggestedFix.builder();
+      new DocTreePathScanner<Void, Void>() {
+        @Override
+        public Void visitLink(LinkTree node, Void aVoid) {
+          SuggestedFixes.qualifyDocReference(
+              fix, new DocTreePath(getCurrentPath(), node.getReference()), state);
+          return null;
+        }
+      }.scan(new DocTreePath(state.getPath(), comment), null);
+      if (fix.isEmpty()) {
+        return Description.NO_MATCH;
+      }
+      return describeMatch(tree, fix.build());
+    }
+  }
+
+  @Test
+  public void qualifyJavadocTest() throws Exception {
+    BugCheckerRefactoringTestHelper.newInstance(new JavadocQualifier(), getClass())
+        .addInputLines(
+            "in/Test.java", //
+            "import java.util.List;",
+            "import java.util.Map;",
+            "/** foo {@link List} bar {@link Map#containsKey(Object)} baz {@link #foo} */",
+            "class Test {",
+            "  void foo() {}",
+            "}")
+        .addOutputLines(
+            "out/Test.java", //
+            "import java.util.List;",
+            "import java.util.Map;",
+            "/** foo {@link java.util.List} bar {@link java.util.Map#containsKey(Object)} baz"
+                + " {@link Test#foo} */",
+            "class Test {",
+            "  void foo() {}",
+            "}")
+        .doTest(TEXT_MATCH);
   }
 }

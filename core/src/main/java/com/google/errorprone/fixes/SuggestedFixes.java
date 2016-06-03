@@ -16,6 +16,8 @@
 
 package com.google.errorprone.fixes;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -24,9 +26,13 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ErrorProneToken;
 
+import com.sun.source.doctree.DocTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.util.DocTreePath;
+import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.tree.DCTree;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Position;
@@ -41,7 +47,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-
 import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
@@ -52,6 +57,7 @@ public class SuggestedFixes {
   /** Parse a modifier token into a {@link Modifier}. */
   @Nullable
   private static Modifier getTokModifierKind(ErrorProneToken tok) {
+    // TODO(cushon): handle DEFAULT
     switch (tok.kind()) {
       case PUBLIC:
         return Modifier.PUBLIC;
@@ -75,9 +81,6 @@ public class SuggestedFixes {
         return Modifier.NATIVE;
       case STRICTFP:
         return Modifier.STRICTFP;
-      // TODO(cushon):
-      // case DEFAULT:
-      //   return Modifier.DEFAULT;
       default:
         return null;
     }
@@ -213,5 +216,49 @@ public class SuggestedFixes {
       curr = ((JCTree.JCFieldAccess) curr).getExpression();
     }
     return false;
+  }
+
+  /** Replaces the leaf doctree in the given path with {@code replacement}. */
+  public static void replaceDocTree(
+      SuggestedFix.Builder fix, DocTreePath docPath, String replacement) {
+    DocTree leaf = docPath.getLeaf();
+    checkArgument(
+        leaf instanceof DCTree.DCEndPosTree, "no end position information for %s", leaf.getKind());
+    DCTree.DCEndPosTree<?> node = (DCTree.DCEndPosTree<?>) leaf;
+    DCTree.DCDocComment comment = (DCTree.DCDocComment) docPath.getDocComment();
+    fix.replace((int) node.getSourcePosition(comment), node.getEndPos(comment), replacement);
+  }
+
+  /**
+   * Fully qualifies a javadoc reference, e.g. for replacing {@code {@link List}} with
+   * {@code {@link java.util.List}}
+   *
+   * @param fix the fix builder to add to
+   * @param docPath the path to a {@link DCTree.DCReference} element
+   */
+  public static void qualifyDocReference(
+      SuggestedFix.Builder fix, DocTreePath docPath, VisitorState state) {
+
+    DocTree leaf = docPath.getLeaf();
+    checkArgument(
+        leaf.getKind() == DocTree.Kind.REFERENCE,
+        "expected a path to a reference, got %s instead",
+        leaf.getKind());
+    DCTree.DCReference reference = (DCTree.DCReference) leaf;
+
+    Symbol sym = (Symbol) JavacTrees.instance(state.context).getElement(docPath);
+    if (sym == null) {
+      return;
+    }
+    String refString = reference.toString();
+    String qualifiedName;
+    int idx = refString.indexOf('#');
+    if (idx >= 0) {
+      qualifiedName = sym.owner.getQualifiedName() + refString.substring(idx, refString.length());
+    } else {
+      qualifiedName = sym.getQualifiedName().toString();
+    }
+
+    replaceDocTree(fix, docPath, qualifiedName);
   }
 }
