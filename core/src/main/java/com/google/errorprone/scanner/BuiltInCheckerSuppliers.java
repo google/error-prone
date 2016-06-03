@@ -70,7 +70,6 @@ import com.google.errorprone.bugpatterns.JUnit4TearDownNotRun;
 import com.google.errorprone.bugpatterns.JUnit4TestNotRun;
 import com.google.errorprone.bugpatterns.JUnitAmbiguousTestClass;
 import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
-import com.google.errorprone.bugpatterns.MalformedFormatString;
 import com.google.errorprone.bugpatterns.MissingCasesInEnumSwitch;
 import com.google.errorprone.bugpatterns.MissingFail;
 import com.google.errorprone.bugpatterns.MissingOverride;
@@ -325,7 +324,6 @@ public class BuiltInCheckerSuppliers {
           JMockTestWithoutRunWithOrRuleAnnotation.class,
           LockMethodChecker.class,
           LongLiteralLowerCaseSuffix.class,
-          MalformedFormatString.class,
           ModifyingCollectionWithItself.class,
           MoreThanOneInjectableConstructor.class,
           MoreThanOneQualifier.class,
