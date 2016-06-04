@@ -335,6 +335,9 @@ Non-constant variable missing @Var annotation
 
 ## Experimental : SUGGESTION
 
+__[RemoveUnusedImports](bugpattern/RemoveUnusedImports)__<br>
+Unused import
+
 __[UseBinds](bugpattern/UseBinds)__<br>
 @Binds is a more efficient and declaritive mechanism for delegating a binding.
 
@@ -399,9 +402,6 @@ __[JavaxInjectOnFinalField](bugpattern/JavaxInjectOnFinalField)__<br>
 
 __[LockMethodChecker](bugpattern/LockMethodChecker)__<br>
 This method does not acquire the locks specified by its @LockMethod annotation
-
-__[MalformedFormatString](bugpattern/MalformedFormatString)__<br>
-Printf-like format string does not match its arguments
 
 __[ModifyingCollectionWithItself](bugpattern/ModifyingCollectionWithItself)__<br>
 Modifying a collection with itself
