@@ -106,7 +106,7 @@ import com.google.errorprone.bugpatterns.RequiredModifiersChecker;
 import com.google.errorprone.bugpatterns.RestrictedApiChecker;
 import com.google.errorprone.bugpatterns.ReturnValueIgnored;
 import com.google.errorprone.bugpatterns.SelfAssignment;
-import com.google.errorprone.bugpatterns.SelfComparision;
+import com.google.errorprone.bugpatterns.SelfComparison;
 import com.google.errorprone.bugpatterns.SelfEquality;
 import com.google.errorprone.bugpatterns.SelfEquals;
 import com.google.errorprone.bugpatterns.SizeGreaterThanOrEqualsZero;
@@ -343,7 +343,7 @@ public class BuiltInCheckerSuppliers {
           RemoveUnusedImports.class,
           ScopeAnnotationOnInterfaceOrAbstractClass.class,
           ScopeOrQualifierAnnotationRetention.class,
-          SelfComparision.class,
+          SelfComparison.class,
           SelfEquality.class,
           SelfEquals.class,
           StaticAccessedFromInstance.class,

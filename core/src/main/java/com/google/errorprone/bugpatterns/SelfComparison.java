@@ -35,13 +35,13 @@ import com.sun.source.tree.MethodInvocationTree;
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-  name = "SelfComparision",
+  name = "SelfComparison",
   summary = "An object is compared to itself",
   category = JDK,
   severity = ERROR,
   maturity = MATURE
 )
-public class SelfComparision extends BugChecker implements MethodInvocationTreeMatcher {
+public class SelfComparison extends BugChecker implements MethodInvocationTreeMatcher {
 
   /**
    * Matches calls to any instance method called "compareTo" with exactly one argument in which the

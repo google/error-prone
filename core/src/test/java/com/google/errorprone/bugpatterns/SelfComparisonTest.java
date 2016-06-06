@@ -24,25 +24,25 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 /**
- * Unit tests for {@link SelfComparision} bug pattern.
+ * Unit tests for {@link SelfComparison} bug pattern.
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @RunWith(JUnit4.class)
-public class SelfComparisionTest {
+public class SelfComparisonTest {
   CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(SelfComparision.class, getClass());
+    compilationHelper = CompilationTestHelper.newInstance(SelfComparison.class, getClass());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.addSourceFile("SelfComparisionPositiveCase.java").doTest();
+    compilationHelper.addSourceFile("SelfComparisonPositiveCase.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.addSourceFile("SelfComparisionNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("SelfComparisonNegativeCases.java").doTest();
   }
 }

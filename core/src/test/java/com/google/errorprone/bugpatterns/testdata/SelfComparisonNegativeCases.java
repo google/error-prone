@@ -17,37 +17,37 @@
 package com.google.errorprone.bugpatterns;
 
 /**
- * Negative test cases for {@link SelfComparision} check.
+ * Negative test cases for {@link SelfComparison} check.
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
-public class SelfComparisionNegativeCases implements Comparable<Object> {
+public class SelfComparisonNegativeCases implements Comparable<Object> {
   private String field;
 
   @Override
   public int hashCode() {
     return field != null ? field.hashCode() : 0;
   }
-  
+
   @Override
   public int compareTo(Object o) {
-    if (!(o instanceof SelfComparisionNegativeCases)) {
+    if (!(o instanceof SelfComparisonNegativeCases)) {
       return -1;
     }
-    
-    SelfComparisionNegativeCases other = (SelfComparisionNegativeCases) o;
+
+    SelfComparisonNegativeCases other = (SelfComparisonNegativeCases) o;
     return field.compareTo(other.field);
   }
-  
+
   public int test() {
     return Boolean.TRUE.toString().compareTo(Boolean.FALSE.toString());
   }
 
-  public static class ComparisionTest implements Comparable<ComparisionTest> {
+  public static class CopmarisonTest implements Comparable<CopmarisonTest> {
     private String testField;
+
     @Override
-    public int compareTo(ComparisionTest obj) {
+    public int compareTo(CopmarisonTest obj) {
       return testField.compareTo(obj.testField);
     }
   }
-  
 }

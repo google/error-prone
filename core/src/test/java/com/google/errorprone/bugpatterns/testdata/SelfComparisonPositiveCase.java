@@ -17,18 +17,19 @@
 package com.google.errorprone.bugpatterns;
 
 /**
- * Positive test case for {@link SelfComparision} check.
+ * Positive test case for {@link SelfComparison} check.
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
-public class SelfComparisionPositiveCase implements Comparable<Object> {
-  
+public class SelfComparisonPositiveCase implements Comparable<Object> {
+
   public int test1() {
-    SelfComparisionPositiveCase obj = new SelfComparisionPositiveCase();
+    SelfComparisonPositiveCase obj = new SelfComparisonPositiveCase();
     // BUG: Diagnostic contains: An object is compared to itself
     return obj.compareTo(obj);
   }
-  
-  private SelfComparisionPositiveCase obj = new SelfComparisionPositiveCase();
+
+  private SelfComparisonPositiveCase obj = new SelfComparisonPositiveCase();
+
   public int test2() {
     // BUG: Diagnostic contains: An object is compared to itself
     return obj.compareTo(this.obj);
@@ -54,20 +55,22 @@ public class SelfComparisionPositiveCase implements Comparable<Object> {
     return 0;
   }
 
-  public static class ComparisionTest implements Comparable<ComparisionTest> {
+  public static class ComparisonTest implements Comparable<ComparisonTest> {
     private String testField;
+
     @Override
-    public int compareTo(ComparisionTest s) {
+    public int compareTo(ComparisonTest s) {
       return testField.compareTo(s.testField);
     }
 
     public int test1() {
-      ComparisionTest obj = new ComparisionTest();
+      ComparisonTest obj = new ComparisonTest();
       // BUG: Diagnostic contains: An object is compared to itself
       return obj.compareTo(obj);
     }
 
-    private ComparisionTest obj = new ComparisionTest();
+    private ComparisonTest obj = new ComparisonTest();
+
     public int test2() {
       // BUG: Diagnostic contains: An object is compared to itself
       return obj.compareTo(this.obj);
