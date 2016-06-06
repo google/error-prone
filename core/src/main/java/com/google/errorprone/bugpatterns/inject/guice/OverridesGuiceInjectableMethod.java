@@ -32,10 +32,7 @@ import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.MethodTree;
-import com.sun.tools.javac.code.Attribute.Compound;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-
-import javax.lang.model.element.TypeElement;
 
 /**
  * This checker matches methods that
@@ -78,12 +75,12 @@ public class OverridesGuiceInjectableMethod extends BugChecker implements Method
 
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
-    // if method is itself annotated with @Inject or it has no ancestor methods, return No_MATCH;
+    // if method is itself annotated with @Inject or it has no ancestor methods, return NO_MATCH;
     if (!INJECTABLE_METHOD_MATCHER.matches(methodTree, state)
         && OVERRIDE_METHOD_MATCHER.matches(methodTree, state)) {
       MethodSymbol method = ASTHelpers.getSymbol(methodTree);
       for (MethodSymbol superMethod : ASTHelpers.findSuperMethods(method, state.getTypes())) {
-        if (isAnnotatedWith(superMethod, GUICE_INJECT_ANNOTATION)) {
+        if (ASTHelpers.hasAnnotation(superMethod, GUICE_INJECT_ANNOTATION, state)) {
           return buildDescription(methodTree)
               .addFix(
                   SuggestedFix.builder()
@@ -101,16 +98,5 @@ public class OverridesGuiceInjectableMethod extends BugChecker implements Method
       }
     }
     return Description.NO_MATCH;
-  }
-
-  private static boolean isAnnotatedWith(MethodSymbol method, String annotation) {
-    for (Compound c : method.getAnnotationMirrors()) {
-      if (((TypeElement) c.getAnnotationType().asElement())
-          .getQualifiedName()
-          .contentEquals(annotation)) {
-        return true;
-      }
-    }
-    return false;
   }
 }
