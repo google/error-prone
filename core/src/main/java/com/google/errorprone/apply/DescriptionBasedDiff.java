@@ -72,12 +72,15 @@ public final class DescriptionBasedDiff implements DescriptionListener, Diff {
   public void onDescribed(Description description) {
     // Use only first (most likely) suggested fix
     if (description.fixes.size() > 0) {
-      Fix fix = description.fixes.get(0);
-      importsToAdd.addAll(fix.getImportsToAdd());
-      importsToRemove.addAll(fix.getImportsToRemove());
-      for (Replacement replacement : fix.getReplacements(endPositions)) {
-        replacements.add(replacement);
-      }
+      handleFix(description.fixes.get(0));
+    }
+  }
+
+  public void handleFix(Fix fix) {
+    importsToAdd.addAll(fix.getImportsToAdd());
+    importsToRemove.addAll(fix.getImportsToRemove());
+    for (Replacement replacement : fix.getReplacements(endPositions)) {
+      replacements.add(replacement);
     }
   }
 

@@ -27,6 +27,8 @@ import com.google.common.io.CharStreams;
 import com.google.errorprone.apply.DescriptionBasedDiff;
 import com.google.errorprone.apply.SourceFile;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.fixes.Fix;
+import com.google.errorprone.matchers.Description;
 import com.google.errorprone.scanner.ErrorProneScanner;
 import com.google.errorprone.scanner.ErrorProneScannerTransformer;
 import com.google.testing.compile.JavaFileObjects;
@@ -41,6 +43,7 @@ import com.sun.tools.javac.util.Context;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.tools.DiagnosticCollector;
@@ -58,11 +61,11 @@ public class BugCheckerRefactoringTestHelper {
   /**
    * Test mode for matching refactored source against expected source.
    */
-  public static enum TestMode {
+  public enum TestMode {
     TEXT_MATCH {
       @Override
-      void verifyMatch(JavaFileObject refactoredSource,
-          JavaFileObject expectedSource) throws IOException {
+      void verifyMatch(JavaFileObject refactoredSource, JavaFileObject expectedSource)
+          throws IOException {
         assertThat(refactoredSource.getCharContent(false).toString())
             .isEqualTo(expectedSource.getCharContent(false).toString());
       }
@@ -74,16 +77,34 @@ public class BugCheckerRefactoringTestHelper {
       }
     };
 
-    abstract void verifyMatch(JavaFileObject refactoredSource,
-        JavaFileObject expectedSource) throws IOException;
+    abstract void verifyMatch(JavaFileObject refactoredSource, JavaFileObject expectedSource)
+        throws IOException;
+  }
+
+  /**
+   * For checks that provide multiple possible fixes, chooses the one that will be applied for the
+   * test.
+   * */
+  public interface FixChooser {
+    Fix choose(List<Fix> fixes);
+  }
+
+  enum FixChoosers implements FixChooser {
+    FIRST {
+      @Override
+      public Fix choose(List<Fix> fixes) {
+        return fixes.get(0);
+      }
+    }
   }
 
   private final Map<JavaFileObject, JavaFileObject> sources = new HashMap<>();
   private final BugChecker refactoringBugChecker;
   private final ErrorProneInMemoryFileManager fileManager;
 
-  private BugCheckerRefactoringTestHelper(
-      BugChecker refactoringBugChecker, Class<?> clazz) {
+  private FixChooser fixChooser = FixChoosers.FIRST;
+
+  private BugCheckerRefactoringTestHelper(BugChecker refactoringBugChecker, Class<?> clazz) {
     this.refactoringBugChecker = refactoringBugChecker;
     this.fileManager = new ErrorProneInMemoryFileManager(clazz);
   }
@@ -100,6 +121,11 @@ public class BugCheckerRefactoringTestHelper {
   public BugCheckerRefactoringTestHelper.ExpectOutput addInputLines(String path, String... input) {
     assertThat(fileManager.exists(path)).isFalse();
     return new ExpectOutput(fileManager.forSourceLines(path, input));
+  }
+
+  public BugCheckerRefactoringTestHelper setFixChooser(FixChooser chooser) {
+    this.fixChooser = chooser;
+    return this;
   }
 
   public void doTest() throws IOException {
@@ -127,18 +153,32 @@ public class BugCheckerRefactoringTestHelper {
     testMode.verifyMatch(transformed, output);
   }
 
-  private JavaFileObject applyDiff(JavaFileObject sourceFileObject,
-      JavacTaskImpl task, JCCompilationUnit tree) throws IOException {
-    DescriptionBasedDiff diff = DescriptionBasedDiff.create(tree);
-    transformer(refactoringBugChecker).apply(new TreePath(tree), task.getContext(), diff);
+  private JavaFileObject applyDiff(
+      JavaFileObject sourceFileObject, JavacTaskImpl task, JCCompilationUnit tree)
+      throws IOException {
+    final DescriptionBasedDiff diff = DescriptionBasedDiff.create(tree);
+    transformer(refactoringBugChecker)
+        .apply(
+            new TreePath(tree),
+            task.getContext(),
+            new DescriptionListener() {
+              @Override
+              public void onDescribed(Description description) {
+                if (!description.fixes.isEmpty()) {
+                  diff.handleFix(fixChooser.choose(description.fixes));
+                }
+              }
+            });
     SourceFile sourceFile = SourceFile.create(sourceFileObject);
     diff.applyDifferences(sourceFile);
 
-    JavaFileObject transformed = JavaFileObjects.forSourceString(
-        Iterables.getOnlyElement(Iterables.filter(tree.getTypeDecls(), JCClassDecl.class))
-            .sym.getQualifiedName()
-            .toString(),
-        sourceFile.getSourceText());
+    JavaFileObject transformed =
+        JavaFileObjects.forSourceString(
+            Iterables.getOnlyElement(Iterables.filter(tree.getTypeDecls(), JCClassDecl.class))
+                .sym
+                .getQualifiedName()
+                .toString(),
+            sourceFile.getSourceText());
     return transformed;
   }
 
@@ -192,15 +232,15 @@ public class BugCheckerRefactoringTestHelper {
       this.input = input;
     }
 
-    public BugCheckerRefactoringTestHelper addOutputLines(String path, String ... output) {
+    public BugCheckerRefactoringTestHelper addOutputLines(String path, String... output) {
       assertThat(fileManager.exists(path)).isFalse();
-      return addInputAndOutput(input, fileManager.forSourceLines(path,  output));
+      return addInputAndOutput(input, fileManager.forSourceLines(path, output));
     }
 
     public BugCheckerRefactoringTestHelper addOutput(String outputFilename) {
       return addInputAndOutput(input, fileManager.forResource(outputFilename));
     }
-    
+
     public BugCheckerRefactoringTestHelper expectUnchanged() {
       return addInputAndOutput(input, input);
     }

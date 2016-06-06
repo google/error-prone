@@ -41,6 +41,7 @@ import com.google.errorprone.bugpatterns.ClassNewInstance;
 import com.google.errorprone.bugpatterns.ComparisonContractViolated;
 import com.google.errorprone.bugpatterns.ComparisonOutOfRange;
 import com.google.errorprone.bugpatterns.CompileTimeConstantChecker;
+import com.google.errorprone.bugpatterns.ConstantField;
 import com.google.errorprone.bugpatterns.DeadException;
 import com.google.errorprone.bugpatterns.DepAnn;
 import com.google.errorprone.bugpatterns.DivZero;
@@ -342,6 +343,7 @@ public class BuiltInCheckerSuppliers {
           ProtoStringFieldReferenceEquality.class,
           RemoveUnusedImports.class,
           ScopeAnnotationOnInterfaceOrAbstractClass.class,
+          ConstantField.class,
           ScopeOrQualifierAnnotationRetention.class,
           SelfComparison.class,
           SelfEquality.class,
