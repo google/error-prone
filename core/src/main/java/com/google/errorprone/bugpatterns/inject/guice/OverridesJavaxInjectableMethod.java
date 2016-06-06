@@ -32,12 +32,9 @@ import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.MethodTree;
-import com.sun.tools.javac.code.Attribute.Compound;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
-
-import javax.lang.model.element.TypeElement;
 
 /**
  * This checker matches methods that
@@ -85,14 +82,14 @@ public class OverridesJavaxInjectableMethod extends BugChecker implements Method
     MethodSymbol superMethod = null;
     for (boolean checkSuperClass = true; checkSuperClass; method = superMethod) {
       superMethod = findSuperMethod(method, state);
-      if (isAnnotatedWith(superMethod, GUICE_INJECT_ANNOTATION)) {
+      if (ASTHelpers.hasAnnotation(superMethod, GUICE_INJECT_ANNOTATION, state)) {
         return Description.NO_MATCH;
       }
       // is not necessarily a match even if we find javax Inject on an ancestor
       // since a higher up ancestor may have @com.google.inject.Inject
-      foundJavaxInject = isAnnotatedWith(superMethod, JAVAX_INJECT_ANNOTATION);
+      foundJavaxInject = ASTHelpers.hasAnnotation(superMethod, JAVAX_INJECT_ANNOTATION, state);
       // check if there are ancestor methods
-      checkSuperClass = isAnnotatedWith(superMethod, OVERRIDE_ANNOTATION);
+      checkSuperClass = ASTHelpers.hasAnnotation(superMethod, OVERRIDE_ANNOTATION, state);
     }
     if (foundJavaxInject) {
       return describeMatch(
@@ -114,17 +111,5 @@ public class OverridesJavaxInjectableMethod extends BugChecker implements Method
       }
     }
     return null;
-  }
-
-  // better to use matchers?
-  private static boolean isAnnotatedWith(MethodSymbol method, String annotation) {
-    for (Compound c : method.getAnnotationMirrors()) {
-      if (((TypeElement) c.getAnnotationType().asElement())
-          .getQualifiedName()
-          .contentEquals(annotation)) {
-        return true;
-      }
-    }
-    return false;
   }
 }
