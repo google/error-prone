@@ -61,4 +61,22 @@ public class WrongParameterPackageTest {
             "}")
         .doTest();
   }
+
+  // regression test for https://github.com/google/error-prone/issues/356
+  @Test
+  public void testCompleteParams() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "package org.gaul.mypackage;",
+            "import java.io.IOException;",
+            "import java.io.InputStream;",
+            "class MyInputStream extends InputStream {",
+            "  @Override",
+            "  public int read() throws IOException {",
+            "    return 0;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

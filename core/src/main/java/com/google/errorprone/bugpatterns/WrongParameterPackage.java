@@ -78,13 +78,13 @@ public class WrongParameterPackage extends BugChecker implements MethodTreeMatch
         }
 
         // if this doesn't have the right number of parameters, look at other ones.
-        if (supermethod.params.size() != method.params.size()) {
+        if (supermethod.params().size() != method.params().size()) {
           continue;
         }
 
-        for (int x = 0; x < method.params.size(); x++) {
-          Type methodParamType = method.params.get(x).type;
-          Type supermethodParamType = supermethod.params.get(x).type;
+        for (int x = 0; x < method.params().size(); x++) {
+          Type methodParamType = method.params().get(x).type;
+          Type supermethodParamType = supermethod.params().get(x).type;
           if (methodParamType.tsym.name.contentEquals(supermethodParamType.tsym.name)
               && !state.getTypes().isSameType(methodParamType, supermethodParamType)) {
             this.supermethod = supermethod;
@@ -106,9 +106,9 @@ public class WrongParameterPackage extends BugChecker implements MethodTreeMatch
       throw new IllegalStateException("Matching supermethod was not found");
     }
 
-    for (int x = 0; x < method.params.size(); x++) {
-      Type methodParamType = method.params.get(x).type;
-      Type supermethodParamType = supermethod.params.get(x).type;
+    for (int x = 0; x < method.params().size(); x++) {
+      Type methodParamType = method.params().get(x).type;
+      Type supermethodParamType = supermethod.params().get(x).type;
       if (methodParamType.tsym.name.contentEquals(supermethodParamType.tsym.name)
           && !state.getTypes().isSameType(methodParamType, supermethodParamType)) {
         VariableTree param = tree.getParameters().get(x);
