@@ -1,5 +1,5 @@
 ---
-title: SelfComparision
+title: SelfComparison
 summary: An object is compared to itself
 layout: bugpattern
 category: JDK
@@ -17,12 +17,12 @@ The arguments to compareTo method are the same object, so it always returns 0.
 Either change the arguments to point to different objects or substitute 0.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("SelfComparision")` annotation to the enclosing element.
+Suppress false positives by adding an `@SuppressWarnings("SelfComparison")` annotation to the enclosing element.
 
 ----------
 
 ### Positive examples
-__SelfComparisionPositiveCase.java__
+__SelfComparisonPositiveCase.java__
 
 {% highlight java %}
 /*
@@ -44,18 +44,19 @@ __SelfComparisionPositiveCase.java__
 package com.google.errorprone.bugpatterns;
 
 /**
- * Positive test case for {@link SelfComparision} check.
+ * Positive test case for {@link SelfComparison} check.
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
-public class SelfComparisionPositiveCase implements Comparable<Object> {
-  
+public class SelfComparisonPositiveCase implements Comparable<Object> {
+
   public int test1() {
-    SelfComparisionPositiveCase obj = new SelfComparisionPositiveCase();
+    SelfComparisonPositiveCase obj = new SelfComparisonPositiveCase();
     // BUG: Diagnostic contains: An object is compared to itself
     return obj.compareTo(obj);
   }
-  
-  private SelfComparisionPositiveCase obj = new SelfComparisionPositiveCase();
+
+  private SelfComparisonPositiveCase obj = new SelfComparisonPositiveCase();
+
   public int test2() {
     // BUG: Diagnostic contains: An object is compared to itself
     return obj.compareTo(this.obj);
@@ -81,20 +82,22 @@ public class SelfComparisionPositiveCase implements Comparable<Object> {
     return 0;
   }
 
-  public static class ComparisionTest implements Comparable<ComparisionTest> {
+  public static class ComparisonTest implements Comparable<ComparisonTest> {
     private String testField;
+
     @Override
-    public int compareTo(ComparisionTest s) {
+    public int compareTo(ComparisonTest s) {
       return testField.compareTo(s.testField);
     }
 
     public int test1() {
-      ComparisionTest obj = new ComparisionTest();
+      ComparisonTest obj = new ComparisonTest();
       // BUG: Diagnostic contains: An object is compared to itself
       return obj.compareTo(obj);
     }
 
-    private ComparisionTest obj = new ComparisionTest();
+    private ComparisonTest obj = new ComparisonTest();
+
     public int test2() {
       // BUG: Diagnostic contains: An object is compared to itself
       return obj.compareTo(this.obj);
@@ -119,7 +122,7 @@ public class SelfComparisionPositiveCase implements Comparable<Object> {
 {% endhighlight %}
 
 ### Negative examples
-__SelfComparisionNegativeCases.java__
+__SelfComparisonNegativeCases.java__
 
 {% highlight java %}
 /*
@@ -141,39 +144,39 @@ __SelfComparisionNegativeCases.java__
 package com.google.errorprone.bugpatterns;
 
 /**
- * Negative test cases for {@link SelfComparision} check.
+ * Negative test cases for {@link SelfComparison} check.
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
-public class SelfComparisionNegativeCases implements Comparable<Object> {
+public class SelfComparisonNegativeCases implements Comparable<Object> {
   private String field;
 
   @Override
   public int hashCode() {
     return field != null ? field.hashCode() : 0;
   }
-  
+
   @Override
   public int compareTo(Object o) {
-    if (!(o instanceof SelfComparisionNegativeCases)) {
+    if (!(o instanceof SelfComparisonNegativeCases)) {
       return -1;
     }
-    
-    SelfComparisionNegativeCases other = (SelfComparisionNegativeCases) o;
+
+    SelfComparisonNegativeCases other = (SelfComparisonNegativeCases) o;
     return field.compareTo(other.field);
   }
-  
+
   public int test() {
     return Boolean.TRUE.toString().compareTo(Boolean.FALSE.toString());
   }
 
-  public static class ComparisionTest implements Comparable<ComparisionTest> {
+  public static class CopmarisonTest implements Comparable<CopmarisonTest> {
     private String testField;
+
     @Override
-    public int compareTo(ComparisionTest obj) {
+    public int compareTo(CopmarisonTest obj) {
       return testField.compareTo(obj.testField);
     }
   }
-  
 }
 {% endhighlight %}
 

@@ -122,6 +122,11 @@ Unsynchronized method overrides a synchronized method.
 __[WaitNotInLoop](bugpattern/WaitNotInLoop)__<br>
 Because of spurious wakeups, Object.wait() and Condition.await() must always be called in a loop
 
+## On by default : SUGGESTION
+
+__[ConstantField](bugpattern/ConstantField)__<br>
+Field name is CONSTANT_CASE, but field is not static and final
+
 ## On by default : ERROR
 
 __[ArrayEquals](bugpattern/ArrayEquals)__<br>
@@ -262,7 +267,7 @@ Return value of this method must be used
 __[SelfAssignment](bugpattern/SelfAssignment)__<br>
 Variable assigned to itself
 
-__[SelfComparision](bugpattern/SelfComparision)__<br>
+__[SelfComparison](bugpattern/SelfComparison)__<br>
 An object is compared to itself
 
 __[SelfEquals](bugpattern/SelfEquals)__<br>
