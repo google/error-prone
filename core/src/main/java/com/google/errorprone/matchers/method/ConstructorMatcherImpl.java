@@ -22,11 +22,12 @@ import com.google.errorprone.matchers.method.MethodMatchers.ConstructorClassMatc
 import com.google.errorprone.matchers.method.MethodMatchers.ConstructorMatcher;
 import com.google.errorprone.predicates.TypePredicates;
 import com.google.errorprone.suppliers.Supplier;
+import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.ExpressionTree;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.tree.JCTree.JCNewClass;
 
 /** Matches constructors, allows refinement on class type. */
 public class ConstructorMatcherImpl extends AbstractSimpleMatcher<MatchState>
@@ -34,22 +35,30 @@ public class ConstructorMatcherImpl extends AbstractSimpleMatcher<MatchState>
 
   @Override
   protected Optional<MatchState> matchResult(ExpressionTree tree, VisitorState state) {
-    // TODO(eaftan): Don't catch NullPointerException. Need to do this right now
-    // for internal use, but remember to remove later.
-    try {
-      if (!(tree instanceof JCNewClass)) {
-        return Optional.absent();
-      }
-      JCNewClass newClass = (JCNewClass) tree;
-      Type clazz = newClass.constructor.getEnclosingElement().type;
-      if (!(newClass.constructor instanceof MethodSymbol)) {
-        return Optional.absent();
-      }
-      MethodSymbol sym = (MethodSymbol) newClass.constructor;
-      return Optional.of(MatchState.create(clazz, sym));
-    } catch (NullPointerException e) {
+    MethodSymbol sym = getConstructor(tree);
+    if (sym == null) {
       return Optional.absent();
     }
+    return Optional.of(MatchState.create(sym.owner.type, sym));
+  }
+
+  private static MethodSymbol getConstructor(ExpressionTree tree) {
+    switch (tree.getKind()) {
+      case NEW_CLASS:
+      case METHOD_INVOCATION:
+        break;
+      default:
+        return null;
+    }
+    Symbol sym = ASTHelpers.getSymbol(tree);
+    if (!(sym instanceof MethodSymbol)) {
+      return null;
+    }
+    MethodSymbol method = (MethodSymbol) sym;
+    if (!method.isConstructor()) {
+      return null;
+    }
+    return method;
   }
 
   @Override
