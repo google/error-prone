@@ -17,6 +17,7 @@
 package com.google.errorprone.scanner;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.collect.Iterables.getFirst;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -102,5 +103,11 @@ class ScannerSupplierImpl extends ScannerSupplier implements Serializable {
               }
             })
         .toSet();
+  }
+
+  /** Returns the name of the first check, or {@code null}. */
+  @Override
+  public String toString() {
+    return getFirst(getAllChecks().keySet(), null);
   }
 }
