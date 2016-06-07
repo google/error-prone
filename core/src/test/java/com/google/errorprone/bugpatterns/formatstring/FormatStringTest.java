@@ -71,7 +71,7 @@ public class FormatStringTest {
   @Test
   public void testIllegalFormatConversion() throws Exception {
     testFormat(
-        "illegal format conversion: 'class java.lang.String' cannot be formatted using '%f'",
+        "illegal format conversion: 'java.lang.String' cannot be formatted using '%f'",
         "String.format(\"%f\", \"abcd\");");
   }
 
@@ -189,5 +189,18 @@ public class FormatStringTest {
     testFormat("", "System.console().format(\"%d\", \"hello\");");
     testFormat("", "System.console().readLine(\"%d\", \"hello\");");
     testFormat("", "System.console().readPassword(\"%d\", \"hello\");");
+  }
+
+  @Test
+  public void nullArgument() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f() {",
+            "    String.format(\"%s %s\", null, null);",
+            "  }",
+            "}")
+        .doTest();
   }
 }
