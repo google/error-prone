@@ -75,6 +75,11 @@ public class ConstantFieldTest {
             "class Test {",
             "  static final Object CONSTANT = 42;",
             "  Object nonConst = 42;",
+            "  public static final Object FLAG_foo = new Object();",
+            "  protected static final int FOO_BAR = 100;",
+            "  static final int FOO_BAR2 = 100;",
+            "  private static final int[] intArray = {0};",
+            "  private static final Object mutable = new Object();",
             "}")
         .doTest();
   }
@@ -106,5 +111,51 @@ public class ConstantFieldTest {
               }
             })
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void primitivesAreConstant() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  // BUG: Diagnostic contains:"
+                + " ints are immutable, field should be named 'CONSTANT'",
+            "  static final int constant = 42;",
+            "  // BUG: Diagnostic contains:"
+                + " Integers are immutable, field should be named 'BOXED_CONSTANT'",
+            "  static final Integer boxedConstant = 42;",
+            "  // BUG: Diagnostic contains:"
+                + " Strings are immutable, field should be named 'STRING_CONSTANT'",
+            "  static final String stringConstant = \"\";",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void primitivesAreConstant_negative() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  static final int CONSTANT = 42;",
+            "  static final Integer BOXED_CONSTANT = 42;",
+            "  static final String STRING_CONSTANT = \"\";",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void primitivesAreConstant_serializable() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.io.ObjectStreamField;",
+            "import java.io.Serializable;",
+            "class Test implements Serializable {",
+            "  private static final long serialVersionUID = 1L;",
+            "  private static final ObjectStreamField[] serialPersistentFields = {};",
+            "}")
+        .doTest();
   }
 }
