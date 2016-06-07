@@ -374,11 +374,6 @@ public class Matchers {
     return new MethodInvocationMethodSelect(methodSelectMatcher);
   }
 
-  // TODO(cushon): expunge
-  public static Matcher<ExpressionTree> expressionMethodSelect(Matcher<ExpressionTree> methodSelectMatcher) {
-    return new ExpressionMethodSelect(methodSelectMatcher);
-  }
-
   public static Matcher<MethodInvocationTree> argument(
       final int position, final Matcher<ExpressionTree> argumentMatcher) {
     return new MethodInvocationArgument(position, argumentMatcher);
