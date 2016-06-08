@@ -146,4 +146,68 @@ public class BoxedPrimitiveConstructorTest {
             "}")
         .doTest();
   }
+
+  // Tests that `new Integer(x).memberSelect` isn't unboxed to x.memberSelect
+  // TODO(cushon): we could provide a better fix for byteValue(), but hopefully no one does that?
+  @Test
+  public void methodCall() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "public abstract class Test {",
+            "  abstract int g(Integer x);",
+            "  void f(int x) {",
+            "    // BUG: Diagnostic contains: int i = Integer.valueOf(x).byteValue();",
+            "    int i = new Integer(x).byteValue();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void stringValue() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "public abstract class Test {",
+            "  abstract int g(Integer x);",
+            "  void f(int x) {",
+            "    // BUG: Diagnostic contains: String s = String.valueOf(x);",
+            "    String s = new Integer(x).toString();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void compareTo() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "public abstract class Test {",
+            "  abstract int g(Integer x);",
+            "  void f(int x, Integer y) {",
+            "    // BUG: Diagnostic contains: int c1 = Integer.compare(x, y);",
+            "    int c1 = new Integer(x).compareTo(y);",
+            "    // BUG: Diagnostic contains: int c2 = y.compareTo(Integer.valueOf(x));",
+            "    int c2 = y.compareTo(new Integer(x));",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testHashCode() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "public abstract class Test {",
+            "  abstract int g(Integer x);",
+            "  void f(int x, Integer y) {",
+            "    // BUG: Diagnostic contains: int h = Integer.hashCode(x);",
+            "    int h = new Integer(x).hashCode();",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
