@@ -1153,6 +1153,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/BugCheckerInfo.html#create-java.lang.Class-">create(Class&lt;? extends BugChecker&gt;)</a></span> - Static method in class com.google.errorprone.<a href="com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/formatstring/FormatStringValidation.ValidationResult.html#create-java.lang.Exception-java.lang.String-">create(Exception, String)</a></span> - Static method in class com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/FormatStringValidation.ValidationResult.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatStringValidation.ValidationResult</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.ClassLiteral.html#create-com.sun.tools.javac.code.Symbol-">create(Symbol)</a></span> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.ClassLiteral.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression.ClassLiteral</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.LocalVariable.html#create-com.sun.tools.javac.code.Symbol-">create(Symbol)</a></span> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.LocalVariable.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression.LocalVariable</a></dt>
@@ -1792,6 +1794,10 @@
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/ExampleInfo.ExampleKind.html" title="enum in com.google.errorprone"><span class="typeNameLink">ExampleInfo.ExampleKind</span></a> - Enum in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/formatstring/FormatStringValidation.ValidationResult.html#exception--">exception()</a></span> - Method in class com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/FormatStringValidation.ValidationResult.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatStringValidation.ValidationResult</a></dt>
+<dd>
+<div class="block">The exception thrown by <code>String.format</code> or <code>Formatter.check</code>.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/suppliers/Suppliers.html#EXCEPTION_TYPE">EXCEPTION_TYPE</a></span> - Static variable in class com.google.errorprone.suppliers.<a href="com/google/errorprone/suppliers/Suppliers.html" title="class in com.google.errorprone.suppliers">Suppliers</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneAntCompilerAdapter.html#execute--">execute()</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneAntCompilerAdapter.html" title="class in com.google.errorprone">ErrorProneAntCompilerAdapter</a></dt>
@@ -1816,8 +1822,6 @@
 <dt><a href="com/google/errorprone/matchers/ExpressionMethodSelect.html" title="class in com.google.errorprone.matchers"><span class="typeNameLink">ExpressionMethodSelect</span></a> - Class in <a href="com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/ExpressionMethodSelect.html#ExpressionMethodSelect-com.google.errorprone.matchers.Matcher-">ExpressionMethodSelect(Matcher&lt;ExpressionTree&gt;)</a></span> - Constructor for class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/ExpressionMethodSelect.html" title="class in com.google.errorprone.matchers">ExpressionMethodSelect</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Matchers.html#expressionMethodSelect-com.google.errorprone.matchers.Matcher-">expressionMethodSelect(Matcher&lt;ExpressionTree&gt;)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Matchers.html#expressionStatement-com.google.errorprone.matchers.Matcher-">expressionStatement(Matcher&lt;ExpressionTree&gt;)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
@@ -1937,6 +1941,16 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/formatstring/FormatString.html#FormatString--">FormatString()</a></span> - Constructor for class com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/FormatString.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatString</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/formatstring/FormatStringValidation.html" title="class in com.google.errorprone.bugpatterns.formatstring"><span class="typeNameLink">FormatStringValidation</span></a> - Class in <a href="com/google/errorprone/bugpatterns/formatstring/package-summary.html">com.google.errorprone.bugpatterns.formatstring</a></dt>
+<dd>
+<div class="block">Utilities for validating format strings.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/formatstring/FormatStringValidation.html#FormatStringValidation--">FormatStringValidation()</a></span> - Constructor for class com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/FormatStringValidation.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatStringValidation</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/formatstring/FormatStringValidation.ValidationResult.html" title="class in com.google.errorprone.bugpatterns.formatstring"><span class="typeNameLink">FormatStringValidation.ValidationResult</span></a> - Class in <a href="com/google/errorprone/bugpatterns/formatstring/package-summary.html">com.google.errorprone.bugpatterns.formatstring</a></dt>
+<dd>
+<div class="block">Description of an incorrect format method call.</div>
+</dd>
 <dt><a href="com/google/errorprone/annotations/ForOverride.html" title="annotation in com.google.errorprone.annotations"><span class="typeNameLink">ForOverride</span></a> - Annotation Type in <a href="com/google/errorprone/annotations/package-summary.html">com.google.errorprone.annotations</a></dt>
 <dd>
 <div class="block">Indicates that the annotated method is provided only to be overridden: it should not be
@@ -3884,6 +3898,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.html#message--">message()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/formatstring/FormatStringValidation.ValidationResult.html#message--">message()</a></span> - Method in class com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/FormatStringValidation.ValidationResult.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatStringValidation.ValidationResult</a></dt>
+<dd>
+<div class="block">A human-readable diagnostic message.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/StaticGuardedByInstance.html#MESSAGE">MESSAGE</a></span> - Static variable in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/StaticGuardedByInstance.html" title="class in com.google.errorprone.bugpatterns.threadsafety">StaticGuardedByInstance</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/nullnesspropagation/MethodInfo.html#method--">method()</a></span> - Method in interface com.google.errorprone.dataflow.nullnesspropagation.<a href="com/google/errorprone/dataflow/nullnesspropagation/MethodInfo.html" title="interface in com.google.errorprone.dataflow.nullnesspropagation">MethodInfo</a></dt>
@@ -5569,6 +5587,8 @@
 </a>
 <h2 class="title">V</h2>
 <dl>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/formatstring/FormatStringValidation.html#validate-java.util.Collection-com.google.errorprone.VisitorState-">validate(Collection&lt;? extends ExpressionTree&gt;, VisitorState)</a></span> - Static method in class com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/FormatStringValidation.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatStringValidation</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/BugPatternValidator.html#validate-com.google.errorprone.BugPattern-">validate(BugPattern)</a></span> - Static method in class com.google.errorprone.<a href="com/google/errorprone/BugPatternValidator.html" title="class in com.google.errorprone">BugPatternValidator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/ValidationException.html" title="class in com.google.errorprone"><span class="typeNameLink">ValidationException</span></a> - Exception in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
@@ -5576,6 +5596,8 @@
 <div class="block">An exception that indicates that BugPattern validation failed.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/ValidationException.html#ValidationException-java.lang.String-">ValidationException(String)</a></span> - Constructor for exception com.google.errorprone.<a href="com/google/errorprone/ValidationException.html" title="class in com.google.errorprone">ValidationException</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/formatstring/FormatStringValidation.ValidationResult.html#ValidationResult--">ValidationResult()</a></span> - Constructor for class com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/FormatStringValidation.ValidationResult.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatStringValidation.ValidationResult</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/BugPattern.Category.html#valueOf-java.lang.String-">valueOf(String)</a></span> - Static method in enum com.google.errorprone.<a href="com/google/errorprone/BugPattern.Category.html" title="enum in com.google.errorprone">BugPattern.Category</a></dt>
 <dd>
