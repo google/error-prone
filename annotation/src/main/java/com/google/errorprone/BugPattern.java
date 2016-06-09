@@ -135,11 +135,7 @@ public @interface BugPattern {
   public enum SeverityLevel {
     ERROR,
     WARNING,
-    SUGGESTION,
-
-    /** @deprecated use {@link SUGGESTION} instead */
-    @Deprecated
-    NOT_A_PROBLEM
+    SUGGESTION
   }
 
   MaturityLevel maturity();
