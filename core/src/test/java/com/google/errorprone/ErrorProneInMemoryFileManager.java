@@ -28,6 +28,7 @@ import com.google.common.jimfs.Jimfs;
 import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.util.Context;
 
+import java.io.IOError;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.FileSystem;
@@ -88,22 +89,26 @@ public class ErrorProneInMemoryFileManager extends JavacFileManager {
    */
   public JavaFileObject forResource(Class<?> clazz, String fileName) {
     Path path = fileSystem.getPath("/", clazz.getPackage().getName().replace('.', '/'), fileName);
-    try {
+    try (InputStream is = findResource(clazz, fileName)) {
       Files.createDirectories(path.getParent());
-      InputStream inputStream = null;
-      try {
-        inputStream = clazz.getResourceAsStream(fileName);
-        if (inputStream == null) {
-          inputStream = clazz.getResourceAsStream("testdata/" + fileName);
-        }
-        Files.copy(inputStream, path);
-      } finally {
-        inputStream.close();
-      }
+      Files.copy(is, path);
     } catch (IOException e) {
-      throw new AssertionError(e);
+      throw new IOError(e);
     }
     return Iterables.getOnlyElement(getJavaFileObjects(path));
+  }
+
+  // TODO(cushon): the testdata/ fallback is a hack, fix affected tests and remove it
+  private InputStream findResource(Class<?> clazz, String name) {
+    InputStream is = clazz.getResourceAsStream(name);
+    if (is != null) {
+      return is;
+    }
+    is = clazz.getResourceAsStream("testdata/" + name);
+    if (is != null) {
+      return is;
+    }
+    throw new AssertionError("could not find resource: " + name);
   }
 
   /**
