@@ -23,9 +23,6 @@ import com.sun.tools.javac.util.DiagnosticSource;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Log;
 
-import java.io.PrintStream;
-import java.io.PrintWriter;
-
 import javax.tools.JavaFileObject;
 
 /**
@@ -39,7 +36,11 @@ public class ErrorProneError extends Error {
   private final JavaFileObject source;
 
   public ErrorProneError(Throwable cause, DiagnosticPosition pos, JavaFileObject source) {
-    super(formatMessage(source, pos, cause), cause);
+    super(
+        formatMessage(source, pos, cause),
+        cause,
+        /*enableSuppression=*/ true,
+        /*writableStackTrace=*/ false);
     this.cause = cause;
     this.pos = pos;
     this.source = source;
@@ -73,25 +74,5 @@ public class ErrorProneError extends Error {
     sb.append(snippet).append('\n');
     sb.append(Strings.repeat(" ", column - 1)).append("^\n");
     return sb.toString();
-  }
-
-  @Override
-  public void printStackTrace() {
-    cause.printStackTrace();
-  }
-
-  @Override
-  public void printStackTrace(PrintStream s) {
-    cause.printStackTrace(s);
-  }
-
-  @Override
-  public void printStackTrace(PrintWriter s) {
-    cause.printStackTrace(s);
-  }
-
-  @Override
-  public StackTraceElement[] getStackTrace() {
-    return cause.getStackTrace();
   }
 }
