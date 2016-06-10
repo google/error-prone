@@ -23,6 +23,7 @@ import com.google.errorprone.scanner.ScannerSupplier;
 
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTool;
+import com.sun.tools.javac.api.MultiTaskListener;
 import com.sun.tools.javac.util.Context;
 
 import java.io.InputStream;
@@ -91,7 +92,9 @@ public class ErrorProneJavaCompiler implements JavaCompiler {
     CompilationTask task = javacTool.getTask(
         out, fileManager, diagnosticListener, remainingOptions, classes, compilationUnits);
     Context context = ((JavacTaskImpl) task).getContext();
-    ErrorProneJavacJavaCompiler.preRegister(context, transformer, errorProneOptions);
+    ErrorProneCompiler.setupMessageBundle(context);
+    MultiTaskListener.instance(context)
+        .add(new ErrorProneAnalyzer(transformer, errorProneOptions, context));
     return task;
   }
 

@@ -240,7 +240,8 @@ public class ErrorProneCompiler {
 
     setupMessageBundle(context);
     enableEndPositions(context);
-    ErrorProneJavacJavaCompiler.preRegister(context, transformer, epOptions);
+    MultiTaskListener.instance(context)
+        .add(new ErrorProneAnalyzer(transformer, epOptions, context));
 
     return argv;
   }
