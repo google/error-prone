@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10};
+var methods = {"i0":9,"i1":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -50,7 +50,7 @@ var activeTableTab = "activeTableTab";
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../com/google/errorprone/DocGenTool.TargetEnumConverter.html" title="class in com.google.errorprone"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../com/google/errorprone/ErrorProneAntCompilerAdapter.html" title="class in com.google.errorprone"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../com/google/errorprone/ErrorProneAnalyzer.Builder.html" title="interface in com.google.errorprone"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../index.html?com/google/errorprone/ErrorProneAnalyzer.html" target="_top">Frames</a></li>
@@ -74,15 +74,15 @@ var activeTableTab = "activeTableTab";
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
@@ -116,13 +116,53 @@ var activeTableTab = "activeTableTab";
 <pre>public class <span class="typeNameLabel">ErrorProneAnalyzer</span>
 extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>
 implements com.sun.source.util.TaskListener</pre>
-<div class="block">Used to run an error-prone analysis as a phase in the javac compiler.</div>
+<div class="block">A <code>TaskListener</code> that runs Error Prone over attributed compilation units.</div>
 </li>
 </ul>
 </div>
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="nested.class.summary">
+<!--   -->
+</a>
+<h3>Nested Class Summary</h3>
+<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Nested Class Summary table, listing nested classes, and an explanation">
+<caption><span>Nested Classes</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Class and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static interface&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneAnalyzer.Builder.html" title="interface in com.google.errorprone">ErrorProneAnalyzer.Builder</a></span></code>
+<div class="block">Temporary intermediate class for building <a href="../../../com/google/errorprone/ErrorProneAnalyzer.html" title="class in com.google.errorprone"><code>ErrorProneAnalyzer</code></a>s, see <a href="../../../com/google/errorprone/ErrorProneAnalyzer.html#create-com.google.errorprone.scanner.Scanner-"><code>create(com.google.errorprone.scanner.Scanner)</code></a>.</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="constructor.summary">
+<!--   -->
+</a>
+<h3>Constructor Summary</h3>
+<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Constructor Summary table, listing constructors, and an explanation">
+<caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colOne" scope="col">Constructor and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneAnalyzer.html#ErrorProneAnalyzer-com.google.errorprone.CodeTransformer-com.google.errorprone.ErrorProneOptions-com.sun.tools.javac.util.Context-">ErrorProneAnalyzer</a></span>(<a href="../../../com/google/errorprone/CodeTransformer.html" title="interface in com.google.errorprone">CodeTransformer</a>&nbsp;transformer,
+                  <a href="../../../com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a>&nbsp;errorProneOptions,
+                  com.sun.tools.javac.util.Context&nbsp;context)</code>&nbsp;</td>
+</tr>
+</table>
+</li>
+</ul>
 <!-- ========== METHOD SUMMARY =========== -->
 <ul class="blockList">
 <li class="blockList"><a name="method.summary">
@@ -136,40 +176,15 @@ implements com.sun.source.util.TaskListener</pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>static <a href="../../../com/google/errorprone/ErrorProneAnalyzer.html" title="class in com.google.errorprone">ErrorProneAnalyzer</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneAnalyzer.html#create-com.google.errorprone.CodeTransformer-">create</a></span>(<a href="../../../com/google/errorprone/CodeTransformer.html" title="interface in com.google.errorprone">CodeTransformer</a>&nbsp;transformer)</code>&nbsp;</td>
+<td class="colFirst"><code>static <a href="../../../com/google/errorprone/ErrorProneAnalyzer.Builder.html" title="interface in com.google.errorprone">ErrorProneAnalyzer.Builder</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneAnalyzer.html#create-com.google.errorprone.scanner.Scanner-">create</a></span>(<a href="../../../com/google/errorprone/scanner/Scanner.html" title="class in com.google.errorprone.scanner">Scanner</a>&nbsp;scanner)</code>
+<div class="block">Temporary shim to avoid breaking Bazel, which expects the API to look like
+ <code>ErrorProneAnalyzer.create(scanner).init(options, context);</code>.</div>
+</td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code>static <a href="../../../com/google/errorprone/ErrorProneAnalyzer.html" title="class in com.google.errorprone">ErrorProneAnalyzer</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneAnalyzer.html#create-com.google.errorprone.scanner.Scanner-">create</a></span>(<a href="../../../com/google/errorprone/scanner/Scanner.html" title="class in com.google.errorprone.scanner">Scanner</a>&nbsp;scanner)</code>&nbsp;</td>
-</tr>
-<tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneAnalyzer.html#finished-com.sun.source.util.TaskEvent-">finished</a></span>(com.sun.source.util.TaskEvent&nbsp;taskEvent)</code>&nbsp;</td>
-</tr>
-<tr id="i3" class="rowColor">
-<td class="colFirst"><code><a href="../../../com/google/errorprone/ErrorProneAnalyzer.html" title="class in com.google.errorprone">ErrorProneAnalyzer</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneAnalyzer.html#init-com.sun.tools.javac.util.Context-com.google.errorprone.ErrorProneOptions-">init</a></span>(com.sun.tools.javac.util.Context&nbsp;context,
-    <a href="../../../com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a>&nbsp;errorProneOptions)</code>
-<div class="block">Initializes the analyzer with the current compilation context.</div>
-</td>
-</tr>
-<tr id="i4" class="altColor">
-<td class="colFirst"><code><a href="../../../com/google/errorprone/ErrorProneAnalyzer.html" title="class in com.google.errorprone">ErrorProneAnalyzer</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneAnalyzer.html#register-com.sun.tools.javac.util.Context-com.google.errorprone.ErrorProneOptions-">register</a></span>(com.sun.tools.javac.util.Context&nbsp;context,
-        <a href="../../../com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a>&nbsp;errorProneOptions)</code>&nbsp;</td>
-</tr>
-<tr id="i5" class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneAnalyzer.html#reportReadyForAnalysis-com.sun.source.util.TaskEvent-com.sun.source.util.TreePath-boolean-">reportReadyForAnalysis</a></span>(com.sun.source.util.TaskEvent&nbsp;taskEvent,
-                      com.sun.source.util.TreePath&nbsp;path,
-                      boolean&nbsp;hasErrors)</code>
-<div class="block">Reports that a class is ready for error-prone to analyze.</div>
-</td>
-</tr>
-<tr id="i6" class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneAnalyzer.html#started-com.sun.source.util.TaskEvent-">started</a></span>(com.sun.source.util.TaskEvent&nbsp;taskEvent)</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -179,6 +194,13 @@ implements com.sun.source.util.TaskListener</pre>
 <h3>Methods inherited from class&nbsp;java.lang.<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></h3>
 <code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#clone--" title="class or interface in java.lang">clone</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#equals-java.lang.Object-" title="class or interface in java.lang">equals</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#finalize--" title="class or interface in java.lang">finalize</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#getClass--" title="class or interface in java.lang">getClass</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#hashCode--" title="class or interface in java.lang">hashCode</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#notify--" title="class or interface in java.lang">notify</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#notifyAll--" title="class or interface in java.lang">notifyAll</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#toString--" title="class or interface in java.lang">toString</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#wait--" title="class or interface in java.lang">wait</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#wait-long-" title="class or interface in java.lang">wait</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#wait-long-int-" title="class or interface in java.lang">wait</a></code></li>
 </ul>
+<ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.com.sun.source.util.TaskListener">
+<!--   -->
+</a>
+<h3>Methods inherited from interface&nbsp;com.sun.source.util.TaskListener</h3>
+<code>started</code></li>
+</ul>
 </li>
 </ul>
 </li>
@@ -187,65 +209,31 @@ implements com.sun.source.util.TaskListener</pre>
 <div class="details">
 <ul class="blockList">
 <li class="blockList">
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="constructor.detail">
+<!--   -->
+</a>
+<h3>Constructor Detail</h3>
+<a name="ErrorProneAnalyzer-com.google.errorprone.CodeTransformer-com.google.errorprone.ErrorProneOptions-com.sun.tools.javac.util.Context-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>ErrorProneAnalyzer</h4>
+<pre>public&nbsp;ErrorProneAnalyzer(<a href="../../../com/google/errorprone/CodeTransformer.html" title="interface in com.google.errorprone">CodeTransformer</a>&nbsp;transformer,
+                          <a href="../../../com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a>&nbsp;errorProneOptions,
+                          com.sun.tools.javac.util.Context&nbsp;context)</pre>
+</li>
+</ul>
+</li>
+</ul>
 <!-- ============ METHOD DETAIL ========== -->
 <ul class="blockList">
 <li class="blockList"><a name="method.detail">
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="create-com.google.errorprone.scanner.Scanner-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>create</h4>
-<pre>public static&nbsp;<a href="../../../com/google/errorprone/ErrorProneAnalyzer.html" title="class in com.google.errorprone">ErrorProneAnalyzer</a>&nbsp;create(<a href="../../../com/google/errorprone/scanner/Scanner.html" title="class in com.google.errorprone.scanner">Scanner</a>&nbsp;scanner)</pre>
-</li>
-</ul>
-<a name="create-com.google.errorprone.CodeTransformer-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>create</h4>
-<pre>public static&nbsp;<a href="../../../com/google/errorprone/ErrorProneAnalyzer.html" title="class in com.google.errorprone">ErrorProneAnalyzer</a>&nbsp;create(<a href="../../../com/google/errorprone/CodeTransformer.html" title="interface in com.google.errorprone">CodeTransformer</a>&nbsp;transformer)</pre>
-</li>
-</ul>
-<a name="init-com.sun.tools.javac.util.Context-com.google.errorprone.ErrorProneOptions-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>init</h4>
-<pre>public&nbsp;<a href="../../../com/google/errorprone/ErrorProneAnalyzer.html" title="class in com.google.errorprone">ErrorProneAnalyzer</a>&nbsp;init(com.sun.tools.javac.util.Context&nbsp;context,
-                               <a href="../../../com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a>&nbsp;errorProneOptions)</pre>
-<div class="block">Initializes the analyzer with the current compilation context. (E.g. for the current
- annotation processing round.)</div>
-</li>
-</ul>
-<a name="register-com.sun.tools.javac.util.Context-com.google.errorprone.ErrorProneOptions-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>register</h4>
-<pre>public&nbsp;<a href="../../../com/google/errorprone/ErrorProneAnalyzer.html" title="class in com.google.errorprone">ErrorProneAnalyzer</a>&nbsp;register(com.sun.tools.javac.util.Context&nbsp;context,
-                                   <a href="../../../com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a>&nbsp;errorProneOptions)</pre>
-</li>
-</ul>
-<a name="started-com.sun.source.util.TaskEvent-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>started</h4>
-<pre>public&nbsp;void&nbsp;started(com.sun.source.util.TaskEvent&nbsp;taskEvent)</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>started</code>&nbsp;in interface&nbsp;<code>com.sun.source.util.TaskListener</code></dd>
-</dl>
-</li>
-</ul>
 <a name="finished-com.sun.source.util.TaskEvent-">
 <!--   -->
 </a>
@@ -259,21 +247,15 @@ implements com.sun.source.util.TaskListener</pre>
 </dl>
 </li>
 </ul>
-<a name="reportReadyForAnalysis-com.sun.source.util.TaskEvent-com.sun.source.util.TreePath-boolean-">
+<a name="create-com.google.errorprone.scanner.Scanner-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>reportReadyForAnalysis</h4>
-<pre>public&nbsp;void&nbsp;reportReadyForAnalysis(com.sun.source.util.TaskEvent&nbsp;taskEvent,
-                                   com.sun.source.util.TreePath&nbsp;path,
-                                   boolean&nbsp;hasErrors)</pre>
-<div class="block">Reports that a class is ready for error-prone to analyze.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>path</code> - the path from the compilation unit to the class declaration</dd>
-<dd><code>hasErrors</code> - true if errors have been reported during the compilation</dd>
-</dl>
+<h4>create</h4>
+<pre>public static&nbsp;<a href="../../../com/google/errorprone/ErrorProneAnalyzer.Builder.html" title="interface in com.google.errorprone">ErrorProneAnalyzer.Builder</a>&nbsp;create(<a href="../../../com/google/errorprone/scanner/Scanner.html" title="class in com.google.errorprone.scanner">Scanner</a>&nbsp;scanner)</pre>
+<div class="block">Temporary shim to avoid breaking Bazel, which expects the API to look like
+ <code>ErrorProneAnalyzer.create(scanner).init(options, context);</code>.</div>
 </li>
 </ul>
 </li>
@@ -305,7 +287,7 @@ implements com.sun.source.util.TaskListener</pre>
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../com/google/errorprone/DocGenTool.TargetEnumConverter.html" title="class in com.google.errorprone"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../com/google/errorprone/ErrorProneAntCompilerAdapter.html" title="class in com.google.errorprone"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../com/google/errorprone/ErrorProneAnalyzer.Builder.html" title="interface in com.google.errorprone"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../index.html?com/google/errorprone/ErrorProneAnalyzer.html" target="_top">Frames</a></li>
@@ -329,15 +311,15 @@ implements com.sun.source.util.TaskListener</pre>
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>

@@ -44,9 +44,6 @@ An equality test between objects with incompatible types always returns false
 __[Finally](bugpattern/Finally)__<br>
 If you return or throw from a finally, then values returned or thrown from the try-catch block will be ignored. Consider using try-with-resources instead.
 
-__[GetClassOnAnnotation](bugpattern/GetClassOnAnnotation)__<br>
-Calling getClass() on an annotation may return a proxy class
-
 __[GetClassOnEnum](bugpattern/GetClassOnEnum)__<br>
 Calling getClass() on an enum may return a subclass of the enum type
 
@@ -179,6 +176,9 @@ __[EqualsNaN](bugpattern/EqualsNaN)__<br>
 
 __[ForOverride](bugpattern/ForOverride)__<br>
 Method annotated @ForOverride must be protected or package-private and only invoked from declaring class
+
+__[GetClassOnAnnotation](bugpattern/GetClassOnAnnotation)__<br>
+Calling getClass() on an annotation may return a proxy class
 
 __[GetClassOnClass](bugpattern/GetClassOnClass)__<br>
 Calling getClass() on an object of type Class returns the Class object for java.lang.Class; you probably meant to operate on the object directly

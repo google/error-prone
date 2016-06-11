@@ -107,8 +107,11 @@
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/ErrorProneAnalyzer.html" title="class in com.google.errorprone">ErrorProneAnalyzer</a></code></td>
-<td class="colLast"><span class="typeNameLabel">ErrorProneAnalyzer.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/ErrorProneAnalyzer.html#create-com.google.errorprone.scanner.Scanner-">create</a></span>(<a href="../../../../../com/google/errorprone/scanner/Scanner.html" title="class in com.google.errorprone.scanner">Scanner</a>&nbsp;scanner)</code>&nbsp;</td>
+<td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/ErrorProneAnalyzer.Builder.html" title="interface in com.google.errorprone">ErrorProneAnalyzer.Builder</a></code></td>
+<td class="colLast"><span class="typeNameLabel">ErrorProneAnalyzer.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/ErrorProneAnalyzer.html#create-com.google.errorprone.scanner.Scanner-">create</a></span>(<a href="../../../../../com/google/errorprone/scanner/Scanner.html" title="class in com.google.errorprone.scanner">Scanner</a>&nbsp;scanner)</code>
+<div class="block">Temporary shim to avoid breaking Bazel, which expects the API to look like
+ <code>ErrorProneAnalyzer.create(scanner).init(options, context);</code>.</div>
+</td>
 </tr>
 </tbody>
 </table>
