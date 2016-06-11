@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
@@ -35,19 +35,24 @@ import com.sun.tools.javac.tree.JCTree;
 /**
  * @author avenet@google.com (Arnaud J. Venet)
  */
-@BugPattern(name = "InsecureCipherMode",
-    summary = "Cipher.getInstance() is invoked using either the default settings or ECB mode",
-    explanation = "This error is triggered when a Cipher instance is created using either"
-        + " the default settings or the notoriously insecure ECB mode. In particular, Java's"
-        + " default `Cipher.getInstance(\"AES\")` returns a cipher object that operates in ECB"
-        + " mode. Dynamically constructed transformation strings are also flagged, as they may"
-        + " conceal an instance of ECB mode. The problem with ECB mode is that encrypting the same"
-        + " block of plaintext always yields the same block of ciphertext. Hence, repetitions in"
-        + " the plaintext translate into repetitions in the ciphertext, which can be readily used"
-        + " to conduct cryptanalysis.\n\n"
-    ,
-    category = JDK, severity = ERROR, documentSuppression = false,
-    maturity = MATURE)
+@BugPattern(
+  name = "InsecureCipherMode",
+  summary = "Cipher.getInstance() is invoked using either the default settings or ECB mode",
+  explanation =
+      "This error is triggered when a Cipher instance is created using either"
+          + " the default settings or the notoriously insecure ECB mode. In particular, Java's"
+          + " default `Cipher.getInstance(\"AES\")` returns a cipher object that operates in ECB"
+          + " mode. Dynamically constructed transformation strings are also flagged, as they may"
+          + " conceal an instance of ECB mode. The problem with ECB mode is that encrypting the"
+          + " same block of plaintext always yields the same block of ciphertext. Hence,"
+          + " repetitions in the plaintext translate into repetitions in the ciphertext, which can"
+          + " be readily used to conduct cryptanalysis.\n\n"
+  ,
+  category = JDK,
+  severity = WARNING,
+  documentSuppression = false,
+  maturity = MATURE
+)
 public class InsecureCipherMode extends BugChecker implements MethodInvocationTreeMatcher {
   private static final String MESSAGE_BASE = "Insecure usage of Cipher.getInstance(): ";
 

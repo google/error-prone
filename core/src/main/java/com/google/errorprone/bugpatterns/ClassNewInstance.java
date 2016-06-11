@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
 import com.google.common.base.Joiner;
@@ -64,7 +64,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
   category = JDK,
   summary =
       "Class.newInstance() bypasses exception checking; prefer getConstructor().newInstance()",
-  severity = ERROR,
+  severity = WARNING,
   maturity = MATURE
 )
 public class ClassNewInstance extends BugChecker implements MethodInvocationTreeMatcher {

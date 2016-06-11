@@ -46,7 +46,7 @@ import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
   name = "BoxedPrimitiveConstructor",
   category = Category.JDK,
   summary = "valueOf or autoboxing provides better time and space performance",
-  severity = SeverityLevel.ERROR,
+  severity = SeverityLevel.WARNING,
   maturity = MaturityLevel.MATURE
 )
 public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTreeMatcher {

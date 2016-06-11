@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -52,7 +52,7 @@ import javax.lang.model.element.NestingKind;
           + "uses more memory and does not make the intent of the class clear.",
   category = JDK,
   maturity = EXPERIMENTAL,
-  severity = ERROR
+  severity = WARNING
 )
 public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
 
