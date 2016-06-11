@@ -99,6 +99,7 @@ import com.google.errorprone.bugpatterns.PreconditionsCheckNotNullPrimitive;
 import com.google.errorprone.bugpatterns.PreconditionsExpensiveString;
 import com.google.errorprone.bugpatterns.PreconditionsInvalidPlaceholder;
 import com.google.errorprone.bugpatterns.PrimitiveArrayPassedToVarargsMethod;
+import com.google.errorprone.bugpatterns.PrivateConstructorForUtilityClass;
 import com.google.errorprone.bugpatterns.ProtoFieldNullComparison;
 import com.google.errorprone.bugpatterns.ProtoFieldPreconditionsCheckNotNull;
 import com.google.errorprone.bugpatterns.ProtoStringFieldReferenceEquality;
@@ -341,6 +342,7 @@ public class BuiltInCheckerSuppliers {
           OverridesJavaxInjectableMethod.class,
           PreconditionsExpensiveString.class,
           PrimitiveArrayPassedToVarargsMethod.class,
+          PrivateConstructorForUtilityClass.class,
           ProtoStringFieldReferenceEquality.class,
           RemoveUnusedImports.class,
           ScopeAnnotationOnInterfaceOrAbstractClass.class,
