@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.errorprone.BugPattern;
@@ -33,21 +34,28 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 
+import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Scope.StarImportScope;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
+import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.TreeScanner;
-import com.sun.tools.javac.util.Name;
 
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Nullable;
+import javax.lang.model.element.ElementKind;
 
 /**
  * Enforce style guide §3.3.1.
@@ -65,25 +73,28 @@ import javax.annotation.Nullable;
 )
 public class WildcardImport extends BugChecker implements CompilationUnitTreeMatcher {
 
+  /** Maximum number of members to import before switching to qualified names. */
+  public static final int MAX_MEMBER_IMPORTS = 20;
+
   /** A type or member that needs to be imported.*/
   @AutoValue
   abstract static class TypeToImport {
 
-    /** Returns the simple name of the imported member. */
-    abstract Name name();
+    /** Returns the simple name of the import. */
+    abstract String name();
 
-    /** Returns the fully-qualified name of the owner. */
-    abstract Name owner();
+    /** Returns the owner of the imported type or member. */
+    abstract Symbol owner();
 
     /** Returns true if the import needs to be static (i.e. the import is for a field or method). */
     abstract boolean isStatic();
 
-    static TypeToImport create(Name name, Name owner, boolean stat) {
+    static TypeToImport create(String name, Symbol owner, boolean stat) {
       return new AutoValue_WildcardImport_TypeToImport(name, owner, stat);
     }
 
     private void addFix(SuggestedFix.Builder fix) {
-      String qualifiedName = owner() + "." + name();
+      String qualifiedName = owner().getQualifiedName() + "." + name();
       if (isStatic()) {
         fix.addStaticImport(qualifiedName);
       } else {
@@ -100,12 +111,12 @@ public class WildcardImport extends BugChecker implements CompilationUnitTreeMat
     }
 
     // Find all of the types that need to be imported.
-    Set<TypeToImport> typesToImport = ImportCollector.collect((JCTree.JCCompilationUnit) tree);
+    Set<TypeToImport> typesToImport = ImportCollector.collect((JCCompilationUnit) tree);
 
     // Group the imported types by the on-demand import they replace.
     Multimap<ImportTree, TypeToImport> toFix = groupImports(wildcardImports, typesToImport);
 
-    Fix fix = createFix(wildcardImports, toFix);
+    Fix fix = createFix(wildcardImports, toFix, state);
     if (fix.isEmpty()) {
       return NO_MATCH;
     }
@@ -134,7 +145,7 @@ public class WildcardImport extends BugChecker implements CompilationUnitTreeMat
       // guaranteed to be a MemberSelectTree by getWildcardImports().
       String importBase =
           ((MemberSelectTree) importTree.getQualifiedIdentifier()).getExpression().toString();
-      if (type.owner().contentEquals(importBase)) {
+      if (type.owner().getQualifiedName().contentEquals(importBase)) {
         return importTree;
       }
     }
@@ -168,7 +179,7 @@ public class WildcardImport extends BugChecker implements CompilationUnitTreeMat
       this.wildcardScope = wildcardScope;
     }
 
-    public static Set<TypeToImport> collect(JCTree.JCCompilationUnit tree) {
+    public static Set<TypeToImport> collect(JCCompilationUnit tree) {
       ImportCollector collector = new ImportCollector(tree.starImportScope);
       collector.scan(tree);
       return collector.seen;
@@ -190,7 +201,7 @@ public class WildcardImport extends BugChecker implements CompilationUnitTreeMat
     }
 
     @Override
-    public void visitIdent(JCTree.JCIdent tree) {
+    public void visitIdent(JCIdent tree) {
       Symbol sym = tree.sym;
       if (sym == null) {
         return;
@@ -202,11 +213,11 @@ public class WildcardImport extends BugChecker implements CompilationUnitTreeMat
         }
         switch (sym.kind) {
           case TYP:
-            seen.add(TypeToImport.create(sym.getSimpleName(), sym.owner.getQualifiedName(), false));
+            seen.add(TypeToImport.create(sym.getSimpleName().toString(), sym.owner, false));
             break;
           case VAR:
           case MTH:
-            seen.add(TypeToImport.create(sym.getSimpleName(), sym.owner.getQualifiedName(), true));
+            seen.add(TypeToImport.create(sym.getSimpleName().toString(), sym.owner, true));
             break;
           default:
             return;
@@ -217,8 +228,10 @@ public class WildcardImport extends BugChecker implements CompilationUnitTreeMat
 
   /** Creates a {@link Fix} that replaces wildcard imports. */
   static Fix createFix(
-      ImmutableList<ImportTree> wildcardImports, Multimap<ImportTree, TypeToImport> toFix) {
-    SuggestedFix.Builder fix = SuggestedFix.builder();
+      ImmutableList<ImportTree> wildcardImports,
+      Multimap<ImportTree, TypeToImport> toFix,
+      VisitorState state) {
+    final SuggestedFix.Builder fix = SuggestedFix.builder();
     for (ImportTree importToDelete : wildcardImports) {
       String importSpecification = importToDelete.getQualifiedIdentifier().toString();
       if (importToDelete.isStatic()) {
@@ -227,9 +240,50 @@ public class WildcardImport extends BugChecker implements CompilationUnitTreeMat
         fix.removeImport(importSpecification);
       }
     }
+    Multimap<Symbol, TypeToImport> importsByOwner = LinkedHashMultimap.create();
     for (TypeToImport toImport : toFix.values()) {
-      toImport.addFix(fix);
+      importsByOwner.put(toImport.owner(), toImport);
+    }
+    for (Map.Entry<Symbol, Collection<TypeToImport>> entries : importsByOwner.asMap().entrySet()) {
+      final Symbol owner = entries.getKey();
+      if (entries.getValue().size() > MAX_MEMBER_IMPORTS) {
+        qualifiedNameFix(fix, owner, state);
+      } else {
+        for (TypeToImport toImport : toFix.values()) {
+          toImport.addFix(fix);
+        }
+      }
     }
     return fix.build();
+  }
+
+  /**
+   * Add an import for {@code owner}, and qualify all on demand imported references to members of
+   * owner by owner's simple name.
+   */
+  private static void qualifiedNameFix(
+      final SuggestedFix.Builder fix, final Symbol owner, VisitorState state) {
+    fix.addImport(owner.getQualifiedName().toString());
+    final JCCompilationUnit unit = (JCCompilationUnit) state.getPath().getCompilationUnit();
+    new TreePathScanner<Void, Void>() {
+      @Override
+      public Void visitIdentifier(IdentifierTree tree, Void unused) {
+        Symbol sym = ASTHelpers.getSymbol(tree);
+        if (sym == null) {
+          return null;
+        }
+        Tree parent = getCurrentPath().getParentPath().getLeaf();
+        if (parent.getKind() == Tree.Kind.CASE
+            && ((CaseTree) parent).getExpression().equals(tree)
+            && sym.owner.getKind() == ElementKind.ENUM) {
+          // switch cases can refer to enum constants by simple name without importing them
+          return null;
+        }
+        if (sym.owner.equals(owner) && unit.starImportScope.includes(sym)) {
+          fix.prefixWith(tree, owner.getSimpleName() + ".");
+        }
+        return null;
+      }
+    }.scan(unit, null);
   }
 }

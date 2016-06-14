@@ -446,4 +446,63 @@ public class WildcardImportTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void qualifyMembersFix() throws Exception {
+    testHelper
+        .addInputLines(
+            "e/E.java",
+            "package e;",
+            "public enum E {",
+            "  A, B, C, D, E, F, G, H, I, J,",
+            "  K, L, M, N, O, P, Q, R, S, T,",
+            "  U, V, W, X, Y, Z",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "in/Test.java",
+            "import static e.E.*;",
+            "public class Test {",
+            "  E ex = {",
+            "    A, B, C, D, E, F, G, H, I, J,",
+            "    K, L, M, N, O, P, Q, R, S, T,",
+            "    U, V, W, X, Y, Z",
+            "  };",
+            "  boolean f(E e) {",
+            "    switch (e) {",
+            "      case A:",
+            "      case E:",
+            "      case I:",
+            "      case O:",
+            "      case U:",
+            "        return true;",
+            "      default:",
+            "        return false;",
+            "    };",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import e.E;",
+            "public class Test {",
+            "  E ex = {",
+            "    E.A, E.B, E.C, E.D, E.E, E.F, E.G, E.H, E.I, E.J,",
+            "    E.K, E.L, E.M, E.N, E.O, E.P, E.Q, E.R, E.S, E.T,",
+            "    E.U, E.V, E.W, E.X, E.Y, E.Z",
+            "  };",
+            "  boolean f(E e) {",
+            "    switch (e) {",
+            "      case A:",
+            "      case E:",
+            "      case I:",
+            "      case O:",
+            "      case U:",
+            "        return true;",
+            "      default:",
+            "        return false;",
+            "    };",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
