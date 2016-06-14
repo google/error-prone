@@ -16,9 +16,11 @@
 
 package com.google.errorprone;
 
+import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
+import static org.junit.Assert.fail;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -37,6 +39,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 import java.util.NoSuchElementException;
 
 /**
@@ -202,6 +205,19 @@ public class BugCheckerRefactoringTestHelperTest {
         return describeMatch(tree, SuggestedFix.replace(tree, ""));
       }
       return Description.NO_MATCH;
+    }
+  }
+
+  @Test
+  public void testFileAlreadyExists() throws IOException {
+    try {
+      helper
+          .addInputLines("Test.java", "public class Test {}")
+          .addOutputLines("Test.java", "public class Test {}")
+          .doTest();
+      fail();
+    } catch (FileAlreadyExistsException e) {
+      assertThat(e).hasMessage("Test.java");
     }
   }
 }

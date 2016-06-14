@@ -42,6 +42,7 @@ import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
 
 import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -232,8 +233,11 @@ public class BugCheckerRefactoringTestHelper {
       this.input = input;
     }
 
-    public BugCheckerRefactoringTestHelper addOutputLines(String path, String... output) {
-      assertThat(fileManager.exists(path)).isFalse();
+    public BugCheckerRefactoringTestHelper addOutputLines(String path, String... output)
+        throws IOException {
+      if (fileManager.exists(path)) {
+        throw new FileAlreadyExistsException(path);
+      }
       return addInputAndOutput(input, fileManager.forSourceLines(path, output));
     }
 
