@@ -3,7 +3,7 @@ title: ClassCanBeStatic
 summary: Inner class is non-static but does not reference enclosing class
 layout: bugpattern
 category: JDK
-severity: ERROR
+severity: WARNING
 maturity: EXPERIMENTAL
 ---
 

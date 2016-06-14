@@ -3,7 +3,7 @@ title: ClassNewInstance
 summary: Class.newInstance() bypasses exception checking; prefer getConstructor().newInstance()
 layout: bugpattern
 category: JDK
-severity: ERROR
+severity: WARNING
 maturity: MATURE
 ---
 

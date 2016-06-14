@@ -338,8 +338,6 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/AppliedFix.Applier.html#Applier-java.lang.CharSequence-com.sun.tools.javac.tree.EndPosTable-">Applier(CharSequence, EndPosTable)</a></span> - Constructor for class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AppliedFix.Applier.html" title="class in com.google.errorprone.fixes">AppliedFix.Applier</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/WildcardImport.FixStrategy.html#apply-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-com.google.common.collect.ImmutableList-com.google.common.collect.Multimap-com.google.errorprone.bugpatterns.BugChecker-">apply(ClassTree, VisitorState, ImmutableList&lt;ImportTree&gt;, Multimap&lt;ImportTree, WildcardImport.TypeToImport&gt;, BugChecker)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/WildcardImport.FixStrategy.html" title="interface in com.google.errorprone.bugpatterns">WildcardImport.FixStrategy</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/CodeTransformer.html#apply-com.sun.source.util.TreePath-com.sun.tools.javac.util.Context-com.google.errorprone.DescriptionListener-">apply(TreePath, Context, DescriptionListener)</a></span> - Method in interface com.google.errorprone.<a href="com/google/errorprone/CodeTransformer.html" title="interface in com.google.errorprone">CodeTransformer</a></dt>
 <dd>
 <div class="block">Apply recursively from the leaf node in the given <code>TreePath</code>.</div>
@@ -3423,9 +3421,9 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/JUnitAmbiguousTestClass.html#matchClass-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/JUnitAmbiguousTestClass.html" title="class in com.google.errorprone.bugpatterns">JUnitAmbiguousTestClass</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableChecker.html#matchClass-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ImmutableChecker</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/PrivateConstructorForUtilityClass.html#matchClass-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/PrivateConstructorForUtilityClass.html" title="class in com.google.errorprone.bugpatterns">PrivateConstructorForUtilityClass</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/WildcardImport.html#matchClass-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/WildcardImport.html" title="class in com.google.errorprone.bugpatterns">WildcardImport</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableChecker.html#matchClass-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ImmutableChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.CompilationUnitTreeMatcher.html#matchCompilationUnit-com.sun.source.tree.CompilationUnitTree-com.google.errorprone.VisitorState-">matchCompilationUnit(CompilationUnitTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.CompilationUnitTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.CompilationUnitTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
@@ -3440,6 +3438,8 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/MultipleTopLevelClasses.html#matchCompilationUnit-com.sun.source.tree.CompilationUnitTree-com.google.errorprone.VisitorState-">matchCompilationUnit(CompilationUnitTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MultipleTopLevelClasses.html" title="class in com.google.errorprone.bugpatterns">MultipleTopLevelClasses</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/PackageLocation.html#matchCompilationUnit-com.sun.source.tree.CompilationUnitTree-com.google.errorprone.VisitorState-">matchCompilationUnit(CompilationUnitTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/PackageLocation.html" title="class in com.google.errorprone.bugpatterns">PackageLocation</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/WildcardImport.html#matchCompilationUnit-com.sun.source.tree.CompilationUnitTree-com.google.errorprone.VisitorState-">matchCompilationUnit(CompilationUnitTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/WildcardImport.html" title="class in com.google.errorprone.bugpatterns">WildcardImport</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.CompoundAssignmentTreeMatcher.html#matchCompoundAssignment-com.sun.source.tree.CompoundAssignmentTree-com.google.errorprone.VisitorState-">matchCompoundAssignment(CompoundAssignmentTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.CompoundAssignmentTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.CompoundAssignmentTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
@@ -4481,6 +4481,10 @@
 <dt><a href="com/google/errorprone/bugpatterns/PrimitiveArrayPassedToVarargsMethod.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">PrimitiveArrayPassedToVarargsMethod</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/PrimitiveArrayPassedToVarargsMethod.html#PrimitiveArrayPassedToVarargsMethod--">PrimitiveArrayPassedToVarargsMethod()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/PrimitiveArrayPassedToVarargsMethod.html" title="class in com.google.errorprone.bugpatterns">PrimitiveArrayPassedToVarargsMethod</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/PrivateConstructorForUtilityClass.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">PrivateConstructorForUtilityClass</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/PrivateConstructorForUtilityClass.html#PrivateConstructorForUtilityClass--">PrivateConstructorForUtilityClass()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/PrivateConstructorForUtilityClass.html" title="class in com.google.errorprone.bugpatterns">PrivateConstructorForUtilityClass</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/DocGenProcessor.html#process-java.util.Set-javax.annotation.processing.RoundEnvironment-">process(Set&lt;? extends TypeElement&gt;, RoundEnvironment)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/DocGenProcessor.html" title="class in com.google.errorprone">DocGenProcessor</a></dt>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/annotation/RequiredAnnotationProcessor.html#process-java.util.Set-javax.annotation.processing.RoundEnvironment-">process(Set&lt;? extends TypeElement&gt;, RoundEnvironment)</a></span> - Method in class com.google.errorprone.refaster.annotation.<a href="com/google/errorprone/refaster/annotation/RequiredAnnotationProcessor.html" title="class in com.google.errorprone.refaster.annotation">RequiredAnnotationProcessor</a></dt>
@@ -5602,10 +5606,6 @@
 <dd>
 <div class="block">Returns the enum constant of this type with the specified name.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/WildcardImport.FixStrategies.html#valueOf-java.lang.String-">valueOf(String)</a></span> - Static method in enum com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/WildcardImport.FixStrategies.html" title="enum in com.google.errorprone.bugpatterns">WildcardImport.FixStrategies</a></dt>
-<dd>
-<div class="block">Returns the enum constant of this type with the specified name.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/nullnesspropagation/Nullness.html#valueOf-java.lang.String-">valueOf(String)</a></span> - Static method in enum com.google.errorprone.dataflow.nullnesspropagation.<a href="com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a></dt>
 <dd>
 <div class="block">Returns the enum constant of this type with the specified name.</div>
@@ -5678,11 +5678,6 @@ the order they are declared.</div>
 the order they are declared.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.Kind.html#values--">values()</a></span> - Static method in enum com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.Kind.html" title="enum in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression.Kind</a></dt>
-<dd>
-<div class="block">Returns an array containing the constants of this enum type, in
-the order they are declared.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/WildcardImport.FixStrategies.html#values--">values()</a></span> - Static method in enum com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/WildcardImport.FixStrategies.html" title="enum in com.google.errorprone.bugpatterns">WildcardImport.FixStrategies</a></dt>
 <dd>
 <div class="block">Returns an array containing the constants of this enum type, in
 the order they are declared.</div>
@@ -6119,16 +6114,6 @@ the order they are declared.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/WildcardImport.html#WildcardImport--">WildcardImport()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/WildcardImport.html" title="class in com.google.errorprone.bugpatterns">WildcardImport</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/WildcardImport.html#WildcardImport-com.google.errorprone.bugpatterns.WildcardImport.FixStrategy-">WildcardImport(WildcardImport.FixStrategy)</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/WildcardImport.html" title="class in com.google.errorprone.bugpatterns">WildcardImport</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/bugpatterns/WildcardImport.FixStrategies.html" title="enum in com.google.errorprone.bugpatterns"><span class="typeNameLink">WildcardImport.FixStrategies</span></a> - Enum in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
-<dd>
-<div class="block">Fix strategies for testing and production.</div>
-</dd>
-<dt><a href="com/google/errorprone/bugpatterns/WildcardImport.FixStrategy.html" title="interface in com.google.errorprone.bugpatterns"><span class="typeNameLink">WildcardImport.FixStrategy</span></a> - Interface in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
-<dd>
-<div class="block">Interface for the fix generating logic.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html#withAnyName--">withAnyName()</a></span> - Method in interface com.google.errorprone.matchers.method.<a href="com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></dt>
 <dd>
 <div class="block">Match methods with any name.</div>

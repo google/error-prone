@@ -3,7 +3,7 @@ title: BoxedPrimitiveConstructor
 summary: valueOf or autoboxing provides better time and space performance
 layout: bugpattern
 category: JDK
-severity: ERROR
+severity: WARNING
 maturity: MATURE
 ---
 

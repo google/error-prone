@@ -23,8 +23,14 @@ Classes that implement Annotation must override equals and hashCode. Consider us
 __[BadComparable](bugpattern/BadComparable)__<br>
 Possible sign flip from narrowing conversion
 
+__[BoxedPrimitiveConstructor](bugpattern/BoxedPrimitiveConstructor)__<br>
+valueOf or autoboxing provides better time and space performance
+
 __[CannotMockFinalClass](bugpattern/CannotMockFinalClass)__<br>
 Mockito cannot mock final classes
+
+__[ClassNewInstance](bugpattern/ClassNewInstance)__<br>
+Class.newInstance() bypasses exception checking; prefer getConstructor().newInstance()
 
 __[DoubleCheckedLocking](bugpattern/DoubleCheckedLocking)__<br>
 Double-checked locking on non-volatile fields is unsafe
@@ -49,6 +55,9 @@ Calling getClass() on an enum may return a subclass of the enum type
 
 __[IncompatibleModifiers](bugpattern/IncompatibleModifiers)__<br>
 This annotation has incompatible modifiers as specified by its @IncompatibleModifiers annotation
+
+__[InsecureCipherMode](bugpattern/InsecureCipherMode)__<br>
+Cipher.getInstance() is invoked using either the default settings or ECB mode
 
 __[JUnit3FloatingPointComparisonWithoutDelta](bugpattern/JUnit3FloatingPointComparisonWithoutDelta)__<br>
 Floating-point comparison without error tolerance
@@ -119,6 +128,9 @@ Unsynchronized method overrides a synchronized method.
 __[WaitNotInLoop](bugpattern/WaitNotInLoop)__<br>
 Because of spurious wakeups, Object.wait() and Condition.await() must always be called in a loop
 
+__[WildcardImport](bugpattern/WildcardImport)__<br>
+Use of wildcard imports is forbidden
+
 ## On by default : SUGGESTION
 
 __[ConstantField](bugpattern/ConstantField)__<br>
@@ -141,9 +153,6 @@ AsyncFunction should not return a null Future, only a Future whose result is nul
 __[BadShiftAmount](bugpattern/BadShiftAmount)__<br>
 Shift by an amount that is out of range
 
-__[BoxedPrimitiveConstructor](bugpattern/BoxedPrimitiveConstructor)__<br>
-valueOf or autoboxing provides better time and space performance
-
 __[ChainingConstructorIgnoresParameter](bugpattern/ChainingConstructorIgnoresParameter)__<br>
 The called constructor accepts a parameter with the same name and type as one of its caller&#39;s parameters, but its caller doesn&#39;t pass that parameter to it.  It&#39;s likely that it was intended to.
 
@@ -152,9 +161,6 @@ Ignored return value of method that is annotated with @CheckReturnValue
 
 __[ClassName](bugpattern/ClassName)__<br>
 The source file name should match the name of the top-level class it contains
-
-__[ClassNewInstance](bugpattern/ClassNewInstance)__<br>
-Class.newInstance() bypasses exception checking; prefer getConstructor().newInstance()
 
 __[ComparisonOutOfRange](bugpattern/ComparisonOutOfRange)__<br>
 Comparison to value that is out of range for the compared type
@@ -194,9 +200,6 @@ Scope annotation on implementation class of AssistedInject factory is not allowe
 
 __[HashtableContains](bugpattern/HashtableContains)__<br>
 contains() is a legacy method that is equivalent to containsValue()
-
-__[InsecureCipherMode](bugpattern/InsecureCipherMode)__<br>
-Cipher.getInstance() is invoked using either the default settings or ECB mode
 
 __[InvalidPatternSyntax](bugpattern/InvalidPatternSyntax)__<br>
 Invalid syntax used for a regular expression
@@ -308,6 +311,9 @@ __[AssistedInjectAndInjectOnConstructors](bugpattern/AssistedInjectAndInjectOnCo
 __[BigDecimalLiteralDouble](bugpattern/BigDecimalLiteralDouble)__<br>
 BigDecimal(double) and BigDecimal.valueOf(double) may lose precision, prefer BigDecimal(String) or BigDecimal(long)
 
+__[ClassCanBeStatic](bugpattern/ClassCanBeStatic)__<br>
+Inner class is non-static but does not reference enclosing class
+
 __[CollectionIncompatibleType](bugpattern/CollectionIncompatibleType)__<br>
 Incompatible type as argument to Object-accepting Java collections method
 
@@ -340,6 +346,9 @@ Non-constant variable missing @Var annotation
 
 ## Experimental : SUGGESTION
 
+__[PrivateConstructorForUtilityClass](bugpattern/PrivateConstructorForUtilityClass)__<br>
+Utility classes (only static members) are not designed to be instantiated and should be made noninstantiable with a default constructor.
+
 __[RemoveUnusedImports](bugpattern/RemoveUnusedImports)__<br>
 Unused import
 
@@ -353,9 +362,6 @@ Arrays.asList does not autobox primitive arrays, as one might expect.
 
 __[AssistedInjectAndInjectOnSameConstructor](bugpattern/AssistedInjectAndInjectOnSameConstructor)__<br>
 @AssistedInject and @Inject cannot be used on the same constructor.
-
-__[ClassCanBeStatic](bugpattern/ClassCanBeStatic)__<br>
-Inner class is non-static but does not reference enclosing class
 
 __[ComparisonContractViolated](bugpattern/ComparisonContractViolated)__<br>
 This comparison method violates the contract
@@ -443,7 +449,4 @@ throwIfUnchecked(knownCheckedException) is a no-op.
 
 __[UnlockMethod](bugpattern/UnlockMethod)__<br>
 This method does not acquire the locks specified by its @UnlockMethod annotation
-
-__[WildcardImport](bugpattern/WildcardImport)__<br>
-Use of wildcard imports is forbidden
 

@@ -2,9 +2,9 @@
 title: WildcardImport
 summary: Use of wildcard imports is forbidden
 layout: bugpattern
-category: GUAVA
-severity: ERROR
-maturity: EXPERIMENTAL
+category: JDK
+severity: WARNING
+maturity: MATURE
 ---
 
 <!--

@@ -3,7 +3,7 @@ title: InsecureCipherMode
 summary: Cipher.getInstance() is invoked using either the default settings or ECB mode
 layout: bugpattern
 category: JDK
-severity: ERROR
+severity: WARNING
 maturity: MATURE
 ---
 
