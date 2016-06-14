@@ -15,12 +15,15 @@
  */
 package com.google.errorprone.bugpatterns;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
+import java.io.IOException;
 
 /**
  * @author gak@google.com (Gregory Kick)
@@ -38,5 +41,24 @@ public class RemoveUnusedImportsTest {
   @Test
   public void testPositiveCase() throws Exception {
     compilationHelper.addSourceFile("RemoveUnusedImportsPositiveCases.java").doTest();
+  }
+
+  @Test
+  public void useInSelect() throws IOException {
+    BugCheckerRefactoringTestHelper.newInstance(new RemoveUnusedImports(), getClass())
+        .addInputLines(
+            "in/Test.java",
+            "import java.util.Map;",
+            "import java.util.Map.Entry;",
+            "public class Test {",
+            "  Map.Entry<String, String> e;",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import java.util.Map;",
+            "public class Test {",
+            "  Map.Entry<String, String> e;",
+            "}")
+        .doTest();
   }
 }

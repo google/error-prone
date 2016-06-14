@@ -33,6 +33,7 @@ import com.google.errorprone.matchers.Description;
 import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.doctree.ReferenceTree;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.DocTreePath;
@@ -103,14 +104,12 @@ public final class RemoveUnusedImports extends BugChecker implements ImportTreeM
       if (symbol == null) {
         return false;
       }
-      if (searchSymbols.contains(symbol.baseSymbol())) {
-        return true;
-      }
-      DocCommentTree commentTree = trees.getDocCommentTree(getCurrentPath());
-      return commentTree == null
-          ? false
-          : docTreeSymbolScanner.scan(
-              new DocTreePath(getCurrentPath(), commentTree), searchSymbols);
+      return searchSymbols.contains(symbol.baseSymbol());
+    }
+
+    @Override
+    public Boolean visitIdentifier(IdentifierTree tree, Set<Symbol> searchSymbols) {
+      return containsSymbol(tree, searchSymbols);
     }
 
     @Override
@@ -118,8 +117,19 @@ public final class RemoveUnusedImports extends BugChecker implements ImportTreeM
       if (tree == null) {
         return false;
       }
-      // TODO(gak): figure out if we can just get away with scanning identifiers
-      return reduce(containsSymbol(tree, searchSymbols), super.scan(tree, searchSymbols));
+      return reduce(scanJavadoc(searchSymbols), super.scan(tree, searchSymbols));
+    }
+
+    private boolean scanJavadoc(Set<Symbol> searchSymbols) {
+      if (getCurrentPath() == null) {
+        return false;
+      }
+      DocCommentTree commentTree = trees.getDocCommentTree(getCurrentPath());
+      if (commentTree == null) {
+        return false;
+      }
+      return docTreeSymbolScanner.scan(
+          new DocTreePath(getCurrentPath(), commentTree), searchSymbols);
     }
 
     @Override
