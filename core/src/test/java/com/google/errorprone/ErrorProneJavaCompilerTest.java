@@ -34,15 +34,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.errorprone.bugpatterns.ArrayEquals;
-import com.google.errorprone.bugpatterns.ArrayEqualsTest;
 import com.google.errorprone.bugpatterns.BadShiftAmount;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.ChainingConstructorIgnoresParameter;
-import com.google.errorprone.bugpatterns.EmptyIfStatementTest;
 import com.google.errorprone.bugpatterns.Finally;
-import com.google.errorprone.bugpatterns.SelfAssignmentTest;
-import com.google.errorprone.bugpatterns.WaitNotInLoopTest;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.scanner.ScannerSupplier;
@@ -137,8 +133,7 @@ public class ErrorProneJavaCompilerTest {
   public void fileWithErrorIntegrationTest() throws Exception {
     CompilationResult result =
         doCompile(
-            SelfAssignmentTest.class,
-            Arrays.asList("SelfAssignmentPositiveCases1.java"),
+            Arrays.asList("bugpatterns/testdata/SelfAssignmentPositiveCases1.java"),
             Collections.<String>emptyList(),
             Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isFalse();
@@ -151,16 +146,14 @@ public class ErrorProneJavaCompilerTest {
   public void testWithDisabledCheck() throws Exception {
     CompilationResult result =
         doCompile(
-            SelfAssignmentTest.class,
-            Arrays.asList("SelfAssignmentPositiveCases1.java"),
+            Arrays.asList("bugpatterns/testdata/SelfAssignmentPositiveCases1.java"),
             Collections.<String>emptyList(),
             Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isFalse();
 
     result =
         doCompile(
-            SelfAssignmentTest.class,
-            Arrays.asList("SelfAssignmentPositiveCases1.java"),
+            Arrays.asList("bugpatterns/testdata/SelfAssignmentPositiveCases1.java"),
             Arrays.asList("-Xep:SelfAssignment:OFF"),
             Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isTrue();
@@ -168,22 +161,22 @@ public class ErrorProneJavaCompilerTest {
 
   @Test
   public void testWithCheckPromotedToError() throws Exception {
-    CompilationResult result = doCompile(
-        WaitNotInLoopTest.class,
-        Arrays.asList("WaitNotInLoopPositiveCases.java"),
-        Collections.<String>emptyList(),
-        Collections.<Class<? extends BugChecker>>emptyList());
+    CompilationResult result =
+        doCompile(
+            Arrays.asList("bugpatterns/testdata/WaitNotInLoopPositiveCases.java"),
+            Collections.<String>emptyList(),
+            Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isTrue();
     assertThat(result.diagnosticHelper.getDiagnostics().size()).isGreaterThan(0);
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
         hasItem(diagnosticMessage(containsString("[WaitNotInLoop]")));
     assertTrue(matcher.matches(result.diagnosticHelper.getDiagnostics()));
 
-    result = doCompile(
-        WaitNotInLoopTest.class,
-        Arrays.asList("WaitNotInLoopPositiveCases.java"),
-        Arrays.asList("-Xep:WaitNotInLoop:ERROR"),
-        Collections.<Class<? extends BugChecker>>emptyList());
+    result =
+        doCompile(
+            Arrays.asList("bugpatterns/testdata/WaitNotInLoopPositiveCases.java"),
+            Arrays.asList("-Xep:WaitNotInLoop:ERROR"),
+            Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isFalse();
     assertThat(result.diagnosticHelper.getDiagnostics().size()).isGreaterThan(0);
     assertTrue(matcher.matches(result.diagnosticHelper.getDiagnostics()));
@@ -193,8 +186,7 @@ public class ErrorProneJavaCompilerTest {
   public void testWithCheckDemotedToWarning() throws Exception {
     CompilationResult result =
         doCompile(
-            SelfAssignmentTest.class,
-            Arrays.asList("SelfAssignmentPositiveCases1.java"),
+            Arrays.asList("bugpatterns/testdata/SelfAssignmentPositiveCases1.java"),
             Collections.<String>emptyList(),
             Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isFalse();
@@ -205,8 +197,7 @@ public class ErrorProneJavaCompilerTest {
 
     result =
         doCompile(
-            SelfAssignmentTest.class,
-            Arrays.asList("SelfAssignmentPositiveCases1.java"),
+            Arrays.asList("bugpatterns/testdata/SelfAssignmentPositiveCases1.java"),
             Arrays.asList("-Xep:SelfAssignment:WARN"),
             Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isTrue();
@@ -216,19 +207,19 @@ public class ErrorProneJavaCompilerTest {
 
   @Test
   public void testWithNonDefaultCheckOn() throws Exception {
-    CompilationResult result = doCompile(
-        EmptyIfStatementTest.class,
-        Arrays.asList("EmptyIfStatementPositiveCases.java"),
-        Collections.<String>emptyList(),
-        Collections.<Class<? extends BugChecker>>emptyList());
+    CompilationResult result =
+        doCompile(
+            Arrays.asList("bugpatterns/testdata/EmptyIfStatementPositiveCases.java"),
+            Collections.<String>emptyList(),
+            Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isTrue();
     assertThat(result.diagnosticHelper.getDiagnostics()).isEmpty();
 
-    result = doCompile(
-        EmptyIfStatementTest.class,
-        Arrays.asList("EmptyIfStatementPositiveCases.java"),
-        Arrays.asList("-Xep:EmptyIf"),
-        Collections.<Class<? extends BugChecker>>emptyList());
+    result =
+        doCompile(
+            Arrays.asList("bugpatterns/testdata/EmptyIfStatementPositiveCases.java"),
+            Arrays.asList("-Xep:EmptyIf"),
+            Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isFalse();
     assertThat(result.diagnosticHelper.getDiagnostics().size()).isGreaterThan(0);
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
@@ -240,8 +231,7 @@ public class ErrorProneJavaCompilerTest {
   public void testBadFlagThrowsException() throws Exception {
     try {
       doCompile(
-          EmptyIfStatementTest.class,
-          Arrays.asList("EmptyIfStatementPositiveCases.java"),
+          Arrays.asList("bugpatterns/testdata/EmptyIfStatementPositiveCases.java"),
           Arrays.asList("-Xep:foo:bar:baz"),
           Collections.<Class<? extends BugChecker>>emptyList());
       fail();
@@ -260,8 +250,7 @@ public class ErrorProneJavaCompilerTest {
   public void testCantDisableNonDisableableCheck() throws Exception {
     try {
       doCompile(
-          ArrayEqualsTest.class,
-          Arrays.asList("ArrayEqualsPositiveCases.java"),
+          Arrays.asList("bugpatterns/testdata/ArrayEqualsPositiveCases.java"),
           Arrays.asList("-Xep:ArrayEquals:OFF"),
           ImmutableList.<Class<? extends BugChecker>>of(UnsuppressibleArrayEquals.class));
       fail();
@@ -272,11 +261,11 @@ public class ErrorProneJavaCompilerTest {
 
   @Test
   public void testWithCustomCheckPositive() throws Exception {
-    CompilationResult result = doCompile(
-        BadShiftAmount.class,
-        Arrays.asList("BadShiftAmountPositiveCases.java"),
-        Collections.<String>emptyList(),
-        Arrays.<Class<? extends BugChecker>>asList(BadShiftAmount.class));
+    CompilationResult result =
+        doCompile(
+            Arrays.asList("bugpatterns/testdata/BadShiftAmountPositiveCases.java"),
+            Collections.<String>emptyList(),
+            Arrays.<Class<? extends BugChecker>>asList(BadShiftAmount.class));
     assertThat(result.succeeded).isFalse();
     assertThat(result.diagnosticHelper.getDiagnostics().size()).isGreaterThan(0);
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
@@ -288,8 +277,7 @@ public class ErrorProneJavaCompilerTest {
   public void testWithCustomCheckNegative() throws Exception {
     CompilationResult result =
         doCompile(
-            SelfAssignmentTest.class,
-            Arrays.asList("SelfAssignmentPositiveCases1.java"),
+            Arrays.asList("bugpatterns/testdata/SelfAssignmentPositiveCases1.java"),
             Collections.<String>emptyList(),
             Arrays.<Class<? extends BugChecker>>asList(Finally.class));
     assertThat(result.succeeded).isTrue();
@@ -357,7 +345,8 @@ public class ErrorProneJavaCompilerTest {
         "-proc:none",
         "-Xep:EmptyIf");
     List<JavaFileObject> sources =
-        fileManager.forResources(BadShiftAmount.class, "EmptyIfStatementPositiveCases.java");
+        fileManager.forResources(
+            BadShiftAmount.class, "testdata/EmptyIfStatementPositiveCases.java");
     fileManager.close();
 
     JavaCompiler.CompilationTask task = errorProneJavaCompiler.getTask(
@@ -412,8 +401,7 @@ public class ErrorProneJavaCompilerTest {
   public void testFixGeneratedConstructor() throws Exception {
     CompilationResult result =
         doCompile(
-            ErrorProneJavaCompilerTest.class,
-            Arrays.asList("DeleteGeneratedConstructorTestCase.java"),
+            Arrays.asList("testdata/DeleteGeneratedConstructorTestCase.java"),
             Collections.<String>emptyList(),
             ImmutableList.<Class<? extends BugChecker>>of(DeleteMethod.class));
     assertThat(result.succeeded).isFalse();
@@ -435,7 +423,6 @@ public class ErrorProneJavaCompilerTest {
   }
 
   private CompilationResult doCompile(
-      Class<?> clazz,
       List<String> fileNames,
       List<String> extraArgs,
       List<Class<? extends BugChecker>> customCheckers) {
@@ -452,13 +439,14 @@ public class ErrorProneJavaCompilerTest {
     JavaCompiler errorProneJavaCompiler = (customCheckers.isEmpty())
         ? new ErrorProneJavaCompiler()
         : new ErrorProneJavaCompiler(ScannerSupplier.fromBugCheckerClasses(customCheckers));
-    JavaCompiler.CompilationTask task = errorProneJavaCompiler.getTask(
-        printWriter,
-        fileManager,
-        diagnosticHelper.collector,
-        args,
-        null,
-        fileManager.forResources(clazz, fileNames.toArray(new String[fileNames.size()])));
+    JavaCompiler.CompilationTask task =
+        errorProneJavaCompiler.getTask(
+            printWriter,
+            fileManager,
+            diagnosticHelper.collector,
+            args,
+            null,
+            fileManager.forResources(getClass(), fileNames.toArray(new String[0])));
 
     fileManager.close();
     return new CompilationResult(task.call(), diagnosticHelper);

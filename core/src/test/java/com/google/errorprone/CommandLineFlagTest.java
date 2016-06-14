@@ -135,9 +135,10 @@ public class CommandLineFlagTest {
   @Test
   public void canEnableWithDefaultSeverity() throws Exception {
     ErrorProneTestCompiler compiler = builder.build();
-    List<JavaFileObject> sources = compiler.fileManager().forResources(
-        EmptyIfStatement.class,
-        "EmptyIfStatementPositiveCases.java");
+    List<JavaFileObject> sources =
+        compiler
+            .fileManager()
+            .forResources(EmptyIfStatement.class, "testdata/EmptyIfStatementPositiveCases.java");
 
     Result exitCode = compiler.compile(sources);
     assertThat(exitCode).isEqualTo(Result.OK);
@@ -150,9 +151,10 @@ public class CommandLineFlagTest {
   @Test
   public void canEnableWithOverriddenSeverity() throws Exception {
     ErrorProneTestCompiler compiler = builder.build();
-    List<JavaFileObject> sources = compiler.fileManager().forResources(
-        EmptyIfStatement.class,
-        "EmptyIfStatementPositiveCases.java");
+    List<JavaFileObject> sources =
+        compiler
+            .fileManager()
+            .forResources(EmptyIfStatement.class, "testdata/EmptyIfStatementPositiveCases.java");
 
     Result exitCode = compiler.compile(sources);
     assertThat(exitCode).isEqualTo(Result.OK);
