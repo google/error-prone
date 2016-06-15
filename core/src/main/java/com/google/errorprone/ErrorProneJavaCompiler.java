@@ -92,7 +92,7 @@ public class ErrorProneJavaCompiler implements JavaCompiler {
     CompilationTask task = javacTool.getTask(
         out, fileManager, diagnosticListener, remainingOptions, classes, compilationUnits);
     Context context = ((JavacTaskImpl) task).getContext();
-    ErrorProneCompiler.setupMessageBundle(context);
+    BaseErrorProneCompiler.setupMessageBundle(context);
     MultiTaskListener.instance(context)
         .add(new ErrorProneAnalyzer(transformer, errorProneOptions, context));
     return task;

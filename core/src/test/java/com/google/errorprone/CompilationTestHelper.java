@@ -59,7 +59,7 @@ public class CompilationTestHelper {
           "-XDdev");
 
   private final DiagnosticTestHelper diagnosticHelper;
-  private final ErrorProneCompiler compiler;
+  private final BaseErrorProneCompiler compiler;
   private final ByteArrayOutputStream outputStream;
   private final ErrorProneInMemoryFileManager fileManager;
   private final List<JavaFileObject> sources = new ArrayList<>();
@@ -74,11 +74,12 @@ public class CompilationTestHelper {
     this.fileManager = new ErrorProneInMemoryFileManager(clazz);
     this.diagnosticHelper = new DiagnosticTestHelper(checkName);
     this.outputStream = new ByteArrayOutputStream();
-    this.compiler = new ErrorProneCompiler.Builder()
-        .report(scannerSupplier)
-        .redirectOutputTo(new PrintWriter(outputStream, /*autoFlush=*/true))
-        .listenToDiagnostics(diagnosticHelper.collector)
-        .build();
+    this.compiler =
+        BaseErrorProneCompiler.builder()
+            .report(scannerSupplier)
+            .redirectOutputTo(new PrintWriter(outputStream, /*autoFlush=*/ true))
+            .listenToDiagnostics(diagnosticHelper.collector)
+            .build();
   }
 
   /**

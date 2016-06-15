@@ -47,7 +47,7 @@ public class ErrorProneError extends Error {
   }
 
   public void logFatalError(Log log) {
-    String version = ErrorProneCompiler.loadVersionFromPom().or("unknown version");
+    String version = ErrorProneVersion.loadVersionFromPom().or("unknown version");
     JavaFileObject prev = log.currentSourceFile();
     try {
       log.useSource(source);

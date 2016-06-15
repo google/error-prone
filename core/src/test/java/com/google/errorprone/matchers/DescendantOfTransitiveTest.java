@@ -18,7 +18,7 @@ package com.google.errorprone.matchers;
 
 import static org.hamcrest.CoreMatchers.is;
 
-import com.google.errorprone.ErrorProneCompiler;
+import com.google.errorprone.BaseErrorProneCompiler;
 import com.google.errorprone.scanner.Scanner;
 import com.google.errorprone.scanner.ScannerSupplier;
 
@@ -73,9 +73,8 @@ public class DescendantOfTransitiveTest extends DescendantOfAbstractTest {
     args.add(tempDir.getRoot().getAbsolutePath());
     args.addAll(filesToCompile);
 
-    ErrorProneCompiler compiler = new ErrorProneCompiler.Builder()
-        .report(ScannerSupplier.fromScanner(scanner))
-        .build();
+    BaseErrorProneCompiler compiler =
+        BaseErrorProneCompiler.builder().report(ScannerSupplier.fromScanner(scanner)).build();
     Assert.assertThat(compiler.run(args.toArray(new String[0])), is(Result.OK));
   }
 
