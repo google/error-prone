@@ -341,6 +341,9 @@ Second argument to Preconditions.* is a call to String.format(), which can be un
 __[PrimitiveArrayPassedToVarargsMethod](bugpattern/PrimitiveArrayPassedToVarargsMethod)__<br>
 Passing a primitive array to a varargs method is usually wrong
 
+__[ReferenceEquality](bugpattern/ReferenceEquality)__<br>
+Comparison using reference equality instead of value equality
+
 __[Var](bugpattern/Var)__<br>
 Non-constant variable missing @Var annotation
 
