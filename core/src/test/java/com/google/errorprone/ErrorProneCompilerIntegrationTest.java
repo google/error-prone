@@ -25,12 +25,10 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import com.google.common.collect.Iterables;
-import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.bugpatterns.BadShiftAmount;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ExpressionStatementTreeMatcher;
@@ -39,8 +37,6 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.bugpatterns.NonAtomicVolatileUpdate;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.scanner.ErrorProneScanner;
-import com.google.errorprone.scanner.Scanner;
 import com.google.errorprone.scanner.ScannerSupplier;
 
 import com.sun.source.tree.ExpressionStatementTree;
@@ -51,8 +47,6 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.main.Main.Result;
-import com.sun.tools.javac.processing.JavacProcessingEnvironment;
-import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.List;
 
 import org.hamcrest.CoreMatchers;
@@ -68,14 +62,8 @@ import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Locale;
-import java.util.Set;
 
-import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Name;
-import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
@@ -215,45 +203,6 @@ public class ErrorProneCompilerIntegrationTest {
             // is desugared, once normally).
             "FlowSuper.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
-  }
-
-  @Test
-  public void propagatesScannerThroughAnnotationProcessingRounds() throws Exception {
-    final ErrorProneScanner scanner =
-        new ErrorProneScanner(
-            Collections.<BugChecker>emptyList(), Collections.<String, SeverityLevel>emptyMap());
-    compilerBuilder.report(ScannerSupplier.fromScanner(scanner));
-    compiler = compilerBuilder.build();
-    Result exitCode = compiler.compile(
-        compiler.fileManager().forResources(getClass(), "UsesAnnotationProcessor.java"),
-        Arrays.asList(new ScannerCheckingProcessor(scanner)));
-    assertThat(outputStream.toString(), exitCode, is(Result.OK));
-  }
-
-  /**
-   * Annotation processor that checks that the context always has the same {@link ErrorProneScanner}
-   * instance at each stage of annotation processing.
-   */
-  @SupportedAnnotationTypes("*")
-  public static final class ScannerCheckingProcessor extends AbstractProcessor {
-
-    private final ErrorProneScanner expected;
-
-    public ScannerCheckingProcessor(ErrorProneScanner expected) {
-      this.expected = expected;
-    }
-
-    @Override
-    public SourceVersion getSupportedSourceVersion() {
-      return SourceVersion.latest();
-    }
-
-    @Override
-    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-      Context context = ((JavacProcessingEnvironment) processingEnv).getContext();
-      assertSame(expected, context.get(Scanner.class));
-      return false;
-    }
   }
 
   @BugPattern(name = "ConstructorMatcher", explanation = "",

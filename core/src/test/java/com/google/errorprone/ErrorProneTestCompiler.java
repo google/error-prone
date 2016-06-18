@@ -90,9 +90,11 @@ public class ErrorProneTestCompiler {
   public Result compile(String[] args, List<JavaFileObject> sources, List<? extends Processor>
       processors) {
     Context context = new Context();
-    List<String> processedArgs =
-        CompilationTestHelper.disableImplicitProcessing(Arrays.asList(args));
-    String[] argsArray = processedArgs.toArray(new String[processedArgs.size()]);
-    return compiler.run(argsArray, context, fileManager, sources, processors);
+    if (processors == null || processors.isEmpty()) {
+      List<String> processedArgs =
+          CompilationTestHelper.disableImplicitProcessing(Arrays.asList(args));
+      args = processedArgs.toArray(new String[0]);
+    }
+    return compiler.run(args, context, fileManager, sources, processors);
   }
 }
