@@ -46,6 +46,7 @@ import com.sun.tools.javac.code.Kinds.KindSelector;
 import com.sun.tools.javac.code.Scope;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Symbol.CompletionFailure;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
@@ -485,7 +486,13 @@ public class ASTHelpers {
    * @param annotationType The type of the annotation to look for (e.g, "javax.annotation.Nullable")
    */
   public static boolean hasAnnotation(Symbol sym, String annotationType, VisitorState state) {
-    Symbol annotationSym = state.getSymbolFromString(annotationType);
+    Symbol annotationSym = state.getSymtab().enterClass(state.getName(annotationType));
+    try {
+      annotationSym.complete();
+    } catch (CompletionFailure e) {
+      // @Inherited won't work if the annotation isn't on the classpath, but we can still check
+      // if it's present directly
+    }
     Symbol inheritedSym = state.getSymtab().inheritedType.tsym;
 
     if ((sym == null) || (annotationSym == null)) {
