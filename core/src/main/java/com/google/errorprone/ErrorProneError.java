@@ -31,16 +31,19 @@ import javax.tools.JavaFileObject;
  */
 public class ErrorProneError extends Error {
 
+  private final String checkName;
   private final Throwable cause;
   private final DiagnosticPosition pos;
   private final JavaFileObject source;
 
-  public ErrorProneError(Throwable cause, DiagnosticPosition pos, JavaFileObject source) {
+  public ErrorProneError(
+      String checkName, Throwable cause, DiagnosticPosition pos, JavaFileObject source) {
     super(
-        formatMessage(source, pos, cause),
+        formatMessage(checkName, source, pos, cause),
         cause,
         /*enableSuppression=*/ true,
         /*writableStackTrace=*/ false);
+    this.checkName = checkName;
     this.cause = cause;
     this.pos = pos;
     this.source = source;
@@ -59,7 +62,7 @@ public class ErrorProneError extends Error {
   }
 
   private static String formatMessage(
-      JavaFileObject file, DiagnosticPosition pos, Throwable cause) {
+      String checkName, JavaFileObject file, DiagnosticPosition pos, Throwable cause) {
     DiagnosticSource source = new DiagnosticSource(file, /*log=*/ null);
     int column = source.getColumnNumber(pos.getStartPosition(), /*expandTabs=*/ true);
     int line = source.getLineNumber(pos.getStartPosition());
@@ -67,12 +70,14 @@ public class ErrorProneError extends Error {
     StringBuilder sb = new StringBuilder();
     sb.append(
         String.format(
-            "\n%s:%d: An exception was thrown by Error Prone: %s\n",
-            source.getFile().getName(),
-            line,
-            cause.getMessage()));
+            "\n%s:%d: %s: An exception was thrown by Error Prone: %s\n",
+            source.getFile().getName(), line, checkName, cause.getMessage()));
     sb.append(snippet).append('\n');
     sb.append(Strings.repeat(" ", column - 1)).append("^\n");
     return sb.toString();
+  }
+
+  public String checkName() {
+    return checkName;
   }
 }
