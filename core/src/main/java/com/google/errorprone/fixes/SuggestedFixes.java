@@ -17,16 +17,19 @@
 package com.google.errorprone.fixes;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ErrorProneToken;
 
 import com.sun.source.doctree.DocTree;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.DocTreePath;
@@ -261,4 +264,24 @@ public class SuggestedFixes {
 
     replaceDocTree(fix, docPath, qualifiedName);
   }
+
+  /**
+   * Returns a {@link Fix} that adds members defined by {@code firstMember} (and optionally {@code
+   * otherMembers}) to the end of the class referenced by {@code classTree}.  This method should
+   * only be called once per {@link ClassTree} as the suggestions will otherwise collide.
+   */
+  public static Fix addMembers(
+      ClassTree classTree, VisitorState state, String firstMember, String... otherMembers) {
+    checkNotNull(classTree);
+    int classEndPosition = state.getEndPosition((JCTree) classTree);
+    StringBuilder stringBuilder = new StringBuilder();
+    for (String memberSnippet : Lists.asList(firstMember, otherMembers)) {
+      stringBuilder.append("\n\n").append(memberSnippet);
+    }
+    stringBuilder.append('\n');
+
+    return SuggestedFix.replace(
+        classEndPosition - 1, classEndPosition - 1, stringBuilder.toString());
+  }
+
 }
