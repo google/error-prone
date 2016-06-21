@@ -16,7 +16,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -30,22 +29,74 @@ import java.io.IOException;
  */
 @RunWith(JUnit4.class)
 public class RemoveUnusedImportsTest {
-
-  private CompilationTestHelper compilationHelper;
+  private BugCheckerRefactoringTestHelper testHelper;
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(RemoveUnusedImports.class, getClass());
+    this.testHelper =
+        BugCheckerRefactoringTestHelper.newInstance(new RemoveUnusedImports(), getClass());
   }
 
   @Test
-  public void testPositiveCase() throws Exception {
-    compilationHelper.addSourceFile("RemoveUnusedImportsPositiveCases.java").doTest();
+  public void basicUsageTest() throws IOException {
+    testHelper
+        .addInputLines(
+            "in/Test.java",
+            "import static java.util.Collections.emptyList;",
+            "import static java.util.Collections.emptySet;",
+            "import static com.google.common.base.Preconditions.checkNotNull;",
+            "",
+            "import java.util.ArrayList;",
+            "import java.util.Collection;",
+            "import java.util.Collections;",
+            "import java.util.HashSet;",
+            "import java.util.List;",
+            "import java.util.Map;",
+            "import java.util.Set;",
+            "import java.util.UUID;",
+            "public class Test {",
+            "  private final Object object;",
+            "",
+            "  Test(Object object) {",
+            "    this.object = checkNotNull(object);",
+            "  }",
+            "",
+            "  Set<UUID> someMethod(Collection<UUID> collection) {",
+            "    if (collection.isEmpty()) {",
+            "      return emptySet();",
+            "    }",
+            "    return new HashSet<>(collection);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import static java.util.Collections.emptySet;",
+            "import static com.google.common.base.Preconditions.checkNotNull;",
+            "",
+            "import java.util.Collection;",
+            "import java.util.HashSet;",
+            "import java.util.Set;",
+            "import java.util.UUID;",
+            "public class Test {",
+            "  private final Object object;",
+            "",
+            "  Test(Object object) {",
+            "    this.object = checkNotNull(object);",
+            "  }",
+            "",
+            "  Set<UUID> someMethod(Collection<UUID> collection) {",
+            "    if (collection.isEmpty()) {",
+            "      return emptySet();",
+            "    }",
+            "    return new HashSet<>(collection);",
+            "  }",
+            "}")
+        .doTest();
   }
 
   @Test
   public void useInSelect() throws IOException {
-    BugCheckerRefactoringTestHelper.newInstance(new RemoveUnusedImports(), getClass())
+    testHelper
         .addInputLines(
             "in/Test.java",
             "import java.util.Map;",
@@ -59,6 +110,67 @@ public class RemoveUnusedImportsTest {
             "public class Test {",
             "  Map.Entry<String, String> e;",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void useInJavadocSee() throws IOException {
+    testHelper
+        .addInputLines(
+            "in/Test.java", //
+            "import java.util.Map;",
+            "/** @see Map */",
+            "public class Test {}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void useInJavadocSeeSelect() throws IOException {
+    testHelper
+        .addInputLines(
+            "in/Test.java", //
+            "import java.util.Map;",
+            "/** @see Map#get */",
+            "public class Test {}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void useInJavadocLink() throws IOException {
+    testHelper
+        .addInputLines(
+            "in/Test.java", //
+            "import java.util.Map;",
+            "/** {@link Map} */",
+            "public class Test {}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void useInJavadocLink_selfReferenceDoesNotBreak() throws IOException {
+    testHelper
+        .addInputLines(
+            "in/Test.java", //
+            "/** {@link #blah} */",
+            "public class Test {",
+            "  void blah() {}",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void useInJavadocLinkSelect() throws IOException {
+    testHelper
+        .addInputLines(
+            "in/Test.java",
+            "import java.util.Map;",
+            "/** {@link Map#get} */",
+            "public class Test {}")
+        .expectUnchanged()
         .doTest();
   }
 }

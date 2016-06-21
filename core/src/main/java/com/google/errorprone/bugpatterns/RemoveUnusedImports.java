@@ -21,11 +21,11 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSetMultimap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.bugpatterns.BugChecker.ImportTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.bugpatterns.StaticImports.StaticImportInfo;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
@@ -42,99 +42,114 @@ import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Symbol;
 
+import java.util.HashSet;
 import java.util.Set;
 
-/**
- * @author gak@google.com (Gregory Kick)
- */
+import javax.annotation.Nullable;
+
+/** @author gak@google.com (Gregory Kick) */
 @BugPattern(
   name = "RemoveUnusedImports",
-  summary = "Unused import",
-  explanation = "Unused import",
+  summary = "Unused imports",
+  explanation = "Unused imports",
   category = JDK,
   maturity = EXPERIMENTAL,
   severity = SUGGESTION
 )
-/* TODO(gak): should this match the entire compilation unit or each individual import?  In either
- * case, rescanning the entire compilation unit for each import is a huge waste and we should fix
- * that. */
-public final class RemoveUnusedImports extends BugChecker implements ImportTreeMatcher {
+public final class RemoveUnusedImports extends BugChecker implements CompilationUnitTreeMatcher {
   @Override
-  public Description matchImport(ImportTree importTree, VisitorState state) {
-    CompilationUnitTree compilationUnit = state.getPath().getCompilationUnit();
-    Set<Symbol> importedSymbols = getImportedSymbols(importTree, state);
+  public Description matchCompilationUnit(
+      CompilationUnitTree compilationUnitTree, VisitorState state) {
+    final ImmutableSetMultimap<ImportTree, Symbol> importedSymbols =
+        getImportedSymbols(compilationUnitTree, state);
 
     if (importedSymbols.isEmpty()) {
       return NO_MATCH;
     }
 
-    boolean used =
-        new TreeSymbolScanner(compilationUnit, JavacTrees.instance(state.context))
-            .scan(compilationUnit, importedSymbols);
+    final Set<ImportTree> unusedImports = new HashSet<>(importedSymbols.keySet());
+    new TreeSymbolScanner(JavacTrees.instance(state.context))
+        .scan(
+            compilationUnitTree,
+            new SymbolSink() {
+              @Override
+              public boolean keepScanning() {
+                return !unusedImports.isEmpty();
+              }
 
-    if (used) {
-      return NO_MATCH;
+              @Override
+              public void accept(Symbol symbol) {
+                unusedImports.removeAll(importedSymbols.inverse().get(symbol));
+              }
+            });
+
+    SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
+    for (ImportTree unusedImport : unusedImports) {
+      fixBuilder.delete(unusedImport);
     }
 
-    return describeMatch(importTree, SuggestedFix.delete(importTree));
+    return fixBuilder.isEmpty() ? NO_MATCH : describeMatch(compilationUnitTree, fixBuilder.build());
   }
 
-  private static final class TreeSymbolScanner extends TreePathScanner<Boolean, Set<Symbol>> {
+  /**
+   * A callback that provides actions for whenever you encounter a {@link Symbol}. Also provides a
+   * hook by which you can stop scanning.
+   */
+  private interface SymbolSink {
+    boolean keepScanning();
+
+    void accept(Symbol symbol);
+  }
+
+  private static final class TreeSymbolScanner extends TreePathScanner<Void, SymbolSink> {
     final DocTreeSymbolScanner docTreeSymbolScanner;
-    final CompilationUnitTree compilationUnit;
     final JavacTrees trees;
 
-    private TreeSymbolScanner(CompilationUnitTree compilationUnit, JavacTrees trees) {
+    private TreeSymbolScanner(JavacTrees trees) {
       this.docTreeSymbolScanner = new DocTreeSymbolScanner();
-      this.compilationUnit = compilationUnit;
       this.trees = trees;
     }
 
     /** Skip the imports themselves when checking for usage. */
     @Override
-    public Boolean visitImport(ImportTree importTree, Set<Symbol> symbols) {
-      return false;
+    public Void visitImport(ImportTree importTree, SymbolSink usedSymbols) {
+      return null;
     }
 
-    boolean containsSymbol(Tree tree, Set<Symbol> searchSymbols) {
+    @Override
+    public Void visitIdentifier(IdentifierTree tree, SymbolSink sink) {
       if (tree == null) {
-        return false;
+        return null;
       }
       Symbol symbol = getSymbol(tree);
       if (symbol == null) {
-        return false;
+        return null;
       }
-      return searchSymbols.contains(symbol.baseSymbol());
+      sink.accept(symbol.baseSymbol());
+      return null;
     }
 
     @Override
-    public Boolean visitIdentifier(IdentifierTree tree, Set<Symbol> searchSymbols) {
-      return containsSymbol(tree, searchSymbols);
-    }
-
-    @Override
-    public Boolean scan(Tree tree, Set<Symbol> searchSymbols) {
+    public Void scan(Tree tree, SymbolSink sink) {
+      if (!sink.keepScanning()) {
+        return null;
+      }
       if (tree == null) {
-        return false;
+        return null;
       }
-      return reduce(scanJavadoc(searchSymbols), super.scan(tree, searchSymbols));
+      scanJavadoc(sink);
+      return super.scan(tree, sink);
     }
 
-    private boolean scanJavadoc(Set<Symbol> searchSymbols) {
+    private void scanJavadoc(SymbolSink sink) {
       if (getCurrentPath() == null) {
-        return false;
+        return;
       }
       DocCommentTree commentTree = trees.getDocCommentTree(getCurrentPath());
       if (commentTree == null) {
-        return false;
+        return;
       }
-      return docTreeSymbolScanner.scan(
-          new DocTreePath(getCurrentPath(), commentTree), searchSymbols);
-    }
-
-    @Override
-    public Boolean reduce(Boolean a, Boolean b) {
-      return (a == null ? false : a) || (b == null ? false : b);
+      docTreeSymbolScanner.scan(new DocTreePath(getCurrentPath(), commentTree), sink);
     }
 
     /**
@@ -142,39 +157,41 @@ public final class RemoveUnusedImports extends BugChecker implements ImportTreeM
      * TODO(gak): improve this so that we can remove imports used only from javadoc and replace the
      * usages with fully-qualified names.
      */
-    final class DocTreeSymbolScanner extends DocTreePathScanner<Boolean, Set<Symbol>> {
+    final class DocTreeSymbolScanner extends DocTreePathScanner<Void, SymbolSink> {
       @Override
-      public Boolean visitReference(ReferenceTree referenceTree, Set<Symbol> searchSymbols) {
-        Optional<Symbol> symbolForReference = getSymbolForReference(getCurrentPath());
-        if (symbolForReference.isPresent()) {
+      public Void visitReference(ReferenceTree referenceTree, SymbolSink sink) {
+        Symbol symbolForReference = (Symbol) trees.getElement(getCurrentPath());
+        if (symbolForReference != null) {
           /* If the signature is for a member (includes a #) then we need to get the symbol for the
            * owner because that's what will have been imported. */
-          Symbol possiblyImportedSymbol =
+          Symbol referencedSymbol =
               referenceTree.getSignature().contains("#")
-                  ? symbolForReference.get().owner
-                  : symbolForReference.get();
-          return searchSymbols.contains(possiblyImportedSymbol);
+                  ? symbolForReference.owner
+                  : symbolForReference;
+          sink.accept(referencedSymbol);
         }
-        return false;
-      }
-
-      @Override
-      public Boolean reduce(Boolean a, Boolean b) {
-        return (a == null ? false : a) || (b == null ? false : b);
-      }
-
-      Optional<Symbol> getSymbolForReference(DocTreePath path) {
-        return Optional.fromNullable((Symbol) trees.getElement(path));
+        return null;
       }
     }
   }
 
-  private static Set<Symbol> getImportedSymbols(ImportTree importTree, VisitorState state) {
+  private static ImmutableSetMultimap<ImportTree, Symbol> getImportedSymbols(
+      CompilationUnitTree compilationUnitTree, VisitorState state) {
+    ImmutableSetMultimap.Builder<ImportTree, Symbol> builder = ImmutableSetMultimap.builder();
+    for (ImportTree importTree : compilationUnitTree.getImports()) {
+      builder.putAll(importTree, getImportedSymbols(importTree, state));
+    }
+    return builder.build();
+  }
+
+  private static ImmutableSet<Symbol> getImportedSymbols(
+      ImportTree importTree, VisitorState state) {
     if (importTree.isStatic()) {
       StaticImportInfo staticImportInfo = StaticImports.tryCreate(importTree, state);
       return staticImportInfo == null ? ImmutableSet.<Symbol>of() : staticImportInfo.members();
     } else {
-      return Optional.fromNullable(getSymbol(importTree.getQualifiedIdentifier())).asSet();
+      @Nullable Symbol importedSymbol = getSymbol(importTree.getQualifiedIdentifier());
+      return importedSymbol == null ? ImmutableSet.<Symbol>of() : ImmutableSet.of(importedSymbol);
     }
   }
 }
