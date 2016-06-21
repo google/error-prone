@@ -103,6 +103,7 @@ import com.google.errorprone.bugpatterns.PrivateConstructorForUtilityClass;
 import com.google.errorprone.bugpatterns.ProtoFieldNullComparison;
 import com.google.errorprone.bugpatterns.ProtoFieldPreconditionsCheckNotNull;
 import com.google.errorprone.bugpatterns.ProtoStringFieldReferenceEquality;
+import com.google.errorprone.bugpatterns.RandomModInteger;
 import com.google.errorprone.bugpatterns.ReferenceEquality;
 import com.google.errorprone.bugpatterns.RemoveUnusedImports;
 import com.google.errorprone.bugpatterns.RequiredModifiersChecker;
@@ -202,9 +203,7 @@ public class BuiltInCheckerSuppliers {
     return allChecks().filter(Predicates.in(ENABLED_ERRORS));
   }
 
-  /**
-   * A list of all checks with severity ERROR that are on by default.
-   */
+  /** A list of all checks with severity ERROR that are on by default. */
   public static final ImmutableSet<BugCheckerInfo> ENABLED_ERRORS =
       getSuppliers(
           ArrayEquals.class,
@@ -246,6 +245,7 @@ public class BuiltInCheckerSuppliers {
           PreconditionsCheckNotNullPrimitive.class,
           ProtoFieldNullComparison.class,
           ProvidesNull.class,
+          RandomModInteger.class,
           RectIntersectReturnValueIgnored.class,
           RestrictedApiChecker.class,
           ReturnValueIgnored.class,
