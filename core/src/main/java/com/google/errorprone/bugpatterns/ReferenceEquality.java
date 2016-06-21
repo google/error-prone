@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
@@ -40,7 +40,7 @@ import com.sun.tools.javac.util.Name;
   summary = "Comparison using reference equality instead of value equality",
   category = JDK,
   severity = WARNING,
-  maturity = EXPERIMENTAL
+  maturity = MATURE
 )
 public class ReferenceEquality extends AbstractReferenceEquality {
 
