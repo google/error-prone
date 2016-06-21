@@ -16,7 +16,7 @@
 
 package com.google.errorprone;
 
-public class InvalidCommandLineOptionException extends Exception {
+public class InvalidCommandLineOptionException extends RuntimeException {
 
   public InvalidCommandLineOptionException(String message) {
     super(message);

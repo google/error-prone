@@ -60,9 +60,7 @@ public class ErrorProneCompiler {
    * @return result from the compiler invocation
    */
   public static Result compile(DiagnosticListener<JavaFileObject> listener, String[] args) {
-    ErrorProneCompiler compiler =
-        new ErrorProneCompiler.Builder().listenToDiagnostics(listener).build();
-    return compiler.run(args);
+    return ErrorProneCompiler.builder().listenToDiagnostics(listener).build().run(args);
   }
 
   /**
@@ -72,7 +70,7 @@ public class ErrorProneCompiler {
    * @return result from the compiler invocation
    */
   public static Result compile(String[] args) {
-    return new Builder().build().run(args);
+    return builder().build().run(args);
   }
 
   /**
@@ -83,14 +81,17 @@ public class ErrorProneCompiler {
    * @return result from the compiler invocation
    */
   public static Result compile(String[] args, PrintWriter out) {
-    ErrorProneCompiler compiler = new ErrorProneCompiler.Builder().redirectOutputTo(out).build();
-    return compiler.run(args);
+    return ErrorProneCompiler.builder().redirectOutputTo(out).build().run(args);
   }
 
   private final BaseErrorProneCompiler compiler;
 
   private ErrorProneCompiler(BaseErrorProneCompiler compiler) {
     this.compiler = compiler;
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   public static class Builder {
@@ -120,6 +121,10 @@ public class ErrorProneCompiler {
       builder.report(scannerSupplier);
       return this;
     }
+
+    /** @deprecated prefer {@link #builder()} */
+    @Deprecated
+    public Builder() {}
   }
 
   public Result run(String[] args) {

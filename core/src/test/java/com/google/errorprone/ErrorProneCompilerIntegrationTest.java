@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.Category.ONE_OFF;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasItem;
@@ -28,7 +29,9 @@ import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import com.google.common.io.ByteStreams;
 import com.google.errorprone.bugpatterns.BadShiftAmount;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ExpressionStatementTreeMatcher;
@@ -47,21 +50,27 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.main.Main.Result;
-import com.sun.tools.javac.util.List;
 
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
+import java.util.jar.JarEntry;
+import java.util.jar.JarOutputStream;
 
 import javax.lang.model.element.Name;
 import javax.tools.Diagnostic;
@@ -79,6 +88,7 @@ public class ErrorProneCompilerIntegrationTest {
   private StringWriter outputStream;
   private ErrorProneTestCompiler.Builder compilerBuilder;
   ErrorProneTestCompiler compiler;
+  @Rule public final TemporaryFolder tmpFolder = new TemporaryFolder();
 
   @Before
   public void setUp() {
@@ -183,9 +193,10 @@ public class ErrorProneCompilerIntegrationTest {
    */
   @Test
   public void annotationProcessingWorks() throws Exception {
-    Result exitCode = compiler.compile(
-        compiler.fileManager().forResources(getClass(), "UsesAnnotationProcessor.java"),
-        List.of(new NullAnnotationProcessor()));
+    Result exitCode =
+        compiler.compile(
+            compiler.fileManager().forResources(getClass(), "UsesAnnotationProcessor.java"),
+            Arrays.asList(new NullAnnotationProcessor()));
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
 
@@ -538,5 +549,53 @@ public class ErrorProneCompilerIntegrationTest {
     String output = diagnosticHelper.getDiagnostics().toString();
     assertThat(output).contains("error: cannot find symbol");
     assertThat(output).doesNotContain("Using 'return' is considered harmful");
+  }
+
+  @Test
+  public void plugin() throws Exception {
+
+    Path base = tmpFolder.newFolder().toPath();
+    Path source = base.resolve("test/Test.java");
+    Files.createDirectories(source.getParent());
+    Files.write(
+        source,
+        Arrays.asList(
+            "package test;", //
+            "public class Test {",
+            "  int f() { return 42; }",
+            "}"),
+        UTF_8);
+
+    Path jar = base.resolve("libproc.jar");
+    try (JarOutputStream jos = new JarOutputStream(Files.newOutputStream(jar))) {
+      jos.putNextEntry(new JarEntry("META-INF/services/" + BugChecker.class.getName()));
+      jos.write((CPSChecker.class.getName() + "\n").getBytes(UTF_8));
+      String classFile = CPSChecker.class.getName().replace('.', '/') + ".class";
+      jos.putNextEntry(new JarEntry(classFile));
+      ByteStreams.copy(getClass().getClassLoader().getResourceAsStream(classFile), jos);
+    }
+
+    // no plugins
+    {
+      List<String> args =
+          ImmutableList.of(source.toAbsolutePath().toString(), "-processorpath", ":");
+      StringWriter out = new StringWriter();
+      Result result =
+          ErrorProneCompiler.compile(args.toArray(new String[0]), new PrintWriter(out, true));
+      assertThat(result).isEqualTo(Result.OK);
+    }
+    // with plugins
+    {
+      List<String> args =
+          ImmutableList.of(
+              source.toAbsolutePath().toString(),
+              "-processorpath",
+              jar.toAbsolutePath().toString());
+      StringWriter out = new StringWriter();
+      Result result =
+          ErrorProneCompiler.compile(args.toArray(new String[0]), new PrintWriter(out, true));
+      assertThat(out.toString()).contains("Using 'return' is considered harmful");
+      assertThat(result).isEqualTo(Result.ERROR);
+    }
   }
 }

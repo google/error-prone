@@ -17,8 +17,6 @@
 package com.google.errorprone;
 
 import com.google.errorprone.scanner.BuiltInCheckerSuppliers;
-import com.google.errorprone.scanner.ErrorProneScannerTransformer;
-import com.google.errorprone.scanner.Scanner;
 import com.google.errorprone.scanner.ScannerSupplier;
 
 import com.sun.tools.javac.api.JavacTaskImpl;
@@ -80,21 +78,18 @@ public class ErrorProneJavaCompiler implements JavaCompiler {
       Iterable<String> classes,
       Iterable<? extends JavaFileObject> compilationUnits) {
     ErrorProneOptions errorProneOptions;
-    Scanner scanner;
     try {
       errorProneOptions = ErrorProneOptions.processArgs(options);
-      scanner = scannerSupplier.applyOverrides(errorProneOptions).get();
     } catch (InvalidCommandLineOptionException e) {
       throw new RuntimeException(e);
     }
-    CodeTransformer transformer = ErrorProneScannerTransformer.create(scanner);
     List<String> remainingOptions = Arrays.asList(errorProneOptions.getRemainingArgs());
     CompilationTask task = javacTool.getTask(
         out, fileManager, diagnosticListener, remainingOptions, classes, compilationUnits);
     Context context = ((JavacTaskImpl) task).getContext();
     BaseErrorProneCompiler.setupMessageBundle(context);
     MultiTaskListener.instance(context)
-        .add(new ErrorProneAnalyzer(transformer, errorProneOptions, context));
+        .add(new ErrorProneAnalyzer(scannerSupplier, errorProneOptions, context));
     return task;
   }
 

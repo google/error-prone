@@ -19,9 +19,12 @@ package com.google.errorprone;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Verify.verify;
 
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
 import com.google.common.base.Throwables;
 import com.google.errorprone.scanner.ErrorProneScannerTransformer;
 import com.google.errorprone.scanner.Scanner;
+import com.google.errorprone.scanner.ScannerSupplier;
 
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
@@ -36,6 +39,7 @@ import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Log;
+import com.sun.tools.javac.util.PropagatedException;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -47,12 +51,42 @@ public class ErrorProneAnalyzer implements TaskListener {
   // The set of trees that have already been scanned.
   private final Set<Tree> seen = new HashSet<>();
 
-  private final CodeTransformer transformer;
+  private final Supplier<CodeTransformer> transformer;
   private final ErrorProneOptions errorProneOptions;
   private final Context context;
 
   public ErrorProneAnalyzer(
+      final ScannerSupplier scannerSupplier,
+      final ErrorProneOptions errorProneOptions,
+      final Context context) {
+    this(
+        Suppliers.memoize(
+            new Supplier<CodeTransformer>() {
+              @Override
+              public CodeTransformer get() {
+                // we can't load plugins from the processorpath until the filemanager has been
+                // initialized, so do it lazily
+                try {
+                  return ErrorProneScannerTransformer.create(
+                      ErrorPronePlugins.loadPlugins(scannerSupplier, context)
+                          .applyOverrides(errorProneOptions)
+                          .get());
+                } catch (InvalidCommandLineOptionException e) {
+                  throw new PropagatedException(e);
+                }
+              }
+            }),
+        errorProneOptions,
+        context);
+  }
+
+  public ErrorProneAnalyzer(
       CodeTransformer transformer, ErrorProneOptions errorProneOptions, Context context) {
+    this(Suppliers.ofInstance(transformer), errorProneOptions, context);
+  }
+
+  private ErrorProneAnalyzer(
+      Supplier<CodeTransformer> transformer, ErrorProneOptions errorProneOptions, Context context) {
     this.transformer = checkNotNull(transformer);
     this.errorProneOptions = checkNotNull(errorProneOptions);
     this.context = checkNotNull(context);
@@ -84,11 +118,11 @@ public class ErrorProneAnalyzer implements TaskListener {
         // We only get TaskEvents for compilation units if they contain no package declarations
         // (e.g. package-info.java files).  In this case it's safe to analyze the
         // CompilationUnitTree immediately.
-        transformer.apply(path, subContext, logReporter);
+        transformer.get().apply(path, subContext, logReporter);
       } else if (finishedCompilation(path.getCompilationUnit())) {
         // Otherwise this TaskEvent is for a ClassTree, and we can scan the whole
         // CompilationUnitTree once we've seen all the enclosed classes.
-        transformer.apply(new TreePath(compilation), subContext, logReporter);
+        transformer.get().apply(new TreePath(compilation), subContext, logReporter);
       }
     } catch (ErrorProneError e) {
       e.logFatalError(log);
@@ -135,12 +169,14 @@ public class ErrorProneAnalyzer implements TaskListener {
   }
 
   /**
-   * Temporary shim to avoid breaking Bazel, which expects the API to look like
-   * {@code ErrorProneAnalyzer.create(scanner).init(options, context);}.
+   * Temporary shim to avoid breaking Bazel, which expects the API to look like {@code
+   * ErrorProneAnalyzer.create(scanner).init(options, context);}.
    */
+  // TODO(cushon): delete this
   public static Builder create(Scanner scanner) {
     final CodeTransformer transformer = ErrorProneScannerTransformer.create(scanner);
     return new Builder() {
+      @Override
       public ErrorProneAnalyzer init(Context context, ErrorProneOptions errorProneOptions) {
         return new ErrorProneAnalyzer(transformer, errorProneOptions, context);
       }

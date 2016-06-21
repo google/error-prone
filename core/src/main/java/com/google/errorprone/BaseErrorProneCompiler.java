@@ -20,14 +20,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.StandardSystemProperty.JAVA_SPECIFICATION_VERSION;
 
 import com.google.common.collect.Iterables;
-import com.google.errorprone.scanner.ErrorProneScannerTransformer;
-import com.google.errorprone.scanner.Scanner;
 import com.google.errorprone.scanner.ScannerSupplier;
 
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.api.MultiTaskListener;
-import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.main.Main;
 import com.sun.tools.javac.main.Main.Result;
 import com.sun.tools.javac.util.Context;
@@ -101,9 +98,7 @@ public class BaseErrorProneCompiler {
   }
 
   public Result run(String[] args) {
-    Context context = new Context();
-    JavacFileManager.preRegister(context);
-    return run(args, context);
+    return run(args, new Context());
   }
 
   /**
@@ -173,13 +168,11 @@ public class BaseErrorProneCompiler {
     if (diagnosticListener != null) {
       context.put(DiagnosticListener.class, diagnosticListener);
     }
-
-    Scanner scanner = scannerSupplier.applyOverrides(epOptions).get();
-    CodeTransformer transformer = ErrorProneScannerTransformer.create(scanner);
+    MaskedClassLoader.preRegisterFileManager(context);
 
     setupMessageBundle(context);
     MultiTaskListener.instance(context)
-        .add(new ErrorProneAnalyzer(transformer, epOptions, context));
+        .add(new ErrorProneAnalyzer(scannerSupplier, epOptions, context));
 
     return argv;
   }
@@ -193,7 +186,13 @@ public class BaseErrorProneCompiler {
       return Result.CMDERR;
     }
 
-    return new Main(compilerName, errOutput).compile(argv, context);
+    try {
+      return new Main(compilerName, errOutput).compile(argv, context);
+    } catch (InvalidCommandLineOptionException e) {
+      errOutput.println(e.getMessage());
+      errOutput.flush();
+      return Result.CMDERR;
+    }
   }
 
   public Result run(String[] argv, List<JavaFileObject> javaFileObjects) {
@@ -224,7 +223,13 @@ public class BaseErrorProneCompiler {
     if (processors != null) {
       task.setProcessors(processors);
     }
-    return task.doCall();
+    try {
+      return task.doCall();
+    } catch (InvalidCommandLineOptionException e) {
+      errOutput.println(e.getMessage());
+      errOutput.flush();
+      return Result.CMDERR;
+    }
   }
 
   /**

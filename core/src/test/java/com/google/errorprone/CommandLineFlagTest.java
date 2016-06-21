@@ -222,13 +222,15 @@ public class CommandLineFlagTest {
         compiler.fileManager().forResources(getClass(), "CommandLineFlagTestFile.java");
 
     Result exitCode = compiler.compile(new String[]{"-Xep:NondisableableChecker:OFF"}, sources);
-    assertThat(exitCode).isEqualTo(Result.CMDERR);
     assertThat(output.toString()).contains("NondisableableChecker may not be disabled");
+    assertThat(exitCode).isEqualTo(Result.CMDERR);
   }
 
   @Test
   public void cantOverrideNonexistentCheck() throws Exception {
     ErrorProneTestCompiler compiler =  builder.build();
+    List<JavaFileObject> sources =
+        compiler.fileManager().forResources(getClass(), "CommandLineFlagTestFile.java");
     List<String> badOptions = Arrays.asList(
         "-Xep:BogusChecker:ERROR",
         "-Xep:BogusChecker:WARN",
@@ -236,8 +238,7 @@ public class CommandLineFlagTest {
         "-Xep:BogusChecker");
 
     for (String badOption : badOptions) {
-      Result exitCode = compiler.compile(new String[]{badOption},
-          Collections.<JavaFileObject>emptyList());
+      Result exitCode = compiler.compile(new String[] {badOption}, sources);
       assertThat(exitCode).isEqualTo(Result.CMDERR);
       assertThat(output.toString()).contains("BogusChecker is not a valid checker name");
     }
