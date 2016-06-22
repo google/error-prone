@@ -33,14 +33,21 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.5</version>
+        <version>3.5.1</version>
         <configuration>
           <compilerId>javac-with-errorprone</compilerId>
           <forceJavacCompilerUse>true</forceJavacCompilerUse>
           <!-- maven-compiler-plugin defaults to targeting Java 5 -->
           <source>1.8</source>
           <target>1.8</target>
-          <!-- add custom checks to the annotation processor classpath -->
+          <!-- Add custom checks to the annotation processor classpath.
+
+               Note that Maven doesn't guarantee the build order and could
+               attempt to build hello before sample-plugin, and fail because it
+               cannot find sample-plugin.
+
+               One workaround is to add sample-plugin as a dependency (with
+               scope provided so it's not transitive). -->
           <annotationProcessorPaths>
             <path>
               <groupId>com.example</groupId>

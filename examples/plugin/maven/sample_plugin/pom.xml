@@ -32,16 +32,19 @@
       <groupId>com.google.errorprone</groupId>
       <artifactId>error_prone_core</artifactId>
       <version>2.0.10-SNAPSHOT</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.google.errorprone</groupId>
       <artifactId>error_prone_annotation</artifactId>
       <version>2.0.10-SNAPSHOT</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.google.auto.service</groupId>
       <artifactId>auto-service</artifactId>
       <version>1.0-rc2</version>
+      <optional>true</optional>
     </dependency>
   </dependencies>
 
@@ -50,7 +53,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.5</version>
+        <version>3.5.1</version>
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
