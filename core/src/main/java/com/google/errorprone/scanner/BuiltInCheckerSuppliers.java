@@ -149,6 +149,7 @@ import com.google.errorprone.bugpatterns.inject.MoreThanOneScopeAnnotationOnClas
 import com.google.errorprone.bugpatterns.inject.OverlappingQualifierAndScopeAnnotation;
 import com.google.errorprone.bugpatterns.inject.ScopeAnnotationOnInterfaceOrAbstractClass;
 import com.google.errorprone.bugpatterns.inject.ScopeOrQualifierAnnotationRetention;
+import com.google.errorprone.bugpatterns.inject.dagger.EmptySetMultibindingContributions;
 import com.google.errorprone.bugpatterns.inject.dagger.ProvidesNull;
 import com.google.errorprone.bugpatterns.inject.dagger.UseBinds;
 import com.google.errorprone.bugpatterns.inject.guice.AssistedInjectScoping;
@@ -303,9 +304,7 @@ public class BuiltInCheckerSuppliers {
           UnsynchronizedOverridesSynchronized.class,
           WaitNotInLoop.class);
 
-  /**
-   * A list of all checks that are off by default.
-   */
+  /** A list of all checks that are off by default. */
   public static final ImmutableSet<BugCheckerInfo> DISABLED_CHECKS =
       getSuppliers(
           ArraysAsListPrimitiveArray.class,
@@ -320,6 +319,7 @@ public class BuiltInCheckerSuppliers {
           DepAnn.class,
           DivZero.class,
           EmptyIfStatement.class,
+          EmptySetMultibindingContributions.class,
           EmptyTopLevelDeclaration.class,
           HardCodedSdCardPath.class,
           InjectOnFinalField.class,
