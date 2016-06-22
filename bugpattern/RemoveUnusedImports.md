@@ -4,7 +4,7 @@ summary: Unused imports
 layout: bugpattern
 category: JDK
 severity: SUGGESTION
-maturity: EXPERIMENTAL
+maturity: MATURE
 ---
 
 <!--

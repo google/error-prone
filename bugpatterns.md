@@ -139,6 +139,9 @@ Use of wildcard imports is forbidden
 __[ConstantField](bugpattern/ConstantField)__<br>
 Field name is CONSTANT_CASE, but field is not static and final
 
+__[RemoveUnusedImports](bugpattern/RemoveUnusedImports)__<br>
+Unused imports
+
 ## On by default : ERROR
 
 __[ArrayEquals](bugpattern/ArrayEquals)__<br>
@@ -351,9 +354,6 @@ Non-constant variable missing @Var annotation
 
 __[PrivateConstructorForUtilityClass](bugpattern/PrivateConstructorForUtilityClass)__<br>
 Utility classes (only static members) are not designed to be instantiated and should be made noninstantiable with a default constructor.
-
-__[RemoveUnusedImports](bugpattern/RemoveUnusedImports)__<br>
-Unused imports
 
 __[UseBinds](bugpattern/UseBinds)__<br>
 @Binds is a more efficient and declaritive mechanism for delegating a binding.
