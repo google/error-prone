@@ -4,7 +4,7 @@ summary: Comparison using reference equality instead of value equality
 layout: bugpattern
 category: JDK
 severity: WARNING
-maturity: EXPERIMENTAL
+maturity: MATURE
 ---
 
 <!--

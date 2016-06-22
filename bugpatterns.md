@@ -101,6 +101,9 @@ Preconditions only accepts the %s placeholder in error message strings
 __[ProtoFieldPreconditionsCheckNotNull](bugpattern/ProtoFieldPreconditionsCheckNotNull)__<br>
 Protobuf fields cannot be null, so this check is redundant
 
+__[ReferenceEquality](bugpattern/ReferenceEquality)__<br>
+Comparison using reference equality instead of value equality
+
 __[RequiredModifiers](bugpattern/RequiredModifiers)__<br>
 This annotation is missing required modifiers as specified by its @RequiredModifiers annotation
 
@@ -341,9 +344,6 @@ Second argument to Preconditions.* is a call to String.format(), which can be un
 __[PrimitiveArrayPassedToVarargsMethod](bugpattern/PrimitiveArrayPassedToVarargsMethod)__<br>
 Passing a primitive array to a varargs method is usually wrong
 
-__[ReferenceEquality](bugpattern/ReferenceEquality)__<br>
-Comparison using reference equality instead of value equality
-
 __[Var](bugpattern/Var)__<br>
 Non-constant variable missing @Var annotation
 
@@ -353,7 +353,7 @@ __[PrivateConstructorForUtilityClass](bugpattern/PrivateConstructorForUtilityCla
 Utility classes (only static members) are not designed to be instantiated and should be made noninstantiable with a default constructor.
 
 __[RemoveUnusedImports](bugpattern/RemoveUnusedImports)__<br>
-Unused import
+Unused imports
 
 __[UseBinds](bugpattern/UseBinds)__<br>
 @Binds is a more efficient and declaritive mechanism for delegating a binding.
@@ -443,6 +443,9 @@ Method parameter has wrong package
 
 __[ProtoStringFieldReferenceEquality](bugpattern/ProtoStringFieldReferenceEquality)__<br>
 Comparing protobuf fields of type String using reference equality
+
+__[RandomModInteger](bugpattern/RandomModInteger)__<br>
+Use Random.nextInt(int).  Random.nextInt() % n can have negative results
 
 __[SelfEquality](bugpattern/SelfEquality)__<br>
 Variable compared to itself

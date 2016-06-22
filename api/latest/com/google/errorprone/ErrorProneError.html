@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10};
+var methods = {"i0":10,"i1":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -149,7 +149,8 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Error.html?i
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneError.html#ErrorProneError-java.lang.Throwable-com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition-javax.tools.JavaFileObject-">ErrorProneError</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang">Throwable</a>&nbsp;cause,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneError.html#ErrorProneError-java.lang.String-java.lang.Throwable-com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition-javax.tools.JavaFileObject-">ErrorProneError</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;checkName,
+               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang">Throwable</a>&nbsp;cause,
                com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition&nbsp;pos,
                <a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/JavaFileObject.html?is-external=true" title="class or interface in javax.tools">JavaFileObject</a>&nbsp;source)</code>&nbsp;</td>
 </tr>
@@ -169,6 +170,10 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Error.html?i
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneError.html#checkName--">checkName</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneError.html#logFatalError-com.sun.tools.javac.util.Log-">logFatalError</a></span>(com.sun.tools.javac.util.Log&nbsp;log)</code>&nbsp;</td>
 </tr>
@@ -201,13 +206,14 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Error.html?i
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="ErrorProneError-java.lang.Throwable-com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition-javax.tools.JavaFileObject-">
+<a name="ErrorProneError-java.lang.String-java.lang.Throwable-com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition-javax.tools.JavaFileObject-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>ErrorProneError</h4>
-<pre>public&nbsp;ErrorProneError(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang">Throwable</a>&nbsp;cause,
+<pre>public&nbsp;ErrorProneError(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;checkName,
+                       <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang">Throwable</a>&nbsp;cause,
                        com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition&nbsp;pos,
                        <a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/JavaFileObject.html?is-external=true" title="class or interface in javax.tools">JavaFileObject</a>&nbsp;source)</pre>
 </li>
@@ -223,10 +229,19 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Error.html?i
 <a name="logFatalError-com.sun.tools.javac.util.Log-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>logFatalError</h4>
 <pre>public&nbsp;void&nbsp;logFatalError(com.sun.tools.javac.util.Log&nbsp;log)</pre>
+</li>
+</ul>
+<a name="checkName--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>checkName</h4>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;checkName()</pre>
 </li>
 </ul>
 </li>
