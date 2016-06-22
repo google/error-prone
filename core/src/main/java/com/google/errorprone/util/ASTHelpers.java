@@ -37,6 +37,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.PackageTree;
+import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
@@ -166,6 +167,10 @@ public class ASTHelpers {
     if (tree instanceof PackageTree) {
       return getSymbol((PackageTree) tree);
     }
+    if (tree instanceof ParameterizedTypeTree) {
+      return getSymbol(((ParameterizedTypeTree) tree).getType());
+    }
+
     return null;
   }
 
