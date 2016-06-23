@@ -5,7 +5,7 @@ layout: documentation
 
 Error Prone supports custom checks via a plugin mechanism. Plugin checks are
 loaded dynamically from the annotation processor path using
-[java.util.ServiceLoader](http://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html).
+[java.util.ServiceLoader](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html).
 
 Using [AutoService](https://github.com/google/auto/tree/master/service) to
 specify the service descriptor is recommended.
@@ -37,7 +37,7 @@ annotation processor classpath.
 ### Bazel
 
 Bazel allows annotation processors to be configured using the
-[java_plugin](http://www.bazel.io/docs/be/java.html#java_plugin) rule:
+[java_plugin](https://www.bazel.io/docs/be/java.html#java_plugin) rule:
 
 ```
 java_plugin(
@@ -52,7 +52,7 @@ java_plugin(
 ```
 
 For a complete example, see: 
-http://github.com/google/error-prone/tree/master/examples/plugin/bazel
+https://github.com/google/error-prone/tree/master/examples/plugin/bazel
 
 ### Maven
 
@@ -62,4 +62,4 @@ configured with the
 parameter.
 
 For a complete example, see: 
-http://github.com/google/error-prone/tree/master/examples/plugin/maven
+https://github.com/google/error-prone/tree/master/examples/plugin/maven
