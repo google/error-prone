@@ -150,6 +150,7 @@ import com.google.errorprone.bugpatterns.inject.OverlappingQualifierAndScopeAnno
 import com.google.errorprone.bugpatterns.inject.ScopeAnnotationOnInterfaceOrAbstractClass;
 import com.google.errorprone.bugpatterns.inject.ScopeOrQualifierAnnotationRetention;
 import com.google.errorprone.bugpatterns.inject.dagger.EmptySetMultibindingContributions;
+import com.google.errorprone.bugpatterns.inject.dagger.PrivateConstructorForNoninstantiableModule;
 import com.google.errorprone.bugpatterns.inject.dagger.ProvidesNull;
 import com.google.errorprone.bugpatterns.inject.dagger.UseBinds;
 import com.google.errorprone.bugpatterns.inject.guice.AssistedInjectScoping;
@@ -345,6 +346,7 @@ public class BuiltInCheckerSuppliers {
           PreconditionsExpensiveString.class,
           PrimitiveArrayPassedToVarargsMethod.class,
           PrivateConstructorForUtilityClass.class,
+          PrivateConstructorForNoninstantiableModule.class,
           ProtoStringFieldReferenceEquality.class,
           RemoveUnusedImports.class,
           ScopeAnnotationOnInterfaceOrAbstractClass.class,
