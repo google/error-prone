@@ -162,6 +162,9 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
     state.reportMatch(description);
   }
 
+  /** Handles an exception thrown by an individual check. */
+  protected void handleError(Suppressible s, Throwable t) {}
+
   /**
    * Returns a mapping between the canonical names of checks and their {@link SeverityLevel}.
    */

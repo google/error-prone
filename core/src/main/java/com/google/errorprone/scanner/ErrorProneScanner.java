@@ -1234,10 +1234,11 @@ public class ErrorProneScanner extends Scanner {
   }
 
   /**
-   * Handles an exception thrown by an individual BugPattern. By default, wraps the exception in
-   * an {@link ErrorProneError} and rethrows. May be overridden by subclasses, for example to log
-   * the error and continue.
+   * Handles an exception thrown by an individual BugPattern. By default, wraps the exception in an
+   * {@link ErrorProneError} and rethrows. May be overridden by subclasses, for example to log the
+   * error and continue.
    */
+  @Override
   protected void handleError(Suppressible s, Throwable t) {
     if (t instanceof ErrorProneError) {
       throw (ErrorProneError) t;

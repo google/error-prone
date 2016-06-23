@@ -46,7 +46,7 @@ class InstanceReturningScannerSupplierImpl extends ScannerSupplier {
   }
 
   @Override
-  protected ImmutableMap<String, SeverityLevel> severities() {
+  public ImmutableMap<String, SeverityLevel> severities() {
     throw new UnsupportedOperationException();
   }
 

@@ -116,10 +116,9 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
   /**
    * Returns the set of {@link BugCheckerInfo}s that are enabled in this {@link ScannerSupplier}.
    */
-  @VisibleForTesting
   public abstract ImmutableSet<BugCheckerInfo> getEnabledChecks();
 
-  protected abstract ImmutableMap<String, BugPattern.SeverityLevel> severities();
+  public abstract ImmutableMap<String, BugPattern.SeverityLevel> severities();
 
   protected abstract ImmutableSet<String> disabled();
 

@@ -58,7 +58,6 @@ class ScannerSupplierImpl extends ScannerSupplier implements Serializable {
     this.disabled = disabled;
   }
 
-  // TODO(cushon): BugCheckerSupplier::get
   private static final Function<BugCheckerInfo, BugChecker> INSTANTIATE_CHECKER =
       new Function<BugCheckerInfo, BugChecker>() {
         @Override
@@ -83,7 +82,7 @@ class ScannerSupplierImpl extends ScannerSupplier implements Serializable {
   }
 
   @Override
-  protected ImmutableMap<String, BugPattern.SeverityLevel> severities() {
+  public ImmutableMap<String, BugPattern.SeverityLevel> severities() {
     return severities;
   }
 
