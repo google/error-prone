@@ -123,19 +123,18 @@ public class SuppressionHelper {
       }
     }
 
-    /**
-     * Handle @SuppressWarnings.
-     */
+    /** Handle {@code @SuppressWarnings} and {@code @SuppressLint}. */
     Set<String> newSuppressions = null;
     // Iterate over annotations on this symbol, looking for SuppressWarnings
     for (Attribute.Compound attr : sym.getAnnotationMirrors()) {
-      // TODO(eaftan): use JavacElements.getAnnotation instead
-      if (attr.type.tsym == suppressWarningsType.tsym) {
+      if ((attr.type.tsym == suppressWarningsType.tsym)
+          || attr.type.tsym.getQualifiedName().contentEquals("android.annotation.SuppressLint")) {
         for (List<Pair<MethodSymbol,Attribute>> v = attr.values;
             v.nonEmpty(); v = v.tail) {
           Pair<MethodSymbol,Attribute> value = v.head;
           if (value.fst.name.contentEquals("value"))
-            if (value.snd instanceof Attribute.Array) { // SuppressWarnings takes an array
+            if (value.snd
+                instanceof Attribute.Array) { // SuppressWarnings/SuppressLint take an array
               for (Attribute suppress : ((Attribute.Array) value.snd).values) {
                 if (newSuppressions == null) {
                   newSuppressions = new HashSet<>(suppressionsOnCurrentPath);
@@ -144,7 +143,8 @@ public class SuppressionHelper {
                 newSuppressions.add((String) suppress.getValue());
               }
             } else {
-              throw new RuntimeException("Expected SuppressWarnings annotation to take array type");
+              throw new RuntimeException(
+                  "Expected SuppressWarnings/SuppressLint annotation to take array type");
             }
         }
       }
