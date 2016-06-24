@@ -56,8 +56,18 @@ public class Replacements {
     if (replacements.containsKey(replacement.range())) {
       Replacement existing = replacements.get(replacement.range());
       if (!existing.equals(replacement)) {
-        throw new IllegalArgumentException(
-            String.format("%s conflicts with existing replacement %s", replacement, existing));
+        if (replacement.range().isEmpty()) {
+          // The replacement is an insertion, and there's an existing insertion at the same point.
+          // In that case, we coalesce the additional insertion with the existing one.
+          replacement =
+              Replacement.create(
+                  existing.startPosition(),
+                  existing.endPosition(),
+                  existing.replaceWith() + replacement.replaceWith());
+        } else {
+          throw new IllegalArgumentException(
+              String.format("%s conflicts with existing replacement %s", replacement, existing));
+        }
       }
     } else {
       checkOverlaps(replacement);

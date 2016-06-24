@@ -34,9 +34,9 @@ public class ReplacementsTest {
   @Test
   public void duplicate() {
     Replacements replacements = new Replacements();
-    replacements.add(Replacement.create(42, 42, "hello"));
+    replacements.add(Replacement.create(42, 43, "hello"));
     try {
-      replacements.add(Replacement.create(42, 42, "goodbye"));
+      replacements.add(Replacement.create(42, 43, "goodbye"));
       fail();
     } catch (IllegalArgumentException expected) {
       assertThat(expected.getMessage()).contains("conflicts with existing replacement");
@@ -89,7 +89,36 @@ public class ReplacementsTest {
   @Test
   public void identicalDuplicatesOK() {
     Replacements replacements = new Replacements();
-    replacements.add(Replacement.create(42, 42, "hello"));
-    replacements.add(Replacement.create(42, 42, "hello"));
+    replacements.add(Replacement.create(42, 43, "hello"));
+    replacements.add(Replacement.create(42, 43, "hello"));
+  }
+
+  @Test
+  public void multipleInsertionsAtSamePointAreCoalescedInOrder() {
+    // A replacement of an empty region represents an insertion.
+    // Multiple, differing insertions at the same insertion point are allowed, and will be
+    // coalesced into a single Replacement at that insertion point.
+    assertThat(
+            new Replacements()
+                .add(Replacement.create(42, 42, "hello;"))
+                .add(Replacement.create(42, 42, "goodbye;"))
+                .descending())
+        .containsExactly(Replacement.create(42, 42, "hello;goodbye;"));
+    assertThat(
+            new Replacements()
+                .add(Replacement.create(42, 42, "goodbye;"))
+                .add(Replacement.create(42, 42, "hello;"))
+                .descending())
+        .containsExactly(Replacement.create(42, 42, "goodbye;hello;"));
+  }
+
+  @Test
+  public void multipleInsertionsAreDeduplicated() {
+    assertThat(
+            new Replacements()
+                .add(Replacement.create(42, 42, "hello;"))
+                .add(Replacement.create(42, 42, "hello;"))
+                .descending())
+        .containsExactly(Replacement.create(42, 42, "hello;"));
   }
 }
