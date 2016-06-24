@@ -1,0 +1,3 @@
+dependencies {
+  apt project(':sample_plugin')
+}
