@@ -352,6 +352,12 @@ Non-constant variable missing @Var annotation
 
 ## Experimental : SUGGESTION
 
+__[EmptySetMultibindingContributions](bugpattern/EmptySetMultibindingContributions)__<br>
+@Multibinds is a more efficient and declarative mechanism for ensuring that a set multibinding is present in the graph.
+
+__[PrivateConstructorForNoninstantiableModuleTest](bugpattern/PrivateConstructorForNoninstantiableModuleTest)__<br>
+Add a private constructor to modules that will not be instantiated by Dagger.
+
 __[PrivateConstructorForUtilityClass](bugpattern/PrivateConstructorForUtilityClass)__<br>
 Utility classes (only static members) are not designed to be instantiated and should be made noninstantiable with a default constructor.
 
