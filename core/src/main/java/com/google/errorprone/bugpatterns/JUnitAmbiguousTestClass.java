@@ -32,35 +32,20 @@ import com.google.errorprone.matchers.Matcher;
 
 import com.sun.source.tree.ClassTree;
 
-/**
- * @author mwacker@google.com (Mike Wacker)
- */
+/** @author mwacker@google.com (Mike Wacker) */
 @BugPattern(
-    name = "JUnitAmbiguousTestClass",
-    summary = "Test class inherits from JUnit 3's TestCase but has JUnit 4 @Test annotations.",
-    explanation = "For JUnit3-style tests, behavior is defined in junit.framework.TestCase and "
-        + "tests add behavior by overriding methods. For JUnit4-style tests, special "
-        + "behavior happens with fields and methods annotated with JUnit 4 annotations. Having "
-        + "JUnit4-style tests extend from junit.framework.TestCase (directly or indirectly) "
-        + "historically has been a source of test bugs and "
-        + "unexpected behavior (e.g.: teardown logic and/or verification does not run because "
-        + "JUnit doesn't call the inherited code). "
-        + "Error Prone also cannot infer whether the test class runs with JUnit 3 or JUnit 4. "
-        + "Thus, even if the test class runs with JUnit 4, Error Prone will not run "
-        + "additional checks which can catch common errors with JUnit 4 test classes. "
-        + "Either use only JUnit4 classes and annotations and remove the inheritance from "
-        + "TestCase, or use only JUnit 3 and remove the @Test annotations. When looking for "
-        + "replacements for base test classes, consider using Rules (see the @Rule annotation and "
-        + "implementations of TestRule and MethodRule).",
-    category = JUNIT, maturity = MATURE, severity = WARNING)
+  name = "JUnitAmbiguousTestClass",
+  summary = "Test class inherits from JUnit 3's TestCase but has JUnit 4 @Test annotations.",
+  category = JUNIT,
+  maturity = MATURE,
+  severity = WARNING
+)
 public class JUnitAmbiguousTestClass extends BugChecker implements ClassTreeMatcher {
 
-  private static final Matcher<ClassTree> matcher = allOf(
-      isTestCaseDescendant,
-      hasJUnit4TestCases);
+  private static final Matcher<ClassTree> MATCHER = allOf(isTestCaseDescendant, hasJUnit4TestCases);
 
   @Override
   public Description matchClass(ClassTree classTree, VisitorState state) {
-    return matcher.matches(classTree, state) ? describeMatch(classTree) : NO_MATCH;
+    return MATCHER.matches(classTree, state) ? describeMatch(classTree) : NO_MATCH;
   }
 }
