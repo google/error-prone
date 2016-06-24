@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;

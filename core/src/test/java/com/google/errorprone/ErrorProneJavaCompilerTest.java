@@ -295,9 +295,10 @@ public class ErrorProneJavaCompilerTest {
         "-d", tempDir.getRoot().getAbsolutePath(),
         "-proc:none",
         "-Xep:ChainingConstructorIgnoresParameter:WARN");
-    List<JavaFileObject> sources = fileManager.forResources(
-        ChainingConstructorIgnoresParameter.class,
-        "ChainingConstructorIgnoresParameterPositiveCases.java");
+    List<JavaFileObject> sources =
+        fileManager.forResources(
+            ChainingConstructorIgnoresParameter.class,
+            "testdata/ChainingConstructorIgnoresParameterPositiveCases.java");
     fileManager.close();
 
     JavaCompiler.CompilationTask task = errorProneJavaCompiler.getTask(
@@ -316,8 +317,10 @@ public class ErrorProneJavaCompilerTest {
     // reset state between compilations
     diagnosticHelper.clearDiagnostics();
     fileManager = new ErrorProneInMemoryFileManager();
-    sources = fileManager.forResources(ChainingConstructorIgnoresParameter.class,
-        "ChainingConstructorIgnoresParameterPositiveCases.java");
+    sources =
+        fileManager.forResources(
+            ChainingConstructorIgnoresParameter.class,
+            "testdata/ChainingConstructorIgnoresParameterPositiveCases.java");
     fileManager.close();
     args.remove("-Xep:ChainingConstructorIgnoresParameter:WARN");
 

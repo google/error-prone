@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import org.junit.runner.RunWith;
 import org.junit.internal.runners.JUnit38ClassRunner;

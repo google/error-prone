@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.dataflow.nullnesspropagation;
+package com.google.errorprone.dataflow.nullnesspropagation.testdata;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
 

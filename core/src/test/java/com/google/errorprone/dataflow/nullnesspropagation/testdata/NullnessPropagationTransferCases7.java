@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.dataflow.nullnesspropagation;
+package com.google.errorprone.dataflow.nullnesspropagation.testdata;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessCheckerOnBoxed;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessCheckerOnPrimitive;
-import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTransferCases7.HasStaticFields.staticIntField;
-import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTransferCases7.HasStaticFields.staticStringField;
+import static com.google.errorprone.dataflow.nullnesspropagation.testdata.NullnessPropagationTransferCases7.HasStaticFields.staticIntField;
+import static com.google.errorprone.dataflow.nullnesspropagation.testdata.NullnessPropagationTransferCases7.HasStaticFields.staticStringField;
 
 /**
  * Tests for field accesses and assignments.

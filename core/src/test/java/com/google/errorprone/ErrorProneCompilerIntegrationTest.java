@@ -103,9 +103,11 @@ public class ErrorProneCompilerIntegrationTest {
 
   @Test
   public void fileWithError() throws Exception {
-    Result exitCode = compiler.compile(compiler.fileManager().forResources(
-        BadShiftAmount.class,
-        "BadShiftAmountPositiveCases.java"));
+    Result exitCode =
+        compiler.compile(
+            compiler
+                .fileManager()
+                .forResources(BadShiftAmount.class, "testdata/BadShiftAmountPositiveCases.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
 
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher = hasItem(
@@ -118,9 +120,13 @@ public class ErrorProneCompilerIntegrationTest {
   public void fileWithWarning() throws Exception {
     compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(NonAtomicVolatileUpdate.class));
     compiler = compilerBuilder.build();
-    Result exitCode = compiler.compile(compiler.fileManager().forResources(
-        NonAtomicVolatileUpdate.class,
-        "NonAtomicVolatileUpdatePositiveCases.java"));
+    Result exitCode =
+        compiler.compile(
+            compiler
+                .fileManager()
+                .forResources(
+                    NonAtomicVolatileUpdate.class,
+                    "testdata/NonAtomicVolatileUpdatePositiveCases.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
 
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher = hasItem(
@@ -131,17 +137,24 @@ public class ErrorProneCompilerIntegrationTest {
 
   @Test
   public void fileWithMultipleTopLevelClasses() throws Exception {
-    Result exitCode = compiler.compile(
-        compiler.fileManager().forResources(getClass(),
-            "MultipleTopLevelClassesWithNoErrors.java"));
+    Result exitCode =
+        compiler.compile(
+            compiler
+                .fileManager()
+                .forResources(getClass(), "testdata/MultipleTopLevelClassesWithNoErrors.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
 
   @Test
   public void fileWithMultipleTopLevelClassesExtends() throws Exception {
-    Result exitCode = compiler.compile(
-        compiler.fileManager().forResources(getClass(), "MultipleTopLevelClassesWithNoErrors.java",
-            "ExtendedMultipleTopLevelClassesWithNoErrors.java"));
+    Result exitCode =
+        compiler.compile(
+            compiler
+                .fileManager()
+                .forResources(
+                    getClass(),
+                    "testdata/MultipleTopLevelClassesWithNoErrors.java",
+                    "testdata/ExtendedMultipleTopLevelClassesWithNoErrors.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
 
@@ -151,9 +164,14 @@ public class ErrorProneCompilerIntegrationTest {
    */
   @Test
   public void fileWithMultipleTopLevelClassesExtendsWithError() throws Exception {
-    Result exitCode = compiler.compile(
-        compiler.fileManager().forResources(getClass(), "MultipleTopLevelClassesWithErrors.java",
-            "ExtendedMultipleTopLevelClassesWithErrors.java"));
+    Result exitCode =
+        compiler.compile(
+            compiler
+                .fileManager()
+                .forResources(
+                    getClass(),
+                    "testdata/MultipleTopLevelClassesWithErrors.java",
+                    "testdata/ExtendedMultipleTopLevelClassesWithErrors.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher = hasItem(
         diagnosticMessage(containsString("[SelfAssignment]")));
@@ -176,9 +194,14 @@ public class ErrorProneCompilerIntegrationTest {
   public void unhandledExceptionsAreReportedWithoutBugParadeLink() throws Exception {
     compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(Throwing.class));
     compiler = compilerBuilder.build();
-    Result exitCode = compiler.compile(
-        compiler.fileManager().forResources(getClass(), "MultipleTopLevelClassesWithErrors.java",
-            "ExtendedMultipleTopLevelClassesWithErrors.java"));
+    Result exitCode =
+        compiler.compile(
+            compiler
+                .fileManager()
+                .forResources(
+                    getClass(),
+                    "testdata/MultipleTopLevelClassesWithErrors.java",
+                    "testdata/ExtendedMultipleTopLevelClassesWithErrors.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.ABNORMAL));
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher = hasItem(
         diagnosticMessage(CoreMatchers.<String>allOf(
@@ -195,7 +218,9 @@ public class ErrorProneCompilerIntegrationTest {
   public void annotationProcessingWorks() throws Exception {
     Result exitCode =
         compiler.compile(
-            compiler.fileManager().forResources(getClass(), "UsesAnnotationProcessor.java"),
+            compiler
+                .fileManager()
+                .forResources(getClass(), "testdata/UsesAnnotationProcessor.java"),
             Arrays.asList(new NullAnnotationProcessor()));
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
@@ -205,14 +230,18 @@ public class ErrorProneCompilerIntegrationTest {
    */
   @Test
   public void reportReadyForAnalysisOnce() throws Exception {
-    Result exitCode = compiler.compile(
-        compiler.fileManager().forResources(getClass(),
-            "FlowConstants.java",
-            "FlowSub.java",
-            // This order is important: the superclass needs to occur after the subclass in the
-            // sources so it goes through flow twice (once so it can be used when the subclass
-            // is desugared, once normally).
-            "FlowSuper.java"));
+    Result exitCode =
+        compiler.compile(
+            compiler
+                .fileManager()
+                .forResources(
+                    getClass(),
+                    "testdata/FlowConstants.java",
+                    "testdata/FlowSub.java",
+                    // This order is important: the superclass needs to occur after the subclass in
+                    // the sources so it goes through flow twice (once so it can be used when the
+                    // subclass is desugared, once normally).
+                    "testdata/FlowSuper.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
 

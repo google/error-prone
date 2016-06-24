@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.dataflow.nullnesspropagation;
+package com.google.errorprone.dataflow.nullnesspropagation.testdata;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessCheckerOnPrimitive;
-import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTransferCases6.MyEnum.ENUM_INSTANCE;
+import static com.google.errorprone.dataflow.nullnesspropagation.testdata.NullnessPropagationTransferCases6.MyEnum.ENUM_INSTANCE;
 
 /**
  * Tests for:

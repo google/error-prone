@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import static com.google.common.util.concurrent.Futures.immediateFuture;
 

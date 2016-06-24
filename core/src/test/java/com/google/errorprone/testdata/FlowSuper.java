@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.google.errorprone;
+package com.google.errorprone.testdata;
 
-import static com.google.errorprone.FlowConstants.*;
+import static com.google.errorprone.testdata.FlowConstants.*;
 
 public class FlowSuper {
   byte myByte = SOME_BYTE;
