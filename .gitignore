@@ -25,6 +25,7 @@
 .idea/misc.xml
 
 # bazel
+bazel-bazel
 bazel-bin
 bazel-error-prone
 bazel-genfiles
