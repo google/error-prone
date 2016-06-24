@@ -71,6 +71,22 @@ public final class PrivateConstructorForNoninstantiableModuleTest {
   }
 
   @Test
+  public void onlyStaticMethods_withConstructorGetsLeftAlone() throws IOException {
+    testHelper
+        .addInputLines(
+            "in/TestModule.java", //
+            "import dagger.Module;",
+            "import dagger.Provides;",
+            "@Module final class TestModule {",
+            "  @Provides static String provideString() { return \"\"; }",
+            "  @Provides static Integer provideInteger() { return 1; }",
+            "  private TestModule() {}",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
   public void abstractClassWithStaticAndAbstractMethods() throws IOException {
     testHelper
         .addInputLines(
@@ -96,6 +112,65 @@ public final class PrivateConstructorForNoninstantiableModuleTest {
             "  @Binds abstract Number bindNumber(Integer integer);",
             "  private TestModule() {}",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void abstractClassWithStaticAndAbstractMethods_withConstructorGetsLeftAlone()
+      throws IOException {
+    testHelper
+        .addInputLines(
+            "in/TestModule.java",
+            "import dagger.Binds;",
+            "import dagger.Module;",
+            "import dagger.Provides;",
+            "@Module abstract class TestModule {",
+            "  @Provides static String provideString() { return \"\"; }",
+            "  @Binds abstract Object bindObject(String string);",
+            "  @Provides static Integer provideInteger() { return 1; }",
+            "  @Binds abstract Number bindNumber(Integer integer);",
+            "  private TestModule() {}",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void onlyAbstractMethods() throws IOException {
+    testHelper
+        .addInputLines(
+            "in/TestModule.java",
+            "import dagger.Binds;",
+            "import dagger.Module;",
+            "@Module abstract class TestModule {",
+            "  @Binds abstract Object bindObject(String string);",
+            "  @Binds abstract Number bindNumber(Integer integer);",
+            "}")
+        .addOutputLines(
+            "out/TestModule.java", //
+            "import dagger.Binds;",
+            "import dagger.Module;",
+            "@Module abstract class TestModule {",
+            "  @Binds abstract Object bindObject(String string);",
+            "  @Binds abstract Number bindNumber(Integer integer);",
+            "  private TestModule() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void onlyAbstractMethods_withConstructorGetsLeftAlone() throws IOException {
+    testHelper
+        .addInputLines(
+            "in/TestModule.java",
+            "import dagger.Binds;",
+            "import dagger.Module;",
+            "@Module abstract class TestModule {",
+            "  @Binds abstract Object bindObject(String string);",
+            "  @Binds abstract Number bindNumber(Integer integer);",
+            "  private TestModule() {}",
+            "}")
+        .expectUnchanged()
         .doTest();
   }
 

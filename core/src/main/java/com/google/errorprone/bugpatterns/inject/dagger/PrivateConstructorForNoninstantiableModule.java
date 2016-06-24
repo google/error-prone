@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.bugpatterns.inject.dagger.DaggerAnnotations.isBindingDeclarationMethod;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.isStatic;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
 import static com.sun.source.tree.Tree.Kind.CLASS;
 import static com.sun.source.tree.Tree.Kind.METHOD;
@@ -56,6 +57,13 @@ import com.sun.source.tree.Tree;
 )
 public class PrivateConstructorForNoninstantiableModule extends BugChecker
     implements ClassTreeMatcher {
+  private static final Predicate<Tree> IS_CONSTRUCTOR =
+      new Predicate<Tree>() {
+        @Override
+        public boolean apply(Tree tree) {
+          return getSymbol(tree).isConstructor();
+        }
+      };
 
   @Override
   public Description matchClass(ClassTree classTree, VisitorState state) {
@@ -82,6 +90,10 @@ public class PrivateConstructorForNoninstantiableModule extends BugChecker
 
     // ignore empty modules
     if (nonSyntheticMembers.isEmpty()) {
+      return NO_MATCH;
+    }
+
+    if (nonSyntheticMembers.anyMatch(IS_CONSTRUCTOR)) {
       return NO_MATCH;
     }
 
