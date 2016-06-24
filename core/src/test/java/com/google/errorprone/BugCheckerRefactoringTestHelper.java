@@ -19,6 +19,7 @@ package com.google.errorprone;
 import static com.google.common.truth.Truth.assertAbout;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;
+import static org.junit.Assert.fail;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
@@ -47,21 +48,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
 
 /**
  * Compare a file transformed as suggested by {@link BugChecker} to an expected source.
  *
- * Inputs are a {@link BugChecker} instance, input file and expected file.
+ * <p>Inputs are a {@link BugChecker} instance, input file and expected file.
  *
  * @author kurs@google.com (Jan Kurs)
  */
 public class BugCheckerRefactoringTestHelper {
 
-  /**
-   * Test mode for matching refactored source against expected source.
-   */
+  /** Test mode for matching refactored source against expected source. */
   public enum TestMode {
     TEXT_MATCH {
       @Override
@@ -85,7 +85,7 @@ public class BugCheckerRefactoringTestHelper {
   /**
    * For checks that provide multiple possible fixes, chooses the one that will be applied for the
    * test.
-   * */
+   */
   public interface FixChooser {
     Fix choose(List<Fix> fixes);
   }
@@ -147,21 +147,44 @@ public class BugCheckerRefactoringTestHelper {
 
   private void runTestOnPair(JavaFileObject input, JavaFileObject output, TestMode testMode)
       throws IOException {
-    JavacTaskImpl task = createJavacTask();
+    JavacTool tool = JavacTool.create();
+    DiagnosticCollector<JavaFileObject> diagnosticsCollector = new DiagnosticCollector<>();
+    Context context = new Context();
+    context.put(ErrorProneOptions.class, ErrorProneOptions.empty());
+    JavacTaskImpl task =
+        (JavacTaskImpl)
+            tool.getTask(
+                CharStreams.nullWriter(),
+                fileManager,
+                diagnosticsCollector,
+                /*options=*/ ImmutableList.<String>of(),
+                /*classes=*/ null,
+                ImmutableList.copyOf(sources.keySet()),
+                context);
     JCCompilationUnit tree = parseAndAnalyze(task, input);
-    JavaFileObject transformed = applyDiff(input, task, tree);
-
+    Iterable<Diagnostic<? extends JavaFileObject>> errorDiagnostics =
+        Iterables.filter(
+            diagnosticsCollector.getDiagnostics(),
+            new Predicate<Diagnostic<? extends JavaFileObject>>() {
+              @Override
+              public boolean apply(Diagnostic<? extends JavaFileObject> input) {
+                return input.getKind() == Diagnostic.Kind.ERROR;
+              }
+            });
+    if (!Iterables.isEmpty(errorDiagnostics)) {
+      fail("compilation failed unexpectedly: " + errorDiagnostics);
+    }
+    JavaFileObject transformed = applyDiff(input, context, tree);
     testMode.verifyMatch(transformed, output);
   }
 
   private JavaFileObject applyDiff(
-      JavaFileObject sourceFileObject, JavacTaskImpl task, JCCompilationUnit tree)
-      throws IOException {
+      JavaFileObject sourceFileObject, Context context, JCCompilationUnit tree) throws IOException {
     final DescriptionBasedDiff diff = DescriptionBasedDiff.create(tree);
     transformer(refactoringBugChecker)
         .apply(
             new TreePath(tree),
-            task.getContext(),
+            context,
             new DescriptionListener() {
               @Override
               public void onDescribed(Description description) {
@@ -197,35 +220,12 @@ public class BugCheckerRefactoringTestHelper {
             }));
   }
 
-  private JavacTaskImpl createJavacTask() {
-    JavacTool tool = JavacTool.create();
-    DiagnosticCollector<JavaFileObject> diagnosticsCollector = new DiagnosticCollector<>();
-    Context context = new Context();
-
-    context.put(ErrorProneOptions.class, ErrorProneOptions.empty());
-
-    JavacTaskImpl task =
-        (JavacTaskImpl)
-            tool.getTask(
-                CharStreams.nullWriter(),
-                fileManager,
-                diagnosticsCollector,
-                ImmutableList.<String>of(),
-                null,
-                ImmutableList.copyOf(sources.keySet()),
-                context);
-
-    return task;
-  }
-
   private ErrorProneScannerTransformer transformer(BugChecker bugChecker) {
     ErrorProneScanner scanner = new ErrorProneScanner(bugChecker);
     return ErrorProneScannerTransformer.create(scanner);
   }
 
-  /**
-   * To assert the proper {@code .addInput().addOutput()} chain.
-   */
+  /** To assert the proper {@code .addInput().addOutput()} chain. */
   public class ExpectOutput {
     private final JavaFileObject input;
 

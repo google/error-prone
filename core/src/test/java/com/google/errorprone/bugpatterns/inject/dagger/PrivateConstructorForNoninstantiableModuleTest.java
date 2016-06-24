@@ -77,6 +77,7 @@ public final class PrivateConstructorForNoninstantiableModuleTest {
             "in/TestModule.java",
             "import dagger.Binds;",
             "import dagger.Module;",
+            "import dagger.Provides;",
             "@Module abstract class TestModule {",
             "  @Provides static String provideString() { return \"\"; }",
             "  @Binds abstract Object bindObject(String string);",
@@ -87,6 +88,7 @@ public final class PrivateConstructorForNoninstantiableModuleTest {
             "out/TestModule.java", //
             "import dagger.Binds;",
             "import dagger.Module;",
+            "import dagger.Provides;",
             "@Module abstract class TestModule {",
             "  @Provides static String provideString() { return \"\"; }",
             "  @Binds abstract Object bindObject(String string);",

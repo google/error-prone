@@ -40,11 +40,8 @@ import org.junit.runners.JUnit4;
 
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
-import java.util.NoSuchElementException;
 
-/**
- * Tests for {@link BugCheckerRefactoringTestHelper}.
- */
+/** Tests for {@link BugCheckerRefactoringTestHelper}. */
 @RunWith(JUnit4.class)
 public class BugCheckerRefactoringTestHelperTest {
 
@@ -107,8 +104,6 @@ public class BugCheckerRefactoringTestHelperTest {
         .doTest();
   }
 
-
-
   @Test
   public void testReplaceTextMatch() throws IOException {
     helper
@@ -130,7 +125,7 @@ public class BugCheckerRefactoringTestHelperTest {
             "}")
         .doTest(TestMode.TEXT_MATCH);
   }
-  
+
   @Test(expected = AssertionError.class)
   public void testReplaceTextMatchFail() throws IOException {
     helper
@@ -142,7 +137,8 @@ public class BugCheckerRefactoringTestHelperTest {
             "    return i;",
             "  }",
             "}")
-        .addOutputLines("out/Test.java",
+        .addOutputLines(
+            "out/Test.java",
             "public class Test {",
             "  public Object foo() {",
             "    Integer i = 1 + 2;",
@@ -151,12 +147,19 @@ public class BugCheckerRefactoringTestHelperTest {
             "}")
         .doTest(TestMode.TEXT_MATCH);
   }
-  @Test(expected = NoSuchElementException.class)
+
+  @Test
   public void compilationErrorFail() throws IOException {
-    helper
-        .addInputLines("syntax_error.java", "public clazz Bar { ! this should fail }")
-        .expectUnchanged()
-        .doTest();
+    try {
+      helper
+          .addInputLines("syntax_error.java", "public clazz Bar { ! this should fail }")
+          .expectUnchanged()
+          .doTest();
+    } catch (AssertionError e) {
+      assertThat(e.getMessage()).contains("compilation failed unexpectedly");
+      return;
+    }
+    fail("compilation succeeded unexpectedly");
   }
 
   @Test
@@ -168,9 +171,7 @@ public class BugCheckerRefactoringTestHelperTest {
         .addOutputLines("out/foo/Bar.java", "import bar.Foo;", "public  class Bar {", "}")
         .doTest(TestMode.TEXT_MATCH);
   }
-  /**
-   * Mock {@link BugChecker} for testing only.
-   */
+  /** Mock {@link BugChecker} for testing only. */
   @BugPattern(
     name = "ReturnNullRefactoring",
     summary = "Mock refactoring that replaces all returns with 'return null;' statement.",
@@ -185,9 +186,7 @@ public class BugCheckerRefactoringTestHelperTest {
       return describeMatch(tree, SuggestedFix.replace(tree, "return null;"));
     }
   }
-  /**
-   * Mock {@link BugChecker} for testing only.
-   */
+  /** Mock {@link BugChecker} for testing only. */
   @BugPattern(
     name = "RemoveAnnotationRefactoring",
     summary = "Mock refactoring that removes all annotations declared in package bar ",
@@ -219,5 +218,19 @@ public class BugCheckerRefactoringTestHelperTest {
     } catch (FileAlreadyExistsException e) {
       assertThat(e).hasMessage("Test.java");
     }
+  }
+
+  @Test
+  public void compilationError() throws Exception {
+    try {
+      helper
+          .addInputLines("Test.java", "public class Test extends NoSuch {}")
+          .expectUnchanged()
+          .doTest();
+    } catch (AssertionError e) {
+      assertThat(e.getMessage()).contains("error: cannot find symbol");
+      return;
+    }
+    fail("compilation succeeded unexpectedly");
   }
 }
