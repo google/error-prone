@@ -51,8 +51,8 @@ java_plugin(
 )
 ```
 
-For a complete example, see: 
-https://github.com/google/error-prone/tree/master/examples/plugin/bazel
+For a complete example, see:
+[examples/plugin/bazel](https://github.com/google/error-prone/tree/master/examples/plugin/bazel).
 
 ### Maven
 
@@ -61,5 +61,5 @@ configured with the
 [annotationProcessorPaths](https://maven.apache.org/plugins/maven-compiler-plugin/compile-mojo.html#annotationProcessorPaths)
 parameter.
 
-For a complete example, see: 
-https://github.com/google/error-prone/tree/master/examples/plugin/maven
+For a complete example, see:
+[examples/plugin/maven](https://github.com/google/error-prone/tree/master/examples/plugin/maven).
