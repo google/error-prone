@@ -41,12 +41,12 @@ Bazel allows annotation processors to be configured using the
 
 ```
 java_plugin(
-    name = "MyErrorPronePlugin",
-    # a no-op annotation processor; the processor class can't be empty
-    processor_class = "com.google.errorprone.sample.NullAnnotationProcessor",
+    name = "MyCustomCheckPlugin",
+    srcs = ["MyCustomCheck.java"],
     deps = [
-        ":MyErrorPronePluginImplementation",
-        # ...
+        "//third_party/java/auto_service",
+        "@error_prone//jar",
+        "@guava//jar",
     ],
 )
 ```
