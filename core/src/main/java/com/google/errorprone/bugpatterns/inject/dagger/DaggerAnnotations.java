@@ -28,7 +28,7 @@ final class DaggerAnnotations {
   static final String BINDS_CLASS_NAME = "dagger.Binds";
   static final String PROVIDES_CLASS_NAME = "dagger.Provides";
   static final String MODULE_CLASS_NAME = "dagger.Module";
-  static final String MULTIBINDS_CLASS_NAME = "dagger.multibinds.Module";
+  static final String MULTIBINDS_CLASS_NAME = "dagger.multibindings.Multibinds";
 
   // Dagger matchers
   static <T extends Tree> Matcher<T> isModule() {
