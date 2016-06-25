@@ -44,7 +44,7 @@ __JUnit4TearDownNotRunPositiveCaseCustomAfter.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -81,7 +81,7 @@ __JUnit4TearDownNotRunPositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -158,7 +158,7 @@ __JUnit4TearDownNotRunNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import junit.framework.TestCase;
 

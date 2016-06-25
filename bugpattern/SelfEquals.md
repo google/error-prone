@@ -44,7 +44,7 @@ __SelfEqualsPositiveCase.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
@@ -128,7 +128,7 @@ __SelfEqualsNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)

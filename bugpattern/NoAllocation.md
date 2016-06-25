@@ -45,7 +45,7 @@ __NoAllocationCheckerPositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.errorprone.annotations.NoAllocation;
 
@@ -539,7 +539,7 @@ __NoAllocationCheckerNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.errorprone.annotations.NoAllocation;
 

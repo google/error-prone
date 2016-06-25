@@ -42,7 +42,7 @@ __DeadExceptionPositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 public class DeadExceptionPositiveCases {
   public void error() {
@@ -123,7 +123,7 @@ __DeadExceptionNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 public class DeadExceptionNegativeCases {
   public void noError() {

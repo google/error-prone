@@ -42,7 +42,7 @@ __SelfAssignmentPositiveCases1.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * Tests for self assignment
@@ -107,7 +107,7 @@ __SelfAssignmentPositiveCases2.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -201,7 +201,7 @@ __SelfAssignmentNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

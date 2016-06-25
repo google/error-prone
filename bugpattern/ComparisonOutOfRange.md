@@ -42,7 +42,7 @@ __ComparisonOutOfRangePositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -113,7 +113,7 @@ __ComparisonOutOfRangeNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import java.io.IOException;
 import java.io.Reader;

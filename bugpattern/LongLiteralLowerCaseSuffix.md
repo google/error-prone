@@ -40,7 +40,7 @@ __LongLiteralLowerCaseSuffixPositiveCase1.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * Positive cases for {@link LongLiteralLowerCaseSuffix}.
@@ -140,7 +140,7 @@ __LongLiteralLowerCaseSuffixPositiveCase2.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * Positive cases for {@link LongLiteralLowerCaseSuffix}.
@@ -179,7 +179,7 @@ __LongLiteralLowerCaseSuffixNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * Negative cases for {@link LongLiteralLowerCaseSuffix}

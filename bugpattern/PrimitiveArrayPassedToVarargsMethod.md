@@ -40,7 +40,7 @@ __PrimitiveArrayPassedToVarargsMethodPositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.Arrays;
 
@@ -95,7 +95,7 @@ __PrimitiveArrayPassedToVarargsMethodNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.base.Objects;
 

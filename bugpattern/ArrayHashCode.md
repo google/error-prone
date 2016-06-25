@@ -70,7 +70,7 @@ __ArrayHashCodePositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.base.Objects;
 
@@ -157,7 +157,7 @@ __ArrayHashCodePositiveCases2.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.Objects;
 
@@ -246,7 +246,7 @@ __ArrayHashCodeNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.base.Objects;
 
@@ -301,7 +301,7 @@ __ArrayHashCodeNegativeCases2.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.Objects;
 

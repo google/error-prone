@@ -40,7 +40,7 @@ __PreconditionsInvalidPlaceholderPositiveCase1.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -81,7 +81,7 @@ __PreconditionsInvalidPlaceholderNegativeCase1.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import static com.google.common.base.Preconditions.checkArgument;
 

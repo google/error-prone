@@ -40,7 +40,7 @@ __EqualsNaNPositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * @author lowasser@google.com (Louis Wasserman)
@@ -87,7 +87,7 @@ __EqualsNaNNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * @author lowasser@google.com (Louis Wasserman)

@@ -46,7 +46,7 @@ __JUnit4SetUpNotRunPositiveCaseCustomBefore.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -83,7 +83,7 @@ __JUnit4SetUpNotRunPositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -174,7 +174,7 @@ __JUnit4SetUpNotRunNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import junit.framework.TestCase;
 

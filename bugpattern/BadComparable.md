@@ -40,7 +40,7 @@ __BadComparablePositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.Comparator;
 
@@ -104,7 +104,7 @@ __BadComparableNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.Comparator;
 

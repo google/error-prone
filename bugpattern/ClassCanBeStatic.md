@@ -40,7 +40,7 @@ __ClassCanBeStaticPositiveCase1.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * @author alexloh@google.com (Alex Loh)
@@ -76,7 +76,7 @@ __ClassCanBeStaticPositiveCase2.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * @author alexloh@google.com (Alex Loh)
@@ -117,7 +117,7 @@ __ClassCanBeStaticPositiveCase3.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * @author alexloh@google.com (Alex Loh)
@@ -156,7 +156,7 @@ __ClassCanBeStaticNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * @author alexloh@google.com (Alex Loh)

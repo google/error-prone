@@ -27,7 +27,7 @@ Suppress false positives by adding an `@SuppressWarnings("SuppressWarningsDeprec
 __SuppressWarningsDeprecatedPositiveCases.java__
 
 {% highlight java %}
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 /*
  * Copyright 2012 Google Inc. All Rights Reserved.
  *
@@ -122,7 +122,7 @@ __SuppressWarningsDeprecatedNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * Negative cases for {@link SuppressWarningsDeprecated}.

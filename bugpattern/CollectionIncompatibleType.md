@@ -160,7 +160,7 @@ __CollectionIncompatibleTypePositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns.collectionincompatibletype;
+package com.google.errorprone.bugpatterns.collectionincompatibletype.testdata;
 
 import com.google.common.collect.ClassToInstanceMap;
 
@@ -325,7 +325,7 @@ public class CollectionIncompatibleTypePositiveCases {
   public boolean errorMessageUsesFullyQualifedNamesWhenSimpleNamesAreTheSame(
       Collection<java.util.Date> collection1, Collection<Date> collection2) {
     // BUG: Diagnostic contains: Argument 'new Date()' should not be passed to this method
-    // its type com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionIncompatibleTypePositiveCases.Date is not compatible with its collection's type argument java.util.Date
+    // its type com.google.errorprone.bugpatterns.collectionincompatibletype.testdata.CollectionIncompatibleTypePositiveCases.Date is not compatible with its collection's type argument java.util.Date
     return collection1.contains(new Date());
   }
 
@@ -426,7 +426,7 @@ __CollectionIncompatibleTypeNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns.collectionincompatibletype;
+package com.google.errorprone.bugpatterns.collectionincompatibletype.testdata;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ClassToInstanceMap;

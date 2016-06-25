@@ -103,7 +103,7 @@ __MissingFailPositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import junit.framework.TestCase;
 
@@ -244,7 +244,7 @@ __MissingFailPositiveCases2.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 // unused import to make sure we don't introduce an import conflict.
 import static junit.framework.Assert.fail;
@@ -295,7 +295,7 @@ __MissingFailPositiveCases3.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import junit.framework.TestCase;
 
@@ -349,7 +349,7 @@ __MissingFailNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
@@ -806,7 +806,7 @@ __MissingFailNegativeCases2.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 /** Test cases for missing fail in a non-test class */
 public class MissingFailNegativeCases2 {

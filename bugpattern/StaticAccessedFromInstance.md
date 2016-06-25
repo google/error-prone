@@ -42,7 +42,7 @@ __StaticAccessedFromInstancePositiveCase1.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import java.math.BigDecimal;
 
@@ -215,7 +215,7 @@ __StaticAccessedFromInstancePositiveCase2.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.base.Objects;
 import java.math.BigDecimal;
@@ -260,7 +260,7 @@ __StaticAccessedFromInstanceNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.List;
 

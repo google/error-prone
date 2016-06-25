@@ -42,7 +42,7 @@ __RectIntersectReturnValueIgnoredPositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns.android;
+package com.google.errorprone.bugpatterns.android.testdata;
 
 import android.graphics.Rect;
 
@@ -105,7 +105,7 @@ __RectIntersectReturnValueIgnoredNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns.android;
+package com.google.errorprone.bugpatterns.android.testdata;
 
 import android.graphics.Rect;
 

@@ -42,7 +42,7 @@ __ArrayEqualsPositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.base.Objects;
 
@@ -146,7 +146,7 @@ __ArrayEqualsPositiveCases2.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.Objects;
 
@@ -203,7 +203,7 @@ __ArrayEqualsNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.base.Objects;
 
@@ -285,7 +285,7 @@ __ArrayEqualsNegativeCases2.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.Objects;
 

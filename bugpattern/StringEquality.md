@@ -40,7 +40,7 @@ __StringEqualityPositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * @author ptoomey@google.com (Patrick Toomey)
@@ -108,7 +108,7 @@ __StringEqualityNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * @author ptoomey@google.com (Patrick Toomey)

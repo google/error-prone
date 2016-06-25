@@ -40,7 +40,7 @@ __ModifyingCollectionWithItselfPositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,7 +95,7 @@ __ModifyingCollectionWithItselfNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.ArrayList;
 import java.util.List;

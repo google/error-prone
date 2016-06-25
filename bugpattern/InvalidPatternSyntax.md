@@ -42,7 +42,7 @@ __InvalidPatternSyntaxPositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.regex.Pattern;
 
@@ -107,7 +107,7 @@ __InvalidPatternSyntaxNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.regex.Pattern;
 

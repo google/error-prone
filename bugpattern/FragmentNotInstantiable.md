@@ -43,7 +43,7 @@ __FragmentNotInstantiablePositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns.android;
+package com.google.errorprone.bugpatterns.android.testdata;
 
 import android.app.Fragment;
 
@@ -134,7 +134,7 @@ __FragmentNotInstantiableNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns.android;
+package com.google.errorprone.bugpatterns.android.testdata;
 
 import android.app.Fragment;
 

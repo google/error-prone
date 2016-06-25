@@ -40,7 +40,7 @@ __NullablePrimitivePositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import javax.annotation.Nullable;
 
@@ -87,7 +87,7 @@ __NullablePrimitiveNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import javax.annotation.Nullable;
 

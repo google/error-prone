@@ -40,7 +40,7 @@ __PreconditionsCheckNotNullPositiveCase1.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -78,7 +78,7 @@ __PreconditionsCheckNotNullPositiveCase2.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * Test case for fully qualified methodIs call.
@@ -111,7 +111,7 @@ __PreconditionsCheckNotNullPositiveCase3.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -147,7 +147,7 @@ __PreconditionsCheckNotNullNegativeCase1.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 public class PreconditionsCheckNotNullNegativeCase1 {
   public void go() {
@@ -181,7 +181,7 @@ __PreconditionsCheckNotNullNegativeCase2.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.base.Preconditions;
 

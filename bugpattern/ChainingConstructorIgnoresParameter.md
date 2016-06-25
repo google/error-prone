@@ -40,9 +40,9 @@ __ChainingConstructorIgnoresParameterPositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
-import static com.google.errorprone.bugpatterns.ChainingConstructorIgnoresParameterPositiveCases.Location.TEST_TARGET;
+import static com.google.errorprone.bugpatterns.testdata.ChainingConstructorIgnoresParameterPositiveCases.Location.TEST_TARGET;
 
 /**
  * @author cpovirk@google.com (Chris Povirk)
@@ -150,7 +150,7 @@ __ChainingConstructorIgnoresParameterNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import java.io.File;
 

@@ -40,7 +40,7 @@ __AssertFalsePositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * @author sebastian.h.monte@gmail.com (Sebastian Monte)
@@ -73,7 +73,7 @@ __AssertFalseNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * @author sebastian.h.monte@gmail.com (Sebastian Monte)

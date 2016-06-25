@@ -40,7 +40,7 @@ __NumericEqualityPositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * @author scottjohnson@google.com (Scott Johnson)
@@ -126,7 +126,7 @@ __NumericEqualityNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * @author scottjohnson@google.com (Scott Johnsson)

@@ -40,7 +40,7 @@ __ElementsCountedInLoopPositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.*;
 
@@ -127,7 +127,7 @@ __ElementsCountedInLoopNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.*;
 

@@ -40,7 +40,7 @@ __OverridesPositiveCase1.java__
  * the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -146,7 +146,7 @@ __OverridesPositiveCase2.java__
  * the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -201,7 +201,7 @@ __OverridesPositiveCase3.java__
  * the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -256,7 +256,7 @@ __OverridesPositiveCase4.java__
  * the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.List;
 import java.util.Map;
@@ -308,7 +308,7 @@ __OverridesPositiveCase5.java__
  * the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.List;
 import java.util.Map;
@@ -358,7 +358,7 @@ __OverridesNegativeCase1.java__
  * the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * @author cushon@google.com (Liam Miller-Cushon)
@@ -448,7 +448,7 @@ __OverridesNegativeCase2.java__
  * the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -495,7 +495,7 @@ __OverridesNegativeCase3.java__
  * the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.ArrayList;
 import java.util.List;

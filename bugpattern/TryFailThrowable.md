@@ -44,7 +44,7 @@ __TryFailThrowablePositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -248,7 +248,7 @@ __TryFailThrowableNegativeCases.java__
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

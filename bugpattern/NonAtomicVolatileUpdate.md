@@ -44,7 +44,7 @@ __NonAtomicVolatileUpdatePositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * Positive test cases for {@code NonAtomicVolatileUpdate} checker.
@@ -139,7 +139,7 @@ __NonAtomicVolatileUpdateNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * Positive test cases for {@code NonAtomicVolatileUpdate} checker.

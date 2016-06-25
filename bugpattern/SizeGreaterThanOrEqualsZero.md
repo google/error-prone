@@ -40,7 +40,7 @@ __SizeGreaterThanOrEqualsZeroPositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.collect.Iterables;
 
@@ -183,7 +183,7 @@ __SizeGreaterThanOrEqualsZeroNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.ArrayList;
 import java.util.Collection;

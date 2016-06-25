@@ -42,7 +42,7 @@ __MisusedWeekYearPositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
@@ -122,7 +122,7 @@ __MisusedWeekYearPositiveCases2.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import com.ibm.icu.text.DateFormatSymbols;
 import com.ibm.icu.text.SimpleDateFormat;
@@ -185,7 +185,7 @@ __MisusedWeekYearNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;

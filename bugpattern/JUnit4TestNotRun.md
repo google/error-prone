@@ -42,7 +42,7 @@ __JUnit4TestNotRunPositiveCase1.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -79,7 +79,7 @@ __JUnit4TestNotRunPositiveCase2.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -119,7 +119,7 @@ __JUnit4TestNotRunNegativeCase1.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -153,7 +153,7 @@ __JUnit4TestNotRunNegativeCase2.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import org.junit.runner.RunWith;
 import org.junit.internal.runners.JUnit38ClassRunner;
@@ -188,7 +188,7 @@ __JUnit4TestNotRunNegativeCase3.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import org.junit.*;
 import org.junit.runner.RunWith;
@@ -248,7 +248,7 @@ __JUnit4TestNotRunNegativeCase4.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import junit.framework.TestCase;
 import org.junit.runner.RunWith;
@@ -284,7 +284,7 @@ __JUnit4TestNotRunNegativeCase5.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;

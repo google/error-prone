@@ -40,7 +40,7 @@ __PreconditionsExpensiveStringPositiveCase1.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.base.Preconditions;
 
@@ -78,7 +78,7 @@ __PreconditionsExpensiveStringNegativeCase1.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.base.Preconditions;
 
@@ -118,7 +118,7 @@ __PreconditionsExpensiveStringNegativeCase2.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.base.Preconditions;
 

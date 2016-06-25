@@ -40,7 +40,7 @@ __SelfEqualityPositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * @author scottjohnson@google.com (Scott Johnson)
@@ -122,7 +122,7 @@ __SelfEqualityNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * @author scottjohnson@google.com (Scott Johnson)

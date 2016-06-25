@@ -40,7 +40,7 @@ __NonRuntimeAnnotationPositiveCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -99,7 +99,7 @@ __NonRuntimeAnnotationNegativeCases.java__
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
