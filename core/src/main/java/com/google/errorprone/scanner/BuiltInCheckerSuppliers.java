@@ -91,6 +91,7 @@ import com.google.errorprone.bugpatterns.NullableConstructor;
 import com.google.errorprone.bugpatterns.NullablePrimitive;
 import com.google.errorprone.bugpatterns.NullableVoid;
 import com.google.errorprone.bugpatterns.NumericEquality;
+import com.google.errorprone.bugpatterns.OperatorPrecedence;
 import com.google.errorprone.bugpatterns.OptionalEquality;
 import com.google.errorprone.bugpatterns.Overrides;
 import com.google.errorprone.bugpatterns.PackageLocation;
@@ -261,9 +262,7 @@ public class BuiltInCheckerSuppliers {
           TypeParameterQualifier.class,
           UnusedAnonymousClass.class);
 
-  /**
-   * A list of all checks with severity WARNING that are on by default.
-   */
+  /** A list of all checks with severity WARNING that are on by default. */
   public static final ImmutableSet<BugCheckerInfo> ENABLED_WARNINGS =
       getSuppliers(
           BadAnnotationImplementation.class,
@@ -293,6 +292,7 @@ public class BuiltInCheckerSuppliers {
           NullableConstructor.class,
           NullablePrimitive.class,
           NullableVoid.class,
+          OperatorPrecedence.class,
           OverridesGuiceInjectableMethod.class,
           PackageLocation.class,
           PreconditionsInvalidPlaceholder.class,
