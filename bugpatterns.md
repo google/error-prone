@@ -92,6 +92,9 @@ __[NullablePrimitive](bugpattern/NullablePrimitive)__<br>
 __[NullableVoid](bugpattern/NullableVoid)__<br>
 void-returning methods should not be annotated with @Nullable, since they cannot return null
 
+__[OperatorPrecedence](bugpattern/OperatorPrecedence)__<br>
+Use grouping parenthesis to make the operator precedence explicit
+
 __[PackageLocation](bugpattern/PackageLocation)__<br>
 Package names should match the directory they are declared in
 

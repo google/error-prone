@@ -30,8 +30,8 @@ Always prefer `myClass.getConstructor().newInstance()` to calling
 [deprecation in JDK 9](https://bugs.openjdk.java.net/browse/JDK-6850612).
 
 Note that migrating to `Constructor#newInstance` requires handling two new
-checked exceptions: [`IllegalArgumentException`][iae] and
-[`InvocationTargetException`][ite].
+exceptions: [`IllegalArgumentException`][iae] and [`InvocationTargetException`]
+[ite].
 
 [iae]: https://docs.oracle.com/javase/8/docs/api/java/lang/IllegalArgumentException.html
 [ite]: https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/InvocationTargetException.html
