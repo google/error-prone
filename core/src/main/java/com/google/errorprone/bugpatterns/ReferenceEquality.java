@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
@@ -27,8 +28,6 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.tools.javac.code.Flags;
-import com.sun.tools.javac.code.Scope;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
@@ -91,17 +90,17 @@ public class ReferenceEquality extends AbstractReferenceEquality {
   /** Check if the method declares or inherits an implementation of .equals() */
   public static boolean implementsEquals(Type type, VisitorState state) {
     Name equalsName = state.getName("equals");
-    // Iterates over an ordered list of all super classes and interfaces.
-    for (Type sup : state.getTypes().directSupertypes(type)) {
-      if (sup == state.getSymtab().objectType) {
+    Type objectType = state.getSymtab().objectType;
+    Symbol objectEquals = getOnlyElement(objectType.tsym.members().getSymbolsByName(equalsName));
+    for (Type sup : state.getTypes().closure(type)) {
+      if (sup.tsym.isInterface()) {
+        continue;
+      }
+      if (ASTHelpers.isSameType(sup, objectType, state)) {
         return false;
       }
-      Scope scope = sup.tsym.members();
-      for (Symbol sym : scope.getSymbolsByName(equalsName)) {
-        if (sym != null
-            && !sym.isStatic()
-            && ((sym.flags() & Flags.SYNTHETIC) == 0)
-            && sym.toString().equals("equals(java.lang.Object)")) {
+      for (Symbol sym : sup.tsym.members().getSymbolsByName(equalsName)) {
+        if (sym.overrides(objectEquals, type.tsym, state.getTypes(), false)) {
           return true;
         }
       }
@@ -109,3 +108,4 @@ public class ReferenceEquality extends AbstractReferenceEquality {
     return false;
   }
 }
+

@@ -16,28 +16,39 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.common.io.ByteStreams;
 import com.google.errorprone.CompilationTestHelper;
 
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.jar.JarEntry;
+import java.util.jar.JarOutputStream;
 
 /** {@link ReferenceEquality}Test */
 @RunWith(JUnit4.class)
 public class ReferenceEqualityTest {
 
-  private CompilationTestHelper compilationHelper;
+  @Rule public final TemporaryFolder tempFolder = new TemporaryFolder();
 
-  @Before
-  public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(ReferenceEquality.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(ReferenceEquality.class, getClass());
 
   @Test
   public void negative_const() throws Exception {
     compilationHelper
-        .addSourceLines("Foo.java", "class Foo {", "}")
+        .addSourceLines(
+            "Foo.java", //
+            "class Foo {",
+            "}")
         .addSourceLines(
             "Test.java",
             "import com.google.common.base.Optional;",
@@ -57,7 +68,12 @@ public class ReferenceEqualityTest {
   public void negative_extends_equalsObject() throws Exception {
     compilationHelper
         .addSourceLines(
-            "Sup.java", "class Sup {", "  public boolean equals(Object o) { return false; }", "}")
+            "Sup.java", //
+            "class Sup {",
+            "  public boolean equals(Object o) {",
+            "    return false; ",
+            "  }",
+            "}")
         .addSourceLines(
             "Test.java",
             "import com.google.common.base.Optional;",
@@ -73,7 +89,10 @@ public class ReferenceEqualityTest {
   public void positive_extendsAbstract_equals() throws Exception {
     compilationHelper
         .addSourceLines(
-            "Sup.java", "abstract class Sup { public abstract boolean equals(Object o); }")
+            "Sup.java", //
+            "abstract class Sup { ",
+            "  public abstract boolean equals(Object o); ",
+            "}")
         .addSourceLines(
             "Test.java",
             "import com.google.common.base.Optional;",
@@ -89,7 +108,11 @@ public class ReferenceEqualityTest {
   @Test
   public void negative_implementsInterface_equals() throws Exception {
     compilationHelper
-        .addSourceLines("Sup.java", "interface Sup { public boolean equals(Object o); }")
+        .addSourceLines(
+            "Sup.java", //
+            "interface Sup {",
+            "  public boolean equals(Object o); ",
+            "}")
         .addSourceLines(
             "Test.java",
             "import com.google.common.base.Optional;",
@@ -210,7 +233,10 @@ public class ReferenceEqualityTest {
   public void negative_abstractEq() throws Exception {
     compilationHelper
         .addSourceLines(
-            "Sup.java", "interface Sup {", "  public abstract boolean equals(Object o);", "}")
+            "Sup.java", //
+            "interface Sup {",
+            "  public abstract boolean equals(Object o);",
+            "}")
         .addSourceLines(
             "Test.java",
             "import com.google.common.base.Optional;",
@@ -233,5 +259,67 @@ public class ReferenceEqualityTest {
             "  }",
             "}")
         .doTest();
+  }
+
+  @Test
+  public void transitiveEquals() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Super.java",
+            "public class Super {",
+            "  public boolean equals(Object o) {",
+            "    return false;",
+            "  }",
+            "}")
+        .addSourceLines("Mid.java", "public class Mid extends Super {", "}")
+        .addSourceLines("Sub.java", "public class Sub extends Mid {", "}")
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test {",
+            "  boolean f(Sub a, Sub b) {",
+            "    // BUG: Diagnostic contains: a.equals(b)",
+            "    return a == b;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  public static class Missing {}
+
+  public static class MayImplementEquals {
+
+    public void f(Missing m) {}
+
+    public void g(Missing m) {}
+  }
+
+  @Test
+  public void testErroneous() throws Exception {
+    File libJar = tempFolder.newFile("lib.jar");
+    try (FileOutputStream fis = new FileOutputStream(libJar);
+        JarOutputStream jos = new JarOutputStream(fis)) {
+      addClassToJar(jos, MayImplementEquals.class);
+      addClassToJar(jos, ReferenceEqualityTest.class);
+    }
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import " + MayImplementEquals.class.getCanonicalName() + ";",
+            "abstract class Test {",
+            "  abstract MayImplementEquals getter();",
+            "  boolean f(MayImplementEquals b) {",
+            "    return getter() == b;",
+            "  }",
+            "}")
+        .setArgs(Arrays.asList("-cp", libJar.toString()))
+        .doTest();
+  }
+
+  static void addClassToJar(JarOutputStream jos, Class<?> clazz) throws IOException {
+    String entryPath = clazz.getName().replace('.', '/') + ".class";
+    try (InputStream is = clazz.getClassLoader().getResourceAsStream(entryPath)) {
+      jos.putNextEntry(new JarEntry(entryPath));
+      ByteStreams.copy(is, jos);
+    }
   }
 }
