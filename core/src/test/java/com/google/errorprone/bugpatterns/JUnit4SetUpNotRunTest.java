@@ -16,18 +16,31 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.common.io.ByteStreams;
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.JUnit4;
+import org.junit.runners.ParentRunner;
 
-/**
- * @author glorioso@google.com (Nick Glorioso)
- */
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.jar.JarEntry;
+import java.util.jar.JarOutputStream;
+
+/** @author glorioso@google.com (Nick Glorioso) */
 @RunWith(JUnit4.class)
 public class JUnit4SetUpNotRunTest {
+
+  @Rule public final TemporaryFolder tempFolder = new TemporaryFolder();
 
   private CompilationTestHelper compilationHelper;
 
@@ -51,4 +64,42 @@ public class JUnit4SetUpNotRunTest {
     compilationHelper.addSourceFile("JUnit4SetUpNotRunNegativeCases.java").doTest();
   }
 
+  public abstract static class SuperTest {
+    @Before
+    public void setUp() {}
+  }
+
+  @Test
+  public void noBeforeOnClasspath() throws Exception {
+    File libJar = tempFolder.newFile("lib.jar");
+    try (FileOutputStream fis = new FileOutputStream(libJar);
+        JarOutputStream jos = new JarOutputStream(fis)) {
+      addClassToJar(jos, RunWith.class);
+      addClassToJar(jos, JUnit4.class);
+      addClassToJar(jos, BlockJUnit4ClassRunner.class);
+      addClassToJar(jos, ParentRunner.class);
+      addClassToJar(jos, SuperTest.class);
+      addClassToJar(jos, SuperTest.class.getEnclosingClass());
+    }
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import org.junit.runner.RunWith;",
+            "import org.junit.runners.JUnit4;",
+            "import " + SuperTest.class.getCanonicalName() + ";",
+            "@RunWith(JUnit4.class)",
+            "class Test extends SuperTest {",
+            "  @Override public void setUp() {}",
+            "}")
+        .setArgs(Arrays.asList("-cp", libJar.toString()))
+        .doTest();
+  }
+
+  static void addClassToJar(JarOutputStream jos, Class<?> clazz) throws IOException {
+    String entryPath = clazz.getName().replace('.', '/') + ".class";
+    try (InputStream is = clazz.getClassLoader().getResourceAsStream(entryPath)) {
+      jos.putNextEntry(new JarEntry(entryPath));
+      ByteStreams.copy(is, jos);
+    }
+  }
 }

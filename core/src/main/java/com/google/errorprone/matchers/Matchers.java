@@ -815,20 +815,17 @@ public class Matchers {
       @Override
       public boolean matches(MethodTree tree, VisitorState state) {
         MethodSymbol methodSym = ASTHelpers.getSymbol(tree);
-        Symbol annotationSym = state.getSymbolFromString(annotationType);
-        if ((methodSym == null) || (annotationSym == null)) {
+        if (methodSym == null) {
           return false;
         }
-
-        Set<MethodSymbol> allMethods = ASTHelpers.findSuperMethods(methodSym, state.getTypes());
-        allMethods.add(methodSym);
-
-        for (MethodSymbol method : allMethods) {
-          if (method.attribute(annotationSym) != null) {
+        if (ASTHelpers.hasAnnotation(methodSym, annotationType, state)) {
+          return true;
+        }
+        for (MethodSymbol method : ASTHelpers.findSuperMethods(methodSym, state.getTypes())) {
+          if (ASTHelpers.hasAnnotation(method, annotationType, state)) {
             return true;
           }
         }
-
         return false;
       }
     };
