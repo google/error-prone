@@ -57,7 +57,19 @@ final class DaggerAnnotations {
   }
 
   static <T extends Tree> Matcher<T> isProducesMethod() {
-    return hasAnnotation(PROVIDES_CLASS_NAME);
+    return hasAnnotation(PRODUCES_CLASS_NAME);
+  }
+
+  // Multibinding types
+  static final String INTO_SET_CLASS_NAME = "dagger.multibindings.IntoSet";
+  static final String ELEMENTS_INTO_SET_CLASS_NAME = "dagger.multibindings.ElementsIntoSet";
+  static final String INTO_MAP_CLASS_NAME = "dagger.multibindings.IntoMap";
+
+  static <T extends Tree> Matcher<T> isMultibindingMethod() {
+    return anyOf(
+        hasAnnotation(INTO_SET_CLASS_NAME),
+        hasAnnotation(ELEMENTS_INTO_SET_CLASS_NAME),
+        hasAnnotation(INTO_MAP_CLASS_NAME));
   }
 
   // Common Matchers
@@ -66,7 +78,7 @@ final class DaggerAnnotations {
   }
 
   static <T extends Tree> Matcher<T> isBindingMethod() {
-    return anyOf(isModule(), isProducerModule());
+    return anyOf(isProvidesMethod(), isProducesMethod());
   }
 
   static <T extends Tree> Matcher<T> isBindingDeclarationMethod() {
