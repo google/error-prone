@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.fixes.SuggestedFixes.addSuppressWarnings;
 
 import com.google.common.base.MoreObjects;
@@ -44,25 +44,25 @@ import javax.annotation.Nullable;
 
 /**
  * Checker for calling Object-accepting methods with types that don't match the type arguments of
- * their container types.  Currently this checker detects problems with the following methods on
- * all their subtypes and subinterfaces:
+ * their container types. Currently this checker detects problems with the following methods on all
+ * their subtypes and subinterfaces:
+ *
  * <ul>
- * <li>{@link Collection#contains}
- * <li>{@link Collection#remove}
- * <li>{@link List#indexOf}
- * <li>{@link List#lastIndexOf}
- * <li>{@link Map#get}
- * <li>{@link Map#containsKey}
- * <li>{@link Map#remove}
- * <li>{@link Map#containsValue}
+ *   <li>{@link Collection#contains}
+ *   <li>{@link Collection#remove}
+ *   <li>{@link List#indexOf}
+ *   <li>{@link List#lastIndexOf}
+ *   <li>{@link Map#get}
+ *   <li>{@link Map#containsKey}
+ *   <li>{@link Map#remove}
+ *   <li>{@link Map#containsValue}
  * </ul>
  */
 @BugPattern(
   name = "CollectionIncompatibleType",
   summary = "Incompatible type as argument to Object-accepting Java collections method",
   category = JDK,
-  
-  severity = WARNING
+  severity = ERROR
 )
 public class CollectionIncompatibleType extends BugChecker implements MethodInvocationTreeMatcher {
 
