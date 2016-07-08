@@ -110,6 +110,9 @@ Comparison using reference equality instead of value equality
 __[RequiredModifiers](bugpattern/RequiredModifiers)__<br>
 This annotation is missing required modifiers as specified by its @RequiredModifiers annotation
 
+__[SelfComparison](bugpattern/SelfComparison)__<br>
+An object is compared to itself
+
 __[StaticAccessedFromInstance](bugpattern/StaticAccessedFromInstance)__<br>
 A static variable or method should not be accessed from an object instance
 
@@ -279,9 +282,6 @@ Return value of this method must be used
 __[SelfAssignment](bugpattern/SelfAssignment)__<br>
 Variable assigned to itself
 
-__[SelfComparison](bugpattern/SelfComparison)__<br>
-An object is compared to itself
-
 __[SelfEquals](bugpattern/SelfEquals)__<br>
 An object is tested for equality to itself
 
@@ -365,7 +365,7 @@ __[PrivateConstructorForUtilityClass](bugpattern/PrivateConstructorForUtilityCla
 Utility classes (only static members) are not designed to be instantiated and should be made noninstantiable with a default constructor.
 
 __[UseBinds](bugpattern/UseBinds)__<br>
-@Binds is a more efficient and declaritive mechanism for delegating a binding.
+@Binds is a more efficient and declarative mechanism for delegating a binding.
 
 ## Experimental : ERROR
 
