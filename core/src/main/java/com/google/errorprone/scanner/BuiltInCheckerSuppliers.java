@@ -59,6 +59,7 @@ import com.google.errorprone.bugpatterns.GetClassOnEnum;
 import com.google.errorprone.bugpatterns.GuavaSelfEquals;
 import com.google.errorprone.bugpatterns.HashtableContains;
 import com.google.errorprone.bugpatterns.IncompatibleModifiersChecker;
+import com.google.errorprone.bugpatterns.InfiniteRecursion;
 import com.google.errorprone.bugpatterns.InsecureCipherMode;
 import com.google.errorprone.bugpatterns.InvalidPatternSyntax;
 import com.google.errorprone.bugpatterns.IsInstanceOfClass;
@@ -280,6 +281,7 @@ public class BuiltInCheckerSuppliers {
           FragmentNotInstantiable.class,
           GetClassOnEnum.class,
           IncompatibleModifiersChecker.class,
+          InfiniteRecursion.class,
           InsecureCipherMode.class,
           IterableAndIterator.class,
           JUnit3FloatingPointComparisonWithoutDelta.class,
