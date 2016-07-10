@@ -123,6 +123,7 @@ import com.google.errorprone.bugpatterns.StringBuilderInitWithChar;
 import com.google.errorprone.bugpatterns.StringEquality;
 import com.google.errorprone.bugpatterns.SuppressWarningsDeprecated;
 import com.google.errorprone.bugpatterns.ThrowIfUncheckedKnownChecked;
+import com.google.errorprone.bugpatterns.ThrowsUncheckedException;
 import com.google.errorprone.bugpatterns.TryFailThrowable;
 import com.google.errorprone.bugpatterns.TypeParameterQualifier;
 import com.google.errorprone.bugpatterns.TypeParameterUnusedInFormals;
@@ -362,6 +363,7 @@ public class BuiltInCheckerSuppliers {
           SelfEquality.class,
           StaticAccessedFromInstance.class,
           StringEquality.class,
+          ThrowsUncheckedException.class,
           UnlockMethodChecker.class,
           UnnecessaryStaticImport.class,
           UnnecessaryTypeArgument.class,
