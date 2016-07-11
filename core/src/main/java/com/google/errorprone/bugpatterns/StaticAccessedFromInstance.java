@@ -42,15 +42,19 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
-@BugPattern(name = "StaticAccessedFromInstance",
-    summary = "A static variable or method should not be accessed from an object instance",
-    explanation = "A static variable or method should never be accessed from an instance.  This "
-        + "hides the fact that the variable or method is static and does not depend on the value "
-        + "of the object instance on which this variable or method is being invoked.",
-    category = JDK, severity = WARNING, maturity = MATURE, altNames = "static")
+/** @author eaftan@google.com (Eddie Aftandilian) */
+@BugPattern(
+  name = "StaticAccessedFromInstance",
+  summary = "A static variable or method should not be accessed from an object instance",
+  explanation =
+      "A static variable or method should never be accessed from an instance.  This "
+          + "hides the fact that the variable or method is static and does not depend on the value "
+          + "of the object instance on which this variable or method is being invoked.",
+  category = JDK,
+  severity = WARNING,
+  maturity = MATURE,
+  altNames = {"static", "static-access"}
+)
 public class StaticAccessedFromInstance extends BugChecker implements MemberSelectTreeMatcher {
 
   private static final String MESSAGE_TEMPLATE = "Static %s %s should not be accessed from an "

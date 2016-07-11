@@ -49,4 +49,14 @@ public class StaticAccessedFromInstanceNegativeCases {
   public void test4() {
     Class<?> klass = String[].class;
   }
+  
+  @SuppressWarnings("static")
+  public void testJavacAltname() {
+    this.staticTestMethod();
+  }
+
+  @SuppressWarnings("static-access")
+  public void testEclipseAltname() {
+    this.staticTestMethod();
+  }
 }
