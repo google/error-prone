@@ -16,14 +16,11 @@
 
 package com.google.errorprone.matchers.method;
 
-import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.method.MethodMatchers.ParameterMatcher;
 import com.google.errorprone.suppliers.Supplier;
-import com.google.errorprone.suppliers.Suppliers;
 
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Type;
@@ -33,19 +30,6 @@ public class ParameterMatcherImpl extends AbstractChainedMatcher<MatchState, Mat
     implements ParameterMatcher {
 
   private final ImmutableList<Supplier<Type>> expected;
-
-  // TODO(cushon): Suppliers::typeFromString
-  private static final Function<String, Supplier<Type>> GET_SUPPLIER =
-      new Function<String, Supplier<Type>>() {
-        @Override public Supplier<Type> apply(String input) {
-          return Suppliers.typeFromString(input);
-        }
-      };
-
-  ParameterMatcherImpl(AbstractSimpleMatcher<MatchState> baseMatcher,
-      Iterable<String> parameterTypes) {
-    this(baseMatcher, ImmutableList.copyOf(Iterables.transform(parameterTypes, GET_SUPPLIER)));
-  }
 
   ParameterMatcherImpl(AbstractSimpleMatcher<MatchState> baseMatcher,
       ImmutableList<Supplier<Type>> parameterTypes) {

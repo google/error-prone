@@ -17,12 +17,16 @@
 package com.google.errorprone.matchers.method;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.method.MethodMatchers.ConstructorClassMatcher;
 import com.google.errorprone.matchers.method.MethodMatchers.ParameterMatcher;
 import com.google.errorprone.predicates.TypePredicate;
+import com.google.errorprone.suppliers.Supplier;
+import com.google.errorprone.suppliers.Suppliers;
 
 import com.sun.source.tree.ExpressionTree;
+import com.sun.tools.javac.code.Type;
 
 import java.util.Arrays;
 
@@ -49,11 +53,11 @@ class ConstructorClassMatcherImpl extends AbstractChainedMatcher<MatchState, Mat
 
   @Override
   public ParameterMatcher withParameters(String... parameters) {
-    return withParameters(Arrays.asList(parameters));
+    return withParameters(Suppliers.fromStrings(Arrays.asList(parameters)));
   }
 
   @Override
-  public ParameterMatcher withParameters(Iterable<String> parameters) {
-    return new ParameterMatcherImpl(this, parameters);
+  public ParameterMatcher withParameters(Iterable<Supplier<Type>> parameters) {
+    return new ParameterMatcherImpl(this, ImmutableList.copyOf(parameters));
   }
 }

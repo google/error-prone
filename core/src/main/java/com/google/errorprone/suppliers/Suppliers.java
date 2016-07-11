@@ -16,6 +16,9 @@
 
 package com.google.errorprone.suppliers;
 
+import com.google.common.base.Function;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
 
@@ -148,12 +151,28 @@ public class Suppliers {
       }
     };
 
+  public static final Supplier<Type> STRING_TYPE =
+      new Supplier<Type>() {
+        @Override
+        public Type get(VisitorState state) {
+          return state.getSymtab().stringType;
+        }
+      };
+
   public static final Supplier<Type> BOOLEAN_TYPE = new Supplier<Type>() {
       @Override
       public Type get(VisitorState state) {
         return state.getSymtab().booleanType;
       }
     };
+
+  public static final Supplier<Type> BYTE_TYPE =
+      new Supplier<Type>() {
+        @Override
+        public Type get(VisitorState state) {
+          return state.getSymtab().byteType;
+        }
+      };
 
   public static final Supplier<Type> INT_TYPE = new Supplier<Type>() {
       @Override
@@ -204,4 +223,25 @@ public class Suppliers {
         return ((JCTree) state.findEnclosing(ClassTree.class)).type;
       }
     };
+
+  public static Supplier<Type> arrayOf(final Supplier<Type> elementType) {
+    return new Supplier<Type>() {
+      @Override
+      public Type get(VisitorState state) {
+        return new Type.ArrayType(elementType.get(state), state.getSymtab().arraysType.tsym);
+      }
+    };
+  }
+
+  public static ImmutableList<Supplier<Type>> fromStrings(Iterable<String> types) {
+    return ImmutableList.copyOf(
+        Iterables.transform(
+            types,
+            new Function<String, Supplier<Type>>() {
+              @Override
+              public Supplier<Type> apply(String input) {
+                return Suppliers.typeFromString(input);
+              }
+            }));
+  }
 }

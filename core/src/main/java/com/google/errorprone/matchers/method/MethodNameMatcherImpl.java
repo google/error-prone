@@ -20,6 +20,7 @@ import com.google.common.base.Optional;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.method.MethodMatchers.MethodNameMatcher;
 import com.google.errorprone.matchers.method.MethodMatchers.ParameterMatcher;
+import com.google.errorprone.suppliers.Suppliers;
 
 import com.sun.source.tree.ExpressionTree;
 
@@ -41,7 +42,7 @@ public abstract class MethodNameMatcherImpl extends AbstractChainedMatcher<Match
 
   @Override
   public ParameterMatcher withParameters(Iterable<String> parameters) {
-    return new ParameterMatcherImpl(this, parameters);
+    return new ParameterMatcherImpl(this, Suppliers.fromStrings(parameters));
   }
 
   /** Matches on exact method name. */

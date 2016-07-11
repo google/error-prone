@@ -43,6 +43,7 @@ import com.google.errorprone.bugpatterns.ComparisonOutOfRange;
 import com.google.errorprone.bugpatterns.CompileTimeConstantChecker;
 import com.google.errorprone.bugpatterns.ConstantField;
 import com.google.errorprone.bugpatterns.DeadException;
+import com.google.errorprone.bugpatterns.DefaultCharset;
 import com.google.errorprone.bugpatterns.DepAnn;
 import com.google.errorprone.bugpatterns.DivZero;
 import com.google.errorprone.bugpatterns.ElementsCountedInLoop;
@@ -321,6 +322,7 @@ public class BuiltInCheckerSuppliers {
           ClassName.class,
           ComparisonContractViolated.class,
           ConstantField.class,
+          DefaultCharset.class,
           DepAnn.class,
           DivZero.class,
           EmptyIfStatement.class,

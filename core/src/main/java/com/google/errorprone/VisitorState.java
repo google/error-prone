@@ -43,6 +43,7 @@ import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
+import com.sun.tools.javac.util.Options;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -377,5 +378,10 @@ public class VisitorState {
     return typeStr.equals("byte") || typeStr.equals("short") || typeStr.equals("int") ||
         typeStr.equals("long") || typeStr.equals("float") || typeStr.equals("double") ||
         typeStr.equals("boolean") || typeStr.equals("char");
+  }
+
+  /** Returns true if the compilation is targeting Android. */
+  public boolean isAndroidCompatible() {
+    return Options.instance(context).getBoolean("androidCompatible");
   }
 }

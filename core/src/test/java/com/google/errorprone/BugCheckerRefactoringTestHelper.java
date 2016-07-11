@@ -104,6 +104,7 @@ public class BugCheckerRefactoringTestHelper {
   private final ErrorProneInMemoryFileManager fileManager;
 
   private FixChooser fixChooser = FixChoosers.FIRST;
+  private List<String> options = ImmutableList.of();
 
   private BugCheckerRefactoringTestHelper(BugChecker refactoringBugChecker, Class<?> clazz) {
     this.refactoringBugChecker = refactoringBugChecker;
@@ -126,6 +127,11 @@ public class BugCheckerRefactoringTestHelper {
 
   public BugCheckerRefactoringTestHelper setFixChooser(FixChooser chooser) {
     this.fixChooser = chooser;
+    return this;
+  }
+
+  public BugCheckerRefactoringTestHelper setArgs(String... args) {
+    this.options = ImmutableList.copyOf(args);
     return this;
   }
 
@@ -157,7 +163,7 @@ public class BugCheckerRefactoringTestHelper {
                 CharStreams.nullWriter(),
                 fileManager,
                 diagnosticsCollector,
-                /*options=*/ ImmutableList.<String>of(),
+                options,
                 /*classes=*/ null,
                 ImmutableList.copyOf(sources.keySet()),
                 context);
