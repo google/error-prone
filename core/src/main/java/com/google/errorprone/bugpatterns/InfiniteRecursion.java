@@ -52,7 +52,7 @@ import com.sun.tools.javac.tree.TreeInfo;
 public class InfiniteRecursion extends BugChecker implements BugChecker.MethodTreeMatcher {
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
-    if (tree.getBody().getStatements().size() != 1) {
+    if (tree.getBody() == null || tree.getBody().getStatements().size() != 1) {
       return NO_MATCH;
     }
     Tree statement =

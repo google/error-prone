@@ -119,4 +119,15 @@ public class InfiniteRecursionTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void abstractMethod() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java", //
+            "abstract class Test {",
+            "  abstract void f ();",
+            "}")
+        .doTest();
+  }
 }
