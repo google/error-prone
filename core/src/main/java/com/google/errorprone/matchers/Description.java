@@ -16,6 +16,7 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 
 import com.google.common.base.Preconditions;
@@ -179,16 +180,17 @@ public class Description {
     }
 
     /**
-     * Add a suggested fix for this {@code Description}. Fixes should be added in order of
-     * decreasing preference.
+     * Adds a suggested fix for this {@code Description}. Fixes should be added in order of
+     * decreasing preference. Adding an empty fix is a no-op.
      *
-     * @param fix A suggested fix for this problem
+     * @param fix a suggested fix for this problem
+     * @throws IllegalArgumentException if {@code fix} is {@code null}
      */
     public Builder addFix(Fix fix) {
-      if (fix == null) {
-        throw new IllegalArgumentException("fix must not be null");
+      checkArgument(fix != null, "fix must not be null");
+      if (!fix.isEmpty()) {
+        fixListBuilder.add(fix);
       }
-      fixListBuilder.add(fix);
       return this;
     }
 

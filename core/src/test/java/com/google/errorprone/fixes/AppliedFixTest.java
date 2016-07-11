@@ -92,11 +92,12 @@ public class AppliedFixTest {
     assertThat(fix.getNewCodeSnippet().toString(), equalTo("int three3tres;"));
   }
 
-  @Test(expected = IllegalStateException.class)
-  public void shouldThrowExceptionOnEmptyFix() {
-    AppliedFix.fromSource(
-        "public class Foo {}", endPositions)
-        .apply(SuggestedFix.builder().build());
+  @Test
+  public void shouldReturnNullOnEmptyFix() {
+    AppliedFix fix =
+        AppliedFix.fromSource("public class Foo {}", endPositions)
+            .apply(SuggestedFix.builder().build());
+    assertNull(fix);
   }
 
   @Test
