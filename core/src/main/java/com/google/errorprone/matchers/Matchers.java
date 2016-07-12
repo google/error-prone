@@ -1397,4 +1397,31 @@ public class Matchers {
       }
     };
   }
+
+  /**
+   * Matches an AST node if its erased type is the same as the given type.
+   *
+   * @param typeStr a string representation of the type, e.g., "java.util.AbstractList"
+   */
+  public static <T extends Tree> Matcher<T> isSameErasedType(String typeStr) {
+    return new IsSameErasedType<>(typeStr);
+  }
+
+  /**
+   * Matches an AST node if its erased type is the same as the given type.
+   *
+   * @param type the type to check against.
+   */
+  public static <T extends Tree> Matcher<T> isSameErasedType(Supplier<Type> type) {
+    return new IsSameErasedType<>(type);
+  }
+
+  /**
+   * Matches an AST node if its erased type is the same as the given type.
+   *
+   * @param clazz a class representation of the type, e.g., Action.class.
+   */
+  public static <T extends Tree> Matcher<T> isSameErasedType(Class<?> clazz) {
+    return new IsSameErasedType<>(typeFromClass(clazz));
+  }
 }
