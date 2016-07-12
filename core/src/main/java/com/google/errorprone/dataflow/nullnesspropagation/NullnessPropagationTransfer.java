@@ -71,10 +71,12 @@ import org.checkerframework.dataflow.analysis.Analysis;
 import org.checkerframework.dataflow.cfg.CFGBuilder;
 import org.checkerframework.dataflow.cfg.ControlFlowGraph;
 import org.checkerframework.dataflow.cfg.UnderlyingAST;
+import org.checkerframework.dataflow.cfg.node.ArrayAccessNode;
 import org.checkerframework.dataflow.cfg.node.ArrayCreationNode;
 import org.checkerframework.dataflow.cfg.node.AssignmentNode;
 import org.checkerframework.dataflow.cfg.node.EqualToNode;
 import org.checkerframework.dataflow.cfg.node.FieldAccessNode;
+import org.checkerframework.dataflow.cfg.node.InstanceOfNode;
 import org.checkerframework.dataflow.cfg.node.LocalVariableNode;
 import org.checkerframework.dataflow.cfg.node.MethodInvocationNode;
 import org.checkerframework.dataflow.cfg.node.Node;
@@ -260,6 +262,17 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   }
 
   // Literals
+
+  @Override
+  Nullness visitThisLiteral() {
+    return NONNULL;
+  }
+
+  @Override
+  Nullness visitSuper() {
+    return NONNULL;
+  }
+
   /**
    * Note: A short literal appears as an int to the compiler, and the compiler can perform a
    * narrowing conversion on the literal to cast from int to short. For example, when assigning a
@@ -293,6 +306,13 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   }
 
   @Override
+  Nullness visitInstanceOf(InstanceOfNode node, SubNodeValues inputs,
+      LocalVariableUpdates thenUpdates, LocalVariableUpdates elseUpdates) {
+    setNonnullIfLocalVariable(thenUpdates, node.getOperand());
+    return NONNULL; // the result of an instanceof is a primitive boolean, so it's non-null
+  }
+
+  @Override
   Nullness visitTypeCast(TypeCastNode node, SubNodeValues inputs) {
     return hasPrimitiveType(node)
         ? NONNULL
@@ -307,6 +327,11 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   @Override
   Nullness visitStringConcatenate() {
     // TODO(user): Mark the inputs as dereferenced.
+    return NONNULL;
+  }
+
+  @Override
+  Nullness visitStringConversion() {
     return NONNULL;
   }
 
@@ -352,10 +377,14 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
       updates.set((LocalVariableNode) target, value);
     }
 
+    if (target instanceof ArrayAccessNode) {
+      setNonnullIfLocalVariable(updates, ((ArrayAccessNode) target).getArray());
+    }
+
     if (target instanceof FieldAccessNode) {
       FieldAccessNode fieldAccess = (FieldAccessNode) target;
       ClassAndField targetField = tryGetFieldSymbol(target.getTree());
-      setReceiverNullness(updates, fieldAccess.getReceiver(), targetField);
+      setReceiverNonnull(updates, fieldAccess.getReceiver(), targetField);
     }
 
     /*
@@ -380,6 +409,11 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    * primitive, in which case we probably wouldn't have bothered to run the nullness checker on it,
    * or it's being used as an Object, in which case the compiler generates a call to {@code valueOf}
    * (to autobox the value), which triggers {@link #visitMethodInvocation}.)
+   *
+   * <p>Edge case: {@code node} can be a captured local variable accessed from inside a local or
+   * anonymous inner class, or possibly from inside a lambda expression (even though these manifest
+   * as fields in bytecode).  As of 7/2016 this analysis doesn't have any knowledge of captured
+   * local variables will will essentially assume whatever default is used in {@link #values}.
    */
   @Override
   Nullness visitLocalVariable(LocalVariableNode node, LocalVariableValues values) {
@@ -399,8 +433,21 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   @Override
   Nullness visitFieldAccess(FieldAccessNode node, LocalVariableUpdates updates) {
     ClassAndField accessed = tryGetFieldSymbol(node.getTree());
-    setReceiverNullness(updates, node.getReceiver(), accessed);
+    setReceiverNonnull(updates, node.getReceiver(), accessed);
     return fieldNullness(accessed);
+  }
+
+  /**
+   * Refines the accessed array to non-null after a successful array access.
+   *
+   * <p>Note: If the array access occurs when the node is an l-value, the analysis won't call this
+   * method. Instead, it will call {@link #visitAssignment}.
+   */
+  @Override
+  Nullness visitArrayAccess(
+      ArrayAccessNode node, SubNodeValues inputs, LocalVariableUpdates updates) {
+    setNonnullIfLocalVariable(updates, node.getArray());
+    return hasPrimitiveType(node) ? NONNULL : NULLABLE;
   }
 
   /**
@@ -412,7 +459,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   Nullness visitMethodInvocation(MethodInvocationNode node, LocalVariableUpdates thenUpdates,
       LocalVariableUpdates elseUpdates, LocalVariableUpdates bothUpdates) {
     ClassAndMethod callee = tryGetMethodSymbol(node.getTree());
-    setReceiverNullness(bothUpdates, node.getTarget().getReceiver(), callee);
+    setReceiverNonnull(bothUpdates, node.getTarget().getReceiver(), callee);
     setUnconditionalArgumentNullness(bothUpdates, node.getArguments(), callee);
     setConditionalArgumentNullness(elseUpdates, node.getArguments(), callee);
     return returnValueNullness(callee);
@@ -540,7 +587,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     if (accessed.isEnumConstant()) {
       return NONNULL;
     }
-    if (accessed.isPrimitive()) {
+    if (accessed.isPrimitive()) { // includes <array>.length
       return NONNULL;
     }
     if (accessed.hasNonNullConstantValue()) {
@@ -610,10 +657,16 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     }
   }
 
-  private static void setReceiverNullness(
+  private static void setReceiverNonnull(
       LocalVariableUpdates updates, Node receiver, Member member) {
-    if (!member.isStatic() && receiver instanceof LocalVariableNode) {
-      updates.set((LocalVariableNode) receiver, NONNULL);
+    if (!member.isStatic()) {
+      setNonnullIfLocalVariable(updates, receiver);
+    }
+  }
+
+  private static void setNonnullIfLocalVariable(LocalVariableUpdates updates, Node node) {
+    if (node instanceof LocalVariableNode) {
+      updates.set((LocalVariableNode) node, NONNULL);
     }
   }
 

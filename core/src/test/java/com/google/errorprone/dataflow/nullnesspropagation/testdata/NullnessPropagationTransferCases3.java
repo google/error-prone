@@ -93,6 +93,9 @@ public class NullnessPropagationTransferCases3 {
     triggerNullnessChecker(i);
     // BUG: Diagnostic contains: (Non-null)
     triggerNullnessCheckerOnPrimitive(i);
+    // Unboxing is a method call, so i must be non-null...
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(i);
   }
 
   public void parameter(String str, int i) {

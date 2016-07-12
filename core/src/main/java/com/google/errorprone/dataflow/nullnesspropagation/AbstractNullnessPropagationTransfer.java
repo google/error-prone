@@ -144,6 +144,7 @@ abstract class AbstractNullnessPropagationTransfer
    * because the variable is a parameter with no assignments within the method), it will be returned
    * as {@code NULLABLE}.
    */
+  // TODO(kmb) remove this interface and introduce a sensible method into LocalStore instead
   interface LocalVariableValues {
     Nullness valueOfLocalVariable(LocalVariableNode node);
   }
@@ -840,13 +841,17 @@ abstract class AbstractNullnessPropagationTransfer
   @Override
   public final TransferResult<Nullness, LocalStore<Nullness>> visitInstanceOf(
       InstanceOfNode node, TransferInput<Nullness, LocalStore<Nullness>> input) {
-    ReadableLocalVariableUpdates updates = new ReadableLocalVariableUpdates();
-    Nullness result = visitInstanceOf(node, values(input), updates);
-    return updateRegularStore(result, input, updates);
+    ReadableLocalVariableUpdates thenUpdates = new ReadableLocalVariableUpdates();
+    ReadableLocalVariableUpdates elseUpdates = new ReadableLocalVariableUpdates();
+    Nullness result = visitInstanceOf(node, values(input), thenUpdates, elseUpdates);
+    ResultingStore thenStore = updateStore(input.getThenStore(), thenUpdates);
+    ResultingStore elseStore = updateStore(input.getElseStore(), elseUpdates);
+    return new ConditionalTransferResult<>(result,
+        thenStore.store, elseStore.store, thenStore.storeChanged | elseStore.storeChanged);
   }
 
   Nullness visitInstanceOf(InstanceOfNode node, SubNodeValues inputs,
-      LocalVariableUpdates updates) {
+      LocalVariableUpdates thenUpdates, LocalVariableUpdates elseUpdates) {
     return NULLABLE;
   }
 

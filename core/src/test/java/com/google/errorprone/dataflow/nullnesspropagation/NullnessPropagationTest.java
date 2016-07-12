@@ -56,8 +56,9 @@ public class NullnessPropagationTest {
    * This method triggers the {@code BugPattern} used to test nullness propagation
    *
    * @param obj Variable whose nullness value is being checked
+   * @return {@code obj} for use in expressions
    */
-  public static void triggerNullnessChecker(Object obj) {}
+  public static Object triggerNullnessChecker(Object obj) { return obj; }
 
   /*
    * Methods that should never be called. These methods exist to force tests that pass a primitive
@@ -162,6 +163,80 @@ public class NullnessPropagationTest {
   @Test
   public void testTransferFunctions8() throws Exception {
     compilationHelper.addSourceFile("NullnessPropagationTransferCases8.java").doTest();
+  }
+
+  @Test
+  public void testThis() throws Exception {
+    compilationHelper
+        .addSourceLines("ThisNonNullTest.java",
+            "package com.google.errorprone.dataflow.nullnesspropagation;",
+            "import static com.google.errorprone.dataflow.nullnesspropagation."
+            + "NullnessPropagationTest.triggerNullnessChecker;",
+            "public class ThisNonNullTest {",
+            "  public void instanceMethod() {",
+            "    // BUG: Diagnostic contains: (Non-null)",
+            "    triggerNullnessChecker(this);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testInstanceof() throws Exception {
+    compilationHelper
+        .addSourceLines("InstanceofTest.java",
+            "package com.google.errorprone.dataflow.nullnesspropagation;",
+            "import static com.google.errorprone.dataflow.nullnesspropagation."
+            + "NullnessPropagationTest.triggerNullnessChecker;",
+            "public class InstanceofTest {",
+            "  public static void m(Object o) {",
+            "    if (o instanceof InstanceofTest) {",
+            "      // BUG: Diagnostic contains: (Non-null)",
+            "      triggerNullnessChecker(o);",
+            "    } else {",
+            "      // BUG: Diagnostic contains: (Nullable)",
+            "      triggerNullnessChecker(o);",
+            "    }",
+            "    // BUG: Diagnostic contains: (Nullable)",
+            "    triggerNullnessChecker(o);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testArrayAccess() throws Exception {
+    compilationHelper
+        .addSourceLines("ArrayAccessTest.java",
+            "package com.google.errorprone.dataflow.nullnesspropagation;",
+            "import static com.google.errorprone.dataflow.nullnesspropagation."
+            + "NullnessPropagationTest.triggerNullnessChecker;",
+            "public class ArrayAccessTest {",
+            "  public static void read(Integer[] a) {",
+            "    // BUG: Diagnostic contains: (Nullable)",
+            "    triggerNullnessChecker(a);",
+            "    Integer result = a[0];",
+            "    // BUG: Diagnostic contains: (Non-null)",
+            "    triggerNullnessChecker(a);",
+            "    // BUG: Diagnostic contains: (Nullable)",
+            "    triggerNullnessChecker(result);",
+            "  }",
+            "  public static void read(int[][] matrix) {",
+            "    // BUG: Diagnostic contains: (Nullable)",
+            "    triggerNullnessChecker(matrix);",
+            "    int result = matrix[0][0];",
+            "    // BUG: Diagnostic contains: (Non-null)",
+            "    triggerNullnessChecker(matrix);",
+            "  }",
+            "  public static void write(int[] vector) {",
+            "    // BUG: Diagnostic contains: (Nullable)",
+            "    triggerNullnessChecker(vector);",
+            "    vector[7] = 42;",
+            "    // BUG: Diagnostic contains: (Non-null)",
+            "    triggerNullnessChecker(vector);",
+            "  }",
+            "}")
+        .doTest();
   }
 
   /**

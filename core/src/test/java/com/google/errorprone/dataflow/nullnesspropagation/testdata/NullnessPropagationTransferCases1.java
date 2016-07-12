@@ -71,6 +71,23 @@ public class NullnessPropagationTransferCases1 {
     triggerNullnessChecker(foo);
   }
 
+  public void conditionalOr4(String foo) {
+    // BUG: Diagnostic contains: (Non-null)
+    if (foo == null || triggerNullnessChecker(foo) == null) {
+      // BUG: Diagnostic contains: (Nullable)
+      triggerNullnessChecker(foo);
+    }
+
+    // BUG: Diagnostic contains: (Null)
+    if (foo != null || triggerNullnessChecker(foo) != null) {
+      // BUG: Diagnostic contains: (Nullable)
+      triggerNullnessChecker(foo);
+    }
+
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(foo);
+  }
+
   public void conditionalAnd1(String foo, String bar) {
     if (foo != null && bar != null) {
       // BUG: Diagnostic contains: (Non-null)
@@ -86,6 +103,21 @@ public class NullnessPropagationTransferCases1 {
       // BUG: Diagnostic contains: (Bottom)
       triggerNullnessChecker(foo);
       return;
+    }
+
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(foo);
+  }
+
+  public void conditionalAnd3(String foo) {
+    // BUG: Diagnostic contains: (Null)
+    if (foo == null && triggerNullnessChecker(foo) == null) {
+      // Something
+    }
+
+    // BUG: Diagnostic contains: (Non-null)
+    if (foo != null && triggerNullnessChecker(foo) != null) {
+      // Something
     }
 
     // BUG: Diagnostic contains: (Nullable)
