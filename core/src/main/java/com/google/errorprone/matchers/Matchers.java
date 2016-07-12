@@ -354,14 +354,6 @@ public class Matchers {
   }
 
   /**
-   * Matches a constructor with the given class name and parameter types.
-   */
-  // TODO(cushon): expunge
-  public static Constructor constructor(String className, List<String> parameterTypes) {
-    return new Constructor(className, parameterTypes);
-  }
-
-  /**
    * Matches a class in which any of/all of its constructors match the given constructorMatcher.
    */
   public static MultiMatcher<ClassTree, MethodTree> constructor(MatchType matchType,
