@@ -18,7 +18,6 @@ package com.google.errorprone.apply;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -129,97 +128,31 @@ public class ImportStatementsTest {
     return result;
   }
 
-
-  /**
-   * Test extracting the top-level package from a non-static import statement.
-   */
-  @Test
-  public void shouldGetTopLevelFromImport() {
-    assertEquals("com",
-        ImportStatements.getTopLevel("import com.google.ads.pebl.AdGroupCriterionPredicate"));
-  }
-
-  /**
-   * Test extracting the top-level package from a non-static import statement that
-   * ends with a wildcard.
-   */
-  @Test
-  public void shouldGetTopLevelFromImportWithWildcard() {
-    assertEquals("com",
-        ImportStatements.getTopLevel("import com.google.ads.pebl.*"));
-  }
-
-  /**
-   * Test extracting the top-level package from a static import statement.
-   */
-  @Test
-  public void shouldGetTopLevelFromStaticImport() {
-    assertEquals("org",
-        ImportStatements.getTopLevel("import static org.junit.Assert.assertEquals"));
-  }
-
-  /**
-   * Test extracting the top-level package from a static import statement that
-   * ends with a wildcard.
-   */
-  @Test
-  public void shouldGetTopLevelFromStaticImportWithWildcard() {
-    assertEquals("org",
-        ImportStatements.getTopLevel("import static org.junit.Assert.*"));
-  }
-
-  /**
-   * Test extracting the top-level package from an import statement with
-   * extra whitespace.
-   */
-  @Test
-  public void shouldGetTopLevelFromImportWithWhitespace() {
-    assertEquals("com",
-        ImportStatements.getTopLevel("import   com.google.ads.pebl.AdGroupCriterionPredicate   "));
-  }
-
-
-  /**
-   * Test that getting the top-level package from an improperly-formatted
-   * import statement throws an IllegalArgumentException.
-   */
-  @Test(expected = IllegalArgumentException.class)
-  public void shouldThrowExceptionForImproperlyFormattedImport() {
-    ImportStatements.getTopLevel("not an import");
-    fail("Should have thrown IllegalArgumentException");
-  }
-
-  /**
-   * Test that the import statements are sorted correctly.
-   */
+  /** Test that the import statements are sorted according to the Google Style Guide. */
   @Test
   public void shouldSortImports() {
     ImportStatements imports = new ImportStatements(basePackage, baseImportList, FAKE_END_POS_MAP);
 
     assertEquals(
         "import static com.google.ads.pebl.AdGroupCriterionPredicate.PAUSED;\n"
-        + "import static com.google.common.base.Preconditions.checkNotNull;\n"
-        + "\n"
-        + "import com.google.common.collect.ImmutableList;\n"
-        + "import com.google.common.collect.ImmutableMap;\n"
-        + "\n"
-        + "import com.sun.source.tree.CompilationUnitTree;\n"
-        + "import com.sun.source.tree.ImportTree;\n"
-        + "import com.sun.tools.javac.tree.JCTree;\n"
-        + "import com.sun.tools.javac.tree.JCTree.JCExpression;\n"
-        + "\n"
-        + "import org.joda.time.DateTime;\n"
-        + "import org.joda.time.DateTimeZone;\n"
-        + "import org.joda.time.Interval;\n"
-        + "\n"
-        + "import java.io.File;\n"
-        + "import java.io.IOException;\n"
-        + "import java.util.Iterator;\n"
-        + "\n"
-        + "import javax.tools.JavaCompiler;\n"
-        + "import javax.tools.JavaFileObject;\n"
-        + "import javax.tools.StandardJavaFileManager;\n"
-        + "import javax.tools.ToolProvider;",
+            + "import static com.google.common.base.Preconditions.checkNotNull;\n"
+            + "\n"
+            + "import com.google.common.collect.ImmutableList;\n"
+            + "import com.google.common.collect.ImmutableMap;\n"
+            + "import com.sun.source.tree.CompilationUnitTree;\n"
+            + "import com.sun.source.tree.ImportTree;\n"
+            + "import com.sun.tools.javac.tree.JCTree;\n"
+            + "import com.sun.tools.javac.tree.JCTree.JCExpression;\n"
+            + "import java.io.File;\n"
+            + "import java.io.IOException;\n"
+            + "import java.util.Iterator;\n"
+            + "import javax.tools.JavaCompiler;\n"
+            + "import javax.tools.JavaFileObject;\n"
+            + "import javax.tools.StandardJavaFileManager;\n"
+            + "import javax.tools.ToolProvider;\n"
+            + "import org.joda.time.DateTime;\n"
+            + "import org.joda.time.DateTimeZone;\n"
+            + "import org.joda.time.Interval;",
         imports.toString());
 
   }
@@ -235,29 +168,25 @@ public class ImportStatementsTest {
     assertTrue(added);
     assertEquals(
         "import static com.google.ads.pebl.AdGroupCriterionPredicate.PAUSED;\n"
-        + "import static com.google.common.base.Preconditions.checkNotNull;\n"
-        + "import static org.junit.Assert.assertEquals;\n"
-        + "\n"
-        + "import com.google.common.collect.ImmutableList;\n"
-        + "import com.google.common.collect.ImmutableMap;\n"
-        + "\n"
-        + "import com.sun.source.tree.CompilationUnitTree;\n"
-        + "import com.sun.source.tree.ImportTree;\n"
-        + "import com.sun.tools.javac.tree.JCTree;\n"
-        + "import com.sun.tools.javac.tree.JCTree.JCExpression;\n"
-        + "\n"
-        + "import org.joda.time.DateTime;\n"
-        + "import org.joda.time.DateTimeZone;\n"
-        + "import org.joda.time.Interval;\n"
-        + "\n"
-        + "import java.io.File;\n"
-        + "import java.io.IOException;\n"
-        + "import java.util.Iterator;\n"
-        + "\n"
-        + "import javax.tools.JavaCompiler;\n"
-        + "import javax.tools.JavaFileObject;\n"
-        + "import javax.tools.StandardJavaFileManager;\n"
-        + "import javax.tools.ToolProvider;",
+            + "import static com.google.common.base.Preconditions.checkNotNull;\n"
+            + "import static org.junit.Assert.assertEquals;\n"
+            + "\n"
+            + "import com.google.common.collect.ImmutableList;\n"
+            + "import com.google.common.collect.ImmutableMap;\n"
+            + "import com.sun.source.tree.CompilationUnitTree;\n"
+            + "import com.sun.source.tree.ImportTree;\n"
+            + "import com.sun.tools.javac.tree.JCTree;\n"
+            + "import com.sun.tools.javac.tree.JCTree.JCExpression;\n"
+            + "import java.io.File;\n"
+            + "import java.io.IOException;\n"
+            + "import java.util.Iterator;\n"
+            + "import javax.tools.JavaCompiler;\n"
+            + "import javax.tools.JavaFileObject;\n"
+            + "import javax.tools.StandardJavaFileManager;\n"
+            + "import javax.tools.ToolProvider;\n"
+            + "import org.joda.time.DateTime;\n"
+            + "import org.joda.time.DateTimeZone;\n"
+            + "import org.joda.time.Interval;",
         imports.toString());
   }
 
@@ -272,33 +201,30 @@ public class ImportStatementsTest {
         "import javax.servlet.http.HttpServletRequest",
         "import com.google.common.flags.FlagSpec"));
 
+    assertTrue(added);
     assertEquals(
         "import static com.google.ads.pebl.AdGroupCriterionPredicate.PAUSED;\n"
-        + "import static com.google.common.base.Preconditions.checkNotNull;\n"
-        + "import static org.junit.Assert.assertEquals;\n"
-        + "\n"
-        + "import com.google.common.collect.ImmutableList;\n"
-        + "import com.google.common.collect.ImmutableMap;\n"
-        + "import com.google.common.flags.FlagSpec;\n"
-        + "\n"
-        + "import com.sun.source.tree.CompilationUnitTree;\n"
-        + "import com.sun.source.tree.ImportTree;\n"
-        + "import com.sun.tools.javac.tree.JCTree;\n"
-        + "import com.sun.tools.javac.tree.JCTree.JCExpression;\n"
-        + "\n"
-        + "import org.joda.time.DateTime;\n"
-        + "import org.joda.time.DateTimeZone;\n"
-        + "import org.joda.time.Interval;\n"
-        + "\n"
-        + "import java.io.File;\n"
-        + "import java.io.IOException;\n"
-        + "import java.util.Iterator;\n"
-        + "\n"
-        + "import javax.servlet.http.HttpServletRequest;\n"
-        + "import javax.tools.JavaCompiler;\n"
-        + "import javax.tools.JavaFileObject;\n"
-        + "import javax.tools.StandardJavaFileManager;\n"
-        + "import javax.tools.ToolProvider;",
+            + "import static com.google.common.base.Preconditions.checkNotNull;\n"
+            + "import static org.junit.Assert.assertEquals;\n"
+            + "\n"
+            + "import com.google.common.collect.ImmutableList;\n"
+            + "import com.google.common.collect.ImmutableMap;\n"
+            + "import com.google.common.flags.FlagSpec;\n"
+            + "import com.sun.source.tree.CompilationUnitTree;\n"
+            + "import com.sun.source.tree.ImportTree;\n"
+            + "import com.sun.tools.javac.tree.JCTree;\n"
+            + "import com.sun.tools.javac.tree.JCTree.JCExpression;\n"
+            + "import java.io.File;\n"
+            + "import java.io.IOException;\n"
+            + "import java.util.Iterator;\n"
+            + "import javax.servlet.http.HttpServletRequest;\n"
+            + "import javax.tools.JavaCompiler;\n"
+            + "import javax.tools.JavaFileObject;\n"
+            + "import javax.tools.StandardJavaFileManager;\n"
+            + "import javax.tools.ToolProvider;\n"
+            + "import org.joda.time.DateTime;\n"
+            + "import org.joda.time.DateTimeZone;\n"
+            + "import org.joda.time.Interval;",
         imports.toString());
   }
 
@@ -313,28 +239,24 @@ public class ImportStatementsTest {
     assertTrue(!added);
     assertEquals(
         "import static com.google.ads.pebl.AdGroupCriterionPredicate.PAUSED;\n"
-        + "import static com.google.common.base.Preconditions.checkNotNull;\n"
-        + "\n"
-        + "import com.google.common.collect.ImmutableList;\n"
-        + "import com.google.common.collect.ImmutableMap;\n"
-        + "\n"
-        + "import com.sun.source.tree.CompilationUnitTree;\n"
-        + "import com.sun.source.tree.ImportTree;\n"
-        + "import com.sun.tools.javac.tree.JCTree;\n"
-        + "import com.sun.tools.javac.tree.JCTree.JCExpression;\n"
-        + "\n"
-        + "import org.joda.time.DateTime;\n"
-        + "import org.joda.time.DateTimeZone;\n"
-        + "import org.joda.time.Interval;\n"
-        + "\n"
-        + "import java.io.File;\n"
-        + "import java.io.IOException;\n"
-        + "import java.util.Iterator;\n"
-        + "\n"
-        + "import javax.tools.JavaCompiler;\n"
-        + "import javax.tools.JavaFileObject;\n"
-        + "import javax.tools.StandardJavaFileManager;\n"
-        + "import javax.tools.ToolProvider;",
+            + "import static com.google.common.base.Preconditions.checkNotNull;\n"
+            + "\n"
+            + "import com.google.common.collect.ImmutableList;\n"
+            + "import com.google.common.collect.ImmutableMap;\n"
+            + "import com.sun.source.tree.CompilationUnitTree;\n"
+            + "import com.sun.source.tree.ImportTree;\n"
+            + "import com.sun.tools.javac.tree.JCTree;\n"
+            + "import com.sun.tools.javac.tree.JCTree.JCExpression;\n"
+            + "import java.io.File;\n"
+            + "import java.io.IOException;\n"
+            + "import java.util.Iterator;\n"
+            + "import javax.tools.JavaCompiler;\n"
+            + "import javax.tools.JavaFileObject;\n"
+            + "import javax.tools.StandardJavaFileManager;\n"
+            + "import javax.tools.ToolProvider;\n"
+            + "import org.joda.time.DateTime;\n"
+            + "import org.joda.time.DateTimeZone;\n"
+            + "import org.joda.time.Interval;",
         imports.toString());
   }
 
@@ -350,27 +272,23 @@ public class ImportStatementsTest {
     assertTrue(removed);
     assertEquals(
         "import static com.google.ads.pebl.AdGroupCriterionPredicate.PAUSED;\n"
-        + "import static com.google.common.base.Preconditions.checkNotNull;\n"
-        + "\n"
-        + "import com.google.common.collect.ImmutableList;\n"
-        + "import com.google.common.collect.ImmutableMap;\n"
-        + "\n"
-        + "import com.sun.source.tree.CompilationUnitTree;\n"
-        + "import com.sun.source.tree.ImportTree;\n"
-        + "import com.sun.tools.javac.tree.JCTree.JCExpression;\n"
-        + "\n"
-        + "import org.joda.time.DateTime;\n"
-        + "import org.joda.time.DateTimeZone;\n"
-        + "import org.joda.time.Interval;\n"
-        + "\n"
-        + "import java.io.File;\n"
-        + "import java.io.IOException;\n"
-        + "import java.util.Iterator;\n"
-        + "\n"
-        + "import javax.tools.JavaCompiler;\n"
-        + "import javax.tools.JavaFileObject;\n"
-        + "import javax.tools.StandardJavaFileManager;\n"
-        + "import javax.tools.ToolProvider;",
+            + "import static com.google.common.base.Preconditions.checkNotNull;\n"
+            + "\n"
+            + "import com.google.common.collect.ImmutableList;\n"
+            + "import com.google.common.collect.ImmutableMap;\n"
+            + "import com.sun.source.tree.CompilationUnitTree;\n"
+            + "import com.sun.source.tree.ImportTree;\n"
+            + "import com.sun.tools.javac.tree.JCTree.JCExpression;\n"
+            + "import java.io.File;\n"
+            + "import java.io.IOException;\n"
+            + "import java.util.Iterator;\n"
+            + "import javax.tools.JavaCompiler;\n"
+            + "import javax.tools.JavaFileObject;\n"
+            + "import javax.tools.StandardJavaFileManager;\n"
+            + "import javax.tools.ToolProvider;\n"
+            + "import org.joda.time.DateTime;\n"
+            + "import org.joda.time.DateTimeZone;\n"
+            + "import org.joda.time.Interval;",
         imports.toString());
   }
 
@@ -385,27 +303,55 @@ public class ImportStatementsTest {
         "import static com.google.common.base.Preconditions.checkNotNull",
         "import org.joda.time.Interval"));
 
+    assertTrue(removed);
     assertEquals(
         "import static com.google.ads.pebl.AdGroupCriterionPredicate.PAUSED;\n"
-        + "\n"
-        + "import com.google.common.collect.ImmutableList;\n"
-        + "import com.google.common.collect.ImmutableMap;\n"
-        + "\n"
-        + "import com.sun.source.tree.CompilationUnitTree;\n"
-        + "import com.sun.source.tree.ImportTree;\n"
-        + "import com.sun.tools.javac.tree.JCTree.JCExpression;\n"
-        + "\n"
-        + "import org.joda.time.DateTime;\n"
-        + "import org.joda.time.DateTimeZone;\n"
-        + "\n"
-        + "import java.io.File;\n"
-        + "import java.io.IOException;\n"
-        + "import java.util.Iterator;\n"
-        + "\n"
-        + "import javax.tools.JavaCompiler;\n"
-        + "import javax.tools.JavaFileObject;\n"
-        + "import javax.tools.StandardJavaFileManager;\n"
-        + "import javax.tools.ToolProvider;",
+            + "\n"
+            + "import com.google.common.collect.ImmutableList;\n"
+            + "import com.google.common.collect.ImmutableMap;\n"
+            + "import com.sun.source.tree.CompilationUnitTree;\n"
+            + "import com.sun.source.tree.ImportTree;\n"
+            + "import com.sun.tools.javac.tree.JCTree.JCExpression;\n"
+            + "import java.io.File;\n"
+            + "import java.io.IOException;\n"
+            + "import java.util.Iterator;\n"
+            + "import javax.tools.JavaCompiler;\n"
+            + "import javax.tools.JavaFileObject;\n"
+            + "import javax.tools.StandardJavaFileManager;\n"
+            + "import javax.tools.ToolProvider;\n"
+            + "import org.joda.time.DateTime;\n"
+            + "import org.joda.time.DateTimeZone;",
+        imports.toString());
+  }
+
+  /** Tests that a list of imports with no static imports is handled correctly. */
+  @Test
+  public void noRemainingStaticImports() {
+    ImportStatements imports = new ImportStatements(basePackage, baseImportList, FAKE_END_POS_MAP);
+    boolean removed =
+        imports.removeAll(
+            Arrays.asList(
+                "import static com.google.common.base.Preconditions.checkNotNull",
+                "import static com.google.ads.pebl.AdGroupCriterionPredicate.PAUSED"));
+
+    assertTrue(removed);
+    assertEquals(
+        "import com.google.common.collect.ImmutableList;\n"
+            + "import com.google.common.collect.ImmutableMap;\n"
+            + "import com.sun.source.tree.CompilationUnitTree;\n"
+            + "import com.sun.source.tree.ImportTree;\n"
+            + "import com.sun.tools.javac.tree.JCTree;\n"
+            + "import com.sun.tools.javac.tree.JCTree.JCExpression;\n"
+            + "import java.io.File;\n"
+            + "import java.io.IOException;\n"
+            + "import java.util.Iterator;\n"
+            + "import javax.tools.JavaCompiler;\n"
+            + "import javax.tools.JavaFileObject;\n"
+            + "import javax.tools.StandardJavaFileManager;\n"
+            + "import javax.tools.ToolProvider;\n"
+            + "import org.joda.time.DateTime;\n"
+            + "import org.joda.time.DateTimeZone;\n"
+            + "import org.joda.time.Interval;",
         imports.toString());
   }
 
@@ -420,28 +366,24 @@ public class ImportStatementsTest {
     assertTrue(!removed);
     assertEquals(
         "import static com.google.ads.pebl.AdGroupCriterionPredicate.PAUSED;\n"
-        + "import static com.google.common.base.Preconditions.checkNotNull;\n"
-        + "\n"
-        + "import com.google.common.collect.ImmutableList;\n"
-        + "import com.google.common.collect.ImmutableMap;\n"
-        + "\n"
-        + "import com.sun.source.tree.CompilationUnitTree;\n"
-        + "import com.sun.source.tree.ImportTree;\n"
-        + "import com.sun.tools.javac.tree.JCTree;\n"
-        + "import com.sun.tools.javac.tree.JCTree.JCExpression;\n"
-        + "\n"
-        + "import org.joda.time.DateTime;\n"
-        + "import org.joda.time.DateTimeZone;\n"
-        + "import org.joda.time.Interval;\n"
-        + "\n"
-        + "import java.io.File;\n"
-        + "import java.io.IOException;\n"
-        + "import java.util.Iterator;\n"
-        + "\n"
-        + "import javax.tools.JavaCompiler;\n"
-        + "import javax.tools.JavaFileObject;\n"
-        + "import javax.tools.StandardJavaFileManager;\n"
-        + "import javax.tools.ToolProvider;",
+            + "import static com.google.common.base.Preconditions.checkNotNull;\n"
+            + "\n"
+            + "import com.google.common.collect.ImmutableList;\n"
+            + "import com.google.common.collect.ImmutableMap;\n"
+            + "import com.sun.source.tree.CompilationUnitTree;\n"
+            + "import com.sun.source.tree.ImportTree;\n"
+            + "import com.sun.tools.javac.tree.JCTree;\n"
+            + "import com.sun.tools.javac.tree.JCTree.JCExpression;\n"
+            + "import java.io.File;\n"
+            + "import java.io.IOException;\n"
+            + "import java.util.Iterator;\n"
+            + "import javax.tools.JavaCompiler;\n"
+            + "import javax.tools.JavaFileObject;\n"
+            + "import javax.tools.StandardJavaFileManager;\n"
+            + "import javax.tools.ToolProvider;\n"
+            + "import org.joda.time.DateTime;\n"
+            + "import org.joda.time.DateTimeZone;\n"
+            + "import org.joda.time.Interval;",
         imports.toString());
   }
 

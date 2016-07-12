@@ -45,8 +45,9 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
     "class Foo {",
     "  public static void main(String[] args) {",
     "    System.out.println(\"foo\");",
-    "  }", 
-    "}"};
+    "  }",
+    "}"
+  };
 
   @Before
   public void setUp() {
@@ -80,7 +81,7 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
             "}")
         .inOrder();
   }
-  
+
   @Test
   public void prefixDiff() {
     DescriptionBasedDiff diff = DescriptionBasedDiff.create(compilationUnit);
@@ -138,9 +139,8 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
     assertThat(sourceFile.getLines())
         .containsExactly(
             "package foo.bar;",
-            "import com.google.foo.Bar;",
-            "",
             "import com.foo.Bar;",
+            "import com.google.foo.Bar;",
             "",
             "class Foo {",
             "  public static void main(String[] args) {",
@@ -190,9 +190,8 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
     assertThat(sourceFile.getLines())
         .containsExactly(
             "package foo.bar;",
-            "import com.google.foo.Bar;",
-            "",
             "import com.foo.Bar;",
+            "import com.google.foo.Bar;",
             "",
             "class Foo {",
             "  public static void main(String[] args) {",
