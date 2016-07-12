@@ -19,15 +19,21 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.ONE_OFF;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.isSameType;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
+import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-
+import com.google.errorprone.suppliers.Suppliers;
+import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.Tree.Kind;
 
 @BugPattern(
   category = ONE_OFF,
@@ -40,15 +46,36 @@ import com.sun.source.tree.ExpressionTree;
           + "of the time when one of the strings is a protobuf field.  Additionally, protobuf "
           + "fields cannot be null, so Object.equals(Object) is always more correct."
 )
-public class ProtoStringFieldReferenceEquality extends AbstractReferenceEquality {
+public class ProtoStringFieldReferenceEquality extends BugChecker implements BinaryTreeMatcher {
 
   private static final String PROTO_SUPER_CLASS = "com.google.protobuf.GeneratedMessage";
 
   private static final Matcher<ExpressionTree> PROTO_STRING_METHOD =
-      allOf(instanceMethod().onDescendantOf(PROTO_SUPER_CLASS), isSameType("java.lang.String"));
+      allOf(instanceMethod().onDescendantOf(PROTO_SUPER_CLASS), isSameType(Suppliers.STRING_TYPE));
 
   @Override
-  protected boolean matchArgument(ExpressionTree tree, VisitorState state) {
-    return PROTO_STRING_METHOD.matches(tree, state);
+  public Description matchBinary(BinaryTree tree, VisitorState state) {
+    switch (tree.getKind()) {
+      case EQUAL_TO:
+      case NOT_EQUAL_TO:
+        break;
+      default:
+        return NO_MATCH;
+    }
+    ExpressionTree lhs = tree.getLeftOperand();
+    ExpressionTree rhs = tree.getRightOperand();
+    if (match(lhs, rhs, state) || match(rhs, lhs, state)) {
+      String result =
+          String.format("%s.equals(%s)", state.getSourceForNode(lhs), state.getSourceForNode(rhs));
+      if (tree.getKind() == Kind.NOT_EQUAL_TO) {
+        result = "!" + result;
+      }
+      return describeMatch(tree, SuggestedFix.replace(tree, result));
+    }
+    return NO_MATCH;
+  }
+
+  private boolean match(ExpressionTree a, ExpressionTree b, VisitorState state) {
+    return PROTO_STRING_METHOD.matches(a, state) && b.getKind() != Kind.NULL_LITERAL;
   }
 }
