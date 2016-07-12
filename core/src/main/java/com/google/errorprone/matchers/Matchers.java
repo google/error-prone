@@ -444,15 +444,6 @@ public class Matchers {
    *
    * @param type the type to check against
    */
-  public static <T extends Tree> Matcher<T> isSubtypeOf(Type type) {
-    return new IsSubtypeOf<>(type);
-  }
-
-  /**
-   * Matches an AST node if its type is a subtype of the given type.
-   *
-   * @param type the type to check against
-   */
   public static <T extends Tree> Matcher<T> isSubtypeOf(Supplier<Type> type) {
     return new IsSubtypeOf<>(type);
   }
@@ -465,7 +456,7 @@ public class Matchers {
   public static <T extends Tree> Matcher<T> isSubtypeOf(Class<?> clazz) {
     return new IsSubtypeOf<>(typeFromClass(clazz));
   }
-  
+
   /**
    * Matches an AST node if its type is castable to the given type.
    *
@@ -489,15 +480,6 @@ public class Matchers {
    *
    * @param type the type to check against
    */
-  public static <T extends Tree> Matcher<T> isSameType(Type type) {
-    return new IsSameType<>(type);
-  }
-
-  /**
-   * Matches an AST node if its type is the same as the given type.
-   *
-   * @param type the type to check against
-   */
   public static <T extends Tree> Matcher<T> isSameType(Supplier<Type> type) {
     return new IsSameType<>(type);
   }
@@ -509,15 +491,6 @@ public class Matchers {
    */
   public static <T extends Tree> Matcher<T> isSameType(String typeString) {
     return new IsSameType<>(typeString);
-  }
-
-  /**
-   * Matches an AST node if its type is the same as the type of the given tree.
-   *
-   * @param tree an AST node whose type to check against
-   */
-  public static <T extends Tree> Matcher<T> isSameType(Tree tree) {
-    return new IsSameType<>(tree);
   }
 
   /**
@@ -847,10 +820,6 @@ public class Matchers {
         return returnTypeMatcher.matches(returnTree, state);
       }
     };
-  }
-
-  public static Matcher<MethodTree> methodReturns(final Type returnType) {
-    return methodReturns(isSameType(returnType));
   }
 
   public static Matcher<MethodTree> methodReturns(final Supplier<Type> returnType) {

@@ -34,6 +34,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Attribute.Compound;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Types;
 
 import javax.lang.model.element.TypeElement;
 
@@ -82,7 +83,8 @@ public class AssistedParameters extends BugChecker implements VariableTreeMatche
       // will be iterating through all parameters including the one we're matching.
       int numIdentical = 0;
       for (VariableTree parameter : enclosingMethod.getParameters()) {
-        if (Matchers.<VariableTree>isSameType(variableTree).matches(parameter, state)) {
+        Types types = state.getTypes();
+        if (types.isSameType(ASTHelpers.getType(variableTree), ASTHelpers.getType(parameter))) {
           Compound otherParamsAssisted = null;
           for (Compound c : ASTHelpers.getSymbol(parameter).getAnnotationMirrors()) {
             if (((TypeElement) c.getAnnotationType().asElement())

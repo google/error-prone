@@ -37,14 +37,6 @@ public class IsCastableTo<T extends Tree> extends AbstractTypeMatcher<T> {
     super(typeString);
   }
 
-  public IsCastableTo(Tree tree) {
-    super(tree);
-  }
-
-  public IsCastableTo(Type typeToCompare) {
-    super(typeToCompare);
-  }
-
   @Override
   public boolean matches(T tree, VisitorState state) {
     Types types = state.getTypes();

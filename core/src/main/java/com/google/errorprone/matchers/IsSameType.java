@@ -37,14 +37,6 @@ public class IsSameType<T extends Tree> extends AbstractTypeMatcher<T> {
     super(typeString);
   }
 
-  public IsSameType(Tree tree) {
-    super(tree);
-  }
-
-  public IsSameType(Type typeToCompare) {
-    super(typeToCompare);
-  }
-
   @Override
   public boolean matches(T tree, VisitorState state) {
     Types types = state.getTypes();

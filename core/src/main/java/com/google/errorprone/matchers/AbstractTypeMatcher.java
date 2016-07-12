@@ -16,7 +16,6 @@
 
 package com.google.errorprone.matchers;
 
-import static com.google.errorprone.suppliers.Suppliers.identitySupplier;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 
 import com.google.errorprone.VisitorState;
@@ -24,7 +23,6 @@ import com.google.errorprone.suppliers.Supplier;
 
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.tree.JCTree;
 
 /**
  * Base class for type matchers.
@@ -35,14 +33,6 @@ public abstract class AbstractTypeMatcher<T extends Tree> implements Matcher<T> 
 
   public AbstractTypeMatcher(Supplier<Type> typeToCompareSupplier) {
     this.typeToCompareSupplier = typeToCompareSupplier;
-  }
-
-  public AbstractTypeMatcher(Type typeToCompare) {
-    this(identitySupplier(typeToCompare));
-  }
-
-  public AbstractTypeMatcher(Tree tree) {
-    this(((JCTree) tree).type);
   }
 
   public AbstractTypeMatcher(String typeString) {

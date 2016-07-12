@@ -37,14 +37,6 @@ public class IsSubtypeOf<T extends Tree> extends AbstractTypeMatcher<T> {
     super(typeString);
   }
 
-  public IsSubtypeOf(Tree tree) {
-    super(tree);
-  }
-
-  public IsSubtypeOf(Type typeToCompare) {
-    super(typeToCompare);
-  }
-
   @Override
   public boolean matches(T tree, VisitorState state) {
     Types types = state.getTypes();

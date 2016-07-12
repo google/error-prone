@@ -225,12 +225,13 @@ public class Suppliers {
     };
   }
 
-  public static Supplier<Type> ENCLOSING_CLASS = new Supplier<Type>() {
-      @Override
-      public Type get(VisitorState state) {
-        return ((JCTree) state.findEnclosing(ClassTree.class)).type;
-      }
-    };
+  public static final Supplier<Type> ENCLOSING_CLASS =
+      new Supplier<Type>() {
+        @Override
+        public Type get(VisitorState state) {
+          return ((JCTree) state.findEnclosing(ClassTree.class)).type;
+        }
+      };
 
   public static Supplier<Type> arrayOf(final Supplier<Type> elementType) {
     return new Supplier<Type>() {
