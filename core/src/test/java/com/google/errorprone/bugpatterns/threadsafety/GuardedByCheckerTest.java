@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -1442,6 +1441,24 @@ public class GuardedByCheckerTest {
             "    // BUG: Diagnostic contains: guarded by 't'",
             "    t.f();",
             "  }",
+            "}")
+        .doTest();
+  }
+
+  // regression test for #426
+  @Test
+  public void noSuchMethod() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Foo.java", //
+            "public class Foo {}")
+        .addSourceLines(
+            "Test.java",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "public class Test {",
+            "  Foo foo;",
+            "  // BUG: Diagnostic contains: could not resolve guard",
+            "  @GuardedBy(\"foo.get()\") Object o = null;",
             "}")
         .doTest();
   }
