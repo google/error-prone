@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Google Inc. All Rights Reserved.
+ * Copyright 2016 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,14 +18,16 @@ package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.suppliers.Supplier;
-
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.Types;
-import com.sun.tools.javac.tree.JCTree;
 
 /**
- * @author eaftan@google.com (Eddie Aftandilian)
+ * Matches an AST node if its erased type is the same as the given type, e.g. If the type of the AST
+ * node is {@code HashMap<K,V>} and the given type is {@code HashMap}, then their erased type is the
+ * same.
+ *
+ * @author yanx@google.com (Yan Xie)
  */
 public class IsSameType<T extends Tree> extends AbstractTypeMatcher<T> {
 
@@ -39,9 +41,7 @@ public class IsSameType<T extends Tree> extends AbstractTypeMatcher<T> {
 
   @Override
   public boolean matches(T tree, VisitorState state) {
-    Types types = state.getTypes();
     Type typeToCompare = typeToCompareSupplier.get(state);
-    return (typeToCompare != null &&
-        types.isSameType(((JCTree) tree).type, typeToCompare));
+    return ASTHelpers.isSameType(ASTHelpers.getType(tree), typeToCompare, state);
   }
 }

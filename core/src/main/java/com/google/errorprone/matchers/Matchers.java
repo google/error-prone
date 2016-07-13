@@ -29,7 +29,6 @@ import com.google.errorprone.matchers.method.MethodMatchers.InstanceMethodMatche
 import com.google.errorprone.matchers.method.MethodMatchers.StaticMethodMatcher;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssertTree;
 import com.sun.source.tree.AssignmentTree;
@@ -64,14 +63,12 @@ import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import com.sun.tools.javac.tree.TreeInfo;
-
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
-
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
@@ -475,27 +472,22 @@ public class Matchers {
     return new IsCastableTo<>(typeSupplier);
   }
 
-  /**
-   * Matches an AST node if its type is the same as the given type.
-   *
-   * @param type the type to check against
-   */
+  /** Matches an AST node if it has the same erased type as the given type. */
   public static <T extends Tree> Matcher<T> isSameType(Supplier<Type> type) {
     return new IsSameType<>(type);
   }
 
-  /**
-   * Matches an AST node if its type is the same as the given type.
-   *
-   * @param typeString the type to check against
-   */
+  /** Matches an AST node if it has the same erased type as the given type. */
   public static <T extends Tree> Matcher<T> isSameType(String typeString) {
     return new IsSameType<>(typeString);
   }
 
-  /**
-   * Matches an AST node if its type is an array type.
-   */
+  /** Matches an AST node if it has the same erased type as the given class. */
+  public static <T extends Tree> Matcher<T> isSameType(Class<?> clazz) {
+    return new IsSameType<>(typeFromClass(clazz));
+  }
+
+  /** Matches an AST node if its type is an array type. */
   public static <T extends Tree> Matcher<T> isArrayType() {
     return new Matcher<T>() {
       @Override public boolean matches(Tree t, VisitorState state) {
@@ -1365,32 +1357,5 @@ public class Matchers {
         return methodTree.getParameters().size() == arity;
       }
     };
-  }
-
-  /**
-   * Matches an AST node if its erased type is the same as the given type.
-   *
-   * @param typeStr a string representation of the type, e.g., "java.util.AbstractList"
-   */
-  public static <T extends Tree> Matcher<T> isSameErasedType(String typeStr) {
-    return new IsSameErasedType<>(typeStr);
-  }
-
-  /**
-   * Matches an AST node if its erased type is the same as the given type.
-   *
-   * @param type the type to check against.
-   */
-  public static <T extends Tree> Matcher<T> isSameErasedType(Supplier<Type> type) {
-    return new IsSameErasedType<>(type);
-  }
-
-  /**
-   * Matches an AST node if its erased type is the same as the given type.
-   *
-   * @param clazz a class representation of the type, e.g., Action.class.
-   */
-  public static <T extends Tree> Matcher<T> isSameErasedType(Class<?> clazz) {
-    return new IsSameErasedType<>(typeFromClass(clazz));
   }
 }
