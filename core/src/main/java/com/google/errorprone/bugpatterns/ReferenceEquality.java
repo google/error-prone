@@ -24,10 +24,10 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.tools.javac.code.Scope.WriteableScope;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
@@ -99,7 +99,11 @@ public class ReferenceEquality extends AbstractReferenceEquality {
       if (ASTHelpers.isSameType(sup, objectType, state)) {
         return false;
       }
-      for (Symbol sym : sup.tsym.members().getSymbolsByName(equalsName)) {
+      WriteableScope scope = sup.tsym.members();
+      if (scope == null) {
+        continue;
+      }
+      for (Symbol sym : scope.getSymbolsByName(equalsName)) {
         if (sym.overrides(objectEquals, type.tsym, state.getTypes(), false)) {
           return true;
         }

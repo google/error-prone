@@ -18,13 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.common.io.ByteStreams;
 import com.google.errorprone.CompilationTestHelper;
-
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -32,6 +25,11 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /** {@link ReferenceEquality}Test */
 @RunWith(JUnit4.class)
@@ -321,5 +319,26 @@ public class ReferenceEqualityTest {
       jos.putNextEntry(new JarEntry(entryPath));
       ByteStreams.copy(is, jos);
     }
+  }
+
+  // regression test for #423
+  @Test
+  public void typaram() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test<T extends String, X> {",
+            "  boolean f(T t) {",
+            "    return t == null;",
+            "  }",
+            "  boolean g(T t1, T t2) {",
+            "    // BUG: Diagnostic contains:",
+            "    return t1 == t2;",
+            "  }",
+            "  boolean g(X x1, X x2) {",
+            "    return x1 == x2;",
+            "  }",
+            "}")
+        .doTest();
   }
 }
