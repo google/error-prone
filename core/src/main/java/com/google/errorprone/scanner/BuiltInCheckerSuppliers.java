@@ -269,6 +269,7 @@ public class BuiltInCheckerSuppliers {
   /** A list of all checks with severity WARNING that are on by default. */
   public static final ImmutableSet<BugCheckerInfo> ENABLED_WARNINGS =
       getSuppliers(
+          ArraysAsListPrimitiveArray.class,
           BadAnnotationImplementation.class,
           BadComparable.class,
           BoxedPrimitiveConstructor.class,
@@ -314,7 +315,6 @@ public class BuiltInCheckerSuppliers {
   /** A list of all checks that are off by default. */
   public static final ImmutableSet<BugCheckerInfo> DISABLED_CHECKS =
       getSuppliers(
-          ArraysAsListPrimitiveArray.class,
           AssertFalse.class,
           AssistedInjectAndInjectOnConstructors.class,
           AssistedInjectAndInjectOnSameConstructor.class,

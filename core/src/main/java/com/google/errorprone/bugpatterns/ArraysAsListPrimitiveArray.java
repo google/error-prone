@@ -17,8 +17,8 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
@@ -52,8 +52,8 @@ import javax.lang.model.type.TypeKind;
           + "list containing the primitive array, use Collections.singletonList to "
           + "make your intent clearer.",
   category = JDK,
-  severity = ERROR,
-  maturity = EXPERIMENTAL
+  severity = WARNING,
+  maturity = MATURE
 )
 public class ArraysAsListPrimitiveArray extends BugChecker implements MethodInvocationTreeMatcher {
 
