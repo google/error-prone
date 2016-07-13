@@ -3,7 +3,7 @@ title: SelfEquals
 summary: An object is tested for equality to itself
 layout: bugpattern
 category: JDK
-severity: ERROR
+severity: WARNING
 maturity: MATURE
 ---
 

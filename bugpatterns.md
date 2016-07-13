@@ -32,6 +32,9 @@ Mockito cannot mock final classes
 __[ClassNewInstance](bugpattern/ClassNewInstance)__<br>
 Class.newInstance() bypasses exception checking; prefer getConstructor().newInstance()
 
+__[DefaultCharset](bugpattern/DefaultCharset)__<br>
+Implicit use of the platform default charset, which can result in e.g. non-ASCII characters being silently replaced with &#39;?&#39; in many environments
+
 __[DoubleCheckedLocking](bugpattern/DoubleCheckedLocking)__<br>
 Double-checked locking on non-volatile fields is unsafe
 
@@ -55,6 +58,9 @@ Calling getClass() on an enum may return a subclass of the enum type
 
 __[IncompatibleModifiers](bugpattern/IncompatibleModifiers)__<br>
 This annotation has incompatible modifiers as specified by its @IncompatibleModifiers annotation
+
+__[InfiniteRecursion](bugpattern/InfiniteRecursion)__<br>
+This method always recurses, and will cause a StackOverflowError
 
 __[InsecureCipherMode](bugpattern/InsecureCipherMode)__<br>
 Cipher.getInstance() is invoked using either the default settings or ECB mode
@@ -110,8 +116,8 @@ Comparison using reference equality instead of value equality
 __[RequiredModifiers](bugpattern/RequiredModifiers)__<br>
 This annotation is missing required modifiers as specified by its @RequiredModifiers annotation
 
-__[SelfComparison](bugpattern/SelfComparison)__<br>
-An object is compared to itself
+__[SelfEquals](bugpattern/SelfEquals)__<br>
+An object is tested for equality to itself
 
 __[StaticAccessedFromInstance](bugpattern/StaticAccessedFromInstance)__<br>
 A static variable or method should not be accessed from an object instance
@@ -282,8 +288,8 @@ Return value of this method must be used
 __[SelfAssignment](bugpattern/SelfAssignment)__<br>
 Variable assigned to itself
 
-__[SelfEquals](bugpattern/SelfEquals)__<br>
-An object is tested for equality to itself
+__[SelfComparison](bugpattern/SelfComparison)__<br>
+An object is compared to itself
 
 __[SizeGreaterThanOrEqualsZero](bugpattern/SizeGreaterThanOrEqualsZero)__<br>
 Comparison of a size &gt;= 0 is always true, did you intend to check for non-emptiness?

@@ -111,9 +111,9 @@ var activeTableTab = "activeTableTab";
 <br>
 <pre>public class <span class="typeNameLabel">ImportStatements</span>
 extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></pre>
-<div class="block">Represents a list of import statements.  Supports adding and removing 
- import statements and pretty printing the result as source code.  Correctly
- sorts the imports according to Google Java Style Guide rules.</div>
+<div class="block">Represents a list of import statements. Supports adding and removing import statements and pretty
+ printing the result as source code. Correctly sorts the imports according to Google Java Style
+ Guide rules.</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
 <dd>eaftan@google.com (Eddie Aftandilian)</dd>
@@ -198,7 +198,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/apply/ImportStatements.html#toString--">toString</a></span>()</code>
-<div class="block">Returns a string representation of the imports, as proper Java code.</div>
+<div class="block">Returns a string representation of the imports as Java code in proper Google Java Style.</div>
 </td>
 </tr>
 </table>
@@ -278,8 +278,8 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <li class="blockList">
 <h4>add</h4>
 <pre>public&nbsp;boolean&nbsp;add(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;importToAdd)</pre>
-<div class="block">Add an import to the list of imports. If the import is already in the 
- list, does nothing. The import should be of the form "import foo.bar".</div>
+<div class="block">Add an import to the list of imports. If the import is already in the list, does nothing. The
+ import should be of the form "import foo.bar".</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>importToAdd</code> - a string representation of the import to add</dd>
@@ -295,8 +295,8 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <li class="blockList">
 <h4>addAll</h4>
 <pre>public&nbsp;boolean&nbsp;addAll(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util">Collection</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;importsToAdd)</pre>
-<div class="block">Add all imports in a collection to this list of imports. Does not add 
- any imports that are already in the list.</div>
+<div class="block">Add all imports in a collection to this list of imports. Does not add any imports that are
+ already in the list.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>importsToAdd</code> - a collection of imports to add</dd>
@@ -312,8 +312,8 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <li class="blockList">
 <h4>remove</h4>
 <pre>public&nbsp;boolean&nbsp;remove(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;importToRemove)</pre>
-<div class="block">Remove an import from the list of imports. If the import is not in the
- list, does nothing. The import should be of the form "import foo.bar".</div>
+<div class="block">Remove an import from the list of imports. If the import is not in the list, does nothing. The
+ import should be of the form "import foo.bar".</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>importToRemove</code> - a string representation of the import to remove</dd>
@@ -329,8 +329,8 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <li class="blockList">
 <h4>removeAll</h4>
 <pre>public&nbsp;boolean&nbsp;removeAll(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util">Collection</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;importsToRemove)</pre>
-<div class="block">Removes all imports in a collection to this list of imports. Does not
- remove any imports that are not in the list.</div>
+<div class="block">Removes all imports in a collection to this list of imports. Does not remove any imports that
+ are not in the list.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>importsToRemove</code> - a collection of imports to remove</dd>
@@ -346,9 +346,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <li class="blockList">
 <h4>toString</h4>
 <pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;toString()</pre>
-<div class="block">Returns a string representation of the imports, as proper Java code.
- Includes newlines in the correct places as defined by the Google
- Java Style Guide.</div>
+<div class="block">Returns a string representation of the imports as Java code in proper Google Java Style.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
 <dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#toString--" title="class or interface in java.lang">toString</a></code>&nbsp;in class&nbsp;<code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></code></dd>

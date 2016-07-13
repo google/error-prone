@@ -113,7 +113,7 @@ var activeTableTab = "activeTableTab";
 </dl>
 <dl>
 <dt>Direct Known Subclasses:</dt>
-<dd><a href="../../../../com/google/errorprone/matchers/IsCastableTo.html" title="class in com.google.errorprone.matchers">IsCastableTo</a>, <a href="../../../../com/google/errorprone/matchers/IsSameType.html" title="class in com.google.errorprone.matchers">IsSameType</a>, <a href="../../../../com/google/errorprone/matchers/IsSubtypeOf.html" title="class in com.google.errorprone.matchers">IsSubtypeOf</a></dd>
+<dd><a href="../../../../com/google/errorprone/matchers/IsCastableTo.html" title="class in com.google.errorprone.matchers">IsCastableTo</a>, <a href="../../../../com/google/errorprone/matchers/IsSameErasedType.html" title="class in com.google.errorprone.matchers">IsSameErasedType</a>, <a href="../../../../com/google/errorprone/matchers/IsSameType.html" title="class in com.google.errorprone.matchers">IsSameType</a>, <a href="../../../../com/google/errorprone/matchers/IsSubtypeOf.html" title="class in com.google.errorprone.matchers">IsSubtypeOf</a></dd>
 </dl>
 <hr>
 <br>
@@ -166,12 +166,6 @@ implements <a href="../../../../com/google/errorprone/matchers/Matcher.html" tit
 </tr>
 <tr class="rowColor">
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/AbstractTypeMatcher.html#AbstractTypeMatcher-com.google.errorprone.suppliers.Supplier-">AbstractTypeMatcher</a></span>(<a href="../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;typeToCompareSupplier)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/AbstractTypeMatcher.html#AbstractTypeMatcher-com.sun.source.tree.Tree-">AbstractTypeMatcher</a></span>(com.sun.source.tree.Tree&nbsp;tree)</code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/AbstractTypeMatcher.html#AbstractTypeMatcher-com.sun.tools.javac.code.Type-">AbstractTypeMatcher</a></span>(com.sun.tools.javac.code.Type&nbsp;typeToCompare)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -239,24 +233,6 @@ implements <a href="../../../../com/google/errorprone/matchers/Matcher.html" tit
 <li class="blockList">
 <h4>AbstractTypeMatcher</h4>
 <pre>public&nbsp;AbstractTypeMatcher(<a href="../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;typeToCompareSupplier)</pre>
-</li>
-</ul>
-<a name="AbstractTypeMatcher-com.sun.tools.javac.code.Type-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>AbstractTypeMatcher</h4>
-<pre>public&nbsp;AbstractTypeMatcher(com.sun.tools.javac.code.Type&nbsp;typeToCompare)</pre>
-</li>
-</ul>
-<a name="AbstractTypeMatcher-com.sun.source.tree.Tree-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>AbstractTypeMatcher</h4>
-<pre>public&nbsp;AbstractTypeMatcher(com.sun.source.tree.Tree&nbsp;tree)</pre>
 </li>
 </ul>
 <a name="AbstractTypeMatcher-java.lang.String-">

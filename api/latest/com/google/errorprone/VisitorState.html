@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -270,10 +270,16 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getTypes--">getTypes</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i17" class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#isAndroidCompatible--">isAndroidCompatible</a></span>()</code>
+<div class="block">Returns true if the compilation is targeting Android.</div>
+</td>
+</tr>
+<tr id="i18" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#reportMatch-com.google.errorprone.matchers.Description-">reportMatch</a></span>(<a href="../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;description)</code>&nbsp;</td>
 </tr>
-<tr id="i18" class="altColor">
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code><a href="../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#withPath-com.sun.source.util.TreePath-">withPath</a></span>(com.sun.source.util.TreePath&nbsp;path)</code>&nbsp;</td>
 </tr>
@@ -575,7 +581,7 @@ public final&nbsp;&lt;T extends com.sun.source.tree.Tree&gt;&nbsp;T&nbsp;findEnc
 <a name="getEndPosition-com.sun.tools.javac.tree.JCTree-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getEndPosition</h4>
 <pre>public&nbsp;int&nbsp;getEndPosition(com.sun.tools.javac.tree.JCTree&nbsp;node)</pre>
@@ -584,6 +590,16 @@ public final&nbsp;&lt;T extends com.sun.source.tree.Tree&gt;&nbsp;T&nbsp;findEnc
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the end position of the node, or -1 if it is not available</dd>
 </dl>
+</li>
+</ul>
+<a name="isAndroidCompatible--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>isAndroidCompatible</h4>
+<pre>public&nbsp;boolean&nbsp;isAndroidCompatible()</pre>
+<div class="block">Returns true if the compilation is targeting Android.</div>
 </li>
 </ul>
 </li>

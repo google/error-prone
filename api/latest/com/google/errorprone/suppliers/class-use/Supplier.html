@@ -144,17 +144,23 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static &lt;T extends com.sun.source.tree.Tree&gt;<br><a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</code></td>
+<td class="colLast"><span class="typeNameLabel">Matchers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/Matchers.html#isSameErasedType-com.google.errorprone.suppliers.Supplier-">isSameErasedType</a></span>(<a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;type)</code>
+<div class="block">Matches an AST node if its erased type is the same as the given type.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static &lt;T extends com.sun.source.tree.Tree&gt;<br><a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">Matchers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/Matchers.html#isSameType-com.google.errorprone.suppliers.Supplier-">isSameType</a></span>(<a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;type)</code>
 <div class="block">Matches an AST node if its type is the same as the given type.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static &lt;T extends com.sun.source.tree.Tree&gt;<br><a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">Matchers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/Matchers.html#isSubtypeOf-com.google.errorprone.suppliers.Supplier-">isSubtypeOf</a></span>(<a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;type)</code>
 <div class="block">Matches an AST node if its type is a subtype of the given type.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodTree&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">Matchers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/Matchers.html#methodReturns-com.google.errorprone.suppliers.Supplier-">methodReturns</a></span>(<a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;returnType)</code>&nbsp;</td>
 </tr>
@@ -173,9 +179,12 @@
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/IsCastableTo.html#IsCastableTo-com.google.errorprone.suppliers.Supplier-">IsCastableTo</a></span>(<a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;typeToCompareSupplier)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/IsSameType.html#IsSameType-com.google.errorprone.suppliers.Supplier-">IsSameType</a></span>(<a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;typeToCompareSupplier)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/IsSameErasedType.html#IsSameErasedType-com.google.errorprone.suppliers.Supplier-">IsSameErasedType</a></span>(<a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;typeToCompareSupplier)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/IsSameType.html#IsSameType-com.google.errorprone.suppliers.Supplier-">IsSameType</a></span>(<a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;typeToCompareSupplier)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/IsSubtypeOf.html#IsSubtypeOf-com.google.errorprone.suppliers.Supplier-">IsSubtypeOf</a></span>(<a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;typeToCompareSupplier)</code>&nbsp;</td>
 </tr>
 </tbody>
@@ -218,6 +227,21 @@
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></code></td>
 <td class="colLast"><span class="typeNameLabel">MethodMatchers.InstanceMethodMatcher.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.InstanceMethodMatcher.html#onExactClass-com.google.errorprone.suppliers.Supplier-">onExactClass</a></span>(<a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;classType)</code>
 <div class="block">Match on the given type exactly.</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
+<caption><span>Method parameters in <a href="../../../../../com/google/errorprone/matchers/method/package-summary.html">com.google.errorprone.matchers.method</a> with type arguments of type <a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.ParameterMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.ParameterMatcher</a></code></td>
+<td class="colLast"><span class="typeNameLabel">MethodMatchers.ConstructorClassMatcher.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.ConstructorClassMatcher.html#withParameters-java.lang.Iterable-">withParameters</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang">Iterable</a>&lt;<a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&gt;&nbsp;parameters)</code>
+<div class="block">Match constructors whose formal parameters have the given types.</div>
 </td>
 </tr>
 </tbody>
@@ -337,6 +361,14 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;</code></td>
+<td class="colLast"><span class="typeNameLabel">Suppliers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/suppliers/Suppliers.html#BYTE_TYPE">BYTE_TYPE</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;</code></td>
+<td class="colLast"><span class="typeNameLabel">Suppliers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/suppliers/Suppliers.html#CHAR_TYPE">CHAR_TYPE</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">Suppliers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/suppliers/Suppliers.html#ENCLOSING_CLASS">ENCLOSING_CLASS</a></span></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
@@ -361,6 +393,10 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;</code></td>
+<td class="colLast"><span class="typeNameLabel">Suppliers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/suppliers/Suppliers.html#STRING_TYPE">STRING_TYPE</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">Suppliers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/suppliers/Suppliers.html#VOID_TYPE">VOID_TYPE</a></span></code>&nbsp;</td>
 </tr>
 </tbody>
@@ -374,47 +410,64 @@
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;</code></td>
+<td class="colLast"><span class="typeNameLabel">Suppliers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/suppliers/Suppliers.html#arrayOf-com.google.errorprone.suppliers.Supplier-">arrayOf</a></span>(<a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;elementType)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">Suppliers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/suppliers/Suppliers.html#genericTypeOf-com.google.errorprone.suppliers.Supplier-int-">genericTypeOf</a></span>(<a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;expressionSupplier,
              int&nbsp;n)</code>
 <div class="block">Supplies the n'th generic type of the given expression.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">Suppliers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/suppliers/Suppliers.html#genericTypeOfType-com.google.errorprone.suppliers.Supplier-int-">genericTypeOfType</a></span>(<a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;typeSupplier,
                  int&nbsp;n)</code>
 <div class="block">Supplies the n'th generic type of the given expression.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static &lt;T&gt;&nbsp;<a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;T&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">Suppliers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/suppliers/Suppliers.html#identitySupplier-T-">identitySupplier</a></span>(T&nbsp;toSupply)</code>
 <div class="block">Supplies what was given.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.source.tree.ExpressionTree&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">Suppliers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/suppliers/Suppliers.html#receiverInstance--">receiverInstance</a></span>()</code>
 <div class="block">Supplies the expression which gives the instance of an object that will receive the method call.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">Suppliers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/suppliers/Suppliers.html#receiverType--">receiverType</a></span>()</code>
 <div class="block">Supplies the expression which gives the instance of an object that will receive the method call.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">Suppliers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/suppliers/Suppliers.html#typeFromClass-java.lang.Class-">typeFromClass</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;&nbsp;inputClass)</code>
 <div class="block">Given the class representation of a type, supplies the corresponding type.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">Suppliers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/suppliers/Suppliers.html#typeFromString-java.lang.String-">typeFromString</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;typeString)</code>
 <div class="block">Given the string representation of a type, supplies the corresponding type.</div>
 </td>
+</tr>
+</tbody>
+</table>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
+<caption><span>Methods in <a href="../../../../../com/google/errorprone/suppliers/package-summary.html">com.google.errorprone.suppliers</a> that return types with arguments of type <a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>static com.google.common.collect.ImmutableList&lt;<a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&gt;</code></td>
+<td class="colLast"><span class="typeNameLabel">Suppliers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/suppliers/Suppliers.html#fromStrings-java.lang.Iterable-">fromStrings</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang">Iterable</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;types)</code>&nbsp;</td>
 </tr>
 </tbody>
 </table>
@@ -427,12 +480,16 @@
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;</code></td>
+<td class="colLast"><span class="typeNameLabel">Suppliers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/suppliers/Suppliers.html#arrayOf-com.google.errorprone.suppliers.Supplier-">arrayOf</a></span>(<a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;elementType)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">Suppliers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/suppliers/Suppliers.html#genericTypeOf-com.google.errorprone.suppliers.Supplier-int-">genericTypeOf</a></span>(<a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;expressionSupplier,
              int&nbsp;n)</code>
 <div class="block">Supplies the n'th generic type of the given expression.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">Suppliers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/suppliers/Suppliers.html#genericTypeOfType-com.google.errorprone.suppliers.Supplier-int-">genericTypeOfType</a></span>(<a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;typeSupplier,
                  int&nbsp;n)</code>

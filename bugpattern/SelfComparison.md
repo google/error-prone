@@ -3,7 +3,7 @@ title: SelfComparison
 summary: An object is compared to itself
 layout: bugpattern
 category: JDK
-severity: WARNING
+severity: ERROR
 maturity: MATURE
 ---
 

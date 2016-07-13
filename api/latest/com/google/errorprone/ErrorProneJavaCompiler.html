@@ -18,12 +18,6 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
-var altColor = "altColor";
-var rowColor = "rowColor";
-var tableTab = "tableTab";
-var activeTableTab = "activeTableTab";
 </script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
@@ -77,13 +71,13 @@ var activeTableTab = "activeTableTab";
 <li>Nested&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
-<li><a href="#method.summary">Method</a></li>
+<li><a href="#methods.inherited.from.class.com.google.errorprone.BaseErrorProneJavaCompiler">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
-<li><a href="#method.detail">Method</a></li>
+<li>Method</li>
 </ul>
 </div>
 <a name="skip.navbar.top">
@@ -100,7 +94,12 @@ var activeTableTab = "activeTableTab";
 <li><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">java.lang.Object</a></li>
 <li>
 <ul class="inheritance">
+<li><a href="../../../com/google/errorprone/BaseErrorProneJavaCompiler.html" title="class in com.google.errorprone">com.google.errorprone.BaseErrorProneJavaCompiler</a></li>
+<li>
+<ul class="inheritance">
 <li>com.google.errorprone.ErrorProneJavaCompiler</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -114,9 +113,10 @@ var activeTableTab = "activeTableTab";
 <hr>
 <br>
 <pre>public class <span class="typeNameLabel">ErrorProneJavaCompiler</span>
-extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>
-implements <a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/JavaCompiler.html?is-external=true" title="class or interface in javax.tools">JavaCompiler</a></pre>
-<div class="block">An error-prone compiler that implements <a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/JavaCompiler.html?is-external=true" title="class or interface in javax.tools"><code>JavaCompiler</code></a>.</div>
+extends <a href="../../../com/google/errorprone/BaseErrorProneJavaCompiler.html" title="class in com.google.errorprone">BaseErrorProneJavaCompiler</a></pre>
+<div class="block">An Error Prone compiler that implements <a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/JavaCompiler.html?is-external=true" title="class or interface in javax.tools"><code>JavaCompiler</code></a>.
+
+ <p>Runs all built-in checks by default.</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
 <dd>nik</dd>
@@ -168,43 +168,13 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/JavaCom
 <!--   -->
 </a>
 <h3>Method Summary</h3>
-<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colLast" scope="col">Method and Description</th>
-</tr>
-<tr id="i0" class="altColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/javax/lang/model/SourceVersion.html?is-external=true" title="class or interface in javax.lang.model">SourceVersion</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneJavaCompiler.html#getSourceVersions--">getSourceVersions</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i1" class="rowColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/StandardJavaFileManager.html?is-external=true" title="class or interface in javax.tools">StandardJavaFileManager</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneJavaCompiler.html#getStandardFileManager-javax.tools.DiagnosticListener-java.util.Locale-java.nio.charset.Charset-">getStandardFileManager</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/DiagnosticListener.html?is-external=true" title="class or interface in javax.tools">DiagnosticListener</a>&lt;? super <a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/JavaFileObject.html?is-external=true" title="class or interface in javax.tools">JavaFileObject</a>&gt;&nbsp;diagnosticListener,
-                      <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Locale.html?is-external=true" title="class or interface in java.util">Locale</a>&nbsp;locale,
-                      <a href="http://docs.oracle.com/javase/7/docs/api/java/nio/charset/Charset.html?is-external=true" title="class or interface in java.nio.charset">Charset</a>&nbsp;charset)</code>&nbsp;</td>
-</tr>
-<tr id="i2" class="altColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/JavaCompiler.CompilationTask.html?is-external=true" title="class or interface in javax.tools">JavaCompiler.CompilationTask</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneJavaCompiler.html#getTask-java.io.Writer-javax.tools.JavaFileManager-javax.tools.DiagnosticListener-java.lang.Iterable-java.lang.Iterable-java.lang.Iterable-">getTask</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/io/Writer.html?is-external=true" title="class or interface in java.io">Writer</a>&nbsp;out,
-       <a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/JavaFileManager.html?is-external=true" title="class or interface in javax.tools">JavaFileManager</a>&nbsp;fileManager,
-       <a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/DiagnosticListener.html?is-external=true" title="class or interface in javax.tools">DiagnosticListener</a>&lt;? super <a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/JavaFileObject.html?is-external=true" title="class or interface in javax.tools">JavaFileObject</a>&gt;&nbsp;diagnosticListener,
-       <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang">Iterable</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;options,
-       <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang">Iterable</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;classes,
-       <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang">Iterable</a>&lt;? extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/JavaFileObject.html?is-external=true" title="class or interface in javax.tools">JavaFileObject</a>&gt;&nbsp;compilationUnits)</code>&nbsp;</td>
-</tr>
-<tr id="i3" class="rowColor">
-<td class="colFirst"><code>int</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneJavaCompiler.html#isSupportedOption-java.lang.String-">isSupportedOption</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;option)</code>&nbsp;</td>
-</tr>
-<tr id="i4" class="altColor">
-<td class="colFirst"><code>int</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneJavaCompiler.html#run-java.io.InputStream-java.io.OutputStream-java.io.OutputStream-java.lang.String...-">run</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/io/InputStream.html?is-external=true" title="class or interface in java.io">InputStream</a>&nbsp;in,
-   <a href="http://docs.oracle.com/javase/7/docs/api/java/io/OutputStream.html?is-external=true" title="class or interface in java.io">OutputStream</a>&nbsp;out,
-   <a href="http://docs.oracle.com/javase/7/docs/api/java/io/OutputStream.html?is-external=true" title="class or interface in java.io">OutputStream</a>&nbsp;err,
-   <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>...&nbsp;arguments)</code>&nbsp;</td>
-</tr>
-</table>
+<ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.com.google.errorprone.BaseErrorProneJavaCompiler">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;com.google.errorprone.<a href="../../../com/google/errorprone/BaseErrorProneJavaCompiler.html" title="class in com.google.errorprone">BaseErrorProneJavaCompiler</a></h3>
+<code><a href="../../../com/google/errorprone/BaseErrorProneJavaCompiler.html#getSourceVersions--">getSourceVersions</a>, <a href="../../../com/google/errorprone/BaseErrorProneJavaCompiler.html#getStandardFileManager-javax.tools.DiagnosticListener-java.util.Locale-java.nio.charset.Charset-">getStandardFileManager</a>, <a href="../../../com/google/errorprone/BaseErrorProneJavaCompiler.html#getTask-java.io.Writer-javax.tools.JavaFileManager-javax.tools.DiagnosticListener-java.lang.Iterable-java.lang.Iterable-java.lang.Iterable-">getTask</a>, <a href="../../../com/google/errorprone/BaseErrorProneJavaCompiler.html#isSupportedOption-java.lang.String-">isSupportedOption</a>, <a href="../../../com/google/errorprone/BaseErrorProneJavaCompiler.html#run-java.io.InputStream-java.io.OutputStream-java.io.OutputStream-java.lang.String...-">run</a></code></li>
+</ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
 <!--   -->
@@ -242,89 +212,6 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/JavaCom
 <li class="blockList">
 <h4>ErrorProneJavaCompiler</h4>
 <pre>public&nbsp;ErrorProneJavaCompiler(<a href="../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a>&nbsp;scannerSupplier)</pre>
-</li>
-</ul>
-</li>
-</ul>
-<!-- ============ METHOD DETAIL ========== -->
-<ul class="blockList">
-<li class="blockList"><a name="method.detail">
-<!--   -->
-</a>
-<h3>Method Detail</h3>
-<a name="getTask-java.io.Writer-javax.tools.JavaFileManager-javax.tools.DiagnosticListener-java.lang.Iterable-java.lang.Iterable-java.lang.Iterable-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getTask</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/JavaCompiler.CompilationTask.html?is-external=true" title="class or interface in javax.tools">JavaCompiler.CompilationTask</a>&nbsp;getTask(<a href="http://docs.oracle.com/javase/7/docs/api/java/io/Writer.html?is-external=true" title="class or interface in java.io">Writer</a>&nbsp;out,
-                                            <a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/JavaFileManager.html?is-external=true" title="class or interface in javax.tools">JavaFileManager</a>&nbsp;fileManager,
-                                            <a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/DiagnosticListener.html?is-external=true" title="class or interface in javax.tools">DiagnosticListener</a>&lt;? super <a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/JavaFileObject.html?is-external=true" title="class or interface in javax.tools">JavaFileObject</a>&gt;&nbsp;diagnosticListener,
-                                            <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang">Iterable</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;options,
-                                            <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang">Iterable</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;classes,
-                                            <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang">Iterable</a>&lt;? extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/JavaFileObject.html?is-external=true" title="class or interface in javax.tools">JavaFileObject</a>&gt;&nbsp;compilationUnits)</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/JavaCompiler.html?is-external=true#getTask-java.io.Writer-javax.tools.JavaFileManager-javax.tools.DiagnosticListener-java.lang.Iterable-java.lang.Iterable-java.lang.Iterable-" title="class or interface in javax.tools">getTask</a></code>&nbsp;in interface&nbsp;<code><a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/JavaCompiler.html?is-external=true" title="class or interface in javax.tools">JavaCompiler</a></code></dd>
-</dl>
-</li>
-</ul>
-<a name="getStandardFileManager-javax.tools.DiagnosticListener-java.util.Locale-java.nio.charset.Charset-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getStandardFileManager</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/StandardJavaFileManager.html?is-external=true" title="class or interface in javax.tools">StandardJavaFileManager</a>&nbsp;getStandardFileManager(<a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/DiagnosticListener.html?is-external=true" title="class or interface in javax.tools">DiagnosticListener</a>&lt;? super <a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/JavaFileObject.html?is-external=true" title="class or interface in javax.tools">JavaFileObject</a>&gt;&nbsp;diagnosticListener,
-                                                      <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Locale.html?is-external=true" title="class or interface in java.util">Locale</a>&nbsp;locale,
-                                                      <a href="http://docs.oracle.com/javase/7/docs/api/java/nio/charset/Charset.html?is-external=true" title="class or interface in java.nio.charset">Charset</a>&nbsp;charset)</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/JavaCompiler.html?is-external=true#getStandardFileManager-javax.tools.DiagnosticListener-java.util.Locale-java.nio.charset.Charset-" title="class or interface in javax.tools">getStandardFileManager</a></code>&nbsp;in interface&nbsp;<code><a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/JavaCompiler.html?is-external=true" title="class or interface in javax.tools">JavaCompiler</a></code></dd>
-</dl>
-</li>
-</ul>
-<a name="isSupportedOption-java.lang.String-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>isSupportedOption</h4>
-<pre>public&nbsp;int&nbsp;isSupportedOption(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;option)</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/OptionChecker.html?is-external=true#isSupportedOption-java.lang.String-" title="class or interface in javax.tools">isSupportedOption</a></code>&nbsp;in interface&nbsp;<code><a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/OptionChecker.html?is-external=true" title="class or interface in javax.tools">OptionChecker</a></code></dd>
-</dl>
-</li>
-</ul>
-<a name="run-java.io.InputStream-java.io.OutputStream-java.io.OutputStream-java.lang.String...-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>run</h4>
-<pre>public&nbsp;int&nbsp;run(<a href="http://docs.oracle.com/javase/7/docs/api/java/io/InputStream.html?is-external=true" title="class or interface in java.io">InputStream</a>&nbsp;in,
-               <a href="http://docs.oracle.com/javase/7/docs/api/java/io/OutputStream.html?is-external=true" title="class or interface in java.io">OutputStream</a>&nbsp;out,
-               <a href="http://docs.oracle.com/javase/7/docs/api/java/io/OutputStream.html?is-external=true" title="class or interface in java.io">OutputStream</a>&nbsp;err,
-               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>...&nbsp;arguments)</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/Tool.html?is-external=true#run-java.io.InputStream-java.io.OutputStream-java.io.OutputStream-java.lang.String...-" title="class or interface in javax.tools">run</a></code>&nbsp;in interface&nbsp;<code><a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/Tool.html?is-external=true" title="class or interface in javax.tools">Tool</a></code></dd>
-</dl>
-</li>
-</ul>
-<a name="getSourceVersions--">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>getSourceVersions</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/javax/lang/model/SourceVersion.html?is-external=true" title="class or interface in javax.lang.model">SourceVersion</a>&gt;&nbsp;getSourceVersions()</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/Tool.html?is-external=true#getSourceVersions--" title="class or interface in javax.tools">getSourceVersions</a></code>&nbsp;in interface&nbsp;<code><a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/Tool.html?is-external=true" title="class or interface in javax.tools">Tool</a></code></dd>
-</dl>
 </li>
 </ul>
 </li>
@@ -383,13 +270,13 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/JavaCom
 <li>Nested&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
-<li><a href="#method.summary">Method</a></li>
+<li><a href="#methods.inherited.from.class.com.google.errorprone.BaseErrorProneJavaCompiler">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
-<li><a href="#method.detail">Method</a></li>
+<li>Method</li>
 </ul>
 </div>
 <a name="skip.navbar.bottom">

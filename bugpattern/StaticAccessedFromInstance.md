@@ -12,7 +12,7 @@ maturity: MATURE
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-_Alternate names: static_
+_Alternate names: static, static-access_
 
 ## The problem
 A static variable or method should never be accessed from an instance.  This hides the fact that the variable or method is static and does not depend on the value of the object instance on which this variable or method is being invoked.
@@ -294,6 +294,16 @@ public class StaticAccessedFromInstanceNegativeCases {
 
   public void test4() {
     Class<?> klass = String[].class;
+  }
+  
+  @SuppressWarnings("static")
+  public void testJavacAltname() {
+    this.staticTestMethod();
+  }
+
+  @SuppressWarnings("static-access")
+  public void testEclipseAltname() {
+    this.staticTestMethod();
   }
 }
 {% endhighlight %}
