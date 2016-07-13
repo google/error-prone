@@ -19,19 +19,17 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.Tree;
-import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-
 import javax.lang.model.type.TypeKind;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
@@ -45,32 +43,22 @@ import javax.lang.model.type.TypeKind;
   severity = WARNING,
   maturity = MATURE
 )
-public class NullableVoid extends BugChecker implements BugChecker.AnnotationTreeMatcher {
+public class NullableVoid extends BugChecker implements MethodTreeMatcher {
 
   @Override
-  public Description matchAnnotation(AnnotationTree tree, VisitorState state) {
-    Symbol sym = ASTHelpers.getSymbol(tree);
+  public Description matchMethod(MethodTree tree, VisitorState state) {
+    MethodSymbol sym = ASTHelpers.getSymbol(tree);
     if (sym == null) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
-    if (!sym.name.contentEquals("Nullable")) {
-      return Description.NO_MATCH;
+    if (sym.getReturnType().getKind() != TypeKind.VOID) {
+      return NO_MATCH;
     }
-    Tree annotatedNode = getAnnotatedNode(state);
-    if (!(annotatedNode instanceof MethodTree)) {
-      return Description.NO_MATCH;
+    AnnotationTree annotation =
+        ASTHelpers.getAnnotationWithSimpleName(tree.getModifiers().getAnnotations(), "Nullable");
+    if (annotation == null) {
+      return NO_MATCH;
     }
-    MethodSymbol annotatedMethod = ASTHelpers.getSymbol((MethodTree) annotatedNode);
-    if (annotatedMethod == null) {
-      return Description.NO_MATCH;
-    }
-    if (annotatedMethod.getReturnType().getKind() != TypeKind.VOID) {
-      return Description.NO_MATCH;
-    }
-    return describeMatch(tree, SuggestedFix.delete(tree));
-  }
-
-  private static Tree getAnnotatedNode(VisitorState state) {
-    return state.getPath().getParentPath().getParentPath().getLeaf();
+    return describeMatch(annotation, SuggestedFix.delete(annotation));
   }
 }

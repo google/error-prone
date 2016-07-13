@@ -19,24 +19,26 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.matchers.Matchers.isPrimitiveType;
-import static com.google.errorprone.matchers.Matchers.methodReturnsNonPrimitiveType;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.AnnotatedTypeTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-
+import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Type;
+import java.util.List;
 
-/**
- * @author sebastian.h.monte@gmail.com (Sebastian Monte)
- */
+/** @author sebastian.h.monte@gmail.com (Sebastian Monte) */
 @BugPattern(
   name = "NullablePrimitive",
   summary = "@Nullable should not be used for primitive types since they cannot be null",
@@ -45,37 +47,44 @@ import com.sun.tools.javac.code.Symbol;
   severity = WARNING,
   maturity = MATURE
 )
-public class NullablePrimitive extends BugChecker implements BugChecker.AnnotationTreeMatcher {
-
-  private static final Matcher<Tree> IS_PRIMITIVE_TYPE_MATCHER = isPrimitiveType();
-  private static final Matcher<MethodTree> METHOD_RETURNS_NON_PRIMITIVE_TYPE_MATCHER =
-      methodReturnsNonPrimitiveType();
+public class NullablePrimitive extends BugChecker
+    implements AnnotatedTypeTreeMatcher, VariableTreeMatcher, MethodTreeMatcher {
 
   @Override
-  public Description matchAnnotation(AnnotationTree tree, VisitorState state) {
-    Symbol sym = ASTHelpers.getSymbol(tree);
-    if (sym == null) {
-      return Description.NO_MATCH;
-    }
-    if (!sym.name.contentEquals("Nullable")) {
-      return Description.NO_MATCH;
-    }
-    Tree annotatedNode = getAnnotatedNode(state);
-    Symbol annotatedSymbol = ASTHelpers.getSymbol(annotatedNode);
-    if (annotatedSymbol.isConstructor()) {
-      // @Nullable constructors get their own check
-      return Description.NO_MATCH;
-    }
-    if (IS_PRIMITIVE_TYPE_MATCHER.matches(annotatedNode, state)) {
-      return describeMatch(tree, SuggestedFix.delete(tree));
-    } else if (annotatedNode instanceof MethodTree
-        && !METHOD_RETURNS_NON_PRIMITIVE_TYPE_MATCHER.matches((MethodTree) annotatedNode, state)) {
-      return describeMatch(tree, SuggestedFix.delete(tree));
-    }
-    return Description.NO_MATCH;
+  public Description matchAnnotatedType(AnnotatedTypeTree tree, VisitorState state) {
+    Type type = ASTHelpers.getType(tree);
+    return check(type, tree.getAnnotations());
   }
 
-  private static Tree getAnnotatedNode(VisitorState state) {
-    return state.getPath().getParentPath().getParentPath().getLeaf();
+  @Override
+  public Description matchMethod(MethodTree tree, VisitorState state) {
+    MethodSymbol sym = ASTHelpers.getSymbol(tree);
+    if (sym == null) {
+      return NO_MATCH;
+    }
+    return check(sym.getReturnType(), tree.getModifiers().getAnnotations());
+  }
+
+  @Override
+  public Description matchVariable(VariableTree tree, VisitorState state) {
+    Symbol.VarSymbol sym = ASTHelpers.getSymbol(tree);
+    if (sym == null) {
+      return NO_MATCH;
+    }
+    return check(sym.type, tree.getModifiers().getAnnotations());
+  }
+
+  private Description check(Type type, List<? extends AnnotationTree> annotations) {
+    if (type == null) {
+      return NO_MATCH;
+    }
+    if (!type.isPrimitive()) {
+      return NO_MATCH;
+    }
+    AnnotationTree annotation = ASTHelpers.getAnnotationWithSimpleName(annotations, "Nullable");
+    if (annotation == null) {
+      return NO_MATCH;
+    }
+    return describeMatch(annotation, SuggestedFix.delete(annotation));
   }
 }

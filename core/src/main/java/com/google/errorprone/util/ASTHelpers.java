@@ -26,7 +26,6 @@ import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis;
 import com.google.errorprone.matchers.JUnitMatchers;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Suppliers;
-
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ClassTree;
@@ -74,7 +73,6 @@ import com.sun.tools.javac.tree.JCTree.JCPackageDecl;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.Filter;
 import com.sun.tools.javac.util.Name;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayDeque;
@@ -85,7 +83,6 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
 import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.TypeKind;
@@ -417,7 +414,7 @@ public class ASTHelpers {
     TypeSymbol owner = (TypeSymbol) methodSymbol.owner;
     // Iterates over an ordered list of all super classes and interfaces.
     for (Type sup : types.closure(owner.type)) {
-      if (sup == owner.type) {
+      if (sup.equals(owner.type)) {
         continue; // Skip the owner of the method
       }
       Scope scope = sup.tsym.members();
@@ -796,5 +793,29 @@ public class ASTHelpers {
     } catch (ReflectiveOperationException e) {
       throw new LinkageError(e.getMessage(), e);
     }
+  }
+
+  /** Returns an {@link AnnotationTree} with the given simple name, or {@code null}. */
+  public static AnnotationTree getAnnotationWithSimpleName(
+      List<? extends AnnotationTree> annotations, String name) {
+    for (AnnotationTree annotation : annotations) {
+      if (hasSimpleName(annotation, name)) {
+        return annotation;
+      }
+    }
+    return null;
+  }
+
+  private static boolean hasSimpleName(AnnotationTree annotation, String name) {
+    Tree annotationType = annotation.getAnnotationType();
+    javax.lang.model.element.Name simpleName;
+    if (annotationType instanceof IdentifierTree) {
+      simpleName = ((IdentifierTree) annotationType).getName();
+    } else if (annotationType instanceof MemberSelectTree) {
+      simpleName = ((MemberSelectTree) annotationType).getIdentifier();
+    } else {
+      return false;
+    }
+    return simpleName.contentEquals(name);
   }
 }

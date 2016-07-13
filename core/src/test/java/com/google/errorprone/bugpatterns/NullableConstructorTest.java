@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,7 +49,11 @@ public class NullableConstructorTest {
   @Test
   public void negativeNotAnnotated() {
     compilationHelper
-        .addSourceLines("Test.java", "class Test {", "  public Test() {}", "}")
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  public Test() {}",
+            "}")
         .doTest();
   }
 
@@ -62,6 +65,27 @@ public class NullableConstructorTest {
             "import javax.annotation.Nullable;",
             "class Test {",
             "  @Nullable public int f() { return 42; }",
+            "}")
+        .doTest();
+  }
+
+  // regression test for #418
+  @Test
+  public void typeParameter() {
+    compilationHelper
+        .addSourceLines(
+            "Nullable.java",
+            "import java.lang.annotation.ElementType;",
+            "import java.lang.annotation.Retention;",
+            "import java.lang.annotation.RetentionPolicy;",
+            "import java.lang.annotation.Target;",
+            "@Retention(RetentionPolicy.RUNTIME)",
+            "@Target(ElementType.TYPE_USE)",
+            "public @interface Nullable {}")
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  <@Nullable T> Test(T t) {}",
             "}")
         .doTest();
   }
