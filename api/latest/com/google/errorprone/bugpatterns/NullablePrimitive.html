@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10};
+var methods = {"i0":10,"i1":10,"i2":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -114,13 +114,13 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.AnnotationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.AnnotationTreeMatcher</a>, <a href="../../../../com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io">Serializable</a></dd>
+<dd><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.AnnotatedTypeTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.AnnotatedTypeTreeMatcher</a>, <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a>, <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.VariableTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.VariableTreeMatcher</a>, <a href="../../../../com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io">Serializable</a></dd>
 </dl>
 <hr>
 <br>
 <pre>public class <span class="typeNameLabel">NullablePrimitive</span>
 extends <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
-implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.AnnotationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.AnnotationTreeMatcher</a></pre>
+implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.AnnotatedTypeTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.AnnotatedTypeTreeMatcher</a>, <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.VariableTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.VariableTreeMatcher</a>, <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a></pre>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
 <dd>sebastian.h.monte@gmail.com (Sebastian Monte)</dd>
@@ -179,8 +179,18 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Ann
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/NullablePrimitive.html#matchAnnotation-com.sun.source.tree.AnnotationTree-com.google.errorprone.VisitorState-">matchAnnotation</a></span>(com.sun.source.tree.AnnotationTree&nbsp;tree,
-               <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/NullablePrimitive.html#matchAnnotatedType-com.sun.source.tree.AnnotatedTypeTree-com.google.errorprone.VisitorState-">matchAnnotatedType</a></span>(com.sun.source.tree.AnnotatedTypeTree&nbsp;tree,
+                  <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/NullablePrimitive.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod</a></span>(com.sun.source.tree.MethodTree&nbsp;tree,
+           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/NullablePrimitive.html#matchVariable-com.sun.source.tree.VariableTree-com.google.errorprone.VisitorState-">matchVariable</a></span>(com.sun.source.tree.VariableTree&nbsp;tree,
+             <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -235,17 +245,45 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Ann
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="matchAnnotation-com.sun.source.tree.AnnotationTree-com.google.errorprone.VisitorState-">
+<a name="matchAnnotatedType-com.sun.source.tree.AnnotatedTypeTree-com.google.errorprone.VisitorState-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>matchAnnotatedType</h4>
+<pre>public&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;matchAnnotatedType(com.sun.source.tree.AnnotatedTypeTree&nbsp;tree,
+                                      <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.AnnotatedTypeTreeMatcher.html#matchAnnotatedType-com.sun.source.tree.AnnotatedTypeTree-com.google.errorprone.VisitorState-">matchAnnotatedType</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.AnnotatedTypeTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.AnnotatedTypeTreeMatcher</a></code></dd>
+</dl>
+</li>
+</ul>
+<a name="matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>matchMethod</h4>
+<pre>public&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;matchMethod(com.sun.source.tree.MethodTree&nbsp;tree,
+                               <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodTreeMatcher.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a></code></dd>
+</dl>
+</li>
+</ul>
+<a name="matchVariable-com.sun.source.tree.VariableTree-com.google.errorprone.VisitorState-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>matchAnnotation</h4>
-<pre>public&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;matchAnnotation(com.sun.source.tree.AnnotationTree&nbsp;tree,
-                                   <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
+<h4>matchVariable</h4>
+<pre>public&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;matchVariable(com.sun.source.tree.VariableTree&nbsp;tree,
+                                 <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.AnnotationTreeMatcher.html#matchAnnotation-com.sun.source.tree.AnnotationTree-com.google.errorprone.VisitorState-">matchAnnotation</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.AnnotationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.AnnotationTreeMatcher</a></code></dd>
+<dd><code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.VariableTreeMatcher.html#matchVariable-com.sun.source.tree.VariableTree-com.google.errorprone.VisitorState-">matchVariable</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.VariableTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.VariableTreeMatcher</a></code></dd>
 </dl>
 </li>
 </ul>

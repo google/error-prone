@@ -17,6 +17,9 @@ after we've vetted them against Google's codebase.
 
 ## On by default : WARNING
 
+__[ArraysAsListPrimitiveArray](bugpattern/ArraysAsListPrimitiveArray)__<br>
+Arrays.asList does not autobox primitive arrays, as one might expect.
+
 __[BadAnnotationImplementation](bugpattern/BadAnnotationImplementation)__<br>
 Classes that implement Annotation must override equals and hashCode. Consider using AutoAnnotation instead of implementing Annotation by hand.
 
@@ -58,9 +61,6 @@ Calling getClass() on an enum may return a subclass of the enum type
 
 __[IncompatibleModifiers](bugpattern/IncompatibleModifiers)__<br>
 This annotation has incompatible modifiers as specified by its @IncompatibleModifiers annotation
-
-__[InfiniteRecursion](bugpattern/InfiniteRecursion)__<br>
-This method always recurses, and will cause a StackOverflowError
 
 __[InsecureCipherMode](bugpattern/InsecureCipherMode)__<br>
 Cipher.getInstance() is invoked using either the default settings or ECB mode
@@ -219,6 +219,9 @@ Scope annotation on implementation class of AssistedInject factory is not allowe
 __[HashtableContains](bugpattern/HashtableContains)__<br>
 contains() is a legacy method that is equivalent to containsValue()
 
+__[InfiniteRecursion](bugpattern/InfiniteRecursion)__<br>
+This method always recurses, and will cause a StackOverflowError
+
 __[InvalidPatternSyntax](bugpattern/InvalidPatternSyntax)__<br>
 Invalid syntax used for a regular expression
 
@@ -374,9 +377,6 @@ __[UseBinds](bugpattern/UseBinds)__<br>
 @Binds is a more efficient and declarative mechanism for delegating a binding.
 
 ## Experimental : ERROR
-
-__[ArraysAsListPrimitiveArray](bugpattern/ArraysAsListPrimitiveArray)__<br>
-Arrays.asList does not autobox primitive arrays, as one might expect.
 
 __[AssistedInjectAndInjectOnSameConstructor](bugpattern/AssistedInjectAndInjectOnSameConstructor)__<br>
 @AssistedInject and @Inject cannot be used on the same constructor.

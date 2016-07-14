@@ -3,7 +3,7 @@ title: InfiniteRecursion
 summary: This method always recurses, and will cause a StackOverflowError
 layout: bugpattern
 category: JDK
-severity: WARNING
+severity: ERROR
 maturity: MATURE
 ---
 
