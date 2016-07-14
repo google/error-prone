@@ -3035,39 +3035,25 @@
 <dd>
 <div class="block">Matches an AST node which is the same object reference as the given node.</div>
 </dd>
-<dt><a href="com/google/errorprone/matchers/IsSameErasedType.html" title="class in com.google.errorprone.matchers"><span class="typeNameLink">IsSameErasedType</span></a>&lt;<a href="com/google/errorprone/matchers/IsSameErasedType.html" title="type parameter in IsSameErasedType">T</a> extends com.sun.source.tree.Tree&gt; - Class in <a href="com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a></dt>
+<dt><a href="com/google/errorprone/matchers/IsSameType.html" title="class in com.google.errorprone.matchers"><span class="typeNameLink">IsSameType</span></a>&lt;<a href="com/google/errorprone/matchers/IsSameType.html" title="type parameter in IsSameType">T</a> extends com.sun.source.tree.Tree&gt; - Class in <a href="com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a></dt>
 <dd>
 <div class="block">Matches an AST node if its erased type is the same as the given type, e.g.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/IsSameErasedType.html#IsSameErasedType-com.google.errorprone.suppliers.Supplier-">IsSameErasedType(Supplier&lt;Type&gt;)</a></span> - Constructor for class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/IsSameErasedType.html" title="class in com.google.errorprone.matchers">IsSameErasedType</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/IsSameErasedType.html#IsSameErasedType-java.lang.String-">IsSameErasedType(String)</a></span> - Constructor for class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/IsSameErasedType.html" title="class in com.google.errorprone.matchers">IsSameErasedType</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Matchers.html#isSameErasedType-java.lang.String-">isSameErasedType(String)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
-<dd>
-<div class="block">Matches an AST node if its erased type is the same as the given type.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Matchers.html#isSameErasedType-com.google.errorprone.suppliers.Supplier-">isSameErasedType(Supplier&lt;Type&gt;)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
-<dd>
-<div class="block">Matches an AST node if its erased type is the same as the given type.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Matchers.html#isSameErasedType-java.lang.Class-">isSameErasedType(Class&lt;?&gt;)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
-<dd>
-<div class="block">Matches an AST node if its erased type is the same as the given type.</div>
-</dd>
-<dt><a href="com/google/errorprone/matchers/IsSameType.html" title="class in com.google.errorprone.matchers"><span class="typeNameLink">IsSameType</span></a>&lt;<a href="com/google/errorprone/matchers/IsSameType.html" title="type parameter in IsSameType">T</a> extends com.sun.source.tree.Tree&gt; - Class in <a href="com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/IsSameType.html#IsSameType-com.google.errorprone.suppliers.Supplier-">IsSameType(Supplier&lt;Type&gt;)</a></span> - Constructor for class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/IsSameType.html" title="class in com.google.errorprone.matchers">IsSameType</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/IsSameType.html#IsSameType-java.lang.String-">IsSameType(String)</a></span> - Constructor for class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/IsSameType.html" title="class in com.google.errorprone.matchers">IsSameType</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Matchers.html#isSameType-com.google.errorprone.suppliers.Supplier-">isSameType(Supplier&lt;Type&gt;)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
-<div class="block">Matches an AST node if its type is the same as the given type.</div>
+<div class="block">Matches an AST node if it has the same erased type as the given type.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Matchers.html#isSameType-java.lang.String-">isSameType(String)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
-<div class="block">Matches an AST node if its type is the same as the given type.</div>
+<div class="block">Matches an AST node if it has the same erased type as the given type.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Matchers.html#isSameType-java.lang.Class-">isSameType(Class&lt;?&gt;)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
+<dd>
+<div class="block">Matches an AST node if it has the same erased type as the given class.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/util/ASTHelpers.html#isSameType-com.sun.tools.javac.code.Type-com.sun.tools.javac.code.Type-com.google.errorprone.VisitorState-">isSameType(Type, Type, VisitorState)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
@@ -3598,8 +3584,6 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/InstanceMethod.html#matches-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">matches(ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InstanceMethod.html" title="class in com.google.errorprone.matchers">InstanceMethod</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/IsCastableTo.html#matches-T-com.google.errorprone.VisitorState-">matches(T, VisitorState)</a></span> - Method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/IsCastableTo.html" title="class in com.google.errorprone.matchers">IsCastableTo</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/IsSameErasedType.html#matches-T-com.google.errorprone.VisitorState-">matches(T, VisitorState)</a></span> - Method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/IsSameErasedType.html" title="class in com.google.errorprone.matchers">IsSameErasedType</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/IsSameType.html#matches-T-com.google.errorprone.VisitorState-">matches(T, VisitorState)</a></span> - Method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/IsSameType.html" title="class in com.google.errorprone.matchers">IsSameType</a></dt>
 <dd>&nbsp;</dd>

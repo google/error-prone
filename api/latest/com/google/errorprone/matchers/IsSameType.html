@@ -49,7 +49,7 @@ var activeTableTab = "activeTableTab";
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../com/google/errorprone/matchers/IsSameErasedType.html" title="class in com.google.errorprone.matchers"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../com/google/errorprone/matchers/IsCastableTo.html" title="class in com.google.errorprone.matchers"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li><a href="../../../../com/google/errorprone/matchers/IsSubtypeOf.html" title="class in com.google.errorprone.matchers"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
@@ -120,9 +120,12 @@ var activeTableTab = "activeTableTab";
 <br>
 <pre>public class <span class="typeNameLabel">IsSameType&lt;T extends com.sun.source.tree.Tree&gt;</span>
 extends <a href="../../../../com/google/errorprone/matchers/AbstractTypeMatcher.html" title="class in com.google.errorprone.matchers">AbstractTypeMatcher</a>&lt;T&gt;</pre>
+<div class="block">Matches an AST node if its erased type is the same as the given type, e.g. If the type of the AST
+ node is <code>HashMap&lt;K,V&gt;</code> and the given type is <code>HashMap</code>, then their erased type is the
+ same.</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
-<dd>eaftan@google.com (Eddie Aftandilian)</dd>
+<dd>yanx@google.com (Yan Xie)</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../serialized-form.html#com.google.errorprone.matchers.IsSameType">Serialized Form</a></dd>
 </dl>
@@ -278,7 +281,7 @@ extends <a href="../../../../com/google/errorprone/matchers/AbstractTypeMatcher.
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../com/google/errorprone/matchers/IsSameErasedType.html" title="class in com.google.errorprone.matchers"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../com/google/errorprone/matchers/IsCastableTo.html" title="class in com.google.errorprone.matchers"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li><a href="../../../../com/google/errorprone/matchers/IsSubtypeOf.html" title="class in com.google.errorprone.matchers"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
