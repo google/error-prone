@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.toType;
@@ -65,8 +64,7 @@ import java.util.List;
   summary =
       "Implicit use of the platform default charset, which can result in e.g. non-ASCII"
           + " characters being silently replaced with '?' in many environments",
-  severity = WARNING,
-  maturity = MATURE
+  severity = WARNING
 )
 public class DefaultCharset extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {

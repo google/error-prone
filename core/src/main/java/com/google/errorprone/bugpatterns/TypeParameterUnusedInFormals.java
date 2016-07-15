@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
@@ -41,8 +40,7 @@ import java.util.Set;
           + " generics: operations on the type parameter are unchecked, it hides unsafe casts at"
           + " invocations of the method, and it interacts badly with method overload resolution.",
   category = JDK,
-  severity = WARNING,
-  maturity = MATURE
+  severity = WARNING
 )
 public class TypeParameterUnusedInFormals extends BugChecker implements MethodTreeMatcher {
 

@@ -15,7 +15,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
@@ -25,9 +24,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 
-/**
- * @author scottjohnson@google.com (Scott Johnson)
- */
+/** @author scottjohnson@google.com (Scott Johnson) */
 @BugPattern(
   name = "NumericEquality",
   summary = "Numeric comparison using reference equality instead of value equality",
@@ -35,8 +32,7 @@ import com.sun.tools.javac.code.Symbol;
       "Numbers are compared for reference equality/inequality using == or != "
           + "instead of for value equality using .equals()",
   category = JDK,
-  severity = ERROR,
-  maturity = EXPERIMENTAL
+  severity = ERROR
 )
 public class NumericEquality extends AbstractReferenceEquality {
 

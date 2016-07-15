@@ -15,7 +15,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.GUAVA;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.fixes.SuggestedFix.delete;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -39,9 +38,7 @@ import com.sun.tools.javac.tree.JCTree;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.UnionType;
 
-/**
- * Catches no-op calls to {@code Throwables.throwIfUnchecked}.
- */
+/** Catches no-op calls to {@code Throwables.throwIfUnchecked}. */
 @BugPattern(
   name = "ThrowIfUncheckedKnownChecked",
   summary = "throwIfUnchecked(knownCheckedException) is a no-op.",
@@ -49,8 +46,7 @@ import javax.lang.model.type.UnionType;
       "`throwIfUnchecked(knownCheckedException)` is a no-op (aside from performing a null check). "
           + "`propagateIfPossible(knownCheckedException)` is a complete no-op.",
   category = GUAVA,
-  severity = ERROR,
-  maturity = EXPERIMENTAL
+  severity = ERROR
 )
 public class ThrowIfUncheckedKnownChecked extends BugChecker
     implements MethodInvocationTreeMatcher {

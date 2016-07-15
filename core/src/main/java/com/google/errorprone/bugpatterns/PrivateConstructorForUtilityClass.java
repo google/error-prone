@@ -16,7 +16,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.fixes.SuggestedFixes.addMembers;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -50,8 +49,7 @@ import com.sun.source.tree.VariableTree;
           + " instances, the class should include a private constructor.  See Effective Java,"
           + " Second Edition - Item 4.",
   category = JDK,
-  severity = SUGGESTION,
-  maturity = EXPERIMENTAL
+  severity = SUGGESTION
 )
 public final class PrivateConstructorForUtilityClass extends BugChecker
     implements ClassTreeMatcher {

@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
@@ -44,8 +43,7 @@ import java.util.List;
   summary = "@Nullable should not be used for primitive types since they cannot be null",
   explanation = "Primitives can never be null.",
   category = JDK,
-  severity = WARNING,
-  maturity = MATURE
+  severity = WARNING
 )
 public class NullablePrimitive extends BugChecker
     implements AnnotatedTypeTreeMatcher, VariableTreeMatcher, MethodTreeMatcher {

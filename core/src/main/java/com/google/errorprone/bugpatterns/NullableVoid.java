@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
@@ -40,8 +39,7 @@ import javax.lang.model.type.TypeKind;
           + " since they cannot return null",
   explanation = "void-returning methods cannot return null.",
   category = JDK,
-  severity = WARNING,
-  maturity = MATURE
+  severity = WARNING
 )
 public class NullableVoid extends BugChecker implements MethodTreeMatcher {
 

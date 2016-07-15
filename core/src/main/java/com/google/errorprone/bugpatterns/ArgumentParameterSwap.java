@@ -16,7 +16,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.base.CaseFormat;
@@ -57,8 +56,7 @@ import java.util.Set;
   summary =
       "An argument is more similar to a different parameter; the arguments may have been swapped.",
   category = JDK,
-  severity = ERROR,
-  maturity = MATURE
+  severity = ERROR
 )
 public class ArgumentParameterSwap extends BugChecker
     implements NewClassTreeMatcher, MethodInvocationTreeMatcher {

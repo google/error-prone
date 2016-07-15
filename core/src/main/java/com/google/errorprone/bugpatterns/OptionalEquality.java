@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.GUAVA;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.collect.ImmutableSet;
@@ -35,8 +34,7 @@ import com.sun.tools.javac.code.Type;
       "Optionals should be compared for value equality using `.equals()`, and not for reference "
           + "equality using `==` and `!=`.",
   category = GUAVA,
-  severity = ERROR,
-  maturity = MATURE
+  severity = ERROR
 )
 public class OptionalEquality extends AbstractReferenceEquality {
 

@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.LinkType.NONE;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.collect.ImmutableSet;
@@ -47,8 +46,7 @@ import javax.lang.model.element.Modifier;
           + "use it on an  element that is missing one or more required modifiers.",
   linkType = NONE,
   category = JDK,
-  severity = WARNING,
-  maturity = MATURE
+  severity = WARNING
 )
 public class RequiredModifiersChecker extends BugChecker implements AnnotationTreeMatcher {
 

@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
@@ -45,8 +44,7 @@ import javax.lang.model.element.Modifier;
   name = "Var",
   summary = "Non-constant variable missing @Var annotation",
   category = JDK,
-  severity = WARNING,
-  maturity = EXPERIMENTAL
+  severity = WARNING
 )
 public class VarChecker extends BugChecker implements VariableTreeMatcher {
 

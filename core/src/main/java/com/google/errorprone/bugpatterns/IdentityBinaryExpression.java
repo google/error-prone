@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
@@ -33,8 +32,7 @@ import com.sun.source.tree.BinaryTree;
   category = JDK,
   summary = "Writing \"a && a\", \"a || a\", \"a & a\", or \"a | a\" is equivalent to \"a\".",
   explanation = "Writing `a && a`, `a || a`, `a & a`, or `a | a` is equivalent to `a`.",
-  severity = ERROR,
-  maturity = MATURE
+  severity = ERROR
 )
 public class IdentityBinaryExpression extends BugChecker implements BinaryTreeMatcher {
   @Override

@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
@@ -44,8 +43,7 @@ import com.sun.source.tree.Tree;
       "The `toString` method on an array will print its identity, such as `[I@4488aabb`. This "
           + "is almost never needed. Use `Arrays.toString` to print a human-readable summary.",
   category = JDK,
-  severity = ERROR,
-  maturity = MATURE
+  severity = ERROR
 )
 public class ArrayToString extends AbstractToString {
 

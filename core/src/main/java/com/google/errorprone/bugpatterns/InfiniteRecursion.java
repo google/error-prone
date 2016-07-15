@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
@@ -45,8 +44,7 @@ import com.sun.tools.javac.tree.TreeInfo;
   name = "InfiniteRecursion",
   category = JDK,
   summary = "This method always recurses, and will cause a StackOverflowError",
-  severity = ERROR,
-  maturity = MATURE
+  severity = ERROR
 )
 public class InfiniteRecursion extends BugChecker implements BugChecker.MethodTreeMatcher {
   @Override

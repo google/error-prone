@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.ONE_OFF;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 
@@ -55,8 +54,7 @@ import javax.annotation.Nullable;
           + "`bytes`. In those cases you will need to wrap your field in "
           + "`google.protobuf.StringValue` or `google.protobuf.BytesValue`, respectively.",
   category = ONE_OFF,
-  severity = ERROR,
-  maturity = MATURE
+  severity = ERROR
 )
 public class ProtoFieldNullComparison extends BugChecker implements BinaryTreeMatcher {
 

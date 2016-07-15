@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.collect.Sets;
@@ -41,9 +40,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.lang.model.element.ElementKind;
 
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
   name = "MissingCasesInEnumSwitch",
   summary = "Enum switch statement is missing cases",
@@ -51,8 +48,7 @@ import javax.lang.model.element.ElementKind;
       "Switches on enums should either handle all possible values of the enum, or"
           + " have an explicit default case",
   category = JDK,
-  severity = WARNING,
-  maturity = MATURE
+  severity = WARNING
 )
 public class MissingCasesInEnumSwitch extends BugChecker implements SwitchTreeMatcher {
 

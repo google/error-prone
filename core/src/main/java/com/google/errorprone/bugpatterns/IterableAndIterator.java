@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
@@ -33,9 +32,7 @@ import com.sun.source.tree.Tree;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * @author jsjeon@google.com (Jinseong Jeon)
- */
+/** @author jsjeon@google.com (Jinseong Jeon) */
 @BugPattern(
   name = "IterableAndIterator",
   summary = "Class should not implement both `Iterable` and `Iterator`",
@@ -46,8 +43,7 @@ import java.util.List;
           + "while an `Iterable` is a representation of literally iterable elements. "
           + "An `Iterable` can generate multiple valid `Iterator`s, though.",
   category = JDK,
-  severity = WARNING,
-  maturity = EXPERIMENTAL
+  severity = WARNING
 )
 public class IterableAndIterator extends BugChecker implements ClassTreeMatcher {
 

@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 
@@ -37,17 +36,19 @@ import com.sun.source.tree.MethodInvocationTree;
  * @author kmuhlrad@google.com (Katy Muhlrad)
  */
 @BugPattern(
-    name = "GetClassOnClass",
-    summary = "Calling getClass() on an object of type Class returns the Class object for "
-        + "java.lang.Class; you probably meant to operate on the object directly",
-    explanation = "Calling `getClass()` on an object of type Class returns the Class object for "
-        + "java.lang.Class.  Usually this is a mistake, and people intend to operate on the "
-        + "object itself (for example, to print an error message).  If you really did intend to "
-        + "operate on the Class object for java.lang.Class, please use `Class.class` instead for "
-        + "clarity.",
-    category = JDK,
-    severity = ERROR,
-    maturity = MATURE)
+  name = "GetClassOnClass",
+  summary =
+      "Calling getClass() on an object of type Class returns the Class object for "
+          + "java.lang.Class; you probably meant to operate on the object directly",
+  explanation =
+      "Calling `getClass()` on an object of type Class returns the Class object for "
+          + "java.lang.Class.  Usually this is a mistake, and people intend to operate on the "
+          + "object itself (for example, to print an error message).  If you really did intend to "
+          + "operate on the Class object for java.lang.Class, please use `Class.class` instead for "
+          + "clarity.",
+  category = JDK,
+  severity = ERROR
+)
 public class GetClassOnClass extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> getClassMethodMatcher =

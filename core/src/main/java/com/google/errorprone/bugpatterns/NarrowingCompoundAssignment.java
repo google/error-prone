@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.util.ASTHelpers.getType;
 
@@ -46,8 +45,7 @@ import javax.lang.model.type.TypeKind;
   name = "NarrowingCompoundAssignment",
   summary = "Compound assignments to bytes, shorts, chars, and floats hide dangerous casts",
   category = JDK,
-  severity = WARNING,
-  maturity = MATURE
+  severity = WARNING
 )
 public class NarrowingCompoundAssignment extends BugChecker
     implements CompoundAssignmentTreeMatcher {

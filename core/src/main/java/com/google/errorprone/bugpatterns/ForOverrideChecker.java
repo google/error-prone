@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.GUAVA;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
@@ -58,8 +57,7 @@ import javax.lang.model.element.Modifier;
           + " overriding Converter.doForward, you should invoke it through Converter.convert."
           + " For testing, factor out the code you want to run to a separate method.",
   category = GUAVA,
-  severity = ERROR,
-  maturity = MATURE
+  severity = ERROR
 )
 public class ForOverrideChecker extends BugChecker
     implements MethodInvocationTreeMatcher, MethodTreeMatcher {

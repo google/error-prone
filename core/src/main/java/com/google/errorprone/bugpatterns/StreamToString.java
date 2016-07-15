@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.base.Optional;
@@ -38,8 +37,7 @@ import com.sun.tools.javac.code.Type;
       "The `toString` method on a `Stream` will print its identity, such as "
           + "`java.util.stream.ReferencePipeline$Head@6d06d69c`. This is rarely what was intended.",
   category = JDK,
-  severity = ERROR,
-  maturity = MATURE
+  severity = ERROR
 )
 public class StreamToString extends AbstractToString {
 

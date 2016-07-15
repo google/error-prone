@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
@@ -37,8 +36,7 @@ import com.sun.source.tree.ImportTree;
   name = "NonCanonicalStaticMemberImport",
   summary = "Static import of member uses non-canonical name",
   category = JDK,
-  severity = WARNING,
-  maturity = MATURE
+  severity = WARNING
 )
 public class NonCanonicalStaticMemberImport extends BugChecker implements ImportTreeMatcher {
 
