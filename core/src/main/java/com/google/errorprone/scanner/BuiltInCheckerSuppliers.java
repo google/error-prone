@@ -59,6 +59,7 @@ import com.google.errorprone.bugpatterns.GetClassOnClass;
 import com.google.errorprone.bugpatterns.GetClassOnEnum;
 import com.google.errorprone.bugpatterns.GuavaSelfEquals;
 import com.google.errorprone.bugpatterns.HashtableContains;
+import com.google.errorprone.bugpatterns.IdentityBinaryExpression;
 import com.google.errorprone.bugpatterns.IncompatibleModifiersChecker;
 import com.google.errorprone.bugpatterns.InfiniteRecursion;
 import com.google.errorprone.bugpatterns.InsecureCipherMode;
@@ -309,6 +310,7 @@ public class BuiltInCheckerSuppliers {
           StaticGuardedByInstance.class,
           SynchronizeOnNonFinalField.class,
           TypeParameterUnusedInFormals.class,
+          IdentityBinaryExpression.class,
           UnsynchronizedOverridesSynchronized.class,
           WaitNotInLoop.class);
 
