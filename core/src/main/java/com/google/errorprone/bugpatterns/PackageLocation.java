@@ -122,34 +122,6 @@ public class PackageLocation extends BugChecker implements CompilationUnitTreeMa
     }
   }
 
-  Matcher<MethodInvocationTree> myMatcher = new Matcher<MethodInvocationTree>() {
-    @Override public boolean matches(MethodInvocationTree tree, VisitorState state) {
-      MethodSymbol sym = ASTHelpers.getSymbol(tree);
-      return ASTHelpers.isSubtype(sym.getReturnType(), state.getTypeFromString("java.util.Future"), state);
-    }
-  };
-
-  /** Gets the path elements for the given path. */
-  @Nullable
-  private static ImmutableList<String> getPathElements(URI uri) {
-    Path path;
-    if (!uri.getScheme().equals("jar")) {
-      path = Paths.get(uri);
-    } else {
-      try {
-        path = Paths.get(((JarURLConnection) uri.toURL().openConnection()).getEntryName());
-      } catch (IOException e) {
-        return null;
-      }
-    }
-
-    ImmutableList.Builder<String> result = new ImmutableList.Builder<>();
-    for (Path element : path.getParent()) {
-      result.add(element.toString());
-    }
-    return result.build();
-  }
-
   @Nullable
   private static String getPathSeparator(URI uri) {
     if (!uri.getScheme().equals("jar")) {
