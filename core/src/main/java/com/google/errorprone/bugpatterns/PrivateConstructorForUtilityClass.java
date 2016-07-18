@@ -91,8 +91,12 @@ public final class PrivateConstructorForUtilityClass extends BugChecker
                     return ((VariableTree) tree).getModifiers().getFlags().contains(STATIC);
                   case BLOCK:
                     return ((BlockTree) tree).isStatic();
+                  case ENUM:
+                  case ANNOTATION_TYPE:
+                  case INTERFACE:
+                    return true;
                   default:
-                    throw new AssertionError("unknown member type:" + tree);
+                    throw new AssertionError("unknown member type:" + tree.getKind());
                 }
               }
             });

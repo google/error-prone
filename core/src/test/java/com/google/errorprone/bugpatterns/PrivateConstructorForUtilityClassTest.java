@@ -17,6 +17,7 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 
+import com.google.errorprone.CompilationTestHelper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -212,6 +213,20 @@ public final class PrivateConstructorForUtilityClassTest {
             "  INSTANCE;",
             "}")
         .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void b30170662() throws IOException {
+    CompilationTestHelper.newInstance(PrivateConstructorForUtilityClass.class, getClass())
+        .addSourceLines(
+            "Foo.java",
+            "// BUG: Diagnostic contains:",
+            "public class Foo {",
+            "  enum Enum {}",
+            "  @interface Annotation {}",
+            "  interface Interface {}",
+            "}")
         .doTest();
   }
 }
