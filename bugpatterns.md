@@ -59,6 +59,9 @@ If you return or throw from a finally, then values returned or thrown from the t
 __[GetClassOnEnum](bugpattern/GetClassOnEnum)__<br>
 Calling getClass() on an enum may return a subclass of the enum type
 
+__[IdentityBinaryExpression](bugpattern/IdentityBinaryExpression)__<br>
+Writing `a &amp;&amp; a`, `a || a`, `a &amp; a`, or `a | a` is equivalent to `a`.
+
 __[IncompatibleModifiers](bugpattern/IncompatibleModifiers)__<br>
 This annotation has incompatible modifiers as specified by its @IncompatibleModifiers annotation
 
@@ -352,9 +355,6 @@ Not calling fail() when expecting an exception masks bugs
 
 __[OverridesGuiceInjectableMethod](bugpattern/OverridesGuiceInjectableMethod)__<br>
 This method is not annotated with @Inject, but it overrides a method that is annotated with @com.google.inject.Inject. Guice will inject this method, and it is recommended to annotate it explicitly.
-
-__[PreconditionsErrorMessageEagerEvaluation](bugpattern/PreconditionsErrorMessageEagerEvaluation)__<br>
-Second argument to Preconditions.* is a call to String.format(), which can be unwrapped
 
 __[PrimitiveArrayPassedToVarargsMethod](bugpattern/PrimitiveArrayPassedToVarargsMethod)__<br>
 Passing a primitive array to a varargs method is usually wrong
