@@ -6,7 +6,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.7.1'
+    classpath 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.8'
   }
 }
 
