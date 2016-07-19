@@ -214,6 +214,7 @@ public class BuiltInCheckerSuppliers {
           ArrayEquals.class,
           ArrayHashCode.class,
           ArrayToString.class,
+          ArraysAsListPrimitiveArray.class,
           AssistedInjectScoping.class,
           AsyncFunctionReturnsNull.class,
           BadShiftAmount.class,
@@ -231,6 +232,7 @@ public class BuiltInCheckerSuppliers {
           GuardedByValidator.class,
           GuavaSelfEquals.class,
           HashtableContains.class,
+          IdentityBinaryExpression.class,
           ImmutableChecker.class,
           InfiniteRecursion.class,
           InvalidPatternSyntax.class,
@@ -269,7 +271,6 @@ public class BuiltInCheckerSuppliers {
   /** A list of all checks with severity WARNING that are on by default. */
   public static final ImmutableSet<BugCheckerInfo> ENABLED_WARNINGS =
       getSuppliers(
-          ArraysAsListPrimitiveArray.class,
           BadAnnotationImplementation.class,
           BadComparable.class,
           BoxedPrimitiveConstructor.class,
@@ -309,7 +310,6 @@ public class BuiltInCheckerSuppliers {
           StaticGuardedByInstance.class,
           SynchronizeOnNonFinalField.class,
           TypeParameterUnusedInFormals.class,
-          IdentityBinaryExpression.class,
           UnsynchronizedOverridesSynchronized.class,
           WaitNotInLoop.class);
 

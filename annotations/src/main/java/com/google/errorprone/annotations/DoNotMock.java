@@ -33,5 +33,5 @@ public @interface DoNotMock {
    *
    * <p>This should suggest alternative APIs to use for testing objects of this type.
    */
-  String value();
+  String value() default "Create a real instance instead";
 }
