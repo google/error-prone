@@ -106,7 +106,7 @@ public class BaseErrorProneCompiler {
    *
    * <p>This prevents, e.g., targeting Java 8 by default when using error-prone on JDK7.
    */
-  private Iterable<String> defaultToLatestSupportedLanguageLevel(Iterable<String> args) {
+  public static Iterable<String> defaultToLatestSupportedLanguageLevel(Iterable<String> args) {
 
     String overrideLanguageLevel;
     switch (JAVA_SPECIFICATION_VERSION.value()) {
@@ -129,14 +129,14 @@ public class BaseErrorProneCompiler {
   }
 
   /**
-   * Sets javac's {@code -XDcompilePolicy} flag to ensure that all classes in a
-   * file are attributed before any of them are lowered.  Error Prone depends on
-   * this behavior when analyzing files that contain multiple top-level classes.
+   * Sets javac's {@code -XDcompilePolicy} flag to ensure that all classes in a file are attributed
+   * before any of them are lowered. Error Prone depends on this behavior when analyzing files that
+   * contain multiple top-level classes.
    *
-   * @throws InvalidCommandLineOptionException if the {@code -XDcompilePolicy}
-   *     flag is passed in the existing arguments with an unsupported value
+   * @throws InvalidCommandLineOptionException if the {@code -XDcompilePolicy} flag is passed in the
+   *     existing arguments with an unsupported value
    */
-  private Iterable<String> setCompilePolicyToByFile(Iterable<String> args)
+  public static Iterable<String> setCompilePolicyToByFile(Iterable<String> args)
       throws InvalidCommandLineOptionException {
     for (String arg : args) {
       if (arg.startsWith("-XDcompilePolicy")) {
