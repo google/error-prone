@@ -16,16 +16,13 @@ package com.google.errorprone.refaster;
 
 import com.google.errorprone.CodeTransformer;
 import com.google.errorprone.CompositeCodeTransformer;
-
 import com.sun.source.tree.ClassTree;
 import com.sun.source.util.TaskEvent;
 import com.sun.source.util.TaskEvent.Kind;
 import com.sun.source.util.TaskListener;
-import com.sun.source.util.TreePath;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.util.Context;
-
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.nio.file.Files;
@@ -53,12 +50,12 @@ public class RefasterRuleCompilerAnalyzer implements TaskListener {
     if (JavaCompiler.instance(context).errorCount() > 0) {
       return;
     }
-    TreePath path = JavacTrees.instance(context).getPath(taskEvent.getTypeElement());
-    if (path == null) {
-      path = new TreePath(taskEvent.getCompilationUnit());
+    ClassTree tree = JavacTrees.instance(context).getTree(taskEvent.getTypeElement());
+    if (tree == null) {
+      return;
     }
     Collection<? extends CodeTransformer> rules =
-        RefasterRuleBuilderScanner.extractRules((ClassTree) path.getLeaf(), context);
+        RefasterRuleBuilderScanner.extractRules(tree, context);
     try (ObjectOutputStream output =
         new ObjectOutputStream(Files.newOutputStream(destinationPath))) {
       output.writeObject(CompositeCodeTransformer.compose(rules));

@@ -21,7 +21,6 @@ import static com.google.common.base.StandardSystemProperty.JAVA_SPECIFICATION_V
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.scanner.ScannerSupplier;
-
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.api.MultiTaskListener;
@@ -29,12 +28,10 @@ import com.sun.tools.javac.main.Main;
 import com.sun.tools.javac.main.Main.Result;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JavacMessages;
-
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import javax.annotation.processing.Processor;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileManager;
@@ -106,7 +103,7 @@ public class BaseErrorProneCompiler {
    *
    * <p>This prevents, e.g., targeting Java 8 by default when using error-prone on JDK7.
    */
-  public static Iterable<String> defaultToLatestSupportedLanguageLevel(Iterable<String> args) {
+  private static Iterable<String> defaultToLatestSupportedLanguageLevel(Iterable<String> args) {
 
     String overrideLanguageLevel;
     switch (JAVA_SPECIFICATION_VERSION.value()) {
@@ -136,7 +133,7 @@ public class BaseErrorProneCompiler {
    * @throws InvalidCommandLineOptionException if the {@code -XDcompilePolicy} flag is passed in the
    *     existing arguments with an unsupported value
    */
-  public static Iterable<String> setCompilePolicyToByFile(Iterable<String> args)
+  private static Iterable<String> setCompilePolicyToByFile(Iterable<String> args)
       throws InvalidCommandLineOptionException {
     for (String arg : args) {
       if (arg.startsWith("-XDcompilePolicy")) {

@@ -17,23 +17,20 @@ package com.google.errorprone.refaster;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.errorprone.BaseErrorProneCompiler;
 import com.google.errorprone.InvalidCommandLineOptionException;
 import com.google.errorprone.MaskedClassLoader;
-
 import com.sun.tools.javac.api.MultiTaskListener;
 import com.sun.tools.javac.main.Main;
 import com.sun.tools.javac.main.Main.Result;
 import com.sun.tools.javac.util.Context;
-
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-
+import java.util.List;
 import javax.tools.DiagnosticCollector;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
@@ -78,10 +75,8 @@ public class RefasterRuleCompiler {
 
   private String[] prepareCompilation(String[] argv, Context context)
       throws InvalidCommandLineOptionException {
-    Iterable<String> newArgs = Arrays.asList(argv);
-    newArgs = BaseErrorProneCompiler.setCompilePolicyToByFile(newArgs);
     context.put(DiagnosticListener.class, new DiagnosticCollector<JavaFileObject>());
-    newArgs = Lists.newLinkedList(newArgs);
+    List<String> newArgs = new ArrayList<>(Arrays.asList(argv));
     Iterator<String> itr = newArgs.iterator();
     String path = null;
     while (itr.hasNext()) {
