@@ -23,7 +23,6 @@ import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ErrorProneToken;
 import com.google.errorprone.util.ErrorProneTokens;
-
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol;
@@ -44,7 +43,6 @@ import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Options;
-
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
@@ -322,17 +320,13 @@ public class VisitorState {
     return ErrorProneTokens.getTokens(getSourceForNode(tree), context);
   }
 
-  /**
-   * Gets the end position of the given node.
-   *
-   * @return the end position of the node, or -1 if it is not available
-   */
-  public int getEndPosition(JCTree node) {
+  /** Returns the end position of the node, or -1 if it is not available. */
+  public int getEndPosition(Tree node) {
     JCCompilationUnit compilationUnit = (JCCompilationUnit) getPath().getCompilationUnit();
     if (compilationUnit.endPositions == null) {
       return -1;
     }
-    return node.getEndPosition(compilationUnit.endPositions);
+    return ((JCTree) node).getEndPosition(compilationUnit.endPositions);
   }
 
   /**

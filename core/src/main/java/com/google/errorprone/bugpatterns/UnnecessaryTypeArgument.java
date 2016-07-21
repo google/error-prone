@@ -29,14 +29,12 @@ import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.tree.JCTree;
-
 import java.util.List;
 
 /**
@@ -91,7 +89,7 @@ public class UnnecessaryTypeArgument extends BugChecker
     JCTree node = (JCTree) tree;
     int startAbsolute = node.getStartPosition();
     int lower = ((JCTree) arguments.get(0)).getStartPosition() - startAbsolute;
-    int upper = state.getEndPosition((JCTree) arguments.get(arguments.size() - 1)) - startAbsolute;
+    int upper = state.getEndPosition(arguments.get(arguments.size() - 1)) - startAbsolute;
 
     CharSequence source = state.getSourceForNode(node);
 

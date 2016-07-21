@@ -37,7 +37,6 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -45,9 +44,7 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Options;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -359,8 +356,8 @@ public class DefaultCharset extends BugChecker
     SuggestedFix.Builder fix = SuggestedFix.builder();
     if (arguments.isEmpty()) {
       fix.replace(
-          state.getEndPosition((JCTree) select),
-          state.getEndPosition((JCTree) tree),
+          state.getEndPosition(select),
+          state.getEndPosition(tree),
           String.format("(%s)", charset.replacement()));
     } else {
       fix.postfixWith(Iterables.getLast(arguments), ", " + charset.replacement());

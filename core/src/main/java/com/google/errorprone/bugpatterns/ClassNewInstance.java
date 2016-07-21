@@ -32,7 +32,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -44,7 +43,6 @@ import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeScanner;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -79,8 +77,8 @@ public class ClassNewInstance extends BugChecker implements MethodInvocationTree
     }
     SuggestedFix.Builder fix = SuggestedFix.builder();
     fix.replace(
-        state.getEndPosition((JCTree) ASTHelpers.getReceiver(tree)),
-        state.getEndPosition((JCTree) tree),
+        state.getEndPosition(ASTHelpers.getReceiver(tree)),
+        state.getEndPosition(tree),
         String.format(".getConstructor().newInstance()"));
     boolean fixedExceptions = fixExceptions(state, fix);
     if (!fixedExceptions) {

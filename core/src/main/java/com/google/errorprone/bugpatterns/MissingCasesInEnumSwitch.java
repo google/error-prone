@@ -28,7 +28,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Description.Builder;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
@@ -37,11 +36,9 @@ import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCSwitch;
 import com.sun.tools.javac.tree.TreeInfo;
-
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
-
 import javax.lang.model.element.ElementKind;
 
 /**
@@ -86,7 +83,7 @@ public class MissingCasesInEnumSwitch extends BugChecker implements SwitchTreeMa
   private void buildFixes(
       SwitchTree tree, VisitorState state, Set<String> unhandled, Builder description) {
 
-    int idx = state.getEndPosition((JCTree) tree) - 1; // preserve closing '}'
+    int idx = state.getEndPosition(tree) - 1; // preserve closing '}'
 
     StringBuilder sb = new StringBuilder();
     for (String label : unhandled) {

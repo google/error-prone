@@ -27,10 +27,8 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.tools.javac.tree.JCTree;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
@@ -51,8 +49,8 @@ public class GetClassOnEnum extends BugChecker implements BugChecker.MethodInvoc
       return describeMatch(
           tree,
           SuggestedFix.replace(
-              state.getEndPosition((JCTree) ASTHelpers.getReceiver(tree)),
-              state.getEndPosition((JCTree) tree),
+              state.getEndPosition(ASTHelpers.getReceiver(tree)),
+              state.getEndPosition(tree),
               ".getDeclaringClass()"));
     }
     return Description.NO_MATCH;
