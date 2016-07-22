@@ -20,6 +20,7 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.matchers.Matchers.toType;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
+import com.google.common.primitives.Longs;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.MaturityLevel;
@@ -106,11 +107,16 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
     String typeName = state.getSourceForNode(tree.getIdentifier());
     if (HASH_CODE.matches(parent, state)) {
       // e.g. new Integer($A).hashCode() -> Integer.hashCode($A)
-      return SuggestedFix.builder()
-          .replace(
-              parent.getStartPosition(),
-              arg.getStartPosition(),
-              String.format("%s.hashCode(", typeName))
+      SuggestedFix.Builder fix = SuggestedFix.builder();
+      String replacement;
+      if (state.getTypes().isSameType(type, state.getSymtab().longType)) {
+        // TODO(b/29979605): Long.hashCode was added in JDK8
+        fix.addImport(Longs.class.getName());
+        replacement = "Longs.hashCode(";
+      } else {
+        replacement = String.format("%s.hashCode(", typeName);
+      }
+      return fix.replace(parent.getStartPosition(), arg.getStartPosition(), replacement)
           .replace(state.getEndPosition(arg), state.getEndPosition(parent), ")")
           .build();
     }

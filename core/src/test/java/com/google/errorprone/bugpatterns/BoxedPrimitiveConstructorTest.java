@@ -210,4 +210,19 @@ public class BoxedPrimitiveConstructorTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void longHashCode() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "public abstract class Test {",
+            "  abstract int g(Integer x);",
+            "  int f(long x) {",
+            "    // BUG: Diagnostic contains: return Longs.hashCode(x);",
+            "    return new Long(x).hashCode();",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
