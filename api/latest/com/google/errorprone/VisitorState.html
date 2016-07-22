@@ -197,8 +197,8 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>int</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getEndPosition-com.sun.tools.javac.tree.JCTree-">getEndPosition</a></span>(com.sun.tools.javac.tree.JCTree&nbsp;node)</code>
-<div class="block">Gets the end position of the given node.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getEndPosition-com.sun.source.tree.Tree-">getEndPosition</a></span>(com.sun.source.tree.Tree&nbsp;node)</code>
+<div class="block">Returns the end position of the node, or -1 if it is not available.</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
@@ -578,18 +578,14 @@ public final&nbsp;&lt;T extends com.sun.source.tree.Tree&gt;&nbsp;T&nbsp;findEnc
  only be used if a fix is already going to be emitted.</div>
 </li>
 </ul>
-<a name="getEndPosition-com.sun.tools.javac.tree.JCTree-">
+<a name="getEndPosition-com.sun.source.tree.Tree-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getEndPosition</h4>
-<pre>public&nbsp;int&nbsp;getEndPosition(com.sun.tools.javac.tree.JCTree&nbsp;node)</pre>
-<div class="block">Gets the end position of the given node.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the end position of the node, or -1 if it is not available</dd>
-</dl>
+<pre>public&nbsp;int&nbsp;getEndPosition(com.sun.source.tree.Tree&nbsp;node)</pre>
+<div class="block">Returns the end position of the node, or -1 if it is not available.</div>
 </li>
 </ul>
 <a name="isAndroidCompatible--">

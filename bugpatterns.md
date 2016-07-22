@@ -17,9 +17,6 @@ after we've vetted them against Google's codebase.
 
 ## On by default : WARNING
 
-__[ArraysAsListPrimitiveArray](bugpattern/ArraysAsListPrimitiveArray)__<br>
-Arrays.asList does not autobox primitive arrays, as one might expect.
-
 __[BadAnnotationImplementation](bugpattern/BadAnnotationImplementation)__<br>
 Classes that implement Annotation must override equals and hashCode. Consider using AutoAnnotation instead of implementing Annotation by hand.
 
@@ -58,9 +55,6 @@ If you return or throw from a finally, then values returned or thrown from the t
 
 __[GetClassOnEnum](bugpattern/GetClassOnEnum)__<br>
 Calling getClass() on an enum may return a subclass of the enum type
-
-__[IdentityBinaryExpression](bugpattern/IdentityBinaryExpression)__<br>
-Writing `a &amp;&amp; a`, `a || a`, `a &amp; a`, or `a | a` is equivalent to `a`.
 
 __[IncompatibleModifiers](bugpattern/IncompatibleModifiers)__<br>
 This annotation has incompatible modifiers as specified by its @IncompatibleModifiers annotation
@@ -168,6 +162,9 @@ hashcode method on array does not hash array contents
 __[ArrayToString](bugpattern/ArrayToString)__<br>
 Calling toString on an array does not provide useful information
 
+__[ArraysAsListPrimitiveArray](bugpattern/ArraysAsListPrimitiveArray)__<br>
+Arrays.asList does not autobox primitive arrays, as one might expect.
+
 __[AsyncFunctionReturnsNull](bugpattern/AsyncFunctionReturnsNull)__<br>
 AsyncFunction should not return a null Future, only a Future whose result is null.
 
@@ -221,6 +218,9 @@ Scope annotation on implementation class of AssistedInject factory is not allowe
 
 __[HashtableContains](bugpattern/HashtableContains)__<br>
 contains() is a legacy method that is equivalent to containsValue()
+
+__[IdentityBinaryExpression](bugpattern/IdentityBinaryExpression)__<br>
+Writing `a &amp;&amp; a`, `a || a`, `a &amp; a`, or `a | a` is equivalent to `a`.
 
 __[InfiniteRecursion](bugpattern/InfiniteRecursion)__<br>
 This method always recurses, and will cause a StackOverflowError
@@ -309,6 +309,9 @@ StringBuilder does not have a char constructor; this invokes the int constructor
 __[SuppressWarningsDeprecated](bugpattern/SuppressWarningsDeprecated)__<br>
 Suppressing &quot;deprecated&quot; is probably a typo for &quot;deprecation&quot;
 
+__[ThrowsUncheckedException](bugpattern/ThrowsUncheckedException)__<br>
+Unchecked exceptions do not need to be declared in the method signature.
+
 __[TryFailThrowable](bugpattern/TryFailThrowable)__<br>
 Catching Throwable/Error masks failures from fail() or assert*() in the try block
 
@@ -392,6 +395,9 @@ Empty statement after if
 
 __[FormatString](bugpattern/FormatString)__<br>
 Invalid printf-style format string
+
+__[FormatStringAnnotation](bugpattern/FormatStringAnnotation)__<br>
+Invalid format string passed to formatting method.
 
 __[GuardedByValidator](bugpattern/GuardedByValidator)__<br>
 Invalid @GuardedBy expression

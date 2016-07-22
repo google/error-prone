@@ -1950,6 +1950,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneAnalyzer.html#finished-com.sun.source.util.TaskEvent-">finished(TaskEvent)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneAnalyzer.html" title="class in com.google.errorprone">ErrorProneAnalyzer</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/RefasterRuleCompilerAnalyzer.html#finished-com.sun.source.util.TaskEvent-">finished(TaskEvent)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/RefasterRuleCompilerAnalyzer.html" title="class in com.google.errorprone.refaster">RefasterRuleCompilerAnalyzer</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/Choice.html#first--">first()</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a></dt>
 <dd>
 <div class="block">Returns the first valid option from this <code>Choice</code>.</div>
@@ -1985,9 +1987,25 @@
 <div class="block">Returns a <code>Unifier</code> containing all the bindings from this <code>Unifier</code>, but which can
  succeed or fail independently of this <code>Unifier</code>.</div>
 </dd>
+<dt><a href="com/google/errorprone/annotations/FormatMethod.html" title="annotation in com.google.errorprone.annotations"><span class="typeNameLink">FormatMethod</span></a> - Annotation Type in <a href="com/google/errorprone/annotations/package-summary.html">com.google.errorprone.annotations</a></dt>
+<dd>
+<div class="block">Annotation for a method that takes a printf-style format string as an argument followed by
+ arguments for that format string.</div>
+</dd>
+<dt><a href="com/google/errorprone/annotations/FormatString.html" title="annotation in com.google.errorprone.annotations"><span class="typeNameLink">FormatString</span></a> - Annotation Type in <a href="com/google/errorprone/annotations/package-summary.html">com.google.errorprone.annotations</a></dt>
+<dd>
+<div class="block">Annotation for method parameter declarations which denotes that actual parameters will be used as
+ a format string in printf-style formatting.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/formatstring/FormatString.html" title="class in com.google.errorprone.bugpatterns.formatstring"><span class="typeNameLink">FormatString</span></a> - Class in <a href="com/google/errorprone/bugpatterns/formatstring/package-summary.html">com.google.errorprone.bugpatterns.formatstring</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/formatstring/FormatString.html#FormatString--">FormatString()</a></span> - Constructor for class com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/FormatString.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatString</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/formatstring/FormatStringAnnotationChecker.html" title="class in com.google.errorprone.bugpatterns.formatstring"><span class="typeNameLink">FormatStringAnnotationChecker</span></a> - Class in <a href="com/google/errorprone/bugpatterns/formatstring/package-summary.html">com.google.errorprone.bugpatterns.formatstring</a></dt>
+<dd>
+<div class="block"><a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> to assert validity of methods calls with <a href="com/google/errorprone/bugpatterns/formatstring/FormatString.html" title="class in com.google.errorprone.bugpatterns.formatstring"><code>FormatString</code></a> annotations.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/formatstring/FormatStringAnnotationChecker.html#FormatStringAnnotationChecker--">FormatStringAnnotationChecker()</a></span> - Constructor for class com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/FormatStringAnnotationChecker.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatStringAnnotationChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/formatstring/FormatStringValidation.html" title="class in com.google.errorprone.bugpatterns.formatstring"><span class="typeNameLink">FormatStringValidation</span></a> - Class in <a href="com/google/errorprone/bugpatterns/formatstring/package-summary.html">com.google.errorprone.bugpatterns.formatstring</a></dt>
 <dd>
@@ -2062,7 +2080,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/GuavaSelfEquals.html#generateFix-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-com.sun.source.tree.ExpressionTree-">generateFix(MethodInvocationTree, VisitorState, ExpressionTree)</a></span> - Static method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/GuavaSelfEquals.html" title="class in com.google.errorprone.bugpatterns">GuavaSelfEquals</a></dt>
 <dd>
-<div class="block">Finds a replacement for toReplace expression tree is possible.</div>
+<div class="block">Finds a replacement for toReplace expression tree if possible.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/ExpressionTemplate.html#generateNegation--">generateNegation()</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ExpressionTemplate.html" title="class in com.google.errorprone.refaster">ExpressionTemplate</a></dt>
 <dd>&nbsp;</dd>
@@ -2190,9 +2208,9 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/IndexedPosition.html#getEndPosition-com.sun.tools.javac.tree.EndPosTable-">getEndPosition(EndPosTable)</a></span> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/IndexedPosition.html" title="class in com.google.errorprone.fixes">IndexedPosition</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/VisitorState.html#getEndPosition-com.sun.tools.javac.tree.JCTree-">getEndPosition(JCTree)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/VisitorState.html#getEndPosition-com.sun.source.tree.Tree-">getEndPosition(Tree)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
 <dd>
-<div class="block">Gets the end position of the given node.</div>
+<div class="block">Returns the end position of the node, or -1 if it is not available.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UMemberSelect.html#getExpression--">getExpression()</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UMemberSelect.html" title="class in com.google.errorprone.refaster">UMemberSelect</a></dt>
 <dd>&nbsp;</dd>
@@ -3351,6 +3369,10 @@
 <dd>
 <div class="block">Entry point for compiling Java code with error-prone enabled.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/RefasterRuleCompiler.html#main-java.lang.String:A-">main(String[])</a></span> - Static method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/RefasterRuleCompiler.html" title="class in com.google.errorprone.refaster">RefasterRuleCompiler</a></dt>
+<dd>
+<div class="block">Entry point for compiling a Refaster rule to an analyzer.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/Inliner.html#maker--">maker()</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/MaskedClassLoader.html" title="class in com.google.errorprone"><span class="typeNameLink">MaskedClassLoader</span></a> - Class in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
@@ -3685,6 +3707,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/DepAnn.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/DepAnn.html" title="class in com.google.errorprone.bugpatterns">DepAnn</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/formatstring/FormatStringAnnotationChecker.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/FormatStringAnnotationChecker.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatStringAnnotationChecker</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ForOverrideChecker.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ForOverrideChecker.html" title="class in com.google.errorprone.bugpatterns">ForOverrideChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/InfiniteRecursion.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/InfiniteRecursion.html" title="class in com.google.errorprone.bugpatterns">InfiniteRecursion</a></dt>
@@ -3733,6 +3757,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByValidator.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByValidator.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByValidator</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ThrowsUncheckedException.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ThrowsUncheckedException.html" title="class in com.google.errorprone.bugpatterns">ThrowsUncheckedException</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/TypeParameterUnusedInFormals.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TypeParameterUnusedInFormals.html" title="class in com.google.errorprone.bugpatterns">TypeParameterUnusedInFormals</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/UnsynchronizedOverridesSynchronized.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnsynchronizedOverridesSynchronized.html" title="class in com.google.errorprone.bugpatterns">UnsynchronizedOverridesSynchronized</a></dt>
@@ -3774,6 +3800,8 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/EqualsIncompatibleType.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/EqualsIncompatibleType.html" title="class in com.google.errorprone.bugpatterns">EqualsIncompatibleType</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/formatstring/FormatString.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/FormatString.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatString</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/formatstring/FormatStringAnnotationChecker.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/FormatStringAnnotationChecker.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatStringAnnotationChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ForOverrideChecker.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ForOverrideChecker.html" title="class in com.google.errorprone.bugpatterns">ForOverrideChecker</a></dt>
 <dd>&nbsp;</dd>
@@ -4704,6 +4732,18 @@
 <dd>
 <div class="block">Scanner implementation to extract a single Refaster rule from a <code>ClassTree</code>.</div>
 </dd>
+<dt><a href="com/google/errorprone/refaster/RefasterRuleCompiler.html" title="class in com.google.errorprone.refaster"><span class="typeNameLink">RefasterRuleCompiler</span></a> - Class in <a href="com/google/errorprone/refaster/package-summary.html">com.google.errorprone.refaster</a></dt>
+<dd>
+<div class="block">A compiler for Refaster rules that outputs a <code>.analyzer</code> file containing a compiled
+ Refaster rule.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/RefasterRuleCompiler.html#RefasterRuleCompiler--">RefasterRuleCompiler()</a></span> - Constructor for class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/RefasterRuleCompiler.html" title="class in com.google.errorprone.refaster">RefasterRuleCompiler</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/refaster/RefasterRuleCompilerAnalyzer.html" title="class in com.google.errorprone.refaster"><span class="typeNameLink">RefasterRuleCompilerAnalyzer</span></a> - Class in <a href="com/google/errorprone/refaster/package-summary.html">com.google.errorprone.refaster</a></dt>
+<dd>
+<div class="block">TaskListener that receives compilation of a Refaster rule class and outputs a serialized analyzer
+ to the specified path.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/ReferenceEquality.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">ReferenceEquality</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ReferenceEquality.html#ReferenceEquality--">ReferenceEquality()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ReferenceEquality.html" title="class in com.google.errorprone.bugpatterns">ReferenceEquality</a></dt>
@@ -5101,6 +5141,11 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/StreamToString.html#StreamToString--">StreamToString()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StreamToString.html" title="class in com.google.errorprone.bugpatterns">StreamToString</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/formatstring/StrictFormatStringValidation.html" title="class in com.google.errorprone.bugpatterns.formatstring"><span class="typeNameLink">StrictFormatStringValidation</span></a> - Class in <a href="com/google/errorprone/bugpatterns/formatstring/package-summary.html">com.google.errorprone.bugpatterns.formatstring</a></dt>
+<dd>
+<div class="block">Format string validation utility that fails on more cases than <a href="com/google/errorprone/bugpatterns/formatstring/FormatStringValidation.html" title="class in com.google.errorprone.bugpatterns.formatstring"><code>FormatStringValidation</code></a> to
+ enforce strict format string checking.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/suppliers/Suppliers.html#STRING_TYPE">STRING_TYPE</a></span> - Static variable in class com.google.errorprone.suppliers.<a href="com/google/errorprone/suppliers/Suppliers.html" title="class in com.google.errorprone.suppliers">Suppliers</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/StringBuilderInitWithChar.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">StringBuilderInitWithChar</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
@@ -5295,6 +5340,12 @@
 <div class="block">Matches a <code>throw</code> statement where the thrown item is matched by the passed
  <code>thrownMatcher</code>.</div>
 </dd>
+<dt><a href="com/google/errorprone/bugpatterns/ThrowsUncheckedException.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">ThrowsUncheckedException</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">Suggests to remove the unchecked throws clause.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ThrowsUncheckedException.html#ThrowsUncheckedException--">ThrowsUncheckedException()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ThrowsUncheckedException.html" title="class in com.google.errorprone.bugpatterns">ThrowsUncheckedException</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/LocalStore.html#toBuilder--">toBuilder()</a></span> - Method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/LocalStore.html#toDOToutput--">toDOToutput()</a></span> - Method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a></dt>
@@ -5665,6 +5716,8 @@
 <h2 class="title">V</h2>
 <dl>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/formatstring/FormatStringValidation.html#validate-java.util.Collection-com.google.errorprone.VisitorState-">validate(Collection&lt;? extends ExpressionTree&gt;, VisitorState)</a></span> - Static method in class com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/FormatStringValidation.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatStringValidation</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/formatstring/StrictFormatStringValidation.html#validate-com.sun.source.tree.ExpressionTree-java.util.List-com.google.errorprone.VisitorState-">validate(ExpressionTree, List&lt;? extends ExpressionTree&gt;, VisitorState)</a></span> - Static method in class com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/StrictFormatStringValidation.html" title="class in com.google.errorprone.bugpatterns.formatstring">StrictFormatStringValidation</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/BugPatternValidator.html#validate-com.google.errorprone.BugPattern-">validate(BugPattern)</a></span> - Static method in class com.google.errorprone.<a href="com/google/errorprone/BugPatternValidator.html" title="class in com.google.errorprone">BugPatternValidator</a></dt>
 <dd>&nbsp;</dd>
