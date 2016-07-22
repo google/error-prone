@@ -21,15 +21,12 @@ import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
-
 import edu.umd.cs.findbugs.formatStringChecker.ExtraFormatArgumentsException;
 import edu.umd.cs.findbugs.formatStringChecker.Formatter;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayDeque;
@@ -50,7 +47,6 @@ import java.util.MissingFormatArgumentException;
 import java.util.MissingFormatWidthException;
 import java.util.UnknownFormatConversionException;
 import java.util.UnknownFormatFlagsException;
-
 import javax.annotation.Nullable;
 import javax.lang.model.type.TypeKind;
 
@@ -62,9 +58,8 @@ public class FormatStringValidation {
    */
   @AutoValue
   public abstract static class ValidationResult {
-    /**
-     * The exception thrown by {@code String.format} or {@code Formatter.check}.
-     */
+    /** The exception thrown by {@code String.format} or {@code Formatter.check}. */
+    @Nullable
     public abstract Exception exception();
 
     /**
@@ -72,7 +67,7 @@ public class FormatStringValidation {
      */
     public abstract String message();
 
-    public static ValidationResult create(Exception exception, String message) {
+    public static ValidationResult create(@Nullable Exception exception, String message) {
       return new AutoValue_FormatStringValidation_ValidationResult(exception, message);
     }
   }

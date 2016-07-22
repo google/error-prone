@@ -140,6 +140,7 @@ import com.google.errorprone.bugpatterns.android.MislabeledAndroidString;
 import com.google.errorprone.bugpatterns.android.RectIntersectReturnValueIgnored;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionIncompatibleType;
 import com.google.errorprone.bugpatterns.formatstring.FormatString;
+import com.google.errorprone.bugpatterns.formatstring.FormatStringAnnotationChecker;
 import com.google.errorprone.bugpatterns.inject.AssistedInjectAndInjectOnConstructors;
 import com.google.errorprone.bugpatterns.inject.AssistedInjectAndInjectOnSameConstructor;
 import com.google.errorprone.bugpatterns.inject.InjectedConstructorAnnotations;
@@ -226,6 +227,7 @@ public class BuiltInCheckerSuppliers {
           EqualsNaN.class,
           ForOverrideChecker.class,
           FormatString.class,
+          FormatStringAnnotationChecker.class,
           GetClassOnAnnotation.class,
           GetClassOnClass.class,
           GuardedByChecker.class,
