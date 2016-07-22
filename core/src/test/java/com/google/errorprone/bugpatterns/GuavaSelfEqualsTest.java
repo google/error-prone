@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,5 +43,19 @@ public class GuavaSelfEqualsTest {
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.addSourceFile("GuavaSelfEqualsNegativeCases.java").doTest();
+  }
+
+  @Test
+  public void enclosingStatement() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.base.Objects;",
+            "class Test {",
+            "  Object a = new Object();",
+            "  // BUG: Diagnostic contains:",
+            "  boolean b = Objects.equal(a, a);",
+            "}")
+        .doTest();
   }
 }

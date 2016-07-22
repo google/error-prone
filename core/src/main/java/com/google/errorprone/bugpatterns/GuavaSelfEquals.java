@@ -31,9 +31,9 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
@@ -41,7 +41,6 @@ import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
-
 import java.util.List;
 
 /**
@@ -124,14 +123,25 @@ public class GuavaSelfEquals extends BugChecker implements MethodInvocationTreeM
       }
     }
   }
-  
-  /** Finds a replacement for toReplace expression tree is possible. */
+
+  /** Finds a replacement for toReplace expression tree if possible. */
   protected static Fix generateFix(
       MethodInvocationTree methodInvocationTree, VisitorState state, ExpressionTree toReplace) {
-    // Find containing block
+    Fix fieldFix = fieldFix(toReplace, state);
+    if (fieldFix != null) {
+      return fieldFix;
+    }
+    // If we don't find a good field to use, then just replace with "true"
+    return SuggestedFix.replace(methodInvocationTree, "true");
+  }
+
+  private static Fix fieldFix(Tree toReplace, VisitorState state) {
     TreePath path = state.getPath();
-    while (path.getLeaf().getKind() != Kind.BLOCK) {
+    while (path != null && path.getLeaf().getKind() != Kind.BLOCK) {
       path = path.getParentPath();
+    }
+    if (path == null) {
+      return null;
     }
     JCBlock block = (JCBlock) path.getLeaf();
     for (JCStatement jcStatement : block.getStatements()) {
@@ -143,14 +153,12 @@ public class GuavaSelfEquals extends BugChecker implements MethodInvocationTreeM
           if (toReplace.getKind() == Kind.IDENTIFIER) {
             return SuggestedFix.prefixWith(toReplace, declaration.getName() + ".");
           } else {
-            return
-                SuggestedFix.replace(
-                    ((JCFieldAccess) toReplace).getExpression(), declaration.getName().toString());
+            return SuggestedFix.replace(
+                ((JCFieldAccess) toReplace).getExpression(), declaration.getName().toString());
           }
         }
       }
     }
-    // If we don't find a good field to use, then just replace with "true"
-    return SuggestedFix.replace(methodInvocationTree, "true");
+    return null;
   }
 }
