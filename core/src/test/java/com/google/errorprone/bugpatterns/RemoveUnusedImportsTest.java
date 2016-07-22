@@ -16,13 +16,12 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-
+import com.google.errorprone.CompilationTestHelper;
+import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.io.IOException;
 
 /**
  * @author gak@google.com (Gregory Kick)
@@ -171,6 +170,22 @@ public class RemoveUnusedImportsTest {
             "/** {@link Map#get} */",
             "public class Test {}")
         .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void diagnosticPosition() throws IOException {
+    CompilationTestHelper.newInstance(RemoveUnusedImports.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "package test;",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "// BUG: Diagnostic contains:",
+            "import java.util.LinkedList;",
+            "public class Test {",
+            "  List<String> xs = new ArrayList<>();",
+            "}")
         .doTest();
   }
 }

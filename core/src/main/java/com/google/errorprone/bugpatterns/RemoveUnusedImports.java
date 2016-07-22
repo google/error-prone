@@ -29,7 +29,6 @@ import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.bugpatterns.StaticImports.StaticImportInfo;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-
 import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.doctree.ReferenceTree;
 import com.sun.source.tree.CompilationUnitTree;
@@ -41,10 +40,8 @@ import com.sun.source.util.DocTreePathScanner;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Symbol;
-
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.annotation.Nullable;
 
 /** @author gak@google.com (Gregory Kick) */
@@ -83,12 +80,15 @@ public final class RemoveUnusedImports extends BugChecker implements Compilation
               }
             });
 
+
+    if (unusedImports.isEmpty()) {
+      return NO_MATCH;
+    }
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
     for (ImportTree unusedImport : unusedImports) {
       fixBuilder.delete(unusedImport);
     }
-
-    return fixBuilder.isEmpty() ? NO_MATCH : describeMatch(compilationUnitTree, fixBuilder.build());
+    return describeMatch(unusedImports.iterator().next(), fixBuilder.build());
   }
 
   /**
