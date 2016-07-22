@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.auto.value.AutoValue;
@@ -68,8 +67,7 @@ import org.pcollections.ConsPStack;
   name = "Immutable",
   summary = "Type declaration annotated with @Immutable is not immutable",
   category = JDK,
-  severity = ERROR,
-  maturity = EXPERIMENTAL
+  severity = ERROR
 )
 public class ImmutableChecker extends BugChecker implements BugChecker.ClassTreeMatcher {
 

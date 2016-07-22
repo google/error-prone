@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.android;
 
 import static com.google.errorprone.BugPattern.Category.ANDROID;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -41,9 +40,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import java.util.List;
 
-/**
- * @author avenet@google.com (Arnaud J. Venet)
- */
+/** @author avenet@google.com (Arnaud J. Venet) */
 @BugPattern(
   name = "FragmentNotInstantiable",
   altNames = {"ValidFragment"},
@@ -51,8 +48,7 @@ import java.util.List;
       "Subclasses of Fragment must be instantiable via Class#newInstance():"
           + " the class must be public, static and have a public nullary constructor",
   category = ANDROID,
-  severity = WARNING,
-  maturity = EXPERIMENTAL
+  severity = WARNING
 )
 public class FragmentNotInstantiable extends BugChecker implements ClassTreeMatcher {
   private static final String MESSAGE_BASE = "Fragment is not instantiable: ";

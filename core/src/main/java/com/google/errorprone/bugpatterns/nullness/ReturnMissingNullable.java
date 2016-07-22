@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.nullness;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 
 import com.google.errorprone.BugPattern;
@@ -42,8 +41,7 @@ import javax.annotation.Nullable;
   name = "ReturnMissingNullable",
   summary = "Methods that can return null should be annotated @Nullable",
   category = JDK,
-  severity = SUGGESTION,
-  maturity = EXPERIMENTAL
+  severity = SUGGESTION
 )
 public class ReturnMissingNullable extends BugChecker implements ReturnTreeMatcher {
 

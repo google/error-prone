@@ -17,7 +17,6 @@
 package com.google.errorprone.matchers;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
@@ -44,8 +43,7 @@ public class MethodMatchersTest {
     name = "ConstructorDeleter",
     category = JDK,
     summary = "Deletes constructors",
-    severity = ERROR,
-    maturity = EXPERIMENTAL
+    severity = ERROR
   )
   public static class ConstructorDeleter extends BugChecker
       implements BugChecker.MethodInvocationTreeMatcher, BugChecker.NewClassTreeMatcher {

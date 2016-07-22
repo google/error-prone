@@ -18,7 +18,6 @@ package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static org.junit.Assert.fail;
 
@@ -174,8 +173,7 @@ public class BugCheckerRefactoringTestHelperTest {
     summary = "Mock refactoring that replaces all returns with 'return null;' statement.",
     explanation = "For test purposes only.",
     category = JDK,
-    severity = SUGGESTION,
-    maturity = EXPERIMENTAL
+    severity = SUGGESTION
   )
   public static class ReturnNullRefactoring extends BugChecker implements ReturnTreeMatcher {
     @Override
@@ -189,8 +187,7 @@ public class BugCheckerRefactoringTestHelperTest {
     summary = "Mock refactoring that removes all annotations declared in package bar ",
     explanation = "For test purposes only.",
     category = JDK,
-    severity = SUGGESTION,
-    maturity = EXPERIMENTAL
+    severity = SUGGESTION
   )
   public static class RemoveAnnotationRefactoring extends BugChecker
       implements AnnotationTreeMatcher {

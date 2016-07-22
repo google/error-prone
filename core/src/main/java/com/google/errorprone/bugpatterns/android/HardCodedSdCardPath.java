@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.android;
 
 import static com.google.errorprone.BugPattern.Category.ANDROID;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
 
@@ -33,8 +32,8 @@ import com.sun.source.tree.LiteralTree;
 import java.util.Map;
 
 /**
- * TODO(avenet): Restrict this check to Android code once the capability is available in
- * Error Prone. See b/27967984.
+ * TODO(avenet): Restrict this check to Android code once the capability is available in Error
+ * Prone. See b/27967984.
  *
  * @author avenet@google.com (Arnaud J. Venet)
  */
@@ -43,8 +42,7 @@ import java.util.Map;
   altNames = {"SdCardPath"},
   summary = "Hardcoded reference to /sdcard",
   category = ANDROID,
-  severity = WARNING,
-  maturity = EXPERIMENTAL
+  severity = WARNING
 )
 public class HardCodedSdCardPath extends BugChecker implements LiteralTreeMatcher {
   // The proper ways of retrieving the "/sdcard" and "/data/data" directories.

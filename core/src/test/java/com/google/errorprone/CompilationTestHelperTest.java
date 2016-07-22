@@ -18,7 +18,6 @@ package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static org.junit.Assert.fail;
 
@@ -407,8 +406,7 @@ public class CompilationTestHelperTest {
     summary = "Package declaration found",
     explanation = "Prefer to use the default package for everything.",
     category = JDK,
-    severity = ERROR,
-    maturity = EXPERIMENTAL
+    severity = ERROR
   )
   public static class PackageTreeChecker extends BugChecker implements CompilationUnitTreeMatcher {
     @Override

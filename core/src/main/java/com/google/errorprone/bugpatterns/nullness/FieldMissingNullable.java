@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.nullness;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 
 import com.google.errorprone.BugPattern;
@@ -42,11 +41,11 @@ import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
 
 /**
- * {@link Nullable} suggestions for fields based on values assigned to them.  For simplicity this
- * check will not suggest annotations for fields that are never assigned in a constructor.  While
+ * {@link Nullable} suggestions for fields based on values assigned to them. For simplicity this
+ * check will not suggest annotations for fields that are never assigned in a constructor. While
  * fields like that <i>seem</i> like obvious candidates for being nullable, they are really not
  * because fields may be assigned to in methods called from a constructor or super-constructor, for
- * instance.  We'd also need an analysis that tells us about uninitialized fields.
+ * instance. We'd also need an analysis that tells us about uninitialized fields.
  *
  * @author kmb@google.com (Kevin Bierhoff)
  */
@@ -54,8 +53,7 @@ import javax.lang.model.element.ElementKind;
   name = "FieldMissingNullable",
   summary = "Fields that can be null should be annotated @Nullable",
   category = JDK,
-  severity = SUGGESTION,
-  maturity = EXPERIMENTAL
+  severity = SUGGESTION
 )
 public class FieldMissingNullable extends BugChecker
     implements AssignmentTreeMatcher, VariableTreeMatcher {

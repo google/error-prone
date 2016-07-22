@@ -17,7 +17,6 @@
 package com.google.errorprone.matchers;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static org.junit.Assert.assertNotNull;
 
@@ -42,8 +41,7 @@ public final class NextStatementTest {
     name = "CompoundAssignmentBeforeReturn",
     category = JDK,
     summary = "This is a compound assignment before another statement in the same block",
-    severity = ERROR,
-    maturity = EXPERIMENTAL
+    severity = ERROR
   )
   public static class CompoundBeforeAnythingChecker extends BugChecker
       implements BugChecker.CompoundAssignmentTreeMatcher {

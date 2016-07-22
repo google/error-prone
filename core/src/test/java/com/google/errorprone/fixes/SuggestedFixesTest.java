@@ -17,7 +17,6 @@
 package com.google.errorprone.fixes;
 
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
@@ -26,7 +25,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Category;
-import com.google.errorprone.BugPattern.MaturityLevel;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
@@ -71,8 +69,7 @@ public class SuggestedFixesTest {
     name = "EditModifiers",
     category = Category.ONE_OFF,
     summary = "Edits modifiers",
-    severity = SeverityLevel.ERROR,
-    maturity = MaturityLevel.EXPERIMENTAL
+    severity = SeverityLevel.ERROR
   )
   public static class EditModifiersChecker extends BugChecker implements VariableTreeMatcher {
 
@@ -351,8 +348,7 @@ public class SuggestedFixesTest {
     name = "JavadocQualifier",
     category = BugPattern.Category.JDK,
     summary = "all javadoc links should be qualified",
-    severity = ERROR,
-    maturity = MATURE
+    severity = ERROR
   )
   public static class JavadocQualifier extends BugChecker implements BugChecker.ClassTreeMatcher {
     @Override
