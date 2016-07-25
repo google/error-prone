@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package com.google.errorprone.bugpatterns;
+
+option java_package = "com.google.errorprone.bugpatterns.proto";
+
+message TestProto3Message {
+  string myString = 1;
+  bytes myBytes = 2;
+}
