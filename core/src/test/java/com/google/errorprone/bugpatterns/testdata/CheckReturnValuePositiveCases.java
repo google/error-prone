@@ -16,7 +16,10 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-import javax.annotation.CheckReturnValue;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
@@ -25,15 +28,22 @@ public class CheckReturnValuePositiveCases {
   
   IntValue intValue = new IntValue(0);
   
-  @CheckReturnValue
+  @javax.annotation.CheckReturnValue
   private int increment(int bar) {
     return bar + 1;
   }
   
+  @CheckReturnValue
+  private int incrementWithCustomAnnotation(int bar) {
+    return bar + 1;
+  }
+
   public void foo() {
     int i = 1;
     // BUG: Diagnostic contains: remove this line
     increment(i);
+    // BUG: Diagnostic contains: remove this line
+    incrementWithCustomAnnotation(i);
     System.out.println(i);
   }
   
@@ -92,7 +102,7 @@ public class CheckReturnValuePositiveCases {
       this.i = i;
     }
     
-    @CheckReturnValue
+    @javax.annotation.CheckReturnValue
     public IntValue increment() {
       return new IntValue(i + 1);
     }
@@ -109,14 +119,14 @@ public class CheckReturnValuePositiveCases {
   }
 
   private static class MyObject {
-    @CheckReturnValue
+    @javax.annotation.CheckReturnValue
     MyObject() {}
   }
 
   private abstract static class LB1<A> {}
   private static class LB2<A> extends LB1<A> {
     
-    @CheckReturnValue
+    @javax.annotation.CheckReturnValue
     public static <T> LB2<T> lb1() {
         return new LB2<T>();
     }
@@ -126,5 +136,10 @@ public class CheckReturnValuePositiveCases {
       lb1();
       return lb1();
     }
+  }
+
+  @Target({ ElementType.CONSTRUCTOR, ElementType.METHOD, ElementType.PACKAGE, ElementType.TYPE })
+  @Retention(RetentionPolicy.CLASS)
+  @interface CheckReturnValue {
   }
 }

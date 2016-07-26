@@ -47,6 +47,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -73,7 +74,8 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
     if (hasAnnotation(sym, CanIgnoreReturnValue.class, state)) {
       return Optional.of(false);
     }
-    if (hasAnnotation(sym, javax.annotation.CheckReturnValue.class, state)) {
+    if (hasAnnotation(sym, javax.annotation.CheckReturnValue.class, state)
+        || hasAnnotationString(sym, "CheckReturnValue")) {
       return Optional.of(true);
     }
     return Optional.absent();
@@ -173,7 +175,8 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
   public Description matchMethod(MethodTree tree, VisitorState state) {
     MethodSymbol method = ASTHelpers.getSymbol(tree);
 
-    boolean checkReturn = hasAnnotation(method, javax.annotation.CheckReturnValue.class, state);
+    boolean checkReturn = hasAnnotation(method, javax.annotation.CheckReturnValue.class, state)
+        || hasAnnotationString(method, "CheckReturnValue");
     boolean canIgnore = hasAnnotation(method, CanIgnoreReturnValue.class, state);
 
     if (checkReturn && canIgnore) {
@@ -206,7 +209,8 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
    */
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
-    if (hasAnnotation(tree, javax.annotation.CheckReturnValue.class, state)
+    if ((hasAnnotation(tree, javax.annotation.CheckReturnValue.class, state)
+         || hasAnnotationString(ASTHelpers.getSymbol(tree), "CheckReturnValue"))
         && hasAnnotation(tree, CanIgnoreReturnValue.class, state)) {
       return buildDescription(tree).setMessage(String.format(BOTH_ERROR, "class")).build();
     }
@@ -237,4 +241,19 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
 
   static final Matcher<StatementTree> EXPECTED_EXCEPTION_MATCHER =
       allOf(enclosingNode(kindIs(Kind.TRY)), nextStatement(expressionStatement(FAIL_METHOD)));
+
+  /** Check if a symbol has an annotation by comparing its not fully qualified name. */
+  private static boolean hasAnnotationString(Symbol sym, String annotation) {
+    for (Attribute.Compound compound : sym.getAnnotationMirrors()) {
+      String str = compound.type.toString();
+      int index = str.lastIndexOf('.');
+      if (index != -1) {
+        str = str.substring(index + 1);
+      }
+      if (str.equals(annotation)) {
+          return true;
+      }
+    }
+    return false;
+  }
 }
