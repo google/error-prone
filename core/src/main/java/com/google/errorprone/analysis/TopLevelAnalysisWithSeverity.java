@@ -19,10 +19,8 @@ import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.DescriptionListener;
 import com.google.errorprone.ErrorProneOptions.Severity;
 import com.google.errorprone.matchers.Description;
-
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.tools.javac.util.Context;
-
 import java.util.Set;
 
 /**

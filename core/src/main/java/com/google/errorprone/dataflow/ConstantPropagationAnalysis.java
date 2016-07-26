@@ -18,7 +18,6 @@ package com.google.errorprone.dataflow;
 
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.util.Context;
-
 import org.checkerframework.dataflow.constantpropagation.Constant;
 import org.checkerframework.dataflow.constantpropagation.ConstantPropagationTransfer;
 

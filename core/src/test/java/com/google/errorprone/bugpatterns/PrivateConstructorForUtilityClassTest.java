@@ -16,14 +16,12 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-
 import com.google.errorprone.CompilationTestHelper;
+import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.io.IOException;
 
 /** {@link PrivateConstructorForUtilityClass} Test */
 @RunWith(JUnit4.class)

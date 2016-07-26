@@ -20,12 +20,10 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.google.auto.service.AutoService;
 import com.google.gson.Gson;
-
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.Set;
-
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;

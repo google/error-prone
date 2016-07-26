@@ -20,7 +20,6 @@ import static org.junit.Assert.assertEquals;
 
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Context.Key;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;

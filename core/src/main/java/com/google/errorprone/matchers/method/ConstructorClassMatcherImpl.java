@@ -24,10 +24,8 @@ import com.google.errorprone.matchers.method.MethodMatchers.ParameterMatcher;
 import com.google.errorprone.predicates.TypePredicate;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Type;
-
 import java.util.Arrays;
 
 /** Matches on class type, allows refinement on parameters. */

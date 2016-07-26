@@ -23,7 +23,6 @@ import com.google.errorprone.matchers.method.MethodMatchers.ConstructorMatcher;
 import com.google.errorprone.predicates.TypePredicates;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;

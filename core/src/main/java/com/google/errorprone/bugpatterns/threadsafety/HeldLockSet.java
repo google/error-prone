@@ -16,12 +16,10 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
+import java.util.Collection;
+import javax.annotation.CheckReturnValue;
 import org.pcollections.Empty;
 import org.pcollections.PSet;
-
-import java.util.Collection;
-
-import javax.annotation.CheckReturnValue;
 
 /**
  * A set of held locks.

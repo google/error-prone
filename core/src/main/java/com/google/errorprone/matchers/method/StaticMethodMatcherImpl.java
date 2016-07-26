@@ -22,7 +22,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.method.MethodMatchers.StaticMethodMatcher;
 import com.google.errorprone.predicates.TypePredicates;
 import com.google.errorprone.suppliers.Supplier;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Type;
 

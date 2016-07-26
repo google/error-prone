@@ -17,7 +17,6 @@ package com.google.errorprone.analysis;
 import com.google.auto.value.AutoValue;
 import com.google.errorprone.ErrorProneOptions;
 import com.google.errorprone.InvalidCommandLineOptionException;
-
 import java.util.Set;
 
 /**

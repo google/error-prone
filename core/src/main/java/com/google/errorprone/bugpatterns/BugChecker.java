@@ -27,7 +27,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Suppressible;
-
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ArrayAccessTree;
@@ -80,13 +79,11 @@ import com.sun.source.tree.UnionTypeTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
-
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-
 import javax.annotation.CheckReturnValue;
 
 /**

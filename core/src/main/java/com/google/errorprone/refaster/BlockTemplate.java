@@ -28,7 +28,6 @@ import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.refaster.UStatement.UnifierWithUnconsumedStatements;
 import com.google.errorprone.refaster.annotation.UseImportPolicy;
-
 import com.sun.source.tree.StatementTree;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCBlock;
@@ -36,7 +35,6 @@ import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Warner;
-
 import java.io.IOException;
 import java.io.StringWriter;
 import java.lang.annotation.Annotation;

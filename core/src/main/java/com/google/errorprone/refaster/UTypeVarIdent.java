@@ -18,11 +18,9 @@ package com.google.errorprone.refaster;
 
 import com.google.auto.value.AutoValue;
 import com.google.errorprone.refaster.UTypeVar.TypeWithExpression;
-
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
-
 import javax.annotation.Nullable;
 
 /**

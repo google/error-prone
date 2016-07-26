@@ -18,7 +18,6 @@ package com.google.errorprone.refaster;
 
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
-
 import javax.annotation.Nullable;
 
 /**

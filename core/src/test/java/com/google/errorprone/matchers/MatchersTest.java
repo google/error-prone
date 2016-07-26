@@ -32,9 +32,7 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.scanner.ErrorProneScanner;
 import com.google.errorprone.scanner.ScannerSupplier;
-
 import com.sun.source.tree.MethodTree;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

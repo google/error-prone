@@ -17,7 +17,6 @@
 package com.google.errorprone.matchers;
 
 import com.google.errorprone.BugPattern;
-
 import java.lang.annotation.Annotation;
 import java.util.Set;
 

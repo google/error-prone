@@ -20,11 +20,8 @@ import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.scanner.ScannerSupplier;
-
 import com.sun.tools.javac.util.Context;
-
 import java.util.ServiceLoader;
-
 import javax.tools.JavaFileManager;
 import javax.tools.StandardLocation;
 

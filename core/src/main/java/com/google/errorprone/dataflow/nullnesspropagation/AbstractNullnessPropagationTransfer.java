@@ -22,7 +22,12 @@ import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropaga
 import static org.checkerframework.javacutil.TreeUtils.elementFromDeclaration;
 
 import com.google.errorprone.dataflow.LocalStore;
-
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import javax.annotation.CheckReturnValue;
+import javax.lang.model.element.Element;
 import org.checkerframework.dataflow.analysis.ConditionalTransferResult;
 import org.checkerframework.dataflow.analysis.RegularTransferResult;
 import org.checkerframework.dataflow.analysis.TransferFunction;
@@ -97,14 +102,6 @@ import org.checkerframework.dataflow.cfg.node.TypeCastNode;
 import org.checkerframework.dataflow.cfg.node.UnsignedRightShiftNode;
 import org.checkerframework.dataflow.cfg.node.VariableDeclarationNode;
 import org.checkerframework.dataflow.cfg.node.WideningConversionNode;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.annotation.CheckReturnValue;
-import javax.lang.model.element.Element;
 
 /**
  * A default implementation of a transfer function for nullability analysis with more convenient

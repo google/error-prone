@@ -20,7 +20,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.predicates.TypePredicate;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.tools.javac.code.Type;
 
 /** Matches sub-types of the given type. */

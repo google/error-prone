@@ -19,7 +19,6 @@ package com.google.errorprone.util;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import com.google.common.collect.ImmutableList;
-
 import com.sun.tools.javac.parser.JavaTokenizer;
 import com.sun.tools.javac.parser.Scanner;
 import com.sun.tools.javac.parser.ScannerFactory;

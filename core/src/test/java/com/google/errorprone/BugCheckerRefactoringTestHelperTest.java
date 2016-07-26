@@ -29,17 +29,14 @@ import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ReturnTree;
-
+import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.io.IOException;
-import java.nio.file.FileAlreadyExistsException;
 
 /** Tests for {@link BugCheckerRefactoringTestHelper}. */
 @RunWith(JUnit4.class)

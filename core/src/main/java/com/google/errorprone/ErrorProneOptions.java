@@ -19,7 +19,6 @@ package com.google.errorprone;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;

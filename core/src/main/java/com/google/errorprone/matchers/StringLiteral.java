@@ -17,10 +17,8 @@
 package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
-
 import java.util.regex.Pattern;
 
 /**

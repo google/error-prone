@@ -19,7 +19,6 @@ package com.google.errorprone.matchers.method;
 import com.google.common.base.Optional;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;

@@ -22,7 +22,6 @@ import com.google.errorprone.matchers.method.MethodMatchers.AnyMethodMatcher;
 import com.google.errorprone.matchers.method.MethodMatchers.MethodClassMatcher;
 import com.google.errorprone.predicates.TypePredicate;
 import com.google.errorprone.predicates.TypePredicates;
-
 import com.sun.source.tree.ExpressionTree;
 
 /** Matches instance or static methods, allows refinement on class type. */

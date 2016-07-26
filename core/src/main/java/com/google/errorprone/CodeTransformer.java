@@ -17,10 +17,8 @@
 package com.google.errorprone;
 
 import com.google.common.collect.ImmutableClassToInstanceMap;
-
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.util.Context;
-
 import java.lang.annotation.Annotation;
 
 /**

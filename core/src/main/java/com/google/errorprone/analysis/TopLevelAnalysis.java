@@ -15,10 +15,8 @@
 package com.google.errorprone.analysis;
 
 import com.google.errorprone.DescriptionListener;
-
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.tools.javac.util.Context;
-
 import java.util.Set;
 
 /**

@@ -19,7 +19,6 @@ import com.google.common.base.Stopwatch;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.AbstractService;
-
 import java.io.IOException;
 import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;

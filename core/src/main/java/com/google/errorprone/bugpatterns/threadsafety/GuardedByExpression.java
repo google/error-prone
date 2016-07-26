@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns.threadsafety;
 import static com.google.errorprone.bugpatterns.threadsafety.IllegalGuardedBy.checkGuardedBy;
 
 import com.google.auto.value.AutoValue;
-
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
@@ -27,10 +26,8 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.util.Names;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.lang.model.element.ElementKind;
 
 /**

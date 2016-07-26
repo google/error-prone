@@ -27,18 +27,14 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.CodeTransformer;
 import com.google.testing.compile.JavaFileObjects;
-
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
-
+import java.io.IOException;
+import javax.tools.JavaFileObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.io.IOException;
-
-import javax.tools.JavaFileObject;
 
 /**
  * Tests for Refaster templates.

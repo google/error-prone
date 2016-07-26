@@ -19,14 +19,12 @@ package com.google.errorprone.apply;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.io.CharSource;
-
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.StringReader;
 import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.tools.JavaFileObject;
 
 /**

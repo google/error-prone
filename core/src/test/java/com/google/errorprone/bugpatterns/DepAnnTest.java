@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;

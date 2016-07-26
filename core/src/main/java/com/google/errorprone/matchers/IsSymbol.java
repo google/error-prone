@@ -18,7 +18,6 @@ package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol;
 

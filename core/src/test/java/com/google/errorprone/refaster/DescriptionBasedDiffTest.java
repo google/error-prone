@@ -21,9 +21,7 @@ import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.apply.DescriptionBasedDiff;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

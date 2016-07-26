@@ -20,7 +20,6 @@ import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionIncompatibleType.FixType;
 import com.google.errorprone.scanner.ErrorProneScanner;
 import com.google.errorprone.scanner.ScannerSupplier;
-
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;

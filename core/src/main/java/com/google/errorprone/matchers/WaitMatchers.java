@@ -20,7 +20,6 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
 import com.sun.source.tree.MethodInvocationTree;
-
 import java.util.regex.Pattern;
 
 /**

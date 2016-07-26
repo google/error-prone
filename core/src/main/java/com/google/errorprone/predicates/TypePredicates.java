@@ -26,7 +26,6 @@ import com.google.errorprone.predicates.type.Exact;
 import com.google.errorprone.predicates.type.ExactAny;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
-
 import com.sun.tools.javac.code.Type;
 
 /**

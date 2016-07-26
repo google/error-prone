@@ -23,7 +23,6 @@ import com.google.common.collect.Sets;
 import com.google.errorprone.SubContext;
 import com.google.errorprone.refaster.Bindings.Key;
 import com.google.errorprone.refaster.UTypeVar.TypeWithExpression;
-
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
@@ -45,7 +44,6 @@ import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.ListBuffer;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
-
 import java.util.Map;
 import java.util.Set;
 

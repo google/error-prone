@@ -20,7 +20,6 @@ import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.suppliers.Supplier;
-
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
 

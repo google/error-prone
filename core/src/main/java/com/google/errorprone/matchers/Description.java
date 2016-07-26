@@ -25,9 +25,7 @@ import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.fixes.Fix;
-
 import com.sun.source.tree.Tree;
-
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 

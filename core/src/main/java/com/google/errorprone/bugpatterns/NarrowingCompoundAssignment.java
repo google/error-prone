@@ -26,16 +26,13 @@ import com.google.errorprone.bugpatterns.BugChecker.CompoundAssignmentTreeMatche
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.OperatorPrecedence;
-
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCBinary;
-
 import java.util.EnumMap;
-
 import javax.lang.model.type.TypeKind;
 
 /**

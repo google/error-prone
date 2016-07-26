@@ -26,7 +26,6 @@ import com.google.errorprone.bugpatterns.BugChecker.ImportTreeMatcher;
 import com.google.errorprone.bugpatterns.StaticImports.StaticImportInfo;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-
 import com.sun.source.tree.ImportTree;
 
 /**

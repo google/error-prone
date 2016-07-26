@@ -25,17 +25,13 @@ import com.google.errorprone.bugpatterns.DeadException;
 import com.google.errorprone.bugpatterns.EmptyIfStatement;
 import com.google.errorprone.bugpatterns.SelfAssignment;
 import com.google.errorprone.scanner.ScannerSupplier;
-
 import com.sun.tools.javac.main.Main.Result;
-
+import java.util.List;
+import javax.tools.JavaFileObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.util.List;
-
-import javax.tools.JavaFileObject;
 
 /**
  * Tests for standard {@code @SuppressWarnings} suppression method.

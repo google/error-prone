@@ -76,7 +76,6 @@ import com.google.errorprone.bugpatterns.BugChecker.WhileLoopTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.WildcardTreeMatcher;
 import com.google.errorprone.matchers.Suppressible;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ArrayAccessTree;
@@ -130,7 +129,6 @@ import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
-
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;

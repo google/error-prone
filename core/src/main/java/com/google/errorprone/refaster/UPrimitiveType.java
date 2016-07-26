@@ -20,10 +20,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
-
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
-
 import javax.lang.model.type.TypeKind;
 
 /**

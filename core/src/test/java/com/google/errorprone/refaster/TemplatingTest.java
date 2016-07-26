@@ -22,16 +22,13 @@ import com.google.common.collect.ImmutableClassToInstanceMap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
-
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.BoundKind;
 import com.sun.tools.javac.code.Flags;
-
+import java.lang.annotation.Annotation;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.lang.annotation.Annotation;
 
 /**
  * Tests for {@link UTemplater#createTemplate} against real compiled code.

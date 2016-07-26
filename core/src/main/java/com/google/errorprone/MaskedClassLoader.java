@@ -18,10 +18,8 @@ package com.google.errorprone;
 
 import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.util.Context;
-
 import java.net.URL;
 import java.net.URLClassLoader;
-
 import javax.tools.JavaFileManager;
 
 /**

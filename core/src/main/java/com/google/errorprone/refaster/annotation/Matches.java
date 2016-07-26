@@ -17,9 +17,7 @@
 package com.google.errorprone.refaster.annotation;
 
 import com.google.errorprone.matchers.Matcher;
-
 import com.sun.source.tree.ExpressionTree;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

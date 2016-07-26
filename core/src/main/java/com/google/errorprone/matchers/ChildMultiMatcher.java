@@ -21,10 +21,8 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.VisitorState;
-
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
-
 import java.util.List;
 
 /**

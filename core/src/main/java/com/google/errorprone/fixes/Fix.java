@@ -18,7 +18,6 @@ package com.google.errorprone.fixes;
 
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
-
 import java.util.Collection;
 import java.util.Set;
 

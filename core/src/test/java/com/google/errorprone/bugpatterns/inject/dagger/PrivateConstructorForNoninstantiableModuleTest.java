@@ -16,13 +16,11 @@
 package com.google.errorprone.bugpatterns.inject.dagger;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-
+import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.io.IOException;
 
 /** @author Gregory Kick (gak@google.com) */
 @RunWith(JUnit4.class)

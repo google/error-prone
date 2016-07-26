@@ -25,18 +25,15 @@ import static javax.lang.model.element.ElementKind.PARAMETER;
 import static javax.lang.model.element.ElementKind.RESOURCE_VARIABLE;
 
 import com.google.common.collect.ImmutableMap;
-
+import java.util.HashMap;
+import java.util.Map;
+import javax.lang.model.element.Element;
 import org.checkerframework.dataflow.analysis.AbstractValue;
 import org.checkerframework.dataflow.analysis.FlowExpressions;
 import org.checkerframework.dataflow.analysis.Store;
 import org.checkerframework.dataflow.cfg.node.LocalVariableNode;
 import org.checkerframework.dataflow.cfg.node.VariableDeclarationNode;
 import org.checkerframework.javacutil.TreeUtils;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.lang.model.element.Element;
 
 /**
  * Immutable map from each local variable to its {@link AbstractValue}. Note that, while the

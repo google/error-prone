@@ -17,11 +17,8 @@
 package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
-
 import com.sun.source.tree.MethodTree;
-
 import java.util.Set;
-
 import javax.lang.model.element.Modifier;
 
 /**

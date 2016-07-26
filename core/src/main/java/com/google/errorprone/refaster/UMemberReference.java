@@ -20,11 +20,9 @@ import static com.google.errorprone.refaster.Unifier.unifications;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
-
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCMemberReference;
-
 import javax.annotation.Nullable;
 
 /**

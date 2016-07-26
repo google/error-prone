@@ -16,7 +16,6 @@ package com.google.errorprone.analysis;
 
 import com.google.errorprone.DescriptionListener;
 import com.google.errorprone.matchers.Suppressible;
-
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.util.Context;
 

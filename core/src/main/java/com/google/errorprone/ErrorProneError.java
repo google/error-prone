@@ -18,11 +18,9 @@ package com.google.errorprone;
 
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
-
 import com.sun.tools.javac.util.DiagnosticSource;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Log;
-
 import javax.tools.JavaFileObject;
 
 /**

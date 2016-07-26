@@ -25,18 +25,14 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.scanner.ScannerSupplier;
-
 import com.sun.source.tree.ReturnTree;
 import com.sun.tools.javac.main.Main.Result;
-
+import java.util.Arrays;
+import javax.tools.Diagnostic;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.util.Arrays;
-
-import javax.tools.Diagnostic;
 
 /**
  * Tests that {@link BugPattern.SeverityLevel}s map to appropriate

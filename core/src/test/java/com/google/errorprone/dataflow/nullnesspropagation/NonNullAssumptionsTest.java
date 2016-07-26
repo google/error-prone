@@ -23,15 +23,13 @@ import static org.junit.Assert.fail;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.testing.ArbitraryInstances;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTransfer.MemberName;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests to verify assumptions about specific JDK and other methods and fields built into

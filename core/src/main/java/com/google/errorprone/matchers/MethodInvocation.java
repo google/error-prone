@@ -18,7 +18,6 @@ package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.ChildMultiMatcher.MatchType;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 

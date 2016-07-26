@@ -24,20 +24,17 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.refaster.UPlaceholderExpression.PlaceholderParamIdent;
 import com.google.errorprone.refaster.annotation.Matches;
 import com.google.errorprone.refaster.annotation.MayOptionallyUse;
 import com.google.errorprone.refaster.annotation.NotMatches;
 import com.google.errorprone.refaster.annotation.OfKind;
 import com.google.errorprone.refaster.annotation.Placeholder;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.util.List;
-
-import com.google.errorprone.refaster.UPlaceholderExpression.PlaceholderParamIdent;
-
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;

@@ -24,7 +24,6 @@ import com.google.errorprone.matchers.method.MethodMatchers.MethodClassMatcher;
 import com.google.errorprone.predicates.TypePredicate;
 import com.google.errorprone.predicates.TypePredicates;
 import com.google.errorprone.suppliers.Supplier;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Type;
 

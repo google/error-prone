@@ -17,7 +17,6 @@
 package com.google.errorprone.suppliers;
 
 import com.google.errorprone.VisitorState;
-
 import java.io.Serializable;
 
 /**

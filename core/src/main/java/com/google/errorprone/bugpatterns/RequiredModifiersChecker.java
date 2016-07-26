@@ -31,16 +31,13 @@ import com.google.errorprone.annotations.RequiredModifiers;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.util.Names;
-
 import java.util.List;
 import java.util.Set;
-
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 

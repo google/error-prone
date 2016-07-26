@@ -30,9 +30,7 @@ import static com.google.errorprone.matchers.Matchers.not;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.matchers.Matcher;
-
 import com.sun.source.tree.MethodTree;
-
 import java.util.Arrays;
 import java.util.List;
 

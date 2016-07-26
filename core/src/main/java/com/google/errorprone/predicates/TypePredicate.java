@@ -17,9 +17,7 @@
 package com.google.errorprone.predicates;
 
 import com.google.errorprone.VisitorState;
-
 import com.sun.tools.javac.code.Type;
-
 import java.io.Serializable;
 
 /** A predicate for testing {@link Type}s. */

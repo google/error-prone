@@ -21,13 +21,11 @@ import static com.google.common.truth.Truth.assertThat;
 import com.google.errorprone.BugPattern.MaturityLevel;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.DocGenTool.Target;
-
+import java.io.StringWriter;
+import java.util.Arrays;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.io.StringWriter;
-import java.util.Arrays;
 
 @RunWith(JUnit4.class)
 public class BugPatternIndexWriterTest {

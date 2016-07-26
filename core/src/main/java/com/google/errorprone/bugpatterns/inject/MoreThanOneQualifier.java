@@ -29,10 +29,8 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
-
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ModifiersTree;
-
 import java.util.List;
 
 /**

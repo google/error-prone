@@ -24,15 +24,12 @@ import com.google.common.collect.FluentIterable;
 import com.google.errorprone.fixes.AppliedFix;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
-
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Log;
-
 import java.io.IOError;
 import java.io.IOException;
 import java.util.List;
-
 import javax.tools.JavaFileObject;
 
 /**

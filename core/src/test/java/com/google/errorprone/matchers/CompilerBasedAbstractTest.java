@@ -19,13 +19,10 @@ package com.google.errorprone.matchers;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.scanner.Scanner;
 import com.google.errorprone.scanner.ScannerSupplier;
-
 import com.sun.tools.javac.main.Main.Result;
-
-import org.junit.After;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.After;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)

@@ -27,9 +27,7 @@ import com.google.common.primitives.Primitives;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
-
 import com.sun.tools.javac.code.Type;
-
 import java.lang.reflect.TypeVariable;
 import java.util.HashSet;
 import java.util.Set;

@@ -23,10 +23,8 @@ import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.Replacement;
 import com.google.errorprone.fixes.Replacements;
 import com.google.errorprone.matchers.Description;
-
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
-
 import java.util.LinkedHashSet;
 import java.util.Set;
 

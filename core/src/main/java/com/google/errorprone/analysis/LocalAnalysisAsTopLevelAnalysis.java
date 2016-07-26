@@ -18,13 +18,11 @@ import com.google.auto.value.AutoValue;
 import com.google.errorprone.DescriptionListener;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.util.Context;
-
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Collections;

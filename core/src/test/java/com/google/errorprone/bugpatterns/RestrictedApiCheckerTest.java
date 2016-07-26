@@ -17,9 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-
 import com.sun.tools.javac.main.Main.Result;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

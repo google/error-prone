@@ -17,7 +17,6 @@
 package com.google.errorprone.fixes;
 
 import com.sun.tools.javac.tree.EndPosTable;
-
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.StringReader;

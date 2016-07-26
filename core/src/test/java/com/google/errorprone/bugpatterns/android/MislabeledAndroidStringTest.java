@@ -19,12 +19,10 @@ package com.google.errorprone.bugpatterns.android;
 import static com.google.common.truth.Truth.assertThat;
 
 import com.google.errorprone.CompilationTestHelper;
-
+import java.util.Map;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.util.Map;
 
 /**
  * @author kmb@google.com (Kevin Bierhoff)

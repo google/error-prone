@@ -17,9 +17,7 @@
 package com.google.errorprone.refaster;
 
 import com.google.auto.value.AutoValue;
-
 import com.sun.tools.javac.code.Type.ArrayType;
-
 import javax.annotation.Nullable;
 
 /**

@@ -26,7 +26,6 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.errorprone.annotations.ForOverride;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;

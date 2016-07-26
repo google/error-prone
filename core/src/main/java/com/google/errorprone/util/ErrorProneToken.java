@@ -17,12 +17,10 @@
 package com.google.errorprone.util;
 
 import com.google.common.collect.Lists;
-
 import com.sun.tools.javac.parser.Tokens.Comment;
 import com.sun.tools.javac.parser.Tokens.Token;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
 import com.sun.tools.javac.util.Name;
-
 import java.util.Collections;
 import java.util.List;
 

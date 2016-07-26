@@ -27,9 +27,7 @@ import com.google.errorprone.BugPatternValidator;
 import com.google.errorprone.ValidationException;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.matchers.Description;
-
 import com.sun.source.tree.Tree;
-
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
@@ -37,7 +35,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
 import javax.annotation.CheckReturnValue;
 
 /**

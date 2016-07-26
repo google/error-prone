@@ -21,7 +21,6 @@ import static com.sun.tools.javac.code.Flags.COMPOUND;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
-
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.Type.IntersectionClassType;

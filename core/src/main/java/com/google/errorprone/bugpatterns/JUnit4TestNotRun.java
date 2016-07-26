@@ -33,10 +33,8 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.JUnitMatchers.JUnit4TestClassMatcher;
 import com.google.errorprone.matchers.Matchers;
-
 import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
-
 import javax.lang.model.element.Modifier;
 
 /**

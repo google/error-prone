@@ -17,12 +17,10 @@
 package com.google.errorprone;
 
 import com.google.errorprone.scanner.ScannerSupplier;
-
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.api.MultiTaskListener;
 import com.sun.tools.javac.util.Context;
-
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Writer;
@@ -32,7 +30,6 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-
 import javax.lang.model.SourceVersion;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaCompiler;

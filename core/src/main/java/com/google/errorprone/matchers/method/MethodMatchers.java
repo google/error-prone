@@ -19,10 +19,8 @@ package com.google.errorprone.matchers.method;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.predicates.TypePredicate;
 import com.google.errorprone.suppliers.Supplier;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Type;
-
 import java.util.regex.Pattern;
 
 public class MethodMatchers {

@@ -20,10 +20,8 @@ import static org.junit.Assert.assertTrue;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.scanner.Scanner;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

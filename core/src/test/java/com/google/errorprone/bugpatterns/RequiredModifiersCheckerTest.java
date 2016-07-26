@@ -17,13 +17,11 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-
+import javax.tools.JavaFileObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import javax.tools.JavaFileObject;
 
 /**
  * Unit tests for {@link RequiredModifiersChecker}.

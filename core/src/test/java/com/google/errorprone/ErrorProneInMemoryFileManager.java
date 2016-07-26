@@ -24,10 +24,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
-
 import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.util.Context;
-
 import java.io.IOError;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,7 +34,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
-
 import javax.tools.JavaFileObject;
 
 /**

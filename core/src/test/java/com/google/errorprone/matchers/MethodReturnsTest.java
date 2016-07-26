@@ -22,16 +22,13 @@ import static org.junit.Assert.assertEquals;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.scanner.Scanner;
 import com.google.errorprone.suppliers.Suppliers;
-
 import com.sun.source.tree.MethodTree;
-
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author cpovirk@google.com (Chris Povirk)

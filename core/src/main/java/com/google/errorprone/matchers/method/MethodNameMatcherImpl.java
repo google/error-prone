@@ -21,9 +21,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.method.MethodMatchers.MethodNameMatcher;
 import com.google.errorprone.matchers.method.MethodMatchers.ParameterMatcher;
 import com.google.errorprone.suppliers.Suppliers;
-
 import com.sun.source.tree.ExpressionTree;
-
 import java.util.Arrays;
 import java.util.regex.Pattern;
 

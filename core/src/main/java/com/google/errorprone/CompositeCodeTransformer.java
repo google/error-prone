@@ -19,10 +19,8 @@ package com.google.errorprone;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableClassToInstanceMap;
 import com.google.common.collect.ImmutableList;
-
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.util.Context;
-
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 

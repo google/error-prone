@@ -19,7 +19,6 @@ package com.google.errorprone.matchers;
 import static com.google.common.base.MoreObjects.firstNonNull;
 
 import com.google.errorprone.VisitorState;
-
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.Tree;

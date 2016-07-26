@@ -18,7 +18,6 @@ import static com.google.errorprone.bugpatterns.threadsafety.IllegalGuardedBy.ch
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
@@ -39,7 +38,6 @@ import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
-
 import javax.lang.model.element.ElementKind;
 
 /**

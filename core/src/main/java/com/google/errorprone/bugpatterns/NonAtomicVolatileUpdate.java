@@ -37,14 +37,12 @@ import com.google.errorprone.bugpatterns.BugChecker.UnaryTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
-
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.UnaryTree;
-
 import javax.lang.model.element.Modifier;
 
 /**

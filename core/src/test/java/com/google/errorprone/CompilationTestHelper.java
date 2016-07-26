@@ -27,11 +27,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.errorprone.DiagnosticTestHelper.LookForCheckNameInDiagnostic;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.scanner.ScannerSupplier;
-
 import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.main.Main.Result;
 import com.sun.tools.javac.util.Context;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOError;
 import java.io.IOException;
@@ -41,7 +39,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-
 import javax.tools.Diagnostic;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;

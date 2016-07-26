@@ -20,13 +20,11 @@ import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChooser;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.fixes.Fix;
-
+import java.io.IOException;
+import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.io.IOException;
-import java.util.List;
 
 /** {@link ConstantField}Test */
 @RunWith(JUnit4.class)

@@ -29,7 +29,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.refaster.PlaceholderMethod.PlaceholderExpressionKey;
 import com.google.errorprone.refaster.UTypeVar.TypeWithExpression;
 import com.google.errorprone.refaster.annotation.NoAutoboxing;
-
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Kinds.KindSelector;
 import com.sun.tools.javac.code.Symbol;
@@ -63,7 +62,6 @@ import com.sun.tools.javac.util.ListBuffer;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Position;
 import com.sun.tools.javac.util.Warner;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.Writer;
@@ -75,7 +73,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Logger;
-
 import javax.annotation.Nullable;
 
 /**

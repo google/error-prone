@@ -19,7 +19,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern.MaturityLevel;
 import com.google.errorprone.bugpatterns.BugChecker;
-
 import java.util.Arrays;
 import java.util.ServiceLoader;
 

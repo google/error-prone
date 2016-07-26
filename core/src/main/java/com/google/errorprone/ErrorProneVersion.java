@@ -17,7 +17,6 @@
 package com.google.errorprone;
 
 import com.google.common.base.Optional;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;

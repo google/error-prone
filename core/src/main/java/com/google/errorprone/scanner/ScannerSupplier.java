@@ -33,7 +33,6 @@ import com.google.errorprone.ErrorProneOptions;
 import com.google.errorprone.ErrorProneOptions.Severity;
 import com.google.errorprone.InvalidCommandLineOptionException;
 import com.google.errorprone.bugpatterns.BugChecker;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -41,7 +40,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
 import javax.annotation.CheckReturnValue;
 
 /**

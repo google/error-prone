@@ -18,7 +18,13 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.common.io.ByteStreams;
 import com.google.errorprone.CompilationTestHelper;
-
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.jar.JarEntry;
+import java.util.jar.JarOutputStream;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -27,14 +33,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.JUnit4;
 import org.junit.runners.ParentRunner;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.jar.JarEntry;
-import java.util.jar.JarOutputStream;
 
 /** @author glorioso@google.com (Nick Glorioso) */
 @RunWith(JUnit4.class)

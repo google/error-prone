@@ -19,7 +19,6 @@ package com.google.errorprone.matchers.method;
 import com.google.common.base.Optional;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.method.MethodMatchers.MethodSignatureMatcher;
-
 import com.sun.source.tree.ExpressionTree;
 
 /** Matches on method signature. */

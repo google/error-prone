@@ -32,7 +32,6 @@ import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
@@ -50,11 +49,9 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
-
 import java.util.LinkedHashSet;
 import java.util.Map.Entry;
 import java.util.Set;
-
 import javax.lang.model.element.ElementKind;
 
 /** @author Liam Miller-Cushon (cushon@google.com) */

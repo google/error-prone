@@ -18,7 +18,6 @@ package com.google.errorprone.predicates.type;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.predicates.TypePredicate;
-
 import com.sun.tools.javac.code.Type;
 
 /** Matches any type. */

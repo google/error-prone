@@ -17,11 +17,9 @@
 package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
-
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree.Kind;
-
 import java.util.HashSet;
 import java.util.Set;
 

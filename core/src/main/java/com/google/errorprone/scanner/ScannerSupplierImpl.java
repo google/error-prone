@@ -30,7 +30,6 @@ import com.google.common.collect.Sets;
 import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.bugpatterns.BugChecker;
-
 import java.io.Serializable;
 
 /**

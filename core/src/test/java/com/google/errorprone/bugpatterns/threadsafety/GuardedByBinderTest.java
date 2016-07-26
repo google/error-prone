@@ -22,26 +22,22 @@ import static org.junit.Assert.fail;
 import com.google.common.base.Optional;
 import com.google.errorprone.ErrorProneInMemoryFileManager;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeScanner;
-
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /** {@link GuardedByBinder}Test */
 @RunWith(JUnit4.class)

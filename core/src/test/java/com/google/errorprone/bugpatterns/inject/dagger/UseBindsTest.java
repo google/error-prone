@@ -17,21 +17,18 @@
 package com.google.errorprone.bugpatterns.inject.dagger;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-
 import dagger.Module;
 import dagger.Provides;
 import dagger.producers.ProducerModule;
 import dagger.producers.Produces;
-
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
 
 /** Tests for {@link UseBinds}. */
 @RunWith(Parameterized.class)

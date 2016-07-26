@@ -21,14 +21,11 @@ import static com.google.errorprone.refaster.Unifier.unifyNullable;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
-
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
-
 import java.util.List;
-
 import javax.annotation.Nullable;
 
 /**

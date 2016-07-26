@@ -23,7 +23,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ExpressionTree;
 
 /**

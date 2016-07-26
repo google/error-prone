@@ -30,14 +30,12 @@ import static com.google.errorprone.matchers.Matchers.toType;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.ChildMultiMatcher.MatchType;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Type;
-
 import java.util.List;
 
 /**

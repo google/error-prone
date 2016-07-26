@@ -23,9 +23,7 @@ import com.google.errorprone.matchers.method.MethodMatchers.MethodNameMatcher;
 import com.google.errorprone.matchers.method.MethodMatchers.MethodSignatureMatcher;
 import com.google.errorprone.matchers.method.MethodNameMatcherImpl.Regex;
 import com.google.errorprone.predicates.TypePredicate;
-
 import com.sun.source.tree.ExpressionTree;
-
 import java.util.regex.Pattern;
 
 /** Matches on the method's class type, and allows refinement on method name or signature. */

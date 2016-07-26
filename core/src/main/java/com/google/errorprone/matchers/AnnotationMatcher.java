@@ -17,7 +17,6 @@
 package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
-
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;

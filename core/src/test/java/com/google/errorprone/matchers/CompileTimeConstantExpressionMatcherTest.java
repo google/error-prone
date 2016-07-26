@@ -25,19 +25,16 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CompileTimeConstant;
 import com.google.errorprone.scanner.Scanner;
 import com.google.errorprone.scanner.ScannerSupplier;
-
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.main.Main.Result;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /** {@link CompileTimeConstantExpressionMatcher}Test */
 @RunWith(JUnit4.class)

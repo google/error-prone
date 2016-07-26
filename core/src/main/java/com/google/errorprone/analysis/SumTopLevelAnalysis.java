@@ -18,10 +18,8 @@ import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.DescriptionListener;
-
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.tools.javac.util.Context;
-
 import java.util.Set;
 
 /**

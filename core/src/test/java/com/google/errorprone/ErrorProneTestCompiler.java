@@ -17,14 +17,11 @@
 package com.google.errorprone;
 
 import com.google.errorprone.scanner.ScannerSupplier;
-
 import com.sun.tools.javac.main.Main.Result;
 import com.sun.tools.javac.util.Context;
-
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.List;
-
 import javax.annotation.processing.Processor;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;

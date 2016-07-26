@@ -53,7 +53,6 @@ import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.matchers.MultiMatcher;
 import com.google.errorprone.matchers.NextStatement;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ClassTree;
@@ -71,12 +70,10 @@ import com.sun.source.tree.TryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.tools.javac.code.Symbol;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
-
 import javax.lang.model.element.Name;
 
 /**

@@ -22,10 +22,8 @@ import com.google.errorprone.CodeTransformer;
 import com.google.errorprone.DescriptionListener;
 import com.google.errorprone.ErrorProneOptions;
 import com.google.errorprone.VisitorState;
-
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.util.Context;
-
 import java.lang.annotation.Annotation;
 
 /**

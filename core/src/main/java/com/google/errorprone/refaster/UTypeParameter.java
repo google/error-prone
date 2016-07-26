@@ -21,11 +21,9 @@ import static com.google.errorprone.refaster.Unifier.unifications;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
-
 import com.sun.source.tree.TreeVisitor;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.tools.javac.tree.JCTree.JCTypeParameter;
-
 import javax.annotation.Nullable;
 
 /**

@@ -36,7 +36,6 @@ import static com.google.errorprone.suppliers.Suppliers.VOID_TYPE;
 import static javax.lang.model.element.NestingKind.TOP_LEVEL;
 
 import com.google.errorprone.VisitorState;
-
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
@@ -44,10 +43,8 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.tree.JCTree;
-
 import java.util.Arrays;
 import java.util.Collection;
-
 import javax.lang.model.element.Modifier;
 
 /**

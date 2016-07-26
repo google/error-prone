@@ -19,16 +19,13 @@ package com.google.errorprone.bugpatterns.collectionincompatibletype;
 import com.google.auto.value.AutoValue;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
-
 import java.util.Collection;
 import java.util.Map;
-
 import javax.annotation.Nullable;
 
 /**

@@ -17,9 +17,7 @@
 package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
-
 import com.sun.source.tree.Tree;
-
 import java.io.Serializable;
 
 /**

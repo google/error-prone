@@ -21,9 +21,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.scanner.Scanner;
-
 import com.sun.source.tree.AnnotationTree;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

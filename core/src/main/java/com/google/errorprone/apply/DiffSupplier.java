@@ -17,7 +17,6 @@
 package com.google.errorprone.apply;
 
 import java.io.IOException;
-
 import javax.annotation.Nullable;
 
 /**

@@ -18,7 +18,6 @@ package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.util.TreePath;
 

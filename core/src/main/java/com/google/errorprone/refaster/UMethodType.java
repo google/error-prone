@@ -20,12 +20,9 @@ import static com.google.errorprone.refaster.Unifier.unifyList;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
-
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.MethodType;
-
 import java.util.List;
-
 import javax.annotation.Nullable;
 
 /**

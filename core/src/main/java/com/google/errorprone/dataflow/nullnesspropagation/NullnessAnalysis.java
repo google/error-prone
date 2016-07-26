@@ -17,10 +17,8 @@
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import com.google.errorprone.dataflow.DataFlow;
-
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.util.Context;
-
 import java.io.Serializable;
 
 /**

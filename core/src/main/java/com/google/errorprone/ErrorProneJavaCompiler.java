@@ -18,9 +18,7 @@ package com.google.errorprone;
 
 import com.google.errorprone.scanner.BuiltInCheckerSuppliers;
 import com.google.errorprone.scanner.ScannerSupplier;
-
 import com.sun.tools.javac.api.JavacTool;
-
 import javax.tools.JavaCompiler;
 
 /**

@@ -19,7 +19,6 @@ package com.google.errorprone.refaster;
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Optional;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.IdentifierTree;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 
