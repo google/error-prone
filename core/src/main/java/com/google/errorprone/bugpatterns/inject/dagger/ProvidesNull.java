@@ -36,8 +36,6 @@ import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import javax.lang.model.element.AnnotationMirror;
-
 /**
  * Bug checker for null-returning methods annotated with {@code @Provides} but not
  * {@code @Nullable}.
@@ -88,7 +86,7 @@ public class ProvidesNull extends BugChecker implements ReturnTreeMatcher {
     }
 
     if (!ASTHelpers.hasAnnotation(enclosingMethodSym, "dagger.Provides", state)
-        || hasAnyNullableAnnotation(enclosingMethodSym)) {
+        || ASTHelpers.hasDirectAnnotationWithSimpleName(enclosingMethodSym, "Nullable")) {
       return Description.NO_MATCH;
     }
 
@@ -117,18 +115,5 @@ public class ProvidesNull extends BugChecker implements ReturnTreeMatcher {
           .addFix(addNullableFix)
           .build();
     }
-  }
-
-  /**
-   * Returns true iff this method is directly annotated with <em>any</em> annotation with the simple
-   * name "Nullable".
-   */
-  private static boolean hasAnyNullableAnnotation(MethodSymbol methodSym) {
-    for (AnnotationMirror annotation : methodSym.getAnnotationMirrors()) {
-      if (annotation.getAnnotationType().asElement().getSimpleName().contentEquals("Nullable")) {
-        return true;
-      }
-    }
-    return false;
   }
 }

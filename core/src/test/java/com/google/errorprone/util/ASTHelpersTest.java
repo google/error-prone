@@ -22,8 +22,17 @@ import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Verify;
+import com.google.common.io.ByteStreams;
+import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.Category;
+import com.google.errorprone.BugPattern.MaturityLevel;
+import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.CompilerBasedAbstractTest;
+import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.scanner.Scanner;
@@ -33,21 +42,35 @@ import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.TypeVar;
 import com.sun.tools.javac.parser.Tokens.Comment;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarOutputStream;
 import org.junit.After;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+/** Tests for {@link ASTHelpers}. */
 @RunWith(JUnit4.class)
 public class ASTHelpersTest extends CompilerBasedAbstractTest {
 
@@ -496,7 +519,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
     tests.add(scanner);
     assertCompiles(scanner);
   }
-  
+
   @Test
   public void testCommentTokens() {
     writeFile(
@@ -542,6 +565,97 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
         };
     tests.add(scanner);
     assertCompiles(scanner);
+  }
+
+  @Test
+  public void testHasDirectAnnotationWithSimpleName() {
+    writeFile(
+        "A.java", //
+        "public class A {",
+        "  @Deprecated public void doIt() {}",
+        "}");
+    TestScanner scanner =
+        new TestScanner() {
+          @Override
+          public Void visitMethod(MethodTree tree, VisitorState state) {
+            if (tree.getName().contentEquals("doIt")) {
+              setAssertionsComplete();
+              Symbol sym = ASTHelpers.getSymbol(tree);
+              assertThat(ASTHelpers.hasDirectAnnotationWithSimpleName(sym, "Deprecated")).isTrue();
+              assertThat(ASTHelpers.hasDirectAnnotationWithSimpleName(sym, "Nullable")).isFalse();
+            }
+            return super.visitMethod(tree, state);
+          }
+        };
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
+  @BugPattern(
+    name = "HasDirectAnnotationWithSimpleNameChecker",
+    category = Category.ONE_OFF,
+    maturity = MaturityLevel.MATURE,
+    severity = SeverityLevel.ERROR,
+    summary =
+        "Test checker to ensure that ASTHelpers.hasDirectAnnotationWithSimpleName() "
+            + "does require the annotation symbol to be on the classpath"
+  )
+  public static class HasDirectAnnotationWithSimpleNameChecker extends BugChecker
+      implements MethodInvocationTreeMatcher {
+    @Override
+    public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+      if (ASTHelpers.hasDirectAnnotationWithSimpleName(
+          ASTHelpers.getSymbol(tree), "CheckReturnValue")) {
+        return describeMatch(tree);
+      }
+      return Description.NO_MATCH;
+    }
+  }
+
+  /** Test class containing a method annotated with a custom @CheckReturnValue. */
+  public static class CustomCRVTest {
+    /** A custom @CRV annotation. */
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface CheckReturnValue {}
+
+    @CheckReturnValue
+    public static String hello() {
+      return "Hello!";
+    }
+  }
+
+  @Rule public final TemporaryFolder tempFolder = new TemporaryFolder();
+
+  static void addClassToJar(JarOutputStream jos, Class<?> clazz) throws IOException {
+    String entryPath = clazz.getName().replace('.', '/') + ".class";
+    try (InputStream is = clazz.getClassLoader().getResourceAsStream(entryPath)) {
+      jos.putNextEntry(new JarEntry(entryPath));
+      ByteStreams.copy(is, jos);
+    }
+  }
+
+  @Test
+  public void testHasDirectAnnotationWithSimpleNameWithoutAnnotationOnClasspath()
+      throws IOException {
+    File libJar = tempFolder.newFile("lib.jar");
+    try (FileOutputStream fis = new FileOutputStream(libJar);
+        JarOutputStream jos = new JarOutputStream(fis)) {
+      addClassToJar(jos, CustomCRVTest.class);
+      addClassToJar(jos, ASTHelpersTest.class);
+      addClassToJar(jos, CompilerBasedAbstractTest.class);
+    }
+
+    CompilationTestHelper.newInstance(HasDirectAnnotationWithSimpleNameChecker.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void m() {",
+            "    // BUG: Diagnostic contains:",
+            "    com.google.errorprone.util.ASTHelpersTest.CustomCRVTest.hello();",
+            "  }",
+            "}")
+        .setArgs(Arrays.asList("-cp", libJar.toString()))
+        .doTest();
   }
 
   /* Test infrastructure */

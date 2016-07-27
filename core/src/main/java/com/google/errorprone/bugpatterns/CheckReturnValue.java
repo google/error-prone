@@ -30,6 +30,7 @@ import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 
 import com.google.common.base.Optional;
 import com.google.errorprone.BugPattern;
@@ -67,11 +68,13 @@ import javax.lang.model.element.ElementKind;
 public class CheckReturnValue extends AbstractReturnValueIgnored
     implements MethodTreeMatcher, ClassTreeMatcher {
 
+  private static final String CHECK_RETURN_VALUE = "CheckReturnValue";
+
   private static Optional<Boolean> shouldCheckReturnValue(Symbol sym, VisitorState state) {
     if (hasAnnotation(sym, CanIgnoreReturnValue.class, state)) {
       return Optional.of(false);
     }
-    if (hasAnnotation(sym, javax.annotation.CheckReturnValue.class, state)) {
+    if (hasDirectAnnotationWithSimpleName(sym, CHECK_RETURN_VALUE)) {
       return Optional.of(true);
     }
     return Optional.absent();
@@ -171,7 +174,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
   public Description matchMethod(MethodTree tree, VisitorState state) {
     MethodSymbol method = ASTHelpers.getSymbol(tree);
 
-    boolean checkReturn = hasAnnotation(method, javax.annotation.CheckReturnValue.class, state);
+    boolean checkReturn = hasDirectAnnotationWithSimpleName(method, CHECK_RETURN_VALUE);
     boolean canIgnore = hasAnnotation(method, CanIgnoreReturnValue.class, state);
 
     if (checkReturn && canIgnore) {
@@ -204,7 +207,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
    */
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
-    if (hasAnnotation(tree, javax.annotation.CheckReturnValue.class, state)
+    if (hasDirectAnnotationWithSimpleName(ASTHelpers.getSymbol(tree), CHECK_RETURN_VALUE)
         && hasAnnotation(tree, CanIgnoreReturnValue.class, state)) {
       return buildDescription(tree).setMessage(String.format(BOTH_ERROR, "class")).build();
     }

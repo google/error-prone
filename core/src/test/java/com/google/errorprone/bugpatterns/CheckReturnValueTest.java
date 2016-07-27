@@ -51,6 +51,30 @@ public class CheckReturnValueTest {
   }
 
   @Test
+  public void testCustomCheckReturnValueAnnotation() {
+    compilationHelper
+        .addSourceLines(
+            "foo/bar/CheckReturnValue.java",
+            "package foo.bar;",
+            "public @interface CheckReturnValue {}")
+        .addSourceLines(
+            "test/TestCustomCheckReturnValueAnnotation.java",
+            "package test;",
+            "import foo.bar.CheckReturnValue;",
+            "public class TestCustomCheckReturnValueAnnotation {",
+            "  @CheckReturnValue",
+            "  public String getString() {",
+            "    return \"string\";",
+            "  }",
+            "  public void doIt() {",
+            "    // BUG: Diagnostic contains:",
+            "    getString();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.addSourceFile("CheckReturnValueNegativeCases.java").doTest();
   }
