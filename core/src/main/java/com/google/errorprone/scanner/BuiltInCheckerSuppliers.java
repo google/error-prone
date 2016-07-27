@@ -42,6 +42,7 @@ import com.google.errorprone.bugpatterns.ComparisonContractViolated;
 import com.google.errorprone.bugpatterns.ComparisonOutOfRange;
 import com.google.errorprone.bugpatterns.CompileTimeConstantChecker;
 import com.google.errorprone.bugpatterns.ConstantField;
+import com.google.errorprone.bugpatterns.ConstantOverflow;
 import com.google.errorprone.bugpatterns.DeadException;
 import com.google.errorprone.bugpatterns.DefaultCharset;
 import com.google.errorprone.bugpatterns.DepAnn;
@@ -224,6 +225,7 @@ public class BuiltInCheckerSuppliers {
           CheckReturnValue.class,
           ComparisonOutOfRange.class,
           CompileTimeConstantChecker.class,
+          ConstantOverflow.class,
           DeadException.class,
           EqualsNaN.class,
           ForOverrideChecker.class,
