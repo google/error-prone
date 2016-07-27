@@ -124,18 +124,16 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <div class="block">Detects invocations of methods with a parameter annotated <code>@CompileTimeConstant</code> such that
  the corresponding actual parameter is not a compile-time constant expression.
 
- <p>
- This type annotation checker enforces that for all method and constructor invocations, for all
- formal parameters of the invoked method/constructor that are annotated with the
- <a href="../../../../com/google/errorprone/annotations/CompileTimeConstant.html" title="annotation in com.google.errorprone.annotations"><code>CompileTimeConstant</code></a> type annotation, the
- corresponding actual parameter is an expression that satisfies one of the following conditions:
+ <p>This type annotation checker enforces that for all method and constructor invocations, for all
+ formal parameters of the invoked method/constructor that are annotated with the <a href="../../../../com/google/errorprone/annotations/CompileTimeConstant.html" title="annotation in com.google.errorprone.annotations"><code>CompileTimeConstant</code></a> type annotation, the corresponding actual
+ parameter is an expression that satisfies one of the following conditions:
+
  <ol>
  <li>The expression is one for which the Java compiler can determine a constant value at compile
- time, or</li>
- <li>the expression consists of the literal <code>null</code>, or</li>
+     time, or
+ <li>the expression consists of the literal <code>null</code>, or
  <li>the expression consists of a single identifier, where the identifier is a formal method
- parameter that is declared <code>final</code> and has the
- <a href="../../../../com/google/errorprone/annotations/CompileTimeConstant.html" title="annotation in com.google.errorprone.annotations"><code>CompileTimeConstant</code></a> annotation.</li>
+     parameter that is declared <code>final</code> and has the <a href="../../../../com/google/errorprone/annotations/CompileTimeConstant.html" title="annotation in com.google.errorprone.annotations"><code>CompileTimeConstant</code></a> annotation.
  </ol></div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>

@@ -113,9 +113,6 @@ Comparison using reference equality instead of value equality
 __[RequiredModifiers](bugpattern/RequiredModifiers)__<br>
 This annotation is missing required modifiers as specified by its @RequiredModifiers annotation
 
-__[SelfEquals](bugpattern/SelfEquals)__<br>
-An object is tested for equality to itself
-
 __[StaticAccessedFromInstance](bugpattern/StaticAccessedFromInstance)__<br>
 A static variable or method should not be accessed from an object instance
 
@@ -296,6 +293,9 @@ Variable assigned to itself
 
 __[SelfComparison](bugpattern/SelfComparison)__<br>
 An object is compared to itself
+
+__[SelfEquals](bugpattern/SelfEquals)__<br>
+An object is tested for equality to itself
 
 __[SizeGreaterThanOrEqualsZero](bugpattern/SizeGreaterThanOrEqualsZero)__<br>
 Comparison of a size &gt;= 0 is always true, did you intend to check for non-emptiness?
