@@ -183,6 +183,9 @@ Comparison to value that is out of range for the compared type
 __[CompileTimeConstant](bugpattern/CompileTimeConstant)__<br>
 Non-compile-time constant expression passed to parameter with @CompileTimeConstant type annotation.
 
+__[ConstantOverflow](bugpattern/ConstantOverflow)__<br>
+Compile-time constant expression overflows
+
 __[DaggerProvidesNull](bugpattern/DaggerProvidesNull)__<br>
 Dagger @Provides methods may not return null unless annotated with @Nullable
 
