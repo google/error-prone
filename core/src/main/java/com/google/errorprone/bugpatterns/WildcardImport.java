@@ -17,8 +17,9 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
+import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.auto.value.AutoValue;
@@ -54,20 +55,16 @@ import java.util.Set;
 import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
 
-/**
- * Enforce style guide §3.3.1.
- *
- * <p>https://google-styleguide.googlecode.com/svn/trunk/javaguide.html#s3.3.1-wildcard-imports
- *
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
   name = "WildcardImport",
-  summary = "Use of wildcard imports is forbidden",
+  summary = "Wildcard imports, static or otherwise, should not be used",
   category = JDK,
-  severity = WARNING,
-  maturity = MATURE
-)
+  severity = SUGGESTION,
+  maturity = MATURE,
+  linkType = CUSTOM,
+  link = "https://google.github.io/styleguide/javaguide.html#s3.3.1-wildcard-imports"
+  )
 public class WildcardImport extends BugChecker implements CompilationUnitTreeMatcher {
 
   /** Maximum number of members to import before switching to qualified names. */
