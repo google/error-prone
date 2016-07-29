@@ -16,16 +16,15 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isSubtype;
+
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.Types;
-import com.sun.tools.javac.tree.JCTree;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/** @author eaftan@google.com (Eddie Aftandilian) */
 public class IsSubtypeOf<T extends Tree> extends AbstractTypeMatcher<T> {
 
   public IsSubtypeOf(Supplier<Type> typeToCompareSupplier) {
@@ -38,9 +37,6 @@ public class IsSubtypeOf<T extends Tree> extends AbstractTypeMatcher<T> {
 
   @Override
   public boolean matches(T tree, VisitorState state) {
-    Types types = state.getTypes();
-    Type typeToCompare = typeToCompareSupplier.get(state);
-    return (typeToCompare != null &&
-        types.isSubtype(((JCTree) tree).type, types.erasure(typeToCompare)));
+    return isSubtype(getType(tree), typeToCompareSupplier.get(state), state);
   }
 }
