@@ -17,8 +17,10 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.toType;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
+import static com.google.errorprone.util.ASTHelpers.getType;
 
 import com.google.common.primitives.Longs;
 import com.google.errorprone.BugPattern;
@@ -36,6 +38,8 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
+import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree;
@@ -64,21 +68,29 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
 
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
-    Type type = ASTHelpers.getType(tree);
-    if (type == null) {
-      return Description.NO_MATCH;
+    Symbol sym = ASTHelpers.getSymbol(tree.getIdentifier());
+    if (sym == null) {
+      return NO_MATCH;
     }
     Types types = state.getTypes();
-    type = types.unboxedTypeOrType(type);
-    if (!type.isPrimitive()) {
-      // TODO(cushon): consider handling String also
-      return Description.NO_MATCH;
+    Symtab symtab = state.getSymtab();
+    // TODO(cushon): consider handling String also
+    if (sym.equals(types.boxedClass(symtab.byteType))
+        || sym.equals(types.boxedClass(symtab.charType))
+        || sym.equals(types.boxedClass(symtab.shortType))
+        || sym.equals(types.boxedClass(symtab.intType))
+        || sym.equals(types.boxedClass(symtab.longType))
+        || sym.equals(types.boxedClass(symtab.doubleType))
+        || sym.equals(types.boxedClass(symtab.floatType))
+        || sym.equals(types.boxedClass(symtab.booleanType))) {
+      return describeMatch(tree, buildFix(tree, state));
     }
-    return describeMatch(tree, buildFix(tree, state, type));
+    return NO_MATCH;
   }
 
-  private Fix buildFix(NewClassTree tree, VisitorState state, Type type) {
+  private Fix buildFix(NewClassTree tree, VisitorState state) {
     boolean autoboxFix = shouldAutoboxFix(state);
+    Type type = state.getTypes().unboxedTypeOrType(getType(tree));
     if (state.getTypes().isSameType(type, state.getSymtab().booleanType)) {
       Object value = literalValue(tree.getArguments().iterator().next());
       if (value instanceof Boolean) {
@@ -89,10 +101,10 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
       }
     }
     JCTree.JCExpression arg = (JCTree.JCExpression) getOnlyElement(tree.getArguments());
-    if (autoboxFix && ASTHelpers.getType(arg).isPrimitive()) {
+    if (autoboxFix && getType(arg).isPrimitive()) {
       return SuggestedFix.builder()
           .replace(((JCTree) tree).getStartPosition(), arg.getStartPosition(), "")
-          .replace(state.getEndPosition(arg), state.getEndPosition((JCTree) tree), "")
+          .replace(state.getEndPosition(arg), state.getEndPosition(tree), "")
           .build();
     }
     JCTree parent = (JCTree) state.getPath().getParentPath().getParentPath().getLeaf();
