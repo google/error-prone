@@ -42,9 +42,9 @@ import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.util.Options;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -53,6 +53,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
 import java.util.Iterator;
 import java.util.List;
 
@@ -217,6 +219,7 @@ public class DefaultCharset extends BugChecker
             "Files.newBufferedReader(%s, %s)", toPath(state, arg, fix), charset.replacement()));
     fix.addImport("java.nio.file.Files");
     charset.addImport(fix, state);
+    variableTypeFix(fix, state, FileReader.class, Reader.class);
     return fix.build();
   }
 
@@ -229,7 +232,22 @@ public class DefaultCharset extends BugChecker
             "Files.newReader(%s, %s)", toFile(state, fileArg, fix), charset.replacement()));
     fix.addImport("com.google.common.io.Files");
     charset.addImport(fix, state);
+    variableTypeFix(fix, state, FileReader.class, Reader.class);
     return fix.build();
+  }
+
+  private void variableTypeFix(
+      SuggestedFix.Builder fix, VisitorState state, Class<?> original, Class<?> replacement) {
+    Tree parent = state.getPath().getParentPath().getLeaf();
+    if (!(parent instanceof VariableTree)) {
+      return;
+    }
+    Tree type = ((VariableTree) parent).getType();
+    if (!ASTHelpers.isSameType(
+        ASTHelpers.getType(type), state.getTypeFromString(original.getCanonicalName()), state)) {
+      return;
+    }
+    fix.replace(type, replacement.getSimpleName()).addImport(replacement.getCanonicalName());
   }
 
   private Description handleFileWriter(NewClassTree tree, VisitorState state) {
@@ -261,6 +279,7 @@ public class DefaultCharset extends BugChecker
             "Files.newWriter(%s, %s)", toFile(state, fileArg, fix), charset.replacement()));
     fix.addImport("com.google.common.io.Files");
     charset.addImport(fix, state);
+    variableTypeFix(fix, state, FileWriter.class, Writer.class);
     return fix.build();
   }
 
@@ -288,6 +307,7 @@ public class DefaultCharset extends BugChecker
     }
     sb.append(")");
     fix.replace(toReplace, sb.toString());
+    variableTypeFix(fix, state, FileWriter.class, Writer.class);
     return fix.build();
   }
 
@@ -364,10 +384,5 @@ public class DefaultCharset extends BugChecker
     }
     charset.addImport(fix, state);
     return fix.build();
-  }
-
-  /** Returns true if the compilation is targeting Android. */
-  private static boolean isAndroidCompatible(VisitorState state) {
-    return Options.instance(state.context).getBoolean("androidCompatible");
   }
 }

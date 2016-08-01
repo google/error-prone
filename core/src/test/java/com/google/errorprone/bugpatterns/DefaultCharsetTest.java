@@ -340,4 +340,32 @@ public class DefaultCharsetTest {
         .setArgs("-XDandroidCompatible=true")
         .doTest();
   }
+
+  @Test
+  public void variableFix() throws IOException {
+    refactoringTest()
+        .addInputLines(
+            "in/Test.java",
+            "import java.io.*;",
+            "class Test {",
+            "  void f(File f) throws Exception {",
+            "    FileWriter w = new FileWriter(f);",
+            "    FileReader r = new FileReader(f);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import static java.nio.charset.StandardCharsets.UTF_8;",
+            "import java.io.*;",
+            "import java.io.Reader;",
+            "import java.io.Writer;",
+            "import java.nio.file.Files;",
+            "class Test {",
+            "  void f(File f) throws Exception {",
+            "    Writer w = Files.newBufferedWriter(f.toPath(), UTF_8);",
+            "    Reader r = Files.newBufferedReader(f.toPath(), UTF_8);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
