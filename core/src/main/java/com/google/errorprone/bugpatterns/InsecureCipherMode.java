@@ -31,9 +31,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.tree.JCTree;
 
-/**
- * @author avenet@google.com (Arnaud J. Venet)
- */
+/** @author avenet@google.com (Arnaud J. Venet) */
 @BugPattern(
   name = "InsecureCipherMode",
   summary = "Cipher.getInstance() is invoked using either the default settings or ECB mode",
