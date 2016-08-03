@@ -31,7 +31,7 @@ import com.sun.source.tree.BinaryTree;
 @BugPattern(
   name = "IdentityBinaryExpression",
   category = JDK,
-  summary = "Writing `a && a`, `a || a`, `a & a`, or `a | a` is equivalent to `a`.",
+  summary = "Writing \"a && a\", \"a || a\", \"a & a\", or \"a | a\" is equivalent to \"a\".",
   explanation = "Writing `a && a`, `a || a`, `a & a`, or `a | a` is equivalent to `a`.",
   severity = ERROR,
   maturity = MATURE

@@ -132,4 +132,32 @@ public class BugPatternFileGeneratorTest {
     String actual = new String(Files.readAllBytes(wikiDir.resolve("DeadException.md")), UTF_8);
     assertThat(expected.trim()).isEqualTo(actual.trim());
   }
+
+  @Test
+  public void testEscapeAngleBracketsInSummary() throws Exception {
+    // Create a BugPattern with angle brackets in the summary
+    BugPatternInstance instance = new BugPatternInstance();
+    instance.className = "com.google.errorprone.bugpatterns.DontDoThis";
+    instance.name = "DontDoThis";
+    instance.summary = "Don't do this; do List<Foo> instead";
+    instance.explanation = "This is a bad idea, you want `List<Foo>` instead";
+    instance.altNames = new String[0];
+    instance.category = Category.ONE_OFF.toString();
+    instance.severity = SeverityLevel.ERROR;
+    instance.maturity = MaturityLevel.MATURE;
+    instance.suppressibility = Suppressibility.SUPPRESS_WARNINGS;
+    instance.customSuppressionAnnotations =
+        new String[] {"com.google.errorprone.BugPattern.NoCustomSuppression.class"};
+
+    // Write markdown file
+    BugPatternFileGenerator generator =
+        new BugPatternFileGenerator(wikiDir, exampleDirBase, explanationDirBase, false, false);
+    generator.processLine(new Gson().toJson(instance));
+    String expected =
+        CharStreams.toString(
+            new InputStreamReader(
+                getClass().getResourceAsStream("testdata/DontDoThis_nofrontmatter_gfm.md"), UTF_8));
+    String actual = new String(Files.readAllBytes(wikiDir.resolve("DontDoThis.md")), UTF_8);
+    assertThat(expected.trim()).isEqualTo(actual.trim());
+  }
 }
