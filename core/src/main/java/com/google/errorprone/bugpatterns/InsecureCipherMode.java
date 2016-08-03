@@ -83,7 +83,8 @@ public class InsecureCipherMode extends BugChecker implements MethodInvocationTr
     // We exclude stream ciphers (this check only makes sense for block ciphers), i.e., the RC4
     // cipher. The name of this algorithm is "ARCFOUR" in the SunJce and "ARC4" in Conscrypt.
     // Some other providers like JCraft also seem to use the name "RC4".
-    if (transformation.matches("ARCFOUR.*") || transformation.matches("ARC4.*")
+    if (transformation.matches("ARCFOUR.*")
+        || transformation.matches("ARC4.*")
         || transformation.matches("RC4.*")) {
       return Description.NO_MATCH;
     }
@@ -94,7 +95,8 @@ public class InsecureCipherMode extends BugChecker implements MethodInvocationTr
       return buildErrorMessage(tree, "the mode and padding must be explicitly specified");
     }
 
-    if (transformation.matches(".*/ECB/.*") && !transformation.matches("RSA/.*")
+    if (transformation.matches(".*/ECB/.*")
+        && !transformation.matches("RSA/.*")
         && !transformation.matches("AESWrap/.*")) {
       // Otherwise, ECB mode should be explicitly specified in order to trigger the check. RSA
       // is an exception, as this transformation doesn't actually implement a block cipher
