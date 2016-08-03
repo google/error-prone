@@ -1241,4 +1241,22 @@ public class ImmutableCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void mutableEnclosing() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "public class Test {",
+            "  int x = 0;",
+            "  // BUG: Diagnostic contains: 'Inner' has mutable enclosing instance 'Test'",
+            "  @Immutable public class Inner {",
+            "    public int count() {",
+            "      return x++;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

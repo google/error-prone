@@ -158,7 +158,7 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
     // Check that the fields (including inherited fields) are immutable, and
     // validate the type hierarchy superclass.
     Violation info =
-        checkFieldsAndSupertypesForImmutability(
+        checkForImmutability(
             Optional.of(tree),
             immutableTypeParametersInScope(ASTHelpers.getSymbol(tree)),
             ASTHelpers.getType(tree),
@@ -174,14 +174,18 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
   }
 
   /**
-   * Check that an {@code @Immutable}-annotated class does not declare or inherit
-   * any mutable fields. Check also that any immutable supertypes are instantiated
-   * with immutable type arguments as required by their containerOf spec.
+   * Check that an {@code @Immutable}-annotated class:
    *
-   * <p>This is the only place we needed to recursively examine members of other
-   * types, since requiring supertypes to be annotated immutable would be too restrictive.
+   * <ul>
+   * <li>does not declare or inherit any mutable fields,
+   * <li>any immutable supertypes are instantiated with immutable type arguments as required by
+   *     their containerOf spec, and
+   * <li>any enclosing instances are immutable.
+   * </ul>
+   *
+   * requiring supertypes to be annotated immutable would be too restrictive.
    */
-  private Violation checkFieldsAndSupertypesForImmutability(
+  private Violation checkForImmutability(
       Optional<ClassTree> tree,
       ImmutableSet<String> immutableTyParams,
       ClassType type,
@@ -206,6 +210,30 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
       }
     }
 
+    info = checkSuper(immutableTyParams, type, state);
+    if (info.isPresent()) {
+      return info;
+    }
+
+    Type enclosing = type.getEnclosingType();
+    while (!Type.noType.equals(enclosing)) {
+      // require the enclosing instance to be annotated @Immutable
+      // don't worry about containerOf, this isn't an explicit type use
+      System.err.println(enclosing);
+      if (getImmutableAnnotation(enclosing.tsym) == null) {
+        return info.plus(
+            String.format(
+                "'%s' has mutable enclosing instance '%s'",
+                getPrettyName(type.tsym, state), getPrettyName(enclosing.tsym, state)));
+      }
+      enclosing = enclosing.getEnclosingType();
+    }
+
+    return Violation.absent();
+  }
+
+  private Violation checkSuper(
+      ImmutableSet<String> immutableTyParams, ClassType type, VisitorState state) {
     ClassType superType = (ClassType) state.getTypes().supertype(type);
     if (superType.getKind() == TypeKind.NONE
         || state.getTypes().isSameType(state.getSymtab().objectType, superType)) {
@@ -216,7 +244,7 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
     if (superannotation != null) {
       // If the superclass does happen to be immutable, we don't need to recursively
       // inspect it. We just have to check that it's instantiated correctly:
-      info = immutableInstantiation(immutableTyParams, superannotation, superType, state);
+      Violation info = immutableInstantiation(immutableTyParams, superannotation, superType, state);
       if (!info.isPresent()) {
         return Violation.absent();
       }
@@ -228,9 +256,8 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
     }
 
     // Recursive case: check if the supertype is 'effectively' immutable.
-    info =
-        checkFieldsAndSupertypesForImmutability(
-            Optional.<ClassTree>absent(), immutableTyParams, superType, state);
+    Violation info =
+        checkForImmutability(Optional.<ClassTree>absent(), immutableTyParams, superType, state);
     if (!info.isPresent()) {
       return Violation.absent();
     }
