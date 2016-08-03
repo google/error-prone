@@ -105,6 +105,12 @@ public class InsecureCipherMode extends BugChecker implements MethodInvocationTr
       return buildErrorMessage(tree, "ECB mode must not be used");
     }
 
+    if (transformation.matches("ECIES.*") || transformation.matches("DHIES.*")) {
+      // Existing implementations of IES-based algorithms use ECB under the hood and must also be
+      // flagged as vulnerable. See b/30424901 for a more detailed rationale.
+      return buildErrorMessage(tree, "IES-based algorithms use ECB mode and are insecure");
+    }
+
     return Description.NO_MATCH;
   }
 }
