@@ -57,7 +57,7 @@ public class ReferenceEquality extends AbstractReferenceEquality {
     if (classType == null) {
       return false;
     }
-    if (inEqualsImplementation(classType, type, state)) {
+    if (inEqualsOrCompareTo(classType, type, state)) {
       return false;
     }
     if (ASTHelpers.isSubtype(type, state.getSymtab().enumSym.type, state)) {
@@ -72,13 +72,19 @@ public class ReferenceEquality extends AbstractReferenceEquality {
     return true;
   }
 
-  private boolean inEqualsImplementation(Type classType, Type type, VisitorState state) {
+  private boolean inEqualsOrCompareTo(Type classType, Type type, VisitorState state) {
     MethodTree methodTree = ASTHelpers.findEnclosingNode(state.getPath(), MethodTree.class);
     if (methodTree == null) {
       return false;
     }
     MethodSymbol sym = ASTHelpers.getSymbol(methodTree);
-    if (sym == null || sym.isStatic() || !sym.toString().equals("equals(java.lang.Object)")) {
+    if (sym == null || sym.isStatic()) {
+      return false;
+    }
+    Symbol compareTo = getOnlyMember(state, state.getSymtab().comparableType, "compareTo");
+    Symbol equals = getOnlyMember(state, state.getSymtab().objectType, "equals");
+    if (!sym.overrides(compareTo, classType.tsym, state.getTypes(), false)
+        && !sym.overrides(equals, classType.tsym, state.getTypes(), false)) {
       return false;
     }
     if (!ASTHelpers.isSameType(type, classType, state)) {
@@ -87,16 +93,19 @@ public class ReferenceEquality extends AbstractReferenceEquality {
     return true;
   }
 
+  private static Symbol getOnlyMember(VisitorState state, Type type, String name) {
+    return getOnlyElement(type.tsym.members().getSymbolsByName(state.getName(name)));
+  }
+
   /** Check if the method declares or inherits an implementation of .equals() */
   public static boolean implementsEquals(Type type, VisitorState state) {
     Name equalsName = state.getName("equals");
-    Type objectType = state.getSymtab().objectType;
-    Symbol objectEquals = getOnlyElement(objectType.tsym.members().getSymbolsByName(equalsName));
+    Symbol objectEquals = getOnlyMember(state, state.getSymtab().objectType, "equals");
     for (Type sup : state.getTypes().closure(type)) {
       if (sup.tsym.isInterface()) {
         continue;
       }
-      if (ASTHelpers.isSameType(sup, objectType, state)) {
+      if (ASTHelpers.isSameType(sup, state.getSymtab().objectType, state)) {
         return false;
       }
       WriteableScope scope = sup.tsym.members();
@@ -112,4 +121,3 @@ public class ReferenceEquality extends AbstractReferenceEquality {
     return false;
   }
 }
-

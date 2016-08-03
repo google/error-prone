@@ -341,4 +341,32 @@ public class ReferenceEqualityTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void negative_compareTo() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test implements Comparable<Test> {",
+            "  public int compareTo(Test o) {",
+            "    return this == o ? 0 : -1;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positive_compareTo() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test implements Comparable<String> {",
+            "  String f;",
+            "  public int compareTo(String o) {",
+            "    // BUG: Diagnostic contains:",
+            "    return f == o ? 0 : -1;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
