@@ -31,12 +31,14 @@ import com.sun.source.doctree.DocTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import com.sun.source.util.DocTreePath;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.tree.DCTree;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeMaker;
+import com.sun.tools.javac.tree.TreeScanner;
 import com.sun.tools.javac.util.Position;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -281,4 +283,27 @@ public class SuggestedFixes {
         classEndPosition - 1, classEndPosition - 1, stringBuilder.toString());
   }
 
+  /**
+   * Renames the given {@link VariableTree} and its usages in the current compilation unit to {@code
+   * replacement}.
+   */
+  public static Fix renameVariable(
+      VariableTree tree, final String replacement, VisitorState state) {
+    String name = tree.getName().toString();
+    int pos = ((JCTree) tree).getStartPosition() + state.getSourceForNode(tree).indexOf(name);
+    final SuggestedFix.Builder fix =
+        SuggestedFix.builder().replace(pos, pos + name.length(), replacement);
+    final Symbol.VarSymbol sym = ASTHelpers.getSymbol(tree);
+    ((JCTree) state.getPath().getCompilationUnit())
+        .accept(
+            new TreeScanner() {
+              @Override
+              public void visitIdent(JCTree.JCIdent tree) {
+                if (sym.equals(ASTHelpers.getSymbol(tree))) {
+                  fix.replace(tree, replacement);
+                }
+              }
+            });
+    return fix.build();
+  }
 }

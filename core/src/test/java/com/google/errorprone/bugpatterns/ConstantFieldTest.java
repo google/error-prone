@@ -108,7 +108,7 @@ public class ConstantFieldTest {
                 return fixes.get(1);
               }
             })
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
