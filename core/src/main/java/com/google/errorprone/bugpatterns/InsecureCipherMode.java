@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
@@ -46,7 +46,7 @@ import com.sun.tools.javac.tree.JCTree;
           + " be readily used to conduct cryptanalysis.\n\n"
   ,
   category = JDK,
-  severity = WARNING,
+  severity = ERROR,
   documentSuppression = false,
   maturity = MATURE
 )
