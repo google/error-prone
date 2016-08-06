@@ -35,6 +35,7 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.PackageTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.Tree;
@@ -157,7 +158,7 @@ public class ASTHelpers {
       return ASTHelpers.getSymbol((MethodInvocationTree) tree);
     }
     if (tree instanceof JCNewClass) {
-      return ((JCNewClass) tree).constructor;
+      return ASTHelpers.getSymbol((NewClassTree) tree);
     }
     if (tree instanceof AnnotationTree) {
       return getSymbol(((AnnotationTree) tree).getAnnotationType());
@@ -185,6 +186,12 @@ public class ASTHelpers {
   /** Gets the symbol for a method. */
   public static MethodSymbol getSymbol(MethodTree tree) {
     return ((JCMethodDecl) tree).sym;
+  }
+
+  /** Gets the method symbol for a new class. */
+  public static MethodSymbol getSymbol(NewClassTree tree) {
+    Symbol sym = ((JCNewClass) tree).constructor;
+    return sym instanceof MethodSymbol ? (MethodSymbol) sym : null;
   }
 
   /** Gets the symbol for a variable. */
