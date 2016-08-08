@@ -19,6 +19,7 @@ import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import java.io.IOException;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -186,6 +187,38 @@ public class RemoveUnusedImportsTest {
             "public class Test {",
             "  List<String> xs = new ArrayList<>();",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void useInJavadocParameter() throws IOException {
+    testHelper
+        .addInputLines(
+            "in/Test.java",
+            "import java.util.List;",
+            "import java.util.Collection;",
+            "/** {@link List#containsAll(Collection)}  */",
+            "public class Test {}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Ignore("b/30713456")
+  @Test
+  public void qualifiedJavadoc() throws IOException {
+    testHelper
+        .addInputLines(
+            "in/Test.java",
+            "import java.util.List;",
+            "import java.util.Map;",
+            "import java.util.Map.Entry;",
+            "/** {@link java.util.List} {@link Map.Entry} */",
+            "public class Test {}")
+        .addOutputLines(
+            "out/Test.java",
+            "import java.util.Map;",
+            "/** {@link java.util.List} {@link Map.Entry} */",
+            "public class Test {}")
         .doTest();
   }
 }

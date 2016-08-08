@@ -40,6 +40,8 @@ import com.sun.source.util.DocTreePathScanner;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.HashSet;
 import java.util.Set;
 import javax.annotation.Nullable;
@@ -168,7 +170,15 @@ public final class RemoveUnusedImports extends BugChecker implements Compilation
               referenceTree.getSignature().contains("#")
                   ? symbolForReference.owner
                   : symbolForReference;
+          // TODO(b/30713456); this isn't correct for qualified type names
           sink.accept(referencedSymbol);
+          /* Record uses inside method parameters. The javadoc tool doesn't use these, but
+           * IntelliJ does. */
+          if (symbolForReference instanceof MethodSymbol) {
+            for (VarSymbol parameter : ((MethodSymbol) symbolForReference).getParameters()) {
+              sink.accept(parameter.type.tsym);
+            }
+          }
         }
         return null;
       }
