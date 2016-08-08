@@ -37,11 +37,13 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
+import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCBlock;
+import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
-import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import java.util.List;
+import javax.annotation.Nullable;
 
 /**
  * Points out if an object is tested for equality to itself using Guava Libraries.
@@ -125,28 +127,36 @@ public class GuavaSelfEquals extends BugChecker implements MethodInvocationTreeM
   }
 
   /** Finds a replacement for toReplace expression tree if possible. */
-  protected static Fix generateFix(
-      MethodInvocationTree methodInvocationTree, VisitorState state, ExpressionTree toReplace) {
+  protected static Fix generateFix(Tree tree, VisitorState state, ExpressionTree toReplace) {
     Fix fieldFix = fieldFix(toReplace, state);
     if (fieldFix != null) {
       return fieldFix;
     }
     // If we don't find a good field to use, then just replace with "true"
-    return SuggestedFix.replace(methodInvocationTree, "true");
+    return SuggestedFix.replace(tree, "true");
   }
 
-  private static Fix fieldFix(Tree toReplace, VisitorState state) {
+  @Nullable
+  protected static Fix fieldFix(Tree toReplace, VisitorState state) {
     TreePath path = state.getPath();
-    while (path != null && path.getLeaf().getKind() != Kind.BLOCK) {
+    while (path != null
+        && path.getLeaf().getKind() != Kind.CLASS
+        && path.getLeaf().getKind() != Kind.BLOCK) {
       path = path.getParentPath();
     }
     if (path == null) {
       return null;
     }
-    JCBlock block = (JCBlock) path.getLeaf();
-    for (JCStatement jcStatement : block.getStatements()) {
-      if (jcStatement.getKind() == Kind.VARIABLE) {
-        JCVariableDecl declaration = (JCVariableDecl) jcStatement;
+    List<? extends JCTree> members;
+    // Must be block or class
+    if (path.getLeaf().getKind() == Kind.CLASS) {
+      members = ((JCClassDecl) path.getLeaf()).getMembers();
+    } else {
+      members = ((JCBlock) path.getLeaf()).getStatements();
+    }
+    for (JCTree jcTree : members) {
+      if (jcTree.getKind() == Kind.VARIABLE) {
+        JCVariableDecl declaration = (JCVariableDecl) jcTree;
         TypeSymbol variableTypeSymbol = declaration.getType().type.tsym;
 
         if (ASTHelpers.getSymbol(toReplace).isMemberOf(variableTypeSymbol, state.getTypes())) {

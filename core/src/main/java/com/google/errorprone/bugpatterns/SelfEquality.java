@@ -17,9 +17,8 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.sun.source.tree.Tree.Kind.EQUAL_TO;
@@ -27,6 +26,7 @@ import static com.sun.source.tree.Tree.Kind.NOT_EQUAL_TO;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
@@ -35,26 +35,22 @@ import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
-import com.sun.source.util.TreePath;
-import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.JCTree.JCBlock;
-import com.sun.tools.javac.tree.JCTree.JCClassDecl;
-import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
-import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
-import java.util.List;
 
-/**
- * @author scottjohnson@google.com (Scott Johnson)
- */
-@BugPattern(name = "SelfEquality",
-    summary = "Variable compared to itself",
-    explanation = "There is no good reason to test a primitive value or reference for equality " +
-          "with itself.",
-    category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
+/** @author scottjohnson@google.com (Scott Johnson) */
+@BugPattern(
+  name = "SelfEquality",
+  summary = "Variable compared to itself",
+  explanation =
+      "There is no good reason to test a primitive value or reference for equality "
+          + "with itself.",
+  category = JDK,
+  severity = WARNING,
+  maturity = MATURE
+)
 public class SelfEquality extends BugChecker implements BinaryTreeMatcher {
 
   @Override
@@ -65,7 +61,6 @@ public class SelfEquality extends BugChecker implements BinaryTreeMatcher {
     }
 
     StringBuilder fixedExpression = new StringBuilder();
-    Fix fix = null;
 
     ExpressionTree leftOperand = tree.getLeftOperand();
     ExpressionTree rightOperand = tree.getRightOperand();
@@ -93,37 +88,7 @@ public class SelfEquality extends BugChecker implements BinaryTreeMatcher {
       toReplace = rightOperand;
     }
 
-    // Find containing block
-    TreePath path = state.getPath();
-    while (path.getLeaf() != null && path.getLeaf().getKind() != Kind.CLASS
-        && path.getLeaf().getKind() != Kind.BLOCK) {
-      path = path.getParentPath();
-    }
-    if (path.getLeaf() != null) {
-      List<? extends JCTree> members;
-      // Must be block or class
-      if (path.getLeaf().getKind() == Kind.CLASS) {
-        members = ((JCClassDecl) path.getLeaf()).getMembers();
-      } else {
-        members = ((JCBlock) path.getLeaf()).getStatements();
-      }
-      for (JCTree jcTree : members) {
-        if (jcTree.getKind() == Kind.VARIABLE) {
-          JCVariableDecl declaration = (JCVariableDecl) jcTree;
-          TypeSymbol variableTypeSymbol = declaration.getType().type.tsym;
-
-          if (ASTHelpers.getSymbol(toReplace).isMemberOf(variableTypeSymbol, state.getTypes())) {
-            if (toReplace.getKind() == Kind.IDENTIFIER) {
-              fix = SuggestedFix.prefixWith(toReplace, declaration.getName() + ".");
-            } else {
-              fix = SuggestedFix.replace(
-                  ((JCFieldAccess) toReplace).getExpression(), declaration.getName().toString());
-            }
-          }
-        }
-      }
-    }
-
+    Fix fix = GuavaSelfEquals.fieldFix(toReplace, state);
     if (fix == null) {
       // No good replacement, let's try something else!
 
