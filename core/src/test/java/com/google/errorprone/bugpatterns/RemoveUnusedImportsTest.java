@@ -19,7 +19,6 @@ import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import java.io.IOException;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -203,7 +202,6 @@ public class RemoveUnusedImportsTest {
         .doTest();
   }
 
-  @Ignore("b/30713456")
   @Test
   public void qualifiedJavadoc() throws IOException {
     testHelper
