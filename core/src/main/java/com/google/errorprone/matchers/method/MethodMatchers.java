@@ -65,6 +65,9 @@ public class MethodMatchers {
     
     /** Match on types that are equal to any of the given types. */
     MethodClassMatcher onClassAny(String... classNames);
+    
+    /** Match on any class. */
+    MethodClassMatcher anyClass();
   }
 
   public interface AnyMethodMatcher extends Matcher<ExpressionTree> {

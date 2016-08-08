@@ -213,35 +213,12 @@ public class Matchers {
     return MethodMatchers.constructor();
   }
 
-  /**
-   * Matches an AST node which is an expression yielding the indicated static method.
-   * You can use "*" wildcard instead of any of the arguments.
-   * @param fullClassName fully-qualified name like "java.util.regex.Pattern"
-   * @param methodName either name or full signature of the static method which is a member of the
-   * class, like "compile" or "compile(java.lang.String)"
-   */
+  /** @deprecated prefer {@link MethodMatchers#instanceMethod} */
+  @Deprecated
   // TODO(cushon): expunge
-  public static StaticMethod staticMethod(String fullClassName, String methodName) {
-    return new StaticMethod(fullClassName, methodName);
-  }
-
-  /**
-   * Matches an AST node which is an expression yielding the indicated non-static method.
-   * @param receiverMatcher Used to determine if the part of the expression before the dot matches.
-   * @param methodName The name of the method to match, e.g., "equals"
-   */
-  // TODO(cushon): expunge
-  public static InstanceMethod instanceMethod(Matcher<? super ExpressionTree> receiverMatcher, String methodName) {
+  public static InstanceMethod instanceMethod(
+      Matcher<? super ExpressionTree> receiverMatcher, String methodName) {
     return new InstanceMethod(receiverMatcher, methodName);
-  }
-
-  /**
-   * Matches an AST node which is an expression yielding the indicated non-static method.
-   * @param receiverMatcher Used to determine if the part of the expression before the dot matches.
-   */
-  // TODO(cushon): expunge
-  public static InstanceMethod methodReceiver(Matcher<? super ExpressionTree> receiverMatcher) {
-    return InstanceMethod.methodReceiverMatcher(receiverMatcher);
   }
 
   /**

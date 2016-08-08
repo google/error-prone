@@ -55,4 +55,9 @@ class StaticMethodMatcherImpl extends MethodMatcher implements StaticMethodMatch
   public MethodClassMatcherImpl onClass(Supplier<Type> classType) {
     return new MethodClassMatcherImpl(this, TypePredicates.isExactType(classType));
   }
+
+  @Override
+  public MethodMatchers.MethodClassMatcher anyClass() {
+    return new MethodClassMatcherImpl(this, TypePredicates.anyType());
+  }
 }

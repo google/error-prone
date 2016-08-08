@@ -23,8 +23,7 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.argument;
 import static com.google.errorprone.matchers.Matchers.argumentCount;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
-import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -55,12 +54,14 @@ import javax.lang.model.type.UnionType;
 )
 public class ThrowIfUncheckedKnownChecked extends BugChecker
     implements MethodInvocationTreeMatcher {
+
   private static final Matcher<MethodInvocationTree> IS_THROW_IF_UNCHECKED =
       allOf(
-          methodSelect(
-              anyOf(
-                  staticMethod("com.google.common.base.Throwables", "throwIfUnchecked"),
-                  staticMethod("com.google.common.base.Throwables", "propagateIfPossible"))),
+          anyOf(
+              staticMethod().onClass("com.google.common.base.Throwables").named("throwIfUnchecked"),
+              staticMethod()
+                  .onClass("com.google.common.base.Throwables")
+                  .named("propagateIfPossible")),
           argumentCount(1));
 
   private static final Matcher<ExpressionTree> IS_KNOWN_CHECKED_EXCEPTION =
