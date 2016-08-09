@@ -80,6 +80,7 @@ import com.google.errorprone.bugpatterns.MissingCasesInEnumSwitch;
 import com.google.errorprone.bugpatterns.MissingFail;
 import com.google.errorprone.bugpatterns.MissingOverride;
 import com.google.errorprone.bugpatterns.MisusedWeekYear;
+import com.google.errorprone.bugpatterns.MixedArrayDimensions;
 import com.google.errorprone.bugpatterns.MockitoCast;
 import com.google.errorprone.bugpatterns.MockitoUsage;
 import com.google.errorprone.bugpatterns.ModifyingCollectionWithItself;
@@ -346,6 +347,7 @@ public class BuiltInCheckerSuppliers {
           JavaxInjectOnFinalField.class,
           LockMethodChecker.class,
           LongLiteralLowerCaseSuffix.class,
+          MixedArrayDimensions.class,
           ModifyingCollectionWithItself.class,
           MoreThanOneInjectableConstructor.class,
           MoreThanOneQualifier.class,
