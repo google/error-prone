@@ -83,6 +83,7 @@ import com.google.errorprone.bugpatterns.MisusedWeekYear;
 import com.google.errorprone.bugpatterns.MockitoCast;
 import com.google.errorprone.bugpatterns.MockitoUsage;
 import com.google.errorprone.bugpatterns.ModifyingCollectionWithItself;
+import com.google.errorprone.bugpatterns.MultiVariableDeclaration;
 import com.google.errorprone.bugpatterns.MultipleTopLevelClasses;
 import com.google.errorprone.bugpatterns.NarrowingCompoundAssignment;
 import com.google.errorprone.bugpatterns.NoAllocationChecker;
@@ -349,6 +350,7 @@ public class BuiltInCheckerSuppliers {
           MoreThanOneInjectableConstructor.class,
           MoreThanOneQualifier.class,
           MoreThanOneScopeAnnotationOnClass.class,
+          MultiVariableDeclaration.class,
           MultipleTopLevelClasses.class,
           NarrowingCompoundAssignment.class,
           NoAllocationChecker.class,
