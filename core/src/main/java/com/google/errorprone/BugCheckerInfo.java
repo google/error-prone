@@ -99,7 +99,10 @@ public class BugCheckerInfo implements Serializable {
   private final Set<Class<? extends Annotation>> customSuppressionAnnotations;
 
   public static BugCheckerInfo create(Class<? extends BugChecker> checker) {
-    BugPattern pattern = checkNotNull(checker.getAnnotation(BugPattern.class));
+    BugPattern pattern =
+        checkNotNull(
+            checker.getAnnotation(BugPattern.class),
+            "BugCheckers must be annotated with @BugPattern");
     try {
       BugPatternValidator.validate(pattern);
     } catch (ValidationException e) {
