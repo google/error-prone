@@ -16,8 +16,11 @@
 
 package com.google.errorprone;
 
+import com.google.common.base.Optional;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis;
 import com.google.errorprone.matchers.Description;
@@ -46,6 +49,8 @@ import com.sun.tools.javac.util.Options;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -57,6 +62,7 @@ public class VisitorState {
   private final TreePath path;
   private final Map<String, SeverityLevel> severityMap;
   private final ErrorProneOptions errorProneOptions;
+  private final LoadingCache<String, Optional<Type>> typeCache;
 
   // The default no-op implementation of DescriptionListener. We use this instead of null so callers
   // of getDescriptionListener() don't have to do null-checking.
@@ -65,18 +71,12 @@ public class VisitorState {
   };
 
   public VisitorState(Context context) {
-    this(
-        context,
-        null,
-        NULL_LISTENER,
-        ImmutableMap.<String, SeverityLevel>of(),
-        ErrorProneOptions.empty());
+    this(context, NULL_LISTENER);
   }
 
   public VisitorState(Context context, DescriptionListener listener) {
     this(
         context,
-        null,
         listener,
         Collections.<String, SeverityLevel>emptyMap(),
         ErrorProneOptions.empty());
@@ -87,7 +87,7 @@ public class VisitorState {
       DescriptionListener listener,
       Map<String, SeverityLevel> severityMap,
       ErrorProneOptions errorProneOptions) {
-    this(context, null, listener, severityMap, errorProneOptions);
+    this(context, null, listener, severityMap, errorProneOptions, null);
   }
 
   private VisitorState(
@@ -95,16 +95,31 @@ public class VisitorState {
       TreePath path,
       DescriptionListener descriptionListener,
       Map<String, SeverityLevel> severityMap,
-      ErrorProneOptions errorProneOptions) {
+      ErrorProneOptions errorProneOptions,
+      LoadingCache<String, Optional<Type>> typeCache) {
     this.context = context;
     this.path = path;
     this.descriptionListener = descriptionListener;
     this.severityMap = severityMap;
     this.errorProneOptions = errorProneOptions;
+    if (typeCache != null) {
+      this.typeCache = typeCache;
+    } else {
+      this.typeCache =
+          CacheBuilder.newBuilder()
+              .build(
+                  new CacheLoader<String, Optional<Type>>() {
+                    @Override
+                    public Optional<Type> load(String key) throws Exception {
+                      return Optional.fromNullable(getTypeFromStringInternal(key));
+                    }
+                  });
+    }
   }
 
   public VisitorState withPath(TreePath path) {
-    return new VisitorState(context, path, descriptionListener, severityMap, errorProneOptions);
+    return new VisitorState(
+        context, path, descriptionListener, severityMap, errorProneOptions, typeCache);
   }
 
   public TreePath getPath() {
@@ -151,15 +166,23 @@ public class VisitorState {
   /**
    * Given the binary name of a class, returns the {@link Type}.
    *
-   * <p>If this method returns null, the compiler doesn't have access to this type, which means
-   * that if you are comparing other types to this for equality or the subtype relation, your
-   * result would always be false even if it could create the type. Thus it might be best to bail
-   * out early in your matcher if this method returns null on your type of interest.
+   * <p>If this method returns null, the compiler doesn't have access to this type, which means that
+   * if you are comparing other types to this for equality or the subtype relation, your result
+   * would always be false even if it could create the type. Thus it might be best to bail out early
+   * in your matcher if this method returns null on your type of interest.
    *
    * @param typeStr the JLS 13.1 binary name of the class, e.g. {@code "java.util.Map$Entry"}
    * @return the {@link Type}, or null if it cannot be found
    */
   public Type getTypeFromString(String typeStr) {
+    try {
+      return typeCache.get(typeStr).orNull();
+    } catch (ExecutionException e) {
+      return null;
+    }
+  }
+
+  private Type getTypeFromStringInternal(String typeStr) {
     validateTypeStr(typeStr);
     if (isPrimitiveType(typeStr)) {
       return getPrimitiveType(typeStr);
