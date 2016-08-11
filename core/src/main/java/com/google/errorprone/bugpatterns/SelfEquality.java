@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.sun.source.tree.Tree.Kind.EQUAL_TO;
@@ -40,7 +40,12 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree;
 
-/** @author scottjohnson@google.com (Scott Johnson) */
+/**
+ * Points out if a variable is tested for equality to itself.
+ *
+ * @author scottjohnson@google.com (Scott Johnson)
+ * @author bhagwani@google.com (Sumit Bhagwani)
+ */
 @BugPattern(
   name = "SelfEquality",
   summary = "Variable compared to itself",
@@ -48,7 +53,7 @@ import com.sun.tools.javac.tree.JCTree;
       "There is no good reason to test a primitive value or reference for equality "
           + "with itself.",
   category = JDK,
-  severity = WARNING,
+  severity = ERROR,
   maturity = MATURE
 )
 public class SelfEquality extends BugChecker implements BinaryTreeMatcher {
