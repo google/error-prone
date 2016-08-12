@@ -83,4 +83,13 @@ public final class ArgumentParameterUtilsTest {
   public void lexicalSimilarity_falsePositiveCase() {
     assertThat(ArgumentParameterUtils.lexicalSimilarity("fooBar", "barFoo")).isEqualTo(1.0);
   }
+
+  @Test
+  public void correctArgForParam_twoArgs() {
+    List<String> paramList = ImmutableList.of("keepPath", "dropPath");
+    List<String> argList = ImmutableList.of("dropPath", "keepPath");
+    double[] percentage = {.5, 1};
+    assertThat(ArgumentParameterUtils.correctArgForParam(percentage, 0, argList))
+        .isEqualTo("keepPath");
+  }
 }

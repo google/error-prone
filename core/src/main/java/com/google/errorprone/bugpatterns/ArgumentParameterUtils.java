@@ -15,9 +15,9 @@
  */
 
 package com.google.errorprone.bugpatterns;
-
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -30,6 +30,9 @@ import java.util.Set;
  * @author yulissa@google.com (Yulissa Arroyo-Paredes)
  */
 public class ArgumentParameterUtils {
+  public static final List<String> BLACK_LIST =
+      ImmutableList.of("message", "counter", "index", "object", "value", "item", "key");
+
   /**
    * Given the name of the argument and parameter this measures the similarity of the two strings.
    * The terms within the argument and parameter names are split, so "keepPath" becomes &lt;"keep",
@@ -58,6 +61,33 @@ public class ArgumentParameterUtils {
       simToParams.add(lexicalSimilarity(arg, param));
     }
     return simToParams;
+  }
+
+  /**
+   * Finds the maximum percentage and then gives the argument in that same index.
+   *
+   * @param tempPercentage is the array of the lexical similarity between the current parameter and
+   *     the arguments, in the order that the arguments originally where
+   * @param paramIndex is the parameter looking for the most similar argument
+   * @param argList is just the list of arguments
+   * @return once the index of which argument has the highest percentage, that index will be
+   *     retrieved from the orignal argList. The argument from argList will be suggested as the new
+   *     argument for the parameter.
+   */
+  public static String correctArgForParam(
+      double[] tempPercentage, int paramIndex, List<String> argList) {
+    // for now just finding the max but I am concerned for when there isn't a clear value that is
+    // greater than the other. If the array is something like [.5, .5, .5].
+    int maxIndex = 0;
+    double max = tempPercentage[maxIndex];
+    for (int i = 1; i < tempPercentage.length; i++) {
+      if (max < tempPercentage[i]) {
+        max = tempPercentage[i];
+        maxIndex = i;
+      }
+    }
+
+    return argList.get(maxIndex);
   }
 
   private static HashSet<String> splitStringTermsToSet(String name) {
