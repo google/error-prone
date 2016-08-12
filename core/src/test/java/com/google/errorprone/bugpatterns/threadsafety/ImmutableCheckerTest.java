@@ -1259,4 +1259,5 @@ public class ImmutableCheckerTest {
             "}")
         .doTest();
   }
+
 }
