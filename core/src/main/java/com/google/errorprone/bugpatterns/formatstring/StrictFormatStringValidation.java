@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.formatstring;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.annotations.FormatMethod;
 import com.google.errorprone.annotations.FormatString;
 import com.google.errorprone.bugpatterns.formatstring.FormatStringValidation.ValidationResult;
 import com.google.errorprone.util.ASTHelpers;
@@ -67,7 +68,7 @@ public class StrictFormatStringValidation {
     }
 
     if (formatStringSymbol.getKind() == ElementKind.PARAMETER
-        && ASTHelpers.hasAnnotation(formatStringSymbol, FormatString.class, state)) {
+        && isFormatStringParameter(formatStringSymbol, state)) {
       List<VarSymbol> ownerParams = ((MethodSymbol) formatStringSymbol.owner).getParameters();
       int ownerFormatStringIndex = ownerParams.indexOf(formatStringSymbol);
 
@@ -120,6 +121,54 @@ public class StrictFormatStringValidation {
             "Format strings must be compile time constant or parameters annotated "
                 + "@FormatString: %s",
             formatStringTree));
+  }
+
+  /**
+   * Returns whether an input {@link Symbol} is a format string in a {@link FormatMethod}. This is
+   * true if the {@link Symbol} is a {@link String} parameter in a {@link FormatMethod} and is
+   * either:
+   *
+   * <ol>
+   * <li>Annotated with {@link FormatString}
+   * <li>The first {@link String} parameter in the method with no other parameters annotated {@link
+   *     FormatString}.
+   * </ol>
+   */
+  private static boolean isFormatStringParameter(Symbol formatString, VisitorState state) {
+    Type stringType = state.getSymtab().stringType;
+
+    // The input symbol must be a String and a parameter of a @FormatMethod to be a @FormatString.
+    if (!ASTHelpers.isSameType(formatString.type, stringType, state)
+        || !(formatString.owner instanceof MethodSymbol)
+        || !ASTHelpers.hasAnnotation(formatString.owner, FormatMethod.class, state)) {
+      return false;
+    }
+
+    // If the format string is annotated @FormatString in a @FormatMethod, it is a format string.
+    if (ASTHelpers.hasAnnotation(formatString, FormatString.class, state)) {
+      return true;
+    }
+
+    // Check if format string is the first string with no @FormatString params in the @FormatMethod.
+    MethodSymbol owner = (MethodSymbol) formatString.owner;
+    boolean formatStringFound = false;
+    for (Symbol param : owner.getParameters()) {
+      if (param == formatString) {
+        formatStringFound = true;
+      }
+
+      if (ASTHelpers.isSameType(param.type, stringType, state)) {
+        // If this is a String parameter before the input Symbol, then the input symbol can't be the
+        // format string since it wasn't annotated @FormatString.
+        if (!formatStringFound) {
+          return false;
+        } else if (ASTHelpers.hasAnnotation(param, FormatString.class, state)) {
+          return false;
+        }
+      }
+    }
+
+    return true;
   }
 
   private StrictFormatStringValidation() {}

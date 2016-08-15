@@ -73,6 +73,23 @@ public class FormatStringAnnotationCheckerTest {
   }
 
   @Test
+  public void testMatches_succeedsForMatchingFormatMethodWithImplicitFormatString() {
+    compilationHelper
+        .addSourceLines(
+            "test/FormatStringTestCase.java",
+            "package test;",
+            "import com.google.errorprone.annotations.FormatMethod;",
+            "import com.google.errorprone.annotations.FormatString;",
+            "public class FormatStringTestCase {",
+            "  @FormatMethod public static void log(@FormatString String s, Object... args) {}",
+            "  @FormatMethod public static void callLog(String s, Object arg) {",
+            "    log(s, arg);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testMatches_failsWithMismatchedFormatString() {
     compilationHelper
         .addSourceLines(
@@ -146,6 +163,29 @@ public class FormatStringAnnotationCheckerTest {
             "  @FormatMethod void log3(@FormatString Object o) {}",
             "  // BUG: Diagnostic contains: A parameter can only be annotated @FormatString in a",
             "  void log4(@FormatString Object o) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testMatches_failsForIncorrectStringParameterUsedWithImplicitFormatString() {
+    compilationHelper
+        .addSourceLines(
+            "test/FormatStringTestCase.java",
+            "package test;",
+            "import com.google.errorprone.annotations.FormatMethod;",
+            "import com.google.errorprone.annotations.FormatString;",
+            "public class FormatStringTestCase {",
+            "  @FormatMethod public static void log(@FormatString String s, Object... args) {}",
+            "  @FormatMethod public static void callLog1(String format, String s, Object arg) {",
+            "    // BUG: Diagnostic contains: Format strings must be compile time constant or",
+            "    log(s, arg);",
+            "  }",
+            "  @FormatMethod public static void callLog2(String s, @FormatString String format,",
+            "      Object arg) {",
+            "    // BUG: Diagnostic contains: Format strings must be compile time constant or",
+            "    log(s, arg);",
+            "  }",
             "}")
         .doTest();
   }
