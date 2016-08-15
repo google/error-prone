@@ -39,9 +39,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol;
 
-/**
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/** @author sgoldfeder@google.com (Steven Goldfeder) */
 @BugPattern(
   name = "AssistedInjectAndInjectOnConstructors",
   summary =
@@ -50,7 +48,7 @@ import com.sun.tools.javac.code.Symbol;
   explanation =
       "Mixing @Inject and @AssistedInject leads to confusing code and the "
           + "documentation specifies not to do it. See "
-          + "http://google-guice.googlecode.com/git/javadoc/com/google/inject/assistedinject/AssistedInject.html",
+          + "https://google.github.io/guice/api-docs/latest/javadoc/com/google/inject/assistedinject/AssistedInject.html",
   category = INJECT,
   severity = WARNING,
   maturity = EXPERIMENTAL

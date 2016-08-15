@@ -36,16 +36,14 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Types;
 import javax.lang.model.element.TypeElement;
 
-/**
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/** @author sgoldfeder@google.com (Steven Goldfeder) */
 @BugPattern(
   name = "GuiceAssistedParameters",
   summary =
       "A constructor cannot have two @Assisted parameters of the same type unless they are "
           + "disambiguated with named @Assisted annotations. ",
   explanation =
-      "See http://google-guice.googlecode.com/git/javadoc/com/google/inject/assistedinject/FactoryModuleBuilder.html",
+      "See https://google.github.io/guice/api-docs/latest/javadoc/com/google/inject/assistedinject/FactoryModuleBuilder.html",
   category = GUICE,
   severity = ERROR,
   maturity = EXPERIMENTAL
