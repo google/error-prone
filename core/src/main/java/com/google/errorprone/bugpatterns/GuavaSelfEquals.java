@@ -157,7 +157,8 @@ public class GuavaSelfEquals extends BugChecker implements MethodInvocationTreeM
     for (JCTree jcTree : members) {
       if (jcTree.getKind() == Kind.VARIABLE) {
         JCVariableDecl declaration = (JCVariableDecl) jcTree;
-        TypeSymbol variableTypeSymbol = declaration.getType().type.tsym;
+        TypeSymbol variableTypeSymbol =
+            state.getTypes().erasure(ASTHelpers.getType(declaration)).tsym;
 
         if (ASTHelpers.getSymbol(toReplace).isMemberOf(variableTypeSymbol, state.getTypes())) {
           if (toReplace.getKind() == Kind.IDENTIFIER) {
