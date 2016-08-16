@@ -16,8 +16,13 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
+import org.junit.Assert;
+
 /**
+ * Positive test cases for {@link SelfEquals} check.
+ *
  * @author eaftan@google.com (Eddie Aftandilian)
+ * @author bhagwani@google.com (Sumit Bhagwani)
  */
 public class SelfEqualsPositiveCase {
   private String simpleField;
@@ -66,7 +71,12 @@ public class SelfEqualsPositiveCase {
     // BUG: Diagnostic contains: An object is tested for equality to itself
     return equals(this);
   }
-  
+
+  public void testAssertTrue(SelfEqualsPositiveCase obj) {
+    // BUG: Diagnostic contains: An object is tested for equality to itself
+    Assert.assertTrue(obj.equals(obj));
+  }
+
   @Override
   public boolean equals(Object obj) {
     if (obj == null || getClass() != obj.getClass()) {
