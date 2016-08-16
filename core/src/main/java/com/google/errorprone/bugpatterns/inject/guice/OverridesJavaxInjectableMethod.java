@@ -31,34 +31,26 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodTree;
-import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.code.Symbol.TypeSymbol;
 
 /**
- * This checker matches methods that
- *   1) are not themselves annotated with @Inject
- *   2) descend from a method that is annotated with @javax.inject.Inject
- *   3) do not descent from a method that is annotated with @com.google.inject.Inject
+ * This checker matches methods that 1) are not themselves annotated with @Inject 2) descend from a
+ * method that is annotated with @javax.inject.Inject 3) do not descent from a method that is
+ * annotated with @com.google.inject.Inject
  *
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
 @BugPattern(
   name = "OverridesJavaxInjectableMethod",
   summary =
-      "This method is not annotated with @Inject, but it overrides a  method that is "
-          + " annotated with @javax.inject.Inject.",
-  explanation =
-      "According to the JSR-330 spec, a method that overrides a method annotated "
-          + "with javax.inject.Inject will not be injected unless it iself is annotated with "
-          + " @Inject",
+      "This method is not annotated with @Inject, but it overrides a method that is "
+          + " annotated with @javax.inject.Inject. The method will not be Injected.",
   category = GUICE,
   severity = ERROR,
   maturity = EXPERIMENTAL
 )
 public class OverridesJavaxInjectableMethod extends BugChecker implements MethodTreeMatcher {
 
-  private static final String OVERRIDE_ANNOTATION = "java.lang.Override";
   private static final String GUICE_INJECT_ANNOTATION = "com.google.inject.Inject";
   private static final String JAVAX_INJECT_ANNOTATION = "javax.inject.Inject";
 
@@ -66,30 +58,27 @@ public class OverridesJavaxInjectableMethod extends BugChecker implements Method
       Matchers.<MethodTree>anyOf(
           hasAnnotation(GUICE_INJECT_ANNOTATION), hasAnnotation(JAVAX_INJECT_ANNOTATION));
 
-  private static final Matcher<MethodTree> OVERRIDE_METHOD_MATCHER =
-      Matchers.<MethodTree>hasAnnotation(OVERRIDE_ANNOTATION);
-
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
     // if method is itself annotated with @Inject or it has no ancestor methods, return NO_MATCH;
-    if (INJECTABLE_METHOD_MATCHER.matches(methodTree, state)
-        || !OVERRIDE_METHOD_MATCHER.matches(methodTree, state)) {
+    if (INJECTABLE_METHOD_MATCHER.matches(methodTree, state)) {
       return Description.NO_MATCH;
     }
+
     boolean foundJavaxInject = false;
-    MethodSymbol method = ASTHelpers.getSymbol(methodTree);
-    MethodSymbol superMethod = null;
-    for (boolean checkSuperClass = true; checkSuperClass; method = superMethod) {
-      superMethod = findSuperMethod(method, state);
+    for (MethodSymbol superMethod :
+        ASTHelpers.findSuperMethods(ASTHelpers.getSymbol(methodTree), state.getTypes())) {
+
+      // With a Guice annotation, Guice will still inject the subclass-overridden method.
       if (ASTHelpers.hasAnnotation(superMethod, GUICE_INJECT_ANNOTATION, state)) {
         return Description.NO_MATCH;
       }
+
       // is not necessarily a match even if we find javax Inject on an ancestor
       // since a higher up ancestor may have @com.google.inject.Inject
-      foundJavaxInject = ASTHelpers.hasAnnotation(superMethod, JAVAX_INJECT_ANNOTATION, state);
-      // check if there are ancestor methods
-      checkSuperClass = ASTHelpers.hasAnnotation(superMethod, OVERRIDE_ANNOTATION, state);
+      foundJavaxInject |= ASTHelpers.hasAnnotation(superMethod, JAVAX_INJECT_ANNOTATION, state);
     }
+
     if (foundJavaxInject) {
       return describeMatch(
           methodTree,
@@ -101,14 +90,4 @@ public class OverridesJavaxInjectableMethod extends BugChecker implements Method
     return Description.NO_MATCH;
   }
 
-  private MethodSymbol findSuperMethod(MethodSymbol method, VisitorState state) {
-    TypeSymbol superClass = method.enclClass().getSuperclass().tsym;
-    for (Symbol s : superClass.members().getSymbols()) {
-      if (s.name.contentEquals(method.name)
-          && method.overrides(s, superClass, state.getTypes(), true)) {
-        return (MethodSymbol) s;
-      }
-    }
-    return null;
-  }
 }

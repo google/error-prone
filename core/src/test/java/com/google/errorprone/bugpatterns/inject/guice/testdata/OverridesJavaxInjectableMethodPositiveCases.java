@@ -21,11 +21,16 @@ package com.google.errorprone.bugpatterns.inject.guice.testdata;
  */
 public class OverridesJavaxInjectableMethodPositiveCases {
 
+  /** Class with foo() */
+  public class TestClass0 {
+    public void foo() {}
+  }
+
   /**
-   * Class with a method foo() that is annotated with @javax.inject.Inject. Other test classes will
-   * extend this class.
+   * Class with a method foo() that is annotated with {@code javax.inject.Inject}. Other test
+   * classes will extend this class.
    */
-  public class TestClass1 {
+  public class TestClass1 extends TestClass0 {
     @javax.inject.Inject
     public void foo() {}
   }
@@ -35,7 +40,6 @@ public class OverridesJavaxInjectableMethodPositiveCases {
    * @javax.inject.Inject.
    */
   public class TestClass2 extends TestClass1 {
-    @Override 
     // BUG: Diagnostic contains: @Inject
     public void foo() {}
   }
@@ -45,7 +49,6 @@ public class OverridesJavaxInjectableMethodPositiveCases {
    * a method that is annotated with @javax.inject.Inject.
    */
   public class TestClass3 extends TestClass2 {
-    @Override 
     // BUG: Diagnostic contains: @Inject
     public void foo() {}
   }
