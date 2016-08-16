@@ -19,9 +19,9 @@ package com.google.errorprone.bugpatterns.formatstring;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.BugPattern.Suppressibility.UNSUPPRESSIBLE;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.FormatMethod;
 import com.google.errorprone.annotations.FormatString;
@@ -45,8 +45,8 @@ import java.util.List;
   category = JDK,
   severity = ERROR,
   maturity = EXPERIMENTAL,
-  suppressibility = UNSUPPRESSIBLE
-)
+  suppressibility = Suppressibility.SUPPRESS_WARNINGS
+  )
 public final class FormatStringAnnotationChecker extends BugChecker
     implements MethodInvocationTreeMatcher, MethodTreeMatcher {
 
