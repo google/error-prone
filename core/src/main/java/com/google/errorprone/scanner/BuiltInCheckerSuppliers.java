@@ -56,6 +56,7 @@ import com.google.errorprone.bugpatterns.EqualsIncompatibleType;
 import com.google.errorprone.bugpatterns.EqualsNaN;
 import com.google.errorprone.bugpatterns.Finally;
 import com.google.errorprone.bugpatterns.ForOverrideChecker;
+import com.google.errorprone.bugpatterns.FuturesGetCheckedIllegalExceptionType;
 import com.google.errorprone.bugpatterns.GetClassOnAnnotation;
 import com.google.errorprone.bugpatterns.GetClassOnClass;
 import com.google.errorprone.bugpatterns.GetClassOnEnum;
@@ -234,6 +235,7 @@ public class BuiltInCheckerSuppliers {
           ForOverrideChecker.class,
           FormatString.class,
           FormatStringAnnotationChecker.class,
+          FuturesGetCheckedIllegalExceptionType.class,
           GetClassOnAnnotation.class,
           GetClassOnClass.class,
           GuardedByChecker.class,
