@@ -451,10 +451,10 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <pre>public&nbsp;com.sun.tools.javac.code.Type&nbsp;getTypeFromString(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;typeStr)</pre>
 <div class="block">Given the binary name of a class, returns the <code>Type</code>.
 
- <p>If this method returns null, the compiler doesn't have access to this type, which means
- that if you are comparing other types to this for equality or the subtype relation, your
- result would always be false even if it could create the type. Thus it might be best to bail
- out early in your matcher if this method returns null on your type of interest.</div>
+ <p>If this method returns null, the compiler doesn't have access to this type, which means that
+ if you are comparing other types to this for equality or the subtype relation, your result
+ would always be false even if it could create the type. Thus it might be best to bail out early
+ in your matcher if this method returns null on your type of interest.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>typeStr</code> - the JLS 13.1 binary name of the class, e.g. <code>"java.util.Map$Entry"</code></dd>

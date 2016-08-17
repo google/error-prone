@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6,"i1":6,"i2":6,"i3":6};
+var methods = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -131,23 +131,29 @@ extends <a href="../../../../../com/google/errorprone/matchers/Matcher.html" tit
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.StaticMethodMatcher.html#anyClass--">anyClass</a></span>()</code>
+<div class="block">Match on any class.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.StaticMethodMatcher.html#onClass-java.lang.String-">onClass</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;className)</code>
 <div class="block">Match on types with the given fully-qualified name.</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.StaticMethodMatcher.html#onClass-com.google.errorprone.suppliers.Supplier-">onClass</a></span>(<a href="../../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;classType)</code>
 <div class="block">Match on the given type exactly.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.StaticMethodMatcher.html#onClassAny-java.lang.Iterable-">onClassAny</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang">Iterable</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;classNames)</code>
 <div class="block">Match on types that are equal to any of the given types.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.StaticMethodMatcher.html#onClassAny-java.lang.String...-">onClassAny</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>...&nbsp;classNames)</code>
 <div class="block">Match on types that are equal to any of the given types.</div>
@@ -208,11 +214,21 @@ extends <a href="../../../../../com/google/errorprone/matchers/Matcher.html" tit
 <a name="onClassAny-java.lang.String...-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>onClassAny</h4>
 <pre><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a>&nbsp;onClassAny(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>...&nbsp;classNames)</pre>
 <div class="block">Match on types that are equal to any of the given types.</div>
+</li>
+</ul>
+<a name="anyClass--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>anyClass</h4>
+<pre><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a>&nbsp;anyClass()</pre>
+<div class="block">Match on any class.</div>
 </li>
 </ul>
 </li>

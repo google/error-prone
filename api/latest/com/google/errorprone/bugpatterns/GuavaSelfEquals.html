@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":10,"i2":9};
+var methods = {"i0":9,"i1":9,"i2":10,"i3":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -180,18 +180,23 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>protected static <a href="../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/GuavaSelfEquals.html#generateFix-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-com.sun.source.tree.ExpressionTree-">generateFix</a></span>(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/GuavaSelfEquals.html#fieldFix-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-">fieldFix</a></span>(com.sun.source.tree.Tree&nbsp;toReplace,
+        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>protected static <a href="../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/GuavaSelfEquals.html#generateFix-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-com.sun.source.tree.ExpressionTree-">generateFix</a></span>(com.sun.source.tree.Tree&nbsp;tree,
            <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
            com.sun.source.tree.ExpressionTree&nbsp;toReplace)</code>
 <div class="block">Finds a replacement for toReplace expression tree if possible.</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/GuavaSelfEquals.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation</a></span>(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
                      <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>protected static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/GuavaSelfEquals.html#verifyArgsType-com.sun.source.tree.MethodInvocationTree-">verifyArgsType</a></span>(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree)</code>
 <div class="block">Verifies arguments to be either identifiers or field accesses.</div>
@@ -274,16 +279,27 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <div class="block">Verifies arguments to be either identifiers or field accesses.</div>
 </li>
 </ul>
-<a name="generateFix-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-com.sun.source.tree.ExpressionTree-">
+<a name="generateFix-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-com.sun.source.tree.ExpressionTree-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>generateFix</h4>
+<pre>protected static&nbsp;<a href="../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;generateFix(com.sun.source.tree.Tree&nbsp;tree,
+                                 <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+                                 com.sun.source.tree.ExpressionTree&nbsp;toReplace)</pre>
+<div class="block">Finds a replacement for toReplace expression tree if possible.</div>
+</li>
+</ul>
+<a name="fieldFix-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>generateFix</h4>
-<pre>protected static&nbsp;<a href="../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;generateFix(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
-                                 <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
-                                 com.sun.source.tree.ExpressionTree&nbsp;toReplace)</pre>
-<div class="block">Finds a replacement for toReplace expression tree if possible.</div>
+<h4>fieldFix</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+protected static&nbsp;<a href="../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;fieldFix(com.sun.source.tree.Tree&nbsp;toReplace,
+                                        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
 </li>
 </ul>
 </li>

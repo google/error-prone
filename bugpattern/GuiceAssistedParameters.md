@@ -14,7 +14,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-See http://google-guice.googlecode.com/git/javadoc/com/google/inject/assistedinject/FactoryModuleBuilder.html
+See https://google.github.io/guice/api-docs/latest/javadoc/com/google/inject/assistedinject/FactoryModuleBuilder.html
 
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("GuiceAssistedParameters")` annotation to the enclosing element.

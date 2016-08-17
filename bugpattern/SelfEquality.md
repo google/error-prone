@@ -4,7 +4,7 @@ summary: Variable compared to itself
 layout: bugpattern
 category: JDK
 severity: ERROR
-maturity: EXPERIMENTAL
+maturity: MATURE
 ---
 
 <!--

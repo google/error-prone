@@ -3,7 +3,7 @@ title: UnnecessaryStaticImport
 summary: Using static imports for types is unnecessary
 layout: bugpattern
 category: JDK
-severity: WARNING
+severity: SUGGESTION
 maturity: MATURE
 ---
 

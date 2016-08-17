@@ -1,9 +1,9 @@
 ---
 title: WildcardImport
-summary: Use of wildcard imports is forbidden
+summary: Wildcard imports, static or otherwise, should not be used
 layout: bugpattern
 category: JDK
-severity: WARNING
+severity: SUGGESTION
 maturity: MATURE
 ---
 

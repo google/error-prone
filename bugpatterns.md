@@ -59,9 +59,6 @@ Calling getClass() on an enum may return a subclass of the enum type
 __[IncompatibleModifiers](bugpattern/IncompatibleModifiers)__<br>
 This annotation has incompatible modifiers as specified by its @IncompatibleModifiers annotation
 
-__[InsecureCipherMode](bugpattern/InsecureCipherMode)__<br>
-Cipher.getInstance() is invoked using either the default settings or ECB mode
-
 __[JUnit3FloatingPointComparisonWithoutDelta](bugpattern/JUnit3FloatingPointComparisonWithoutDelta)__<br>
 Floating-point comparison without error tolerance
 
@@ -73,9 +70,6 @@ Enum switch statement is missing cases
 
 __[MissingOverride](bugpattern/MissingOverride)__<br>
 method overrides method in supertype; expected @Override
-
-__[MultipleTopLevelClasses](bugpattern/MultipleTopLevelClasses)__<br>
-Source files should not contain multiple top-level class declarations
 
 __[NonAtomicVolatileUpdate](bugpattern/NonAtomicVolatileUpdate)__<br>
 This update of a volatile variable is non-atomic
@@ -97,9 +91,6 @@ void-returning methods should not be annotated with @Nullable, since they cannot
 
 __[OperatorPrecedence](bugpattern/OperatorPrecedence)__<br>
 Use grouping parenthesis to make the operator precedence explicit
-
-__[PackageLocation](bugpattern/PackageLocation)__<br>
-Package names should match the directory they are declared in
 
 __[PreconditionsInvalidPlaceholder](bugpattern/PreconditionsInvalidPlaceholder)__<br>
 Preconditions only accepts the %s placeholder in error message strings
@@ -128,27 +119,42 @@ Synchronizing on non-final fields is not safe: if the field is ever updated, dif
 __[TypeParameterUnusedInFormals](bugpattern/TypeParameterUnusedInFormals)__<br>
 Declaring a type parameter that is only used in the return type is a misuse of generics: operations on the type parameter are unchecked, it hides unsafe casts at invocations of the method, and it interacts badly with method overload resolution.
 
-__[UnnecessaryStaticImport](bugpattern/UnnecessaryStaticImport)__<br>
-Using static imports for types is unnecessary
-
 __[UnsynchronizedOverridesSynchronized](bugpattern/UnsynchronizedOverridesSynchronized)__<br>
 Unsynchronized method overrides a synchronized method.
 
 __[WaitNotInLoop](bugpattern/WaitNotInLoop)__<br>
 Because of spurious wakeups, Object.wait() and Condition.await() must always be called in a loop
 
-__[WildcardImport](bugpattern/WildcardImport)__<br>
-Use of wildcard imports is forbidden
-
 ## On by default : SUGGESTION
 
 __[ConstantField](bugpattern/ConstantField)__<br>
 Field name is CONSTANT_CASE, but field is not static and final
 
+__[MixedArrayDimensions](bugpattern/MixedArrayDimensions)__<br>
+C-style array declarations should not be used
+
+__[MultiVariableDeclaration](bugpattern/MultiVariableDeclaration)__<br>
+Variable declarations should declare only one variable
+
+__[MultipleTopLevelClasses](bugpattern/MultipleTopLevelClasses)__<br>
+Source files should not contain multiple top-level class declarations
+
+__[PackageLocation](bugpattern/PackageLocation)__<br>
+Package names should match the directory they are declared in
+
 __[RemoveUnusedImports](bugpattern/RemoveUnusedImports)__<br>
 Unused imports
 
+__[UnnecessaryStaticImport](bugpattern/UnnecessaryStaticImport)__<br>
+Using static imports for types is unnecessary
+
+__[WildcardImport](bugpattern/WildcardImport)__<br>
+Wildcard imports, static or otherwise, should not be used
+
 ## On by default : ERROR
+
+__[ArgumentParameterSwap](bugpattern/ArgumentParameterSwap)__<br>
+The argument and parameter names do not match exactly.
 
 __[ArrayEquals](bugpattern/ArrayEquals)__<br>
 Reference equality used to compare arrays
@@ -220,10 +226,13 @@ __[HashtableContains](bugpattern/HashtableContains)__<br>
 contains() is a legacy method that is equivalent to containsValue()
 
 __[IdentityBinaryExpression](bugpattern/IdentityBinaryExpression)__<br>
-Writing `a &amp;&amp; a`, `a || a`, `a &amp; a`, or `a | a` is equivalent to `a`.
+Writing &quot;a &amp;&amp; a&quot;, &quot;a || a&quot;, &quot;a &amp; a&quot;, or &quot;a | a&quot; is equivalent to &quot;a&quot;.
 
 __[InfiniteRecursion](bugpattern/InfiniteRecursion)__<br>
 This method always recurses, and will cause a StackOverflowError
+
+__[InsecureCipherMode](bugpattern/InsecureCipherMode)__<br>
+Cipher.getInstance() is invoked using either the default settings or ECB mode
 
 __[InvalidPatternSyntax](bugpattern/InvalidPatternSyntax)__<br>
 Invalid syntax used for a regular expression
@@ -296,6 +305,9 @@ Variable assigned to itself
 
 __[SelfComparison](bugpattern/SelfComparison)__<br>
 An object is compared to itself
+
+__[SelfEquality](bugpattern/SelfEquality)__<br>
+Variable compared to itself
 
 __[SelfEquals](bugpattern/SelfEquals)__<br>
 An object is tested for equality to itself
@@ -460,7 +472,7 @@ __[OverlappingQualifierAndScopeAnnotation](bugpattern/OverlappingQualifierAndSco
 Annotations cannot be both Qualifiers/BindingAnnotations and Scopes
 
 __[OverridesJavaxInjectableMethod](bugpattern/OverridesJavaxInjectableMethod)__<br>
-This method is not annotated with @Inject, but it overrides a  method that is  annotated with @javax.inject.Inject.
+This method is not annotated with @Inject, but it overrides a method that is  annotated with @javax.inject.Inject. The method will not be Injected.
 
 __[ParameterPackage](bugpattern/ParameterPackage)__<br>
 Method parameter has wrong package
@@ -470,9 +482,6 @@ Comparing protobuf fields of type String using reference equality
 
 __[RandomModInteger](bugpattern/RandomModInteger)__<br>
 Use Random.nextInt(int).  Random.nextInt() % n can have negative results
-
-__[SelfEquality](bugpattern/SelfEquality)__<br>
-Variable compared to itself
 
 __[ThrowIfUncheckedKnownChecked](bugpattern/ThrowIfUncheckedKnownChecked)__<br>
 throwIfUnchecked(knownCheckedException) is a no-op.

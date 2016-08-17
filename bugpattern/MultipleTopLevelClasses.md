@@ -3,7 +3,7 @@ title: MultipleTopLevelClasses
 summary: Source files should not contain multiple top-level class declarations
 layout: bugpattern
 category: JDK
-severity: WARNING
+severity: SUGGESTION
 maturity: MATURE
 ---
 

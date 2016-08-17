@@ -46,8 +46,13 @@ __SelfEqualsPositiveCase.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
+import org.junit.Assert;
+
 /**
+ * Positive test cases for {@link SelfEquals} check.
+ *
  * @author eaftan@google.com (Eddie Aftandilian)
+ * @author bhagwani@google.com (Sumit Bhagwani)
  */
 public class SelfEqualsPositiveCase {
   private String simpleField;
@@ -96,7 +101,12 @@ public class SelfEqualsPositiveCase {
     // BUG: Diagnostic contains: An object is tested for equality to itself
     return equals(this);
   }
-  
+
+  public void testAssertTrue(SelfEqualsPositiveCase obj) {
+    // BUG: Diagnostic contains: An object is tested for equality to itself
+    Assert.assertTrue(obj.equals(obj));
+  }
+
   @Override
   public boolean equals(Object obj) {
     if (obj == null || getClass() != obj.getClass()) {
@@ -130,8 +140,13 @@ __SelfEqualsNegativeCases.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
+import static com.google.common.truth.Truth.assertThat;
+
 /**
+ * Negative test cases for {@link SelfEquals} check.
+ *
  * @author alexeagle@google.com (Alex Eagle)
+ * @author bhagwani@google.com (Sumit Bhagwani)
  */
 public class SelfEqualsNegativeCases {
   private String field;
@@ -140,19 +155,27 @@ public class SelfEqualsNegativeCases {
   public int hashCode() {
     return field != null ? field.hashCode() : 0;
   }
-  
+
   @Override
   public boolean equals(Object o) {
     if (!(o instanceof SelfEqualsNegativeCases)) {
       return false;
     }
-    
+
     SelfEqualsNegativeCases other = (SelfEqualsNegativeCases) o;
     return field.equals(other.field);
   }
-  
+
   public boolean test() {
     return Boolean.TRUE.toString().equals(Boolean.FALSE.toString());
+  }
+
+  public void testAssertThatEq(SelfEqualsNegativeCases obj) {
+    assertThat(obj).isEqualTo(obj);
+  }
+
+  public void testAssertThatNeq(SelfEqualsNegativeCases obj) {
+    assertThat(obj).isNotEqualTo(obj);
   }
 }
 {% endhighlight %}

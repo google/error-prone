@@ -1,6 +1,6 @@
 ---
 title: IdentityBinaryExpression
-summary: Writing `a && a`, `a || a`, `a & a`, or `a | a` is equivalent to `a`.
+summary: Writing "a && a", "a || a", "a & a", or "a | a" is equivalent to "a".
 layout: bugpattern
 category: JDK
 severity: ERROR

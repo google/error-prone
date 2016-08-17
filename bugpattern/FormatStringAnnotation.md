@@ -30,4 +30,4 @@ information on possible format string errors, see
 http://errorprone.info/bugpattern/FormatString
 
 ## Suppression
-This check may not be suppressed.
+Suppress false positives by adding an `@SuppressWarnings("FormatStringAnnotation")` annotation to the enclosing element.
