@@ -75,4 +75,24 @@ public class MoreThanOneInjectableConstructorNegativeCases {
     public TestClass5(int n) {}
   }
 
+
+  /** Suppressed class */
+  @SuppressWarnings("inject-constructors")
+  public class TestClass6 {
+    @Inject
+    public TestClass6() {}
+
+    @Inject
+    public TestClass6(int n) {}
+  }
+
+  /** Suppressed class */
+  @SuppressWarnings("InjectMultipleAtInjectConstructors")
+  public class TestClass7 {
+    @Inject
+    public TestClass7() {}
+
+    @Inject
+    public TestClass7(int n) {}
+  }
 }
