@@ -61,7 +61,6 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 )
 public class OverridesGuiceInjectableMethod extends BugChecker implements MethodTreeMatcher {
 
-  private static final String OVERRIDE_ANNOTATION = "java.lang.Override";
   private static final String GUICE_INJECT_ANNOTATION = "com.google.inject.Inject";
   private static final String JAVAX_INJECT_ANNOTATION = "javax.inject.Inject";
 
@@ -69,14 +68,10 @@ public class OverridesGuiceInjectableMethod extends BugChecker implements Method
       Matchers.<MethodTree>anyOf(
           hasAnnotation(GUICE_INJECT_ANNOTATION), hasAnnotation(JAVAX_INJECT_ANNOTATION));
 
-  private static final Matcher<MethodTree> OVERRIDE_METHOD_MATCHER =
-      Matchers.<MethodTree>hasAnnotation(OVERRIDE_ANNOTATION);
-
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
     // if method is itself annotated with @Inject or it has no ancestor methods, return NO_MATCH;
-    if (!INJECTABLE_METHOD_MATCHER.matches(methodTree, state)
-        && OVERRIDE_METHOD_MATCHER.matches(methodTree, state)) {
+    if (!INJECTABLE_METHOD_MATCHER.matches(methodTree, state)) {
       MethodSymbol method = ASTHelpers.getSymbol(methodTree);
       for (MethodSymbol superMethod : ASTHelpers.findSuperMethods(method, state.getTypes())) {
         if (ASTHelpers.hasAnnotation(superMethod, GUICE_INJECT_ANNOTATION, state)) {
