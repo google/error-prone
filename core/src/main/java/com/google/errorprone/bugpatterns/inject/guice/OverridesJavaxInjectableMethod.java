@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns.inject.guice;
 
 import static com.google.errorprone.BugPattern.Category.GUICE;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 
@@ -47,7 +47,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
           + " annotated with @javax.inject.Inject. The method will not be Injected.",
   category = GUICE,
   severity = ERROR,
-  maturity = EXPERIMENTAL
+  maturity = MATURE
 )
 public class OverridesJavaxInjectableMethod extends BugChecker implements MethodTreeMatcher {
 
