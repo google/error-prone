@@ -107,10 +107,10 @@ public @interface BugPattern {
      * Errors specific to JMock.
      */
     JMOCK,
-    /**
-     * Errors specific to Android.
-     */
-    ANDROID;
+    /** Errors specific to Android. */
+    ANDROID,
+    /** Errors specific to Truth. */
+    TRUTH;
   }
 
   /**
