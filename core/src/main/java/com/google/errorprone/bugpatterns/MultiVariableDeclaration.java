@@ -56,16 +56,15 @@ public class MultiVariableDeclaration extends BugChecker
 
   @Override
   public Description matchBlock(BlockTree tree, VisitorState state) {
-    return checkDeclarations(tree, tree.getStatements(), state);
+    return checkDeclarations(tree.getStatements(), state);
   }
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
-    return checkDeclarations(tree, tree.getMembers(), state);
+    return checkDeclarations(tree.getMembers(), state);
   }
 
-  private Description checkDeclarations(
-      Tree parent, List<? extends Tree> children, VisitorState state) {
+  private Description checkDeclarations(List<? extends Tree> children, VisitorState state) {
     PeekingIterator<Tree> it = Iterators.<Tree>peekingIterator(children.iterator());
     while (it.hasNext()) {
       if (it.peek().getKind() != Tree.Kind.VARIABLE) {
@@ -93,7 +92,7 @@ public class MultiVariableDeclaration extends BugChecker
               ((JCTree) fragments.get(0)).getStartPosition(),
               state.getEndPosition(Iterables.getLast(fragments)),
               Joiner.on("; ").join(fragments) + ";");
-      state.reportMatch(describeMatch(parent, fix));
+      state.reportMatch(describeMatch(fragments.get(0), fix));
     }
     return NO_MATCH;
   }

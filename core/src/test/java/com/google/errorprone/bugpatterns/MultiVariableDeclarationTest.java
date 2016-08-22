@@ -32,8 +32,21 @@ public class MultiVariableDeclarationTest {
       CompilationTestHelper.newInstance(MultiVariableDeclaration.class, getClass());
 
   @Test
-  public void positive() throws Exception {
+  public void positivePosition() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "A.java", //
+            "package a;",
+            "public class A {",
+            "  int a;",
+            "  // BUG: Diagnostic contains:",
+            "  int x = 1, y = 2;",
+            "}")
+        .doTest();
+  }
 
+  @Test
+  public void positive() throws Exception {
     BugCheckerRefactoringTestHelper.newInstance(new MultiVariableDeclaration(), getClass())
         .addInputLines(
             "in/A.java", //
