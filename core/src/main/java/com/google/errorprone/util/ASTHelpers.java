@@ -496,7 +496,11 @@ public class ASTHelpers {
    * @param annotationType The type of the annotation to look for (e.g, "javax.annotation.Nullable")
    */
   public static boolean hasAnnotation(Symbol sym, String annotationType, VisitorState state) {
-    Symbol annotationSym = state.getSymtab().enterClass(state.getName(annotationType));
+    Name annotationName = state.getName(annotationType);
+    Symbol annotationSym;
+    synchronized (state.context) {
+      annotationSym = state.getSymtab().enterClass(annotationName);
+    }
     try {
       annotationSym.complete();
     } catch (CompletionFailure e) {
