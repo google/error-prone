@@ -17,6 +17,10 @@ package com.google.errorprone.bugpatterns.inject;
 import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.InjectMatchers.GUICE_BINDING_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.GUICE_SCOPE_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.JAVAX_QUALIFIER_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.JAVAX_SCOPE_ANNOTATION;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
@@ -50,21 +54,15 @@ import java.lang.annotation.Retention;
 )
 public class ScopeOrQualifierAnnotationRetention extends BugChecker implements ClassTreeMatcher {
 
-  private static final String GUICE_SCOPE_ANNOTATION = "com.google.inject.ScopeAnnotation";
-  private static final String JAVAX_SCOPE_ANNOTATION = "javax.inject.Scope";
-  private static final String GUICE_BINDING_ANNOTATION = "com.google.inject.BindingAnnotation";
-  private static final String JAVAX_QUALIFER_ANNOTATION = "javax.inject.Qualifier";
   private static final String RETENTION_ANNOTATION = "java.lang.annotation.Retention";
 
-  /**
-   * Matches classes that are annotated with @Scope or @ScopeAnnotation.
-   */
+  /** Matches classes that are annotated with @Scope or @ScopeAnnotation. */
   private static final Matcher<ClassTree> SCOPE_OR_QUALIFIER_ANNOTATION_MATCHER =
       Matchers.<ClassTree>anyOf(
           hasAnnotation(GUICE_SCOPE_ANNOTATION),
           hasAnnotation(JAVAX_SCOPE_ANNOTATION),
           hasAnnotation(GUICE_BINDING_ANNOTATION),
-          hasAnnotation(JAVAX_QUALIFER_ANNOTATION));
+          hasAnnotation(JAVAX_QUALIFIER_ANNOTATION));
 
   @Override
   public final Description matchClass(ClassTree classTree, VisitorState state) {

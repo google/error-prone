@@ -19,6 +19,8 @@ package com.google.errorprone.bugpatterns.inject;
 import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.InjectMatchers.GUICE_SCOPE_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.JAVAX_SCOPE_ANNOTATION;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static javax.lang.model.element.Modifier.ABSTRACT;
 
@@ -49,9 +51,6 @@ import com.sun.tools.javac.code.Flags;
 )
 public class ScopeAnnotationOnInterfaceOrAbstractClass extends BugChecker
     implements AnnotationTreeMatcher {
-
-  private static final String GUICE_SCOPE_ANNOTATION = "com.google.inject.ScopeAnnotation";
-  private static final String JAVAX_SCOPE_ANNOTATION = "javax.inject.Scope";
 
   /**
    * Matches annotations that are themselves annotated with with @ScopeAnnotation(Guice) or

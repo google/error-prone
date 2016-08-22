@@ -17,6 +17,7 @@ package com.google.errorprone.bugpatterns.inject.guice;
 import static com.google.errorprone.BugPattern.Category.GUICE;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.InjectMatchers.ASSISTED_ANNOTATION;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -49,8 +50,6 @@ import javax.lang.model.element.TypeElement;
   maturity = EXPERIMENTAL
 )
 public class AssistedParameters extends BugChecker implements VariableTreeMatcher {
-
-  private static final String ASSISTED_ANNOTATION = "com.google.inject.assistedinject.Assisted";
 
   private final Matcher<VariableTree> constructorAssistedParameterMatcher =
       new Matcher<VariableTree>() {

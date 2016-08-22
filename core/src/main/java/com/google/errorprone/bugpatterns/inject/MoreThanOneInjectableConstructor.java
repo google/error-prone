@@ -19,15 +19,13 @@ package com.google.errorprone.bugpatterns.inject;
 import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.hasAnnotation;
+import static com.google.errorprone.matchers.InjectMatchers.hasInjectAnnotation;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
@@ -54,15 +52,11 @@ import com.sun.source.tree.MethodTree;
 )
 public class MoreThanOneInjectableConstructor extends BugChecker implements ClassTreeMatcher {
 
-  private static final Matcher<MethodTree> INJECTABLE_METHOD_MATCHER =
-      Matchers.anyOf(
-          hasAnnotation("com.google.inject.Inject"), hasAnnotation("javax.inject.Inject"));
-
   @Override
   public Description matchClass(ClassTree classTree, VisitorState state) {
     boolean hasInjectConstructor = false;
     for (MethodTree constructor : ASTHelpers.getConstructors(classTree)) {
-      if (INJECTABLE_METHOD_MATCHER.matches(constructor, state)) {
+      if (hasInjectAnnotation().matches(constructor, state)) {
         if (hasInjectConstructor) {
           return describeMatch(classTree);
         }

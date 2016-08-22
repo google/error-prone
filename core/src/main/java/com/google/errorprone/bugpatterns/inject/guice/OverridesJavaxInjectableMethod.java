@@ -19,7 +19,9 @@ package com.google.errorprone.bugpatterns.inject.guice;
 import static com.google.errorprone.BugPattern.Category.GUICE;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.hasAnnotation;
+import static com.google.errorprone.matchers.InjectMatchers.GUICE_INJECT_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.JAVAX_INJECT_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.hasInjectAnnotation;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -27,8 +29,6 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -51,17 +51,10 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 )
 public class OverridesJavaxInjectableMethod extends BugChecker implements MethodTreeMatcher {
 
-  private static final String GUICE_INJECT_ANNOTATION = "com.google.inject.Inject";
-  private static final String JAVAX_INJECT_ANNOTATION = "javax.inject.Inject";
-
-  private static final Matcher<MethodTree> INJECTABLE_METHOD_MATCHER =
-      Matchers.<MethodTree>anyOf(
-          hasAnnotation(GUICE_INJECT_ANNOTATION), hasAnnotation(JAVAX_INJECT_ANNOTATION));
-
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
     // if method is itself annotated with @Inject or it has no ancestor methods, return NO_MATCH;
-    if (INJECTABLE_METHOD_MATCHER.matches(methodTree, state)) {
+    if (hasInjectAnnotation().matches(methodTree, state)) {
       return Description.NO_MATCH;
     }
 
@@ -83,7 +76,7 @@ public class OverridesJavaxInjectableMethod extends BugChecker implements Method
       return describeMatch(
           methodTree,
           SuggestedFix.builder()
-              .addImport("javax.inject.Inject")
+              .addImport(JAVAX_INJECT_ANNOTATION)
               .prefixWith(methodTree, "@Inject\n")
               .build());
     }

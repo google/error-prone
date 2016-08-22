@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns.inject;
 import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.InjectMatchers.IS_APPLICATION_OF_JAVAX_INJECT;
 import static com.sun.source.tree.Tree.Kind.VARIABLE;
 import static javax.lang.model.element.Modifier.FINAL;
 
@@ -27,7 +28,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.AnnotationType;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
@@ -51,8 +51,6 @@ import com.sun.source.tree.VariableTree;
 )
 public class JavaxInjectOnFinalField extends BugChecker implements AnnotationTreeMatcher {
 
-  private static final String JAVAX_INJECT_ANNOTATION = "javax.inject.Inject";
-
   private static final Matcher<Tree> FINAL_FIELD_MATCHER =
       new Matcher<Tree>() {
         @Override
@@ -61,12 +59,9 @@ public class JavaxInjectOnFinalField extends BugChecker implements AnnotationTre
         }
       };
 
-  private static final Matcher<AnnotationTree> JAVAX_INJECT_ANNOTATION_MATCHER =
-      new AnnotationType(JAVAX_INJECT_ANNOTATION);
-
   @Override
   public Description matchAnnotation(AnnotationTree annotationTree, VisitorState state) {
-    if (JAVAX_INJECT_ANNOTATION_MATCHER.matches(annotationTree, state)
+    if (IS_APPLICATION_OF_JAVAX_INJECT.matches(annotationTree, state)
         && FINAL_FIELD_MATCHER.matches(getAnnotatedNode(state), state)) {
       return describeMatch(annotationTree, SuggestedFix.delete(annotationTree));
     }

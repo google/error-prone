@@ -20,8 +20,10 @@ import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
+import static com.google.errorprone.matchers.InjectMatchers.ASSISTED_INJECT_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.GUICE_INJECT_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.JAVAX_INJECT_ANNOTATION;
 import static com.google.errorprone.matchers.Matchers.constructor;
-import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -29,6 +31,7 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.InjectMatchers;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.matchers.MultiMatcher;
@@ -56,19 +59,9 @@ import com.sun.tools.javac.code.Symbol;
 public class AssistedInjectAndInjectOnConstructors extends BugChecker
     implements AnnotationTreeMatcher {
 
-  private static final String GUICE_INJECT_ANNOTATION = "com.google.inject.Inject";
-  private static final String JAVAX_INJECT_ANNOTATION = "javax.inject.Inject";
-  private static final String ASSISTED_INJECT_ANNOTATION =
-      "com.google.inject.assistedinject.AssistedInject";
-
-  /**
-   * Matches if any constructor of a class is annotated with an @Inject annotation.
-   */
+  /** Matches if any constructor of a class is annotated with an @Inject annotation. */
   private final MultiMatcher<ClassTree, MethodTree> constructorWithInjectMatcher =
-      constructor(
-          AT_LEAST_ONE,
-          Matchers.<MethodTree>anyOf(
-              hasAnnotation(GUICE_INJECT_ANNOTATION), hasAnnotation(JAVAX_INJECT_ANNOTATION)));
+      constructor(AT_LEAST_ONE, InjectMatchers.<MethodTree>hasInjectAnnotation());
 
   /**
    * Matches if any constructor of a class is annotated with an @AssistedInject annotation.

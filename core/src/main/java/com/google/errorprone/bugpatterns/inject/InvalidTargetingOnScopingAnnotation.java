@@ -17,6 +17,9 @@ package com.google.errorprone.bugpatterns.inject;
 import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.InjectMatchers.GUICE_SCOPE_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.JAVAX_SCOPE_ANNOTATION;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
@@ -28,7 +31,6 @@ import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
@@ -53,16 +55,11 @@ import java.lang.annotation.Target;
 )
 public class InvalidTargetingOnScopingAnnotation extends BugChecker implements ClassTreeMatcher {
 
-  private static final String GUICE_SCOPE_ANNOTATION = "com.google.inject.ScopeAnnotation";
-  private static final String JAVAX_SCOPE_ANNOTATION = "javax.inject.Scope";
   private static final String TARGET_ANNOTATION = "java.lang.annotation.Target";
 
-  /**
-   * Matches classes that are annotated with @Scope or @ScopeAnnotation.
-   */
+  /** Matches classes that are annotated with @Scope or @ScopeAnnotation. */
   private static final Matcher<ClassTree> SCOPE_ANNOTATION_MATCHER =
-      Matchers.<ClassTree>anyOf(
-          hasAnnotation(GUICE_SCOPE_ANNOTATION), hasAnnotation(JAVAX_SCOPE_ANNOTATION));
+      anyOf(hasAnnotation(GUICE_SCOPE_ANNOTATION), hasAnnotation(JAVAX_SCOPE_ANNOTATION));
 
   @Override
   public final Description matchClass(ClassTree classTree, VisitorState state) {

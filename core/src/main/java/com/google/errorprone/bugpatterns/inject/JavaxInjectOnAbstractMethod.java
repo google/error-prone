@@ -19,24 +19,21 @@ package com.google.errorprone.bugpatterns.inject;
 import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.sun.source.tree.Tree.Kind.METHOD;
+import static com.google.errorprone.fixes.SuggestedFix.delete;
+import static com.google.errorprone.matchers.InjectMatchers.IS_APPLICATION_OF_JAVAX_INJECT;
 import static javax.lang.model.element.Modifier.ABSTRACT;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
-import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
-import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.Tree;
 
-/**
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/** @author sgoldfeder@google.com (Steven Goldfeder) */
 @BugPattern(
   name = "JavaxInjectOnAbstractMethod",
   summary = "Abstract methods are not injectable with javax.inject.Inject.",
@@ -46,42 +43,28 @@ import com.sun.source.tree.Tree;
           + "method that was annotated with javax.inject.Inject, and the subclass method"
           + "is not annotated, the subclass method will not be injected.\n\n"
           + "See http://docs.oracle.com/javaee/6/api/javax/inject/Inject.html\n"
-          + "and https://code.google.com/p/google-guice/wiki/JSR330"
+          + "and https://github.com/google/guice/wiki/JSR330"
           + " ",
   category = INJECT,
   severity = ERROR,
   maturity = EXPERIMENTAL
 )
-public class JavaxInjectOnAbstractMethod extends BugChecker implements AnnotationTreeMatcher {
+public class JavaxInjectOnAbstractMethod extends BugChecker implements MethodTreeMatcher {
 
-  private static final String JAVAX_INJECT_ANNOTATION = "javax.inject.Inject";
-
-  final Matcher<AnnotationTree> javaxInjectAnnotationMatcher =
-      new Matcher<AnnotationTree>() {
-        @Override
-        public boolean matches(AnnotationTree annotationTree, VisitorState state) {
-          return (ASTHelpers.getSymbol(annotationTree)
-              .equals(state.getSymbolFromString(JAVAX_INJECT_ANNOTATION)));
-        }
-      };
+  private static final Matcher<MethodTree> IS_ABSTRACT = Matchers.hasModifier(ABSTRACT);
 
   @Override
-  public Description matchAnnotation(AnnotationTree annotationTree, VisitorState state) {
-    if (!javaxInjectAnnotationMatcher.matches(annotationTree, state)) {
+  public Description matchMethod(MethodTree methodTree, VisitorState state) {
+    if (!IS_ABSTRACT.matches(methodTree, state)) {
       return Description.NO_MATCH;
     }
-    Tree annotatedNode = state.getPath().getParentPath().getParentPath().getLeaf();
-    if (isMethod(annotatedNode) && isAbstract(annotatedNode)) {
-      return describeMatch(annotationTree, SuggestedFix.delete(annotationTree));
+
+    for (AnnotationTree annotationTree : methodTree.getModifiers().getAnnotations()) {
+      if (IS_APPLICATION_OF_JAVAX_INJECT.matches(annotationTree, state)) {
+        return describeMatch(annotationTree, delete(annotationTree));
+      }
     }
+
     return Description.NO_MATCH;
-  }
-
-  private static boolean isMethod(Tree tree) {
-    return tree.getKind().equals(METHOD);
-  }
-
-  private static boolean isAbstract(Tree tree) {
-    return ((MethodTree) tree).getModifiers().getFlags().contains(ABSTRACT);
   }
 }

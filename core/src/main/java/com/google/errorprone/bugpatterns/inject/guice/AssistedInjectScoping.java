@@ -20,6 +20,10 @@ import static com.google.errorprone.BugPattern.Category.GUICE;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
+import static com.google.errorprone.matchers.InjectMatchers.ASSISTED_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.ASSISTED_INJECT_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.GUICE_SCOPE_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.JAVAX_SCOPE_ANNOTATION;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.annotations;
 import static com.google.errorprone.matchers.Matchers.constructor;
@@ -32,6 +36,7 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.InjectMatchers;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.matchers.MultiMatcher;
@@ -66,14 +71,6 @@ import com.sun.source.tree.VariableTree;
 )
 public class AssistedInjectScoping extends BugChecker implements ClassTreeMatcher {
 
-  private static final String GUICE_SCOPE_ANNOTATION = "com.google.inject.ScopeAnnotation";
-  private static final String JAVAX_SCOPE_ANNOTATION = "javax.inject.Scope";
-  private static final String ASSISTED_ANNOTATION = "com.google.inject.assistedinject.Assisted";
-  private static final String GUICE_INJECT_ANNOTATION = "com.google.inject.Inject";
-  private static final String JAVAX_INJECT_ANNOTATION = "javax.inject.Inject";
-  private static final String ASSISTED_INJECT_ANNOTATION =
-      "com.google.inject.assistedinject.AssistedInject";
-
   /**
    * Matches classes that have an annotation that itself is annotated with @ScopeAnnotation.
    */
@@ -83,14 +80,9 @@ public class AssistedInjectScoping extends BugChecker implements ClassTreeMatche
           Matchers.<AnnotationTree>anyOf(
               hasAnnotation(GUICE_SCOPE_ANNOTATION), hasAnnotation(JAVAX_SCOPE_ANNOTATION)));
 
-  /**
-   * Matches if any constructor of a class is annotated with an @Inject annotation.
-   */
+  /** Matches if any constructor of a class is annotated with an @Inject annotation. */
   private static final MultiMatcher<ClassTree, MethodTree> constructorWithInjectMatcher =
-      constructor(
-          AT_LEAST_ONE,
-          Matchers.<MethodTree>anyOf(
-              hasAnnotation(GUICE_INJECT_ANNOTATION), hasAnnotation(JAVAX_INJECT_ANNOTATION)));
+      constructor(AT_LEAST_ONE, InjectMatchers.<MethodTree>hasInjectAnnotation());
 
   /**
    * Matches if:
@@ -126,7 +118,7 @@ public class AssistedInjectScoping extends BugChecker implements ClassTreeMatche
     AnnotationTree annotationWithScopeAnnotation = classAnnotationMatcher.getMatchingNode();
     if (annotationWithScopeAnnotation == null) {
       throw new IllegalStateException(
-          "Expected to find an annotation that was annotated " + "with @ScopeAnnotation");
+          "Expected to find an annotation that was annotated with @ScopeAnnotation");
     }
 
     return describeMatch(

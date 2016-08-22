@@ -19,6 +19,10 @@ package com.google.errorprone.bugpatterns.inject;
 import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.InjectMatchers.GUICE_BINDING_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.GUICE_SCOPE_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.JAVAX_QUALIFIER_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.JAVAX_SCOPE_ANNOTATION;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 
@@ -34,9 +38,7 @@ import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.tools.javac.code.Symbol;
 
-/**
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/** @author sgoldfeder@google.com (Steven Goldfeder) */
 @BugPattern(
   name = "OverlappingQualifierAndScopeAnnotation",
   summary = "Annotations cannot be both Qualifiers/BindingAnnotations and Scopes",
@@ -50,11 +52,6 @@ import com.sun.tools.javac.code.Symbol;
 public class OverlappingQualifierAndScopeAnnotation extends BugChecker
     implements AnnotationTreeMatcher {
 
-  private static final String GUICE_SCOPE_ANNOTATION = "com.google.inject.ScopeAnnotation";
-  private static final String JAVAX_SCOPE_ANNOTATION = "javax.inject.Scope";
-  private static final String GUICE_BINDING_ANNOTATION = "com.google.inject.BindingAnnotation";
-  private static final String JAVAX_QUALIFER_ANNOTATION = "javax.inject.Qualifier";
-
   /**
    * Matches types(including annotation types) that are annotated with  @ScopeAnnotation(Guice) or
    * {@code @Scope}(javax).
@@ -63,26 +60,26 @@ public class OverlappingQualifierAndScopeAnnotation extends BugChecker
       anyOf(hasAnnotation(GUICE_SCOPE_ANNOTATION), hasAnnotation(JAVAX_SCOPE_ANNOTATION));
 
   /**
-   * Matches types(including annotation types) that are annotated with @Qualifier or
-   * @BindingAnnotation
+   * Matches types(including annotation types) that are annotated with @Qualifier
+   * or @BindingAnnotation
    */
   private static final Matcher<ClassTree> HAS_QUALIFIER_ANNOTATION_MATCHER =
-      anyOf(hasAnnotation(GUICE_BINDING_ANNOTATION), hasAnnotation(JAVAX_QUALIFER_ANNOTATION));
-  /**
+      anyOf(hasAnnotation(GUICE_BINDING_ANNOTATION), hasAnnotation(JAVAX_QUALIFIER_ANNOTATION));
+  /*
    * Matches the following four annotations:
    * (1) @javax.inject.Qualifier
    * (2) @com.google.inject.BindingAnnotation
    * (3) @javax.inject.Scope,
    * (4) @com.google.inject.ScopeAnnotation
    *
-   * It matches the annotations themselves, NOT anotations annotated with them.
+   * It matches the annotations themselves, NOT annotations annotated with them.
    */
   private static final Matcher<AnnotationTree> QUALIFIER_OR_SCOPE_MATCHER =
       new Matcher<AnnotationTree>() {
         @Override
         public boolean matches(AnnotationTree annotationTree, VisitorState state) {
           Symbol annotationSymbol = ASTHelpers.getSymbol(annotationTree);
-          return (annotationSymbol.equals(state.getSymbolFromString(JAVAX_QUALIFER_ANNOTATION))
+          return (annotationSymbol.equals(state.getSymbolFromString(JAVAX_QUALIFIER_ANNOTATION))
               || annotationSymbol.equals(state.getSymbolFromString(GUICE_BINDING_ANNOTATION))
               || annotationSymbol.equals(state.getSymbolFromString(JAVAX_SCOPE_ANNOTATION))
               || annotationSymbol.equals(state.getSymbolFromString(GUICE_SCOPE_ANNOTATION)));

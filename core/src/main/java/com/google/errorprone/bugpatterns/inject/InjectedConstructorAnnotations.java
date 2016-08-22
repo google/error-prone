@@ -19,6 +19,8 @@ package com.google.errorprone.bugpatterns.inject;
 import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.InjectMatchers.GUICE_BINDING_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.GUICE_INJECT_ANNOTATION;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.booleanLiteral;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
@@ -51,8 +53,6 @@ import com.sun.source.tree.MethodTree;
   maturity = EXPERIMENTAL
 )
 public class InjectedConstructorAnnotations extends BugChecker implements MethodTreeMatcher {
-  private static final String GUICE_INJECT_ANNOTATION = "com.google.inject.Inject";
-  private static final String GUICE_BINDING_ANNOTATION = "com.google.inject.BindingAnnotation";
 
   // A matcher of @Inject{optional=true}
   private static final Matcher<AnnotationTree> OPTIONAL_INJECTION_MATCHER =

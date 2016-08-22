@@ -17,6 +17,7 @@ package com.google.errorprone.bugpatterns.inject.guice;
 import static com.google.errorprone.BugPattern.Category.GUICE;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.matchers.InjectMatchers.GUICE_INJECT_ANNOTATION;
 import static com.google.errorprone.matchers.Matchers.annotations;
 import static com.google.errorprone.matchers.Matchers.isType;
 import static com.sun.source.tree.Tree.Kind.VARIABLE;
@@ -54,10 +55,7 @@ import com.sun.tools.javac.tree.TreeMaker;
   severity = WARNING,
   maturity = EXPERIMENTAL
 )
-@SuppressWarnings("serial")
 public class InjectOnFinalField extends BugChecker implements VariableTreeMatcher {
-
-  private static final String GUICE_INJECT_ANNOTATION = "com.google.inject.Inject";
 
   private static final MultiMatcher<Tree, AnnotationTree> ANNOTATED_WITH_GUICE_INJECT_MATCHER =
       annotations(MatchType.AT_LEAST_ONE, isType(GUICE_INJECT_ANNOTATION));

@@ -19,6 +19,8 @@ package com.google.errorprone.bugpatterns.inject;
 import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.InjectMatchers.GUICE_BINDING_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.JAVAX_QUALIFIER_ANNOTATION;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 
 import com.google.errorprone.BugPattern;
@@ -45,12 +47,10 @@ import java.util.List;
   maturity = EXPERIMENTAL
 )
 public class MoreThanOneQualifier extends BugChecker implements AnnotationTreeMatcher {
-  private static final String GUICE_BINDING_ANNOTATION = "com.google.inject.BindingAnnotation";
-  private static final String JAVAX_QUALIFER_ANNOTATION = "javax.inject.Qualifier";
 
   private static final Matcher<AnnotationTree> QUALIFIER_ANNOTATION_MATCHER =
-      Matchers.<AnnotationTree>anyOf(
-          hasAnnotation(GUICE_BINDING_ANNOTATION), hasAnnotation(JAVAX_QUALIFER_ANNOTATION));
+      Matchers.anyOf(
+          hasAnnotation(GUICE_BINDING_ANNOTATION), hasAnnotation(JAVAX_QUALIFIER_ANNOTATION));
 
   @Override
   public Description matchAnnotation(AnnotationTree annotationTree, VisitorState state) {
