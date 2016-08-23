@@ -26,13 +26,12 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.Fix;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Description.Builder;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import java.util.List;
 
 /**
  * Points out if an object is tested for equality/inequality to itself using Truth Libraries.
@@ -84,29 +83,25 @@ public class TruthSelfEquals extends BugChecker implements MethodInvocationTreeM
   @Override
   public Description matchMethodInvocation(
       MethodInvocationTree methodInvocationTree, VisitorState state) {
+    if (methodInvocationTree.getArguments().isEmpty()) {
+      return Description.NO_MATCH;
+    }
+    Description.Builder description = buildDescription(methodInvocationTree);
+    ExpressionTree toReplace = methodInvocationTree.getArguments().get(0);
     if (EQUALS_MATCHER.matches(methodInvocationTree, state)) {
-      return describe(methodInvocationTree, state, "isEqualTo", "passes");
+      description
+          .setMessage(generateSummary("isEqualTo", "passes"))
+          .addFix(suggestEqualsTesterFix(methodInvocationTree, toReplace));
     } else if (NOT_EQUALS_MATCHER.matches(methodInvocationTree, state)) {
-      return describe(methodInvocationTree, state, "isNotEqualTo", "fails");
+      description.setMessage(generateSummary("isNotEqualTo", "fails"));
+    } else {
+      return Description.NO_MATCH;
     }
-    return Description.NO_MATCH;
-  }
-
-  private Description describe(
-      MethodInvocationTree methodInvocationTree,
-      VisitorState state,
-      String methodName,
-      String constantOutput) {
-    List<? extends ExpressionTree> args = methodInvocationTree.getArguments();
-    // Choose argument to replace.
-    ExpressionTree toReplace = args.get(0);
     Fix fix = GuavaSelfEquals.fieldFix(toReplace, state);
-    String message = generateSummary(methodName, constantOutput);
-    Builder desc = buildDescription(methodInvocationTree).setMessage(message);
     if (fix != null) {
-      desc.addFix(fix);
+      description.addFix(fix);
     }
-    return desc.build();
+    return description.build();
   }
 
   private static String generateSummary(String methodName, String constantOutput) {
@@ -130,5 +125,15 @@ public class TruthSelfEquals extends BugChecker implements MethodInvocationTreeM
         return false;
       }
     };
+  }
+
+  private static Fix suggestEqualsTesterFix(
+      MethodInvocationTree methodInvocationTree, ExpressionTree toReplace) {
+    String equalsTesterSuggest =
+        "new EqualsTester().addEqualityGroup(" + toReplace + ").testEquals()";
+    return SuggestedFix.builder()
+        .replace(methodInvocationTree, equalsTesterSuggest)
+        .addImport("com.google.common.testing.EqualsTester")
+        .build();
   }
 }

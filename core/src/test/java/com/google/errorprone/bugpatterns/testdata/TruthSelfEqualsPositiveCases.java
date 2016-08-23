@@ -28,13 +28,13 @@ public class TruthSelfEqualsPositiveCases {
 
   public void testAssertThatEq() {
     String test = Boolean.TRUE.toString();
-    // BUG: Diagnostic contains: The arguments to isEqualTo method are the same object
+    // BUG: Diagnostic contains: new EqualsTester().addEqualityGroup(test).testEquals()
     assertThat(test).isEqualTo(test);
   }
 
   public void testAssertWithMessageEq() {
     String test = Boolean.TRUE.toString();
-    // BUG: Diagnostic contains: The arguments to isEqualTo method are the same object
+    // BUG: Diagnostic contains: new EqualsTester().addEqualityGroup(test).testEquals()
     assertWithMessage("msg").that(test).isEqualTo(test);
   }
 
