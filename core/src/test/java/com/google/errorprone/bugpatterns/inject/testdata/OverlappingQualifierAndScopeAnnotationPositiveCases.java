@@ -20,29 +20,24 @@ package com.google.errorprone.bugpatterns.inject.testdata;
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
 public class OverlappingQualifierAndScopeAnnotationPositiveCases {
- 
-  // BUG: Diagnostic contains: remove
+
   @javax.inject.Scope
-  // BUG: Diagnostic contains: remove
   @javax.inject.Qualifier
+  // BUG: Diagnostic contains: OverlappingQualifierAndScopeAnnotation
   @interface JavaxScopeAndJavaxQualifier {}
-    
-  // BUG: Diagnostic contains: remove
+
   @com.google.inject.ScopeAnnotation
-  // BUG: Diagnostic contains: remove
   @javax.inject.Qualifier
+  // BUG: Diagnostic contains: OverlappingQualifierAndScopeAnnotation
   @interface GuiceScopeAndJavaxQualifier {}
 
-  // BUG: Diagnostic contains: remove
   @com.google.inject.ScopeAnnotation
-  // BUG: Diagnostic contains: remove
   @com.google.inject.BindingAnnotation
+  // BUG: Diagnostic contains: OverlappingQualifierAndScopeAnnotation
   @interface GuiceScopeAndGuiceBindingAnnotation {}
-    
-  // BUG: Diagnostic contains: remove
-  @javax.inject.Scope
-  // BUG: Diagnostic contains: remove
-  @com.google.inject.BindingAnnotation
-  @interface JavaxScopeAndGuiceBindingAnnotation {}
 
+  @javax.inject.Scope
+  @com.google.inject.BindingAnnotation
+  // BUG: Diagnostic contains: OverlappingQualifierAndScopeAnnotation
+  @interface JavaxScopeAndGuiceBindingAnnotation {}
 }
