@@ -60,7 +60,6 @@ public class OverridesGuiceInjectableMethodPositiveCases {
    * annotated with @com.google.inject.Inject
    */
   public class TestClass2 extends TestClass1 {
-    @Override 
     // BUG: Diagnostic contains: @Inject
     public void foo() {}
   }
@@ -70,7 +69,6 @@ public class OverridesGuiceInjectableMethodPositiveCases {
    * turn is overrides a method that is annotated with @com.google.inject.Inject
    */
   public class TestClass3 extends TestClass2 {
-    @Override 
     // BUG: Diagnostic contains: @Inject
     public void foo() {}
   }
@@ -81,7 +79,6 @@ public class OverridesGuiceInjectableMethodPositiveCases {
    * but it is extended in the next test class.
    */
   public class TestClass4 extends TestClass1 {
-    @Override
     @javax.inject.Inject
     public void foo() {}
   }
@@ -92,7 +89,6 @@ public class OverridesGuiceInjectableMethodPositiveCases {
    * annoatated with @com.google.inject.Inject.
    */
   public class TestClass5 extends TestClass4 {
-    @Override
     // BUG: Diagnostic contains: @Inject
     public void foo() {}
   }
@@ -105,7 +101,6 @@ public class OverridesGuiceInjectableMethodPositiveCases {
    * isn't a direct supertype.
    */
   public class TestClass7 extends TestClass1 {
-    @Override
     // BUG: Diagnostic contains: @Inject
     public void foo() {}
   }

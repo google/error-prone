@@ -16,7 +16,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 The javax.inject.Inject annotation cannot go on an abstract method as per the JSR-330 spec. This is in line with the fact that if a class overrides a method that was annotated with javax.inject.Inject, and the subclass methodis not annotated, the subclass method will not be injected.
 
 See http://docs.oracle.com/javaee/6/api/javax/inject/Inject.html
-and https://code.google.com/p/google-guice/wiki/JSR330
+and https://github.com/google/guice/wiki/JSR330
 
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("JavaxInjectOnAbstractMethod")` annotation to the enclosing element.
@@ -71,14 +71,34 @@ public class JavaxInjectOnAbstractMethodPositiveCases {
   }
   
   /**
-   * Abstract class has an injectable(javax.inject.Inject) abstract method and 
-   * an unrelated abstarct method.
+   * Abstract class has an injectable(javax.inject.Inject) abstract method and an unrelated abstract
+   * method.
    */
   public abstract class TestClass3 {
     // BUG: Diagnostic contains: remove  
     @javax.inject.Inject
     abstract void abstractMethod1();
-    abstract void abstarctMethod2();
+    abstract void abstractMethod2();
+  }
+
+  /** Interface with Inject method, should also fail. */
+  public interface TestInterface {
+    // BUG: Diagnostic contains: remove
+    @javax.inject.Inject
+    void abstractMethod();
+  }
+
+  /** Concrete Implementer of interface. */
+  public class Implementing implements TestInterface {
+    // No error here
+    public void abstractMethod() {}
+  }
+
+  /** Abstract implementer of interface. */
+  public abstract class AbstractImplementing implements TestInterface {
+    // BUG: Diagnostic contains: remove
+    @javax.inject.Inject
+    public abstract void abstractMethod();
   }
 }
 {% endhighlight %}

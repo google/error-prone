@@ -4,7 +4,7 @@ summary: This method is not annotated with @Inject, but it overrides a method th
 layout: bugpattern
 category: GUICE
 severity: ERROR
-maturity: EXPERIMENTAL
+maturity: MATURE
 ---
 
 <!--

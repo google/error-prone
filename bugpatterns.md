@@ -116,6 +116,9 @@ String comparison using reference equality instead of value equality
 __[SynchronizeOnNonFinalField](bugpattern/SynchronizeOnNonFinalField)__<br>
 Synchronizing on non-final fields is not safe: if the field is ever updated, different threads may end up locking on different objects.
 
+__[TruthSelfEquals](bugpattern/TruthSelfEquals)__<br>
+An object is tested for equality to itself using Truth Libraries.
+
 __[TypeParameterUnusedInFormals](bugpattern/TypeParameterUnusedInFormals)__<br>
 Declaring a type parameter that is only used in the return type is a misuse of generics: operations on the type parameter are unchecked, it hides unsafe casts at invocations of the method, and it interacts badly with method overload resolution.
 
@@ -207,6 +210,9 @@ __[EqualsNaN](bugpattern/EqualsNaN)__<br>
 __[ForOverride](bugpattern/ForOverride)__<br>
 Method annotated @ForOverride must be protected or package-private and only invoked from declaring class
 
+__[FuturesGetCheckedIllegalExceptionType](bugpattern/FuturesGetCheckedIllegalExceptionType)__<br>
+Futures.getChecked requires a checked exception type with a standard constructor.
+
 __[GetClassOnAnnotation](bugpattern/GetClassOnAnnotation)__<br>
 Calling getClass() on an annotation may return a proxy class
 
@@ -267,6 +273,9 @@ A bug in Mockito will cause this test to fail at runtime with a ClassCastExcepti
 __[MockitoUsage](bugpattern/MockitoUsage)__<br>
 Missing method call for verify(mock) here
 
+__[MoreThanOneInjectableConstructor](bugpattern/MoreThanOneInjectableConstructor)__<br>
+This class has more than one @Inject-annotated constructor. Please remove the @Inject annotation from all but one of them.
+
 __[NarrowingCompoundAssignment](bugpattern/NarrowingCompoundAssignment)__<br>
 Compound assignments to bytes, shorts, chars, and floats hide dangerous casts
 
@@ -281,6 +290,9 @@ Comparison using reference equality instead of value equality
 
 __[Overrides](bugpattern/Overrides)__<br>
 Varargs doesn&#39;t agree for overridden method
+
+__[OverridesJavaxInjectableMethod](bugpattern/OverridesJavaxInjectableMethod)__<br>
+This method is not annotated with @Inject, but it overrides a method that is  annotated with @javax.inject.Inject. The method will not be Injected.
 
 __[PreconditionsCheckNotNull](bugpattern/PreconditionsCheckNotNull)__<br>
 Literal passed as first argument to Preconditions.checkNotNull() can never be null
@@ -456,9 +468,6 @@ This method does not acquire the locks specified by its @LockMethod annotation
 __[ModifyingCollectionWithItself](bugpattern/ModifyingCollectionWithItself)__<br>
 Modifying a collection with itself
 
-__[MoreThanOneInjectableConstructor](bugpattern/MoreThanOneInjectableConstructor)__<br>
-A class may not have more than one injectable constructor.
-
 __[NoAllocation](bugpattern/NoAllocation)__<br>
 @NoAllocation was specified on this method, but something was found that would trigger an allocation
 
@@ -470,9 +479,6 @@ Numeric comparison using reference equality instead of value equality
 
 __[OverlappingQualifierAndScopeAnnotation](bugpattern/OverlappingQualifierAndScopeAnnotation)__<br>
 Annotations cannot be both Qualifiers/BindingAnnotations and Scopes
-
-__[OverridesJavaxInjectableMethod](bugpattern/OverridesJavaxInjectableMethod)__<br>
-This method is not annotated with @Inject, but it overrides a method that is  annotated with @javax.inject.Inject. The method will not be Injected.
 
 __[ParameterPackage](bugpattern/ParameterPackage)__<br>
 Method parameter has wrong package

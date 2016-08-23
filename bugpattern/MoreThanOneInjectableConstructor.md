@@ -1,10 +1,10 @@
 ---
 title: MoreThanOneInjectableConstructor
-summary: A class may not have more than one injectable constructor.
+summary: This class has more than one @Inject-annotated constructor. Please remove the @Inject annotation from all but one of them.
 layout: bugpattern
 category: INJECT
 severity: ERROR
-maturity: EXPERIMENTAL
+maturity: MATURE
 ---
 
 <!--
@@ -12,8 +12,10 @@ maturity: EXPERIMENTAL
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+_Alternate names: inject-constructors, InjectMultipleAtInjectConstructors_
+
 ## The problem
-Having more than one injectable constructor will throw a runtime error in compliant JSR-330 frameworks such as Guice or Dagger
+Injection frameworks may use `@Inject` to determine how to construct an object in the absence of other instructions. Annotating `@Inject` on a constructor tells the injection framework to use that constructor. However, if multiple `@Inject` constructors exist, injection frameworks can't reliably choose between them.
 
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("MoreThanOneInjectableConstructor")` annotation to the enclosing element.
@@ -50,31 +52,25 @@ import java.beans.ConstructorProperties;
  */
 public class MoreThanOneInjectableConstructorPositiveCases {
 
-  /**
-   * Class has 2 constructors, both are injectable
-   */
+  /** Class has 2 constructors, both are injectable */
+  // BUG: Diagnostic contains: MoreThanOneInjectableConstructor
   public class TestClass1 {
-    // BUG: Diagnostic contains: remove
     @Inject
     public TestClass1() {}
 
-    // BUG: Diagnostic contains: remove
     @Inject
     public TestClass1(int n) {}
   }
 
-  /**
-   * Class has 3 constructors, two of which are injectable.
-   */
+  /** Class has 3 constructors, two of which are injectable. */
+  // BUG: Diagnostic contains: MoreThanOneInjectableConstructor
   public class TestClass2 {
-    // BUG: Diagnostic contains: remove
     @Inject
     public TestClass2() {}
 
-    // BUG: Diagnostic contains: remove
-    @Inject
     public TestClass2(int n) {}
 
+    @Inject
     public TestClass2(String s) {}
   }
 
@@ -82,31 +78,27 @@ public class MoreThanOneInjectableConstructorPositiveCases {
    * testing that the error appears on the @Inject annotation even in the presence of other
    * annotations
    */
+  // BUG: Diagnostic contains: MoreThanOneInjectableConstructor
   public class TestClass3 {
-    // BUG: Diagnostic contains: remove
     @Inject
     public TestClass3() {}
 
-    // BUG: Diagnostic contains: remove
     @Inject
     @ConstructorProperties({"m", "n"})
     public TestClass3(int m, int n) {}
   }
 
-  /**
-   * This class tests that the error appears on the @Inject annotation even in the presence of other
-   * unrelated annotations.
-   */
+  /** Fails on 3 constructors w/ @Inject */
+  // BUG: Diagnostic contains: MoreThanOneInjectableConstructor
   public class TestClass4 {
-
-    // BUG: Diagnostic contains: remove
     @Inject
     public TestClass4() {}
 
-    @ConstructorProperties({"m", "n"}) 
-    // BUG: Diagnostic contains: remove
     @Inject
     public TestClass4(int m, int n) {}
+
+    @Inject
+    public TestClass4(int m, int n, boolean x) {}
   }
 }
 {% endhighlight %}
@@ -192,6 +184,26 @@ public class MoreThanOneInjectableConstructorNegativeCases {
     public TestClass5(int n) {}
   }
 
+
+  /** Suppressed class */
+  @SuppressWarnings("inject-constructors")
+  public class TestClass6 {
+    @Inject
+    public TestClass6() {}
+
+    @Inject
+    public TestClass6(int n) {}
+  }
+
+  /** Suppressed class */
+  @SuppressWarnings("InjectMultipleAtInjectConstructors")
+  public class TestClass7 {
+    @Inject
+    public TestClass7() {}
+
+    @Inject
+    public TestClass7(int n) {}
+  }
 }
 {% endhighlight %}
 
