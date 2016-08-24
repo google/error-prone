@@ -478,7 +478,7 @@ __[NumericEquality](bugpattern/NumericEquality)__<br>
 Numeric comparison using reference equality instead of value equality
 
 __[OverlappingQualifierAndScopeAnnotation](bugpattern/OverlappingQualifierAndScopeAnnotation)__<br>
-Annotations cannot be both Qualifiers/BindingAnnotations and Scopes
+Annotations cannot be both Scope annotations and Qualifier annotations: this causes confusion when trying to use them.
 
 __[ParameterPackage](bugpattern/ParameterPackage)__<br>
 Method parameter has wrong package
