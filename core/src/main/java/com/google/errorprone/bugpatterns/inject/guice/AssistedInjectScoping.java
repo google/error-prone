@@ -85,11 +85,9 @@ public class AssistedInjectScoping extends BugChecker implements ClassTreeMatche
       constructor(AT_LEAST_ONE, InjectMatchers.<MethodTree>hasInjectAnnotation());
 
   /**
-   * Matches if:
-   * 1) If there is a constructor that is annotated with @Inject and that constructor has at least
-   *    one parameter that is annotated with @Assisted.
-   * 2) If there is no @Inject constructor and at least one constructor is annotated with
-   *    @AssistedInject.
+   * Matches if: 1) If there is a constructor that is annotated with @Inject and that constructor
+   * has at least one parameter that is annotated with @Assisted. 2) If there is no @Inject
+   * constructor and at least one constructor is annotated with @AssistedInject.
    */
   private static final Matcher<ClassTree> assistedMatcher =
       new Matcher<ClassTree>() {
@@ -99,7 +97,7 @@ public class AssistedInjectScoping extends BugChecker implements ClassTreeMatche
             // Check constructor with @Inject annotation for parameter with @Assisted annotation.
             return methodHasParameters(
                     AT_LEAST_ONE, Matchers.<VariableTree>hasAnnotation(ASSISTED_ANNOTATION))
-                .matches(constructorWithInjectMatcher.getMatchingNode(), state);
+                .matches(constructorWithInjectMatcher.getMatchingNodes().get(0), state);
           }
 
           return constructor(
@@ -115,7 +113,7 @@ public class AssistedInjectScoping extends BugChecker implements ClassTreeMatche
       return Description.NO_MATCH;
     }
 
-    AnnotationTree annotationWithScopeAnnotation = classAnnotationMatcher.getMatchingNode();
+    AnnotationTree annotationWithScopeAnnotation = classAnnotationMatcher.getMatchingNodes().get(0);
     if (annotationWithScopeAnnotation == null) {
       throw new IllegalStateException(
           "Expected to find an annotation that was annotated with @ScopeAnnotation");

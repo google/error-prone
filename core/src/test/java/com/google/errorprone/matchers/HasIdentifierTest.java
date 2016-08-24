@@ -135,12 +135,12 @@ public class HasIdentifierTest extends CompilerBasedAbstractTest {
         })));
   }
 
-  private abstract class ScannerTest extends Scanner {
+  private abstract static class ScannerTest extends Scanner {
     abstract void assertDone();
   }
 
-  private Scanner methodHasIdentifierMatching(final boolean shouldMatch,
-      final MultiMatcher<Tree, IdentifierTree> toMatch) {
+  private Scanner methodHasIdentifierMatching(
+      final boolean shouldMatch, final Matcher<Tree> toMatch) {
     ScannerTest test = new ScannerTest() {
       private boolean matched = false;
 
@@ -162,8 +162,8 @@ public class HasIdentifierTest extends CompilerBasedAbstractTest {
     return test;
   }
 
-  private Scanner literalHasIdentifierMatching(final boolean shouldMatch,
-      final MultiMatcher<Tree, IdentifierTree> toMatch) {
+  private Scanner literalHasIdentifierMatching(
+      final boolean shouldMatch, final Matcher<Tree> toMatch) {
     ScannerTest test = new ScannerTest() {
       private boolean matched = false;
 

@@ -17,6 +17,7 @@
 package com.google.errorprone.matchers;
 
 import com.sun.source.tree.Tree;
+import java.util.List;
 
 /**
  * An matcher that applies a single matcher across multiple tree nodes.
@@ -28,7 +29,14 @@ import com.sun.source.tree.Tree;
 public interface MultiMatcher<T extends Tree, N extends Tree> extends Matcher<T> {
 
   /**
-   * @return the matching node, iff a single node was matched.
+   * This method is only valid to call after calling {@link #matches}. If that call returned true,
+   * this method will return all nodes that matched (which could be empty if the multi matcher had
+   * no nodes to process, so the child nodes vacuously matched the matcher). If that call returned
+   * false (i.e.: this multimatcher did not match the matcher), this function will return an empty
+   * list.
+   *
+   * @return all the child nodes that matched the matcher.
+   * @throws IllegalStateException if {@link #matches} wasn't called beforehand.
    */
-  N getMatchingNode();
+  List<N> getMatchingNodes();
 }

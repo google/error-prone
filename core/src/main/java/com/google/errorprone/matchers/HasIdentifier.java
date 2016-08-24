@@ -29,7 +29,7 @@ import com.sun.source.util.TreePathScanner;
  *
  * @author alexloh@google.com (Alex Loh)
  */
-public class HasIdentifier implements MultiMatcher<Tree, IdentifierTree> {
+public class HasIdentifier implements Matcher<Tree> {
 
   private final Matcher<IdentifierTree> nodeMatcher;
 
@@ -70,10 +70,5 @@ public class HasIdentifier implements MultiMatcher<Tree, IdentifierTree> {
     public Boolean visitClass(ClassTree node, Void v) {
       return firstNonNull(super.visitClass(node, v), false);
     }
-  }
-
-  @Override
-  public IdentifierTree getMatchingNode() {
-    throw new IllegalStateException();
   }
 }

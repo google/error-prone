@@ -446,8 +446,7 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
   /**
    * Matches if any two of the given list of expressions are integer literals with different values.
    */
-  private static class UnequalIntegerLiteralMatcher
-      implements MultiMatcher<MethodInvocationTree, ExpressionTree> {
+  private static class UnequalIntegerLiteralMatcher implements Matcher<MethodInvocationTree> {
 
     private final Matcher<ExpressionTree> methodSelectMatcher;
 
@@ -475,11 +474,6 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
         }
       }
       return false;
-    }
-
-    @Override
-    public ExpressionTree getMatchingNode() {
-      throw new UnsupportedOperationException();
     }
   }
 

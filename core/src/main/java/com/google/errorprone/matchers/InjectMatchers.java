@@ -16,6 +16,8 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
+import static com.google.errorprone.matchers.Matchers.annotations;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 
@@ -48,5 +50,20 @@ public final class InjectMatchers {
   @SuppressWarnings("unchecked") // Safe contravariant cast
   public static <T extends Tree> Matcher<T> hasInjectAnnotation() {
     return (Matcher<T>) HAS_INJECT_ANNOTATION_MATCHER;
+  }
+
+  private static final Matcher<Tree> DAGGER_COMPONENT_MATCHER =
+      anyOf(hasAnnotation("dagger.Component"), hasAnnotation("dagger.Subcomponent"));
+
+  @SuppressWarnings("unchecked") // Safe contravariant cast
+  public static <T extends Tree> Matcher<T> isDaggerComponent() {
+    return (Matcher<T>) DAGGER_COMPONENT_MATCHER;
+  }
+
+  public static MultiMatcher<Tree, AnnotationTree> hasScopingAnnotations() {
+    return annotations(
+        AT_LEAST_ONE,
+        Matchers.<AnnotationTree>anyOf(
+            hasAnnotation(GUICE_SCOPE_ANNOTATION), hasAnnotation(JAVAX_SCOPE_ANNOTATION)));
   }
 }

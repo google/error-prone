@@ -1037,8 +1037,7 @@ public class Matchers {
    *
    * @param nodeMatcher Which identifiers to look for
    */
-  public static MultiMatcher<Tree, IdentifierTree> hasIdentifier(
-      Matcher<IdentifierTree> nodeMatcher) {
+  public static Matcher<Tree> hasIdentifier(Matcher<IdentifierTree> nodeMatcher) {
     return new HasIdentifier(nodeMatcher);
   }
 

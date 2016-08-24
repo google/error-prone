@@ -16,8 +16,9 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import com.google.auto.value.AutoValue;
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.VisitorState;
@@ -38,8 +39,21 @@ public abstract class ChildMultiMatcher<T extends Tree, N extends Tree>
     implements MultiMatcher<T, N> {
 
   public enum MatchType {
+    /**
+     * Matches if all of the child elements match the matcher. If the parent element has no child
+     * elements, this matcher returns true.
+     */
     ALL,
+    /**
+     * Matches if at least one of the child elements match the matcher. If the parent element has no
+     * child elements, this matcher returns false.
+     */
     AT_LEAST_ONE,
+    /**
+     * Matches if the last child element matches the matcher, regardless of whether or not any of
+     * the other child elements would match the matcher. If the parent element has no child
+     * elements, this matcher returns false.
+     */
     LAST
   }
   
@@ -55,23 +69,23 @@ public abstract class ChildMultiMatcher<T extends Tree, N extends Tree>
   
   @AutoValue
   abstract static class MatchResult<T extends Tree> {
-    public abstract Optional<T> matchingNode();
+    public abstract ImmutableList<T> matchingNodes();
     public abstract boolean matches();
     
     public static <T extends Tree> MatchResult<T> none() {
-      return create(Optional.<T>absent(), false);
+      return create(ImmutableList.<T>of(), false);
     }
-    
-    public static <T extends Tree> MatchResult<T> match() {
-      return create(Optional.<T>absent(), true);
-    }
-    
+
     public static <T extends Tree> MatchResult<T> match(T matchingNode) {
-      return create(Optional.of(matchingNode), true);
+      return create(ImmutableList.of(matchingNode), true);
+    }
+
+    public static <T extends Tree> MatchResult<T> match(ImmutableList<T> matchingNodes) {
+      return create(matchingNodes, true);
     }
     
     private static <T extends Tree> MatchResult<T> create(
-        Optional<T> matchingNode, boolean matches) {
+        ImmutableList<T> matchingNode, boolean matches) {
       return new AutoValue_ChildMultiMatcher_MatchResult<>(matchingNode, matches);
     }
   }
@@ -102,12 +116,14 @@ public abstract class ChildMultiMatcher<T extends Tree, N extends Tree>
   private static class AllMatcher<N extends Tree> extends ListMatcher<N> {
     @Override
     public MatchResult<N> matches(List<Matchable<N>> matchables, Matcher<N> nodeMatcher) {
+      ImmutableList.Builder<N> matchingTrees = ImmutableList.builder();
       for (Matchable<N> matchable : matchables) {
         if (!nodeMatcher.matches(matchable.tree(), matchable.state())) {
           return MatchResult.none();
         }
+        matchingTrees.add(matchable.tree());
       }
-      return MatchResult.match();
+      return MatchResult.match(matchingTrees.build());
     }
   }
   
@@ -117,12 +133,14 @@ public abstract class ChildMultiMatcher<T extends Tree, N extends Tree>
   private static class AtLeastOneMatcher<N extends Tree> extends ListMatcher<N> {
     @Override
     public MatchResult<N> matches(List<Matchable<N>> matchables, Matcher<N> nodeMatcher) {
+      ImmutableList.Builder<N> matchingTrees = ImmutableList.builder();
       for (Matchable<N> matchable : matchables) {
         if (nodeMatcher.matches(matchable.tree(), matchable.state())) {
-          return MatchResult.match(matchable.tree());
+          matchingTrees.add(matchable.tree());
         }
       }
-      return MatchResult.none();
+      ImmutableList<N> allTheTrees = matchingTrees.build();
+      return allTheTrees.isEmpty() ? MatchResult.<N>none() : MatchResult.match(allTheTrees);
     }
   }
   
@@ -167,14 +185,15 @@ public abstract class ChildMultiMatcher<T extends Tree, N extends Tree>
   }
 
   @Override
-  public N getMatchingNode() {
-    return matchResult.matchingNode().get();
+  public List<N> getMatchingNodes() {
+    checkState(matchResult != null, "getMatchingNodes() called before matches()");
+    return matchResult.matchingNodes();
   }
-  
+
   /**
    * Returns the set of child nodes to match. The nodes must be immediate children of the current
    * node to ensure the TreePath calculation is correct. MultiMatchers with other requirements
-   * should not subclass ChildMultiMatcher (see {@link HasIdentifier} for an example).
+   * should not subclass ChildMultiMatcher.
    */
   protected abstract Iterable<? extends N> getChildNodes(T tree, VisitorState state);
 }
