@@ -88,4 +88,15 @@ public class MixedArrayDimensionsTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void comment() throws IOException {
+    CompilationTestHelper.newInstance(MixedArrayDimensions.class, getClass())
+        .addSourceLines(
+            "Test.java", //
+            "abstract class Test {",
+            "  int /*@Nullable*/ [] x;",
+            "}")
+        .doTest();
+  }
 }

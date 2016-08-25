@@ -23,16 +23,20 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.common.base.CharMatcher;
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.ErrorProneToken;
+import com.google.errorprone.util.ErrorProneTokens;
 import com.sun.source.tree.ArrayTypeTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+import com.sun.tools.javac.parser.Tokens.TokenKind;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
@@ -73,11 +77,14 @@ public class MixedArrayDimensions extends BugChecker
       if (dim.isEmpty()) {
         continue;
       }
-      int nonWhitespace = CharMatcher.isNot(' ').indexIn(dim);
-      int idx = dim.indexOf("[]", nonWhitespace);
-      if (idx > nonWhitespace) {
-        String replacement = dim.substring(idx, dim.length()) + dim.substring(0, idx);
-        return describeMatch(tree, SuggestedFix.replace(start, end, replacement));
+      ImmutableList<ErrorProneToken> tokens = ErrorProneTokens.getTokens(dim.trim(), state.context);
+      if (tokens.size() > 2 && tokens.get(0).kind() == TokenKind.IDENTIFIER) {
+        int nonWhitespace = CharMatcher.isNot(' ').indexIn(dim);
+        int idx = dim.indexOf("[]", nonWhitespace);
+        if (idx > nonWhitespace) {
+          String replacement = dim.substring(idx, dim.length()) + dim.substring(0, idx);
+          return describeMatch(tree, SuggestedFix.replace(start, end, replacement));
+        }
       }
     }
     return NO_MATCH;

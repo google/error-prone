@@ -41,10 +41,10 @@ public class ErrorProneTokens {
     Scanner scanner =
         new AccessibleScanner(fac, new CommentSavingTokenizer(fac, buffer, buffer.length));
     ImmutableList.Builder<ErrorProneToken> tokens = ImmutableList.builder();
-    while (scanner.token().kind != TokenKind.EOF) {
-      tokens.add(new ErrorProneToken(scanner.token()));
+    do {
       scanner.nextToken();
-    }
+      tokens.add(new ErrorProneToken(scanner.token()));
+    } while (scanner.token().kind != TokenKind.EOF);
     return tokens.build();
   }
 
