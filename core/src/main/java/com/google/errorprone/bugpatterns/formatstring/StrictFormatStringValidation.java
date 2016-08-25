@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.formatstring;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.FormatMethod;
@@ -23,6 +24,11 @@ import com.google.errorprone.annotations.FormatString;
 import com.google.errorprone.bugpatterns.formatstring.FormatStringValidation.ValidationResult;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePath;
+import com.sun.source.util.TreeScanner;
+import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
@@ -52,7 +58,6 @@ public class StrictFormatStringValidation {
           state);
     }
 
-    // TODO(dawasser): Handle effectively final format strings.
 
     // The format string is not a compile time constant. Check if it is an @FormatString method
     // parameter or is in an @FormatMethod method.
@@ -67,60 +72,171 @@ public class StrictFormatStringValidation {
               formatStringTree));
     }
 
-    if (formatStringSymbol.getKind() == ElementKind.PARAMETER
-        && isFormatStringParameter(formatStringSymbol, state)) {
-      List<VarSymbol> ownerParams = ((MethodSymbol) formatStringSymbol.owner).getParameters();
-      int ownerFormatStringIndex = ownerParams.indexOf(formatStringSymbol);
-
-      ImmutableList.Builder<Type> ownerFormatArgTypesBuilder = ImmutableList.builder();
-      for (VarSymbol paramSymbol :
-          ownerParams.subList(ownerFormatStringIndex + 1, ownerParams.size())) {
-        ownerFormatArgTypesBuilder.add(paramSymbol.type);
-      }
-      ImmutableList<Type> ownerFormatArgTypes = ownerFormatArgTypesBuilder.build();
-
-      Types types = state.getTypes();
-      ImmutableList.Builder<Type> calleeFormatArgTypesBuilder = ImmutableList.builder();
-      for (ExpressionTree formatArgExpression : args) {
-        calleeFormatArgTypesBuilder.add(types.erasure(((JCExpression) formatArgExpression).type));
-      }
-      ImmutableList<Type> calleeFormatArgTypes = calleeFormatArgTypesBuilder.build();
-
-      if (ownerFormatArgTypes.size() != calleeFormatArgTypes.size()) {
-        return ValidationResult.create(
-            null,
-            String.format(
-                "The number of format arguments passed "
-                    + "with an @FormatString must match the number of format arguments in the "
-                    + "@FormatMethod header where the format string was declared.\n\t"
-                    + "Format args passed: %d\n\tFormat args expected: %d",
-                calleeFormatArgTypes.size(), ownerFormatArgTypes.size()));
-      } else {
-        for (int i = 0; i < calleeFormatArgTypes.size(); i++) {
-          if (!ASTHelpers.isSameType(
-              ownerFormatArgTypes.get(i), calleeFormatArgTypes.get(i), state)) {
-            return ValidationResult.create(
-                null,
-                String.format(
-                    "The format argument types passed "
-                        + "with an @FormatString must match the types of the format arguments in "
-                        + "the @FormatMethod header where the format string was declared.\n\t"
-                        + "Format arg types passed: %s\n\tFormat arg types expected: %s",
-                    calleeFormatArgTypes.toArray(), ownerFormatArgTypes.toArray()));
-          }
-        }
-      }
-
-      // The arguments matched. Return a successful result.
-      return null;
+    if ((formatStringSymbol.flags() & (Flags.FINAL | Flags.EFFECTIVELY_FINAL)) == 0) {
+      return ValidationResult.create(
+          null, "All variables passed as @FormatString must be final or effectively final");
     }
 
-    return ValidationResult.create(
-        null,
-        String.format(
-            "Format strings must be compile time constant or parameters annotated "
-                + "@FormatString: %s",
-            formatStringTree));
+    if (formatStringSymbol.getKind() == ElementKind.PARAMETER) {
+      return validateFormatStringParamter(formatStringTree, formatStringSymbol, args, state);
+    } else {
+      // The format string is final but not a method parameter or compile time constant. Ensure that
+      // it is only assigned to compile time constant values and ensure that any possible assignment
+      // works with the format arguments.
+      return validateFormatStringVariable(formatStringTree, formatStringSymbol, args, state);
+    }
+  }
+
+  /** Helps {@code validate()} validate a format string that is declared as a method parameter. */
+  private static ValidationResult validateFormatStringParamter(
+      ExpressionTree formatStringTree,
+      Symbol formatStringSymbol,
+      List<? extends ExpressionTree> args,
+      VisitorState state) {
+    if (!isFormatStringParameter(formatStringSymbol, state)) {
+      return ValidationResult.create(
+          null,
+          String.format(
+              "Format strings must be compile time constant or parameters annotated "
+                  + "@FormatString: %s",
+              formatStringTree));
+    }
+
+    List<VarSymbol> ownerParams = ((MethodSymbol) formatStringSymbol.owner).getParameters();
+    int ownerFormatStringIndex = ownerParams.indexOf(formatStringSymbol);
+
+    ImmutableList.Builder<Type> ownerFormatArgTypesBuilder = ImmutableList.builder();
+    for (VarSymbol paramSymbol :
+        ownerParams.subList(ownerFormatStringIndex + 1, ownerParams.size())) {
+      ownerFormatArgTypesBuilder.add(paramSymbol.type);
+    }
+    ImmutableList<Type> ownerFormatArgTypes = ownerFormatArgTypesBuilder.build();
+
+    Types types = state.getTypes();
+    ImmutableList.Builder<Type> calleeFormatArgTypesBuilder = ImmutableList.builder();
+    for (ExpressionTree formatArgExpression : args) {
+      calleeFormatArgTypesBuilder.add(types.erasure(((JCExpression) formatArgExpression).type));
+    }
+    ImmutableList<Type> calleeFormatArgTypes = calleeFormatArgTypesBuilder.build();
+
+    if (ownerFormatArgTypes.size() != calleeFormatArgTypes.size()) {
+      return ValidationResult.create(
+          null,
+          String.format(
+              "The number of format arguments passed "
+                  + "with an @FormatString must match the number of format arguments in the "
+                  + "@FormatMethod header where the format string was declared.\n\t"
+                  + "Format args passed: %d\n\tFormat args expected: %d",
+              calleeFormatArgTypes.size(), ownerFormatArgTypes.size()));
+    } else {
+      for (int i = 0; i < calleeFormatArgTypes.size(); i++) {
+        if (!ASTHelpers.isSameType(
+            ownerFormatArgTypes.get(i), calleeFormatArgTypes.get(i), state)) {
+          return ValidationResult.create(
+              null,
+              String.format(
+                  "The format argument types passed "
+                      + "with an @FormatString must match the types of the format arguments in "
+                      + "the @FormatMethod header where the format string was declared.\n\t"
+                      + "Format arg types passed: %s\n\tFormat arg types expected: %s",
+                  calleeFormatArgTypes.toArray(), ownerFormatArgTypes.toArray()));
+        }
+      }
+    }
+
+    // Format string usage was valid.
+    return null;
+  }
+
+  /**
+   * Helps {@code validate()} validate a format string that is a variable, but not a parameter. This
+   * method assumes that the format string variable has already been asserted to be final or
+   * effectively final.
+   */
+  private static ValidationResult validateFormatStringVariable(
+      ExpressionTree formatStringTree,
+      final Symbol formatStringSymbol,
+      final List<? extends ExpressionTree> args,
+      final VisitorState state) {
+    if (formatStringSymbol.getKind() != ElementKind.LOCAL_VARIABLE) {
+      return ValidationResult.create(
+          null,
+          String.format(
+              "Variables used as format strings that are not local variables must be compile time"
+                  + " consant.\n%s is not a local variable and is not compile time constant.",
+              formatStringTree));
+    }
+
+    // Find the Tree for the block in which the variable is defined. If it is not defined in this
+    // class (though it may have been in a super class). We require compile time constant values in
+    // that case.
+    Symbol owner = formatStringSymbol.owner;
+    TreePath path = TreePath.getPath(state.getPath(), formatStringTree);
+    while (path != null && ASTHelpers.getSymbol(path.getLeaf()) != owner) {
+      path = path.getParentPath();
+    }
+
+    // A local variable must be declared in a parent tree to be accessed. This case should be
+    // impossible.
+    if (path == null) {
+      throw new IllegalStateException(
+          String.format(
+              "Could not find the Tree where local variable %s is declared. "
+                  + "This should be impossible.",
+              formatStringTree));
+    }
+
+    // Scan down from the scope where the variable was declared
+    ValidationResult result =
+        path.getLeaf()
+            .accept(
+                new TreeScanner<ValidationResult, Void>() {
+                  @Override
+                  public ValidationResult visitVariable(VariableTree node, Void unused) {
+                    if (ASTHelpers.getSymbol(node) == formatStringSymbol) {
+                      if (node.getInitializer() == null) {
+                        return ValidationResult.create(
+                            null,
+                            String.format(
+                                "Variables used as format strings must be initialized when they are"
+                                    + " declared.\nInvalid declaration: %s",
+                                node));
+                      }
+                      return validateStringFromAssignment(node, node.getInitializer(), args, state);
+                    }
+                    return super.visitVariable(node, unused);
+                  }
+
+                  @Override
+                  public ValidationResult reduce(ValidationResult r1, ValidationResult r2) {
+                    if (r1 == null && r2 == null) {
+                      return null;
+                    }
+                    return MoreObjects.firstNonNull(r1, r2);
+                  }
+                },
+                null);
+
+    return result;
+  }
+
+  private static ValidationResult validateStringFromAssignment(
+      Tree formatStringAssignment,
+      ExpressionTree formatStringRhs,
+      List<? extends ExpressionTree> args,
+      VisitorState state) {
+    String value = ASTHelpers.constValue(formatStringRhs, String.class);
+    if (value == null) {
+      return ValidationResult.create(
+          null,
+          String.format(
+              "Local format string variables must only be assigned to compile time constant values."
+                  + " Invalid format string assignment: %s",
+              formatStringAssignment));
+    } else {
+      return FormatStringValidation.validate(
+          ImmutableList.<ExpressionTree>builder().add(formatStringRhs).addAll(args).build(), state);
+    }
   }
 
   /**

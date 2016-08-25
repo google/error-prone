@@ -189,4 +189,76 @@ public class FormatStringAnnotationCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void testMatches_succeedsForNonParameterFinalOrEffectivelyFinalFormatStrings() {
+    compilationHelper
+        .addSourceLines(
+            "test/FormatStringTestCase.java",
+            "package test;",
+            "import com.google.errorprone.annotations.FormatMethod;",
+            "import com.google.errorprone.annotations.FormatString;",
+            "public class FormatStringTestCase {",
+            "  private static final String validFormat = \"foo\";",
+            "  @FormatMethod public static void log(@FormatString String s, Object... args) {}",
+            "  public static void callLog1() {",
+            "    final String fmt1 = \"foo%s\";",
+            "    log(fmt1, new Object());",
+            // Effectively final
+            "    String fmt2 = \"foo%s\";",
+            "    log(fmt2, new Object());",
+            "    log(validFormat);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testMatches_failsForNonFinalParametersOrNonMatchingFinalParameters() {
+    compilationHelper
+        .addSourceLines(
+            "test/FormatStringTestCase.java",
+            "package test;",
+            "import com.google.errorprone.annotations.FormatMethod;",
+            "import com.google.errorprone.annotations.FormatString;",
+            "public class FormatStringTestCase {",
+            "  final String invalidFormat;",
+            "  private static final String validFormat = \"foo%s\";",
+            "  public FormatStringTestCase() {",
+            "    invalidFormat = \"foo\";",
+            "  }",
+            "  @FormatMethod public static void log(@FormatString String s, Object... args) {}",
+            "  public void callLog() {",
+            "    final String fmt1 = \"foo%s\";",
+            "    // BUG: Diagnostic contains: missing argument for format specifier '%s'",
+            "    log(fmt1);",
+            // Effectively final
+            "    String fmt2 = \"foo%s\";",
+            "    // BUG: Diagnostic contains: missing argument for format specifier '%s'",
+            "    log(fmt2);",
+            // Still effectively final, but multiple assignments is invalid
+            "    String fmt3;",
+            "    if (true) {",
+            "      fmt3 = \"foo%s\";",
+            "    } else {",
+            "      fmt3 = \"bar%s\";",
+            "    }",
+            "    // BUG: Diagnostic contains: Variables used as format strings must be initialized",
+            "    log(fmt3);",
+            "    String fmt4 = fmt3;",
+            "    // BUG: Diagnostic contains: Local format string variables must only be assigned",
+            "    log(fmt4);",
+            "    String fmt5 = \"foo\";",
+            // This makes fmt5 no longer effectively final
+            "    fmt5 += 'a';",
+            "    // BUG: Diagnostic contains: All variables passed as @FormatString must be final",
+            "    log(fmt5);",
+            "    // BUG: Diagnostic contains: Variables used as format strings that are not local",
+            "    log(invalidFormat);",
+            "    // BUG: Diagnostic contains: missing argument for format specifier '%s'",
+            "    log(validFormat);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
