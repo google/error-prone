@@ -80,8 +80,8 @@ public class Replacements {
         overlaps.subRangeMap(replacement.range()).asMapOfRanges().values();
     checkArgument(
         overlap.isEmpty(),
-        "replacement '%s' overlaps with existing replacements: %s",
-        replacement.replaceWith(),
+        "%s overlaps with existing replacements: %s",
+        replacement,
         Joiner.on(", ").join(overlap));
     overlaps.put(replacement.range(), replacement);
   }

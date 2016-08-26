@@ -45,13 +45,15 @@ public class ReplacementsTest {
   @Test
   public void overlap() {
     Replacements replacements = new Replacements();
-    replacements.add(Replacement.create(2, 4, "hello"));
+    Replacement hello = Replacement.create(2, 4, "hello");
+    Replacement goodbye = Replacement.create(3, 5, "goodbye");
+    replacements.add(hello);
     try {
-      replacements.add(Replacement.create(3, 5, "goodbye"));
+      replacements.add(goodbye);
       fail();
     } catch (IllegalArgumentException expected) {
       assertThat(expected.getMessage())
-          .contains("replacement 'goodbye' overlaps with existing replacements");
+          .isEqualTo(String.format("%s overlaps with existing replacements: %s", goodbye, hello));
     }
   }
 
