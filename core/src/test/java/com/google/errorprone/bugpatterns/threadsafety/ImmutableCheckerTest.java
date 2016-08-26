@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.annotations.concurrent.LazyInit;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Ignore;
@@ -1260,4 +1261,23 @@ public class ImmutableCheckerTest {
         .doTest();
   }
 
+  /** A sample superclass with a mutable field. */
+  public static class SuperFieldSuppressionTest {
+    @LazyInit public int x = 0;
+
+    public int count() {
+      return x++;
+    }
+  }
+
+  @Test
+  public void superFieldSuppression() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import " + SuperFieldSuppressionTest.class.getCanonicalName() + ";",
+            "@Immutable public class Test extends SuperFieldSuppressionTest {}")
+        .doTest();
+  }
 }

@@ -30,6 +30,7 @@ import com.google.common.collect.Sets.SetView;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.Immutable;
+import com.google.errorprone.annotations.concurrent.LazyInit;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -326,6 +327,9 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
     SuppressWarnings suppression = ASTHelpers.getAnnotation(var, SuppressWarnings.class);
     if (suppression != null
         && !Collections.disjoint(Arrays.asList(suppression.value()), allNames())) {
+      return Violation.absent();
+    }
+    if (ASTHelpers.hasAnnotation(var, LazyInit.class, state)) {
       return Violation.absent();
     }
     if (!var.getModifiers().contains(Modifier.FINAL)) {
