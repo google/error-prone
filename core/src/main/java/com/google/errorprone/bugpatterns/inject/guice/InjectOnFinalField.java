@@ -15,7 +15,7 @@
 package com.google.errorprone.bugpatterns.inject.guice;
 
 import static com.google.errorprone.BugPattern.Category.GUICE;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.InjectMatchers.GUICE_INJECT_ANNOTATION;
 import static com.google.errorprone.matchers.Matchers.allOf;
@@ -42,7 +42,7 @@ import com.sun.source.tree.VariableTree;
   explanation = "See https://github.com/google/guice/wiki/InjectionPoints#how-guice-injects",
   category = GUICE,
   severity = ERROR,
-  maturity = EXPERIMENTAL
+  maturity = MATURE
 )
 public class InjectOnFinalField extends BugChecker implements VariableTreeMatcher {
 
