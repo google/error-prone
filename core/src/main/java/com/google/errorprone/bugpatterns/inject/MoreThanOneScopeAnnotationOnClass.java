@@ -43,6 +43,7 @@ import java.util.List;
  */
 @BugPattern(
   name = "InjectMoreThanOneScopeAnnotationOnClass",
+  altNames = "MoreThanOneScopeAnnotationOnClass",
   summary = "A class can be annotated with at most one scope annotation.",
   explanation =
       "Annotating a class with more than one scope annotation is "
