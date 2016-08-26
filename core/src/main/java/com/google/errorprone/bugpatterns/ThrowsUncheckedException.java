@@ -18,14 +18,16 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
-import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.code.Type;
@@ -41,40 +43,26 @@ import java.util.List;
   name = "ThrowsUncheckedException",
   summary = "Unchecked exceptions do not need to be declared in the method signature.",
   category = JDK,
-  severity = ERROR,
+  severity = SUGGESTION,
   maturity = MATURE
 )
 public class ThrowsUncheckedException extends BugChecker implements MethodTreeMatcher {
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
-    List<ExpressionTree> runtimeExceptions = new ArrayList<>();
-
+    if (tree.getThrows().isEmpty()) {
+      return NO_MATCH;
+    }
+    List<ExpressionTree> uncheckedExceptions = new ArrayList<>();
     for (ExpressionTree exception : tree.getThrows()) {
-      Type exceptionType = ASTHelpers.getType(exception);
-      if (ASTHelpers.isSubtype(exceptionType, state.getSymtab().runtimeExceptionType, state)
-          || ASTHelpers.isSubtype(exceptionType, state.getSymtab().errorType, state)) {
-        runtimeExceptions.add(exception);
+      Type exceptionType = getType(exception);
+      if (isSubtype(exceptionType, state.getSymtab().runtimeExceptionType, state)
+          || isSubtype(exceptionType, state.getSymtab().errorType, state)) {
+        uncheckedExceptions.add(exception);
       }
     }
-
-    // With all runtime exceptions in a list, if all the exceptions are Runtime suggest to
-    // remove all otherwise just gives description.
-    Description.Builder builder = buildDescription(tree);
-    if (runtimeExceptions.isEmpty()) {
-      return Description.NO_MATCH;
-    } else if (runtimeExceptions.size() == tree.getThrows().size()) {
-      int lengthOfExceptions = 0;
-      // loop is intended to find the end position for the replace() for the first exception,
-      // which is why the loop starts counting from the second item in the list
-      for (int i = 1; i < runtimeExceptions.size(); i++) {
-        // +2 to account for space and comma
-        lengthOfExceptions += runtimeExceptions.get(i).toString().length() + 2;
-      }
-      // the " throws " string is exactly 8 characters before the exception if formatted correctly
-      // and +1 for the " " after all the exceptions
-      builder.addFix(
-          SuggestedFix.replace(runtimeExceptions.get(0), " ", -8, lengthOfExceptions + 1));
+    if (uncheckedExceptions.isEmpty()) {
+      return NO_MATCH;
     }
-    return builder.build();
+    return describeMatch(tree, SuggestedFixes.deleteExceptions(tree, state, uncheckedExceptions));
   }
 }

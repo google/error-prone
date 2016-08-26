@@ -15,11 +15,13 @@
  */
 package com.google.errorprone.bugpatterns;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
 
 /** @author yulissa@google.com (Yulissa Arroyo-Paredes) */
 @RunWith(JUnit4.class)
@@ -40,5 +42,81 @@ public final class ThrowsUncheckedExceptionTest {
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.addSourceFile("ThrowsUncheckedExceptionNegativeCases.java").doTest();
+  }
+
+  @Test
+  public void deleteAll() throws Exception {
+    BugCheckerRefactoringTestHelper.newInstance(new ThrowsUncheckedException(), getClass())
+        .addInputLines(
+            "in/Test.java",
+            "import java.io.IOError;",
+            "interface Test {",
+            "  void f() throws IOError, RuntimeException;",
+            "}")
+        .addOutputLines(
+            "out/Test.java", //
+            "import java.io.IOError;",
+            "interface Test {",
+            "  void f();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void deleteLeft() throws Exception {
+    BugCheckerRefactoringTestHelper.newInstance(new ThrowsUncheckedException(), getClass())
+        .addInputLines(
+            "in/Test.java",
+            "import java.io.IOError;",
+            "import java.io.IOException;",
+            "interface Test {",
+            "  void f() throws IOError, RuntimeException, IOException;",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import java.io.IOError;",
+            "import java.io.IOException;",
+            "interface Test {",
+            "  void f() throws IOException;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void deleteRight() throws Exception {
+    BugCheckerRefactoringTestHelper.newInstance(new ThrowsUncheckedException(), getClass())
+        .addInputLines(
+            "in/Test.java",
+            "import java.io.IOError;",
+            "import java.io.IOException;",
+            "interface Test {",
+            "  void f() throws IOException, IOError, RuntimeException;",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import java.io.IOError;",
+            "import java.io.IOException;",
+            "interface Test {",
+            "  void f() throws IOException;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void preserveOrder() throws Exception {
+    BugCheckerRefactoringTestHelper.newInstance(new ThrowsUncheckedException(), getClass())
+        .addInputLines(
+            "in/Test.java",
+            "import java.io.IOException;",
+            "interface Test {",
+            "  void f() throws ReflectiveOperationException, IOException, RuntimeException;",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import java.io.IOException;",
+            "interface Test {",
+            "  void f() throws ReflectiveOperationException, IOException;",
+            "}")
+        .doTest();
   }
 }

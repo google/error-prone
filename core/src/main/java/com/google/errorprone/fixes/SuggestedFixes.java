@@ -18,8 +18,12 @@ package com.google.errorprone.fixes;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.Iterables.getLast;
 
+import com.google.common.base.Function;
 import com.google.common.base.Joiner;
+import com.google.common.base.Predicates;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
@@ -29,12 +33,15 @@ import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ErrorProneToken;
 import com.sun.source.doctree.DocTree;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.DocTreePath;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.parser.Tokens;
 import com.sun.tools.javac.tree.DCTree;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeMaker;
@@ -305,5 +312,39 @@ public class SuggestedFixes {
               }
             });
     return fix.build();
+  }
+
+  /** Deletes the given exceptions from a method's throws clause. */
+  public static Fix deleteExceptions(
+      MethodTree tree, final VisitorState state, List<ExpressionTree> toDelete) {
+    List<? extends ExpressionTree> trees = tree.getThrows();
+    if (toDelete.size() == trees.size()) {
+      return SuggestedFix.replace(
+          getThrowsPosition(tree, state), state.getEndPosition(getLast(trees)), "");
+    }
+    String replacement =
+        FluentIterable.from(tree.getThrows())
+            .filter(Predicates.not(Predicates.in(toDelete)))
+            .transform(
+                new Function<ExpressionTree, String>() {
+                  @Nullable
+                  public String apply(ExpressionTree input) {
+                    return state.getSourceForNode(input);
+                  }
+                })
+            .join(Joiner.on(", "));
+    return SuggestedFix.replace(
+        ((JCTree) tree.getThrows().get(0)).getStartPosition(),
+        state.getEndPosition(getLast(tree.getThrows())),
+        replacement);
+  }
+
+  private static int getThrowsPosition(MethodTree tree, VisitorState state) {
+    for (ErrorProneToken token : state.getTokensForNode(tree)) {
+      if (token.kind() == Tokens.TokenKind.THROWS) {
+        return ((JCTree) tree).getStartPosition() + token.pos();
+      }
+    }
+    throw new AssertionError();
   }
 }

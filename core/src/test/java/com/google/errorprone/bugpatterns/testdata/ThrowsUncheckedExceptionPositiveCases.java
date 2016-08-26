@@ -19,12 +19,12 @@ import java.io.IOException;
 
 /** @author yulissa@google.com (Yulissa Arroyo-Paredes) */
 public class ThrowsUncheckedExceptionPositiveCases {
-  // BUG: Diagnostic contains: 'public void doSomething() {'
+  // BUG: Diagnostic contains: 'public void doSomething()  {'
   public void doSomething() throws IllegalArgumentException {
     throw new IllegalArgumentException("thrown");
   }
 
-  // BUG: Diagnostic contains: 'public void doSomethingElse() {'
+  // BUG: Diagnostic contains: 'public void doSomethingElse()  {'
   public void doSomethingElse() throws RuntimeException, NullPointerException {
     throw new NullPointerException("thrown");
   }
@@ -39,7 +39,7 @@ public class ThrowsUncheckedExceptionPositiveCases {
     throw new IllegalArgumentException("thrown");
   }
 
-  // BUG: Diagnostic contains: 'public void doBetter() {'
+  // BUG: Diagnostic contains: 'public void doBetter()  {'
   public void doBetter() throws RuntimeException, AssertionError {
     throw new RuntimeException("thrown");
   }
