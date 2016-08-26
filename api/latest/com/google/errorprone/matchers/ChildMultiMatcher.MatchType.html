@@ -142,13 +142,20 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Enum.html?is
 <th class="colOne" scope="col">Enum Constant and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.MatchType.html#ALL">ALL</a></span></code>&nbsp;</td>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.MatchType.html#ALL">ALL</a></span></code>
+<div class="block">Matches if all of the child elements match the matcher.</div>
+</td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.MatchType.html#AT_LEAST_ONE">AT_LEAST_ONE</a></span></code>&nbsp;</td>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.MatchType.html#AT_LEAST_ONE">AT_LEAST_ONE</a></span></code>
+<div class="block">Matches if at least one of the child elements match the matcher.</div>
+</td>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.MatchType.html#LAST">LAST</a></span></code>&nbsp;</td>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.MatchType.html#LAST">LAST</a></span></code>
+<div class="block">Matches if the last child element matches the matcher, regardless of whether or not any of
+ the other child elements would match the matcher.</div>
+</td>
 </tr>
 </table>
 </li>
@@ -214,6 +221,8 @@ the order they are declared.</div>
 <li class="blockList">
 <h4>ALL</h4>
 <pre>public static final&nbsp;<a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.MatchType.html" title="enum in com.google.errorprone.matchers">ChildMultiMatcher.MatchType</a> ALL</pre>
+<div class="block">Matches if all of the child elements match the matcher. If the parent element has no child
+ elements, this matcher returns true.</div>
 </li>
 </ul>
 <a name="AT_LEAST_ONE">
@@ -223,6 +232,8 @@ the order they are declared.</div>
 <li class="blockList">
 <h4>AT_LEAST_ONE</h4>
 <pre>public static final&nbsp;<a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.MatchType.html" title="enum in com.google.errorprone.matchers">ChildMultiMatcher.MatchType</a> AT_LEAST_ONE</pre>
+<div class="block">Matches if at least one of the child elements match the matcher. If the parent element has no
+ child elements, this matcher returns false.</div>
 </li>
 </ul>
 <a name="LAST">
@@ -232,6 +243,9 @@ the order they are declared.</div>
 <li class="blockList">
 <h4>LAST</h4>
 <pre>public static final&nbsp;<a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.MatchType.html" title="enum in com.google.errorprone.matchers">ChildMultiMatcher.MatchType</a> LAST</pre>
+<div class="block">Matches if the last child element matches the matcher, regardless of whether or not any of
+ the other child elements would match the matcher. If the parent element has no child
+ elements, this matcher returns false.</div>
 </li>
 </ul>
 </li>

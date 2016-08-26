@@ -1,9 +1,9 @@
 ---
 title: GuiceInjectOnFinalField
-summary: Although Guice allows injecting final fields, doing so is not recommended because the injected value may not be visible to other threads.
+summary: Although Guice allows injecting final fields, doing so is disallowed because the injected value may not be visible to other threads.
 layout: bugpattern
 category: GUICE
-severity: WARNING
+severity: ERROR
 maturity: EXPERIMENTAL
 ---
 
@@ -13,7 +13,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-See https://code.google.com/p/google-guice/wiki/InjectionPoints
+See https://github.com/google/guice/wiki/InjectionPoints#how-guice-injects
 
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("GuiceInjectOnFinalField")` annotation to the enclosing element.
@@ -43,9 +43,6 @@ __InjectOnFinalFieldPositiveCases.java__
 package com.google.errorprone.bugpatterns.inject.guice.testdata;
 
 import com.google.inject.Inject;
-
-import java.util.Set;
-
 import javax.annotation.Nullable;
 
 /**
@@ -60,12 +57,12 @@ public class InjectOnFinalFieldPositiveCases {
     @Inject final int a = 0;
 
     
-    // BUG: Diagnostic contains: @Inject public int b
     @Inject
+    // BUG: Diagnostic contains: public int b
     public final int b = 0;
-  
-    // BUG: Diagnostic contains: @Inject @Nullable Object c
+
     @Inject @Nullable
+    // BUG: Diagnostic contains: Object c
     final Object c = null;
   }
 }

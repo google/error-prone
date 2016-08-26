@@ -218,8 +218,10 @@ implements <a href="../../../../com/google/errorprone/matchers/MultiMatcher.html
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.html" title="type parameter in ChildMultiMatcher">N</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.html#getMatchingNode--">getMatchingNode</a></span>()</code>&nbsp;</td>
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.html" title="type parameter in ChildMultiMatcher">N</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.html#getMatchingNodes--">getMatchingNodes</a></span>()</code>
+<div class="block">This method is only valid to call after calling <a href="../../../../com/google/errorprone/matchers/Matcher.html#matches-T-com.google.errorprone.VisitorState-"><code>Matcher.matches(T, com.google.errorprone.VisitorState)</code></a>.</div>
+</td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
@@ -300,18 +302,24 @@ implements <a href="../../../../com/google/errorprone/matchers/MultiMatcher.html
 </dl>
 </li>
 </ul>
-<a name="getMatchingNode--">
+<a name="getMatchingNodes--">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>getMatchingNode</h4>
-<pre>public&nbsp;<a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.html" title="type parameter in ChildMultiMatcher">N</a>&nbsp;getMatchingNode()</pre>
+<h4>getMatchingNodes</h4>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.html" title="type parameter in ChildMultiMatcher">N</a>&gt;&nbsp;getMatchingNodes()</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../com/google/errorprone/matchers/MultiMatcher.html#getMatchingNodes--">MultiMatcher</a></code></span></div>
+<div class="block">This method is only valid to call after calling <a href="../../../../com/google/errorprone/matchers/Matcher.html#matches-T-com.google.errorprone.VisitorState-"><code>Matcher.matches(T, com.google.errorprone.VisitorState)</code></a>. If that call returned true,
+ this method will return all nodes that matched (which could be empty if the multi matcher had
+ no nodes to process, so the child nodes vacuously matched the matcher). If that call returned
+ false (i.e.: this multimatcher did not match the matcher), this function will return an empty
+ list.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../com/google/errorprone/matchers/MultiMatcher.html#getMatchingNode--">getMatchingNode</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/matchers/MultiMatcher.html" title="interface in com.google.errorprone.matchers">MultiMatcher</a>&lt;<a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.html" title="type parameter in ChildMultiMatcher">T</a> extends com.sun.source.tree.Tree,<a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.html" title="type parameter in ChildMultiMatcher">N</a> extends com.sun.source.tree.Tree&gt;</code></dd>
+<dd><code><a href="../../../../com/google/errorprone/matchers/MultiMatcher.html#getMatchingNodes--">getMatchingNodes</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/matchers/MultiMatcher.html" title="interface in com.google.errorprone.matchers">MultiMatcher</a>&lt;<a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.html" title="type parameter in ChildMultiMatcher">T</a> extends com.sun.source.tree.Tree,<a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.html" title="type parameter in ChildMultiMatcher">N</a> extends com.sun.source.tree.Tree&gt;</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the matching node, iff a single node was matched.</dd>
+<dd>all the child nodes that matched the matcher.</dd>
 </dl>
 </li>
 </ul>
@@ -327,7 +335,7 @@ implements <a href="../../../../com/google/errorprone/matchers/MultiMatcher.html
                                                        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
 <div class="block">Returns the set of child nodes to match. The nodes must be immediate children of the current
  node to ensure the TreePath calculation is correct. MultiMatchers with other requirements
- should not subclass ChildMultiMatcher (see <a href="../../../../com/google/errorprone/matchers/HasIdentifier.html" title="class in com.google.errorprone.matchers"><code>HasIdentifier</code></a> for an example).</div>
+ should not subclass ChildMultiMatcher.</div>
 </li>
 </ul>
 </li>

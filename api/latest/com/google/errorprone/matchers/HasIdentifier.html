@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10};
+var methods = {"i0":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -109,13 +109,13 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.Tree&gt;, <a href="../../../../com/google/errorprone/matchers/MultiMatcher.html" title="interface in com.google.errorprone.matchers">MultiMatcher</a>&lt;com.sun.source.tree.Tree,com.sun.source.tree.IdentifierTree&gt;, <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io">Serializable</a></dd>
+<dd><a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.Tree&gt;, <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io">Serializable</a></dd>
 </dl>
 <hr>
 <br>
 <pre>public class <span class="typeNameLabel">HasIdentifier</span>
 extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>
-implements <a href="../../../../com/google/errorprone/matchers/MultiMatcher.html" title="interface in com.google.errorprone.matchers">MultiMatcher</a>&lt;com.sun.source.tree.Tree,com.sun.source.tree.IdentifierTree&gt;</pre>
+implements <a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.Tree&gt;</pre>
 <div class="block">Matches if the given matcher matches all of the identifiers under this syntax tree.</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
@@ -159,10 +159,6 @@ implements <a href="../../../../com/google/errorprone/matchers/MultiMatcher.html
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>com.sun.source.tree.IdentifierTree</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/HasIdentifier.html#getMatchingNode--">getMatchingNode</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i1" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/HasIdentifier.html#matches-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-">matches</a></span>(com.sun.source.tree.Tree&nbsp;tree,
        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
@@ -209,7 +205,7 @@ implements <a href="../../../../com/google/errorprone/matchers/MultiMatcher.html
 <a name="matches-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>matches</h4>
 <pre>public&nbsp;boolean&nbsp;matches(com.sun.source.tree.Tree&nbsp;tree,
@@ -217,21 +213,6 @@ implements <a href="../../../../com/google/errorprone/matchers/MultiMatcher.html
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../com/google/errorprone/matchers/Matcher.html#matches-T-com.google.errorprone.VisitorState-">matches</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.Tree&gt;</code></dd>
-</dl>
-</li>
-</ul>
-<a name="getMatchingNode--">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>getMatchingNode</h4>
-<pre>public&nbsp;com.sun.source.tree.IdentifierTree&nbsp;getMatchingNode()</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../com/google/errorprone/matchers/MultiMatcher.html#getMatchingNode--">getMatchingNode</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/matchers/MultiMatcher.html" title="interface in com.google.errorprone.matchers">MultiMatcher</a>&lt;com.sun.source.tree.Tree,com.sun.source.tree.IdentifierTree&gt;</code></dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the matching node, iff a single node was matched.</dd>
 </dl>
 </li>
 </ul>

@@ -371,9 +371,6 @@ Incompatible type as argument to Object-accepting Java collections method
 __[FragmentNotInstantiable](bugpattern/FragmentNotInstantiable)__<br>
 Subclasses of Fragment must be instantiable via Class#newInstance(): the class must be public, static and have a public nullary constructor
 
-__[GuiceInjectOnFinalField](bugpattern/GuiceInjectOnFinalField)__<br>
-Although Guice allows injecting final fields, doing so is not recommended because the injected value may not be visible to other threads.
-
 __[HardCodedSdCardPath](bugpattern/HardCodedSdCardPath)__<br>
 Hardcoded reference to /sdcard
 
@@ -432,6 +429,9 @@ Invalid @GuardedBy expression
 __[GuiceAssistedParameters](bugpattern/GuiceAssistedParameters)__<br>
 A constructor cannot have two @Assisted parameters of the same type unless they are disambiguated with named @Assisted annotations. 
 
+__[GuiceInjectOnFinalField](bugpattern/GuiceInjectOnFinalField)__<br>
+Although Guice allows injecting final fields, doing so is disallowed because the injected value may not be visible to other threads.
+
 __[Immutable](bugpattern/Immutable)__<br>
 Type declaration annotated with @Immutable is not immutable
 
@@ -442,7 +442,7 @@ __[InjectMoreThanOneQualifier](bugpattern/InjectMoreThanOneQualifier)__<br>
 Using more than one qualifier annotation on the same element is not allowed.
 
 __[InjectMoreThanOneScopeAnnotationOnClass](bugpattern/InjectMoreThanOneScopeAnnotationOnClass)__<br>
-A class can be annotated with at most one scope annotation
+A class can be annotated with at most one scope annotation.
 
 __[InjectScopeAnnotationOnInterfaceOrAbstractClass](bugpattern/InjectScopeAnnotationOnInterfaceOrAbstractClass)__<br>
 Scope annotation on an interface or abstact class is not allowed
