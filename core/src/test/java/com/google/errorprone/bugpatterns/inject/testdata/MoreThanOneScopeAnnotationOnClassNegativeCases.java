@@ -71,4 +71,8 @@ public class MoreThanOneScopeAnnotationOnClassNegativeCases {
   @SessionScoped
   @Subcomponent
   public class DaggerSubComponent {}
+
+  /** Suppression through secondary name */
+  @SuppressWarnings("MoreThanOneScopeAnnotationOnClass")
+  public class TestClass6 {}
 }

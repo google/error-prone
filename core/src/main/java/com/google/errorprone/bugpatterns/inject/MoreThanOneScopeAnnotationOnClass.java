@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns.inject;
 
 import static com.google.errorprone.BugPattern.Category.INJECT;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.InjectMatchers.hasScopingAnnotations;
 import static com.google.errorprone.matchers.InjectMatchers.isDaggerComponent;
@@ -50,7 +50,7 @@ import java.util.List;
           + "invalid according to the JSR-330 specification. ",
   category = INJECT,
   severity = ERROR,
-  maturity = EXPERIMENTAL
+  maturity = MATURE
 )
 public class MoreThanOneScopeAnnotationOnClass extends BugChecker implements ClassTreeMatcher {
 
