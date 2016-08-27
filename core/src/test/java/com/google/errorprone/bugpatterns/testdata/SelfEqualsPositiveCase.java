@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
+import static com.google.common.truth.Truth.assertThat;
+
 import org.junit.Assert;
 
 /**
@@ -25,7 +27,7 @@ import org.junit.Assert;
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 public class SelfEqualsPositiveCase {
-  private String simpleField;
+  protected String simpleField;
 
   public boolean test1(Object obj) {
     if (obj == null || getClass() != obj.getClass()) {
@@ -77,6 +79,11 @@ public class SelfEqualsPositiveCase {
     Assert.assertTrue(obj.equals(obj));
   }
 
+  public void testAssertThat(SelfEqualsPositiveCase obj) {
+    // BUG: Diagnostic contains: An object is tested for equality to itself
+    assertThat(obj.equals(obj)).isTrue();
+  }
+
   @Override
   public boolean equals(Object obj) {
     if (obj == null || getClass() != obj.getClass()) {
@@ -84,5 +91,22 @@ public class SelfEqualsPositiveCase {
     }
     SelfEqualsPositiveCase other = (SelfEqualsPositiveCase) obj;
     return simpleField.equals(((SelfEqualsPositiveCase)other).simpleField);
+  }
+
+  private static class SubClass extends SelfEqualsPositiveCase {
+    @Override
+    public boolean equals(Object obj) {
+      if (obj == null || getClass() != obj.getClass()) {
+        return false;
+      }
+      SubClass other = (SubClass) obj;
+      return simpleField.equals(((SubClass) other).simpleField);
+    }
+  }
+
+  public void testSub() {
+    SubClass sc = new SubClass();
+    // BUG: Diagnostic contains: An object is tested for equality to itself
+    sc.equals(sc);
   }
 }
