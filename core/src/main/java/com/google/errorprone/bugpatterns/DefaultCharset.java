@@ -75,11 +75,7 @@ public class DefaultCharset extends BugChecker
     UTF_8_FIX("UTF_8") {
       @Override
       void addImport(SuggestedFix.Builder fix, VisitorState state) {
-        if (state.isAndroidCompatible()) {
-          fix.addStaticImport("com.google.common.base.Charsets.UTF_8");
-        } else {
-          fix.addStaticImport("java.nio.charset.StandardCharsets.UTF_8");
-        }
+        fix.addStaticImport("java.nio.charset.StandardCharsets.UTF_8");
       }
     },
     DEFAULT_CHARSET_FIX("Charset.defaultCharset()") {
@@ -154,7 +150,7 @@ public class DefaultCharset extends BugChecker
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (INVOCATION.matches(tree, state)) {
+    if (!state.isAndroidCompatible() && INVOCATION.matches(tree, state)) {
       Description.Builder description = buildDescription(tree);
       appendCharsets(description, tree, tree.getMethodSelect(), tree.getArguments(), state);
       return description.build();
@@ -164,16 +160,18 @@ public class DefaultCharset extends BugChecker
 
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
-    if (CTOR.matches(tree, state)) {
-      Description.Builder description = buildDescription(tree);
-      appendCharsets(description, tree, tree.getIdentifier(), tree.getArguments(), state);
-      return description.build();
-    }
-    if (FILE_READER.matches(tree, state)) {
-      return handleFileReader(tree, state);
-    }
-    if (FILE_WRITER.matches(tree, state)) {
-      return handleFileWriter(tree, state);
+    if (!state.isAndroidCompatible()) {
+      if (CTOR.matches(tree, state)) {
+        Description.Builder description = buildDescription(tree);
+        appendCharsets(description, tree, tree.getIdentifier(), tree.getArguments(), state);
+        return description.build();
+      }
+      if (FILE_READER.matches(tree, state)) {
+        return handleFileReader(tree, state);
+      }
+      if (FILE_WRITER.matches(tree, state)) {
+        return handleFileWriter(tree, state);
+      }
     }
     return Description.NO_MATCH;
   }
@@ -203,7 +201,7 @@ public class DefaultCharset extends BugChecker
   private void fileReaderFix(
       Description.Builder description, VisitorState state, Tree arg, Tree toReplace) {
     for (CharsetFix charset : CharsetFix.values()) {
-      if (shouldUseGuava(state) || state.isAndroidCompatible()) {
+      if (shouldUseGuava(state)) {
         description.addFix(guavaFileReaderFix(state, arg, toReplace, charset));
       } else {
         description.addFix(nioFileReaderFix(state, arg, toReplace, charset));
@@ -258,11 +256,10 @@ public class DefaultCharset extends BugChecker
     Tree toReplace = BUFFERED_WRITER.matches(parent, state) ? parent : tree;
     Description.Builder description = buildDescription(tree);
     boolean useGuava = shouldUseGuava(state);
-    boolean isAndroid = state.isAndroidCompatible();
     for (CharsetFix charset : CharsetFix.values()) {
-      if (appendMode == null && (useGuava || isAndroid)) {
+      if (appendMode == null && useGuava) {
         description.addFix(guavaFileWriterFix(state, fileArg, toReplace, charset));
-      } else if (!isAndroid) {
+      } else {
         description.addFix(
             nioFileWriterFix(state, appendMode, fileArg, toReplace, charset, useGuava));
       }

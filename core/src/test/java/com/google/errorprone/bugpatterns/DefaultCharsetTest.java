@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
-
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import java.io.IOException;
@@ -279,38 +277,9 @@ public class DefaultCharsetTest {
             "    new FileReader(f);",
             "  }",
             "}")
-        .addOutputLines(
-            "out/Test.java",
-            "import static com.google.common.base.Charsets.UTF_8;",
-            "import com.google.common.io.Files;",
-            "import java.io.*;",
-            "import java.io.File;",
-            "class Test {",
-            "  void f(String s, File f) throws Exception {",
-            "    Files.newReader(new File(s), UTF_8);",
-            "    Files.newReader(f, UTF_8);",
-            "  }",
-            "}")
-        .setArgs("-XDandroidCompatible=true")
-        .doTest();
-  }
-
-  // this is unfixable without nio.file
-  @Test
-  public void androidWriterImportAppend() throws IOException {
-    refactoringTest()
-        .addInputLines(
-            "in/Test.java",
-            "import java.io.*;",
-            "class Test {",
-            "  void f(String s, File f) throws Exception {",
-            "    new FileWriter(s, true);",
-            "    new FileWriter(f, true);",
-            "  }",
-            "}")
         .expectUnchanged()
         .setArgs("-XDandroidCompatible=true")
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -325,18 +294,7 @@ public class DefaultCharsetTest {
             "    new FileWriter(f);",
             "  }",
             "}")
-        .addOutputLines(
-            "out/Test.java",
-            "import static com.google.common.base.Charsets.UTF_8;",
-            "import com.google.common.io.Files;",
-            "import java.io.*;",
-            "import java.io.File;",
-            "class Test {",
-            "  void f(String s, File f) throws Exception {",
-            "    Files.newWriter(new File(s), UTF_8);",
-            "    Files.newWriter(f, UTF_8);",
-            "  }",
-            "}")
+        .expectUnchanged()
         .setArgs("-XDandroidCompatible=true")
         .doTest();
   }
