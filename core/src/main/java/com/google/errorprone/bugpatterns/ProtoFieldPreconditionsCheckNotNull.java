@@ -62,8 +62,7 @@ public class ProtoFieldPreconditionsCheckNotNull
 
   private static final String LIST_INTERFACE = "java.util.List";
 
-  private static final Matcher<Tree> returnsListMatcher =
-      Matchers.isCastableTo(LIST_INTERFACE);
+  private static final Matcher<Tree> returnsListMatcher = Matchers.isSubtypeOf(LIST_INTERFACE);
 
   private static final Matcher<ExpressionTree> PROTO_MESSAGE_INVOCATION_MATCHER =
       new Matcher<ExpressionTree>() {

@@ -75,8 +75,7 @@ public class ProtoFieldNullComparison extends BugChecker implements BinaryTreeMa
 
   private static final String LIST_INTERFACE = "java.util.List";
 
-  private static final Matcher<Tree> returnsListMatcher =
-      Matchers.isCastableTo(LIST_INTERFACE);
+  private static final Matcher<Tree> returnsListMatcher = Matchers.isSubtypeOf(LIST_INTERFACE);
 
   private static final Set<Kind> COMPARISON_OPERATORS =
       EnumSet.of(Kind.EQUAL_TO, Kind.NOT_EQUAL_TO);

@@ -431,24 +431,6 @@ public class Matchers {
     return new IsSubtypeOf<>(typeFromClass(clazz));
   }
 
-  /**
-   * Matches an AST node if its type is castable to the given type.
-   *
-   * @param typeString a string representation of the type, e.g., "java.util.Set"
-   */
-  public static <T extends Tree> Matcher<T> isCastableTo(String typeString) {
-    return new IsCastableTo<>(typeString);
-  }
-
-  /**
-   * Matches an AST node if its type is castable to the given type.
-   *
-   * @param typeSupplier a supplier of the type to check against
-   */
-  public static <T extends Tree> Matcher<T> isCastableTo(Supplier<Type> typeSupplier) {
-    return new IsCastableTo<>(typeSupplier);
-  }
-
   /** Matches an AST node if it has the same erased type as the given type. */
   public static <T extends Tree> Matcher<T> isSameType(Supplier<Type> type) {
     return new IsSameType<>(type);
