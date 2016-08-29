@@ -170,6 +170,7 @@ import com.google.errorprone.bugpatterns.inject.guice.AssistedParameters;
 import com.google.errorprone.bugpatterns.inject.guice.InjectOnFinalField;
 import com.google.errorprone.bugpatterns.inject.guice.OverridesGuiceInjectableMethod;
 import com.google.errorprone.bugpatterns.inject.guice.OverridesJavaxInjectableMethod;
+import com.google.errorprone.bugpatterns.inject.guice.ProvidesMethodOutsideOfModule;
 import com.google.errorprone.bugpatterns.threadsafety.DoubleCheckedLocking;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByChecker;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByValidator;
@@ -368,6 +369,7 @@ public class BuiltInCheckerSuppliers {
           PrimitiveArrayPassedToVarargsMethod.class,
           PrivateConstructorForUtilityClass.class,
           PrivateConstructorForNoninstantiableModule.class,
+          ProvidesMethodOutsideOfModule.class,
           ProtoStringFieldReferenceEquality.class,
           RedundantThrows.class,
           RemoveUnusedImports.class,
