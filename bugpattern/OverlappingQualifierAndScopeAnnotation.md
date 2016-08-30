@@ -5,7 +5,7 @@ summary: 'Annotations cannot be both Scope annotations and Qualifier annotations
 layout: bugpattern
 category: INJECT
 severity: ERROR
-maturity: EXPERIMENTAL
+maturity: MATURE
 ---
 
 <!--

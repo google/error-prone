@@ -4,13 +4,15 @@ summary: A class can be annotated with at most one scope annotation.
 layout: bugpattern
 category: INJECT
 severity: ERROR
-maturity: EXPERIMENTAL
+maturity: MATURE
 ---
 
 <!--
 *** AUTO-GENERATED, DO NOT MODIFY ***
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
+
+_Alternate names: MoreThanOneScopeAnnotationOnClass_
 
 ## The problem
 Annotating a class with more than one scope annotation is invalid according to the JSR-330 specification.
@@ -152,6 +154,10 @@ public class MoreThanOneScopeAnnotationOnClassNegativeCases {
   @SessionScoped
   @Subcomponent
   public class DaggerSubComponent {}
+
+  /** Suppression through secondary name */
+  @SuppressWarnings("MoreThanOneScopeAnnotationOnClass")
+  public class TestClass6 {}
 }
 {% endhighlight %}
 

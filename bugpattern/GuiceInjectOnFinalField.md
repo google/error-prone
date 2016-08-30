@@ -4,7 +4,7 @@ summary: Although Guice allows injecting final fields, doing so is disallowed be
 layout: bugpattern
 category: GUICE
 severity: ERROR
-maturity: EXPERIMENTAL
+maturity: MATURE
 ---
 
 <!--

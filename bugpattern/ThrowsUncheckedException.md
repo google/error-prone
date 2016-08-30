@@ -3,7 +3,7 @@ title: ThrowsUncheckedException
 summary: Unchecked exceptions do not need to be declared in the method signature.
 layout: bugpattern
 category: JDK
-severity: ERROR
+severity: SUGGESTION
 maturity: MATURE
 ---
 
@@ -13,7 +13,11 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
+Effective Java Item 62 says:
 
+> Use the Javadoc @throws tag to document each unchecked exception that a
+> method can throw, but do not use the throws keyword to include unchecked
+> exceptions in the method declaration.
 
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("ThrowsUncheckedException")` annotation to the enclosing element.
@@ -45,12 +49,12 @@ import java.io.IOException;
 
 /** @author yulissa@google.com (Yulissa Arroyo-Paredes) */
 public class ThrowsUncheckedExceptionPositiveCases {
-  // BUG: Diagnostic contains: 'public void doSomething() {'
+  // BUG: Diagnostic contains: 'public void doSomething()  {'
   public void doSomething() throws IllegalArgumentException {
     throw new IllegalArgumentException("thrown");
   }
 
-  // BUG: Diagnostic contains: 'public void doSomethingElse() {'
+  // BUG: Diagnostic contains: 'public void doSomethingElse()  {'
   public void doSomethingElse() throws RuntimeException, NullPointerException {
     throw new NullPointerException("thrown");
   }
@@ -65,7 +69,7 @@ public class ThrowsUncheckedExceptionPositiveCases {
     throw new IllegalArgumentException("thrown");
   }
 
-  // BUG: Diagnostic contains: 'public void doBetter() {'
+  // BUG: Diagnostic contains: 'public void doBetter()  {'
   public void doBetter() throws RuntimeException, AssertionError {
     throw new RuntimeException("thrown");
   }

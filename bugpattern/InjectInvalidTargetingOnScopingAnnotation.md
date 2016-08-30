@@ -1,6 +1,6 @@
 ---
 title: InjectInvalidTargetingOnScopingAnnotation
-summary: The target of a scoping annotation must be set to METHOD and/or TYPE.
+summary: A scoping annotation's Target should include TYPE and METHOD.
 layout: bugpattern
 category: INJECT
 severity: ERROR
@@ -13,7 +13,9 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-Scoping annotations are only appropriate for provision and therefore are only appropriate on @Provides methods and classes that will be provided just-in-time.
+`@Scope` annotations should be applicable to TYPE (annotating classes that should be scoped) and to METHOD (annotating `@Provides` methods to apply scoping to the returned object.
+
+ If an annotation's use is restricted by `@Target` and it doesn't include those two element types, the annotation can't be used where it should be able to be used.
 
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("InjectInvalidTargetingOnScopingAnnotation")` annotation to the enclosing element.
@@ -42,12 +44,16 @@ __InvalidTargetingOnScopingAnnotationPositiveCases.java__
 
 package com.google.errorprone.bugpatterns.inject.testdata;
 
+import static java.lang.annotation.ElementType.CONSTRUCTOR;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+import com.google.inject.ScopeAnnotation;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-
 import javax.inject.Scope;
 
 /**
@@ -55,40 +61,47 @@ import javax.inject.Scope;
  */
 public class InvalidTargetingOnScopingAnnotationPositiveCases {
 
-  /**
-   * A scoping annotation with no specified target.
-   */
-  @Scope 
+  /** Scoping excludes METHOD */
   // BUG: Diagnostic contains: @Target({TYPE, METHOD})
-  public @interface TestAnnotation1 {
-  }
+  @Target(TYPE)
+  @Scope
+  @Retention(RUNTIME)
+  public @interface TestAnnotation1 {}
 
-  /**
-   * @Target is given an empty array
-   */
+  /** Scoping excludes TYPE */
+  // BUG: Diagnostic contains: @Target({TYPE, METHOD})
+  @Target(METHOD)
+  @Scope
+  @Retention(RUNTIME)
+  public @interface TestAnnotation2 {}
+
+  /** Scoping excludes both, but has other elements to preserve */
+  // BUG: Diagnostic contains: @Target({TYPE, METHOD, PARAMETER})
+  @Target(PARAMETER)
+  @Scope
+  @Retention(RUNTIME)
+  public @interface TestAnnotation4 {}
+
+  /** Scoping includes one of the required ones. */
+  // BUG: Diagnostic contains: @Target({TYPE, METHOD, PARAMETER, CONSTRUCTOR})
+  @Target({PARAMETER, METHOD, CONSTRUCTOR})
+  @Scope
+  @Retention(RUNTIME)
+  public @interface TestAnnotation5 {}
+
+  /** Same as above, but with a different physical manifestation */
+  // BUG: Diagnostic contains: @Target({TYPE, METHOD, PARAMETER, CONSTRUCTOR})
+  @Target(value = {ElementType.PARAMETER, METHOD, CONSTRUCTOR})
+  @Scope
+  @Retention(RUNTIME)
+  public @interface TestAnnotation6 {}
+
+  /** Target annotation is empty, nonsensical since it can't be applied to anything */
   // BUG: Diagnostic contains: @Target({TYPE, METHOD})
   @Target({})
-  @Scope 
-  public @interface TestAnnotation2 {
-  }
-
-  /**
-   * A scoping annotation with taeget TYPE, METHOD, and (illegal) PARAMETER.
-   */
-  // BUG: Diagnostic contains: @Target({TYPE, METHOD})
-  @Target({TYPE, METHOD, PARAMETER})
-  @Scope 
-  public @interface TestAnnotation3 {
-  }
-
-  /**
-   * A scoping annotation target set to PARAMETER.
-   */
-  // BUG: Diagnostic contains: @Target({TYPE, METHOD})
-  @Target(PARAMETER)
-  @Scope 
-  public @interface TestAnnotation4 {
-  }
+  @ScopeAnnotation
+  @Retention(RUNTIME)
+  public @interface TestAnnotation7 {}
 }
 {% endhighlight %}
 
@@ -117,9 +130,10 @@ package com.google.errorprone.bugpatterns.inject.testdata;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-
 import javax.inject.Scope;
 
 /**
@@ -127,36 +141,29 @@ import javax.inject.Scope;
  */
 public class InvalidTargetingOnScopingAnnotationNegativeCases {
 
-  /**
-   * A scoping annotation with legal targeting.
-   */
-  @Target(TYPE)
+  /** A scoping annotation with no specified target. */
   @Scope
-  public @interface TestAnnotation1 {
-  }
+  @Retention(RUNTIME)
+  public @interface TestAnnotation1 {}
 
-  /**
-   * A scoping annotation with legal targeting.
-   */
-  @Target(METHOD)
+  /** A scoping annotation that contains more than the required */
+  @Target({TYPE, METHOD, PARAMETER})
   @Scope
-  public @interface TestAnnotation2 {
-  }
+  @Retention(RUNTIME)
+  public @interface TestAnnotation2 {}
 
-  /**
-   * A scoping annotation with legal targeting.
-   */
+  /** A scoping annotation with legal targeting. */
   @Target({TYPE, METHOD})
   @Scope
-  public @interface TestAnnotation3 {
-  }
+  @Retention(RUNTIME)
+  public @interface TestAnnotation3 {}
 
   /**
    * A non-scoping annotation with targeting that would be illegal if it were a scoping annotation.
    */
   @Target(PARAMETER)
-  public @interface TestAnnotation4 {
-  }
+  @Retention(RUNTIME)
+  public @interface TestAnnotation4 {}
 }
 {% endhighlight %}
 

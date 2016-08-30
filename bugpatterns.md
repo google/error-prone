@@ -98,6 +98,9 @@ Preconditions only accepts the %s placeholder in error message strings
 __[ProtoFieldPreconditionsCheckNotNull](bugpattern/ProtoFieldPreconditionsCheckNotNull)__<br>
 Protobuf fields cannot be null, so this check is redundant
 
+__[RedundantThrows](bugpattern/RedundantThrows)__<br>
+Thrown exception is a subtype of another
+
 __[ReferenceEquality](bugpattern/ReferenceEquality)__<br>
 Comparison using reference equality instead of value equality
 
@@ -147,6 +150,9 @@ Package names should match the directory they are declared in
 
 __[RemoveUnusedImports](bugpattern/RemoveUnusedImports)__<br>
 Unused imports
+
+__[ThrowsUncheckedException](bugpattern/ThrowsUncheckedException)__<br>
+Unchecked exceptions do not need to be declared in the method signature.
 
 __[UnnecessaryStaticImport](bugpattern/UnnecessaryStaticImport)__<br>
 Using static imports for types is unnecessary
@@ -228,6 +234,9 @@ An object is tested for equality to itself using Guava Libraries
 __[GuiceAssistedInjectScoping](bugpattern/GuiceAssistedInjectScoping)__<br>
 Scope annotation on implementation class of AssistedInject factory is not allowed
 
+__[GuiceInjectOnFinalField](bugpattern/GuiceInjectOnFinalField)__<br>
+Although Guice allows injecting final fields, doing so is disallowed because the injected value may not be visible to other threads.
+
 __[HashtableContains](bugpattern/HashtableContains)__<br>
 contains() is a legacy method that is equivalent to containsValue()
 
@@ -236,6 +245,9 @@ Writing &quot;a &amp;&amp; a&quot;, &quot;a || a&quot;, &quot;a &amp; a&quot;, o
 
 __[InfiniteRecursion](bugpattern/InfiniteRecursion)__<br>
 This method always recurses, and will cause a StackOverflowError
+
+__[InjectMoreThanOneScopeAnnotationOnClass](bugpattern/InjectMoreThanOneScopeAnnotationOnClass)__<br>
+A class can be annotated with at most one scope annotation.
 
 __[InsecureCipherMode](bugpattern/InsecureCipherMode)__<br>
 Cipher.getInstance() is invoked using either the default settings or ECB mode
@@ -288,6 +300,9 @@ __[NonFinalCompileTimeConstant](bugpattern/NonFinalCompileTimeConstant)__<br>
 __[OptionalEquality](bugpattern/OptionalEquality)__<br>
 Comparison using reference equality instead of value equality
 
+__[OverlappingQualifierAndScopeAnnotation](bugpattern/OverlappingQualifierAndScopeAnnotation)__<br>
+Annotations cannot be both Scope annotations and Qualifier annotations: this causes confusion when trying to use them.
+
 __[Overrides](bugpattern/Overrides)__<br>
 Varargs doesn&#39;t agree for overridden method
 
@@ -335,9 +350,6 @@ StringBuilder does not have a char constructor; this invokes the int constructor
 
 __[SuppressWarningsDeprecated](bugpattern/SuppressWarningsDeprecated)__<br>
 Suppressing &quot;deprecated&quot; is probably a typo for &quot;deprecation&quot;
-
-__[ThrowsUncheckedException](bugpattern/ThrowsUncheckedException)__<br>
-Unchecked exceptions do not need to be declared in the method signature.
 
 __[TryFailThrowable](bugpattern/TryFailThrowable)__<br>
 Catching Throwable/Error masks failures from fail() or assert*() in the try block
@@ -429,20 +441,14 @@ Invalid @GuardedBy expression
 __[GuiceAssistedParameters](bugpattern/GuiceAssistedParameters)__<br>
 A constructor cannot have two @Assisted parameters of the same type unless they are disambiguated with named @Assisted annotations. 
 
-__[GuiceInjectOnFinalField](bugpattern/GuiceInjectOnFinalField)__<br>
-Although Guice allows injecting final fields, doing so is disallowed because the injected value may not be visible to other threads.
-
 __[Immutable](bugpattern/Immutable)__<br>
 Type declaration annotated with @Immutable is not immutable
 
 __[InjectInvalidTargetingOnScopingAnnotation](bugpattern/InjectInvalidTargetingOnScopingAnnotation)__<br>
-The target of a scoping annotation must be set to METHOD and/or TYPE.
+A scoping annotation&#39;s Target should include TYPE and METHOD.
 
 __[InjectMoreThanOneQualifier](bugpattern/InjectMoreThanOneQualifier)__<br>
 Using more than one qualifier annotation on the same element is not allowed.
-
-__[InjectMoreThanOneScopeAnnotationOnClass](bugpattern/InjectMoreThanOneScopeAnnotationOnClass)__<br>
-A class can be annotated with at most one scope annotation.
 
 __[InjectScopeAnnotationOnInterfaceOrAbstractClass](bugpattern/InjectScopeAnnotationOnInterfaceOrAbstractClass)__<br>
 Scope annotation on an interface or abstact class is not allowed
@@ -477,14 +483,14 @@ Calling getAnnotation on an annotation that is not retained at runtime.
 __[NumericEquality](bugpattern/NumericEquality)__<br>
 Numeric comparison using reference equality instead of value equality
 
-__[OverlappingQualifierAndScopeAnnotation](bugpattern/OverlappingQualifierAndScopeAnnotation)__<br>
-Annotations cannot be both Scope annotations and Qualifier annotations: this causes confusion when trying to use them.
-
 __[ParameterPackage](bugpattern/ParameterPackage)__<br>
 Method parameter has wrong package
 
 __[ProtoStringFieldReferenceEquality](bugpattern/ProtoStringFieldReferenceEquality)__<br>
 Comparing protobuf fields of type String using reference equality
+
+__[ProvidesMethodOutsideOfModule](bugpattern/ProvidesMethodOutsideOfModule)__<br>
+@Provides methods need to be declared in a Module to have any effect.
 
 __[RandomModInteger](bugpattern/RandomModInteger)__<br>
 Use Random.nextInt(int).  Random.nextInt() % n can have negative results
