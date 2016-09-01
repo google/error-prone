@@ -23,7 +23,9 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.enclosingNode;
 import static com.google.errorprone.matchers.Matchers.expressionStatement;
+import static com.google.errorprone.matchers.Matchers.isLastStatementInBlock;
 import static com.google.errorprone.matchers.Matchers.kindIs;
+import static com.google.errorprone.matchers.Matchers.methodInvocation;
 import static com.google.errorprone.matchers.Matchers.nextStatement;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
@@ -236,6 +238,24 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
           staticMethod().onClass("junit.framework.Assert").named("fail"),
           staticMethod().onClass("junit.framework.TestCase").named("fail"));
 
+  static final Matcher<ExpressionTree> EXPECT_THROWS =
+      anyOf(
+          // JUnit 4
+          staticMethod().onClass("org.junit.Assert").named("assertThrows"),
+          staticMethod().onClass("org.junit.Assert").named("expectThrows"),
+          // JUnit 5
+          staticMethod().onClass("org.junit.jupiter.api.Assertions").named("assertThrows"),
+          staticMethod().onClass("org.junit.jupiter.api.Assertions").named("expectThrows"));
+
   static final Matcher<StatementTree> EXPECTED_EXCEPTION_MATCHER =
-      allOf(enclosingNode(kindIs(Kind.TRY)), nextStatement(expressionStatement(FAIL_METHOD)));
+      anyOf(
+          // try { me(); fail(); } catch (Throwable t) {}
+          allOf(enclosingNode(kindIs(Kind.TRY)), nextStatement(expressionStatement(FAIL_METHOD))),
+          // assertThrows(Throwable.class, () => { me(); })
+          allOf(
+              isLastStatementInBlock(),
+              enclosingNode(
+                  // Extra kindIs is needed as methodInvocation will cast each parent node to
+                  // ExpressionTree.
+                  allOf(kindIs(Kind.METHOD_INVOCATION), methodInvocation(EXPECT_THROWS)))));
 }

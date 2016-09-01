@@ -16,12 +16,10 @@
 
 package com.google.errorprone.matchers;
 
+import com.google.common.base.Preconditions;
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.StatementTree;
-import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
-import com.sun.source.util.TreePath;
 import java.util.List;
 
 /**
@@ -36,33 +34,20 @@ public class NextStatement<T extends StatementTree> implements Matcher<T> {
   }
 
   @Override
-  public boolean matches(T stmt, VisitorState state) {
-    // TODO(alexeagle): should re-use Enclosing.BlockOrCase
-    // find enclosing block
-    TreePath path = state.getPath();
-    Tree prev = null;
-    Tree curr = path.getLeaf();     // initialized to curr node (if stmt)
-    boolean found = false;
-    while (path != null) {
-      prev = curr;
-      path = path.getParentPath();
-      curr = path.getLeaf();
-      if (curr.getKind() == Kind.BLOCK) {
-        found = true;
-        break;
-      }
-    }
-    assert(found);      // should always find an enclosing block
-    BlockTree block = (BlockTree)curr;
+  public boolean matches(T statement, VisitorState state) {
+    List<? extends StatementTree> blockStatements =
+        state.findEnclosing(BlockTree.class).getStatements();
+    int statementIndex = blockStatements.indexOf(statement);
+    Preconditions.checkState(statementIndex > -1);
 
     // find next statement
-    List<? extends StatementTree> stmts = block.getStatements();
-    int ifStmtIdx = stmts.indexOf(prev);
+    statementIndex++;
     StatementTree nextStmt = null;
-    if (ifStmtIdx < stmts.size() - 1) {  // TODO(eaftan): off by one?
-      nextStmt = stmts.get(ifStmtIdx + 1);
+    if (statementIndex < blockStatements.size()) {
+      nextStmt = blockStatements.get(statementIndex);
     }
 
+    // TODO(glorioso): return false always instead of allowing the matcher to fail to match null?
     return matcher.matches(nextStmt, state);
   }
 }

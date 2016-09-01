@@ -532,6 +532,11 @@ public class Matchers {
     return new NextStatement<>(matcher);
   }
 
+  /** Matches a statement AST node if the statement is the last statement in the block. */
+  public static Matcher<StatementTree> isLastStatementInBlock() {
+    return new IsLastStatementInBlock<>();
+  }
+
   /**
    * Matches an AST node if it is a literal other than null.
    */

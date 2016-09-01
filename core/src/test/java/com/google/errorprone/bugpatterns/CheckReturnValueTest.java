@@ -460,6 +460,43 @@ public class CheckReturnValueTest {
   }
 
   @Test
+  public void ignoreInAssertThrowsBodies() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Foo.java",
+            "@javax.annotation.CheckReturnValue",
+            "public class Foo {",
+            "  public int f() {",
+            "    return 42;",
+            "  }",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f(Foo foo) {",
+            "   org.junit.Assert.assertThrows(IllegalStateException.class, ",
+            "     new org.junit.function.ThrowingRunnable() {",
+            "       @Override",
+            "       public void run() throws Throwable {",
+            "         foo.f();",
+            "       }",
+            "     });",
+            "   org.junit.Assert.assertThrows(IllegalStateException.class, () -> foo.f());",
+            "   org.junit.Assert.assertThrows(IllegalStateException.class, () -> {",
+            "      int bah = foo.f();",
+            "      foo.f(); ",
+            "   });",
+            "   org.junit.Assert.assertThrows(IllegalStateException.class, () -> { ",
+            "     // BUG: Diagnostic contains: Ignored return value",
+            "     foo.f(); ",
+            "     foo.f(); ",
+            "   });",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void ignoreTruthFailure() throws Exception {
     compilationHelper
         .addSourceLines(
