@@ -65,7 +65,15 @@ public class BoxedPrimitiveConstructorTest {
             "    long j = new Long(0);",
             "    // BUG: Diagnostic contains: short s = (short) 0;",
             "    short s = new Short((short) 0);",
+            "    Double dd = d;",
+            "    // BUG: Diagnostic contains: float f2 = dd.floatValue();",
+            "    float f2 = new Float(dd);",
+            "    // BUG: Diagnostic contains: float f3 = (float) d;",
+            "    float f3 = new Float(d);",
+            "    // BUG: Diagnostic contains: foo(Float.valueOf((float) d));",
+            "    foo(new Float(d));",
             "  }",
+            "  public void foo(Float f) {}",
             "}")
         .doTest();
   }
@@ -195,11 +203,15 @@ public class BoxedPrimitiveConstructorTest {
             "Test.java",
             "public abstract class Test {",
             "  abstract int g(Integer x);",
-            "  void f(int x, Integer y) {",
+            "  void f(int x, Integer y, double d, Double dd, Float f) {",
             "    // BUG: Diagnostic contains: int c1 = Integer.compare(x, y);",
             "    int c1 = new Integer(x).compareTo(y);",
             "    // BUG: Diagnostic contains: int c2 = y.compareTo(Integer.valueOf(x));",
             "    int c2 = y.compareTo(new Integer(x));",
+            "    // BUG: Diagnostic contains: int c3 = Float.compare((float) d, f);",
+            "    int c3 = new Float(d).compareTo(f);",
+            "    // BUG: Diagnostic contains: int c4 = Float.compare(dd.floatValue(), f);",
+            "    int c4 = new Float(dd).compareTo(f);",
             "  }",
             "}")
         .doTest();
