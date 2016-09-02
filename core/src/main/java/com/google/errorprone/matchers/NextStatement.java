@@ -16,7 +16,6 @@
 
 package com.google.errorprone.matchers;
 
-import com.google.common.base.Preconditions;
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.StatementTree;
@@ -38,7 +37,13 @@ public class NextStatement<T extends StatementTree> implements Matcher<T> {
     List<? extends StatementTree> blockStatements =
         state.findEnclosing(BlockTree.class).getStatements();
     int statementIndex = blockStatements.indexOf(statement);
-    Preconditions.checkState(statementIndex > -1);
+
+    if (statementIndex == -1) {
+      // The block wrapping us doesn't contain this statement, e.g.:
+      // { if (foo) return a; }
+      // return a; isn't contained directly in a BlockTree :-|
+      return false;
+    }
 
     // find next statement
     statementIndex++;
