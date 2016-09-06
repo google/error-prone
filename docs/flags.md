@@ -14,18 +14,18 @@ A valid Error Prone command-line option looks like:
 ```
 
 `checkName` is required and is the canonical name of the check, e.g.
-"StringEquality".  `severity` is one of {"OFF", "WARN", "ERROR"}.  Multiple
+"ReferenceEquality".  `severity` is one of {"OFF", "WARN", "ERROR"}.  Multiple
 flags must be passed to enable or disable multiple checks.  The last flag for a
 specific check wins.
 
 Examples of usage follow:
 
 ```bash
--Xep:StringEquality  [turns on StringEquality check with the severity level from its BugPattern annotation]
--Xep:StringEquality:OFF  [turns off StringEquality check]
--Xep:StringEquality:WARN  [turns on StringEquality check as a warning]
--Xep:StringEquality:ERROR  [turns on StringEquality check as an error]
--Xep:StringEquality:OFF -Xep:StringEquality  [turns on StringEquality check]
+-Xep:ReferenceEquality  [turns on ReferenceEquality check with the severity level from its BugPattern annotation]
+-Xep:ReferenceEquality:OFF  [turns off ReferenceEquality check]
+-Xep:ReferenceEquality:WARN  [turns on ReferenceEquality check as a warning]
+-Xep:ReferenceEquality:ERROR  [turns on ReferenceEquality check as an error]
+-Xep:ReferenceEquality:OFF -Xep:ReferenceEquality  [turns on ReferenceEquality check]
 ```
 
 If you pass a flag that refers to an unknown check name, by default Error Prone
