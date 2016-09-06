@@ -286,6 +286,15 @@ public class SuggestedFix implements Fix {
       return this;
     }
 
+    /** Merges all edits from {@code other} into {@code this}. */
+    public Builder merge(SuggestedFix other) {
+      checkNotNull(other);
+      fixes.addAll(other.fixes);
+      importsToAdd.addAll(other.importsToAdd);
+      importsToRemove.addAll(other.importsToRemove);
+      return this;
+    }
+
     /**
      * Implicit default constructors are one of the few synthetic constructs
      * added to the AST early enough to be visible from Error Prone, so we
