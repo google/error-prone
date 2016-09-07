@@ -16,28 +16,16 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.base.MoreObjects.firstNonNull;
-import static com.google.errorprone.BugPattern.Category.MOCKITO;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
-
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-import com.sun.source.tree.AssignmentTree;
-import com.sun.source.tree.CompilationUnitTree;
-import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.Tree;
-import com.sun.source.tree.VariableTree;
+import com.sun.source.tree.*;
 import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Attribute;
@@ -49,20 +37,29 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
+
+import javax.lang.model.element.ElementKind;
 import java.util.LinkedHashSet;
 import java.util.Map.Entry;
 import java.util.Set;
-import javax.lang.model.element.ElementKind;
 
-/** @author Liam Miller-Cushon (cushon@google.com) */
+import static com.google.common.base.MoreObjects.firstNonNull;
+import static com.google.errorprone.BugPattern.Category.MOCKITO;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+
+/**
+ * @author Liam Miller-Cushon (cushon@google.com)
+ */
 @BugPattern(
-  name = "MockitoCast",
-  category = MOCKITO,
-  summary = "A bug in Mockito will cause this test to fail at runtime with a ClassCastException",
-  severity = ERROR,
-  maturity = MATURE
+    name = "MockitoCast",
+    category = MOCKITO,
+    summary = "A bug in Mockito will cause this test to fail at runtime with a ClassCastException",
+    severity = ERROR,
+    maturity = MATURE
 )
-public class MockitoCast extends BugChecker implements CompilationUnitTreeMatcher {
+public class MockitoCast extends BugChecker implements BugChecker.MethodInvocationTreeMatcher {
 
   private static final String MOCKITO_CLASS = "org.mockito.Mockito";
 
@@ -70,12 +67,14 @@ public class MockitoCast extends BugChecker implements CompilationUnitTreeMatche
 
   private static final String MOCK_ANNOTATION = "org.mockito.Mock";
 
-  /** Answer strategies that always return an instance of the erased return type. */
+  /**
+   * Answer strategies that always return an instance of the erased return type.
+   */
   private static final ImmutableSet<String> BAD_ANSWER_STRATEGIES =
       ImmutableSet.of("RETURNS_SMART_NULLS", "RETURNS_MOCKS", "RETURNS_DEEP_STUBS");
 
   @Override
-  public Description matchCompilationUnit(CompilationUnitTree tree, final VisitorState state) {
+  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     Symbol mockitoSym = state.getSymbolFromString(MOCKITO_CLASS);
     if (mockitoSym == null) {
       // fast path if mockito isn't being used
@@ -93,7 +92,7 @@ public class MockitoCast extends BugChecker implements CompilationUnitTreeMatche
       }
     }
 
-    // collect mocks that are initialized in this compilation unit using a bad answer strategy
+    // collect mocks that are initialized in this class using a bad answer strategy
     final Set<VarSymbol> mockVariables = MockInitializationScanner.scan(state, badAnswers);
 
     // check for when(...) calls on mocks using a bad answer strategy
@@ -169,7 +168,9 @@ public class MockitoCast extends BugChecker implements CompilationUnitTreeMatche
   private static final Matcher<ExpressionTree> WHEN_MATCHER =
       staticMethod().onClass(MOCKITO_CLASS).named("when");
 
-  /** Scans for when(...) calls that needs a cast added, and emits fixes. */
+  /**
+   * Scans for when(...) calls that needs a cast added, and emits fixes.
+   */
   class WhenNeedsCastScanner extends TreePathScanner<Void, Void> {
 
     final Set<VarSymbol> badMocks;
@@ -239,7 +240,7 @@ public class MockitoCast extends BugChecker implements CompilationUnitTreeMatche
 
   /**
    * Scans for the mock variable in a when(...), and checks if it has a bad answer strategy.
-   *
+   * <p>
    * <p>@Mock annotations are handled here instead of in {@link MockInitializationScanner}
    * because they're visible across compilation boundaries, so scanning the declarations in the
    * current compilation would result in false negatives.
