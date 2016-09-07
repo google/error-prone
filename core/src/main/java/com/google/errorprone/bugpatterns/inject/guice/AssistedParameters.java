@@ -15,7 +15,7 @@
 package com.google.errorprone.bugpatterns.inject.guice;
 
 import static com.google.errorprone.BugPattern.Category.GUICE;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.InjectMatchers.ASSISTED_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.ASSISTED_INJECT_ANNOTATION;
@@ -68,7 +68,7 @@ import javax.lang.model.element.TypeElement;
       "See https://google.github.io/guice/api-docs/latest/javadoc/com/google/inject/assistedinject/FactoryModuleBuilder.html",
   category = GUICE,
   severity = ERROR,
-  maturity = EXPERIMENTAL
+  maturity = MATURE
 )
 public class AssistedParameters extends BugChecker implements MethodTreeMatcher {
 
