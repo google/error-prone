@@ -290,4 +290,38 @@ public class MockitoCastTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void supportsClassLevelSuppression() throws Exception {
+    compilationHelper
+        .addSourceLines("Box.java", "public class Box<T> {", "  T f() { return null; }", "}")
+        .addSourceLines(
+            "Test.java",
+            "import org.mockito.Mockito;",
+            "@SuppressWarnings(\"MockitoCast\")",
+            "class Test {",
+            "  Box<Boolean> box = Mockito.mock(Box.class, Mockito.RETURNS_SMART_NULLS);",
+            "  void m() {",
+            "    Mockito.when(box.f()).thenReturn(false);",
+            "  }",
+            "}")
+        .doTest();
+  }
+  
+  @Test
+  public void supportsMethodLevelSuppression() throws Exception {
+    compilationHelper
+        .addSourceLines("Box.java", "public class Box<T> {", "  T f() { return null; }", "}")
+        .addSourceLines(
+            "Test.java",
+            "import org.mockito.Mockito;",
+            "class Test {",
+            "  Box<Boolean> box = Mockito.mock(Box.class, Mockito.RETURNS_SMART_NULLS);",
+            "  @SuppressWarnings(\"MockitoCast\")",
+            "  void m() {",
+            "    Mockito.when(box.f()).thenReturn(false);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
