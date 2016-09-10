@@ -208,6 +208,30 @@ public class SuggestedFixesTest {
     }
   }
 
+  @BugPattern(
+    category = Category.ONE_OFF,
+    maturity = MaturityLevel.EXPERIMENTAL,
+    name = "CastReturn",
+    severity = SeverityLevel.ERROR,
+    summary = "Adds casts to returned expressions"
+  )
+  public static class CastReturnFullType extends BugChecker implements ReturnTreeMatcher {
+
+    @Override
+    public Description matchReturn(ReturnTree tree, VisitorState state) {
+      if (tree.getExpression() == null) {
+        return Description.NO_MATCH;
+      }
+      Type type =
+          ASTHelpers.getSymbol(ASTHelpers.findEnclosingNode(state.getPath(), MethodTree.class))
+              .getReturnType();
+      SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
+      String qualifiedTargetType = SuggestedFixes.qualifyType(state, fixBuilder, type);
+      fixBuilder.prefixWith(tree.getExpression(), String.format("(%s) ", qualifiedTargetType));
+      return describeMatch(tree, fixBuilder.build());
+    }
+  }
+
   @Test
   public void qualifiedName_Object() {
     CompilationTestHelper.newInstance(CastReturn.class, getClass())
@@ -229,7 +253,7 @@ public class SuggestedFixesTest {
             "Test.java",
             "import java.util.Map.Entry;",
             "class Test {",
-            "  java.util.Map.Entry f() {",
+            "  java.util.Map.Entry<String, Integer> f() {",
             "    // BUG: Diagnostic contains: return (Entry) null;",
             "    return null;",
             "  }",
@@ -243,7 +267,7 @@ public class SuggestedFixesTest {
         .addSourceLines(
             "Test.java",
             "class Test {",
-            "  java.util.Map.Entry f() {",
+            "  java.util.Map.Entry<String, Integer> f() {",
             "    // BUG: Diagnostic contains: return (Map.Entry) null;",
             "    return null;",
             "  }",
@@ -254,6 +278,63 @@ public class SuggestedFixesTest {
   @Test
   public void qualifiedName_typeVariable() {
     CompilationTestHelper.newInstance(CastReturn.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "class Test<T> {",
+            "  T f() {",
+            "    // BUG: Diagnostic contains: return (T) null;",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void fullQualifiedName_Object() {
+    CompilationTestHelper.newInstance(CastReturnFullType.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  Object f() {",
+            "    // BUG: Diagnostic contains: return (Object) null;",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void fullQualifiedName_imported() {
+    CompilationTestHelper.newInstance(CastReturnFullType.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Map.Entry;",
+            "class Test {",
+            "  java.util.Map.Entry<String, Integer> f() {",
+            "    // BUG: Diagnostic contains: return (Entry<String,Integer>) null;",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void fullQualifiedName_notImported() {
+    CompilationTestHelper.newInstance(CastReturnFullType.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  java.util.Map.Entry<String, Integer> f() {",
+            "    // BUG: Diagnostic contains: return (Map.Entry<String,Integer>) null;",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void fullQualifiedName_typeVariable() {
+    CompilationTestHelper.newInstance(CastReturnFullType.class, getClass())
         .addSourceLines(
             "Test.java",
             "class Test<T> {",

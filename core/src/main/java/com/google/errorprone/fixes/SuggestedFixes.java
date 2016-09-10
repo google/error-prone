@@ -29,6 +29,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.fixes.SuggestedFix.Builder;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ErrorProneToken;
 import com.sun.source.doctree.DocTree;
@@ -41,6 +42,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.DocTreePath;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.parser.Tokens;
 import com.sun.tools.javac.tree.DCTree;
 import com.sun.tools.javac.tree.JCTree;
@@ -59,6 +61,10 @@ import java.util.TreeSet;
 import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.type.ArrayType;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.SimpleTypeVisitor8;
 
 /** Factories for constructing {@link Fix}es. */
 public class SuggestedFixes {
@@ -170,6 +176,14 @@ public class SuggestedFixes {
     return fix.build();
   }
 
+  /** Returns a human-friendly name of the given type for use in fixes. */
+  public static String qualifyType(VisitorState state, SuggestedFix.Builder fix, TypeMirror type) {
+    TreeMaker make =
+        TreeMaker.instance(state.context)
+            .forToplevel((JCTree.JCCompilationUnit) state.getPath().getCompilationUnit());
+    return qualifyType(make, fix, type);
+  }
+
   /** Returns a human-friendly name of the given {@link Symbol.TypeSymbol} for use in fixes. */
   public static String qualifyType(
       VisitorState state, SuggestedFix.Builder fix, Symbol.TypeSymbol sym) {
@@ -209,6 +223,43 @@ public class SuggestedFixes {
     }
     fix.addImport(curr.toString());
     return Joiner.on('.').join(names);
+  }
+  
+  public static String qualifyType(
+      final TreeMaker make, SuggestedFix.Builder fix, TypeMirror type) {
+    return type.accept(
+        new SimpleTypeVisitor8<String, SuggestedFix.Builder>() {
+          @Override
+          protected String defaultAction(TypeMirror e, Builder builder) {
+            return e.toString();
+          }
+
+          @Override
+          public String visitArray(ArrayType t, Builder builder) {
+            return t.getComponentType().accept(this, builder) + "[]";
+          }
+
+          @Override
+          public String visitDeclared(DeclaredType t, Builder builder) {
+            String baseType = qualifyType(make, builder, ((Type) t).tsym);
+            if (t.getTypeArguments().isEmpty()) {
+              return baseType;
+            }
+            StringBuilder b = new StringBuilder(baseType);
+            b.append('<');
+            boolean started = false;
+            for (TypeMirror arg : t.getTypeArguments()) {
+              if (started) {
+                b.append(',');
+              }
+              b.append(arg.accept(this, builder));
+              started = true;
+            }
+            b.append('>');
+            return b.toString();
+          }
+        },
+        fix);
   }
 
   /** Returns true iff the given expression is qualified by a package. */
@@ -327,6 +378,7 @@ public class SuggestedFixes {
             .filter(Predicates.not(Predicates.in(toDelete)))
             .transform(
                 new Function<ExpressionTree, String>() {
+                  @Override
                   @Nullable
                   public String apply(ExpressionTree input) {
                     return state.getSourceForNode(input);
