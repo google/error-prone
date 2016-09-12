@@ -51,6 +51,9 @@ abstract class UTypeVarIdent extends UIdent {
   protected Choice<Unifier> defaultAction(Tree target, Unifier unifier) {
     JCExpression expr = (JCExpression) target;
     Type targetType = expr.type;
+    if (targetType == null) {
+      return Choice.none();
+    }
     @Nullable
     TypeWithExpression boundType = unifier.getBinding(key());
     if (boundType == null) {
