@@ -44,7 +44,8 @@ import java.util.List;
   summary = "Unchecked exceptions do not need to be declared in the method signature.",
   category = JDK,
   severity = SUGGESTION,
-  maturity = MATURE
+  maturity = MATURE,
+  generateExamplesFromTestCases = false
 )
 public class ThrowsUncheckedException extends BugChecker implements MethodTreeMatcher {
   @Override
