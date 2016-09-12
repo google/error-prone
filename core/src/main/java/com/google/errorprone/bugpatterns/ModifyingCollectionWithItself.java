@@ -25,31 +25,36 @@ import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.receiverSameAsArgument;
 import static com.google.errorprone.matchers.Matchers.variableType;
-import static com.sun.source.tree.Tree.Kind.CLASS;
 import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
 import static com.sun.source.tree.Tree.Kind.MEMBER_SELECT;
-import static com.sun.source.tree.Tree.Kind.METHOD;
-import static com.sun.source.tree.Tree.Kind.VARIABLE;
 
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.EditDistance;
+import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.util.TreePath;
-import com.sun.tools.javac.code.Flags;
-import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
+import java.util.Collections;
+import java.util.List;
+import javax.lang.model.element.ElementKind;
 
 /**
  * @author scottjohnson@google.com (Scott Johnson)
@@ -63,126 +68,201 @@ import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 public class ModifyingCollectionWithItself extends BugChecker
     implements MethodInvocationTreeMatcher {
 
+  private static final Matcher<MethodInvocationTree> IS_COLLECTION_MODIFIED_WITH_ITSELF =
+      buildMatcher();
+
+  private static Matcher<MethodInvocationTree> buildMatcher() {
+    return anyOf(
+        allOf(
+            anyOf(
+                instanceMethod().onDescendantOf("java.util.Collection").named("addAll"),
+                instanceMethod().onDescendantOf("java.util.Collection").named("removeAll"),
+                instanceMethod().onDescendantOf("java.util.Collection").named("containsAll"),
+                instanceMethod().onDescendantOf("java.util.Collection").named("retainAll")),
+            receiverSameAsArgument(0)),
+        allOf(
+            instanceMethod().onDescendantOf("java.util.Collection").named("addAll"),
+            receiverSameAsArgument(1)));
+  }
+
+
   /**
    * Matches calls to addAll, containsAll, removeAll, and retainAll on itself
    */
   @Override
   public Description matchMethodInvocation(MethodInvocationTree t, VisitorState state) {
-    if (allOf(anyOf(
-        instanceMethod().onDescendantOf("java.util.Collection").named("addAll"),
-        instanceMethod().onDescendantOf("java.util.Collection").named("removeAll"),
-        instanceMethod().onDescendantOf("java.util.Collection").named("containsAll"),
-        instanceMethod().onDescendantOf("java.util.Collection").named("retainAll")),
-        receiverSameAsArgument(0)).matches(t, state)) {
+    if (IS_COLLECTION_MODIFIED_WITH_ITSELF.matches(t, state)) {
       return describe(t, state);
     }
     return Description.NO_MATCH;
   }
 
   /**
-   * We expect that the lhs is a field and the rhs is an identifier, specifically
-   * a parameter to the method.  We base our suggested fixes on this expectation.
+   * We expect that the lhs is a field and the rhs is an identifier, specifically a parameter to the
+   * method. We base our suggested fixes on this expectation.
    *
-   * Case 1: If lhs is a field and rhs is an identifier, find a method parameter
-   * of the same type and similar name and suggest it as the rhs.  (Guess that they
-   * have misspelled the identifier.)
+   * <p>Case 1: If lhs is a field and rhs is an identifier, find a method parameter of the same type
+   * and similar name and suggest it as the rhs. (Guess that they have misspelled the identifier.)
    *
-   * Case 2: If lhs is a field and rhs is not an identifier, find a method parameter
-   * of the same type and similar name and suggest it as the rhs.
+   * <p>Case 2: If lhs is a field and rhs is not an identifier, find a method parameter of the same
+   * type and similar name and suggest it as the rhs.
    *
-   * Case 3: If lhs is not a field and rhs is an identifier, find a class field
-   * of the same type and similar name and suggest it as the lhs.
+   * <p>Case 3: If lhs is not a field and rhs is an identifier, find a class field of the same type
+   * and similar name and suggest it as the lhs.
    *
-   * Case 4: Otherwise replace with literal meaning of functionality
+   * <p>Case 4: Otherwise replace with literal meaning of functionality
    */
-  public Description describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
+  private Description describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
+    ExpressionTree receiver = ASTHelpers.getReceiver(methodInvocationTree);
 
-    // the statement that is the parent of the self-assignment expression
+    List<? extends ExpressionTree> arguments = methodInvocationTree.getArguments();
+    ExpressionTree argument;
+    // .addAll(int, Collection); for the true case
+    argument = arguments.size() == 2 ? arguments.get(1) : arguments.get(0);
+
+    Description.Builder builder = buildDescription(methodInvocationTree);
+    for (Fix fix : buildFixes(methodInvocationTree, state, receiver, argument)) {
+      builder.addFix(fix);
+    }
+    return builder.build();
+  }
+
+  private List<Fix> buildFixes(
+      MethodInvocationTree methodInvocationTree,
+      VisitorState state,
+      ExpressionTree receiver,
+      ExpressionTree argument) {
+    List<Fix> fixes;
+    // this.a.addAll(...);
+    if (receiver.getKind() == MEMBER_SELECT) {
+      // Only inspect method parameters, unlikely to want to this.a.addAll(b), where b is another
+      // field.
+      fixes = fixesFromMethodParameters(state, argument);
+    } else {
+      // a.addAll(...)
+      assert (receiver.getKind() == IDENTIFIER);
+
+      boolean lhsIsField = ASTHelpers.getSymbol(receiver).getKind() == ElementKind.FIELD;
+      fixes =
+          lhsIsField
+              ? fixesFromMethodParameters(state, argument)
+              : fixesFromFields(state, receiver);
+    }
+
+    if (fixes.isEmpty()) {
+      fixes = literalReplacement(methodInvocationTree, state, receiver);
+    }
+    return fixes;
+  }
+
+  private List<Fix> fixesFromFields(VisitorState state, final ExpressionTree receiver) {
+    FluentIterable<JCVariableDecl> collectionFields =
+        FluentIterable.from(
+                ASTHelpers.findEnclosingNode(state.getPath(), JCClassDecl.class).getMembers())
+            .filter(JCVariableDecl.class)
+            .filter(isCollectionVariable(state));
+
+    Multimap<Integer, JCVariableDecl> potentialReplacements =
+        partitionByEditDistance(simpleNameOfIdentifierOrMemberAccess(receiver), collectionFields);
+
+    return buildValidReplacements(
+        potentialReplacements,
+        new Function<JCVariableDecl, Fix>() {
+          @Override
+          public Fix apply(JCVariableDecl var) {
+            return SuggestedFix.replace(receiver, "this." + var.sym.toString());
+          }
+        });
+  }
+
+  private List<Fix> buildValidReplacements(
+      Multimap<Integer, JCVariableDecl> potentialReplacements,
+      Function<JCVariableDecl, Fix> replacementFunction) {
+    if (potentialReplacements.isEmpty()) {
+      return ImmutableList.of();
+    }
+
+    // Take all of the potential edit-distance replacements with the same minimum distance,
+    // then suggest them as individual fixes.
+    return FluentIterable.from(
+            potentialReplacements.get(Collections.min(potentialReplacements.keySet())))
+        .transform(replacementFunction)
+        .toList();
+  }
+
+  private Predicate<JCVariableDecl> isCollectionVariable(final VisitorState state) {
+    return new Predicate<JCVariableDecl>() {
+      @Override
+      public boolean apply(JCVariableDecl var) {
+        return variableType(isSubtypeOf("java.util.Collection")).matches(var, state);
+      }
+    };
+  }
+
+  private List<Fix> fixesFromMethodParameters(VisitorState state, final ExpressionTree argument) {
+    // find a method parameter of the same type and similar name and suggest it
+    // as the new argument
+
+    assert (argument.getKind() == IDENTIFIER || argument.getKind() == MEMBER_SELECT);
+
+    FluentIterable<JCVariableDecl> collectionParams =
+        FluentIterable.from(
+                ASTHelpers.findEnclosingNode(state.getPath(), JCMethodDecl.class).getParameters())
+            .filter(isCollectionVariable(state));
+
+    Multimap<Integer, JCVariableDecl> potentialReplacements =
+        partitionByEditDistance(simpleNameOfIdentifierOrMemberAccess(argument), collectionParams);
+
+    return buildValidReplacements(
+        potentialReplacements,
+        new Function<JCVariableDecl, Fix>() {
+          @Override
+          public Fix apply(JCVariableDecl var) {
+            return SuggestedFix.replace(argument, var.sym.toString());
+          }
+        });
+  }
+
+  private Multimap<Integer, JCVariableDecl> partitionByEditDistance(
+      final String baseName, Iterable<JCVariableDecl> candidates) {
+    return Multimaps.index(
+        candidates,
+        new Function<JCVariableDecl, Integer>() {
+          @Override
+          public Integer apply(JCVariableDecl jcVariableDecl) {
+            return EditDistance.getEditDistance(baseName, jcVariableDecl.name.toString());
+          }
+        });
+  }
+
+  private String simpleNameOfIdentifierOrMemberAccess(ExpressionTree tree) {
+    String name = null;
+    if (tree.getKind() == IDENTIFIER) {
+      name = ((JCIdent) tree).name.toString();
+    } else if (tree.getKind() == MEMBER_SELECT) {
+      name = ((JCFieldAccess) tree).name.toString();
+    }
+    return name;
+  }
+
+  private List<Fix> literalReplacement(
+      MethodInvocationTree methodInvocationTree, VisitorState state, ExpressionTree lhs) {
+
     Tree parent = state.getPath().getParentPath().getLeaf();
 
-    ExpressionTree lhs = ASTHelpers.getReceiver(methodInvocationTree);
-    ExpressionTree rhs = methodInvocationTree.getArguments().get(0);
-
-    // default fix for methods
-    Fix fix = SuggestedFix.delete(parent);
-    if (instanceMethod().anyClass().named("removeAll").matches(methodInvocationTree, state)) {
-      fix = SuggestedFix.replace(methodInvocationTree, lhs + ".clear()");
+    // If the parent is an ExpressionStatement, the expression value is ignored, so we can delete
+    // the call entirely (or replace removeAll with .clear()). Otherwise, we can't provide a good
+    // replacement.
+    if (parent instanceof ExpressionStatementTree) {
+      Fix fix;
+      if (instanceMethod().anyClass().named("removeAll").matches(methodInvocationTree, state)) {
+        fix = SuggestedFix.replace(methodInvocationTree, lhs + ".clear()");
+      } else {
+        fix = SuggestedFix.delete(parent);
+      }
+      return ImmutableList.of(fix);
     }
 
-    if (lhs.getKind() == MEMBER_SELECT) {
-      // find a method parameter of the same type and similar name and suggest it
-      // as the rhs
-
-      // rhs should be either identifier or field access
-      assert(rhs.getKind() == IDENTIFIER || rhs.getKind() == MEMBER_SELECT);
-
-      // get current name of rhs
-      String rhsName = null;
-      if (rhs.getKind() == IDENTIFIER) {
-        rhsName = ((JCIdent) rhs).name.toString();
-      } else if (rhs.getKind() == MEMBER_SELECT) {
-        rhsName = ((JCFieldAccess) rhs).name.toString();
-      }
-
-      // find method parameters of the type "Collection"
-      TreePath path = state.getPath();
-      while (path != null && path.getLeaf().getKind() != METHOD) {
-        path = path.getParentPath();
-      }
-      JCMethodDecl method = (JCMethodDecl) path.getLeaf();
-      int minEditDistance = Integer.MAX_VALUE;
-      String replacement = null;
-      for (JCVariableDecl var : method.params) {
-        if (variableType(isSubtypeOf("java.util.Collection")).matches(var, state)) {
-          int editDistance = EditDistance.getEditDistance(rhsName, var.name.toString());
-          if (editDistance < minEditDistance) {
-            // pick one with minimum edit distance
-            minEditDistance = editDistance;
-            replacement = var.name.toString();
-          }
-        }
-      }
-      if (replacement != null) {
-        // suggest replacing rhs with the parameter
-        fix = SuggestedFix.replace(rhs, replacement);
-      }
-    } else if (rhs.getKind() == IDENTIFIER) {
-      // find a field of the same type and similar name and suggest it as the lhs
-
-      // lhs should be identifier
-      assert(lhs.getKind() == IDENTIFIER);
-
-      // get current name of lhs
-      String lhsName = ((JCIdent) rhs).name.toString();
-
-      // find class instance fields of the type "Collection"
-      TreePath path = state.getPath();
-      while (path != null && path.getLeaf().getKind() != CLASS) {
-        path = path.getParentPath();
-      }
-      JCClassDecl klass = (JCClassDecl) path.getLeaf();
-      int minEditDistance = Integer.MAX_VALUE;
-      String replacement = null;
-      for (JCTree member : klass.getMembers()) {
-        if (member.getKind() == VARIABLE) {
-          JCVariableDecl var = (JCVariableDecl) member;
-          if (!Flags.isStatic(var.sym)
-              && variableType(isSubtypeOf("java.util.Collection")).matches(var, state)) {
-            int editDistance = EditDistance.getEditDistance(lhsName, var.name.toString());
-            if (editDistance < minEditDistance) {
-              // pick one with minimum edit distance
-              minEditDistance = editDistance;
-              replacement = var.name.toString();
-            }
-          }
-        }
-      }
-      if (replacement != null) {
-        // suggest replacing lhs with the field
-        fix = SuggestedFix.replace(lhs, "this." + replacement);
-      }
-    }
-
-    return describeMatch(methodInvocationTree, fix);
+    return ImmutableList.of();
   }
 }
