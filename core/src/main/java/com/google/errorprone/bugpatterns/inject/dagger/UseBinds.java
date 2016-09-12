@@ -25,15 +25,14 @@ import static com.google.errorprone.bugpatterns.inject.dagger.DaggerAnnotations.
 import static com.google.errorprone.bugpatterns.inject.dagger.DaggerAnnotations.PRODUCES_CLASS_NAME;
 import static com.google.errorprone.bugpatterns.inject.dagger.DaggerAnnotations.PROVIDES_CLASS_NAME;
 import static com.google.errorprone.bugpatterns.inject.dagger.DaggerAnnotations.isBindingMethod;
+import static com.google.errorprone.bugpatterns.inject.dagger.Util.IS_DAGGER_2_MODULE;
+import static com.google.errorprone.bugpatterns.inject.dagger.Util.makeConcreteClassAbstract;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.hasArgumentWithValue;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.sun.source.tree.Tree.Kind.ASSIGNMENT;
 import static com.sun.source.tree.Tree.Kind.RETURN;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
@@ -44,11 +43,8 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
-import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.BlockTree;
-import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
@@ -85,15 +81,6 @@ import javax.lang.model.element.Modifier;
   maturity = EXPERIMENTAL
 )
 public class UseBinds extends BugChecker implements MethodTreeMatcher {
-  private static final Matcher<AnnotationTree> HAS_DAGGER_ONE_MODULE_ARGUMENT =
-      anyOf(
-          hasArgumentWithValue("injects", Matchers.<ExpressionTree>anything()),
-          hasArgumentWithValue("staticInjections", Matchers.<ExpressionTree>anything()),
-          hasArgumentWithValue("overrides", Matchers.<ExpressionTree>anything()),
-          hasArgumentWithValue("addsTo", Matchers.<ExpressionTree>anything()),
-          hasArgumentWithValue("complete", Matchers.<ExpressionTree>anything()),
-          hasArgumentWithValue("library", Matchers.<ExpressionTree>anything()));
-
   private static final Matcher<MethodTree> SIMPLE_METHOD =
       new Matcher<MethodTree>() {
         @Override
@@ -137,14 +124,9 @@ public class UseBinds extends BugChecker implements MethodTreeMatcher {
 
     JCClassDecl enclosingClass = ASTHelpers.findEnclosingNode(state.getPath(), JCClassDecl.class);
 
-    // Check to see if this is in a Dagger 1 module b/c it doesn't support @Binds
-    for (JCAnnotation annotation : enclosingClass.getModifiers().getAnnotations()) {
-      if (getSymbol(annotation.getAnnotationType())
-              .getQualifiedName()
-              .contentEquals("dagger.Module")
-          && HAS_DAGGER_ONE_MODULE_ARGUMENT.matches(annotation, state)) {
-        return NO_MATCH;
-      }
+    // Dagger 1 modules don't support @Binds.
+    if (!IS_DAGGER_2_MODULE.matches(enclosingClass, state)) {
+      return NO_MATCH;
     }
 
     if (enclosingClass.getExtendsClause() != null) {
@@ -167,46 +149,21 @@ public class UseBinds extends BugChecker implements MethodTreeMatcher {
 
   private Description fixByModifyingMethod(
       VisitorState state, JCClassDecl enclosingClass, MethodTree method) {
-    JCModifiers methodModifiers = ((JCMethodDecl) method).getModifiers();
-    ModifiersAndImports replacementModifiers =
-        createReplacementMethodModifiers(state, methodModifiers);
-
-    JCModifiers enclosingClassModifiers = enclosingClass.getModifiers();
-    String enclosingClassReplacementModifiersString =
-        createReplacementClassModifiers(state, enclosingClassModifiers);
-
-    SuggestedFix.Builder fixBuilder = SuggestedFix.builder().addImport("dagger.Binds");
-    for (String typeToImport : replacementModifiers.typesToImport()) {
-      fixBuilder.addImport(typeToImport);
-    }
-    fixBuilder
-        .replace(methodModifiers, replacementModifiers.modifiers())
-        .replace(method.getBody(), ";");
-    if (enclosingClassModifiers.pos == -1) { // no modifiers
-      fixBuilder.prefixWith(enclosingClass, enclosingClassReplacementModifiersString);
-    } else {
-      fixBuilder.replace(enclosingClassModifiers, enclosingClassReplacementModifiersString);
-    }
-    return describeMatch(method, fixBuilder.build());
+    return describeMatch(
+        method,
+        SuggestedFix.builder()
+            .addImport("dagger.Binds")
+            .merge(convertMethodToBinds(method, state))
+            .merge(makeConcreteClassAbstract(enclosingClass, state))
+            .build());
   }
 
-  private Description fixByDelegating() {
-    // TODO(gak): add a suggested fix by which we make a nested abstract module that we can include
-    return NO_MATCH;
-  }
+  private SuggestedFix.Builder convertMethodToBinds(MethodTree method, VisitorState state) {
+    SuggestedFix.Builder fix = SuggestedFix.builder();
 
-  @AutoValue
-  abstract static class ModifiersAndImports {
-    abstract String modifiers();
-
-    abstract ImmutableList<String> typesToImport();
-  }
-
-  private ModifiersAndImports createReplacementMethodModifiers(
-      VisitorState state, JCModifiers modifiers) {
+    JCModifiers modifiers = ((JCMethodDecl) method).getModifiers();
     ImmutableList.Builder<String> modifierStringsBuilder =
         new ImmutableList.Builder<String>().add("@Binds");
-    ImmutableList.Builder<String> typesToImport = ImmutableList.builder();
 
     for (JCAnnotation annotation : modifiers.annotations) {
       Name annotationQualifiedName = getSymbol(annotation).getQualifiedName();
@@ -222,15 +179,15 @@ public class UseBinds extends BugChecker implements MethodTreeMatcher {
           switch (typeName) {
             case "SET":
               modifierStringsBuilder.add("@IntoSet");
-              typesToImport.add(INTO_SET_CLASS_NAME);
+              fix.addImport(INTO_SET_CLASS_NAME);
               break;
             case "SET_VALUES":
               modifierStringsBuilder.add("@ElementsIntoSet");
-              typesToImport.add(ELEMENTS_INTO_SET_CLASS_NAME);
+              fix.addImport(ELEMENTS_INTO_SET_CLASS_NAME);
               break;
             case "MAP":
               modifierStringsBuilder.add("@IntoMap");
-              typesToImport.add(INTO_MAP_CLASS_NAME);
+              fix.addImport(INTO_MAP_CLASS_NAME);
               break;
             default:
               throw new AssertionError("Unknown type name: " + typeName);
@@ -249,26 +206,14 @@ public class UseBinds extends BugChecker implements MethodTreeMatcher {
     for (Flag flag : methodFlags) {
       modifierStringsBuilder.add(flag.toString());
     }
-
-    return new AutoValue_UseBinds_ModifiersAndImports(
-        Joiner.on(' ').join(modifierStringsBuilder.build()), typesToImport.build());
+  
+    fix.replace(modifiers, Joiner.on(' ').join(modifierStringsBuilder.build()));
+    fix.replace(method.getBody(), ";");
+    return fix;
   }
 
-  private String createReplacementClassModifiers(
-      VisitorState state, JCModifiers enclosingClassModifiers) {
-    ImmutableList.Builder<String> classModifierStringsBuilder = new ImmutableList.Builder<String>();
-
-    for (JCAnnotation annotation : enclosingClassModifiers.annotations) {
-      classModifierStringsBuilder.add(state.getSourceForNode(annotation));
-    }
-
-    EnumSet<Flag> classFlags = Flags.asFlagSet(enclosingClassModifiers.flags);
-    classFlags.remove(Flags.Flag.FINAL);
-    classFlags.add(Flags.Flag.ABSTRACT);
-    for (Flag flag : classFlags) {
-      classModifierStringsBuilder.add(flag.toString());
-    }
-
-    return Joiner.on(' ').join(classModifierStringsBuilder.build());
+  private Description fixByDelegating() {
+    // TODO(gak): add a suggested fix by which we make a nested abstract module that we can include
+    return NO_MATCH;
   }
 }
