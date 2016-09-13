@@ -137,7 +137,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/Description.Builder.html#addFix-com.google.errorprone.fixes.Fix-">addFix</a></span>(<a href="../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;fix)</code>
-<div class="block">Add a suggested fix for this <code>Description</code>.</div>
+<div class="block">Adds a suggested fix for this <code>Description</code>.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
@@ -179,11 +179,13 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <li class="blockList">
 <h4>addFix</h4>
 <pre>public&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a>&nbsp;addFix(<a href="../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;fix)</pre>
-<div class="block">Add a suggested fix for this <code>Description</code>. Fixes should be added in order of
- decreasing preference.</div>
+<div class="block">Adds a suggested fix for this <code>Description</code>. Fixes should be added in order of
+ decreasing preference. Adding an empty fix is a no-op.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>fix</code> - A suggested fix for this problem</dd>
+<dd><code>fix</code> - a suggested fix for this problem</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</a></code> - if <code>fix</code> is <code>null</code></dd>
 </dl>
 </li>
 </ul>

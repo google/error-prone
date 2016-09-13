@@ -964,29 +964,6 @@
 <!--   -->
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/inject/AssistedInjectAndInjectOnConstructors.html" title="class in com.google.errorprone.bugpatterns.inject">com.google.errorprone.bugpatterns.inject.AssistedInjectAndInjectOnConstructors</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>constructorWithInjectMatcher</h4>
-<pre><a href="com/google/errorprone/matchers/MultiMatcher.html" title="interface in com.google.errorprone.matchers">MultiMatcher</a>&lt;<a href="com/google/errorprone/matchers/MultiMatcher.html" title="type parameter in MultiMatcher">T</a> extends com.sun.source.tree.Tree,<a href="com/google/errorprone/matchers/MultiMatcher.html" title="type parameter in MultiMatcher">N</a> extends com.sun.source.tree.Tree&gt; constructorWithInjectMatcher</pre>
-<div class="block">Matches if any constructor of a class is annotated with an @Inject annotation.</div>
-</li>
-<li class="blockList">
-<h4>constructorWithAssistedInjectMatcher</h4>
-<pre><a href="com/google/errorprone/matchers/MultiMatcher.html" title="interface in com.google.errorprone.matchers">MultiMatcher</a>&lt;<a href="com/google/errorprone/matchers/MultiMatcher.html" title="type parameter in MultiMatcher">T</a> extends com.sun.source.tree.Tree,<a href="com/google/errorprone/matchers/MultiMatcher.html" title="type parameter in MultiMatcher">N</a> extends com.sun.source.tree.Tree&gt; constructorWithAssistedInjectMatcher</pre>
-<div class="block">Matches if any constructor of a class is annotated with an @AssistedInject annotation.</div>
-</li>
-<li class="blockListLast">
-<h4>constructorsWithInjectAndAssistedInjectMatcher</h4>
-<pre><a href="com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="com/google/errorprone/matchers/Matcher.html" title="type parameter in Matcher">T</a> extends com.sun.source.tree.Tree&gt; constructorsWithInjectAndAssistedInjectMatcher</pre>
-<div class="block">Matches if a class has a constructor that is annotated with @Inject and a constructor annotated
- with @AssistedInject.</div>
-</li>
-</ul>
-</li>
-</ul>
 </li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.inject.AssistedInjectAndInjectOnSameConstructor">
 <!--   -->
@@ -1053,6 +1030,11 @@
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/inject/dagger/EmptySetMultibindingContributions.html" title="class in com.google.errorprone.bugpatterns.inject.dagger">com.google.errorprone.bugpatterns.inject.dagger.EmptySetMultibindingContributions</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
 </li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.inject.dagger.MultibindsInsteadOfMultibindings">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/inject/dagger/MultibindsInsteadOfMultibindings.html" title="class in com.google.errorprone.bugpatterns.inject.dagger">com.google.errorprone.bugpatterns.inject.dagger.MultibindsInsteadOfMultibindings</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.inject.dagger.PrivateConstructorForNoninstantiableModule">
 <!--   -->
 </a>
@@ -1082,17 +1064,6 @@
 <!--   -->
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/inject/guice/AssistedParameters.html" title="class in com.google.errorprone.bugpatterns.inject.guice">com.google.errorprone.bugpatterns.inject.guice.AssistedParameters</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockListLast">
-<h4>constructorAssistedParameterMatcher</h4>
-<pre><a href="com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="com/google/errorprone/matchers/Matcher.html" title="type parameter in Matcher">T</a> extends com.sun.source.tree.Tree&gt; constructorAssistedParameterMatcher</pre>
-</li>
-</ul>
-</li>
-</ul>
 </li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.inject.guice.InjectOnFinalField">
 <!--   -->
@@ -1469,6 +1440,11 @@
 </ul>
 </li>
 </ul>
+</li>
+<li class="blockList"><a name="com.google.errorprone.matchers.IsLastStatementInBlock">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/matchers/IsLastStatementInBlock.html" title="class in com.google.errorprone.matchers">com.google.errorprone.matchers.IsLastStatementInBlock</a> extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a> implements Serializable</h3>
 </li>
 <li class="blockList"><a name="com.google.errorprone.matchers.IsSameType">
 <!--   -->

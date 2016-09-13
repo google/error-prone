@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10};
+var methods = {"i0":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -179,14 +179,6 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/ModifyingCollectionWithItself.html#describe-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">describe</a></span>(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
-        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
-<div class="block">We expect that the lhs is a field and the rhs is an identifier, specifically
- a parameter to the method.</div>
-</td>
-</tr>
-<tr id="i1" class="rowColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/ModifyingCollectionWithItself.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation</a></span>(com.sun.source.tree.MethodInvocationTree&nbsp;t,
                      <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
 <div class="block">Matches calls to addAll, containsAll, removeAll, and retainAll on itself</div>
@@ -248,7 +240,7 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <a name="matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>matchMethodInvocation</h4>
 <pre>public&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;matchMethodInvocation(com.sun.source.tree.MethodInvocationTree&nbsp;t,
@@ -258,30 +250,6 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></code></dd>
 </dl>
-</li>
-</ul>
-<a name="describe-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>describe</h4>
-<pre>public&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;describe(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
-                            <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
-<div class="block">We expect that the lhs is a field and the rhs is an identifier, specifically
- a parameter to the method.  We base our suggested fixes on this expectation.
-
- Case 1: If lhs is a field and rhs is an identifier, find a method parameter
- of the same type and similar name and suggest it as the rhs.  (Guess that they
- have misspelled the identifier.)
-
- Case 2: If lhs is a field and rhs is not an identifier, find a method parameter
- of the same type and similar name and suggest it as the rhs.
-
- Case 3: If lhs is not a field and rhs is an identifier, find a class field
- of the same type and similar name and suggest it as the lhs.
-
- Case 4: Otherwise replace with literal meaning of functionality</div>
 </li>
 </ul>
 </li>

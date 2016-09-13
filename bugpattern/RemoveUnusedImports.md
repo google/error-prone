@@ -13,7 +13,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-Unused imports
+This import is unused.
 
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("RemoveUnusedImports")` annotation to the enclosing element.

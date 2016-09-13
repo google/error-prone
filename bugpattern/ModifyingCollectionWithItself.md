@@ -52,25 +52,59 @@ public class ModifyingCollectionWithItselfPositiveCases {
   
   List<Integer> a = new ArrayList<Integer>();
   List<Integer> c = new ArrayList<Integer>();
-  
-  public boolean addAll(List<Integer> b) {
+
+  public void addAll(List<Integer> b) {
     // BUG: Diagnostic contains: a.addAll(b)
-    return this.a.addAll(a);
+    this.a.addAll(a);
+
+    // BUG: Diagnostic contains: a.addAll(1, b)
+    a.addAll(1, a);
   }
   
-  public boolean removeAll(List<Integer> b) {
+  public void containsAll(List<Integer> b) {
+    // BUG: Diagnostic contains: this.a.containsAll(b)
+    this.a.containsAll(this.a);
+
     // BUG: Diagnostic contains: a.containsAll(b)
-    return this.a.containsAll(this.a);
+    a.containsAll(this.a);
   }
-  
-  public boolean retainAll(List<Integer> a) {
+
+  public void retainAll(List<Integer> a) {
     // BUG: Diagnostic contains: this.a.retainAll(a)
-    return a.retainAll(a);
+    a.retainAll(a);
   }
-  
-  public boolean containsAll() {
+
+  public void removeAll() {
     // BUG: Diagnostic contains: a.clear()
-    return this.a.removeAll(a);
+    this.a.removeAll(a);
+
+    // BUG: Diagnostic contains: a.clear()
+    a.removeAll(a);
+  }
+
+  static class HasOneField {
+    List<Integer> a;
+
+    void removeAll() {
+      // BUG: Diagnostic contains: a.clear();
+      a.removeAll(a);
+    }
+
+    void testParameterFirst(List<Integer> b) {
+      // BUG: Diagnostic contains: this.a.removeAll(b);
+      b.removeAll(b);
+    }
+
+    void expressionStatementChecks() {
+      // BUG: Diagnostic contains: ModifyingCollectionWithItself
+      boolean b = 2 == 2 && a.containsAll(a);
+
+      // BUG: Diagnostic contains: ModifyingCollectionWithItself
+      b = a.retainAll(a);
+
+      // BUG: Diagnostic contains: ModifyingCollectionWithItself
+      b = a.removeAll(a);
+    }
   }
 }
 {% endhighlight %}

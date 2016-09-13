@@ -1,11 +1,10 @@
 ---
 title: GuiceAssistedParameters
-summary: 'A constructor cannot have two @Assisted parameters of the same type unless
-  they are disambiguated with named @Assisted annotations. '
+summary: A constructor cannot have two @Assisted parameters of the same type unless they are disambiguated with named @Assisted annotations.
 layout: bugpattern
 category: GUICE
 severity: ERROR
-maturity: EXPERIMENTAL
+maturity: MATURE
 ---
 
 <!--
@@ -44,9 +43,7 @@ __AssistedParametersPositiveCases.java__
 package com.google.errorprone.bugpatterns.inject.guice.testdata;
 
 import com.google.inject.assistedinject.Assisted;
-
 import java.util.List;
-
 import javax.inject.Inject;
 
 /**
@@ -59,13 +56,16 @@ public class AssistedParametersPositiveCases {
    */
   public class TestClass1 {
     @Inject
-    public TestClass1(int n,
-                      // BUG: Diagnostic contains: remove
-                      @Assisted
-                      String x,
-                      // BUG: Diagnostic contains: remove
-                      @Assisted 
-                      String y, int z) {}
+    // BUG: Diagnostic contains: java.lang.String: x, y
+    public TestClass1(int n, @Assisted String x, @Assisted String y, int z) {}
+
+    @Inject
+    // BUG: Diagnostic contains: java.lang.String, @Assisted("baz"): x, z
+    public TestClass1(
+        @Assisted("foo") int a,
+        @Assisted("foo") int b,
+        @Assisted("baz") String x,
+        @Assisted("baz") String z) {}
   }
 
   /**
@@ -73,27 +73,35 @@ public class AssistedParametersPositiveCases {
    */
   public class TestClass2 {
     @Inject
-    public TestClass2(int n,
-                      // BUG: Diagnostic contains: remove
-                      @Assisted("foo") 
-                      int x,
-                      // BUG: Diagnostic contains: remove
-                      @Assisted("foo") 
-                      int y, String z) {}
+    // BUG: Diagnostic contains: int, @Assisted("foo"): x, y
+    public TestClass2(int n, @Assisted("foo") int x, @Assisted("foo") int y, String z) {}
   }
 
   /**
    * Class has constructor with two @Assisted parameters of the same parameterized type.
    */
   public class TestClass3 {
+    private static final String FOO = "foo";
+
     @Inject
-    public TestClass3(int n,
-                      // BUG: Diagnostic contains: remove
-                      @Assisted("foo")
-                      List<String> x,
-                      // BUG: Diagnostic contains: remove
-                      @Assisted("foo")
-                      List<String> y, String z) {}
+    // BUG: Diagnostic contains: java.util.List<java.lang.String>, @Assisted("foo"): x, y
+    public TestClass3(
+        int n, @Assisted("foo") List<String> x, @Assisted(FOO) List<String> y, String z) {}
+
+    @Inject
+    // BUG: Diagnostic contains: int, @Assisted("bar"): x, y
+    public TestClass3(
+        @Assisted() int n, @Assisted("bar") int x, @Assisted("bar") int y, String z) {}
+  }
+
+  class GenericClass<T> {
+    @Inject
+    // BUG: Diagnostic contains: T: a, b
+    GenericClass(@Assisted T a, @Assisted T b) {}
+
+    @Inject
+    // BUG: Diagnostic contains: int: a, b
+    GenericClass(@Assisted Integer a, @Assisted int b) {}
   }
 }
 {% endhighlight %}

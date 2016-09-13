@@ -53,12 +53,11 @@ public class AssistedInjectAndInjectOnConstructorsPositiveCases {
    * Class has a constructor annotated with @javax.inject.Inject and another constructor annotated
    * with @AssistedInject.
    */
+  // BUG: Diagnostic contains: AssistedInjectAndInjectOnConstructors
   public class TestClass1 {
-    // BUG: Diagnostic contains: remove
     @javax.inject.Inject
     public TestClass1() {}
 
-    // BUG: Diagnostic contains: remove
     @AssistedInject
     public TestClass1(int n) {}
   }
@@ -67,26 +66,24 @@ public class AssistedInjectAndInjectOnConstructorsPositiveCases {
    * Class has a constructor annotated with @com.google.inject.Inject and another constructor
    * annotated with @AssistedInject.
    */
+  // BUG: Diagnostic contains: AssistedInjectAndInjectOnConstructors
   public class TestClass2 {
-    // BUG: Diagnostic contains: remove
     @com.google.inject.Inject
     public TestClass2() {}
 
-    // BUG: Diagnostic contains: remove
     @AssistedInject
     public TestClass2(int n) {}
   }
   
   /**
-   * Class has a constructor annotated with @com.google.inject.Inject, another constructor
-   * annotated with @AssistedInject, and a third constructor with no annotation.
+   * Class has a constructor annotated with @com.google.inject.Inject, another constructor annotated
+   * with @AssistedInject, and a third constructor with no annotation.
    */
+  // BUG: Diagnostic contains: AssistedInjectAndInjectOnConstructors
   public class TestClass3 {
-    // BUG: Diagnostic contains: remove
     @com.google.inject.Inject
     public TestClass3() {}
 
-    // BUG: Diagnostic contains: remove
     @AssistedInject
     public TestClass3(int n) {}
 

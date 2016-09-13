@@ -234,6 +234,9 @@ An object is tested for equality to itself using Guava Libraries
 __[GuiceAssistedInjectScoping](bugpattern/GuiceAssistedInjectScoping)__<br>
 Scope annotation on implementation class of AssistedInject factory is not allowed
 
+__[GuiceAssistedParameters](bugpattern/GuiceAssistedParameters)__<br>
+A constructor cannot have two @Assisted parameters of the same type unless they are disambiguated with named @Assisted annotations.
+
 __[GuiceInjectOnFinalField](bugpattern/GuiceInjectOnFinalField)__<br>
 Although Guice allows injecting final fields, doing so is disallowed because the injected value may not be visible to other threads.
 
@@ -438,9 +441,6 @@ Invalid format string passed to formatting method.
 __[GuardedByValidator](bugpattern/GuardedByValidator)__<br>
 Invalid @GuardedBy expression
 
-__[GuiceAssistedParameters](bugpattern/GuiceAssistedParameters)__<br>
-A constructor cannot have two @Assisted parameters of the same type unless they are disambiguated with named @Assisted annotations. 
-
 __[Immutable](bugpattern/Immutable)__<br>
 Type declaration annotated with @Immutable is not immutable
 
@@ -473,6 +473,9 @@ This method does not acquire the locks specified by its @LockMethod annotation
 
 __[ModifyingCollectionWithItself](bugpattern/ModifyingCollectionWithItself)__<br>
 Modifying a collection with itself
+
+__[MultibindsInsteadOfMultibindings](bugpattern/MultibindsInsteadOfMultibindings)__<br>
+`@Multibinds` is the new way to declare multibindings.
 
 __[NoAllocation](bugpattern/NoAllocation)__<br>
 @NoAllocation was specified on this method, but something was found that would trigger an allocation
