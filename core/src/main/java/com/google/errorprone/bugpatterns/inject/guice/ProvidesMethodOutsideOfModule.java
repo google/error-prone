@@ -15,7 +15,7 @@
 package com.google.errorprone.bugpatterns.inject.guice;
 
 import static com.google.errorprone.BugPattern.Category.GUICE;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.enclosingClass;
@@ -44,7 +44,7 @@ import com.sun.source.tree.ClassTree;
           + " modules are not used for binding declaration.",
   category = GUICE,
   severity = ERROR,
-  maturity = EXPERIMENTAL
+  maturity = MATURE
 )
 public class ProvidesMethodOutsideOfModule extends BugChecker implements AnnotationTreeMatcher {
   private static final Matcher<AnnotationTree> PROVIDES_ANNOTATION_ON_METHOD_OUTSIDE_OF_MODULE =

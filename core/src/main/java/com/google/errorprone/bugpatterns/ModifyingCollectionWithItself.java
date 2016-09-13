@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -56,15 +56,22 @@ import java.util.Collections;
 import java.util.List;
 import javax.lang.model.element.ElementKind;
 
-/**
- * @author scottjohnson@google.com (Scott Johnson)
- */
-@BugPattern(name = "ModifyingCollectionWithItself",
-    summary = "Modifying a collection with itself",
-    explanation = "Modifying a collection with itself is almost never what is intended. " +
-        "collection.addAll(collection) and collection.retainAll(collection) are both no-ops, " +
-        "and collection.removeAll(collection) is equivalent to collection.clear().",
-    category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
+/** @author scottjohnson@google.com (Scott Johnson) */
+@BugPattern(
+  name = "ModifyingCollectionWithItself",
+  summary = "Using a collection function with itself as the argument.",
+  explanation =
+      "Invoking a collection method with the same collection as the argument is likely"
+          + " incorrect.\n\n"
+          + "* `collection.addAll(collection)` may cause an infinite loop, duplicate the elements,"
+          + " or do nothing, depending on the type of Collection and implementation class.\n"
+          + "* `collection.retainAll(collection)` is a no-op.\n"
+          + "* `collection.removeAll(collection)` is the same as `collection.clear()`.\n"
+          + "* `collection.containsAll(collection)` is always true.",
+  category = JDK,
+  severity = ERROR,
+  maturity = MATURE
+)
 public class ModifyingCollectionWithItself extends BugChecker
     implements MethodInvocationTreeMatcher {
 
