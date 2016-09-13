@@ -28,6 +28,8 @@ import com.sun.source.tree.Tree;
 public final class InjectMatchers {
   private InjectMatchers() {} // no instantiation
 
+  public static final String GUICE_PROVIDES_ANNOTATION = "com.google.inject.Provides";
+
   public static final String ASSISTED_ANNOTATION = "com.google.inject.assistedinject.Assisted";
   public static final String ASSISTED_INJECT_ANNOTATION =
       "com.google.inject.assistedinject.AssistedInject";

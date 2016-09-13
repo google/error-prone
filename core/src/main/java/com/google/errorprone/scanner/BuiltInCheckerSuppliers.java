@@ -168,6 +168,7 @@ import com.google.errorprone.bugpatterns.inject.dagger.ProvidesNull;
 import com.google.errorprone.bugpatterns.inject.dagger.UseBinds;
 import com.google.errorprone.bugpatterns.inject.guice.AssistedInjectScoping;
 import com.google.errorprone.bugpatterns.inject.guice.AssistedParameters;
+import com.google.errorprone.bugpatterns.inject.guice.BindingToUnqualifiedCommonType;
 import com.google.errorprone.bugpatterns.inject.guice.InjectOnFinalField;
 import com.google.errorprone.bugpatterns.inject.guice.OverridesGuiceInjectableMethod;
 import com.google.errorprone.bugpatterns.inject.guice.OverridesJavaxInjectableMethod;
@@ -342,6 +343,7 @@ public class BuiltInCheckerSuppliers {
           AssistedInjectAndInjectOnConstructors.class,
           AssistedInjectAndInjectOnSameConstructor.class,
           BigDecimalLiteralDouble.class,
+          BindingToUnqualifiedCommonType.class,
           ClassName.class,
           ComparisonContractViolated.class,
           ConstantField.class,

@@ -314,6 +314,16 @@ public class Matchers {
     };
   }
 
+  public static Matcher<MethodInvocationTree> receiverOfInvocation(
+      final Matcher<ExpressionTree> expressionTreeMatcher) {
+    return new Matcher<MethodInvocationTree>() {
+      @Override
+      public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
+        return expressionTreeMatcher.matches(ASTHelpers.getReceiver(methodInvocationTree), state);
+      }
+    };
+  }
+
   /**
    * Matches if the given annotation matcher matches all of or any of the annotations on this tree
    * node.
@@ -474,6 +484,18 @@ public class Matchers {
     return new Matcher<T>() {
       @Override public boolean matches(Tree t, VisitorState state) {
         return ((JCTree) t).type.isPrimitive();
+      }
+    };
+  }
+
+  /**
+   * Matches an AST node if its type is a primitive type, or a boxed version of a primitive type.
+   */
+  public static <T extends Tree> Matcher<T> isPrimitiveOrBoxedPrimitiveType() {
+    return new Matcher<T>() {
+      @Override
+      public boolean matches(Tree t, VisitorState state) {
+        return state.getTypes().unboxedTypeOrType(((JCTree) t).type).isPrimitive();
       }
     };
   }
