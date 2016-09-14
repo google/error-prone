@@ -139,24 +139,24 @@ public final class Inliner {
         @Override
         public JCExpression visitClassType(ClassType type, Inliner inliner) {
           ClassSymbol classSym = (ClassSymbol) type.tsym;
-          JCExpression classExpr = inliner.importPolicy().classReference(
-              inliner, classSym.outermostClass().getQualifiedName().toString(),
-              classSym.getQualifiedName().toString());
+          JCExpression classExpr =
+              inliner
+                  .importPolicy()
+                  .classReference(
+                      inliner,
+                      classSym.outermostClass().getQualifiedName().toString(),
+                      classSym.getQualifiedName().toString());
           List<JCExpression> argExprs = List.nil();
           for (Type argType : type.getTypeArguments()) {
             argExprs = argExprs.append(visit(argType, inliner));
           }
-          return argExprs.isEmpty()
-              ? classExpr
-              : inliner.maker().TypeApply(classExpr, argExprs);
+          return argExprs.isEmpty() ? classExpr : inliner.maker().TypeApply(classExpr, argExprs);
         }
 
         @Override
         public JCExpression visitWildcardType(WildcardType type, Inliner inliner) {
           TreeMaker maker = inliner.maker();
-          return maker.Wildcard(
-              maker.TypeBoundKind(type.kind),
-              visit(type.baseType(), inliner));
+          return maker.Wildcard(maker.TypeBoundKind(type.kind), visit(type.type, inliner));
         }
 
         @Override
