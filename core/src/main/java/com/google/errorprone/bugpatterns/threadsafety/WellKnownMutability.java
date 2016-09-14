@@ -92,6 +92,7 @@ final class WellKnownMutability {
         .add(java.math.BigDecimal.class)
         .add(java.net.InetAddress.class)
         .add(java.util.Locale.class)
+        .add(java.util.regex.Pattern.class)
         .add("java.util.Optional", "T")
         .add("org.joda.time.DateTime")
         .add("org.joda.time.DateTimeZone")
