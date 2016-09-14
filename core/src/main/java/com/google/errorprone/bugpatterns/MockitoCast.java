@@ -26,7 +26,6 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.*;
-import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Attribute.Compound;
@@ -39,6 +38,7 @@ import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 
 import javax.lang.model.element.ElementKind;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -59,7 +59,7 @@ import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
     severity = ERROR,
     maturity = MATURE
 )
-public class MockitoCast extends BugChecker implements BugChecker.MethodInvocationTreeMatcher {
+public class MockitoCast extends BugChecker implements BugChecker.CompilationUnitTreeMatcher, BugChecker.MethodInvocationTreeMatcher {
 
   private static final String MOCKITO_CLASS = "org.mockito.Mockito";
 
@@ -73,11 +73,14 @@ public class MockitoCast extends BugChecker implements BugChecker.MethodInvocati
   private static final ImmutableSet<String> BAD_ANSWER_STRATEGIES =
       ImmutableSet.of("RETURNS_SMART_NULLS", "RETURNS_MOCKS", "RETURNS_DEEP_STUBS");
 
+  private Set<VarSymbol> mockVariables = Collections.emptySet();
+
   @Override
-  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+  public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
     Symbol mockitoSym = state.getSymbolFromString(MOCKITO_CLASS);
     if (mockitoSym == null) {
       // fast path if mockito isn't being used
+      mockVariables = Collections.emptySet();
       return Description.NO_MATCH;
     }
 
@@ -93,13 +96,57 @@ public class MockitoCast extends BugChecker implements BugChecker.MethodInvocati
     }
 
     // collect mocks that are initialized in this class using a bad answer strategy
-    final Set<VarSymbol> mockVariables = MockInitializationScanner.scan(state, badAnswers);
+    mockVariables = MockInitializationScanner.scan(state, badAnswers);
 
-    // check for when(...) calls on mocks using a bad answer strategy
-    new WhenNeedsCastScanner(mockVariables, state).scan(state.getPath(), null);
-
-    // errors are reported in WhenNeedsCastScanner
     return Description.NO_MATCH;
+  }
+
+  @Override
+  public Description matchMethodInvocation(MethodInvocationTree tree, final VisitorState state) {
+    // look for a call to Mockito.when(arg)
+    if (!WHEN_MATCHER.matches(tree, state)) {
+      return Description.NO_MATCH;
+    }
+    // where the only arg is an invocation
+    if (tree.getArguments().size() != 1) {
+      return Description.NO_MATCH;
+    }
+    ExpressionTree arg = Iterables.getOnlyElement(tree.getArguments());
+    if (!(arg instanceof JCMethodInvocation)) {
+      return Description.NO_MATCH;
+    }
+    // and the invocation's inferred erased and uninstantiated erased return types differ
+    JCMethodInvocation call = (JCMethodInvocation) arg;
+    Types types = state.getTypes();
+    if (call.meth.type == null) {
+      return Description.NO_MATCH;
+    }
+    Type instantiatedReturnType = types.erasure(call.meth.type.getReturnType());
+    if (instantiatedReturnType == null) {
+      return Description.NO_MATCH;
+    }
+    MethodSymbol methodSym = ASTHelpers.getSymbol(call);
+    if (methodSym == null) {
+      return Description.NO_MATCH;
+    }
+    if (methodSym.type == null) {
+      return Description.NO_MATCH;
+    }
+    Type uninstantiatedReturnType = types.erasure(methodSym.type.getReturnType());
+    if (uninstantiatedReturnType == null) {
+      return Description.NO_MATCH;
+    }
+    if (types.isSameType(instantiatedReturnType, uninstantiatedReturnType)) {
+      return Description.NO_MATCH;
+    }
+    if (!MockAnswerStrategyScanner.scan(call.getMethodSelect(), state, mockVariables)) {
+      return Description.NO_MATCH;
+    }
+
+    final SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
+    String qual = SuggestedFixes.qualifyType(state, fixBuilder, uninstantiatedReturnType.tsym);
+    fixBuilder.prefixWith(arg, String.format("(%s) ", qual));
+    return describeMatch(tree, fixBuilder.build());
   }
 
   /**
@@ -167,76 +214,6 @@ public class MockitoCast extends BugChecker implements BugChecker.MethodInvocati
 
   private static final Matcher<ExpressionTree> WHEN_MATCHER =
       staticMethod().onClass(MOCKITO_CLASS).named("when");
-
-  /**
-   * Scans for when(...) calls that needs a cast added, and emits fixes.
-   */
-  class WhenNeedsCastScanner extends TreePathScanner<Void, Void> {
-
-    final Set<VarSymbol> badMocks;
-    final VisitorState state;
-
-    WhenNeedsCastScanner(Set<VarSymbol> badMocks, VisitorState state) {
-      this.badMocks = badMocks;
-      this.state = state;
-    }
-
-    @Override
-    public Void visitMethodInvocation(MethodInvocationTree node, Void unused) {
-      Description description = matchMethodInvocation(node, state.withPath(getCurrentPath()));
-      if (description != Description.NO_MATCH) {
-        state.reportMatch(description);
-      }
-      return super.visitMethodInvocation(node, null);
-    }
-
-    public Description matchMethodInvocation(MethodInvocationTree tree, final VisitorState state) {
-      // look for a call to Mockito.when(arg)
-      if (!WHEN_MATCHER.matches(tree, state)) {
-        return Description.NO_MATCH;
-      }
-      // where the only arg is an invocation
-      if (tree.getArguments().size() != 1) {
-        return Description.NO_MATCH;
-      }
-      ExpressionTree arg = Iterables.getOnlyElement(tree.getArguments());
-      if (!(arg instanceof JCMethodInvocation)) {
-        return Description.NO_MATCH;
-      }
-      // and the invocation's inferred erased and uninstantiated erased return types differ
-      JCMethodInvocation call = (JCMethodInvocation) arg;
-      Types types = state.getTypes();
-      if (call.meth.type == null) {
-        return Description.NO_MATCH;
-      }
-      Type instantiatedReturnType = types.erasure(call.meth.type.getReturnType());
-      if (instantiatedReturnType == null) {
-        return Description.NO_MATCH;
-      }
-      MethodSymbol methodSym = ASTHelpers.getSymbol(call);
-      if (methodSym == null) {
-        return Description.NO_MATCH;
-      }
-      if (methodSym.type == null) {
-        return Description.NO_MATCH;
-      }
-      Type uninstantiatedReturnType = types.erasure(methodSym.type.getReturnType());
-      if (uninstantiatedReturnType == null) {
-        return Description.NO_MATCH;
-      }
-      if (types.isSameType(instantiatedReturnType, uninstantiatedReturnType)) {
-        return Description.NO_MATCH;
-      }
-      if (!MockAnswerStrategyScanner.scan(call.getMethodSelect(), state, badMocks)) {
-        return Description.NO_MATCH;
-      }
-
-      final SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
-      String qual = SuggestedFixes.qualifyType(state, fixBuilder, uninstantiatedReturnType.tsym);
-      fixBuilder.prefixWith(arg, String.format("(%s) ", qual));
-      return describeMatch(tree, fixBuilder.build());
-    }
-  }
 
   /**
    * Scans for the mock variable in a when(...), and checks if it has a bad answer strategy.
