@@ -291,4 +291,9 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
   public void emitComment() throws IOException {
     runTest("EmitCommentTemplate");
   }
+
+  @Test
+  public void nestedClass() throws IOException {
+    runTest("NestedClassTemplate");
+  }
 }

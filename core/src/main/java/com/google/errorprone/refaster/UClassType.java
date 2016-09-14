@@ -17,6 +17,7 @@
 package com.google.errorprone.refaster;
 
 import static com.google.errorprone.refaster.Unifier.unifications;
+import static com.sun.tools.javac.code.Flags.STATIC;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
@@ -53,7 +54,9 @@ public abstract class UClassType extends UType {
   @Override
   public ClassType inline(Inliner inliner) throws CouldNotResolveImportException {
     ClassSymbol classSymbol = inliner.resolveClass(fullyQualifiedClass());
-    return new ClassType(
-        Type.noType, inliner.<Type>inlineList(typeArguments()), classSymbol);
+    boolean isNonStaticInnerClass =
+        classSymbol.owner instanceof ClassSymbol && (classSymbol.flags() & STATIC) == 0;
+    Type owner = isNonStaticInnerClass ? classSymbol.owner.type : Type.noType;
+    return new ClassType(owner, inliner.<Type>inlineList(typeArguments()), classSymbol);
   }
 }
