@@ -23,15 +23,19 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import com.google.common.util.concurrent.AsyncFunction;
 import com.google.errorprone.BugPattern;
 
-/**
- * Checks that {@link AsyncFunction} implementations do not directly {@code return null}.
- */
-@BugPattern(name = "AsyncFunctionReturnsNull",
-    summary = "AsyncFunction should not return a null Future, only a Future whose result is null.",
-    explanation = "Methods like Futures.transformAsync and Futures.catchingAsync will throw a "
-        + "NullPointerException if the provided AsyncFunction returns a null Future. To produce a "
-        + "Future with an output of null, instead return immediateFuture(null).",
-    category = GUAVA, severity = ERROR, maturity = MATURE)
+/** Checks that {@link AsyncFunction} implementations do not directly {@code return null}. */
+@BugPattern(
+  name = "AsyncFunctionReturnsNull",
+  summary = "AsyncFunction should not return a null Future, only a Future whose result is null.",
+  explanation =
+      "Methods like Futures.transformAsync and Futures.catchingAsync will throw a "
+          + "NullPointerException if the provided AsyncFunction returns a null Future. To produce "
+          + "a Future with an output of null, instead return immediateFuture(null).",
+  category = GUAVA,
+  severity = ERROR,
+  maturity = MATURE,
+  generateExamplesFromTestCases = false
+)
 public final class AsyncFunctionReturnsNull extends AbstractAsyncTypeReturnsNull {
   public AsyncFunctionReturnsNull() {
     super(AsyncFunction.class);
