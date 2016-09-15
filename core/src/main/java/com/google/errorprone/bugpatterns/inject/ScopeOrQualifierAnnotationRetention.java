@@ -21,7 +21,11 @@ import static com.google.errorprone.matchers.InjectMatchers.GUICE_BINDING_ANNOTA
 import static com.google.errorprone.matchers.InjectMatchers.GUICE_SCOPE_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.JAVAX_QUALIFIER_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.JAVAX_SCOPE_ANNOTATION;
+import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
+import static com.google.errorprone.matchers.Matchers.kindIs;
+import static com.sun.source.tree.Tree.Kind.ANNOTATION_TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import com.google.errorprone.BugPattern;
@@ -31,12 +35,11 @@ import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
-import com.sun.tools.javac.code.Flags;
 import java.lang.annotation.Retention;
+import javax.annotation.Nullable;
 
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
@@ -58,29 +61,33 @@ public class ScopeOrQualifierAnnotationRetention extends BugChecker implements C
 
   /** Matches classes that are annotated with @Scope or @ScopeAnnotation. */
   private static final Matcher<ClassTree> SCOPE_OR_QUALIFIER_ANNOTATION_MATCHER =
-      Matchers.<ClassTree>anyOf(
-          hasAnnotation(GUICE_SCOPE_ANNOTATION),
-          hasAnnotation(JAVAX_SCOPE_ANNOTATION),
-          hasAnnotation(GUICE_BINDING_ANNOTATION),
-          hasAnnotation(JAVAX_QUALIFIER_ANNOTATION));
+      allOf(
+          kindIs(ANNOTATION_TYPE),
+          anyOf(
+              hasAnnotation(GUICE_SCOPE_ANNOTATION),
+              hasAnnotation(JAVAX_SCOPE_ANNOTATION),
+              hasAnnotation(GUICE_BINDING_ANNOTATION),
+              hasAnnotation(JAVAX_QUALIFIER_ANNOTATION)));
 
   @Override
   public final Description matchClass(ClassTree classTree, VisitorState state) {
-    if ((ASTHelpers.getSymbol(classTree).flags() & Flags.ANNOTATION) != 0) {
-      if (SCOPE_OR_QUALIFIER_ANNOTATION_MATCHER.matches(classTree, state)) {
-        Retention retention = ASTHelpers.getAnnotation(classTree, Retention.class);
-        if (retention != null && retention.value().equals(RUNTIME)) {
-          return Description.NO_MATCH;
-        }
-        //Default retention is CLASS, not RUNTIME, so return true if retention == null
-        return describe(classTree, state);
+    // TODO(glorioso): This is a poor hack to exclude android apps that are more likely to not have
+    // reflective DI than normal java. JSR spec still says the annotations should be
+    // runtime-retained, but this reduces the instances that are erroneously flagged.
+    if (!state.isAndroidCompatible()
+        && SCOPE_OR_QUALIFIER_ANNOTATION_MATCHER.matches(classTree, state)) {
+      Retention retention = ASTHelpers.getAnnotation(classTree, Retention.class);
+      if (retention != null && retention.value().equals(RUNTIME)) {
+        return Description.NO_MATCH;
       }
+      // Default retention is CLASS, not RUNTIME, so return true if retention == null
+      return describe(classTree, state, retention);
     }
     return Description.NO_MATCH;
   }
 
-  public Description describe(ClassTree classTree, VisitorState state) {
-    Retention retention = ASTHelpers.getAnnotation(classTree, Retention.class);
+  private Description describe(
+      ClassTree classTree, VisitorState state, @Nullable Retention retention) {
     if (retention == null) {
       return describeMatch(
           classTree,

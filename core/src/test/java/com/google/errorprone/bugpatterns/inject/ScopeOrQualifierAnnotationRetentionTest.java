@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.inject;
 
 import com.google.errorprone.CompilationTestHelper;
+import java.util.Collections;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,6 +47,17 @@ public class ScopeOrQualifierAnnotationRetentionTest {
   public void testNegativeCase() throws Exception {
     compilationHelper
         .addSourceFile("ScopeOrQualifierAnnotationRetentionNegativeCases.java")
+        .doTest();
+  }
+
+  @Test
+  public void testIgnoredOnAndroid() {
+    compilationHelper
+        .setArgs(Collections.singletonList("-XDandroidCompatible=true"))
+        .addSourceLines(
+            "TestAnnotation.java", //
+            "@javax.inject.Scope",
+            "public @interface TestAnnotation {}")
         .doTest();
   }
 }
