@@ -55,7 +55,11 @@ public final class InjectMatchers {
   }
 
   private static final Matcher<Tree> DAGGER_COMPONENT_MATCHER =
-      anyOf(hasAnnotation("dagger.Component"), hasAnnotation("dagger.Subcomponent"));
+      anyOf(
+          hasAnnotation("dagger.Component"),
+          hasAnnotation("dagger.Subcomponent"),
+          hasAnnotation("dagger.producers.ProductionComponent"),
+          hasAnnotation("dagger.producers.ProductionSubcomponent"));
 
   @SuppressWarnings("unchecked") // Safe contravariant cast
   public static <T extends Tree> Matcher<T> isDaggerComponent() {

@@ -21,6 +21,8 @@ import com.google.inject.Singleton;
 import com.google.inject.servlet.SessionScoped;
 import dagger.Component;
 import dagger.Subcomponent;
+import dagger.producers.ProductionComponent;
+import dagger.producers.ProductionSubcomponent;
 
 /**
  * @author sgoldfeder@google.com(Steven Goldfeder)
@@ -70,7 +72,19 @@ public class MoreThanOneScopeAnnotationOnClassNegativeCases {
   @Singleton
   @SessionScoped
   @Subcomponent
-  public class DaggerSubComponent {}
+  public class DaggerSubcomponent {}
+
+  /** Class has two scoped annotations, but is a Dagger component */
+  @Singleton
+  @SessionScoped
+  @ProductionComponent
+  public class DaggerProductionComponent {}
+
+  /** Class has two scoped annotations, but is a Dagger subcomponent */
+  @Singleton
+  @SessionScoped
+  @ProductionSubcomponent
+  public class DaggerProductionSubcomponent {}
 
   /** Suppression through secondary name */
   @SuppressWarnings("MoreThanOneScopeAnnotationOnClass")
