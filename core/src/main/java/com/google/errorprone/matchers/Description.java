@@ -17,6 +17,7 @@
 package com.google.errorprone.matchers;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 
 import com.google.common.base.Preconditions;
@@ -144,7 +145,7 @@ public class Description {
    * no link.
    */
   private static String linkTextForDiagnostic(String linkUrl) {
-    return linkUrl == null ? null : "  (see " + linkUrl + ")";
+    return isNullOrEmpty(linkUrl) ? null : "  (see " + linkUrl + ")";
   }
 
   /**
