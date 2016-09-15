@@ -288,6 +288,9 @@ A bug in Mockito will cause this test to fail at runtime with a ClassCastExcepti
 __[MockitoUsage](bugpattern/MockitoUsage)__<br>
 Missing method call for verify(mock) here
 
+__[ModifyingCollectionWithItself](bugpattern/ModifyingCollectionWithItself)__<br>
+Using a collection function with itself as the argument.
+
 __[MoreThanOneInjectableConstructor](bugpattern/MoreThanOneInjectableConstructor)__<br>
 This class has more than one @Inject-annotated constructor. Please remove the @Inject annotation from all but one of them.
 
@@ -320,6 +323,9 @@ First argument to `Preconditions.checkNotNull()` is a primitive rather than an o
 
 __[ProtoFieldNullComparison](bugpattern/ProtoFieldNullComparison)__<br>
 Protobuf fields cannot be null
+
+__[ProvidesMethodOutsideOfModule](bugpattern/ProvidesMethodOutsideOfModule)__<br>
+@Provides methods need to be declared in a Module to have any effect.
 
 __[RectIntersectReturnValueIgnored](bugpattern/RectIntersectReturnValueIgnored)__<br>
 Return value of android.graphics.Rect.intersect() must be checked
@@ -376,6 +382,9 @@ __[AssistedInjectAndInjectOnConstructors](bugpattern/AssistedInjectAndInjectOnCo
 
 __[BigDecimalLiteralDouble](bugpattern/BigDecimalLiteralDouble)__<br>
 BigDecimal(double) and BigDecimal.valueOf(double) may lose precision, prefer BigDecimal(String) or BigDecimal(long)
+
+__[BindingToUnqualifiedCommonType](bugpattern/BindingToUnqualifiedCommonType)__<br>
+This code declares a binding for a common value type without a Qualifier annotation.
 
 __[ClassCanBeStatic](bugpattern/ClassCanBeStatic)__<br>
 Inner class is non-static but does not reference enclosing class
@@ -471,9 +480,6 @@ __[JavaxInjectOnFinalField](bugpattern/JavaxInjectOnFinalField)__<br>
 __[LockMethodChecker](bugpattern/LockMethodChecker)__<br>
 This method does not acquire the locks specified by its @LockMethod annotation
 
-__[ModifyingCollectionWithItself](bugpattern/ModifyingCollectionWithItself)__<br>
-Modifying a collection with itself
-
 __[MultibindsInsteadOfMultibindings](bugpattern/MultibindsInsteadOfMultibindings)__<br>
 `@Multibinds` is the new way to declare multibindings.
 
@@ -491,9 +497,6 @@ Method parameter has wrong package
 
 __[ProtoStringFieldReferenceEquality](bugpattern/ProtoStringFieldReferenceEquality)__<br>
 Comparing protobuf fields of type String using reference equality
-
-__[ProvidesMethodOutsideOfModule](bugpattern/ProvidesMethodOutsideOfModule)__<br>
-@Provides methods need to be declared in a Module to have any effect.
 
 __[RandomModInteger](bugpattern/RandomModInteger)__<br>
 Use Random.nextInt(int).  Random.nextInt() % n can have negative results

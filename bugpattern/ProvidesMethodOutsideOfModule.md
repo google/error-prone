@@ -4,7 +4,7 @@ summary: '@Provides methods need to be declared in a Module to have any effect.'
 layout: bugpattern
 category: GUICE
 severity: ERROR
-maturity: EXPERIMENTAL
+maturity: MATURE
 ---
 
 <!--
