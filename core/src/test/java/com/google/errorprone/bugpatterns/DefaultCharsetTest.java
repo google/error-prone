@@ -107,19 +107,22 @@ public class DefaultCharsetTest {
             "    // BUG: Diagnostic contains: Files.newBufferedWriter(Paths.get(s), UTF_8);",
             "    new FileWriter(s);",
             "    // BUG: Diagnostic contains:"
-                + " Files.newBufferedWriter(Paths.get(s), UTF_8, APPEND);",
+                + " Files.newBufferedWriter(Paths.get(s), UTF_8, CREATE, APPEND);",
             "    new FileWriter(s, true);",
             "    // BUG: Diagnostic contains:"
-                + " Files.newBufferedWriter(Paths.get(s), UTF_8, APPEND);",
+                + " Files.newBufferedWriter(Paths.get(s), UTF_8, CREATE, APPEND);",
             "    new FileWriter(s, CONST);",
             "    // BUG: Diagnostic contains: Files.newBufferedWriter(f.toPath(), UTF_8);",
             "    new FileWriter(f);",
-            "    // BUG: Diagnostic contains: Files.newBufferedWriter(f.toPath(), UTF_8, APPEND);",
+            "    // BUG: Diagnostic contains:"
+                + " Files.newBufferedWriter(f.toPath(), UTF_8, CREATE, APPEND);",
             "    new FileWriter(f, true);",
             "    // BUG: Diagnostic contains: Files.newBufferedWriter(f.toPath(), UTF_8);",
             "    new FileWriter(f, false);",
             "    // BUG: Diagnostic contains:"
-                + " Files.newBufferedWriter(f.toPath(), UTF_8, flag ? APPEND : CREATE);",
+                + " Files.newBufferedWriter(f.toPath(), UTF_8, flag"
+                + " ? new StandardOpenOption[] {CREATE, APPEND}"
+                + " : new StandardOpenOption[] {CREATE}",
             "    new FileWriter(f, flag);",
             "  }",
             "}")
@@ -225,13 +228,14 @@ public class DefaultCharsetTest {
             "out/Test.java",
             "import static java.nio.charset.StandardCharsets.UTF_8;",
             "import static java.nio.file.StandardOpenOption.APPEND;",
+            "import static java.nio.file.StandardOpenOption.CREATE;",
             "import com.google.common.io.Files;",
             "import java.io.*;",
             "import java.nio.file.Paths;",
             "class Test {",
             "  void f(String s, File f) throws Exception {",
-            "    java.nio.file.Files.newBufferedWriter(Paths.get(s), UTF_8, APPEND);",
-            "    java.nio.file.Files.newBufferedWriter(f.toPath(), UTF_8, APPEND);",
+            "    java.nio.file.Files.newBufferedWriter(Paths.get(s), UTF_8, CREATE, APPEND);",
+            "    java.nio.file.Files.newBufferedWriter(f.toPath(), UTF_8, CREATE, APPEND);",
             "  }",
             "}")
         .doTest();

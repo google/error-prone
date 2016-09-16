@@ -310,21 +310,25 @@ public class DefaultCharset extends BugChecker
 
   /** Convert a boolean append mode to a StandardOpenOption. */
   private String toAppendMode(SuggestedFix.Builder fix, Tree appendArg, VisitorState state) {
-    // recognize constants to try to emit `APPEND` instead of `flag ? APPEND : CREATE`
+    // recognize constants to try to avoid `true ? CREATE, APPEND : CREATE`
     Object value = ASTHelpers.constValue(appendArg);
     // const booleans are represented as ints
     if (value instanceof Integer) {
       if ((int) value == 1) {
         fix.addStaticImport("java.nio.file.StandardOpenOption.APPEND");
-        return ", APPEND";
+        fix.addStaticImport("java.nio.file.StandardOpenOption.CREATE");
+        return ", CREATE, APPEND";
       } else {
         // CREATE is the default
         return "";
       }
     }
+    fix.addImport("java.nio.file.StandardOpenOption");
     fix.addStaticImport("java.nio.file.StandardOpenOption.APPEND");
     fix.addStaticImport("java.nio.file.StandardOpenOption.CREATE");
-    return String.format(", %s ? APPEND : CREATE", state.getSourceForNode(appendArg));
+    return String.format(
+        ", %s ? new StandardOpenOption[] {CREATE, APPEND} : new StandardOpenOption[] {CREATE}",
+        state.getSourceForNode(appendArg));
   }
 
   /** Converts a {@code String} to a {@code File}. */
