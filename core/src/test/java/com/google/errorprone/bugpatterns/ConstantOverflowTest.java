@@ -16,7 +16,9 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
+import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -130,6 +132,36 @@ public class ConstantOverflowTest {
             "    }",
             "  }",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void longOverflow() throws IOException {
+    BugCheckerRefactoringTestHelper.newInstance(new ConstantOverflow(), getClass())
+        .addInputLines(
+            "in/Test.java",
+            "class Test {",
+            "  private static final long GOLDEN_GAMMA = 0x9e3779b97f4a7c15L;",
+            "  void f() {",
+            "    System.err.println(2 * GOLDEN_GAMMA);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "class Test {",
+            "  private static final long GOLDEN_GAMMA = 0x9e3779b97f4a7c15L;",
+            "  void f() {",
+            "    System.err.println(2 * GOLDEN_GAMMA);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void onlyFixIntegers() throws Exception {
+    BugCheckerRefactoringTestHelper.newInstance(new ConstantOverflow(), getClass())
+        .addInputLines("in/Test.java", "class Test {", "  int a = 'a' + Integer.MAX_VALUE;", "}")
+        .addOutputLines("out/Test.java", "class Test {", "  int a = 'a' + Integer.MAX_VALUE;", "}")
         .doTest();
   }
 }

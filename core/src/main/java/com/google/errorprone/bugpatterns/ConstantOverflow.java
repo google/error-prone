@@ -16,6 +16,13 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.BugPattern.Category.JDK;
+import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
+
 import com.google.common.math.IntMath;
 import com.google.common.math.LongMath;
 import com.google.errorprone.BugPattern;
@@ -40,16 +47,8 @@ import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.source.util.TreePath;
-
 import com.sun.tools.javac.code.Type;
 import javax.lang.model.type.TypeKind;
-
-import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.util.ASTHelpers.getType;
-import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
@@ -85,17 +84,19 @@ public class ConstantOverflow extends BugChecker implements BinaryTreeMatcher {
   }
 
   /**
-   * If the left hand side of the binary expression is an integer literal, suggest making it a long.
+   * If the left operand of an int binary expression is an int literal, suggest making it a long.
    */
   private Fix longFix(ExpressionTree expr, VisitorState state) {
+    BinaryTree binExpr = null;
     while (expr instanceof BinaryTree) {
-      expr = ((BinaryTree) expr).getLeftOperand();
+      binExpr = (BinaryTree) expr;
+      expr = binExpr.getLeftOperand();
     }
-    Type intType = state.getSymtab().intType;
-    if (!(expr instanceof LiteralTree)) {
+    if (!(expr instanceof LiteralTree) || expr.getKind() != Kind.INT_LITERAL) {
       return null;
     }
-    if (!isSameType(getType(expr), intType, state)) {
+    Type intType = state.getSymtab().intType;
+    if (!isSameType(getType(binExpr), intType, state)) {
       return null;
     }
     SuggestedFix.Builder fix = SuggestedFix.builder().postfixWith(expr, "L");
