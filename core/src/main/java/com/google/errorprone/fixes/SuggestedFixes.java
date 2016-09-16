@@ -72,7 +72,6 @@ public class SuggestedFixes {
   /** Parse a modifier token into a {@link Modifier}. */
   @Nullable
   private static Modifier getTokModifierKind(ErrorProneToken tok) {
-    // TODO(cushon): handle DEFAULT
     switch (tok.kind()) {
       case PUBLIC:
         return Modifier.PUBLIC;
@@ -96,6 +95,8 @@ public class SuggestedFixes {
         return Modifier.NATIVE;
       case STRICTFP:
         return Modifier.STRICTFP;
+      case DEFAULT:
+        return Modifier.DEFAULT;
       default:
         return null;
     }
