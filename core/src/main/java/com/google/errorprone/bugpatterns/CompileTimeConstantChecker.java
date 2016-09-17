@@ -37,7 +37,6 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
-import com.sun.tools.javac.tree.JCTree;
 import java.util.Iterator;
 
 /**
@@ -160,18 +159,19 @@ public class CompileTimeConstantChecker extends BugChecker
 
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
-    JCTree.JCNewClass newClass = (JCTree.JCNewClass) tree;
-    return matchArguments(
-        state, (Symbol.MethodSymbol) newClass.constructor, tree.getArguments().iterator());
+    Symbol.MethodSymbol sym = ASTHelpers.getSymbol(tree);
+    if (sym == null) {
+      return Description.NO_MATCH;
+    }
+    return matchArguments(state, sym, tree.getArguments().iterator());
   }
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    ExpressionTree methodSelect = tree.getMethodSelect();
-    Symbol sym = ASTHelpers.getSymbol(methodSelect);
+    Symbol.MethodSymbol sym = ASTHelpers.getSymbol(tree);
     if (sym == null) {
       return Description.NO_MATCH;
     }
-    return matchArguments(state, (Symbol.MethodSymbol) sym, tree.getArguments().iterator());
+    return matchArguments(state, sym, tree.getArguments().iterator());
   }
 }
