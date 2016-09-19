@@ -61,11 +61,13 @@ abstract class UMemberReference extends UExpression implements MemberReferenceTr
 
   @Override
   public JCMemberReference inline(Inliner inliner) throws CouldNotResolveImportException {
-    return inliner.maker().Reference(
-        getMode(),
-        getName().inline(inliner),
-        getQualifierExpression().inline(inliner),
-        inliner.inlineList(getTypeArguments()));
+    return inliner
+        .maker()
+        .Reference(
+            getMode(),
+            getName().inline(inliner),
+            getQualifierExpression().inline(inliner),
+            (getTypeArguments() == null) ? null : inliner.inlineList(getTypeArguments()));
   }
 
   @Override
