@@ -100,10 +100,15 @@ public class InvalidTargetingOnScopingAnnotation extends BugChecker implements C
    * Rewrite the annotation with static imports, adding TYPE and METHOD to the @Target annotation
    * value (and reordering them to their declaration order in ElementType).
    */
-  private Fix replaceTargetAnnotation(Target annotation, AnnotationTree targetAnnotationTree) {
+  private static Fix replaceTargetAnnotation(
+      Target annotation, AnnotationTree targetAnnotationTree) {
     Set<ElementType> types = EnumSet.copyOf(REQUIRED_ELEMENT_TYPES);
     types.addAll(Arrays.asList(annotation.value()));
 
+    return replaceTargetAnnotation(targetAnnotationTree, types);
+  }
+
+  static Fix replaceTargetAnnotation(AnnotationTree targetAnnotationTree, Set<ElementType> types) {
     Builder builder =
         SuggestedFix.builder()
             .replace(targetAnnotationTree, "@Target({" + Joiner.on(", ").join(types) + "})");

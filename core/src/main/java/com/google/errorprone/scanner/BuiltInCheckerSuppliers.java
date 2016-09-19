@@ -159,6 +159,7 @@ import com.google.errorprone.bugpatterns.inject.MoreThanOneInjectableConstructor
 import com.google.errorprone.bugpatterns.inject.MoreThanOneQualifier;
 import com.google.errorprone.bugpatterns.inject.MoreThanOneScopeAnnotationOnClass;
 import com.google.errorprone.bugpatterns.inject.OverlappingQualifierAndScopeAnnotation;
+import com.google.errorprone.bugpatterns.inject.QualifierWithTypeUse;
 import com.google.errorprone.bugpatterns.inject.ScopeAnnotationOnInterfaceOrAbstractClass;
 import com.google.errorprone.bugpatterns.inject.ScopeOrQualifierAnnotationRetention;
 import com.google.errorprone.bugpatterns.inject.dagger.EmptySetMultibindingContributions;
@@ -375,6 +376,7 @@ public class BuiltInCheckerSuppliers {
           PrivateConstructorForUtilityClass.class,
           PrivateConstructorForNoninstantiableModule.class,
           ProtoStringFieldReferenceEquality.class,
+          QualifierWithTypeUse.class,
           RedundantThrows.class,
           RemoveUnusedImports.class,
           ScopeAnnotationOnInterfaceOrAbstractClass.class,
