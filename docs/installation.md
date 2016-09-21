@@ -62,7 +62,7 @@ Edit your `pom.xml` file to add settings to the maven-compiler-plugin:
         <dependency>
           <groupId>com.google.errorprone</groupId>
           <artifactId>error_prone_core</artifactId>
-          <version>2.0.9</version>
+          <version>2.0.13</version>
         </dependency>
       </dependencies>
     </plugin>
