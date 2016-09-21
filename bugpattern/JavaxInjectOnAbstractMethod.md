@@ -1,6 +1,6 @@
 ---
 title: JavaxInjectOnAbstractMethod
-summary: Abstract methods are not injectable with javax.inject.Inject.
+summary: Abstract and default methods are not injectable with javax.inject.Inject
 layout: bugpattern
 category: INJECT
 severity: ERROR
@@ -13,10 +13,20 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-The javax.inject.Inject annotation cannot go on an abstract method as per the JSR-330 spec. This is in line with the fact that if a class overrides a method that was annotated with javax.inject.Inject, and the subclass methodis not annotated, the subclass method will not be injected.
+The [`Inject`] annotation cannot be applied to abstract methods, per the JSR-330 spec, since
+injectors will only inject those methods if the concrete implementer of the abstract method has
+the [`Inject`] annotation as well. See [OverridesJavaxInjectableMethod] for more examples of this
+interaction.
 
-See http://docs.oracle.com/javaee/6/api/javax/inject/Inject.html
-and https://github.com/google/guice/wiki/JSR330
+Currently, default methods in interfaces are not injected if they have [`Inject`] for similar
+reasons, although future updates to dependency injection frameworks may allow this, since the
+default methods are not abstract.
+
+See the [Guice wiki] page on JSR-330 for more.
+
+[`Inject`]: http://javax-inject.github.io/javax-inject/api/javax/inject/Inject.html
+[OverridesJavaxInjectableMethod]: OverridesJavaxInjectableMethod
+[Guice wiki]: https://github.com/google/guice/wiki/JSR330
 
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("JavaxInjectOnAbstractMethod")` annotation to the enclosing element.
@@ -99,6 +109,12 @@ public class JavaxInjectOnAbstractMethodPositiveCases {
     // BUG: Diagnostic contains: remove
     @javax.inject.Inject
     public abstract void abstractMethod();
+  }
+
+  interface HasDefault {
+    // BUG: Diagnostic contains: remove
+    @javax.inject.Inject
+    default void foo() {}
   }
 }
 {% endhighlight %}

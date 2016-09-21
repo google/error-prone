@@ -410,6 +410,9 @@ This method is not annotated with @Inject, but it overrides a method that is ann
 __[PrimitiveArrayPassedToVarargsMethod](bugpattern/PrimitiveArrayPassedToVarargsMethod)__<br>
 Passing a primitive array to a varargs method is usually wrong
 
+__[QualifierWithTypeUse](bugpattern/QualifierWithTypeUse)__<br>
+Injection frameworks currently don&#39;t understand Qualifiers in TYPE_PARAMETER or TYPE_USE contexts.
+
 __[Var](bugpattern/Var)__<br>
 Non-constant variable missing @Var annotation
 
@@ -472,7 +475,7 @@ __[JMockTestWithoutRunWithOrRuleAnnotation](bugpattern/JMockTestWithoutRunWithOr
 jMock tests must have a @RunWith(JMock.class) annotation, or the Mockery field must have a @Rule JUnit annotation
 
 __[JavaxInjectOnAbstractMethod](bugpattern/JavaxInjectOnAbstractMethod)__<br>
-Abstract methods are not injectable with javax.inject.Inject.
+Abstract and default methods are not injectable with javax.inject.Inject
 
 __[JavaxInjectOnFinalField](bugpattern/JavaxInjectOnFinalField)__<br>
 @javax.inject.Inject cannot be put on a final field.
