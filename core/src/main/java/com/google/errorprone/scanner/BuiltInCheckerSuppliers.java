@@ -151,6 +151,7 @@ import com.google.errorprone.bugpatterns.formatstring.FormatString;
 import com.google.errorprone.bugpatterns.formatstring.FormatStringAnnotationChecker;
 import com.google.errorprone.bugpatterns.inject.AssistedInjectAndInjectOnConstructors;
 import com.google.errorprone.bugpatterns.inject.AssistedInjectAndInjectOnSameConstructor;
+import com.google.errorprone.bugpatterns.inject.InjectOnConstructorOfAbstractClass;
 import com.google.errorprone.bugpatterns.inject.InjectedConstructorAnnotations;
 import com.google.errorprone.bugpatterns.inject.InvalidTargetingOnScopingAnnotation;
 import com.google.errorprone.bugpatterns.inject.JavaxInjectOnAbstractMethod;
@@ -356,6 +357,7 @@ public class BuiltInCheckerSuppliers {
           EmptyTopLevelDeclaration.class,
           HardCodedSdCardPath.class,
           InjectedConstructorAnnotations.class,
+          InjectOnConstructorOfAbstractClass.class,
           InvalidTargetingOnScopingAnnotation.class,
           JMockTestWithoutRunWithOrRuleAnnotation.class,
           JavaxInjectOnFinalField.class,
