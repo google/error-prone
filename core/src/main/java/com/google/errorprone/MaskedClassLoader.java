@@ -55,17 +55,11 @@ public class MaskedClassLoader extends ClassLoader {
 
   @Override
   protected Class<?> findClass(String name) throws ClassNotFoundException {
-    int idx = name.lastIndexOf('.');
-    if (idx == -1) {
+    if (name.startsWith("com.google.errorprone.")
+        || name.startsWith("org.checkerframework.dataflow.")) {
+      return Class.forName(name);
+    } else {
       throw new ClassNotFoundException(name);
-    }
-    String packageName = name.substring(0, idx);
-    switch (packageName) {
-      case "com.google.errorprone":
-      case "org.checkerframework.dataflow":
-        return Class.forName(name);
-      default:
-        throw new ClassNotFoundException(name);
     }
   }
 }
