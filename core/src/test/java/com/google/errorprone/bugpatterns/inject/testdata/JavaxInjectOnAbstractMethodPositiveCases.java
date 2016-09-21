@@ -71,4 +71,10 @@ public class JavaxInjectOnAbstractMethodPositiveCases {
     @javax.inject.Inject
     public abstract void abstractMethod();
   }
+
+  interface HasDefault {
+    // BUG: Diagnostic contains: remove
+    @javax.inject.Inject
+    default void foo() {}
+  }
 }
