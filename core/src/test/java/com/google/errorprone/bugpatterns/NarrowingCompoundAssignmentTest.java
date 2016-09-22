@@ -22,9 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/** @author cushon@google.com (Liam Miller-Cushon) */
 @RunWith(JUnit4.class)
 public class NarrowingCompoundAssignmentTest {
   private CompilationTestHelper compilationHelper;
@@ -206,6 +204,74 @@ public class NarrowingCompoundAssignmentTest {
             "    short s = 0;",
             "    // BUG: Diagnostic contains: " + expect,
             compoundAssignment,
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testDoubleLong() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void m() {",
+            "    long a = 1;",
+            "    double b = 2;",
+            "    // BUG: Diagnostic contains:"
+                + " Compound assignments from floating point to integral type",
+            "    a *= b;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testDoubleInt() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void m() {",
+            "    int a = 1;",
+            "    double b = 2;",
+            "    // BUG: Diagnostic contains:"
+                + " Compound assignments from floating point to integral type",
+            "    a *= b;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testFloatLong() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void m() {",
+            "    long a = 1;",
+            "    float b = 2;",
+            "    // BUG: Diagnostic contains:"
+                + " Compound assignments from floating point to integral type",
+            "    a *= b;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testFloatInt() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void m() {",
+            "    int a = 1;",
+            "    float b = 2;",
+            "    // BUG: Diagnostic contains:"
+                + " Compound assignments from floating point to integral type",
+            "    a *= b;",
             "  }",
             "}")
         .doTest();
