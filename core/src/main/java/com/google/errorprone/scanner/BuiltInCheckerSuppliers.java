@@ -293,6 +293,7 @@ public class BuiltInCheckerSuppliers {
           ThrowIfUncheckedKnownChecked.class,
           TryFailThrowable.class,
           TypeParameterQualifier.class,
+          UnnecessaryTypeArgument.class,
           UnusedAnonymousClass.class);
 
   /** A list of all checks with severity WARNING that are on by default. */
@@ -388,7 +389,6 @@ public class BuiltInCheckerSuppliers {
           ThrowsUncheckedException.class,
           UnlockMethodChecker.class,
           UnnecessaryStaticImport.class,
-          UnnecessaryTypeArgument.class,
           UseBinds.class,
           VarChecker.class,
           WildcardImport.class,
