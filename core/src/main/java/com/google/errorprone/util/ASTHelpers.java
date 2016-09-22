@@ -493,13 +493,14 @@ public class ASTHelpers {
   }
 
   /**
-   * Determines whether a symbol has an annotation of the given type.
-   * This includes annotations inherited from superclasses due to @Inherited.
+   * Determines whether a symbol has an annotation of the given type. This includes annotations
+   * inherited from superclasses due to {@code @Inherited}.
    *
-   * @param annotationType The type of the annotation to look for (e.g, "javax.annotation.Nullable")
+   * @param annotationClass the binary class name of the annotation (e.g.
+   *     "javax.annotation.Nullable", or "some.package.OuterClassName$InnerClassName")
    */
-  public static boolean hasAnnotation(Symbol sym, String annotationType, VisitorState state) {
-    Name annotationName = state.getName(annotationType);
+  public static boolean hasAnnotation(Symbol sym, String annotationClass, VisitorState state) {
+    Name annotationName = state.getName(annotationClass);
     Symbol annotationSym;
     synchronized (state.context) {
       annotationSym = state.getSymtab().enterClass(annotationName);
@@ -534,8 +535,8 @@ public class ASTHelpers {
    * @return true if the symbol is annotated with given type.
    */
   public static boolean hasAnnotation(
-      Symbol sym, Class<? extends Annotation> annotationType, VisitorState state) {
-    return hasAnnotation(sym, annotationType.getName(), state);
+      Symbol sym, Class<? extends Annotation> annotationClass, VisitorState state) {
+    return hasAnnotation(sym, annotationClass.getName(), state);
   }
 
   /**
@@ -544,9 +545,9 @@ public class ASTHelpers {
    * @return the annotation of given type on the tree's symbol, or null.
    */
   public static boolean hasAnnotation(
-      Tree tree, Class<? extends Annotation> annotationType, VisitorState state) {
+      Tree tree, Class<? extends Annotation> annotationClass, VisitorState state) {
     Symbol sym = getSymbol(tree);
-    return hasAnnotation(sym, annotationType.getName(), state);
+    return hasAnnotation(sym, annotationClass.getName(), state);
   }
 
   /**
@@ -571,9 +572,9 @@ public class ASTHelpers {
    *
    * @return the annotation of given type on the tree's symbol, or null.
    */
-  public static <T extends Annotation> T getAnnotation(Tree tree, Class<T> annotationType) {
+  public static <T extends Annotation> T getAnnotation(Tree tree, Class<T> annotationClass) {
     Symbol sym = getSymbol(tree);
-    return sym == null ? null : getAnnotation(sym, annotationType);
+    return sym == null ? null : getAnnotation(sym, annotationClass);
   }
 
   /**
@@ -584,8 +585,8 @@ public class ASTHelpers {
   // Symbol#getAnnotation is not intended for internal javac use, but because error-prone is run
   // after attribution it's safe to use here.
   @SuppressWarnings("deprecation")
-  public static <T extends Annotation> T getAnnotation(Symbol sym, Class<T> annotationType) {
-    return sym == null ? null : sym.getAnnotation(annotationType);
+  public static <T extends Annotation> T getAnnotation(Symbol sym, Class<T> annotationClass) {
+    return sym == null ? null : sym.getAnnotation(annotationClass);
   }
 
   /** @return all values of the given enum type, in declaration order. */

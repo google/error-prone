@@ -715,16 +715,17 @@ public class Matchers {
   }
 
   /**
-   * Determines whether an expression has an annotation of the given type.
-   * This includes annotations inherited from superclasses due to @Inherited.
+   * Determines whether an expression has an annotation of the given type. This includes annotations
+   * inherited from superclasses due to @Inherited.
    *
-   * @param annotationType The type of the annotation to look for (e.g, "javax.annotation.Nullable")
+   * @param annotationClass the binary class name of the annotation (e.g.
+   *     "javax.annotation.Nullable", or "some.package.OuterClassName$InnerClassName")
    */
-  public static <T extends Tree> Matcher<T> hasAnnotation(final String annotationType) {
+  public static <T extends Tree> Matcher<T> hasAnnotation(final String annotationClass) {
     return new Matcher<T>() {
       @Override
-      public boolean matches (T tree, VisitorState state) {
-        return ASTHelpers.hasAnnotation(ASTHelpers.getSymbol(tree), annotationType, state);
+      public boolean matches(T tree, VisitorState state) {
+        return ASTHelpers.hasAnnotation(ASTHelpers.getSymbol(tree), annotationClass, state);
       }
     };
   }
@@ -747,13 +748,14 @@ public class Matchers {
 
 
   /**
-   * Matches if a method or any method it overrides has an annotation of the given type.
-   * JUnit 4's {@code @Test}, {@code @Before}, and {@code @After} annotations behave this way.
+   * Matches if a method or any method it overrides has an annotation of the given type. JUnit 4's
+   * {@code @Test}, {@code @Before}, and {@code @After} annotations behave this way.
    *
-   * @param annotationType The type of the annotation to look for (e.g, "org.junit.Test")
+   * @param annotationClass the binary class name of the annotation (e.g.
+   *     "javax.annotation.Nullable", or "some.package.OuterClassName$InnerClassName")
    */
   public static Matcher<MethodTree> hasAnnotationOnAnyOverriddenMethod(
-      final String annotationType) {
+      final String annotationClass) {
     return new Matcher<MethodTree>() {
       @Override
       public boolean matches(MethodTree tree, VisitorState state) {
@@ -761,11 +763,11 @@ public class Matchers {
         if (methodSym == null) {
           return false;
         }
-        if (ASTHelpers.hasAnnotation(methodSym, annotationType, state)) {
+        if (ASTHelpers.hasAnnotation(methodSym, annotationClass, state)) {
           return true;
         }
         for (MethodSymbol method : ASTHelpers.findSuperMethods(methodSym, state.getTypes())) {
-          if (ASTHelpers.hasAnnotation(method, annotationType, state)) {
+          if (ASTHelpers.hasAnnotation(method, annotationClass, state)) {
             return true;
           }
         }
