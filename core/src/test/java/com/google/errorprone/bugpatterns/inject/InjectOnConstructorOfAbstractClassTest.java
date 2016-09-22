@@ -35,11 +35,24 @@ public class InjectOnConstructorOfAbstractClassTest {
   }
 
   @Test
-  public void testPositiveCase() throws Exception {
+  public void testPositiveCase() {
     compilationHelper
         .addSourceLines(
             "Foo.java",
             "import javax.inject.Inject;",
+            "abstract class Foo {",
+            "  // BUG: Diagnostic contains: Foo() {}",
+            "  @Inject Foo() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testGuiceConstructor() {
+    compilationHelper
+        .addSourceLines(
+            "Foo.java",
+            "import com.google.inject.Inject;",
             "abstract class Foo {",
             "  // BUG: Diagnostic contains: Foo() {}",
             "  @Inject Foo() {}",
@@ -63,7 +76,7 @@ public class InjectOnConstructorOfAbstractClassTest {
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper
         .addSourceLines(
             "Foo.java", //
