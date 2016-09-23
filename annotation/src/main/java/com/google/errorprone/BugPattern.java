@@ -138,7 +138,7 @@ public @interface BugPattern {
     SUGGESTION
   }
 
-  MaturityLevel maturity();
+  MaturityLevel maturity() default MaturityLevel.MATURE;
 
   public enum MaturityLevel {
     MATURE("On by default"),
