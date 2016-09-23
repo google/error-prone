@@ -325,13 +325,13 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </tr>
 <tr id="i30" class="altColor">
 <td class="colFirst"><code>static &lt;T extends com.sun.source.tree.Tree&gt;<br><a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/Matchers.html#hasAnnotation-java.lang.String-">hasAnnotation</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;annotationType)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/Matchers.html#hasAnnotation-java.lang.String-">hasAnnotation</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;annotationClass)</code>
 <div class="block">Determines whether an expression has an annotation of the given type.</div>
 </td>
 </tr>
 <tr id="i31" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodTree&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/Matchers.html#hasAnnotationOnAnyOverriddenMethod-java.lang.String-">hasAnnotationOnAnyOverriddenMethod</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;annotationType)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/Matchers.html#hasAnnotationOnAnyOverriddenMethod-java.lang.String-">hasAnnotationOnAnyOverriddenMethod</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;annotationClass)</code>
 <div class="block">Matches if a method or any method it overrides has an annotation of the given type.</div>
 </td>
 </tr>
@@ -1422,12 +1422,13 @@ public static&nbsp;<a href="../../../../com/google/errorprone/matchers/InstanceM
 <ul class="blockList">
 <li class="blockList">
 <h4>hasAnnotation</h4>
-<pre>public static&nbsp;&lt;T extends com.sun.source.tree.Tree&gt;&nbsp;<a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;&nbsp;hasAnnotation(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;annotationType)</pre>
-<div class="block">Determines whether an expression has an annotation of the given type.
- This includes annotations inherited from superclasses due to @Inherited.</div>
+<pre>public static&nbsp;&lt;T extends com.sun.source.tree.Tree&gt;&nbsp;<a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;&nbsp;hasAnnotation(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;annotationClass)</pre>
+<div class="block">Determines whether an expression has an annotation of the given type. This includes annotations
+ inherited from superclasses due to @Inherited.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>annotationType</code> - The type of the annotation to look for (e.g, "javax.annotation.Nullable")</dd>
+<dd><code>annotationClass</code> - the binary class name of the annotation (e.g.
+     "javax.annotation.Nullable", or "some.package.OuterClassName$InnerClassName")</dd>
 </dl>
 </li>
 </ul>
@@ -1452,12 +1453,13 @@ public static&nbsp;<a href="../../../../com/google/errorprone/matchers/InstanceM
 <ul class="blockList">
 <li class="blockList">
 <h4>hasAnnotationOnAnyOverriddenMethod</h4>
-<pre>public static&nbsp;<a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodTree&gt;&nbsp;hasAnnotationOnAnyOverriddenMethod(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;annotationType)</pre>
-<div class="block">Matches if a method or any method it overrides has an annotation of the given type.
- JUnit 4's <code>@Test</code>, <code>@Before</code>, and <code>@After</code> annotations behave this way.</div>
+<pre>public static&nbsp;<a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodTree&gt;&nbsp;hasAnnotationOnAnyOverriddenMethod(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;annotationClass)</pre>
+<div class="block">Matches if a method or any method it overrides has an annotation of the given type. JUnit 4's
+ <code>@Test</code>, <code>@Before</code>, and <code>@After</code> annotations behave this way.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>annotationType</code> - The type of the annotation to look for (e.g, "org.junit.Test")</dd>
+<dd><code>annotationClass</code> - the binary class name of the annotation (e.g.
+     "javax.annotation.Nullable", or "some.package.OuterClassName$InnerClassName")</dd>
 </dl>
 </li>
 </ul>
