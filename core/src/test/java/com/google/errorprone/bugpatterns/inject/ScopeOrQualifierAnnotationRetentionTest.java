@@ -51,6 +51,18 @@ public class ScopeOrQualifierAnnotationRetentionTest {
   }
 
   @Test
+  public void nestedQualifierInDaggerModule() {
+    compilationHelper
+        .addSourceLines(
+            "DaggerModule.java", //
+            "@dagger.Module class DaggerModule {",
+            "@javax.inject.Scope",
+            "public @interface TestAnnotation {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testIgnoredOnAndroid() {
     compilationHelper
         .setArgs(Collections.singletonList("-XDandroidCompatible=true"))

@@ -213,13 +213,14 @@ public class ASTHelpers {
   }
 
   /**
-   * Given a TreePath, walks up the tree until it finds a node of the given type and returns
-   * the path from that node to the top-level node in the path (typically a
-   * {@code CompilationUnitTree}).
+   * Given a TreePath, finds the first enclosing node of the given type and returns the path from
+   * the enclosing node to the top-level {@code CompilationUnitTree}.
    */
-  public static <T> TreePath findPathFromEnclosingNodeToTopLevel(TreePath path, Class<T> klass) {
-    while (path != null && !(klass.isInstance(path.getLeaf()))) {
-      path = path.getParentPath();
+  private static <T> TreePath findPathFromEnclosingNodeToTopLevel(TreePath path, Class<T> klass) {
+    if (path != null) {
+      do {
+        path = path.getParentPath();
+      } while (path != null && !(klass.isInstance(path.getLeaf())));
     }
     return path;
   }

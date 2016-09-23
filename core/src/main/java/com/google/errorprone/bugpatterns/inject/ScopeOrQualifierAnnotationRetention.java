@@ -34,6 +34,7 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.InjectMatchers;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
@@ -47,10 +48,6 @@ import javax.annotation.Nullable;
 @BugPattern(
   name = "InjectScopeOrQualifierAnnotationRetention",
   summary = "Scoping and qualifier annotations must have runtime retention.",
-  explanation =
-      "The JSR-330 spec allows use of reflection. Not having runtime "
-          + "retention on scoping or qualifer annotations will cause unexpected "
-          + "behavior in frameworks that use reflection.",
   category = INJECT,
   severity = ERROR,
   maturity = EXPERIMENTAL
@@ -69,6 +66,9 @@ public class ScopeOrQualifierAnnotationRetention extends BugChecker implements C
               hasAnnotation(GUICE_BINDING_ANNOTATION),
               hasAnnotation(JAVAX_QUALIFIER_ANNOTATION)));
 
+  private static final Matcher<ClassTree> IS_A_DAGGER_CLASS =
+      anyOf(InjectMatchers.<ClassTree>isDaggerComponent(), hasAnnotation("dagger.Module"));
+
   @Override
   public final Description matchClass(ClassTree classTree, VisitorState state) {
     // TODO(glorioso): This is a poor hack to exclude android apps that are more likely to not have
@@ -77,10 +77,17 @@ public class ScopeOrQualifierAnnotationRetention extends BugChecker implements C
     if (!state.isAndroidCompatible()
         && SCOPE_OR_QUALIFIER_ANNOTATION_MATCHER.matches(classTree, state)) {
       Retention retention = ASTHelpers.getAnnotation(classTree, Retention.class);
+      // Default retention is CLASS, not RUNTIME, so return true if retention == null
       if (retention != null && retention.value().equals(RUNTIME)) {
         return Description.NO_MATCH;
       }
-      // Default retention is CLASS, not RUNTIME, so return true if retention == null
+
+      // Is this in a dagger component?
+      ClassTree outer = ASTHelpers.findEnclosingNode(state.getPath(), ClassTree.class);
+      if (outer != null && IS_A_DAGGER_CLASS.matches(outer, state)) {
+        return Description.NO_MATCH;
+      }
+
       return describe(classTree, state, retention);
     }
     return Description.NO_MATCH;
