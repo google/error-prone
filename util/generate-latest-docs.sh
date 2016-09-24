@@ -1,5 +1,7 @@
 # https://github.com/google/dagger/blob/master/util/generate-latest-docs.sh
 
+set -eu
+
 if [ "$TRAVIS_REPO_SLUG" == "google/error-prone" ] && \
    [ "$TRAVIS_JDK_VERSION" == "oraclejdk8" ] && \
    [ "$TRAVIS_PULL_REQUEST" == "false" ] && \
