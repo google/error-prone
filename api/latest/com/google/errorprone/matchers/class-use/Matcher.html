@@ -149,11 +149,11 @@
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code>protected <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodTree&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">JUnit4TearDownNotRun.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/JUnit4TearDownNotRun.html#methodMatcher--">methodMatcher</a></span>()</code>&nbsp;</td>
+<td class="colLast"><span class="typeNameLabel">JUnit4SetUpNotRun.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/JUnit4SetUpNotRun.html#methodMatcher--">methodMatcher</a></span>()</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>protected <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodTree&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">JUnit4SetUpNotRun.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/JUnit4SetUpNotRun.html#methodMatcher--">methodMatcher</a></span>()</code>&nbsp;</td>
+<td class="colLast"><span class="typeNameLabel">JUnit4TearDownNotRun.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/JUnit4TearDownNotRun.html#methodMatcher--">methodMatcher</a></span>()</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super com.sun.source.tree.MethodInvocationTree&gt;</code></td>
@@ -163,17 +163,17 @@
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodInvocationTree&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">CheckReturnValue.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/CheckReturnValue.html#specializedMatcher--">specializedMatcher</a></span>()</code>
-<div class="block">Return a matcher for method invocations in which the method being called has the
- <code>@CheckReturnValue</code> annotation.</div>
-</td>
-</tr>
-<tr class="altColor">
 <td class="colFirst"><code>abstract <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super com.sun.source.tree.MethodInvocationTree&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">AbstractReturnValueIgnored.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html#specializedMatcher--">specializedMatcher</a></span>()</code>
 <div class="block">Match whatever additional conditions concrete subclasses want to match (a list of known
  side-effect-free methods, has a @CheckReturnValue annotation, etc.).</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodInvocationTree&gt;</code></td>
+<td class="colLast"><span class="typeNameLabel">CheckReturnValue.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/CheckReturnValue.html#specializedMatcher--">specializedMatcher</a></span>()</code>
+<div class="block">Return a matcher for method invocations in which the method being called has the
+ <code>@CheckReturnValue</code> annotation.</div>
 </td>
 </tr>
 </tbody>
