@@ -24,7 +24,6 @@ import com.google.common.collect.FluentIterable;
 import com.google.errorprone.BugPattern.MaturityLevel;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.BugPattern.Suppressibility;
-import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -109,20 +108,5 @@ public final class BugPatternInstance {
       result.put(key.getSimpleName().toString(), mirror.getElementValues().get(key).getValue());
     }
     return result;
-  }
-
-  public enum Comparators implements Comparator<BugPatternInstance> {
-    BY_SEVERITY {
-      @Override
-      public int compare(BugPatternInstance o1, BugPatternInstance o2) {
-        return o1.severity.compareTo(o2.severity);
-      }
-    },
-    BY_NAME {
-      @Override
-      public int compare(BugPatternInstance o1, BugPatternInstance o2) {
-        return o1.name.compareTo(o2.name);
-      }
-    }
   }
 }

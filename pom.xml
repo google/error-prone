@@ -40,6 +40,7 @@
     <module>annotation</module>
     <module>annotations</module>
     <module>docgen</module>
+    <module>docgen_processor</module>
     <module>ant</module>
   </modules>
 

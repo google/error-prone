@@ -280,7 +280,7 @@
       <dependencies>
         <dependency>
           <groupId>com.google.errorprone</groupId>
-          <artifactId>error_prone_docgen</artifactId>
+          <artifactId>error_prone_docgen_processor</artifactId>
           <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -289,33 +289,6 @@
           <version>${guava.version}</version>
         </dependency>
       </dependencies>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>1.1.1</version>
-            <executions>
-              <execution>
-                <phase>site</phase>
-                <goals>
-                  <goal>java</goal>
-                </goals>
-                <configuration>
-                  <mainClass>com.google.errorprone.DocGenTool</mainClass>
-                  <arguments>
-                    <argument>-bug_patterns=${basedir}/target/generated-sources/annotations/bugPatterns.txt</argument>
-                    <argument>-docs_repository=${basedir}/target/generated-wiki/</argument>
-                    <argument>-examplesDir=${basedir}/src/test/java/</argument>
-                    <argument>-explanations=${basedir}/../docs/bugpattern/</argument>
-                    <argument>-target=external</argument>
-                  </arguments>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
     </profile>
   </profiles>
 </project>
