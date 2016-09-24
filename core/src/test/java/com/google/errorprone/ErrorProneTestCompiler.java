@@ -34,7 +34,7 @@ public class ErrorProneTestCompiler {
   /** Wraps {@link com.google.errorprone.ErrorProneCompiler.Builder} */
   public static class Builder {
 
-    final ErrorProneCompiler.Builder wrappedCompilerBuilder = ErrorProneCompiler.builder();
+    final BaseErrorProneCompiler.Builder wrappedCompilerBuilder = BaseErrorProneCompiler.builder();
 
     public ErrorProneTestCompiler build() {
       return new ErrorProneTestCompiler(wrappedCompilerBuilder.build());
@@ -61,14 +61,14 @@ public class ErrorProneTestCompiler {
     }
   }
 
-  private final ErrorProneCompiler compiler;
+  private final BaseErrorProneCompiler compiler;
   private final ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
 
   public ErrorProneInMemoryFileManager fileManager() {
     return fileManager;
   }
 
-  private ErrorProneTestCompiler(ErrorProneCompiler compiler) {
+  private ErrorProneTestCompiler(BaseErrorProneCompiler compiler) {
     this.compiler = compiler;
   }
 

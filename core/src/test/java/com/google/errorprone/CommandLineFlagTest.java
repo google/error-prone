@@ -27,6 +27,7 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.bugpatterns.EmptyIfStatement;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.scanner.BuiltInCheckerSuppliers;
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.sun.source.tree.ReturnTree;
 import com.sun.tools.javac.main.Main.Result;
@@ -100,9 +101,11 @@ public class CommandLineFlagTest {
   public void setUp() {
     output = new StringWriter();
     diagnosticHelper = new DiagnosticTestHelper();
-    builder = new ErrorProneTestCompiler.Builder()
-        .listenToDiagnostics(diagnosticHelper.collector)
-        .redirectOutputTo(new PrintWriter(output, true));
+    builder =
+        new ErrorProneTestCompiler.Builder()
+            .report(BuiltInCheckerSuppliers.defaultChecks())
+            .listenToDiagnostics(diagnosticHelper.collector)
+            .redirectOutputTo(new PrintWriter(output, true));
   }
 
 

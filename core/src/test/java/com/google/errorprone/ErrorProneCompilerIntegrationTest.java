@@ -40,6 +40,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.bugpatterns.NonAtomicVolatileUpdate;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.scanner.BuiltInCheckerSuppliers;
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.IdentifierTree;
@@ -90,10 +91,12 @@ public class ErrorProneCompilerIntegrationTest {
   public void setUp() {
     diagnosticHelper = new DiagnosticTestHelper();
     outputStream = new StringWriter();
-    compilerBuilder = new ErrorProneTestCompiler.Builder()
-        .named("test")
-        .redirectOutputTo(new PrintWriter(outputStream, true))
-        .listenToDiagnostics(diagnosticHelper.collector);
+    compilerBuilder =
+        new ErrorProneTestCompiler.Builder()
+            .named("test")
+            .report(BuiltInCheckerSuppliers.defaultChecks())
+            .redirectOutputTo(new PrintWriter(outputStream, true))
+            .listenToDiagnostics(diagnosticHelper.collector);
     compiler = compilerBuilder.build();
   }
 
