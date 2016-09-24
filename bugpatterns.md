@@ -71,6 +71,9 @@ Enum switch statement is missing cases
 __[MissingOverride](bugpattern/MissingOverride)__<br>
 method overrides method in supertype; expected @Override
 
+__[NarrowingCompoundAssignment](bugpattern/NarrowingCompoundAssignment)__<br>
+Compound assignments to bytes, shorts, chars, and floats hide dangerous casts
+
 __[NonAtomicVolatileUpdate](bugpattern/NonAtomicVolatileUpdate)__<br>
 This update of a volatile variable is non-atomic
 
@@ -273,6 +276,9 @@ tearDown() method will not be run; Please add an @After annotation
 __[JUnit4TestNotRun](bugpattern/JUnit4TestNotRun)__<br>
 Test method will not be run; please add @Test annotation
 
+__[JavaxInjectOnAbstractMethod](bugpattern/JavaxInjectOnAbstractMethod)__<br>
+Abstract and default methods are not injectable with javax.inject.Inject
+
 __[LongLiteralLowerCaseSuffix](bugpattern/LongLiteralLowerCaseSuffix)__<br>
 Prefer &#39;L&#39; to &#39;l&#39; for the suffix to long literals
 
@@ -293,9 +299,6 @@ Using a collection function with itself as the argument.
 
 __[MoreThanOneInjectableConstructor](bugpattern/MoreThanOneInjectableConstructor)__<br>
 This class has more than one @Inject-annotated constructor. Please remove the @Inject annotation from all but one of them.
-
-__[NarrowingCompoundAssignment](bugpattern/NarrowingCompoundAssignment)__<br>
-Compound assignments to bytes, shorts, chars, and floats hide dangerous casts
 
 __[NonCanonicalStaticImport](bugpattern/NonCanonicalStaticImport)__<br>
 Static import of type uses non-canonical name
@@ -398,6 +401,9 @@ Subclasses of Fragment must be instantiable via Class#newInstance(): the class m
 __[HardCodedSdCardPath](bugpattern/HardCodedSdCardPath)__<br>
 Hardcoded reference to /sdcard
 
+__[InjectOnConstructorOfAbstractClass](bugpattern/InjectOnConstructorOfAbstractClass)__<br>
+Constructors on abstract classes are never directly @Injected, only the constructors of their subclasses can be @Inject&#39;ed.
+
 __[IterableAndIterator](bugpattern/IterableAndIterator)__<br>
 Class should not implement both `Iterable` and `Iterator`
 
@@ -473,9 +479,6 @@ Injected constructors cannot be optional nor have binding annotations
 
 __[JMockTestWithoutRunWithOrRuleAnnotation](bugpattern/JMockTestWithoutRunWithOrRuleAnnotation)__<br>
 jMock tests must have a @RunWith(JMock.class) annotation, or the Mockery field must have a @Rule JUnit annotation
-
-__[JavaxInjectOnAbstractMethod](bugpattern/JavaxInjectOnAbstractMethod)__<br>
-Abstract and default methods are not injectable with javax.inject.Inject
 
 __[JavaxInjectOnFinalField](bugpattern/JavaxInjectOnFinalField)__<br>
 @javax.inject.Inject cannot be put on a final field.
