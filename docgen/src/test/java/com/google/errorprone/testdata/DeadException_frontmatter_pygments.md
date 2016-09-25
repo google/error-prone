@@ -4,7 +4,6 @@ summary: Exception created but not thrown
 layout: bugpattern
 category: JDK
 severity: ERROR
-maturity: MATURE
 ---
 
 <!--
