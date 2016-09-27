@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.inject;
 
 import static com.google.errorprone.BugPattern.Category.INJECT;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFix.delete;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
@@ -55,8 +54,7 @@ import com.sun.source.tree.MethodTree;
           + " concrete subclasses, not directly by injection frameworks, so the `@Inject`"
           + " annotation has no effect.",
   category = INJECT,
-  severity = WARNING,
-  maturity = EXPERIMENTAL
+  severity = WARNING
 )
 public class InjectOnConstructorOfAbstractClass extends BugChecker implements MethodTreeMatcher {
 
