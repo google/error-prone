@@ -371,7 +371,13 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
     @Override
     public boolean matches(ExpressionTree expressionTree, VisitorState state) {
       Symbol sym = ASTHelpers.getSymbol(expressionTree);
-      return sym != null && sym.getSimpleName().toString().startsWith("assert");
+
+      if (sym == null) {
+        return false;
+      }
+
+      String symSimpleName = sym.getSimpleName().toString();
+      return symSimpleName.startsWith("assert") || symSimpleName.startsWith("verify");
     }
   }
 

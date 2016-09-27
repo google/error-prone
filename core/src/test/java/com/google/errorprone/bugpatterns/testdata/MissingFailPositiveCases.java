@@ -42,6 +42,15 @@ public class MissingFailPositiveCases extends TestCase {
     }
   }
 
+  public void catchVerify() {
+    try {
+      // BUG: Diagnostic contains: fail()
+      dummyMethod();
+    } catch (Exception e) {
+      verifyDummy();
+    }
+  }
+
   public void expectedException_throwOutsideTryTree() throws Exception {
     try {
       // BUG: Diagnostic contains: fail()
@@ -133,4 +142,6 @@ public class MissingFailPositiveCases extends TestCase {
   private static void dummyMethod() {}
 
   private static void assertDummy() {}
+
+  private static void verifyDummy() {}
 }
