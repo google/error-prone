@@ -152,6 +152,7 @@ import com.google.errorprone.bugpatterns.formatstring.FormatString;
 import com.google.errorprone.bugpatterns.formatstring.FormatStringAnnotationChecker;
 import com.google.errorprone.bugpatterns.inject.AssistedInjectAndInjectOnConstructors;
 import com.google.errorprone.bugpatterns.inject.AssistedInjectAndInjectOnSameConstructor;
+import com.google.errorprone.bugpatterns.inject.AutoFactoryAtInject;
 import com.google.errorprone.bugpatterns.inject.InjectOnConstructorOfAbstractClass;
 import com.google.errorprone.bugpatterns.inject.InjectedConstructorAnnotations;
 import com.google.errorprone.bugpatterns.inject.InvalidTargetingOnScopingAnnotation;
@@ -347,6 +348,7 @@ public class BuiltInCheckerSuppliers {
   public static final ImmutableSet<BugCheckerInfo> DISABLED_CHECKS =
       getSuppliers(
           ArgumentParameterSwap.class,
+          AutoFactoryAtInject.class,
           AssertFalse.class,
           AssistedInjectAndInjectOnConstructors.class,
           AssistedInjectAndInjectOnSameConstructor.class,

@@ -46,6 +46,12 @@ public final class InjectMatchers {
   public static final Matcher<AnnotationTree> IS_APPLICATION_OF_JAVAX_INJECT =
       new AnnotationType(JAVAX_INJECT_ANNOTATION);
 
+  public static final Matcher<AnnotationTree> IS_APPLICATION_OF_GUICE_INJECT =
+      new AnnotationType(GUICE_INJECT_ANNOTATION);
+
+  public static final Matcher<AnnotationTree> IS_APPLICATION_OF_AT_INJECT =
+      anyOf(IS_APPLICATION_OF_JAVAX_INJECT, IS_APPLICATION_OF_GUICE_INJECT);
+
   private static final Matcher<Tree> HAS_INJECT_ANNOTATION_MATCHER =
       anyOf(hasAnnotation(GUICE_INJECT_ANNOTATION), hasAnnotation(JAVAX_INJECT_ANNOTATION));
 
