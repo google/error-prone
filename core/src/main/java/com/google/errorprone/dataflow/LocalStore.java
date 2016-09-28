@@ -27,13 +27,12 @@ import static javax.lang.model.element.ElementKind.RESOURCE_VARIABLE;
 import com.google.common.collect.ImmutableMap;
 import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.Nullable;
 import javax.lang.model.element.Element;
 import org.checkerframework.dataflow.analysis.AbstractValue;
 import org.checkerframework.dataflow.analysis.FlowExpressions;
 import org.checkerframework.dataflow.analysis.Store;
 import org.checkerframework.dataflow.cfg.node.LocalVariableNode;
-import org.checkerframework.dataflow.cfg.node.VariableDeclarationNode;
-import org.checkerframework.javacutil.TreeUtils;
 
 /**
  * Immutable map from each local variable to its {@link AbstractValue}. Note that, while the
@@ -45,7 +44,8 @@ import org.checkerframework.javacutil.TreeUtils;
  *
  * @author deminguyen@google.com (Demi Nguyen)
  */
-public final class LocalStore<V extends AbstractValue<V>> implements Store<LocalStore<V>> {
+public final class LocalStore<V extends AbstractValue<V>>
+    implements Store<LocalStore<V>>, LocalVariableValues<V> {
 
   @SuppressWarnings({"unchecked", "rawtypes"}) // fully variant
   private static final LocalStore<?> EMPTY = new LocalStore(ImmutableMap.of());
@@ -61,13 +61,20 @@ public final class LocalStore<V extends AbstractValue<V>> implements Store<Local
     this.contents = ImmutableMap.copyOf(contents);
   }
 
+  @Override
+  public V valueOfLocalVariable(LocalVariableNode node, V defaultValue) {
+    V result = getInformation(node.getElement());
+    return result != null ? result : defaultValue;
+  }
+
   /**
-   * Returns the value for the given variable. {@code element} must come from a call to
-   * {@link LocalVariableNode#getElement()} or
-   * {@link TreeUtils#elementFromDeclaration(com.sun.source.tree.VariableTree)}(
-   * {@link VariableDeclarationNode#getTree()}).
+   * Returns the value for the given variable. {@code element} must come from a call to {@link
+   * LocalVariableNode#getElement()} or {@link
+   * org.checkerframework.javacutil.TreeUtils#elementFromDeclaration} ({@link
+   * org.checkerframework.dataflow.cfg.node.VariableDeclarationNode#getTree()}).
    */
-  public V getInformation(Element element) {
+  @Nullable
+  private V getInformation(Element element) {
     checkElementType(element);
     return contents.get(checkNotNull(element));
   }
@@ -89,10 +96,10 @@ public final class LocalStore<V extends AbstractValue<V>> implements Store<Local
     }
 
     /**
-     * Sets the value for the given variable. {@code element} must come from a call to
-     * {@link LocalVariableNode#getElement()} or
-     * {@link TreeUtils#elementFromDeclaration(com.sun.source.tree.VariableTree)}(
-     * {@link VariableDeclarationNode#getTree()}).
+     * Sets the value for the given variable. {@code element} must come from a call to {@link
+     * LocalVariableNode#getElement()} or {@link
+     * org.checkerframework.javacutil.TreeUtils#elementFromDeclaration} ({@link
+     * org.checkerframework.dataflow.cfg.node.VariableDeclarationNode#getTree()}).
      */
     public Builder<V> setInformation(Element element, V value) {
       checkElementType(element);

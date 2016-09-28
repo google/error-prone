@@ -37,6 +37,7 @@ import com.google.common.io.Files;
 import com.google.common.primitives.UnsignedInteger;
 import com.google.common.primitives.UnsignedLong;
 import com.google.errorprone.dataflow.LocalStore;
+import com.google.errorprone.dataflow.LocalVariableValues;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -85,11 +86,11 @@ import org.checkerframework.dataflow.cfg.node.TypeCastNode;
 import org.checkerframework.dataflow.cfg.node.VariableDeclarationNode;
 
 /**
- * The {@code TransferFunction} for our nullability analysis.  This analysis determines, for all
- * variables and parameters, whether they are definitely null ({@link Nullness#NULL}),
- * definitely non-null ({@link Nullness#NONNULL}), possibly null
- * ({@link Nullness#NULLABLE}), or are on an infeasible path ({@link Nullness#BOTTOM}).
- * This analysis depends only on the code and does not take nullness annotations into account.
+ * The {@code TransferFunction} for our nullability analysis. This analysis determines, for all
+ * variables and parameters, whether they are definitely null ({@link Nullness#NULL}), definitely
+ * non-null ({@link Nullness#NONNULL}), possibly null ({@link Nullness#NULLABLE}), or are on an
+ * infeasible path ({@link Nullness#BOTTOM}). This analysis depends only on the code and does not
+ * take nullness annotations into account.
  *
  * <p>Each {@code visit*()} implementation provides us with information about nullability that
  * applies <i>if the expression is successfully evaluated</i> (in other words, it did not throw an
@@ -130,22 +131,20 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
 
   private static final long serialVersionUID = -2413953917354086984L;
 
-  /**
-   * Matches methods that are statically known never to return null.
-   */
+  /** Matches methods that are statically known never to return null. */
   private static class ReturnValueIsNonNull implements Predicate<MethodInfo>, Serializable {
 
     private static final long serialVersionUID = -6277529478866058532L;
 
     private static final ImmutableSet<MemberName> METHODS_WITH_NON_NULLABLE_RETURNS =
         ImmutableSet.of(
-          // We would love to include all the methods of Files, but readFirstLine can return null.
-          member(Files.class.getName(), "toString"),
-          // Some methods of Class can return null, e.g. getAnnotation, getCanonicalName
-          member(Class.class.getName(), "getName"),
-          member(Class.class.getName(), "getSimpleName"),
-          member(Class.class.getName(), "forName"),
-          member(Charset.class.getName(), "forName"));
+            // We would love to include all the methods of Files, but readFirstLine can return null.
+            member(Files.class.getName(), "toString"),
+            // Some methods of Class can return null, e.g. getAnnotation, getCanonicalName
+            member(Class.class.getName(), "getName"),
+            member(Class.class.getName(), "getSimpleName"),
+            member(Class.class.getName(), "forName"),
+            member(Charset.class.getName(), "forName"));
     // TODO(cpovirk): respect nullness annotations (and also check them to ensure correctness!)
 
     private static final ImmutableSet<String> CLASSES_WITH_NON_NULLABLE_RETURNS =
@@ -181,7 +180,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
       // Any method explicitly annotated with @Nullable is assumed to be capable of returning
       // null.
       for (String annotation : methodInfo.annotations()) {
-        if (annotation.endsWith("Nullable")) {
+        if (annotation.endsWith(".Nullable")) {
           return false;
         }
       }
@@ -206,6 +205,8 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   }
 
   private final transient Set<VarSymbol> traversed = new HashSet<>();
+
+  private final Nullness defaultAssumption;
   private final Predicate<MethodInfo> methodReturnsNonNull;
 
   /**
@@ -214,9 +215,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    */
   private transient Context context;
 
-  /**
-   * Compilation unit to limit evaluating field initializers to.
-   */
+  /** Compilation unit to limit evaluating field initializers to. */
   private transient CompilationUnitTree compilationUnit;
 
   /**
@@ -224,17 +223,29 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    * returning methods.
    */
   public NullnessPropagationTransfer() {
-    this.methodReturnsNonNull = new ReturnValueIsNonNull();
+    this(NULLABLE, new ReturnValueIsNonNull());
   }
 
   /**
    * Constructs a {@link NullnessPropagationTransfer} instance with additional non-null returning
-   * methods.  The additional predicate is or'ed with the predicate for the built-in set of
-   * non-null returning methods.
+   * methods. The additional predicate is or'ed with the predicate for the built-in set of non-null
+   * returning methods.
    */
   public NullnessPropagationTransfer(Predicate<MethodInfo> additionalNonNullReturningMethods) {
-    this.methodReturnsNonNull = Predicates.or(
-        new ReturnValueIsNonNull(), additionalNonNullReturningMethods);
+    this(NULLABLE, Predicates.or(new ReturnValueIsNonNull(), additionalNonNullReturningMethods));
+  }
+
+  /**
+   * Constructor for use by subclasses.
+   *
+   * @param defaultAssumption used if a field or method can't be resolved as well as as the default
+   *        for local variables, field and array reads in the absence of better information
+   * @param methodReturnsNonNull determines whether a method's return value is known to be non-null
+   */
+  protected NullnessPropagationTransfer(
+      Nullness defaultAssumption, Predicate<MethodInfo> methodReturnsNonNull) {
+    this.defaultAssumption = defaultAssumption;
+    this.methodReturnsNonNull = methodReturnsNonNull;
   }
 
   /**
@@ -243,7 +254,8 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    */
   NullnessPropagationTransfer setContext(@Nullable Context context) {
     // This is a best-effort check (similar to ArrayList iterators, for instance), no guarantee
-    Preconditions.checkArgument(context == null || this.context == null,
+    Preconditions.checkArgument(
+        context == null || this.context == null,
         "Context already set: reset after use and don't use this class concurrently");
     this.context = context;
     // Clear traversed set just-in-case as this marks the beginning or end of analyzing a method
@@ -253,7 +265,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
 
   /**
    * Set compilation unit being analyzed, to limit analyzing field initializers to that compilation
-   * unit.  Analyzing initializers from other compilation units tends to fail because type
+   * unit. Analyzing initializers from other compilation units tends to fail because type
    * information is sometimes missing on nodes returned from {@link Trees}.
    */
   NullnessPropagationTransfer setCompilationUnit(@Nullable CompilationUnitTree compilationUnit) {
@@ -306,23 +318,24 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   }
 
   @Override
-  Nullness visitInstanceOf(InstanceOfNode node, SubNodeValues inputs,
-      LocalVariableUpdates thenUpdates, LocalVariableUpdates elseUpdates) {
+  Nullness visitInstanceOf(
+      InstanceOfNode node,
+      SubNodeValues inputs,
+      LocalVariableUpdates thenUpdates,
+      LocalVariableUpdates elseUpdates) {
     setNonnullIfLocalVariable(thenUpdates, node.getOperand());
     return NONNULL; // the result of an instanceof is a primitive boolean, so it's non-null
   }
 
   @Override
   Nullness visitTypeCast(TypeCastNode node, SubNodeValues inputs) {
-    return hasPrimitiveType(node)
-        ? NONNULL
-        : inputs.valueOfSubNode(node.getOperand());
+    return hasPrimitiveType(node) ? NONNULL : inputs.valueOfSubNode(node.getOperand());
   }
 
   /**
    * The result of string concatenation is always non-null. If an operand is {@code null}, it is
-   * converted to {@code "null"}. For more information, see
-   * JLS 15.18.1 "String Concatenation Operator +", and 5.1.11, "String Conversion".
+   * converted to {@code "null"}. For more information, see JLS 15.18.1 "String Concatenation
+   * Operator +", and 5.1.11, "String Conversion".
    */
   @Override
   Nullness visitStringConcatenate() {
@@ -346,30 +359,28 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   }
 
   @Override
-  void visitEqualTo(EqualToNode node, SubNodeValues inputs, LocalVariableUpdates thenUpdates,
+  void visitEqualTo(
+      EqualToNode node,
+      SubNodeValues inputs,
+      LocalVariableUpdates thenUpdates,
       LocalVariableUpdates elseUpdates) {
-    handleEqualityComparison(true,
-        node.getLeftOperand(),
-        node.getRightOperand(),
-        inputs,
-        thenUpdates,
-        elseUpdates);
+    handleEqualityComparison(
+        true, node.getLeftOperand(), node.getRightOperand(), inputs, thenUpdates, elseUpdates);
   }
 
   @Override
-  void visitNotEqual(NotEqualNode node, SubNodeValues inputs, LocalVariableUpdates thenUpdates,
+  void visitNotEqual(
+      NotEqualNode node,
+      SubNodeValues inputs,
+      LocalVariableUpdates thenUpdates,
       LocalVariableUpdates elseUpdates) {
-    handleEqualityComparison(false,
-        node.getLeftOperand(),
-        node.getRightOperand(),
-        inputs,
-        thenUpdates,
-        elseUpdates);
+    handleEqualityComparison(
+        false, node.getLeftOperand(), node.getRightOperand(), inputs, thenUpdates, elseUpdates);
   }
 
   @Override
-  Nullness visitAssignment(AssignmentNode node, SubNodeValues inputs,
-      LocalVariableUpdates updates) {
+  Nullness visitAssignment(
+      AssignmentNode node, SubNodeValues inputs, LocalVariableUpdates updates) {
     Nullness value = inputs.valueOfSubNode(node.getExpression());
 
     Node target = node.getTarget();
@@ -412,14 +423,14 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    *
    * <p>Edge case: {@code node} can be a captured local variable accessed from inside a local or
    * anonymous inner class, or possibly from inside a lambda expression (even though these manifest
-   * as fields in bytecode).  As of 7/2016 this analysis doesn't have any knowledge of captured
-   * local variables will will essentially assume whatever default is used in {@link #values}.
+   * as fields in bytecode). As of 7/2016 this analysis doesn't have any knowledge of captured local
+   * variables will will essentially assume whatever default is used in {@link #values}.
    */
   @Override
-  Nullness visitLocalVariable(LocalVariableNode node, LocalVariableValues values) {
+  Nullness visitLocalVariable(LocalVariableNode node, LocalVariableValues<Nullness> values) {
     return hasPrimitiveType(node) || hasNonNullConstantValue(node)
         ? NONNULL
-        : values.valueOfLocalVariable(node);
+        : values.valueOfLocalVariable(node, defaultAssumption);
   }
 
   /**
@@ -447,7 +458,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   Nullness visitArrayAccess(
       ArrayAccessNode node, SubNodeValues inputs, LocalVariableUpdates updates) {
     setNonnullIfLocalVariable(updates, node.getArray());
-    return hasPrimitiveType(node) ? NONNULL : NULLABLE;
+    return hasPrimitiveType(node) ? NONNULL : defaultAssumption;
   }
 
   /**
@@ -456,8 +467,11 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    * returns a primitive type).
    */
   @Override
-  Nullness visitMethodInvocation(MethodInvocationNode node, LocalVariableUpdates thenUpdates,
-      LocalVariableUpdates elseUpdates, LocalVariableUpdates bothUpdates) {
+  Nullness visitMethodInvocation(
+      MethodInvocationNode node,
+      LocalVariableUpdates thenUpdates,
+      LocalVariableUpdates elseUpdates,
+      LocalVariableUpdates bothUpdates) {
     ClassAndMethod callee = tryGetMethodSymbol(node.getTree());
     setReceiverNonnull(bothUpdates, node.getTarget().getReceiver(), callee);
     setUnconditionalArgumentNullness(bothUpdates, node.getArguments(), callee);
@@ -471,8 +485,8 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   }
 
   @Override
-  Nullness visitArrayCreation(ArrayCreationNode node, SubNodeValues inputs,
-      LocalVariableUpdates updates) {
+  Nullness visitArrayCreation(
+      ArrayCreationNode node, SubNodeValues inputs, LocalVariableUpdates updates) {
     return NONNULL;
   }
 
@@ -501,9 +515,9 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    * @param rightNode the right-hand side of the comparison
    * @param inputs access to nullness values of the left and right nodes
    * @param thenUpdates the local variables whose nullness values should be updated if the
-   *      comparison returns {@code true}
+   *     comparison returns {@code true}
    * @param elseUpdates the local variables whose nullness values should be updated if the
-   *      comparison returns {@code false}
+   *     comparison returns {@code false}
    */
   private static void handleEqualityComparison(
       boolean equalTo,
@@ -576,9 +590,9 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     return null;
   }
 
-  private Nullness fieldNullness(@Nullable ClassAndField accessed) {
+  Nullness fieldNullness(@Nullable ClassAndField accessed) {
     if (accessed == null) {
-      return NULLABLE;
+      return defaultAssumption;
     }
 
     if (accessed.field.equals("class")) {
@@ -594,7 +608,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
       return NONNULL;
     }
     if (accessed.isStatic() && accessed.isFinal()) {
-      if (CLASSES_WITH_NON_NULL_CONSTANTS.contains(accessed.clazz)){
+      if (CLASSES_WITH_NON_NULL_CONSTANTS.contains(accessed.clazz)) {
         return NONNULL;
       }
       // Try to evaluate initializer.
@@ -605,12 +619,12 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
       }
     }
 
-    return NULLABLE;
+    return defaultAssumption;
   }
 
   private Nullness returnValueNullness(@Nullable ClassAndMethod callee) {
     if (callee == null) {
-      return NULLABLE;
+      return defaultAssumption;
     }
 
     return methodReturnsNonNull.apply(callee) ? NONNULL : NULLABLE;
@@ -646,8 +660,13 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
       // function into a method that operates on Javac Nodes.
       TreePath initializerPath = TreePath.getPath(fieldDeclPath, initializer);
       UnderlyingAST ast = new UnderlyingAST.CFGStatement(initializerPath.getLeaf());
-      ControlFlowGraph cfg = CFGBuilder.build(initializerPath, javacEnv, ast,
-          /* assumeAssertionsEnabled */ false, /* assumeAssertionsDisabled */ false);
+      ControlFlowGraph cfg =
+          CFGBuilder.build(
+              initializerPath,
+              javacEnv,
+              ast,
+              /* assumeAssertionsEnabled */ false, /* assumeAssertionsDisabled */
+              false);
       Analysis<Nullness, LocalStore<Nullness>, NullnessPropagationTransfer> analysis =
           new Analysis<>(javacEnv, this);
       analysis.performAnalysis(cfg);
@@ -765,8 +784,13 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     final boolean isPrimitive;
     final boolean isBoolean;
 
-    private ClassAndMethod(String clazz, String method, List<String> annotations, boolean isStatic,
-        boolean isPrimitive, boolean isBoolean) {
+    private ClassAndMethod(
+        String clazz,
+        String method,
+        List<String> annotations,
+        boolean isStatic,
+        boolean isPrimitive,
+        boolean isBoolean) {
       this.clazz = clazz;
       this.method = method;
       this.annotations = ImmutableList.copyOf(annotations);
@@ -781,7 +805,8 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
       for (AnnotationMirror annotationMirror : annotationMirrors) {
         annotations.add(annotationMirror.getAnnotationType().toString());
       }
-      return new ClassAndMethod(symbol.owner.getQualifiedName().toString(),
+      return new ClassAndMethod(
+          symbol.owner.getQualifiedName().toString(),
           symbol.getSimpleName().toString(),
           annotations,
           symbol.isStatic(),
@@ -819,7 +844,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     }
   }
 
-  private static final class ClassAndField implements Member {
+  static final class ClassAndField implements Member {
     final VarSymbol symbol;
     final String clazz;
     final String field;
@@ -856,9 +881,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     }
   }
 
-  /**
-   * Classes where we know that all static final fields are non-null.
-   */
+  /** Classes where we know that all static final fields are non-null. */
   @VisibleForTesting
   static final ImmutableSet<String> CLASSES_WITH_NON_NULL_CONSTANTS =
       ImmutableSet.of(
@@ -874,8 +897,8 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    * argument list. For example, "-1" means "the final parameter."
    */
   @VisibleForTesting
-  static final ImmutableSetMultimap<MemberName, Integer>
-      REQUIRED_NON_NULL_PARAMETERS = new ImmutableSetMultimap.Builder<MemberName, Integer>()
+  static final ImmutableSetMultimap<MemberName, Integer> REQUIRED_NON_NULL_PARAMETERS =
+      new ImmutableSetMultimap.Builder<MemberName, Integer>()
           .put(member(Preconditions.class, "checkNotNull"), 0)
           .put(member(Verify.class, "verifyNotNull"), 0)
           .put(member("junit.framework.Assert", "assertNotNull"), -1)
@@ -888,8 +911,8 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    * argument list. For example, "-1" means "the final parameter."
    */
   @VisibleForTesting
-  static final ImmutableSetMultimap<MemberName, Integer>
-      NULL_IMPLIES_TRUE_PARAMETERS = new ImmutableSetMultimap.Builder<MemberName, Integer>()
+  static final ImmutableSetMultimap<MemberName, Integer> NULL_IMPLIES_TRUE_PARAMETERS =
+      new ImmutableSetMultimap.Builder<MemberName, Integer>()
           .put(member(Strings.class, "isNullOrEmpty"), 0)
           .build();
 }

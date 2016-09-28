@@ -22,6 +22,7 @@ import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropaga
 import static org.checkerframework.javacutil.TreeUtils.elementFromDeclaration;
 
 import com.google.errorprone.dataflow.LocalStore;
+import com.google.errorprone.dataflow.LocalVariableValues;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -125,7 +126,7 @@ import org.checkerframework.dataflow.cfg.node.WideningConversionNode;
 abstract class AbstractNullnessPropagationTransfer
     implements TransferFunction<Nullness, LocalStore<Nullness>> {
   @Override
-  public final LocalStore<Nullness> initialStore(
+  public LocalStore<Nullness> initialStore(
       UnderlyingAST underlyingAST, List<LocalVariableNode> parameters) {
     return LocalStore.empty();
   }
@@ -136,17 +137,6 @@ abstract class AbstractNullnessPropagationTransfer
    */
   interface SubNodeValues {
     Nullness valueOfSubNode(Node node);
-  }
-
-  /**
-   * Provides the nullness values of local variables based only on their past assignments (as far as
-   * they can be determined). If the nullness value cannot be definitively determined (for example,
-   * because the variable is a parameter with no assignments within the method), it will be returned
-   * as {@code NULLABLE}.
-   */
-  // TODO(kmb) remove this interface and introduce a sensible method into LocalStore instead
-  interface LocalVariableValues {
-    Nullness valueOfLocalVariable(LocalVariableNode node);
   }
 
   /**
@@ -278,11 +268,11 @@ abstract class AbstractNullnessPropagationTransfer
   public final TransferResult<Nullness, LocalStore<Nullness>> visitLocalVariable(
       LocalVariableNode node, TransferInput<Nullness, LocalStore<Nullness>> input) {
     ReadableLocalVariableUpdates updates = new ReadableLocalVariableUpdates();
-    Nullness result = visitLocalVariable(node, values(input.getRegularStore()));
+    Nullness result = visitLocalVariable(node, input.getRegularStore());
     return updateRegularStore(result, input, updates);
   }
 
-  Nullness visitLocalVariable(LocalVariableNode node, LocalVariableValues store) {
+  Nullness visitLocalVariable(LocalVariableNode node, LocalVariableValues<Nullness> store) {
     return NULLABLE;
   }
 
@@ -1030,19 +1020,6 @@ abstract class AbstractNullnessPropagationTransfer
         return input.getValueOfSubNode(node);
       }
     };
-  }
-
-  private static LocalVariableValues values(final LocalStore<Nullness> store) {
-    return new LocalVariableValues() {
-      @Override
-      public Nullness valueOfLocalVariable(LocalVariableNode node) {
-        return orNullable(store.getInformation(node.getElement()));
-      }
-    };
-  }
-
-  private static Nullness orNullable(Nullness nullnessValue) {
-    return (nullnessValue != null) ? nullnessValue : NULLABLE;
   }
 
   private static final class ResultingStore {
