@@ -296,4 +296,9 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
   public void nestedClass() throws IOException {
     runTest("NestedClassTemplate");
   }
+
+  @Test
+  public void inferLambdaBodyType() throws IOException {
+    runTest("InferLambdaBodyType");
+  }
 }
