@@ -35,6 +35,7 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
+import javax.annotation.Nullable;
 
 /** @author kmb@google.com (Kevin Bierhoff) */
 @BugPattern(
@@ -61,7 +62,7 @@ public class MissingNullableReturn extends BugChecker implements ReturnTreeMatch
     }
 
     JCMethodDecl method = findSurroundingMethod(state.getPath());
-    if (isIgnoredReturnType(method, state)) {
+    if (method == null || isIgnoredReturnType(method, state)) {
       return Description.NO_MATCH;
     }
     switch (TrustingNullnessAnalysis.nullnessFromAnnotations(method.sym)) {
@@ -118,8 +119,14 @@ public class MissingNullableReturn extends BugChecker implements ReturnTreeMatch
         .build();
   }
 
+  @Nullable
   private static JCMethodDecl findSurroundingMethod(TreePath path) {
-    while (path != null && path.getLeaf().getKind() != Kind.METHOD) {
+    while (path.getLeaf().getKind() != Kind.METHOD) {
+      if (path.getLeaf().getKind() == Kind.LAMBDA_EXPRESSION) {
+        // Ignore return statements in lambda expressions. There's no method declaration to suggest
+        // annotations for anyway.
+        return null;
+      }
       path = path.getParentPath();
     }
     return (JCMethodDecl) path.getLeaf();

@@ -290,6 +290,20 @@ public class MissingNullableReturnTest {
         .doTest();
   }
 
+  @Test
+  public void testNegativeCases_nullableReturnInLambda() throws Exception {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/MissingNullableReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import javax.annotation.Nullable;",
+            "public class MissingNullableReturnTest {",
+            "  public static final java.util.function.Function<String, String> IDENTITY =",
+            "      (s -> { return s != null ? s : null; });",
+            "}")
+        .doTest();
+  }
+
   private CompilationTestHelper createCompilationTestHelper() {
     return CompilationTestHelper.newInstance(MissingNullableReturn.class, getClass());
   }

@@ -74,7 +74,7 @@ public final class TrustingNullnessAnalysis implements Serializable {
    */
   public static Nullness nullnessFromAnnotations(Element element) {
     for (AnnotationMirror anno : element.getAnnotationMirrors()) {
-      // Check for Nullable like ReturnValueIsNull
+      // Check for Nullable like ReturnValueIsNonNull
       if (anno.getAnnotationType().toString().endsWith(".Nullable")) {
         return Nullness.NULLABLE;
       }

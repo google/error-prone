@@ -424,7 +424,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    * <p>Edge case: {@code node} can be a captured local variable accessed from inside a local or
    * anonymous inner class, or possibly from inside a lambda expression (even though these manifest
    * as fields in bytecode). As of 7/2016 this analysis doesn't have any knowledge of captured local
-   * variables will will essentially assume whatever default is used in {@link #values}.
+   * variables will essentially assume whatever default is used in {@link #values}.
    */
   @Override
   Nullness visitLocalVariable(LocalVariableNode node, LocalVariableValues<Nullness> values) {
