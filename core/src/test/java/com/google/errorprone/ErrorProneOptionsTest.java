@@ -17,7 +17,7 @@
 package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.expectThrows;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.ErrorProneOptions.Severity;
@@ -49,14 +49,15 @@ public class ErrorProneOptionsTest {
         "-Xep:Foo:WARN:jfkdlsdf", // too many parts
         "-Xep:", // no check name
         "-Xep:Foo:FJDKFJSD"); // nonexistent severity level
-    for (String arg : badArgs) {
-      try {
-        ErrorProneOptions.processArgs(Arrays.asList(arg));
-        fail();
-      } catch (InvalidCommandLineOptionException expected) {
-        assertThat(expected.getMessage()).contains("invalid flag");
-      }
-    }
+
+    badArgs.forEach(
+        arg -> {
+          InvalidCommandLineOptionException expected =
+              expectThrows(
+                  InvalidCommandLineOptionException.class,
+                  () -> ErrorProneOptions.processArgs(Arrays.asList(arg)));
+          assertThat(expected.getMessage()).contains("invalid flag");
+        });
   }
 
   @Test
@@ -105,5 +106,19 @@ public class ErrorProneOptionsTest {
         .put("Check1", Severity.OFF)
         .build();
     assertThat(options.getSeverityMap()).isEqualTo(expectedSeverityMap);
+  }
+
+  @Test
+  public void recognizesAllChecks() {
+    ErrorProneOptions options =
+        ErrorProneOptions.processArgs(new String[] {"-XepAllDisabledChecksAsWarnings"});
+    assertThat(options.isEnableAllChecks()).isTrue();
+  }
+
+  @Test
+  public void recognizesDemoteErrorToWarning() {
+    ErrorProneOptions options =
+        ErrorProneOptions.processArgs(new String[] {"-XepAllErrorsAsWarnings"});
+    assertThat(options.isDropErrorsToWarnings()).isTrue();
   }
 }

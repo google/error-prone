@@ -38,7 +38,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import javax.annotation.CheckReturnValue;
 
@@ -140,7 +139,9 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
   public ScannerSupplier applyOverrides(ErrorProneOptions errorProneOptions)
       throws InvalidCommandLineOptionException {
     Map<String, Severity> severityOverrides = errorProneOptions.getSeverityMap();
-    if (severityOverrides.isEmpty()) {
+    if (severityOverrides.isEmpty()
+        && !errorProneOptions.isEnableAllChecks()
+        && !errorProneOptions.isDropErrorsToWarnings()) {
       return this;
     }
 
@@ -159,49 +160,65 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
       }
     }
 
-    // Process overrides
-    for (Entry<String, Severity> entry : severityOverrides.entrySet()) {
-      Collection<BugCheckerInfo> checksWithName = checksByAllNames.get(entry.getKey());
-      if (checksWithName.isEmpty()) {
-        if (errorProneOptions.ignoreUnknownChecks()) {
-          continue;
-        }
-        throw new InvalidCommandLineOptionException(
-            entry.getKey() + " is not a valid checker name");
-      }
-      for (BugCheckerInfo check : checksWithName) {
-        switch (entry.getValue()) {
-          case OFF:
-            if (!check.suppressibility().disableable()) {
-              throw new InvalidCommandLineOptionException(
-                  check.canonicalName() + " may not be disabled");
-            }
-            disabled.add(check.canonicalName());
-            break;
-          case DEFAULT:
-            severities.put(check.canonicalName(), check.defaultSeverity());
-            disabled.remove(check.canonicalName());
-            break;
-          case WARN:
-            // Demoting an enabled check from an error to a warning is a form of disabling
-            if (!disabled().contains(check.canonicalName())
-                && !check.suppressibility().disableable()
-                && check.defaultSeverity() == SeverityLevel.ERROR) {
-              throw new InvalidCommandLineOptionException(check.canonicalName()
-                  + " is not disableable and may not be demoted to a warning");
-            }
-            severities.put(check.canonicalName(), SeverityLevel.WARNING);
-            disabled.remove(check.canonicalName());
-            break;
-          case ERROR:
-            severities.put(check.canonicalName(), SeverityLevel.ERROR);
-            disabled.remove(check.canonicalName());
-            break;
-          default:
-            throw new IllegalStateException("Unexpected severity level: " + entry.getValue());
-        }
-      }
+    if (errorProneOptions.isEnableAllChecks()) {
+      disabled.forEach(c -> severities.put(c, checks.get(c).defaultSeverity()));
+      disabled.clear();
     }
+
+    if (errorProneOptions.isDropErrorsToWarnings()) {
+      checksByAllNames
+          .values()
+          .stream()
+          .filter(
+              c -> c.defaultSeverity() == SeverityLevel.ERROR && c.suppressibility().disableable())
+          .forEach(c -> severities.put(c.canonicalName(), SeverityLevel.WARNING));
+    }
+
+    // Process overrides
+    severityOverrides.forEach(
+        (checkName, newSeverity) -> {
+          Collection<BugCheckerInfo> checksWithName = checksByAllNames.get(checkName);
+          if (checksWithName.isEmpty()) {
+            if (errorProneOptions.ignoreUnknownChecks()) {
+              return;
+            }
+            throw new InvalidCommandLineOptionException(checkName + " is not a valid checker name");
+          }
+          for (BugCheckerInfo check : checksWithName) {
+            switch (newSeverity) {
+              case OFF:
+                if (!check.suppressibility().disableable()) {
+                  throw new InvalidCommandLineOptionException(
+                      check.canonicalName() + " may not be disabled");
+                }
+                severities.remove(check.canonicalName());
+                disabled.add(check.canonicalName());
+                break;
+              case DEFAULT:
+                severities.put(check.canonicalName(), check.defaultSeverity());
+                disabled.remove(check.canonicalName());
+                break;
+              case WARN:
+                // Demoting an enabled check from an error to a warning is a form of disabling
+                if (!disabled().contains(check.canonicalName())
+                    && !check.suppressibility().disableable()
+                    && check.defaultSeverity() == SeverityLevel.ERROR) {
+                  throw new InvalidCommandLineOptionException(
+                      check.canonicalName()
+                          + " is not disableable and may not be demoted to a warning");
+                }
+                severities.put(check.canonicalName(), SeverityLevel.WARNING);
+                disabled.remove(check.canonicalName());
+                break;
+              case ERROR:
+                severities.put(check.canonicalName(), SeverityLevel.ERROR);
+                disabled.remove(check.canonicalName());
+                break;
+              default:
+                throw new IllegalStateException("Unexpected severity level: " + newSeverity);
+            }
+          }
+        });
 
     return new ScannerSupplierImpl(
         checks, ImmutableMap.copyOf(severities), ImmutableSet.copyOf(disabled));

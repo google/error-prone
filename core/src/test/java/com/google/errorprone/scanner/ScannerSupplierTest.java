@@ -16,30 +16,35 @@
 
 package com.google.errorprone.scanner;
 
+import static com.google.common.truth.Truth.assertAbout;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.scanner.BuiltInCheckerSuppliers.getSuppliers;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.expectThrows;
 
-import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.truth.FailureStrategy;
+import com.google.common.truth.Subject;
+import com.google.common.truth.SubjectFactory;
 import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.ErrorProneJavaCompilerTest;
+import com.google.errorprone.ErrorProneJavaCompilerTest.UnsuppressibleArrayEquals;
 import com.google.errorprone.ErrorProneOptions;
 import com.google.errorprone.InvalidCommandLineOptionException;
 import com.google.errorprone.bugpatterns.ArrayEquals;
 import com.google.errorprone.bugpatterns.BadShiftAmount;
+import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.ChainingConstructorIgnoresParameter;
 import com.google.errorprone.bugpatterns.DepAnn;
+import com.google.errorprone.bugpatterns.DivZero;
 import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNull;
 import com.google.errorprone.bugpatterns.StaticAccessedFromInstance;
 import com.google.errorprone.bugpatterns.StringEquality;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Set;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -49,27 +54,25 @@ import org.junit.runners.JUnit4;
  */
 @RunWith(JUnit4.class)
 public class ScannerSupplierTest {
+
   @Test
   public void fromBugCheckerClassesWorks() {
     ScannerSupplier ss = ScannerSupplier.fromBugCheckerClasses(
         ArrayEquals.class,
         StaticAccessedFromInstance.class);
 
-    Set<BugCheckerInfo> expected =
-        getSuppliers(ArrayEquals.class, StaticAccessedFromInstance.class);
-
-    assertThat(ss.getEnabledChecks()).isEqualTo(expected);
+    assertScanner(ss).hasEnabledChecks(ArrayEquals.class, StaticAccessedFromInstance.class);
   }
 
   @Test
   public void fromBugCheckersWorks() {
     ScannerSupplier ss =
-        ScannerSupplier.fromBugCheckerClasses(ArrayEquals.class, StaticAccessedFromInstance.class);
+        ScannerSupplier.fromBugCheckerInfos(
+            ImmutableList.of(
+                BugCheckerInfo.create(ArrayEquals.class),
+                BugCheckerInfo.create(StaticAccessedFromInstance.class)));
 
-    Set<BugCheckerInfo> expected =
-        getSuppliers(ArrayEquals.class, StaticAccessedFromInstance.class);
-
-    assertThat(ss.getEnabledChecks()).isEqualTo(expected);
+    assertScanner(ss).hasEnabledChecks(ArrayEquals.class, StaticAccessedFromInstance.class);
   }
 
   @Test
@@ -80,30 +83,23 @@ public class ScannerSupplierTest {
         ScannerSupplier.fromBugCheckerClasses(
             BadShiftAmount.class, PreconditionsCheckNotNull.class);
 
-    Set<BugCheckerInfo> expected =
-        getSuppliers(
+    assertScanner(ss1.plus(ss2))
+        .hasEnabledChecks(
             ArrayEquals.class,
             StaticAccessedFromInstance.class,
             BadShiftAmount.class,
             PreconditionsCheckNotNull.class);
-
-    assertThat(ss1.plus(ss2).getEnabledChecks()).isEqualTo(expected);
   }
 
   @Test
-  // Calling ScannerSupplier.plus() just to make sure it throws the right exception
-  @SuppressWarnings("CheckReturnValue")
   public void plusDoesntAllowDuplicateChecks() {
     ScannerSupplier ss1 =
         ScannerSupplier.fromBugCheckerClasses(ArrayEquals.class, StaticAccessedFromInstance.class);
     ScannerSupplier ss2 = ScannerSupplier.fromBugCheckerClasses(ArrayEquals.class);
 
-    try {
-      ss1.plus(ss2);
-      fail();
-    } catch (IllegalArgumentException expected) {
-      assertThat(expected.getMessage()).contains("ArrayEquals");
-    }
+    IllegalArgumentException expected =
+        expectThrows(IllegalArgumentException.class, () -> ss1.plus(ss2));
+    assertThat(expected.getMessage()).contains("ArrayEquals");
   }
 
   @Test
@@ -111,30 +107,26 @@ public class ScannerSupplierTest {
     ScannerSupplier ss =
         ScannerSupplier.fromBugCheckerClasses(
             ArrayEquals.class, BadShiftAmount.class, StaticAccessedFromInstance.class);
-    Predicate<BugCheckerInfo> isBadShiftAmount =
-        new Predicate<BugCheckerInfo>() {
-      @Override
-          public boolean apply(BugCheckerInfo input) {
-        return input.canonicalName().equals("BadShiftAmount");
-      }
-    };
 
-    Set<BugCheckerInfo> expected = getSuppliers(BadShiftAmount.class);
-
-    assertThat(ss.filter(isBadShiftAmount).getEnabledChecks()).isEqualTo(expected);
+    assertScanner(ss.filter(input -> input.canonicalName().equals("BadShiftAmount")))
+        .hasEnabledChecks(BadShiftAmount.class);
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void applyOverridesWorksOnEmptySeverityMap() throws Exception {
     ScannerSupplier ss =
         ScannerSupplier.fromBugCheckerClasses(
             ChainingConstructorIgnoresParameter.class,
             DepAnn.class,
             LongLiteralLowerCaseSuffix.class);
-    ErrorProneOptions epOptions = ErrorProneOptions.processArgs(Collections.<String>emptyList());
+    ErrorProneOptions epOptions = ErrorProneOptions.processArgs(Collections.emptyList());
 
-    Set<BugCheckerInfo> expected = ss.getEnabledChecks();
-    assertThat(ss.applyOverrides(epOptions).getEnabledChecks()).isEqualTo(expected);
+    assertScanner(ss.applyOverrides(epOptions))
+        .hasEnabledChecks(
+            ChainingConstructorIgnoresParameter.class,
+            DepAnn.class,
+            LongLiteralLowerCaseSuffix.class);
   }
 
   @Test
@@ -148,9 +140,62 @@ public class ScannerSupplierTest {
     ErrorProneOptions epOptions = ErrorProneOptions.processArgs(
         ImmutableList.of("-Xep:ArrayEquals", "-Xep:BadShiftAmount"));
 
-    Set<BugCheckerInfo> expected = getSuppliers(ArrayEquals.class, BadShiftAmount.class);
+    assertScanner(ss.applyOverrides(epOptions))
+        .hasEnabledChecks(ArrayEquals.class, BadShiftAmount.class);
+  }
 
-    assertThat(ss.applyOverrides(epOptions).getEnabledChecks()).isEqualTo(expected);
+  @Test
+  public void applyOverridesEnableAllChecks() throws Exception {
+    ScannerSupplier ss =
+        ScannerSupplier.fromBugCheckerClasses(
+                ArrayEquals.class, BadShiftAmount.class, StaticAccessedFromInstance.class)
+            .filter(Predicates.alwaysFalse()); // disables all checks
+
+    assertScanner(ss).hasEnabledChecks(); // Empty scanner
+
+    ErrorProneOptions epOptions =
+        ErrorProneOptions.processArgs(ImmutableList.of("-XepAllDisabledChecksAsWarnings"));
+
+    assertScanner(ss.applyOverrides(epOptions))
+        .hasEnabledChecks(
+            ArrayEquals.class, BadShiftAmount.class, StaticAccessedFromInstance.class);
+
+    epOptions =
+        ErrorProneOptions.processArgs(
+            ImmutableList.of("-XepAllDisabledChecksAsWarnings", "-Xep:ArrayEquals:OFF"));
+
+    assertScanner(ss.applyOverrides(epOptions))
+        .hasEnabledChecks(BadShiftAmount.class, StaticAccessedFromInstance.class);
+
+    // The 'AllDisabledChecks' flag doesn't populate through to additional plugins
+    assertScanner(
+            ss.applyOverrides(epOptions)
+                .plus(ScannerSupplier.fromBugCheckerClasses(DivZero.class).filter(t -> false)))
+        .hasEnabledChecks(BadShiftAmount.class, StaticAccessedFromInstance.class);
+  }
+
+  @Test
+  public void applyOverridesDisableErrors() {
+    ScannerSupplier ss =
+        ScannerSupplier.fromBugCheckerClasses(
+            BadShiftAmount.class, UnsuppressibleArrayEquals.class);
+
+    ErrorProneOptions epOptions =
+        ErrorProneOptions.processArgs(ImmutableList.of("-XepAllErrorsAsWarnings"));
+
+    assertScanner(ss.applyOverrides(epOptions))
+        .hasSeverities(
+            ImmutableMap.of(
+                "BadShiftAmount", SeverityLevel.WARNING,
+                "ArrayEquals", SeverityLevel.ERROR));
+
+    epOptions =
+        ErrorProneOptions.processArgs(
+            ImmutableList.of("-XepAllErrorsAsWarnings", "-Xep:BadShiftAmount:OFF"));
+
+    assertScanner(ss.applyOverrides(epOptions))
+        .hasSeverities(ImmutableMap.of("ArrayEquals", SeverityLevel.ERROR));
+    assertScanner(ss.applyOverrides(epOptions)).hasEnabledChecks(UnsuppressibleArrayEquals.class);
   }
 
   @Test
@@ -165,14 +210,10 @@ public class ScannerSupplierTest {
             "-Xep:LongLiteralLowerCaseSuffix:OFF",
             "-Xep:ChainingConstructorIgnoresParameter:OFF"));
 
-    Set<BugCheckerInfo> expected = getSuppliers(DepAnn.class);
-
-    assertThat(ss.applyOverrides(epOptions).getEnabledChecks()).isEqualTo(expected);
+    assertScanner(ss.applyOverrides(epOptions)).hasEnabledChecks(DepAnn.class);
   }
 
   @Test
-  // Calling ScannerSupplier.applyOverrides() just to make sure it throws the right exception
-  @SuppressWarnings("CheckReturnValue")
   public void applyOverridesThrowsExceptionWhenDisablingNonDisablableCheck() throws Exception {
     ScannerSupplier ss =
         ScannerSupplier.fromBugCheckerClasses(
@@ -180,17 +221,12 @@ public class ScannerSupplierTest {
     ErrorProneOptions epOptions = ErrorProneOptions.processArgs(
         ImmutableList.of("-Xep:ArrayEquals:OFF"));
 
-    try {
-      ss.applyOverrides(epOptions);
-      fail();
-    } catch (InvalidCommandLineOptionException expected) {
-      assertThat(expected.getMessage()).contains("may not be disabled");
-    }
+    InvalidCommandLineOptionException exception =
+        expectThrows(InvalidCommandLineOptionException.class, () -> ss.applyOverrides(epOptions));
+    assertThat(exception.getMessage()).contains("may not be disabled");
   }
 
   @Test
-  // Calling ScannerSupplier.applyOverrides() just to make sure it throws the right exception
-  @SuppressWarnings("CheckReturnValue")
   public void applyOverridesThrowsExceptionWhenDemotingNonDisablableCheck() throws Exception {
     ScannerSupplier ss =
         ScannerSupplier.fromBugCheckerClasses(
@@ -198,24 +234,19 @@ public class ScannerSupplierTest {
     ErrorProneOptions epOptions = ErrorProneOptions.processArgs(
         ImmutableList.of("-Xep:ArrayEquals:WARN"));
 
-    try {
-      ss.applyOverrides(epOptions);
-      fail();
-    } catch (InvalidCommandLineOptionException expected) {
-      assertThat(expected.getMessage()).contains("may not be demoted to a warning");
-    }
+    InvalidCommandLineOptionException exception =
+        expectThrows(InvalidCommandLineOptionException.class, () -> ss.applyOverrides(epOptions));
+    assertThat(exception.getMessage()).contains("may not be demoted to a warning");
   }
 
   @Test
-  // Calling ScannerSupplier.applyOverrides() just to make sure it does not throw an exception
-  @SuppressWarnings("CheckReturnValue")
   public void applyOverridesSucceedsWhenDisablingUnknownCheckAndIgnoreUnknownCheckNamesIsSet()
       throws Exception {
     ScannerSupplier ss = ScannerSupplier.fromBugCheckerClasses(ArrayEquals.class);
     ErrorProneOptions epOptions = ErrorProneOptions.processArgs(
         ImmutableList.of("-XepIgnoreUnknownCheckNames", "-Xep:foo:OFF"));
 
-    ss.applyOverrides(epOptions);
+    assertScanner(ss.applyOverrides(epOptions)).hasEnabledChecks(ArrayEquals.class);
   }
 
   @Test
@@ -234,6 +265,37 @@ public class ScannerSupplierTest {
         "ChainingConstructorIgnoresParameter", SeverityLevel.WARNING,
         "StringEquality", SeverityLevel.ERROR);
 
-    assertThat(overriddenScannerSupplier.severities()).isEqualTo(expected);
+    assertScanner(overriddenScannerSupplier).hasSeverities(expected);
   }
+
+  private static class ScannerSupplierSubject
+      extends Subject<ScannerSupplierSubject, ScannerSupplier> {
+    ScannerSupplierSubject(FailureStrategy failureStrategy, ScannerSupplier scannerSupplier) {
+      super(failureStrategy, scannerSupplier);
+    }
+
+    final void hasSeverities(Map<String, SeverityLevel> severities) {
+      check().that(getSubject().severities()).containsExactlyEntriesIn(severities);
+    }
+
+    @SafeVarargs
+    final void hasEnabledChecks(Class<? extends BugChecker>... bugCheckers) {
+      check()
+          .that(getSubject().getEnabledChecks())
+          .containsExactlyElementsIn(getSuppliers(bugCheckers));
+    }
+  }
+
+  private ScannerSupplierSubject assertScanner(ScannerSupplier scannerSupplier) {
+    return assertAbout(SCANNER_SUBJECT_FACTORY).that(scannerSupplier);
+  }
+
+  private static final SubjectFactory<ScannerSupplierSubject, ScannerSupplier>
+      SCANNER_SUBJECT_FACTORY =
+          new SubjectFactory<ScannerSupplierSubject, ScannerSupplier>() {
+            @Override
+            public ScannerSupplierSubject getSubject(FailureStrategy fs, ScannerSupplier t) {
+              return new ScannerSupplierSubject(fs, t);
+            }
+          };
 }
