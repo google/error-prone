@@ -19,16 +19,22 @@ package com.google.errorprone.bugpatterns.inject;
 import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.InjectMatchers.hasInjectAnnotation;
+import static com.google.errorprone.bugpatterns.inject.ElementPredicates.isFirstConstructorOfMultiInjectedClass;
+import static com.google.errorprone.matchers.InjectMatchers.IS_APPLICATION_OF_GUICE_INJECT;
+import static com.google.errorprone.matchers.InjectMatchers.IS_APPLICATION_OF_JAVAX_INJECT;
+import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
-import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.Tree;
 
 /**
  * Matches classes that have two or more constructors annotated with @Inject.
@@ -50,17 +56,17 @@ import com.sun.source.tree.MethodTree;
   maturity = MATURE,
   altNames = {"inject-constructors", "InjectMultipleAtInjectConstructors"}
 )
-public class MoreThanOneInjectableConstructor extends BugChecker implements ClassTreeMatcher {
+public class MoreThanOneInjectableConstructor extends BugChecker implements AnnotationTreeMatcher {
+
+  private static final Matcher<AnnotationTree> IS_EITHER_INJECT =
+      anyOf(IS_APPLICATION_OF_GUICE_INJECT, IS_APPLICATION_OF_JAVAX_INJECT);
 
   @Override
-  public Description matchClass(ClassTree classTree, VisitorState state) {
-    boolean hasInjectConstructor = false;
-    for (MethodTree constructor : ASTHelpers.getConstructors(classTree)) {
-      if (hasInjectAnnotation().matches(constructor, state)) {
-        if (hasInjectConstructor) {
-          return describeMatch(classTree);
-        }
-        hasInjectConstructor = true;
+  public Description matchAnnotation(AnnotationTree tree, VisitorState state) {
+    if (IS_EITHER_INJECT.matches(tree, state)) {
+      Tree injectedMember = state.getPath().getParentPath().getParentPath().getLeaf();
+      if (isFirstConstructorOfMultiInjectedClass(getSymbol(injectedMember))) {
+        return describeMatch(ASTHelpers.findEnclosingNode(state.getPath(), ClassTree.class));
       }
     }
     return Description.NO_MATCH;

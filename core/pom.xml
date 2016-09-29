@@ -71,6 +71,12 @@
       <version>${guava.version}</version>
     </dependency>
     <dependency>
+      <!-- Apache 2.0 -->
+      <groupId>com.google.auto</groupId>
+      <artifactId>auto-common</artifactId>
+      <version>0.7</version>
+    </dependency>
+    <dependency>
       <!-- LGPL -->
       <groupId>com.google.code.findbugs</groupId>
       <artifactId>jFormatString</artifactId>
@@ -259,6 +265,7 @@
                   <include>com.github.stephenc.jcip:jcip-annotations</include>
                   <include>org.pcollections:pcollections</include>
                   <include>com.google.guava:guava</include>
+                  <include>com.google.auto:auto-common</include>
                   <include>com.google.code.findbugs:jsr305</include>
                 </includes>
               </artifactSet>

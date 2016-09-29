@@ -18,6 +18,7 @@ import static com.google.errorprone.BugPattern.Category.GUICE;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.enclosingClass;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.isType;
@@ -30,9 +31,7 @@ import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.AnnotationTree;
-import com.sun.source.tree.ClassTree;
 
 /** @author glorioso@google.com (Nick Glorioso) */
 @BugPattern(
@@ -47,12 +46,13 @@ import com.sun.source.tree.ClassTree;
   maturity = MATURE
 )
 public class ProvidesMethodOutsideOfModule extends BugChecker implements AnnotationTreeMatcher {
+
   private static final Matcher<AnnotationTree> PROVIDES_ANNOTATION_ON_METHOD_OUTSIDE_OF_MODULE =
       allOf(
           isType("com.google.inject.Provides"),
           enclosingClass(
               not(
-                  Matchers.<ClassTree>anyOf(
+                  anyOf(
                       isSubtypeOf("com.google.inject.Module"),
                       isSubtypeOf("com.google.gwt.inject.client.GinModule")))));
 

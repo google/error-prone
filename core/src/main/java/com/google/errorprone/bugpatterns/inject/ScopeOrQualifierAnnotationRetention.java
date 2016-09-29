@@ -17,6 +17,7 @@ package com.google.errorprone.bugpatterns.inject;
 import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.inject.ElementPredicates.doesNotHaveRuntimeRetention;
 import static com.google.errorprone.matchers.InjectMatchers.GUICE_BINDING_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.GUICE_SCOPE_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.JAVAX_QUALIFIER_ANNOTATION;
@@ -26,7 +27,6 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.sun.source.tree.Tree.Kind.ANNOTATION_TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -39,6 +39,7 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import java.lang.annotation.Retention;
 import javax.annotation.Nullable;
 
@@ -76,19 +77,16 @@ public class ScopeOrQualifierAnnotationRetention extends BugChecker implements C
     // runtime-retained, but this reduces the instances that are erroneously flagged.
     if (!state.isAndroidCompatible()
         && SCOPE_OR_QUALIFIER_ANNOTATION_MATCHER.matches(classTree, state)) {
-      Retention retention = ASTHelpers.getAnnotation(classTree, Retention.class);
-      // Default retention is CLASS, not RUNTIME, so return true if retention == null
-      if (retention != null && retention.value().equals(RUNTIME)) {
-        return Description.NO_MATCH;
-      }
+      ClassSymbol classSymbol = ASTHelpers.getSymbol(classTree);
+      if (doesNotHaveRuntimeRetention(classSymbol)) {
+        // Is this in a dagger component?
+        ClassTree outer = ASTHelpers.findEnclosingNode(state.getPath(), ClassTree.class);
+        if (outer != null && IS_A_DAGGER_CLASS.matches(outer, state)) {
+          return Description.NO_MATCH;
+        }
 
-      // Is this in a dagger component?
-      ClassTree outer = ASTHelpers.findEnclosingNode(state.getPath(), ClassTree.class);
-      if (outer != null && IS_A_DAGGER_CLASS.matches(outer, state)) {
-        return Description.NO_MATCH;
+        return describe(classTree, state, ASTHelpers.getAnnotation(classSymbol, Retention.class));
       }
-
-      return describe(classTree, state, retention);
     }
     return Description.NO_MATCH;
   }
