@@ -16,12 +16,24 @@
 
 package com.google.errorprone.dataflow.nullnesspropagation;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.google.errorprone.dataflow.DataFlow;
+import com.google.errorprone.dataflow.LocalStore;
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
+import com.sun.tools.javac.processing.JavacProcessingEnvironment;
+import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.Context;
 import java.io.Serializable;
-import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import org.checkerframework.dataflow.analysis.Analysis;
+import org.checkerframework.dataflow.cfg.CFGBuilder;
+import org.checkerframework.dataflow.cfg.ControlFlowGraph;
+import org.checkerframework.dataflow.cfg.UnderlyingAST;
 
 /**
  * An interface to the "trusting" nullness analysis. This variant "trusts" {@code Nullabe}
@@ -70,15 +82,38 @@ public final class TrustingNullnessAnalysis implements Serializable {
   }
 
   /**
-   * Returns nullability based on the presence of a {@code Nullable} annotation.
+   * Returns {@link Nullness} of the initializer of the {@link VariableTree} at the leaf of the
+   * given {@code fieldDeclPath}.  Returns {@link Nullness#NULL} should there be no initializer.
    */
-  public static Nullness nullnessFromAnnotations(Element element) {
-    for (AnnotationMirror anno : element.getAnnotationMirrors()) {
-      // Check for Nullable like ReturnValueIsNonNull
-      if (anno.getAnnotationType().toString().endsWith(".Nullable")) {
-        return Nullness.NULLABLE;
-      }
+  // TODO(kmb): Fold this functionality into Dataflow.expressionDataflow
+  public Nullness getFieldInitializerNullness(TreePath fieldDeclPath, Context context) {
+    Tree decl = fieldDeclPath.getLeaf();
+    checkArgument(
+        decl instanceof VariableTree && ((JCVariableDecl) decl).sym.getKind() == ElementKind.FIELD,
+        "Leaf of fieldDeclPath must be a field declaration: %s", decl);
+
+    ExpressionTree initializer = ((VariableTree) decl).getInitializer();
+    if (initializer == null) {
+      // An uninitialized field is null or 0 to start :)
+      return ((JCVariableDecl) decl).type.isPrimitive() ? Nullness.NONNULL : Nullness.NULL;
     }
-    return Nullness.NONNULL;
+    TreePath initializerPath = TreePath.getPath(fieldDeclPath, initializer);
+    JavacProcessingEnvironment javacEnv = JavacProcessingEnvironment.instance(context);
+    UnderlyingAST ast = new UnderlyingAST.CFGStatement(decl);
+    ControlFlowGraph cfg =
+        CFGBuilder.build(
+            initializerPath,
+            javacEnv,
+            ast,
+            /* assumeAssertionsEnabled */ false,
+            /* assumeAssertionsDisabled */ false);
+    Analysis<Nullness, LocalStore<Nullness>, TrustingNullnessPropagation> analysis =
+        new Analysis<>(javacEnv, nullnessPropagation);
+    analysis.performAnalysis(cfg);
+    return analysis.getValue(initializer);
+  }
+
+  public static boolean hasNullableAnnotation(Element element) {
+    return TrustingNullnessPropagation.nullnessFromAnnotations(element) == Nullness.NULLABLE;
   }
 }

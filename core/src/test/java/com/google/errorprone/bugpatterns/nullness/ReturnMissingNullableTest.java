@@ -23,7 +23,7 @@ import org.junit.runners.JUnit4;
 
 /** @author kmb@google.com (Kevin Bierhoff) */
 @RunWith(JUnit4.class)
-public class MissingNullableReturnTest {
+public class ReturnMissingNullableTest {
 
   @Test
   public void testLiteralNullReturn() throws Exception {
@@ -305,6 +305,6 @@ public class MissingNullableReturnTest {
   }
 
   private CompilationTestHelper createCompilationTestHelper() {
-    return CompilationTestHelper.newInstance(MissingNullableReturn.class, getClass());
+    return CompilationTestHelper.newInstance(ReturnMissingNullable.class, getClass());
   }
 }

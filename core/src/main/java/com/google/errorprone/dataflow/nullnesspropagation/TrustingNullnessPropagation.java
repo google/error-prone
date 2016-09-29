@@ -20,6 +20,7 @@ import com.google.common.base.Predicate;
 import com.google.errorprone.dataflow.LocalStore;
 import java.util.List;
 import javax.annotation.Nullable;
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import org.checkerframework.dataflow.cfg.UnderlyingAST;
 import org.checkerframework.dataflow.cfg.node.LocalVariableNode;
@@ -63,7 +64,7 @@ class TrustingNullnessPropagation extends NullnessPropagationTransfer {
     LocalStore.Builder<Nullness> result = LocalStore.<Nullness>empty().toBuilder();
     for (LocalVariableNode param : parameters) {
       Element element = param.getElement();
-      Nullness assumed = TrustingNullnessAnalysis.nullnessFromAnnotations(element);
+      Nullness assumed = nullnessFromAnnotations(element);
       result.setInformation(element, assumed);
     }
     return result.build();
@@ -76,15 +77,28 @@ class TrustingNullnessPropagation extends NullnessPropagationTransfer {
     }
     // In the absence of annotations, this will do the right thing for things like primitives,
     // array length, .class, etc.
-    return TrustingNullnessAnalysis.nullnessFromAnnotations(accessed.symbol);
+    return nullnessFromAnnotations(accessed.symbol);
+  }
+
+  /**
+   * Returns nullability based on the presence of a {@code Nullable} annotation.
+   */
+  static Nullness nullnessFromAnnotations(Element element) {
+    for (AnnotationMirror anno : element.getAnnotationMirrors()) {
+      // Check for Nullable like ReturnValueIsNonNull
+      if (anno.getAnnotationType().toString().endsWith(".Nullable")) {
+        return Nullness.NULLABLE;
+      }
+    }
+    return Nullness.NONNULL;
   }
 
   private enum TrustReturnAnnotation implements Predicate<MethodInfo> {
     INSTANCE;
 
     /**
-     * Returns {@code true} where {@link TrustingNullnessAnalysis#nullnessFromAnnotations} would
-     * return {@link Nullness#NONNULL}.
+     * Returns {@code true} where {@link #nullnessFromAnnotations} would return
+     * {@link Nullness#NONNULL}.
      */
     @Override
     public boolean apply(MethodInfo input) {

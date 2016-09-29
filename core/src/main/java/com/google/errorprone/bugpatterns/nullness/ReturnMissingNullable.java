@@ -39,13 +39,13 @@ import javax.annotation.Nullable;
 
 /** @author kmb@google.com (Kevin Bierhoff) */
 @BugPattern(
-  name = "MissingNullableReturn",
+  name = "ReturnMissingNullable",
   summary = "Methods that can return null should be annotated @Nullable",
   category = JDK,
   severity = SUGGESTION,
   maturity = EXPERIMENTAL
 )
-public class MissingNullableReturn extends BugChecker implements ReturnTreeMatcher {
+public class ReturnMissingNullable extends BugChecker implements ReturnTreeMatcher {
 
   @Override
   public Description matchReturn(ReturnTree tree, VisitorState state) {
@@ -65,21 +65,13 @@ public class MissingNullableReturn extends BugChecker implements ReturnTreeMatch
     if (method == null || isIgnoredReturnType(method, state)) {
       return Description.NO_MATCH;
     }
-    switch (TrustingNullnessAnalysis.nullnessFromAnnotations(method.sym)) {
-      case NULLABLE:
-      case NULL:
-        // Method already annotated
-        return Description.NO_MATCH;
-      default:
-        break;
+    if (TrustingNullnessAnalysis.hasNullableAnnotation(method.sym)) {
+      return Description.NO_MATCH;
     }
 
     // Don't need dataflow to tell us that null is nullable
-    switch (returnExpression.getKind()) {
-      case NULL_LITERAL:
-        return makeFix(method, tree, "Returning null literal");
-      default:
-        break;
+    if (returnExpression.getKind() == ExpressionTree.Kind.NULL_LITERAL) {
+      return makeFix(method, tree, "Returning null literal");
     }
 
     // OK let's see what dataflow says
