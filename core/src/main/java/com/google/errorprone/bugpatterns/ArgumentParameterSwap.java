@@ -19,9 +19,10 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
+import com.google.common.base.CaseFormat;
 import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -33,111 +34,195 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.tree.JCTree;
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+
 /**
- * This checks the similarity between the arguments and parameters, currently checking if terms have
- * identical names but the arguments are swapped.
+ * This checks the similarity between the arguments and parameters. This version calculates the
+ * similarity between argument and parameter names and recommends a different order of the arguments
+ * if the similarity is higher.
  *
  * @author yulissa@google.com (Yulissa Arroyo-Paredes)
  */
 @BugPattern(
   name = "ArgumentParameterSwap",
-  summary = "The argument and parameter names do not match exactly.",
+  summary =
+      "An argument is more similar to a different parameter; the arguments may have been swapped.",
   category = JDK,
   severity = ERROR,
   maturity = MATURE
 )
 public class ArgumentParameterSwap extends BugChecker
     implements NewClassTreeMatcher, MethodInvocationTreeMatcher {
-  public static final List<String> BLACK_LIST =
-      ImmutableList.of("message", "counter", "index", "object", "value", "item", "key");
+  public static final List<String> IGNORE_PARAMS =
+      ImmutableList.of("message", "counter", "index", "object", "value");
 
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
     MethodSymbol symbol = ASTHelpers.getSymbol(tree);
-    List<VarSymbol> paramList = symbol.getParameters();
-    List<ExpressionTree> argList = new ArrayList<ExpressionTree>(tree.getArguments());
-
-    if (evaluateNames(argList, paramList)) {
-      return reportMatch(tree, state, argList, paramList);
-    }
-    return Description.NO_MATCH;
+    return findSwaps(
+        tree.getArguments().stream().toArray(ExpressionTree[]::new),
+        symbol.getParameters().stream().toArray(VarSymbol[]::new),
+        tree,
+        state);
   }
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     MethodSymbol symbol = ASTHelpers.getSymbol(tree);
-    List<VarSymbol> paramList = symbol.params;
-    List<ExpressionTree> argList = new ArrayList<ExpressionTree>(tree.getArguments());
+    return findSwaps(
+        tree.getArguments().stream().toArray(ExpressionTree[]::new),
+        symbol.getParameters().stream().toArray(VarSymbol[]::new),
+        tree,
+        state);
+  }
 
-    if (paramList == null) {
+  private Description findSwaps(
+      ExpressionTree[] args, VarSymbol[] params, Tree tree, VisitorState state) {
+    LexicalSimilarityMatcher matcher = new LexicalSimilarityMatcher(args, params, state);
+    boolean bestMatch = true;
+
+    // TODO(eaftan): Capture the list of potential matches for a parameter based on what is in
+    // scope with the same type and kind.
+
+    // TODO(ciera): Instead of the algorithm below, capture all of the potential
+    // matches for each argument, then select the best match and store it. Return a match
+    // if the suggested replacement is different from the existing
+    for (int ndx = 0; ndx < args.length; ndx++) {
+      if (!(args[ndx] instanceof IdentifierTree)
+          && !(args[ndx] instanceof MemberSelectTree)
+          && !(args[ndx] instanceof MethodInvocationTree)) {
+        continue;
+      }
+
+      if (params[ndx].getSimpleName().toString().length() <= 4) {
+        continue;
+      }
+
+      if (IGNORE_PARAMS.contains(params[ndx].getSimpleName().toString())) {
+        continue;
+      }
+
+      if (matcher.findBestArgument(ndx) != ndx) {
+        bestMatch = false;
+        break;
+      }
+    }
+
+    if (bestMatch) {
       return Description.NO_MATCH;
     }
-    if (evaluateNames(argList, paramList)) {
-      return reportMatch(tree, state, argList, paramList);
+
+    String[] suggestion = new String[params.length];
+    for (int pNdx = 0; pNdx < params.length; pNdx++) {
+      int match = pNdx;
+      if (args[pNdx] instanceof IdentifierTree
+          || args[pNdx] instanceof MemberSelectTree
+          || args[pNdx] instanceof MethodInvocationTree) {
+        match = matcher.findBestArgument(pNdx);
+      }
+      suggestion[pNdx] = args[match].toString();
     }
-    return Description.NO_MATCH;
+
+    Fix fix =
+        SuggestedFix.replace(
+            ((JCTree) args[0]).getStartPosition(),
+            state.getEndPosition(args[args.length - 1]),
+            Joiner.on(", ").join(suggestion));
+    return describeMatch(tree, fix);
+  }
+
+  static class LexicalSimilarityMatcher {
+    private final double[][] simMatrix;
+    private final VisitorState state;
+    private final VarSymbol[] params;
+    private final ExpressionTree[] args;
+
+    private LexicalSimilarityMatcher(
+        ExpressionTree[] args, VarSymbol[] params, VisitorState state) {
+      this.state = state;
+      this.params = params;
+      this.args = args;
+
+      String[] paramNames =
+          Arrays.stream(params)
+              .map(param -> param.getSimpleName().toString())
+              .toArray(String[]::new);
+      String[] argNames = new String[args.length];
+      for (int ndx = 0; ndx < args.length; ndx++) {
+        ExpressionTree tree = args[ndx];
+        if (tree instanceof MemberSelectTree) {
+          argNames[ndx] = ((MemberSelectTree) tree).getIdentifier().toString();
+        } else if (tree instanceof MethodInvocationTree) {
+          argNames[ndx] = ASTHelpers.getSymbol(tree).getSimpleName().toString();
+        } else {
+          argNames[ndx] = tree.toString();
+        }
+      }
+
+      this.simMatrix = calculateSimilarityMatrix(argNames, paramNames);
+    }
+
+    /**
+     * Given a parameter index, returns the argument index with the highest match. If there is a
+     * tie, it will always favor the original index, followed by the first highest index.
+     */
+    int findBestArgument(int pNdx) {
+      int maxNdx = pNdx;
+      for (int aNdx = 0; aNdx < params.length; aNdx++) {
+        if (!state.getTypes().isSubtype(ASTHelpers.getType(args[aNdx]), params[pNdx].asType())) {
+          continue;
+        }
+        // TODO(ciera): Use a beta value and require that anything better than existing must be at
+        // least beta better than existing.
+        if (simMatrix[aNdx][pNdx] > simMatrix[maxNdx][pNdx]) {
+          maxNdx = aNdx;
+        }
+      }
+      return maxNdx;
+    }
   }
 
   /**
-   * Checks if the current argument and parameters have identical names and are in the same
-   * location.
-   *
-   * @param argList the list of arguments when the method is invoked, must be the same length as
-   *     paramList.
-   * @param paramList the list of parameters.
-   * @return true if the names were the same but not in the correct order.Otherwise false for all
-   *     other instances, if the names were in the expected location, if all the params are less
-   *     than 4 characters or are part of the blacklist, if even one name isn't exactly the same as
-   *     the parameter (or isn't an identifier). In future versions, there names won't have to be
-   *     identical but rather the similarity of the names will be calculated.
+   * Calculates, for each argument/parameter pair, how close the argument and parameter are to each
+   * other based on the formula |argTerms intersect paramTerms| / (|argTerms| + |paramTerms|) * 2
    */
-  private boolean evaluateNames(List<ExpressionTree> argList, List<VarSymbol> paramList) {
-    HashSet<String> paramDetails = new HashSet<>();
-    HashSet<String> argDetails = new HashSet<>();
-
-    int paramArgNamesMatch = 0;
-    for (int i = 0; i < paramList.size(); i++) {
-      VarSymbol param = paramList.get(i);
-      String paramName = param.getSimpleName().toString();
-      paramDetails.add(paramName);
-      ExpressionTree arg = argList.get(i);
-      // before arg is turned into a string must be a sure it is an IdentifierTree. If the arg
-      // is of type int and the expression 1 + 1 is used that would become "1 + 1".
-      // TODO(yulissa): Handle cases where a value isn't an identifier but a swap is present
-      // among other argument
-      if (!(arg instanceof IdentifierTree)) {
-        return false;
-      }
-      String argName = arg.toString();
-      argDetails.add(argName);
-      // consider it a match if the parameter name is exactly the same as the current argument,
-      // if it is less than 4 characters (ex. i), or if it is part of the black list of common terms
-      if (argName.equals(paramName) || paramName.length() <= 4 || BLACK_LIST.contains(paramName)) {
-        paramArgNamesMatch++;
+  static double[][] calculateSimilarityMatrix(String[] args, String[] params) {
+    // TODO(ciera): consider also using edit distance on individual words.
+    double[][] similarity = new double[args.length][params.length];
+    for (int aNdx = 0; aNdx < args.length; aNdx++) {
+      Set<String> argSplit = splitStringTerms(args[aNdx]);
+      for (int pNdx = 0; pNdx < params.length; pNdx++) {
+        Set<String> paramSplit = splitStringTerms(params[pNdx]);
+        // TODO(ciera): Handle the substring cases so that lenList matches listLength
+        double commonTerms = Sets.intersection(argSplit, paramSplit).size() * 2;
+        double totalTerms = argSplit.size() + paramSplit.size();
+        similarity[aNdx][pNdx] = commonTerms / totalTerms;
       }
     }
-    if (paramArgNamesMatch == paramDetails.size()) {
-      return false;
-    }
-    return Sets.difference(paramDetails, argDetails).isEmpty();
+    return similarity;
   }
 
-  private Description reportMatch(
-      Tree tree, VisitorState state, List<ExpressionTree> arguments, List<VarSymbol> parameters) {
-    Fix fix =
-        SuggestedFix.replace(
-            ((JCTree) arguments.get(0)).getStartPosition(),
-            state.getEndPosition(Iterables.getLast(arguments)),
-            Joiner.on(", ").join(parameters));
-    return describeMatch(tree, fix);
+  /**
+   * Splits a string into a Set of terms. If the name starts with a lower-case letter, it is
+   * presumed to be in lowerCamelCase format. Otherwise, it presumes UPPER_UNDERSCORE format.
+   */
+  static Set<String> splitStringTerms(String name) {
+    // TODO(ciera): Handle lower_underscore
+    CaseFormat caseFormat =
+        Character.isLowerCase(name.charAt(0))
+            ? CaseFormat.LOWER_CAMEL
+            : CaseFormat.UPPER_UNDERSCORE;
+    String nameSplit = caseFormat.to(CaseFormat.LOWER_UNDERSCORE, name);
+    return Sets.newHashSet(
+        Splitter.on('_').trimResults().omitEmptyStrings().splitToList(nameSplit));
   }
 }
