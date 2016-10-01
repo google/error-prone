@@ -89,6 +89,15 @@ public abstract class UVariableDecl extends USimpleStatement implements Variable
 
   @Override
   public JCVariableDecl inline(Inliner inliner) throws CouldNotResolveImportException {
+    return inline(getType(), inliner);
+  }
+
+  public JCVariableDecl inlineImplicitType(Inliner inliner) throws CouldNotResolveImportException {
+    return inline(null, inliner);
+  }
+
+  private JCVariableDecl inline(@Nullable UExpression type, Inliner inliner)
+      throws CouldNotResolveImportException {
     Optional<LocalVarBinding> binding = inliner.getOptionalBinding(key());
     JCModifiers modifiers;
     Name name;
@@ -100,7 +109,10 @@ public abstract class UVariableDecl extends USimpleStatement implements Variable
       modifiers = maker.Modifiers(0L);
       name = getName().inline(inliner);
     }
-    return maker.VarDef(modifiers, name, getType().inline(inliner),
+    return maker.VarDef(
+        modifiers,
+        name,
+        (type == null) ? null : type.inline(inliner),
         (getInitializer() == null) ? null : getInitializer().inline(inliner));
   }
 

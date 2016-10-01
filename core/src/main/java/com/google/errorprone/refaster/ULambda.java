@@ -27,10 +27,12 @@ import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCExpressionStatement;
 import com.sun.tools.javac.tree.JCTree.JCLambda;
+import com.sun.tools.javac.tree.JCTree.JCLambda.ParameterKind;
 import com.sun.tools.javac.tree.JCTree.JCReturn;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.List;
+import com.sun.tools.javac.util.ListBuffer;
 
 /**
  * {@code UTree} representation of a {@code LambdaExpressionTree}.
@@ -39,8 +41,9 @@ import com.sun.tools.javac.util.List;
  */
 @AutoValue
 abstract class ULambda extends UExpression implements LambdaExpressionTree {
-  public static ULambda create(Iterable<UVariableDecl> parameters, UTree<?> body) {
-    return new AutoValue_ULambda(ImmutableList.copyOf(parameters), body);
+  public static ULambda create(
+      ParameterKind parameterKind, Iterable<UVariableDecl> parameters, UTree<?> body) {
+    return new AutoValue_ULambda(parameterKind, ImmutableList.copyOf(parameters), body);
   }
   
   @Override
@@ -61,11 +64,18 @@ abstract class ULambda extends UExpression implements LambdaExpressionTree {
 
   @Override
   public JCLambda inline(Inliner inliner) throws CouldNotResolveImportException {
-    return inliner
-        .maker()
-        .Lambda(
-            List.convert(JCVariableDecl.class, inliner.inlineList(getParameters())),
-            inlineBody(inliner));
+    return inliner.maker().Lambda(inlineParams(inliner), inlineBody(inliner));
+  }
+
+  public List<JCVariableDecl> inlineParams(Inliner inliner) throws CouldNotResolveImportException {
+    if (parameterKind() == ParameterKind.EXPLICIT) {
+      return List.convert(JCVariableDecl.class, inliner.inlineList(getParameters()));
+    }
+    ListBuffer<JCVariableDecl> params = new ListBuffer<>();
+    for (UVariableDecl param : getParameters()) {
+      params.add(param.inlineImplicitType(inliner));
+    }
+    return params.toList();
   }
 
   JCTree inlineBody(Inliner inliner) throws CouldNotResolveImportException {
@@ -90,6 +100,8 @@ abstract class ULambda extends UExpression implements LambdaExpressionTree {
     }
     return getBody().inline(inliner);
   }
+  
+  abstract ParameterKind parameterKind();
 
   @Override
   public abstract ImmutableList<UVariableDecl> getParameters();

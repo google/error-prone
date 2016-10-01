@@ -103,6 +103,7 @@ import com.sun.tools.javac.code.Type.WildcardType;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.model.AnnotationProxyMaker;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCLambda;
 import com.sun.tools.javac.tree.JCTree.JCModifiers;
 import com.sun.tools.javac.tree.JCTree.JCPrimitiveTypeTree;
 import com.sun.tools.javac.util.Context;
@@ -520,6 +521,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
   @Override
   public ULambda visitLambdaExpression(LambdaExpressionTree tree, Void v) {
     return ULambda.create(
+        ((JCLambda) tree).paramKind,
         cast(templateStatements(tree.getParameters()), UVariableDecl.class),
         (UTree<?>) template(tree.getBody()));
   }

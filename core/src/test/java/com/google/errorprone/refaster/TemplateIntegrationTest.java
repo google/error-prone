@@ -298,6 +298,15 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
   }
 
   @Test
+  public void inferLambdaType() throws IOException {
+    runTest("InferLambdaType");
+  }
+
+  @Test
+  public void lambdaImplicitType() throws IOException {
+    runTest("LambdaImplicitType");
+  }
+  
   public void inferLambdaBodyType() throws IOException {
     runTest("InferLambdaBodyType");
   }
