@@ -156,6 +156,9 @@ public class NarrowingCompoundAssignment extends BugChecker
   /** Classifies bad casts. */
   private static NarrowingCastKind identifyBadCast(Type lhs, Type rhs, Types types) {
     if (types.isConvertible(rhs, lhs)) {
+      // Exemption if the rhs is convertable to the lhs.
+      // This allows, e.g.: <byte> &= <byte> since the narrowing conversion can never be
+      // detected.
       return null;
     }
     if (DEFICIENT_TYPES.contains(lhs.getKind())) {
@@ -177,10 +180,10 @@ public class NarrowingCompoundAssignment extends BugChecker
     }
     switch (tree.getKind()) {
       case RIGHT_SHIFT_ASSIGNMENT:
-      case UNSIGNED_RIGHT_SHIFT_ASSIGNMENT:
-        // Right shifts cannot cause overflow
+        // narrowing the result of a signed right shift does not lose information
         return Optional.absent();
-      default: // continue below
+      default:
+        break;
     }
     Kind regularAssignmentKind = regularAssignmentFromCompound(tree.getKind());
     String op = assignmentToString(regularAssignmentKind);
