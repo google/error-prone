@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
@@ -44,7 +43,6 @@ import com.sun.tools.javac.parser.Tokens.TokenKind;
   category = JDK,
   summary = "C-style array declarations should not be used",
   severity = SUGGESTION,
-  maturity = MATURE,
   linkType = CUSTOM,
   link = "https://google.github.io/styleguide/javaguide.html#s4.8.3.2-array-declarations"
   )

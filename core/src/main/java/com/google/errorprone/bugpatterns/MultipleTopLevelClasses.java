@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 
 import com.google.common.base.Joiner;
@@ -42,7 +41,7 @@ import java.util.List;
   summary = "Source files should not contain multiple top-level class declarations",
   category = JDK,
   severity = SUGGESTION,
-  maturity = MATURE,
+
   documentSuppression = false,
   linkType = CUSTOM,
   link = "https://google.github.io/styleguide/javaguide.html#s3.4.1-one-top-level-class"

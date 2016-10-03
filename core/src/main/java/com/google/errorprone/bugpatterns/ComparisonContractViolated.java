@@ -27,7 +27,6 @@ import static com.google.errorprone.suppliers.Suppliers.INT_TYPE;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Category;
-import com.google.errorprone.BugPattern.MaturityLevel;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -75,7 +74,7 @@ import java.util.Set;
           + " arbitrarily."
   ,
   severity = SeverityLevel.ERROR,
-  maturity = MaturityLevel.EXPERIMENTAL,
+
   category = Category.JDK
 )
 public class ComparisonContractViolated extends BugChecker implements MethodTreeMatcher {

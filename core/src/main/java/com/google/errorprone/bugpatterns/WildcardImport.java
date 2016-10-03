@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
@@ -61,7 +60,7 @@ import javax.lang.model.element.ElementKind;
   summary = "Wildcard imports, static or otherwise, should not be used",
   category = JDK,
   severity = SUGGESTION,
-  maturity = MATURE,
+
   linkType = CUSTOM,
   link = "https://google.github.io/styleguide/javaguide.html#s3.3.1-wildcard-imports"
   )

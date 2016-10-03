@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Category;
-import com.google.errorprone.BugPattern.MaturityLevel;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.errorprone.VisitorState;
@@ -51,7 +50,7 @@ import javax.lang.model.type.TypeMirror;
       "Calls to APIs marked @RestrictedApi are prohibited without a corresponding whitelist"
           + " annotation.",
   category = Category.ONE_OFF,
-  maturity = MaturityLevel.MATURE,
+  
   severity = SeverityLevel.ERROR,
   suppressibility = Suppressibility.UNSUPPRESSIBLE
 )

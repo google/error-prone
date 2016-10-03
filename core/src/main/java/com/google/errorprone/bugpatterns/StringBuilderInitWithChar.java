@@ -14,7 +14,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
@@ -33,14 +32,16 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Convert;
 import javax.lang.model.type.TypeKind;
 
-/**
- * @author lowasser@google.com (Louis Wasserman)
- */
-@BugPattern(category = Category.JDK, explanation =
-    "StringBuilder does not have a char constructor, so instead this code creates "
-    + "a StringBuilder with initial size equal to the code point of the specified char.",
-    maturity = MATURE, name = "StringBuilderInitWithChar", severity = ERROR,
-    summary = "StringBuilder does not have a char constructor; this invokes the int constructor.")
+/** @author lowasser@google.com (Louis Wasserman) */
+@BugPattern(
+  category = Category.JDK,
+  explanation =
+      "StringBuilder does not have a char constructor, so instead this code creates "
+          + "a StringBuilder with initial size equal to the code point of the specified char.",
+  name = "StringBuilderInitWithChar",
+  severity = ERROR,
+  summary = "StringBuilder does not have a char constructor; this invokes the int constructor."
+)
 public class StringBuilderInitWithChar extends BugChecker implements NewClassTreeMatcher {
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {

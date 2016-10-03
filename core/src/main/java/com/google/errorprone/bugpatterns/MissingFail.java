@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JUNIT;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT_AFTER_ANNOTATION;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT_BEFORE_ANNOTATION;
@@ -83,7 +82,7 @@ import javax.lang.model.element.Name;
     altNames = "missing-fail",
     summary = "Not calling fail() when expecting an exception masks bugs",
     category = JUNIT,
-    maturity = EXPERIMENTAL,
+    
     severity = WARNING)
 public class MissingFail extends BugChecker implements TryTreeMatcher {
 

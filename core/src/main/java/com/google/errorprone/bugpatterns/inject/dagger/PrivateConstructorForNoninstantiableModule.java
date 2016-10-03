@@ -16,7 +16,6 @@
 package com.google.errorprone.bugpatterns.inject.dagger;
 
 import static com.google.errorprone.BugPattern.Category.DAGGER;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.bugpatterns.inject.dagger.DaggerAnnotations.isBindingDeclarationMethod;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -51,7 +50,7 @@ import com.sun.source.tree.Tree;
           + " component.  Adding a private constructor clearly conveys that the module will not be"
           + " used as an instance.",
   category = DAGGER,
-  maturity = EXPERIMENTAL,
+  
   severity = SUGGESTION
 )
 public class PrivateConstructorForNoninstantiableModule extends BugChecker

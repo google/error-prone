@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.BugPattern.Suppressibility.CUSTOM_ANNOTATION;
 
@@ -36,7 +35,7 @@ import com.sun.source.tree.CompilationUnitTree;
   summary = "Package names should match the directory they are declared in",
   category = JDK,
   severity = SUGGESTION,
-  maturity = MATURE,
+
   suppressibility = CUSTOM_ANNOTATION,
   documentSuppression = false,
   customSuppressionAnnotations = SuppressPackageLocation.class

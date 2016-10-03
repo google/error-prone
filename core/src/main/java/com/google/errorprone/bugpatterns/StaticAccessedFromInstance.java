@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -51,7 +50,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
           + "of the object instance on which this variable or method is being invoked.",
   category = JDK,
   severity = WARNING,
-  maturity = MATURE,
+  
   altNames = {"static", "static-access"}
 )
 public class StaticAccessedFromInstance extends BugChecker implements MemberSelectTreeMatcher {

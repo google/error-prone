@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.inject.dagger;
 
 import static com.google.errorprone.BugPattern.Category.DAGGER;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
@@ -50,7 +49,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
           + "If you believe the `return null` path can never be taken, please throw a "
           + "`RuntimeException` instead. Otherwise, please annotate the method with `@Nullable`.",
   category = DAGGER,
-  maturity = MATURE,
+  
   severity = ERROR
 )
 public class ProvidesNull extends BugChecker implements ReturnTreeMatcher {

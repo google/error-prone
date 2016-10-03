@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Category;
-import com.google.errorprone.BugPattern.MaturityLevel;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
@@ -47,7 +46,7 @@ import com.sun.source.tree.Tree.Kind;
           + "inclusive, but you must use random.nextInt(n) to get that behavior.  If the original "
           + "behavior is truly desired, use `(random.nextBoolean() ? 1 : -1) * random.nextInt(n)`.",
   severity = SeverityLevel.ERROR,
-  maturity = MaturityLevel.EXPERIMENTAL,
+  
   category = Category.JDK
 )
 public class RandomModInteger extends BugChecker implements BinaryTreeMatcher {

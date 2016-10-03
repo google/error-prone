@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.formatstring;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
@@ -42,7 +41,7 @@ import java.util.regex.Pattern;
   name = "FormatString",
   summary = "Invalid printf-style format string",
   category = JDK,
-  maturity = EXPERIMENTAL,
+  
   severity = ERROR
 )
 public class FormatString extends BugChecker implements MethodInvocationTreeMatcher {

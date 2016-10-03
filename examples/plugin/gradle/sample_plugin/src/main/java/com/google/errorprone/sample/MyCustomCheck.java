@@ -19,7 +19,6 @@ package com.google.errorprone.sample;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
@@ -53,7 +52,7 @@ import java.util.Objects;
   category = JDK,
   summary = "String formatting inside print method",
   severity = ERROR,
-  maturity = EXPERIMENTAL,
+  
   linkType = CUSTOM,
   link = "example.com/bugpattern/MyCustomCheck"
 )

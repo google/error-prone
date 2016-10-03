@@ -16,7 +16,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -56,7 +55,7 @@ import javax.annotation.Nullable;
   summary = "Unused imports",
   explanation = "This import is unused.",
   category = JDK,
-  maturity = MATURE,
+
   severity = SUGGESTION
 )
 public final class RemoveUnusedImports extends BugChecker implements CompilationUnitTreeMatcher {

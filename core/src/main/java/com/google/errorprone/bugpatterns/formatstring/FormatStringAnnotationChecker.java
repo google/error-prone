@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.formatstring;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
@@ -44,7 +43,7 @@ import java.util.List;
   summary = "Invalid format string passed to formatting method.",
   category = JDK,
   severity = ERROR,
-  maturity = EXPERIMENTAL,
+
   suppressibility = Suppressibility.SUPPRESS_WARNINGS
   )
 public final class FormatStringAnnotationChecker extends BugChecker

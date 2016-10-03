@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.GUAVA;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.util.concurrent.AsyncFunction;
@@ -33,7 +32,7 @@ import com.google.errorprone.BugPattern;
           + "a Future with an output of null, instead return immediateFuture(null).",
   category = GUAVA,
   severity = ERROR,
-  maturity = MATURE,
+  
   generateExamplesFromTestCases = false
 )
 public final class AsyncFunctionReturnsNull extends AbstractAsyncTypeReturnsNull {

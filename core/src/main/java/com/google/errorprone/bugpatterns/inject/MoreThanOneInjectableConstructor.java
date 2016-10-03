@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.inject;
 
 import static com.google.errorprone.BugPattern.Category.INJECT;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.bugpatterns.inject.ElementPredicates.isFirstConstructorOfMultiInjectedClass;
 import static com.google.errorprone.matchers.InjectMatchers.IS_APPLICATION_OF_GUICE_INJECT;
@@ -53,7 +52,7 @@ import com.sun.source.tree.Tree;
           + " constructors exist, injection frameworks can't reliably choose between them.",
   category = INJECT,
   severity = ERROR,
-  maturity = MATURE,
+  
   altNames = {"inject-constructors", "InjectMultipleAtInjectConstructors"}
 )
 public class MoreThanOneInjectableConstructor extends BugChecker implements AnnotationTreeMatcher {

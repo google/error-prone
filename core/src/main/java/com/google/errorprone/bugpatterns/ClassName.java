@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.base.Joiner;
@@ -43,7 +42,7 @@ import javax.lang.model.element.Modifier;
   summary = "The source file name should match the name of the top-level class it contains",
   category = JDK,
   severity = ERROR,
-  maturity = MATURE,
+
   documentSuppression = false,
   linkType = CUSTOM,
   link = "https://google.github.io/styleguide/javaguide.html#s2.1-file-name"

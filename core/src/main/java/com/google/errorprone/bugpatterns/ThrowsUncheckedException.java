@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getType;
@@ -44,7 +43,7 @@ import java.util.List;
   summary = "Unchecked exceptions do not need to be declared in the method signature.",
   category = JDK,
   severity = SUGGESTION,
-  maturity = MATURE,
+  
   generateExamplesFromTestCases = false
 )
 public class ThrowsUncheckedException extends BugChecker implements MethodTreeMatcher {

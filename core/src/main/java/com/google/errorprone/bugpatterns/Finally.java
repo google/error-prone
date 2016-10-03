@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
@@ -66,7 +65,7 @@ import com.sun.tools.javac.util.Name;
           + " try-catch block will be ignored. Consider using try-with-resources instead.",
   category = JDK,
   severity = WARNING,
-  maturity = MATURE,
+  
   generateExamplesFromTestCases = false
 )
 public class Finally extends BugChecker
