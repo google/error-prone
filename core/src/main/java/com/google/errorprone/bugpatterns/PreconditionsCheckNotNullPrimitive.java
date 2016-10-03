@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.GUAVA;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.argument;
@@ -52,32 +51,35 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Checks that the 1st argument to Preconditions.checkNotNull() isn't a primitive.
- * The primitive would be autoboxed to a non-null boxed type, and the check would trivially
- * pass.
+ * Checks that the 1st argument to Preconditions.checkNotNull() isn't a primitive. The primitive
+ * would be autoboxed to a non-null boxed type, and the check would trivially pass.
  *
- * In our experience, most of these errors are from copied-and-pasted code and should
- * simply be removed.
+ * <p>In our experience, most of these errors are from copied-and-pasted code and should simply be
+ * removed.
  *
  * @author sjnickerson@google.com (Simon Nickerson)
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-@BugPattern(name = "PreconditionsCheckNotNullPrimitive",
-    summary = "First argument to `Preconditions.checkNotNull()` is a primitive rather "
-        + "than an object reference",
-    explanation =
-        "`Preconditions.checkNotNull()` takes as an argument a reference that should be " +
-        "non-null. Often a primitive is passed as the argument to check. The primitive " +
-        "will be [autoboxed]" +
-        "(http://docs.oracle.com/javase/7/docs/technotes/guides/language/autoboxing.html) " +
-        "into a boxed object, which is non-null, causing the check to " +
-        "always pass without the condition being evaluated.\n\n" +
-        "If the intent was to ensure that the primitive met some criterion (e.g., a boolean " +
-        "that should be non-null), please use `Preconditions.checkState()` or " +
-        "`Preconditions.checkArgument()` instead.",
-    category = GUAVA, severity = ERROR, maturity = MATURE)
-public class PreconditionsCheckNotNullPrimitive
-    extends BugChecker implements MethodInvocationTreeMatcher {
+@BugPattern(
+  name = "PreconditionsCheckNotNullPrimitive",
+  summary =
+      "First argument to `Preconditions.checkNotNull()` is a primitive rather "
+          + "than an object reference",
+  explanation =
+      "`Preconditions.checkNotNull()` takes as an argument a reference that should be "
+          + "non-null. Often a primitive is passed as the argument to check. The primitive "
+          + "will be [autoboxed]"
+          + "(http://docs.oracle.com/javase/7/docs/technotes/guides/language/autoboxing.html) "
+          + "into a boxed object, which is non-null, causing the check to "
+          + "always pass without the condition being evaluated.\n\n"
+          + "If the intent was to ensure that the primitive met some criterion (e.g., a boolean "
+          + "that should be non-null), please use `Preconditions.checkState()` or "
+          + "`Preconditions.checkArgument()` instead.",
+  category = GUAVA,
+  severity = ERROR
+)
+public class PreconditionsCheckNotNullPrimitive extends BugChecker
+    implements MethodInvocationTreeMatcher {
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree methodInvocationTree, VisitorState state) {

@@ -17,7 +17,6 @@
 package com.google.errorprone.matchers;
 
 import static com.google.errorprone.BugPattern.Category.ONE_OFF;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.inLoop;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
@@ -240,9 +239,11 @@ public class MatchersTest {
   }
 
   @BugPattern(
-      name = "InLoopChecker",
-      summary = "Checker that flags the given expression statement if the given matcher matches",
-      category = ONE_OFF, maturity = MATURE, severity = ERROR)
+    name = "InLoopChecker",
+    summary = "Checker that flags the given expression statement if the given matcher matches",
+    category = ONE_OFF,
+    severity = ERROR
+  )
   public static class InLoopChecker extends MatcherChecker {
     public InLoopChecker() {
       super("System.out.println();", inLoop());
@@ -257,7 +258,7 @@ public class MatchersTest {
     name = "MethodTreeChecker",
     summary = "Checker that flags the given method declaration if the given matcher matches",
     category = ONE_OFF,
-    maturity = MATURE,
+    
     severity = ERROR
   )
   static class MethodTreeChecker extends BugChecker

@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JUNIT;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.collect.Iterables;
@@ -41,18 +40,21 @@ import javax.lang.model.type.TypeKind;
 /**
  * Detects floating-point assertEquals() calls that will not work in JUnit 4.
  *
- * <p>JUnit 4 bans most but not all floating-point comparisons without a delta argument.
- * This check will be as strict as JUnit 4, no more and no less.
+ * <p>JUnit 4 bans most but not all floating-point comparisons without a delta argument. This check
+ * will be as strict as JUnit 4, no more and no less.
  *
  * @author mwacker@google.com (Mike Wacker)
  */
 @BugPattern(
-    name = "JUnit3FloatingPointComparisonWithoutDelta",
-    summary = "Floating-point comparison without error tolerance",
-    // First sentence copied directly from JUnit 4.
-    explanation = "Use assertEquals(expected, actual, delta) to compare floating-point numbers. "
-        + "This call to assertEquals() will either fail or not compile in JUnit 4.",
-    category = JUNIT, maturity = MATURE, severity = WARNING)
+  name = "JUnit3FloatingPointComparisonWithoutDelta",
+  summary = "Floating-point comparison without error tolerance",
+  // First sentence copied directly from JUnit 4.
+  explanation =
+      "Use assertEquals(expected, actual, delta) to compare floating-point numbers. "
+          + "This call to assertEquals() will either fail or not compile in JUnit 4.",
+  category = JUNIT,
+  severity = WARNING
+)
 public class JUnit3FloatingPointComparisonWithoutDelta extends BugChecker
     implements MethodInvocationTreeMatcher {
 

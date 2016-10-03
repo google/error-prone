@@ -18,7 +18,6 @@ package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugPattern.Category.ONE_OFF;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -179,9 +178,7 @@ public class ErrorProneCompilerIntegrationTest {
     assertThat(diagnosticHelper.getDiagnostics()).hasSize(4);
   }
 
-  @BugPattern(
-      name = "", explanation = "", summary = "", maturity = EXPERIMENTAL, severity = ERROR,
-      category = ONE_OFF)
+  @BugPattern(name = "", explanation = "", summary = "", severity = ERROR, category = ONE_OFF)
   public static class Throwing extends BugChecker implements ExpressionStatementTreeMatcher {
     @Override
     public Description matchExpressionStatement(ExpressionStatementTree tree, VisitorState state) {
@@ -244,8 +241,13 @@ public class ErrorProneCompilerIntegrationTest {
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
 
-  @BugPattern(name = "ConstructorMatcher", explanation = "",
-      category = ONE_OFF, maturity = EXPERIMENTAL, severity = ERROR, summary = "")
+  @BugPattern(
+    name = "ConstructorMatcher",
+    explanation = "",
+    category = ONE_OFF,
+    severity = ERROR,
+    summary = ""
+  )
   public static class ConstructorMatcher extends BugChecker implements MethodTreeMatcher {
     @Override
     public Description matchMethod(MethodTree tree, VisitorState state) {
@@ -269,8 +271,13 @@ public class ErrorProneCompilerIntegrationTest {
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
 
-  @BugPattern(name = "SuperCallMatcher", explanation = "",
-      category = ONE_OFF, maturity = EXPERIMENTAL, severity = ERROR, summary = "")
+  @BugPattern(
+    name = "SuperCallMatcher",
+    explanation = "",
+    category = ONE_OFF,
+    severity = ERROR,
+    summary = ""
+  )
   static class SuperCallMatcher extends BugChecker implements MethodInvocationTreeMatcher {
     @Override
     public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
@@ -472,7 +479,7 @@ public class ErrorProneCompilerIntegrationTest {
     name = "CrashOnReturn",
     explanation = "",
     summary = "",
-    maturity = EXPERIMENTAL,
+    
     severity = ERROR,
     category = ONE_OFF
   )
@@ -546,7 +553,7 @@ public class ErrorProneCompilerIntegrationTest {
     summary = "Using 'return' is considered harmful",
     explanation = "Please refactor your code into continuation passing style.",
     category = ONE_OFF,
-    maturity = EXPERIMENTAL,
+    
     severity = ERROR
   )
   public static class CPSChecker extends BugChecker implements ReturnTreeMatcher {

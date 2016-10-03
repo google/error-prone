@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.collect.ImmutableList;
@@ -29,14 +28,17 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodTree;
 import java.util.Set;
 
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- */
-@BugPattern(name = "LockMethodChecker", altNames = {"GuardedBy"},
-    summary = "This method does not acquire the locks specified by its @LockMethod annotation",
-    explanation = "Methods with the @LockMethod annotation are expected to acquire one or more"
-    + " locks. The caller will hold the locks when the function finishes execution.",
-    category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
+/** @author cushon@google.com (Liam Miller-Cushon) */
+@BugPattern(
+  name = "LockMethodChecker",
+  altNames = {"GuardedBy"},
+  summary = "This method does not acquire the locks specified by its @LockMethod annotation",
+  explanation =
+      "Methods with the @LockMethod annotation are expected to acquire one or more"
+          + " locks. The caller will hold the locks when the function finishes execution.",
+  category = JDK,
+  severity = ERROR
+)
 public class LockMethodChecker extends AbstractLockMethodChecker {
 
   @Override

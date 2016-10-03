@@ -15,7 +15,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.isArrayType;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
@@ -53,13 +52,18 @@ import com.sun.tools.javac.tree.JCTree.JCWhileLoop;
  * @author amshali@google.com (Amin Shali)
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-@BugPattern(name = "ElementsCountedInLoop",
-    summary = "This code, which counts elements using a loop, can be replaced by a simpler library "
-        + "method",
-    explanation = "This code counts elements using a loop.  You can use various library methods "
-        + "(Guava's Iterables.size(), Collection.size(), array.length) to achieve the same thing "
-        + "in a cleaner way.",
-    category = JDK, severity = WARNING, maturity = MATURE)
+@BugPattern(
+  name = "ElementsCountedInLoop",
+  summary =
+      "This code, which counts elements using a loop, can be replaced by a simpler library "
+          + "method",
+  explanation =
+      "This code counts elements using a loop.  You can use various library methods "
+          + "(Guava's Iterables.size(), Collection.size(), array.length) to achieve the same thing "
+          + "in a cleaner way.",
+  category = JDK,
+  severity = WARNING
+)
 public class ElementsCountedInLoop extends BugChecker
     implements EnhancedForLoopTreeMatcher, WhileLoopTreeMatcher {
 

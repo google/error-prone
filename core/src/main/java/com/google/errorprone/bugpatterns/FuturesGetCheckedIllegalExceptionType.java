@@ -15,7 +15,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.GUAVA;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -52,12 +51,16 @@ import com.sun.tools.javac.code.Types;
  * Checks for calls to Guava's {@code Futures.getChecked} method that will always fail because they
  * pass an incompatible exception type.
  */
-@BugPattern(name = "FuturesGetCheckedIllegalExceptionType",
-    summary = "Futures.getChecked requires a checked exception type with a standard constructor.",
-    explanation = "The passed exception type must not be a RuntimeException, and it must expose a "
-        + "public constructor whose only parameters are of type String or Throwable. getChecked "
-        + "will reject any other type with an IllegalArgumentException.",
-    category = GUAVA, severity = ERROR, maturity = MATURE)
+@BugPattern(
+  name = "FuturesGetCheckedIllegalExceptionType",
+  summary = "Futures.getChecked requires a checked exception type with a standard constructor.",
+  explanation =
+      "The passed exception type must not be a RuntimeException, and it must expose a "
+          + "public constructor whose only parameters are of type String or Throwable. getChecked "
+          + "will reject any other type with an IllegalArgumentException.",
+  category = GUAVA,
+  severity = ERROR
+)
 public final class FuturesGetCheckedIllegalExceptionType extends BugChecker
     implements MethodInvocationTreeMatcher {
   @Override

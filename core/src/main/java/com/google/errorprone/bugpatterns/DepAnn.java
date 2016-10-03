@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.sun.tools.javac.code.Flags.DEPRECATED;
 
@@ -40,12 +39,17 @@ import com.sun.tools.javac.code.Symbol;
  *
  * @author cushon@google.com (Liam Miller-Cushon)
  */
-@BugPattern(name = "DepAnn", altNames = "dep-ann",
-    summary = "Deprecated item is not annotated with @Deprecated",
-    explanation = "A declaration has the @deprecated Javadoc tag but no @Deprecated annotation. "
-        + "Please add an @Deprecated annotation to this declaration in addition to the @deprecated "
-        + "tag in the Javadoc.",
-    category = JDK, severity = ERROR, maturity = MATURE)
+@BugPattern(
+  name = "DepAnn",
+  altNames = "dep-ann",
+  summary = "Deprecated item is not annotated with @Deprecated",
+  explanation =
+      "A declaration has the `@deprecated` Javadoc tag but no `@Deprecated` annotation. "
+          + "Please add an `@Deprecated` annotation to this declaration in addition to the "
+          + "`@deprecated` tag in the Javadoc.",
+  category = JDK,
+  severity = ERROR
+)
 public class DepAnn extends BugChecker
     implements MethodTreeMatcher, ClassTreeMatcher, VariableTreeMatcher {
 

@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.GUAVA;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.argument;
@@ -39,21 +38,23 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 
-/**
- * @author awturner@google.com (Andy Turner)
- */
-@BugPattern(name = "ProtoFieldPreconditionsCheckNotNull",
-    summary = "Protobuf fields cannot be null, so this check is redundant",
-    explanation = "This checker looks for comparisons of protocol buffer fields with null "
-        + "via the com.google.common.base.Preconditions.checkNotNull method. "
-        + "If a proto field is not specified, its field accessor will return a non-null default "
-        + "value. Thus, the result of calling one of these accessors can never be null, and "
-        + "comparisons like these often indicate a nearby error.\n\n"
-        + "If you meant to check whether an optional field has been set, you should use the "
-        + "hasField() method instead.",
-    category = GUAVA, severity = WARNING, maturity = MATURE)
-public class ProtoFieldPreconditionsCheckNotNull
-    extends BugChecker implements MethodInvocationTreeMatcher {
+/** @author awturner@google.com (Andy Turner) */
+@BugPattern(
+  name = "ProtoFieldPreconditionsCheckNotNull",
+  summary = "Protobuf fields cannot be null, so this check is redundant",
+  explanation =
+      "This checker looks for comparisons of protocol buffer fields with null "
+          + "via the com.google.common.base.Preconditions.checkNotNull method. "
+          + "If a proto field is not specified, its field accessor will return a non-null default "
+          + "value. Thus, the result of calling one of these accessors can never be null, and "
+          + "comparisons like these often indicate a nearby error.\n\n"
+          + "If you meant to check whether an optional field has been set, you should use the "
+          + "hasField() method instead.",
+  category = GUAVA,
+  severity = WARNING
+)
+public class ProtoFieldPreconditionsCheckNotNull extends BugChecker
+    implements MethodInvocationTreeMatcher {
 
   private static final String PROTO_SUPER_CLASS = "com.google.protobuf.GeneratedMessage";
 

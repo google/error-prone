@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -49,14 +48,15 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 
-/**
- * @author alexeagle@google.com (Alex Eagle)
- */
-@BugPattern(name = "DeadException", altNames = "ThrowableInstanceNeverThrown",
-    summary = "Exception created but not thrown",
-    explanation =
-        "The exception is created with new, but is not thrown, and the reference is lost.",
-    category = JDK, severity = ERROR, maturity = MATURE)
+/** @author alexeagle@google.com (Alex Eagle) */
+@BugPattern(
+  name = "DeadException",
+  altNames = "ThrowableInstanceNeverThrown",
+  summary = "Exception created but not thrown",
+  explanation = "The exception is created with new, but is not thrown, and the reference is lost.",
+  category = JDK,
+  severity = ERROR
+)
 public class DeadException extends BugChecker implements NewClassTreeMatcher {
 
   public static final Matcher<Tree> MATCHER = allOf(

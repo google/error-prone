@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -36,16 +35,18 @@ import com.sun.tools.javac.tree.JCTree.JCExpression;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-/**
- * @author mdempsky@google.com (Matthew Dempsky)
- */
-@BugPattern(name = "InvalidPatternSyntax",
-    summary = "Invalid syntax used for a regular expression",
-    explanation = "This error is triggered by calls to regex-accepting methods with invalid string "
-        + "literals.  These calls would cause a PatternSyntaxException at runtime.\n\n"
-        + "We deliberately do not check java.util.regex.Pattern#compile as many of its users "
-        + "are deliberately testing the regex compiler or using a vacuously true regex.",
-    category = JDK, severity = ERROR, maturity = MATURE)
+/** @author mdempsky@google.com (Matthew Dempsky) */
+@BugPattern(
+  name = "InvalidPatternSyntax",
+  summary = "Invalid syntax used for a regular expression",
+  explanation =
+      "This error is triggered by calls to regex-accepting methods with invalid string "
+          + "literals.  These calls would cause a PatternSyntaxException at runtime.\n\n"
+          + "We deliberately do not check java.util.regex.Pattern#compile as many of its users "
+          + "are deliberately testing the regex compiler or using a vacuously true regex.",
+  category = JDK,
+  severity = ERROR
+)
 public class InvalidPatternSyntax extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final String MESSAGE_BASE = "Invalid syntax used for a regular expression: ";

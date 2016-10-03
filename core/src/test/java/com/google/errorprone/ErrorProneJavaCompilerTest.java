@@ -18,10 +18,10 @@ package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.BugPattern.Suppressibility.UNSUPPRESSIBLE;
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertTrue;
@@ -236,10 +236,14 @@ public class ErrorProneJavaCompilerTest {
     }
   }
 
-  @BugPattern(name = "ArrayEquals",
-      summary = "Reference equality used to compare arrays",
-      explanation = "", category = JDK, severity = ERROR, maturity = MATURE,
-      suppressibility = UNSUPPRESSIBLE)
+  @BugPattern(
+    name = "ArrayEquals",
+    summary = "Reference equality used to compare arrays",
+    explanation = "",
+    category = JDK,
+    severity = ERROR,
+    suppressibility = UNSUPPRESSIBLE
+  )
   public static class UnsuppressibleArrayEquals extends ArrayEquals {}
 
   @Test
@@ -284,7 +288,7 @@ public class ErrorProneJavaCompilerTest {
   public void testSeverityResetsAfterOverride() throws Exception {
     DiagnosticTestHelper diagnosticHelper = new DiagnosticTestHelper();
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(outputStream), true);
+    PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(outputStream, UTF_8), true);
     ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
     JavaCompiler errorProneJavaCompiler = new ErrorProneJavaCompiler();
     List<String> args = Lists.newArrayList(
@@ -336,7 +340,7 @@ public class ErrorProneJavaCompilerTest {
   public void testMaturityResetsAfterOverride() throws Exception {
     DiagnosticTestHelper diagnosticHelper = new DiagnosticTestHelper();
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(outputStream), true);
+    PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(outputStream, UTF_8), true);
     ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
     JavaCompiler errorProneJavaCompiler = new ErrorProneJavaCompiler();
     List<String> args = Lists.newArrayList(
@@ -384,7 +388,7 @@ public class ErrorProneJavaCompilerTest {
     explanation = "",
     category = JDK,
     severity = ERROR,
-    maturity = MATURE,
+    
     suppressibility = UNSUPPRESSIBLE
   )
   public static class DeleteMethod extends BugChecker implements ClassTreeMatcher {
@@ -427,7 +431,7 @@ public class ErrorProneJavaCompilerTest {
       List<Class<? extends BugChecker>> customCheckers) {
     DiagnosticTestHelper diagnosticHelper = new DiagnosticTestHelper();
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(outputStream), true);
+    PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(outputStream, UTF_8), true);
     ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
 
     List<String> args = Lists.newArrayList(

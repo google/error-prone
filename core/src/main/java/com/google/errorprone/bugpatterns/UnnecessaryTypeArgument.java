@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.base.Verify.verify;
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
@@ -37,12 +36,13 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.tree.JCTree;
 import java.util.List;
 
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- */
-@BugPattern(name = "UnnecessaryTypeArgument",
-    summary = "Non-generic methods should not be invoked with type arguments",
-    category = JDK, severity = ERROR, maturity = MATURE)
+/** @author cushon@google.com (Liam Miller-Cushon) */
+@BugPattern(
+  name = "UnnecessaryTypeArgument",
+  summary = "Non-generic methods should not be invoked with type arguments",
+  category = JDK,
+  severity = ERROR
+)
 public class UnnecessaryTypeArgument extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
 

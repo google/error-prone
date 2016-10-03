@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.inLoop;
@@ -36,14 +35,16 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.tree.JCTree.JCIf;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/** @author eaftan@google.com (Eddie Aftandilian) */
 // TODO(eaftan): Doesn't handle the case that the enclosing method is always called in a loop.
-@BugPattern(name = "WaitNotInLoop",
-    summary = "Because of spurious wakeups, Object.wait() and Condition.await() must always be "
-        + "called in a loop",
-    category = JDK, severity = WARNING, maturity = MATURE)
+@BugPattern(
+  name = "WaitNotInLoop",
+  summary =
+      "Because of spurious wakeups, Object.wait() and Condition.await() must always be "
+          + "called in a loop",
+  category = JDK,
+  severity = WARNING
+)
 public class WaitNotInLoop extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final String MESSAGE_TEMPLATE =

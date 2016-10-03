@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
@@ -40,11 +39,16 @@ import java.util.Set;
  *
  * @author cushon@google.com (Liam Miller-Cushon)
  */
-@BugPattern(name = "Overrides", altNames = "overrides",
-    summary = "Varargs doesn't agree for overridden method",
-    explanation = "A varargs method is overridden by a method with an array parameter, or vice "
-        + "versa.  Please match the signature of the method being overridden.",
-    category = JDK, severity = ERROR, maturity = MATURE)
+@BugPattern(
+  name = "Overrides",
+  altNames = "overrides",
+  summary = "Varargs doesn't agree for overridden method",
+  explanation =
+      "A varargs method is overridden by a method with an array parameter, or vice "
+          + "versa.  Please match the signature of the method being overridden.",
+  category = JDK,
+  severity = ERROR
+)
 public class Overrides extends BugChecker implements MethodTreeMatcher {
 
   @Override

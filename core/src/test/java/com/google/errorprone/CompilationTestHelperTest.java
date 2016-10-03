@@ -376,10 +376,13 @@ public class CompilationTestHelperTest {
     }
   }
 
-  @BugPattern(name = "ReturnTreeChecker",
-      summary = "Method may return normally.",
-      explanation = "Consider mutating some global state instead.",
-      category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
+  @BugPattern(
+    name = "ReturnTreeChecker",
+    summary = "Method may return normally.",
+    explanation = "Consider mutating some global state instead.",
+    category = JDK,
+    severity = ERROR
+  )
   public static class ReturnTreeChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {

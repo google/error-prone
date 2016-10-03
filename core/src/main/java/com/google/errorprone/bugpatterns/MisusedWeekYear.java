@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
@@ -39,24 +38,20 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.JCTree;
 
 /**
- * Ban use of YYYY in a SimpleDateFormat pattern, unless it is being used for a week date.
- * Otherwise the user almost certainly meant yyyy instead.  See the summary in the {@link
- * BugPattern} below for more details.
+ * Ban use of YYYY in a SimpleDateFormat pattern, unless it is being used for a week date. Otherwise
+ * the user almost certainly meant yyyy instead. See the summary in the {@link BugPattern} below for
+ * more details.
  *
  * <p>This bug caused a Twitter outage in December 2014.
  */
-@BugPattern(name = "MisusedWeekYear",
-    summary = "Use of \"YYYY\" (week year) in a date pattern without \"ww\" (week in year). "
-        + "You probably meant to use \"yyyy\" (year) instead.",
-    explanation = "\"YYYY\" in a date pattern means \"week year\".  The week year is defined to "
-        + "begin at the beginning of the week that contains the year's first Thursday.  For "
-        + "example, the week year 2015 began on Monday, December 29, 2014, since January 1, 2015, "
-        + "was on a Thursday.\n\n"
-        + "\"Week year\" is intended to be used for week dates, e.g. \"2015-W01-1\", but is often "
-        + "mistakenly used for calendar dates, e.g. 2014-12-29, in which case the year may be "
-        + "incorrect during the last week of the year.  If you are formatting anything other than "
-        + "a week date, you should use the year specifier \"yyyy\" instead.",
-    category = JDK, severity = ERROR, maturity = MATURE)
+@BugPattern(
+  name = "MisusedWeekYear",
+  summary =
+      "Use of \"YYYY\" (week year) in a date pattern without \"ww\" (week in year). "
+          + "You probably meant to use \"yyyy\" (year) instead.",
+  category = JDK,
+  severity = ERROR
+)
 public class MisusedWeekYear extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
   

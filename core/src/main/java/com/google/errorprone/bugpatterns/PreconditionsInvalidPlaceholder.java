@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.GUAVA;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 
@@ -34,17 +33,19 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.tree.JCTree;
 import java.util.regex.Pattern;
 
-/**
- * @author Louis Wasserman
- */
-@BugPattern(name = "PreconditionsInvalidPlaceholder",
-    summary = "Preconditions only accepts the %s placeholder in error message strings",
-    explanation = "The Guava Preconditions checks take error message template strings that "
-        + "look similar to format strings but only accept %s as a placeholder. This check "
-        + "points out places where there is a non-%s placeholder in a Preconditions error "
-        + "message template string and the number of arguments does not match the number of "
-        + "%s placeholders.",
-    category = GUAVA, maturity = MATURE, severity = WARNING)
+/** @author Louis Wasserman */
+@BugPattern(
+  name = "PreconditionsInvalidPlaceholder",
+  summary = "Preconditions only accepts the %s placeholder in error message strings",
+  explanation =
+      "The Guava Preconditions checks take error message template strings that "
+          + "look similar to format strings but only accept %s as a placeholder. This check "
+          + "points out places where there is a non-%s placeholder in a Preconditions error "
+          + "message template string and the number of arguments does not match the number of "
+          + "%s placeholders.",
+  category = GUAVA,
+  severity = WARNING
+)
 public class PreconditionsInvalidPlaceholder extends BugChecker
     implements MethodInvocationTreeMatcher {
 

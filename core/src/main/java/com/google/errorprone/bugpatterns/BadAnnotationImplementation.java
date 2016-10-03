@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -53,16 +52,12 @@ import java.lang.annotation.Annotation;
  */
 @BugPattern(
   name = "BadAnnotationImplementation",
-  summary = "Classes that implement Annotation must override equals and hashCode. Consider "
-      + "using AutoAnnotation instead of implementing Annotation by hand.",
-  explanation = "Implementations of `java.lang.annotation.Annotation` must override `equals` "
-      + "and `hashCode`, otherwise they inherit the implementations from `java.lang.Object`, "
-      + "and those implementations do not meet the contract specified by the `Annotation` "
-      + "interface.\n\n"
-      + "It is very difficult to write these methods correctly, so consider using [AutoAnnotation]"
-      + "(https://github.com/google/auto/blob/master/value/src/main/java/com/google/auto/value/AutoAnnotation.java) "
-      + "to generate the correct code automatically.",
-  category = JDK, severity = WARNING, maturity = MATURE)
+  summary =
+      "Classes that implement Annotation must override equals and hashCode. Consider "
+          + "using AutoAnnotation instead of implementing Annotation by hand.",
+  category = JDK,
+  severity = WARNING
+)
 public class BadAnnotationImplementation extends BugChecker implements ClassTreeMatcher {
 
   private static final Matcher<ClassTree> CLASS_TREE_MATCHER = allOf(

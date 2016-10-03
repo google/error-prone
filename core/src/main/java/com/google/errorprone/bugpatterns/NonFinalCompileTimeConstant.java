@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
@@ -42,18 +41,22 @@ import javax.lang.model.element.Modifier;
  *
  * @author cushon@google.com (Liam Miller-Cushon)
  */
-@BugPattern(name = "NonFinalCompileTimeConstant",
-    summary = "@CompileTimeConstant parameters should be final",
-    explanation = "If a method's formal parameter is annotated with @CompileTimeConstant, the"
-        + " method will always be invoked with an argument that is a static constant. If the"
-        + " parameter itself is non-final, then it is a mutable reference to immutable data."
-        + " This is rarely useful, and can be confusing when trying to use the parameter in a"
-        + " context that requires an compile-time constant. For example:\n\n"
-        + "    void f(@CompileTimeConstant y) {}\n"
-        + "    void g(@CompileTimeConstant x) {\n"
-        + "      f(x); // x is not a constant, did you mean to declare it as final?\n"
-        + "    }\n\n",
-    category = JDK, severity = ERROR, maturity = MATURE)
+@BugPattern(
+  name = "NonFinalCompileTimeConstant",
+  summary = "@CompileTimeConstant parameters should be final",
+  explanation =
+      "If a method's formal parameter is annotated with @CompileTimeConstant, the"
+          + " method will always be invoked with an argument that is a static constant. If the"
+          + " parameter itself is non-final, then it is a mutable reference to immutable data."
+          + " This is rarely useful, and can be confusing when trying to use the parameter in a"
+          + " context that requires an compile-time constant. For example:\n\n"
+          + "    void f(@CompileTimeConstant y) {}\n"
+          + "    void g(@CompileTimeConstant x) {\n"
+          + "      f(x); // x is not a constant, did you mean to declare it as final?\n"
+          + "    }\n\n",
+  category = JDK,
+  severity = ERROR
+)
 public class NonFinalCompileTimeConstant extends BugChecker implements MethodTreeMatcher {
 
   @Override

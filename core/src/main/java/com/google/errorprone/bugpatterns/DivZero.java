@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.kindIs;
@@ -42,10 +41,14 @@ import com.sun.source.tree.Tree.Kind;
  *
  * @author cushon@google.com (Liam Miller-Cushon)
  */
-@BugPattern(name = "DivZero", altNames = "divzero",
-    summary = "Division by integer literal zero",
-    explanation = "This code will cause a runtime arithmetic exception if it is executed.",
-    category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
+@BugPattern(
+  name = "DivZero",
+  altNames = "divzero",
+  summary = "Division by integer literal zero",
+  explanation = "This code will cause a runtime arithmetic exception if it is executed.",
+  category = JDK,
+  severity = ERROR
+)
 public class DivZero extends BugChecker
     implements BinaryTreeMatcher, CompoundAssignmentTreeMatcher {
 

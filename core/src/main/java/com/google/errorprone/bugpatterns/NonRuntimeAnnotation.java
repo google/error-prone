@@ -17,14 +17,13 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
@@ -33,14 +32,16 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import java.lang.annotation.Retention;
 
-/**
- * @author scottjohnson@google.com (Scott Johnson)
- */
-@BugPattern(name = "NonRuntimeAnnotation",
-    summary = "Calling getAnnotation on an annotation that is not retained at runtime.",
-    explanation = "Calling getAnnotation on an annotation that does not have its Retention set to "
-        + "RetentionPolicy.RUNTIME will always return null.",
-    category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
+/** @author scottjohnson@google.com (Scott Johnson) */
+@BugPattern(
+  name = "NonRuntimeAnnotation",
+  summary = "Calling getAnnotation on an annotation that is not retained at runtime.",
+  explanation =
+      "Calling getAnnotation on an annotation that does not have its Retention set to "
+          + "RetentionPolicy.RUNTIME will always return null.",
+  category = JDK,
+  severity = ERROR
+)
 public class NonRuntimeAnnotation extends BugChecker implements MethodInvocationTreeMatcher {
 
   @Override

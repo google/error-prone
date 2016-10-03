@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.assertionWithCondition;
 import static com.google.errorprone.matchers.Matchers.booleanLiteral;
@@ -30,19 +29,22 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.AssertTree;
 
-/**
- * @author sebastian.h.monte@gmail.com (Sebastian Monte)
- */
-@BugPattern(name = "AssertFalse",
-    summary = "Assertions may be disabled at runtime and do not guarantee that execution will "
-        + "halt here; consider throwing an exception instead",
-    explanation = "Java assertions do not necessarily execute at runtime; they may be enabled and "
-        + "disabled depending on which options are passed to the JVM invocation. An assert"
-        + " false statement may be intended to ensure that the program never proceeds beyond "
-        + "that statement. If the correct execution of the program depends on that being the "
-        + "case, consider throwing an exception instead, so that execution is halted regardless "
-        + "of runtime configuration.",
-    category = JDK, severity = WARNING, maturity = EXPERIMENTAL)
+/** @author sebastian.h.monte@gmail.com (Sebastian Monte) */
+@BugPattern(
+  name = "AssertFalse",
+  summary =
+      "Assertions may be disabled at runtime and do not guarantee that execution will "
+          + "halt here; consider throwing an exception instead",
+  explanation =
+      "Java assertions do not necessarily execute at runtime; they may be enabled and "
+          + "disabled depending on which options are passed to the JVM invocation. An assert"
+          + " false statement may be intended to ensure that the program never proceeds beyond "
+          + "that statement. If the correct execution of the program depends on that being the "
+          + "case, consider throwing an exception instead, so that execution is halted regardless "
+          + "of runtime configuration.",
+  category = JDK,
+  severity = WARNING
+)
 public class AssertFalse extends BugChecker implements AssertTreeMatcher {
   
   private static final Matcher<AssertTree> ASSERT_FALSE_MATCHER = 

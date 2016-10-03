@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JMOCK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.Matchers.allOf;
@@ -42,14 +41,19 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 
-@BugPattern(name = "JMockTestWithoutRunWithOrRuleAnnotation",
-    summary = "jMock tests must have a @RunWith(JMock.class) annotation, or the Mockery field must "
-        + "have a @Rule JUnit annotation",
-    explanation = "jMock tests must have a @RunWith(JMock.class) annotation, or the Mockery field "
-        + "must have a @Rule JUnit annotation. If this is not done, then all of your jMock tests "
-        + "will run and pass, but none of your assertions will actually be evaluated. Your tests "
-        + "will pass even if they shouldn't.",
-    category = JMOCK, severity = ERROR, maturity = EXPERIMENTAL)
+@BugPattern(
+  name = "JMockTestWithoutRunWithOrRuleAnnotation",
+  summary =
+      "jMock tests must have a @RunWith(JMock.class) annotation, or the Mockery field must "
+          + "have a @Rule JUnit annotation",
+  explanation =
+      "jMock tests must have a @RunWith(JMock.class) annotation, or the Mockery field "
+          + "must have a @Rule JUnit annotation. If this is not done, then all of your jMock tests "
+          + "will run and pass, but none of your assertions will actually be evaluated. Your tests "
+          + "will pass even if they shouldn't.",
+  category = JMOCK,
+  severity = ERROR
+)
 public class JMockTestWithoutRunWithOrRuleAnnotation extends BugChecker
     implements VariableTreeMatcher {
 

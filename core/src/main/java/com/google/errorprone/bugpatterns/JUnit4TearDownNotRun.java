@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JUNIT;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT_AFTER_ANNOTATION;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT_AFTER_CLASS_ANNOTATION;
@@ -39,22 +38,12 @@ import java.util.List;
  *
  * @author glorioso@google.com (Nick Glorioso)
  */
-@BugPattern(name = "JUnit4TearDownNotRun",
-    summary = "tearDown() method will not be run; Please add an @After annotation",
-    explanation = "JUnit 3 provides the overridable method tearDown(), to be overridden by "
-        + " subclasses when the test needs to perform some post-test de-initialization. "
-        + " In JUnit 4, this is accomplished by annotating such a method with @After."
-        + " The method that triggered this error matches the definition of tearDown() from"
-        + " JUnit3, but was not annotated with @After and thus won't be run by the JUnit4"
-        + " runner.\n\n"
-        + " If you intend for this tearDown() method not to be run by the JUnit4 runner,"
-        + " but perhaps be manually invoked after certain test methods, please rename the method "
-        + " or mark it private.\n\n"
-        + " If the method is part of an abstract test class hierarchy"
-        + " where this class's tearDown() is invoked by a superclass method that is annotated with"
-        + " @After, then please rename the abstract method or add @After to"
-        + " the superclass's definition of tearDown()",
-    category = JUNIT, maturity = MATURE, severity = ERROR)
+@BugPattern(
+  name = "JUnit4TearDownNotRun",
+  summary = "tearDown() method will not be run; Please add an @After annotation",
+  category = JUNIT,
+  severity = ERROR
+)
 public class JUnit4TearDownNotRun extends AbstractJUnit4InitMethodNotRun {
   @Override
   protected Matcher<MethodTree> methodMatcher() {

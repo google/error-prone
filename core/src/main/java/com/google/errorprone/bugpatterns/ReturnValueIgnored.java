@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -47,8 +46,7 @@ import java.util.Set;
           + "methods in the JDK whose return value must be used and issues an error if they "
           + "are not.",
   category = JDK,
-  severity = ERROR,
-  maturity = MATURE
+  severity = ERROR
 )
 public class ReturnValueIgnored extends AbstractReturnValueIgnored {
   /** A set of types which this checker should examine method calls on. */

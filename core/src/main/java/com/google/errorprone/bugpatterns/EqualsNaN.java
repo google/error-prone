@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
@@ -33,15 +32,17 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import javax.annotation.Nullable;
 
-/**
- * @author lowasser@google.com (Louis Wasserman)
- */
-@BugPattern(name = "EqualsNaN",
-    summary = "== NaN always returns false; use the isNaN methods instead",
-    explanation = "As per JLS 15.21.1, == NaN comparisons always return false, even NaN == NaN. "
-        + "Instead, use the isNaN methods to check for NaN.",
-    category = JDK, severity = ERROR, maturity = MATURE)
-public class EqualsNaN extends BugChecker implements BinaryTreeMatcher {  
+/** @author lowasser@google.com (Louis Wasserman) */
+@BugPattern(
+  name = "EqualsNaN",
+  summary = "== NaN always returns false; use the isNaN methods instead",
+  explanation =
+      "As per JLS 15.21.1, == NaN comparisons always return false, even NaN == NaN. "
+          + "Instead, use the isNaN methods to check for NaN.",
+  category = JDK,
+  severity = ERROR
+)
+public class EqualsNaN extends BugChecker implements BinaryTreeMatcher {
   @Override
   public Description matchBinary(BinaryTree tree, VisitorState state) {
     String prefix;
