@@ -37,6 +37,7 @@
   </properties>
 
   <modules>
+    <module>check_api</module>
     <module>core</module>
     <module>annotation</module>
     <module>annotations</module>

@@ -52,6 +52,12 @@
       <artifactId>error_prone_annotation</artifactId>
       <version>${project.version}</version>
     </dependency>
+        <dependency>
+      <!-- Apache 2.0 -->
+      <groupId>com.google.errorprone</groupId>
+      <artifactId>error_prone_check_api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
     <dependency>
       <!-- Apache 2.0 -->
       <groupId>com.github.stephenc.jcip</groupId>
