@@ -50,7 +50,7 @@ var activeTableTab = "activeTableTab";
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../../com/google/errorprone/bugpatterns/AbstractToString.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../com/google/errorprone/bugpatterns/ArgumentParameterUtils.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../com/google/errorprone/bugpatterns/ArrayEquals.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../index.html?com/google/errorprone/bugpatterns/ArgumentParameterSwap.html" target="_top">Frames</a></li>
@@ -121,8 +121,9 @@ var activeTableTab = "activeTableTab";
 <pre>public class <span class="typeNameLabel">ArgumentParameterSwap</span>
 extends <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
 implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.NewClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.NewClassTreeMatcher</a>, <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></pre>
-<div class="block">This checks the similarity between the arguments and parameters, currently checking if terms have
- identical names but the arguments are swapped.</div>
+<div class="block">This checks the similarity between the arguments and parameters. This version calculates the
+ similarity between argument and parameter names and recommends a different order of the arguments
+ if the similarity is higher.</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
 <dd>yulissa@google.com (Yulissa Arroyo-Paredes)</dd>
@@ -164,7 +165,7 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.New
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static <a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/ArgumentParameterSwap.html#BLACK_LIST">BLACK_LIST</a></span></code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/ArgumentParameterSwap.html#IGNORE_PARAMS">IGNORE_PARAMS</a></span></code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -244,13 +245,13 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.New
 <!--   -->
 </a>
 <h3>Field Detail</h3>
-<a name="BLACK_LIST">
+<a name="IGNORE_PARAMS">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>BLACK_LIST</h4>
-<pre>public static final&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt; BLACK_LIST</pre>
+<h4>IGNORE_PARAMS</h4>
+<pre>public static final&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt; IGNORE_PARAMS</pre>
 </li>
 </ul>
 </li>
@@ -335,7 +336,7 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.New
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../../com/google/errorprone/bugpatterns/AbstractToString.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../com/google/errorprone/bugpatterns/ArgumentParameterUtils.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../com/google/errorprone/bugpatterns/ArrayEquals.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../index.html?com/google/errorprone/bugpatterns/ArgumentParameterSwap.html" target="_top">Frames</a></li>

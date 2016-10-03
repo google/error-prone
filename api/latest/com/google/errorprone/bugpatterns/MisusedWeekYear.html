@@ -121,8 +121,9 @@ var activeTableTab = "activeTableTab";
 <pre>public class <span class="typeNameLabel">MisusedWeekYear</span>
 extends <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
 implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a>, <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.NewClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.NewClassTreeMatcher</a></pre>
-<div class="block">Ban use of YYYY in a SimpleDateFormat pattern, unless it is being used for a week date.
- Otherwise the user almost certainly meant yyyy instead.  See the summary in the <a href="../../../../com/google/errorprone/BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> below for more details.
+<div class="block">Ban use of YYYY in a SimpleDateFormat pattern, unless it is being used for a week date. Otherwise
+ the user almost certainly meant yyyy instead. See the summary in the <a href="../../../../com/google/errorprone/BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> below for
+ more details.
 
  <p>This bug caused a Twitter outage in December 2014.</div>
 <dl>

@@ -125,15 +125,14 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Ass
 
  <ol>
    <li>Calls to new are disallowed.
-   <li>Methods statically determined to be reachable from this method must also be annotated
-       with <code>@NoAllocation</code>.
+   <li>Methods statically determined to be reachable from this method must also be annotated with
+       <code>@NoAllocation</code>.
    <li>Autoboxing is disallowed.
    <li>String concatenation and conversions are disallowed.
    <li>To make it easier to use exceptions, allocations are always allowed within a throw
-       statement. (But not in the methods of nested classes if they are annotated with
-       <code>NoAllocation</code>.)
-   <li>The check is done at the source level. The compiler or runtime may perform optimizations
-       or transformations that add or remove allocations in a way not visible to this check.
+       statement. (But not in the methods of nested classes if they are annotated with <code>NoAllocation</code>.)
+   <li>The check is done at the source level. The compiler or runtime may perform optimizations or
+       transformations that add or remove allocations in a way not visible to this check.
  </ol></div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>

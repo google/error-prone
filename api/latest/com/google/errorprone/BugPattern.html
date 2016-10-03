@@ -126,21 +126,17 @@ public @interface <span class="memberNameLabel">BugPattern</span></pre>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code><a href="../../../com/google/errorprone/BugPattern.MaturityLevel.html" title="enum in com.google.errorprone">BugPattern.MaturityLevel</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/BugPattern.html#maturity--">maturity</a></span></code>&nbsp;</td>
-</tr>
-<tr class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/BugPattern.html#name--">name</a></span></code>
 <div class="block">A unique identifier for this bug, used for @SuppressWarnings and in the compiler error
  message.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../com/google/errorprone/BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/BugPattern.html#severity--">severity</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/BugPattern.html#summary--">summary</a></span></code>
 <div class="block">A short summary of the problem that this checker detects.</div>
@@ -205,6 +201,10 @@ public @interface <span class="memberNameLabel">BugPattern</span></pre>
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code><a href="../../../com/google/errorprone/BugPattern.MaturityLevel.html" title="enum in com.google.errorprone">BugPattern.MaturityLevel</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/BugPattern.html#maturity--">maturity</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../com/google/errorprone/BugPattern.Suppressibility.html" title="enum in com.google.errorprone">BugPattern.Suppressibility</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/BugPattern.html#suppressibility--">suppressibility</a></span></code>
 <div class="block">Whether this checker should be suppressible, and if so, by what means.</div>
@@ -272,22 +272,10 @@ public @interface <span class="memberNameLabel">BugPattern</span></pre>
 <li class="blockList"><a name="severity--">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>severity</h4>
 <pre>public abstract&nbsp;<a href="../../../com/google/errorprone/BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a>&nbsp;severity</pre>
-</li>
-</ul>
-</li>
-</ul>
-<ul class="blockList">
-<li class="blockList"><a name="maturity--">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>maturity</h4>
-<pre>public abstract&nbsp;<a href="../../../com/google/errorprone/BugPattern.MaturityLevel.html" title="enum in com.google.errorprone">BugPattern.MaturityLevel</a>&nbsp;maturity</pre>
 </li>
 </ul>
 </li>
@@ -359,6 +347,22 @@ public @interface <span class="memberNameLabel">BugPattern</span></pre>
 <dl>
 <dt>Default:</dt>
 <dd>""</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="maturity--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>maturity</h4>
+<pre>public abstract&nbsp;<a href="../../../com/google/errorprone/BugPattern.MaturityLevel.html" title="enum in com.google.errorprone">BugPattern.MaturityLevel</a>&nbsp;maturity</pre>
+<dl>
+<dt>Default:</dt>
+<dd>com.google.errorprone.BugPattern.MaturityLevel.MATURE</dd>
 </dl>
 </li>
 </ul>

@@ -109,13 +109,13 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd>org.checkerframework.dataflow.analysis.Store&lt;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a>&lt;V&gt;&gt;</dd>
+<dd><a href="../../../../com/google/errorprone/dataflow/LocalVariableValues.html" title="interface in com.google.errorprone.dataflow">LocalVariableValues</a>&lt;V&gt;, org.checkerframework.dataflow.analysis.Store&lt;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a>&lt;V&gt;&gt;</dd>
 </dl>
 <hr>
 <br>
 <pre>public final class <span class="typeNameLabel">LocalStore&lt;V extends org.checkerframework.dataflow.analysis.AbstractValue&lt;V&gt;&gt;</span>
 extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>
-implements org.checkerframework.dataflow.analysis.Store&lt;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a>&lt;V&gt;&gt;</pre>
+implements org.checkerframework.dataflow.analysis.Store&lt;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a>&lt;V&gt;&gt;, <a href="../../../../com/google/errorprone/dataflow/LocalVariableValues.html" title="interface in com.google.errorprone.dataflow">LocalVariableValues</a>&lt;V&gt;</pre>
 <div class="block">Immutable map from each local variable to its <code>AbstractValue</code>. Note that, while the
  interface is written in terms of <b>nodes</b>, the stored data is indexed by variable
  <b>declaration</b>, so values persist across nodes.
@@ -190,34 +190,35 @@ implements org.checkerframework.dataflow.analysis.Store&lt;<a href="../../../../
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/dataflow/LocalStore.html#equals-java.lang.Object-">equals</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;o)</code>&nbsp;</td>
 </tr>
 <tr id="i4" class="altColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="type parameter in LocalStore">V</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/dataflow/LocalStore.html#getInformation-javax.lang.model.element.Element-">getInformation</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/javax/lang/model/element/Element.html?is-external=true" title="class or interface in javax.lang.model.element">Element</a>&nbsp;element)</code>
-<div class="block">Returns the value for the given variable.</div>
-</td>
-</tr>
-<tr id="i5" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/dataflow/LocalStore.html#hasDOToutput--">hasDOToutput</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/dataflow/LocalStore.html#hashCode--">hashCode</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a>&lt;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="type parameter in LocalStore">V</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/dataflow/LocalStore.html#leastUpperBound-com.google.errorprone.dataflow.LocalStore-">leastUpperBound</a></span>(<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a>&lt;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="type parameter in LocalStore">V</a>&gt;&nbsp;other)</code>&nbsp;</td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/dataflow/LocalStore.Builder.html" title="class in com.google.errorprone.dataflow">LocalStore.Builder</a>&lt;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="type parameter in LocalStore">V</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/dataflow/LocalStore.html#toBuilder--">toBuilder</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/dataflow/LocalStore.html#toDOToutput--">toDOToutput</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/dataflow/LocalStore.html#toString--">toString</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i10" class="altColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="type parameter in LocalStore">V</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/dataflow/LocalStore.html#valueOfLocalVariable-org.checkerframework.dataflow.cfg.node.LocalVariableNode-V-">valueOfLocalVariable</a></span>(org.checkerframework.dataflow.cfg.node.LocalVariableNode&nbsp;node,
+                    <a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="type parameter in LocalStore">V</a>&nbsp;defaultValue)</code>
+<div class="block">Provides the nullness values of local variables (as far as they can be determined).</div>
+</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -250,17 +251,25 @@ implements org.checkerframework.dataflow.analysis.Store&lt;<a href="../../../../
 <pre>public static&nbsp;&lt;V extends org.checkerframework.dataflow.analysis.AbstractValue&lt;V&gt;&gt;&nbsp;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a>&lt;V&gt;&nbsp;empty()</pre>
 </li>
 </ul>
-<a name="getInformation-javax.lang.model.element.Element-">
+<a name="valueOfLocalVariable-org.checkerframework.dataflow.cfg.node.LocalVariableNode-org.checkerframework.dataflow.analysis.AbstractValue-">
+<!--   -->
+</a><a name="valueOfLocalVariable-org.checkerframework.dataflow.cfg.node.LocalVariableNode-V-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>getInformation</h4>
-<pre>public&nbsp;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="type parameter in LocalStore">V</a>&nbsp;getInformation(<a href="http://docs.oracle.com/javase/7/docs/api/javax/lang/model/element/Element.html?is-external=true" title="class or interface in javax.lang.model.element">Element</a>&nbsp;element)</pre>
-<div class="block">Returns the value for the given variable. <code>element</code> must come from a call to
- <code>LocalVariableNode.getElement()</code> or
- <code>TreeUtils.elementFromDeclaration(com.sun.source.tree.VariableTree)</code>(
- <code>VariableDeclarationNode.getTree()</code>).</div>
+<h4>valueOfLocalVariable</h4>
+<pre>public&nbsp;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="type parameter in LocalStore">V</a>&nbsp;valueOfLocalVariable(org.checkerframework.dataflow.cfg.node.LocalVariableNode&nbsp;node,
+                              <a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="type parameter in LocalStore">V</a>&nbsp;defaultValue)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../com/google/errorprone/dataflow/LocalVariableValues.html#valueOfLocalVariable-org.checkerframework.dataflow.cfg.node.LocalVariableNode-T-">LocalVariableValues</a></code></span></div>
+<div class="block">Provides the nullness values of local variables (as far as they can be determined). If the
+ nullness value cannot be definitively determined (for example, because the variable is a
+ parameter with no assignments within the method and wasn't given an explicit initial value),
+ <code>defaultValue</code> will be returned.</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../../com/google/errorprone/dataflow/LocalVariableValues.html#valueOfLocalVariable-org.checkerframework.dataflow.cfg.node.LocalVariableNode-T-">valueOfLocalVariable</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/dataflow/LocalVariableValues.html" title="interface in com.google.errorprone.dataflow">LocalVariableValues</a>&lt;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="type parameter in LocalStore">V</a> extends org.checkerframework.dataflow.analysis.AbstractValue&lt;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="type parameter in LocalStore">V</a>&gt;&gt;</code></dd>
+</dl>
 </li>
 </ul>
 <a name="toBuilder--">

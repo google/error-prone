@@ -122,7 +122,9 @@ var activeTableTab = "activeTableTab";
 extends <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
 implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.CompilationUnitTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.CompilationUnitTreeMatcher</a>, <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a>, <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a></pre>
 <div class="block">Checks, if two constructors in a class both accept <code>Foo foo</code> and one calls the other, that
- the caller passes <code>foo</code> as a parameter. The goal is to catch copy-paste errors:<pre>
+ the caller passes <code>foo</code> as a parameter. The goal is to catch copy-paste errors:
+
+ <pre>
    MissileLauncher(Location target, boolean askForConfirmation) {
      ...
    }

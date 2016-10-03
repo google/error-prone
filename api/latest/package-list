@@ -1,5 +1,4 @@
 com.google.errorprone
-com.google.errorprone.analysis
 com.google.errorprone.annotations
 com.google.errorprone.annotations.concurrent
 com.google.errorprone.apply
@@ -10,6 +9,7 @@ com.google.errorprone.bugpatterns.formatstring
 com.google.errorprone.bugpatterns.inject
 com.google.errorprone.bugpatterns.inject.dagger
 com.google.errorprone.bugpatterns.inject.guice
+com.google.errorprone.bugpatterns.nullness
 com.google.errorprone.bugpatterns.threadsafety
 com.google.errorprone.dataflow
 com.google.errorprone.dataflow.nullnesspropagation

@@ -121,12 +121,11 @@ var activeTableTab = "activeTableTab";
 <pre>public class <span class="typeNameLabel">PreconditionsCheckNotNullPrimitive</span>
 extends <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
 implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></pre>
-<div class="block">Checks that the 1st argument to Preconditions.checkNotNull() isn't a primitive.
- The primitive would be autoboxed to a non-null boxed type, and the check would trivially
- pass.
+<div class="block">Checks that the 1st argument to Preconditions.checkNotNull() isn't a primitive. The primitive
+ would be autoboxed to a non-null boxed type, and the check would trivially pass.
 
- In our experience, most of these errors are from copied-and-pasted code and should
- simply be removed.</div>
+ <p>In our experience, most of these errors are from copied-and-pasted code and should simply be
+ removed.</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
 <dd>sjnickerson@google.com (Simon Nickerson), eaftan@google.com (Eddie Aftandilian)</dd>

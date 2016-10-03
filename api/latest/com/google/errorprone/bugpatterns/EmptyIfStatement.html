@@ -121,12 +121,11 @@ var activeTableTab = "activeTableTab";
 <pre>public class <span class="typeNameLabel">EmptyIfStatement</span>
 extends <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
 implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.EmptyStatementTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.EmptyStatementTreeMatcher</a></pre>
-<div class="block">This checker finds and fixes empty statements after an if, with no else
- part. For example:
- if (foo == 10);
+<div class="block">This checker finds and fixes empty statements after an if, with no else part. For example: if
+ (foo == 10);
 
- It attempts to match javac's -Xlint:empty warning behavior, which can
- be found in com/sun/tools/javac/comp/Check.java.</div>
+ <p>It attempts to match javac's -Xlint:empty warning behavior, which can be found in
+ com/sun/tools/javac/comp/Check.java.</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
 <dd>eaftan@google.com (Eddie Aftandilian)</dd>

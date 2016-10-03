@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":9,"i3":9,"i4":6,"i5":10,"i6":10,"i7":6,"i8":10,"i9":6,"i10":10,"i11":10,"i12":10};
+var methods = {"i0":10,"i1":10,"i2":9,"i3":9,"i4":6,"i5":10,"i6":10,"i7":6,"i8":10,"i9":6,"i10":10,"i11":10,"i12":10,"i13":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -262,10 +262,14 @@ implements com.sun.source.tree.VariableTree</pre>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/refaster/UVariableDecl.html#inline-com.google.errorprone.refaster.Inliner-">inline</a></span>(<a href="../../../../com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a>&nbsp;inliner)</code>&nbsp;</td>
 </tr>
 <tr id="i11" class="rowColor">
+<td class="colFirst"><code>com.sun.tools.javac.tree.JCTree.JCVariableDecl</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/refaster/UVariableDecl.html#inlineImplicitType-com.google.errorprone.refaster.Inliner-">inlineImplicitType</a></span>(<a href="../../../../com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a>&nbsp;inliner)</code>&nbsp;</td>
+</tr>
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>com.sun.tools.javac.util.List&lt;com.sun.tools.javac.tree.JCTree.JCStatement&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/refaster/UVariableDecl.html#inlineStatements-com.google.errorprone.refaster.Inliner-">inlineStatements</a></span>(<a href="../../../../com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a>&nbsp;inliner)</code>&nbsp;</td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/refaster/UVariableDecl.html#visitVariable-com.sun.source.tree.VariableTree-com.google.errorprone.refaster.Unifier-">visitVariable</a></span>(com.sun.source.tree.VariableTree&nbsp;decl,
              <a href="../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</code>&nbsp;</td>
@@ -416,6 +420,20 @@ public abstract&nbsp;<a href="../../../../com/google/errorprone/refaster/UExpres
 <h4>inline</h4>
 <pre>public&nbsp;com.sun.tools.javac.tree.JCTree.JCVariableDecl&nbsp;inline(<a href="../../../../com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a>&nbsp;inliner)
                                                       throws <a href="../../../../com/google/errorprone/refaster/CouldNotResolveImportException.html" title="class in com.google.errorprone.refaster">CouldNotResolveImportException</a></pre>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code><a href="../../../../com/google/errorprone/refaster/CouldNotResolveImportException.html" title="class in com.google.errorprone.refaster">CouldNotResolveImportException</a></code></dd>
+</dl>
+</li>
+</ul>
+<a name="inlineImplicitType-com.google.errorprone.refaster.Inliner-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>inlineImplicitType</h4>
+<pre>public&nbsp;com.sun.tools.javac.tree.JCTree.JCVariableDecl&nbsp;inlineImplicitType(<a href="../../../../com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a>&nbsp;inliner)
+                                                                  throws <a href="../../../../com/google/errorprone/refaster/CouldNotResolveImportException.html" title="class in com.google.errorprone.refaster">CouldNotResolveImportException</a></pre>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="../../../../com/google/errorprone/refaster/CouldNotResolveImportException.html" title="class in com.google.errorprone.refaster">CouldNotResolveImportException</a></code></dd>
