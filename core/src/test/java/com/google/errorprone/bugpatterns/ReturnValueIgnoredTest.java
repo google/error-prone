@@ -22,9 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author alexeagle@google.com (Alex Eagle)
- */
+/** @author alexeagle@google.com (Alex Eagle) */
 @RunWith(JUnit4.class)
 public class ReturnValueIgnoredTest {
 
@@ -45,4 +43,64 @@ public class ReturnValueIgnoredTest {
     compilationHelper.addSourceFile("ReturnValueIgnoredNegativeCases.java").doTest();
   }
 
+  @Test
+  public void function() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.function.Function;",
+            "class Test {",
+            "  void f(Function<Integer, Integer> f) {",
+            "    // BUG: Diagnostic contains:",
+            "    f.apply(0);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void consumer() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.function.Consumer;",
+            "class Test {",
+            "  void f(Consumer<Integer> f) {",
+            "    f.accept(0);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void functionVoid() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.function.Function;",
+            "class Test {",
+            "  void f(Function<Integer, Void> f) {",
+            "    f.apply(0);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void ignoreInTests() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static org.junit.Assert.fail;",
+            "import java.util.function.Function;",
+            "class Test {",
+            "  void f(Function<Integer, Integer> f) {",
+            "    try {",
+            "      f.apply(0);",
+            "      fail();",
+            "    } catch (Exception expected) {}",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
