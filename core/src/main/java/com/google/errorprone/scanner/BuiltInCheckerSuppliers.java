@@ -56,6 +56,7 @@ import com.google.errorprone.bugpatterns.EqualsIncompatibleType;
 import com.google.errorprone.bugpatterns.EqualsNaN;
 import com.google.errorprone.bugpatterns.Finally;
 import com.google.errorprone.bugpatterns.ForOverrideChecker;
+import com.google.errorprone.bugpatterns.FunctionalInterfaceClash;
 import com.google.errorprone.bugpatterns.FunctionalInterfaceMethodChanged;
 import com.google.errorprone.bugpatterns.FuturesGetCheckedIllegalExceptionType;
 import com.google.errorprone.bugpatterns.GetClassOnAnnotation;
@@ -316,6 +317,7 @@ public class BuiltInCheckerSuppliers {
           EqualsIncompatibleType.class,
           Finally.class,
           FragmentNotInstantiable.class,
+          FunctionalInterfaceClash.class,
           GetClassOnEnum.class,
           IncompatibleModifiersChecker.class,
           InjectOnConstructorOfAbstractClass.class,
