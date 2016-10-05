@@ -15,7 +15,6 @@
  */
 package com.google.errorprone.bugpatterns.inject.dagger;
 
-import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.Matchers.allOf;
@@ -31,11 +30,8 @@ import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
-import static com.sun.source.tree.Tree.Kind.ASSIGNMENT;
 import static com.sun.source.tree.Tree.Kind.INTERFACE;
 import static com.sun.source.tree.Tree.Kind.METHOD;
-import static com.sun.source.tree.Tree.Kind.NEW_ARRAY;
-import static com.sun.source.tree.Tree.Kind.PARENTHESIZED;
 import static java.util.Arrays.asList;
 import static javax.lang.model.element.Modifier.ABSTRACT;
 import static javax.lang.model.element.Modifier.FINAL;
@@ -51,16 +47,12 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.matchers.MultiMatcher;
 import com.sun.source.tree.AnnotationTree;
-import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.NewArrayTree;
-import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.tree.JCTree.JCModifiers;
-import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Set;
 import javax.lang.model.element.Modifier;
@@ -144,82 +136,6 @@ final class Util {
       ClassSymbol annotationClass = (ClassSymbol) getSymbol(annotationTree.getAnnotationType());
       if (annotationClass.fullname.contentEquals(annotationName)) {
         return Optional.of(annotationTree);
-      }
-    }
-    return Optional.absent();
-  }
-
-  /**
-   * Returns a fix that appends {@code newValues} to the {@code parameterName} argument for {@code
-   * annotation}, regardless of whether there is already an argument.
-   */
-  static SuggestedFix.Builder addValuesToAnnotationArgument(
-      AnnotationTree annotation,
-      String parameterName,
-      Collection<String> newValues,
-      VisitorState state) {
-    if (annotation.getArguments().isEmpty()) {
-      return SuggestedFix.builder()
-          .replace(
-              annotation,
-              annotation
-                  .toString()
-                  .replaceFirst(
-                      "\\(\\)", "(" + parameterName + " = " + newArgument(newValues) + ")"));
-    }
-    Optional<ExpressionTree> maybeExistingArgument = findArgument(annotation, parameterName);
-    if (!maybeExistingArgument.isPresent()) {
-      return SuggestedFix.builder()
-          .prefixWith(
-              annotation.getArguments().get(0),
-              parameterName + " = " + newArgument(newValues) + ", ");
-    }
-
-    ExpressionTree existingArgument = maybeExistingArgument.get();
-    if (!existingArgument.getKind().equals(NEW_ARRAY)) {
-      return SuggestedFix.builder()
-          .replace(
-              existingArgument, newArgument(state.getSourceForNode(existingArgument), newValues));
-    }
-
-    NewArrayTree newArray = (NewArrayTree) existingArgument;
-    if (newArray.getInitializers().isEmpty()) {
-      return SuggestedFix.builder().replace(newArray, newArgument(newValues));
-    } else {
-      return SuggestedFix.builder()
-          .postfixWith(getLast(newArray.getInitializers()), ", " + Joiner.on(", ").join(newValues));
-    }
-  }
-
-  private static String newArgument(String existingParameters, Collection<String> initializers) {
-    return newArgument(
-        new ImmutableList.Builder<String>().add(existingParameters).addAll(initializers).build());
-  }
-
-  private static String newArgument(Collection<String> initializers) {
-    StringBuilder expression = new StringBuilder();
-    if (initializers.size() > 1) {
-      expression.append('{');
-    }
-    Joiner.on(", ").appendTo(expression, initializers);
-    if (initializers.size() > 1) {
-      expression.append('}');
-    }
-    return expression.toString();
-  }
-
-  private static Optional<ExpressionTree> findArgument(
-      AnnotationTree annotation, String parameter) {
-    for (ExpressionTree argument : annotation.getArguments()) {
-      if (argument.getKind().equals(ASSIGNMENT)) {
-        AssignmentTree assignment = (AssignmentTree) argument;
-        if (assignment.getVariable().toString().equals(parameter)) {
-          ExpressionTree expression = assignment.getExpression();
-          while (expression.getKind().equals(PARENTHESIZED)) {
-            expression = ((ParenthesizedTree) expression).getExpression();
-          }
-          return Optional.of(expression);
-        }
       }
     }
     return Optional.absent();

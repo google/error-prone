@@ -29,12 +29,14 @@ import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.BugChecker.LiteralTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.doctree.LinkTree;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.VariableTree;
@@ -43,6 +45,7 @@ import com.sun.source.util.DocTreePathScanner;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.DCTree;
 import com.sun.tools.javac.tree.JCTree;
+import java.io.IOException;
 import java.lang.annotation.Retention;
 import javax.lang.model.element.Modifier;
 import org.junit.Test;
@@ -397,4 +400,48 @@ public class SuggestedFixesTest {
             "}")
         .doTest(TEXT_MATCH);
   }
+
+  @BugPattern(name = "SuppressMe", category = Category.ONE_OFF, summary = "", severity = ERROR)
+  static final class SuppressMe extends BugChecker implements LiteralTreeMatcher {
+    @Override
+    public Description matchLiteral(LiteralTree tree, VisitorState state) {
+      if (tree.getValue().equals(42)) {
+        Fix potentialFix = SuggestedFixes.addSuppressWarnings(state, "SuppressMe");
+        if (potentialFix == null) {
+          return describeMatch(tree);
+        }
+        return describeMatch(tree, potentialFix);
+      }
+      return Description.NO_MATCH;
+    }
+  }
+
+  @Test
+  public void testSuppressWarningsFix() throws IOException {
+    BugCheckerRefactoringTestHelper refactorTestHelper =
+        BugCheckerRefactoringTestHelper.newInstance(new SuppressMe(), getClass());
+    refactorTestHelper
+        .addInputLines(
+            "in/Test.java",
+            "public class Test {",
+            "  static final int BEST_NUMBER = 42;",
+            "  static { int i = 42; }",
+            "  @SuppressWarnings(\"one\")",
+            "  public void doIt() {",
+            "    System.out.println(\"\" + 42);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "public class Test {",
+            "  @SuppressWarnings(\"SuppressMe\") static final int BEST_NUMBER = 42;",
+            "  static { @SuppressWarnings(\"SuppressMe\") int i = 42; }",
+            "  @SuppressWarnings({\"one\", \"SuppressMe\"})",
+            "  public void doIt() {",
+            "    System.out.println(\"\" + 42);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
 }

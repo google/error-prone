@@ -19,9 +19,18 @@ package com.google.errorprone.fixes;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterables.getLast;
+import static com.google.errorprone.util.ASTHelpers.getAnnotation;
+import static com.google.errorprone.util.ASTHelpers.getAnnotationWithSimpleName;
+import static com.google.errorprone.util.ASTHelpers.getModifiers;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.sun.source.tree.Tree.Kind.ASSIGNMENT;
+import static com.sun.source.tree.Tree.Kind.NEW_ARRAY;
+import static com.sun.source.tree.Tree.Kind.PARENTHESIZED;
+import static com.sun.tools.javac.code.TypeTag.CLASS;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
+import com.google.common.base.Optional;
 import com.google.common.base.Predicates;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
@@ -30,16 +39,20 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix.Builder;
-import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ErrorProneToken;
 import com.sun.source.doctree.DocTree;
+import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
+import com.sun.source.tree.NewArrayTree;
+import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.DocTreePath;
+import com.sun.source.util.TreePath;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
@@ -52,12 +65,14 @@ import com.sun.tools.javac.util.Position;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Deque;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.stream.StreamSupport;
 import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
@@ -105,7 +120,7 @@ public class SuggestedFixes {
   /** Add modifiers to the given class, method, or field declaration. */
   @Nullable
   public static Fix addModifiers(Tree tree, VisitorState state, Modifier... modifiers) {
-    ModifiersTree originalModifiers = ASTHelpers.getModifiers(tree);
+    ModifiersTree originalModifiers = getModifiers(tree);
     if (originalModifiers == null) {
       return null;
     }
@@ -155,7 +170,7 @@ public class SuggestedFixes {
   @Nullable
   public static Fix removeModifiers(Tree tree, VisitorState state, Modifier... modifiers) {
     Set<Modifier> toRemove = ImmutableSet.copyOf(modifiers);
-    ModifiersTree originalModifiers = ASTHelpers.getModifiers(tree);
+    ModifiersTree originalModifiers = getModifiers(tree);
     if (originalModifiers == null) {
       return null;
     }
@@ -267,7 +282,7 @@ public class SuggestedFixes {
   private static boolean selectsPackage(JCTree.JCExpression qual) {
     JCTree.JCExpression curr = qual;
     while (true) {
-      Symbol sym = ASTHelpers.getSymbol(curr);
+      Symbol sym = getSymbol(curr);
       if (sym != null && sym.getKind() == ElementKind.PACKAGE) {
         return true;
       }
@@ -352,13 +367,13 @@ public class SuggestedFixes {
     int pos = ((JCTree) tree).getStartPosition() + state.getSourceForNode(tree).indexOf(name);
     final SuggestedFix.Builder fix =
         SuggestedFix.builder().replace(pos, pos + name.length(), replacement);
-    final Symbol.VarSymbol sym = ASTHelpers.getSymbol(tree);
+    final Symbol.VarSymbol sym = getSymbol(tree);
     ((JCTree) state.getPath().getCompilationUnit())
         .accept(
             new TreeScanner() {
               @Override
               public void visitIdent(JCTree.JCIdent tree) {
-                if (sym.equals(ASTHelpers.getSymbol(tree))) {
+                if (sym.equals(getSymbol(tree))) {
                   fix.replace(tree, replacement);
                 }
               }
@@ -399,5 +414,172 @@ public class SuggestedFixes {
       }
     }
     throw new AssertionError();
+  }
+
+  /**
+   * Returns a fix that adds a {@code @SuppressWarnings(warningToSuppress)} to the closest
+   * suppressible element to the node pointed at by {@code state.getPath()}.
+   *
+   * <p>If the closest suppressible element already has a @SuppressWarning annotation,
+   * warningToSuppress will be added to the value in {@code @SuppressWarnings} instead.
+   *
+   * <p>In the event that a suppressible element couldn't be found (e.g.: the state is pointing at a
+   * CompilationUnit, or some other internal inconsistency has occurred), or the enclosing
+   * suppressible element already has a {@code @SuppressWarnings} annotation with {@code
+   * warningToSuppress}, this method will return null.
+   */
+  @Nullable
+  public static Fix addSuppressWarnings(VisitorState state, String warningToSuppress) {
+    Builder fixBuilder = SuggestedFix.builder();
+    addSuppressWarnings(fixBuilder, state, warningToSuppress);
+    return fixBuilder.isEmpty() ? null : fixBuilder.build();
+  }
+
+  /**
+   * Modifies {@code fixBuilder} to either create a new {@code @SuppressWarnings} element on the
+   * closest suppressible node, or add {@code warningToSuppress} to that node if there's already a
+   * {@code SuppressWarnings} annotation there.
+   *
+   * @see #addSuppressWarnings(VisitorState, String)
+   */
+  public static void addSuppressWarnings(
+      Builder fixBuilder, VisitorState state, String warningToSuppress) {
+    // Find the nearest tree to add @SuppressWarnings to.
+    Tree suppressibleNode = suppressibleNode(state.getPath());
+    if (suppressibleNode == null) {
+      return;
+    }
+
+    SuppressWarnings existingAnnotation = getAnnotation(suppressibleNode, SuppressWarnings.class);
+    // If we have an existing @SuppressWarnings on the element, extend its value
+    if (existingAnnotation != null) {
+      // Add warning to the existing annotation
+      String[] values = existingAnnotation.value();
+      if (Arrays.asList(values).contains(warningToSuppress)) {
+        // The nearest suppress warnings already contains this thing, so we can't add another thing
+        return;
+      }
+      AnnotationTree suppressAnnotationTree =
+          getAnnotationWithSimpleName(
+              findAnnotationsTree(suppressibleNode), SuppressWarnings.class.getSimpleName());
+      if (suppressAnnotationTree == null) {
+        // This is weird, bail out
+        return;
+      }
+
+      fixBuilder.merge(
+          addValuesToAnnotationArgument(
+              suppressAnnotationTree,
+              "value",
+              ImmutableList.of(state.getTreeMaker().Literal(CLASS, warningToSuppress).toString()),
+              state));
+    } else {
+      // Otherwise, add a suppress annotation to the element
+      fixBuilder.prefixWith(suppressibleNode, "@SuppressWarnings(\"" + warningToSuppress + "\")\n");
+    }
+  }
+
+  private static List<? extends AnnotationTree> findAnnotationsTree(Tree tree) {
+    if (tree instanceof ClassTree) {
+      return ((ClassTree) tree).getModifiers().getAnnotations();
+    }
+    if (tree instanceof MethodTree) {
+      return ((MethodTree) tree).getModifiers().getAnnotations();
+    }
+    if (tree instanceof VariableTree) {
+      return ((VariableTree) tree).getModifiers().getAnnotations();
+    }
+
+    return ImmutableList.of();
+  }
+
+  @Nullable
+  private static Tree suppressibleNode(TreePath path) {
+    return StreamSupport.stream(path.spliterator(), false)
+        .filter(
+            tree ->
+                tree instanceof MethodTree
+                    || tree instanceof ClassTree
+                    || tree instanceof VariableTree)
+        .findFirst()
+        .orElse(null);
+  }
+
+  /**
+   * Returns a fix that appends {@code newValues} to the {@code parameterName} argument for {@code
+   * annotation}, regardless of whether there is already an argument.
+   *
+   * <p>N.B.: {@code newValues} are source-code strings, not string literal values.
+   */
+  public static Builder addValuesToAnnotationArgument(
+      AnnotationTree annotation,
+      String parameterName,
+      Collection<String> newValues,
+      VisitorState state) {
+    if (annotation.getArguments().isEmpty()) {
+      String parameterPrefix = parameterName.equals("value") ? "" : (parameterName + " = ");
+      return SuggestedFix.builder()
+          .replace(
+              annotation,
+              annotation
+                  .toString()
+                  .replaceFirst("\\(\\)", "(" + parameterPrefix + newArgument(newValues) + ")"));
+    }
+    Optional<ExpressionTree> maybeExistingArgument = findArgument(annotation, parameterName);
+    if (!maybeExistingArgument.isPresent()) {
+      return SuggestedFix.builder()
+          .prefixWith(
+              annotation.getArguments().get(0),
+              parameterName + " = " + newArgument(newValues) + ", ");
+    }
+
+    ExpressionTree existingArgument = maybeExistingArgument.get();
+    if (!existingArgument.getKind().equals(NEW_ARRAY)) {
+      return SuggestedFix.builder()
+          .replace(
+              existingArgument, newArgument(state.getSourceForNode(existingArgument), newValues));
+    }
+
+    NewArrayTree newArray = (NewArrayTree) existingArgument;
+    if (newArray.getInitializers().isEmpty()) {
+      return SuggestedFix.builder().replace(newArray, newArgument(newValues));
+    } else {
+      return SuggestedFix.builder()
+          .postfixWith(getLast(newArray.getInitializers()), ", " + Joiner.on(", ").join(newValues));
+    }
+  }
+
+  private static String newArgument(String existingParameters, Collection<String> initializers) {
+    return newArgument(
+        new ImmutableList.Builder<String>().add(existingParameters).addAll(initializers).build());
+  }
+
+  private static String newArgument(Collection<String> initializers) {
+    StringBuilder expression = new StringBuilder();
+    if (initializers.size() > 1) {
+      expression.append('{');
+    }
+    Joiner.on(", ").appendTo(expression, initializers);
+    if (initializers.size() > 1) {
+      expression.append('}');
+    }
+    return expression.toString();
+  }
+
+  private static Optional<ExpressionTree> findArgument(
+      AnnotationTree annotation, String parameter) {
+    for (ExpressionTree argument : annotation.getArguments()) {
+      if (argument.getKind().equals(ASSIGNMENT)) {
+        AssignmentTree assignment = (AssignmentTree) argument;
+        if (assignment.getVariable().toString().equals(parameter)) {
+          ExpressionTree expression = assignment.getExpression();
+          while (expression.getKind().equals(PARENTHESIZED)) {
+            expression = ((ParenthesizedTree) expression).getExpression();
+          }
+          return Optional.of(expression);
+        }
+      }
+    }
+    return Optional.absent();
   }
 }

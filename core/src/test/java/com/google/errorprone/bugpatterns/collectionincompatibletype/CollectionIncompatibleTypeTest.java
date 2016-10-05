@@ -16,10 +16,13 @@
 
 package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionIncompatibleType.FixType;
 import com.google.errorprone.scanner.ErrorProneScanner;
 import com.google.errorprone.scanner.ScannerSupplier;
+import java.io.IOException;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -80,6 +83,35 @@ public class CollectionIncompatibleTypeTest {
             "  }",
             "}")
         .doTest();
+  }
+
+  @Test
+  public void testSuppressWarningsFix() throws IOException {
+    BugCheckerRefactoringTestHelper refactorTestHelper =
+        BugCheckerRefactoringTestHelper.newInstance(
+            new CollectionIncompatibleType(FixType.SUPPRESS_WARNINGS), getClass());
+    refactorTestHelper
+        .addInputLines(
+            "in/Test.java",
+            "import java.util.Collection;",
+            "public class Test {",
+            "  public void doIt(Collection<String> c1, Collection<Integer> c2) {",
+            "    c1.contains(1);",
+            "    c1.containsAll(c2);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import java.util.Collection;",
+            "public class Test {",
+            "  @SuppressWarnings(\"CollectionIncompatibleType\")",
+            // In this test environment, the fix doesn't include formatting
+            "public void doIt(Collection<String> c1, Collection<Integer> c2) {",
+            "    c1.contains(/* expected: String, actual: int */ 1);",
+            "    c1.containsAll(/* expected: String, actual: Integer */ c2);",
+            "  }",
+            "}")
+        .doTest(TestMode.TEXT_MATCH);
   }
 
   // This test is disabled because calling Types#asSuper in the check removes the upper bound on K.

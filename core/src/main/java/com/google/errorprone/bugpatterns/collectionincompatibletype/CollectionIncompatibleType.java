@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.fixes.SuggestedFixes.addSuppressWarnings;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Splitter;
@@ -65,10 +66,11 @@ import javax.annotation.Nullable;
 )
 public class CollectionIncompatibleType extends BugChecker implements MethodInvocationTreeMatcher {
 
-  public static enum FixType {
+  public enum FixType {
     NONE,
     CAST,
     PRINT_TYPES_AS_COMMENT,
+    SUPPRESS_WARNINGS,
   }
 
   private final FixType fixType;
@@ -211,6 +213,14 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
           fix = SuggestedFix.prefixWith(result.sourceTree(), "(Object) ");
         }
         description.addFix(fix);
+        break;
+      case SUPPRESS_WARNINGS:
+        SuggestedFix.Builder builder = SuggestedFix.builder();
+        builder.prefixWith(
+            result.sourceTree(),
+            String.format("/* expected: %s, actual: %s */ ", targetType, sourceType));
+        addSuppressWarnings(builder, state, "CollectionIncompatibleType");
+        description.addFix(builder.build());
         break;
       case NONE:
         break;
