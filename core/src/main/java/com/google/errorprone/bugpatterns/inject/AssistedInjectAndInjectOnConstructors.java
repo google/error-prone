@@ -21,19 +21,18 @@ import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.InjectMatchers.ASSISTED_INJECT_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.hasInjectAnnotation;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.constructor;
+import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.InjectMatchers;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.MethodTree;
 
 /** @author sgoldfeder@google.com (Steven Goldfeder) */
 @BugPattern(
@@ -56,9 +55,8 @@ public class AssistedInjectAndInjectOnConstructors extends BugChecker implements
    */
   private static final Matcher<ClassTree> HAS_CONSTRUCTORS_WITH_INJECT_AND_ASSISTED_INJECT =
       allOf(
-          constructor(AT_LEAST_ONE, InjectMatchers.<MethodTree>hasInjectAnnotation()),
-          constructor(
-              AT_LEAST_ONE, Matchers.<MethodTree>hasAnnotation(ASSISTED_INJECT_ANNOTATION)));
+          constructor(AT_LEAST_ONE, hasInjectAnnotation()),
+          constructor(AT_LEAST_ONE, hasAnnotation(ASSISTED_INJECT_ANNOTATION)));
 
   @Override
   public final Description matchClass(ClassTree classTree, VisitorState state) {

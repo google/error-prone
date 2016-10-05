@@ -17,10 +17,9 @@ package com.google.errorprone.bugpatterns.inject.guice;
 import static com.google.errorprone.BugPattern.Category.GUICE;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.InjectMatchers.GUICE_PROVIDES_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.INSIDE_GUICE_MODULE;
 import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.enclosingClass;
-import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.isType;
 import static com.google.errorprone.matchers.Matchers.not;
 
@@ -48,13 +47,7 @@ import com.sun.source.tree.AnnotationTree;
 public class ProvidesMethodOutsideOfModule extends BugChecker implements AnnotationTreeMatcher {
 
   private static final Matcher<AnnotationTree> PROVIDES_ANNOTATION_ON_METHOD_OUTSIDE_OF_MODULE =
-      allOf(
-          isType("com.google.inject.Provides"),
-          enclosingClass(
-              not(
-                  anyOf(
-                      isSubtypeOf("com.google.inject.Module"),
-                      isSubtypeOf("com.google.gwt.inject.client.GinModule")))));
+      allOf(isType(GUICE_PROVIDES_ANNOTATION), not(INSIDE_GUICE_MODULE));
 
   @Override
   public Description matchAnnotation(AnnotationTree annotation, VisitorState state) {

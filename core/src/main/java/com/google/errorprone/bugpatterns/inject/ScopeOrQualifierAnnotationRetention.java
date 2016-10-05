@@ -67,9 +67,6 @@ public class ScopeOrQualifierAnnotationRetention extends BugChecker implements C
               hasAnnotation(GUICE_BINDING_ANNOTATION),
               hasAnnotation(JAVAX_QUALIFIER_ANNOTATION)));
 
-  private static final Matcher<ClassTree> IS_A_DAGGER_CLASS =
-      anyOf(InjectMatchers.<ClassTree>isDaggerComponent(), hasAnnotation("dagger.Module"));
-
   @Override
   public final Description matchClass(ClassTree classTree, VisitorState state) {
     // TODO(glorioso): This is a poor hack to exclude android apps that are more likely to not have
@@ -81,10 +78,9 @@ public class ScopeOrQualifierAnnotationRetention extends BugChecker implements C
       if (doesNotHaveRuntimeRetention(classSymbol)) {
         // Is this in a dagger component?
         ClassTree outer = ASTHelpers.findEnclosingNode(state.getPath(), ClassTree.class);
-        if (outer != null && IS_A_DAGGER_CLASS.matches(outer, state)) {
+        if (outer != null && InjectMatchers.IS_DAGGER_COMPONENT_OR_MODULE.matches(outer, state)) {
           return Description.NO_MATCH;
         }
-
         return describe(classTree, state, ASTHelpers.getAnnotation(classSymbol, Retention.class));
       }
     }

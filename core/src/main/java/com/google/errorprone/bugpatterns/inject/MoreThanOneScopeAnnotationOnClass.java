@@ -19,8 +19,10 @@ package com.google.errorprone.bugpatterns.inject;
 import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.InjectMatchers.hasScopingAnnotations;
-import static com.google.errorprone.matchers.InjectMatchers.isDaggerComponent;
+import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
+import static com.google.errorprone.matchers.InjectMatchers.IS_DAGGER_COMPONENT;
+import static com.google.errorprone.matchers.InjectMatchers.IS_SCOPING_ANNOTATION;
+import static com.google.errorprone.matchers.Matchers.annotations;
 
 import com.google.common.base.Joiner;
 import com.google.errorprone.BugPattern;
@@ -56,8 +58,9 @@ public class MoreThanOneScopeAnnotationOnClass extends BugChecker implements Cla
 
   @Override
   public final Description matchClass(ClassTree classTree, VisitorState state) {
-    MultiMatcher<Tree, AnnotationTree> scopeFinder = hasScopingAnnotations();
-    if (scopeFinder.matches(classTree, state) && !isDaggerComponent().matches(classTree, state)) {
+    MultiMatcher<Tree, AnnotationTree> scopeFinder =
+        annotations(AT_LEAST_ONE, IS_SCOPING_ANNOTATION);
+    if (scopeFinder.matches(classTree, state) && !IS_DAGGER_COMPONENT.matches(classTree, state)) {
       List<AnnotationTree> scopeAnnotations = scopeFinder.getMatchingNodes();
       if (scopeAnnotations.size() > 1) {
         return buildDescription(classTree)
