@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.inject;
 
 import static com.google.errorprone.BugPattern.Category.INJECT;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.fixes.SuggestedFix.delete;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
@@ -44,8 +43,7 @@ import com.sun.source.tree.MethodTree;
   name = "JavaxInjectOnAbstractMethod",
   summary = "Abstract and default methods are not injectable with javax.inject.Inject",
   category = INJECT,
-  severity = ERROR,
-  maturity = MATURE
+  severity = ERROR
 )
 public class JavaxInjectOnAbstractMethod extends BugChecker implements MethodTreeMatcher {
   private static final MultiMatcher<MethodTree, AnnotationTree> INJECT_FINDER =

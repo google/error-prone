@@ -16,7 +16,6 @@
 package com.google.errorprone.bugpatterns.inject.dagger;
 
 import static com.google.errorprone.BugPattern.Category.DAGGER;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.bugpatterns.inject.dagger.Util.CAN_HAVE_ABSTRACT_BINDING_METHODS;
 import static com.google.errorprone.bugpatterns.inject.dagger.Util.findAnnotation;
@@ -55,8 +54,7 @@ import javax.lang.model.element.Name;
   explanation =
       "Nested `@Multibindings` interfaces are being replaced by `@Multibinds` methods in a module.",
   category = DAGGER,
-  severity = ERROR,
-  maturity = EXPERIMENTAL
+  severity = ERROR
 )
 public class MultibindsInsteadOfMultibindings extends BugChecker implements ClassTreeMatcher {
 

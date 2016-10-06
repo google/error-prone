@@ -15,7 +15,6 @@
 package com.google.errorprone.bugpatterns.inject;
 
 import static com.google.errorprone.BugPattern.Category.INJECT;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.bugpatterns.inject.ElementPredicates.doesNotHaveRuntimeRetention;
 import static com.google.errorprone.matchers.InjectMatchers.GUICE_BINDING_ANNOTATION;
@@ -43,15 +42,12 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import java.lang.annotation.Retention;
 import javax.annotation.Nullable;
 
-/**
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/** @author sgoldfeder@google.com (Steven Goldfeder) */
 @BugPattern(
   name = "InjectScopeOrQualifierAnnotationRetention",
   summary = "Scoping and qualifier annotations must have runtime retention.",
   category = INJECT,
-  severity = ERROR,
-  maturity = EXPERIMENTAL
+  severity = ERROR
 )
 public class ScopeOrQualifierAnnotationRetention extends BugChecker implements ClassTreeMatcher {
 

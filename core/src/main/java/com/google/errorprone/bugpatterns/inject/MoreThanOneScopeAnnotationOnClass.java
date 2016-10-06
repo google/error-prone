@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.inject;
 
 import static com.google.errorprone.BugPattern.Category.INJECT;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.InjectMatchers.IS_DAGGER_COMPONENT;
@@ -51,8 +50,7 @@ import java.util.List;
       "Annotating a class with more than one scope annotation is "
           + "invalid according to the JSR-330 specification. ",
   category = INJECT,
-  severity = ERROR,
-  maturity = MATURE
+  severity = ERROR
 )
 public class MoreThanOneScopeAnnotationOnClass extends BugChecker implements ClassTreeMatcher {
 

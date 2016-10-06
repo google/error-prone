@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.inject;
 
 import static com.google.errorprone.BugPattern.Category.INJECT;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.InjectMatchers.GUICE_BINDING_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.GUICE_INJECT_ANNOTATION;
@@ -38,9 +37,7 @@ import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.MethodTree;
 
-/**
- * A checker for injected constructors with @Inject(optional=true) or binding annotations.
- */
+/** A checker for injected constructors with @Inject(optional=true) or binding annotations. */
 @BugPattern(
   name = "InjectedConstructorAnnotations",
   summary = "Injected constructors cannot be optional nor have binding annotations",
@@ -49,8 +46,7 @@ import com.sun.source.tree.MethodTree;
           + "with @Inject and a binding annotation. This will cause a Guice runtime error.\n\n"
           + "See [https://code.google.com/p/google-guice/wiki/InjectionPoints] for details.",
   category = INJECT,
-  severity = ERROR,
-  maturity = EXPERIMENTAL
+  severity = ERROR
 )
 public class InjectedConstructorAnnotations extends BugChecker implements MethodTreeMatcher {
 

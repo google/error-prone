@@ -16,7 +16,6 @@ package com.google.errorprone.bugpatterns.inject;
 
 import static com.google.common.collect.Sets.immutableEnumSet;
 import static com.google.errorprone.BugPattern.Category.INJECT;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.InjectMatchers.GUICE_SCOPE_ANNOTATION;
@@ -63,8 +62,7 @@ import java.util.Set;
           + " If an annotation's use is restricted by `@Target` and it doesn't include those two"
           + " element types, the annotation can't be used where it should be able to be used.",
   category = INJECT,
-  severity = ERROR,
-  maturity = EXPERIMENTAL
+  severity = ERROR
 )
 public class InvalidTargetingOnScopingAnnotation extends BugChecker implements ClassTreeMatcher {
 

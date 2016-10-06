@@ -16,7 +16,6 @@
 package com.google.errorprone.bugpatterns.inject.dagger;
 
 import static com.google.errorprone.BugPattern.Category.DAGGER;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
@@ -72,8 +71,7 @@ import java.util.TreeSet;
           + " multibinding is present in the graph.",
   explanation = "",
   category = DAGGER,
-  severity = SUGGESTION,
-  maturity = EXPERIMENTAL
+  severity = SUGGESTION
 )
 public final class EmptySetMultibindingContributions extends BugChecker
     implements MethodTreeMatcher {

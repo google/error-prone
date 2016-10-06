@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.inject;
 
 import static com.google.errorprone.BugPattern.Category.INJECT;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.InjectMatchers.GUICE_BINDING_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.GUICE_SCOPE_ANNOTATION;
@@ -44,8 +43,7 @@ import com.sun.source.tree.ClassTree;
       "Annotations cannot be both Scope annotations and Qualifier annotations: this causes "
           + "confusion when trying to use them.",
   category = INJECT,
-  severity = ERROR,
-  maturity = MATURE
+  severity = ERROR
 )
 public class OverlappingQualifierAndScopeAnnotation extends BugChecker implements ClassTreeMatcher {
   private static final Matcher<ClassTree> ANNOTATION_WITH_BOTH_TYPES =

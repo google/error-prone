@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.inject;
 
 import static com.google.errorprone.BugPattern.Category.INJECT;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.InjectMatchers.IS_APPLICATION_OF_AT_INJECT;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
@@ -51,8 +50,7 @@ import com.sun.source.tree.Tree;
           + "graph. Generated @AutoFactory classes are automatically marked @Inject - prefer to "
           + "inject that instead.",
   category = INJECT,
-  severity = ERROR,
-  maturity = EXPERIMENTAL
+  severity = ERROR
 )
 public class AutoFactoryAtInject extends BugChecker implements AnnotationTreeMatcher {
 

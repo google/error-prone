@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.inject.guice;
 
 import static com.google.errorprone.BugPattern.Category.GUICE;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.InjectMatchers.GUICE_INJECT_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.JAVAX_INJECT_ANNOTATION;
@@ -34,10 +33,9 @@ import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
 /**
- * This checker matches methods that
- *   1) are not themselves annotated with @Inject
- *     (neither javax.inject.Inject nor com.google.inject.Inject)
- *   2) descend from a method that is annotated with @com.google.inject.Inject
+ * This checker matches methods that 1) are not themselves annotated with @Inject (neither
+ * javax.inject.Inject nor com.google.inject.Inject) 2) descend from a method that is annotated
+ * with @com.google.inject.Inject
  *
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
@@ -56,8 +54,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
           + "annotated with `@Inject`. Because of this difference, it is recommended that you "
           + "annotate this method explicitly.",
   category = GUICE,
-  severity = WARNING,
-  maturity = EXPERIMENTAL
+  severity = WARNING
 )
 public class OverridesGuiceInjectableMethod extends BugChecker implements MethodTreeMatcher {
 

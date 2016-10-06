@@ -17,7 +17,6 @@ package com.google.errorprone.bugpatterns.inject.dagger;
 
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.errorprone.BugPattern.Category.DAGGER;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.bugpatterns.inject.dagger.DaggerAnnotations.ELEMENTS_INTO_SET_CLASS_NAME;
 import static com.google.errorprone.bugpatterns.inject.dagger.DaggerAnnotations.INTO_MAP_CLASS_NAME;
@@ -77,8 +76,7 @@ import javax.lang.model.element.Modifier;
           + "the implementation. @Binds should always be preferred over @Provides or @Produces for "
           + "delegation.",
   category = DAGGER,
-  severity = SUGGESTION,
-  maturity = EXPERIMENTAL
+  severity = SUGGESTION
 )
 public class UseBinds extends BugChecker implements MethodTreeMatcher {
   private static final Matcher<MethodTree> SIMPLE_METHOD =

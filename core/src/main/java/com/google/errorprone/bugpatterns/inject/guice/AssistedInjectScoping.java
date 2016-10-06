@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.inject.guice;
 
 import static com.google.errorprone.BugPattern.Category.GUICE;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.InjectMatchers.ASSISTED_ANNOTATION;
@@ -46,14 +45,11 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
 
 /**
- * This checker matches iff *both* of the following conditions are true:
- * 1) The class is assisted:
- *   a) If there is a constructor that is annotated with @Inject and that constructor has at least
- *      one parameter that is annotated with @Assisted.
- *   b) If there is no @Inject constructor and at least one constructor is annotated with
- *      {@code @AssistedInject}.
- * 2) There is an annotation on the class, and the annotation is itself annotated with
- *    {@code @ScopeAnnotation}.
+ * This checker matches iff *both* of the following conditions are true: 1) The class is assisted:
+ * a) If there is a constructor that is annotated with @Inject and that constructor has at least one
+ * parameter that is annotated with @Assisted. b) If there is no @Inject constructor and at least
+ * one constructor is annotated with {@code @AssistedInject}. 2) There is an annotation on the
+ * class, and the annotation is itself annotated with {@code @ScopeAnnotation}.
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
@@ -66,8 +62,7 @@ import com.sun.source.tree.VariableTree;
           + "See [https://code.google.com/p/google-guice/issues/detail?id=742 this bug report] for "
           + "details.",
   category = GUICE,
-  severity = ERROR,
-  maturity = MATURE
+  severity = ERROR
 )
 public class AssistedInjectScoping extends BugChecker implements ClassTreeMatcher {
 

@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.inject;
 
 import static com.google.errorprone.BugPattern.Category.INJECT;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.Matchers.allOf;
@@ -56,8 +55,7 @@ import java.util.Set;
       "Injection frameworks currently don't understand Qualifiers in TYPE_PARAMETER or"
           + " TYPE_USE contexts.",
   category = INJECT,
-  severity = WARNING,
-  maturity = EXPERIMENTAL
+  severity = WARNING
 )
 public class QualifierWithTypeUse extends BugChecker implements ClassTreeMatcher {
 
