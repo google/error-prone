@@ -18,10 +18,12 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -32,11 +34,11 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.tree.JCTree;
@@ -63,6 +65,9 @@ public class ArgumentParameterSwap extends BugChecker
   public static final List<String> IGNORE_PARAMS =
       ImmutableList.of("message", "counter", "index", "object", "value");
 
+  static final Set<Kind> VALID_KINDS =
+      ImmutableSet.of(Kind.MEMBER_SELECT, Kind.IDENTIFIER, Kind.METHOD_INVOCATION);
+
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
     MethodSymbol symbol = ASTHelpers.getSymbol(tree);
@@ -85,49 +90,35 @@ public class ArgumentParameterSwap extends BugChecker
 
   private Description findSwaps(
       ExpressionTree[] args, VarSymbol[] params, Tree tree, VisitorState state) {
-    LexicalSimilarityMatcher matcher = new LexicalSimilarityMatcher(args, params, state);
-    boolean bestMatch = true;
-
-    // TODO(eaftan): Capture the list of potential matches for a parameter based on what is in
-    // scope with the same type and kind.
-
-    // TODO(ciera): Instead of the algorithm below, capture all of the potential
-    // matches for each argument, then select the best match and store it. Return a match
-    // if the suggested replacement is different from the existing
-    for (int ndx = 0; ndx < args.length; ndx++) {
-      if (!(args[ndx] instanceof IdentifierTree)
-          && !(args[ndx] instanceof MemberSelectTree)
-          && !(args[ndx] instanceof MethodInvocationTree)) {
-        continue;
-      }
-
-      if (params[ndx].getSimpleName().toString().length() <= 4) {
-        continue;
-      }
-
-      if (IGNORE_PARAMS.contains(params[ndx].getSimpleName().toString())) {
-        continue;
-      }
-
-      if (matcher.findBestArgument(ndx) != ndx) {
-        bestMatch = false;
-        break;
-      }
-    }
-
-    if (bestMatch) {
-      return Description.NO_MATCH;
-    }
-
     String[] suggestion = new String[params.length];
-    for (int pNdx = 0; pNdx < params.length; pNdx++) {
-      int match = pNdx;
-      if (args[pNdx] instanceof IdentifierTree
-          || args[pNdx] instanceof MemberSelectTree
-          || args[pNdx] instanceof MethodInvocationTree) {
-        match = matcher.findBestArgument(pNdx);
+
+    // Create a list of suggested best arguments for the method in question.
+    for (int ndx = 0; ndx < params.length; ndx++) {
+      String paramName = params[ndx].getSimpleName().toString();
+      String argName = getRelevantName(args[ndx]);
+      // If the parameter for this argument is under 4 characters or in our ignore list, just
+      // presume it is correct.
+      if (paramName.length() <= 4 || IGNORE_PARAMS.contains(paramName)) {
+        suggestion[ndx] = args[ndx].toString();
+        continue;
       }
-      suggestion[pNdx] = args[match].toString();
+
+      // Get all possible matches for the parameter in question that have the same kind as the
+      // argument and get the relevant part of their name for matching up.
+      ExpressionTree[] possibleMatches =
+          getPossibleMatches(params[ndx], args, args[ndx].getKind(), state);
+      String[] relevantMatchNames =
+          Arrays.stream(possibleMatches).map(exp -> getRelevantName(exp)).toArray(String[]::new);
+
+      // Figure out which one is best. Use the existing if nothing else works.
+      int best = findBestMatch(relevantMatchNames, argName, paramName);
+      suggestion[ndx] = best == -1 ? args[ndx].toString() : possibleMatches[best].toString();
+    }
+
+    // If the suggestions match what we already have, then don't suggest any changes.
+    String[] current = Arrays.stream(args).map(ExpressionTree::toString).toArray(String[]::new);
+    if (Arrays.equals(current, suggestion)) {
+      return Description.NO_MATCH;
     }
 
     Fix fix =
@@ -138,81 +129,73 @@ public class ArgumentParameterSwap extends BugChecker
     return describeMatch(tree, fix);
   }
 
-  static class LexicalSimilarityMatcher {
-    private final double[][] simMatrix;
-    private final VisitorState state;
-    private final VarSymbol[] params;
-    private final ExpressionTree[] args;
-
-    private LexicalSimilarityMatcher(
-        ExpressionTree[] args, VarSymbol[] params, VisitorState state) {
-      this.state = state;
-      this.params = params;
-      this.args = args;
-
-      String[] paramNames =
-          Arrays.stream(params)
-              .map(param -> param.getSimpleName().toString())
-              .toArray(String[]::new);
-      String[] argNames = new String[args.length];
-      for (int ndx = 0; ndx < args.length; ndx++) {
-        ExpressionTree tree = args[ndx];
-        if (tree instanceof MemberSelectTree) {
-          argNames[ndx] = ((MemberSelectTree) tree).getIdentifier().toString();
-        } else if (tree instanceof MethodInvocationTree) {
-          argNames[ndx] = ASTHelpers.getSymbol(tree).getSimpleName().toString();
-        } else {
-          argNames[ndx] = tree.toString();
-        }
-      }
-
-      this.simMatrix = calculateSimilarityMatrix(argNames, paramNames);
+  /** Gets the part of the expression that represents the "name" for each value in expressions. */
+  private String getRelevantName(ExpressionTree exp) {
+    if (exp instanceof MemberSelectTree) {
+      return ((MemberSelectTree) exp).getIdentifier().toString();
+    } else if (exp instanceof MethodInvocationTree) {
+      return ASTHelpers.getSymbol(exp).getSimpleName().toString();
+    } else {
+      return exp.toString();
     }
-
-    /**
-     * Given a parameter index, returns the argument index with the highest match. If there is a
-     * tie, it will always favor the original index, followed by the first highest index.
-     */
-    int findBestArgument(int pNdx) {
-      int maxNdx = pNdx;
-      for (int aNdx = 0; aNdx < params.length; aNdx++) {
-        if (!state.getTypes().isSubtype(ASTHelpers.getType(args[aNdx]), params[pNdx].asType())) {
-          continue;
-        }
-        // TODO(ciera): Use a beta value and require that anything better than existing must be at
-        // least beta better than existing.
-        if (simMatrix[aNdx][pNdx] > simMatrix[maxNdx][pNdx]) {
-          maxNdx = aNdx;
-        }
-      }
-      return maxNdx;
-    }
+  }
+  /**
+   * Finds all possible matches for param that have the same kind as the original argument, have a
+   * kind that we can find replacements for, and are subtype compatible with the parameter.
+   */
+  private ExpressionTree[] getPossibleMatches(
+      VarSymbol param, ExpressionTree[] args, Kind originalKind, VisitorState state) {
+    // TODO(eaftan): Capture the list of potential matches for a parameter based on what is in
+    // scope with the same type and kind.
+    return Arrays.stream(args)
+        .filter(
+            arg ->
+                (arg.getKind().equals(originalKind)
+                    && VALID_KINDS.contains(arg.getKind())
+                    && state.getTypes().isSubtype(ASTHelpers.getType(arg), param.asType())))
+        .toArray(ExpressionTree[]::new);
   }
 
   /**
-   * Calculates, for each argument/parameter pair, how close the argument and parameter are to each
-   * other based on the formula |argTerms intersect paramTerms| / (|argTerms| + |paramTerms|) * 2
+   * Given a parameter index, returns the argument index with the highest match. If there is a tie,
+   * it will always favor the original index, followed by the first highest index.
    */
-  static double[][] calculateSimilarityMatrix(String[] args, String[] params) {
-    // TODO(ciera): consider also using edit distance on individual words.
-    double[][] similarity = new double[args.length][params.length];
-    for (int aNdx = 0; aNdx < args.length; aNdx++) {
-      Set<String> argSplit = splitStringTerms(args[aNdx]);
-      for (int pNdx = 0; pNdx < params.length; pNdx++) {
-        Set<String> paramSplit = splitStringTerms(params[pNdx]);
-        // TODO(ciera): Handle the substring cases so that lenList matches listLength
-        double commonTerms = Sets.intersection(argSplit, paramSplit).size() * 2;
-        double totalTerms = argSplit.size() + paramSplit.size();
-        similarity[aNdx][pNdx] = commonTerms / totalTerms;
+  @VisibleForTesting
+  static int findBestMatch(String[] potentialMatches, String original, String param) {
+    double maxMatch = calculateSimilarity(original, param);
+    int maxNdx = -1;
+    for (int ndx = 0; ndx < potentialMatches.length; ndx++) {
+      // TODO(andrewrice): Use a beta value and require that anything better than existing must be
+      // at least beta better than existing.
+      double similarity = calculateSimilarity(potentialMatches[ndx], param);
+      if (similarity > maxMatch) {
+        maxNdx = ndx;
       }
     }
-    return similarity;
+    return maxNdx;
+  }
+
+  /**
+   * Calculates, for the provided argument and parameter, how close the argument and parameter are
+   * to each other based on the formula |argTerms intersect paramTerms| / (|argTerms| +
+   * |paramTerms|) * 2
+   */
+  @VisibleForTesting
+  static double calculateSimilarity(String arg, String param) {
+    // TODO(ciera): consider also using edit distance on individual words.
+    Set<String> argSplit = splitStringTerms(arg);
+    Set<String> paramSplit = splitStringTerms(param);
+    // TODO(andrewrice): Handle the substring cases so that lenList matches listLength
+    double commonTerms = Sets.intersection(argSplit, paramSplit).size() * 2;
+    double totalTerms = argSplit.size() + paramSplit.size();
+    return commonTerms / totalTerms;
   }
 
   /**
    * Splits a string into a Set of terms. If the name starts with a lower-case letter, it is
    * presumed to be in lowerCamelCase format. Otherwise, it presumes UPPER_UNDERSCORE format.
    */
+  @VisibleForTesting
   static Set<String> splitStringTerms(String name) {
     // TODO(ciera): Handle lower_underscore
     CaseFormat caseFormat =

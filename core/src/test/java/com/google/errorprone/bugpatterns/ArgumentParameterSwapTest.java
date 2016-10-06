@@ -29,6 +29,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class ArgumentParameterSwapTest {
   private CompilationTestHelper compilationHelper;
+  private static final double EPSILON = 0.001;
 
   @Before
   public void setUp() {
@@ -46,39 +47,94 @@ public class ArgumentParameterSwapTest {
   }
 
   @Test
-  public void calculateSimilarityMatrix() throws Exception {
-    String[] args = {"foo", "fooBarFoo", "fooBar"};
-    String[] params = {"foo", "bar", "barFoo"};
-    double[][] simMatrix = ArgumentParameterSwap.calculateSimilarityMatrix(args, params);
-
-    assertThat(simMatrix[0]).hasValuesWithin(0.001).of(new double[] {1.0, 0.0, 0.6666});
-    assertThat(simMatrix[1]).hasValuesWithin(0.001).of(new double[] {0.6666, 0.6666, 1.0});
-    assertThat(simMatrix[2]).hasValuesWithin(0.001).of(new double[] {0.6666, 0.6666, 1.0});
+  public void findBestMatch_original() {
+    assertThat(ArgumentParameterSwap.findBestMatch(new String[] {"baz", "other"}, "foo", "fooBar"))
+        .isEqualTo(-1);
   }
 
   @Test
-  public void calculateSimilarityMatrix2() throws Exception {
-    String[] args = {"extraPath", "keepPath", "dropPath"};
-    String[] params = {"keepPath", "dropPath", "extraPath"};
-    double[][] simMatrix = ArgumentParameterSwap.calculateSimilarityMatrix(args, params);
-
-    assertThat(simMatrix[0]).hasValuesWithin(0.001).of(new double[] {0.5, 0.5, 1.0});
-    assertThat(simMatrix[1]).hasValuesWithin(0.001).of(new double[] {1.0, 0.5, 0.5});
-    assertThat(simMatrix[2]).hasValuesWithin(0.001).of(new double[] {0.5, 1.0, 0.5});
+  public void findBestMatch_first() {
+    assertThat(ArgumentParameterSwap.findBestMatch(new String[] {"bar", "other"}, "baz", "fooBar"))
+        .isEqualTo(0);
   }
 
   @Test
-  public void splitStringTermsToSet() throws Exception {
+  public void findBestMatch_last() {
+    assertThat(ArgumentParameterSwap.findBestMatch(new String[] {"baz", "foo"}, "baz", "fooBar"))
+        .isEqualTo(1);
+  }
+
+  @Test
+  public void findBestMatch_same() {
+    assertThat(ArgumentParameterSwap.findBestMatch(new String[] {"bar", "other"}, "foo", "fooBar"))
+        .isEqualTo(-1);
+  }
+
+  @Test
+  public void calculateSimilarity_same() throws Exception {
+    assertThat(ArgumentParameterSwap.calculateSimilarity("foo", "foo")).isWithin(EPSILON).of(1.0);
+  }
+
+  @Test
+  public void calculateSimilarity_different() throws Exception {
+    assertThat(ArgumentParameterSwap.calculateSimilarity("foo", "bar")).isWithin(EPSILON).of(0.0);
+  }
+
+  @Test
+  public void calculateSimilarity_partialSmaller() throws Exception {
+    assertThat(ArgumentParameterSwap.calculateSimilarity("foo", "barFoo"))
+        .isWithin(EPSILON)
+        .of(0.6667);
+  }
+
+  @Test
+  public void calculateSimilarity_partialLarger() throws Exception {
+    assertThat(ArgumentParameterSwap.calculateSimilarity("fooBar", "bar"))
+        .isWithin(EPSILON)
+        .of(0.6667);
+  }
+
+  @Test
+  public void calculateSimilarity_partialRepeated() throws Exception {
+    assertThat(ArgumentParameterSwap.calculateSimilarity("fooBarFoo", "foo"))
+        .isWithin(EPSILON)
+        .of(0.6667);
+  }
+
+  @Test
+  public void calculateSimilarity_partialSame() throws Exception {
+    assertThat(ArgumentParameterSwap.calculateSimilarity("fooBar", "barBaz"))
+        .isWithin(EPSILON)
+        .of(0.5);
+  }
+
+  @Test
+  public void splitStringTerms_lower() throws Exception {
     Set<String> terms = ArgumentParameterSwap.splitStringTerms("foo");
     assertThat(terms).containsExactly("foo");
+  }
 
-    terms = ArgumentParameterSwap.splitStringTerms("fooBar");
+  @Test
+  public void splitStringTerms_camel() throws Exception {
+    Set<String> terms = ArgumentParameterSwap.splitStringTerms("fooBar");
     assertThat(terms).containsExactly("foo", "bar");
+  }
 
-    terms = ArgumentParameterSwap.splitStringTerms("fooBarFoo");
+  @Test
+  public void splitStringTerms_upper() throws Exception {
+    Set<String> terms = ArgumentParameterSwap.splitStringTerms("FOO_BAR");
     assertThat(terms).containsExactly("foo", "bar");
+  }
 
-    terms = ArgumentParameterSwap.splitStringTerms("fooBarID");
+  @Test
+  public void splitStringTerms_repeated() throws Exception {
+    Set<String> terms = ArgumentParameterSwap.splitStringTerms("fooBarFoo");
+    assertThat(terms).containsExactly("foo", "bar");
+  }
+
+  @Test
+  public void splitStringTerms_single() throws Exception {
+    Set<String> terms = ArgumentParameterSwap.splitStringTerms("fooBarID");
     assertThat(terms).containsExactly("foo", "bar", "i", "d");
   }
 
