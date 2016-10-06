@@ -480,17 +480,8 @@ public class SuggestedFixes {
   }
 
   private static List<? extends AnnotationTree> findAnnotationsTree(Tree tree) {
-    if (tree instanceof ClassTree) {
-      return ((ClassTree) tree).getModifiers().getAnnotations();
-    }
-    if (tree instanceof MethodTree) {
-      return ((MethodTree) tree).getModifiers().getAnnotations();
-    }
-    if (tree instanceof VariableTree) {
-      return ((VariableTree) tree).getModifiers().getAnnotations();
-    }
-
-    return ImmutableList.of();
+    ModifiersTree maybeModifiers = getModifiers(tree);
+    return maybeModifiers == null ? ImmutableList.of() : maybeModifiers.getAnnotations();
   }
 
   @Nullable
