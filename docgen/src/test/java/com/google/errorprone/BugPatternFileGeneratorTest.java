@@ -97,7 +97,7 @@ public class BugPatternFileGeneratorTest {
   @Test
   public void regressionTest_frontmatter_pygments() throws Exception {
     BugPatternFileGenerator generator =
-        new BugPatternFileGenerator(wikiDir, exampleDirBase, explanationDirBase, true, true);
+        new BugPatternFileGenerator(wikiDir, exampleDirBase, explanationDirBase, true, true, null);
     generator.processLine(BUGPATTERN_LINE);
     String expected = CharStreams.toString(new InputStreamReader(
         getClass().getResourceAsStream("testdata/DeadException_frontmatter_pygments.md"), UTF_8));
@@ -109,7 +109,8 @@ public class BugPatternFileGeneratorTest {
   @Test
   public void regressionTest_nofrontmatter_gfm() throws Exception {
     BugPatternFileGenerator generator =
-        new BugPatternFileGenerator(wikiDir, exampleDirBase, explanationDirBase, false, false);
+        new BugPatternFileGenerator(
+            wikiDir, exampleDirBase, explanationDirBase, false, false, null);
     generator.processLine(BUGPATTERN_LINE);
     String expected = CharStreams.toString(new InputStreamReader(
         getClass().getResourceAsStream("testdata/DeadException_nofrontmatter_gfm.md"), UTF_8));
@@ -120,7 +121,8 @@ public class BugPatternFileGeneratorTest {
   @Test
   public void regressionTest_sidecar() throws Exception {
     BugPatternFileGenerator generator =
-        new BugPatternFileGenerator(wikiDir, exampleDirBase, explanationDirBase, false, false);
+        new BugPatternFileGenerator(
+            wikiDir, exampleDirBase, explanationDirBase, false, false, null);
     Files.write(
         explanationDirBase.resolve("DeadException.md"),
         Arrays.asList(
@@ -151,7 +153,8 @@ public class BugPatternFileGeneratorTest {
 
     // Write markdown file
     BugPatternFileGenerator generator =
-        new BugPatternFileGenerator(wikiDir, exampleDirBase, explanationDirBase, false, false);
+        new BugPatternFileGenerator(
+            wikiDir, exampleDirBase, explanationDirBase, false, false, null);
     generator.processLine(new Gson().toJson(instance));
     String expected =
         CharStreams.toString(

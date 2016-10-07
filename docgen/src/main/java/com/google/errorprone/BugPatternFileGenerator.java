@@ -48,6 +48,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import javax.annotation.Nullable;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
@@ -87,17 +88,22 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
    */
   private final boolean generateFrontMatter;
 
+  /** The base url for links to bugpatterns. */
+  @Nullable private final String baseUrl;
+
   public BugPatternFileGenerator(
       Path bugpatternDir,
       Path exampleDirBase,
       Path explanationDir,
       boolean generateFrontMatter,
-      boolean usePygments) {
+      boolean usePygments,
+      String baseUrl) {
     this.outputDir = bugpatternDir;
     this.exampleDirBase = exampleDirBase;
     this.explanationDir = explanationDir;
     this.generateFrontMatter = generateFrontMatter;
     this.usePygments = usePygments;
+    this.baseUrl = baseUrl;
     result = new ArrayList<>();
   }
 
@@ -192,6 +198,10 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
               .put("summary", pattern.summary.trim())
               .put("altNames", Joiner.on(", ").join(pattern.altNames))
               .put("explanation", pattern.explanation.trim());
+
+      if (baseUrl != null) {
+        templateData.put("baseUrl", baseUrl);
+      }
 
       if (generateFrontMatter) {
         Map<String, String> frontmatterData =

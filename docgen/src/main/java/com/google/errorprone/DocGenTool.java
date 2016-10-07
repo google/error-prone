@@ -76,6 +76,13 @@ public class DocGenTool {
       arity = 1
     )
     private boolean usePygments = true;
+
+    @Parameter(
+      names = "-base_url",
+      description = "The base url for links to bugpatterns",
+      arity = 1
+    )
+    private String baseUrl = null;
   }
 
   enum Target {
@@ -119,7 +126,8 @@ public class DocGenTool {
             exampleDirBase,
             explanationDir,
             options.target == Target.EXTERNAL,
-            options.usePygments);
+            options.usePygments,
+            options.baseUrl);
     try (Writer w =
             Files.newBufferedWriter(wikiDir.resolve("bugpatterns.md"), StandardCharsets.UTF_8)) {
       List<BugPatternInstance> patterns = readLines(bugPatterns.toFile(), UTF_8, generator);
