@@ -121,10 +121,9 @@ var activeTableTab = "activeTableTab";
 <pre>public class <span class="typeNameLabel">OverridesGuiceInjectableMethod</span>
 extends <a href="../../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
 implements <a href="../../../../../../com/google/errorprone/bugpatterns/BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a></pre>
-<div class="block">This checker matches methods that
-   1) are not themselves annotated with @Inject
-     (neither javax.inject.Inject nor com.google.inject.Inject)
-   2) descend from a method that is annotated with @com.google.inject.Inject</div>
+<div class="block">This checker matches methods that 1) are not themselves annotated with @Inject (neither
+ javax.inject.Inject nor com.google.inject.Inject) 2) descend from a method that is annotated
+ with @com.google.inject.Inject</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
 <dd>sgoldfeder@google.com (Steven Goldfeder)</dd>

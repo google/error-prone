@@ -59,6 +59,9 @@ If you return or throw from a finally, then values returned or thrown from the t
 __[FragmentNotInstantiable](bugpattern/FragmentNotInstantiable)__<br>
 Subclasses of Fragment must be instantiable via Class#newInstance(): the class must be public, static and have a public nullary constructor
 
+__[FunctionalInterfaceClash](bugpattern/FunctionalInterfaceClash)__<br>
+Overloads will be ambiguous when passing lambda arguments
+
 __[GetClassOnEnum](bugpattern/GetClassOnEnum)__<br>
 Calling getClass() on an enum may return a subclass of the enum type
 
@@ -522,6 +525,9 @@ Method parameter has wrong package
 
 __[ProtoStringFieldReferenceEquality](bugpattern/ProtoStringFieldReferenceEquality)__<br>
 Comparing protobuf fields of type String using reference equality
+
+__[QualifierOnMethodWithoutProvides](bugpattern/QualifierOnMethodWithoutProvides)__<br>
+Qualifier applied to a method that isn&#39;t a @Provides method. This method won&#39;t be used for dependency injection
 
 __[UnlockMethod](bugpattern/UnlockMethod)__<br>
 This method does not acquire the locks specified by its @UnlockMethod annotation

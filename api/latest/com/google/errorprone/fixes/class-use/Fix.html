@@ -273,13 +273,21 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></td>
+<td class="colLast"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/fixes/SuggestedFixes.html#addSuppressWarnings-com.google.errorprone.VisitorState-java.lang.String-">addSuppressWarnings</a></span>(<a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+                   <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;warningToSuppress)</code>
+<div class="block">Returns a fix that adds a <code>@SuppressWarnings(warningToSuppress)</code> to the closest
+ suppressible element to the node pointed at by <code>state.getPath()</code>.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></td>
 <td class="colLast"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/fixes/SuggestedFixes.html#deleteExceptions-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-java.util.List-">deleteExceptions</a></span>(com.sun.source.tree.MethodTree&nbsp;tree,
                 <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
                 <a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;toDelete)</code>
 <div class="block">Deletes the given exceptions from a method's throws clause.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></td>
 <td class="colLast"><span class="typeNameLabel">SuggestedFix.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/fixes/SuggestedFix.html#removeModifier-com.sun.source.tree.Tree-javax.lang.model.element.Modifier-com.google.errorprone.VisitorState-">removeModifier</a></span>(com.sun.source.tree.Tree&nbsp;tree,
               <a href="http://docs.oracle.com/javase/7/docs/api/javax/lang/model/element/Modifier.html?is-external=true" title="class or interface in javax.lang.model.element">Modifier</a>&nbsp;modifier,
@@ -289,7 +297,7 @@
 </div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></td>
 <td class="colLast"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/fixes/SuggestedFixes.html#removeModifiers-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-javax.lang.model.element.Modifier...-">removeModifiers</a></span>(com.sun.source.tree.Tree&nbsp;tree,
                <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
@@ -297,7 +305,7 @@
 <div class="block">Remove modifiers from the given class, method, or field declaration.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></td>
 <td class="colLast"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/fixes/SuggestedFixes.html#renameVariable-com.sun.source.tree.VariableTree-java.lang.String-com.google.errorprone.VisitorState-">renameVariable</a></span>(com.sun.source.tree.VariableTree&nbsp;tree,
               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;replacement,

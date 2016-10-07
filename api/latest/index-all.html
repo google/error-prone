@@ -170,6 +170,21 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/Inliner.html#addStaticImport-java.lang.String-">addStaticImport(String)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFixes.html#addSuppressWarnings-com.google.errorprone.VisitorState-java.lang.String-">addSuppressWarnings(VisitorState, String)</a></span> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.html" title="class in com.google.errorprone.fixes">SuggestedFixes</a></dt>
+<dd>
+<div class="block">Returns a fix that adds a <code>@SuppressWarnings(warningToSuppress)</code> to the closest
+ suppressible element to the node pointed at by <code>state.getPath()</code>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFixes.html#addSuppressWarnings-com.google.errorprone.fixes.SuggestedFix.Builder-com.google.errorprone.VisitorState-java.lang.String-">addSuppressWarnings(SuggestedFix.Builder, VisitorState, String)</a></span> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.html" title="class in com.google.errorprone.fixes">SuggestedFixes</a></dt>
+<dd>
+<div class="block">Modifies <code>fixBuilder</code> to either create a new <code>@SuppressWarnings</code> element on the
+ closest suppressible node, or add <code>warningToSuppress</code> to that node if there's already a
+ <code>SuppressWarnings</code> annotation there.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFixes.html#addValuesToAnnotationArgument-com.sun.source.tree.AnnotationTree-java.lang.String-java.util.Collection-com.google.errorprone.VisitorState-">addValuesToAnnotationArgument(AnnotationTree, String, Collection&lt;String&gt;, VisitorState)</a></span> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.html" title="class in com.google.errorprone.fixes">SuggestedFixes</a></dt>
+<dd>
+<div class="block">Returns a fix that appends <code>newValues</code> to the <code>parameterName</code> argument for <code>annotation</code>, regardless of whether there is already an argument.</div>
+</dd>
 <dt><a href="com/google/errorprone/fixes/AdjustedPosition.html" title="class in com.google.errorprone.fixes"><span class="typeNameLink">AdjustedPosition</span></a> - Class in <a href="com/google/errorprone/fixes/package-summary.html">com.google.errorprone.fixes</a></dt>
 <dd>
 <div class="block">Describes a tree position with adjustments to the start and end indices.</div>
@@ -430,10 +445,9 @@
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/inject/guice/AssistedInjectScoping.html" title="class in com.google.errorprone.bugpatterns.inject.guice"><span class="typeNameLink">AssistedInjectScoping</span></a> - Class in <a href="com/google/errorprone/bugpatterns/inject/guice/package-summary.html">com.google.errorprone.bugpatterns.inject.guice</a></dt>
 <dd>
-<div class="block">This checker matches iff *both* of the following conditions are true:
- 1) The class is assisted:
-   a) If there is a constructor that is annotated with @Inject and that constructor has at least
-      one parameter that is annotated with @Assisted.</div>
+<div class="block">This checker matches iff *both* of the following conditions are true: 1) The class is assisted:
+ a) If there is a constructor that is annotated with @Inject and that constructor has at least one
+ parameter that is annotated with @Assisted.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/inject/guice/AssistedInjectScoping.html#AssistedInjectScoping--">AssistedInjectScoping()</a></span> - Constructor for class com.google.errorprone.bugpatterns.inject.guice.<a href="com/google/errorprone/bugpatterns/inject/guice/AssistedInjectScoping.html" title="class in com.google.errorprone.bugpatterns.inject.guice">AssistedInjectScoping</a></dt>
 <dd>&nbsp;</dd>
@@ -1294,6 +1308,8 @@
 </a>
 <h2 class="title">D</h2>
 <dl>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/InjectMatchers.html#DAGGER_PROVIDES_ANNOTATION">DAGGER_PROVIDES_ANNOTATION</a></span> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/dataflow/DataFlow.html" title="class in com.google.errorprone.dataflow"><span class="typeNameLink">DataFlow</span></a> - Class in <a href="com/google/errorprone/dataflow/package-summary.html">com.google.errorprone.dataflow</a></dt>
 <dd>
 <div class="block">Provides a wrapper around <code>Analysis</code>.</div>
@@ -2018,6 +2034,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/suppliers/Suppliers.html#fromStrings-java.lang.Iterable-">fromStrings(Iterable&lt;String&gt;)</a></span> - Static method in class com.google.errorprone.suppliers.<a href="com/google/errorprone/suppliers/Suppliers.html" title="class in com.google.errorprone.suppliers">Suppliers</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/FunctionalInterfaceClash.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">FunctionalInterfaceClash</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/FunctionalInterfaceClash.html#FunctionalInterfaceClash--">FunctionalInterfaceClash()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/FunctionalInterfaceClash.html" title="class in com.google.errorprone.bugpatterns">FunctionalInterfaceClash</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/FunctionalInterfaceMethodChanged.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">FunctionalInterfaceMethodChanged</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/FunctionalInterfaceMethodChanged.html#FunctionalInterfaceMethodChanged--">FunctionalInterfaceMethodChanged()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/FunctionalInterfaceMethodChanged.html" title="class in com.google.errorprone.bugpatterns">FunctionalInterfaceMethodChanged</a></dt>
@@ -2587,10 +2607,12 @@
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/android/HardCodedSdCardPath.html" title="class in com.google.errorprone.bugpatterns.android"><span class="typeNameLink">HardCodedSdCardPath</span></a> - Class in <a href="com/google/errorprone/bugpatterns/android/package-summary.html">com.google.errorprone.bugpatterns.android</a></dt>
 <dd>
-<div class="block">TODO(avenet): Restrict this check to Android code once the capability is available in
- Error Prone.</div>
+<div class="block">TODO(avenet): Restrict this check to Android code once the capability is available in Error
+ Prone.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/android/HardCodedSdCardPath.html#HardCodedSdCardPath--">HardCodedSdCardPath()</a></span> - Constructor for class com.google.errorprone.bugpatterns.android.<a href="com/google/errorprone/bugpatterns/android/HardCodedSdCardPath.html" title="class in com.google.errorprone.bugpatterns.android">HardCodedSdCardPath</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/InjectMatchers.html#HAS_INJECT_ANNOTATION">HAS_INJECT_ANNOTATION</a></span> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Matchers.html#hasAnnotation-java.lang.String-">hasAnnotation(String)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
@@ -2689,7 +2711,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/nullnesspropagation/TrustingNullnessAnalysis.html#hasNullableAnnotation-javax.lang.model.element.Element-">hasNullableAnnotation(Element)</a></span> - Static method in class com.google.errorprone.dataflow.nullnesspropagation.<a href="com/google/errorprone/dataflow/nullnesspropagation/TrustingNullnessAnalysis.html" title="class in com.google.errorprone.dataflow.nullnesspropagation">TrustingNullnessAnalysis</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/InjectMatchers.html#hasScopingAnnotations--">hasScopingAnnotations()</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/InjectMatchers.html#hasProvidesAnnotation--">hasProvidesAnnotation()</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/DatastoreMatchers.html#hasSetKeysOnlyMethodCall">hasSetKeysOnlyMethodCall</a></span> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/DatastoreMatchers.html" title="class in com.google.errorprone.matchers">DatastoreMatchers</a></dt>
 <dd>&nbsp;</dd>
@@ -2873,6 +2895,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/InsecureCipherMode.html#InsecureCipherMode--">InsecureCipherMode()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/InsecureCipherMode.html" title="class in com.google.errorprone.bugpatterns">InsecureCipherMode</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/InjectMatchers.html#INSIDE_GUICE_MODULE">INSIDE_GUICE_MODULE</a></span> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/nullnesspropagation/NullnessAnalysis.html#instance-com.sun.tools.javac.util.Context-">instance(Context)</a></span> - Static method in class com.google.errorprone.dataflow.nullnesspropagation.<a href="com/google/errorprone/dataflow/nullnesspropagation/NullnessAnalysis.html" title="class in com.google.errorprone.dataflow.nullnesspropagation">NullnessAnalysis</a></dt>
 <dd>
 <div class="block">Retrieve an instance of <a href="com/google/errorprone/dataflow/nullnesspropagation/NullnessAnalysis.html" title="class in com.google.errorprone.dataflow.nullnesspropagation"><code>NullnessAnalysis</code></a> from the <code>context</code>.</div>
@@ -2929,6 +2953,14 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/InjectMatchers.html#IS_APPLICATION_OF_JAVAX_INJECT">IS_APPLICATION_OF_JAVAX_INJECT</a></span> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/InjectMatchers.html#IS_BINDING_ANNOTATION">IS_BINDING_ANNOTATION</a></span> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/InjectMatchers.html#IS_DAGGER_COMPONENT">IS_DAGGER_COMPONENT</a></span> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/InjectMatchers.html#IS_DAGGER_COMPONENT_OR_MODULE">IS_DAGGER_COMPONENT_OR_MODULE</a></span> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/InjectMatchers.html#IS_SCOPING_ANNOTATION">IS_SCOPING_ANNOTATION</a></span> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/VisitorState.html#isAndroidCompatible--">isAndroidCompatible()</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
 <dd>
 <div class="block">Returns true if the compilation is targeting Android.</div>
@@ -2949,8 +2981,6 @@
 <dd>
 <div class="block">Match a class which appears to be missing a @RunWith annotation.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/InjectMatchers.html#isDaggerComponent--">isDaggerComponent()</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/predicates/TypePredicates.html#isDescendantOf-com.google.errorprone.suppliers.Supplier-">isDescendantOf(Supplier&lt;Type&gt;)</a></span> - Static method in class com.google.errorprone.predicates.<a href="com/google/errorprone/predicates/TypePredicates.html" title="class in com.google.errorprone.predicates">TypePredicates</a></dt>
 <dd>
 <div class="block">Match sub-types of the given type.</div>
@@ -3528,6 +3558,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/EqualsHashCode.html#matchClass-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/EqualsHashCode.html" title="class in com.google.errorprone.bugpatterns">EqualsHashCode</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/FunctionalInterfaceClash.html#matchClass-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/FunctionalInterfaceClash.html" title="class in com.google.errorprone.bugpatterns">FunctionalInterfaceClash</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/inject/AssistedInjectAndInjectOnConstructors.html#matchClass-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.inject.<a href="com/google/errorprone/bugpatterns/inject/AssistedInjectAndInjectOnConstructors.html" title="class in com.google.errorprone.bugpatterns.inject">AssistedInjectAndInjectOnConstructors</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/inject/dagger/MultibindsInsteadOfMultibindings.html#matchClass-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.inject.dagger.<a href="com/google/errorprone/bugpatterns/inject/dagger/MultibindsInsteadOfMultibindings.html" title="class in com.google.errorprone.bugpatterns.inject.dagger">MultibindsInsteadOfMultibindings</a></dt>
@@ -3677,8 +3709,8 @@
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/annotation/Matches.html" title="annotation in com.google.errorprone.refaster.annotation"><span class="typeNameLink">Matches</span></a> - Annotation Type in <a href="com/google/errorprone/refaster/annotation/package-summary.html">com.google.errorprone.refaster.annotation</a></dt>
 <dd>
-<div class="block">Specify an error-prone <a href="com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers"><code>Matcher</code></a> to further restrict what expressions are matched
- by the annotated parameter.</div>
+<div class="block">Specify an error-prone <a href="com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers"><code>Matcher</code></a> to further restrict what expressions are matched by the
+ annotated parameter.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.ExpressionStatementTreeMatcher.html#matchExpressionStatement-com.sun.source.tree.ExpressionStatementTree-com.google.errorprone.VisitorState-">matchExpressionStatement(ExpressionStatementTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.ExpressionStatementTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ExpressionStatementTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
@@ -3768,6 +3800,8 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/inject/InjectOnConstructorOfAbstractClass.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.inject.<a href="com/google/errorprone/bugpatterns/inject/InjectOnConstructorOfAbstractClass.html" title="class in com.google.errorprone.bugpatterns.inject">InjectOnConstructorOfAbstractClass</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/inject/JavaxInjectOnAbstractMethod.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.inject.<a href="com/google/errorprone/bugpatterns/inject/JavaxInjectOnAbstractMethod.html" title="class in com.google.errorprone.bugpatterns.inject">JavaxInjectOnAbstractMethod</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/inject/QualifierOnMethodWithoutProvides.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.inject.<a href="com/google/errorprone/bugpatterns/inject/QualifierOnMethodWithoutProvides.html" title="class in com.google.errorprone.bugpatterns.inject">QualifierOnMethodWithoutProvides</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/JUnit3TestNotRun.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/JUnit3TestNotRun.html" title="class in com.google.errorprone.bugpatterns">JUnit3TestNotRun</a></dt>
 <dd>
@@ -4220,8 +4254,8 @@
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/android/MislabeledAndroidString.html" title="class in com.google.errorprone.bugpatterns.android"><span class="typeNameLink">MislabeledAndroidString</span></a> - Class in <a href="com/google/errorprone/bugpatterns/android/package-summary.html">com.google.errorprone.bugpatterns.android</a></dt>
 <dd>
-<div class="block">Replacement of misleading
- <a href="http://developer.android.com/reference/android/R.string.html">android.R.string</a>
+<div class="block">Replacement of misleading <a
+ href="http://developer.android.com/reference/android/R.string.html">android.R.string</a>
  constants with more intuitive ones.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/android/MislabeledAndroidString.html#MislabeledAndroidString--">MislabeledAndroidString()</a></span> - Constructor for class com.google.errorprone.bugpatterns.android.<a href="com/google/errorprone/bugpatterns/android/MislabeledAndroidString.html" title="class in com.google.errorprone.bugpatterns.android">MislabeledAndroidString</a></dt>
@@ -4577,10 +4611,9 @@
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/inject/guice/OverridesGuiceInjectableMethod.html" title="class in com.google.errorprone.bugpatterns.inject.guice"><span class="typeNameLink">OverridesGuiceInjectableMethod</span></a> - Class in <a href="com/google/errorprone/bugpatterns/inject/guice/package-summary.html">com.google.errorprone.bugpatterns.inject.guice</a></dt>
 <dd>
-<div class="block">This checker matches methods that
-   1) are not themselves annotated with @Inject
-     (neither javax.inject.Inject nor com.google.inject.Inject)
-   2) descend from a method that is annotated with @com.google.inject.Inject</div>
+<div class="block">This checker matches methods that 1) are not themselves annotated with @Inject (neither
+ javax.inject.Inject nor com.google.inject.Inject) 2) descend from a method that is annotated
+ with @com.google.inject.Inject</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/inject/guice/OverridesGuiceInjectableMethod.html#OverridesGuiceInjectableMethod--">OverridesGuiceInjectableMethod()</a></span> - Constructor for class com.google.errorprone.bugpatterns.inject.guice.<a href="com/google/errorprone/bugpatterns/inject/guice/OverridesGuiceInjectableMethod.html" title="class in com.google.errorprone.bugpatterns.inject.guice">OverridesGuiceInjectableMethod</a></dt>
 <dd>&nbsp;</dd>
@@ -4731,6 +4764,10 @@
 </a>
 <h2 class="title">Q</h2>
 <dl>
+<dt><a href="com/google/errorprone/bugpatterns/inject/QualifierOnMethodWithoutProvides.html" title="class in com.google.errorprone.bugpatterns.inject"><span class="typeNameLink">QualifierOnMethodWithoutProvides</span></a> - Class in <a href="com/google/errorprone/bugpatterns/inject/package-summary.html">com.google.errorprone.bugpatterns.inject</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/inject/QualifierOnMethodWithoutProvides.html#QualifierOnMethodWithoutProvides--">QualifierOnMethodWithoutProvides()</a></span> - Constructor for class com.google.errorprone.bugpatterns.inject.<a href="com/google/errorprone/bugpatterns/inject/QualifierOnMethodWithoutProvides.html" title="class in com.google.errorprone.bugpatterns.inject">QualifierOnMethodWithoutProvides</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/inject/QualifierWithTypeUse.html" title="class in com.google.errorprone.bugpatterns.inject"><span class="typeNameLink">QualifierWithTypeUse</span></a> - Class in <a href="com/google/errorprone/bugpatterns/inject/package-summary.html">com.google.errorprone.bugpatterns.inject</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/inject/QualifierWithTypeUse.html#QualifierWithTypeUse--">QualifierWithTypeUse()</a></span> - Constructor for class com.google.errorprone.bugpatterns.inject.<a href="com/google/errorprone/bugpatterns/inject/QualifierWithTypeUse.html" title="class in com.google.errorprone.bugpatterns.inject">QualifierWithTypeUse</a></dt>

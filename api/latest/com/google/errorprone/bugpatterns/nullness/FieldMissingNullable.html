@@ -121,11 +121,11 @@ var activeTableTab = "activeTableTab";
 <pre>public class <span class="typeNameLabel">FieldMissingNullable</span>
 extends <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
 implements <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.AssignmentTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.AssignmentTreeMatcher</a>, <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.VariableTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.VariableTreeMatcher</a></pre>
-<div class="block"><a href="http://docs.oracle.com/javase/7/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation"><code>Nullable</code></a> suggestions for fields based on values assigned to them.  For simplicity this
- check will not suggest annotations for fields that are never assigned in a constructor.  While
+<div class="block"><a href="http://docs.oracle.com/javase/7/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation"><code>Nullable</code></a> suggestions for fields based on values assigned to them. For simplicity this
+ check will not suggest annotations for fields that are never assigned in a constructor. While
  fields like that <i>seem</i> like obvious candidates for being nullable, they are really not
  because fields may be assigned to in methods called from a constructor or super-constructor, for
- instance.  We'd also need an analysis that tells us about uninitialized fields.</div>
+ instance. We'd also need an analysis that tells us about uninitialized fields.</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
 <dd>kmb@google.com (Kevin Bierhoff)</dd>
