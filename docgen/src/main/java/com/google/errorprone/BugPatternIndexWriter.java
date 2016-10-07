@@ -22,7 +22,6 @@ import com.github.mustachejava.MustacheFactory;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimaps;
-import com.google.common.collect.Ordering;
 import com.google.common.collect.TreeMultimap;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.DocGenTool.Target;
@@ -78,10 +77,7 @@ public class BugPatternIndexWriter {
         TreeMultimap.create(
             Comparator.comparing(IndexEntry::onByDefault)
                 .reversed()
-                .thenComparing(
-                    Ordering.explicit(
-                            SeverityLevel.WARNING, SeverityLevel.SUGGESTION, SeverityLevel.ERROR)
-                        .onResultOf(IndexEntry::severity)),
+                .thenComparing(IndexEntry::severity),
             Comparator.comparing(MiniDescription::name));
     for (BugPatternInstance pattern : patterns) {
       sorted.put(
