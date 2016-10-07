@@ -43,7 +43,7 @@ package com.google.errorprone.bugpatterns.testdata;
 /** @author yulissa@google.com (Yulissa Arroyo-Paredes) */
 public class ArgumentParameterSwapPositiveCases {
   // names are identical but they are swapped
-  public String doSomething(String[] keepPath, String[] dropPath, String top, String bottom) {
+  public String doSomething(String[] keepPath, String[] dropPath, String topVal, String bottom) {
     return "wrong";
   }
 

@@ -15,134 +15,6 @@ code, unless you specifically configure Error Prone. The default checks are
 marked __On by default__, and each release promotes some experimental checks
 after we've vetted them against Google's codebase.
 
-## On by default : WARNING
-
-__[BadAnnotationImplementation](bugpattern/BadAnnotationImplementation)__<br>
-Classes that implement Annotation must override equals and hashCode. Consider using AutoAnnotation instead of implementing Annotation by hand.
-
-__[BadComparable](bugpattern/BadComparable)__<br>
-Possible sign flip from narrowing conversion
-
-__[BoxedPrimitiveConstructor](bugpattern/BoxedPrimitiveConstructor)__<br>
-valueOf or autoboxing provides better time and space performance
-
-__[CannotMockFinalClass](bugpattern/CannotMockFinalClass)__<br>
-Mockito cannot mock final classes
-
-__[ClassCanBeStatic](bugpattern/ClassCanBeStatic)__<br>
-Inner class is non-static but does not reference enclosing class
-
-__[ClassNewInstance](bugpattern/ClassNewInstance)__<br>
-Class.newInstance() bypasses exception checking; prefer getConstructor().newInstance()
-
-__[CollectionIncompatibleType](bugpattern/CollectionIncompatibleType)__<br>
-Incompatible type as argument to Object-accepting Java collections method
-
-__[DefaultCharset](bugpattern/DefaultCharset)__<br>
-Implicit use of the platform default charset, which can result in e.g. non-ASCII characters being silently replaced with &#39;?&#39; in many environments
-
-__[DoubleCheckedLocking](bugpattern/DoubleCheckedLocking)__<br>
-Double-checked locking on non-volatile fields is unsafe
-
-__[ElementsCountedInLoop](bugpattern/ElementsCountedInLoop)__<br>
-This code, which counts elements using a loop, can be replaced by a simpler library method
-
-__[EqualsHashCode](bugpattern/EqualsHashCode)__<br>
-Classes that override equals should also override hashCode.
-
-__[EqualsIncompatibleType](bugpattern/EqualsIncompatibleType)__<br>
-An equality test between objects with incompatible types always returns false
-
-__[Finally](bugpattern/Finally)__<br>
-If you return or throw from a finally, then values returned or thrown from the try-catch block will be ignored. Consider using try-with-resources instead.
-
-__[FragmentNotInstantiable](bugpattern/FragmentNotInstantiable)__<br>
-Subclasses of Fragment must be instantiable via Class#newInstance(): the class must be public, static and have a public nullary constructor
-
-__[FunctionalInterfaceClash](bugpattern/FunctionalInterfaceClash)__<br>
-Overloads will be ambiguous when passing lambda arguments
-
-__[GetClassOnEnum](bugpattern/GetClassOnEnum)__<br>
-Calling getClass() on an enum may return a subclass of the enum type
-
-__[IncompatibleModifiers](bugpattern/IncompatibleModifiers)__<br>
-This annotation has incompatible modifiers as specified by its @IncompatibleModifiers annotation
-
-__[InjectOnConstructorOfAbstractClass](bugpattern/InjectOnConstructorOfAbstractClass)__<br>
-Constructors on abstract classes are never directly @Injected, only the constructors of their subclasses can be @Inject&#39;ed.
-
-__[IterableAndIterator](bugpattern/IterableAndIterator)__<br>
-Class should not implement both `Iterable` and `Iterator`
-
-__[JUnit3FloatingPointComparisonWithoutDelta](bugpattern/JUnit3FloatingPointComparisonWithoutDelta)__<br>
-Floating-point comparison without error tolerance
-
-__[JUnitAmbiguousTestClass](bugpattern/JUnitAmbiguousTestClass)__<br>
-Test class inherits from JUnit 3&#39;s TestCase but has JUnit 4 @Test annotations.
-
-__[MissingCasesInEnumSwitch](bugpattern/MissingCasesInEnumSwitch)__<br>
-Enum switch statement is missing cases
-
-__[MissingFail](bugpattern/MissingFail)__<br>
-Not calling fail() when expecting an exception masks bugs
-
-__[MissingOverride](bugpattern/MissingOverride)__<br>
-method overrides method in supertype; expected @Override
-
-__[NarrowingCompoundAssignment](bugpattern/NarrowingCompoundAssignment)__<br>
-Compound assignments to bytes, shorts, chars, and floats hide dangerous casts
-
-__[NonAtomicVolatileUpdate](bugpattern/NonAtomicVolatileUpdate)__<br>
-This update of a volatile variable is non-atomic
-
-__[NonOverridingEquals](bugpattern/NonOverridingEquals)__<br>
-equals method doesn&#39;t override Object.equals
-
-__[NullableConstructor](bugpattern/NullableConstructor)__<br>
-Constructors should not be annotated with @Nullable since they cannot return null
-
-__[NullablePrimitive](bugpattern/NullablePrimitive)__<br>
-@Nullable should not be used for primitive types since they cannot be null
-
-__[NullableVoid](bugpattern/NullableVoid)__<br>
-void-returning methods should not be annotated with @Nullable, since they cannot return null
-
-__[OperatorPrecedence](bugpattern/OperatorPrecedence)__<br>
-Use grouping parenthesis to make the operator precedence explicit
-
-__[OverridesGuiceInjectableMethod](bugpattern/OverridesGuiceInjectableMethod)__<br>
-This method is not annotated with @Inject, but it overrides a method that is annotated with @com.google.inject.Inject. Guice will inject this method, and it is recommended to annotate it explicitly.
-
-__[PreconditionsInvalidPlaceholder](bugpattern/PreconditionsInvalidPlaceholder)__<br>
-Preconditions only accepts the %s placeholder in error message strings
-
-__[ProtoFieldPreconditionsCheckNotNull](bugpattern/ProtoFieldPreconditionsCheckNotNull)__<br>
-Protobuf fields cannot be null, so this check is redundant
-
-__[ReferenceEquality](bugpattern/ReferenceEquality)__<br>
-Comparison using reference equality instead of value equality
-
-__[RequiredModifiers](bugpattern/RequiredModifiers)__<br>
-This annotation is missing required modifiers as specified by its @RequiredModifiers annotation
-
-__[StaticGuardedByInstance](bugpattern/StaticGuardedByInstance)__<br>
-Writes to static fields should not be guarded by instance locks
-
-__[SynchronizeOnNonFinalField](bugpattern/SynchronizeOnNonFinalField)__<br>
-Synchronizing on non-final fields is not safe: if the field is ever updated, different threads may end up locking on different objects.
-
-__[TruthSelfEquals](bugpattern/TruthSelfEquals)__<br>
-An object is tested for equality to itself using Truth Libraries.
-
-__[TypeParameterUnusedInFormals](bugpattern/TypeParameterUnusedInFormals)__<br>
-Declaring a type parameter that is only used in the return type is a misuse of generics: operations on the type parameter are unchecked, it hides unsafe casts at invocations of the method, and it interacts badly with method overload resolution.
-
-__[UnsynchronizedOverridesSynchronized](bugpattern/UnsynchronizedOverridesSynchronized)__<br>
-Unsynchronized method overrides a synchronized method.
-
-__[WaitNotInLoop](bugpattern/WaitNotInLoop)__<br>
-Because of spurious wakeups, Object.wait() and Condition.await() must always be called in a loop
-
 ## On by default : ERROR
 
 __[ArrayEquals](bugpattern/ArrayEquals)__<br>
@@ -364,6 +236,211 @@ Non-generic methods should not be invoked with type arguments
 __[UnusedAnonymousClass](bugpattern/UnusedAnonymousClass)__<br>
 Instance created but never used
 
+## On by default : WARNING
+
+__[BadAnnotationImplementation](bugpattern/BadAnnotationImplementation)__<br>
+Classes that implement Annotation must override equals and hashCode. Consider using AutoAnnotation instead of implementing Annotation by hand.
+
+__[BadComparable](bugpattern/BadComparable)__<br>
+Possible sign flip from narrowing conversion
+
+__[BoxedPrimitiveConstructor](bugpattern/BoxedPrimitiveConstructor)__<br>
+valueOf or autoboxing provides better time and space performance
+
+__[CannotMockFinalClass](bugpattern/CannotMockFinalClass)__<br>
+Mockito cannot mock final classes
+
+__[ClassCanBeStatic](bugpattern/ClassCanBeStatic)__<br>
+Inner class is non-static but does not reference enclosing class
+
+__[ClassNewInstance](bugpattern/ClassNewInstance)__<br>
+Class.newInstance() bypasses exception checking; prefer getConstructor().newInstance()
+
+__[CollectionIncompatibleType](bugpattern/CollectionIncompatibleType)__<br>
+Incompatible type as argument to Object-accepting Java collections method
+
+__[DefaultCharset](bugpattern/DefaultCharset)__<br>
+Implicit use of the platform default charset, which can result in e.g. non-ASCII characters being silently replaced with &#39;?&#39; in many environments
+
+__[DoubleCheckedLocking](bugpattern/DoubleCheckedLocking)__<br>
+Double-checked locking on non-volatile fields is unsafe
+
+__[ElementsCountedInLoop](bugpattern/ElementsCountedInLoop)__<br>
+This code, which counts elements using a loop, can be replaced by a simpler library method
+
+__[EqualsHashCode](bugpattern/EqualsHashCode)__<br>
+Classes that override equals should also override hashCode.
+
+__[EqualsIncompatibleType](bugpattern/EqualsIncompatibleType)__<br>
+An equality test between objects with incompatible types always returns false
+
+__[Finally](bugpattern/Finally)__<br>
+If you return or throw from a finally, then values returned or thrown from the try-catch block will be ignored. Consider using try-with-resources instead.
+
+__[FragmentNotInstantiable](bugpattern/FragmentNotInstantiable)__<br>
+Subclasses of Fragment must be instantiable via Class#newInstance(): the class must be public, static and have a public nullary constructor
+
+__[FunctionalInterfaceClash](bugpattern/FunctionalInterfaceClash)__<br>
+Overloads will be ambiguous when passing lambda arguments
+
+__[GetClassOnEnum](bugpattern/GetClassOnEnum)__<br>
+Calling getClass() on an enum may return a subclass of the enum type
+
+__[IncompatibleModifiers](bugpattern/IncompatibleModifiers)__<br>
+This annotation has incompatible modifiers as specified by its @IncompatibleModifiers annotation
+
+__[InjectOnConstructorOfAbstractClass](bugpattern/InjectOnConstructorOfAbstractClass)__<br>
+Constructors on abstract classes are never directly @Injected, only the constructors of their subclasses can be @Inject&#39;ed.
+
+__[IterableAndIterator](bugpattern/IterableAndIterator)__<br>
+Class should not implement both `Iterable` and `Iterator`
+
+__[JUnit3FloatingPointComparisonWithoutDelta](bugpattern/JUnit3FloatingPointComparisonWithoutDelta)__<br>
+Floating-point comparison without error tolerance
+
+__[JUnitAmbiguousTestClass](bugpattern/JUnitAmbiguousTestClass)__<br>
+Test class inherits from JUnit 3&#39;s TestCase but has JUnit 4 @Test annotations.
+
+__[MissingCasesInEnumSwitch](bugpattern/MissingCasesInEnumSwitch)__<br>
+Enum switch statement is missing cases
+
+__[MissingFail](bugpattern/MissingFail)__<br>
+Not calling fail() when expecting an exception masks bugs
+
+__[MissingOverride](bugpattern/MissingOverride)__<br>
+method overrides method in supertype; expected @Override
+
+__[NarrowingCompoundAssignment](bugpattern/NarrowingCompoundAssignment)__<br>
+Compound assignments to bytes, shorts, chars, and floats hide dangerous casts
+
+__[NonAtomicVolatileUpdate](bugpattern/NonAtomicVolatileUpdate)__<br>
+This update of a volatile variable is non-atomic
+
+__[NonOverridingEquals](bugpattern/NonOverridingEquals)__<br>
+equals method doesn&#39;t override Object.equals
+
+__[NullableConstructor](bugpattern/NullableConstructor)__<br>
+Constructors should not be annotated with @Nullable since they cannot return null
+
+__[NullablePrimitive](bugpattern/NullablePrimitive)__<br>
+@Nullable should not be used for primitive types since they cannot be null
+
+__[NullableVoid](bugpattern/NullableVoid)__<br>
+void-returning methods should not be annotated with @Nullable, since they cannot return null
+
+__[OperatorPrecedence](bugpattern/OperatorPrecedence)__<br>
+Use grouping parenthesis to make the operator precedence explicit
+
+__[OverridesGuiceInjectableMethod](bugpattern/OverridesGuiceInjectableMethod)__<br>
+This method is not annotated with @Inject, but it overrides a method that is annotated with @com.google.inject.Inject. Guice will inject this method, and it is recommended to annotate it explicitly.
+
+__[PreconditionsInvalidPlaceholder](bugpattern/PreconditionsInvalidPlaceholder)__<br>
+Preconditions only accepts the %s placeholder in error message strings
+
+__[ProtoFieldPreconditionsCheckNotNull](bugpattern/ProtoFieldPreconditionsCheckNotNull)__<br>
+Protobuf fields cannot be null, so this check is redundant
+
+__[ReferenceEquality](bugpattern/ReferenceEquality)__<br>
+Comparison using reference equality instead of value equality
+
+__[RequiredModifiers](bugpattern/RequiredModifiers)__<br>
+This annotation is missing required modifiers as specified by its @RequiredModifiers annotation
+
+__[StaticGuardedByInstance](bugpattern/StaticGuardedByInstance)__<br>
+Writes to static fields should not be guarded by instance locks
+
+__[SynchronizeOnNonFinalField](bugpattern/SynchronizeOnNonFinalField)__<br>
+Synchronizing on non-final fields is not safe: if the field is ever updated, different threads may end up locking on different objects.
+
+__[TruthSelfEquals](bugpattern/TruthSelfEquals)__<br>
+An object is tested for equality to itself using Truth Libraries.
+
+__[TypeParameterUnusedInFormals](bugpattern/TypeParameterUnusedInFormals)__<br>
+Declaring a type parameter that is only used in the return type is a misuse of generics: operations on the type parameter are unchecked, it hides unsafe casts at invocations of the method, and it interacts badly with method overload resolution.
+
+__[UnsynchronizedOverridesSynchronized](bugpattern/UnsynchronizedOverridesSynchronized)__<br>
+Unsynchronized method overrides a synchronized method.
+
+__[WaitNotInLoop](bugpattern/WaitNotInLoop)__<br>
+Because of spurious wakeups, Object.wait() and Condition.await() must always be called in a loop
+
+## Experimental : ERROR
+
+__[ArgumentParameterSwap](bugpattern/ArgumentParameterSwap)__<br>
+An argument is more similar to a different parameter; the arguments may have been swapped.
+
+__[AssistedInjectAndInjectOnSameConstructor](bugpattern/AssistedInjectAndInjectOnSameConstructor)__<br>
+@AssistedInject and @Inject cannot be used on the same constructor.
+
+__[AutoFactoryAtInject](bugpattern/AutoFactoryAtInject)__<br>
+@AutoFactory and @Inject should not be used in the same type.
+
+__[ClassName](bugpattern/ClassName)__<br>
+The source file name should match the name of the top-level class it contains
+
+__[ComparisonContractViolated](bugpattern/ComparisonContractViolated)__<br>
+This comparison method violates the contract
+
+__[DepAnn](bugpattern/DepAnn)__<br>
+Deprecated item is not annotated with @Deprecated
+
+__[DivZero](bugpattern/DivZero)__<br>
+Division by integer literal zero
+
+__[EmptyIf](bugpattern/EmptyIf)__<br>
+Empty statement after if
+
+__[InjectInvalidTargetingOnScopingAnnotation](bugpattern/InjectInvalidTargetingOnScopingAnnotation)__<br>
+A scoping annotation&#39;s Target should include TYPE and METHOD.
+
+__[InjectMoreThanOneQualifier](bugpattern/InjectMoreThanOneQualifier)__<br>
+Using more than one qualifier annotation on the same element is not allowed.
+
+__[InjectScopeAnnotationOnInterfaceOrAbstractClass](bugpattern/InjectScopeAnnotationOnInterfaceOrAbstractClass)__<br>
+Scope annotation on an interface or abstact class is not allowed
+
+__[InjectScopeOrQualifierAnnotationRetention](bugpattern/InjectScopeOrQualifierAnnotationRetention)__<br>
+Scoping and qualifier annotations must have runtime retention.
+
+__[InjectedConstructorAnnotations](bugpattern/InjectedConstructorAnnotations)__<br>
+Injected constructors cannot be optional nor have binding annotations
+
+__[JMockTestWithoutRunWithOrRuleAnnotation](bugpattern/JMockTestWithoutRunWithOrRuleAnnotation)__<br>
+jMock tests must have a @RunWith(JMock.class) annotation, or the Mockery field must have a @Rule JUnit annotation
+
+__[JavaxInjectOnFinalField](bugpattern/JavaxInjectOnFinalField)__<br>
+@javax.inject.Inject cannot be put on a final field.
+
+__[LockMethodChecker](bugpattern/LockMethodChecker)__<br>
+This method does not acquire the locks specified by its @LockMethod annotation
+
+__[LongLiteralLowerCaseSuffix](bugpattern/LongLiteralLowerCaseSuffix)__<br>
+Prefer &#39;L&#39; to &#39;l&#39; for the suffix to long literals
+
+__[MultibindsInsteadOfMultibindings](bugpattern/MultibindsInsteadOfMultibindings)__<br>
+`@Multibinds` is the new way to declare multibindings.
+
+__[NoAllocation](bugpattern/NoAllocation)__<br>
+@NoAllocation was specified on this method, but something was found that would trigger an allocation
+
+__[NonRuntimeAnnotation](bugpattern/NonRuntimeAnnotation)__<br>
+Calling getAnnotation on an annotation that is not retained at runtime.
+
+__[NumericEquality](bugpattern/NumericEquality)__<br>
+Numeric comparison using reference equality instead of value equality
+
+__[ParameterPackage](bugpattern/ParameterPackage)__<br>
+Method parameter has wrong package
+
+__[ProtoStringFieldReferenceEquality](bugpattern/ProtoStringFieldReferenceEquality)__<br>
+Comparing protobuf fields of type String using reference equality
+
+__[QualifierOnMethodWithoutProvides](bugpattern/QualifierOnMethodWithoutProvides)__<br>
+Qualifier applied to a method that isn&#39;t a @Provides method. This method won&#39;t be used for dependency injection
+
+__[UnlockMethod](bugpattern/UnlockMethod)__<br>
+This method does not acquire the locks specified by its @UnlockMethod annotation
+
 ## Experimental : WARNING
 
 __[AssertFalse](bugpattern/AssertFalse)__<br>
@@ -454,81 +531,4 @@ __[UseBinds](bugpattern/UseBinds)__<br>
 
 __[WildcardImport](bugpattern/WildcardImport)__<br>
 Wildcard imports, static or otherwise, should not be used
-
-## Experimental : ERROR
-
-__[ArgumentParameterSwap](bugpattern/ArgumentParameterSwap)__<br>
-An argument is more similar to a different parameter; the arguments may have been swapped.
-
-__[AssistedInjectAndInjectOnSameConstructor](bugpattern/AssistedInjectAndInjectOnSameConstructor)__<br>
-@AssistedInject and @Inject cannot be used on the same constructor.
-
-__[AutoFactoryAtInject](bugpattern/AutoFactoryAtInject)__<br>
-@AutoFactory and @Inject should not be used in the same type.
-
-__[ClassName](bugpattern/ClassName)__<br>
-The source file name should match the name of the top-level class it contains
-
-__[ComparisonContractViolated](bugpattern/ComparisonContractViolated)__<br>
-This comparison method violates the contract
-
-__[DepAnn](bugpattern/DepAnn)__<br>
-Deprecated item is not annotated with @Deprecated
-
-__[DivZero](bugpattern/DivZero)__<br>
-Division by integer literal zero
-
-__[EmptyIf](bugpattern/EmptyIf)__<br>
-Empty statement after if
-
-__[InjectInvalidTargetingOnScopingAnnotation](bugpattern/InjectInvalidTargetingOnScopingAnnotation)__<br>
-A scoping annotation&#39;s Target should include TYPE and METHOD.
-
-__[InjectMoreThanOneQualifier](bugpattern/InjectMoreThanOneQualifier)__<br>
-Using more than one qualifier annotation on the same element is not allowed.
-
-__[InjectScopeAnnotationOnInterfaceOrAbstractClass](bugpattern/InjectScopeAnnotationOnInterfaceOrAbstractClass)__<br>
-Scope annotation on an interface or abstact class is not allowed
-
-__[InjectScopeOrQualifierAnnotationRetention](bugpattern/InjectScopeOrQualifierAnnotationRetention)__<br>
-Scoping and qualifier annotations must have runtime retention.
-
-__[InjectedConstructorAnnotations](bugpattern/InjectedConstructorAnnotations)__<br>
-Injected constructors cannot be optional nor have binding annotations
-
-__[JMockTestWithoutRunWithOrRuleAnnotation](bugpattern/JMockTestWithoutRunWithOrRuleAnnotation)__<br>
-jMock tests must have a @RunWith(JMock.class) annotation, or the Mockery field must have a @Rule JUnit annotation
-
-__[JavaxInjectOnFinalField](bugpattern/JavaxInjectOnFinalField)__<br>
-@javax.inject.Inject cannot be put on a final field.
-
-__[LockMethodChecker](bugpattern/LockMethodChecker)__<br>
-This method does not acquire the locks specified by its @LockMethod annotation
-
-__[LongLiteralLowerCaseSuffix](bugpattern/LongLiteralLowerCaseSuffix)__<br>
-Prefer &#39;L&#39; to &#39;l&#39; for the suffix to long literals
-
-__[MultibindsInsteadOfMultibindings](bugpattern/MultibindsInsteadOfMultibindings)__<br>
-`@Multibinds` is the new way to declare multibindings.
-
-__[NoAllocation](bugpattern/NoAllocation)__<br>
-@NoAllocation was specified on this method, but something was found that would trigger an allocation
-
-__[NonRuntimeAnnotation](bugpattern/NonRuntimeAnnotation)__<br>
-Calling getAnnotation on an annotation that is not retained at runtime.
-
-__[NumericEquality](bugpattern/NumericEquality)__<br>
-Numeric comparison using reference equality instead of value equality
-
-__[ParameterPackage](bugpattern/ParameterPackage)__<br>
-Method parameter has wrong package
-
-__[ProtoStringFieldReferenceEquality](bugpattern/ProtoStringFieldReferenceEquality)__<br>
-Comparing protobuf fields of type String using reference equality
-
-__[QualifierOnMethodWithoutProvides](bugpattern/QualifierOnMethodWithoutProvides)__<br>
-Qualifier applied to a method that isn&#39;t a @Provides method. This method won&#39;t be used for dependency injection
-
-__[UnlockMethod](bugpattern/UnlockMethod)__<br>
-This method does not acquire the locks specified by its @UnlockMethod annotation
 

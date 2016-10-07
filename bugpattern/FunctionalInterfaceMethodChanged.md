@@ -12,185 +12,42 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
+There are only two correct ways to have one [`@FunctionalInterface`] extend
+another [`@FunctionalInterface`]—the way where you leave the abstract method
+alone, and the way where you make a different abstract method but a default
+method for the original abstract method simply delegates to the new name.
 
+If you do anything else, you create a situation where what looks like a "cast"
+actually changes behavior. That is really quite bad for understandability.
+
+For example, if the method `bar()` changes the behaviour of `qux()`, then the
+same lambda cast to `A` or `B` could have completely different behaviour.
+
+```java
+@FunctionalInterface
+interface A {
+  Foo bar();
+}
+
+@FunctionalInterface
+interface B extends A {
+  Foo qux();
+  default void bar() {
+    // anything here but exactly `return qux();` or perhaps `return (SomeType) qux();`
+  }
+}
+```
+
+If you need to change the behaviour of an existing lambda, prefer an explicit
+decorator method, e.g.:
+
+```java
+static Runnable crashTerminating(Runnable r) {
+  return () -> { ...wrapping behavior goes here... }
+}
+```
+
+[`@FunctionalInterface`]: https://docs.oracle.com/javase/8/docs/api/java/lang/FunctionalInterface.html
 
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("FunctionalInterfaceMethodChanged")` annotation to the enclosing element.
-
-----------
-
-### Positive examples
-__FunctionalInterfaceMethodChangedPositiveCases.java__
-
-{% highlight java %}
-/*
- * Copyright 2016 Google Inc. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package com.google.errorprone.bugpatterns.testdata;
-
-public class FunctionalInterfaceMethodChangedPositiveCases {
-  @FunctionalInterface
-  interface SuperFI {
-    void superSam();
-  }
-
-  @FunctionalInterface
-  interface OtherSuperFI {
-    void otherSuperSam();
-  }
-
-  @FunctionalInterface
-  interface SubFI extends SuperFI {
-    void subSam();
-
-    @Override
-    // BUG: Diagnostic contains:
-    default void superSam() {
-      subSam();
-      System.out.println("do something else");
-    }
-  }
-
-  @FunctionalInterface
-  interface MultipleInheritanceSubFIOneBad extends SuperFI, OtherSuperFI {
-    void subSam();
-
-    @Override
-    default void superSam() {
-      subSam();
-    }
-
-    @Override
-    // BUG: Diagnostic contains:
-    default void otherSuperSam() {
-      subSam();
-      System.out.println("do something else");
-    }
-  }
-
-  @FunctionalInterface
-  interface MultipleInheritanceSubFIBothBad extends SuperFI, OtherSuperFI {
-    void subSam();
-
-    @Override
-    // BUG: Diagnostic contains:
-    default void superSam() {
-      superSam();
-      System.out.println("do something else");
-    }
-
-    @Override
-    // BUG: Diagnostic contains:
-    default void otherSuperSam() {
-      subSam();
-      System.out.println("do something else");
-    }
-  }
-
-  @FunctionalInterface
-  interface ValueReturningSuperFI {
-    String superSam();
-  }
-
-  @FunctionalInterface
-  interface ValueReturningSubFI extends ValueReturningSuperFI {
-    String subSam();
-
-    @Override
-    // BUG: Diagnostic contains:
-    default String superSam() {
-      System.out.println("do something else");
-      return subSam();
-    }
-  }
-}
-{% endhighlight %}
-
-### Negative examples
-__FunctionalInterfaceMethodChangedNegativeCases.java__
-
-{% highlight java %}
-/*
- * Copyright 2016 Google Inc. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package com.google.errorprone.bugpatterns.testdata;
-
-public class FunctionalInterfaceMethodChangedNegativeCases {
-  @FunctionalInterface
-  interface SuperFI {
-    void superSam();
-  }
-
-  @FunctionalInterface
-  interface OtherSuperFI {
-    void otherSuperSam();
-  }
-
-  @FunctionalInterface
-  interface SubFI extends SuperFI {
-    void subSam();
-
-    @Override
-    default void superSam() {
-      subSam();
-    }
-  }
-
-  @FunctionalInterface
-  interface MultipleInheritanceSubFI extends SuperFI, OtherSuperFI {
-    void subSam();
-
-    @Override
-    default void superSam() {
-      subSam();
-    }
-
-    @Override
-    default void otherSuperSam() {
-      subSam();
-    }
-  }
-
-  @FunctionalInterface
-  interface ValueReturningSuperFI {
-    String superSam();
-  }
-
-  @FunctionalInterface
-  interface ValueReturningSubFI extends ValueReturningSuperFI {
-    String subSam();
-
-    @Override
-    default String superSam() {
-      return subSam();
-    }
-  }
-}
-{% endhighlight %}
-
