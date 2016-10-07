@@ -29,7 +29,6 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class ArgumentParameterSwapTest {
   private CompilationTestHelper compilationHelper;
-  private static final double EPSILON = 0.001;
 
   @Before
   public void setUp() {
@@ -71,41 +70,33 @@ public class ArgumentParameterSwapTest {
   }
 
   @Test
-  public void calculateSimilarity_same() throws Exception {
-    assertThat(ArgumentParameterSwap.calculateSimilarity("foo", "foo")).isWithin(EPSILON).of(1.0);
+  public void calculateSimilarity_sameBiggerThanDifferent() throws Exception {
+    assertThat(ArgumentParameterSwap.calculateSimilarity("foo", "foo"))
+        .isGreaterThan(ArgumentParameterSwap.calculateSimilarity("foo", "bar"));
   }
 
   @Test
-  public void calculateSimilarity_different() throws Exception {
-    assertThat(ArgumentParameterSwap.calculateSimilarity("foo", "bar")).isWithin(EPSILON).of(0.0);
-  }
-
-  @Test
-  public void calculateSimilarity_partialSmaller() throws Exception {
+  public void calculateSimilarity_partialSmallerBiggerThanDifferent() throws Exception {
     assertThat(ArgumentParameterSwap.calculateSimilarity("foo", "barFoo"))
-        .isWithin(EPSILON)
-        .of(0.6667);
+        .isGreaterThan(ArgumentParameterSwap.calculateSimilarity("foo", "bar"));
   }
 
   @Test
-  public void calculateSimilarity_partialLarger() throws Exception {
+  public void calculateSimilarity_partialLargerBiggerThanDifferent() throws Exception {
     assertThat(ArgumentParameterSwap.calculateSimilarity("fooBar", "bar"))
-        .isWithin(EPSILON)
-        .of(0.6667);
+        .isGreaterThan(ArgumentParameterSwap.calculateSimilarity("foo", "bar"));
   }
 
   @Test
-  public void calculateSimilarity_partialRepeated() throws Exception {
+  public void calculateSimilarity_partialRepeatedBiggerThanDifferent() throws Exception {
     assertThat(ArgumentParameterSwap.calculateSimilarity("fooBarFoo", "foo"))
-        .isWithin(EPSILON)
-        .of(0.6667);
+        .isGreaterThan(ArgumentParameterSwap.calculateSimilarity("foo", "bar"));
   }
 
   @Test
-  public void calculateSimilarity_partialSame() throws Exception {
+  public void calculateSimilarity_partialSameBiggerThanDifferent() throws Exception {
     assertThat(ArgumentParameterSwap.calculateSimilarity("fooBar", "barBaz"))
-        .isWithin(EPSILON)
-        .of(0.5);
+        .isGreaterThan(ArgumentParameterSwap.calculateSimilarity("foo", "bar"));
   }
 
   @Test

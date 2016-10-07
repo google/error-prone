@@ -177,8 +177,10 @@ public class ArgumentParameterSwap extends BugChecker
 
   /**
    * Calculates, for the provided argument and parameter, how close the argument and parameter are
-   * to each other based on the formula |argTerms intersect paramTerms| / (|argTerms| +
-   * |paramTerms|) * 2
+   * to each other. The exact range of the returned values doesn't matter: larger values indicate a
+   * better match, if the argument and parameter are identical this should get the highest score.
+   *
+   * <p>Current formula is |argTerms intersect paramTerms| / (|argTerms| + |paramTerms|) * 2.
    */
   @VisibleForTesting
   static double calculateSimilarity(String arg, String param) {
