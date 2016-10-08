@@ -14,7 +14,9 @@
   limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.example</groupId>
@@ -34,8 +36,9 @@
           <forceJavacCompilerUse>true</forceJavacCompilerUse>
           <!-- maven-compiler-plugin defaults to targeting Java 5, but our
                javac only supports >=6 -->
-          <source>7</source>
-          <target>7</target>
+          <source>8</source>
+          <target>8</target>
+          <showWarnings>true</showWarnings>
         </configuration>
         <dependencies>
           <dependency>
@@ -54,4 +57,24 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>fixerrors</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <compilerArgs combine.children="append">
+                <!--<compilerArg>-XepPatch:${basedir}</compilerArg>-->
+                <compilerArg>-XepPatch:IN_PLACE</compilerArg>
+              </compilerArgs>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

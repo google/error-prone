@@ -20,6 +20,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.StandardSystemProperty.JAVA_SPECIFICATION_VERSION;
 
 import com.google.common.collect.Iterables;
+import com.google.errorprone.RefactoringCollection.RefactoringResult;
+import com.google.errorprone.scanner.ErrorProneScannerTransformer;
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTool;
@@ -28,10 +30,14 @@ import com.sun.tools.javac.main.Main;
 import com.sun.tools.javac.main.Main.Result;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JavacMessages;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import javax.annotation.Nullable;
 import javax.annotation.processing.Processor;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileManager;
@@ -64,7 +70,9 @@ public class BaseErrorProneCompiler {
   /** A {@link BaseErrorProneCompiler} builder. */
   public static class Builder {
     private DiagnosticListener<? super JavaFileObject> diagnosticListener = null;
-    private PrintWriter errOutput = new PrintWriter(System.err, true);
+    private PrintWriter errOutput =
+        new PrintWriter(
+            new BufferedWriter(new OutputStreamWriter(System.err, Charset.defaultCharset())), true);
     private String compilerName = "javac (with error-prone)";
     private ScannerSupplier scannerSupplier;
 
@@ -168,8 +176,27 @@ public class BaseErrorProneCompiler {
     MaskedClassLoader.preRegisterFileManager(context);
 
     setupMessageBundle(context);
-    MultiTaskListener.instance(context)
-        .add(new ErrorProneAnalyzer(scannerSupplier, epOptions, context));
+    ErrorProneAnalyzer analyzer;
+    if (epOptions.patchingOptions().doRefactor()) {
+      RefactoringCollection refactoringCollection;
+      if (epOptions.patchingOptions().inPlace()) {
+        refactoringCollection = RefactoringCollection.refactorInPlace();
+      } else {
+        refactoringCollection =
+            RefactoringCollection.refactorToPatchFile(epOptions.patchingOptions().baseDirectory());
+      }
+
+      analyzer =
+          ErrorProneAnalyzer.createWithCustomDescriptionListener(
+              ErrorProneScannerTransformer.create(scannerSupplier.applyOverrides(epOptions).get()),
+              epOptions,
+              context,
+              refactoringCollection);
+      context.put(RefactoringCollection.class, refactoringCollection);
+    } else {
+      analyzer = ErrorProneAnalyzer.createByScanningForPlugins(scannerSupplier, epOptions, context);
+    }
+    MultiTaskListener.instance(context).add(analyzer);
 
     return argv;
   }
@@ -184,7 +211,8 @@ public class BaseErrorProneCompiler {
     }
 
     try {
-      return new Main(compilerName, errOutput).compile(argv, context);
+      Result compileResult = new Main(compilerName, errOutput).compile(argv, context);
+      return wrapPotentialRefactoringCall(compileResult, context.get(RefactoringCollection.class));
     } catch (InvalidCommandLineOptionException e) {
       errOutput.println(e.getMessage());
       errOutput.flush();
@@ -221,11 +249,40 @@ public class BaseErrorProneCompiler {
       task.setProcessors(processors);
     }
     try {
-      return task.doCall();
+      return wrapPotentialRefactoringCall(task.doCall(), context.get(RefactoringCollection.class));
     } catch (InvalidCommandLineOptionException e) {
       errOutput.println(e.getMessage());
       errOutput.flush();
       return Result.CMDERR;
+    }
+  }
+
+  private Result wrapPotentialRefactoringCall(
+      Result original, @Nullable RefactoringCollection refactoringCollection) {
+    if (refactoringCollection == null) {
+      return original;
+    }
+
+    // Attempt the refactor
+    try {
+      RefactoringResult refactoringResult = refactoringCollection.applyChanges();
+      switch (refactoringResult.type()) {
+        case NO_CHANGES:
+          return original;
+        case CHANGED:
+          errOutput.println(refactoringResult.message());
+          errOutput.flush();
+          // Changes were made to the code, so we want to fail the compile phase. (This is to remind
+          // end users that the compiled code does not contained the refactored code, and that they
+          // should re-compile after inspecting the differences).
+          return Result.ERROR;
+        default:
+          throw new AssertionError("Unexpected RefactoringResult: " + refactoringResult);
+      }
+    } catch (Exception e) {
+      errOutput.append(e.getMessage());
+      errOutput.flush();
+      return Result.ERROR;
     }
   }
 

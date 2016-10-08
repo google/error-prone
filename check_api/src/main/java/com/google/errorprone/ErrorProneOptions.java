@@ -16,6 +16,7 @@
 
 package com.google.errorprone;
 
+import com.google.auto.value.AutoValue;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -53,6 +54,7 @@ import java.util.Map;
 public class ErrorProneOptions {
 
   private static final String CUSTOM_ENABLEMENT_PREFIX = "-Xep:";
+  private static final String PATCH_FILE_PREFIX = "-XepPatch:";
   private static final String ERRORS_AS_WARNINGS_FLAG = "-XepAllErrorsAsWarnings";
   private static final String ENABLE_ALL_CHECKS = "-XepAllDisabledChecksAsWarnings";
   private static final String IGNORE_UNKNOWN_CHECKS_FLAG = "-XepIgnoreUnknownCheckNames";
@@ -65,6 +67,7 @@ public class ErrorProneOptions {
   public static int isSupportedOption(String option) {
     boolean isSupported =
         option.startsWith(CUSTOM_ENABLEMENT_PREFIX)
+            || option.startsWith(PATCH_FILE_PREFIX)
             || option.equals(IGNORE_UNKNOWN_CHECKS_FLAG)
             || option.equals(DISABLE_WARNINGS_IN_GENERATED_CODE_FLAG)
             || option.equals(ERRORS_AS_WARNINGS_FLAG)
@@ -87,6 +90,27 @@ public class ErrorProneOptions {
     ERROR
   }
 
+  @AutoValue
+  abstract static class PatchingOptions {
+    abstract boolean doRefactor();
+
+    abstract boolean inPlace();
+
+    abstract String baseDirectory();
+
+    static PatchingOptions nope() {
+      return new AutoValue_ErrorProneOptions_PatchingOptions(false, false, "");
+    }
+
+    static PatchingOptions doInPlace() {
+      return new AutoValue_ErrorProneOptions_PatchingOptions(true, true, "");
+    }
+
+    static PatchingOptions baseDirectory(String baseDirectory) {
+      return new AutoValue_ErrorProneOptions_PatchingOptions(true, false, baseDirectory);
+    }
+  }
+
   private final ImmutableList<String> remainingArgs;
   private final ImmutableMap<String, Severity> severityMap;
   private final boolean ignoreUnknownChecks;
@@ -98,6 +122,7 @@ public class ErrorProneOptions {
 
   private final boolean dropErrorsToWarnings;
   private final boolean enableAllChecks;
+  private final PatchingOptions patchingOptions;
 
   private ErrorProneOptions(
       ImmutableMap<String, Severity> severityMap,
@@ -105,13 +130,15 @@ public class ErrorProneOptions {
       boolean ignoreUnknownChecks,
       boolean disableWarningsInGeneratedCode,
       boolean dropErrorsToWarnings,
-      boolean enableAllChecks) {
+      boolean enableAllChecks,
+      PatchingOptions patchingOptions) {
     this.severityMap = severityMap;
     this.remainingArgs = remainingArgs;
     this.ignoreUnknownChecks = ignoreUnknownChecks;
     this.disableWarningsInGeneratedCode = disableWarningsInGeneratedCode;
     this.dropErrorsToWarnings = dropErrorsToWarnings;
     this.enableAllChecks = enableAllChecks;
+    this.patchingOptions = patchingOptions;
   }
 
   public String[] getRemainingArgs() {
@@ -130,12 +157,17 @@ public class ErrorProneOptions {
     return disableWarningsInGeneratedCode;
   }
 
+  public PatchingOptions patchingOptions() {
+    return patchingOptions;
+  }
+
   private static class Builder {
     private boolean ignoreUnknownChecks = false;
     private boolean disableWarningsInGeneratedCode = false;
     private boolean dropWarningsToErrors = false;
     private boolean enableAllChecks = false;
     private Map<String, Severity> severityMap = new HashMap<>();
+    private PatchingOptions patchingOptions = PatchingOptions.nope();
 
     public void setIgnoreUnknownChecks(boolean ignoreUnknownChecks) {
       this.ignoreUnknownChecks = ignoreUnknownChecks;
@@ -157,6 +189,10 @@ public class ErrorProneOptions {
       this.enableAllChecks = enableAllChecks;
     }
 
+    public void setPatchingOptions(PatchingOptions patchingOptions) {
+      this.patchingOptions = patchingOptions;
+    }
+
     public ErrorProneOptions build(ImmutableList<String> outputArgs) {
       return new ErrorProneOptions(
           ImmutableMap.copyOf(severityMap),
@@ -164,7 +200,8 @@ public class ErrorProneOptions {
           ignoreUnknownChecks,
           disableWarningsInGeneratedCode,
           dropWarningsToErrors,
-          enableAllChecks);
+          enableAllChecks,
+          patchingOptions);
     }
   }
 
@@ -182,8 +219,7 @@ public class ErrorProneOptions {
    * @return an {@link ErrorProneOptions} instance encapsulating the given arguments
    * @throws InvalidCommandLineOptionException if an error-prone option is invalid
    */
-  public static ErrorProneOptions processArgs(Iterable<String> args)
-      throws InvalidCommandLineOptionException {
+  public static ErrorProneOptions processArgs(Iterable<String> args) {
     Preconditions.checkNotNull(args);
     ImmutableList.Builder<String> outputArgs = ImmutableList.builder();
 
@@ -212,6 +248,8 @@ public class ErrorProneOptions {
         default:
           if (arg.startsWith(CUSTOM_ENABLEMENT_PREFIX)) {
             parseCustomFlagIntoOptionsBuilder(builder, arg);
+          } else if (arg.startsWith(PATCH_FILE_PREFIX)) {
+            parsePatchArgIntoBuilder(builder, arg);
           } else {
             outputArgs.add(arg);
           }
@@ -219,6 +257,18 @@ public class ErrorProneOptions {
     }
 
     return builder.build(outputArgs.build());
+  }
+
+  private static void parsePatchArgIntoBuilder(Builder builder, String arg) {
+    String remaining = arg.substring(PATCH_FILE_PREFIX.length());
+    if (remaining.equals("IN_PLACE")) {
+      builder.setPatchingOptions(PatchingOptions.doInPlace());
+    } else {
+      if (remaining.isEmpty()) {
+        throw new InvalidCommandLineOptionException("invalid flag: " + arg);
+      }
+      builder.setPatchingOptions(PatchingOptions.baseDirectory(remaining));
+    }
   }
 
   private static void parseCustomFlagIntoOptionsBuilder(Builder builder, String arg) {
@@ -251,8 +301,7 @@ public class ErrorProneOptions {
    * @return an {@link ErrorProneOptions} instance encapsulating the given arguments
    * @throws InvalidCommandLineOptionException if an error-prone option is invalid
    */
-  public static ErrorProneOptions processArgs(String[] args)
-      throws InvalidCommandLineOptionException {
+  public static ErrorProneOptions processArgs(String[] args) {
     Preconditions.checkNotNull(args);
     return processArgs(Arrays.asList(args));
   }

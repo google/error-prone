@@ -73,7 +73,9 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
     Context context = ((JavacTaskImpl) task).getContext();
     BaseErrorProneCompiler.setupMessageBundle(context);
     MultiTaskListener.instance(context)
-        .add(new ErrorProneAnalyzer(scannerSupplier, errorProneOptions, context));
+        .add(
+            ErrorProneAnalyzer.createByScanningForPlugins(
+                scannerSupplier, errorProneOptions, context));
     return task;
   }
 

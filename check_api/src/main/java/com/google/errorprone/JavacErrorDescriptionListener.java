@@ -18,9 +18,6 @@ package com.google.errorprone;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicates;
-import com.google.common.collect.FluentIterable;
 import com.google.errorprone.fixes.AppliedFix;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
@@ -29,7 +26,11 @@ import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Log;
 import java.io.IOError;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import javax.tools.JavaFileObject;
 
 /**
@@ -38,29 +39,26 @@ import javax.tools.JavaFileObject;
  */
 public class JavacErrorDescriptionListener implements DescriptionListener {
   private final Log log;
-  private final EndPosTable endPositions;
   private final JavaFileObject sourceFile;
-  private final CharSequence sourceFileContent;
+  private final Function<Fix, AppliedFix> fixToAppliedFix;
 
-  private final Function<Fix, AppliedFix> fixToAppliedFix = new Function<Fix, AppliedFix>() {
-    @Override
-    public AppliedFix apply(Fix fix) {
-      return AppliedFix.fromSource(sourceFileContent, endPositions).apply(fix);
-    }
-  };
+  // When we're trying to refactor using error prone fixes, any error halts compilation of other
+  // files. We set this to true when refactoring so we can log every hit without breaking the
+  // compile.
+  private final boolean dontUseErrors;
 
   // The suffix for properties in src/main/resources/com/google/errorprone/errors.properties
   private static final String MESSAGE_BUNDLE_KEY = "error.prone";
 
-  public JavacErrorDescriptionListener(
-      Log log,
-      EndPosTable endPositions,
-      JavaFileObject sourceFile) {
+  private JavacErrorDescriptionListener(
+      Log log, EndPosTable endPositions, JavaFileObject sourceFile, boolean dontUseErrors) {
     this.log = log;
-    this.endPositions = checkNotNull(endPositions);
     this.sourceFile = sourceFile;
+    this.dontUseErrors = dontUseErrors;
+    checkNotNull(endPositions);
     try {
-      this.sourceFileContent = sourceFile.getCharContent(true);
+      CharSequence sourceFileContent = sourceFile.getCharContent(true);
+      fixToAppliedFix = fix -> AppliedFix.fromSource(sourceFileContent, endPositions).apply(fix);
     } catch (IOException e) {
       throw new IOError(e);
     }
@@ -68,38 +66,24 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
 
   @Override
   public void onDescribed(Description description) {
+    List<AppliedFix> appliedFixes =
+        description
+            .fixes
+            .stream()
+            .map(fixToAppliedFix)
+            .filter(Objects::nonNull)
+            .collect(Collectors.toCollection(ArrayList::new));
+
+    String message = messageForFixes(description, appliedFixes);
     // Swap the log's source and the current file's source; then be sure to swap them back later.
     JavaFileObject originalSource = log.useSource(sourceFile);
-
-    List<AppliedFix> appliedFixes = FluentIterable
-        .from(description.fixes)
-        .transform(fixToAppliedFix)
-        .filter(Predicates.notNull())
-        .toList();
-
-    StringBuilder messageBuilder = new StringBuilder(description.getMessage());
-    boolean first = true;
-    for (AppliedFix appliedFix : appliedFixes) {
-      if (first) {
-        messageBuilder.append("\nDid you mean ");
-      } else {
-        messageBuilder.append(" or ");
-      }
-      if (appliedFix.isRemoveLine()) {
-        messageBuilder.append("to remove this line");
-      } else {
-        messageBuilder.append("'" + appliedFix.getNewCodeSnippet() + "'");
-      }
-      first = false;
-    }
-    if (!first) {     // appended at least one suggested fix to the message
-      messageBuilder.append("?");
-    }
-    final String message = messageBuilder.toString();
-
     switch (description.severity) {
       case ERROR:
-        log.error((DiagnosticPosition) description.node, MESSAGE_BUNDLE_KEY, message);
+        if (dontUseErrors) {
+          log.warning((DiagnosticPosition) description.node, MESSAGE_BUNDLE_KEY, message);
+        } else {
+          log.error((DiagnosticPosition) description.node, MESSAGE_BUNDLE_KEY, message);
+        }
         break;
       case WARNING:
         log.warning((DiagnosticPosition) description.node, MESSAGE_BUNDLE_KEY, message);
@@ -114,5 +98,39 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
     if (originalSource != null) {
       log.useSource(originalSource);
     }
+  }
+
+  private static String messageForFixes(Description description, List<AppliedFix> appliedFixes) {
+    StringBuilder messageBuilder = new StringBuilder(description.getMessage());
+    boolean first = true;
+    for (AppliedFix appliedFix : appliedFixes) {
+      if (first) {
+        messageBuilder.append("\nDid you mean ");
+      } else {
+        messageBuilder.append(" or ");
+      }
+      if (appliedFix.isRemoveLine()) {
+        messageBuilder.append("to remove this line");
+      } else {
+        messageBuilder.append("'").append(appliedFix.getNewCodeSnippet()).append("'");
+      }
+      first = false;
+    }
+    if (!first) {     // appended at least one suggested fix to the message
+      messageBuilder.append("?");
+    }
+    return messageBuilder.toString();
+  }
+
+  static Factory provider() {
+    return (log, compilation) ->
+        new JavacErrorDescriptionListener(
+            log, compilation.endPositions, compilation.getSourceFile(), false);
+  }
+
+  static Factory providerForRefactoring() {
+    return (log, compilation) ->
+        new JavacErrorDescriptionListener(
+            log, compilation.endPositions, compilation.getSourceFile(), true);
   }
 }

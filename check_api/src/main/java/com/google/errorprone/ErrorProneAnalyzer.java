@@ -51,42 +51,66 @@ public class ErrorProneAnalyzer implements TaskListener {
   private final Supplier<CodeTransformer> transformer;
   private final ErrorProneOptions errorProneOptions;
   private final Context context;
+  private final DescriptionListener.Factory descriptionListenerFactory;
 
-  public ErrorProneAnalyzer(
-      final ScannerSupplier scannerSupplier,
-      final ErrorProneOptions errorProneOptions,
-      final Context context) {
-    this(
-        Suppliers.memoize(
-            new Supplier<CodeTransformer>() {
-              @Override
-              public CodeTransformer get() {
-                // we can't load plugins from the processorpath until the filemanager has been
-                // initialized, so do it lazily
-                try {
-                  return ErrorProneScannerTransformer.create(
-                      ErrorPronePlugins.loadPlugins(scannerSupplier, context)
-                          .applyOverrides(errorProneOptions)
-                          .get());
-                } catch (InvalidCommandLineOptionException e) {
-                  throw new PropagatedException(e);
-                }
-              }
-            }),
+  public static ErrorProneAnalyzer createByScanningForPlugins(
+      ScannerSupplier scannerSupplier, ErrorProneOptions errorProneOptions, Context context) {
+    return new ErrorProneAnalyzer(
+        scansPlugins(scannerSupplier, errorProneOptions, context),
         errorProneOptions,
-        context);
+        context,
+        JavacErrorDescriptionListener.provider());
   }
 
+  private static Supplier<CodeTransformer> scansPlugins(
+      ScannerSupplier scannerSupplier, ErrorProneOptions errorProneOptions, Context context) {
+    return Suppliers.memoize(
+        () -> {
+          // we can't load plugins from the processorpath until the filemanager has been
+          // initialized, so do it lazily
+          try {
+            return ErrorProneScannerTransformer.create(
+                ErrorPronePlugins.loadPlugins(scannerSupplier, context)
+                    .applyOverrides(errorProneOptions)
+                    .get());
+          } catch (InvalidCommandLineOptionException e) {
+            throw new PropagatedException(e);
+          }
+        });
+  }
+
+  static ErrorProneAnalyzer createWithCustomDescriptionListener(
+      CodeTransformer codeTransformer,
+      ErrorProneOptions errorProneOptions,
+      Context context,
+      DescriptionListener.Factory descriptionListenerFactory) {
+    return new ErrorProneAnalyzer(
+        Suppliers.ofInstance(codeTransformer),
+        errorProneOptions,
+        context,
+        descriptionListenerFactory);
+  }
+
+  // Used by Bazel still
+  @SuppressWarnings("unused")
   public ErrorProneAnalyzer(
-      CodeTransformer transformer, ErrorProneOptions errorProneOptions, Context context) {
-    this(Suppliers.ofInstance(transformer), errorProneOptions, context);
+      ScannerSupplier scannerSupplier, ErrorProneOptions errorProneOptions, Context context) {
+    this(
+        scansPlugins(scannerSupplier, errorProneOptions, context),
+        errorProneOptions,
+        context,
+        JavacErrorDescriptionListener.provider());
   }
 
   private ErrorProneAnalyzer(
-      Supplier<CodeTransformer> transformer, ErrorProneOptions errorProneOptions, Context context) {
+      Supplier<CodeTransformer> transformer,
+      ErrorProneOptions errorProneOptions,
+      Context context,
+      DescriptionListener.Factory descriptionListenerFactory) {
     this.transformer = checkNotNull(transformer);
     this.errorProneOptions = checkNotNull(errorProneOptions);
     this.context = checkNotNull(context);
+    this.descriptionListenerFactory = checkNotNull(descriptionListenerFactory);
   }
 
   @Override
@@ -107,19 +131,18 @@ public class ErrorProneAnalyzer implements TaskListener {
     subContext.put(ErrorProneOptions.class, errorProneOptions);
     Log log = Log.instance(context);
     JCCompilationUnit compilation = (JCCompilationUnit) path.getCompilationUnit();
-    DescriptionListener logReporter =
-        new JavacErrorDescriptionListener(
-            log, compilation.endPositions, compilation.getSourceFile());
+    DescriptionListener descriptionListener =
+        descriptionListenerFactory.getDescriptionListener(log, compilation);
     try {
       if (path.getLeaf().getKind() == Tree.Kind.COMPILATION_UNIT) {
         // We only get TaskEvents for compilation units if they contain no package declarations
         // (e.g. package-info.java files).  In this case it's safe to analyze the
         // CompilationUnitTree immediately.
-        transformer.get().apply(path, subContext, logReporter);
+        transformer.get().apply(path, subContext, descriptionListener);
       } else if (finishedCompilation(path.getCompilationUnit())) {
         // Otherwise this TaskEvent is for a ClassTree, and we can scan the whole
         // CompilationUnitTree once we've seen all the enclosed classes.
-        transformer.get().apply(new TreePath(compilation), subContext, logReporter);
+        transformer.get().apply(new TreePath(compilation), subContext, descriptionListener);
       }
     } catch (ErrorProneError e) {
       e.logFatalError(log);

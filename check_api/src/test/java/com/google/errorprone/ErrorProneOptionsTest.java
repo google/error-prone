@@ -121,4 +121,19 @@ public class ErrorProneOptionsTest {
         ErrorProneOptions.processArgs(new String[] {"-XepAllErrorsAsWarnings"});
     assertThat(options.isDropErrorsToWarnings()).isTrue();
   }
+
+  @Test
+  public void recognizesPatch() {
+    ErrorProneOptions options = ErrorProneOptions.processArgs(new String[] {"-XepPatch:IN_PLACE"});
+    assertThat(options.patchingOptions().doRefactor()).isTrue();
+    assertThat(options.patchingOptions().inPlace()).isTrue();
+
+    options = ErrorProneOptions.processArgs(new String[] {"-XepPatch:/some/base/dir"});
+    assertThat(options.patchingOptions().doRefactor()).isTrue();
+    assertThat(options.patchingOptions().inPlace()).isFalse();
+    assertThat(options.patchingOptions().baseDirectory()).isEqualTo("/some/base/dir");
+
+    options = ErrorProneOptions.processArgs(new String[] {});
+    assertThat(options.patchingOptions().doRefactor()).isFalse();
+  }
 }

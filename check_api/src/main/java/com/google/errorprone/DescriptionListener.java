@@ -17,6 +17,8 @@
 package com.google.errorprone;
 
 import com.google.errorprone.matchers.Description;
+import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
+import com.sun.tools.javac.util.Log;
 
 /**
  * Strategies for reporting results.
@@ -29,4 +31,9 @@ public interface DescriptionListener {
    * @param description
    */
   void onDescribed(Description description);
+
+  /** Factory for creating DescriptionListeners while compiling each file. */
+  interface Factory {
+    DescriptionListener getDescriptionListener(Log log, JCCompilationUnit compilation);
+  }
 }
