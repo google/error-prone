@@ -126,9 +126,15 @@ public class ArgumentParameterSwapTest {
   @Test
   public void splitStringTerms_single() throws Exception {
     Set<String> terms = ArgumentParameterSwap.splitStringTerms("fooBarID");
-    assertThat(terms).containsExactly("foo", "bar", "i", "d");
+    assertThat(terms).containsExactly("foo", "bar", "id");
   }
 
+  @Test
+  public void splitStringTerms_mixed() throws Exception {
+    Set<String> terms = ArgumentParameterSwap.splitStringTerms("foo_barBaz");
+    assertThat(terms).containsExactly("foo", "bar", "baz");
+  }
+  
   @Test
   public void ignoreDisallowedParams() {
     compilationHelper

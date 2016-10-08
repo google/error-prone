@@ -17,11 +17,10 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static java.util.stream.Collectors.toSet;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.CaseFormat;
 import com.google.common.base.Joiner;
-import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
@@ -194,18 +193,14 @@ public class ArgumentParameterSwap extends BugChecker
   }
 
   /**
-   * Splits a string into a Set of terms. If the name starts with a lower-case letter, it is
-   * presumed to be in lowerCamelCase format. Otherwise, it presumes UPPER_UNDERSCORE format.
+   * Divides a string into a Set of terms by splitting on underscores and transitions from lower to
+   * upper case.
    */
   @VisibleForTesting
   static Set<String> splitStringTerms(String name) {
-    // TODO(ciera): Handle lower_underscore
-    CaseFormat caseFormat =
-        Character.isLowerCase(name.charAt(0))
-            ? CaseFormat.LOWER_CAMEL
-            : CaseFormat.UPPER_UNDERSCORE;
-    String nameSplit = caseFormat.to(CaseFormat.LOWER_UNDERSCORE, name);
-    return Sets.newHashSet(
-        Splitter.on('_').trimResults().omitEmptyStrings().splitToList(nameSplit));
+    // TODO(andrewrice): switch over to toImmutableSet if guava provides it in future
+    return Arrays.stream(name.split("_|(?<=[a-z0-9])(?=[A-Z])"))
+        .map(String::toLowerCase)
+        .collect(toSet());
   }
 }
