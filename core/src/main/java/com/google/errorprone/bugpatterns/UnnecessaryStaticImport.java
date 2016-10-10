@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 
 import com.google.errorprone.BugPattern;
@@ -36,8 +35,7 @@ import com.sun.source.tree.ImportTree;
       "Using static imports for types is unnecessary, since they can always be"
           + " replaced by equivalent non-static imports.",
   category = JDK,
-  severity = SUGGESTION,
-  maturity = MATURE
+  severity = SUGGESTION
 )
 public class UnnecessaryStaticImport extends BugChecker implements ImportTreeMatcher {
 

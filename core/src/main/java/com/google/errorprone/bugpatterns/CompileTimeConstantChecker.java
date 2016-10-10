@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.GUAVA;
 import static com.google.errorprone.BugPattern.LinkType.NONE;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.CompileTimeConstantExpressionMatcher.hasCompileTimeConstantAnnotation;
 
@@ -49,12 +48,12 @@ import java.util.Iterator;
  * parameter is an expression that satisfies one of the following conditions:
  *
  * <ol>
- * <li>The expression is one for which the Java compiler can determine a constant value at compile
- *     time, or
- * <li>the expression consists of the literal {@code null}, or
- * <li>the expression consists of a single identifier, where the identifier is a formal method
- *     parameter that is declared {@code final} and has the {@link
- *     com.google.errorprone.annotations.CompileTimeConstant} annotation.
+ *   <li>The expression is one for which the Java compiler can determine a constant value at compile
+ *       time, or
+ *   <li>the expression consists of the literal {@code null}, or
+ *   <li>the expression consists of a single identifier, where the identifier is a formal method
+ *       parameter that is declared {@code final} and has the {@link
+ *       com.google.errorprone.annotations.CompileTimeConstant} annotation.
  * </ol>
  *
  * @see CompileTimeConstantExpressionMatcher
@@ -72,8 +71,7 @@ import java.util.Iterator;
   linkType = NONE,
   category = GUAVA,
   severity = ERROR,
-  suppressibility = Suppressibility.UNSUPPRESSIBLE,
-  maturity = MATURE
+  suppressibility = Suppressibility.UNSUPPRESSIBLE
 )
 public class CompileTimeConstantChecker extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {

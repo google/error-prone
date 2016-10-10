@@ -20,7 +20,6 @@ import static com.google.common.base.MoreObjects.firstNonNull;
 
 import com.google.common.base.Preconditions;
 import com.google.errorprone.BugCheckerInfo;
-import com.google.errorprone.BugPattern.MaturityLevel;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.errorprone.VisitorState;
@@ -157,10 +156,6 @@ public abstract class BugChecker implements Suppressible, Serializable {
 
   public String message() {
     return info.message();
-  }
-
-  public MaturityLevel maturity() {
-    return info.maturity();
   }
 
   public SeverityLevel defaultSeverity() {
@@ -403,12 +398,11 @@ public abstract class BugChecker implements Suppressible, Serializable {
     BugChecker that = (BugChecker) obj;
     return this.canonicalName().equals(that.canonicalName())
         && this.defaultSeverity().equals(that.defaultSeverity())
-        && this.maturity().equals(that.maturity())
         && this.suppressibility().equals(that.suppressibility());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(canonicalName(), defaultSeverity(), maturity(), suppressibility());
+    return Objects.hash(canonicalName(), defaultSeverity(), suppressibility());
   }
 }

@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
@@ -36,9 +35,8 @@ import com.sun.tools.javac.tree.JCTree;
   name = "InsecureCipherMode",
   summary = "Cipher.getInstance() is invoked using either the default settings or ECB mode",
   category = JDK,
-  severity = ERROR,
   documentSuppression = false,
-  maturity = MATURE
+  severity = ERROR
 )
 public class InsecureCipherMode extends BugChecker implements MethodInvocationTreeMatcher {
   private static final String MESSAGE_BASE = "Insecure usage of Cipher.getInstance(): ";

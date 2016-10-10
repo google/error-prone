@@ -21,7 +21,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.google.common.io.CharStreams;
 import com.google.errorprone.BugPattern.Category;
-import com.google.errorprone.BugPattern.MaturityLevel;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.gson.Gson;
@@ -68,7 +67,6 @@ public class BugPatternFileGeneratorTest {
     instance.altNames = new String[] {"ThrowableInstanceNeverThrown"};
     instance.category = Category.JDK.toString();
     instance.severity = SeverityLevel.ERROR;
-    instance.maturity = MaturityLevel.MATURE;
     instance.suppressibility = Suppressibility.SUPPRESS_WARNINGS;
     instance.customSuppressionAnnotations =
         new String[] {"com.google.errorprone.BugPattern.NoCustomSuppression.class"};
@@ -146,7 +144,6 @@ public class BugPatternFileGeneratorTest {
     instance.altNames = new String[0];
     instance.category = Category.ONE_OFF.toString();
     instance.severity = SeverityLevel.ERROR;
-    instance.maturity = MaturityLevel.MATURE;
     instance.suppressibility = Suppressibility.SUPPRESS_WARNINGS;
     instance.customSuppressionAnnotations =
         new String[] {"com.google.errorprone.BugPattern.NoCustomSuppression.class"};

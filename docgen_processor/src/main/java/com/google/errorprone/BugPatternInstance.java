@@ -21,7 +21,6 @@ import static com.google.common.base.Verify.verifyNotNull;
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.FluentIterable;
-import com.google.errorprone.BugPattern.MaturityLevel;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.BugPattern.Suppressibility;
 import java.util.LinkedHashMap;
@@ -49,7 +48,6 @@ public final class BugPatternInstance {
   public String explanation;
   public String[] altNames;
   public String category;
-  public MaturityLevel maturity;
   public SeverityLevel severity;
   public Suppressibility suppressibility;
   public String[] customSuppressionAnnotations;
@@ -63,7 +61,6 @@ public final class BugPatternInstance {
     BugPattern annotation = element.getAnnotation(BugPattern.class);
     instance.name = annotation.name();
     instance.altNames = annotation.altNames();
-    instance.maturity = annotation.maturity();
     instance.severity = annotation.severity();
     instance.suppressibility = annotation.suppressibility();
     instance.summary = annotation.summary();

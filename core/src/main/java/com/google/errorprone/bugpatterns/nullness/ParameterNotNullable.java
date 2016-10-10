@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.nullness;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 
 import com.google.errorprone.BugPattern;
@@ -47,8 +46,7 @@ import javax.lang.model.element.ElementKind;
   name = "ParameterNotNullable",
   summary = "Method parameters that aren't checked for null shouldn't be annotated @Nullable",
   category = JDK,
-  severity = SUGGESTION,
-  maturity = EXPERIMENTAL
+  severity = SUGGESTION
 )
 public class ParameterNotNullable extends BugChecker
     implements MemberSelectTreeMatcher, ArrayAccessTreeMatcher {

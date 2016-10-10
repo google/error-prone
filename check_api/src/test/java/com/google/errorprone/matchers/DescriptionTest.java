@@ -18,7 +18,6 @@ package com.google.errorprone.matchers;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static org.junit.Assert.assertEquals;
 
@@ -48,9 +47,13 @@ public class DescriptionTest {
     }
   }
 
-  @BugPattern(name = "DeadException",
-      summary = "Exception created but not thrown",
-      explanation = "", category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
+  @BugPattern(
+    name = "DeadException",
+    summary = "Exception created but not thrown",
+    explanation = "",
+    category = JDK,
+    severity = ERROR
+  )
   public static class MyChecker extends BugChecker {
     Description getDescription() {
       return describeMatch(new MockTree());
@@ -85,11 +88,15 @@ public class DescriptionTest {
         description.getMessage());
   }
 
-  @BugPattern(name = "CustomLinkChecker",
-      summary = "Exception created but not thrown",
-      explanation = "", category = JDK, severity = ERROR, maturity = EXPERIMENTAL,
-      linkType = CUSTOM,
-      link = "https://www.google.com/")
+  @BugPattern(
+    name = "CustomLinkChecker",
+    summary = "Exception created but not thrown",
+    explanation = "",
+    category = JDK,
+    severity = ERROR,
+    linkType = CUSTOM,
+    link = "https://www.google.com/"
+  )
   public static class CustomLinkChecker extends BugChecker {
     Description getDescription() {
       return describeMatch(new MockTree());

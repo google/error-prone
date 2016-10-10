@@ -19,12 +19,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
-import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.MaturityLevel;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.BugPattern.Suppressibility;
-import com.google.errorprone.BugPatternValidator;
-import com.google.errorprone.ValidationException;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.Tree;
@@ -73,12 +69,6 @@ public class BugCheckerInfo implements Serializable {
   private final SeverityLevel defaultSeverity;
 
   /**
-   * The maturity of this checker. Used to decide whether to enable this check. Corresponds to the
-   * {@code maturity} attribute from its {@code BugPattern}.
-   */
-  private final MaturityLevel maturity;
-
-  /**
    * The link URL to display in the diagnostic message when this check triggers. Computed from the
    * {@code link} and {@code linkType} attributes from its {@code BugPattern}. May be null if no
    * link should be displayed.
@@ -116,7 +106,6 @@ public class BugCheckerInfo implements Serializable {
     canonicalName = pattern.name();
     allNames = ImmutableSet.<String>builder().add(canonicalName).add(pattern.altNames()).build();
     message = pattern.summary();
-    maturity = pattern.maturity();
     defaultSeverity = pattern.severity();
     linkUrl = createLinkUrl(pattern);
     suppressibility = pattern.suppressibility();
@@ -176,10 +165,6 @@ public class BugCheckerInfo implements Serializable {
 
   public String message() {
     return message;
-  }
-
-  public MaturityLevel maturity() {
-    return maturity;
   }
 
   public SeverityLevel defaultSeverity() {
