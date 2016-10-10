@@ -21,7 +21,6 @@ import static java.util.stream.Collectors.toSet;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
@@ -42,7 +41,6 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.tree.JCTree;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -61,11 +59,19 @@ import java.util.Set;
 )
 public class ArgumentParameterSwap extends BugChecker
     implements NewClassTreeMatcher, MethodInvocationTreeMatcher {
-  public static final List<String> IGNORE_PARAMS =
-      ImmutableList.of("message", "counter", "index", "object", "value");
+  /** Commonly overloaded parameter names which should not be considered for swapping into */
+  private final Set<String> ignoreParams;
 
   static final Set<Kind> VALID_KINDS =
       ImmutableSet.of(Kind.MEMBER_SELECT, Kind.IDENTIFIER, Kind.METHOD_INVOCATION);
+
+  public ArgumentParameterSwap() {
+    this(ImmutableSet.of("index", "item", "key", "value"));
+  }
+
+  public ArgumentParameterSwap(Set<String> ignoreParams) {
+    this.ignoreParams = ignoreParams;
+  }
 
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
@@ -97,7 +103,7 @@ public class ArgumentParameterSwap extends BugChecker
       String argName = getRelevantName(args[ndx]);
       // If the parameter for this argument is under 4 characters or in our ignore list, just
       // presume it is correct.
-      if (paramName.length() <= 4 || IGNORE_PARAMS.contains(paramName)) {
+      if (paramName.length() <= 4 || ignoreParams.contains(paramName)) {
         suggestion[ndx] = args[ndx].toString();
         continue;
       }

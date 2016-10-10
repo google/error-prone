@@ -141,9 +141,9 @@ public class ArgumentParameterSwapTest {
         .addSourceLines(
             "SwapNotExact.java",
             "class SwapNotExact {",
-            "  public void doIt(String message, String value) {}",
-            "  public void testMethod(String messageThing, String valueThing) {",
-            "    doIt(valueThing, messageThing);",
+            "  public void doIt(String index, String value) {}",
+            "  public void testMethod(String indexThing, String valueThing) {",
+            "    doIt(valueThing, indexThing);",
             "  }",
             "}")
         .doTest();
