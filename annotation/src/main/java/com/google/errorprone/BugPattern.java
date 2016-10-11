@@ -138,18 +138,6 @@ public @interface BugPattern {
     SUGGESTION
   }
 
-  MaturityLevel maturity() default MaturityLevel.MATURE;
-
-  public enum MaturityLevel {
-    MATURE("On by default"),
-    EXPERIMENTAL("Experimental");
-
-    final String description;
-    MaturityLevel(String description) {
-      this.description = description;
-    }
-  }
-
   /**
    * Whether this checker should be suppressible, and if so, by what means.
    */
