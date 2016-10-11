@@ -32,6 +32,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
@@ -41,6 +42,8 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.tree.JCTree;
 import java.util.Arrays;
+
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -100,10 +103,11 @@ public class ArgumentParameterSwap extends BugChecker
     // Create a list of suggested best arguments for the method in question.
     for (int ndx = 0; ndx < params.length; ndx++) {
       String paramName = params[ndx].getSimpleName().toString();
-      String argName = getRelevantName(args[ndx]);
-      // If the parameter for this argument is under 4 characters or in our ignore list, just
-      // presume it is correct.
-      if (paramName.length() <= 4 || ignoreParams.contains(paramName)) {
+      Optional<String> argName = getRelevantName(args[ndx]);
+
+      // If the parameter for this argument is not something we can extract a argument name from, is
+      // under 4 characters or in our ignore list, just presume it is correct.
+      if (!argName.isPresent() || paramName.length() <= 4 || ignoreParams.contains(paramName)) {
         suggestion[ndx] = args[ndx].toString();
         continue;
       }
@@ -113,10 +117,14 @@ public class ArgumentParameterSwap extends BugChecker
       ExpressionTree[] possibleMatches =
           getPossibleMatches(params[ndx], args, args[ndx].getKind(), state);
       String[] relevantMatchNames =
-          Arrays.stream(possibleMatches).map(exp -> getRelevantName(exp)).toArray(String[]::new);
+          Arrays.stream(possibleMatches)
+              .map(exp -> getRelevantName(exp))
+              .filter(Optional::isPresent)
+              .map(Optional::get)
+              .toArray(String[]::new);
 
       // Figure out which one is best. Use the existing if nothing else works.
-      int best = findBestMatch(relevantMatchNames, argName, paramName);
+      int best = findBestMatch(relevantMatchNames, argName.get(), paramName);
       suggestion[ndx] = best == -1 ? args[ndx].toString() : possibleMatches[best].toString();
     }
 
@@ -134,14 +142,29 @@ public class ArgumentParameterSwap extends BugChecker
     return describeMatch(tree, fix);
   }
 
-  /** Gets the part of the expression that represents the "name" for each value in expressions. */
-  private String getRelevantName(ExpressionTree exp) {
+  /**
+   * Gets the part of the expression that represents the "name" for each value in expressions. If no
+   * name can be extracted then an empty value is returned instead.
+   */
+  private Optional<String> getRelevantName(ExpressionTree exp) {
     if (exp instanceof MemberSelectTree) {
-      return ((MemberSelectTree) exp).getIdentifier().toString();
+      // if we have a 'field access' we use the name of the field (ignore the name of the receiver
+      // object)
+      return Optional.of(((MemberSelectTree) exp).getIdentifier().toString());
     } else if (exp instanceof MethodInvocationTree) {
-      return ASTHelpers.getSymbol(exp).getSimpleName().toString();
+      // if we have a 'call expression' we use the name of the method we are calling
+      return Optional.of(ASTHelpers.getSymbol(exp).getSimpleName().toString());
+    } else if (exp instanceof IdentifierTree) {
+      IdentifierTree idTree = (IdentifierTree) exp;
+      if (idTree.getName().contentEquals("this")) {
+        // for the 'this' keyword the argument name is the name of the object's class
+        return Optional.of(ASTHelpers.enclosingClass(ASTHelpers.getSymbol(idTree)).name.toString());
+      } else {
+        // if we have a variable, just extract its name
+        return Optional.of(((IdentifierTree) exp).getName().toString());
+      }
     } else {
-      return exp.toString();
+      return Optional.empty();
     }
   }
   /**
@@ -210,3 +233,4 @@ public class ArgumentParameterSwap extends BugChecker
         .collect(toSet());
   }
 }
+

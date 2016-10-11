@@ -134,7 +134,7 @@ public class ArgumentParameterSwapTest {
     Set<String> terms = ArgumentParameterSwap.splitStringTerms("foo_barBaz");
     assertThat(terms).containsExactly("foo", "bar", "baz");
   }
-  
+
   @Test
   public void ignoreDisallowedParams() {
     compilationHelper
@@ -334,6 +334,21 @@ public class ArgumentParameterSwapTest {
             "  public void testMethod(MethodCall usage) {",
             "    // BUG: Diagnostic contains: 'doIt(usage.getFoo(), usage.getBar());'",
             "    doIt(usage.getBar(), usage.getFoo());",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void substitutesClassNameForThis() {
+    compilationHelper
+        .addSourceLines(
+            "FooBarBaz.java",
+            "class FooBarBaz {",
+            "  public void test(Object fooBarBaz,Object quxQuuCor) {}",
+            "  public void testMethod(Object quxQuuCor) {",
+            "    // BUG: Diagnostic contains: 'test(this, quxQuuCor);'",
+            "    test(quxQuuCor,this);",
             "  }",
             "}")
         .doTest();
