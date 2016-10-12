@@ -18,65 +18,61 @@ package com.google.errorprone.bugpatterns.testdata;
 /** @author yulissa@google.com (Yulissa Arroyo-Paredes) */
 public class ArgumentParameterSwapPositiveCases {
   // names are identical but they are swapped
-  public String doSomething(String[] keepPath, String[] dropPath, String topVal, String bottom) {
+  public String doSomething(String[] pizzazz, String[] jukebox, String quivery, String junkies) {
     return "wrong";
   }
 
   public void doSomethingElse() {
     int i = 0;
-    String[] keepPath = {"one", "two", "three"};
-    String[] dropPath = {"one"};
-    String top = "top";
-    String bottom = "bottom";
-    // BUG: Diagnostic contains: 'doSomething(keepPath, dropPath, top, bottom);'
-    doSomething(dropPath, keepPath, bottom, top);
+    String[] pizzazz = {};
+    String[] jukebox = {};
+    String quivery = "";
+    String junkies = "";
+    // BUG: Diagnostic contains: 'doSomething(pizzazz, jukebox, quivery, junkies);'
+    doSomething(jukebox, pizzazz, junkies, quivery);
   }
 
   // three parameters, all in the wrong place
-  public String doNothing(String[] keepPath, String[] dropPath, String[] extraPath) {
+  public String doNothing(String[] pizzazz, String[] jukebox, String[] quivery) {
     return "nothing";
   }
 
   public void doNothingElse() {
-    String[] keepPath = {"one", "two", "three"};
-    String[] dropPath = {"one"};
-    String[] extraPath = {"extra"};
-    // BUG: Diagnostic contains: 'doNothing(keepPath, dropPath, extraPath);'
-    doNothing(extraPath, keepPath, dropPath);
+    String[] pizzazz = {};
+    String[] jukebox = {};
+    String[] quivery = {};
+    // BUG: Diagnostic contains: 'doNothing(pizzazz, jukebox, quivery);'
+    doNothing(quivery, pizzazz, jukebox);
   }
 
   // tests for when creating new objects
   class TestObject {
-    final String sourceName;
-    final String destinationName;
+    String pizzazz;
+    String jukebox;
 
-    TestObject(String sourceName, String destinationName) {
-      super();
-      this.sourceName = sourceName;
-      this.destinationName = destinationName;
-    }
+    TestObject(String pizzazz, String jukebox) {}
 
     public TestObject resolveString() {
-      // BUG: Diagnostic contains: 'return new TestObject(sourceName, destinationName);'
-      return new TestObject(destinationName, sourceName);
+      // BUG: Diagnostic contains: 'return new TestObject(pizzazz, jukebox);'
+      return new TestObject(jukebox, pizzazz);
     }
   }
 
   // test for calling super constructor
   class DerivedObject extends TestObject {
-    DerivedObject(String sourceName, String destinationName, String other) {
-      // BUG: Diagnostic contains: 'super(sourceName, destinationName);'
-      super(destinationName, sourceName);
+    DerivedObject(String pizzazz, String jukebox, String quivery) {
+      // BUG: Diagnostic contains: 'super(pizzazz, jukebox);'
+      super(jukebox, pizzazz);
     }
   }
 
   // tests this(...) constructor
   static class ThisCall {
-    ThisCall(String keepPath, String dropPath) {}
+    ThisCall(String pizzazz, String jukebox) {}
 
-    ThisCall(String keepPath, String dropPath, String extraPath) {
-      // BUG: Diagnostic contains: 'this(keepPath, dropPath);'
-      this(dropPath, keepPath);
+    ThisCall(String pizzazz, String jukebox, String quivery) {
+      // BUG: Diagnostic contains: 'this(pizzazz, jukebox);'
+      this(jukebox, pizzazz);
     }
   }
 }

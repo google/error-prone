@@ -46,26 +46,41 @@ public class ArgumentParameterSwapTest {
   }
 
   @Test
-  public void findBestMatch_original() {
-    assertThat(ArgumentParameterSwap.findBestMatch(new String[] {"baz", "other"}, "foo", "fooBar"))
+  public void choosesOriginalWhenBestOption() {
+    assertThat(
+            ArgumentParameterSwap.findBestMatch(
+                new String[] {"baz", "other"}, "foo", "fooBar", 0.667))
         .isEqualTo(-1);
   }
 
   @Test
-  public void findBestMatch_first() {
-    assertThat(ArgumentParameterSwap.findBestMatch(new String[] {"bar", "other"}, "baz", "fooBar"))
+  public void choosesFirstAlternativeWhenBestOption() {
+    assertThat(
+            ArgumentParameterSwap.findBestMatch(
+                new String[] {"fooBarBaz", "other"}, "quxQuuCor", "fooBarBaz", 0.667))
         .isEqualTo(0);
   }
 
   @Test
-  public void findBestMatch_last() {
-    assertThat(ArgumentParameterSwap.findBestMatch(new String[] {"baz", "foo"}, "baz", "fooBar"))
+  public void choosesSecondAlternativeWhenBestOption() {
+    assertThat(
+            ArgumentParameterSwap.findBestMatch(
+                new String[] {"other", "fooBarBaz"}, "quxQuuCor", "fooBarBaz", 0.667))
         .isEqualTo(1);
   }
 
   @Test
-  public void findBestMatch_same() {
-    assertThat(ArgumentParameterSwap.findBestMatch(new String[] {"bar", "other"}, "foo", "fooBar"))
+  public void choosesOriginalWhenAlternativesAsGood() {
+    assertThat(
+            ArgumentParameterSwap.findBestMatch(new String[] {"baz", "qux"}, "bar", "foo", 0.667))
+        .isEqualTo(-1);
+  }
+
+  @Test
+  public void ignoresBetterOptionsWhenBetaIsLarge() {
+    assertThat(
+            ArgumentParameterSwap.findBestMatch(
+                new String[] {"fooBarBaz", "other"}, "quxQuuCor", "quxQuuCor", Integer.MAX_VALUE))
         .isEqualTo(-1);
   }
 
@@ -164,14 +179,13 @@ public class ArgumentParameterSwapTest {
   }
 
   @Test
-  public void equalMatchStays() {
+  public void equalSimilarityMatchLeavesOriginalInPlace() {
     compilationHelper
         .addSourceLines(
             "SwapNotExact.java",
             "class SwapNotExact {",
-            "  public void doIt(String fooString, String barString) {}",
+            "  public void doIt(String to, String barString) {}",
             "  public void testMethod(String stringOne, String stringFoo) {",
-            "    // BUG: Diagnostic contains: 'doIt(stringFoo, stringFoo);'",
             "    doIt(stringOne, stringFoo);",
             "  }",
             "}")
@@ -197,47 +211,51 @@ public class ArgumentParameterSwapTest {
   }
 
   @Test
-  public void twoSwapOneInPlace() {
+  public void shouldSwapFirstWithThird() {
     compilationHelper
         .addSourceLines(
             "SwapNotExact.java",
             "class SwapNotExact {",
-            "  public void doIt(String fooString, String bazString, String barString) {}",
-            "  public void testMethod(String barThing, String bazThing, String fooThing) {",
-            "    // BUG: Diagnostic contains: 'doIt(fooThing, bazThing, barThing);'",
-            "    doIt(barThing, bazThing, fooThing);",
+            "  public void doIt(String fooBarBazString, ",
+            "                   String quxQuuCorString, ",
+            "                   String graGarWalString) {}",
+            "  public void testMethod(String fooBarBazThing, ",
+            "                         String quxQuuCorThing, ",
+            "                         String graGarWalThing) {",
+            " // BUG: Diagnostic contains: 'doIt(fooBarBazThing, quxQuuCorThing, graGarWalThing);'",
+            "    doIt(graGarWalThing, quxQuuCorThing, fooBarBazThing);",
             "  }",
             "}")
         .doTest();
   }
 
   @Test
-  public void swappedNotExact() {
+  public void shouldSwapNearlyMatchingArguments() {
     compilationHelper
         .addSourceLines(
             "SwapNotExact.java",
             "class SwapNotExact {",
-            "  public void doIt(String fooString, String barString) {}",
-            "  public void testMethod(String barThing, String fooThing) {",
-            "    // BUG: Diagnostic contains: 'doIt(fooThing, barThing);'",
-            "    doIt(barThing, fooThing);",
+            "  public void doIt(String fooBarBazString, String quxQuuCorString) {}",
+            "  public void testMethod(String quxQuuCorThing, String fooBarBazThing) {",
+            "    // BUG: Diagnostic contains: 'doIt(fooBarBazThing, quxQuuCorThing);'",
+            "    doIt(quxQuuCorThing, fooBarBazThing);",
             "  }",
             "}")
         .doTest();
   }
 
   @Test
-  public void swappedNotExactConstants() {
+  public void shouldSwapNearlyMatchingConstants() {
     compilationHelper
         .addSourceLines(
             "SwapNotExact.java",
             "class SwapNotExact {",
-            "  public final static String FOO = \"foo\";",
-            "  public final static String BAR_THING = \"bar\";",
-            "  public void doIt(String fooString, String barString) {}",
+            "  public final static String FOO_BAR_BAZ_THING = \"foo\";",
+            "  public final static String QUX_QUU_COR_THING = \"bar\";",
+            "  public void doIt(String fooBarBazString, String quxQuuCorString) {}",
             "  public void testMethod() {",
-            "    // BUG: Diagnostic contains: 'doIt(FOO, BAR_THING);'",
-            "    doIt(BAR_THING, FOO);",
+            "    // BUG: Diagnostic contains: 'doIt(FOO_BAR_BAZ_THING, QUX_QUU_COR_THING);'",
+            "    doIt(QUX_QUU_COR_THING, FOO_BAR_BAZ_THING);",
             "  }",
             "}")
         .doTest();
@@ -291,49 +309,51 @@ public class ArgumentParameterSwapTest {
   }
 
   @Test
-  public void notSimpleArgument() {
+  public void shouldNotSwapLiteralArgument() {
     compilationHelper
         .addSourceLines(
             "SwapNotExact.java",
             "class SwapNotExact {",
-            "  public void doIt(String fooString, String barString, String bazString) {}",
-            "  public void testMethod(String barThing, String fooThing) {",
-            "    // BUG: Diagnostic contains: 'doIt(fooThing, barThing, \"hello\");'",
-            "    doIt(barThing, fooThing, \"hello\");",
+            "  public void doIt(String fooBarBazString,",
+            "                   String quxQuuCorString,",
+            "                   String forBarBazThing) {}",
+            "  public void testMethod(String quxQuuCorThing, String fooBarBazThing) {",
+            "    // BUG: Diagnostic contains: 'doIt(fooBarBazThing, quxQuuCorThing, \"hello\");'",
+            "    doIt(quxQuuCorThing, fooBarBazThing, \"hello\");",
             "  }",
             "}")
         .doTest();
   }
 
   @Test
-  public void fieldUsage() {
+  public void correctlySwapsFieldParameters() {
     compilationHelper
         .addSourceLines(
             "FieldUsage.java",
             "class FieldUsage {",
-            "  public String foo;",
-            "  public String bar;",
-            "  public void doIt(String fooString, String barString) {}",
+            "  public String fooBarBaz;",
+            "  public String quxQuuCor;",
+            "  public void doIt(String fooBarBazString, String quxQuuCorString) {}",
             "  public void testMethod(FieldUsage usage) {",
-            "    // BUG: Diagnostic contains: 'doIt(usage.foo, usage.bar);'",
-            "    doIt(usage.bar, usage.foo);",
+            "    // BUG: Diagnostic contains: 'doIt(usage.fooBarBaz, usage.quxQuuCor);'",
+            "    doIt(usage.quxQuuCor, usage.fooBarBaz);",
             "  }",
             "}")
         .doTest();
   }
 
   @Test
-  public void methodCall() {
+  public void correctlySwapsMethodCallParameters() {
     compilationHelper
         .addSourceLines(
             "MethodCall.java",
             "class MethodCall {",
-            "  public String getFoo() {return \"\";}",
-            "  public String getBar() {return \"\";}",
-            "  public void doIt(String fooString, String barString) {}",
+            "  public String getFooBarBaz() {return \"\";}",
+            "  public String getQuxQuuCor() {return \"\";}",
+            "  public void doIt(String fooBarBazString, String quxQuuCorString) {}",
             "  public void testMethod(MethodCall usage) {",
-            "    // BUG: Diagnostic contains: 'doIt(usage.getFoo(), usage.getBar());'",
-            "    doIt(usage.getBar(), usage.getFoo());",
+            "    // BUG: Diagnostic contains: 'doIt(usage.getFooBarBaz(), usage.getQuxQuuCor());'",
+            "    doIt(usage.getQuxQuuCor(), usage.getFooBarBaz());",
             "  }",
             "}")
         .doTest();
@@ -349,6 +369,20 @@ public class ArgumentParameterSwapTest {
             "  public void testMethod(Object quxQuuCor) {",
             "    // BUG: Diagnostic contains: 'test(this, quxQuuCor);'",
             "    test(quxQuuCor,this);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void shouldNotSwapBecauseCandidateNotSignificantlyBetter() {
+    compilationHelper
+        .addSourceLines(
+            "DontSwap.java",
+            "class DoneSwap {",
+            "  public void doIt(String fooString,String barString) {}",
+            "  public void testMethod(String fooNotBest, String fooBetter) {",
+            "    doIt(fooNotBest,fooBetter);",
             "  }",
             "}")
         .doTest();

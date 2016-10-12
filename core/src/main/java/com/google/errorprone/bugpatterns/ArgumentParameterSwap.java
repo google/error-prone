@@ -42,7 +42,6 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.tree.JCTree;
 import java.util.Arrays;
-
 import java.util.Optional;
 import java.util.Set;
 
@@ -62,18 +61,32 @@ import java.util.Set;
 )
 public class ArgumentParameterSwap extends BugChecker
     implements NewClassTreeMatcher, MethodInvocationTreeMatcher {
-  /** Commonly overloaded parameter names which should not be considered for swapping into */
+
   private final Set<String> ignoreParams;
+
+  private final double swapHandicap;
 
   static final Set<Kind> VALID_KINDS =
       ImmutableSet.of(Kind.MEMBER_SELECT, Kind.IDENTIFIER, Kind.METHOD_INVOCATION);
 
   public ArgumentParameterSwap() {
-    this(ImmutableSet.of("index", "item", "key", "value"));
+    this(ImmutableSet.of("index", "item", "key", "value"), 0.667);
   }
 
-  public ArgumentParameterSwap(Set<String> ignoreParams) {
+  /**
+   * Constructor for overriding default behaviour
+   *
+   * @param ignoreParams identifies (formal) parameters which should be ignored. Arguments to these
+   *     parameters will not be changed. Use this to exclude commonly overloaded variable names such
+   *     as index
+   * @param swapHandicap gives the amount by which the similarity of an accepted replacement must
+   *     beat the similarity of the current parameter. A swapHandicap of 0.5 means that the
+   *     similarity score of the replacement must be 0.5 more than that of the current parameter in
+   *     order to be swapped in
+   */
+  public ArgumentParameterSwap(Set<String> ignoreParams, double swapHandicap) {
     this.ignoreParams = ignoreParams;
+    this.swapHandicap = swapHandicap;
   }
 
   @Override
@@ -124,7 +137,7 @@ public class ArgumentParameterSwap extends BugChecker
               .toArray(String[]::new);
 
       // Figure out which one is best. Use the existing if nothing else works.
-      int best = findBestMatch(relevantMatchNames, argName.get(), paramName);
+      int best = findBestMatch(relevantMatchNames, argName.get(), paramName, swapHandicap);
       suggestion[ndx] = best == -1 ? args[ndx].toString() : possibleMatches[best].toString();
     }
 
@@ -189,12 +202,15 @@ public class ArgumentParameterSwap extends BugChecker
    * it will always favor the original index, followed by the first highest index.
    */
   @VisibleForTesting
-  static int findBestMatch(String[] potentialMatches, String original, String param) {
-    double maxMatch = calculateSimilarity(original, param);
+  static int findBestMatch(
+      String[] potentialMatches, String original, String param, double swapHandicap) {
+    /* boost the similarity that we store for the original value by the swapHandicap. This means
+     * that any subsequent alternative must be better by the handicap value.
+     */
+    double maxMatch = calculateSimilarity(original, param) + swapHandicap;
+
     int maxNdx = -1;
     for (int ndx = 0; ndx < potentialMatches.length; ndx++) {
-      // TODO(andrewrice): Use a beta value and require that anything better than existing must be
-      // at least beta better than existing.
       double similarity = calculateSimilarity(potentialMatches[ndx], param);
       if (similarity > maxMatch) {
         maxNdx = ndx;
@@ -233,4 +249,3 @@ public class ArgumentParameterSwap extends BugChecker
         .collect(toSet());
   }
 }
-
