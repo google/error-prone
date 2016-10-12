@@ -308,6 +308,22 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
+  public void testMatches_effectivelyFinalCompileTimeConstantParam() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "test/CompileTimeConstantTestCase.java",
+            "package test;",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "public class CompileTimeConstantTestCase {",
+            "  public static void m(@CompileTimeConstant String y) { }",
+            "  public static void r(@CompileTimeConstant String x) { ",
+            "    m(x); ",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testMatches_nonFinalCompileTimeConstantParam() throws Exception {
     compilationHelper
         .addSourceLines(
@@ -317,6 +333,7 @@ public class CompileTimeConstantCheckerTest {
             "public class CompileTimeConstantTestCase {",
             "  public static void m(@CompileTimeConstant String y) { }",
             "  public static void r(@CompileTimeConstant String x) { ",
+            "    x = x + \"!\";",
             "    // BUG: Diagnostic contains: . Did you mean to make 'x' final?",
             "    m(x); ",
             "  }",

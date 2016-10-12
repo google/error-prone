@@ -123,10 +123,14 @@ public class CompileTimeConstantExpressionMatcherTest {
       "    String s1; s1 = s;",
       "  }",
       "  public void m2(@CompileTimeConstant String s) { ",
+      "    s = null;",
       "    String s2; s2 = s;",
       "  }",
       "  public void m3(final String s) { ",
       "    String s3; s3 = s;",
+      "  }",
+      "  public void m4(@CompileTimeConstant String s) { ",
+      "    String s4; s4 = s;",
       "  }",
       "}"
     };
@@ -134,6 +138,7 @@ public class CompileTimeConstantExpressionMatcherTest {
     expectedMatches.put("s1", true);
     expectedMatches.put("s2", false);
     expectedMatches.put("s3", false);
+    expectedMatches.put("s4", true);
     assertCompilerMatchesOnAssignment(expectedMatches, lines);
   }
 
@@ -149,11 +154,16 @@ public class CompileTimeConstantExpressionMatcherTest {
       "  }",
       "  public CompileTimeConstantExpressionMatcherTestCase(",
       "      @CompileTimeConstant String s, int foo) { ",
+      "    s = null;",
       "    String s2; s2 = s;",
       "  }",
       "  public CompileTimeConstantExpressionMatcherTestCase(",
       "      final String s, boolean foo) { ",
       "    String s3; s3 = s;",
+      "  }",
+      "  public CompileTimeConstantExpressionMatcherTestCase(",
+      "      @CompileTimeConstant String s, long foo) { ",
+      "    String s4; s4 = s;",
       "  }",
       "}"
     };
@@ -161,6 +171,7 @@ public class CompileTimeConstantExpressionMatcherTest {
     expectedMatches.put("s1", true);
     expectedMatches.put("s2", false);
     expectedMatches.put("s3", false);
+    expectedMatches.put("s4", true);
     assertCompilerMatchesOnAssignment(expectedMatches, lines);
   }
 

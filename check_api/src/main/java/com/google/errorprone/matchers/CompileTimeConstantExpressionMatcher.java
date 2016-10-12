@@ -29,13 +29,14 @@ import javax.lang.model.element.ElementKind;
 /**
  * A matcher for compile-time-constant expressions.
  *
- * <p>
- * For the purposes of this matcher, a compile-time constant expression is one of the following:
+ * <p>For the purposes of this matcher, a compile-time constant expression is one of the following:
+ *
  * <ol>
- * <li>Any expression for which the Java compiler can determine a constant value at compile time.
- * <li>The expression consisting of the literal {@code null}.
- * <li>An expression consisting of a single identifier, where the identifier is a formal method
- * parameter that is declared {@code final} and has the {@link CompileTimeConstant} annotation.
+ *   <li>Any expression for which the Java compiler can determine a constant value at compile time.
+ *   <li>The expression consisting of the literal {@code null}.
+ *   <li>An expression consisting of a single identifier, where the identifier is a formal method
+ *       parameter that is declared {@code final} and has the {@link CompileTimeConstant}
+ *       annotation.
  * </ol>
  */
 public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionTree> {
@@ -48,13 +49,13 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
       "com.google.common.annotations.CompileTimeConstant";
 
   @SuppressWarnings("unchecked")
-  private final Matcher<ExpressionTree> matcher = Matchers.anyOf(
-      // TODO(xtof): Consider utilising mdempksy's closed-over-addition matcher (perhaps extended
-      // for other arithmetic operations).
-      new ExpressionWithConstValueMatcher(),
-      Matchers.kindIs(Tree.Kind.NULL_LITERAL),
-      new FinalCompileTimeConstantParameterMatcher()
-      );
+  private final Matcher<ExpressionTree> matcher =
+      Matchers.anyOf(
+          // TODO(xtof): Consider utilising mdempsky's closed-over-addition matcher
+          // (perhaps extended for other arithmetic operations).
+          new ExpressionWithConstValueMatcher(),
+          Matchers.kindIs(Tree.Kind.NULL_LITERAL),
+          new FinalCompileTimeConstantParameterMatcher());
 
   @Override
   public boolean matches(ExpressionTree t, VisitorState state) {
@@ -77,9 +78,7 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
     }
   }
 
-  /**
-   * A matcher that matches a {@code @CompileTimeConstant final} parameter}.
-   */
+  /** A matcher that matches a {@code @CompileTimeConstant final} parameter}. */
   private static final class FinalCompileTimeConstantParameterMatcher
       implements Matcher<ExpressionTree> {
 
@@ -95,8 +94,9 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
       if (ownerKind != ElementKind.METHOD && ownerKind != ElementKind.CONSTRUCTOR) {
         return false;
       }
-      // Check that the symbol is declared {@code final}.
-      if ((varSymbol.flags() & Flags.FINAL) == 0) {
+      // Check that the symbol is final
+      if ((varSymbol.flags() & Flags.FINAL) != Flags.FINAL
+          && (varSymbol.flags() & Flags.EFFECTIVELY_FINAL) != Flags.EFFECTIVELY_FINAL) {
         return false;
       }
       // Check if the symbol has the @CompileTimeConstant annotation.
