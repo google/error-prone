@@ -307,7 +307,13 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
     runTest("LambdaImplicitType");
   }
   
+  @Test
   public void inferLambdaBodyType() throws IOException {
     runTest("InferLambdaBodyType");
+  }
+  
+  @Test
+  public void asVarargs() throws IOException {
+    runTest("AsVarargsTemplate");
   }
 }

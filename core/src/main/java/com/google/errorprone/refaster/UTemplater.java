@@ -28,6 +28,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.reflect.TypeToken;
 import com.google.errorprone.SubContext;
+import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.refaster.annotation.Matches;
 import com.google.errorprone.refaster.annotation.NotMatches;
@@ -352,6 +353,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
   private static final UStaticIdent CLAZZ;
   private static final UStaticIdent NEW_ARRAY;
   private static final UStaticIdent ENUM_VALUE_OF;
+  private static final UStaticIdent AS_VARARGS;
 
   static {
     UTypeVar tVar = UTypeVar.create("T");
@@ -377,6 +379,12 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
         Refaster.class.getCanonicalName(), "enumValueOf",
         UForAll.create(ImmutableList.of(eVar),
             UMethodType.create(eVar, UClassType.create(String.class.getCanonicalName()))));
+    AS_VARARGS =
+        UStaticIdent.create(
+            Refaster.class.getCanonicalName(),
+            "asVarargs",
+            UForAll.create(
+                ImmutableList.of(tVar), UMethodType.create(UArrayType.create(tVar), tVar)));
   }
 
   private static Tree getSingleExplicitTypeArgument(MethodInvocationTree tree) {
@@ -413,6 +421,10 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
       return UMethodInvocation.create(UMemberSelect.create(templateType(typeArg),
           "valueOf", UMethodType.create(template(((JCTree) typeArg).type),
               UClassType.create("java.lang.String"))), template(strArg));
+    } else if (anyMatch(AS_VARARGS, tree.getMethodSelect(), new Unifier(context))) {
+      ExpressionTree arg = Iterables.getOnlyElement(tree.getArguments());
+      checkArgument(ASTHelpers.hasAnnotation(arg, Repeated.class, new VisitorState(context)));
+      return template(arg);
     }
     Map<MethodSymbol, PlaceholderMethod> placeholderMethods = 
         context.get(RefasterRuleBuilderScanner.PLACEHOLDER_METHODS_KEY);
