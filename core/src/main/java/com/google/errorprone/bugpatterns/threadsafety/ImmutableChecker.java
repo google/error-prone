@@ -218,7 +218,6 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
     while (!Type.noType.equals(enclosing)) {
       // require the enclosing instance to be annotated @Immutable
       // don't worry about containerOf, this isn't an explicit type use
-      System.err.println(enclosing);
       if (getImmutableAnnotation(enclosing.tsym) == null) {
         return info.plus(
             String.format(
