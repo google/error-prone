@@ -330,4 +330,36 @@ public class DefaultCharsetTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void variableFixAtADistance() throws IOException {
+    refactoringTest()
+        .addInputLines(
+            "in/Test.java",
+            "import java.io.*;",
+            "class Test {",
+            "  FileWriter w = null;",
+            "  FileReader r = null;",
+            "  void f(File f) throws Exception {",
+            "    w = new FileWriter(f);",
+            "    r = new FileReader(f);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import static java.nio.charset.StandardCharsets.UTF_8;",
+            "import java.io.*;",
+            "import java.io.Reader;",
+            "import java.io.Writer;",
+            "import java.nio.file.Files;",
+            "class Test {",
+            "  Writer w = null;",
+            "  Reader r = null;",
+            "  void f(File f) throws Exception {",
+            "    w = Files.newBufferedWriter(f.toPath(), UTF_8);",
+            "    r = Files.newBufferedReader(f.toPath(), UTF_8);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

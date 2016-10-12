@@ -36,12 +36,14 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import java.io.BufferedReader;
@@ -235,15 +237,36 @@ public class DefaultCharset extends BugChecker
   private void variableTypeFix(
       SuggestedFix.Builder fix, VisitorState state, Class<?> original, Class<?> replacement) {
     Tree parent = state.getPath().getParentPath().getLeaf();
-    if (!(parent instanceof VariableTree)) {
-      return;
+    Symbol sym;
+    switch (parent.getKind()) {
+      case VARIABLE:
+        sym = ASTHelpers.getSymbol((VariableTree) parent);
+        break;
+      case ASSIGNMENT:
+        sym = ASTHelpers.getSymbol(((AssignmentTree) parent).getVariable());
+        break;
+      default:
+        return;
     }
-    Tree type = ((VariableTree) parent).getType();
     if (!ASTHelpers.isSameType(
-        ASTHelpers.getType(type), state.getTypeFromString(original.getCanonicalName()), state)) {
+        sym.type, state.getTypeFromString(original.getCanonicalName()), state)) {
       return;
     }
-    fix.replace(type, replacement.getSimpleName()).addImport(replacement.getCanonicalName());
+    state
+        .getPath()
+        .getCompilationUnit()
+        .accept(
+            new TreeScanner<Void, Void>() {
+              @Override
+              public Void visitVariable(VariableTree node, Void aVoid) {
+                if (sym.equals(ASTHelpers.getSymbol(node))) {
+                  fix.replace(node.getType(), replacement.getSimpleName())
+                      .addImport(replacement.getCanonicalName());
+                }
+                return null;
+              }
+            },
+            null);
   }
 
   private Description handleFileWriter(NewClassTree tree, VisitorState state) {
