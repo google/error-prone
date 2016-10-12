@@ -44,10 +44,6 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
   private static final String COMPILE_TIME_CONSTANT_ANNOTATION =
       CompileTimeConstant.class.getName();
 
-  // TODO(cushon): remove once the migration is done
-  private static final String GUAVA_COMPILE_TIME_CONSTANT_ANNOTATION =
-      "com.google.common.annotations.CompileTimeConstant";
-
   @SuppressWarnings("unchecked")
   private final Matcher<ExpressionTree> matcher =
       Matchers.anyOf(
@@ -114,9 +110,8 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
     return annotation != null && symbol.attribute(annotation) != null;
   }
 
-  // default visibility, since this is also used by CompileTimeConstantTypeAnnotationChecker.
+  // public since this is also used by CompileTimeConstantTypeAnnotationChecker.
   public static boolean hasCompileTimeConstantAnnotation(VisitorState state, Symbol symbol) {
-    return hasAttribute(symbol, COMPILE_TIME_CONSTANT_ANNOTATION, state)
-        || hasAttribute(symbol, GUAVA_COMPILE_TIME_CONSTANT_ANNOTATION, state);
+    return hasAttribute(symbol, COMPILE_TIME_CONSTANT_ANNOTATION, state);
   }
 }
