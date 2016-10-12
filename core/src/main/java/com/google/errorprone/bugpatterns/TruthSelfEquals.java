@@ -16,11 +16,13 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.Category.TRUTH;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.instanceMethod;
-
+import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
+import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -56,10 +58,10 @@ public class TruthSelfEquals extends BugChecker implements MethodInvocationTreeM
    * <p>Examples:
    *
    * <ul>
-   * <li> assertThat(a).isEqualTo(a)
-   * <li> assertThat(a).isNotEqualTo(a)
-   * <li> assertWithMessage(msg).that(a).isEqualTo(a)
-   * <li> assertWithMessage(msg).that(a).isNotEqualTo(a)
+   *   <li> assertThat(a).isEqualTo(a)
+   *   <li> assertThat(a).isNotEqualTo(a)
+   *   <li> assertWithMessage(msg).that(a).isEqualTo(a)
+   *   <li> assertWithMessage(msg).that(a).isNotEqualTo(a)
    * </ul>
    */
   private static final Matcher<MethodInvocationTree> EQUALS_MATCHER =
@@ -77,6 +79,11 @@ public class TruthSelfEquals extends BugChecker implements MethodInvocationTreeM
               .named("isNotEqualTo")
               .withParameters("java.lang.Object"),
           receiverSameAsParentsArgument());
+
+  private static final Matcher<ExpressionTree> ASSERT_THAT =
+      anyOf(
+          staticMethod().onClass("com.google.common.truth.Truth").named("assertThat"),
+          instanceMethod().onDescendantOf("com.google.common.truth.TestVerb").named("that"));
 
   @Override
   public Description matchMethodInvocation(
@@ -116,11 +123,18 @@ public class TruthSelfEquals extends BugChecker implements MethodInvocationTreeM
       @Override
       public boolean matches(MethodInvocationTree t, VisitorState state) {
         ExpressionTree rec = ASTHelpers.getReceiver(t);
-        if (rec != null && rec instanceof MethodInvocationTree) {
-          MethodInvocationTree m = (MethodInvocationTree) rec;
-          return ASTHelpers.sameVariable(m.getArguments().get(0), t.getArguments().get(0));
+        if (rec == null) {
+          return false;
         }
-        return false;
+        if (!ASSERT_THAT.matches(rec, state)) {
+          return false;
+        }
+        if (!ASTHelpers.sameVariable(
+            getOnlyElement(((MethodInvocationTree) rec).getArguments()),
+            getOnlyElement(t.getArguments()))) {
+          return false;
+        }
+        return true;
       }
     };
   }

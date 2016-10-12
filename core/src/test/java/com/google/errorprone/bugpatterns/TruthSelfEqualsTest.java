@@ -45,4 +45,24 @@ public class TruthSelfEqualsTest {
   public void testNegativeCase() throws Exception {
     compilationHelper.addSourceFile("TruthSelfEqualsNegativeCases.java").doTest();
   }
+
+  // regression test for b/32107126
+  @Test
+  public void customReceiver() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import com.google.common.truth.IntegerSubject;",
+            "import java.util.Arrays;",
+            "abstract class Test {",
+            "  abstract IntegerSubject f(int i);",
+            "  abstract IntegerSubject g();",
+            "  void test(int x) {",
+            "    f(x).isEqualTo(x);",
+            "    g().isEqualTo(x);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
