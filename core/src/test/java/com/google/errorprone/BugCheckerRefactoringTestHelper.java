@@ -21,7 +21,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;
 import static org.junit.Assert.fail;
 
-import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.io.CharStreams;
@@ -150,9 +149,18 @@ public class BugCheckerRefactoringTestHelper {
 
   private void runTestOnPair(JavaFileObject input, JavaFileObject output, TestMode testMode)
       throws IOException {
+    Context context = new Context();
+    JCCompilationUnit tree = doCompile(input, sources.keySet(), context);
+    JavaFileObject transformed = applyDiff(input, context, tree);
+    testMode.verifyMatch(transformed, output);
+    doCompile(output, sources.values(), new Context());
+  }
+
+  private JCCompilationUnit doCompile(
+      final JavaFileObject input, Iterable<JavaFileObject> files, Context context)
+      throws IOException {
     JavacTool tool = JavacTool.create();
     DiagnosticCollector<JavaFileObject> diagnosticsCollector = new DiagnosticCollector<>();
-    Context context = new Context();
     context.put(ErrorProneOptions.class, ErrorProneOptions.empty());
     JavacTaskImpl task =
         (JavacTaskImpl)
@@ -162,23 +170,22 @@ public class BugCheckerRefactoringTestHelper {
                 diagnosticsCollector,
                 options,
                 /*classes=*/ null,
-                ImmutableList.copyOf(sources.keySet()),
+                files,
                 context);
-    JCCompilationUnit tree = parseAndAnalyze(task, input);
+    Iterable<? extends CompilationUnitTree> trees = task.parse();
+    task.analyze();
+    JCCompilationUnit tree =
+        Iterables.getOnlyElement(
+            Iterables.filter(
+                Iterables.filter(trees, JCCompilationUnit.class),
+                compilationUnit -> compilationUnit.getSourceFile() == input));
     Iterable<Diagnostic<? extends JavaFileObject>> errorDiagnostics =
         Iterables.filter(
-            diagnosticsCollector.getDiagnostics(),
-            new Predicate<Diagnostic<? extends JavaFileObject>>() {
-              @Override
-              public boolean apply(Diagnostic<? extends JavaFileObject> input) {
-                return input.getKind() == Diagnostic.Kind.ERROR;
-              }
-            });
+            diagnosticsCollector.getDiagnostics(), d -> d.getKind() == Diagnostic.Kind.ERROR);
     if (!Iterables.isEmpty(errorDiagnostics)) {
       fail("compilation failed unexpectedly: " + errorDiagnostics);
     }
-    JavaFileObject transformed = applyDiff(input, context, tree);
-    testMode.verifyMatch(transformed, output);
+    return tree;
   }
 
   private JavaFileObject applyDiff(
@@ -207,20 +214,6 @@ public class BugCheckerRefactoringTestHelper {
                 .toString(),
             sourceFile.getSourceText());
     return transformed;
-  }
-
-  private JCCompilationUnit parseAndAnalyze(JavacTaskImpl task, final JavaFileObject input) {
-    Iterable<? extends CompilationUnitTree> trees = task.parse();
-    task.analyze();
-    return Iterables.getOnlyElement(
-        Iterables.filter(
-            Iterables.filter(trees, JCCompilationUnit.class),
-            new Predicate<JCCompilationUnit>() {
-              @Override
-              public boolean apply(JCCompilationUnit compilation) {
-                return compilation.getSourceFile() == input;
-              }
-            }));
   }
 
   private ErrorProneScannerTransformer transformer(BugChecker bugChecker) {
