@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9};
+var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -142,38 +142,45 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </td>
 </tr>
 <tr id="i1" class="rowColor">
+<td class="colFirst"><code>static &lt;T&gt;&nbsp;T[]</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/refaster/Refaster.html#asVarargs-T-">asVarargs</a></span>(T&nbsp;arg)</code>
+<div class="block">Indicates that Refaster should treat this <code>@Repeated</code> argument specifically as a varargs
+ argument.</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>static &lt;T&gt;&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;T&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/refaster/Refaster.html#clazz--">clazz</a></span>()</code>
 <div class="block">This is a placeholder for the expression T.class.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/refaster/Refaster.html#emitComment-java.lang.String-">emitComment</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;literal)</code>
 <div class="block">This is a special method to emit a one-line comment.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>static &lt;T&gt;&nbsp;T</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/refaster/Refaster.html#emitCommentBefore-java.lang.String-T-">emitCommentBefore</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;literal,
                  T&nbsp;expression)</code>
 <div class="block">This is a special method to emit a comment before an expression.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>static &lt;E extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Enum.html?is-external=true" title="class or interface in java.lang">Enum</a>&lt;E&gt;&gt;<br>E</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/refaster/Refaster.html#enumValueOf-java.lang.String-">enumValueOf</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;string)</code>
 <div class="block">This is a placeholder for the expression E.valueOf(string).</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>static &lt;T&gt;&nbsp;boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/refaster/Refaster.html#isInstance-java.lang.Object-">isInstance</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;o)</code>
 <div class="block">This is a placeholder for the Java instanceof operator that can be used with Refaster
  type variables.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>static &lt;T&gt;&nbsp;T[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/refaster/Refaster.html#newArray-int-">newArray</a></span>(int&nbsp;size)</code>
 <div class="block">This is a placeholder for <code>new T[size]</code>.</div>
@@ -201,6 +208,27 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a name="asVarargs-java.lang.Object-">
+<!--   -->
+</a><a name="asVarargs-T-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>asVarargs</h4>
+<pre>public static&nbsp;&lt;T&gt;&nbsp;T[]&nbsp;asVarargs(T&nbsp;arg)</pre>
+<div class="block">Indicates that Refaster should treat this <code>@Repeated</code> argument specifically as a varargs
+ argument.
+
+ <p>For example, you might write
+
+ <pre><code>
+     @BeforeTemplate void something(@Repeated T arg) {
+     Stream.of(asVarargs(arg)); // doesn't use the Stream.of(T) overload, but Stream.of(T...)
+    }
+ </code></pre></div>
+</li>
+</ul>
 <a name="anyOf-java.lang.Object:A-">
 <!--   -->
 </a><a name="anyOf-T...-">

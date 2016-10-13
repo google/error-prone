@@ -115,12 +115,6 @@
 <div class="block">The default type of diagnostic (error or warning) to emit when this check triggers.</div>
 </li>
 <li class="blockList">
-<h4>maturity</h4>
-<pre><a href="com/google/errorprone/BugPattern.MaturityLevel.html" title="enum in com.google.errorprone">BugPattern.MaturityLevel</a> maturity</pre>
-<div class="block">The maturity of this checker. Used to decide whether to enable this check. Corresponds to the
- <code>maturity</code> attribute from its <code>BugPattern</code>.</div>
-</li>
-<li class="blockList">
 <h4>linkUrl</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> linkUrl</pre>
 <div class="block">The link URL to display in the diagnostic message when this check triggers. Computed from the
@@ -240,6 +234,21 @@
 <!--   -->
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/ArgumentParameterSwap.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.ArgumentParameterSwap</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockList">
+<h4>ignoreParams</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">E</a>&gt; ignoreParams</pre>
+</li>
+<li class="blockListLast">
+<h4>swapHandicap</h4>
+<pre>double swapHandicap</pre>
+</li>
+</ul>
+</li>
+</ul>
 </li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.ArrayEquals">
 <!--   -->
