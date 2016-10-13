@@ -41,6 +41,7 @@ import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
+import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.DCTree.DCReference;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
@@ -55,7 +56,6 @@ import javax.annotation.Nullable;
   summary = "Unused imports",
   explanation = "This import is unused.",
   category = JDK,
-
   severity = SUGGESTION
 )
 public final class RemoveUnusedImports extends BugChecker implements CompilationUnitTreeMatcher {
@@ -70,7 +70,7 @@ public final class RemoveUnusedImports extends BugChecker implements Compilation
     }
 
     final Set<ImportTree> unusedImports = new HashSet<>(importedSymbols.keySet());
-    new TreeSymbolScanner(JavacTrees.instance(state.context))
+    new TreeSymbolScanner(JavacTrees.instance(state.context), state.getTypes())
         .scan(
             compilationUnitTree,
             new SymbolSink() {
@@ -84,7 +84,6 @@ public final class RemoveUnusedImports extends BugChecker implements Compilation
                 unusedImports.removeAll(importedSymbols.inverse().get(symbol));
               }
             });
-
 
     if (unusedImports.isEmpty()) {
       return NO_MATCH;
@@ -109,8 +108,10 @@ public final class RemoveUnusedImports extends BugChecker implements Compilation
   private static final class TreeSymbolScanner extends TreePathScanner<Void, SymbolSink> {
     final DocTreeSymbolScanner docTreeSymbolScanner;
     final JavacTrees trees;
+    final Types types;
 
-    private TreeSymbolScanner(JavacTrees trees) {
+    private TreeSymbolScanner(JavacTrees trees, Types types) {
+      this.types = types;
       this.docTreeSymbolScanner = new DocTreeSymbolScanner();
       this.trees = trees;
     }
@@ -180,7 +181,7 @@ public final class RemoveUnusedImports extends BugChecker implements Compilation
          * IntelliJ does. */
         if (symbolForReference instanceof MethodSymbol) {
           for (VarSymbol parameter : ((MethodSymbol) symbolForReference).getParameters()) {
-            sink.accept(parameter.type.tsym);
+            sink.accept(types.erasure(parameter.type).tsym);
           }
         }
         return null;

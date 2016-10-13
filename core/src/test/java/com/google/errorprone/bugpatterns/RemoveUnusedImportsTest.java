@@ -219,4 +219,26 @@ public class RemoveUnusedImportsTest {
             "public class Test {}")
         .doTest();
   }
+
+  @Test
+  public void parameterErasure() throws IOException {
+    testHelper
+        .addInputLines(
+            "in/A.java",
+            "import java.util.Collection;",
+            "public class A<T extends Collection> {",
+            "  public void foo(T t) {}",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "in/B.java",
+            "import java.util.Collection;",
+            "import java.util.List;",
+            "public class B extends A<List> {",
+            "  /** {@link #foo(Collection)} {@link #foo(List)} */",
+            "  public void foo(List t) {}",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }
