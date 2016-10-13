@@ -101,6 +101,7 @@ public class BugCheckerRefactoringTestHelper {
 
   private FixChooser fixChooser = FixChoosers.FIRST;
   private List<String> options = ImmutableList.of();
+  private boolean allowBreakingChanges = false;
 
   private BugCheckerRefactoringTestHelper(BugChecker refactoringBugChecker, Class<?> clazz) {
     this.refactoringBugChecker = refactoringBugChecker;
@@ -131,6 +132,12 @@ public class BugCheckerRefactoringTestHelper {
     return this;
   }
 
+  /** If set, fixes that produce output that doesn't compile are allowed. Off by default. */
+  public BugCheckerRefactoringTestHelper allowBreakingChanges() {
+    allowBreakingChanges = true;
+    return this;
+  }
+
   public void doTest() throws IOException {
     this.doTest(TestMode.AST_MATCH);
   }
@@ -153,7 +160,9 @@ public class BugCheckerRefactoringTestHelper {
     JCCompilationUnit tree = doCompile(input, sources.keySet(), context);
     JavaFileObject transformed = applyDiff(input, context, tree);
     testMode.verifyMatch(transformed, output);
-    doCompile(output, sources.values(), new Context());
+    if (!allowBreakingChanges) {
+      doCompile(output, sources.values(), new Context());
+    }
   }
 
   private JCCompilationUnit doCompile(
