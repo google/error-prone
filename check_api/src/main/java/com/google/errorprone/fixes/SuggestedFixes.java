@@ -119,7 +119,7 @@ public class SuggestedFixes {
 
   /** Add modifiers to the given class, method, or field declaration. */
   @Nullable
-  public static Fix addModifiers(Tree tree, VisitorState state, Modifier... modifiers) {
+  public static SuggestedFix addModifiers(Tree tree, VisitorState state, Modifier... modifiers) {
     ModifiersTree originalModifiers = getModifiers(tree);
     if (originalModifiers == null) {
       return null;
@@ -128,10 +128,19 @@ public class SuggestedFixes {
         Sets.difference(new TreeSet<>(Arrays.asList(modifiers)), originalModifiers.getFlags());
     if (originalModifiers.getFlags().isEmpty()) {
       int pos =
-          state.getEndPosition((JCTree) originalModifiers) != Position.NOPOS
-              ? state.getEndPosition((JCTree) originalModifiers) + 1
+          state.getEndPosition(originalModifiers) != Position.NOPOS
+              ? state.getEndPosition(originalModifiers) + 1
               : ((JCTree) tree).getStartPosition();
-      return SuggestedFix.replace(pos, pos, Joiner.on(' ').join(toAdd) + " ");
+      int base = ((JCTree) tree).getStartPosition();
+      java.util.Optional<Integer> insert =
+          state
+              .getTokensForNode(tree)
+              .stream()
+              .map(token -> token.pos() + base)
+              .filter(thisPos -> thisPos >= pos)
+              .findFirst();
+      int insertPos = insert.orElse(pos); // shouldn't ever be able to get to the else
+      return SuggestedFix.replace(insertPos, insertPos, Joiner.on(' ').join(toAdd) + " ");
     }
     // a map from modifiers to modifier position (or -1 if the modifier is being added)
     // modifiers are sorted in Google Java Style order
@@ -240,7 +249,7 @@ public class SuggestedFixes {
     fix.addImport(curr.toString());
     return Joiner.on('.').join(names);
   }
-  
+
   public static String qualifyType(
       final TreeMaker make, SuggestedFix.Builder fix, TypeMirror type) {
     return type.accept(
@@ -346,7 +355,7 @@ public class SuggestedFixes {
   public static Fix addMembers(
       ClassTree classTree, VisitorState state, String firstMember, String... otherMembers) {
     checkNotNull(classTree);
-    int classEndPosition = state.getEndPosition((JCTree) classTree);
+    int classEndPosition = state.getEndPosition(classTree);
     StringBuilder stringBuilder = new StringBuilder();
     for (String memberSnippet : Lists.asList(firstMember, otherMembers)) {
       stringBuilder.append("\n\n").append(memberSnippet);

@@ -23,6 +23,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import com.google.common.base.Verify;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.SeverityLevel;
@@ -30,6 +31,7 @@ import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.LiteralTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.matchers.Description;
@@ -39,6 +41,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.DocTreePath;
 import com.sun.source.util.DocTreePathScanner;
@@ -74,7 +77,8 @@ public class SuggestedFixesTest {
     summary = "Edits modifiers",
     severity = SeverityLevel.ERROR
   )
-  public static class EditModifiersChecker extends BugChecker implements VariableTreeMatcher {
+  public static class EditModifiersChecker extends BugChecker
+      implements VariableTreeMatcher, MethodTreeMatcher {
 
     static final ImmutableMap<String, Modifier> MODIFIERS_BY_NAME = createModifiersByName();
 
@@ -88,6 +92,15 @@ public class SuggestedFixesTest {
 
     @Override
     public Description matchVariable(VariableTree tree, VisitorState state) {
+      return editModifiers(tree, state);
+    }
+
+    @Override
+    public Description matchMethod(MethodTree tree, VisitorState state) {
+      return editModifiers(tree, state);
+    }
+
+    private Description editModifiers(Tree tree, VisitorState state) {
       EditModifiers editModifiers =
           ASTHelpers.getAnnotation(
               ASTHelpers.findEnclosingNode(state.getPath(), ClassTree.class), EditModifiers.class);
@@ -106,6 +119,34 @@ public class SuggestedFixesTest {
       }
       return describeMatch(tree, fix);
     }
+  }
+
+  @Test
+  public void addAtBeginningOfLine() throws IOException {
+    BugCheckerRefactoringTestHelper.newInstance(new EditModifiersChecker(), getClass())
+        .addInputLines(
+            "in/Test.java",
+            "import javax.annotation.Nullable;",
+            String.format("import %s;", EditModifiers.class.getCanonicalName()),
+            "@EditModifiers(value=\"final\", kind=EditModifiers.EditKind.ADD)",
+            "class Test {",
+            "  @Nullable",
+            "  int foo() {",
+            "    return 10;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import javax.annotation.Nullable;",
+            String.format("import %s;", EditModifiers.class.getCanonicalName()),
+            "@EditModifiers(value=\"final\", kind=EditModifiers.EditKind.ADD)",
+            "class Test {",
+            "  @Nullable",
+            "  final int foo() {",
+            "    return 10;",
+            "  }",
+            "}")
+        .doTest(TestMode.TEXT_MATCH);
   }
 
   @Test
@@ -186,7 +227,7 @@ public class SuggestedFixesTest {
 
   @BugPattern(
     category = Category.ONE_OFF,
-    
+
     name = "CastReturn",
     severity = SeverityLevel.ERROR,
     summary = "Adds casts to returned expressions"
@@ -210,7 +251,7 @@ public class SuggestedFixesTest {
 
   @BugPattern(
     category = Category.ONE_OFF,
-    
+
     name = "CastReturn",
     severity = SeverityLevel.ERROR,
     summary = "Adds casts to returned expressions"
