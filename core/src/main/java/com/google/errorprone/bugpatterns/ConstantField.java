@@ -79,7 +79,8 @@ public class ConstantField extends BugChecker implements VariableTreeMatcher {
       return Description.NO_MATCH;
     }
     if (state.getTypes().unboxedTypeOrType(type).isPrimitive()
-        || ASTHelpers.isSameType(type, state.getSymtab().stringType, state)) {
+        || ASTHelpers.isSameType(type, state.getSymtab().stringType, state)
+        || type.tsym.getKind() == ElementKind.ENUM) {
       String constName = CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, name);
       return buildDescription(tree)
           .setMessage(

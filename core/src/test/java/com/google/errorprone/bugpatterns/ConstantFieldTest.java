@@ -156,4 +156,17 @@ public class ConstantFieldTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void positiveEnum() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import javax.lang.model.element.ElementKind;",
+            "interface Test {",
+            "  // BUG: Diagnostic contains: 'ElementKind KIND = ElementKind.FIELD;'",
+            "  ElementKind Kind = ElementKind.FIELD;",
+            "}")
+        .doTest();
+  }
 }

@@ -373,7 +373,9 @@ public class SuggestedFixes {
   public static Fix renameVariable(
       VariableTree tree, final String replacement, VisitorState state) {
     String name = tree.getName().toString();
-    int pos = ((JCTree) tree).getStartPosition() + state.getSourceForNode(tree).indexOf(name);
+    int typeLength = state.getSourceForNode(tree.getType()).length();
+    int pos =
+        ((JCTree) tree).getStartPosition() + state.getSourceForNode(tree).indexOf(name, typeLength);
     final SuggestedFix.Builder fix =
         SuggestedFix.builder().replace(pos, pos + name.length(), replacement);
     final Symbol.VarSymbol sym = getSymbol(tree);
