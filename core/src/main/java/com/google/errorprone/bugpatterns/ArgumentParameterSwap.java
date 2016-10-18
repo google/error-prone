@@ -92,6 +92,9 @@ public class ArgumentParameterSwap extends BugChecker
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
     MethodSymbol symbol = ASTHelpers.getSymbol(tree);
+    if (symbol == null) {
+      return Description.NO_MATCH;
+    }
     return findSwaps(
         tree.getArguments().stream().toArray(ExpressionTree[]::new),
         symbol.getParameters().stream().toArray(VarSymbol[]::new),
@@ -102,6 +105,9 @@ public class ArgumentParameterSwap extends BugChecker
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     MethodSymbol symbol = ASTHelpers.getSymbol(tree);
+    if (symbol == null) {
+      return Description.NO_MATCH;
+    }
     return findSwaps(
         tree.getArguments().stream().toArray(ExpressionTree[]::new),
         symbol.getParameters().stream().toArray(VarSymbol[]::new),
