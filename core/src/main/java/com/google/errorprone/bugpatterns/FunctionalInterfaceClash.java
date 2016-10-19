@@ -29,20 +29,16 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.Signatures;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
-import com.sun.tools.javac.code.BoundKind;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
-import com.sun.tools.javac.code.Types.DefaultTypeVisitor;
-import com.sun.tools.javac.code.Types.SignatureGenerator;
 import com.sun.tools.javac.util.List;
-import com.sun.tools.javac.util.Name;
-import com.sun.tools.javac.util.Names;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -90,10 +86,12 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
       clash.removeIf(m -> msym.overrides(m, origin, types, false));
       if (!clash.isEmpty()) {
         String message =
-            String.format(
-                "When passing lambda arguments to this function, callers will need a cast to"
-                    + " disambiguate with: %s",
-                clash.stream().map(m -> pretty(origin, m)).collect(joining("\n    ")));
+            "When passing lambda arguments to this function, callers will need a cast to"
+                + " disambiguate with: "
+                + clash
+                    .stream()
+                    .map(m -> Signatures.prettyMethodSignature(origin, m))
+                    .collect(joining("\n    "));
         state.reportMatch(buildDescription(member).setMessage(message).build());
       }
     }
@@ -118,7 +116,7 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
   private String functionalInterfaceSignature(VisitorState state, Type type) {
     Types types = state.getTypes();
     if (!types.isFunctionalInterface(type)) {
-      return SigGen.descriptor(type, state);
+      return Signatures.descriptor(type, types);
     }
     Type descriptorType = types.findDescriptorType(type);
     List<Type> fiparams = descriptorType.getParameterTypes();
@@ -127,115 +125,9 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
     // types in general. The except is nullary functional interfaces, since the lambda parameters
     // will never be implicitly typed.
     String result =
-        fiparams.isEmpty() ? SigGen.descriptor(descriptorType.getReturnType(), state) : "_";
+        fiparams.isEmpty() ? Signatures.descriptor(descriptorType.getReturnType(), types) : "_";
     return String.format(
         "(%s)->%s",
-        fiparams.stream().map(t -> SigGen.descriptor(t, state)).collect(joining(",")), result);
+        fiparams.stream().map(t -> Signatures.descriptor(t, types)).collect(joining(",")), result);
   }
-
-  /** Generate binary descriptors. */
-  // TODO(cushon): find a better home for this, share it with the api checker
-  static class SigGen extends SignatureGenerator {
-
-    static String classDescriptor(Type type, VisitorState state) {
-      SigGen sig = new SigGen(state);
-      sig.assembleClassSig(state.getTypes().erasure(type));
-      return sig.toName().toString();
-    }
-
-    static String descriptor(Type type, VisitorState state) {
-      SigGen sig = new SigGen(state);
-      sig.assembleSig(state.getTypes().erasure(type));
-      return sig.toName().toString();
-    }
-
-    private final com.sun.tools.javac.util.ByteBuffer buffer =
-        new com.sun.tools.javac.util.ByteBuffer();
-    private final VisitorState state;
-
-    protected SigGen(VisitorState state) {
-      super(state.getTypes());
-      this.state = state;
-    }
-
-    @Override
-    protected void append(char ch) {
-      buffer.appendByte(ch);
-    }
-
-    @Override
-    protected void append(byte[] ba) {
-      buffer.appendBytes(ba);
-    }
-
-    @Override
-    protected void append(Name name) {
-      buffer.appendName(name);
-    }
-
-    Name toName() {
-      return buffer.toName(Names.instance(state.context));
-    }
-  }
-
-  /**
-   * Pretty-prints a method signature using simple names for declared types, and omitting formal
-   * type parameters and the return type since they do not affect overload resolution.
-   */
-  private String pretty(ClassSymbol origin, MethodSymbol m) {
-    StringBuilder sb = new StringBuilder();
-    if (!m.owner.equals(origin)) {
-      sb.append(m.owner.getSimpleName()).append('.');
-    }
-    sb.append(m.isConstructor() ? origin.getSimpleName() : m.getSimpleName()).append('(');
-    sb.append(
-        m.getParameters()
-            .stream()
-            .map(v -> v.type.accept(PRETTY_TYPE_VISITOR, null))
-            .collect(joining(", ")));
-    sb.append(')');
-    return sb.toString();
-  }
-
-  private static final Type.Visitor<String, Void> PRETTY_TYPE_VISITOR =
-      new DefaultTypeVisitor<String, Void>() {
-        @Override
-        public String visitWildcardType(Type.WildcardType t, Void aVoid) {
-          StringBuilder sb = new StringBuilder();
-          sb.append(t.kind);
-          if (t.kind != BoundKind.UNBOUND) {
-            sb.append(t.type.accept(this, null));
-          }
-          return sb.toString();
-        }
-
-        @Override
-        public String visitClassType(Type.ClassType t, Void s) {
-          StringBuilder buf = new StringBuilder();
-          buf.append(t.tsym.getSimpleName());
-          if (t.getTypeArguments().nonEmpty()) {
-            buf.append('<');
-            boolean first = true;
-            for (Type ta : t.getTypeArguments()) {
-              if (!first) {
-                buf.append(", ");
-              }
-              first = false;
-              buf.append(ta.accept(this, null));
-            }
-            buf.append(">");
-          }
-          return buf.toString();
-        }
-
-        @Override
-        public String visitCapturedType(Type.CapturedType t, Void s) {
-          return t.wildcard.accept(this, null);
-        }
-
-        @Override
-        public String visitType(Type t, Void s) {
-          return t.toString();
-        }
-      };
 }

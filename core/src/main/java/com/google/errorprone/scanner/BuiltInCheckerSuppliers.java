@@ -20,6 +20,7 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugCheckerInfo;
+import com.google.errorprone.bugpatterns.AmbiguousMethodReference;
 import com.google.errorprone.bugpatterns.ArgumentParameterSwap;
 import com.google.errorprone.bugpatterns.ArrayEquals;
 import com.google.errorprone.bugpatterns.ArrayHashCode;
@@ -304,6 +305,7 @@ public class BuiltInCheckerSuppliers {
   /** A list of all checks with severity WARNING that are on by default. */
   public static final ImmutableSet<BugCheckerInfo> ENABLED_WARNINGS =
       getSuppliers(
+          AmbiguousMethodReference.class,
           BadAnnotationImplementation.class,
           BadComparable.class,
           BoxedPrimitiveConstructor.class,
