@@ -159,7 +159,7 @@ __[NonCanonicalStaticImport](bugpattern/NonCanonicalStaticImport)__<br>
 Static import of type uses non-canonical name
 
 __[NonFinalCompileTimeConstant](bugpattern/NonFinalCompileTimeConstant)__<br>
-@CompileTimeConstant parameters should be final
+@CompileTimeConstant parameters should be final or effectively final
 
 __[OptionalEquality](bugpattern/OptionalEquality)__<br>
 Comparison using reference equality instead of value equality
@@ -237,6 +237,9 @@ __[UnusedAnonymousClass](bugpattern/UnusedAnonymousClass)__<br>
 Instance created but never used
 
 ## On by default : WARNING
+
+__[AmbiguousMethodReference](bugpattern/AmbiguousMethodReference)__<br>
+Method reference is ambiguous
 
 __[BadAnnotationImplementation](bugpattern/BadAnnotationImplementation)__<br>
 Classes that implement Annotation must override equals and hashCode. Consider using AutoAnnotation instead of implementing Annotation by hand.
