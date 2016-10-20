@@ -43,10 +43,7 @@ import javax.lang.model.element.ElementKind;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
   name = "MissingCasesInEnumSwitch",
-  summary = "Enum switch statement is missing cases",
-  explanation =
-      "Switches on enums should either handle all possible values of the enum, or"
-          + " have an explicit default case",
+  summary = "The Google Java Style Guide requires switch statements to have an explicit default",
   category = JDK,
   severity = WARNING
 )
