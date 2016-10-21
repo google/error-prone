@@ -305,7 +305,7 @@ __[JUnitAmbiguousTestClass](bugpattern/JUnitAmbiguousTestClass)__<br>
 Test class inherits from JUnit 3&#39;s TestCase but has JUnit 4 @Test annotations.
 
 __[MissingCasesInEnumSwitch](bugpattern/MissingCasesInEnumSwitch)__<br>
-Enum switch statement is missing cases
+The Google Java Style Guide requires switch statements to have an explicit default
 
 __[MissingFail](bugpattern/MissingFail)__<br>
 Not calling fail() when expecting an exception masks bugs
