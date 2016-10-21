@@ -169,4 +169,17 @@ public class ConstantFieldTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void cppStyle() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import javax.lang.model.element.ElementKind;",
+            "interface Test {",
+            "  // BUG: Diagnostic contains: int MAX_FOOS = 42",
+            "  static final int kMaxFoos = 42;",
+            "}")
+        .doTest();
+  }
 }
