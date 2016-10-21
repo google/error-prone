@@ -16,6 +16,7 @@
 
 package com.google.errorprone.apply;
 
+import com.google.common.base.CharMatcher;
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ComparisonChain;
@@ -90,13 +91,18 @@ public class ImportStatements {
 
     // convert list of JCImports to list of strings
     importStrings = new TreeSet<>(IMPORT_ORDERING);
-    importStrings.addAll(Lists.transform(importTrees, new Function<JCImport, String>() {
-      @Override
-      public String apply(JCImport input) {
-        String importExpr = input.toString();
-        return importExpr.substring(0, importExpr.length() - 2); // snip trailing ";\n"
-      }
-    }));
+    importStrings.addAll(
+        Lists.transform(
+            importTrees,
+            new Function<JCImport, String>() {
+              @Override
+              public String apply(JCImport input) {
+                String importExpr = input.toString();
+                return CharMatcher.whitespace()
+                    .or(CharMatcher.is(';'))
+                    .trimTrailingFrom(importExpr);
+              }
+            }));
   }
 
   /**
