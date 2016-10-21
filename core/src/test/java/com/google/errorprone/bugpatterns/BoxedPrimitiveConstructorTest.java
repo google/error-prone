@@ -282,4 +282,20 @@ public class BoxedPrimitiveConstructorTest {
         .setArgs(Arrays.asList("-cp", libJar.toString()))
         .doTest();
   }
+
+  @Test
+  public void autoboxWidening() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f(float f) {",
+            "    // BUG: Diagnostic contains: (double) f;",
+            "    Double d = new Double(f);",
+            "    // BUG: Diagnostic contains: (short) (byte) 0;",
+            "    Short s = new Short((byte) 0);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

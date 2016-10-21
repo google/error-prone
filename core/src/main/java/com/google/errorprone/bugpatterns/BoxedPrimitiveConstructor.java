@@ -21,6 +21,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.toType;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.common.primitives.Longs;
 import com.google.errorprone.BugPattern;
@@ -33,10 +34,16 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.AssignmentTree;
+import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
@@ -104,14 +111,11 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
     JCTree.JCExpression arg = (JCTree.JCExpression) getOnlyElement(tree.getArguments());
     Type argType = getType(arg);
     if (autoboxFix && argType.isPrimitive()) {
-      // e.g.: new Double(3) => 3
-      String optionalCast =
-          doubleAndFloatStatus(state, type, argType)
-                  == DoubleAndFloatStatus.PRIMITIVE_DOUBLE_INTO_FLOAT
-              ? "(float) "
-              : "";
       return SuggestedFix.builder()
-          .replace(((JCTree) tree).getStartPosition(), arg.getStartPosition(), optionalCast)
+          .replace(
+              ((JCTree) tree).getStartPosition(),
+              arg.getStartPosition(),
+              maybeCast(state, type, argType))
           .replace(state.getEndPosition(arg), state.getEndPosition(tree), "")
           .build();
     }
@@ -201,6 +205,46 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
         .replace(((JCTree) tree).getStartPosition(), arg.getStartPosition(), prefixToArg)
         .postfixWith(arg, suffix)
         .build();
+  }
+
+  private String maybeCast(VisitorState state, Type type, Type argType) {
+    if (doubleAndFloatStatus(state, type, argType)
+        == DoubleAndFloatStatus.PRIMITIVE_DOUBLE_INTO_FLOAT) {
+      // e.g.: new Float(3.0d) => (float) 3.0d
+      return "(float) ";
+    }
+    // primitive widening conversions can't be combined with autoboxing, so add a
+    // explicit widening cast unless we're sure the expression doesn't get autoboxed
+    Tree parent = state.getPath().getParentPath().getLeaf();
+    // TODO(cushon): de-dupe with UnnecessaryCast
+    Type targetType =
+        parent.accept(
+            new TreeScanner<Type, Void>() {
+              @Override
+              public Type visitAssignment(AssignmentTree node, Void unused) {
+                return getType(node.getVariable());
+              }
+
+              @Override
+              public Type visitCompoundAssignment(CompoundAssignmentTree node, Void unused) {
+                return getType(node.getVariable());
+              }
+
+              @Override
+              public Type visitReturn(ReturnTree node, Void unused) {
+                return getType(state.findEnclosing(MethodTree.class).getReturnType());
+              }
+
+              @Override
+              public Type visitVariable(VariableTree node, Void unused) {
+                return getType(node.getType());
+              }
+            },
+            null);
+    if (!isSameType(type, argType, state) && !isSameType(targetType, type, state)) {
+      return String.format("(%s) ", type);
+    }
+    return "";
   }
 
   private enum DoubleAndFloatStatus {
