@@ -220,8 +220,9 @@ public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
         int last = nTargets - 1;
         ImmutableList<JCStatement> remainingInlined =
             inlinedStatements.subList(last, nInlined);
-        fix.replace(targetStatements.get(last), CharMatcher.is('\n').trimTrailingFrom(
-            printStatements(context, remainingInlined)));
+        fix.replace(
+            targetStatements.get(last),
+            CharMatcher.whitespace().trimTrailingFrom(printStatements(context, remainingInlined)));
       }
     } catch (CouldNotResolveImportException e) {
       logger.log(SEVERE, "Failure to resolve import in replacement", e);
