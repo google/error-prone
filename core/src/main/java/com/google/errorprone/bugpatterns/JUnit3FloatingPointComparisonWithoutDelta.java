@@ -51,7 +51,8 @@ import javax.lang.model.type.TypeKind;
   // First sentence copied directly from JUnit 4.
   explanation =
       "Use assertEquals(expected, actual, delta) to compare floating-point numbers. "
-          + "This call to assertEquals() will either fail or not compile in JUnit 4.",
+          + "This call to assertEquals() will either fail or not compile in JUnit 4. "
+          + "Use assertEquals(expected, actual, 0.0) if the delta must be 0.",
   category = JUNIT,
   severity = WARNING
 )
