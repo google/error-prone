@@ -216,7 +216,7 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
       List<? extends StatementTree> tryStatements = tree.getBlock().getStatements();
       StatementTree lastTryStatement = tryStatements.get(tryStatements.size() - 1);
 
-      String failCall = String.format("%nfail(\"Expected %s\");", exceptionToString(tree));
+      String failCall = String.format("\nfail(\"Expected %s\");", exceptionToString(tree));
       SuggestedFix.Builder fixBuilder = SuggestedFix.builder()
           .postfixWith(lastTryStatement, failCall);
 

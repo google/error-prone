@@ -194,7 +194,7 @@ public class ImportStatements {
     if (!hasExistingImports) {
       return replacementString;
     } else {
-      return replacementString.substring(0, replacementString.length() - 1);    // trim last newline
+      return CharMatcher.whitespace().trimTrailingFrom(replacementString); // trim last newline
     }
   }
 

@@ -73,10 +73,11 @@ public abstract class AbstractUTreeTest {
 
   public void assertInlines(String expression, UStatement template) {
     try {
+      // javac's pretty-printer uses the platform line terminator
       assertEquals(
           String.format("Expected template %s to inline to expression %s", template, expression),
           expression,
-          Joiner.on('\n').join(template.inlineStatements(inliner)));
+          Joiner.on(System.lineSeparator()).join(template.inlineStatements(inliner)));
     } catch (CouldNotResolveImportException e) {
       throw new RuntimeException(e);
     }

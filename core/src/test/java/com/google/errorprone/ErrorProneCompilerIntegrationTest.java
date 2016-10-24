@@ -49,6 +49,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.main.Main.Result;
+import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.file.Files;
@@ -613,7 +614,8 @@ public class ErrorProneCompilerIntegrationTest {
     // no plugins
     {
       List<String> args =
-          ImmutableList.of(source.toAbsolutePath().toString(), "-processorpath", ":");
+          ImmutableList.of(
+              source.toAbsolutePath().toString(), "-processorpath", File.pathSeparator);
       StringWriter out = new StringWriter();
       Result result =
           ErrorProneCompiler.compile(args.toArray(new String[0]), new PrintWriter(out, true));

@@ -75,12 +75,15 @@ public class UIfTest extends AbstractUTreeTest {
     bind(new UFreeIdent.Key("x"), parseExpression("x"));
     bind(new UFreeIdent.Key("y"), parseExpression("\"foo\""));
     bind(new UFreeIdent.Key("z"), parseExpression("\"bar\""));
-    assertInlines(Joiner.on('\n').join(
-        "if (true) {",
-        "    x = \"foo\";",
-        "} else {",
-        "    x = \"bar\";",
-        "}"), ifTree);
+    assertInlines(
+        Joiner.on(System.lineSeparator())
+            .join(
+                "if (true) {", //
+                "    x = \"foo\";",
+                "} else {",
+                "    x = \"bar\";",
+                "}"),
+        ifTree);
   }
   
   @Test
@@ -93,9 +96,12 @@ public class UIfTest extends AbstractUTreeTest {
     bind(new UFreeIdent.Key("cond"), parseExpression("true"));
     bind(new UFreeIdent.Key("x"), parseExpression("x"));
     bind(new UFreeIdent.Key("y"), parseExpression("\"foo\""));
-    assertInlines(Joiner.on('\n').join(
-        "if (true) {",
-        "    x = \"foo\";",
-        "}"), ifTree);
+    assertInlines(
+        Joiner.on(System.lineSeparator())
+            .join(
+                "if (true) {", //
+                "    x = \"foo\";",
+                "}"),
+        ifTree);
   }
 }
