@@ -133,6 +133,7 @@ import com.google.errorprone.bugpatterns.StringEquality;
 import com.google.errorprone.bugpatterns.SuppressWarningsDeprecated;
 import com.google.errorprone.bugpatterns.ThrowIfUncheckedKnownChecked;
 import com.google.errorprone.bugpatterns.ThrowsUncheckedException;
+import com.google.errorprone.bugpatterns.TruthConstantAsserts;
 import com.google.errorprone.bugpatterns.TruthSelfEquals;
 import com.google.errorprone.bugpatterns.TryFailThrowable;
 import com.google.errorprone.bugpatterns.TypeParameterQualifier;
@@ -344,6 +345,7 @@ public class BuiltInCheckerSuppliers {
           RequiredModifiersChecker.class,
           StaticGuardedByInstance.class,
           SynchronizeOnNonFinalField.class,
+          TruthConstantAsserts.class,
           TruthSelfEquals.class,
           TypeParameterUnusedInFormals.class,
           UnsynchronizedOverridesSynchronized.class,
