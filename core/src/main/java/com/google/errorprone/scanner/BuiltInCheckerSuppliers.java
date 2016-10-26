@@ -105,6 +105,7 @@ import com.google.errorprone.bugpatterns.NumericEquality;
 import com.google.errorprone.bugpatterns.OperatorPrecedence;
 import com.google.errorprone.bugpatterns.OptionalEquality;
 import com.google.errorprone.bugpatterns.Overrides;
+import com.google.errorprone.bugpatterns.PackageInfo;
 import com.google.errorprone.bugpatterns.PackageLocation;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNull;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNullPrimitive;
@@ -280,6 +281,7 @@ public class BuiltInCheckerSuppliers {
           OverlappingQualifierAndScopeAnnotation.class,
           Overrides.class,
           OverridesJavaxInjectableMethod.class,
+          PackageInfo.class,
           PreconditionsCheckNotNull.class,
           PreconditionsCheckNotNullPrimitive.class,
           ProtoFieldNullComparison.class,
