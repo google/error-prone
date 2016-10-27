@@ -17,11 +17,9 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChooser;
+import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.fixes.Fix;
 import java.io.IOException;
-import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -101,13 +99,7 @@ public class ConstantFieldTest {
             "    System.err.println(constantCase);",
             "  }",
             "}")
-        .setFixChooser(
-            new FixChooser() {
-              @Override
-              public Fix choose(List<Fix> fixes) {
-                return fixes.get(1);
-              }
-            })
+        .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
 

@@ -86,11 +86,30 @@ public class BugCheckerRefactoringTestHelper {
     Fix choose(List<Fix> fixes);
   }
 
-  enum FixChoosers implements FixChooser {
+  /** Predefined FixChoosers for selecting a fix by its position in the list */
+  public enum FixChoosers implements FixChooser {
     FIRST {
       @Override
       public Fix choose(List<Fix> fixes) {
         return fixes.get(0);
+      }
+    },
+    SECOND {
+      @Override
+      public Fix choose(List<Fix> fixes) {
+        return fixes.get(1);
+      }
+    },
+    THIRD {
+      @Override
+      public Fix choose(List<Fix> fixes) {
+        return fixes.get(2);
+      }
+    },
+    FOURTH {
+      @Override
+      public Fix choose(List<Fix> fixes) {
+        return fixes.get(3);
       }
     }
   }

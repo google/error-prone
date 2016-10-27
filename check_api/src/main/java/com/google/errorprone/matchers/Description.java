@@ -28,6 +28,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.fixes.Fix;
 import com.sun.source.tree.Tree;
+import java.util.List;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 
@@ -195,6 +196,20 @@ public class Description {
       return this;
     }
 
+    /**
+     * Add each fix in order.
+     *
+     * @param fixes a list of suggested fixes for this problem
+     * @throws IllegalArgumentException if {@code fixes} or any of its elements are {@code null}
+     */
+    public Builder addAllFixes(List<? extends Fix> fixes) {
+      checkArgument(fixes != null, "fixes must not be null");
+      for (Fix fix : fixes) {
+        addFix(fix);
+      }
+      return this;
+    }
+    
     /**
      * Set a custom error message for this {@code Description}.  The custom message will be used
      * instead of the summary field as the text for the diagnostic message.
