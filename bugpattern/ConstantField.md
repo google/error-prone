@@ -21,5 +21,9 @@ When naming a field with `CONSTANT_CASE`, make sure the field is `static`,
 `final`, and of immutable type. If the field doesn't meet those criteria, use
 `lowerCamelCase` instead.
 
+The check recognizes all primitive, `String`, and `enum` fields as deeply
+immutable. It is possible to create mutable enums, but doing so is
+strongly discouraged.
+
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("ConstantField")` annotation to the enclosing element.

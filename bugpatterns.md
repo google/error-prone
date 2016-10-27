@@ -173,6 +173,9 @@ Varargs doesn&#39;t agree for overridden method
 __[OverridesJavaxInjectableMethod](bugpattern/OverridesJavaxInjectableMethod)__<br>
 This method is not annotated with @Inject, but it overrides a method that is  annotated with @javax.inject.Inject. The method will not be Injected.
 
+__[PackageInfo](bugpattern/PackageInfo)__<br>
+Declaring types inside package-info.java files is very bad form
+
 __[PreconditionsCheckNotNull](bugpattern/PreconditionsCheckNotNull)__<br>
 Literal passed as first argument to Preconditions.checkNotNull() can never be null
 
@@ -354,6 +357,9 @@ Writes to static fields should not be guarded by instance locks
 
 __[SynchronizeOnNonFinalField](bugpattern/SynchronizeOnNonFinalField)__<br>
 Synchronizing on non-final fields is not safe: if the field is ever updated, different threads may end up locking on different objects.
+
+__[TruthConstantAsserts](bugpattern/TruthConstantAsserts)__<br>
+Truth Library assert is called on a constant.
 
 __[TruthSelfEquals](bugpattern/TruthSelfEquals)__<br>
 An object is tested for equality to itself using Truth Libraries.
