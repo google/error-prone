@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -48,12 +49,14 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.Iterator;
@@ -148,6 +151,22 @@ public class DefaultCharset extends BugChecker
               .named("newWriter")
               .withParameters("java.lang.String"));
 
+  private static final Matcher<ExpressionTree> PRINT_WRITER =
+      anyOf(
+          constructor().forClass(PrintWriter.class.getName()).withParameters(File.class.getName()),
+          constructor()
+              .forClass(PrintWriter.class.getName())
+              .withParameters(String.class.getName()));
+
+  private static final Matcher<ExpressionTree> PRINT_WRITER_OUTPUTSTREAM =
+      anyOf(
+          constructor()
+              .forClass(PrintWriter.class.getName())
+              .withParameters(OutputStream.class.getName()),
+          constructor()
+              .forClass(PrintWriter.class.getName())
+              .withParameters(OutputStream.class.getName(), "boolean"));
+
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (!state.isAndroidCompatible() && INVOCATION.matches(tree, state)) {
@@ -172,6 +191,12 @@ public class DefaultCharset extends BugChecker
       if (FILE_WRITER.matches(tree, state)) {
         return handleFileWriter(tree, state);
       }
+      if (PRINT_WRITER.matches(tree, state)) {
+        return handlePrintWriter(tree, state);
+      }
+      if (PRINT_WRITER_OUTPUTSTREAM.matches(tree, state)) {
+        return handlePrintWriterOutputStream(tree, state);
+      }
     }
     return Description.NO_MATCH;
   }
@@ -190,7 +215,7 @@ public class DefaultCharset extends BugChecker
   }
 
   private Description handleFileReader(NewClassTree tree, VisitorState state) {
-    Tree arg = Iterables.getOnlyElement(tree.getArguments());
+    Tree arg = getOnlyElement(tree.getArguments());
     Tree parent = state.getPath().getParentPath().getLeaf();
     Tree toReplace = BUFFERED_READER.matches(parent, state) ? parent : tree;
     Description.Builder description = buildDescription(tree);
@@ -407,4 +432,33 @@ public class DefaultCharset extends BugChecker
     charset.addImport(fix, state);
     return fix.build();
   }
+
+  private Description handlePrintWriter(NewClassTree tree, VisitorState state) {
+    Description.Builder description = buildDescription(tree);
+    for (CharsetFix charsetFix : CharsetFix.values()) {
+      SuggestedFix.Builder fix =
+          SuggestedFix.builder()
+              .postfixWith(
+                  getOnlyElement(tree.getArguments()),
+                  String.format(", %s.name()", charsetFix.replacement()));
+      charsetFix.addImport(fix, state);
+      description.addFix(fix.build());
+    }
+    return description.build();
+  }
+
+  private Description handlePrintWriterOutputStream(NewClassTree tree, VisitorState state) {
+    Tree outputStream = tree.getArguments().get(0);
+    Description.Builder description = buildDescription(tree);
+    for (CharsetFix charsetFix : CharsetFix.values()) {
+      SuggestedFix.Builder fix =
+          SuggestedFix.builder()
+              .prefixWith(outputStream, "new BufferedWriter(new OutputStreamWriter(")
+              .postfixWith(outputStream, String.format(", %s))", charsetFix.replacement()));
+      charsetFix.addImport(fix, state);
+      description.addFix(fix.build());
+    }
+    return description.build();
+  }
 }
+

@@ -362,4 +362,35 @@ public class DefaultCharsetTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void printWriter() throws IOException {
+    refactoringTest()
+        .addInputLines(
+            "in/Test.java",
+            "import java.io.*;",
+            "class Test {",
+            "  void f() throws Exception {",
+            "    PrintWriter pw1 = new PrintWriter(System.err, true);",
+            "    PrintWriter pw2 = new PrintWriter(System.err);",
+            "    PrintWriter pw3 = new PrintWriter(\"test\");",
+            "    PrintWriter pw4 = new PrintWriter(new File(\"test\"));",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import static java.nio.charset.StandardCharsets.UTF_8;",
+            "import java.io.*;",
+            "class Test {",
+            "  void f() throws Exception {",
+            "    PrintWriter pw1 = new PrintWriter(",
+            "        new BufferedWriter(new OutputStreamWriter(System.err, UTF_8)), true);",
+            "    PrintWriter pw2 = new PrintWriter(",
+            "        new BufferedWriter(new OutputStreamWriter(System.err, UTF_8)));",
+            "    PrintWriter pw3 = new PrintWriter(\"test\", UTF_8.name());",
+            "    PrintWriter pw4 = new PrintWriter(new File(\"test\"), UTF_8.name());",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
