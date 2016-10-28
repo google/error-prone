@@ -68,6 +68,7 @@ import com.google.errorprone.bugpatterns.HashtableContains;
 import com.google.errorprone.bugpatterns.IdentityBinaryExpression;
 import com.google.errorprone.bugpatterns.IncompatibleModifiersChecker;
 import com.google.errorprone.bugpatterns.InfiniteRecursion;
+import com.google.errorprone.bugpatterns.InputStreamSlowMultibyteRead;
 import com.google.errorprone.bugpatterns.InsecureCipherMode;
 import com.google.errorprone.bugpatterns.InvalidPatternSyntax;
 import com.google.errorprone.bugpatterns.IsInstanceOfClass;
@@ -327,6 +328,7 @@ public class BuiltInCheckerSuppliers {
           GetClassOnEnum.class,
           IncompatibleModifiersChecker.class,
           InjectOnConstructorOfAbstractClass.class,
+          InputStreamSlowMultibyteRead.class,
           IterableAndIterator.class,
           JUnit3FloatingPointComparisonWithoutDelta.class,
           JUnitAmbiguousTestClass.class,

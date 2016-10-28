@@ -56,6 +56,8 @@ import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.Type.TypeVar;
 import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.code.Types;
+import com.sun.tools.javac.comp.Enter;
+import com.sun.tools.javac.comp.Resolve;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
@@ -67,6 +69,8 @@ import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import com.sun.tools.javac.tree.JCTree.JCPackageDecl;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.Filter;
+import com.sun.tools.javac.util.Log;
+import com.sun.tools.javac.util.Log.DeferredDiagnosticHandler;
 import com.sun.tools.javac.util.Name;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -855,6 +859,59 @@ public class ASTHelpers {
       return jarEntryFileName;
     } catch (IOException e) {
       return null;
+    }
+  }
+
+  /**
+   * Given a Type ({@code base}), find the method named {@code name}, with the appropriate {@code
+   * argTypes} and {@code tyargTypes} and return its MethodSymbol.
+   *
+   * <p>Ex:
+   *
+   * <pre>{@code
+   * .....
+   * class A {}
+   * class B {
+   *   public int hashCode() { return 42; }
+   * }
+   * .....
+   *
+   * MethodSymbol meth =  ASTHelpers.resolveExistingMethod(
+   *    state,
+   *    symbol,
+   *    state.getName("hashCode"),
+   *    ImmutableList.<Type>of(),
+   *    ImmutableList.<Type>of());
+   * </pre>
+   *
+   * {@code meth} could be different MethodSymbol's depending on whether {@code symbol}
+   * represented {@code B} or {@code A}. (B's hashCode method or Object#hashCode).
+   *
+   * <p>Do NOT call this method unless the method you're looking for is guaranteed to exist. A fatal
+   * error will result otherwise.
+   *
+   * @return a MethodSymbol representing the method symbol resolved from the context of this type
+   */
+  public static MethodSymbol resolveExistingMethod(
+      VisitorState state,
+      TypeSymbol base,
+      Name name,
+      Iterable<Type> argTypes,
+      Iterable<Type> tyargTypes) {
+    Resolve resolve = Resolve.instance(state.context);
+    Enter enter = Enter.instance(state.context);
+    Log log = Log.instance(state.context);
+    DeferredDiagnosticHandler handler = new DeferredDiagnosticHandler(log);
+    try {
+      return resolve.resolveInternalMethod(
+          /*pos*/ null,
+          enter.getEnv(base),
+          base.type,
+          name,
+          com.sun.tools.javac.util.List.from(argTypes),
+          com.sun.tools.javac.util.List.from(tyargTypes));
+    } finally {
+      log.popDiagnosticHandler(handler);
     }
   }
 }

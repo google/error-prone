@@ -42,11 +42,6 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.comp.Enter;
-import com.sun.tools.javac.comp.Resolve;
-import com.sun.tools.javac.util.Log;
-import com.sun.tools.javac.util.Log.DeferredDiagnosticHandler;
-import com.sun.tools.javac.util.Name;
 import javax.lang.model.element.ElementKind;
 
 /**
@@ -92,7 +87,7 @@ public class EqualsHashCode extends BugChecker implements ClassTreeMatcher {
     }
 
     MethodSymbol hashCodeSym =
-        resolveMethod(
+        ASTHelpers.resolveExistingMethod(
             state,
             symbol,
             state.getName("hashCode"),
@@ -105,26 +100,4 @@ public class EqualsHashCode extends BugChecker implements ClassTreeMatcher {
     return Description.NO_MATCH;
   }
 
-  public static MethodSymbol resolveMethod(
-      VisitorState state,
-      TypeSymbol base,
-      Name name,
-      Iterable<Type> argTypes,
-      Iterable<Type> tyargTypes) {
-    Resolve resolve = Resolve.instance(state.context);
-    Enter enter = Enter.instance(state.context);
-    Log log = Log.instance(state.context);
-    DeferredDiagnosticHandler handler = new DeferredDiagnosticHandler(log);
-    try {
-      return resolve.resolveInternalMethod(
-          /*pos*/ null,
-          enter.getEnv(base),
-          base.type,
-          name,
-          com.sun.tools.javac.util.List.from(argTypes),
-          com.sun.tools.javac.util.List.from(tyargTypes));
-    } finally {
-      log.popDiagnosticHandler(handler);
-    }
-  }
 }
