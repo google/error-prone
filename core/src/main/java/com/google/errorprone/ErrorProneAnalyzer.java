@@ -23,7 +23,6 @@ import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.base.Throwables;
 import com.google.errorprone.scanner.ErrorProneScannerTransformer;
-import com.google.errorprone.scanner.Scanner;
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
@@ -164,25 +163,5 @@ public class ErrorProneAnalyzer implements TaskListener {
       }
     }
     return true;
-  }
-
-  /**
-   * Temporary shim to avoid breaking Bazel, which expects the API to look like {@code
-   * ErrorProneAnalyzer.create(scanner).init(options, context);}.
-   */
-  // TODO(cushon): delete this
-  public static Builder create(Scanner scanner) {
-    final CodeTransformer transformer = ErrorProneScannerTransformer.create(scanner);
-    return new Builder() {
-      @Override
-      public ErrorProneAnalyzer init(Context context, ErrorProneOptions errorProneOptions) {
-        return new ErrorProneAnalyzer(transformer, errorProneOptions, context);
-      }
-    };
-  }
-
-  /** Temporary intermediate class for building {@link ErrorProneAnalyzer}s, see {@link #create}. */
-  public interface Builder {
-    ErrorProneAnalyzer init(Context context, ErrorProneOptions errorProneOptions);
   }
 }
