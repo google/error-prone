@@ -38,6 +38,7 @@
 
   <modules>
     <module>check_api</module>
+    <module>test_helpers</module>
     <module>core</module>
     <module>annotation</module>
     <module>annotations</module>
