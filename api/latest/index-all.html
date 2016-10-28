@@ -136,6 +136,10 @@
 <dd>
 <div class="block">Add all imports in a collection to this list of imports.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Description.Builder.html#addAllFixes-java.util.List-">addAllFixes(List&lt;? extends Fix&gt;)</a></span> - Method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></dt>
+<dd>
+<div class="block">Add each fix in order.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Description.Builder.html#addFix-com.google.errorprone.fixes.Fix-">addFix(Fix)</a></span> - Method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></dt>
 <dd>
 <div class="block">Adds a suggested fix for this <code>Description</code>.</div>
@@ -164,6 +168,8 @@
 <dd>
 <div class="block">Add modifiers to the given class, method, or field declaration.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/BranchedSuggestedFixes.Builder.html#addOption-com.google.errorprone.fixes.SuggestedFix-">addOption(SuggestedFix)</a></span> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/BranchedSuggestedFixes.Builder.html" title="class in com.google.errorprone.fixes">BranchedSuggestedFixes.Builder</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFix.Builder.html#addStaticImport-java.lang.String-">addStaticImport(String)</a></span> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></dt>
 <dd>
 <div class="block">Add a static import statement as part of this SuggestedFix.</div>
@@ -596,6 +602,15 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BoxedPrimitiveConstructor.html#BoxedPrimitiveConstructor--">BoxedPrimitiveConstructor()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BoxedPrimitiveConstructor.html" title="class in com.google.errorprone.bugpatterns">BoxedPrimitiveConstructor</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/BranchedSuggestedFixes.html" title="class in com.google.errorprone.fixes"><span class="typeNameLink">BranchedSuggestedFixes</span></a> - Class in <a href="com/google/errorprone/fixes/package-summary.html">com.google.errorprone.fixes</a></dt>
+<dd>
+<div class="block">Helper class for accumulating a branching tree of alternative fixes designed to help build as set
+ of potential fixes with different options in them.</div>
+</dd>
+<dt><a href="com/google/errorprone/fixes/BranchedSuggestedFixes.Builder.html" title="class in com.google.errorprone.fixes"><span class="typeNameLink">BranchedSuggestedFixes.Builder</span></a> - Class in <a href="com/google/errorprone/fixes/package-summary.html">com.google.errorprone.fixes</a></dt>
+<dd>
+<div class="block">Builder class for BranchedSuggestedFixes</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">BugChecker</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">A base class for implementing bug checkers.</div>
@@ -743,6 +758,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneCompiler.Builder.html#build--">build()</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneCompiler.Builder.html" title="class in com.google.errorprone">ErrorProneCompiler.Builder</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/BranchedSuggestedFixes.Builder.html#build--">build()</a></span> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/BranchedSuggestedFixes.Builder.html" title="class in com.google.errorprone.fixes">BranchedSuggestedFixes.Builder</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFix.Builder.html#build--">build()</a></span> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Description.Builder.html#build--">build()</a></span> - Method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></dt>
@@ -774,6 +791,10 @@
 <div class="block"><span class="deprecationComment">prefer <a href="com/google/errorprone/ErrorProneCompiler.html#builder--"><code>ErrorProneCompiler.builder()</code></a></span></div>
 </div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/BranchedSuggestedFixes.html#builder--">builder()</a></span> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/BranchedSuggestedFixes.html" title="class in com.google.errorprone.fixes">BranchedSuggestedFixes</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/BranchedSuggestedFixes.Builder.html#Builder--">Builder()</a></span> - Constructor for class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/BranchedSuggestedFixes.Builder.html" title="class in com.google.errorprone.fixes">BranchedSuggestedFixes.Builder</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFix.html#builder--">builder()</a></span> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFix.Builder.html#Builder--">Builder()</a></span> - Constructor for class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></dt>
@@ -1199,10 +1220,6 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnnotationInfo.html#create-java.lang.String-">create(String)</a></span> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ImmutableAnnotationInfo</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneAnalyzer.html#create-com.google.errorprone.scanner.Scanner-">create(Scanner)</a></span> - Static method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneAnalyzer.html" title="class in com.google.errorprone">ErrorProneAnalyzer</a></dt>
-<dd>
-<div class="block">Temporary shim to avoid breaking Bazel, which expects the API to look like <code>ErrorProneAnalyzer.create(scanner).init(options, context);</code>.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/ExampleInfo.html#create-com.google.errorprone.ExampleInfo.ExampleKind-java.lang.String-java.lang.String-java.lang.String-">create(ExampleInfo.ExampleKind, String, String, String)</a></span> - Static method in class com.google.errorprone.<a href="com/google/errorprone/ExampleInfo.html" title="class in com.google.errorprone">ExampleInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/Replacement.html#create-int-int-java.lang.String-">create(int, int, String)</a></span> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/Replacement.html" title="class in com.google.errorprone.fixes">Replacement</a></dt>
@@ -1712,10 +1729,6 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneAnalyzer.html#ErrorProneAnalyzer-com.google.errorprone.CodeTransformer-com.google.errorprone.ErrorProneOptions-com.sun.tools.javac.util.Context-">ErrorProneAnalyzer(CodeTransformer, ErrorProneOptions, Context)</a></span> - Constructor for class com.google.errorprone.<a href="com/google/errorprone/ErrorProneAnalyzer.html" title="class in com.google.errorprone">ErrorProneAnalyzer</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/ErrorProneAnalyzer.Builder.html" title="interface in com.google.errorprone"><span class="typeNameLink">ErrorProneAnalyzer.Builder</span></a> - Interface in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
-<dd>
-<div class="block">Temporary intermediate class for building <a href="com/google/errorprone/ErrorProneAnalyzer.html" title="class in com.google.errorprone"><code>ErrorProneAnalyzer</code></a>s, see <a href="com/google/errorprone/ErrorProneAnalyzer.html#create-com.google.errorprone.scanner.Scanner-"><code>ErrorProneAnalyzer.create(com.google.errorprone.scanner.Scanner)</code></a>.</div>
-</dd>
 <dt><a href="com/google/errorprone/ErrorProneAntCompilerAdapter.html" title="class in com.google.errorprone"><span class="typeNameLink">ErrorProneAntCompilerAdapter</span></a> - Class in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
 <dd>
 <div class="block">Adapts the error-prone compiler to be used in an Ant build.</div>
@@ -1933,8 +1946,6 @@
 <div class="block">Finds all methods in any superclass of <code>startClass</code> with a certain <code>name</code> that
  match the given <code>predicate</code>.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/DataFlow.html#findPathFromEnclosingNodeToTopLevel-com.sun.source.util.TreePath-java.lang.Class-">findPathFromEnclosingNodeToTopLevel(TreePath, Class&lt;T&gt;)</a></span> - Static method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/DataFlow.html" title="class in com.google.errorprone.dataflow">DataFlow</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/VisitorState.html#findPathToEnclosing-java.lang.Class...-">findPathToEnclosing(Class&lt;? extends Tree&gt;...)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
 <dd>
 <div class="block">Returns the <code>TreePath</code> to the nearest tree node of one of the given types.</div>
@@ -2237,6 +2248,8 @@
 <dd>
 <div class="block">Extract the filename from the URI, with special handling for jar files.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/BranchedSuggestedFixes.html#getFixes--">getFixes()</a></span> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/BranchedSuggestedFixes.html" title="class in com.google.errorprone.fixes">BranchedSuggestedFixes</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/apply/SourceFile.html#getFragmentByChars-int-int-">getFragmentByChars(int, int)</a></span> - Method in class com.google.errorprone.apply.<a href="com/google/errorprone/apply/SourceFile.html" title="class in com.google.errorprone.apply">SourceFile</a></dt>
 <dd>
 <div class="block">Returns a fragment of the source code as a string.</div>
@@ -2847,8 +2860,6 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/SuppressionHelper.SuppressionInfo.html#inGeneratedCode">inGeneratedCode</a></span> - Variable in class com.google.errorprone.<a href="com/google/errorprone/SuppressionHelper.SuppressionInfo.html" title="class in com.google.errorprone">SuppressionHelper.SuppressionInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/DocGenProcessor.html#init-javax.annotation.processing.ProcessingEnvironment-">init(ProcessingEnvironment)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/DocGenProcessor.html" title="class in com.google.errorprone">DocGenProcessor</a></dt>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneAnalyzer.Builder.html#init-com.sun.tools.javac.util.Context-com.google.errorprone.ErrorProneOptions-">init(Context, ErrorProneOptions)</a></span> - Method in interface com.google.errorprone.<a href="com/google/errorprone/ErrorProneAnalyzer.Builder.html" title="interface in com.google.errorprone">ErrorProneAnalyzer.Builder</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/inject/InjectedConstructorAnnotations.html" title="class in com.google.errorprone.bugpatterns.inject"><span class="typeNameLink">InjectedConstructorAnnotations</span></a> - Class in <a href="com/google/errorprone/bugpatterns/inject/package-summary.html">com.google.errorprone.bugpatterns.inject</a></dt>
 <dd>
 <div class="block">A checker for injected constructors with @Inject(optional=true) or binding annotations.</div>
@@ -4151,11 +4162,6 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Enclosing.Method.html#Method-com.google.errorprone.matchers.Matcher-">Method(Matcher&lt;MethodTree&gt;)</a></span> - Constructor for class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Enclosing.Method.html" title="class in com.google.errorprone.matchers">Enclosing.Method</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/DataFlow.html#methodDataflow-com.sun.source.util.TreePath-com.sun.tools.javac.util.Context-T-">methodDataflow(TreePath, Context, T)</a></span> - Static method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/DataFlow.html" title="class in com.google.errorprone.dataflow">DataFlow</a></dt>
-<dd>
-<div class="block">Run the <code>transfer</code> dataflow analysis over the method which is the leaf of the
- <code>methodPath</code>.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Matchers.html#methodHasArity-int-">methodHasArity(int)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
 <div class="block">Matches if the method accepts the given number of arguments.</div>
@@ -5291,6 +5297,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/AdjustedPosition.html#startPositionAdjustment">startPositionAdjustment</a></span> - Variable in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AdjustedPosition.html" title="class in com.google.errorprone.fixes">AdjustedPosition</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/BranchedSuggestedFixes.Builder.html#startWith-com.google.errorprone.fixes.SuggestedFix-">startWith(SuggestedFix)</a></span> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/BranchedSuggestedFixes.Builder.html" title="class in com.google.errorprone.fixes">BranchedSuggestedFixes.Builder</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/StaticAccessedFromInstance.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">StaticAccessedFromInstance</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/StaticAccessedFromInstance.html#StaticAccessedFromInstance--">StaticAccessedFromInstance()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StaticAccessedFromInstance.html" title="class in com.google.errorprone.bugpatterns">StaticAccessedFromInstance</a></dt>
@@ -5475,6 +5483,8 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UTemplater.html#templateType-com.sun.source.tree.Tree-">templateType(Tree)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTemplater.html" title="class in com.google.errorprone.refaster">UTemplater</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/Template.html#templateTypeVariables--">templateTypeVariables()</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Template.html" title="class in com.google.errorprone.refaster">Template</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/BranchedSuggestedFixes.Builder.html#then--">then()</a></span> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/BranchedSuggestedFixes.Builder.html" title="class in com.google.errorprone.fixes">BranchedSuggestedFixes.Builder</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/Choice.html#thenChoose-com.google.common.base.Function-">thenChoose(Function&lt;? super T, Choice&lt;R&gt;&gt;)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a></dt>
 <dd>
