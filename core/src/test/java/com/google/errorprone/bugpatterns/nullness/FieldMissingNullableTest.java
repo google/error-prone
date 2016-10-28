@@ -42,6 +42,22 @@ public class FieldMissingNullableTest {
   }
 
   @Test
+  public void testDefiniteNullAssignment() throws Exception {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "public class FieldMissingNullTest {",
+            "  private String message = \"hello\";",
+            "  public void setMessage(String message) {",
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    this.message = message != null ? null : message;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testMaybeNullAssignment() throws Exception {
     createCompilationTestHelper()
         .addSourceLines(
@@ -171,6 +187,24 @@ public class FieldMissingNullableTest {
         .doTest();
   }
 
+
+  @Test
+  public void testMaybeNullAssignmentInLambda() throws Exception {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/NullableParameterTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import javax.annotation.Nullable;",
+            "public class NullableParameterTest {",
+            "  private String message = \"hello\";",
+            "  public void setMessageIfPresent(java.util.Optional<String> message) {",
+            // Note this code is bogus: s is guaranteed non-null...
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    message.ifPresent(s -> { this.message = s != null ? s : null; });",
+            "  }",
+            "}")
+        .doTest();
+  }
   @Test
   public void testNegativeCases_alreadyAnnotated() throws Exception {
     createCompilationTestHelper()

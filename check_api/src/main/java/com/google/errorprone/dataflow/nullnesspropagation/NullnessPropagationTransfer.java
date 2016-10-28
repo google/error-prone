@@ -77,6 +77,7 @@ import org.checkerframework.dataflow.cfg.node.ArrayCreationNode;
 import org.checkerframework.dataflow.cfg.node.AssignmentNode;
 import org.checkerframework.dataflow.cfg.node.EqualToNode;
 import org.checkerframework.dataflow.cfg.node.FieldAccessNode;
+import org.checkerframework.dataflow.cfg.node.FunctionalInterfaceNode;
 import org.checkerframework.dataflow.cfg.node.InstanceOfNode;
 import org.checkerframework.dataflow.cfg.node.LocalVariableNode;
 import org.checkerframework.dataflow.cfg.node.MethodInvocationNode;
@@ -488,6 +489,13 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   Nullness visitArrayCreation(
       ArrayCreationNode node, SubNodeValues inputs, LocalVariableUpdates updates) {
     return NONNULL;
+  }
+
+  @Override
+  Nullness visitMemberReference(
+      FunctionalInterfaceNode node, SubNodeValues inputs, LocalVariableUpdates updates) {
+    // TODO(kmb,cpovirk): Mark object member reference receivers as non-null
+    return NONNULL; // lambdas and member references are never null :)
   }
 
   @Override

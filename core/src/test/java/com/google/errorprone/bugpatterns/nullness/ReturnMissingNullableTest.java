@@ -41,7 +41,22 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testMaybeNullLiteralReturn() throws Exception {
+  public void testDefiniteNullReturn() throws Exception {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "public class LiteralNullReturnTest {",
+            "  public String getMessage(String message) {",
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    return message != null ? null : message;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testMaybeNullReturn() throws Exception {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -300,6 +315,21 @@ public class ReturnMissingNullableTest {
             "public class MissingNullableReturnTest {",
             "  public static final java.util.function.Function<String, String> IDENTITY =",
             "      (s -> { return s != null ? s : null; });",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testNegativeCases_returnLambda() throws Exception {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/MissingNullableReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import javax.annotation.Nullable;",
+            "public class MissingNullableReturnTest {",
+            "  public static java.util.function.Function<String, String> identity() {",
+            "    return (s -> s);",
+            "  }",
             "}")
         .doTest();
   }
