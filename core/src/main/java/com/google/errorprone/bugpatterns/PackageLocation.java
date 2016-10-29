@@ -35,7 +35,6 @@ import com.sun.source.tree.CompilationUnitTree;
   summary = "Package names should match the directory they are declared in",
   category = JDK,
   severity = SUGGESTION,
-
   suppressibility = CUSTOM_ANNOTATION,
   documentSuppression = false,
   customSuppressionAnnotations = SuppressPackageLocation.class
