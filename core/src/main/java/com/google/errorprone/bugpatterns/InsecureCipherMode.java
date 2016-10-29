@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
@@ -32,8 +33,8 @@ import com.sun.tools.javac.tree.JCTree;
 
 /** @author avenet@google.com (Arnaud J. Venet) */
 @BugPattern(
-  name = "InsecureCipherMode",
-  summary = "Cipher.getInstance() is invoked using either the default settings or ECB mode",
+  name = "InsecureCryptoUsage",
+  summary = "A standard cryptographic operation is used in a mode that is prone to vulnerabilities",
   category = JDK,
   documentSuppression = false,
   severity = ERROR
@@ -41,23 +42,24 @@ import com.sun.tools.javac.tree.JCTree;
 public class InsecureCipherMode extends BugChecker implements MethodInvocationTreeMatcher {
   private static final String MESSAGE_BASE = "Insecure usage of Cipher.getInstance(): ";
 
-  private static final Matcher<ExpressionTree> GETINSTANCE_MATCHER =
+  private static final Matcher<ExpressionTree> CIPHER_GETINSTANCE_MATCHER =
       staticMethod().onClass("javax.crypto.Cipher").named("getInstance");
+
+  private static final Matcher<ExpressionTree> KEY_STRUCTURE_GETINSTANCE_MATCHER =
+      anyOf(
+          staticMethod().onClass("java.security.KeyPairGenerator").named("getInstance"),
+          staticMethod().onClass("java.security.KeyFactory").named("getInstance"),
+          staticMethod().onClass("javax.crypto.KeyAgreement").named("getInstance"));
 
 
   private Description buildErrorMessage(MethodInvocationTree tree, String explanation) {
     Description.Builder description = buildDescription(tree);
-    description.setMessage(MESSAGE_BASE + explanation + ".");
+    String message = MESSAGE_BASE + explanation + ".";
+    description.setMessage(message);
     return description.build();
   }
 
-  @Override
-  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (!GETINSTANCE_MATCHER.matches(tree, state)) {
-      return Description.NO_MATCH;
-    }
-
-
+  private Description identifyEcbVulnerability(MethodInvocationTree tree) {
     // We analyze the first argument of all the overloads of Cipher.getInstance().
     Object argument = ASTHelpers.constValue((JCTree) tree.getArguments().get(0));
     if (argument == null) {
@@ -97,6 +99,47 @@ public class InsecureCipherMode extends BugChecker implements MethodInvocationTr
       // Existing implementations of IES-based algorithms use ECB under the hood and must also be
       // flagged as vulnerable. See b/30424901 for a more detailed rationale.
       return buildErrorMessage(tree, "IES-based algorithms use ECB mode and are insecure");
+    }
+
+    return Description.NO_MATCH;
+  }
+
+  private Description identifyDiffieHellmanAndDsaVulnerabilities(MethodInvocationTree tree) {
+    // The first argument holds a string specifying the algorithm used for the operation
+    // considered.
+    Object argument = ASTHelpers.constValue((JCTree) tree.getArguments().get(0));
+    if (argument == null) {
+      // We flag call sites where the algorithm specification string is dynamically computed.
+      return buildErrorMessage(
+          tree, "the algorithm specification is not a compile-time constant expression");
+    }
+    // Otherwise, we know that the algorithm is specified by a string literal.
+    String algorithm = (String) argument;
+
+    if (algorithm.matches("DH")) {
+      // Most implementations of Diffie-Hellman on prime fields have vulnerabilities. See b/31574444
+      // for a more detailed rationale.
+      return buildErrorMessage(tree, "using Diffie-Hellman on prime fields is insecure");
+    }
+
+    if (algorithm.matches("DSA")) {
+      // Some crypto libraries may accept invalid DSA signatures in specific configurations (see
+      // b/30262692 for details).
+      return buildErrorMessage(tree, "using DSA is insecure");
+    }
+
+    return Description.NO_MATCH;
+  }
+
+  @Override
+  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+
+    if (CIPHER_GETINSTANCE_MATCHER.matches(tree, state)) {
+      return identifyEcbVulnerability(tree);
+    }
+
+    if (KEY_STRUCTURE_GETINSTANCE_MATCHER.matches(tree, state)) {
+      return identifyDiffieHellmanAndDsaVulnerabilities(tree);
     }
 
     return Description.NO_MATCH;

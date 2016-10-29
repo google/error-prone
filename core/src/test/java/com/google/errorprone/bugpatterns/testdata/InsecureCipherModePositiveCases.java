@@ -16,9 +16,12 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
+import java.security.KeyFactory;
+import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import javax.crypto.Cipher;
+import javax.crypto.KeyAgreement;
 import javax.crypto.NoSuchPaddingException;
 
 /**
@@ -194,6 +197,33 @@ public class InsecureCipherModePositiveCases {
     } catch (NoSuchAlgorithmException e) {
       // We don't handle any exception as this code is not meant to be executed.
     } catch (NoSuchPaddingException e) {
+      // We don't handle any exception as this code is not meant to be executed.
+    }
+  }
+
+  interface StringProvider {
+    String get();
+  }
+
+  public void keyOperations(StringProvider provider) {
+    KeyFactory keyFactory;
+    KeyAgreement keyAgreement;
+    KeyPairGenerator keyPairGenerator;
+    final String dh = "DH";
+    try {
+      // BUG: Diagnostic contains: compile-time constant
+      keyFactory = KeyFactory.getInstance(provider.get());
+      // BUG: Diagnostic contains: Diffie-Hellman on prime fields
+      keyFactory = KeyFactory.getInstance(dh);
+      // BUG: Diagnostic contains: DSA
+      keyAgreement = KeyAgreement.getInstance("DSA");
+      // BUG: Diagnostic contains: compile-time constant
+      keyAgreement = KeyAgreement.getInstance(provider.get());
+      // BUG: Diagnostic contains: Diffie-Hellman on prime fields
+      keyPairGenerator = KeyPairGenerator.getInstance(dh);
+      // BUG: Diagnostic contains: compile-time constant
+      keyPairGenerator = KeyPairGenerator.getInstance(provider.get());
+    } catch (NoSuchAlgorithmException e) {
       // We don't handle any exception as this code is not meant to be executed.
     }
   }
