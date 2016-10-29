@@ -382,8 +382,7 @@ public class ImmutableAnalysis {
       }
       String nameStr = type.tsym.flatName().toString();
       if (WellKnownMutability.KNOWN_UNSAFE.contains(nameStr)) {
-        return Violation.of(
-            String.format("'%s' is known to be mutable", type.tsym.getSimpleName()));
+        return Violation.of(String.format("'%s' is mutable", type.tsym.getSimpleName()));
       }
       if (WellKnownMutability.isProto2MessageClass(state, type)) {
         if (WellKnownMutability.isProto2MutableMessageClass(state, type)) {

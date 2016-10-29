@@ -606,7 +606,7 @@ public class ImmutableCheckerTest {
             "import com.google.common.collect.ImmutableList;",
             "import com.google.errorprone.annotations.Immutable;",
             "@Immutable(containerOf=\"T\") public class X<T> {",
-            "  // BUG: Diagnostic contains: known to be mutable",
+            "  // BUG: Diagnostic contains: mutable type for 'E', 'Object' is mutable",
             "  final ImmutableList<?> xs = null;",
             "}")
         .addSourceLines(
