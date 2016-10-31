@@ -213,7 +213,7 @@ public class ASTHelpers {
    * Given a TreePath, finds the first enclosing node of the given type and returns the path from
    * the enclosing node to the top-level {@code CompilationUnitTree}.
    */
-  private static <T> TreePath findPathFromEnclosingNodeToTopLevel(TreePath path, Class<T> klass) {
+  public static <T> TreePath findPathFromEnclosingNodeToTopLevel(TreePath path, Class<T> klass) {
     if (path != null) {
       do {
         path = path.getParentPath();
@@ -800,7 +800,7 @@ public class ASTHelpers {
     }
     return false;
   }
-  
+
   /**
    * Finds a declaration with the given name that is in scope at the current location.
    *
