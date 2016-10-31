@@ -882,10 +882,10 @@ public class ASTHelpers {
    *    state.getName("hashCode"),
    *    ImmutableList.<Type>of(),
    *    ImmutableList.<Type>of());
-   * </pre>
+   * }</pre>
    *
-   * {@code meth} could be different MethodSymbol's depending on whether {@code symbol}
-   * represented {@code B} or {@code A}. (B's hashCode method or Object#hashCode).
+   * {@code meth} could be different MethodSymbol's depending on whether {@code symbol} represented
+   * {@code B} or {@code A}. (B's hashCode method or Object#hashCode).
    *
    * <p>Do NOT call this method unless the method you're looking for is guaranteed to exist. A fatal
    * error will result otherwise.
