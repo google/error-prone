@@ -1,6 +1,6 @@
 ---
-title: InsecureCipherMode
-summary: Cipher.getInstance() is invoked using either the default settings or ECB mode
+title: InsecureCryptoUsage
+summary: A standard cryptographic operation is used in a mode that is prone to vulnerabilities
 layout: bugpattern
 category: JDK
 severity: ERROR
@@ -12,16 +12,30 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-This error is triggered when a Cipher instance is created using either the
-default settings or the notoriously insecure ECB mode. In particular, Java's
-default `Cipher.getInstance(AES)` returns a cipher object that operates in ECB
-mode. Dynamically constructed transformation strings are also flagged, as they
-may conceal an instance of ECB mode. The problem with ECB mode is that
-encrypting the same block of plaintext always yields the same block of
-ciphertext. Hence, repetitions in the plaintext translate into repetitions in
-the ciphertext, which can be readily used to conduct cryptanalysis. The use of
-IES-based cipher algorithms also raises an error, as all currently available
-implementations use ECB mode under the hood.
+This checker looks for usages of standard cryptographic algorithms in
+configurations that are prone to vulnerabilities. There are currently three
+classes of problems that are covered by this checker:
+
+*   Creating an instance of `javax.crypto.Cipher` using either the default
+    settings or the notoriously insecure ECB mode. In particular, Java's default
+    `Cipher.getInstance(AES)` returns a cipher object that operates in ECB mode.
+    Dynamically constructed transformation strings are also flagged, as they may
+    conceal an instance of ECB mode. The problem with ECB mode is that
+    encrypting the same block of plaintext always yields the same block of
+    ciphertext. Hence, repetitions in the plaintext translate into repetitions
+    in the ciphertext, which can be readily used to conduct cryptanalysis. The
+    use of IES-based cipher algorithms also raises an error, as all currently
+    available implementations use ECB mode under the hood.
+
+*   Using the Diffie-Hellmann protocol on prime fields. Most library
+    implementations of Diffie-Hellman on prime fields have serious issues that
+    can be exploited by an attacker. Any operation that may involve this
+    protocol will be flagged by the checker. Implementations of the protocol
+    based on elliptic curves (ECDH) are secure and should be used instead.
+
+*   Using DSA for digital signatures. Some widely used crypto libraries accept
+    invalid DSA signatures in specific configurations. The checker will flag all
+    cryptographic operations that may involve DSA.
 
 
 ----------
@@ -48,9 +62,12 @@ __InsecureCipherModePositiveCases.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
+import java.security.KeyFactory;
+import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import javax.crypto.Cipher;
+import javax.crypto.KeyAgreement;
 import javax.crypto.NoSuchPaddingException;
 
 /**
@@ -229,6 +246,33 @@ public class InsecureCipherModePositiveCases {
       // We don't handle any exception as this code is not meant to be executed.
     }
   }
+
+  interface StringProvider {
+    String get();
+  }
+
+  public void keyOperations(StringProvider provider) {
+    KeyFactory keyFactory;
+    KeyAgreement keyAgreement;
+    KeyPairGenerator keyPairGenerator;
+    final String dh = "DH";
+    try {
+      // BUG: Diagnostic contains: compile-time constant
+      keyFactory = KeyFactory.getInstance(provider.get());
+      // BUG: Diagnostic contains: Diffie-Hellman on prime fields
+      keyFactory = KeyFactory.getInstance(dh);
+      // BUG: Diagnostic contains: DSA
+      keyAgreement = KeyAgreement.getInstance("DSA");
+      // BUG: Diagnostic contains: compile-time constant
+      keyAgreement = KeyAgreement.getInstance(provider.get());
+      // BUG: Diagnostic contains: Diffie-Hellman on prime fields
+      keyPairGenerator = KeyPairGenerator.getInstance(dh);
+      // BUG: Diagnostic contains: compile-time constant
+      keyPairGenerator = KeyPairGenerator.getInstance(provider.get());
+    } catch (NoSuchAlgorithmException e) {
+      // We don't handle any exception as this code is not meant to be executed.
+    }
+  }
 }
 {% endhighlight %}
 
@@ -255,10 +299,13 @@ __InsecureCipherModeNegativeCases.java__
 package com.google.errorprone.bugpatterns.testdata;
 
 
+import java.security.KeyFactory;
+import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 
 import javax.crypto.Cipher;
+import javax.crypto.KeyAgreement;
 import javax.crypto.NoSuchPaddingException;
 
 /**
@@ -368,6 +415,20 @@ public class InsecureCipherModeNegativeCases {
     } catch (NoSuchAlgorithmException e) {
       // We don't handle any exception as this code is not meant to be executed.
     } catch (NoSuchPaddingException e) {
+      // We don't handle any exception as this code is not meant to be executed.
+    }
+  }
+
+  public void ellipticCurveDiffieHellman() {
+    KeyFactory keyFactory;
+    KeyAgreement keyAgreement;
+    KeyPairGenerator keyPairGenerator;
+    final String ecdh = "ECDH";
+    try {
+      keyFactory = KeyFactory.getInstance(ecdh);
+      keyAgreement = KeyAgreement.getInstance("ECDH");
+      keyPairGenerator = KeyPairGenerator.getInstance("EC" + "DH");
+    } catch (NoSuchAlgorithmException e) {
       // We don't handle any exception as this code is not meant to be executed.
     }
   }

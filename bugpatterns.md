@@ -113,8 +113,8 @@ This method always recurses, and will cause a StackOverflowError
 __[InjectMoreThanOneScopeAnnotationOnClass](bugpattern/InjectMoreThanOneScopeAnnotationOnClass)__<br>
 A class can be annotated with at most one scope annotation.
 
-__[InsecureCipherMode](bugpattern/InsecureCipherMode)__<br>
-Cipher.getInstance() is invoked using either the default settings or ECB mode
+__[InsecureCryptoUsage](bugpattern/InsecureCryptoUsage)__<br>
+A standard cryptographic operation is used in a mode that is prone to vulnerabilities
 
 __[InvalidPatternSyntax](bugpattern/InvalidPatternSyntax)__<br>
 Invalid syntax used for a regular expression
@@ -297,6 +297,9 @@ This annotation has incompatible modifiers as specified by its @IncompatibleModi
 
 __[InjectOnConstructorOfAbstractClass](bugpattern/InjectOnConstructorOfAbstractClass)__<br>
 Constructors on abstract classes are never directly @Injected, only the constructors of their subclasses can be @Inject&#39;ed.
+
+__[InputStreamSlowMultibyteRead](bugpattern/InputStreamSlowMultibyteRead)__<br>
+Please also override int read(byte[], int, int), otherwise multi-byte reads from this input stream are likely to be slow.
 
 __[IterableAndIterator](bugpattern/IterableAndIterator)__<br>
 Class should not implement both `Iterable` and `Iterator`
