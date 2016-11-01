@@ -84,6 +84,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.ElementKind;
@@ -414,30 +415,34 @@ public class ASTHelpers {
     return tree.getStartPosition();
   }
 
-  public static Set<MethodSymbol> findSuperMethods(MethodSymbol methodSymbol, Types types) {
-    Set<MethodSymbol> supers = new HashSet<>();
-    if (methodSymbol.isStatic()) {
-      return supers;
+  @Nullable
+  public static MethodSymbol findSuperMethodInType(
+      MethodSymbol methodSymbol, Type superType, Types types) {
+    if (methodSymbol.isStatic() || superType.equals(methodSymbol.owner.type)) {
+      return null;
     }
 
-    TypeSymbol owner = (TypeSymbol) methodSymbol.owner;
-    // Iterates over an ordered list of all super classes and interfaces.
-    for (Type sup : types.closure(owner.type)) {
-      if (sup.equals(owner.type)) {
-        continue; // Skip the owner of the method
-      }
-      Scope scope = sup.tsym.members();
-      for (Symbol sym : scope.getSymbolsByName(methodSymbol.name)) {
-        if (sym != null
-            && !sym.isStatic()
-            && ((sym.flags() & Flags.SYNTHETIC) == 0)
-            && sym.name.contentEquals(methodSymbol.name)
-            && methodSymbol.overrides(sym, owner, types, true)) {
-          supers.add((MethodSymbol) sym);
-        }
+    Scope scope = superType.tsym.members();
+    for (Symbol sym : scope.getSymbolsByName(methodSymbol.name)) {
+      if (sym != null
+          && !sym.isStatic()
+          && ((sym.flags() & Flags.SYNTHETIC) == 0)
+          && sym.name.contentEquals(methodSymbol.name)
+          && methodSymbol.overrides(sym, (TypeSymbol) methodSymbol.owner, types, true)) {
+        return (MethodSymbol) sym;
       }
     }
-    return supers;
+    return null;
+  }
+
+  public static Set<MethodSymbol> findSuperMethods(MethodSymbol methodSymbol, Types types) {
+    TypeSymbol owner = (TypeSymbol) methodSymbol.owner;
+    return types
+        .closure(owner.type)
+        .stream()
+        .map(type -> findSuperMethodInType(methodSymbol, type, types))
+        .filter(x -> x != null)
+        .collect(Collectors.toCollection(HashSet::new));
   }
 
   /**
