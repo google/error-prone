@@ -144,6 +144,7 @@ import com.google.errorprone.bugpatterns.UnnecessaryStaticImport;
 import com.google.errorprone.bugpatterns.UnnecessaryTypeArgument;
 import com.google.errorprone.bugpatterns.UnsynchronizedOverridesSynchronized;
 import com.google.errorprone.bugpatterns.UnusedAnonymousClass;
+import com.google.errorprone.bugpatterns.UnusedCollectionModifiedInPlace;
 import com.google.errorprone.bugpatterns.VarChecker;
 import com.google.errorprone.bugpatterns.WaitNotInLoop;
 import com.google.errorprone.bugpatterns.WildcardImport;
@@ -304,7 +305,8 @@ public class BuiltInCheckerSuppliers {
           TryFailThrowable.class,
           TypeParameterQualifier.class,
           UnnecessaryTypeArgument.class,
-          UnusedAnonymousClass.class);
+          UnusedAnonymousClass.class,
+          UnusedCollectionModifiedInPlace.class);
 
   /** A list of all checks with severity WARNING that are on by default. */
   public static final ImmutableSet<BugCheckerInfo> ENABLED_WARNINGS =
