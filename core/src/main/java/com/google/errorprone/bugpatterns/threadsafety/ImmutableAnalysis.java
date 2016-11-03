@@ -102,9 +102,18 @@ public class ImmutableAnalysis {
   private final BugChecker bugChecker;
   private final VisitorState state;
 
-  public ImmutableAnalysis(BugChecker bugChecker, VisitorState state) {
+  private final String nonFinalFieldMessage;
+  private final String mutableFieldMessage;
+
+  public ImmutableAnalysis(
+      BugChecker bugChecker,
+      VisitorState state,
+      String nonFinalFieldMessage,
+      String mutableFieldMessage) {
     this.bugChecker = bugChecker;
     this.state = state;
+    this.nonFinalFieldMessage = nonFinalFieldMessage;
+    this.mutableFieldMessage = mutableFieldMessage;
   }
 
   /**
@@ -255,7 +264,7 @@ public class ImmutableAnalysis {
         // accumulating the path to the error from the top-level class being checked
         state.reportMatch(
             BugChecker.buildDescriptionFromChecker(tree.get(), bugChecker)
-                .setMessage("@Immutable classes cannot have non-final fields")
+                .setMessage(nonFinalFieldMessage)
                 .addFix(SuggestedFixes.addModifiers(tree.get(), state, Modifier.FINAL))
                 .build());
         return Violation.absent();
@@ -272,7 +281,7 @@ public class ImmutableAnalysis {
         // accumulating the path to the error from the top-level class being checked
         state.reportMatch(
             BugChecker.buildDescriptionFromChecker(tree.get(), bugChecker)
-                .setMessage(info.plus("@Immutable class has mutable field").message())
+                .setMessage(info.plus(mutableFieldMessage).message())
                 .build());
         return Violation.absent();
       }

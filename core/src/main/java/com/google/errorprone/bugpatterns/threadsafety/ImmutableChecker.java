@@ -54,10 +54,16 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
+    ImmutableAnalysis analysis =
+        new ImmutableAnalysis(
+            this,
+            state,
+            "@Immutable classes cannot have non-final fields",
+            "@Immutable class has mutable field");
     if (tree.getSimpleName().length() == 0) {
       // anonymous classes have empty names
       // TODO(cushon): once Java 8 happens, require @Immutable on anonymous classes
-      return handleAnonymousClass(tree, state);
+      return handleAnonymousClass(tree, state, analysis);
     }
 
     ImmutableAnnotationInfo annotation = getImmutableAnnotation(tree);
@@ -91,12 +97,12 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
     //
     // Check that the fields (including inherited fields) are immutable, and
     // validate the type hierarchy superclass.
+
     Violation info =
-        new ImmutableAnalysis(this, state)
-            .checkForImmutability(
-                Optional.of(tree),
-                immutableTypeParametersInScope(ASTHelpers.getSymbol(tree)),
-                ASTHelpers.getType(tree));
+        analysis.checkForImmutability(
+            Optional.of(tree),
+            immutableTypeParametersInScope(ASTHelpers.getSymbol(tree)),
+            ASTHelpers.getType(tree));
 
     if (!info.isPresent()) {
       return Description.NO_MATCH;
@@ -110,7 +116,8 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
   // Anonymous classes
 
   /** Check anonymous implementations of {@code @Immutable} types. */
-  private Description handleAnonymousClass(ClassTree tree, VisitorState state) {
+  private Description handleAnonymousClass(
+      ClassTree tree, VisitorState state, ImmutableAnalysis analysis) {
     ClassSymbol sym = ASTHelpers.getSymbol(tree);
     if (sym == null) {
       return Description.NO_MATCH;
@@ -131,8 +138,7 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
     // }
     ImmutableSet<String> typarams = immutableTypeParametersInScope(sym);
     Violation info =
-        new ImmutableAnalysis(this, state)
-            .areFieldsImmutable(Optional.of(tree), typarams, ASTHelpers.getType(tree));
+        analysis.areFieldsImmutable(Optional.of(tree), typarams, ASTHelpers.getType(tree));
     if (!info.isPresent()) {
       return Description.NO_MATCH;
     }

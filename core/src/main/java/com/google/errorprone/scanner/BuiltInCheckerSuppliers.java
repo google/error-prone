@@ -188,6 +188,7 @@ import com.google.errorprone.bugpatterns.threadsafety.DoubleCheckedLocking;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByChecker;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByValidator;
 import com.google.errorprone.bugpatterns.threadsafety.ImmutableChecker;
+import com.google.errorprone.bugpatterns.threadsafety.ImmutableEnumChecker;
 import com.google.errorprone.bugpatterns.threadsafety.LockMethodChecker;
 import com.google.errorprone.bugpatterns.threadsafety.StaticGuardedByInstance;
 import com.google.errorprone.bugpatterns.threadsafety.SynchronizeOnNonFinalField;
@@ -328,6 +329,7 @@ public class BuiltInCheckerSuppliers {
           FragmentNotInstantiable.class,
           FunctionalInterfaceClash.class,
           GetClassOnEnum.class,
+          ImmutableEnumChecker.class,
           IncompatibleModifiersChecker.class,
           InjectOnConstructorOfAbstractClass.class,
           InputStreamSlowMultibyteRead.class,
