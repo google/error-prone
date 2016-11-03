@@ -16,8 +16,14 @@
 
 package com.google.errorprone.bugpatterns.inject.testdata;
 
-import com.google.inject.Singleton;
 import com.google.inject.Provides;
+import com.google.inject.Singleton;
+import com.google.inject.servlet.SessionScoped;
+import dagger.Component;
+import dagger.Subcomponent;
+import dagger.producers.ProductionComponent;
+import dagger.producers.ProductionSubcomponent;
+
 /**
  * @author sgoldfeder@google.com(Steven Goldfeder)
  */
@@ -46,12 +52,41 @@ public class MoreThanOneScopeAnnotationOnClassNegativeCases {
   public class TestClass4 {}
   
   /**
-   * Class has two annotations, one of which is a scoping annotation. Class
-   * also has a method with a scoping annotation.
+   * Class has two annotations, one of which is a scoping annotation. Class also has a method with a
+   * scoping annotation.
    */
-   @SuppressWarnings("foo")
+  @SuppressWarnings("foo")
   public class TestClass5 {
-  @Singleton @Provides
-  public void foo(){}
+    @Singleton
+    @Provides
+    public void foo() {}
   }
+
+  /** Class has two scoped annotations, but is a Dagger component */
+  @Singleton
+  @SessionScoped
+  @Component
+  public class DaggerComponent {}
+
+  /** Class has two scoped annotations, but is a Dagger subcomponent */
+  @Singleton
+  @SessionScoped
+  @Subcomponent
+  public class DaggerSubcomponent {}
+
+  /** Class has two scoped annotations, but is a Dagger component */
+  @Singleton
+  @SessionScoped
+  @ProductionComponent
+  public class DaggerProductionComponent {}
+
+  /** Class has two scoped annotations, but is a Dagger subcomponent */
+  @Singleton
+  @SessionScoped
+  @ProductionSubcomponent
+  public class DaggerProductionSubcomponent {}
+
+  /** Suppression through secondary name */
+  @SuppressWarnings("MoreThanOneScopeAnnotationOnClass")
+  public class TestClass6 {}
 }

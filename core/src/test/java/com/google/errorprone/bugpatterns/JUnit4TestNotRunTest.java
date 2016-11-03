@@ -17,14 +17,12 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)

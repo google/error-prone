@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,6 +57,24 @@ public class WrongParameterPackageTest {
             "package foo;",
             "public interface Bar {",
             "    void bar();",
+            "}")
+        .doTest();
+  }
+
+  // regression test for https://github.com/google/error-prone/issues/356
+  @Test
+  public void testCompleteParams() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "package org.gaul.mypackage;",
+            "import java.io.IOException;",
+            "import java.io.InputStream;",
+            "class MyInputStream extends InputStream {",
+            "  @Override",
+            "  public int read() throws IOException {",
+            "    return 0;",
+            "  }",
             "}")
         .doTest();
   }

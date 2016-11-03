@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
+import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.base.Joiner;
@@ -27,29 +27,26 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import javax.lang.model.element.Modifier;
 
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
   name = "ClassName",
   summary = "The source file name should match the name of the top-level class it contains",
   category = JDK,
   severity = ERROR,
-  maturity = MATURE,
-  documentSuppression = false
-)
+
+  documentSuppression = false,
+  linkType = CUSTOM,
+  link = "https://google.github.io/styleguide/javaguide.html#s2.1-file-name"
+  )
 public class ClassName extends BugChecker implements CompilationUnitTreeMatcher {
 
   @Override

@@ -17,14 +17,13 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import com.google.errorprone.CompilationTestHelper;
-
+import com.google.errorprone.annotations.concurrent.LazyInit;
+import java.util.Arrays;
+import java.util.List;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.util.Arrays;
-import java.util.List;
 
 /** {@link ImmutableChecker}Test */
 @RunWith(JUnit4.class)
@@ -607,7 +606,7 @@ public class ImmutableCheckerTest {
             "import com.google.common.collect.ImmutableList;",
             "import com.google.errorprone.annotations.Immutable;",
             "@Immutable(containerOf=\"T\") public class X<T> {",
-            "  // BUG: Diagnostic contains: known to be mutable",
+            "  // BUG: Diagnostic contains: mutable type for 'E', 'Object' is mutable",
             "  final ImmutableList<?> xs = null;",
             "}")
         .addSourceLines(
@@ -1241,6 +1240,44 @@ public class ImmutableCheckerTest {
             "  // BUG: Diagnostic contains: @Immutable class has mutable field",
             "  final Object o = null;",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void mutableEnclosing() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "public class Test {",
+            "  int x = 0;",
+            "  // BUG: Diagnostic contains: 'Inner' has mutable enclosing instance 'Test'",
+            "  @Immutable public class Inner {",
+            "    public int count() {",
+            "      return x++;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  /** A sample superclass with a mutable field. */
+  public static class SuperFieldSuppressionTest {
+    @LazyInit public int x = 0;
+
+    public int count() {
+      return x++;
+    }
+  }
+
+  @Test
+  public void superFieldSuppression() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import " + SuperFieldSuppressionTest.class.getCanonicalName() + ";",
+            "@Immutable public class Test extends SuperFieldSuppressionTest {}")
         .doTest();
   }
 }

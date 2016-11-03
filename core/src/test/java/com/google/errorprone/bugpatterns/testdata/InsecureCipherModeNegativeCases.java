@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 
+import java.security.KeyFactory;
+import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 
 import javax.crypto.Cipher;
+import javax.crypto.KeyAgreement;
 import javax.crypto.NoSuchPaddingException;
 
 /**
@@ -130,6 +133,20 @@ public class InsecureCipherModeNegativeCases {
     } catch (NoSuchAlgorithmException e) {
       // We don't handle any exception as this code is not meant to be executed.
     } catch (NoSuchPaddingException e) {
+      // We don't handle any exception as this code is not meant to be executed.
+    }
+  }
+
+  public void ellipticCurveDiffieHellman() {
+    KeyFactory keyFactory;
+    KeyAgreement keyAgreement;
+    KeyPairGenerator keyPairGenerator;
+    final String ecdh = "ECDH";
+    try {
+      keyFactory = KeyFactory.getInstance(ecdh);
+      keyAgreement = KeyAgreement.getInstance("ECDH");
+      keyPairGenerator = KeyPairGenerator.getInstance("EC" + "DH");
+    } catch (NoSuchAlgorithmException e) {
       // We don't handle any exception as this code is not meant to be executed.
     }
   }

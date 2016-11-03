@@ -18,12 +18,16 @@ package com.google.errorprone.matchers;
 
 import static org.hamcrest.CoreMatchers.is;
 
-import com.google.errorprone.ErrorProneCompiler;
+import com.google.errorprone.BaseErrorProneCompiler;
 import com.google.errorprone.scanner.Scanner;
 import com.google.errorprone.scanner.ScannerSupplier;
-
 import com.sun.tools.javac.main.Main.Result;
-
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -32,13 +36,6 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * NOTE(cushon): This test does two rounds of compilation and relies on the first round producing
@@ -73,9 +70,8 @@ public class DescendantOfTransitiveTest extends DescendantOfAbstractTest {
     args.add(tempDir.getRoot().getAbsolutePath());
     args.addAll(filesToCompile);
 
-    ErrorProneCompiler compiler = new ErrorProneCompiler.Builder()
-        .report(ScannerSupplier.fromScanner(scanner))
-        .build();
+    BaseErrorProneCompiler compiler =
+        BaseErrorProneCompiler.builder().report(ScannerSupplier.fromScanner(scanner)).build();
     Assert.assertThat(compiler.run(args.toArray(new String[0])), is(Result.OK));
   }
 

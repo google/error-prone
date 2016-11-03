@@ -23,11 +23,9 @@ import com.google.common.base.Objects;
 import com.google.common.collect.ForwardingMap;
 import com.google.common.collect.Maps;
 import com.google.common.reflect.TypeToken;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.annotation.Nullable;
 
 /**

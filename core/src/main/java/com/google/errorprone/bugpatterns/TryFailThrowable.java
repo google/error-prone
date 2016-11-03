@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.BugPattern.Category.JUNIT;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.bugpatterns.TryFailThrowable.CaughtType.JAVA_LANG_ERROR;
 import static com.google.errorprone.bugpatterns.TryFailThrowable.CaughtType.JAVA_LANG_THROWABLE;
@@ -45,7 +44,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
-
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ExpressionStatementTree;
@@ -59,7 +57,6 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Types;
-
 import java.util.List;
 
 /**
@@ -111,7 +108,7 @@ import java.util.List;
           + "logic in your catch block to ensure that the AssertionError that was caught is not "
           + "the same one thrown by the call to `fail()` or `assert*()`.",
   category = JUNIT,
-  maturity = MATURE,
+  
   severity = ERROR
 )
 public class TryFailThrowable extends BugChecker implements TryTreeMatcher {

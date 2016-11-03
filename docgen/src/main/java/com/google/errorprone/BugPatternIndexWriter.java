@@ -16,79 +16,88 @@
 
 package com.google.errorprone;
 
-import static com.google.common.collect.Multimaps.index;
-
-import com.google.common.base.Function;
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ListMultimap;
-import com.google.common.collect.Ordering;
-import com.google.errorprone.DocGenTool.Target;
-
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
-
-import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.Yaml;
-
+import com.google.auto.value.AutoValue;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Multimaps;
+import com.google.common.collect.TreeMultimap;
+import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.DocGenTool.Target;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.TreeMap;
+import java.util.Set;
+import java.util.stream.Collectors;
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.Yaml;
 
-/**
- * @author alexeagle@google.com (Alex Eagle)
- */
+/** @author alexeagle@google.com (Alex Eagle) */
 public class BugPatternIndexWriter {
 
-  void dump(Collection<BugPatternInstance> patterns, Writer w, Target target) throws IOException {
+  @AutoValue
+  abstract static class IndexEntry {
+    abstract boolean onByDefault();
 
-    Map<String, List<Map<String, String>>> data = new TreeMap<>(Ordering.natural().reverse());
+    abstract SeverityLevel severity();
 
-    ListMultimap<String, BugPatternInstance> index =
-        index(
-            patterns,
-            new Function<BugPatternInstance, String>() {
-              @Override
-              public String apply(BugPatternInstance input) {
-                return (input.maturity.description + " : " + input.severity).replace("_", "\\_");
-              }
-            });
+    static IndexEntry create(boolean onByDefault, SeverityLevel severity) {
+      return new AutoValue_BugPatternIndexWriter_IndexEntry(onByDefault, severity);
+    }
 
-    for (Entry<String, Collection<BugPatternInstance>> entry : index.asMap().entrySet()) {
-      data.put(
-          entry.getKey(),
-          FluentIterable.from(entry.getValue())
-              .transform(
-                  new Function<BugPatternInstance, Map<String, String>>() {
-                    @Override
-                    public Map<String, String> apply(BugPatternInstance input) {
-                      return ImmutableMap.of("name", input.name, "summary", input.summary);
-                    }
-                  })
-              .toSortedList(
-                  new Ordering<Map<String, String>>() {
-                    @Override
-                    public int compare(Map<String, String> left, Map<String, String> right) {
-                      return left.get("name").compareTo(right.get("name"));
-                    }
-                  }));
+    String asCategoryHeader() {
+      return (onByDefault() ? "On by default" : "Experimental") + " : " + severity();
+    }
+  }
+
+  @AutoValue
+  abstract static class MiniDescription {
+    abstract String name();
+
+    abstract String summary();
+
+    static MiniDescription create(BugPatternInstance bugPattern) {
+      return new AutoValue_BugPatternIndexWriter_MiniDescription(
+          bugPattern.name, bugPattern.summary);
+    }
+  }
+
+  void dump(
+      Collection<BugPatternInstance> patterns, Writer w, Target target, Set<String> enabledChecks)
+      throws IOException {
+    // (Default, Severity) -> [Pattern...]
+    TreeMultimap<IndexEntry, MiniDescription> sorted =
+        TreeMultimap.create(
+            Comparator.comparing(IndexEntry::onByDefault)
+                .reversed()
+                .thenComparing(IndexEntry::severity),
+            Comparator.comparing(MiniDescription::name));
+    for (BugPatternInstance pattern : patterns) {
+      sorted.put(
+          IndexEntry.create(enabledChecks.contains(pattern.name), pattern.severity),
+          MiniDescription.create(pattern));
     }
 
     Map<String, Object> templateData = new HashMap<>();
 
-    List<Map<String, Object>> entryData = new ArrayList<>();
-    for (Entry<String, List<Map<String, String>>> entry : data.entrySet()) {
-      entryData.add(ImmutableMap.of("category", entry.getKey(), "checks", entry.getValue()));
-    }
-    templateData.put("bugpatterns", entryData);
+    List<Map<String, Object>> bugpatternData =
+        Multimaps.asMap(sorted)
+            .entrySet()
+            .stream()
+            .map(
+                e ->
+                    ImmutableMap.of(
+                        "category", e.getKey().asCategoryHeader(), "checks", e.getValue()))
+            .collect(Collectors.toCollection(ArrayList::new));
+
+    templateData.put("bugpatterns", bugpatternData);
 
     if (target == Target.EXTERNAL) {
       Map<String, String> frontmatterData =

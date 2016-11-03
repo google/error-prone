@@ -16,35 +16,44 @@
 
 package com.google.errorprone.fixes;
 
+import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import com.google.common.base.Verify;
 import com.google.common.collect.ImmutableMap;
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Category;
-import com.google.errorprone.BugPattern.MaturityLevel;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.BugChecker.LiteralTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
-
+import com.sun.source.doctree.LinkTree;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.DocTreePath;
+import com.sun.source.util.DocTreePathScanner;
 import com.sun.tools.javac.code.Type;
-
+import com.sun.tools.javac.tree.DCTree;
+import com.sun.tools.javac.tree.JCTree;
+import java.io.IOException;
+import java.lang.annotation.Retention;
+import javax.lang.model.element.Modifier;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.lang.annotation.Retention;
-
-import javax.lang.model.element.Modifier;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @RunWith(JUnit4.class)
@@ -66,10 +75,10 @@ public class SuggestedFixesTest {
     name = "EditModifiers",
     category = Category.ONE_OFF,
     summary = "Edits modifiers",
-    severity = SeverityLevel.ERROR,
-    maturity = MaturityLevel.EXPERIMENTAL
+    severity = SeverityLevel.ERROR
   )
-  public static class EditModifiersChecker extends BugChecker implements VariableTreeMatcher {
+  public static class EditModifiersChecker extends BugChecker
+      implements VariableTreeMatcher, MethodTreeMatcher {
 
     static final ImmutableMap<String, Modifier> MODIFIERS_BY_NAME = createModifiersByName();
 
@@ -83,6 +92,15 @@ public class SuggestedFixesTest {
 
     @Override
     public Description matchVariable(VariableTree tree, VisitorState state) {
+      return editModifiers(tree, state);
+    }
+
+    @Override
+    public Description matchMethod(MethodTree tree, VisitorState state) {
+      return editModifiers(tree, state);
+    }
+
+    private Description editModifiers(Tree tree, VisitorState state) {
       EditModifiers editModifiers =
           ASTHelpers.getAnnotation(
               ASTHelpers.findEnclosingNode(state.getPath(), ClassTree.class), EditModifiers.class);
@@ -101,6 +119,34 @@ public class SuggestedFixesTest {
       }
       return describeMatch(tree, fix);
     }
+  }
+
+  @Test
+  public void addAtBeginningOfLine() throws IOException {
+    BugCheckerRefactoringTestHelper.newInstance(new EditModifiersChecker(), getClass())
+        .addInputLines(
+            "in/Test.java",
+            "import javax.annotation.Nullable;",
+            String.format("import %s;", EditModifiers.class.getCanonicalName()),
+            "@EditModifiers(value=\"final\", kind=EditModifiers.EditKind.ADD)",
+            "class Test {",
+            "  @Nullable",
+            "  int foo() {",
+            "    return 10;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import javax.annotation.Nullable;",
+            String.format("import %s;", EditModifiers.class.getCanonicalName()),
+            "@EditModifiers(value=\"final\", kind=EditModifiers.EditKind.ADD)",
+            "class Test {",
+            "  @Nullable",
+            "  final int foo() {",
+            "    return 10;",
+            "  }",
+            "}")
+        .doTest(TestMode.TEXT_MATCH);
   }
 
   @Test
@@ -181,7 +227,7 @@ public class SuggestedFixesTest {
 
   @BugPattern(
     category = Category.ONE_OFF,
-    maturity = MaturityLevel.EXPERIMENTAL,
+
     name = "CastReturn",
     severity = SeverityLevel.ERROR,
     summary = "Adds casts to returned expressions"
@@ -194,10 +240,34 @@ public class SuggestedFixesTest {
         return Description.NO_MATCH;
       }
       Type type =
-          ASTHelpers.getSymbol(
-              ASTHelpers.findEnclosingNode(state.getPath(), MethodTree.class)).getReturnType();
+          ASTHelpers.getSymbol(ASTHelpers.findEnclosingNode(state.getPath(), MethodTree.class))
+              .getReturnType();
       SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
       String qualifiedTargetType = SuggestedFixes.qualifyType(state, fixBuilder, type.tsym);
+      fixBuilder.prefixWith(tree.getExpression(), String.format("(%s) ", qualifiedTargetType));
+      return describeMatch(tree, fixBuilder.build());
+    }
+  }
+
+  @BugPattern(
+    category = Category.ONE_OFF,
+
+    name = "CastReturn",
+    severity = SeverityLevel.ERROR,
+    summary = "Adds casts to returned expressions"
+  )
+  public static class CastReturnFullType extends BugChecker implements ReturnTreeMatcher {
+
+    @Override
+    public Description matchReturn(ReturnTree tree, VisitorState state) {
+      if (tree.getExpression() == null) {
+        return Description.NO_MATCH;
+      }
+      Type type =
+          ASTHelpers.getSymbol(ASTHelpers.findEnclosingNode(state.getPath(), MethodTree.class))
+              .getReturnType();
+      SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
+      String qualifiedTargetType = SuggestedFixes.qualifyType(state, fixBuilder, type);
       fixBuilder.prefixWith(tree.getExpression(), String.format("(%s) ", qualifiedTargetType));
       return describeMatch(tree, fixBuilder.build());
     }
@@ -224,7 +294,7 @@ public class SuggestedFixesTest {
             "Test.java",
             "import java.util.Map.Entry;",
             "class Test {",
-            "  java.util.Map.Entry f() {",
+            "  java.util.Map.Entry<String, Integer> f() {",
             "    // BUG: Diagnostic contains: return (Entry) null;",
             "    return null;",
             "  }",
@@ -238,7 +308,7 @@ public class SuggestedFixesTest {
         .addSourceLines(
             "Test.java",
             "class Test {",
-            "  java.util.Map.Entry f() {",
+            "  java.util.Map.Entry<String, Integer> f() {",
             "    // BUG: Diagnostic contains: return (Map.Entry) null;",
             "    return null;",
             "  }",
@@ -259,4 +329,160 @@ public class SuggestedFixesTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void fullQualifiedName_Object() {
+    CompilationTestHelper.newInstance(CastReturnFullType.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  Object f() {",
+            "    // BUG: Diagnostic contains: return (Object) null;",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void fullQualifiedName_imported() {
+    CompilationTestHelper.newInstance(CastReturnFullType.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Map.Entry;",
+            "class Test {",
+            "  java.util.Map.Entry<String, Integer> f() {",
+            "    // BUG: Diagnostic contains: return (Entry<String,Integer>) null;",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void fullQualifiedName_notImported() {
+    CompilationTestHelper.newInstance(CastReturnFullType.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  java.util.Map.Entry<String, Integer> f() {",
+            "    // BUG: Diagnostic contains: return (Map.Entry<String,Integer>) null;",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void fullQualifiedName_typeVariable() {
+    CompilationTestHelper.newInstance(CastReturnFullType.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "class Test<T> {",
+            "  T f() {",
+            "    // BUG: Diagnostic contains: return (T) null;",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  /** A test check that qualifies javadoc link. */
+  @BugPattern(
+    name = "JavadocQualifier",
+    category = BugPattern.Category.JDK,
+    summary = "all javadoc links should be qualified",
+    severity = ERROR
+  )
+  public static class JavadocQualifier extends BugChecker implements BugChecker.ClassTreeMatcher {
+    @Override
+    public Description matchClass(ClassTree tree, final VisitorState state) {
+      final DCTree.DCDocComment comment =
+          ((JCTree.JCCompilationUnit) state.getPath().getCompilationUnit())
+              .docComments.getCommentTree((JCTree) tree);
+      if (comment == null) {
+        return Description.NO_MATCH;
+      }
+      final SuggestedFix.Builder fix = SuggestedFix.builder();
+      new DocTreePathScanner<Void, Void>() {
+        @Override
+        public Void visitLink(LinkTree node, Void aVoid) {
+          SuggestedFixes.qualifyDocReference(
+              fix, new DocTreePath(getCurrentPath(), node.getReference()), state);
+          return null;
+        }
+      }.scan(new DocTreePath(state.getPath(), comment), null);
+      if (fix.isEmpty()) {
+        return Description.NO_MATCH;
+      }
+      return describeMatch(tree, fix.build());
+    }
+  }
+
+  @Test
+  public void qualifyJavadocTest() throws Exception {
+    BugCheckerRefactoringTestHelper.newInstance(new JavadocQualifier(), getClass())
+        .addInputLines(
+            "in/Test.java", //
+            "import java.util.List;",
+            "import java.util.Map;",
+            "/** foo {@link List} bar {@link Map#containsKey(Object)} baz {@link #foo} */",
+            "class Test {",
+            "  void foo() {}",
+            "}")
+        .addOutputLines(
+            "out/Test.java", //
+            "import java.util.List;",
+            "import java.util.Map;",
+            "/** foo {@link java.util.List} bar {@link java.util.Map#containsKey(Object)} baz"
+                + " {@link Test#foo} */",
+            "class Test {",
+            "  void foo() {}",
+            "}")
+        .doTest(TEXT_MATCH);
+  }
+
+  @BugPattern(name = "SuppressMe", category = Category.ONE_OFF, summary = "", severity = ERROR)
+  static final class SuppressMe extends BugChecker implements LiteralTreeMatcher {
+    @Override
+    public Description matchLiteral(LiteralTree tree, VisitorState state) {
+      if (tree.getValue().equals(42)) {
+        Fix potentialFix = SuggestedFixes.addSuppressWarnings(state, "SuppressMe");
+        if (potentialFix == null) {
+          return describeMatch(tree);
+        }
+        return describeMatch(tree, potentialFix);
+      }
+      return Description.NO_MATCH;
+    }
+  }
+
+  @Test
+  public void testSuppressWarningsFix() throws IOException {
+    BugCheckerRefactoringTestHelper refactorTestHelper =
+        BugCheckerRefactoringTestHelper.newInstance(new SuppressMe(), getClass());
+    refactorTestHelper
+        .addInputLines(
+            "in/Test.java",
+            "public class Test {",
+            "  static final int BEST_NUMBER = 42;",
+            "  static { int i = 42; }",
+            "  @SuppressWarnings(\"one\")",
+            "  public void doIt() {",
+            "    System.out.println(\"\" + 42);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "public class Test {",
+            "  @SuppressWarnings(\"SuppressMe\") static final int BEST_NUMBER = 42;",
+            "  static { @SuppressWarnings(\"SuppressMe\") int i = 42; }",
+            "  @SuppressWarnings({\"one\", \"SuppressMe\"})",
+            "  public void doIt() {",
+            "    System.out.println(\"\" + 42);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
 }

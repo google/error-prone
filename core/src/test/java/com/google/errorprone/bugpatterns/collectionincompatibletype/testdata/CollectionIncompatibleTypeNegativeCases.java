@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns.collectionincompatibletype;
+package com.google.errorprone.bugpatterns.collectionincompatibletype.testdata;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ClassToInstanceMap;

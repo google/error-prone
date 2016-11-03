@@ -27,18 +27,14 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.CodeTransformer;
 import com.google.testing.compile.JavaFileObjects;
-
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
-
+import java.io.IOException;
+import javax.tools.JavaFileObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.io.IOException;
-
-import javax.tools.JavaFileObject;
 
 /**
  * Tests for Refaster templates.
@@ -284,5 +280,40 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
   @Test
   public void ifFallthrough() throws IOException {
     runTest("IfFallthroughTemplate");
+  }
+
+  @Test
+  public void emitCommentBefore() throws IOException {
+    runTest("EmitCommentBeforeTemplate");
+  }
+
+  @Test
+  public void emitComment() throws IOException {
+    runTest("EmitCommentTemplate");
+  }
+
+  @Test
+  public void nestedClass() throws IOException {
+    runTest("NestedClassTemplate");
+  }
+
+  @Test
+  public void inferLambdaType() throws IOException {
+    runTest("InferLambdaType");
+  }
+
+  @Test
+  public void lambdaImplicitType() throws IOException {
+    runTest("LambdaImplicitType");
+  }
+  
+  @Test
+  public void inferLambdaBodyType() throws IOException {
+    runTest("InferLambdaBodyType");
+  }
+  
+  @Test
+  public void asVarargs() throws IOException {
+    runTest("AsVarargsTemplate");
   }
 }

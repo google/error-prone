@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -33,7 +32,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -42,15 +40,19 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
-@BugPattern(name = "StaticAccessedFromInstance",
-    summary = "A static variable or method should not be accessed from an object instance",
-    explanation = "A static variable or method should never be accessed from an instance.  This "
-        + "hides the fact that the variable or method is static and does not depend on the value "
-        + "of the object instance on which this variable or method is being invoked.",
-    category = JDK, severity = WARNING, maturity = MATURE, altNames = "static")
+/** @author eaftan@google.com (Eddie Aftandilian) */
+@BugPattern(
+  name = "StaticAccessedFromInstance",
+  summary = "A static variable or method should not be accessed from an object instance",
+  explanation =
+      "A static variable or method should never be accessed from an instance.  This "
+          + "hides the fact that the variable or method is static and does not depend on the value "
+          + "of the object instance on which this variable or method is being invoked.",
+  category = JDK,
+  severity = WARNING,
+  
+  altNames = {"static", "static-access"}
+)
 public class StaticAccessedFromInstance extends BugChecker implements MemberSelectTreeMatcher {
 
   private static final String MESSAGE_TEMPLATE = "Static %s %s should not be accessed from an "

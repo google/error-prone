@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
+import java.security.KeyFactory;
+import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-
 import javax.crypto.Cipher;
+import javax.crypto.KeyAgreement;
 import javax.crypto.NoSuchPaddingException;
 
 /**
@@ -165,6 +167,63 @@ public class InsecureCipherModePositiveCases {
     } catch (NoSuchAlgorithmException e) {
       // We don't handle any exception as this code is not meant to be executed.
     } catch (NoSuchPaddingException e) {
+      // We don't handle any exception as this code is not meant to be executed.
+    }
+  }
+
+  static Cipher IesCipher;
+
+  static {
+    try {
+      // BUG: Diagnostic contains: the mode and padding must be explicitly specified
+      IesCipher = Cipher.getInstance("ECIES");
+      // BUG: Diagnostic contains: IES
+      IesCipher = Cipher.getInstance("ECIES/DHAES/NoPadding");
+      // BUG: Diagnostic contains: IES
+      IesCipher = Cipher.getInstance("ECIESWITHAES/NONE/PKCS5Padding");
+      // BUG: Diagnostic contains: IES
+      IesCipher = Cipher.getInstance("DHIESWITHAES/DHAES/PKCS7Padding");
+      // BUG: Diagnostic contains: IES
+      IesCipher = Cipher.getInstance("ECIESWITHDESEDE/NONE/NOPADDING");
+      // BUG: Diagnostic contains: IES
+      IesCipher = Cipher.getInstance("DHIESWITHDESEDE/DHAES/PKCS5PADDING");
+      // BUG: Diagnostic contains: IES
+      IesCipher = Cipher.getInstance("ECIESWITHAES/CBC/PKCS7PADDING");
+      // BUG: Diagnostic contains: IES
+      IesCipher = Cipher.getInstance("ECIESWITHAES-CBC/NONE/PKCS5PADDING");
+      // BUG: Diagnostic contains: IES
+      IesCipher = Cipher.getInstance("ECIESwithDESEDE-CBC/DHAES/NOPADDING");
+
+    } catch (NoSuchAlgorithmException e) {
+      // We don't handle any exception as this code is not meant to be executed.
+    } catch (NoSuchPaddingException e) {
+      // We don't handle any exception as this code is not meant to be executed.
+    }
+  }
+
+  interface StringProvider {
+    String get();
+  }
+
+  public void keyOperations(StringProvider provider) {
+    KeyFactory keyFactory;
+    KeyAgreement keyAgreement;
+    KeyPairGenerator keyPairGenerator;
+    final String dh = "DH";
+    try {
+      // BUG: Diagnostic contains: compile-time constant
+      keyFactory = KeyFactory.getInstance(provider.get());
+      // BUG: Diagnostic contains: Diffie-Hellman on prime fields
+      keyFactory = KeyFactory.getInstance(dh);
+      // BUG: Diagnostic contains: DSA
+      keyAgreement = KeyAgreement.getInstance("DSA");
+      // BUG: Diagnostic contains: compile-time constant
+      keyAgreement = KeyAgreement.getInstance(provider.get());
+      // BUG: Diagnostic contains: Diffie-Hellman on prime fields
+      keyPairGenerator = KeyPairGenerator.getInstance(dh);
+      // BUG: Diagnostic contains: compile-time constant
+      keyPairGenerator = KeyPairGenerator.getInstance(provider.get());
+    } catch (NoSuchAlgorithmException e) {
       // We don't handle any exception as this code is not meant to be executed.
     }
   }

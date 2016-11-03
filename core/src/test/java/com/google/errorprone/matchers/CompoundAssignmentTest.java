@@ -20,17 +20,14 @@ import static org.junit.Assert.assertTrue;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.scanner.Scanner;
-
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree.Kind;
-
+import java.util.HashSet;
+import java.util.Set;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author adgar@google.com (Mike Edgar)

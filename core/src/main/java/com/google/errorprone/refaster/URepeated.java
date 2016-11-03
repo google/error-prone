@@ -17,13 +17,10 @@
 package com.google.errorprone.refaster;
 
 import com.google.auto.value.AutoValue;
-
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
-
 import java.util.List;
-
 import javax.annotation.Nullable;
 
 /**

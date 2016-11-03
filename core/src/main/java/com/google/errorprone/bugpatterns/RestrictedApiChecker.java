@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Category;
-import com.google.errorprone.BugPattern.MaturityLevel;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.errorprone.VisitorState;
@@ -29,17 +28,14 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
-
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
-
 import javax.annotation.Nullable;
 import javax.lang.model.type.MirroredTypesException;
 import javax.lang.model.type.TypeMirror;
@@ -54,7 +50,7 @@ import javax.lang.model.type.TypeMirror;
       "Calls to APIs marked @RestrictedApi are prohibited without a corresponding whitelist"
           + " annotation.",
   category = Category.ONE_OFF,
-  maturity = MaturityLevel.MATURE,
+  
   severity = SeverityLevel.ERROR,
   suppressibility = Suppressibility.UNSUPPRESSIBLE
 )

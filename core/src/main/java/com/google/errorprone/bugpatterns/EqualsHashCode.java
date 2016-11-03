@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.isSameType;
@@ -37,19 +36,12 @@ import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.comp.Enter;
-import com.sun.tools.javac.comp.Resolve;
-import com.sun.tools.javac.util.Log;
-import com.sun.tools.javac.util.Log.DeferredDiagnosticHandler;
-import com.sun.tools.javac.util.Name;
-
 import javax.lang.model.element.ElementKind;
 
 /**
@@ -61,8 +53,7 @@ import javax.lang.model.element.ElementKind;
   name = "EqualsHashCode",
   summary = "Classes that override equals should also override hashCode.",
   category = JDK,
-  severity = WARNING,
-  maturity = MATURE
+  severity = WARNING
 )
 public class EqualsHashCode extends BugChecker implements ClassTreeMatcher {
 
@@ -96,7 +87,7 @@ public class EqualsHashCode extends BugChecker implements ClassTreeMatcher {
     }
 
     MethodSymbol hashCodeSym =
-        resolveMethod(
+        ASTHelpers.resolveExistingMethod(
             state,
             symbol,
             state.getName("hashCode"),
@@ -109,26 +100,4 @@ public class EqualsHashCode extends BugChecker implements ClassTreeMatcher {
     return Description.NO_MATCH;
   }
 
-  public static MethodSymbol resolveMethod(
-      VisitorState state,
-      TypeSymbol base,
-      Name name,
-      Iterable<Type> argTypes,
-      Iterable<Type> tyargTypes) {
-    Resolve resolve = Resolve.instance(state.context);
-    Enter enter = Enter.instance(state.context);
-    Log log = Log.instance(state.context);
-    DeferredDiagnosticHandler handler = new DeferredDiagnosticHandler(log);
-    try {
-      return resolve.resolveInternalMethod(
-          /*pos*/ null,
-          enter.getEnv(base),
-          base.type,
-          name,
-          com.sun.tools.javac.util.List.from(argTypes),
-          com.sun.tools.javac.util.List.from(tyargTypes));
-    } finally {
-      log.popDiagnosticHandler(handler);
-    }
-  }
 }

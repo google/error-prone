@@ -16,12 +16,16 @@
 
 package com.google.errorprone.bugpatterns.inject.testdata;
 
+import static java.lang.annotation.ElementType.CONSTRUCTOR;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+import com.google.inject.ScopeAnnotation;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-
 import javax.inject.Scope;
 
 /**
@@ -29,38 +33,45 @@ import javax.inject.Scope;
  */
 public class InvalidTargetingOnScopingAnnotationPositiveCases {
 
-  /**
-   * A scoping annotation with no specified target.
-   */
-  @Scope 
+  /** Scoping excludes METHOD */
   // BUG: Diagnostic contains: @Target({TYPE, METHOD})
-  public @interface TestAnnotation1 {
-  }
+  @Target(TYPE)
+  @Scope
+  @Retention(RUNTIME)
+  public @interface TestAnnotation1 {}
 
-  /**
-   * @Target is given an empty array
-   */
+  /** Scoping excludes TYPE */
+  // BUG: Diagnostic contains: @Target({TYPE, METHOD})
+  @Target(METHOD)
+  @Scope
+  @Retention(RUNTIME)
+  public @interface TestAnnotation2 {}
+
+  /** Scoping excludes both, but has other elements to preserve */
+  // BUG: Diagnostic contains: @Target({TYPE, METHOD, PARAMETER})
+  @Target(PARAMETER)
+  @Scope
+  @Retention(RUNTIME)
+  public @interface TestAnnotation4 {}
+
+  /** Scoping includes one of the required ones. */
+  // BUG: Diagnostic contains: @Target({TYPE, METHOD, PARAMETER, CONSTRUCTOR})
+  @Target({PARAMETER, METHOD, CONSTRUCTOR})
+  @Scope
+  @Retention(RUNTIME)
+  public @interface TestAnnotation5 {}
+
+  /** Same as above, but with a different physical manifestation */
+  // BUG: Diagnostic contains: @Target({TYPE, METHOD, PARAMETER, CONSTRUCTOR})
+  @Target(value = {ElementType.PARAMETER, METHOD, CONSTRUCTOR})
+  @Scope
+  @Retention(RUNTIME)
+  public @interface TestAnnotation6 {}
+
+  /** Target annotation is empty, nonsensical since it can't be applied to anything */
   // BUG: Diagnostic contains: @Target({TYPE, METHOD})
   @Target({})
-  @Scope 
-  public @interface TestAnnotation2 {
-  }
-
-  /**
-   * A scoping annotation with taeget TYPE, METHOD, and (illegal) PARAMETER.
-   */
-  // BUG: Diagnostic contains: @Target({TYPE, METHOD})
-  @Target({TYPE, METHOD, PARAMETER})
-  @Scope 
-  public @interface TestAnnotation3 {
-  }
-
-  /**
-   * A scoping annotation target set to PARAMETER.
-   */
-  // BUG: Diagnostic contains: @Target({TYPE, METHOD})
-  @Target(PARAMETER)
-  @Scope 
-  public @interface TestAnnotation4 {
-  }
+  @ScopeAnnotation
+  @Retention(RUNTIME)
+  public @interface TestAnnotation7 {}
 }

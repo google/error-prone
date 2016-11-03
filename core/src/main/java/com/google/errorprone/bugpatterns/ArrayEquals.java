@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
@@ -35,25 +34,25 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
-@BugPattern(name = "ArrayEquals",
-    summary = "Reference equality used to compare arrays",
-    explanation =
-        "Generally when comparing arrays for equality, the programmer intends to check that the "
-        + "the contents of the arrays are equal rather than that they are actually the same "
-        + "object.  But many commonly used equals methods compare arrays for reference equality "
-        + "rather than content equality. These include the instance .equals() method, Guava's "
-        + "com.google.common.base.Objects#equal(), and the JDK's java.util.Objects#equals().\n\n"
-        + "If reference equality is needed, == should be used instead for clarity. Otherwise, "
-        + "use java.util.Arrays#equals() to compare the contents of the arrays.",
-    category = JDK, severity = ERROR, maturity = MATURE)
+/** @author eaftan@google.com (Eddie Aftandilian) */
+@BugPattern(
+  name = "ArrayEquals",
+  summary = "Reference equality used to compare arrays",
+  explanation =
+      "Generally when comparing arrays for equality, the programmer intends to check that the "
+          + "the contents of the arrays are equal rather than that they are actually the same "
+          + "object.  But many commonly used equals methods compare arrays for reference equality "
+          + "rather than content equality. These include the instance .equals() method, Guava's "
+          + "com.google.common.base.Objects#equal(), and the JDK's java.util.Objects#equals().\n\n"
+          + "If reference equality is needed, == should be used instead for clarity. Otherwise, "
+          + "use java.util.Arrays#equals() to compare the contents of the arrays.",
+  category = JDK,
+  severity = ERROR
+)
 public class ArrayEquals extends BugChecker implements MethodInvocationTreeMatcher {
   /**
    * Matches when the equals instance method is used to compare two arrays.

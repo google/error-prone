@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -254,7 +253,7 @@ public class ClassNewInstanceTest {
         .addInputLines(
             "in/Test.java",
             "class Test {",
-            "  void f() {",
+            "  void f() throws Exception {",
             "    getClass().getConstructor().newInstance();",
             "  }",
             "}")
@@ -362,7 +361,7 @@ public class ClassNewInstanceTest {
             "  void f() throws Exception {",
             "    try {",
             "      getClass().newInstance();",
-            "    } catch (NoSuchMethodException e) {",
+            "    } catch (InstantiationException e) {",
             "      getClass().newInstance();",
             "    }",
             "  }",
@@ -493,7 +492,6 @@ public class ClassNewInstanceTest {
             "    } catch (ReflectiveOperationException ex) {",
             "      return getClass().newInstance();",
             "    }",
-            "    return null;",
             "  }",
             "}")
         .addOutputLines(
@@ -509,7 +507,6 @@ public class ClassNewInstanceTest {
             "    } catch (ReflectiveOperationException ex) {",
             "      return getClass().getConstructor().newInstance();",
             "    }",
-            "    return null;",
             "  }",
             "}")
         .doTest();
@@ -523,7 +520,7 @@ public class ClassNewInstanceTest {
             "class Test {",
             "  void f() {",
             "    try {",
-            "      return getClass().newInstance();",
+            "      getClass().newInstance();",
             "    } catch (InstantiationException e) {",
             "      // InstantiationException",
             "    } catch (IllegalAccessException | NullPointerException e) {",
@@ -536,7 +533,7 @@ public class ClassNewInstanceTest {
             "class Test {",
             "  void f() {",
             "    try {",
-            "      return getClass().getConstructor().newInstance();",
+            "      getClass().getConstructor().newInstance();",
             "    } catch (InstantiationException e) {",
             "      // InstantiationException",
             "    } catch (ReflectiveOperationException | NullPointerException e) {",
@@ -555,7 +552,7 @@ public class ClassNewInstanceTest {
             "class Test {",
             "  void f(Exception e) {",
             "    try {",
-            "      return getClass().newInstance();",
+            "      getClass().newInstance();",
             "    } catch (InstantiationException e1) {",
             "      // one",
             "    } catch (IllegalAccessException e1) {",
@@ -568,7 +565,7 @@ public class ClassNewInstanceTest {
             "class Test {",
             "  void f(Exception e) {",
             "    try {",
-            "      return getClass().getConstructor().newInstance();",
+            "      getClass().getConstructor().newInstance();",
             "    } catch (InstantiationException e1) {",
             "      // one",
             "    } catch (IllegalAccessException e1) {",

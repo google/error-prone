@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 /** Test cases for missing fail in a non-test class */
 public class MissingFailNegativeCases2 {

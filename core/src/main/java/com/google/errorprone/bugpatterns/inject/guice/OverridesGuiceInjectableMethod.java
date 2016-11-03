@@ -17,9 +17,10 @@
 package com.google.errorprone.bugpatterns.inject.guice;
 
 import static com.google.errorprone.BugPattern.Category.GUICE;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.matchers.Matchers.hasAnnotation;
+import static com.google.errorprone.matchers.InjectMatchers.GUICE_INJECT_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.JAVAX_INJECT_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.hasInjectAnnotation;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -27,21 +28,14 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.MethodTree;
-import com.sun.tools.javac.code.Attribute.Compound;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
-import javax.lang.model.element.TypeElement;
-
 /**
- * This checker matches methods that
- *   1) are not themselves annotated with @Inject
- *     (neither javax.inject.Inject nor com.google.inject.Inject)
- *   2) descend from a method that is annotated with @com.google.inject.Inject
+ * This checker matches methods that 1) are not themselves annotated with @Inject (neither
+ * javax.inject.Inject nor com.google.inject.Inject) 2) descend from a method that is annotated
+ * with @com.google.inject.Inject
  *
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
@@ -60,30 +54,17 @@ import javax.lang.model.element.TypeElement;
           + "annotated with `@Inject`. Because of this difference, it is recommended that you "
           + "annotate this method explicitly.",
   category = GUICE,
-  severity = WARNING,
-  maturity = EXPERIMENTAL
+  severity = WARNING
 )
 public class OverridesGuiceInjectableMethod extends BugChecker implements MethodTreeMatcher {
 
-  private static final String OVERRIDE_ANNOTATION = "java.lang.Override";
-  private static final String GUICE_INJECT_ANNOTATION = "com.google.inject.Inject";
-  private static final String JAVAX_INJECT_ANNOTATION = "javax.inject.Inject";
-
-  private static final Matcher<MethodTree> INJECTABLE_METHOD_MATCHER =
-      Matchers.<MethodTree>anyOf(
-          hasAnnotation(GUICE_INJECT_ANNOTATION), hasAnnotation(JAVAX_INJECT_ANNOTATION));
-
-  private static final Matcher<MethodTree> OVERRIDE_METHOD_MATCHER =
-      Matchers.<MethodTree>hasAnnotation(OVERRIDE_ANNOTATION);
-
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
-    // if method is itself annotated with @Inject or it has no ancestor methods, return No_MATCH;
-    if (!INJECTABLE_METHOD_MATCHER.matches(methodTree, state)
-        && OVERRIDE_METHOD_MATCHER.matches(methodTree, state)) {
+    // if method is itself annotated with @Inject or it has no ancestor methods, return NO_MATCH;
+    if (!hasInjectAnnotation().matches(methodTree, state)) {
       MethodSymbol method = ASTHelpers.getSymbol(methodTree);
       for (MethodSymbol superMethod : ASTHelpers.findSuperMethods(method, state.getTypes())) {
-        if (isAnnotatedWith(superMethod, GUICE_INJECT_ANNOTATION)) {
+        if (ASTHelpers.hasAnnotation(superMethod, GUICE_INJECT_ANNOTATION, state)) {
           return buildDescription(methodTree)
               .addFix(
                   SuggestedFix.builder()
@@ -101,16 +82,5 @@ public class OverridesGuiceInjectableMethod extends BugChecker implements Method
       }
     }
     return Description.NO_MATCH;
-  }
-
-  private static boolean isAnnotatedWith(MethodSymbol method, String annotation) {
-    for (Compound c : method.getAnnotationMirrors()) {
-      if (((TypeElement) c.getAnnotationType().asElement())
-          .getQualifiedName()
-          .contentEquals(annotation)) {
-        return true;
-      }
-    }
-    return false;
   }
 }

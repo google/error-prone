@@ -18,16 +18,14 @@ package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertThat;
 
-import com.google.errorprone.BugPattern.MaturityLevel;
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.DocGenTool.Target;
-
+import java.io.StringWriter;
+import java.util.Arrays;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.io.StringWriter;
-import java.util.Arrays;
 
 @RunWith(JUnit4.class)
 public class BugPatternIndexWriterTest {
@@ -38,28 +36,29 @@ public class BugPatternIndexWriterTest {
 
     BugPatternInstance pattern1 = new BugPatternInstance();
     pattern1.severity = SeverityLevel.ERROR;
-    pattern1.maturity = MaturityLevel.EXPERIMENTAL;
     pattern1.name = "BugPatternA";
     pattern1.summary = "Here's the \"interesting\" summary";
 
     BugPatternInstance pattern2 = new BugPatternInstance();
     pattern2.severity = SeverityLevel.ERROR;
-    pattern2.maturity = MaturityLevel.EXPERIMENTAL;
     pattern2.name = "BugPatternB";
     pattern2.summary = "{summary2}";
 
     BugPatternInstance pattern3 = new BugPatternInstance();
     pattern3.severity = SeverityLevel.ERROR;
-    pattern3.maturity = MaturityLevel.MATURE;
     pattern3.name = "BugPatternC";
     pattern3.summary = "mature";
 
     new BugPatternIndexWriter()
-        .dump(Arrays.asList(pattern3, pattern2, pattern1), writer, Target.INTERNAL);
+        .dump(
+            Arrays.asList(pattern3, pattern2, pattern1),
+            writer,
+            Target.INTERNAL,
+            ImmutableSet.of("BugPatternC"));
     assertThat(writer.toString())
         .isEqualTo(
-            "# Bug patterns\n"
-                + "\n"
+            "# Bug patterns\n\n"
+                + "[TOC]\n\n"
                 + "This list is auto-generated from our sources. Each bug pattern includes code\n"
                 + "examples of both positive and negative cases; these examples are used in our\n"
                 + "regression test suite.\n"
@@ -90,24 +89,25 @@ public class BugPatternIndexWriterTest {
 
     BugPatternInstance pattern1 = new BugPatternInstance();
     pattern1.severity = SeverityLevel.ERROR;
-    pattern1.maturity = MaturityLevel.EXPERIMENTAL;
     pattern1.name = "BugPatternA";
     pattern1.summary = "Here's the \"interesting\" summary";
 
     BugPatternInstance pattern2 = new BugPatternInstance();
     pattern2.severity = SeverityLevel.ERROR;
-    pattern2.maturity = MaturityLevel.EXPERIMENTAL;
     pattern2.name = "BugPatternB";
     pattern2.summary = "{summary2}";
 
     BugPatternInstance pattern3 = new BugPatternInstance();
     pattern3.severity = SeverityLevel.ERROR;
-    pattern3.maturity = MaturityLevel.MATURE;
     pattern3.name = "BugPatternC";
     pattern3.summary = "mature";
 
     new BugPatternIndexWriter()
-        .dump(Arrays.asList(pattern3, pattern2, pattern1), writer, Target.EXTERNAL);
+        .dump(
+            Arrays.asList(pattern3, pattern2, pattern1),
+            writer,
+            Target.EXTERNAL,
+            ImmutableSet.of("BugPatternC"));
     assertThat(writer.toString())
         .isEqualTo(
             "---\n"

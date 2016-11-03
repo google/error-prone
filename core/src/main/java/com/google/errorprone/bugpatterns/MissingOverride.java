@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
@@ -26,14 +25,12 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
-
 import javax.lang.model.element.Modifier;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
@@ -41,8 +38,7 @@ import javax.lang.model.element.Modifier;
   name = "MissingOverride",
   summary = "method overrides method in supertype; expected @Override",
   category = JDK,
-  severity = WARNING,
-  maturity = MATURE
+  severity = WARNING
 )
 public class MissingOverride extends BugChecker implements MethodTreeMatcher {
 

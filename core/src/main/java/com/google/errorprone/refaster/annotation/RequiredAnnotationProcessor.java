@@ -19,7 +19,6 @@ package com.google.errorprone.refaster.annotation;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
-
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;

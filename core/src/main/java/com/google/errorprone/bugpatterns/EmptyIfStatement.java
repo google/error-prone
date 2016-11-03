@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.nextStatement;
 import static com.google.errorprone.matchers.Matchers.parentNode;
@@ -29,29 +28,30 @@ import com.google.errorprone.bugpatterns.BugChecker.EmptyStatementTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matchers;
-
 import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 
 /**
- * This checker finds and fixes empty statements after an if, with no else
- * part. For example:
- * if (foo == 10);
+ * This checker finds and fixes empty statements after an if, with no else part. For example: if
+ * (foo == 10);
  *
- * It attempts to match javac's -Xlint:empty warning behavior, which can
- * be found in com/sun/tools/javac/comp/Check.java.
+ * <p>It attempts to match javac's -Xlint:empty warning behavior, which can be found in
+ * com/sun/tools/javac/comp/Check.java.
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-@BugPattern(name = "EmptyIf",
-    altNames = {"empty"},
-    summary = "Empty statement after if",
-    explanation =
-        "An if statement contains an empty statement as the then clause. A semicolon may " +
-        "have been inserted by accident.",
-    category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
+@BugPattern(
+  name = "EmptyIf",
+  altNames = {"empty"},
+  summary = "Empty statement after if",
+  explanation =
+      "An if statement contains an empty statement as the then clause. A semicolon may "
+          + "have been inserted by accident.",
+  category = JDK,
+  severity = ERROR
+)
 public class EmptyIfStatement extends BugChecker implements EmptyStatementTreeMatcher {
 
   /**

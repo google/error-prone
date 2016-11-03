@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 public class DeadExceptionPositiveCases {
   public void error() {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone;
+package com.google.errorprone.testdata;
 
 public final class FlowConstants {
   public static final byte SOME_BYTE = 32;

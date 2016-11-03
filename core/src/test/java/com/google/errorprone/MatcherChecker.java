@@ -20,7 +20,6 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ExpressionStatementTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.Tree;
 

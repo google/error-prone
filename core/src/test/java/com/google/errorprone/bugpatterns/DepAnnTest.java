@@ -18,9 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -46,7 +44,6 @@ public class DepAnnTest {
   }
 
   @Test
-  @Ignore("blocked on javac7 bug")
   public void testNegativeCase2() throws Exception {
     compilationHelper.addSourceFile("DepAnnNegativeCase2.java").doTest();
   }

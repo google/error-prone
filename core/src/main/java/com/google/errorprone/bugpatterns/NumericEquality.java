@@ -15,20 +15,16 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 
-/**
- * @author scottjohnson@google.com (Scott Johnson)
- */
+/** @author scottjohnson@google.com (Scott Johnson) */
 @BugPattern(
   name = "NumericEquality",
   summary = "Numeric comparison using reference equality instead of value equality",
@@ -36,8 +32,7 @@ import com.sun.tools.javac.code.Symbol;
       "Numbers are compared for reference equality/inequality using == or != "
           + "instead of for value equality using .equals()",
   category = JDK,
-  severity = ERROR,
-  maturity = EXPERIMENTAL
+  severity = ERROR
 )
 public class NumericEquality extends AbstractReferenceEquality {
 
@@ -48,14 +43,14 @@ public class NumericEquality extends AbstractReferenceEquality {
       return false;
     }
     Symbol sym = ASTHelpers.getSymbol(tree);
-    if (isFinal(sym) && sym.isStatic()) {
-      // Using a static final object as a sentinel is OK
+    if (sym instanceof Symbol.VarSymbol && isFinal(sym) && sym.isStatic()) {
+      // Using a static final field as a sentinel is OK
       return false;
     }
     return true;
   }
 
   public static boolean isFinal(Symbol s) {
-    return (s.flags() & Flags.FINAL) != 0;
+    return (s.flags() & Flags.FINAL) == Flags.FINAL;
   }
 }

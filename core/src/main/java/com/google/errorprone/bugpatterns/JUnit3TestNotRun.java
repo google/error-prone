@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JUNIT;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.JUnitMatchers.isJUnit3TestClass;
 import static com.google.errorprone.matchers.JUnitMatchers.wouldRunInJUnit4;
@@ -37,27 +36,26 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
-
 import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
-
 import java.util.regex.Pattern;
-
 import javax.lang.model.element.Modifier;
 
-/**
- * @author rburny@google.com (Radoslaw Burny)
- */
-@BugPattern(name = "JUnit3TestNotRun",
-    summary = "Test method will not be run; please prefix name with \"test\"",
-    explanation = "JUnit 3 requires that test method names start with \"test\". The method that" +
-        " triggered this error looks like it is supposed to be the test, but either" +
-        " misspells the required prefix, or has @Test annotation, but no prefix." +
-        " As a consequence, JUnit 3 will ignore it.\n\n" +
-        "If you want to disable test on purpose, change the name to something more descriptive," +
-        " like \"disabledTestSomething()\". You don't need @Test annotation, but if you want to" +
-        " keep it, add @Ignore too.",
-    category = JUNIT, maturity = MATURE, severity = ERROR)
+/** @author rburny@google.com (Radoslaw Burny) */
+@BugPattern(
+  name = "JUnit3TestNotRun",
+  summary = "Test method will not be run; please prefix name with \"test\"",
+  explanation =
+      "JUnit 3 requires that test method names start with \"test\". The method that"
+          + " triggered this error looks like it is supposed to be the test, but either"
+          + " misspells the required prefix, or has @Test annotation, but no prefix."
+          + " As a consequence, JUnit 3 will ignore it.\n\n"
+          + "If you want to disable test on purpose, change the name to something more descriptive,"
+          + " like \"disabledTestSomething()\". You don't need @Test annotation, but if you want to"
+          + " keep it, add @Ignore too.",
+  category = JUNIT,
+  severity = ERROR
+)
 public class JUnit3TestNotRun extends BugChecker implements MethodTreeMatcher {
 
   /*

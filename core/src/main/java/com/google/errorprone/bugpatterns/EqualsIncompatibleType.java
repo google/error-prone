@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -33,7 +32,6 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
@@ -41,18 +39,14 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.util.Name;
-
 import java.util.Set;
 
-/**
- * @author avenet@google.com (Arnaud J. Venet)
- */
+/** @author avenet@google.com (Arnaud J. Venet) */
 @BugPattern(
   name = "EqualsIncompatibleType",
   summary = "An equality test between objects with incompatible types always returns false",
   category = JDK,
-  severity = WARNING,
-  maturity = MATURE
+  severity = WARNING
 )
 public class EqualsIncompatibleType extends BugChecker implements MethodInvocationTreeMatcher {
   private static final Matcher<MethodInvocationTree> STATIC_EQUALS_INVOCATION_MATCHER =
@@ -85,7 +79,7 @@ public class EqualsIncompatibleType extends BugChecker implements MethodInvocati
 
     // This is the type of the object on which the java.lang.Object.equals() method
     // is called, either directly or indirectly via a static utility method. In the latter,
-    // it is the type of the second argument to the static method.
+    // it is the type of the first argument to the static method.
     Type receiverType;
     // This is the type of the argument to the java.lang.Object.equals() method.
     // In case a static utility method is used, it is the type of the second argument

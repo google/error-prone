@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns.android;
+package com.google.errorprone.bugpatterns.android.testdata;
 
 /**
  * @author avenet@google.com (Arnaud J. Venet)

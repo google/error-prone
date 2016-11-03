@@ -19,9 +19,10 @@ package com.google.errorprone.bugpatterns.inject.testdata;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-
 import javax.inject.Scope;
 
 /**
@@ -29,34 +30,27 @@ import javax.inject.Scope;
  */
 public class InvalidTargetingOnScopingAnnotationNegativeCases {
 
-  /**
-   * A scoping annotation with legal targeting.
-   */
-  @Target(TYPE)
+  /** A scoping annotation with no specified target. */
   @Scope
-  public @interface TestAnnotation1 {
-  }
+  @Retention(RUNTIME)
+  public @interface TestAnnotation1 {}
 
-  /**
-   * A scoping annotation with legal targeting.
-   */
-  @Target(METHOD)
+  /** A scoping annotation that contains more than the required */
+  @Target({TYPE, METHOD, PARAMETER})
   @Scope
-  public @interface TestAnnotation2 {
-  }
+  @Retention(RUNTIME)
+  public @interface TestAnnotation2 {}
 
-  /**
-   * A scoping annotation with legal targeting.
-   */
+  /** A scoping annotation with legal targeting. */
   @Target({TYPE, METHOD})
   @Scope
-  public @interface TestAnnotation3 {
-  }
+  @Retention(RUNTIME)
+  public @interface TestAnnotation3 {}
 
   /**
    * A non-scoping annotation with targeting that would be illegal if it were a scoping annotation.
    */
   @Target(PARAMETER)
-  public @interface TestAnnotation4 {
-  }
+  @Retention(RUNTIME)
+  public @interface TestAnnotation4 {}
 }

@@ -18,14 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.common.io.ByteStreams;
 import com.google.errorprone.CompilationTestHelper;
-
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -33,6 +25,12 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
@@ -50,6 +48,30 @@ public class CheckReturnValueTest {
   @Test
   public void testPositiveCases() throws Exception {
     compilationHelper.addSourceFile("CheckReturnValuePositiveCases.java").doTest();
+  }
+
+  @Test
+  public void testCustomCheckReturnValueAnnotation() {
+    compilationHelper
+        .addSourceLines(
+            "foo/bar/CheckReturnValue.java",
+            "package foo.bar;",
+            "public @interface CheckReturnValue {}")
+        .addSourceLines(
+            "test/TestCustomCheckReturnValueAnnotation.java",
+            "package test;",
+            "import foo.bar.CheckReturnValue;",
+            "public class TestCustomCheckReturnValueAnnotation {",
+            "  @CheckReturnValue",
+            "  public String getString() {",
+            "    return \"string\";",
+            "  }",
+            "  public void doIt() {",
+            "    // BUG: Diagnostic contains:",
+            "    getString();",
+            "  }",
+            "}")
+        .doTest();
   }
 
   @Test
@@ -432,6 +454,43 @@ public class CheckReturnValueTest {
             "      foo.f();",
             "      junit.framework.TestCase.fail(\"message\");",
             "    } catch (Exception expected) {}",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void ignoreInAssertThrowsBodies() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Foo.java",
+            "@javax.annotation.CheckReturnValue",
+            "public class Foo {",
+            "  public int f() {",
+            "    return 42;",
+            "  }",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f(Foo foo) {",
+            "   org.junit.Assert.assertThrows(IllegalStateException.class, ",
+            "     new org.junit.function.ThrowingRunnable() {",
+            "       @Override",
+            "       public void run() throws Throwable {",
+            "         foo.f();",
+            "       }",
+            "     });",
+            "   org.junit.Assert.assertThrows(IllegalStateException.class, () -> foo.f());",
+            "   org.junit.Assert.assertThrows(IllegalStateException.class, () -> {",
+            "      int bah = foo.f();",
+            "      foo.f(); ",
+            "   });",
+            "   org.junit.Assert.assertThrows(IllegalStateException.class, () -> { ",
+            "     // BUG: Diagnostic contains: Ignored return value",
+            "     foo.f(); ",
+            "     foo.f(); ",
+            "   });",
             "  }",
             "}")
         .doTest();

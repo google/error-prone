@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -74,7 +73,6 @@ import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.CompoundAssignmentTree;
@@ -96,7 +94,6 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
-
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Iterator;
@@ -108,38 +105,37 @@ import java.util.Set;
  *
  * <ol>
  *   <li>Calls to new are disallowed.
- *   <li>Methods statically determined to be reachable from this method must also be annotated
- *       with {@code @NoAllocation}.
+ *   <li>Methods statically determined to be reachable from this method must also be annotated with
+ *       {@code @NoAllocation}.
  *   <li>Autoboxing is disallowed.
  *   <li>String concatenation and conversions are disallowed.
  *   <li>To make it easier to use exceptions, allocations are always allowed within a throw
- *       statement. (But not in the methods of nested classes if they are annotated with
- *       {@code NoAllocation}.)
- *   <li>The check is done at the source level. The compiler or runtime may perform optimizations
- *       or transformations that add or remove allocations in a way not visible to this check.
+ *       statement. (But not in the methods of nested classes if they are annotated with {@code
+ *       NoAllocation}.)
+ *   <li>The check is done at the source level. The compiler or runtime may perform optimizations or
+ *       transformations that add or remove allocations in a way not visible to this check.
  * </ol>
  */
-@BugPattern(name = "NoAllocation",
-    summary = "@NoAllocation was specified on this method, but something was found that would"
-      + " trigger an allocation",
-    explanation = "Like many other languages, Java provides automatic memory management. In Java,"
-      + " this feature incurs an runtime cost, and can also lead to unpredictable execution pauses."
-      + " In most cases, this is a reasonable tradeoff, but sometimes the loss of performance or"
-      + " predictability is unacceptable. Examples include pause-sensitive user interface handlers,"
-      + " high query rate server response handlers, or other soft-realtime applications.\n\n"
-      + "In these situations, you can annotate a few carefully written methods with"
-      + " @NoAllocation. Methods with this annotation will avoid allocations in most cases,"
-      + " reducing pressure on the garbage collector. Note that allocations may still occur in"
-      + " methods with @NoAllocation if the compiler or runtime system inserts them.\n\n"
-      + "To ease the use of exceptions, allocations are allowed if they occur within a throw"
-      + " statement. But if the throw statement contains a nested class with methods annotated"
-      + " with @NoAllocation, those methods will be disallowed from allocating.",
-    category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
+@BugPattern(
+  name = "NoAllocation",
+  summary =
+      "@NoAllocation was specified on this method, but something was found that would"
+          + " trigger an allocation",
+  category = JDK,
+  severity = ERROR
+)
 public class NoAllocationChecker extends BugChecker
-    implements AssignmentTreeMatcher, BinaryTreeMatcher, CompoundAssignmentTreeMatcher,
-    EnhancedForLoopTreeMatcher, MethodInvocationTreeMatcher, NewArrayTreeMatcher,
-    NewClassTreeMatcher, ReturnTreeMatcher, TypeCastTreeMatcher, UnaryTreeMatcher,
-    VariableTreeMatcher {
+    implements AssignmentTreeMatcher,
+        BinaryTreeMatcher,
+        CompoundAssignmentTreeMatcher,
+        EnhancedForLoopTreeMatcher,
+        MethodInvocationTreeMatcher,
+        NewArrayTreeMatcher,
+        NewClassTreeMatcher,
+        ReturnTreeMatcher,
+        TypeCastTreeMatcher,
+        UnaryTreeMatcher,
+        VariableTreeMatcher {
 
   private static final String COMMON_MESSAGE_SUFFIX =
       "is disallowed in methods annotated with @NoAllocation";

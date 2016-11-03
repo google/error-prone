@@ -17,15 +17,12 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/** @author cushon@google.com (Liam Miller-Cushon) */
 @RunWith(JUnit4.class)
 public class NarrowingCompoundAssignmentTest {
   private CompilationTestHelper compilationHelper;
@@ -84,9 +81,24 @@ public class NarrowingCompoundAssignmentTest {
             "    s -= 1;",
             "    // BUG: Diagnostic contains: s = (short) (s << 1)",
             "    s <<= 1;",
-            "    // Right shifts are OK",
+            "    // Signed right shifts are OK",
             "    s >>= 1;",
+            "    // BUG: Diagnostic contains: s = (short) (s >>> 1)",
             "    s >>>= 1;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testDeficientRightShift() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void m() {",
+            "    // BUG: Diagnostic contains: i = (short) (i >>> 1)",
+            "    for (short i = -1; i != 0; i >>>= 1);",
             "  }",
             "}")
         .doTest();
@@ -122,6 +134,36 @@ public class NarrowingCompoundAssignmentTest {
             "    Float c = Float.valueOf(0);",
             "    a += b;",
             "    a += c;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  // bit twiddling deficient types with masks of the same width is fine
+  @Test
+  public void testBitTwiddle() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void m() {",
+            "    short smask = 0b1;",
+            "    byte bmask = 0b1;",
+            "",
+            "    short s = 0;",
+            "    byte b = 0;",
+            "",
+            "    s &= smask;",
+            "    s |= smask;",
+            "    s ^= smask;",
+            "",
+            "    s &= bmask;",
+            "    s |= bmask;",
+            "    s ^= bmask;",
+            "",
+            "    b &= bmask;",
+            "    b |= bmask;",
+            "    b ^= bmask;",
             "  }",
             "}")
         .doTest();
@@ -207,6 +249,74 @@ public class NarrowingCompoundAssignmentTest {
             "    short s = 0;",
             "    // BUG: Diagnostic contains: " + expect,
             compoundAssignment,
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testDoubleLong() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void m() {",
+            "    long a = 1;",
+            "    double b = 2;",
+            "    // BUG: Diagnostic contains:"
+                + " Compound assignments from floating point to integral type",
+            "    a *= b;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testDoubleInt() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void m() {",
+            "    int a = 1;",
+            "    double b = 2;",
+            "    // BUG: Diagnostic contains:"
+                + " Compound assignments from floating point to integral type",
+            "    a *= b;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testFloatLong() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void m() {",
+            "    long a = 1;",
+            "    float b = 2;",
+            "    // BUG: Diagnostic contains:"
+                + " Compound assignments from floating point to integral type",
+            "    a *= b;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testFloatInt() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void m() {",
+            "    int a = 1;",
+            "    float b = 2;",
+            "    // BUG: Diagnostic contains:"
+                + " Compound assignments from floating point to integral type",
+            "    a *= b;",
             "  }",
             "}")
         .doTest();

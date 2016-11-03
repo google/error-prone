@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,4 +45,19 @@ public class SelfEqualsTest {
     compilationHelper.addSourceFile("SelfEqualsNegativeCases.java").doTest();
   }
 
+  @Test
+  public void positiveFix() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  <T> boolean f() {",
+            "    T t = null;",
+            "    int y = 0;",
+            "    // BUG: Diagnostic contains: return true;",
+            "    return t.equals(t);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

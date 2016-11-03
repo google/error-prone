@@ -17,8 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
 import com.google.common.base.Joiner;
@@ -32,7 +31,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -44,7 +42,6 @@ import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeScanner;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -64,8 +61,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
   category = JDK,
   summary =
       "Class.newInstance() bypasses exception checking; prefer getConstructor().newInstance()",
-  severity = ERROR,
-  maturity = MATURE
+  severity = WARNING
 )
 public class ClassNewInstance extends BugChecker implements MethodInvocationTreeMatcher {
 
@@ -79,8 +75,8 @@ public class ClassNewInstance extends BugChecker implements MethodInvocationTree
     }
     SuggestedFix.Builder fix = SuggestedFix.builder();
     fix.replace(
-        state.getEndPosition((JCTree) ASTHelpers.getReceiver(tree)),
-        state.getEndPosition((JCTree) tree),
+        state.getEndPosition(ASTHelpers.getReceiver(tree)),
+        state.getEndPosition(tree),
         String.format(".getConstructor().newInstance()"));
     boolean fixedExceptions = fixExceptions(state, fix);
     if (!fixedExceptions) {

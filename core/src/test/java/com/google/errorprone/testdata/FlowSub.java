@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone;
+package com.google.errorprone.testdata;
 
 public class FlowSub extends FlowSuper {
 }

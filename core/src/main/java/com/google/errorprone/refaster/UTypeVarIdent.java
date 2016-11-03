@@ -18,12 +18,16 @@ package com.google.errorprone.refaster;
 
 import com.google.auto.value.AutoValue;
 import com.google.errorprone.refaster.UTypeVar.TypeWithExpression;
-
+import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.TreeVisitor;
+import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
-
 import javax.annotation.Nullable;
+import javax.lang.model.element.ElementKind;
 
 /**
  * Identifier for a type variable in an AST; this is a syntactic representation of a
@@ -33,6 +37,21 @@ import javax.annotation.Nullable;
  */
 @AutoValue
 abstract class UTypeVarIdent extends UIdent {
+  private static final TreeVisitor<Boolean, Void> QUALIFIED_FROM_PACKAGE =
+      new SimpleTreeVisitor<Boolean, Void>(false) {
+
+        @Override
+        public Boolean visitMemberSelect(MemberSelectTree node, Void p) {
+          return node.getExpression().accept(this, null);
+        }
+
+        @Override
+        public Boolean visitIdentifier(IdentifierTree node, Void p) {
+          return ASTHelpers.getSymbol(node) != null
+              && ASTHelpers.getSymbol(node).getKind() == ElementKind.PACKAGE;
+        }
+      };
+  
   public static UTypeVarIdent create(CharSequence name) {
     return new AutoValue_UTypeVarIdent(StringName.of(name));
   }
@@ -53,10 +72,17 @@ abstract class UTypeVarIdent extends UIdent {
   protected Choice<Unifier> defaultAction(Tree target, Unifier unifier) {
     JCExpression expr = (JCExpression) target;
     Type targetType = expr.type;
-    @Nullable
-    TypeWithExpression boundType = unifier.getBinding(key());
+    if (targetType == null) {
+      return Choice.none();
+    }
+    @Nullable TypeWithExpression boundType = unifier.getBinding(key());
     if (boundType == null) {
-      unifier.putBinding(key(), TypeWithExpression.create(targetType, expr));
+      unifier.putBinding(
+          key(),
+          expr.accept(QUALIFIED_FROM_PACKAGE, null)
+              ? TypeWithExpression.create(
+                  targetType) /* use the ImportPolicy to refer to this type */
+              : TypeWithExpression.create(targetType, expr));
       return Choice.of(unifier);
     } else if (unifier.types().isSameType(targetType, boundType.type())) {
       return Choice.of(unifier);

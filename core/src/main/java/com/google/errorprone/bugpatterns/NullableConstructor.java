@@ -17,17 +17,17 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.AnnotationTree;
-import com.sun.source.tree.Tree;
+import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.code.Symbol;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
@@ -36,29 +36,24 @@ import com.sun.tools.javac.code.Symbol;
   summary = "Constructors should not be annotated with @Nullable since they cannot return null",
   explanation = "Constructors never return null.",
   category = JDK,
-  severity = WARNING,
-  maturity = MATURE
+  severity = WARNING
 )
-public class NullableConstructor extends BugChecker implements BugChecker.AnnotationTreeMatcher {
+public class NullableConstructor extends BugChecker implements MethodTreeMatcher {
 
   @Override
-  public Description matchAnnotation(AnnotationTree tree, VisitorState state) {
+  public Description matchMethod(MethodTree tree, VisitorState state) {
     Symbol sym = ASTHelpers.getSymbol(tree);
     if (sym == null) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
-    if (!sym.name.contentEquals("Nullable")) {
-      return Description.NO_MATCH;
+    if (!sym.isConstructor()) {
+      return NO_MATCH;
     }
-    Tree annotatedNode = getAnnotatedNode(state);
-    Symbol annotatedSymbol = ASTHelpers.getSymbol(annotatedNode);
-    if (!annotatedSymbol.isConstructor()) {
-      return Description.NO_MATCH;
+    AnnotationTree annotation =
+        ASTHelpers.getAnnotationWithSimpleName(tree.getModifiers().getAnnotations(), "Nullable");
+    if (annotation == null) {
+      return NO_MATCH;
     }
-    return describeMatch(tree, SuggestedFix.delete(tree));
-  }
-
-  private static Tree getAnnotatedNode(VisitorState state) {
-    return state.getPath().getParentPath().getParentPath().getLeaf();
+    return describeMatch(annotation, SuggestedFix.delete(annotation));
   }
 }

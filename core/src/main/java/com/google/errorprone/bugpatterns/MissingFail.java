@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JUNIT;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT_AFTER_ANNOTATION;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT_BEFORE_ANNOTATION;
@@ -53,7 +52,6 @@ import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.matchers.MultiMatcher;
 import com.google.errorprone.matchers.NextStatement;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ClassTree;
@@ -71,12 +69,10 @@ import com.sun.source.tree.TryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.tools.javac.code.Symbol;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
-
 import javax.lang.model.element.Name;
 
 /**
@@ -86,7 +82,7 @@ import javax.lang.model.element.Name;
     altNames = "missing-fail",
     summary = "Not calling fail() when expecting an exception masks bugs",
     category = JUNIT,
-    maturity = EXPERIMENTAL,
+    
     severity = WARNING)
 public class MissingFail extends BugChecker implements TryTreeMatcher {
 
@@ -220,7 +216,7 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
       List<? extends StatementTree> tryStatements = tree.getBlock().getStatements();
       StatementTree lastTryStatement = tryStatements.get(tryStatements.size() - 1);
 
-      String failCall = String.format("%nfail(\"Expected %s\");", exceptionToString(tree));
+      String failCall = String.format("\nfail(\"Expected %s\");", exceptionToString(tree));
       SuggestedFix.Builder fixBuilder = SuggestedFix.builder()
           .postfixWith(lastTryStatement, failCall);
 
@@ -374,7 +370,13 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
     @Override
     public boolean matches(ExpressionTree expressionTree, VisitorState state) {
       Symbol sym = ASTHelpers.getSymbol(expressionTree);
-      return sym != null && sym.getSimpleName().toString().startsWith("assert");
+
+      if (sym == null) {
+        return false;
+      }
+
+      String symSimpleName = sym.getSimpleName().toString();
+      return symSimpleName.startsWith("assert") || symSimpleName.startsWith("verify");
     }
   }
 
@@ -449,8 +451,7 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
   /**
    * Matches if any two of the given list of expressions are integer literals with different values.
    */
-  private static class UnequalIntegerLiteralMatcher
-      implements MultiMatcher<MethodInvocationTree, ExpressionTree> {
+  private static class UnequalIntegerLiteralMatcher implements Matcher<MethodInvocationTree> {
 
     private final Matcher<ExpressionTree> methodSelectMatcher;
 
@@ -478,11 +479,6 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
         }
       }
       return false;
-    }
-
-    @Override
-    public ExpressionTree getMatchingNode() {
-      throw new UnsupportedOperationException();
     }
   }
 

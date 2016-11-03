@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import junit.framework.TestCase;
 import org.junit.Ignore;

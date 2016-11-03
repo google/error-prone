@@ -28,7 +28,6 @@ import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.refaster.UStatement.UnifierWithUnconsumedStatements;
 import com.google.errorprone.refaster.annotation.UseImportPolicy;
-
 import com.sun.source.tree.StatementTree;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCBlock;
@@ -36,7 +35,6 @@ import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Warner;
-
 import java.io.IOException;
 import java.io.StringWriter;
 import java.lang.annotation.Annotation;
@@ -222,8 +220,9 @@ public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
         int last = nTargets - 1;
         ImmutableList<JCStatement> remainingInlined =
             inlinedStatements.subList(last, nInlined);
-        fix.replace(targetStatements.get(last), CharMatcher.is('\n').trimTrailingFrom(
-            printStatements(context, remainingInlined)));
+        fix.replace(
+            targetStatements.get(last),
+            CharMatcher.whitespace().trimTrailingFrom(printStatements(context, remainingInlined)));
       }
     } catch (CouldNotResolveImportException e) {
       logger.log(SEVERE, "Failure to resolve import in replacement", e);

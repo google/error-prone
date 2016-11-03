@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
@@ -31,26 +30,22 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.UnaryTree;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-/**
- * @author endobson@google.com (Eric Dobson)
- */
+/** @author endobson@google.com (Eric Dobson) */
 @BugPattern(
   name = "BigDecimalLiteralDouble",
-  summary = "BigDecimal(double) and BigDecimal.valueOf(double) may lose precision, "
-             + "prefer BigDecimal(String) or BigDecimal(long)",
+  summary =
+      "BigDecimal(double) and BigDecimal.valueOf(double) may lose precision, "
+          + "prefer BigDecimal(String) or BigDecimal(long)",
   category = JDK,
-  severity = WARNING,
-  maturity = EXPERIMENTAL
+  severity = WARNING
 )
 public class BigDecimalLiteralDouble extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {

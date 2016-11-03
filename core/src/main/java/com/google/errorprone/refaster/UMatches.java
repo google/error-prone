@@ -20,7 +20,6 @@ import com.google.auto.value.AutoValue;
 import com.google.common.base.Predicate;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TreeVisitor;
@@ -28,7 +27,6 @@ import com.sun.source.util.TreePath;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.util.Context;
-
 import javax.annotation.Nullable;
 
 /**

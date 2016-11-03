@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.inject.guice.testdata;
 
+
 /**
  * @author sgoldfeder@gooogle.com (Steven Goldfeder)
  */
@@ -43,55 +44,35 @@ public class OverridesJavaxInjectableMethodNegativeCases {
     public void foo() {}
   }
 
-  /**
-   * Class with a method foo() that is not annotated with @Inject, but overrides a method that is
-   * annotated with @com.google.inject.Inject.
-   */
+  /** OK, as it overrides a Guice-Inject method */
   public class TestClass4 extends TestClass2 {
     @Override
     public void foo() {}
   }
 
-  /**
-   * Class with a method foo() annotated with @com.google.inject.Inject that overrides a method
-   * annotated with @javax.inject.Inject.
-   */
+  /** gInject <- jInject */
   public class TestClass5 extends TestClass3 {
     @com.google.inject.Inject
     public void foo() {}
   }
 
-  /**
-   * Class with a method foo() annotated with @javax.inject.Inject that overrides a method 
-   * annotated with @com.google.inject.Inject.
-   */
+  /** jInject <- gInject */
   public class TestClass6 extends TestClass2 {
     @javax.inject.Inject
     public void foo() {}
   }
 
-  /**
-   * Class with a method foo() that is not annotated, but overrides a method that is annotated with
-   * @javax.inject.Inject, and that method in turn overrides a method annotated with
-   * @com.google.inject.Inject
-   */
+  /** OK, as 7 <- jInject <- gInject */
   public class TestClass7 extends TestClass6 {
     public void foo() {}
   }
 
-  /**
-   * Class with a method foo() that is not annotated, but overrides a method that is annotated with
-   * @com.google.inject.Inject, and that method in turn overrides a method annotated with
-   * @javax.inject.Inject
-   */
+  /** OK, as 8 <- gInject */
   public class TestClass8 extends TestClass5 {
     public void foo() {}
   }
   
-  /**
-   * Class with a method foo() that is not annotated, but overrides a method annotated with
-   * @javax.inject.Inject. Error is suppressed.
-   */
+  /** Explicitly suppressed warning */
   public class TestClass9 extends TestClass3 {
     @Override 
     @SuppressWarnings("OverridesJavaxInjectableMethod")

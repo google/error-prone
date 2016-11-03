@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.sun.source.tree.Tree.Kind.CLASS;
@@ -37,7 +36,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.EditDistance;
-
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -61,16 +59,12 @@ import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
  * @author eaftan@google.com (Eddie Aftandilian)
  * @author scottjohnson@google.com (Scott Johnson)
  */
-@BugPattern(name = "SelfAssignment",
-    summary = "Variable assigned to itself",
-    explanation = "The left-hand side and right-hand side of this assignment are the same. " +
-        "It has no effect.\n\n" +
-        "This also handles assignments in which the right-hand side is a call to " +
-        "Preconditions.checkNotNull(), which returns the variable that was checked for " +
-        "non-nullity.  If you just intended to check that the variable is non-null, please " +
-        "don't assign the result to the checked variable; just call Preconditions.checkNotNull() " +
-        "as a bare statement.",
-    category = JDK, severity = ERROR, maturity = MATURE)
+@BugPattern(
+  name = "SelfAssignment",
+  summary = "Variable assigned to itself",
+  category = JDK,
+  severity = ERROR
+)
 public class SelfAssignment extends BugChecker
     implements AssignmentTreeMatcher, VariableTreeMatcher {
 

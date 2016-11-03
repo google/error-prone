@@ -16,43 +16,24 @@
 
 package com.google.errorprone;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.StandardSystemProperty.JAVA_SPECIFICATION_VERSION;
-
-import com.google.common.base.Optional;
-import com.google.common.collect.Iterables;
 import com.google.errorprone.scanner.BuiltInCheckerSuppliers;
-import com.google.errorprone.scanner.ErrorProneScannerTransformer;
-import com.google.errorprone.scanner.Scanner;
 import com.google.errorprone.scanner.ScannerSupplier;
-
-import com.sun.source.util.TaskEvent;
-import com.sun.source.util.TaskListener;
-import com.sun.tools.javac.api.JavacTaskImpl;
-import com.sun.tools.javac.api.JavacTool;
-import com.sun.tools.javac.api.MultiTaskListener;
-import com.sun.tools.javac.file.JavacFileManager;
-import com.sun.tools.javac.main.Main;
 import com.sun.tools.javac.main.Main.Result;
 import com.sun.tools.javac.util.Context;
-import com.sun.tools.javac.util.JavacMessages;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Properties;
-
 import javax.annotation.processing.Processor;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 
 /**
- * An error-prone compiler that matches the interface of {@link com.sun.tools.javac.main.Main}.
- * Used by plexus-java-compiler-errorprone.
+ * An Error Prone compiler that matches the interface of {@link com.sun.tools.javac.main.Main}.
+ *
+ * <p>Unlike {@link BaseErrorProneCompiler}, it enables all built-in Error Prone checks by
+ * default.
+ *
+ * <p>Used by plexus-java-compiler-errorprone.
  *
  * @author alexeagle@google.com (Alex Eagle)
  */
@@ -76,10 +57,7 @@ public class ErrorProneCompiler {
    * @return result from the compiler invocation
    */
   public static Result compile(DiagnosticListener<JavaFileObject> listener, String[] args) {
-    ErrorProneCompiler compiler = new ErrorProneCompiler.Builder()
-        .listenToDiagnostics(listener)
-        .build();
-    return compiler.run(args);
+    return ErrorProneCompiler.builder().listenToDiagnostics(listener).build().run(args);
   }
 
   /**
@@ -89,7 +67,7 @@ public class ErrorProneCompiler {
    * @return result from the compiler invocation
    */
   public static Result compile(String[] args) {
-    return new Builder().build().run(args);
+    return builder().build().run(args);
   }
 
   /**
@@ -100,169 +78,58 @@ public class ErrorProneCompiler {
    * @return result from the compiler invocation
    */
   public static Result compile(String[] args, PrintWriter out) {
-    ErrorProneCompiler compiler = new ErrorProneCompiler.Builder()
-        .redirectOutputTo(out)
-        .build();
-    return compiler.run(args);
+    return ErrorProneCompiler.builder().redirectOutputTo(out).build().run(args);
   }
 
-  private final DiagnosticListener<? super JavaFileObject> diagnosticListener;
-  private final PrintWriter errOutput;
-  private final String compilerName;
-  private final ScannerSupplier scannerSupplier;
+  private final BaseErrorProneCompiler compiler;
 
-  private ErrorProneCompiler(
-      String compilerName,
-      PrintWriter errOutput,
-      DiagnosticListener<? super JavaFileObject> diagnosticListener,
-      ScannerSupplier scannerSupplier) {
-    this.errOutput = errOutput;
-    this.compilerName = compilerName;
-    this.diagnosticListener = diagnosticListener;
-    this.scannerSupplier = checkNotNull(scannerSupplier);
+  private ErrorProneCompiler(BaseErrorProneCompiler compiler) {
+    this.compiler = compiler;
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   public static class Builder {
-    private DiagnosticListener<? super JavaFileObject> diagnosticListener = null;
-    private PrintWriter errOutput = new PrintWriter(System.err, true);
-    private String compilerName = "javac (with error-prone)";
-    private ScannerSupplier scannerSupplier = BuiltInCheckerSuppliers.defaultChecks();
+    private final BaseErrorProneCompiler.Builder builder =
+        new BaseErrorProneCompiler.Builder().report(BuiltInCheckerSuppliers.defaultChecks());
 
     public ErrorProneCompiler build() {
-      return new ErrorProneCompiler(
-          compilerName,
-          errOutput,
-          diagnosticListener,
-          scannerSupplier);
+      return new ErrorProneCompiler(builder.build());
     }
 
     public Builder named(String compilerName) {
-      this.compilerName = compilerName;
+      builder.named(compilerName);
       return this;
     }
 
     public Builder redirectOutputTo(PrintWriter errOutput) {
-      this.errOutput = errOutput;
+      builder.redirectOutputTo(errOutput);
       return this;
     }
 
     public Builder listenToDiagnostics(DiagnosticListener<? super JavaFileObject> listener) {
-      this.diagnosticListener = listener;
+      builder.listenToDiagnostics(listener);
       return this;
     }
 
     public Builder report(ScannerSupplier scannerSupplier) {
-      this.scannerSupplier = scannerSupplier;
+      builder.report(scannerSupplier);
       return this;
     }
+
+    /** @deprecated prefer {@link #builder()} */
+    @Deprecated
+    public Builder() {}
   }
 
   public Result run(String[] args) {
-    Context context = new Context();
-    JavacFileManager.preRegister(context);
-    return run(args, context);
+    return compiler.run(args);
   }
 
-  /**
-   * Default to compiling with the same -source and -target as the host's javac.
-   *
-   * <p>This prevents, e.g., targeting Java 8 by default when using error-prone on JDK7.
-   */
-  private Iterable<String> defaultToLatestSupportedLanguageLevel(Iterable<String> args) {
-
-    String overrideLanguageLevel;
-    switch (JAVA_SPECIFICATION_VERSION.value()) {
-      case "1.7":
-        overrideLanguageLevel = "7";
-        break;
-      case "1.8":
-        overrideLanguageLevel = "8";
-        break;
-      default:
-        return args;
-    }
-
-    return Iterables.concat(
-        Arrays.asList(
-          // suppress xlint 'options' warnings to avoid diagnostics like:
-          // 'bootstrap class path not set in conjunction with -source 1.7'
-          "-Xlint:-options",
-          "-source", overrideLanguageLevel,
-          "-target", overrideLanguageLevel),
-        args);
-  }
-
-  /**
-   * Sets javac's {@code -XDcompilePolicy} flag to ensure that all classes in a
-   * file are attributed before any of them are lowered.  Error Prone depends on
-   * this behavior when analyzing files that contain multiple top-level classes.
-   *
-   * @throws InvalidCommandLineOptionException if the {@code -XDcompilePolicy}
-   *     flag is passed in the existing arguments with an unsupported value
-   */
-  private Iterable<String> setCompilePolicyToByFile(Iterable<String> args)
-      throws InvalidCommandLineOptionException {
-    for (String arg : args) {
-      if (arg.startsWith("-XDcompilePolicy")) {
-        String value = arg.substring(arg.indexOf('=') + 1);
-        switch (value) {
-          case "byfile":
-          case "simple":
-            break;
-          default:
-            throw new InvalidCommandLineOptionException(
-                String.format("-XDcompilePolicy=%s is not supported by Error Prone", value));
-        }
-        // don't do anything if a valid policy is already set
-        return args;
-      }
-    }
-    return Iterables.concat(
-        args,
-        Arrays.asList("-XDcompilePolicy=byfile"));
-  }
-
-  private String[] prepareCompilation(String[] argv, Context context)
-      throws InvalidCommandLineOptionException {
-
-    Iterable<String> newArgs = defaultToLatestSupportedLanguageLevel(Arrays.asList(argv));
-    newArgs = setCompilePolicyToByFile(newArgs);
-    ErrorProneOptions epOptions = ErrorProneOptions.processArgs(newArgs);
-
-    argv = epOptions.getRemainingArgs();
-
-    if (diagnosticListener != null) {
-      context.put(DiagnosticListener.class, diagnosticListener);
-    }
-
-    Scanner scanner = scannerSupplier.applyOverrides(epOptions).get();
-    CodeTransformer transformer = ErrorProneScannerTransformer.create(scanner);
-
-    setupMessageBundle(context);
-    enableEndPositions(context);
-    ErrorProneJavacJavaCompiler.preRegister(context, transformer, epOptions);
-
-    return argv;
-  }
-
-  private Result run(String[] argv, Context context) {
-    try {
-      argv = prepareCompilation(argv, context);
-    } catch (InvalidCommandLineOptionException e) {
-      errOutput.println(e.getMessage());
-      errOutput.flush();
-      return Result.CMDERR;
-    }
-
-    return new Main(compilerName, errOutput).compile(argv, context);
-  }
-
-  public Result run(
-    String[] argv,
-    List<JavaFileObject> javaFileObjects) {
-
-    Context context = new Context();
-    return run(argv, context, null, javaFileObjects, Collections.<Processor>emptyList());
+  public Result run(String[] argv, List<JavaFileObject> javaFileObjects) {
+    return compiler.run(argv, javaFileObjects);
   }
 
   public Result run(
@@ -271,61 +138,6 @@ public class ErrorProneCompiler {
       JavaFileManager fileManager,
       List<JavaFileObject> javaFileObjects,
       Iterable<? extends Processor> processors) {
-
-    try {
-      argv = prepareCompilation(argv, context);
-    } catch (InvalidCommandLineOptionException e) {
-      errOutput.println(e.getMessage());
-      errOutput.flush();
-      return Result.CMDERR;
-    }
-
-    JavacTool tool = JavacTool.create();
-    JavacTaskImpl task = (JavacTaskImpl) tool.getTask(
-        errOutput,
-        fileManager,
-        null,
-        Arrays.asList(argv),
-        null,
-        javaFileObjects,
-        context);
-    if (processors != null) {
-      task.setProcessors(processors);
-    }
-    return task.doCall();
-  }
-
-  /**
-   * Registers our message bundle.
-   */
-  public static void setupMessageBundle(Context context) {
-    JavacMessages.instance(context).add("com.google.errorprone.errors");
-  }
-
-  private static final String PROPERTIES_RESOURCE =
-      "/META-INF/maven/com.google.errorprone/error_prone_core/pom.properties";
-
-  /** Loads the Error Prone version. */
-  public static Optional<String> loadVersionFromPom() {
-    try (InputStream stream = ErrorProneCompiler.class.getResourceAsStream(PROPERTIES_RESOURCE)) {
-      if (stream == null) {
-        return Optional.absent();
-      }
-      Properties mavenProperties = new Properties();
-      mavenProperties.load(stream);
-      return Optional.of(mavenProperties.getProperty("version"));
-    } catch (IOException expected) {
-      return Optional.absent();
-    }
-  }
-
-  private static final TaskListener EMPTY_LISTENER = new TaskListener() {
-    @Override public void started(TaskEvent e) {}
-    @Override public void finished(TaskEvent e) {}
-  };
-
-  /** Convinces javac to run in 'API mode', and collect end position information. */
-  private static void enableEndPositions(Context context) {
-    MultiTaskListener.instance(context).add(EMPTY_LISTENER);
+    return compiler.run(argv, context, fileManager, javaFileObjects, processors);
   }
 }

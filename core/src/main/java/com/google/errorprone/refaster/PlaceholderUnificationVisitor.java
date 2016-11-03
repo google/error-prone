@@ -24,7 +24,6 @@ import com.google.common.collect.Iterables;
 import com.google.errorprone.refaster.PlaceholderUnificationVisitor.State;
 import com.google.errorprone.refaster.UPlaceholderExpression.PlaceholderParamIdent;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
@@ -102,12 +101,10 @@ import com.sun.tools.javac.tree.JCTree.Tag;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Name;
-
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
-
 import javax.annotation.Nullable;
 
 /**

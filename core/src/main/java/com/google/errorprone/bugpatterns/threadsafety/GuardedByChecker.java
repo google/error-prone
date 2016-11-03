@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.base.Joiner;
@@ -28,7 +27,6 @@ import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Kind;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Select;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
@@ -36,16 +34,13 @@ import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
   name = "GuardedByChecker",
   altNames = "GuardedBy",
   summary = "Checks for unguarded accesses to fields and methods with @GuardedBy annotations",
   category = JDK,
-  severity = ERROR,
-  maturity = MATURE
+  severity = ERROR
 )
 public class GuardedByChecker extends GuardedByValidator
     implements BugChecker.VariableTreeMatcher, BugChecker.MethodTreeMatcher {

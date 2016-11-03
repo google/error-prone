@@ -20,13 +20,11 @@ import static com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher
 
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
-
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.NewArrayTree;
 import com.sun.tools.javac.tree.JCTree;
-
 import java.util.ArrayList;
 import java.util.List;
 

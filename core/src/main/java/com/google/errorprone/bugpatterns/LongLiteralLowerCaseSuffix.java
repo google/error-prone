@@ -17,34 +17,35 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.bugpatterns.BugChecker.LiteralTreeMatcher;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.LiteralTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
-
 import java.util.regex.Pattern;
 
 /**
- * Matcher for a <code>long</code> literal with a lower-case ell for a suffix (e.g.
- * <code>234l</code>) rather than the more readable upper-case ell (e.g. <code>234L</code>).
+ * Matcher for a <code>long</code> literal with a lower-case ell for a suffix (e.g. <code>234l
+ * </code>) rather than the more readable upper-case ell (e.g. <code>234L</code>).
  *
  * @author Simon Nickerson (sjnickerson@google.com)
  */
-@BugPattern(name = "LongLiteralLowerCaseSuffix",
-    summary = "Prefer 'L' to 'l' for the suffix to long literals",
-    explanation = "A long literal can have a suffix of 'L' or 'l', but the former is less " +
-    "likely to be confused with a '1' in most fonts.",
-    category = JDK, severity = ERROR, maturity = MATURE)
+@BugPattern(
+  name = "LongLiteralLowerCaseSuffix",
+  summary = "Prefer 'L' to 'l' for the suffix to long literals",
+  explanation =
+      "A long literal can have a suffix of 'L' or 'l', but the former is less "
+          + "likely to be confused with a '1' in most fonts.",
+  category = JDK,
+  severity = ERROR
+)
 public class LongLiteralLowerCaseSuffix extends BugChecker implements LiteralTreeMatcher {
 
   private static final Matcher<LiteralTree> matcher = new Matcher<LiteralTree>() {

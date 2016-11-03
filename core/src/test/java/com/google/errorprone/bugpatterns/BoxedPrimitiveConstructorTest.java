@@ -16,10 +16,19 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.common.io.ByteStreams;
 import com.google.errorprone.CompilationTestHelper;
-
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.jar.JarEntry;
+import java.util.jar.JarOutputStream;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
@@ -56,7 +65,15 @@ public class BoxedPrimitiveConstructorTest {
             "    long j = new Long(0);",
             "    // BUG: Diagnostic contains: short s = (short) 0;",
             "    short s = new Short((short) 0);",
+            "    Double dd = d;",
+            "    // BUG: Diagnostic contains: float f2 = dd.floatValue();",
+            "    float f2 = new Float(dd);",
+            "    // BUG: Diagnostic contains: float f3 = (float) d;",
+            "    float f3 = new Float(d);",
+            "    // BUG: Diagnostic contains: foo(Float.valueOf((float) d));",
+            "    foo(new Float(d));",
             "  }",
+            "  public void foo(Float f) {}",
             "}")
         .doTest();
   }
@@ -142,6 +159,141 @@ public class BoxedPrimitiveConstructorTest {
             "    i = g(new Integer(x));",
             "    // BUG: Diagnostic contains: i = (short) 0;",
             "    i = new Integer((short) 0);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  // Tests that `new Integer(x).memberSelect` isn't unboxed to x.memberSelect
+  // TODO(cushon): we could provide a better fix for byteValue(), but hopefully no one does that?
+  @Test
+  public void methodCall() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "public abstract class Test {",
+            "  abstract int g(Integer x);",
+            "  void f(int x) {",
+            "    // BUG: Diagnostic contains: int i = Integer.valueOf(x).byteValue();",
+            "    int i = new Integer(x).byteValue();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void stringValue() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "public abstract class Test {",
+            "  abstract int g(Integer x);",
+            "  void f(int x) {",
+            "    // BUG: Diagnostic contains: String s = String.valueOf(x);",
+            "    String s = new Integer(x).toString();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void compareTo() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "public abstract class Test {",
+            "  abstract int g(Integer x);",
+            "  void f(int x, Integer y, double d, Double dd, Float f) {",
+            "    // BUG: Diagnostic contains: int c1 = Integer.compare(x, y);",
+            "    int c1 = new Integer(x).compareTo(y);",
+            "    // BUG: Diagnostic contains: int c2 = y.compareTo(Integer.valueOf(x));",
+            "    int c2 = y.compareTo(new Integer(x));",
+            "    // BUG: Diagnostic contains: int c3 = Float.compare((float) d, f);",
+            "    int c3 = new Float(d).compareTo(f);",
+            "    // BUG: Diagnostic contains: int c4 = Float.compare(dd.floatValue(), f);",
+            "    int c4 = new Float(dd).compareTo(f);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testHashCode() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "public abstract class Test {",
+            "  abstract int g(Integer x);",
+            "  void f(int x, Integer y) {",
+            "    // BUG: Diagnostic contains: int h = Integer.hashCode(x);",
+            "    int h = new Integer(x).hashCode();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void longHashCode() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "public abstract class Test {",
+            "  abstract int g(Integer x);",
+            "  int f(long x) {",
+            "    // BUG: Diagnostic contains: return Longs.hashCode(x);",
+            "    return new Long(x).hashCode();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Rule public final TemporaryFolder tempFolder = new TemporaryFolder();
+
+  public static class Super {}
+
+  public static class Inner extends Super {}
+
+  // TODO(b/30478325): create a better way to write this style of test
+  static void addClassToJar(JarOutputStream jos, Class<?> clazz) throws IOException {
+    String entryPath = clazz.getName().replace('.', '/') + ".class";
+    try (InputStream is = clazz.getClassLoader().getResourceAsStream(entryPath)) {
+      jos.putNextEntry(new JarEntry(entryPath));
+      ByteStreams.copy(is, jos);
+    }
+  }
+
+  @Test
+  public void incompleteClasspath() throws Exception {
+    File libJar = tempFolder.newFile("lib.jar");
+    try (FileOutputStream fis = new FileOutputStream(libJar);
+        JarOutputStream jos = new JarOutputStream(fis)) {
+      addClassToJar(jos, BoxedPrimitiveConstructorTest.class);
+      addClassToJar(jos, Inner.class);
+    }
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import " + Inner.class.getCanonicalName() + ";",
+            "class Test {",
+            "  void m() {",
+            "    new Inner();",
+            "  }",
+            "}")
+        .setArgs(Arrays.asList("-cp", libJar.toString()))
+        .doTest();
+  }
+
+  @Test
+  public void autoboxWidening() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f(float f) {",
+            "    // BUG: Diagnostic contains: (double) f;",
+            "    Double d = new Double(f);",
+            "    // BUG: Diagnostic contains: (short) (byte) 0;",
+            "    Short s = new Short((byte) 0);",
             "  }",
             "}")
         .doTest();

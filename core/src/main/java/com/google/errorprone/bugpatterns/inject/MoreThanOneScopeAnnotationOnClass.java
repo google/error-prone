@@ -17,69 +17,64 @@
 package com.google.errorprone.bugpatterns.inject;
 
 import static com.google.errorprone.BugPattern.Category.INJECT;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.hasAnnotation;
+import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
+import static com.google.errorprone.matchers.InjectMatchers.IS_DAGGER_COMPONENT;
+import static com.google.errorprone.matchers.InjectMatchers.IS_SCOPING_ANNOTATION;
+import static com.google.errorprone.matchers.Matchers.annotations;
 
+import com.google.common.base.Joiner;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
-import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
-import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
-
+import com.google.errorprone.matchers.MultiMatcher;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.ModifiersTree;
+import com.sun.source.tree.Tree;
+import java.util.List;
 
 /**
- * This checker matches if a class has more than one annotation that is a scope
- * annotation(that is, the annotation is either annotated with Guice's
- * {@code @ScopeAnnotation} or Javax's {@code @Scope}).
+ * This checker matches if a class has more than one annotation that is a scope annotation(that is,
+ * the annotation is either annotated with Guice's {@code @ScopeAnnotation} or Javax's
+ * {@code @Scope}).
  *
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
 @BugPattern(
   name = "InjectMoreThanOneScopeAnnotationOnClass",
-  summary = "A class can be annotated with at most one scope annotation",
+  altNames = "MoreThanOneScopeAnnotationOnClass",
+  summary = "A class can be annotated with at most one scope annotation.",
   explanation =
       "Annotating a class with more than one scope annotation is "
           + "invalid according to the JSR-330 specification. ",
   category = INJECT,
-  severity = ERROR,
-  maturity = EXPERIMENTAL
+  severity = ERROR
 )
-public class MoreThanOneScopeAnnotationOnClass extends BugChecker implements AnnotationTreeMatcher {
-
-  private static final String GUICE_SCOPE_ANNOTATION = "com.google.inject.ScopeAnnotation";
-  private static final String JAVAX_SCOPE_ANNOTATION = "javax.inject.Scope";
-
-  /**
-   * Matches annotations that are themselves annotated with with
-   * {@code @ScopeAnnotation(Guice)} or {@code @Scope(Javax)}.
-   */
-  private final Matcher<AnnotationTree> scopeAnnotationMatcher =
-      Matchers.<AnnotationTree>anyOf(
-          hasAnnotation(GUICE_SCOPE_ANNOTATION), hasAnnotation(JAVAX_SCOPE_ANNOTATION));
+public class MoreThanOneScopeAnnotationOnClass extends BugChecker implements ClassTreeMatcher {
 
   @Override
-  public final Description matchAnnotation(AnnotationTree annotationTree, VisitorState state) {
-    int numberOfScopeAnnotations = 0;
-    // check if this annotation is on a class and is a scope annotation
-    if (scopeAnnotationMatcher.matches(annotationTree, state)
-        && state.getPath().getParentPath().getParentPath().getLeaf() instanceof ClassTree) {
-      for (AnnotationTree annotation :
-          ((ModifiersTree) state.getPath().getParentPath().getLeaf()).getAnnotations()) {
-        if (scopeAnnotationMatcher.matches(annotation, state)) {
-          numberOfScopeAnnotations++;
-        }
+  public final Description matchClass(ClassTree classTree, VisitorState state) {
+    MultiMatcher<Tree, AnnotationTree> scopeFinder =
+        annotations(AT_LEAST_ONE, IS_SCOPING_ANNOTATION);
+    if (scopeFinder.matches(classTree, state) && !IS_DAGGER_COMPONENT.matches(classTree, state)) {
+      List<AnnotationTree> scopeAnnotations = scopeFinder.getMatchingNodes();
+      if (scopeAnnotations.size() > 1) {
+        return buildDescription(classTree)
+            .setMessage(
+                "This class is annotated with more than one scope annotation: "
+                    + annotationDebugString(scopeAnnotations)
+                    + ". However, classes can only have one scope annotation applied to them. "
+                    + "Please remove all but one of them.")
+            .build();
       }
-    }
-    if (numberOfScopeAnnotations > 1) {
-      return describeMatch(annotationTree, SuggestedFix.delete(annotationTree));
+
     }
     return Description.NO_MATCH;
+  }
+
+  private String annotationDebugString(List<AnnotationTree> scopeAnnotations) {
+    return Joiner.on(", ").join(scopeAnnotations);
   }
 }

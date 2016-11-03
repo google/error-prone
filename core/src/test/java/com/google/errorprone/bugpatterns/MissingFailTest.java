@@ -25,18 +25,15 @@ import com.google.errorprone.fixes.Replacement;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.scanner.Scanner;
 import com.google.errorprone.scanner.ScannerSupplier;
-
 import com.sun.source.tree.TryTree;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
-
+import java.util.LinkedList;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.util.LinkedList;
-import java.util.List;
 
 /** Unit tests for the missing fail matcher. */
 @RunWith(JUnit4.class)

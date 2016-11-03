@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns.threadsafety;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.annotations.concurrent.LockMethod;
 import com.google.errorprone.annotations.concurrent.UnlockMethod;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

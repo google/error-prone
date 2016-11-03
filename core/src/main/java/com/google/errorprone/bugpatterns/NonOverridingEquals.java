@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -44,7 +43,6 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.MethodVisibility.Visibility;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodTree;
@@ -54,12 +52,13 @@ import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.Name;
 
-/**
- * Bug checker for equals methods that don't actually override equals.
- */
-@BugPattern(name = "NonOverridingEquals",
-    summary = "equals method doesn't override Object.equals",
-    category = JDK, maturity = MATURE, severity = WARNING)
+/** Bug checker for equals methods that don't actually override equals. */
+@BugPattern(
+  name = "NonOverridingEquals",
+  summary = "equals method doesn't override Object.equals",
+  category = JDK,
+  severity = WARNING
+)
 public class NonOverridingEquals extends BugChecker implements MethodTreeMatcher {
 
   private static final String MESSAGE_BASE = "equals method doesn't override Object.equals";

@@ -1,0 +1,30 @@
+// See https://github.com/tbroyer/gradle-errorprone-plugin
+// See https://github.com/tbroyer/gradle-apt-plugin
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "net.ltgt.gradle:gradle-errorprone-plugin:0.0.8"
+    classpath "net.ltgt.gradle:gradle-apt-plugin:0.6"
+  }
+}
+
+subprojects {
+  repositories {
+    mavenCentral()
+    maven {
+      url "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
+  }
+
+  apply plugin: 'java'
+  apply plugin: 'net.ltgt.errorprone'
+  apply plugin: 'net.ltgt.apt'
+
+  configurations.errorprone {
+    resolutionStrategy.force 'com.google.errorprone:error_prone_core:2.0.14-SNAPSHOT'
+  }
+}

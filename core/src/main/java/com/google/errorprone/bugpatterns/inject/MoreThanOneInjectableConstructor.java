@@ -17,24 +17,22 @@
 package com.google.errorprone.bugpatterns.inject;
 
 import static com.google.errorprone.BugPattern.Category.INJECT;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.hasAnnotation;
+import static com.google.errorprone.bugpatterns.inject.ElementPredicates.isFirstConstructorOfMultiInjectedClass;
+import static com.google.errorprone.matchers.InjectMatchers.IS_APPLICATION_OF_GUICE_INJECT;
+import static com.google.errorprone.matchers.InjectMatchers.IS_APPLICATION_OF_JAVAX_INJECT;
+import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
-import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
-import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.AnnotationType;
+import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 
 /**
@@ -44,52 +42,33 @@ import com.sun.source.tree.Tree;
  */
 @BugPattern(
   name = "MoreThanOneInjectableConstructor",
-  summary = "A class may not have more than one injectable constructor.",
+  summary =
+      "This class has more than one @Inject-annotated constructor. Please remove the @Inject"
+          + " annotation from all but one of them.",
   explanation =
-      "Having more than one injectable constructor will throw a runtime error in "
-          + "compliant JSR-330 frameworks such as Guice or Dagger",
+      "Injection frameworks may use `@Inject` to determine how to construct an object"
+          + " in the absence of other instructions. Annotating `@Inject` on a constructor tells"
+          + " the injection framework to use that constructor. However, if multiple `@Inject`"
+          + " constructors exist, injection frameworks can't reliably choose between them.",
   category = INJECT,
   severity = ERROR,
-  maturity = EXPERIMENTAL
+  
+  altNames = {"inject-constructors", "InjectMultipleAtInjectConstructors"}
 )
-public class MoreThanOneInjectableConstructor extends BugChecker implements MethodTreeMatcher {
+public class MoreThanOneInjectableConstructor extends BugChecker implements AnnotationTreeMatcher {
 
-  private static final String GUICE_INJECT_ANNOTATION = "com.google.inject.Inject";
-  private static final String JAVAX_INJECT_ANNOTATION = "javax.inject.Inject";
-
-  private static final Matcher<MethodTree> INJECTABLE_METHOD_MATCHER =
-      Matchers.<MethodTree>anyOf(
-          hasAnnotation(GUICE_INJECT_ANNOTATION), hasAnnotation(JAVAX_INJECT_ANNOTATION));
-
-  private static final AnnotationType JAVAX_INJECT_MATCHER =
-      new AnnotationType(JAVAX_INJECT_ANNOTATION);
-
-  private static final AnnotationType GUICE_INJECT_MATCHER =
-      new AnnotationType(GUICE_INJECT_ANNOTATION);
+  private static final Matcher<AnnotationTree> IS_EITHER_INJECT =
+      anyOf(IS_APPLICATION_OF_GUICE_INJECT, IS_APPLICATION_OF_JAVAX_INJECT);
 
   @Override
-  public Description matchMethod(MethodTree methodTree, VisitorState state) {
-    int numberOfInjectableConstructors = 0;
-    if (ASTHelpers.getSymbol(methodTree).isConstructor()
-        && INJECTABLE_METHOD_MATCHER.matches(methodTree, state)) {
-      for (Tree member : ((ClassTree) state.getPath().getParentPath().getLeaf()).getMembers()) {
-        if (ASTHelpers.getSymbol(member).isConstructor()
-            && INJECTABLE_METHOD_MATCHER.matches((MethodTree) member, state)) {
-          numberOfInjectableConstructors++;
-        }
+  public Description matchAnnotation(AnnotationTree tree, VisitorState state) {
+    if (IS_EITHER_INJECT.matches(tree, state)) {
+      Tree injectedMember = state.getPath().getParentPath().getParentPath().getLeaf();
+      if (isFirstConstructorOfMultiInjectedClass(getSymbol(injectedMember))) {
+        return describeMatch(ASTHelpers.findEnclosingNode(state.getPath(), ClassTree.class));
       }
     }
-    return numberOfInjectableConstructors > 1 ? describe(methodTree, state) : Description.NO_MATCH;
+    return Description.NO_MATCH;
   }
 
-  public Description describe(MethodTree methodTree, VisitorState state) {
-    for (AnnotationTree annotation : methodTree.getModifiers().getAnnotations()) {
-      if (JAVAX_INJECT_MATCHER.matches(annotation, state)
-          || GUICE_INJECT_MATCHER.matches(annotation, state)) {
-        return describeMatch(annotation, SuggestedFix.delete(annotation));
-      }
-    }
-    throw new IllegalStateException(
-        "Expected to find more than once constructor annotated with @Inject");
-  }
 }

@@ -27,18 +27,23 @@
   <name>Maven parent POM</name>
   <groupId>com.google.errorprone</groupId>
   <artifactId>error_prone_parent</artifactId>
-  <version>2.0.10-SNAPSHOT</version>
+  <version>2.0.15-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <guava.version>19.0</guava.version>
+    <truth.version>0.30</truth.version>
   </properties>
 
   <modules>
+    <module>check_api</module>
+    <module>test_helpers</module>
     <module>core</module>
     <module>annotation</module>
     <module>annotations</module>
     <module>docgen</module>
+    <module>docgen_processor</module>
     <module>ant</module>
   </modules>
 
@@ -117,8 +122,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.1</version>
         <configuration>
-          <source>1.7</source>
-          <target>1.7</target>
+          <source>1.8</source>
+          <target>1.8</target>
           <testExcludes>
             <exclude>**/testdata/**</exclude>
           </testExcludes>

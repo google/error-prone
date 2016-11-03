@@ -30,14 +30,11 @@ import com.google.errorprone.matchers.JUnitMatchers;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.tree.JCTree;
-
 import java.io.Serializable;
 import java.util.List;
-
 import javax.annotation.Nullable;
 import javax.lang.model.element.Modifier;
 

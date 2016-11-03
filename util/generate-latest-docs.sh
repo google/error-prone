@@ -1,5 +1,7 @@
 # https://github.com/google/dagger/blob/master/util/generate-latest-docs.sh
 
+set -eu
+
 if [ "$TRAVIS_REPO_SLUG" == "google/error-prone" ] && \
    [ "$TRAVIS_JDK_VERSION" == "oraclejdk8" ] && \
    [ "$TRAVIS_PULL_REQUEST" == "false" ] && \
@@ -24,13 +26,13 @@ if [ "$TRAVIS_REPO_SLUG" == "google/error-prone" ] && \
   mvn clean
 
   mvn -P run-annotation-processor compile site
-  rsync -a core/target/generated-wiki/ ${GH_PAGES_DIR}
+  rsync -a docgen/target/generated-wiki/ ${GH_PAGES_DIR}
 
   cd $GH_PAGES_DIR
   git add --all .
   git config --global user.name "travis-ci"
   git config --global user.email "travis@travis-ci.org"
-  git commit -m "Lastest docs on successful travis build $TRAVIS_BUILD_NUMBER auto-pushed to gh-pages"
+  git commit -m "Latest docs on successful travis build $TRAVIS_BUILD_NUMBER auto-pushed to gh-pages"
   git push -fq origin gh-pages > /dev/null
 
   echo -e "Published docs to gh-pages.\n"

@@ -1,0 +1,383 @@
+/*
+ * Copyright 2016 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.google.errorprone.util;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.google.errorprone.VisitorState;
+import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.CatchTree;
+import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.EnhancedForLoopTree;
+import com.sun.source.tree.ForLoopTree;
+import com.sun.source.tree.ImportTree;
+import com.sun.source.tree.MemberSelectTree;
+import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.TryTree;
+import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePath;
+import com.sun.tools.javac.code.Flags;
+import com.sun.tools.javac.code.Kinds.KindSelector;
+import com.sun.tools.javac.code.Scope;
+import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.PackageSymbol;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
+import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.Type.ClassType;
+import com.sun.tools.javac.comp.AttrContext;
+import com.sun.tools.javac.comp.Enter;
+import com.sun.tools.javac.comp.Env;
+import com.sun.tools.javac.comp.MemberEnter;
+import com.sun.tools.javac.comp.Resolve;
+import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
+import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
+import com.sun.tools.javac.util.Name;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.BiPredicate;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.Modifier;
+
+/** A helper class to find all identifiers in scope at a given program point. */
+public final class FindIdentifiers {
+
+  /** Finds a declaration with the given name that is in scope at the current location. */
+  public static Symbol findIdent(String name, VisitorState state) {
+    ClassType enclosingClass = ASTHelpers.getType(state.findEnclosing(ClassTree.class));
+    if (enclosingClass == null || enclosingClass.tsym == null) {
+      return null;
+    }
+    Env<AttrContext> env = Enter.instance(state.context).getClassEnv(enclosingClass.tsym);
+    MethodTree enclosingMethod = state.findEnclosing(MethodTree.class);
+    if (enclosingMethod != null) {
+      env = MemberEnter.instance(state.context).getMethodEnv((JCMethodDecl) enclosingMethod, env);
+    }
+    try {
+      Method method =
+          Resolve.class.getDeclaredMethod("findIdent", Env.class, Name.class, KindSelector.class);
+      method.setAccessible(true);
+      Symbol result =
+          (Symbol)
+              method.invoke(
+                  Resolve.instance(state.context), env, state.getName(name), KindSelector.VAR);
+      return result.exists() ? result : null;
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage(), e);
+    }
+  }
+
+  /**
+   * Finds the set of all bare variable identifiers in scope at the current location. Identifiers
+   * are ordered by ascending distance/scope count from the current location to match shadowing
+   * rules. That is, if two variables with the same simple names appear in the set, the one that
+   * appears first in iteration order is the one you get if you use the bare name in the source
+   * code.
+   *
+   * <p>We do not report variables that would require a qualfied access. We also do not handle
+   * wildcard imports.
+   */
+  public static LinkedHashSet<VarSymbol> findAllIdents(VisitorState state) {
+    ImmutableSet.Builder<VarSymbol> result = new ImmutableSet.Builder<>();
+    Tree prev = state.getPath().getLeaf();
+    for (Tree curr : state.getPath().getParentPath()) {
+      switch (curr.getKind()) {
+        case BLOCK:
+          for (StatementTree stmt : ((BlockTree) curr).getStatements()) {
+            if (stmt.equals(prev)) {
+              break;
+            }
+            addIfVariable(stmt, result);
+          }
+          break;
+        case METHOD:
+          for (VariableTree param : ((MethodTree) curr).getParameters()) {
+            result.add(ASTHelpers.getSymbol(param));
+          }
+          break;
+        case CATCH:
+          result.add(ASTHelpers.getSymbol(((CatchTree) curr).getParameter()));
+          break;
+        case CLASS:
+        case INTERFACE:
+        case ENUM:
+        case ANNOTATION_TYPE:
+          // Collect fields declared in this class.  If we are in a field initializer, only
+          // include fields declared before this one. JLS 8.3.3 allows forward references if the
+          // field is referred to by qualified name, but we don't support that.
+          for (Tree member : ((ClassTree) curr).getMembers()) {
+            if (member.equals(prev)) {
+              break;
+            }
+            addIfVariable(member, result);
+          }
+
+          // Collect inherited fields.
+          Type classType = ASTHelpers.getType(curr);
+          com.sun.tools.javac.util.List<Type> superTypes = state.getTypes().closure(classType).tail;
+          for (Type type : superTypes) {
+            Scope scope = type.tsym.members();
+            ImmutableList.Builder<VarSymbol> varsList = new ImmutableList.Builder<VarSymbol>();
+            for (Symbol var : scope.getSymbols(VarSymbol.class::isInstance)) {
+              varsList.add((VarSymbol) var);
+            }
+            result.addAll(varsList.build().reverse());
+          }
+          break;
+        case FOR_LOOP:
+          addAllIfVariable(((ForLoopTree) curr).getInitializer(), result);
+          break;
+        case ENHANCED_FOR_LOOP:
+          result.add(ASTHelpers.getSymbol(((EnhancedForLoopTree) curr).getVariable()));
+          break;
+        case TRY:
+          TryTree tryTree = (TryTree) curr;
+          boolean inResources = false;
+          for (Tree resource : tryTree.getResources()) {
+            if (resource.equals(prev)) {
+              inResources = true;
+              break;
+            }
+          }
+          if (inResources) {
+            // Case 1: we're in one of the resource declarations
+            for (Tree resource : tryTree.getResources()) {
+              if (resource.equals(prev)) {
+                break;
+              }
+              addIfVariable(resource, result);
+            }
+          } else if (tryTree.getBlock().equals(prev)) {
+            // Case 2: We're in the block (not a catch or finally)
+            addAllIfVariable(tryTree.getResources(), result);
+          }
+          break;
+        case COMPILATION_UNIT:
+          for (ImportTree importTree : ((CompilationUnitTree) curr).getImports()) {
+            if (importTree.isStatic()
+                && importTree.getQualifiedIdentifier().getKind() == Kind.MEMBER_SELECT) {
+              MemberSelectTree memberSelectTree =
+                  (MemberSelectTree) importTree.getQualifiedIdentifier();
+              Scope scope =
+                  state
+                      .getTypes()
+                      .membersClosure(
+                          ASTHelpers.getType(memberSelectTree.getExpression()),
+                          /*skipInterface*/ false);
+              for (Symbol var :
+                  scope.getSymbols(
+                      sym ->
+                          sym instanceof VarSymbol
+                              && sym.getSimpleName().equals(memberSelectTree.getIdentifier()))) {
+                result.add((VarSymbol) var);
+              }
+            }
+          }
+          break;
+        default:
+          // other node types don't introduce variables
+          break;
+      }
+
+      prev = curr;
+    }
+
+    // TODO(eaftan): switch out collector for ImmutableSet.toImmutableSet()
+    return result
+        .build()
+        .stream()
+        .filter(var -> isVisible(var, state.getPath()))
+        .collect(Collectors.toCollection(LinkedHashSet::new));
+  }
+
+  private static boolean isVisible(VarSymbol var, final TreePath path) {
+    switch (var.getKind()) {
+      case ENUM_CONSTANT:
+      case FIELD:
+        // TODO(eaftan): Switch collector to ImmutableList.toImmutableList() when released
+        List<ClassSymbol> enclosingClasses =
+            StreamSupport.stream(path.spliterator(), false)
+                .filter(tree -> tree instanceof ClassTree)
+                .map(ClassTree.class::cast)
+                .map(ASTHelpers::getSymbol)
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        if (!var.isStatic()) {
+          // Instance fields are not visible if we are in a static context...
+          if (inStaticContext(path)) {
+            return false;
+          }
+
+          // ... or if we're in a static nested class and the instance fields are declared outside
+          // the enclosing static nested class (JLS 8.5.1).
+          if (lowerThan(
+              path,
+              (curr, unused) ->
+                  curr instanceof ClassTree && ASTHelpers.getSymbol((ClassTree) curr).isStatic(),
+              (curr, unused) ->
+                  curr instanceof ClassTree
+                      && ASTHelpers.getSymbol((ClassTree) curr).equals(var.owner))) {
+            return false;
+          }
+        }
+
+        // If we're lexically enclosed by the same class that defined var, we can access private
+        // fields (JLS 6.6.1).
+        if (enclosingClasses.contains(ASTHelpers.enclosingClass(var))) {
+          return true;
+        }
+
+        PackageSymbol enclosingPackage = ((JCCompilationUnit) path.getCompilationUnit()).packge;
+        Set<Modifier> modifiers = var.getModifiers();
+        // If we're in the same package where var was defined, we can access package-private fields
+        // (JLS 6.6.1).
+        if (Objects.equals(enclosingPackage, ASTHelpers.enclosingPackage(var))) {
+          return !modifiers.contains(Modifier.PRIVATE);
+        }
+
+        // Otherwise we can only access public and protected fields (JLS 6.6.1, plus the fact
+        // that the only enum constants and fields usable by simple name are either defined
+        // in the enclosing class or a superclass).
+        return modifiers.contains(Modifier.PUBLIC) || modifiers.contains(Modifier.PROTECTED);
+      case PARAMETER:
+      case LOCAL_VARIABLE:
+        // If we are in an anonymous inner class, lambda, or local class, any local variable or
+        // method parameter we access that is defined outside the anonymous class/lambda must be
+        // final or effectively final (JLS 8.1.3).
+        if (lowerThan(
+            path,
+            (curr, parent) ->
+                curr.getKind() == Kind.LAMBDA_EXPRESSION
+                    || (curr.getKind() == Kind.NEW_CLASS
+                        && ((NewClassTree) curr).getClassBody() != null)
+                    || (curr.getKind() == Kind.CLASS && parent.getKind() == Kind.BLOCK),
+            (curr, unused) -> Objects.equals(var.owner, ASTHelpers.getSymbol(curr)))) {
+          if ((var.flags() & (Flags.FINAL | Flags.EFFECTIVELY_FINAL)) == 0) {
+            return false;
+          }
+        }
+        return true;
+      case EXCEPTION_PARAMETER:
+      case RESOURCE_VARIABLE:
+        return true;
+      default:
+        throw new IllegalArgumentException("Unexpected variable type: " + var.getKind());
+    }
+  }
+
+  /** Returns true iff the leaf node of the {@code path} occurs in a JLS 8.3.1 static context. */
+  private static boolean inStaticContext(TreePath path) {
+    Tree prev = path.getLeaf();
+    path = path.getParentPath();
+
+    ClassSymbol enclosingClass =
+        ASTHelpers.getSymbol(ASTHelpers.findEnclosingNode(path, ClassTree.class));
+    ClassSymbol directSuperClass = (ClassSymbol) enclosingClass.getSuperclass().tsym;
+
+    for (Tree tree : path) {
+      switch (tree.getKind()) {
+        case METHOD:
+          return ASTHelpers.getSymbol(tree).isStatic();
+        case BLOCK: // static initializer
+          if (((BlockTree) tree).isStatic()) {
+            return true;
+          }
+          break;
+        case VARIABLE: // variable initializer of static variable
+          VariableTree variableTree = (VariableTree) tree;
+          VarSymbol variableSym = ASTHelpers.getSymbol(variableTree);
+          if (variableSym.getKind() == ElementKind.FIELD) {
+            return Objects.equals(variableTree.getInitializer(), prev) && variableSym.isStatic();
+          }
+          break;
+        case METHOD_INVOCATION: // JLS 8.8.7.1 explicit constructor invocation
+          MethodSymbol methodSym = ASTHelpers.getSymbol((MethodInvocationTree) tree);
+          if (methodSym.isConstructor()
+              && (Objects.equals(methodSym.owner, enclosingClass)
+                  || Objects.equals(methodSym.owner, directSuperClass))) {
+            return true;
+          }
+          break;
+        default:
+          break;
+      }
+      prev = tree;
+    }
+    return false;
+  }
+
+  private static void addIfVariable(Tree tree, ImmutableSet.Builder<VarSymbol> setBuilder) {
+    if (tree.getKind() == Kind.VARIABLE) {
+      setBuilder.add(ASTHelpers.getSymbol((VariableTree) tree));
+    }
+  }
+
+  private static void addAllIfVariable(
+      List<? extends Tree> list, ImmutableSet.Builder<VarSymbol> setBuilder) {
+    for (Tree tree : list) {
+      addIfVariable(tree, setBuilder);
+    }
+  }
+
+  /**
+   * Walks up the given {@code path} and returns true iff the first node matching {@code predicate1}
+   * occurs lower in the AST than the first node node matching {@code predicate2}. Returns false if
+   * no node matches {@code predicate1} or if no node matches {@code predicate2}.
+   *
+   * @param predicate1 A {@link BiPredicate} that accepts the current node and its parent
+   * @param predicate2 A {@link BiPredicate} that accepts the current node and its parent
+   */
+  private static boolean lowerThan(
+      TreePath path, BiPredicate<Tree, Tree> predicate1, BiPredicate<Tree, Tree> predicate2) {
+    int index1 = -1;
+    int index2 = -1;
+    int count = 0;
+    path = path.getParentPath();
+    while (path != null) {
+      Tree curr = path.getLeaf();
+      TreePath parentPath = path.getParentPath();
+      if (index1 < 0 && predicate1.test(curr, parentPath == null ? null : parentPath.getLeaf())) {
+        index1 = count;
+      }
+      if (index2 < 0 && predicate2.test(curr, parentPath == null ? null : parentPath.getLeaf())) {
+        index2 = count;
+      }
+      if (index1 >= 0 && index2 >= 0) {
+        break;
+      }
+      path = parentPath;
+      count++;
+    }
+
+    return (index1 >= 0) && (index1 < index2);
+  }
+
+  private FindIdentifiers() {}
+}

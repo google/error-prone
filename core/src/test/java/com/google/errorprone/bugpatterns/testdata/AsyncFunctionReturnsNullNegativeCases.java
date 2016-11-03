@@ -12,14 +12,14 @@
  * the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import static com.google.common.util.concurrent.Futures.immediateFuture;
 
 import com.google.common.base.Function;
 import com.google.common.util.concurrent.AsyncFunction;
 import com.google.common.util.concurrent.ListenableFuture;
-
+import java.util.function.Supplier;
 import javax.annotation.Nullable;
 
 /**
@@ -56,6 +56,17 @@ public class AsyncFunctionReturnsNullNegativeCases {
       @Override
       public ListenableFuture<Object> apply(String input) throws Exception {
         return null;
+      }
+    };
+
+    new AsyncFunction<String, Object>() {
+      @Override
+      public ListenableFuture<Object> apply(String input) throws Exception {
+        Supplier<String> s =
+            () -> {
+              return null;
+            };
+        return immediateFuture(s.get());
       }
     };
   }

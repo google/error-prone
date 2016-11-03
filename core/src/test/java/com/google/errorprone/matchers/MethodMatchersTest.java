@@ -1,0 +1,128 @@
+/*
+ * Copyright 2016 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.google.errorprone.matchers;
+
+import static com.google.errorprone.BugPattern.Category.JDK;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
+
+import com.google.errorprone.BugPattern;
+import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.matchers.method.MethodMatchers;
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.NewClassTree;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+
+/** {@link MethodMatchers}Test */
+@RunWith(JUnit4.class)
+public class MethodMatchersTest {
+
+  /** A bugchecker to test constructor matching. */
+  @BugPattern(
+    name = "ConstructorDeleter",
+    category = JDK,
+    summary = "Deletes constructors",
+    severity = ERROR
+  )
+  public static class ConstructorDeleter extends BugChecker
+      implements BugChecker.MethodInvocationTreeMatcher, BugChecker.NewClassTreeMatcher {
+
+    static final Matcher<ExpressionTree> CONSTRUCTOR =
+        constructor().forClass("test.Foo").withParameters("java.lang.String");
+
+    @Override
+    public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+      if (CONSTRUCTOR.matches(tree, state)) {
+        return describeMatch(tree, SuggestedFix.delete(tree));
+      }
+      return NO_MATCH;
+    }
+
+    @Override
+    public Description matchNewClass(NewClassTree tree, VisitorState state) {
+      if (CONSTRUCTOR.matches(tree, state)) {
+        return describeMatch(tree, SuggestedFix.delete(tree));
+      }
+      return NO_MATCH;
+    }
+  }
+
+  @Test
+  public void constructorMatcherTest_this() {
+    CompilationTestHelper.newInstance(ConstructorDeleter.class, getClass())
+        .addSourceLines(
+            "test/Foo.java",
+            "package test;",
+            "public class Foo { ",
+            "  public Foo(String s) {}",
+            "  public Foo() {",
+            "    // BUG: Diagnostic contains:",
+            "    this(\"\");",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void constructorMatcherTest_super() {
+    CompilationTestHelper.newInstance(ConstructorDeleter.class, getClass())
+        .addSourceLines(
+            "test/Foo.java",
+            "package test;",
+            "public class Foo { ",
+            "  public Foo(String s) {}",
+            "}")
+        .addSourceLines(
+            "test/Bar.java", //
+            "package test;",
+            "public class Bar extends Foo {",
+            "  public Bar() {",
+            "    // BUG: Diagnostic contains:",
+            "    super(\"\");",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void constructorMatcherTest_regular() {
+    CompilationTestHelper.newInstance(ConstructorDeleter.class, getClass())
+        .addSourceLines(
+            "test/Foo.java",
+            "package test;",
+            "public class Foo { ",
+            "  public Foo(String s) {}",
+            "}")
+        .addSourceLines(
+            "test/Test.java", //
+            "package test;",
+            "public class Test {",
+            "  public void f() {",
+            "    // BUG: Diagnostic contains:",
+            "    new Foo(\"\");",
+            "  }",
+            "}")
+        .doTest();
+  }
+}

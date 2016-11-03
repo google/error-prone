@@ -42,13 +42,39 @@ public class JavaxInjectOnAbstractMethodPositiveCases {
   }
   
   /**
-   * Abstract class has an injectable(javax.inject.Inject) abstract method and 
-   * an unrelated abstarct method.
+   * Abstract class has an injectable(javax.inject.Inject) abstract method and an unrelated abstract
+   * method.
    */
   public abstract class TestClass3 {
     // BUG: Diagnostic contains: remove  
     @javax.inject.Inject
     abstract void abstractMethod1();
-    abstract void abstarctMethod2();
+    abstract void abstractMethod2();
+  }
+
+  /** Interface with Inject method, should also fail. */
+  public interface TestInterface {
+    // BUG: Diagnostic contains: remove
+    @javax.inject.Inject
+    void abstractMethod();
+  }
+
+  /** Concrete Implementer of interface. */
+  public class Implementing implements TestInterface {
+    // No error here
+    public void abstractMethod() {}
+  }
+
+  /** Abstract implementer of interface. */
+  public abstract class AbstractImplementing implements TestInterface {
+    // BUG: Diagnostic contains: remove
+    @javax.inject.Inject
+    public abstract void abstractMethod();
+  }
+
+  interface HasDefault {
+    // BUG: Diagnostic contains: remove
+    @javax.inject.Inject
+    default void foo() {}
   }
 }

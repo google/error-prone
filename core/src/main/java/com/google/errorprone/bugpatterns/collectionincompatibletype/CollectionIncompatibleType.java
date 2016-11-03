@@ -17,8 +17,8 @@
 package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.fixes.SuggestedFixes.addSuppressWarnings;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Splitter;
@@ -33,16 +33,13 @@ import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.Nullable;
 
 /**
@@ -64,15 +61,16 @@ import javax.annotation.Nullable;
   name = "CollectionIncompatibleType",
   summary = "Incompatible type as argument to Object-accepting Java collections method",
   category = JDK,
-  maturity = EXPERIMENTAL,
+  
   severity = WARNING
 )
 public class CollectionIncompatibleType extends BugChecker implements MethodInvocationTreeMatcher {
 
-  public static enum FixType {
+  public enum FixType {
     NONE,
     CAST,
     PRINT_TYPES_AS_COMMENT,
+    SUPPRESS_WARNINGS,
   }
 
   private final FixType fixType;
@@ -215,6 +213,14 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
           fix = SuggestedFix.prefixWith(result.sourceTree(), "(Object) ");
         }
         description.addFix(fix);
+        break;
+      case SUPPRESS_WARNINGS:
+        SuggestedFix.Builder builder = SuggestedFix.builder();
+        builder.prefixWith(
+            result.sourceTree(),
+            String.format("/* expected: %s, actual: %s */ ", targetType, sourceType));
+        addSuppressWarnings(builder, state, "CollectionIncompatibleType");
+        description.addFix(builder.build());
         break;
       case NONE:
         break;

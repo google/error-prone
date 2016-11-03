@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * @author scottjohnson@google.com (Scott Johnson)
@@ -34,16 +34,16 @@ public class WrongParameterPackagePositiveCases {
    */
   public static class Subclass extends WrongParameterPackagePositiveCases {
 
-    // BUG: Diagnostic contains: public void testParameter(com.google.errorprone.bugpatterns.WrongParameterPackageNegativeCases.Integer x) {}
+    // BUG: Diagnostic contains: public void testParameter(com.google.errorprone.bugpatterns.testdata.WrongParameterPackageNegativeCases.Integer x) {}
     public void testParameter(Integer x) {}
 
-    // BUG: Diagnostic contains: public void testParameter(com.google.errorprone.bugpatterns.WrongParameterPackagePositiveCases.Integer x, com.google.errorprone.bugpatterns.WrongParameterPackagePositiveCases.Integer y) {}
+    // BUG: Diagnostic contains: public void testParameter(com.google.errorprone.bugpatterns.testdata.WrongParameterPackagePositiveCases.Integer x, com.google.errorprone.bugpatterns.testdata.WrongParameterPackagePositiveCases.Integer y) {}
     public void testParameter(WrongParameterPackageNegativeCases.Integer x, Integer y) {}
 
-    // BUG: Diagnostic contains: public void testParameter2(java.lang.Integer x, com.google.errorprone.bugpatterns.WrongParameterPackagePositiveCases.Integer y) {}
+    // BUG: Diagnostic contains: public void testParameter2(java.lang.Integer x, com.google.errorprone.bugpatterns.testdata.WrongParameterPackagePositiveCases.Integer y) {}
     public void testParameter2(WrongParameterPackageNegativeCases.Integer x, java.lang.Integer y) {}
 
-    // BUG: Diagnostic contains: public void testParameter3(com.google.errorprone.bugpatterns.WrongParameterPackagePositiveCases.Integer x, com.google.errorprone.bugpatterns.WrongParameterPackagePositiveCases.Integer y) {}
+    // BUG: Diagnostic contains: public void testParameter3(com.google.errorprone.bugpatterns.testdata.WrongParameterPackagePositiveCases.Integer x, com.google.errorprone.bugpatterns.testdata.WrongParameterPackagePositiveCases.Integer y) {}
     public void testParameter3(java.lang.Integer x, java.lang.Integer y) {}
 
     /**

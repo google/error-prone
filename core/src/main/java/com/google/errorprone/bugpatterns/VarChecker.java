@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
@@ -29,7 +28,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
@@ -37,10 +35,8 @@ import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Source;
 import com.sun.tools.javac.code.Symbol;
-
 import java.util.Collections;
 import java.util.EnumSet;
-
 import javax.lang.model.element.Modifier;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
@@ -48,8 +44,7 @@ import javax.lang.model.element.Modifier;
   name = "Var",
   summary = "Non-constant variable missing @Var annotation",
   category = JDK,
-  severity = WARNING,
-  maturity = EXPERIMENTAL
+  severity = WARNING
 )
 public class VarChecker extends BugChecker implements VariableTreeMatcher {
 

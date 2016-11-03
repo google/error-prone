@@ -20,14 +20,12 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Category;
-import com.google.errorprone.BugPattern.MaturityLevel;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.SynchronizedTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ExpressionTree;
@@ -40,7 +38,6 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeInfo;
-
 import java.util.Map.Entry;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
@@ -48,8 +45,7 @@ import java.util.Map.Entry;
   name = "StaticGuardedByInstance",
   category = Category.JDK,
   summary = "Writes to static fields should not be guarded by instance locks",
-  severity = SeverityLevel.WARNING,
-  maturity = MaturityLevel.MATURE
+  severity = SeverityLevel.WARNING
 )
 public class StaticGuardedByInstance extends BugChecker implements SynchronizedTreeMatcher {
 

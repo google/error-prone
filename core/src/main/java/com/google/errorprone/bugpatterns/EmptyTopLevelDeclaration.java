@@ -17,24 +17,16 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
-import com.google.common.base.Joiner;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.util.ASTHelpers;
-
-import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
-
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
@@ -45,8 +37,7 @@ import java.util.List;
       "A semi-colon at the top level of a Java file is treated as an empty type declaration"
           + " in the grammar, but it's confusing and unnecessary.",
   category = JDK,
-  severity = WARNING,
-  maturity = MATURE
+  severity = WARNING
 )
 public class EmptyTopLevelDeclaration extends BugChecker implements CompilationUnitTreeMatcher {
 

@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
@@ -36,7 +35,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
@@ -48,9 +46,7 @@ import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.TreeInfo;
 
-/**
- * @author irogers@google.com (Ian Rogers)
- */
+/** @author irogers@google.com (Ian Rogers) */
 @BugPattern(
   name = "BadComparable",
   summary = "Possible sign flip from narrowing conversion",
@@ -60,8 +56,7 @@ import com.sun.tools.javac.tree.TreeInfo;
           + " the target type (JLS 5.1.3). In a compare or compareTo method, this can cause"
           + " incorrect and unstable sort orders.",
   category = JDK,
-  severity = WARNING,
-  maturity = MATURE
+  severity = WARNING
 )
 public class BadComparable extends BugChecker implements TypeCastTreeMatcher {
   /** Matcher for the overriding method of 'int java.lang.Comparable.compareTo(T other)' */

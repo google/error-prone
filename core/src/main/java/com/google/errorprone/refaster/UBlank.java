@@ -25,14 +25,12 @@ import com.google.common.collect.DiscreteDomain;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
 import com.google.errorprone.refaster.UStatement.UnifierWithUnconsumedStatements;
-
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.util.ListBuffer;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;

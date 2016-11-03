@@ -17,7 +17,6 @@
 package com.google.errorprone.internal;
 
 import com.google.common.collect.ImmutableSet;
-
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Set;

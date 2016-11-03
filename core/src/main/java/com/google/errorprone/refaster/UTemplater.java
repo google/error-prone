@@ -28,13 +28,13 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.reflect.TypeToken;
 import com.google.errorprone.SubContext;
+import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.refaster.annotation.Matches;
 import com.google.errorprone.refaster.annotation.NotMatches;
 import com.google.errorprone.refaster.annotation.OfKind;
 import com.google.errorprone.refaster.annotation.Repeated;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ArrayAccessTree;
@@ -104,10 +104,10 @@ import com.sun.tools.javac.code.Type.WildcardType;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.model.AnnotationProxyMaker;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCLambda;
 import com.sun.tools.javac.tree.JCTree.JCModifiers;
 import com.sun.tools.javac.tree.JCTree.JCPrimitiveTypeTree;
 import com.sun.tools.javac.util.Context;
-
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -115,7 +115,6 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.Nullable;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Name;
@@ -354,6 +353,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
   private static final UStaticIdent CLAZZ;
   private static final UStaticIdent NEW_ARRAY;
   private static final UStaticIdent ENUM_VALUE_OF;
+  private static final UStaticIdent AS_VARARGS;
 
   static {
     UTypeVar tVar = UTypeVar.create("T");
@@ -379,6 +379,12 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
         Refaster.class.getCanonicalName(), "enumValueOf",
         UForAll.create(ImmutableList.of(eVar),
             UMethodType.create(eVar, UClassType.create(String.class.getCanonicalName()))));
+    AS_VARARGS =
+        UStaticIdent.create(
+            Refaster.class.getCanonicalName(),
+            "asVarargs",
+            UForAll.create(
+                ImmutableList.of(tVar), UMethodType.create(UArrayType.create(tVar), tVar)));
   }
 
   private static Tree getSingleExplicitTypeArgument(MethodInvocationTree tree) {
@@ -415,6 +421,10 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
       return UMethodInvocation.create(UMemberSelect.create(templateType(typeArg),
           "valueOf", UMethodType.create(template(((JCTree) typeArg).type),
               UClassType.create("java.lang.String"))), template(strArg));
+    } else if (anyMatch(AS_VARARGS, tree.getMethodSelect(), new Unifier(context))) {
+      ExpressionTree arg = Iterables.getOnlyElement(tree.getArguments());
+      checkArgument(ASTHelpers.hasAnnotation(arg, Repeated.class, new VisitorState(context)));
+      return template(arg);
     }
     Map<MethodSymbol, PlaceholderMethod> placeholderMethods = 
         context.get(RefasterRuleBuilderScanner.PLACEHOLDER_METHODS_KEY);
@@ -523,6 +533,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
   @Override
   public ULambda visitLambdaExpression(LambdaExpressionTree tree, Void v) {
     return ULambda.create(
+        ((JCLambda) tree).paramKind,
         cast(templateStatements(tree.getParameters()), UVariableDecl.class),
         (UTree<?>) template(tree.getBody()));
   }

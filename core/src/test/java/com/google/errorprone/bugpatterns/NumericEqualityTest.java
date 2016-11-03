@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,4 +45,21 @@ public class NumericEqualityTest {
     compilationHelper.addSourceFile("NumericEqualityNegativeCases.java").doTest();
   }
 
+  // regression test for #415
+  @Test
+  public void testParenthesized() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f() {",
+            "    final Long constValue = new Long(1000L);",
+            "    Long assignedValue;",
+            "    // BUG: Diagnostic contains:"
+                + " (!(assignedValue = new Long(1000L)).equals(constValue))",
+            "    boolean retVal = ((assignedValue = new Long(1000L)) != constValue);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

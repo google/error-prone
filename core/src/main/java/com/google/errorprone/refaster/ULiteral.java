@@ -21,14 +21,11 @@ import static com.google.common.base.Preconditions.checkState;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableBiMap;
-
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
-
 import java.util.Objects;
-
 import javax.annotation.Nullable;
 
 /**

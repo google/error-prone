@@ -16,8 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,77 +35,103 @@ public class PackageLocationTest {
   }
 
   @Test
-  public void positiveCustomRoot() throws Exception {
+  public void positiveCustomRoot() {
     compilationHelper
         .addSourceLines(
             "src/main/java/a/b/A.java",
-            "// BUG: Diagnostic contains: Expected package a to be declared in a directory ending with a, instead found /src/main/java/a/b",
+            "// BUG: Diagnostic contains: Expected package a to be declared in a directory "
+                + "ending with /a, instead found /src/main/java/a/b",
             "package a;",
             "class A {}")
         .doTest();
   }
 
   @Test
-  public void positiveTooLong() throws Exception {
+  public void positiveTooLong() {
     compilationHelper
         .addSourceLines(
             "src/main/java/A.java",
-            "// BUG: Diagnostic contains: Expected package a.b.c to be declared in a directory ending with a/b/c, instead found /src/main/java",
+            "// BUG: Diagnostic contains: Expected package a.b.c to be declared in a directory "
+                + "ending with /a/b/c, instead found /src/main/java",
             "package a.b.c;",
             "class A {}")
         .doTest();
   }
 
   @Test
-  public void positiveTooShort() throws Exception {
+  public void positiveTooShort() {
     compilationHelper
         .addSourceLines(
             "b/c/d/A.java",
-            "// BUG: Diagnostic contains: Expected package a.b.c.d to be declared in a directory ending with a/b/c/d, instead found /b/c/d",
+            "// BUG: Diagnostic contains: Expected package a.b.c.d to be declared in a directory "
+                + "ending with /a/b/c/d, instead found /b/c/d",
             "package a.b.c.d;",
             "class A {}")
         .doTest();
   }
 
   @Test
-  public void negative() throws Exception {
+  public void positiveTooShortSuffix() {
     compilationHelper
         .addSourceLines(
-            "a/A.java",
+            "panda/b/c/d/A.java",
+            "// BUG: Diagnostic contains: Expected package a.b.c.d to be declared in a directory "
+                + "ending with /a/b/c/d, instead found /panda/b/c/d",
+            "package a.b.c.d;",
+            "class A {}")
+        .doTest();
+  }
+
+  @Test
+  public void negative() {
+    compilationHelper
+        .addSourceLines(
+            "a/A.java", //
             "package a;",
             "class A {}")
         .doTest();
   }
 
   @Test
-  public void negative2() throws Exception {
+  public void negative2() {
     compilationHelper
         .addSourceLines(
-            "a/b/c/A.java",
+            "a/b/c/A.java", //
             "package a.b.c;",
             "class A {}")
         .doTest();
   }
 
   @Test
-  public void negativeSuffix() throws Exception {
+  public void negativeSuffix() {
     compilationHelper
         .addSourceLines(
-            "src/main/java/a/b/A.java",
+            "src/main/java/a/b/A.java", //
             "package a.b;",
             "class A {}")
         .doTest();
   }
 
   @Test
-  public void suppression() throws Exception {
+  public void negativeAndroid() {
+    compilationHelper
+        .addSourceLines(
+            "src/main/java/a/b/A.java", //
+            "package a;",
+            "class A {}")
+        .setArgs(ImmutableList.of("-XDandroidCompatible=true"))
+        .doTest();
+  }
+
+  @Test
+  public void suppression() {
     compilationHelper
         .addSourceLines(
             "java/com/google/foo/package-info.java",
             "@com.google.errorprone.annotations.SuppressPackageLocation",
             "package xyz.abc.foo;")
         .addSourceLines(
-            "java/com/google/foo/A.java",
+            "java/com/google/foo/A.java", //
             "package xyz.abc.foo;",
             "class A {}")
         .doTest();

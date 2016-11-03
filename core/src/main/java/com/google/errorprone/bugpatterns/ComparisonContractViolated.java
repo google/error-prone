@@ -27,7 +27,6 @@ import static com.google.errorprone.suppliers.Suppliers.INT_TYPE;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Category;
-import com.google.errorprone.BugPattern.MaturityLevel;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -35,7 +34,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ConditionalExpressionTree;
@@ -56,7 +54,6 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
-
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -77,7 +74,7 @@ import java.util.Set;
           + " arbitrarily."
   ,
   severity = SeverityLevel.ERROR,
-  maturity = MaturityLevel.EXPERIMENTAL,
+
   category = Category.JDK
 )
 public class ComparisonContractViolated extends BugChecker implements MethodTreeMatcher {

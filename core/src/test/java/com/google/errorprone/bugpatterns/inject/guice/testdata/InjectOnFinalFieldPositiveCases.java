@@ -17,9 +17,6 @@
 package com.google.errorprone.bugpatterns.inject.guice.testdata;
 
 import com.google.inject.Inject;
-
-import java.util.Set;
-
 import javax.annotation.Nullable;
 
 /**
@@ -34,12 +31,12 @@ public class InjectOnFinalFieldPositiveCases {
     @Inject final int a = 0;
 
     
-    // BUG: Diagnostic contains: @Inject public int b
     @Inject
+    // BUG: Diagnostic contains: public int b
     public final int b = 0;
-  
-    // BUG: Diagnostic contains: @Inject @Nullable Object c
+
     @Inject @Nullable
+    // BUG: Diagnostic contains: Object c
     final Object c = null;
   }
 }

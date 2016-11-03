@@ -17,7 +17,6 @@
 package com.google.errorprone.refaster;
 
 import com.google.auto.value.AutoValue;
-
 import javax.annotation.Nullable;
 import javax.lang.model.element.Name;
 

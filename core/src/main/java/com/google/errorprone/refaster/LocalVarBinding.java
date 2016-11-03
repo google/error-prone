@@ -17,7 +17,6 @@
 package com.google.errorprone.refaster;
 
 import com.google.auto.value.AutoValue;
-
 import com.sun.source.tree.ModifiersTree;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.util.Name;

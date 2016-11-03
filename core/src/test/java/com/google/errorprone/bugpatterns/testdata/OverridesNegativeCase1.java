@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * @author cushon@google.com (Liam Miller-Cushon)

@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.auto.value.AutoValue;
@@ -30,7 +29,6 @@ import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ExpressionTree;
@@ -50,24 +48,20 @@ import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCExpressionStatement;
 import com.sun.tools.javac.tree.TreeInfo;
-
 import java.util.List;
 import java.util.Objects;
-
 import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/** @author cushon@google.com (Liam Miller-Cushon) */
 // TODO(cushon): allow @LazyInit on fields as a suppression mechanism?
 @BugPattern(
-    name = "DoubleCheckedLocking",
-    summary = "Double-checked locking on non-volatile fields is unsafe",
-    category = JDK,
-    severity = WARNING,
-    maturity = MATURE)
+  name = "DoubleCheckedLocking",
+  summary = "Double-checked locking on non-volatile fields is unsafe",
+  category = JDK,
+  severity = WARNING
+)
 public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
   @Override
   public Description matchIf(IfTree outerIf, VisitorState state) {

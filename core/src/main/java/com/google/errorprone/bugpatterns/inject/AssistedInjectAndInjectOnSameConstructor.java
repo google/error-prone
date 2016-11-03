@@ -17,9 +17,14 @@
 package com.google.errorprone.bugpatterns.inject;
 
 import static com.google.errorprone.BugPattern.Category.INJECT;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.InjectMatchers.ASSISTED_INJECT_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.GUICE_INJECT_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.JAVAX_INJECT_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.hasInjectAnnotation;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
+import static com.google.errorprone.matchers.Matchers.isType;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -28,68 +33,41 @@ import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
-import com.sun.tools.javac.code.Symbol;
 
-/**
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/** @author sgoldfeder@google.com (Steven Goldfeder) */
 @BugPattern(
   name = "AssistedInjectAndInjectOnSameConstructor",
   summary = "@AssistedInject and @Inject cannot be used on the same constructor.",
   explanation =
       "Using @AssistedInject and @Inject on the same constructor is a runtime" + "error in Guice.",
   category = INJECT,
-  severity = ERROR,
-  maturity = EXPERIMENTAL
+  severity = ERROR
 )
 public class AssistedInjectAndInjectOnSameConstructor extends BugChecker
     implements AnnotationTreeMatcher {
 
-  private static final String GUICE_INJECT_ANNOTATION = "com.google.inject.Inject";
-  private static final String JAVAX_INJECT_ANNOTATION = "javax.inject.Inject";
-  private static final String ASSISTED_INJECT_ANNOTATION =
-      "com.google.inject.assistedinject.AssistedInject";
+  /** Matches a method/constructor that is annotated with an @AssistedInject annotation. */
+  private static final Matcher<MethodTree> HAS_ASSISTED_INJECT_MATCHER =
+      hasAnnotation(ASSISTED_INJECT_ANNOTATION);
 
-  /**
-   * Matches a method/constructor that is annotated with an @Inject annotation.
-   */
-  private final Matcher<MethodTree> constructorWithInjectMatcher =
-      Matchers.<MethodTree>anyOf(
-          hasAnnotation(GUICE_INJECT_ANNOTATION), hasAnnotation(JAVAX_INJECT_ANNOTATION));
-
-  /**
-   * Matches a method/constructor that is annotated with an @AssistedInject annotation.
-   */
-  private final Matcher<MethodTree> constructorWithAssistedInjectMatcher =
-      Matchers.<MethodTree>hasAnnotation(ASSISTED_INJECT_ANNOTATION);
-
-  /**
-   * Matches the @Inject and @Assisted inject annotations.
-   */
-  private final Matcher<AnnotationTree> injectOrAssistedInjectMatcher =
-      new Matcher<AnnotationTree>() {
-        @Override
-        public boolean matches(AnnotationTree annotationTree, VisitorState state) {
-          Symbol annotationSymbol = ASTHelpers.getSymbol(annotationTree);
-          return (annotationSymbol.equals(state.getSymbolFromString(JAVAX_INJECT_ANNOTATION))
-              || annotationSymbol.equals(state.getSymbolFromString(GUICE_INJECT_ANNOTATION))
-              || annotationSymbol.equals(state.getSymbolFromString(ASSISTED_INJECT_ANNOTATION)));
-        }
-      };
+  /** Matches the @Inject and @Assisted inject annotations. */
+  private static final Matcher<AnnotationTree> injectOrAssistedInjectMatcher =
+      anyOf(
+          isType(JAVAX_INJECT_ANNOTATION),
+          isType(GUICE_INJECT_ANNOTATION),
+          isType(ASSISTED_INJECT_ANNOTATION));
 
   @Override
   public Description matchAnnotation(AnnotationTree annotationTree, VisitorState state) {
     if (injectOrAssistedInjectMatcher.matches(annotationTree, state)) {
       Tree treeWithAnnotation = state.getPath().getParentPath().getParentPath().getLeaf();
       if (ASTHelpers.getSymbol(treeWithAnnotation).isConstructor()
-          && constructorWithInjectMatcher.matches((MethodTree) treeWithAnnotation, state)
-          && constructorWithAssistedInjectMatcher.matches((MethodTree) treeWithAnnotation, state)) {
+          && hasInjectAnnotation().matches(treeWithAnnotation, state)
+          && HAS_ASSISTED_INJECT_MATCHER.matches((MethodTree) treeWithAnnotation, state)) {
         return describeMatch(annotationTree, SuggestedFix.delete(annotationTree));
       }
     }

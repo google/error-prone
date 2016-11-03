@@ -15,85 +15,44 @@
 package com.google.errorprone.bugpatterns.inject.guice;
 
 import static com.google.errorprone.BugPattern.Category.GUICE;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.matchers.Matchers.annotations;
-import static com.google.errorprone.matchers.Matchers.isType;
-import static com.sun.source.tree.Tree.Kind.VARIABLE;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.InjectMatchers.GUICE_INJECT_ANNOTATION;
+import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.hasAnnotation;
+import static com.google.errorprone.matchers.Matchers.hasModifier;
+import static com.google.errorprone.matchers.Matchers.isField;
 import static javax.lang.model.element.Modifier.FINAL;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
-import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.ChildMultiMatcher.MatchType;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.MultiMatcher;
-import com.google.errorprone.util.ASTHelpers;
-
-import com.sun.source.tree.AnnotationTree;
-import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
-import com.sun.tools.javac.code.Flags;
-import com.sun.tools.javac.tree.JCTree.JCModifiers;
-import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
-import com.sun.tools.javac.tree.TreeMaker;
 
-/**
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/** @author sgoldfeder@google.com (Steven Goldfeder) */
 @BugPattern(
   name = "GuiceInjectOnFinalField",
   summary =
-      "Although Guice allows injecting final fields, doing so is not "
-          + "recommended because the injected value may not be visible to other threads.",
-  explanation = "See https://code.google.com/p/google-guice/wiki/InjectionPoints",
+      "Although Guice allows injecting final fields, doing so is disallowed because the injected "
+          + "value may not be visible to other threads.",
+  explanation = "See https://github.com/google/guice/wiki/InjectionPoints#how-guice-injects",
   category = GUICE,
-  severity = WARNING,
-  maturity = EXPERIMENTAL
+  severity = ERROR
 )
-@SuppressWarnings("serial")
 public class InjectOnFinalField extends BugChecker implements VariableTreeMatcher {
 
-  private static final String GUICE_INJECT_ANNOTATION = "com.google.inject.Inject";
-
-  private static final MultiMatcher<Tree, AnnotationTree> ANNOTATED_WITH_GUICE_INJECT_MATCHER =
-      annotations(MatchType.AT_LEAST_ONE, isType(GUICE_INJECT_ANNOTATION));
-
-  private static final Matcher<Tree> FINAL_FIELD_MATCHER =
-      new Matcher<Tree>() {
-        @Override
-        public boolean matches(Tree t, VisitorState state) {
-          return isField(t, state) && ((VariableTree) t).getModifiers().getFlags().contains(FINAL);
-        }
-      };
+  private static final Matcher<VariableTree> FINAL_FIELD_WITH_GUICE_INJECT =
+      allOf(isField(), hasModifier(FINAL), hasAnnotation(GUICE_INJECT_ANNOTATION));
 
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
-    if (ANNOTATED_WITH_GUICE_INJECT_MATCHER.matches(tree, state)
-        && FINAL_FIELD_MATCHER.matches(tree, state)) {
-      JCModifiers modifiers = ((JCVariableDecl) tree).getModifiers();
-      long replacementFlags = modifiers.flags ^ Flags.FINAL;
-      JCModifiers replacementModifiers =
-          TreeMaker.instance(state.context).Modifiers(replacementFlags, modifiers.annotations);
-      /*
-       * replace new lines with strings, trim whitespace and remove empty parens to make the
-       * suggested fixes look sane
-       */
-      String replacementModifiersString =
-          replacementModifiers.toString().replace('\n', ' ').replace("()", "").trim();
-      return describeMatch(modifiers, SuggestedFix.replace(modifiers, replacementModifiersString));
+    if (FINAL_FIELD_WITH_GUICE_INJECT.matches(tree, state)) {
+      return describeMatch(tree, SuggestedFixes.removeModifiers(tree, state, FINAL));
     }
     return Description.NO_MATCH;
   }
 
-  private static boolean isField(Tree tree, VisitorState state) {
-    return tree.getKind().equals(VARIABLE)
-        && ASTHelpers.findEnclosingNode(state.getPath(), ClassTree.class)
-            .getMembers()
-            .contains(tree);
-  }
 }

@@ -17,8 +17,9 @@
 package com.google.errorprone.bugpatterns.inject;
 
 import static com.google.errorprone.BugPattern.Category.INJECT;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.InjectMatchers.GUICE_SCOPE_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.JAVAX_SCOPE_ANNOTATION;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static javax.lang.model.element.Modifier.ABSTRACT;
 
@@ -31,28 +32,21 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Flags;
 
-/**
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/** @author sgoldfeder@google.com (Steven Goldfeder) */
 @BugPattern(
   name = "InjectScopeAnnotationOnInterfaceOrAbstractClass",
   summary = "Scope annotation on an interface or abstact class is not allowed",
   explanation = "Scoping annotations are not allowed on abstract types.",
   category = INJECT,
-  severity = ERROR,
-  maturity = EXPERIMENTAL
+  severity = ERROR
 )
 public class ScopeAnnotationOnInterfaceOrAbstractClass extends BugChecker
     implements AnnotationTreeMatcher {
-
-  private static final String GUICE_SCOPE_ANNOTATION = "com.google.inject.ScopeAnnotation";
-  private static final String JAVAX_SCOPE_ANNOTATION = "javax.inject.Scope";
 
   /**
    * Matches annotations that are themselves annotated with with @ScopeAnnotation(Guice) or

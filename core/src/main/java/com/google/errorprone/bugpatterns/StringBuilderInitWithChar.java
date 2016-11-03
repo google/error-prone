@@ -14,7 +14,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
@@ -23,32 +22,32 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matchers;
-
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree.Kind;
-import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Convert;
-
 import javax.lang.model.type.TypeKind;
 
-/**
- * @author lowasser@google.com (Louis Wasserman)
- */
-@BugPattern(category = Category.JDK, explanation =
-    "StringBuilder does not have a char constructor, so instead this code creates "
-    + "a StringBuilder with initial size equal to the code point of the specified char.",
-    maturity = MATURE, name = "StringBuilderInitWithChar", severity = ERROR,
-    summary = "StringBuilder does not have a char constructor; this invokes the int constructor.")
+/** @author lowasser@google.com (Louis Wasserman) */
+@BugPattern(
+  category = Category.JDK,
+  explanation =
+      "StringBuilder does not have a char constructor, so instead this code creates "
+          + "a StringBuilder with initial size equal to the code point of the specified char.",
+  name = "StringBuilderInitWithChar",
+  severity = ERROR,
+  summary = "StringBuilder does not have a char constructor; this invokes the int constructor."
+)
 public class StringBuilderInitWithChar extends BugChecker implements NewClassTreeMatcher {
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
-    if (Matchers.isSameType(Symtab.instance(state.context).stringBuilderType).matches(
-        tree.getIdentifier(), state) && tree.getArguments().size() == 1) {
+    if (ASTHelpers.isSameType(
+            state.getSymtab().stringBuilderType, ASTHelpers.getType(tree.getIdentifier()), state)
+        && tree.getArguments().size() == 1) {
       ExpressionTree argument = tree.getArguments().get(0);
       Type type = ((JCTree) argument).type;
       if (type.getKind() == TypeKind.CHAR) {

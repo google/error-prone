@@ -20,13 +20,19 @@ import static com.google.errorprone.refaster.Unifier.unifications;
 import static com.google.errorprone.refaster.Unifier.unifyList;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
-
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.TreeVisitor;
+import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCExpressionStatement;
 import com.sun.tools.javac.tree.JCTree.JCLambda;
+import com.sun.tools.javac.tree.JCTree.JCLambda.ParameterKind;
+import com.sun.tools.javac.tree.JCTree.JCReturn;
+import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.List;
+import com.sun.tools.javac.util.ListBuffer;
 
 /**
  * {@code UTree} representation of a {@code LambdaExpressionTree}.
@@ -35,8 +41,9 @@ import com.sun.tools.javac.util.List;
  */
 @AutoValue
 abstract class ULambda extends UExpression implements LambdaExpressionTree {
-  public static ULambda create(Iterable<UVariableDecl> parameters, UTree<?> body) {
-    return new AutoValue_ULambda(ImmutableList.copyOf(parameters), body);
+  public static ULambda create(
+      ParameterKind parameterKind, Iterable<UVariableDecl> parameters, UTree<?> body) {
+    return new AutoValue_ULambda(parameterKind, ImmutableList.copyOf(parameters), body);
   }
   
   @Override
@@ -57,10 +64,44 @@ abstract class ULambda extends UExpression implements LambdaExpressionTree {
 
   @Override
   public JCLambda inline(Inliner inliner) throws CouldNotResolveImportException {
-    return inliner.maker().Lambda(
-        List.convert(JCVariableDecl.class, inliner.inlineList(getParameters())), 
-        getBody().inline(inliner));
+    return inliner.maker().Lambda(inlineParams(inliner), inlineBody(inliner));
   }
+
+  public List<JCVariableDecl> inlineParams(Inliner inliner) throws CouldNotResolveImportException {
+    if (parameterKind() == ParameterKind.EXPLICIT) {
+      return List.convert(JCVariableDecl.class, inliner.inlineList(getParameters()));
+    }
+    ListBuffer<JCVariableDecl> params = new ListBuffer<>();
+    for (UVariableDecl param : getParameters()) {
+      params.add(param.inlineImplicitType(inliner));
+    }
+    return params.toList();
+  }
+
+  JCTree inlineBody(Inliner inliner) throws CouldNotResolveImportException {
+    if (getBody() instanceof UPlaceholderExpression) {
+      UPlaceholderExpression body = (UPlaceholderExpression) getBody();
+      Optional<List<JCStatement>> blockBinding =
+          inliner.getOptionalBinding(body.placeholder().blockKey());
+      if (blockBinding.isPresent()) {
+        // this lambda is of the form args -> blockPlaceholder();
+        List<JCStatement> blockInlined =
+            UPlaceholderExpression.copier(body.arguments(), inliner)
+                .copy(blockBinding.get(), inliner);
+        if (blockInlined.size() == 1) {
+          if (blockInlined.get(0) instanceof JCReturn) {
+            return ((JCReturn) blockInlined.get(0)).getExpression();
+          } else if (blockInlined.get(0) instanceof JCExpressionStatement) {
+            return ((JCExpressionStatement) blockInlined.get(0)).getExpression();
+          }
+        }
+        return inliner.maker().Block(0, blockInlined);
+      }
+    }
+    return getBody().inline(inliner);
+  }
+  
+  abstract ParameterKind parameterKind();
 
   @Override
   public abstract ImmutableList<UVariableDecl> getParameters();

@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
@@ -26,13 +25,11 @@ import com.google.errorprone.bugpatterns.BugChecker.MemberSelectTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.TreeMaker;
-
 import javax.lang.model.element.ElementKind;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
@@ -40,8 +37,7 @@ import javax.lang.model.element.ElementKind;
   name = "TypeParameterQualifier",
   summary = "Type parameter used as type qualifier",
   category = JDK,
-  severity = ERROR,
-  maturity = MATURE
+  severity = ERROR
 )
 public class TypeParameterQualifier extends BugChecker implements MemberSelectTreeMatcher {
 

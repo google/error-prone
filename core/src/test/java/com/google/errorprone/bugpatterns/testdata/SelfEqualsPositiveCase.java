@@ -14,37 +14,99 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
+
+import static com.google.common.truth.Truth.assertThat;
+
+import org.junit.Assert;
 
 /**
+ * Positive test cases for {@link SelfEquals} check.
+ *
  * @author eaftan@google.com (Eddie Aftandilian)
+ * @author bhagwani@google.com (Sumit Bhagwani)
  */
 public class SelfEqualsPositiveCase {
+  protected String simpleField;
 
-  public boolean test1() {
-    Object obj = new Object();
-    // BUG: Diagnostic contains: An object is tested for equality to itself
-    return obj.equals(obj);
+  public boolean test1(Object obj) {
+    if (obj == null || getClass() != obj.getClass()) {
+      return false;
+    }
+    SelfEqualsPositiveCase other = (SelfEqualsPositiveCase) obj;
+    // BUG: Diagnostic contains: simpleField.equals(other.simpleField);
+    return simpleField.equals(simpleField);
   }
 
-  private Object obj = new Object();
-  public boolean test2() {
-    // BUG: Diagnostic contains: An object is tested for equality to itself
-    return obj.equals(this.obj);
+  public boolean test2(SelfEqualsPositiveCase obj) {
+    if (obj == null || getClass() != obj.getClass()) {
+      return false;
+    }
+    SelfEqualsPositiveCase other = (SelfEqualsPositiveCase) obj;
+    // BUG: Diagnostic contains: simpleField.equals(other.simpleField);
+    return simpleField.equals(this.simpleField);
   }
 
-  public boolean test3() {
-    // BUG: Diagnostic contains: An object is tested for equality to itself
-    return this.obj.equals(obj);
+  public boolean test3(SelfEqualsPositiveCase obj) {
+    if (obj == null || getClass() != obj.getClass()) {
+      return false;
+    }
+    SelfEqualsPositiveCase other = (SelfEqualsPositiveCase) obj;
+    // BUG: Diagnostic contains: this.simpleField.equals(other.simpleField);
+    return this.simpleField.equals(simpleField);
   }
 
-  public boolean test4() {
-    // BUG: Diagnostic contains: An object is tested for equality to itself
-    return this.obj.equals(this.obj);
+  public boolean test4(SelfEqualsPositiveCase obj) {
+    if (obj == null || getClass() != obj.getClass()) {
+      return false;
+    }
+    SelfEqualsPositiveCase other = (SelfEqualsPositiveCase) obj;
+    // BUG: Diagnostic contains: this.simpleField.equals(other.simpleField);
+    return this.simpleField.equals(this.simpleField);
   }
 
-  public boolean test5() {
+  public boolean test5(SelfEqualsPositiveCase obj) {
+    if (obj == null || getClass() != obj.getClass()) {
+      return false;
+    }
+    SelfEqualsPositiveCase other = (SelfEqualsPositiveCase) obj;
     // BUG: Diagnostic contains: An object is tested for equality to itself
     return equals(this);
+  }
+
+  public void testAssertTrue(SelfEqualsPositiveCase obj) {
+    // BUG: Diagnostic contains: An object is tested for equality to itself
+    Assert.assertTrue(obj.equals(obj));
+  }
+
+  public void testAssertThat(SelfEqualsPositiveCase obj) {
+    // BUG: Diagnostic contains: An object is tested for equality to itself
+    assertThat(obj.equals(obj)).isTrue();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null || getClass() != obj.getClass()) {
+      return false;
+    }
+    SelfEqualsPositiveCase other = (SelfEqualsPositiveCase) obj;
+    return simpleField.equals(((SelfEqualsPositiveCase)other).simpleField);
+  }
+
+  private static class SubClass extends SelfEqualsPositiveCase {
+    @Override
+    public boolean equals(Object obj) {
+      if (obj == null || getClass() != obj.getClass()) {
+        return false;
+      }
+      SubClass other = (SubClass) obj;
+      return simpleField.equals(((SubClass) other).simpleField);
+    }
+  }
+
+  public void testSub() {
+    SubClass sc = new SubClass();
+    // BUG: Diagnostic contains: An object is tested for equality to itself
+    sc.equals(sc);
   }
 }

@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
@@ -30,7 +31,6 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.predicates.TypePredicate;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -117,33 +117,65 @@ public abstract class AbstractToString extends BugChecker
   private Description checkToString(ExpressionTree tree, VisitorState state) {
     Symbol sym = ASTHelpers.getSymbol(tree);
     if (!(sym instanceof VarSymbol || sym instanceof MethodSymbol)) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
     Type type = ASTHelpers.getType(tree);
     if (type instanceof MethodType) {
       type = type.getReturnType();
     }
-    if (!typePredicate().apply(type, state)) {
-      return Description.NO_MATCH;
-    }
-    // is the enclosing expression string concat?
     Tree parent = state.getPath().getParentPath().getLeaf();
-    if ((parent.getKind() == Kind.PLUS || parent.getKind() == Kind.PLUS_ASSIGNMENT)
-        && state.getTypes().isSameType(ASTHelpers.getType(parent), state.getSymtab().stringType)) {
-      return maybeFix(tree, implicitToStringFix(tree, state));
+    ToStringKind toStringKind = isToString(parent, tree, state);
+    if (toStringKind == ToStringKind.NONE) {
+      return NO_MATCH;
+    }
+    Optional<Fix> fix;
+    switch (toStringKind) {
+      case IMPLICIT:
+        fix = implicitToStringFix(tree, state);
+        break;
+      case EXPLICIT:
+        fix = toStringFix(parent, tree, state);
+        break;
+      default:
+        throw new AssertionError(toStringKind);
+    }
+    if (!typePredicate().apply(type, state)) {
+      return NO_MATCH;
+    }
+    return maybeFix(tree, fix);
+  }
+
+  enum ToStringKind {
+    /** String concatenation, or an enclosing print method. */
+    IMPLICIT,
+    /** {@code String.valueOf()} or {@code #toString()}. */
+    EXPLICIT,
+    NONE
+  }
+
+  /** Classifies expressions that are converted to strings by their enclosing expression. */
+  ToStringKind isToString(Tree parent, ExpressionTree tree, VisitorState state) {
+    // is the enclosing expression string concat?
+    if (isStringConcat(parent, state)) {
+      return ToStringKind.IMPLICIT;
     }
     if (parent instanceof ExpressionTree) {
       ExpressionTree parentExpression = (ExpressionTree) parent;
       // the enclosing method is print() or println()
       if (PRINT_STRING.matches(parentExpression, state)) {
-        return maybeFix(tree, implicitToStringFix(tree, state));
+        return ToStringKind.IMPLICIT;
       }
       // the enclosing method is String.valueOf()
       if (VALUE_OF.matches(parentExpression, state)) {
-        return maybeFix(tree, toStringFix(parentExpression, tree, state));
+        return ToStringKind.EXPLICIT;
       }
     }
-    return Description.NO_MATCH;
+    return ToStringKind.NONE;
+  }
+
+  private boolean isStringConcat(Tree tree, VisitorState state) {
+    return (tree.getKind() == Kind.PLUS || tree.getKind() == Kind.PLUS_ASSIGNMENT)
+        && state.getTypes().isSameType(ASTHelpers.getType(tree), state.getSymtab().stringType);
   }
 
   private Description maybeFix(Tree tree, Optional<Fix> fix) {

@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.LinkType.NONE;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.base.Function;
@@ -31,28 +30,29 @@ import com.google.errorprone.annotations.IncompatibleModifiers;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Attribute;
-
 import java.util.List;
 import java.util.Set;
-
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
-/**
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
-@BugPattern(name = "IncompatibleModifiers",
-    summary = "This annotation has incompatible modifiers as specified by its "
-    + "@IncompatibleModifiers annotation",
-    explanation = "The @IncompatibleModifiers annotation declares that the target annotation "
-    + "is incompatible with a set of provided modifiers. This check ensures that all "
-    + "annotations respect their @IncompatibleModifiers specifications.",
-    linkType = NONE, category = JDK, severity = WARNING, maturity = MATURE)
+/** @author sgoldfeder@google.com (Steven Goldfeder) */
+@BugPattern(
+  name = "IncompatibleModifiers",
+  summary =
+      "This annotation has incompatible modifiers as specified by its "
+          + "@IncompatibleModifiers annotation",
+  explanation =
+      "The @IncompatibleModifiers annotation declares that the target annotation "
+          + "is incompatible with a set of provided modifiers. This check ensures that all "
+          + "annotations respect their @IncompatibleModifiers specifications.",
+  linkType = NONE,
+  category = JDK,
+  severity = WARNING
+)
 // TODO(cushon): merge the implementation with RequiredModifiersChecker
 public class IncompatibleModifiersChecker extends BugChecker implements AnnotationTreeMatcher {
 

@@ -25,19 +25,16 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CompileTimeConstant;
 import com.google.errorprone.scanner.Scanner;
 import com.google.errorprone.scanner.ScannerSupplier;
-
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.main.Main.Result;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /** {@link CompileTimeConstantExpressionMatcher}Test */
 @RunWith(JUnit4.class)
@@ -126,10 +123,14 @@ public class CompileTimeConstantExpressionMatcherTest {
       "    String s1; s1 = s;",
       "  }",
       "  public void m2(@CompileTimeConstant String s) { ",
+      "    s = null;",
       "    String s2; s2 = s;",
       "  }",
       "  public void m3(final String s) { ",
       "    String s3; s3 = s;",
+      "  }",
+      "  public void m4(@CompileTimeConstant String s) { ",
+      "    String s4; s4 = s;",
       "  }",
       "}"
     };
@@ -137,6 +138,7 @@ public class CompileTimeConstantExpressionMatcherTest {
     expectedMatches.put("s1", true);
     expectedMatches.put("s2", false);
     expectedMatches.put("s3", false);
+    expectedMatches.put("s4", true);
     assertCompilerMatchesOnAssignment(expectedMatches, lines);
   }
 
@@ -152,11 +154,16 @@ public class CompileTimeConstantExpressionMatcherTest {
       "  }",
       "  public CompileTimeConstantExpressionMatcherTestCase(",
       "      @CompileTimeConstant String s, int foo) { ",
+      "    s = null;",
       "    String s2; s2 = s;",
       "  }",
       "  public CompileTimeConstantExpressionMatcherTestCase(",
       "      final String s, boolean foo) { ",
       "    String s3; s3 = s;",
+      "  }",
+      "  public CompileTimeConstantExpressionMatcherTestCase(",
+      "      @CompileTimeConstant String s, long foo) { ",
+      "    String s4; s4 = s;",
       "  }",
       "}"
     };
@@ -164,6 +171,7 @@ public class CompileTimeConstantExpressionMatcherTest {
     expectedMatches.put("s1", true);
     expectedMatches.put("s2", false);
     expectedMatches.put("s3", false);
+    expectedMatches.put("s4", true);
     assertCompilerMatchesOnAssignment(expectedMatches, lines);
   }
 

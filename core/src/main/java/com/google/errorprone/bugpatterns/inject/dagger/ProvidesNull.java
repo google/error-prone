@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.inject.dagger;
 
 import static com.google.errorprone.BugPattern.Category.DAGGER;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
@@ -28,16 +27,14 @@ import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-
-import javax.lang.model.element.AnnotationMirror;
-
 /**
  * Bug checker for null-returning methods annotated with {@code @Provides} but not
  * {@code @Nullable}.
@@ -52,7 +49,7 @@ import javax.lang.model.element.AnnotationMirror;
           + "If you believe the `return null` path can never be taken, please throw a "
           + "`RuntimeException` instead. Otherwise, please annotate the method with `@Nullable`.",
   category = DAGGER,
-  maturity = MATURE,
+  
   severity = ERROR
 )
 public class ProvidesNull extends BugChecker implements ReturnTreeMatcher {
@@ -70,9 +67,17 @@ public class ProvidesNull extends BugChecker implements ReturnTreeMatcher {
       return Description.NO_MATCH;
     }
 
-    MethodTree enclosingMethod = ASTHelpers.findEnclosingNode(state.getPath(), MethodTree.class);
-    if (enclosingMethod == null) {
-      return Description.NO_MATCH;
+    TreePath path = state.getPath();
+    MethodTree enclosingMethod = null;
+    while (true) {
+      if (path == null || path.getLeaf() instanceof LambdaExpressionTree) {
+        return Description.NO_MATCH;
+      } else if (path.getLeaf() instanceof MethodTree) {
+        enclosingMethod = (MethodTree) path.getLeaf();
+        break;
+      } else {
+        path = path.getParentPath();
+      }
     }
     MethodSymbol enclosingMethodSym = ASTHelpers.getSymbol(enclosingMethod);
     if (enclosingMethodSym == null) {
@@ -80,7 +85,7 @@ public class ProvidesNull extends BugChecker implements ReturnTreeMatcher {
     }
 
     if (!ASTHelpers.hasAnnotation(enclosingMethodSym, "dagger.Provides", state)
-        || hasAnyNullableAnnotation(enclosingMethodSym)) {
+        || ASTHelpers.hasDirectAnnotationWithSimpleName(enclosingMethodSym, "Nullable")) {
       return Description.NO_MATCH;
     }
 
@@ -109,18 +114,5 @@ public class ProvidesNull extends BugChecker implements ReturnTreeMatcher {
           .addFix(addNullableFix)
           .build();
     }
-  }
-
-  /**
-   * Returns true iff this method is directly annotated with <em>any</em> annotation with the simple
-   * name "Nullable".
-   */
-  private static boolean hasAnyNullableAnnotation(MethodSymbol methodSym) {
-    for (AnnotationMirror annotation : methodSym.getAnnotationMirrors()) {
-      if (annotation.getAnnotationType().asElement().getSimpleName().contentEquals("Nullable")) {
-        return true;
-      }
-    }
-    return false;
   }
 }

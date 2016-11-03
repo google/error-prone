@@ -16,7 +16,6 @@ package com.google.errorprone.refaster;
 
 import com.google.common.testing.EqualsTester;
 import com.google.common.testing.SerializableTester;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;

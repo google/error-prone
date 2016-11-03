@@ -19,15 +19,12 @@ import static com.google.errorprone.refaster.Unifier.unifyList;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
-
 import com.sun.source.tree.TreeVisitor;
 import com.sun.source.tree.TryTree;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCTry;
-
 import java.util.List;
-
 import javax.annotation.Nullable;
 
 /**

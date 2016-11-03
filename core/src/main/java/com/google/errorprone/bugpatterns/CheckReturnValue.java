@@ -17,19 +17,11 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.enclosingNode;
-import static com.google.errorprone.matchers.Matchers.expressionStatement;
-import static com.google.errorprone.matchers.Matchers.kindIs;
-import static com.google.errorprone.matchers.Matchers.nextStatement;
-import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
-import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 
 import com.google.common.base.Optional;
 import com.google.errorprone.BugPattern;
@@ -40,40 +32,32 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.StatementTree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
-import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
-
 import javax.lang.model.element.ElementKind;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/** @author eaftan@google.com (Eddie Aftandilian) */
 @BugPattern(
   name = "CheckReturnValue",
   altNames = {"ResultOfMethodCallIgnored", "ReturnValueIgnored"},
   summary = "Ignored return value of method that is annotated with @CheckReturnValue",
   category = JDK,
-  severity = ERROR,
-  maturity = MATURE
+  severity = ERROR
 )
 public class CheckReturnValue extends AbstractReturnValueIgnored
     implements MethodTreeMatcher, ClassTreeMatcher {
+
+  private static final String CHECK_RETURN_VALUE = "CheckReturnValue";
 
   private static Optional<Boolean> shouldCheckReturnValue(Symbol sym, VisitorState state) {
     if (hasAnnotation(sym, CanIgnoreReturnValue.class, state)) {
       return Optional.of(false);
     }
-    if (hasAnnotation(sym, javax.annotation.CheckReturnValue.class, state)) {
+    if (hasDirectAnnotationWithSimpleName(sym, CHECK_RETURN_VALUE)) {
       return Optional.of(true);
     }
     return Optional.absent();
@@ -99,30 +83,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
       new Matcher<MethodInvocationTree>() {
         @Override
         public boolean matches(MethodInvocationTree tree, VisitorState state) {
-
           MethodSymbol method = ASTHelpers.getSymbol(tree);
-          if (ASTHelpers.isVoidType(method.getReturnType(), state)) {
-            return false;
-          }
-
-          if (mockitoInvocation(tree, state)) {
-            return false;
-          }
-
-          // Allow unused return values in tests that check for thrown exceptions, e.g.:
-          //
-          // try {
-          //   Foo.newFoo(-1);
-          //   fail();
-          // } catch (IllegalArgumentException expected) {
-          // }
-          //
-          StatementTree statement =
-              ASTHelpers.findEnclosingNode(state.getPath(), StatementTree.class);
-          if (statement != null && EXPECTED_EXCEPTION_MATCHER.matches(statement, state)) {
-            return false;
-          }
-
           Optional<Boolean> result = shouldCheckReturnValue(method, state);
           if (result.isPresent()) {
             return result.get();
@@ -141,12 +102,6 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
           return false;
         }
       };
-
-  private static final Matcher<ExpressionTree> MOCKITO_MATCHER =
-      anyOf(
-          staticMethod().onClass("org.mockito.Mockito").named("verify"),
-          instanceMethod().onDescendantOf("org.mockito.stubbing.Stubber").named("when"),
-          instanceMethod().onDescendantOf("org.mockito.InOrder").named("verify"));
 
   /**
    * Return a matcher for method invocations in which the method being called has the
@@ -173,7 +128,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
   public Description matchMethod(MethodTree tree, VisitorState state) {
     MethodSymbol method = ASTHelpers.getSymbol(tree);
 
-    boolean checkReturn = hasAnnotation(method, javax.annotation.CheckReturnValue.class, state);
+    boolean checkReturn = hasDirectAnnotationWithSimpleName(method, CHECK_RETURN_VALUE);
     boolean canIgnore = hasAnnotation(method, CanIgnoreReturnValue.class, state);
 
     if (checkReturn && canIgnore) {
@@ -201,40 +156,15 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
   }
 
   /**
-   * Validate that at most one of {@link javax.annotation.CheckReturnValue} and
-   * {@link CanIgnoreReturnValue} are applied to a class (or interface or enum).
+   * Validate that at most one of {@link javax.annotation.CheckReturnValue} and {@link
+   * CanIgnoreReturnValue} are applied to a class (or interface or enum).
    */
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
-    if (hasAnnotation(tree, javax.annotation.CheckReturnValue.class, state)
+    if (hasDirectAnnotationWithSimpleName(ASTHelpers.getSymbol(tree), CHECK_RETURN_VALUE)
         && hasAnnotation(tree, CanIgnoreReturnValue.class, state)) {
       return buildDescription(tree).setMessage(String.format(BOTH_ERROR, "class")).build();
     }
     return Description.NO_MATCH;
   }
-
-  /**
-   * Don't match the method that is invoked through {@code Mockito.verify(t)} or
-   * {@code doReturn(val).when(t)}.
-   */
-  private static boolean mockitoInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (tree instanceof JCMethodInvocation
-        && ((JCMethodInvocation) tree).getMethodSelect() instanceof JCFieldAccess) {
-      ExpressionTree receiver = ASTHelpers.getReceiver(tree);
-      if (MOCKITO_MATCHER.matches(receiver, state)) {
-          return true;
-      }
-    }
-    return false;
-  }
-
-  static final Matcher<ExpressionTree> FAIL_METHOD =
-      anyOf(
-          instanceMethod().onDescendantOf("com.google.common.truth.AbstractVerb").named("fail"),
-          staticMethod().onClass("org.junit.Assert").named("fail"),
-          staticMethod().onClass("junit.framework.Assert").named("fail"),
-          staticMethod().onClass("junit.framework.TestCase").named("fail"));
-
-  static final Matcher<StatementTree> EXPECTED_EXCEPTION_MATCHER =
-      allOf(enclosingNode(kindIs(Kind.TRY)), nextStatement(expressionStatement(FAIL_METHOD)));
 }

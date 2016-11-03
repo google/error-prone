@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.android;
 
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

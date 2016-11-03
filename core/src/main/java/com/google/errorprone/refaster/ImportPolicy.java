@@ -23,7 +23,6 @@ import static com.google.common.base.Preconditions.checkState;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
-
 import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
@@ -31,7 +30,6 @@ import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCImport;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -53,6 +51,10 @@ public enum ImportPolicy {
     @Override
     public JCExpression classReference(
         Inliner inliner, CharSequence topLevelClazz, CharSequence fullyQualifiedClazz) {
+      if (Refaster.class.getName().contentEquals(fullyQualifiedClazz)) {
+        // Special handling to ensure that the pretty-printer always recognizes Refaster references
+        return inliner.maker().Ident(inliner.asName("Refaster"));
+      }
       List<String> allImports = getAllImports(inliner);
       /*
        * Check if topLevelClazz or fullyQualifiedClazz is already imported.
@@ -135,6 +137,10 @@ public enum ImportPolicy {
     @Override
     public JCExpression classReference(Inliner inliner, CharSequence topLevelClazz,
         CharSequence fullyQualifiedClazz) {
+      if (Refaster.class.getName().contentEquals(fullyQualifiedClazz)) {
+        // Special handling to ensure that the pretty-printer always recognizes Refaster references
+        return inliner.maker().Ident(inliner.asName("Refaster"));
+      }
       String packge = topLevelClazz.toString();
       int lastDot = packge.lastIndexOf('.');
       packge = (lastDot >= 0) ? packge.substring(0, lastDot) : "";
@@ -152,6 +158,12 @@ public enum ImportPolicy {
     @Override
     public JCExpression staticReference(Inliner inliner, CharSequence topLevelClazz,
         CharSequence fullyQualifiedClazz, CharSequence member) {
+      if (Refaster.class.getName().contentEquals(topLevelClazz)) {
+        // Special handling to ensure that the pretty-printer always recognizes Refaster references
+        return inliner
+            .maker()
+            .Select(inliner.maker().Ident(inliner.asName("Refaster")), inliner.asName(member));
+      }
       return inliner.maker().Select(
           classReference(inliner, topLevelClazz, fullyQualifiedClazz), 
           inliner.asName(member));
@@ -172,6 +184,12 @@ public enum ImportPolicy {
     @Override
     public JCExpression staticReference(Inliner inliner, CharSequence topLevelClazz,
         CharSequence fullyQualifiedClazz, CharSequence member) {
+      if (Refaster.class.getName().contentEquals(topLevelClazz)) {
+        // Special handling to ensure that the pretty-printer always recognizes Refaster references
+        return inliner
+            .maker()
+            .Select(inliner.maker().Ident(inliner.asName("Refaster")), inliner.asName(member));
+      }
       inliner.addStaticImport(fullyQualifiedClazz + "." + member);
       return inliner.maker().Ident(inliner.asName(member));
     }    

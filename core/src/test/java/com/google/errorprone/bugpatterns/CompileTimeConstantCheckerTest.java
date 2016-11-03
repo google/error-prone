@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,6 +36,22 @@ public class CompileTimeConstantCheckerTest {
   public void setUp() {
     compilationHelper =
         CompilationTestHelper.newInstance(CompileTimeConstantChecker.class, getClass());
+  }
+
+  @Test
+  public void test_SuppressWarningsDoesntWork() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "test/CompileTimeConstantTestCase.java",
+            "package test;",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "public class CompileTimeConstantTestCase {",
+            "  public static void m(@CompileTimeConstant String s) { }",
+            "  @SuppressWarnings(\"CompileTimeConstant\")",
+            " // BUG: Diagnostic contains: Non-compile-time constant expression passed",
+            "  public static void r(String x) { m(x); }",
+            "}")
+        .doTest();
   }
 
   @Test
@@ -293,6 +308,22 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
+  public void testMatches_effectivelyFinalCompileTimeConstantParam() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "test/CompileTimeConstantTestCase.java",
+            "package test;",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "public class CompileTimeConstantTestCase {",
+            "  public static void m(@CompileTimeConstant String y) { }",
+            "  public static void r(@CompileTimeConstant String x) { ",
+            "    m(x); ",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testMatches_nonFinalCompileTimeConstantParam() throws Exception {
     compilationHelper
         .addSourceLines(
@@ -302,6 +333,7 @@ public class CompileTimeConstantCheckerTest {
             "public class CompileTimeConstantTestCase {",
             "  public static void m(@CompileTimeConstant String y) { }",
             "  public static void r(@CompileTimeConstant String x) { ",
+            "    x = x + \"!\";",
             "    // BUG: Diagnostic contains: . Did you mean to make 'x' final?",
             "    m(x); ",
             "  }",

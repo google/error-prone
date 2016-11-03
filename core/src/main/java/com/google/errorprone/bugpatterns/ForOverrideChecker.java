@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.GUAVA;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
@@ -26,7 +25,6 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree.Kind;
@@ -36,11 +34,9 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Type;
-
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
 import javax.lang.model.element.Modifier;
 
 /**
@@ -50,28 +46,31 @@ import javax.lang.model.element.Modifier;
  * <p>Specifically, all calls to the method have to occur within the context of the outermost class
  * where the method is defined.
  */
-@BugPattern(name = "ForOverride",
-    summary =
-        "Method annotated @ForOverride must be protected or package-private and only invoked from "
-        + "declaring class",
-    explanation =
-        "A method that overrides a @ForOverride method should not be invoked directly. Instead, it"
-        + " should be invoked only from the class in which it was declared. For example, if"
-        + " overriding Converter.doForward, you should invoke it through Converter.convert."
-        + " For testing, factor out the code you want to run to a separate method.",
-    category = GUAVA, severity = ERROR, maturity = MATURE)
+@BugPattern(
+  name = "ForOverride",
+  summary =
+      "Method annotated @ForOverride must be protected or package-private and only invoked from "
+          + "declaring class",
+  explanation =
+      "A method that overrides a @ForOverride method should not be invoked directly. Instead, it"
+          + " should be invoked only from the class in which it was declared. For example, if"
+          + " overriding Converter.doForward, you should invoke it through Converter.convert."
+          + " For testing, factor out the code you want to run to a separate method.",
+  category = GUAVA,
+  severity = ERROR
+)
 public class ForOverrideChecker extends BugChecker
     implements MethodInvocationTreeMatcher, MethodTreeMatcher {
 
   private static final String FOR_OVERRIDE = "com.google.errorprone.annotations.ForOverride";
   private static final String MESSAGE_BASE = "Method annotated @ForOverride ";
 
-  //TODO(cushon): remove
-  private static final String GUAVA_FOR_OVERRIDE = "com.google.common.annotations.ForOverride";
-
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     MethodSymbol method = ASTHelpers.getSymbol(tree);
+    if (method == null) {
+      return Description.NO_MATCH;
+    }
     Type currentClass = getOutermostClass(state);
 
     if (method.isStatic() || method.isConstructor() || currentClass == null) {
@@ -83,11 +82,13 @@ public class ForOverrideChecker extends BugChecker
     for (Symbol overriddenMethod : overriddenMethods) {
       Type declaringClass = overriddenMethod.outermostClass().asType();
       if (!declaringClass.equals(currentClass)) {
-        String customMessage = MESSAGE_BASE +  "must not be invoked directly "
-                    + "(except by the declaring class, " + declaringClass + ")";
-        return buildDescription(tree)
-            .setMessage(customMessage)
-            .build();
+        String customMessage =
+            MESSAGE_BASE
+                + "must not be invoked directly "
+                + "(except by the declaring class, "
+                + declaringClass
+                + ")";
+        return buildDescription(tree).setMessage(customMessage).build();
       }
     }
 
@@ -108,9 +109,7 @@ public class ForOverrideChecker extends BugChecker
 
       if (!overriddenMethods.isEmpty()) {
         String customMessage = MESSAGE_BASE + "must have protected or package-private visibility";
-        return buildDescription(tree)
-            .setMessage(customMessage)
-            .build();
+        return buildDescription(tree).setMessage(customMessage).build();
       }
     }
 
@@ -123,7 +122,7 @@ public class ForOverrideChecker extends BugChecker
    * @param state the VisitorState
    * @param method the method to find overrides for
    * @return a list of methods annotated @ForOverride that the method overrides, including the
-   * method itself if it has the annotation
+   *     method itself if it has the annotation
    */
   private List<MethodSymbol> getOverriddenMethods(VisitorState state, MethodSymbol method) {
     // Static methods cannot override, only overload.
@@ -155,11 +154,10 @@ public class ForOverrideChecker extends BugChecker
     Iterator<MethodSymbol> iter = list.iterator();
     while (iter.hasNext()) {
       MethodSymbol member = iter.next();
-      if (!(hasAnnotation(FOR_OVERRIDE, member) || hasAnnotation(GUAVA_FOR_OVERRIDE, member))
+      if (!hasAnnotation(FOR_OVERRIDE, member)
           // Note that MethodSymbol.overrides() ignores static-ness, but that's OK since we've
           // already checked that this method is not static.
-          || !method.overrides(
-              member, (TypeSymbol) member.owner, state.getTypes(), true)) {
+          || !method.overrides(member, (TypeSymbol) member.owner, state.getTypes(), true)) {
         iter.remove();
       }
     }
@@ -167,9 +165,7 @@ public class ForOverrideChecker extends BugChecker
     return list;
   }
 
-  /**
-   * Get the outermost class/interface/enum of an element, or null if none.
-   */
+  /** Get the outermost class/interface/enum of an element, or null if none. */
   private Type getOutermostClass(VisitorState state) {
     TreePath path = state.getPath();
     Type type = null;

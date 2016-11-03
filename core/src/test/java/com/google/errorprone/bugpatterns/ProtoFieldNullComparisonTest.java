@@ -14,8 +14,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.common.base.Predicate;
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,5 +44,29 @@ public class ProtoFieldNullComparisonTest {
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.addSourceFile("ProtoFieldNullComparisonNegativeCases.java").doTest();
+  }
+  
+  @Test
+  public void testProto3() {
+    CompilationTestHelper.newInstance(ProtoFieldNullComparison.class, getClass())
+        .addSourceFile("proto/Proto3Test.java")
+        .addSourceLines(
+            "TestProto3.java",
+            "import com.google.errorprone.bugpatterns.proto.Proto3Test.TestProto3Message;",
+            "public class TestProto3 {",
+            "  public boolean doIt(TestProto3Message proto3Message) {",
+            "    // BUG: Diagnostic matches: NO_FIX",
+            "    return proto3Message.getMyString() == null;",
+            "  }",
+            "}")
+        .expectErrorMessage(
+            "NO_FIX",
+            new Predicate<String>() {
+              @Override
+              public boolean apply(String input) {
+                return !input.contains("hasMyString()");
+              }
+            })
+        .doTest();
   }
 }

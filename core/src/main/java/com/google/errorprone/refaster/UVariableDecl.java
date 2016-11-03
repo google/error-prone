@@ -23,7 +23,6 @@ import com.google.auto.value.AutoValue;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.TreeVisitor;
@@ -32,7 +31,6 @@ import com.sun.tools.javac.tree.JCTree.JCModifiers;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Name;
-
 import javax.annotation.Nullable;
 
 /**
@@ -91,6 +89,15 @@ public abstract class UVariableDecl extends USimpleStatement implements Variable
 
   @Override
   public JCVariableDecl inline(Inliner inliner) throws CouldNotResolveImportException {
+    return inline(getType(), inliner);
+  }
+
+  public JCVariableDecl inlineImplicitType(Inliner inliner) throws CouldNotResolveImportException {
+    return inline(null, inliner);
+  }
+
+  private JCVariableDecl inline(@Nullable UExpression type, Inliner inliner)
+      throws CouldNotResolveImportException {
     Optional<LocalVarBinding> binding = inliner.getOptionalBinding(key());
     JCModifiers modifiers;
     Name name;
@@ -102,7 +109,10 @@ public abstract class UVariableDecl extends USimpleStatement implements Variable
       modifiers = maker.Modifiers(0L);
       name = getName().inline(inliner);
     }
-    return maker.VarDef(modifiers, name, getType().inline(inliner),
+    return maker.VarDef(
+        modifiers,
+        name,
+        (type == null) ? null : type.inline(inliner),
         (getInitializer() == null) ? null : getInitializer().inline(inliner));
   }
 

@@ -18,19 +18,19 @@ package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugPattern.Category.ONE_OFF;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.common.io.ByteStreams;
 import com.google.errorprone.bugpatterns.BadShiftAmount;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ExpressionStatementTreeMatcher;
@@ -39,10 +39,8 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.bugpatterns.NonAtomicVolatileUpdate;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.scanner.ErrorProneScanner;
-import com.google.errorprone.scanner.Scanner;
+import com.google.errorprone.scanner.BuiltInCheckerSuppliers;
 import com.google.errorprone.scanner.ScannerSupplier;
-
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -51,33 +49,29 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.main.Main.Result;
-import com.sun.tools.javac.processing.JavacProcessingEnvironment;
-import com.sun.tools.javac.util.Context;
-import com.sun.tools.javac.util.List;
-
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.jar.JarEntry;
+import java.util.jar.JarOutputStream;
+import javax.lang.model.element.Name;
+import javax.tools.Diagnostic;
+import javax.tools.JavaFileObject;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Locale;
-import java.util.Set;
-
-import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.lang.model.SourceVersion;
-import javax.lang.model.element.Name;
-import javax.lang.model.element.TypeElement;
-import javax.tools.Diagnostic;
-import javax.tools.JavaFileObject;
 
 /**
  * Integration tests for {@link ErrorProneCompiler}.
@@ -91,23 +85,28 @@ public class ErrorProneCompilerIntegrationTest {
   private StringWriter outputStream;
   private ErrorProneTestCompiler.Builder compilerBuilder;
   ErrorProneTestCompiler compiler;
+  @Rule public final TemporaryFolder tmpFolder = new TemporaryFolder();
 
   @Before
   public void setUp() {
     diagnosticHelper = new DiagnosticTestHelper();
     outputStream = new StringWriter();
-    compilerBuilder = new ErrorProneTestCompiler.Builder()
-        .named("test")
-        .redirectOutputTo(new PrintWriter(outputStream, true))
-        .listenToDiagnostics(diagnosticHelper.collector);
+    compilerBuilder =
+        new ErrorProneTestCompiler.Builder()
+            .named("test")
+            .report(BuiltInCheckerSuppliers.defaultChecks())
+            .redirectOutputTo(new PrintWriter(outputStream, true))
+            .listenToDiagnostics(diagnosticHelper.collector);
     compiler = compilerBuilder.build();
   }
 
   @Test
   public void fileWithError() throws Exception {
-    Result exitCode = compiler.compile(compiler.fileManager().forResources(
-        BadShiftAmount.class,
-        "BadShiftAmountPositiveCases.java"));
+    Result exitCode =
+        compiler.compile(
+            compiler
+                .fileManager()
+                .forResources(BadShiftAmount.class, "testdata/BadShiftAmountPositiveCases.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
 
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher = hasItem(
@@ -120,9 +119,13 @@ public class ErrorProneCompilerIntegrationTest {
   public void fileWithWarning() throws Exception {
     compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(NonAtomicVolatileUpdate.class));
     compiler = compilerBuilder.build();
-    Result exitCode = compiler.compile(compiler.fileManager().forResources(
-        NonAtomicVolatileUpdate.class,
-        "NonAtomicVolatileUpdatePositiveCases.java"));
+    Result exitCode =
+        compiler.compile(
+            compiler
+                .fileManager()
+                .forResources(
+                    NonAtomicVolatileUpdate.class,
+                    "testdata/NonAtomicVolatileUpdatePositiveCases.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
 
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher = hasItem(
@@ -133,17 +136,24 @@ public class ErrorProneCompilerIntegrationTest {
 
   @Test
   public void fileWithMultipleTopLevelClasses() throws Exception {
-    Result exitCode = compiler.compile(
-        compiler.fileManager().forResources(getClass(),
-            "MultipleTopLevelClassesWithNoErrors.java"));
+    Result exitCode =
+        compiler.compile(
+            compiler
+                .fileManager()
+                .forResources(getClass(), "testdata/MultipleTopLevelClassesWithNoErrors.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
 
   @Test
   public void fileWithMultipleTopLevelClassesExtends() throws Exception {
-    Result exitCode = compiler.compile(
-        compiler.fileManager().forResources(getClass(), "MultipleTopLevelClassesWithNoErrors.java",
-            "ExtendedMultipleTopLevelClassesWithNoErrors.java"));
+    Result exitCode =
+        compiler.compile(
+            compiler
+                .fileManager()
+                .forResources(
+                    getClass(),
+                    "testdata/MultipleTopLevelClassesWithNoErrors.java",
+                    "testdata/ExtendedMultipleTopLevelClassesWithNoErrors.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
 
@@ -152,11 +162,15 @@ public class ErrorProneCompilerIntegrationTest {
    * NullPointerExceptions in the matchers.
    */
   @Test
-  public void fileWithMultipleTopLevelClassesExtendsWithError()
-      throws Exception {
-    Result exitCode = compiler.compile(
-        compiler.fileManager().forResources(getClass(), "MultipleTopLevelClassesWithErrors.java",
-            "ExtendedMultipleTopLevelClassesWithErrors.java"));
+  public void fileWithMultipleTopLevelClassesExtendsWithError() throws Exception {
+    Result exitCode =
+        compiler.compile(
+            compiler
+                .fileManager()
+                .forResources(
+                    getClass(),
+                    "testdata/MultipleTopLevelClassesWithErrors.java",
+                    "testdata/ExtendedMultipleTopLevelClassesWithErrors.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher = hasItem(
         diagnosticMessage(containsString("[SelfAssignment]")));
@@ -165,9 +179,7 @@ public class ErrorProneCompilerIntegrationTest {
     assertThat(diagnosticHelper.getDiagnostics()).hasSize(4);
   }
 
-  @BugPattern(
-      name = "", explanation = "", summary = "", maturity = EXPERIMENTAL, severity = ERROR,
-      category = ONE_OFF)
+  @BugPattern(name = "", explanation = "", summary = "", severity = ERROR, category = ONE_OFF)
   public static class Throwing extends BugChecker implements ExpressionStatementTreeMatcher {
     @Override
     public Description matchExpressionStatement(ExpressionStatementTree tree, VisitorState state) {
@@ -179,9 +191,14 @@ public class ErrorProneCompilerIntegrationTest {
   public void unhandledExceptionsAreReportedWithoutBugParadeLink() throws Exception {
     compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(Throwing.class));
     compiler = compilerBuilder.build();
-    Result exitCode = compiler.compile(
-        compiler.fileManager().forResources(getClass(), "MultipleTopLevelClassesWithErrors.java",
-            "ExtendedMultipleTopLevelClassesWithErrors.java"));
+    Result exitCode =
+        compiler.compile(
+            compiler
+                .fileManager()
+                .forResources(
+                    getClass(),
+                    "testdata/MultipleTopLevelClassesWithErrors.java",
+                    "testdata/ExtendedMultipleTopLevelClassesWithErrors.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.ABNORMAL));
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher = hasItem(
         diagnosticMessage(CoreMatchers.<String>allOf(
@@ -196,9 +213,12 @@ public class ErrorProneCompilerIntegrationTest {
    */
   @Test
   public void annotationProcessingWorks() throws Exception {
-    Result exitCode = compiler.compile(
-        compiler.fileManager().forResources(getClass(), "UsesAnnotationProcessor.java"),
-        List.of(new NullAnnotationProcessor()));
+    Result exitCode =
+        compiler.compile(
+            compiler
+                .fileManager()
+                .forResources(getClass(), "testdata/UsesAnnotationProcessor.java"),
+            Arrays.asList(new NullAnnotationProcessor()));
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
 
@@ -207,58 +227,28 @@ public class ErrorProneCompilerIntegrationTest {
    */
   @Test
   public void reportReadyForAnalysisOnce() throws Exception {
-    Result exitCode = compiler.compile(
-        compiler.fileManager().forResources(getClass(),
-            "FlowConstants.java",
-            "FlowSub.java",
-            // This order is important: the superclass needs to occur after the subclass in the
-            // sources so it goes through flow twice (once so it can be used when the subclass
-            // is desugared, once normally).
-            "FlowSuper.java"));
+    Result exitCode =
+        compiler.compile(
+            compiler
+                .fileManager()
+                .forResources(
+                    getClass(),
+                    "testdata/FlowConstants.java",
+                    "testdata/FlowSub.java",
+                    // This order is important: the superclass needs to occur after the subclass in
+                    // the sources so it goes through flow twice (once so it can be used when the
+                    // subclass is desugared, once normally).
+                    "testdata/FlowSuper.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
 
-  @Test
-  public void propagatesScannerThroughAnnotationProcessingRounds() throws Exception {
-    final ErrorProneScanner scanner =
-        new ErrorProneScanner(
-            Collections.<BugChecker>emptyList(), Collections.<String, SeverityLevel>emptyMap());
-    compilerBuilder.report(ScannerSupplier.fromScanner(scanner));
-    compiler = compilerBuilder.build();
-    Result exitCode = compiler.compile(
-        compiler.fileManager().forResources(getClass(), "UsesAnnotationProcessor.java"),
-        Arrays.asList(new ScannerCheckingProcessor(scanner)));
-    assertThat(outputStream.toString(), exitCode, is(Result.OK));
-  }
-
-  /**
-   * Annotation processor that checks that the context always has the same {@link ErrorProneScanner}
-   * instance at each stage of annotation processing.
-   */
-  @SupportedAnnotationTypes("*")
-  public static final class ScannerCheckingProcessor extends AbstractProcessor {
-
-    private final ErrorProneScanner expected;
-
-    public ScannerCheckingProcessor(ErrorProneScanner expected) {
-      this.expected = expected;
-    }
-
-    @Override
-    public SourceVersion getSupportedSourceVersion() {
-      return SourceVersion.latest();
-    }
-
-    @Override
-    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-      Context context = ((JavacProcessingEnvironment) processingEnv).getContext();
-      assertSame(expected, context.get(Scanner.class));
-      return false;
-    }
-  }
-
-  @BugPattern(name = "ConstructorMatcher", explanation = "",
-      category = ONE_OFF, maturity = EXPERIMENTAL, severity = ERROR, summary = "")
+  @BugPattern(
+    name = "ConstructorMatcher",
+    explanation = "",
+    category = ONE_OFF,
+    severity = ERROR,
+    summary = ""
+  )
   public static class ConstructorMatcher extends BugChecker implements MethodTreeMatcher {
     @Override
     public Description matchMethod(MethodTree tree, VisitorState state) {
@@ -282,8 +272,13 @@ public class ErrorProneCompilerIntegrationTest {
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
 
-  @BugPattern(name = "SuperCallMatcher", explanation = "",
-      category = ONE_OFF, maturity = EXPERIMENTAL, severity = ERROR, summary = "")
+  @BugPattern(
+    name = "SuperCallMatcher",
+    explanation = "",
+    category = ONE_OFF,
+    severity = ERROR,
+    summary = ""
+  )
   static class SuperCallMatcher extends BugChecker implements MethodInvocationTreeMatcher {
     @Override
     public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
@@ -366,16 +361,19 @@ public class ErrorProneCompilerIntegrationTest {
 
   @Test
   public void severityIsResetOnNextCompilation() throws Exception {
-    String[] testFile = {"public class Test {",
-        "  long myLong = 213124l;",
+    String[] testFile = {
+        "public class Test {",
+        "  void doIt (int i) {",
+        "    i = i;",
+        "  }",
         "}"};
 
-    String[] args = {"-Xep:LongLiteralLowerCaseSuffix:WARN"};
+    String[] args = {"-Xep:SelfAssignment:WARN"};
     Result exitCode = compiler.compile(args,
         Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile)));
     outputStream.flush();
-    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher = hasItem(
-        diagnosticMessage(containsString("[LongLiteralLowerCaseSuffix]")));
+    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
+        hasItem(diagnosticMessage(containsString("[SelfAssignment]")));
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
     assertTrue(
         "Warning should be found. " + diagnosticHelper.describe(),
@@ -414,7 +412,7 @@ public class ErrorProneCompilerIntegrationTest {
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
     assertThat(diagnosticHelper.getDiagnostics()).isEmpty();
   }
-  
+
   @Test
   public void suppressGeneratedWarning() throws Exception {
     String[] generatedFile = {
@@ -482,7 +480,7 @@ public class ErrorProneCompilerIntegrationTest {
     name = "CrashOnReturn",
     explanation = "",
     summary = "",
-    maturity = EXPERIMENTAL,
+    
     severity = ERROR,
     category = ONE_OFF
   )
@@ -556,7 +554,7 @@ public class ErrorProneCompilerIntegrationTest {
     summary = "Using 'return' is considered harmful",
     explanation = "Please refactor your code into continuation passing style.",
     category = ONE_OFF,
-    maturity = EXPERIMENTAL,
+    
     severity = ERROR
   )
   public static class CPSChecker extends BugChecker implements ReturnTreeMatcher {
@@ -587,5 +585,54 @@ public class ErrorProneCompilerIntegrationTest {
     String output = diagnosticHelper.getDiagnostics().toString();
     assertThat(output).contains("error: cannot find symbol");
     assertThat(output).doesNotContain("Using 'return' is considered harmful");
+  }
+
+  @Test
+  public void plugin() throws Exception {
+
+    Path base = tmpFolder.newFolder().toPath();
+    Path source = base.resolve("test/Test.java");
+    Files.createDirectories(source.getParent());
+    Files.write(
+        source,
+        Arrays.asList(
+            "package test;", //
+            "public class Test {",
+            "  int f() { return 42; }",
+            "}"),
+        UTF_8);
+
+    Path jar = base.resolve("libproc.jar");
+    try (JarOutputStream jos = new JarOutputStream(Files.newOutputStream(jar))) {
+      jos.putNextEntry(new JarEntry("META-INF/services/" + BugChecker.class.getName()));
+      jos.write((CPSChecker.class.getName() + "\n").getBytes(UTF_8));
+      String classFile = CPSChecker.class.getName().replace('.', '/') + ".class";
+      jos.putNextEntry(new JarEntry(classFile));
+      ByteStreams.copy(getClass().getClassLoader().getResourceAsStream(classFile), jos);
+    }
+
+    // no plugins
+    {
+      List<String> args =
+          ImmutableList.of(
+              source.toAbsolutePath().toString(), "-processorpath", File.pathSeparator);
+      StringWriter out = new StringWriter();
+      Result result =
+          ErrorProneCompiler.compile(args.toArray(new String[0]), new PrintWriter(out, true));
+      assertThat(result).isEqualTo(Result.OK);
+    }
+    // with plugins
+    {
+      List<String> args =
+          ImmutableList.of(
+              source.toAbsolutePath().toString(),
+              "-processorpath",
+              jar.toAbsolutePath().toString());
+      StringWriter out = new StringWriter();
+      Result result =
+          ErrorProneCompiler.compile(args.toArray(new String[0]), new PrintWriter(out, true));
+      assertThat(out.toString()).contains("Using 'return' is considered harmful");
+      assertThat(result).isEqualTo(Result.ERROR);
+    }
   }
 }

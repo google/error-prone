@@ -17,18 +17,14 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ExpressionTree;
 
-/**
- * @author ptoomey@google.com (Patrick Toomey)
- */
+/** @author ptoomey@google.com (Patrick Toomey) */
 @BugPattern(
   name = "StringEquality",
   summary = "String comparison using reference equality instead of value equality",
@@ -36,8 +32,7 @@ import com.sun.source.tree.ExpressionTree;
       "Strings are compared for reference equality/inequality using == or !="
           + "instead of for value equality using .equals()",
   category = JDK,
-  severity = WARNING,
-  maturity = MATURE
+  severity = WARNING
 )
 public class StringEquality extends AbstractReferenceEquality {
 

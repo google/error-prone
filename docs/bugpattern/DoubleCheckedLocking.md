@@ -67,11 +67,11 @@ static Object get() {
 
 ## Double-checked locking and immutability
 
-If the object being initailized with double-checked locking is [immutable]
-(http://jeremymanson.blogspot.com/2008/04/immutability-in-java.html), then it is
-safe for the field to be non-volatile. *However*, the use of volatile is still
-encouraged because it is almost free on x86 and makes the code more obviously
-correct.
+If the object being initialized with double-checked locking is
+[immutable](http://jeremymanson.blogspot.com/2008/04/immutability-in-java.html),
+then it is safe for the field to be non-volatile. *However*, the use of
+volatile is still encouraged because it is almost free on x86 and makes the
+code more obviously correct.
 
 Note that immutable has a very specific meaning in this context:
 

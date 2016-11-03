@@ -27,9 +27,7 @@ import com.google.common.primitives.Primitives;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
-
 import com.sun.tools.javac.code.Type;
-
 import java.lang.reflect.TypeVariable;
 import java.util.HashSet;
 import java.util.Set;
@@ -94,6 +92,8 @@ final class WellKnownMutability {
         .add(java.math.BigDecimal.class)
         .add(java.net.InetAddress.class)
         .add(java.util.Locale.class)
+        .add(java.util.regex.Pattern.class)
+        .add("java.util.Optional", "T")
         .add("org.joda.time.DateTime")
         .add("org.joda.time.DateTimeZone")
         .add("org.joda.time.Duration")

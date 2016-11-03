@@ -19,6 +19,9 @@ package com.google.errorprone;
 import static com.google.common.base.Predicates.not;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
@@ -29,14 +32,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.io.LineProcessor;
 import com.google.gson.Gson;
-
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.Mustache;
-import com.github.mustachejava.MustacheFactory;
-
-import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.Yaml;
-
 import java.io.IOError;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -53,6 +48,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import javax.annotation.Nullable;
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.Yaml;
 
 /**
  * Reads each line of the bugpatterns.txt tab-delimited data file, and generates a GitHub
@@ -90,17 +88,22 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
    */
   private final boolean generateFrontMatter;
 
+  /** The base url for links to bugpatterns. */
+  @Nullable private final String baseUrl;
+
   public BugPatternFileGenerator(
       Path bugpatternDir,
       Path exampleDirBase,
       Path explanationDir,
       boolean generateFrontMatter,
-      boolean usePygments) {
+      boolean usePygments,
+      String baseUrl) {
     this.outputDir = bugpatternDir;
     this.exampleDirBase = exampleDirBase;
     this.explanationDir = explanationDir;
     this.generateFrontMatter = generateFrontMatter;
     this.usePygments = usePygments;
+    this.baseUrl = baseUrl;
     result = new ArrayList<>();
   }
 
@@ -191,11 +194,14 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
           ImmutableMap.<String, Object>builder()
               .put("category", pattern.category)
               .put("severity", pattern.severity)
-              .put("maturity", pattern.maturity)
               .put("name", pattern.name)
               .put("summary", pattern.summary.trim())
               .put("altNames", Joiner.on(", ").join(pattern.altNames))
               .put("explanation", pattern.explanation.trim());
+
+      if (baseUrl != null) {
+        templateData.put("baseUrl", baseUrl);
+      }
 
       if (generateFrontMatter) {
         Map<String, String> frontmatterData =
@@ -205,7 +211,6 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
                 .put("layout", "bugpattern")
                 .put("category", pattern.category.toString())
                 .put("severity", pattern.severity.toString())
-                .put("maturity", pattern.maturity.toString())
                 .build();
         DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);

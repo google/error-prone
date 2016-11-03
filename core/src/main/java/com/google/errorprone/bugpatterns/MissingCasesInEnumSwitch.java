@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.collect.Sets;
@@ -28,7 +27,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Description.Builder;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
@@ -37,25 +35,17 @@ import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCSwitch;
 import com.sun.tools.javac.tree.TreeInfo;
-
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
-
 import javax.lang.model.element.ElementKind;
 
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
   name = "MissingCasesInEnumSwitch",
-  summary = "Enum switch statement is missing cases",
-  explanation =
-      "Switches on enums should either handle all possible values of the enum, or"
-          + " have an explicit default case",
+  summary = "The Google Java Style Guide requires switch statements to have an explicit default",
   category = JDK,
-  severity = WARNING,
-  maturity = MATURE
+  severity = WARNING
 )
 public class MissingCasesInEnumSwitch extends BugChecker implements SwitchTreeMatcher {
 
@@ -86,7 +76,7 @@ public class MissingCasesInEnumSwitch extends BugChecker implements SwitchTreeMa
   private void buildFixes(
       SwitchTree tree, VisitorState state, Set<String> unhandled, Builder description) {
 
-    int idx = state.getEndPosition((JCTree) tree) - 1; // preserve closing '}'
+    int idx = state.getEndPosition(tree) - 1; // preserve closing '}'
 
     StringBuilder sb = new StringBuilder();
     for (String label : unhandled) {

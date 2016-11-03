@@ -16,143 +16,104 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.GUAVA;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.Category.JDK;
+import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
+import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
-
-import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.util.TreePathScanner;
+import com.sun.tools.javac.code.Scope.StarImportScope;
 import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Symbol.ClassSymbol;
-import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.JCTree.JCClassDecl;
+import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
+import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.TreeScanner;
-
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
-
 import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
 
-/**
- * Enforce style guide §3.3.1.
- *
- * <p>https://google-styleguide.googlecode.com/svn/trunk/javaguide.html#s3.3.1-wildcard-imports
- *
- * @author cushon@google.com (Liam Miller-Cushon)
-*/
-@BugPattern(name = "WildcardImport",
-    summary =  "Use of wildcard imports is forbidden",
-    category = GUAVA, severity = ERROR, maturity = EXPERIMENTAL)
-public class WildcardImport extends BugChecker implements ClassTreeMatcher {
+/** @author cushon@google.com (Liam Miller-Cushon) */
+@BugPattern(
+  name = "WildcardImport",
+  summary = "Wildcard imports, static or otherwise, should not be used",
+  category = JDK,
+  severity = SUGGESTION,
 
-  private static final String ASTERISK = "*";
+  linkType = CUSTOM,
+  link = "https://google.github.io/styleguide/javaguide.html#s3.3.1-wildcard-imports"
+  )
+public class WildcardImport extends BugChecker implements CompilationUnitTreeMatcher {
 
-  /**
-   * An abstraction over the logic for generating fixes. The 'test' version exists because we
-   * don't have a good way to test import-only fixes, so it pretty-prints the replacements as a
-   * suffix of each on-demand import being deleted.
-   */
-  // TODO(cushon): create a way to test import-only fixes.
-  private final FixStrategy fixStrategy;
+  /** Maximum number of members to import before switching to qualified names. */
+  public static final int MAX_MEMBER_IMPORTS = 20;
 
-  public WildcardImport() {
-    this(FixStrategies.PRODUCTION);
-  }
-
-  protected WildcardImport(FixStrategy fixStrategy) {
-    this.fixStrategy = fixStrategy;
-  }
-
-  /** A type or member that needs to be imported. */
+  /** A type or member that needs to be imported.*/
   @AutoValue
   abstract static class TypeToImport {
 
-    /**
-     * Returns the fully-qualified canonical name.
-     */
-    abstract String typeName();
+    /** Returns the simple name of the import. */
+    abstract String name();
 
-    /**
-     * Returns true if the import needs to be static (i.e. the imported is for a field or method).
-     */
+    /** Returns the owner of the imported type or member. */
+    abstract Symbol owner();
+
+    /** Returns true if the import needs to be static (i.e. the import is for a field or method). */
     abstract boolean isStatic();
 
-    /**
-     * Generates an import statement.
-     */
-    String generateImportStatement() {
-      return "import " + (isStatic() ? "static " : "") + typeName() + ";";
+    static TypeToImport create(String name, Symbol owner, boolean stat) {
+      return new AutoValue_WildcardImport_TypeToImport(name, owner, stat);
     }
 
-    @Override
-    public String toString() {
-      return generateImportStatement();
-    }
-
-    static TypeToImport create(String type, boolean stat) {
-      return new AutoValue_WildcardImport_TypeToImport(type, stat);
+    private void addFix(SuggestedFix.Builder fix) {
+      String qualifiedName = owner().getQualifiedName() + "." + name();
+      if (isStatic()) {
+        fix.addStaticImport(qualifiedName);
+      } else {
+        fix.addImport(qualifiedName);
+      }
     }
   }
 
   @Override
-  public Description matchClass(ClassTree tree, VisitorState state) {
-    ClassSymbol sym = ASTHelpers.getSymbol(tree);
-    if (sym == null) {
-      return Description.NO_MATCH;
-    }
-    // Only match on top-level classes. The analysis walks the entire class declaration looking
-    // for types that need to be imported, so matching on nested classes will produce incomplete
-    // results.
-    if (sym.getEnclosingElement() != null
-        && sym.getEnclosingElement().getKind() != ElementKind.PACKAGE) {
-      return Description.NO_MATCH;
-    }
-
-    // First, look for on-demand imports. If there aren't any, we're done. This ensures that we
-    // only walk the class declaration if there's an error.
-    CompilationUnitTree unit = state.getPath().getCompilationUnit();
-    ImmutableList<ImportTree> wildcardImports = getWildcardImports(unit.getImports());
+  public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
+    ImmutableList<ImportTree> wildcardImports = getWildcardImports(tree.getImports());
     if (wildcardImports.isEmpty()) {
-      return Description.NO_MATCH;
-    }
-
-    if (unit.getTypeDecls().size() > 1) {
-      // There are multiple top-level types, so visiting this class isn't sufficient to find all
-      // of the imports to add. Visiting all of the classes is hard (see the docs for
-      // CompilationUnitTreeInfo), so we skip the fix.
-      return describeMatch(wildcardImports.get(0));
+      return NO_MATCH;
     }
 
     // Find all of the types that need to be imported.
-    Set<TypeToImport> typesToImport = ImportCollector.collect((JCClassDecl) tree);
+    Set<TypeToImport> typesToImport = ImportCollector.collect((JCCompilationUnit) tree);
 
     // Group the imported types by the on-demand import they replace.
     Multimap<ImportTree, TypeToImport> toFix = groupImports(wildcardImports, typesToImport);
 
-    // Generate fixes.
-    fixStrategy.apply(tree, state, wildcardImports, toFix, this);
-
-    // TODO(cushon): this is kind of a hack. We allow the fix strategy to generate multiple small
-    // fixes, so by the time we get here all of the fixes were emitted and there's nothing to do.
-    return Description.NO_MATCH;
+    Fix fix = createFix(wildcardImports, toFix, state);
+    if (fix.isEmpty()) {
+      return NO_MATCH;
+    }
+    return describeMatch(wildcardImports.get(0), fix);
   }
 
   /**
@@ -163,25 +124,12 @@ public class WildcardImport extends BugChecker implements ClassTreeMatcher {
       ImmutableList<ImportTree> wildcardImports, Set<TypeToImport> typesToImport) {
     Multimap<ImportTree, TypeToImport> toFix = LinkedListMultimap.create();
     for (TypeToImport type : typesToImport) {
-      ImportTree wildcard = findMatchingWildcardImport(wildcardImports, type);
-      if (wildcard != null) {
-        toFix.put(wildcard, type);
-      }
-      // The 'else' case here is interesting - it's possible that one of the types / members
-      // referenced doesn't match up to any on-demand imports. It's probably something that was
-      // already visible in the scope where it was accessed. There don't appear to be any good
-      // ways to answer the question "did we need imports to resolve this name" via accessible
-      // javac state, and the current approach works very well in practice.
-      //
-      // However, there's a chance that we're dropping a real import because the canonical name of
-      // the type doesn't match the static on-demand import that was used to import it. ¯\_(ツ)_/¯
+      toFix.put(findMatchingWildcardImport(wildcardImports, type), type);
     }
     return toFix;
   }
 
-  /**
-   * Find an on-demand import matching the given single-type import specification.
-   */
+  /** Find an on-demand import matching the given single-type import specification. */
   @Nullable
   private ImportTree findMatchingWildcardImport(
       ImmutableList<ImportTree> wildcardImports, TypeToImport type) {
@@ -190,24 +138,14 @@ public class WildcardImport extends BugChecker implements ClassTreeMatcher {
       // guaranteed to be a MemberSelectTree by getWildcardImports().
       String importBase =
           ((MemberSelectTree) importTree.getQualifiedIdentifier()).getExpression().toString();
-      if (type.typeName().startsWith(importBase)) {
-        // Only associate the single-type import with this on-demand import if the portion of
-        // the single-type import after the on-demand import's scope is a simple name.
-        //
-        // e.g. if the on-demand import is 'java.nio.*', we would associate 'java.nio.Path'
-        // but not 'java.nio.charset.Charset'.
-        int next = type.typeName().indexOf('.', importBase.length() + 1);
-        if (next == -1) {
-          return importTree;
-        }
+      if (type.owner().getQualifiedName().contentEquals(importBase)) {
+        return importTree;
       }
     }
-    return null;
+    throw new AssertionError("could not find import for: " + type);
   }
 
-  /**
-   * Collect all on-demand imports.
-   */
+  /** Collect all on demand imports. */
   private static ImmutableList<ImportTree> getWildcardImports(List<? extends ImportTree> imports) {
     ImmutableList.Builder<ImportTree> result = ImmutableList.builder();
     for (ImportTree tree : imports) {
@@ -217,25 +155,32 @@ public class WildcardImport extends BugChecker implements ClassTreeMatcher {
         continue;
       }
       MemberSelectTree select = (MemberSelectTree) ident;
-      if (select.getIdentifier().contentEquals(ASTERISK)) {
+      if (select.getIdentifier().contentEquals("*")) {
         result.add(tree);
       }
     }
     return result.build();
   }
 
-  /**
-   * Walk a top-level class declaration (possibly traversing into nested classes), and collect
-   * all types and static members that are referred to by name and may need to be imported.
-   */
+  /** Collects all uses of on demand-imported types and static members in a compilation unit. */
   static class ImportCollector extends TreeScanner {
 
+    private final StarImportScope wildcardScope;
     private final Set<TypeToImport> seen = new LinkedHashSet<>();
 
-    public static Set<TypeToImport> collect(JCClassDecl tree) {
-      ImportCollector collector = new ImportCollector();
+    ImportCollector(StarImportScope wildcardScope) {
+      this.wildcardScope = wildcardScope;
+    }
+
+    public static Set<TypeToImport> collect(JCCompilationUnit tree) {
+      ImportCollector collector = new ImportCollector(tree.starImportScope);
       collector.scan(tree);
       return collector.seen;
+    }
+
+    @Override
+    public void visitImport(JCTree.JCImport tree) {
+      // skip imports
     }
 
     @Override
@@ -249,125 +194,89 @@ public class WildcardImport extends BugChecker implements ClassTreeMatcher {
     }
 
     @Override
-    public void visitIdent(JCTree.JCIdent tree) {
-      if (tree.sym != null) {
-        switch (tree.sym.kind) {
-          case TYP:
-            addType(tree.sym.type);
-            break;
-          case VAR:
-          case MTH:
-            addStaticMember(tree.sym);
-            break;
-          default: // falls through
-        }
-      }
-    }
-
-    /**
-     * Record a static field or method that may need to be imported.
-     */
-    private void addStaticMember(Symbol sym) {
-      if (!sym.isStatic()) {
-        return;
-      }
-      if (sym.owner == null) {
-        return;
-      }
-      if (sym.isPrivate()) {
-        return;
-      }
-      String canonicalName = sym.owner.getQualifiedName() + "." + sym.getQualifiedName();
-      seen.add(TypeToImport.create(canonicalName, true));
-    }
-
-    /**
-     * Record a type reference that may need to be imported.
-     */
-    private void addType(Type type) {
-      if (type == null) {
-        return;
-      }
-      Symbol.TypeSymbol sym = type.tsym;
+    public void visitIdent(JCIdent tree) {
+      Symbol sym = tree.sym;
       if (sym == null) {
         return;
       }
-      if (sym.isPrivate()) {
-        return;
+      sym = sym.baseSymbol();
+      if (wildcardScope.includes(sym)) {
+        if (sym.owner.getQualifiedName().contentEquals("java.lang")) {
+          return;
+        }
+        switch (sym.kind) {
+          case TYP:
+            seen.add(TypeToImport.create(sym.getSimpleName().toString(), sym.owner, false));
+            break;
+          case VAR:
+          case MTH:
+            seen.add(TypeToImport.create(sym.getSimpleName().toString(), sym.owner, true));
+            break;
+          default:
+            return;
+        }
       }
-      seen.add(TypeToImport.create(sym.getQualifiedName().toString(), false));
     }
   }
 
-  /**
-   * Interface for the fix generating logic.
-   */
-  public interface FixStrategy {
-    void apply(
-        ClassTree tree,
-        VisitorState state,
-        ImmutableList<ImportTree> wildcardImports,
-        Multimap<ImportTree, TypeToImport> toFix,
-        BugChecker checker);
-  }
-
-  /**
-   * Fix strategies for testing and production. (See the TODO above about better testing for
-   * import-only fixes.)
-   */
-  public enum FixStrategies implements FixStrategy {
-    PRODUCTION {
-      /**
-       * Delete all of the on-demand imports, and add all of the new imports.
-       */
-      @Override
-      public void apply(
-          ClassTree tree,
-          VisitorState state,
-          ImmutableList<ImportTree> wildcardImports,
-          Multimap<ImportTree, TypeToImport> toFix,
-          BugChecker checker) {
-        SuggestedFix.Builder fix = SuggestedFix.builder();
-        for (ImportTree importToDelete : wildcardImports) {
-          String importSpecification = importToDelete.getQualifiedIdentifier().toString();
-          if (importToDelete.isStatic()) {
-            fix.removeStaticImport(importSpecification);
-          } else {
-            fix.removeImport(importSpecification);
-          }
-        }
+  /** Creates a {@link Fix} that replaces wildcard imports. */
+  static Fix createFix(
+      ImmutableList<ImportTree> wildcardImports,
+      Multimap<ImportTree, TypeToImport> toFix,
+      VisitorState state) {
+    final SuggestedFix.Builder fix = SuggestedFix.builder();
+    for (ImportTree importToDelete : wildcardImports) {
+      String importSpecification = importToDelete.getQualifiedIdentifier().toString();
+      if (importToDelete.isStatic()) {
+        fix.removeStaticImport(importSpecification);
+      } else {
+        fix.removeImport(importSpecification);
+      }
+    }
+    Multimap<Symbol, TypeToImport> importsByOwner = LinkedHashMultimap.create();
+    for (TypeToImport toImport : toFix.values()) {
+      importsByOwner.put(toImport.owner(), toImport);
+    }
+    for (Map.Entry<Symbol, Collection<TypeToImport>> entries : importsByOwner.asMap().entrySet()) {
+      final Symbol owner = entries.getKey();
+      if (entries.getValue().size() > MAX_MEMBER_IMPORTS) {
+        qualifiedNameFix(fix, owner, state);
+      } else {
         for (TypeToImport toImport : toFix.values()) {
-          if (toImport.isStatic()) {
-            fix.addStaticImport(toImport.typeName());
-          } else {
-            fix.addImport(toImport.typeName());
-          }
-        }
-        if (!fix.isEmpty()) {
-          state.reportMatch(
-              buildDescriptionFromChecker(wildcardImports.get(0), checker)
-                  .addFix(fix.build()).build());
-        }
-      }
-    },
-    TEST {
-      /**
-       * Match up the replacements with each on-demand import being deleted, and pretty print
-       * them as a suffix.
-       */
-      @Override
-      public void apply(
-          ClassTree tree,
-          VisitorState state,
-          ImmutableList<ImportTree> wildcardImports,
-          Multimap<ImportTree, TypeToImport> toFix,
-          BugChecker checker) {
-        for (ImportTree toDelete : wildcardImports) {
-          Iterable<TypeToImport> replacements = toFix.get(toDelete);
-          Fix fix = SuggestedFix.postfixWith(toDelete, replacements.toString());
-          state.reportMatch(buildDescriptionFromChecker(toDelete, checker).addFix(fix).build());
+          toImport.addFix(fix);
         }
       }
     }
+    return fix.build();
+  }
+
+  /**
+   * Add an import for {@code owner}, and qualify all on demand imported references to members of
+   * owner by owner's simple name.
+   */
+  private static void qualifiedNameFix(
+      final SuggestedFix.Builder fix, final Symbol owner, VisitorState state) {
+    fix.addImport(owner.getQualifiedName().toString());
+    final JCCompilationUnit unit = (JCCompilationUnit) state.getPath().getCompilationUnit();
+    new TreePathScanner<Void, Void>() {
+      @Override
+      public Void visitIdentifier(IdentifierTree tree, Void unused) {
+        Symbol sym = ASTHelpers.getSymbol(tree);
+        if (sym == null) {
+          return null;
+        }
+        Tree parent = getCurrentPath().getParentPath().getLeaf();
+        if (parent.getKind() == Tree.Kind.CASE
+            && ((CaseTree) parent).getExpression().equals(tree)
+            && sym.owner.getKind() == ElementKind.ENUM) {
+          // switch cases can refer to enum constants by simple name without importing them
+          return null;
+        }
+        if (sym.owner.equals(owner) && unit.starImportScope.includes(sym)) {
+          fix.prefixWith(tree, owner.getSimpleName() + ".");
+        }
+        return null;
+      }
+    }.scan(unit, null);
   }
 }

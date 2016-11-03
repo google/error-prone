@@ -20,9 +20,7 @@ import static org.junit.Assert.assertNotNull;
 
 import com.google.common.testing.EqualsTester;
 import com.google.common.testing.SerializableTester;
-
 import com.sun.tools.javac.code.Symtab;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;

@@ -21,10 +21,10 @@
   <parent>
     <groupId>com.google.errorprone</groupId>
     <artifactId>error_prone_parent</artifactId>
-    <version>2.0.10-SNAPSHOT</version>
+    <version>2.0.15-SNAPSHOT</version>
   </parent>
 
-  <name>JSR-269 annotation processor for @BugPattern annotation</name>
+  <name>Documention tool for generating Error Prone bugpattern documentation</name>
   <artifactId>error_prone_docgen</artifactId>
 
   <build>
@@ -45,9 +45,19 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <groupId>com.google.errorprone</groupId>
+      <artifactId>error_prone_core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.errorprone</groupId>
+      <artifactId>error_prone_docgen_processor</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>19.0</version>
+      <version>${guava.version}</version>
     </dependency>
     <dependency>
       <groupId>org.yaml</groupId>
@@ -90,8 +100,41 @@
     <dependency>
       <groupId>com.google.truth</groupId>
       <artifactId>truth</artifactId>
-      <version>0.27</version>
+      <version>${truth.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <profiles>
+    <profile>
+      <id>run-annotation-processor</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.1.1</version>
+            <executions>
+              <execution>
+                <phase>site</phase>
+                <goals>
+                  <goal>java</goal>
+                </goals>
+                <configuration>
+                  <mainClass>com.google.errorprone.DocGenTool</mainClass>
+                  <arguments>
+                    <argument>-bug_patterns=${basedir}/../core/target/generated-sources/annotations/bugPatterns.txt</argument>
+                    <argument>-docs_repository=${basedir}/target/generated-wiki/</argument>
+                    <argument>-examplesDir=${basedir}/../core/src/test/java/</argument>
+                    <argument>-explanations=${basedir}/../docs/bugpattern/</argument>
+                    <argument>-target=external</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

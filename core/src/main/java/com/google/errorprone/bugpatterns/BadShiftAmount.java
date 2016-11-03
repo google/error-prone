@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -31,7 +30,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
@@ -46,14 +44,12 @@ import com.sun.tools.javac.tree.JCTree.JCLiteral;
  * @author bill.pugh@gmail.com (Bill Pugh)
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-@BugPattern(name = "BadShiftAmount",
-    summary = "Shift by an amount that is out of range",
-    explanation = "For shift operations on int types, only the five lowest-order bits of the "
-        + "shift amount are used as the shift distance.  This means that shift amounts that are "
-        + "not in the range 0 to 31, inclusive, are silently mapped to values in that range. "
-        + "For example, a shift of an int by 32 is equivalent to shifting by 0, i.e., a no-op.\n\n"
-        + "See JLS 15.19, \"Shift Operators\", for more details.",
-    category = JDK, severity = ERROR, maturity = MATURE)
+@BugPattern(
+  name = "BadShiftAmount",
+  summary = "Shift by an amount that is out of range",
+  category = JDK,
+  severity = ERROR
+)
 public class BadShiftAmount extends BugChecker implements BinaryTreeMatcher {
 
   /**

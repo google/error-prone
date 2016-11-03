@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
@@ -25,7 +24,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.SynchronizedTree;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
@@ -33,17 +31,20 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.TreeInfo;
 
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- */
-@BugPattern(name = "SynchronizeOnNonFinalField",
-    summary = "Synchronizing on non-final fields is not safe: if the field is ever updated,"
-    + " different threads may end up locking on different objects.",
-    explanation = "Possible fixes:\n"
-        + "* If the field is already effectively final, add the missing 'final' modifier.\n"
-        + "* If the field needs to be mutable, create a separate lock by adding a private"
-        + "  final field and synchronizing on it to guard all accesses.",
-    category = JDK, severity = WARNING, maturity = MATURE)
+/** @author cushon@google.com (Liam Miller-Cushon) */
+@BugPattern(
+  name = "SynchronizeOnNonFinalField",
+  summary =
+      "Synchronizing on non-final fields is not safe: if the field is ever updated,"
+          + " different threads may end up locking on different objects.",
+  explanation =
+      "Possible fixes:\n"
+          + "* If the field is already effectively final, add the missing 'final' modifier.\n"
+          + "* If the field needs to be mutable, create a separate lock by adding a private"
+          + "  final field and synchronizing on it to guard all accesses.",
+  category = JDK,
+  severity = WARNING
+)
 public class SynchronizeOnNonFinalField extends BugChecker
     implements BugChecker.SynchronizedTreeMatcher {
 

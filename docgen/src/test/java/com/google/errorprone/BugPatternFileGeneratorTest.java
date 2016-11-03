@@ -21,22 +21,19 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.google.common.io.CharStreams;
 import com.google.errorprone.BugPattern.Category;
-import com.google.errorprone.BugPattern.MaturityLevel;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.gson.Gson;
-
+import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Arrays;
 
 @RunWith(JUnit4.class)
 public class BugPatternFileGeneratorTest {
@@ -70,7 +67,6 @@ public class BugPatternFileGeneratorTest {
     instance.altNames = new String[] {"ThrowableInstanceNeverThrown"};
     instance.category = Category.JDK.toString();
     instance.severity = SeverityLevel.ERROR;
-    instance.maturity = MaturityLevel.MATURE;
     instance.suppressibility = Suppressibility.SUPPRESS_WARNINGS;
     instance.customSuppressionAnnotations =
         new String[] {"com.google.errorprone.BugPattern.NoCustomSuppression.class"};
@@ -99,7 +95,7 @@ public class BugPatternFileGeneratorTest {
   @Test
   public void regressionTest_frontmatter_pygments() throws Exception {
     BugPatternFileGenerator generator =
-        new BugPatternFileGenerator(wikiDir, exampleDirBase, explanationDirBase, true, true);
+        new BugPatternFileGenerator(wikiDir, exampleDirBase, explanationDirBase, true, true, null);
     generator.processLine(BUGPATTERN_LINE);
     String expected = CharStreams.toString(new InputStreamReader(
         getClass().getResourceAsStream("testdata/DeadException_frontmatter_pygments.md"), UTF_8));
@@ -111,7 +107,8 @@ public class BugPatternFileGeneratorTest {
   @Test
   public void regressionTest_nofrontmatter_gfm() throws Exception {
     BugPatternFileGenerator generator =
-        new BugPatternFileGenerator(wikiDir, exampleDirBase, explanationDirBase, false, false);
+        new BugPatternFileGenerator(
+            wikiDir, exampleDirBase, explanationDirBase, false, false, null);
     generator.processLine(BUGPATTERN_LINE);
     String expected = CharStreams.toString(new InputStreamReader(
         getClass().getResourceAsStream("testdata/DeadException_nofrontmatter_gfm.md"), UTF_8));
@@ -122,7 +119,8 @@ public class BugPatternFileGeneratorTest {
   @Test
   public void regressionTest_sidecar() throws Exception {
     BugPatternFileGenerator generator =
-        new BugPatternFileGenerator(wikiDir, exampleDirBase, explanationDirBase, false, false);
+        new BugPatternFileGenerator(
+            wikiDir, exampleDirBase, explanationDirBase, false, false, null);
     Files.write(
         explanationDirBase.resolve("DeadException.md"),
         Arrays.asList(
@@ -132,6 +130,34 @@ public class BugPatternFileGeneratorTest {
     String expected = CharStreams.toString(new InputStreamReader(
         getClass().getResourceAsStream("testdata/DeadException_nofrontmatter_gfm.md"), UTF_8));
     String actual = new String(Files.readAllBytes(wikiDir.resolve("DeadException.md")), UTF_8);
+    assertThat(expected.trim()).isEqualTo(actual.trim());
+  }
+
+  @Test
+  public void testEscapeAngleBracketsInSummary() throws Exception {
+    // Create a BugPattern with angle brackets in the summary
+    BugPatternInstance instance = new BugPatternInstance();
+    instance.className = "com.google.errorprone.bugpatterns.DontDoThis";
+    instance.name = "DontDoThis";
+    instance.summary = "Don't do this; do List<Foo> instead";
+    instance.explanation = "This is a bad idea, you want `List<Foo>` instead";
+    instance.altNames = new String[0];
+    instance.category = Category.ONE_OFF.toString();
+    instance.severity = SeverityLevel.ERROR;
+    instance.suppressibility = Suppressibility.SUPPRESS_WARNINGS;
+    instance.customSuppressionAnnotations =
+        new String[] {"com.google.errorprone.BugPattern.NoCustomSuppression.class"};
+
+    // Write markdown file
+    BugPatternFileGenerator generator =
+        new BugPatternFileGenerator(
+            wikiDir, exampleDirBase, explanationDirBase, false, false, null);
+    generator.processLine(new Gson().toJson(instance));
+    String expected =
+        CharStreams.toString(
+            new InputStreamReader(
+                getClass().getResourceAsStream("testdata/DontDoThis_nofrontmatter_gfm.md"), UTF_8));
+    String actual = new String(Files.readAllBytes(wikiDir.resolve("DontDoThis.md")), UTF_8);
     assertThat(expected.trim()).isEqualTo(actual.trim());
   }
 }

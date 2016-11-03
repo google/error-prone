@@ -18,7 +18,6 @@ package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugPattern.Category.ONE_OFF;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.BugPattern.Suppressibility.UNSUPPRESSIBLE;
@@ -27,24 +26,21 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.bugpatterns.EmptyIfStatement;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.scanner.BuiltInCheckerSuppliers;
 import com.google.errorprone.scanner.ScannerSupplier;
-
 import com.sun.source.tree.ReturnTree;
 import com.sun.tools.javac.main.Main.Result;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import javax.tools.JavaFileObject;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
@@ -52,10 +48,14 @@ import javax.tools.JavaFileObject;
 @RunWith(JUnit4.class)
 public class CommandLineFlagTest {
 
-  @BugPattern(name = "DisableableChecker", altNames = "foo",
-      summary = "Disableable checker that flags all return statements as errors",
-      explanation = "Disableable checker that flags all return statements as errors",
-      category = ONE_OFF, severity = ERROR, maturity = MATURE)
+  @BugPattern(
+    name = "DisableableChecker",
+    altNames = "foo",
+    summary = "Disableable checker that flags all return statements as errors",
+    explanation = "Disableable checker that flags all return statements as errors",
+    category = ONE_OFF,
+    severity = ERROR
+  )
   public static class DisableableChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {
@@ -63,10 +63,14 @@ public class CommandLineFlagTest {
     }
   }
 
-  @BugPattern(name = "NondisableableChecker",
-      summary = "NondisableableChecker checker that flags all return statements as errors",
-      explanation = "NondisableableChecker checker that flags all return statements as errors",
-      suppressibility = UNSUPPRESSIBLE, category = ONE_OFF, severity = ERROR, maturity = MATURE)
+  @BugPattern(
+    name = "NondisableableChecker",
+    summary = "NondisableableChecker checker that flags all return statements as errors",
+    explanation = "NondisableableChecker checker that flags all return statements as errors",
+    suppressibility = UNSUPPRESSIBLE,
+    category = ONE_OFF,
+    severity = ERROR
+  )
   public static class NondisableableChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {
@@ -74,10 +78,13 @@ public class CommandLineFlagTest {
     }
   }
 
-  @BugPattern(name = "WarningChecker",
-      summary = "Checker that flags all return statements as warnings",
-      explanation = "Checker that flags all return statements as warningss",
-      category = ONE_OFF, severity = WARNING, maturity = MATURE)
+  @BugPattern(
+    name = "WarningChecker",
+    summary = "Checker that flags all return statements as warnings",
+    explanation = "Checker that flags all return statements as warningss",
+    category = ONE_OFF,
+    severity = WARNING
+  )
   public static class WarningChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {
@@ -85,10 +92,13 @@ public class CommandLineFlagTest {
     }
   }
 
-  @BugPattern(name = "ErrorChecker",
-      summary = "Checker that flags all return statements as errors",
-      explanation = "Checker that flags all return statements as errors",
-      category = ONE_OFF, severity = ERROR, maturity = MATURE)
+  @BugPattern(
+    name = "ErrorChecker",
+    summary = "Checker that flags all return statements as errors",
+    explanation = "Checker that flags all return statements as errors",
+    category = ONE_OFF,
+    severity = ERROR
+  )
   public static class ErrorChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {
@@ -104,9 +114,11 @@ public class CommandLineFlagTest {
   public void setUp() {
     output = new StringWriter();
     diagnosticHelper = new DiagnosticTestHelper();
-    builder = new ErrorProneTestCompiler.Builder()
-        .listenToDiagnostics(diagnosticHelper.collector)
-        .redirectOutputTo(new PrintWriter(output, true));
+    builder =
+        new ErrorProneTestCompiler.Builder()
+            .report(BuiltInCheckerSuppliers.defaultChecks())
+            .listenToDiagnostics(diagnosticHelper.collector)
+            .redirectOutputTo(new PrintWriter(output, true));
   }
 
 
@@ -135,9 +147,10 @@ public class CommandLineFlagTest {
   @Test
   public void canEnableWithDefaultSeverity() throws Exception {
     ErrorProneTestCompiler compiler = builder.build();
-    List<JavaFileObject> sources = compiler.fileManager().forResources(
-        EmptyIfStatement.class,
-        "EmptyIfStatementPositiveCases.java");
+    List<JavaFileObject> sources =
+        compiler
+            .fileManager()
+            .forResources(EmptyIfStatement.class, "testdata/EmptyIfStatementPositiveCases.java");
 
     Result exitCode = compiler.compile(sources);
     assertThat(exitCode).isEqualTo(Result.OK);
@@ -150,9 +163,10 @@ public class CommandLineFlagTest {
   @Test
   public void canEnableWithOverriddenSeverity() throws Exception {
     ErrorProneTestCompiler compiler = builder.build();
-    List<JavaFileObject> sources = compiler.fileManager().forResources(
-        EmptyIfStatement.class,
-        "EmptyIfStatementPositiveCases.java");
+    List<JavaFileObject> sources =
+        compiler
+            .fileManager()
+            .forResources(EmptyIfStatement.class, "testdata/EmptyIfStatementPositiveCases.java");
 
     Result exitCode = compiler.compile(sources);
     assertThat(exitCode).isEqualTo(Result.OK);
@@ -220,13 +234,15 @@ public class CommandLineFlagTest {
         compiler.fileManager().forResources(getClass(), "CommandLineFlagTestFile.java");
 
     Result exitCode = compiler.compile(new String[]{"-Xep:NondisableableChecker:OFF"}, sources);
-    assertThat(exitCode).isEqualTo(Result.CMDERR);
     assertThat(output.toString()).contains("NondisableableChecker may not be disabled");
+    assertThat(exitCode).isEqualTo(Result.CMDERR);
   }
 
   @Test
   public void cantOverrideNonexistentCheck() throws Exception {
     ErrorProneTestCompiler compiler =  builder.build();
+    List<JavaFileObject> sources =
+        compiler.fileManager().forResources(getClass(), "CommandLineFlagTestFile.java");
     List<String> badOptions = Arrays.asList(
         "-Xep:BogusChecker:ERROR",
         "-Xep:BogusChecker:WARN",
@@ -234,8 +250,7 @@ public class CommandLineFlagTest {
         "-Xep:BogusChecker");
 
     for (String badOption : badOptions) {
-      Result exitCode = compiler.compile(new String[]{badOption},
-          Collections.<JavaFileObject>emptyList());
+      Result exitCode = compiler.compile(new String[] {badOption}, sources);
       assertThat(exitCode).isEqualTo(Result.CMDERR);
       assertThat(output.toString()).contains("BogusChecker is not a valid checker name");
     }

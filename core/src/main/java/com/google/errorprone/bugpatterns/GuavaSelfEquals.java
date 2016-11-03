@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.GUAVA;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.sameArgument;
@@ -31,18 +30,19 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
+import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCBlock;
+import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
-import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
-
 import java.util.List;
+import javax.annotation.Nullable;
 
 /**
  * Points out if an object is tested for equality to itself using Guava Libraries.
@@ -56,8 +56,7 @@ import java.util.List;
       "The arguments to this equal method are the same object, so it always returns "
           + "true.  Either change the arguments to point to different objects or substitute true.",
   category = GUAVA,
-  severity = ERROR,
-  maturity = MATURE
+  severity = ERROR
 )
 public class GuavaSelfEquals extends BugChecker implements MethodInvocationTreeMatcher {
 
@@ -83,8 +82,6 @@ public class GuavaSelfEquals extends BugChecker implements MethodInvocationTreeM
   }
 
   private Description describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
-    // If we don't find a good field to use, then just replace with "true"
-    Fix fix = SuggestedFix.replace(methodInvocationTree, "true");
     /**
      * Cases:
      * <ol>
@@ -94,19 +91,9 @@ public class GuavaSelfEquals extends BugChecker implements MethodInvocationTreeM
      * <li>Objects.equal(this.foo, this.foo) ==> Objects.equal(this.foo, other.foo)</li>
      * </ol>
      */
-    // Assumption: Both arguments are either identifiers or field accesses.
-    List<? extends ExpressionTree> args = methodInvocationTree.getArguments();
-    for (ExpressionTree arg : args) {
-      switch (arg.getKind()) {
-        case IDENTIFIER:
-        case MEMBER_SELECT:
-          break;
-        default:
-          throw new IllegalStateException(
-              "Expected arg " + arg + " to be a field access or identifier");
-      }
-    }
 
+    verifyArgsType(methodInvocationTree);
+    List<? extends ExpressionTree> args = methodInvocationTree.getArguments();  
     // Choose argument to replace.
     ExpressionTree toReplace;
     if (args.get(1).getKind() == Kind.IDENTIFIER) {
@@ -117,29 +104,70 @@ public class GuavaSelfEquals extends BugChecker implements MethodInvocationTreeM
       // If we don't have a good reason to replace one or the other, replace the second.
       toReplace = args.get(1);
     }
-    // Find containing block
+
+    Fix fix = generateFix(methodInvocationTree, state, toReplace);
+    return describeMatch(methodInvocationTree, fix);
+  }
+  
+  /** Verifies arguments to be either identifiers or field accesses. */
+  protected static void verifyArgsType(MethodInvocationTree methodInvocationTree) {
+    // Assumption: Both arguments are either identifiers or field accesses.
+    for (ExpressionTree arg : methodInvocationTree.getArguments()) {
+      switch (arg.getKind()) {
+        case IDENTIFIER:
+        case MEMBER_SELECT:
+          break;
+        default:
+          throw new IllegalStateException(
+              "Expected arg " + arg + " to be a field access or identifier");
+      }
+    }
+  }
+
+  /** Finds a replacement for toReplace expression tree if possible. */
+  protected static Fix generateFix(Tree tree, VisitorState state, ExpressionTree toReplace) {
+    Fix fieldFix = fieldFix(toReplace, state);
+    if (fieldFix != null) {
+      return fieldFix;
+    }
+    // If we don't find a good field to use, then just replace with "true"
+    return SuggestedFix.replace(tree, "true");
+  }
+
+  @Nullable
+  protected static Fix fieldFix(Tree toReplace, VisitorState state) {
     TreePath path = state.getPath();
-    while (path.getLeaf().getKind() != Kind.BLOCK) {
+    while (path != null
+        && path.getLeaf().getKind() != Kind.CLASS
+        && path.getLeaf().getKind() != Kind.BLOCK) {
       path = path.getParentPath();
     }
-    JCBlock block = (JCBlock) path.getLeaf();
-    for (JCStatement jcStatement : block.getStatements()) {
-      if (jcStatement.getKind() == Kind.VARIABLE) {
-        JCVariableDecl declaration = (JCVariableDecl) jcStatement;
-        TypeSymbol variableTypeSymbol = declaration.getType().type.tsym;
+    if (path == null) {
+      return null;
+    }
+    List<? extends JCTree> members;
+    // Must be block or class
+    if (path.getLeaf().getKind() == Kind.CLASS) {
+      members = ((JCClassDecl) path.getLeaf()).getMembers();
+    } else {
+      members = ((JCBlock) path.getLeaf()).getStatements();
+    }
+    for (JCTree jcTree : members) {
+      if (jcTree.getKind() == Kind.VARIABLE) {
+        JCVariableDecl declaration = (JCVariableDecl) jcTree;
+        TypeSymbol variableTypeSymbol =
+            state.getTypes().erasure(ASTHelpers.getType(declaration)).tsym;
 
         if (ASTHelpers.getSymbol(toReplace).isMemberOf(variableTypeSymbol, state.getTypes())) {
           if (toReplace.getKind() == Kind.IDENTIFIER) {
-            fix = SuggestedFix.prefixWith(toReplace, declaration.getName() + ".");
+            return SuggestedFix.prefixWith(toReplace, declaration.getName() + ".");
           } else {
-            fix =
-                SuggestedFix.replace(
-                    ((JCFieldAccess) toReplace).getExpression(), declaration.getName().toString());
+            return SuggestedFix.replace(
+                ((JCFieldAccess) toReplace).getExpression(), declaration.getName().toString());
           }
         }
       }
     }
-
-    return describeMatch(methodInvocationTree, fix);
+    return null;
   }
 }

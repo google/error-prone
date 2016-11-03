@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
@@ -43,7 +42,6 @@ import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.predicates.TypePredicate;
 import com.google.errorprone.predicates.TypePredicates;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
@@ -52,7 +50,6 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.JCTree;
-
 import java.util.List;
 
 /**
@@ -62,13 +59,17 @@ import java.util.List;
  *
  * @author glorioso@google.com (Nick Glorioso)
  */
-@BugPattern(name = "SizeGreaterThanOrEqualsZero",
-    summary = "Comparison of a size >= 0 is always true, did you intend to check for "
-        + "non-emptiness?",
-    explanation = "A standard means of checking non-emptiness of an array or collection is to "
-        + "test if the size of that collection is greater than 0. However, one may accidentally "
-        + "check if the size is greater than or equal to 0, which is always true.",
-    category = JDK, severity = ERROR, maturity = MATURE)
+@BugPattern(
+  name = "SizeGreaterThanOrEqualsZero",
+  summary =
+      "Comparison of a size >= 0 is always true, did you intend to check for " + "non-emptiness?",
+  explanation =
+      "A standard means of checking non-emptiness of an array or collection is to "
+          + "test if the size of that collection is greater than 0. However, one may accidentally "
+          + "check if the size is greater than or equal to 0, which is always true.",
+  category = JDK,
+  severity = ERROR
+)
 public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTreeMatcher {
 
   private enum MethodName { LENGTH, SIZE }
