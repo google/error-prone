@@ -368,7 +368,8 @@ public class DefaultCharsetTest {
     refactoringTest()
         .addInputLines(
             "in/Test.java",
-            "import java.io.*;",
+            "import java.io.File;",
+            "import java.io.PrintWriter;",
             "class Test {",
             "  void f() throws Exception {",
             "    PrintWriter pw1 = new PrintWriter(System.err, true);",
@@ -380,7 +381,10 @@ public class DefaultCharsetTest {
         .addOutputLines(
             "out/Test.java",
             "import static java.nio.charset.StandardCharsets.UTF_8;",
-            "import java.io.*;",
+            "import java.io.BufferedWriter;",
+            "import java.io.File;",
+            "import java.io.OutputStreamWriter;",
+            "import java.io.PrintWriter;",
             "class Test {",
             "  void f() throws Exception {",
             "    PrintWriter pw1 = new PrintWriter(",

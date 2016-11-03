@@ -456,6 +456,8 @@ public class DefaultCharset extends BugChecker
               .prefixWith(outputStream, "new BufferedWriter(new OutputStreamWriter(")
               .postfixWith(outputStream, String.format(", %s))", charsetFix.replacement()));
       charsetFix.addImport(fix, state);
+      fix.addImport("java.io.BufferedWriter");
+      fix.addImport("java.io.OutputStreamWriter");
       description.addFix(fix.build());
     }
     return description.build();
