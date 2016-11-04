@@ -239,6 +239,9 @@ Non-generic methods should not be invoked with type arguments
 __[UnusedAnonymousClass](bugpattern/UnusedAnonymousClass)__<br>
 Instance created but never used
 
+__[UnusedCollectionModifiedInPlace](bugpattern/UnusedCollectionModifiedInPlace)__<br>
+Collection is modified in place, but the result is not used
+
 ## On by default : WARNING
 
 __[AmbiguousMethodReference](bugpattern/AmbiguousMethodReference)__<br>
@@ -291,6 +294,9 @@ Overloads will be ambiguous when passing lambda arguments
 
 __[GetClassOnEnum](bugpattern/GetClassOnEnum)__<br>
 Calling getClass() on an enum may return a subclass of the enum type
+
+__[ImmutableEnumChecker](bugpattern/ImmutableEnumChecker)__<br>
+Enums should always be immutable
 
 __[IncompatibleModifiers](bugpattern/IncompatibleModifiers)__<br>
 This annotation has incompatible modifiers as specified by its @IncompatibleModifiers annotation
