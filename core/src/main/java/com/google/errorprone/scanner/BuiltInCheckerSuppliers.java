@@ -153,6 +153,7 @@ import com.google.errorprone.bugpatterns.android.FragmentNotInstantiable;
 import com.google.errorprone.bugpatterns.android.HardCodedSdCardPath;
 import com.google.errorprone.bugpatterns.android.MislabeledAndroidString;
 import com.google.errorprone.bugpatterns.android.RectIntersectReturnValueIgnored;
+import com.google.errorprone.bugpatterns.android.StaticOrDefaultInterfaceMethod;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionIncompatibleType;
 import com.google.errorprone.bugpatterns.formatstring.FormatString;
 import com.google.errorprone.bugpatterns.formatstring.FormatStringAnnotationChecker;
@@ -405,6 +406,7 @@ public class BuiltInCheckerSuppliers {
           ScopeAnnotationOnInterfaceOrAbstractClass.class,
           ScopeOrQualifierAnnotationRetention.class,
           StaticAccessedFromInstance.class,
+          StaticOrDefaultInterfaceMethod.class,
           StringEquality.class,
           ThrowsUncheckedException.class,
           UnlockMethodChecker.class,
