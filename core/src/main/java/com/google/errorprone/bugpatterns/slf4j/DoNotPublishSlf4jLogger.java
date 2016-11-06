@@ -1,7 +1,6 @@
 package com.google.errorprone.bugpatterns.slf4j;
 
 import static com.google.errorprone.BugPattern.Category.SLF4J;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.isField;
@@ -34,8 +33,7 @@ import autovalue.shaded.com.google.common.common.base.Joiner;
     name = "DoNotPublishSlf4jLogger",
     summary = "Do not publish Logger field, it should be private",
     category = SLF4J,
-    severity = WARNING,
-    maturity = MATURE)
+    severity = WARNING)
 public class DoNotPublishSlf4jLogger extends BugChecker
         implements VariableTreeMatcher {
 
