@@ -14,6 +14,7 @@ import java.util.Set;
 
 import javax.lang.model.element.Modifier;
 
+import com.google.common.collect.Ordering;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -41,7 +42,15 @@ public class DoNotPublishSlf4jLogger extends BugChecker
     private static final Matcher<VariableTree> PRIVATE = new PrivateMatcher();
     private static final Matcher<VariableTree> SLF4J_LOGGER = new LoggerMatcher();
     private static final Joiner JOINER_ON_SPACE = Joiner.on(' ');
-    private static final Comparator<Modifier> MODIFIER_COMPARATOR = new ModifierComparator();
+    /**
+     * Comparator to sort {@link Modifier}. The order is based on styleguide from Google and Open JDK community.
+     * @see <a href="https://google.github.io/styleguide/javaguide.html#s4.8.7-modifiers">Google Java Style</a>
+     * @see <a href="http://cr.openjdk.java.net/~alundblad/styleguide/index-v6.html#toc-modifiers">Open JDK Java Style Guidelines</a>
+     */
+    private static final Comparator<Modifier> MODIFIER_COMPARATOR = Ordering.explicit(
+            Modifier.PUBLIC, Modifier.PROTECTED, Modifier.PRIVATE, Modifier.ABSTRACT,
+            Modifier.STATIC, Modifier.FINAL, Modifier.TRANSIENT, Modifier.VOLATILE,
+            Modifier.DEFAULT, Modifier.SYNCHRONIZED, Modifier.NATIVE, Modifier.STRICTFP);
 
     private final String lineSeparator = System.lineSeparator();
 
