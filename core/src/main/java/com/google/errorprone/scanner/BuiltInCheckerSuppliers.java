@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.bugpatterns.AmbiguousMethodReference;
+import com.google.errorprone.bugpatterns.ArgumentParameterMismatch;
 import com.google.errorprone.bugpatterns.ArgumentParameterSwap;
 import com.google.errorprone.bugpatterns.ArrayEquals;
 import com.google.errorprone.bugpatterns.ArrayHashCode;
@@ -363,6 +364,7 @@ public class BuiltInCheckerSuppliers {
   /** A list of all checks that are off by default. */
   public static final ImmutableSet<BugCheckerInfo> DISABLED_CHECKS =
       getSuppliers(
+          ArgumentParameterMismatch.class,
           ArgumentParameterSwap.class,
           AutoFactoryAtInject.class,
           AssertFalse.class,

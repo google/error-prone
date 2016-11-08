@@ -15,10 +15,7 @@
  */
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.truth.Truth.assertThat;
-
 import com.google.errorprone.CompilationTestHelper;
-import java.util.Set;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -43,111 +40,6 @@ public class ArgumentParameterSwapTest {
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.addSourceFile("ArgumentParameterSwapNegativeCases.java").doTest();
-  }
-
-  @Test
-  public void choosesOriginalWhenBestOption() {
-    assertThat(
-            ArgumentParameterSwap.findBestMatch(
-                new String[] {"baz", "other"}, "foo", "fooBar", 0.667))
-        .isEqualTo(-1);
-  }
-
-  @Test
-  public void choosesFirstAlternativeWhenBestOption() {
-    assertThat(
-            ArgumentParameterSwap.findBestMatch(
-                new String[] {"fooBarBaz", "other"}, "quxQuuCor", "fooBarBaz", 0.667))
-        .isEqualTo(0);
-  }
-
-  @Test
-  public void choosesSecondAlternativeWhenBestOption() {
-    assertThat(
-            ArgumentParameterSwap.findBestMatch(
-                new String[] {"other", "fooBarBaz"}, "quxQuuCor", "fooBarBaz", 0.667))
-        .isEqualTo(1);
-  }
-
-  @Test
-  public void choosesOriginalWhenAlternativesAsGood() {
-    assertThat(
-            ArgumentParameterSwap.findBestMatch(new String[] {"baz", "qux"}, "bar", "foo", 0.667))
-        .isEqualTo(-1);
-  }
-
-  @Test
-  public void ignoresBetterOptionsWhenBetaIsLarge() {
-    assertThat(
-            ArgumentParameterSwap.findBestMatch(
-                new String[] {"fooBarBaz", "other"}, "quxQuuCor", "quxQuuCor", Integer.MAX_VALUE))
-        .isEqualTo(-1);
-  }
-
-  @Test
-  public void calculateSimilarity_sameBiggerThanDifferent() throws Exception {
-    assertThat(ArgumentParameterSwap.calculateSimilarity("foo", "foo"))
-        .isGreaterThan(ArgumentParameterSwap.calculateSimilarity("foo", "bar"));
-  }
-
-  @Test
-  public void calculateSimilarity_partialSmallerBiggerThanDifferent() throws Exception {
-    assertThat(ArgumentParameterSwap.calculateSimilarity("foo", "barFoo"))
-        .isGreaterThan(ArgumentParameterSwap.calculateSimilarity("foo", "bar"));
-  }
-
-  @Test
-  public void calculateSimilarity_partialLargerBiggerThanDifferent() throws Exception {
-    assertThat(ArgumentParameterSwap.calculateSimilarity("fooBar", "bar"))
-        .isGreaterThan(ArgumentParameterSwap.calculateSimilarity("foo", "bar"));
-  }
-
-  @Test
-  public void calculateSimilarity_partialRepeatedBiggerThanDifferent() throws Exception {
-    assertThat(ArgumentParameterSwap.calculateSimilarity("fooBarFoo", "foo"))
-        .isGreaterThan(ArgumentParameterSwap.calculateSimilarity("foo", "bar"));
-  }
-
-  @Test
-  public void calculateSimilarity_partialSameBiggerThanDifferent() throws Exception {
-    assertThat(ArgumentParameterSwap.calculateSimilarity("fooBar", "barBaz"))
-        .isGreaterThan(ArgumentParameterSwap.calculateSimilarity("foo", "bar"));
-  }
-
-  @Test
-  public void splitStringTerms_lower() throws Exception {
-    Set<String> terms = ArgumentParameterSwap.splitStringTerms("foo");
-    assertThat(terms).containsExactly("foo");
-  }
-
-  @Test
-  public void splitStringTerms_camel() throws Exception {
-    Set<String> terms = ArgumentParameterSwap.splitStringTerms("fooBar");
-    assertThat(terms).containsExactly("foo", "bar");
-  }
-
-  @Test
-  public void splitStringTerms_upper() throws Exception {
-    Set<String> terms = ArgumentParameterSwap.splitStringTerms("FOO_BAR");
-    assertThat(terms).containsExactly("foo", "bar");
-  }
-
-  @Test
-  public void splitStringTerms_repeated() throws Exception {
-    Set<String> terms = ArgumentParameterSwap.splitStringTerms("fooBarFoo");
-    assertThat(terms).containsExactly("foo", "bar");
-  }
-
-  @Test
-  public void splitStringTerms_single() throws Exception {
-    Set<String> terms = ArgumentParameterSwap.splitStringTerms("fooBarID");
-    assertThat(terms).containsExactly("foo", "bar", "id");
-  }
-
-  @Test
-  public void splitStringTerms_mixed() throws Exception {
-    Set<String> terms = ArgumentParameterSwap.splitStringTerms("foo_barBaz");
-    assertThat(terms).containsExactly("foo", "bar", "baz");
   }
 
   @Test
@@ -368,7 +260,7 @@ public class ArgumentParameterSwapTest {
             "  public void test(Object fooBarBaz,Object quxQuuCor) {}",
             "  public void testMethod(Object quxQuuCor) {",
             "    // BUG: Diagnostic contains: 'test(this, quxQuuCor);'",
-            "    test(quxQuuCor,this);",
+            "    test(quxQuuCor, this);",
             "  }",
             "}")
         .doTest();
@@ -385,6 +277,29 @@ public class ArgumentParameterSwapTest {
             "    doIt(fooNotBest,fooBetter);",
             "  }",
             "}")
+        .doTest();
+  }
+
+  // Regression test for b/32477667
+  @Test
+  public void shouldNotCrashWithVarargs() {
+    compilationHelper
+        .addSourceLines(
+            "DontCrash.java",
+            "class DontCrash {",
+            "  public void doIt(String... fooStrings) {}",
+            "  public void testMethod(String fooNotBest, String fooBetter) {",
+            "    doIt();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  // Regression test for GitHub issue #453
+  @Test
+  public void shouldNotCrashOnEnum() {
+    compilationHelper
+        .addSourceLines("Enum.java", "enum Enum {", "  C(0);", "  Enum(final int i) {}", "}")
         .doTest();
   }
 }
