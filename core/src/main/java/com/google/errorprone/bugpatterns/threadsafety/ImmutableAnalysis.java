@@ -401,7 +401,7 @@ public class ImmutableAnalysis {
         return Violation.absent();
       }
       return Violation.of(
-          String.format("'%s' is not annotated @Immutable", type));
+          String.format("the declaration of type '%s' is not annotated @Immutable", type));
     }
   }
 

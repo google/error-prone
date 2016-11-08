@@ -26,10 +26,14 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.threadsafety.ImmutableAnalysis.Violation;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 
@@ -41,11 +45,29 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
   severity = WARNING
 )
 public class ImmutableEnumChecker extends BugChecker implements ClassTreeMatcher {
+
+  public static final String ANNOTATED_ENUM_MESSAGE =
+      "enums are immutable by default; annotating them with @Immutable is unnecessary";
+
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
     ClassSymbol symbol = getSymbol(tree);
     if (symbol == null || !symbol.isEnum()) {
       return NO_MATCH;
+    }
+
+    if (ASTHelpers.hasAnnotation(symbol, Immutable.class, state)) {
+      AnnotationTree annotation =
+          ASTHelpers.getAnnotationWithSimpleName(tree.getModifiers().getAnnotations(), "Immutable");
+      if (annotation != null) {
+        state.reportMatch(
+            buildDescription(annotation)
+                .setMessage(ANNOTATED_ENUM_MESSAGE)
+                .addFix(SuggestedFix.delete(annotation))
+                .build());
+      } else {
+        state.reportMatch(buildDescription(tree).setMessage(ANNOTATED_ENUM_MESSAGE).build());
+      }
     }
 
     Violation info =

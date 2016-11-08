@@ -78,4 +78,39 @@ public class ImmutableEnumCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void annotatedEnum() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "// BUG: Diagnostic contains: enums are immutable by default",
+            "@Immutable",
+            "enum Enum {",
+            "  ONE, TWO",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void mutableFieldType() {
+    compilationHelper
+        .addSourceLines("Foo.java", "class Foo {", "}")
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Arrays;",
+            "import java.util.HashSet;",
+            "import java.util.Set;",
+            "enum Enum {",
+            "  ONE(new Foo()), TWO(new Foo());",
+            "  // BUG: Diagnostic contains:"
+                + " the declaration of type 'Foo' is not annotated @Immutable",
+            "  final Foo f;",
+            "  private Enum(Foo f) {",
+            "    this.f = f;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
