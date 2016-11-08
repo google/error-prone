@@ -40,7 +40,7 @@ import com.sun.tools.javac.tree.JCTree;
   severity = ERROR
 )
 public class InsecureCipherMode extends BugChecker implements MethodInvocationTreeMatcher {
-  private static final String MESSAGE_BASE = "Insecure usage of Cipher.getInstance(): ";
+  private static final String MESSAGE_BASE = "Insecure usage of a crypto API: ";
 
   private static final Matcher<ExpressionTree> CIPHER_GETINSTANCE_MATCHER =
       staticMethod().onClass("javax.crypto.Cipher").named("getInstance");
