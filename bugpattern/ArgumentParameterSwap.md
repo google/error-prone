@@ -140,18 +140,6 @@ public class ArgumentParameterSwapNegativeCases {
   public void doNothing() {
     doSomething(null, new String[0]);
   }
-
-  // there is a swap here but because the args is less than 4 characters long then we ignore
-  public String sendSomething(String from, String to, boolean video) {
-    return "wrong but ignore";
-  }
-
-  public void sendReversed() {
-    String from = "from";
-    String to = "to";
-    boolean video = false;
-    sendSomething(to, from, video);
-  }
 }
 {% endhighlight %}
 

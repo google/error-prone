@@ -260,6 +260,8 @@
 <div class="block">Analyzes a method body, tracking the set of held locks and checking accesses to guarded
  members.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableEnumChecker.html#ANNOTATED_ENUM_MESSAGE">ANNOTATED_ENUM_MESSAGE</a></span> - Static variable in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableEnumChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ImmutableEnumChecker</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/suppliers/Suppliers.html#ANNOTATION_TYPE">ANNOTATION_TYPE</a></span> - Static variable in class com.google.errorprone.suppliers.<a href="com/google/errorprone/suppliers/Suppliers.html" title="class in com.google.errorprone.suppliers">Suppliers</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/AnnotationDoesNotHaveArgument.html" title="class in com.google.errorprone.matchers"><span class="typeNameLink">AnnotationDoesNotHaveArgument</span></a> - Class in <a href="com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a></dt>
@@ -406,15 +408,28 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Matchers.html#argumentCount-int-">argumentCount(int)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/ArgumentParameterMismatch.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">ArgumentParameterMismatch</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">Checks the lexical similarity between method parameter names and the argument names at call
+ sites.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ArgumentParameterMismatch.html#ArgumentParameterMismatch--">ArgumentParameterMismatch()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ArgumentParameterMismatch.html" title="class in com.google.errorprone.bugpatterns">ArgumentParameterMismatch</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ArgumentParameterMismatch.html#ArgumentParameterMismatch-com.google.common.collect.ImmutableSet-double-">ArgumentParameterMismatch(ImmutableSet&lt;String&gt;, double)</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ArgumentParameterMismatch.html" title="class in com.google.errorprone.bugpatterns">ArgumentParameterMismatch</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/ArgumentParameterSimilarityMetrics.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">ArgumentParameterSimilarityMetrics</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">Similarity metrics for the ArgumentParameter* checks.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/ArgumentParameterSwap.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">ArgumentParameterSwap</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">This checks the similarity between the arguments and parameters.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ArgumentParameterSwap.html#ArgumentParameterSwap--">ArgumentParameterSwap()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ArgumentParameterSwap.html" title="class in com.google.errorprone.bugpatterns">ArgumentParameterSwap</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ArgumentParameterSwap.html#ArgumentParameterSwap-java.util.Set-double-">ArgumentParameterSwap(Set&lt;String&gt;, double)</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ArgumentParameterSwap.html" title="class in com.google.errorprone.bugpatterns">ArgumentParameterSwap</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ArgumentParameterSwap.html#ArgumentParameterSwap-com.google.common.collect.ImmutableSet-double-">ArgumentParameterSwap(ImmutableSet&lt;String&gt;, double)</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ArgumentParameterSwap.html" title="class in com.google.errorprone.bugpatterns">ArgumentParameterSwap</a></dt>
 <dd>
-<div class="block">Constructor for overriding default behaviour</div>
+<div class="block">Constructor for overriding default behaviour.</div>
 </dd>
 <dt><a href="com/google/errorprone/predicates/type/Array.html" title="enum in com.google.errorprone.predicates.type"><span class="typeNameLink">Array</span></a> - Enum in <a href="com/google/errorprone/predicates/type/package-summary.html">com.google.errorprone.predicates.type</a></dt>
 <dd>
@@ -1149,6 +1164,11 @@
 <dd>
 <div class="block">Matches a compound assignment operator AST node which matches a given left-operand matcher, a
  given right-operand matcher, and is one of a set of compound assignment operators.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ArgumentParameterSimilarityMetrics.html#computeNormalizedTermIntersection-java.lang.String-java.lang.String-">computeNormalizedTermIntersection(String, String)</a></span> - Static method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ArgumentParameterSimilarityMetrics.html" title="class in com.google.errorprone.bugpatterns">ArgumentParameterSimilarityMetrics</a></dt>
+<dd>
+<div class="block">The similarity metric from Section 2.1 of Liu et al., "Nomen est Omen: Exploring and Exploiting
+ Similarities between Argument and Parameter Names," ICSE 2016.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/Choice.html#condition-boolean-T-">condition(boolean, T)</a></span> - Static method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a></dt>
 <dd>
@@ -4007,6 +4027,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/TypeParameterQualifier.html#matchMemberSelect-com.sun.source.tree.MemberSelectTree-com.google.errorprone.VisitorState-">matchMemberSelect(MemberSelectTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TypeParameterQualifier.html" title="class in com.google.errorprone.bugpatterns">TypeParameterQualifier</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/android/StaticOrDefaultInterfaceMethod.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.android.<a href="com/google/errorprone/bugpatterns/android/StaticOrDefaultInterfaceMethod.html" title="class in com.google.errorprone.bugpatterns.android">StaticOrDefaultInterfaceMethod</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.MethodTreeMatcher.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ChainingConstructorIgnoresParameter.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ChainingConstructorIgnoresParameter.html" title="class in com.google.errorprone.bugpatterns">ChainingConstructorIgnoresParameter</a></dt>
@@ -4095,8 +4117,6 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">AbstractReturnValueIgnored</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/AbstractToString.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractToString.html" title="class in com.google.errorprone.bugpatterns">AbstractToString</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ArgumentParameterSwap.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ArgumentParameterSwap.html" title="class in com.google.errorprone.bugpatterns">ArgumentParameterSwap</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ArrayEquals.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ArrayEquals.html" title="class in com.google.errorprone.bugpatterns">ArrayEquals</a></dt>
 <dd>
@@ -4209,8 +4229,6 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.NewArrayTreeMatcher.html#matchNewArray-com.sun.source.tree.NewArrayTree-com.google.errorprone.VisitorState-">matchNewArray(NewArrayTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.NewArrayTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.NewArrayTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/NoAllocationChecker.html#matchNewArray-com.sun.source.tree.NewArrayTree-com.google.errorprone.VisitorState-">matchNewArray(NewArrayTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/NoAllocationChecker.html" title="class in com.google.errorprone.bugpatterns">NoAllocationChecker</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ArgumentParameterSwap.html#matchNewClass-com.sun.source.tree.NewClassTree-com.google.errorprone.VisitorState-">matchNewClass(NewClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ArgumentParameterSwap.html" title="class in com.google.errorprone.bugpatterns">ArgumentParameterSwap</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BigDecimalLiteralDouble.html#matchNewClass-com.sun.source.tree.NewClassTree-com.google.errorprone.VisitorState-">matchNewClass(NewClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BigDecimalLiteralDouble.html" title="class in com.google.errorprone.bugpatterns">BigDecimalLiteralDouble</a></dt>
 <dd>&nbsp;</dd>
@@ -5552,6 +5570,10 @@
 <div class="block">Matches a static method.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/method/MethodMatchers.html#staticMethod--">staticMethod()</a></span> - Static method in class com.google.errorprone.matchers.method.<a href="com/google/errorprone/matchers/method/MethodMatchers.html" title="class in com.google.errorprone.matchers.method">MethodMatchers</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/android/StaticOrDefaultInterfaceMethod.html" title="class in com.google.errorprone.bugpatterns.android"><span class="typeNameLink">StaticOrDefaultInterfaceMethod</span></a> - Class in <a href="com/google/errorprone/bugpatterns/android/package-summary.html">com.google.errorprone.bugpatterns.android</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/android/StaticOrDefaultInterfaceMethod.html#StaticOrDefaultInterfaceMethod--">StaticOrDefaultInterfaceMethod()</a></span> - Constructor for class com.google.errorprone.bugpatterns.android.<a href="com/google/errorprone/bugpatterns/android/StaticOrDefaultInterfaceMethod.html" title="class in com.google.errorprone.bugpatterns.android">StaticOrDefaultInterfaceMethod</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/ImportPolicy.html#staticReference-com.google.errorprone.refaster.Inliner-java.lang.CharSequence-java.lang.CharSequence-java.lang.CharSequence-">staticReference(Inliner, CharSequence, CharSequence, CharSequence)</a></span> - Method in enum com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ImportPolicy.html" title="enum in com.google.errorprone.refaster">ImportPolicy</a></dt>
 <dd>&nbsp;</dd>

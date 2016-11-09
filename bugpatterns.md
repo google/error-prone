@@ -41,6 +41,9 @@ The called constructor accepts a parameter with the same name and type as one of
 __[CheckReturnValue](bugpattern/CheckReturnValue)__<br>
 Ignored return value of method that is annotated with @CheckReturnValue
 
+__[CollectionIncompatibleType](bugpattern/CollectionIncompatibleType)__<br>
+Incompatible type as argument to Object-accepting Java collections method
+
 __[ComparisonOutOfRange](bugpattern/ComparisonOutOfRange)__<br>
 Comparison to value that is out of range for the compared type
 
@@ -265,9 +268,6 @@ Inner class is non-static but does not reference enclosing class
 __[ClassNewInstance](bugpattern/ClassNewInstance)__<br>
 Class.newInstance() bypasses exception checking; prefer getConstructor().newInstance()
 
-__[CollectionIncompatibleType](bugpattern/CollectionIncompatibleType)__<br>
-Incompatible type as argument to Object-accepting Java collections method
-
 __[DefaultCharset](bugpattern/DefaultCharset)__<br>
 Implicit use of the platform default charset, which can result in e.g. non-ASCII characters being silently replaced with &#39;?&#39; in many environments
 
@@ -456,10 +456,16 @@ Comparing protobuf fields of type String using reference equality
 __[QualifierOnMethodWithoutProvides](bugpattern/QualifierOnMethodWithoutProvides)__<br>
 Qualifier applied to a method that isn&#39;t a @Provides method. This method won&#39;t be used for dependency injection
 
+__[StaticOrDefaultInterfaceMethod](bugpattern/StaticOrDefaultInterfaceMethod)__<br>
+Static and default methods in interfaces are not allowed in android builds.
+
 __[UnlockMethod](bugpattern/UnlockMethod)__<br>
 This method does not acquire the locks specified by its @UnlockMethod annotation
 
 ## Experimental : WARNING
+
+__[ArgumentParameterMismatch](bugpattern/ArgumentParameterMismatch)__<br>
+A different potential argument is more similar to the name of the parameter than the existing argument; this may be an error
 
 __[AssertFalse](bugpattern/AssertFalse)__<br>
 Assertions may be disabled at runtime and do not guarantee that execution will halt here; consider throwing an exception instead
