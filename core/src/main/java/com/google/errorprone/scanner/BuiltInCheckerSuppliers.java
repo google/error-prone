@@ -152,6 +152,7 @@ import com.google.errorprone.bugpatterns.WildcardImport;
 import com.google.errorprone.bugpatterns.WrongParameterPackage;
 import com.google.errorprone.bugpatterns.android.FragmentNotInstantiable;
 import com.google.errorprone.bugpatterns.android.HardCodedSdCardPath;
+import com.google.errorprone.bugpatterns.android.IsLoggableTagLength;
 import com.google.errorprone.bugpatterns.android.MislabeledAndroidString;
 import com.google.errorprone.bugpatterns.android.RectIntersectReturnValueIgnored;
 import com.google.errorprone.bugpatterns.android.StaticOrDefaultInterfaceMethod;
@@ -269,6 +270,7 @@ public class BuiltInCheckerSuppliers {
           InsecureCipherMode.class,
           InvalidPatternSyntax.class,
           IsInstanceOfClass.class,
+          IsLoggableTagLength.class,
           JavaxInjectOnAbstractMethod.class,
           JUnit3TestNotRun.class,
           JUnit4SetUpNotRun.class,
