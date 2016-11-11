@@ -33,8 +33,8 @@ import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.Signatures;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import java.util.Arrays;
 import java.util.Collection;
@@ -88,8 +88,6 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
   public CollectionIncompatibleType(FixType fixType) {
     this.fixType = fixType;
   }
-
-  // TODO(eaftan): Support an @CompatibleWith("K") annotation for non-JDK code, particularly Guava.
 
   // The "normal" case of extracting the type of a method argument
   private static final Iterable<MethodArgMatcher> DIRECT_MATCHERS =
@@ -161,9 +159,9 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
 
     // For error message, use simple names instead of fully qualified names unless they are
     // identical.
-    String sourceTreeType = getSimpleName(ASTHelpers.getType(result.sourceTree()));
-    String sourceType = getSimpleName(result.sourceType());
-    String targetType = getSimpleName(result.targetType());
+    String sourceTreeType = Signatures.prettyType(ASTHelpers.getType(result.sourceTree()));
+    String sourceType = Signatures.prettyType(result.sourceType());
+    String targetType = Signatures.prettyType(result.targetType());
     if (sourceType.equals(targetType)) {
       sourceType = result.sourceType().toString();
       targetType = result.targetType().toString();
@@ -245,23 +243,4 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
     return null;
   }
 
-  /**
-   * Computes the simple name for a type.  Handles parameterized types, e.g. {@code
-   * Collection<String>}.
-   */
-  private static String getSimpleName(Type type) {
-    StringBuilder sb = new StringBuilder(type.tsym.getSimpleName());
-    List<Type> typeArgs = type.getTypeArguments();
-    if (!typeArgs.isEmpty()) {
-      sb.append('<');
-      Type typeArg = typeArgs.get(0);
-      sb.append(getSimpleName(typeArg));
-      for (int i = 1; i < typeArgs.size(); i++) {
-        sb.append(", ");
-        sb.append(getSimpleName(typeArg));
-      }
-      sb.append('>');
-    }
-    return sb.toString();
-  }
 }

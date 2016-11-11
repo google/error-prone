@@ -442,7 +442,7 @@ public class ASTHelpers {
         .stream()
         .map(type -> findSuperMethodInType(methodSymbol, type, types))
         .filter(x -> x != null)
-        .collect(Collectors.toCollection(HashSet::new));
+        .collect(Collectors.toCollection(LinkedHashSet::new));
   }
 
   /**

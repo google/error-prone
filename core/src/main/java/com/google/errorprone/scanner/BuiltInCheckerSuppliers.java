@@ -158,6 +158,8 @@ import com.google.errorprone.bugpatterns.android.MislabeledAndroidString;
 import com.google.errorprone.bugpatterns.android.RectIntersectReturnValueIgnored;
 import com.google.errorprone.bugpatterns.android.StaticOrDefaultInterfaceMethod;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionIncompatibleType;
+import com.google.errorprone.bugpatterns.collectionincompatibletype.CompatibleWithMisuse;
+import com.google.errorprone.bugpatterns.collectionincompatibletype.IncompatibleArgumentType;
 import com.google.errorprone.bugpatterns.formatstring.FormatString;
 import com.google.errorprone.bugpatterns.formatstring.FormatStringAnnotationChecker;
 import com.google.errorprone.bugpatterns.inject.AssistedInjectAndInjectOnConstructors;
@@ -248,6 +250,7 @@ public class BuiltInCheckerSuppliers {
           ChainingConstructorIgnoresParameter.class,
           CheckReturnValue.class,
           CollectionIncompatibleType.class,
+          CompatibleWithMisuse.class,
           ComparisonOutOfRange.class,
           CompileTimeConstantChecker.class,
           ConstantOverflow.class,
@@ -267,6 +270,7 @@ public class BuiltInCheckerSuppliers {
           IdentityBinaryExpression.class,
           ImmutableChecker.class,
           ImmutableModification.class,
+          IncompatibleArgumentType.class,
           InfiniteRecursion.class,
           InjectOnFinalField.class,
           InsecureCipherMode.class,

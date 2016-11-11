@@ -100,6 +100,11 @@ public class Signatures {
     return sb.toString();
   }
 
+  /** Pretty-prints a Type for use in diagnostics, using simple names for class types */
+  public static String prettyType(Type type) {
+    return type.accept(PRETTY_TYPE_VISITOR, null);
+  }
+
   private static final Type.Visitor<String, Void> PRETTY_TYPE_VISITOR =
       new DefaultTypeVisitor<String, Void>() {
         @Override
@@ -131,6 +136,11 @@ public class Signatures {
         @Override
         public String visitCapturedType(Type.CapturedType t, Void s) {
           return t.wildcard.accept(this, null);
+        }
+
+        @Override
+        public String visitArrayType(Type.ArrayType t, Void aVoid) {
+          return t.elemtype.accept(this, null) + "[]";
         }
 
         @Override
