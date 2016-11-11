@@ -71,7 +71,10 @@ public class ErrorProneError extends Error {
             "\n%s:%d: %s: An exception was thrown by Error Prone: %s\n",
             source.getFile().getName(), line, checkName, cause.getMessage()));
     sb.append(snippet).append('\n');
-    sb.append(Strings.repeat(" ", column - 1)).append("^\n");
+    if (column > 0) {
+      sb.append(Strings.repeat(" ", column - 1));
+    }
+    sb.append("^\n");
     return sb.toString();
   }
 
