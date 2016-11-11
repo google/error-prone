@@ -67,6 +67,7 @@ import com.google.errorprone.bugpatterns.GetClassOnEnum;
 import com.google.errorprone.bugpatterns.GuavaSelfEquals;
 import com.google.errorprone.bugpatterns.HashtableContains;
 import com.google.errorprone.bugpatterns.IdentityBinaryExpression;
+import com.google.errorprone.bugpatterns.ImmutableModification;
 import com.google.errorprone.bugpatterns.IncompatibleModifiersChecker;
 import com.google.errorprone.bugpatterns.InfiniteRecursion;
 import com.google.errorprone.bugpatterns.InputStreamSlowMultibyteRead;
@@ -265,6 +266,7 @@ public class BuiltInCheckerSuppliers {
           HashtableContains.class,
           IdentityBinaryExpression.class,
           ImmutableChecker.class,
+          ImmutableModification.class,
           InfiniteRecursion.class,
           InjectOnFinalField.class,
           InsecureCipherMode.class,
