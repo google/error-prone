@@ -35,6 +35,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Symbol.CompletionFailure;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
@@ -61,7 +62,7 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
         continue;
       }
       MethodSymbol msym = (MethodSymbol) sym;
-      if (msym.getParameters().stream().map(p -> p.type).noneMatch(types::isFunctionalInterface)) {
+      if (msym.getParameters().stream().noneMatch(p -> maybeFunctionalInterface(p.type, types))) {
         continue;
       }
       if (msym.isConstructor() && !msym.owner.equals(origin)) {
@@ -76,7 +77,7 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
         continue;
       }
       MethodSymbol msym = getSymbol((MethodTree) member);
-      if (msym.getParameters().stream().map(p -> p.type).noneMatch(types::isFunctionalInterface)) {
+      if (msym.getParameters().stream().noneMatch(p -> maybeFunctionalInterface(p.type, types))) {
         continue;
       }
       Collection<MethodSymbol> clash =
@@ -103,7 +104,7 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
    * interface are "erased" to the interface's function type. For example, `foo(Supplier<String>)`
    * is represented as `foo(()->Ljava/lang/String;)`.
    */
-  private String functionalInterfaceSignature(VisitorState state, MethodSymbol msym) {
+  private static String functionalInterfaceSignature(VisitorState state, MethodSymbol msym) {
     return String.format(
         "%s(%s)",
         msym.getSimpleName(),
@@ -113,9 +114,9 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
             .collect(joining(",")));
   }
 
-  private String functionalInterfaceSignature(VisitorState state, Type type) {
+  private static String functionalInterfaceSignature(VisitorState state, Type type) {
     Types types = state.getTypes();
-    if (!types.isFunctionalInterface(type)) {
+    if (!maybeFunctionalInterface(type, types)) {
       return Signatures.descriptor(type, types);
     }
     Type descriptorType = types.findDescriptorType(type);
@@ -129,5 +130,13 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
     return String.format(
         "(%s)->%s",
         fiparams.stream().map(t -> Signatures.descriptor(t, types)).collect(joining(",")), result);
+  }
+
+  private static boolean maybeFunctionalInterface(Type type, Types types) {
+    try {
+      return types.isFunctionalInterface(type);
+    } catch (CompletionFailure e) {
+      return false;
+    }
   }
 }
