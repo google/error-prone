@@ -40,6 +40,7 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
   name = "ImmutableEnumChecker",
+  altNames = "Immutable",
   category = JDK,
   summary = "Enums should always be immutable",
   severity = WARNING
