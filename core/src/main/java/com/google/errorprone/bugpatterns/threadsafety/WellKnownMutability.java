@@ -130,6 +130,7 @@ final class WellKnownMutability {
         .add(com.google.common.base.Splitter.class)
         .add(com.google.common.base.Joiner.class)
         .add(com.google.common.collect.Range.class, "C")
+        .add("android.net.Uri")
         .build();
   }
 
