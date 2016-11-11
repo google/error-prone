@@ -125,6 +125,9 @@ Invalid syntax used for a regular expression
 __[IsInstanceOfClass](bugpattern/IsInstanceOfClass)__<br>
 The argument to Class#isInstance(Object) should not be a Class
 
+__[IsLoggableTagLength](bugpattern/IsLoggableTagLength)__<br>
+Log tag too long, cannot exceed 23 characters.
+
 __[JUnit3TestNotRun](bugpattern/JUnit3TestNotRun)__<br>
 Test method will not be run; please prefix name with &quot;test&quot;
 
