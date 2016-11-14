@@ -47,6 +47,9 @@ Incompatible type as argument to Object-accepting Java collections method
 __[ComparisonOutOfRange](bugpattern/ComparisonOutOfRange)__<br>
 Comparison to value that is out of range for the compared type
 
+__[CompatibleWithAnnotationMisuse](bugpattern/CompatibleWithAnnotationMisuse)__<br>
+@CompatibleWith&#39;s value is not a type argument.
+
 __[CompileTimeConstant](bugpattern/CompileTimeConstant)__<br>
 Non-compile-time constant expression passed to parameter with @CompileTimeConstant type annotation.
 
@@ -109,6 +112,12 @@ Writing &quot;a &amp;&amp; a&quot;, &quot;a || a&quot;, &quot;a &amp; a&quot;, o
 
 __[Immutable](bugpattern/Immutable)__<br>
 Type declaration annotated with @Immutable is not immutable
+
+__[ImmutableModification](bugpattern/ImmutableModification)__<br>
+Modifying an immutable collection is guaranteed to throw an exception and leave the collection unmodified
+
+__[IncompatibleArgumentType](bugpattern/IncompatibleArgumentType)__<br>
+Passing argument to a generic method with an incompatible type.
 
 __[InfiniteRecursion](bugpattern/InfiniteRecursion)__<br>
 This method always recurses, and will cause a StackOverflowError

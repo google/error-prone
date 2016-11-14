@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9};
+var methods = {"i0":9,"i1":9,"i2":9,"i3":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -168,6 +168,12 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <div class="block">Pretty-prints a method signature for use in diagnostics.</div>
 </td>
 </tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>static <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/Signatures.html#prettyType-com.sun.tools.javac.code.Type-">prettyType</a></span>(com.sun.tools.javac.code.Type&nbsp;type)</code>
+<div class="block">Pretty-prints a Type for use in diagnostics, using simple names for class types</div>
+</td>
+</tr>
 </table>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
@@ -232,7 +238,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <a name="prettyMethodSignature-com.sun.tools.javac.code.Symbol.ClassSymbol-com.sun.tools.javac.code.Symbol.MethodSymbol-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>prettyMethodSignature</h4>
 <pre>public static&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;prettyMethodSignature(com.sun.tools.javac.code.Symbol.ClassSymbol&nbsp;origin,
@@ -241,6 +247,16 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 
  <p>Uses simple names for declared types, and omitting formal type parameters and the return
  type since they do not affect overload resolution.</div>
+</li>
+</ul>
+<a name="prettyType-com.sun.tools.javac.code.Type-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>prettyType</h4>
+<pre>public static&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;prettyType(com.sun.tools.javac.code.Type&nbsp;type)</pre>
+<div class="block">Pretty-prints a Type for use in diagnostics, using simple names for class types</div>
 </li>
 </ul>
 </li>
