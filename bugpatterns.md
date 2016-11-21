@@ -529,6 +529,9 @@ __[EmptySetMultibindingContributions](bugpattern/EmptySetMultibindingContributio
 __[FieldMissingNullable](bugpattern/FieldMissingNullable)__<br>
 Fields that can be null should be annotated @Nullable
 
+__[MethodCanBeStatic](bugpattern/MethodCanBeStatic)__<br>
+Method is non-static but does not reference enclosing class
+
 __[MixedArrayDimensions](bugpattern/MixedArrayDimensions)__<br>
 C-style array declarations should not be used
 

@@ -48,7 +48,7 @@ class Foo {
 ```
 
 ```java
-// the annotation doesn't need to be annotated with @Immutable
+// The declaration doesn't need to be annotated with @Immutable.
 enum E {
   A(ImmutableList.of(new Foo(1), new Foo(2))),
   B(ImmutableList.of(new Foo(3)));
