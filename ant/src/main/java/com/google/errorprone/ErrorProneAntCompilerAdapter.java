@@ -19,14 +19,13 @@ package com.google.errorprone;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.internal.NonDelegatingClassLoader;
-import org.apache.tools.ant.AntClassLoader;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.taskdefs.compilers.DefaultCompilerAdapter;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Paths;
+import org.apache.tools.ant.AntClassLoader;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.taskdefs.compilers.DefaultCompilerAdapter;
 
 /**
  * Adapts the error-prone compiler to be used in an Ant build.

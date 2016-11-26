@@ -17,8 +17,8 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
+import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 
 import com.google.common.base.Joiner;
 import com.google.errorprone.BugPattern;
@@ -26,28 +26,26 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
   name = "MultipleTopLevelClasses",
   altNames = {"TopLevel"},
   summary = "Source files should not contain multiple top-level class declarations",
   category = JDK,
-  severity = WARNING,
-  maturity = MATURE,
-  documentSuppression = false
-)
+  severity = SUGGESTION,
+
+  documentSuppression = false,
+  linkType = CUSTOM,
+  link = "https://google.github.io/styleguide/javaguide.html#s3.4.1-one-top-level-class"
+  )
 public class MultipleTopLevelClasses extends BugChecker implements CompilationUnitTreeMatcher {
 
   @Override

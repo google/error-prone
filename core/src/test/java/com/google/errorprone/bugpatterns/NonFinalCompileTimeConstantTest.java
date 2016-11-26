@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,8 +41,10 @@ public class NonFinalCompileTimeConstantTest {
             "Test.java",
             "import com.google.errorprone.annotations.CompileTimeConstant;",
             "public class Test {",
-            "  // BUG: Diagnostic contains: (@CompileTimeConstant final Object x)",
-            "  public void f(@CompileTimeConstant Object x) {}",
+            "  // BUG: Diagnostic contains:",
+            "  public void f(@CompileTimeConstant Object x) {",
+            "    x = null;",
+            "  }",
             "}")
         .doTest();
   }
@@ -55,9 +56,10 @@ public class NonFinalCompileTimeConstantTest {
             "Test.java",
             "import com.google.errorprone.annotations.CompileTimeConstant;",
             "public class Test {",
-            "  // BUG: Diagnostic contains:"
-                + " (@CompileTimeConstant final Object x, @CompileTimeConstant final Object y)",
-            "  public void f(@CompileTimeConstant Object x, @CompileTimeConstant Object y) {}",
+            "  // BUG: Diagnostic contains:",
+            "  public void f(@CompileTimeConstant Object x, @CompileTimeConstant Object y) {",
+            "    x = y = null;",
+            "  }",
             "}")
         .doTest();
   }
@@ -70,8 +72,10 @@ public class NonFinalCompileTimeConstantTest {
             "import com.google.errorprone.annotations.CompileTimeConstant;",
             "public class Test {",
             "  public void f(",
-            "      // BUG: Diagnostic contains: , @CompileTimeConstant final Object y)",
-            "      @CompileTimeConstant final Object x, @CompileTimeConstant Object y) {",
+            "      @CompileTimeConstant Object x,",
+            "      // BUG: Diagnostic contains:",
+            "      @CompileTimeConstant Object y) {",
+            "    y = null;",
             "  }",
             "}")
         .doTest();
@@ -85,6 +89,18 @@ public class NonFinalCompileTimeConstantTest {
             "import com.google.errorprone.annotations.CompileTimeConstant;",
             "public class Test {",
             "  public void f(final @CompileTimeConstant Object x) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeEffectivelyFinal() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "public class Test {",
+            "  public void f(@CompileTimeConstant Object x) {}",
             "}")
         .doTest();
   }

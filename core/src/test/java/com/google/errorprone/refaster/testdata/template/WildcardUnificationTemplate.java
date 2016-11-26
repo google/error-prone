@@ -24,18 +24,18 @@ import java.util.Collection;
 
 /**
  * Tests for {@code UFreeIdent} accepting two references to the same wildcard.
- * 
- * @author kak@google.com (Kurt Kluever)
+ *
+ * @author Kurt Alfred Kluever
  */
 public class WildcardUnificationTemplate {
   @BeforeTemplate
-  static void containsAllOf(IterableSubject<?, ?, ?> subject, Collection<?> expected) {
+  static void containsAllOf(IterableSubject subject, Collection<?> expected) {
     subject.hasSize(expected.size());
     subject.containsAllIn(expected);
   }
 
   @AfterTemplate
-  static void containsExactly(IterableSubject<?, ?, ?> subject, Collection<?> expected) {
+  static void containsExactly(IterableSubject subject, Collection<?> expected) {
     subject.containsExactlyElementsIn(expected);
   }
 }

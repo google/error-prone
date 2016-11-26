@@ -22,7 +22,6 @@ import static com.google.errorprone.refaster.ControlFlowVisitor.Result.NEVER_EXI
 
 import com.google.errorprone.refaster.ControlFlowVisitor.BreakContext;
 import com.google.errorprone.refaster.ControlFlowVisitor.Result;
-
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.CaseTree;
@@ -43,10 +42,8 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.util.SimpleTreeVisitor;
-
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.lang.model.element.Name;
 
 /**
@@ -226,7 +223,9 @@ class ControlFlowVisitor extends SimpleTreeVisitor<Result, BreakContext> {
       for (CaseTree caseTree : node.getCases()) {
         if (caseTree.getExpression() == null) {
           seenDefault = true;
-        } else if (result == null) {
+        }
+        
+        if (result == null) {
           result = caseTree.accept(this, cxt);
         } else {
           result = result.or(caseTree.accept(this, cxt));

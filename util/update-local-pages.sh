@@ -16,4 +16,4 @@ mkdir -p _data bugpattern api/latest
 mvn clean
 
 mvn -P run-annotation-processor compile site
-rsync -a core/target/generated-wiki/ ${GH_PAGES_DIR}
+rsync -a docgen/target/generated-wiki/ ${GH_PAGES_DIR}

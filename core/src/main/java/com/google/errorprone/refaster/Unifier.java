@@ -21,17 +21,14 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.errorprone.SubContext;
 import com.google.errorprone.refaster.Bindings.Key;
-
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.annotation.Nullable;
 
 /**
@@ -102,6 +99,7 @@ public final class Unifier {
     return context;
   }
   
+  @Override
   public String toString() {
     return "Unifier{" + bindings + "}";
   }

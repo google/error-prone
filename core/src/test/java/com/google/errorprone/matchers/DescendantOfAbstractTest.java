@@ -20,15 +20,12 @@ import static org.junit.Assert.assertEquals;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.scanner.Scanner;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-
-import org.junit.After;
-import org.junit.Before;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.After;
+import org.junit.Before;
 
 public class DescendantOfAbstractTest extends CompilerBasedAbstractTest {
 

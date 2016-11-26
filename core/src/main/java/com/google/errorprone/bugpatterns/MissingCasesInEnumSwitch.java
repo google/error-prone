@@ -17,37 +17,37 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
+import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchTreeMatcher;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Description.Builder;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
+import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCSwitch;
-
+import com.sun.tools.javac.tree.TreeInfo;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-
+import java.util.Set;
 import javax.lang.model.element.ElementKind;
 
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- */
-@BugPattern(name = "MissingCasesInEnumSwitch",
-    summary = "Enum switch statement is missing cases",
-    explanation = "Enums on switches should either handle all possible values of the enum, or"
-        + " have an explicit 'default' case.",
-    category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
-public class MissingCasesInEnumSwitch extends BugChecker
-    implements SwitchTreeMatcher {
+/** @author cushon@google.com (Liam Miller-Cushon) */
+@BugPattern(
+  name = "MissingCasesInEnumSwitch",
+  summary = "The Google Java Style Guide requires switch statements to have an explicit default",
+  category = JDK,
+  severity = WARNING
+)
+public class MissingCasesInEnumSwitch extends BugChecker implements SwitchTreeMatcher {
 
   @Override
   public Description matchSwitch(SwitchTree tree, VisitorState state) {
@@ -61,13 +61,39 @@ public class MissingCasesInEnumSwitch extends BugChecker
       return Description.NO_MATCH;
     }
 
-    LinkedHashSet<String> unhandled =
-        setDifference(ASTHelpers.enumValues(switchType), collectEnumSwitchCases(tree));
+    Set<String> unhandled =
+        Sets.difference(ASTHelpers.enumValues(switchType), collectEnumSwitchCases(tree));
     if (unhandled.isEmpty()) {
       return Description.NO_MATCH;
     }
 
-    return buildDescription(tree).setMessage(buildMessage(unhandled)).build();
+    Description.Builder description = buildDescription(tree).setMessage(buildMessage(unhandled));
+    buildFixes(tree, state, unhandled, description);
+    return description.build();
+  }
+
+  /** Adds suggested fixes. */
+  private void buildFixes(
+      SwitchTree tree, VisitorState state, Set<String> unhandled, Builder description) {
+
+    int idx = state.getEndPosition(tree) - 1; // preserve closing '}'
+
+    StringBuilder sb = new StringBuilder();
+    for (String label : unhandled) {
+      sb.append(String.format("case %s: ", label));
+    }
+    sb.append("break;\n");
+    description.addFix(SuggestedFix.replace(idx, idx, sb.toString()));
+
+    description.addFix(
+        SuggestedFix.replace(
+            idx,
+            idx,
+            String.format(
+                "default: throw new AssertionError(\"unexpected case: \" + %s);\n",
+                state.getSourceForNode(TreeInfo.skipParens((JCTree) tree.getExpression())))));
+
+    description.addFix(SuggestedFix.replace(idx, idx, "default: break;\n"));
   }
 
   /**
@@ -76,11 +102,10 @@ public class MissingCasesInEnumSwitch extends BugChecker
    * <p>Examples:
    * <ul>
    * <li>Non-exhaustive switch, expected cases for: FOO
-   * <li>Non-exhaustive switch, expected cases for: FOO, BAR, BAZ, and 42 others. Did you mean to
-   * include a 'default' case?
+   * <li>Non-exhaustive switch, expected cases for: FOO, BAR, BAZ, and 42 others.
    * </ul>
    */
-  private String buildMessage(LinkedHashSet<String> unhandled) {
+  private String buildMessage(Set<String> unhandled) {
     final int maxCasesToPrint = 5;
 
     StringBuilder message = new StringBuilder("Non-exhaustive switch, expected cases for: ");
@@ -99,10 +124,7 @@ public class MissingCasesInEnumSwitch extends BugChecker
     }
 
     if (tooManyCasesToPrint) {
-      message.append(String.format(", and %d others. Did you mean to include a 'default' case?",
-          unhandled.size() - numberToShow));
-    } else {
-      message.append(".");
+      message.append(String.format(", and %d others", unhandled.size() - numberToShow));
     }
     return message.toString();
   }
@@ -117,13 +139,6 @@ public class MissingCasesInEnumSwitch extends BugChecker
       }
     }
     return cases;
-  }
-
-  /** Return the difference of sets ax and bx. */
-  private static <T> LinkedHashSet<T> setDifference(LinkedHashSet<T> ax, LinkedHashSet<T> bx) {
-    LinkedHashSet<T> result = new LinkedHashSet<>(ax);
-    result.removeAll(bx);
-    return result;
   }
 
   /** Return true if the switch has a 'default' case. */

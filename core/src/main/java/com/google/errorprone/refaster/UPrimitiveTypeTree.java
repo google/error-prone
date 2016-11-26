@@ -17,12 +17,10 @@
 package com.google.errorprone.refaster;
 
 import com.google.auto.value.AutoValue;
-
 import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
-
 import javax.lang.model.type.TypeKind;
 
 /**

@@ -17,107 +17,61 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.hasIdentifier;
-import static com.google.errorprone.matchers.Matchers.kindIs;
-import static com.google.errorprone.matchers.Matchers.nestingKind;
-import static com.google.errorprone.matchers.Matchers.not;
-import static com.google.errorprone.matchers.Matchers.parentNode;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
-import com.google.errorprone.fixes.Fix;
-import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.IdentifierTree;
-import com.sun.source.tree.Tree.Kind;
-import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
-import com.sun.tools.javac.code.Types;
-
+import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.tree.JCTree;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
 
 /**
  * @author alexloh@google.com (Alex Loh)
+ * @author cushon@google.com (Liam Miller-Cushon)
  */
-@BugPattern(name = "ClassCanBeStatic",
-    summary = "Inner class is non-static but does not reference enclosing class",
-    explanation = "An inner class should be static unless it references members" +
-        "of its enclosing class. An inner class that is made non-static unnecessarily" +
-        "uses more memory and does not make the intent of the class clear.",
-    category = JDK, maturity = EXPERIMENTAL, severity = ERROR)
+@BugPattern(
+  name = "ClassCanBeStatic",
+  summary = "Inner class is non-static but does not reference enclosing class",
+  explanation =
+      "An inner class should be static unless it references members"
+          + " of its enclosing class. An inner class that is made non-static unnecessarily"
+          + " uses more memory and does not make the intent of the class clear.",
+  category = JDK,
+  
+  severity = WARNING
+)
 public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
 
-  /**
-   * Matches any class definitions that fit the following:
-   * <ol>
-   * <li> Is non-static
-   * <li> Is an inner class (ie has an enclosing class)
-   * <li> Enclosing class is non-nested or static
-   * <li> Has no references to variables defined in enclosing class
-   * </ol>
-   */
-  private static Matcher<ClassTree> classTreeMatcher = new Matcher<ClassTree>() {
-      @Override
-      public boolean matches(ClassTree classTree, VisitorState state) {
-        return allOf(
-          not(Matchers.<ClassTree>hasModifier(Modifier.STATIC)),
-          kindIs(Kind.CLASS),
-          nestingKind(NestingKind.MEMBER),
-          parentNode(kindIs(Kind.CLASS)),
-          anyOf(
-              parentNode(nestingKind(NestingKind.TOP_LEVEL)),
-              parentNode(Matchers.<ClassTree>hasModifier(Modifier.STATIC))),
-          not(hasIdentifier(referenceEnclosing(classTree, state.getTypes())))
-        ).matches(classTree, state);
-      }
-    };
-
-  private static Matcher<IdentifierTree> referenceEnclosing(ClassTree classTree, Types types) {
-    return new ReferenceEnclosing(classTree, types);
-  }
-
-  /**
-   * Matches an identifier that is declared outside of given classTree
-   */
-  private static class ReferenceEnclosing implements Matcher<IdentifierTree> {
-
-    private final ClassSymbol currentClass;
-    private final Types types;
-
-    public ReferenceEnclosing(ClassTree classTree, Types types) {
-      currentClass = (ClassSymbol) ASTHelpers.getSymbol(classTree);
-      this.types = types;
-    }
-
-    @Override
-    public boolean matches(IdentifierTree node, VisitorState state) {
-      Symbol sym = ASTHelpers.getSymbol(node);
-      return !sym.isLocal() && !sym.isMemberOf(currentClass, types);
-    }
-  }
-
   @Override
-  public Description matchClass(ClassTree tree, VisitorState state) {
-    if (!classTreeMatcher.matches(tree, state)) {
+  public Description matchClass(final ClassTree tree, final VisitorState state) {
+    final ClassSymbol currentClass = ASTHelpers.getSymbol(tree);
+    if (currentClass == null || !currentClass.hasOuterInstance()) {
       return Description.NO_MATCH;
     }
-
-    Description.Builder builder = buildDescription(tree);
-    Fix fix = SuggestedFix.addModifier(tree, Modifier.STATIC, state);
-    if (fix != null) {
-      builder.addFix(fix);
+    if (currentClass.getNestingKind() != NestingKind.MEMBER) {
+      // local or anonymous classes can't be static
+      return Description.NO_MATCH;
     }
-    return builder.build();
+    if (currentClass.owner.enclClass().hasOuterInstance()) {
+      // class is nested inside an inner class, so it can't be static
+      return Description.NO_MATCH;
+    }
+    if (tree.getExtendsClause() != null) {
+      Type extendsType = ASTHelpers.getType(tree.getExtendsClause());
+      if (CanBeStaticAnalyzer.memberOfEnclosing(currentClass, state, extendsType.tsym)) {
+        return Description.NO_MATCH;
+      }
+    }
+    if (CanBeStaticAnalyzer.referencesOuter((JCTree) tree, currentClass, state)) {
+      return Description.NO_MATCH;
+    }
+    return describeMatch(tree, SuggestedFixes.addModifiers(tree, state, Modifier.STATIC));
   }
 }

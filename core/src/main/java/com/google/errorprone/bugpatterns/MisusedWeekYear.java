@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
@@ -31,7 +30,6 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
@@ -40,39 +38,56 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.JCTree;
 
 /**
- * Ban use of YYYY in a SimpleDateFormat pattern, unless it is being used for a week date.
- * Otherwise the user almost certainly meant yyyy instead.  See the summary in the {@link
- * BugPattern} below for more details.
+ * Ban use of YYYY in a SimpleDateFormat pattern, unless it is being used for a week date. Otherwise
+ * the user almost certainly meant yyyy instead. See the summary in the {@link BugPattern} below for
+ * more details.
  *
  * <p>This bug caused a Twitter outage in December 2014.
  */
-@BugPattern(name = "MisusedWeekYear",
-    summary = "Use of \"YYYY\" (week year) in a date pattern without \"ww\" (week in year). "
-        + "You probably meant to use \"yyyy\" (year) instead.",
-    explanation = "\"YYYY\" in a date pattern means \"week year\".  The week year is defined to "
-        + "begin at the beginning of the week that contains the year's first Thursday.  For "
-        + "example, the week year 2015 began on Monday, December 29, 2014, since January 1, 2015, "
-        + "was on a Thursday.\n\n"
-        + "\"Week year\" is intended to be used for week dates, e.g. \"2015-W01-1\", but is often "
-        + "mistakenly used for calendar dates, e.g. 2014-12-29, in which case the year may be "
-        + "incorrect during the last week of the year.  If you are formatting anything other than "
-        + "a week date, you should use the year specifier \"yyyy\" instead.",
-    category = JDK, severity = ERROR, maturity = MATURE)
+@BugPattern(
+  name = "MisusedWeekYear",
+  summary =
+      "Use of \"YYYY\" (week year) in a date pattern without \"ww\" (week in year). "
+          + "You probably meant to use \"yyyy\" (year) instead.",
+  category = JDK,
+  severity = ERROR
+)
 public class MisusedWeekYear extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
+  
+  private static final String JAVA_SIMPLE_DATE_FORMAT = "java.text.SimpleDateFormat";
+  private static final String ICU_SIMPLE_DATE_FORMAT = "com.ibm.icu.text.SimpleDateFormat";
 
   private static final Matcher<NewClassTree> simpleDateFormatConstructorMatcher =
       Matchers.<NewClassTree>anyOf(
-          constructor().forClass("java.text.SimpleDateFormat").withParameters("java.lang.String"),
-          constructor().forClass("java.text.SimpleDateFormat")
+          constructor().forClass(JAVA_SIMPLE_DATE_FORMAT)
+              .withParameters("java.lang.String"),
+          constructor().forClass(JAVA_SIMPLE_DATE_FORMAT)
               .withParameters("java.lang.String", "java.text.DateFormatSymbols"),
-          constructor().forClass("java.text.SimpleDateFormat")
-              .withParameters("java.lang.String", "java.util.Locale"));
+          constructor().forClass(JAVA_SIMPLE_DATE_FORMAT)
+              .withParameters("java.lang.String", "java.util.Locale"),
+          constructor().forClass(ICU_SIMPLE_DATE_FORMAT)
+              .withParameters("java.lang.String"),
+          constructor().forClass(ICU_SIMPLE_DATE_FORMAT)
+              .withParameters("java.lang.String", "com.ibm.icu.text.DateFormatSymbols"),
+          constructor().forClass(ICU_SIMPLE_DATE_FORMAT)
+              .withParameters(
+                  "java.lang.String", 
+                  "com.ibm.icu.text.DateFormatSymbols", 
+                  "com.ibm.icu.util.ULocale"),
+          constructor().forClass(ICU_SIMPLE_DATE_FORMAT)
+              .withParameters("java.lang.String", "java.util.Locale"),
+          constructor().forClass(ICU_SIMPLE_DATE_FORMAT)
+              .withParameters("java.lang.String", "java.lang.String", "com.ibm.icu.util.ULocale"),
+          constructor().forClass(ICU_SIMPLE_DATE_FORMAT)
+              .withParameters("java.lang.String", "com.ibm.icu.util.ULocale"));
 
   private static final Matcher<ExpressionTree> applyPatternMatcher =
       Matchers.<ExpressionTree>anyOf(
-          instanceMethod().onExactClass("java.text.SimpleDateFormat").named("applyPattern"),
-          instanceMethod().onExactClass("java.text.SimpleDateFormat").named("applyLocalizedPattern"));
+          instanceMethod().onExactClass(JAVA_SIMPLE_DATE_FORMAT).named("applyPattern"),
+          instanceMethod().onExactClass(JAVA_SIMPLE_DATE_FORMAT).named("applyLocalizedPattern"),
+          instanceMethod().onExactClass(ICU_SIMPLE_DATE_FORMAT).named("applyPattern"),
+          instanceMethod().onExactClass(ICU_SIMPLE_DATE_FORMAT).named("applyLocalizedPattern"));
 
   /**
    * Match uses of SimpleDateFormat.applyPattern and SimpleDateFormat.applyLocalizedPattern in
@@ -106,10 +121,9 @@ public class MisusedWeekYear extends BugChecker
 
   /**
    * Given the {@link ExpressionTree} representing the pattern argument to the various
-   * methods in {@link java.text.SimpleDateFormat} that accept a pattern, construct the description
-   * for this matcher to return.  May be {@link Description#NO_MATCH} if the pattern does not
-   * have a constant value, does not use the week year format specifier, or is in proper week
-   * date format.
+   * methods in SimpleDateFormat that accept a pattern, construct the description for this matcher 
+   * to return.  May be {@link Description#NO_MATCH} if the pattern does not have a constant value,
+   * does not use the week year format specifier, or is in proper week date format.
    */
   private Description constructDescription(Tree tree, ExpressionTree patternArg) {
     String pattern = (String) ASTHelpers.constValue((JCTree) patternArg);

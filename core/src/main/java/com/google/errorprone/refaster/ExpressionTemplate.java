@@ -30,9 +30,10 @@ import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.refaster.annotation.AlsoNegation;
 import com.google.errorprone.refaster.annotation.UseImportPolicy;
-
+import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
+import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCArrayAccess;
 import com.sun.tools.javac.tree.JCTree.JCAssign;
@@ -49,7 +50,6 @@ import com.sun.tools.javac.tree.TreeInfo;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Warner;
-
 import java.io.IOException;
 import java.io.StringWriter;
 import java.lang.annotation.Annotation;
@@ -146,9 +146,25 @@ public abstract class ExpressionTemplate extends Template<ExpressionTemplateMatc
                */
               if (target.type.getTag() != TypeTag.VOID) {
                 expectedTypes = expectedTypes.prepend(returnType().inline(inliner));
-                actualTypes = actualTypes.prepend(target.type);
+                Type ty = target.type;
+                // Java 8 types conditional expressions by taking the *widest* possible type
+                // they could be allowed, instead of the narrowest, where Refaster really wants
+                // the narrowest type possible.  We reconstruct that by taking the lub of the
+                // types from each branch.
+                if (target.getKind() == Kind.CONDITIONAL_EXPRESSION) {
+                  JCConditional cond = (JCConditional) target;
+                  Type trueTy = cond.truepart.type;
+                  Type falseTy = cond.falsepart.type;
+                  if (trueTy.getTag() == TypeTag.BOT) {
+                    ty = falseTy;
+                  } else if (falseTy.getTag() == TypeTag.BOT) {
+                    ty = trueTy;
+                  } else {
+                    ty = Types.instance(unifier.getContext()).lub(trueTy, falseTy); 
+                  }
+                }
+                actualTypes = actualTypes.prepend(ty);
               }
-
               return typecheck(unifier, inliner, new Warner(target), expectedTypes, actualTypes);
             } catch (CouldNotResolveImportException e) {
               logger.log(FINE, "Failure to resolve import", e);

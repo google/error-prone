@@ -17,24 +17,20 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Description;
-
 import com.sun.source.tree.Tree;
-
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /** {@link GuardedByLockSetAnalyzer}Test */
 @RunWith(JUnit4.class)
@@ -253,13 +249,14 @@ public class HeldLockAnalyzerTest {
         .doTest();
   }
 
-  /**
-   * A customized {@link GuardedByChecker} that prints more test-friendly diagnostics.
-   */
-  @BugPattern(name = "GuardedByLockSet",
-      summary = "",
-      explanation = "",
-      category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
+  /** A customized {@link GuardedByChecker} that prints more test-friendly diagnostics. */
+  @BugPattern(
+    name = "GuardedByLockSet",
+    summary = "",
+    explanation = "",
+    category = JDK,
+    severity = ERROR
+  )
   public static class GuardedByLockSetAnalyzer extends GuardedByChecker {
 
     @Override

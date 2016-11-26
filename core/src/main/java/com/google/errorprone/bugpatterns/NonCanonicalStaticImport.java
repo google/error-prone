@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
@@ -26,7 +25,6 @@ import com.google.errorprone.bugpatterns.BugChecker.ImportTreeMatcher;
 import com.google.errorprone.bugpatterns.StaticImports.StaticImportInfo;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-
 import com.sun.source.tree.ImportTree;
 
 /**
@@ -34,15 +32,18 @@ import com.sun.source.tree.ImportTree;
  *
  * @author cushon@google.com (Liam Miller-Cushon)
  */
-@BugPattern(name = "NonCanonicalStaticImport",
-    summary = "Static import of type uses non-canonical name",
-    category = JDK, severity = ERROR, maturity = MATURE)
+@BugPattern(
+  name = "NonCanonicalStaticImport",
+  summary = "Static import of type uses non-canonical name",
+  category = JDK,
+  severity = ERROR
+)
 public class NonCanonicalStaticImport extends BugChecker implements ImportTreeMatcher {
 
   @Override
   public Description matchImport(ImportTree tree, VisitorState state) {
     StaticImportInfo importInfo = StaticImports.tryCreate(tree, state);
-    if (importInfo == null || importInfo.isCanonical() || importInfo.member().isPresent()) {
+    if (importInfo == null || importInfo.isCanonical() || !importInfo.members().isEmpty()) {
       return Description.NO_MATCH;
     }
     return describeMatch(tree, SuggestedFix.replace(tree, importInfo.importStatement()));

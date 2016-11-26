@@ -17,15 +17,12 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author alexloh@google.com (Alex Loh)
- */
+/** {@link ClassCanBeStatic}Test */
 @RunWith(JUnit4.class)
 public class ClassCanBeStaticTest {
 
@@ -54,5 +51,227 @@ public class ClassCanBeStaticTest {
   @Test
   public void testPositiveCase3() throws Exception {
     compilationHelper.addSourceFile("ClassCanBeStaticPositiveCase3.java").doTest();
+  }
+
+  @Test
+  public void positiveReference() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  // BUG: Diagnostic contains:",
+            "  private class One { int field;  }",
+            "  // BUG: Diagnostic contains:",
+            "  private class Two { String field; }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void nonMemberField() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  int x;",
+            "  private class One {",
+            "    {",
+            "      System.err.println(x);",
+            "    }",
+            "  }",
+            "  // BUG: Diagnostic contains:",
+            "  private class Two {",
+            "    void f(Test t) {",
+            "      System.err.println(t.x);",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void qualifiedThis() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private class One {",
+            "    {",
+            "      System.err.println(Test.this);",
+            "    }",
+            "  }",
+            "  // BUG: Diagnostic contains:",
+            "  private class Two {",
+            "    void f(Test t) {",
+            "      System.err.println(Test.class);",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void referencesSibling() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private class One {",
+            "    {",
+            "      new Two();",
+            "    }",
+            "  }",
+            "  private class Two {",
+            "    void f(Test t) {",
+            "      System.err.println(Test.this);",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void referenceInAnonymousClass() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private class Two {",
+            "    {",
+            "      new Runnable() {",
+            "        @Override public void run() {",
+            "          System.err.println(Test.this);",
+            "        }",
+            "      }.run();",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void extendsInnerClass() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private class One {",
+            "    {",
+            "      System.err.println(Test.this);",
+            "    }",
+            "  }",
+            "  private class Two extends One {",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void ctorParametricInnerClass() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private class One<T> {",
+            "    {",
+            "      System.err.println(Test.this);",
+            "    }",
+            "  }",
+            "  private abstract class Two {",
+            "    {",
+            "      new One<String>();",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void extendsParametricInnerClass() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private class One<T> {",
+            "    {",
+            "      System.err.println(Test.this);",
+            "    }",
+            "  }",
+            "  private abstract class Two<T> extends One<T> {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void referencesTypeParameter() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.List;",
+            "class Test<T> {",
+            "  private class One {",
+            "    List<T> xs;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void referencesTypeParameterImplicit() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.List;",
+            "class Test<T> {",
+            "  class One {",
+            "    {",
+            "      System.err.println(Test.this);",
+            "    }",
+            "  }",
+            "  class Two {",
+            "    One one; // implicit reference of Test<T>.One",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negative_referencesTypeParameterImplicit() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "One.java",
+            "package test;",
+            "public class One<T> {",
+            "  public class Inner {",
+            "    {",
+            "      System.err.println(One.this);",
+            "    }",
+            "  }",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "import test.One.Inner;",
+            "class Test {",
+            "  // BUG: Diagnostic contains:",
+            "   class Two {",
+            "    Inner inner; // ok: implicit reference of One.Inner",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void qualifiedSuperReference() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  class One {",
+            "    {",
+            "      Test.super.getClass();",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
   }
 }

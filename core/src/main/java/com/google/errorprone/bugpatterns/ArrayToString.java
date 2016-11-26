@@ -17,71 +17,78 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.instanceMethod;
-import static com.google.errorprone.predicates.TypePredicates.isArray;
+import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
+import com.google.common.base.Optional;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.predicates.TypePredicate;
+import com.google.errorprone.predicates.TypePredicates;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.Tree;
 
 /**
  * @author adgar@google.com (Mike Edgar)
+ * @author cushon@google.com (Liam Miller-Cushon)
  */
-@BugPattern(name = "ArrayToString",
-    summary = "Calling toString on an array does not provide useful information",
-    explanation =
-        "The toString method on an array will print its identity, such as [I@4488aabb. This " +
-        "is almost never needed. Use Arrays.toString to print a human-readable array summary.",
-    category = JDK, severity = ERROR, maturity = MATURE)
-public class ArrayToString extends BugChecker implements MethodInvocationTreeMatcher {
+@BugPattern(
+  name = "ArrayToString",
+  summary = "Calling toString on an array does not provide useful information",
+  explanation =
+      "The `toString` method on an array will print its identity, such as `[I@4488aabb`. This "
+          + "is almost never needed. Use `Arrays.toString` to print a human-readable summary.",
+  category = JDK,
+  severity = ERROR
+)
+public class ArrayToString extends AbstractToString {
 
-  /**
-   * Matches calls to Throwable.getStackTrace().
-   */
-  private static final Matcher<ExpressionTree> getStackTraceMatcher =
+  private static final Matcher<ExpressionTree> GET_STACK_TRACE =
       instanceMethod().onDescendantOf("java.lang.Throwable").named("getStackTrace");
 
-  /**
-   * Matches calls to a toString instance method in which the receiver is an array type.
-   */
+  private static final TypePredicate IS_ARRAY = TypePredicates.isArray();
+
   @Override
-  public Description matchMethodInvocation(MethodInvocationTree methodTree, VisitorState state) {
-    if (!instanceMethod().onClass(isArray()).named("toString").matches(methodTree, state)) {
-      return Description.NO_MATCH;
-    }
+  protected TypePredicate typePredicate() {
+    return IS_ARRAY;
+  }
 
-    /*
-     * Fixes instances of calling toString() on an array.  If the array is the result of calling
-     * e.getStackTrace(), replaces e.getStackTrace().toString() with Guava's
-     * Throwables.getStackTraceAsString(e).
-     * Otherwise, replaces a.toString() with Arrays.toString(a).
-     */
-    Fix fix;
+  @Override
+  protected Optional<Fix> implicitToStringFix(ExpressionTree tree, VisitorState state) {
+    // e.g. println(theArray) -> println(Arrays.toString(theArray))
+    // or:  "" + theArray -> "" + Arrays.toString(theArray)
+    return fix(tree, tree, state);
+  }
 
-    ExpressionTree receiverTree = ASTHelpers.getReceiver(methodTree);
-    if (receiverTree instanceof MethodInvocationTree &&
-        getStackTraceMatcher.matches(receiverTree, state)) {
-      String throwable = ASTHelpers.getReceiver(receiverTree).toString();
-      fix = SuggestedFix.builder()
-          .replace(methodTree, "Throwables.getStackTraceAsString(" + throwable + ")")
-          .addImport("com.google.common.base.Throwables")
-          .build();
-    } else {
-      fix = SuggestedFix.builder()
-          .replace(methodTree, "Arrays.toString(" + receiverTree + ")")
-          .addImport("java.util.Arrays")
-          .build();
+  @Override
+  protected Optional<Fix> toStringFix(Tree parent, ExpressionTree tree, VisitorState state) {
+    // If the array is the result of calling e.getStackTrace(), replace
+    // e.getStackTrace().toString() with Guava's Throwables.getStackTraceAsString(e).
+    if (GET_STACK_TRACE.matches(tree, state)) {
+      return Optional.of(
+          SuggestedFix.builder()
+              .addImport("com.google.common.base.Throwables")
+              .replace(
+                  parent,
+                  String.format(
+                      "Throwables.getStackTraceAsString(%s)",
+                      state.getSourceForNode(ASTHelpers.getReceiver(tree))))
+              .build());
     }
-    return describeMatch(methodTree, fix);
+    // e.g. String.valueOf(theArray) -> Arrays.toString(theArray)
+    // or:  theArray.toString() -> Arrays.toString(theArray)
+    return fix(parent, tree, state);
+  }
+
+  private Optional<Fix> fix(Tree replace, Tree with, VisitorState state) {
+    return Optional.of(
+        SuggestedFix.builder()
+            .addImport("java.util.Arrays")
+            .replace(replace, String.format("Arrays.toString(%s)", state.getSourceForNode(with)))
+            .build());
   }
 }

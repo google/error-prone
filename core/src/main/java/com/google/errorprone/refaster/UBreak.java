@@ -17,11 +17,9 @@
 package com.google.errorprone.refaster;
 
 import com.google.auto.value.AutoValue;
-
 import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCBreak;
-
 import javax.annotation.Nullable;
 
 /**

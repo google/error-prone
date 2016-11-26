@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns.threadsafety;
 import static com.google.errorprone.bugpatterns.threadsafety.IllegalGuardedBy.checkGuardedBy;
 
 import com.google.auto.value.AutoValue;
-
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
@@ -27,10 +26,8 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.util.Names;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.lang.model.element.ElementKind;
 
 /**
@@ -44,7 +41,7 @@ public abstract class GuardedByExpression {
   public abstract Symbol sym();
   public abstract Type type();
   
-  private static final String ENCLOSING_INSTANCE_NAME = "outer$";
+  static final String ENCLOSING_INSTANCE_NAME = "outer$";
   
   /**
    * A 'class' literal: ClassName.class
@@ -76,6 +73,35 @@ public abstract class GuardedByExpression {
     public static LocalVariable create(Symbol owner) {
       return new AutoValue_GuardedByExpression_LocalVariable(
           Kind.LOCAL_VARIABLE, owner, owner.type);
+    }
+  }
+
+  /** A guarded by expression that could not be resolved. */
+  public static class Erroneous extends GuardedByExpression {
+
+    private final String guardString;
+
+    Erroneous(String guardString) {
+      this.guardString = guardString;
+    }
+
+    @Override
+    public Kind kind() {
+      return Kind.ERROR;
+    }
+
+    @Override
+    public Symbol sym() {
+      return null;
+    }
+
+    @Override
+    public Type type() {
+      return null;
+    }
+
+    public String guardString() {
+      return guardString;
     }
   }
 
@@ -156,7 +182,7 @@ public abstract class GuardedByExpression {
       GuardedByExpression base = thisliteral();
       Symbol curr = access;
       do {
-        curr = curr.owner;
+        curr = curr.owner.enclClass();
         if (curr == null) {
           break;
         }
@@ -206,11 +232,20 @@ public abstract class GuardedByExpression {
     LocalVariable localVariable(Symbol.VarSymbol varSymbol) {
       return LocalVariable.create(varSymbol);
     }
+
+    Erroneous error(String guardString) {
+      return new Erroneous(guardString);
+    }
   }
 
   /** {@link GuardedByExpression} kind. */
   public static enum Kind {
-    THIS, CLASS_LITERAL, TYPE_LITERAL, LOCAL_VARIABLE, SELECT;
+    THIS,
+    CLASS_LITERAL,
+    TYPE_LITERAL,
+    LOCAL_VARIABLE,
+    SELECT,
+    ERROR;
   }
 
   @Override
@@ -248,12 +283,27 @@ public abstract class GuardedByExpression {
         case SELECT:
           pprintSelect((Select) exp, sb);
           break;
+        case ERROR:
+          sb.append(((Erroneous) exp).guardString());
+          break;
       }
     }
 
     private static void pprintSelect(Select exp, StringBuilder sb) {
       if (exp.sym().name.contentEquals(ENCLOSING_INSTANCE_NAME)) {
-        sb.append(String.format("%s.this", exp.sym().owner.name));
+        GuardedByExpression curr = exp.base();
+        while (curr.kind() == Kind.SELECT) {
+          curr = ((Select) curr).base();
+          if (curr.kind() == Kind.THIS) {
+            break;
+          }
+        }
+        if (curr.kind() == Kind.THIS) {
+          sb.append(String.format("%s.this", exp.sym().owner.name));
+        } else {
+          pprint(exp.base(), sb);
+          sb.append(".this$0");
+        }
       } else {
         pprint(exp.base(), sb);
         sb.append(String.format(".%s", exp.sym().name));
@@ -286,6 +336,9 @@ public abstract class GuardedByExpression {
           break;
         case SELECT:
           pprintSelect((Select) exp, sb);
+          break;
+        case ERROR:
+          sb.append("(ERROR)");
           break;
       }
     }

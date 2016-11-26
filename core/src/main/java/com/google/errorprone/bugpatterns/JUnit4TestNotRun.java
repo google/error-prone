@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JUNIT;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.JUnitMatchers.hasJUnitAnnotation;
 import static com.google.errorprone.matchers.JUnitMatchers.isJunit3TestCase;
@@ -33,24 +32,24 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.JUnitMatchers.JUnit4TestClassMatcher;
 import com.google.errorprone.matchers.Matchers;
-
 import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
-
 import javax.lang.model.element.Modifier;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
-@BugPattern(name = "JUnit4TestNotRun",
-    summary = "Test method will not be run; please add @Test annotation",
-    explanation = "JUnit 3 required that test methods be named in a special way to be run as " +
-        "part of a test case. JUnit 4 requires that test methods be annotated with @Test. " +
-        "The test method that triggered this error is named like a JUnit 3 test, but is in a " +
-        "JUnit 4 test class.  Thus, it will not be run unless you annotate it with @Test.\n\n" +
-        "If you intend for this test method not to run, please add both an @Test and an " +
-        "@Ignore annotation to make it clear that you are purposely disabling it.",
-    category = JUNIT, maturity = MATURE, severity = ERROR)
+/** @author eaftan@google.com (Eddie Aftandilian) */
+@BugPattern(
+  name = "JUnit4TestNotRun",
+  summary = "Test method will not be run; please add @Test annotation",
+  explanation =
+      "JUnit 3 required that test methods be named in a special way to be run as "
+          + "part of a test case. JUnit 4 requires that test methods be annotated with @Test. "
+          + "The test method that triggered this error is named like a JUnit 3 test, but is in a "
+          + "JUnit 4 test class.  Thus, it will not be run unless you annotate it with @Test.\n\n"
+          + "If you intend for this test method not to run, please add both an @Test and an "
+          + "@Ignore annotation to make it clear that you are purposely disabling it.",
+  category = JUNIT,
+  severity = ERROR
+)
 public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
 
   private static final String JUNIT4_TEST_ANNOTATION = "org.junit.Test";

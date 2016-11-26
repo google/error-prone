@@ -29,18 +29,15 @@ import com.google.common.collect.Iterables;
 import com.google.errorprone.CodeTransformer;
 import com.google.errorprone.DescriptionListener;
 import com.google.errorprone.SubContext;
-
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
-
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.List;
-
 import javax.annotation.Nullable;
 import javax.tools.JavaFileManager;
 

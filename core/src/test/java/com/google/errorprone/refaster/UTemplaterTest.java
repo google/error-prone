@@ -19,7 +19,6 @@ package com.google.errorprone.refaster;
 import static org.junit.Assert.assertNotNull;
 
 import com.sun.tools.javac.tree.JCTree;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;

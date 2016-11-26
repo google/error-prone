@@ -18,10 +18,10 @@ package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.BugPattern.Suppressibility.UNSUPPRESSIBLE;
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertTrue;
@@ -34,32 +34,18 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.errorprone.bugpatterns.ArrayEquals;
-import com.google.errorprone.bugpatterns.ArrayEqualsTest;
 import com.google.errorprone.bugpatterns.BadShiftAmount;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.ChainingConstructorIgnoresParameter;
-import com.google.errorprone.bugpatterns.DepAnnTest;
-import com.google.errorprone.bugpatterns.EmptyIfStatementTest;
 import com.google.errorprone.bugpatterns.Finally;
-import com.google.errorprone.bugpatterns.WaitNotInLoopTest;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
-
-import org.hamcrest.Matcher;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -68,12 +54,17 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-
 import javax.lang.model.SourceVersion;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
+import org.hamcrest.Matcher;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * @author cushon@google.com (Liam Miller-Cushon)
@@ -81,7 +72,7 @@ import javax.tools.JavaFileObject;
 @RunWith(JUnit4.class)
 public class ErrorProneJavaCompilerTest {
 
-  @Rule public TemporaryFolder tempDir = new TemporaryFolder();
+  @Rule public final TemporaryFolder tempDir = new TemporaryFolder();
 
   @Test
   public void testIsSupportedOption() {
@@ -136,52 +127,52 @@ public class ErrorProneJavaCompilerTest {
 
   @Test
   public void fileWithErrorIntegrationTest() throws Exception {
-    CompilationResult result = doCompile(
-        DepAnnTest.class,
-        Arrays.asList("DepAnnPositiveCases.java"),
-        Collections.<String>emptyList(),
-        Collections.<Class<? extends BugChecker>>emptyList());
+    CompilationResult result =
+        doCompile(
+            Arrays.asList("bugpatterns/testdata/SelfAssignmentPositiveCases1.java"),
+            Collections.<String>emptyList(),
+            Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isFalse();
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
-        hasItem(diagnosticMessage(containsString("[DepAnn]")));
+        hasItem(diagnosticMessage(containsString("[SelfAssignment]")));
     assertTrue(matcher.matches(result.diagnosticHelper.getDiagnostics()));
   }
 
   @Test
   public void testWithDisabledCheck() throws Exception {
-    CompilationResult result = doCompile(
-        DepAnnTest.class,
-        Arrays.asList("DepAnnPositiveCases.java"),
-        Collections.<String>emptyList(),
-        Collections.<Class<? extends BugChecker>>emptyList());
+    CompilationResult result =
+        doCompile(
+            Arrays.asList("bugpatterns/testdata/SelfAssignmentPositiveCases1.java"),
+            Collections.<String>emptyList(),
+            Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isFalse();
 
-    result = doCompile(
-        DepAnnTest.class,
-        Arrays.asList("DepAnnPositiveCases.java"),
-        Arrays.asList("-Xep:DepAnn:OFF"),
-        Collections.<Class<? extends BugChecker>>emptyList());
+    result =
+        doCompile(
+            Arrays.asList("bugpatterns/testdata/SelfAssignmentPositiveCases1.java"),
+            Arrays.asList("-Xep:SelfAssignment:OFF"),
+            Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isTrue();
   }
 
   @Test
   public void testWithCheckPromotedToError() throws Exception {
-    CompilationResult result = doCompile(
-        WaitNotInLoopTest.class,
-        Arrays.asList("WaitNotInLoopPositiveCases.java"),
-        Collections.<String>emptyList(),
-        Collections.<Class<? extends BugChecker>>emptyList());
+    CompilationResult result =
+        doCompile(
+            Arrays.asList("bugpatterns/testdata/WaitNotInLoopPositiveCases.java"),
+            Collections.<String>emptyList(),
+            Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isTrue();
     assertThat(result.diagnosticHelper.getDiagnostics().size()).isGreaterThan(0);
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
         hasItem(diagnosticMessage(containsString("[WaitNotInLoop]")));
     assertTrue(matcher.matches(result.diagnosticHelper.getDiagnostics()));
 
-    result = doCompile(
-        WaitNotInLoopTest.class,
-        Arrays.asList("WaitNotInLoopPositiveCases.java"),
-        Arrays.asList("-Xep:WaitNotInLoop:ERROR"),
-        Collections.<Class<? extends BugChecker>>emptyList());
+    result =
+        doCompile(
+            Arrays.asList("bugpatterns/testdata/WaitNotInLoopPositiveCases.java"),
+            Arrays.asList("-Xep:WaitNotInLoop:ERROR"),
+            Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isFalse();
     assertThat(result.diagnosticHelper.getDiagnostics().size()).isGreaterThan(0);
     assertTrue(matcher.matches(result.diagnosticHelper.getDiagnostics()));
@@ -189,22 +180,22 @@ public class ErrorProneJavaCompilerTest {
 
   @Test
   public void testWithCheckDemotedToWarning() throws Exception {
-    CompilationResult result = doCompile(
-        DepAnnTest.class,
-        Arrays.asList("DepAnnPositiveCases.java"),
-        Collections.<String>emptyList(),
-        Collections.<Class<? extends BugChecker>>emptyList());
+    CompilationResult result =
+        doCompile(
+            Arrays.asList("bugpatterns/testdata/SelfAssignmentPositiveCases1.java"),
+            Collections.<String>emptyList(),
+            Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isFalse();
     assertThat(result.diagnosticHelper.getDiagnostics().size()).isGreaterThan(0);
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
-        hasItem(diagnosticMessage(containsString("[DepAnn]")));
+        hasItem(diagnosticMessage(containsString("[SelfAssignment]")));
     assertTrue(matcher.matches(result.diagnosticHelper.getDiagnostics()));
 
-    result = doCompile(
-        DepAnnTest.class,
-        Arrays.asList("DepAnnPositiveCases.java"),
-        Arrays.asList("-Xep:DepAnn:WARN"),
-        Collections.<Class<? extends BugChecker>>emptyList());
+    result =
+        doCompile(
+            Arrays.asList("bugpatterns/testdata/SelfAssignmentPositiveCases1.java"),
+            Arrays.asList("-Xep:SelfAssignment:WARN"),
+            Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isTrue();
     assertThat(result.diagnosticHelper.getDiagnostics().size()).isGreaterThan(0);
     assertTrue(matcher.matches(result.diagnosticHelper.getDiagnostics()));
@@ -212,19 +203,19 @@ public class ErrorProneJavaCompilerTest {
 
   @Test
   public void testWithNonDefaultCheckOn() throws Exception {
-    CompilationResult result = doCompile(
-        EmptyIfStatementTest.class,
-        Arrays.asList("EmptyIfStatementPositiveCases.java"),
-        Collections.<String>emptyList(),
-        Collections.<Class<? extends BugChecker>>emptyList());
+    CompilationResult result =
+        doCompile(
+            Arrays.asList("bugpatterns/testdata/EmptyIfStatementPositiveCases.java"),
+            Collections.<String>emptyList(),
+            Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isTrue();
     assertThat(result.diagnosticHelper.getDiagnostics()).isEmpty();
 
-    result = doCompile(
-        EmptyIfStatementTest.class,
-        Arrays.asList("EmptyIfStatementPositiveCases.java"),
-        Arrays.asList("-Xep:EmptyIf"),
-        Collections.<Class<? extends BugChecker>>emptyList());
+    result =
+        doCompile(
+            Arrays.asList("bugpatterns/testdata/EmptyIfStatementPositiveCases.java"),
+            Arrays.asList("-Xep:EmptyIf"),
+            Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isFalse();
     assertThat(result.diagnosticHelper.getDiagnostics().size()).isGreaterThan(0);
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
@@ -236,8 +227,7 @@ public class ErrorProneJavaCompilerTest {
   public void testBadFlagThrowsException() throws Exception {
     try {
       doCompile(
-          EmptyIfStatementTest.class,
-          Arrays.asList("EmptyIfStatementPositiveCases.java"),
+          Arrays.asList("bugpatterns/testdata/EmptyIfStatementPositiveCases.java"),
           Arrays.asList("-Xep:foo:bar:baz"),
           Collections.<Class<? extends BugChecker>>emptyList());
       fail();
@@ -246,18 +236,21 @@ public class ErrorProneJavaCompilerTest {
     }
   }
 
-  @BugPattern(name = "ArrayEquals",
-      summary = "Reference equality used to compare arrays",
-      explanation = "", category = JDK, severity = ERROR, maturity = MATURE,
-      suppressibility = UNSUPPRESSIBLE)
+  @BugPattern(
+    name = "ArrayEquals",
+    summary = "Reference equality used to compare arrays",
+    explanation = "",
+    category = JDK,
+    severity = ERROR,
+    suppressibility = UNSUPPRESSIBLE
+  )
   public static class UnsuppressibleArrayEquals extends ArrayEquals {}
 
   @Test
   public void testCantDisableNonDisableableCheck() throws Exception {
     try {
       doCompile(
-          ArrayEqualsTest.class,
-          Arrays.asList("ArrayEqualsPositiveCases.java"),
+          Arrays.asList("bugpatterns/testdata/ArrayEqualsPositiveCases.java"),
           Arrays.asList("-Xep:ArrayEquals:OFF"),
           ImmutableList.<Class<? extends BugChecker>>of(UnsuppressibleArrayEquals.class));
       fail();
@@ -268,11 +261,11 @@ public class ErrorProneJavaCompilerTest {
 
   @Test
   public void testWithCustomCheckPositive() throws Exception {
-    CompilationResult result = doCompile(
-        BadShiftAmount.class,
-        Arrays.asList("BadShiftAmountPositiveCases.java"),
-        Collections.<String>emptyList(),
-        Arrays.<Class<? extends BugChecker>>asList(BadShiftAmount.class));
+    CompilationResult result =
+        doCompile(
+            Arrays.asList("bugpatterns/testdata/BadShiftAmountPositiveCases.java"),
+            Collections.<String>emptyList(),
+            Arrays.<Class<? extends BugChecker>>asList(BadShiftAmount.class));
     assertThat(result.succeeded).isFalse();
     assertThat(result.diagnosticHelper.getDiagnostics().size()).isGreaterThan(0);
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
@@ -282,11 +275,11 @@ public class ErrorProneJavaCompilerTest {
 
   @Test
   public void testWithCustomCheckNegative() throws Exception {
-    CompilationResult result = doCompile(
-        DepAnnTest.class,
-        Arrays.asList("DepAnnPositiveCases.java"),
-        Collections.<String>emptyList(),
-        Arrays.<Class<? extends BugChecker>>asList(Finally.class));
+    CompilationResult result =
+        doCompile(
+            Arrays.asList("bugpatterns/testdata/SelfAssignmentPositiveCases1.java"),
+            Collections.<String>emptyList(),
+            Arrays.<Class<? extends BugChecker>>asList(Finally.class));
     assertThat(result.succeeded).isTrue();
     assertThat(result.diagnosticHelper.getDiagnostics()).isEmpty();
   }
@@ -295,16 +288,17 @@ public class ErrorProneJavaCompilerTest {
   public void testSeverityResetsAfterOverride() throws Exception {
     DiagnosticTestHelper diagnosticHelper = new DiagnosticTestHelper();
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(outputStream), true);
+    PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(outputStream, UTF_8), true);
     ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
     JavaCompiler errorProneJavaCompiler = new ErrorProneJavaCompiler();
     List<String> args = Lists.newArrayList(
         "-d", tempDir.getRoot().getAbsolutePath(),
         "-proc:none",
         "-Xep:ChainingConstructorIgnoresParameter:WARN");
-    List<JavaFileObject> sources = fileManager.forResources(
-        ChainingConstructorIgnoresParameter.class,
-        "ChainingConstructorIgnoresParameterPositiveCases.java");
+    List<JavaFileObject> sources =
+        fileManager.forResources(
+            ChainingConstructorIgnoresParameter.class,
+            "testdata/ChainingConstructorIgnoresParameterPositiveCases.java");
     fileManager.close();
 
     JavaCompiler.CompilationTask task = errorProneJavaCompiler.getTask(
@@ -323,8 +317,10 @@ public class ErrorProneJavaCompilerTest {
     // reset state between compilations
     diagnosticHelper.clearDiagnostics();
     fileManager = new ErrorProneInMemoryFileManager();
-    sources = fileManager.forResources(ChainingConstructorIgnoresParameter.class,
-        "ChainingConstructorIgnoresParameterPositiveCases.java");
+    sources =
+        fileManager.forResources(
+            ChainingConstructorIgnoresParameter.class,
+            "testdata/ChainingConstructorIgnoresParameterPositiveCases.java");
     fileManager.close();
     args.remove("-Xep:ChainingConstructorIgnoresParameter:WARN");
 
@@ -344,7 +340,7 @@ public class ErrorProneJavaCompilerTest {
   public void testMaturityResetsAfterOverride() throws Exception {
     DiagnosticTestHelper diagnosticHelper = new DiagnosticTestHelper();
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(outputStream), true);
+    PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(outputStream, UTF_8), true);
     ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
     JavaCompiler errorProneJavaCompiler = new ErrorProneJavaCompiler();
     List<String> args = Lists.newArrayList(
@@ -352,7 +348,8 @@ public class ErrorProneJavaCompilerTest {
         "-proc:none",
         "-Xep:EmptyIf");
     List<JavaFileObject> sources =
-        fileManager.forResources(BadShiftAmount.class, "EmptyIfStatementPositiveCases.java");
+        fileManager.forResources(
+            BadShiftAmount.class, "testdata/EmptyIfStatementPositiveCases.java");
     fileManager.close();
 
     JavaCompiler.CompilationTask task = errorProneJavaCompiler.getTask(
@@ -391,7 +388,7 @@ public class ErrorProneJavaCompilerTest {
     explanation = "",
     category = JDK,
     severity = ERROR,
-    maturity = MATURE,
+    
     suppressibility = UNSUPPRESSIBLE
   )
   public static class DeleteMethod extends BugChecker implements ClassTreeMatcher {
@@ -407,8 +404,7 @@ public class ErrorProneJavaCompilerTest {
   public void testFixGeneratedConstructor() throws Exception {
     CompilationResult result =
         doCompile(
-            ErrorProneJavaCompilerTest.class,
-            Arrays.asList("DeleteGeneratedConstructorTestCase.java"),
+            Arrays.asList("testdata/DeleteGeneratedConstructorTestCase.java"),
             Collections.<String>emptyList(),
             ImmutableList.<Class<? extends BugChecker>>of(DeleteMethod.class));
     assertThat(result.succeeded).isFalse();
@@ -429,11 +425,13 @@ public class ErrorProneJavaCompilerTest {
     }
   }
 
-  private CompilationResult doCompile(Class<?> clazz, List<String> fileNames,
-      List<String> extraArgs, List<Class<? extends BugChecker>> customCheckers) throws IOException {
+  private CompilationResult doCompile(
+      List<String> fileNames,
+      List<String> extraArgs,
+      List<Class<? extends BugChecker>> customCheckers) {
     DiagnosticTestHelper diagnosticHelper = new DiagnosticTestHelper();
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(outputStream), true);
+    PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(outputStream, UTF_8), true);
     ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
 
     List<String> args = Lists.newArrayList(
@@ -444,13 +442,14 @@ public class ErrorProneJavaCompilerTest {
     JavaCompiler errorProneJavaCompiler = (customCheckers.isEmpty())
         ? new ErrorProneJavaCompiler()
         : new ErrorProneJavaCompiler(ScannerSupplier.fromBugCheckerClasses(customCheckers));
-    JavaCompiler.CompilationTask task = errorProneJavaCompiler.getTask(
-        printWriter,
-        fileManager,
-        diagnosticHelper.collector,
-        args,
-        null,
-        fileManager.forResources(clazz, fileNames.toArray(new String[fileNames.size()])));
+    JavaCompiler.CompilationTask task =
+        errorProneJavaCompiler.getTask(
+            printWriter,
+            fileManager,
+            diagnosticHelper.collector,
+            args,
+            null,
+            fileManager.forResources(getClass(), fileNames.toArray(new String[0])));
 
     fileManager.close();
     return new CompilationResult(task.call(), diagnosticHelper);

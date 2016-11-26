@@ -20,12 +20,10 @@ import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
-
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;

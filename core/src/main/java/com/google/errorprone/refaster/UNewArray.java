@@ -23,15 +23,12 @@ import com.google.auto.value.AutoValue;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.NewArrayTree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCNewArray;
-
 import java.util.List;
-
 import javax.annotation.Nullable;
 
 /**

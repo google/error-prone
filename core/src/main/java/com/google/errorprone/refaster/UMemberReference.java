@@ -20,11 +20,9 @@ import static com.google.errorprone.refaster.Unifier.unifications;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
-
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCMemberReference;
-
 import javax.annotation.Nullable;
 
 /**
@@ -63,11 +61,13 @@ abstract class UMemberReference extends UExpression implements MemberReferenceTr
 
   @Override
   public JCMemberReference inline(Inliner inliner) throws CouldNotResolveImportException {
-    return inliner.maker().Reference(
-        getMode(),
-        getName().inline(inliner),
-        getQualifierExpression().inline(inliner),
-        inliner.inlineList(getTypeArguments()));
+    return inliner
+        .maker()
+        .Reference(
+            getMode(),
+            getName().inline(inliner),
+            getQualifierExpression().inline(inliner),
+            (getTypeArguments() == null) ? null : inliner.inlineList(getTypeArguments()));
   }
 
   @Override

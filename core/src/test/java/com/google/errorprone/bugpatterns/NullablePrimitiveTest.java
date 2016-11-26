@@ -17,15 +17,12 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author sebastian.h.monte@gmail.com (Sebastian Monte)
- */
+/** @author sebastian.h.monte@gmail.com (Sebastian Monte) */
 @RunWith(JUnit4.class)
 public class NullablePrimitiveTest {
   private CompilationTestHelper compilationHelper;
@@ -43,5 +40,59 @@ public class NullablePrimitiveTest {
   @Test
   public void testNegativeCase() {
     compilationHelper.addSourceFile("NullablePrimitiveNegativeCases.java").doTest();
+  }
+
+  @Test
+  public void negativeConstructor() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import javax.annotation.Nullable;",
+            "class Test {",
+            "  @Nullable public Test() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeVoid() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import javax.annotation.Nullable;",
+            "class Test {",
+            "  @Nullable void f() {}",
+            "}")
+        .doTest();
+  }
+
+  // regression test for #418
+  @Test
+  public void typeParameter() {
+    compilationHelper
+        .addSourceLines(
+            "Nullable.java",
+            "import java.lang.annotation.ElementType;",
+            "import java.lang.annotation.Retention;",
+            "import java.lang.annotation.RetentionPolicy;",
+            "import java.lang.annotation.Target;",
+            "@Retention(RetentionPolicy.RUNTIME)",
+            "@Target(ElementType.TYPE_USE)",
+            "public @interface Nullable {}")
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  // BUG: Diagnostic contains:",
+            "  @Nullable int x;",
+            "  // BUG: Diagnostic contains:",
+            "  @Nullable int f() {",
+            "    return 42;",
+            "  }",
+            "  <@Nullable T> int g() {",
+            "    return 42;",
+            "  }",
+            "  int @Nullable [] y;",
+            "}")
+        .doTest();
   }
 }

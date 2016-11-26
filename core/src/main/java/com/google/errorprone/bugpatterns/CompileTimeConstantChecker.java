@@ -18,11 +18,11 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.GUAVA;
 import static com.google.errorprone.BugPattern.LinkType.NONE;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.CompileTimeConstantExpressionMatcher.hasCompileTimeConstantAnnotation;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
@@ -30,47 +30,49 @@ import com.google.errorprone.matchers.CompileTimeConstantExpressionMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
-import com.sun.tools.javac.tree.JCTree;
-
 import java.util.Iterator;
 
 /**
  * Detects invocations of methods with a parameter annotated {@code @CompileTimeConstant} such that
  * the corresponding actual parameter is not a compile-time constant expression.
  *
- * <p>
- * This type annotation checker enforces that for all method and constructor invocations, for all
- * formal parameters of the invoked method/constructor that are annotated with the
- * {@link com.google.errorprone.annotations.CompileTimeConstant} type annotation, the
- * corresponding actual parameter is an expression that satisfies one of the following conditions:
+ * <p>This type annotation checker enforces that for all method and constructor invocations, for all
+ * formal parameters of the invoked method/constructor that are annotated with the {@link
+ * com.google.errorprone.annotations.CompileTimeConstant} type annotation, the corresponding actual
+ * parameter is an expression that satisfies one of the following conditions:
+ *
  * <ol>
- * <li>The expression is one for which the Java compiler can determine a constant value at compile
- * time, or</li>
- * <li>the expression consists of the literal {@code null}, or</li>
- * <li>the expression consists of a single identifier, where the identifier is a formal method
- * parameter that is declared {@code final} and has the
- * {@link com.google.errorprone.annotations.CompileTimeConstant} annotation.</li>
+ *   <li>The expression is one for which the Java compiler can determine a constant value at compile
+ *       time, or
+ *   <li>the expression consists of the literal {@code null}, or
+ *   <li>the expression consists of a single identifier, where the identifier is a formal method
+ *       parameter that is declared {@code final} and has the {@link
+ *       com.google.errorprone.annotations.CompileTimeConstant} annotation.
  * </ol>
  *
  * @see CompileTimeConstantExpressionMatcher
  */
-@BugPattern(name = "CompileTimeConstant",
-    summary =
-        "Non-compile-time constant expression passed to parameter with "
-        + "@CompileTimeConstant type annotation.",
-    explanation =
-        "A method or constructor with one or more parameters whose declaration is "
-        + "annotated with the @CompileTimeConstant type annotation must only be invoked "
-        + "with corresponding actual parameters that are computed as compile-time constant "
-        + "expressions, such as a literal or static final constant.",
-    linkType = NONE, category = GUAVA, severity = ERROR, maturity = MATURE)
+@BugPattern(
+  name = "CompileTimeConstant",
+  summary =
+      "Non-compile-time constant expression passed to parameter with "
+          + "@CompileTimeConstant type annotation.",
+  explanation =
+      "A method or constructor with one or more parameters whose declaration is "
+          + "annotated with the @CompileTimeConstant type annotation must only be invoked "
+          + "with corresponding actual parameters that are computed as compile-time constant "
+          + "expressions, such as a literal or static final constant.",
+  linkType = NONE,
+  category = GUAVA,
+  severity = ERROR,
+  suppressibility = Suppressibility.UNSUPPRESSIBLE
+)
 public class CompileTimeConstantChecker extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
 
@@ -155,18 +157,19 @@ public class CompileTimeConstantChecker extends BugChecker
 
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
-    JCTree.JCNewClass newClass = (JCTree.JCNewClass) tree;
-    return matchArguments(
-        state, (Symbol.MethodSymbol) newClass.constructor, tree.getArguments().iterator());
+    Symbol.MethodSymbol sym = ASTHelpers.getSymbol(tree);
+    if (sym == null) {
+      return Description.NO_MATCH;
+    }
+    return matchArguments(state, sym, tree.getArguments().iterator());
   }
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    ExpressionTree methodSelect = tree.getMethodSelect();
-    Symbol sym = ASTHelpers.getSymbol(methodSelect);
+    Symbol.MethodSymbol sym = ASTHelpers.getSymbol(tree);
     if (sym == null) {
       return Description.NO_MATCH;
     }
-    return matchArguments(state, (Symbol.MethodSymbol) sym, tree.getArguments().iterator());
+    return matchArguments(state, sym, tree.getArguments().iterator());
   }
 }

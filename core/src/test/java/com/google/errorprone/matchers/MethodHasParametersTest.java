@@ -24,17 +24,14 @@ import static org.junit.Assert.assertEquals;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.scanner.Scanner;
-
 import com.sun.source.tree.MethodTree;
-
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
@@ -86,7 +83,7 @@ public class MethodHasParametersTest extends CompilerBasedAbstractTest {
         "}");
     assertCompiles(methodMatches(false, new MethodHasParameters(AT_LEAST_ONE, variableType(
         isPrimitiveType()))));
-    assertCompiles(methodMatches(false, new MethodHasParameters(ALL, variableType(
+    assertCompiles(methodMatches(true, new MethodHasParameters(ALL, variableType(
         isPrimitiveType()))));
   }
 
@@ -108,7 +105,6 @@ public class MethodHasParametersTest extends CompilerBasedAbstractTest {
     writeFile("A.java",
         "package com.google;",
         "public class A {",
-        "  private A() {}",
         "  public void A(int i, Object obj) {}",
         "}");
     assertCompiles(methodMatches(true, new MethodHasParameters(AT_LEAST_ONE, variableType(
@@ -129,10 +125,14 @@ public class MethodHasParametersTest extends CompilerBasedAbstractTest {
       @Override
       public Void visitMethod(MethodTree node, VisitorState visitorState) {
         visitorState = visitorState.withPath(getCurrentPath());
-        if (toMatch.matches(node, visitorState)) {
+        if (!isConstructor(node) && toMatch.matches(node, visitorState)) {
           matched = true;
         }
         return super.visitMethod(node, visitorState);
+      }
+
+      private boolean isConstructor(MethodTree node) {
+        return node.getName().contentEquals("<init>");
       }
 
       @Override

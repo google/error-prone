@@ -16,10 +16,19 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.common.io.ByteStreams;
 import com.google.errorprone.CompilationTestHelper;
-
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.jar.JarEntry;
+import java.util.jar.JarOutputStream;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
@@ -39,6 +48,30 @@ public class CheckReturnValueTest {
   @Test
   public void testPositiveCases() throws Exception {
     compilationHelper.addSourceFile("CheckReturnValuePositiveCases.java").doTest();
+  }
+
+  @Test
+  public void testCustomCheckReturnValueAnnotation() {
+    compilationHelper
+        .addSourceLines(
+            "foo/bar/CheckReturnValue.java",
+            "package foo.bar;",
+            "public @interface CheckReturnValue {}")
+        .addSourceLines(
+            "test/TestCustomCheckReturnValueAnnotation.java",
+            "package test;",
+            "import foo.bar.CheckReturnValue;",
+            "public class TestCustomCheckReturnValueAnnotation {",
+            "  @CheckReturnValue",
+            "  public String getString() {",
+            "    return \"string\";",
+            "  }",
+            "  public void doIt() {",
+            "    // BUG: Diagnostic contains:",
+            "    getString();",
+            "  }",
+            "}")
+        .doTest();
   }
 
   @Test
@@ -142,6 +175,36 @@ public class CheckReturnValueTest {
             "  // @CheckReturnValue may not be applied to void-returning methods",
             "  @javax.annotation.CheckReturnValue public static Void f() {",
             "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  // Don't match methods invoked through {@link org.mockito.Mockito}.
+  @Test
+  public void testIgnoreCRVOnMockito() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "package lib;",
+            "public class Test {",
+            "  @javax.annotation.CheckReturnValue",
+            " public int f() {",
+            "    return 0;",
+            "  }",
+            "}")
+        .addSourceLines(
+            "TestCase.java",
+            "import static org.mockito.Mockito.verify;",
+            "import static org.mockito.Mockito.doReturn;",
+            "import org.mockito.Mockito;",
+            "class TestCase {",
+            "  void m() {",
+            "    lib.Test t = new lib.Test();",
+            "    Mockito.verify(t).f();",
+            "    verify(t).f();",
+            "    doReturn(1).when(t).f();",
+            "    Mockito.doReturn(1).when(t).f();",
             "  }",
             "}")
         .doTest();
@@ -329,6 +392,223 @@ public class CheckReturnValueTest {
             "    lib.Lib.f();",
             "  }",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void ignoreInTests() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Foo.java",
+            "@javax.annotation.CheckReturnValue",
+            "public class Foo {",
+            "  public int f() {",
+            "    return 42;",
+            "  }",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f(Foo foo) {",
+            "    try {",
+            "      foo.f();",
+            "      org.junit.Assert.fail();",
+            "    } catch (Exception expected) {}",
+            "    try {",
+            "      foo.f();",
+            "      junit.framework.Assert.fail();",
+            "    } catch (Exception expected) {}",
+            "    try {",
+            "      foo.f();",
+            "      junit.framework.TestCase.fail();",
+            "    } catch (Exception expected) {}",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void ignoreInTestsWithFailureMessage() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Foo.java",
+            "@javax.annotation.CheckReturnValue",
+            "public class Foo {",
+            "  public int f() {",
+            "    return 42;",
+            "  }",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f(Foo foo) {",
+            "    try {",
+            "      foo.f();",
+            "      org.junit.Assert.fail(\"message\");",
+            "    } catch (Exception expected) {}",
+            "    try {",
+            "      foo.f();",
+            "      junit.framework.Assert.fail(\"message\");",
+            "    } catch (Exception expected) {}",
+            "    try {",
+            "      foo.f();",
+            "      junit.framework.TestCase.fail(\"message\");",
+            "    } catch (Exception expected) {}",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void ignoreInAssertThrowsBodies() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Foo.java",
+            "@javax.annotation.CheckReturnValue",
+            "public class Foo {",
+            "  public int f() {",
+            "    return 42;",
+            "  }",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f(Foo foo) {",
+            "   org.junit.Assert.assertThrows(IllegalStateException.class, ",
+            "     new org.junit.function.ThrowingRunnable() {",
+            "       @Override",
+            "       public void run() throws Throwable {",
+            "         foo.f();",
+            "       }",
+            "     });",
+            "   org.junit.Assert.assertThrows(IllegalStateException.class, () -> foo.f());",
+            "   org.junit.Assert.assertThrows(IllegalStateException.class, () -> {",
+            "      int bah = foo.f();",
+            "      foo.f(); ",
+            "   });",
+            "   org.junit.Assert.assertThrows(IllegalStateException.class, () -> { ",
+            "     // BUG: Diagnostic contains: Ignored return value",
+            "     foo.f(); ",
+            "     foo.f(); ",
+            "   });",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void ignoreTruthFailure() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Foo.java",
+            "@javax.annotation.CheckReturnValue",
+            "public class Foo {",
+            "  public int f() {",
+            "    return 42;",
+            "  }",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assert_;",
+            "class Test {",
+            "  void f(Foo foo) {",
+            "    try {",
+            "      foo.f();",
+            "      assert_().fail();",
+            "    } catch (Exception expected) {}",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void onlyIgnoreWithEnclosingTryCatch() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Foo.java",
+            "@javax.annotation.CheckReturnValue",
+            "public class Foo {",
+            "  public int f() {",
+            "    return 42;",
+            "  }",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "import static org.junit.Assert.fail;",
+            "class Test {",
+            "  void f(Foo foo) {",
+            "    // BUG: Diagnostic contains: Ignored return value",
+            "    foo.f();",
+            "    org.junit.Assert.fail();",
+            "    // BUG: Diagnostic contains: Ignored return value",
+            "    foo.f();",
+            "    junit.framework.Assert.fail();",
+            "    // BUG: Diagnostic contains: Ignored return value",
+            "    foo.f();",
+            "    junit.framework.TestCase.fail();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void ignoreInOrderVerification() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Lib.java",
+            "public class Lib {",
+            "  @javax.annotation.CheckReturnValue",
+            "  public int f() {",
+            "    return 0;",
+            "  }",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "import static org.mockito.Mockito.inOrder;",
+            "class Test {",
+            "  void m() {",
+            "    inOrder().verify(new Lib()).f();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Rule public final TemporaryFolder tempFolder = new TemporaryFolder();
+
+  /** Test class containing a method annotated with @CRV. */
+  public static class CRVTest {
+    @javax.annotation.CheckReturnValue
+    public static int f() {
+      return 42;
+    }
+  }
+
+  static void addClassToJar(JarOutputStream jos, Class<?> clazz) throws IOException {
+    String entryPath = clazz.getName().replace('.', '/') + ".class";
+    try (InputStream is = clazz.getClassLoader().getResourceAsStream(entryPath)) {
+      jos.putNextEntry(new JarEntry(entryPath));
+      ByteStreams.copy(is, jos);
+    }
+  }
+
+  @Test
+  public void noCRVonClasspath() throws Exception {
+    File libJar = tempFolder.newFile("lib.jar");
+    try (FileOutputStream fis = new FileOutputStream(libJar);
+        JarOutputStream jos = new JarOutputStream(fis)) {
+      addClassToJar(jos, CRVTest.class);
+      addClassToJar(jos, CheckReturnValueTest.class);
+    }
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void m() {",
+            "    // BUG: Diagnostic contains: Ignored return value",
+            "    com.google.errorprone.bugpatterns.CheckReturnValueTest.CRVTest.f();",
+            "  }",
+            "}")
+        .setArgs(Arrays.asList("-cp", libJar.toString()))
         .doTest();
   }
 }

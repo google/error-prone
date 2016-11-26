@@ -17,7 +17,6 @@
 package com.google.errorprone.refaster;
 
 import com.google.common.base.Function;
-
 import com.sun.source.tree.StatementTree;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.util.List;

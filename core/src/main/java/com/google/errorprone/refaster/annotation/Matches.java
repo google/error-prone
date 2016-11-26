@@ -17,19 +17,17 @@
 package com.google.errorprone.refaster.annotation;
 
 import com.google.errorprone.matchers.Matcher;
-
 import com.sun.source.tree.ExpressionTree;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Specify an error-prone {@link Matcher} to further restrict what expressions are matched
- * by the annotated parameter.
+ * Specify an error-prone {@link Matcher} to further restrict what expressions are matched by the
+ * annotated parameter.
  */
-@Target(ElementType.PARAMETER)
+@Target({ElementType.PARAMETER, ElementType.METHOD})
 @Retention(RetentionPolicy.SOURCE)
 public @interface Matches {
   Class<? extends Matcher<? super ExpressionTree>> value();

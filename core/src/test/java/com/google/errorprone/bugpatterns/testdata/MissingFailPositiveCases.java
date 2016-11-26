@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import junit.framework.TestCase;
 
@@ -39,6 +39,15 @@ public class MissingFailPositiveCases extends TestCase {
       dummyMethod();
     } catch (Exception e) {
       assertDummy();
+    }
+  }
+
+  public void catchVerify() {
+    try {
+      // BUG: Diagnostic contains: fail()
+      dummyMethod();
+    } catch (Exception e) {
+      verifyDummy();
     }
   }
 
@@ -133,4 +142,6 @@ public class MissingFailPositiveCases extends TestCase {
   private static void dummyMethod() {}
 
   private static void assertDummy() {}
+
+  private static void verifyDummy() {}
 }

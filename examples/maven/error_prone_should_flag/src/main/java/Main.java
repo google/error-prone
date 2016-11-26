@@ -17,6 +17,6 @@
 public class Main {
   public static void main(String[] args) {
     // Dead exception
-    new Exception();
+    new RuntimeException();
   }
 }

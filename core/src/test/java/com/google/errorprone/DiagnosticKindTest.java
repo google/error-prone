@@ -18,25 +18,20 @@ package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.scanner.ScannerSupplier;
-
 import com.sun.source.tree.ReturnTree;
 import com.sun.tools.javac.main.Main.Result;
-
+import java.util.Arrays;
+import javax.tools.Diagnostic;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.util.Arrays;
-
-import javax.tools.Diagnostic;
 
 /**
  * Tests that {@link BugPattern.SeverityLevel}s map to appropriate
@@ -69,10 +64,13 @@ public class DiagnosticKindTest {
         .listenToDiagnostics(diagnosticHelper.collector);
   }
 
-  @BugPattern(name = "ErrorChecker",
-      summary = "This is an error!",
-      explanation = "Don't do this!",
-      category = JDK, severity = SeverityLevel.ERROR, maturity = EXPERIMENTAL)
+  @BugPattern(
+    name = "ErrorChecker",
+    summary = "This is an error!",
+    explanation = "Don't do this!",
+    category = JDK,
+    severity = SeverityLevel.ERROR
+  )
   public static class ErrorChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {
@@ -93,10 +91,13 @@ public class DiagnosticKindTest {
     assertThat(result).isEqualTo(Result.ERROR);
   }
 
-  @BugPattern(name = "WarningChecker",
-      summary = "This is a warning!",
-      explanation = "Please don't do this!",
-      category = JDK, severity = SeverityLevel.WARNING, maturity = EXPERIMENTAL)
+  @BugPattern(
+    name = "WarningChecker",
+    summary = "This is a warning!",
+    explanation = "Please don't do this!",
+    category = JDK,
+    severity = SeverityLevel.WARNING
+  )
   public static class WarningChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {
@@ -118,10 +119,13 @@ public class DiagnosticKindTest {
     assertThat(result).isEqualTo(Result.OK);
   }
 
-  @BugPattern(name = "SuggestionChecker",
-      summary = "This is a suggestion!",
-      explanation = "Don't do this. Or do it. I'm a suggestion, not a cop.", category = JDK,
-      severity = SeverityLevel.SUGGESTION, maturity = EXPERIMENTAL)
+  @BugPattern(
+    name = "SuggestionChecker",
+    summary = "This is a suggestion!",
+    explanation = "Don't do this. Or do it. I'm a suggestion, not a cop.",
+    category = JDK,
+    severity = SeverityLevel.SUGGESTION
+  )
   public static class SuggestionChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {

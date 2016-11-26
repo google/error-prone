@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.argument;
@@ -36,19 +35,19 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
-@BugPattern(name = "ArrayHashCode",
-    summary = "hashcode method on array does not hash array contents",
-    category = JDK, severity = ERROR, maturity = MATURE)
+/** @author eaftan@google.com (Eddie Aftandilian) */
+@BugPattern(
+  name = "ArrayHashCode",
+  summary = "hashcode method on array does not hash array contents",
+  category = JDK,
+  severity = ERROR
+)
 public class ArrayHashCode extends BugChecker implements MethodInvocationTreeMatcher {
 
   /**

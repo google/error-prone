@@ -18,7 +18,6 @@ package com.google.errorprone.refaster;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableMap;
-
 import java.util.Map;
 
 /**

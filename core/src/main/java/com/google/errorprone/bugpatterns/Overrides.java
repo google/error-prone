@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
@@ -26,14 +25,11 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.tree.JCTree;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -43,16 +39,21 @@ import java.util.Set;
  *
  * @author cushon@google.com (Liam Miller-Cushon)
  */
-@BugPattern(name = "Overrides", altNames = "overrides",
-    summary = "Varargs doesn't agree for overridden method",
-    explanation = "A varargs method is overridden by a method with an array parameter, or vice "
-        + "versa.  Please match the signature of the method being overridden.",
-    category = JDK, severity = ERROR, maturity = MATURE)
+@BugPattern(
+  name = "Overrides",
+  altNames = "overrides",
+  summary = "Varargs doesn't agree for overridden method",
+  explanation =
+      "A varargs method is overridden by a method with an array parameter, or vice "
+          + "versa.  Please match the signature of the method being overridden.",
+  category = JDK,
+  severity = ERROR
+)
 public class Overrides extends BugChecker implements MethodTreeMatcher {
 
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
-    MethodSymbol methodSymbol = (MethodSymbol) ASTHelpers.getSymbol(methodTree);
+    MethodSymbol methodSymbol = ASTHelpers.getSymbol(methodTree);
     boolean isVarargs = (methodSymbol.flags() & Flags.VARARGS) != 0;
 
     Set<MethodSymbol> superMethods = ASTHelpers.findSuperMethods(methodSymbol, state.getTypes());
@@ -82,7 +83,7 @@ public class Overrides extends BugChecker implements MethodTreeMatcher {
 
     List<? extends VariableTree> parameterTree = methodTree.getParameters();
     Tree paramType = parameterTree.get(parameterTree.size() - 1).getType();
-    CharSequence paramTypeSource = state.getSourceForNode((JCTree) paramType);
+    CharSequence paramTypeSource = state.getSourceForNode(paramType);
     if (paramTypeSource == null) {
       // No fix if we don't have tree end positions.
       return describeMatch(methodTree);

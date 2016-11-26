@@ -1,0 +1,33 @@
+os: Visual Studio 2015
+
+install:
+  - ps: |
+      Add-Type -AssemblyName System.IO.Compression.FileSystem
+      if (!(Test-Path -Path "C:\maven" )) {
+        (new-object System.Net.WebClient).DownloadFile(
+          'http://www.us.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip',
+          'C:\maven-bin.zip'
+        )
+        [System.IO.Compression.ZipFile]::ExtractToDirectory("C:\maven-bin.zip", "C:\maven")
+      }
+  - cmd: SET PATH=C:\maven\apache-maven-3.3.9\bin;%JAVA_HOME%\bin;%PATH%
+  - cmd: SET MAVEN_OPTS=-XX:MaxPermSize=2g -Xmx4g
+  - cmd: SET JAVA_OPTS=-XX:MaxPermSize=2g -Xmx4g
+
+build_script:
+  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+
+test_script:
+  - mvn test -B
+
+cache:
+  - C:\maven\
+  - C:\Users\appveyor\.m2
+
+notifications:
+  - provider: Email
+    to:
+      - error-prone-team+ci@google.com
+    on_build_success: false
+    on_build_failure: true
+    on_build_status_changed: true

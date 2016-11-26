@@ -16,23 +16,19 @@
 
 package com.google.errorprone.matchers;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static org.junit.Assert.assertEquals;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.scanner.Scanner;
-
+import com.google.errorprone.suppliers.Suppliers;
 import com.sun.source.tree.MethodTree;
-import com.sun.tools.javac.code.Type;
-
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author cpovirk@google.com (Chris Povirk)
@@ -75,29 +71,28 @@ public class MethodReturnsTest extends CompilerBasedAbstractTest {
     assertCompiles(fooReturnsType(true, "int"));
   }
 
-  private abstract class ScannerTest extends Scanner {
+  private abstract static class ScannerTest extends Scanner {
     abstract void assertDone();
   }
 
   private Scanner fooReturnsType(final boolean shouldMatch, final String typeString) {
-    ScannerTest test = new ScannerTest() {
-      private boolean matched = false;
+    ScannerTest test =
+        new ScannerTest() {
+          private boolean matched = false;
 
-      @Override
-      public Void visitMethod(MethodTree node, VisitorState visitorState) {
-        Type type = visitorState.getTypeFromString(typeString);
-        checkNotNull(type, "Unrecognized type %s", typeString);
-        if (methodReturns(type).matches(node, visitorState)) {
-          matched = true;
-        }
-        return super.visitMethod(node, visitorState);
-      }
+          @Override
+          public Void visitMethod(MethodTree node, VisitorState visitorState) {
+            if (methodReturns(Suppliers.typeFromString(typeString)).matches(node, visitorState)) {
+              matched = true;
+            }
+            return super.visitMethod(node, visitorState);
+          }
 
-      @Override
-      void assertDone() {
-        assertEquals(matched, shouldMatch);
-      }
-    };
+          @Override
+          void assertDone() {
+            assertEquals(matched, shouldMatch);
+          }
+        };
     tests.add(test);
     return test;
   }

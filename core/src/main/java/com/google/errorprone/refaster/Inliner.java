@@ -23,7 +23,6 @@ import com.google.common.collect.Sets;
 import com.google.errorprone.SubContext;
 import com.google.errorprone.refaster.Bindings.Key;
 import com.google.errorprone.refaster.UTypeVar.TypeWithExpression;
-
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
@@ -45,7 +44,6 @@ import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.ListBuffer;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
-
 import java.util.Map;
 import java.util.Set;
 
@@ -141,24 +139,24 @@ public final class Inliner {
         @Override
         public JCExpression visitClassType(ClassType type, Inliner inliner) {
           ClassSymbol classSym = (ClassSymbol) type.tsym;
-          JCExpression classExpr = inliner.importPolicy().classReference(
-              inliner, classSym.outermostClass().getQualifiedName().toString(),
-              classSym.getQualifiedName().toString());
+          JCExpression classExpr =
+              inliner
+                  .importPolicy()
+                  .classReference(
+                      inliner,
+                      classSym.outermostClass().getQualifiedName().toString(),
+                      classSym.getQualifiedName().toString());
           List<JCExpression> argExprs = List.nil();
           for (Type argType : type.getTypeArguments()) {
             argExprs = argExprs.append(visit(argType, inliner));
           }
-          return argExprs.isEmpty()
-              ? classExpr
-              : inliner.maker().TypeApply(classExpr, argExprs);
+          return argExprs.isEmpty() ? classExpr : inliner.maker().TypeApply(classExpr, argExprs);
         }
 
         @Override
         public JCExpression visitWildcardType(WildcardType type, Inliner inliner) {
           TreeMaker maker = inliner.maker();
-          return maker.Wildcard(
-              maker.TypeBoundKind(type.kind),
-              visit(type.baseType(), inliner));
+          return maker.Wildcard(maker.TypeBoundKind(type.kind), visit(type.type, inliner));
         }
 
         @Override

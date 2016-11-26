@@ -32,7 +32,6 @@ import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Select
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -50,13 +49,11 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import javax.lang.model.element.Modifier;
 
 /**
@@ -183,8 +180,9 @@ public class HeldLockAnalyzer {
     @Override
     public Void visitSynchronized(SynchronizedTree tree, HeldLockSet locks) {
       // The synchronized expression is held in the body of the synchronized statement:
-      Optional<GuardedByExpression> lockExpression = GuardedByBinder.bindExpression(
-          ((JCTree.JCParens) tree.getExpression()).getExpression(), visitorState);
+      Optional<GuardedByExpression> lockExpression =
+          GuardedByBinder.bindExpression(
+              (JCExpression) tree.getExpression(), visitorState);
       scan(tree.getBlock(), lockExpression.isPresent()
           ? locks.plus(lockExpression.get())
           : locks);
@@ -260,6 +258,10 @@ public class HeldLockAnalyzer {
       Optional<GuardedByExpression> boundGuard =
           ExpectedLockCalculator.from((JCTree.JCExpression) tree, guard.get(), visitorState);
       if (!boundGuard.isPresent()) {
+        // We couldn't resolve a guarded by expression in the current scope, so we can't
+        // guarantee the access is protected and must report an error to be safe.
+        listener.handleGuardedAccess(
+            tree, new GuardedByExpression.Factory().error(guardString), locks);
         return;
       }
       listener.handleGuardedAccess(tree, boundGuard.get(), locks);

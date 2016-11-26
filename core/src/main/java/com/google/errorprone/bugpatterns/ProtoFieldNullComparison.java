@@ -17,10 +17,10 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.ONE_OFF;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 
+import com.google.common.base.Predicate;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
@@ -28,27 +28,43 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
-
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
-
 import java.util.EnumSet;
 import java.util.Set;
+import javax.annotation.Nullable;
 
-@BugPattern(name = "ProtoFieldNullComparison",
-    summary = "Protobuf fields cannot be null",
-    explanation = "This checker looks for comparisons of protocol buffer fields with null. "
-        + "If a proto field is not specified, its field accessor will return a non-null default "
-        + "value. Thus, the result of calling one of these accessors can never be null, and "
-        + "comparisons like these often indicate a nearby error.\n\n"
-        + "If you meant to check whether an optional field has been set, you should use the "
-        + "hasField() method instead.",
-    category = ONE_OFF, severity = ERROR, maturity = MATURE)
+@BugPattern(
+  name = "ProtoFieldNullComparison",
+  summary = "Protobuf fields cannot be null",
+  explanation =
+      "This checker looks for comparisons of protocol buffer fields with null. "
+          + "If a proto field is not specified, its field accessor will return a non-null default "
+          + "value. Thus, the result of calling one of these accessors can never be null, and "
+          + "comparisons like these often indicate a nearby error.\n\n"
+          + "If you need to distinguish between an unset optional value and a default value, you "
+          + "have two options.  In most cases, you can simply use the `hasField()` method. proto3 "
+          + "however does not generate `hasField()` methods for scalar fields of type `string` or "
+          + "`bytes`. In those cases you will need to wrap your field in "
+          + "`google.protobuf.StringValue` or `google.protobuf.BytesValue`, respectively.",
+  category = ONE_OFF,
+  severity = ERROR
+)
 public class ProtoFieldNullComparison extends BugChecker implements BinaryTreeMatcher {
+
+  private static final Predicate<MethodSymbol> NO_ARGS =
+      new Predicate<MethodSymbol>() {
+        @Override
+        public boolean apply(MethodSymbol input) {
+          return input.params().isEmpty();
+        }
+      };
 
   private static final String PROTO_SUPER_CLASS = "com.google.protobuf.GeneratedMessage";
 
@@ -57,8 +73,7 @@ public class ProtoFieldNullComparison extends BugChecker implements BinaryTreeMa
 
   private static final String LIST_INTERFACE = "java.util.List";
 
-  private static final Matcher<Tree> returnsListMatcher =
-      Matchers.isCastableTo(LIST_INTERFACE);
+  private static final Matcher<Tree> returnsListMatcher = Matchers.isSubtypeOf(LIST_INTERFACE);
 
   private static final Set<Kind> COMPARISON_OPERATORS =
       EnumSet.of(Kind.EQUAL_TO, Kind.NOT_EQUAL_TO);
@@ -137,7 +152,7 @@ public class ProtoFieldNullComparison extends BugChecker implements BinaryTreeMa
   }
 
   private static boolean receiverIsProtoMessage(ExpressionTree tree, VisitorState state) {
-    return protoMessageReceiverMatcher.matches(((MethodInvocationTree) tree), state);
+    return protoMessageReceiverMatcher.matches(tree, state);
   }
 
   private static String replaceLast(String text, String pattern, String replacement) {
@@ -156,6 +171,7 @@ public class ProtoFieldNullComparison extends BugChecker implements BinaryTreeMa
    * <pre>
    * Also creates replacements for the Yoda style version of them.
    */
+  @Nullable
   private static String createReplacement(BinaryTree tree, VisitorState state) {
     ExpressionTree leftOperand = tree.getLeftOperand();
     ExpressionTree rightOperand = tree.getRightOperand();
@@ -168,6 +184,18 @@ public class ProtoFieldNullComparison extends BugChecker implements BinaryTreeMa
     if (isGetMethodInvocation(methodInvocation, state)) {
       String methodName = getMethodName(methodInvocation);
       String hasMethod = methodName.replaceFirst("get", "has");
+      
+      // proto3 does not generate has methods for scalar types, e.g. ByteString and String.
+      // Do not provide a replacement in these cases.
+      Set<MethodSymbol> hasMethods =
+          ASTHelpers.findMatchingMethods(
+              state.getName(hasMethod),
+              NO_ARGS,
+              ASTHelpers.getType(ASTHelpers.getReceiver(methodInvocation)),
+              state.getTypes());
+      if (hasMethods.isEmpty()) {
+        return null;
+      }
       String replacement = replaceLast(methodInvocation.toString(), methodName, hasMethod);
       replacement = tree.getKind() == Kind.EQUAL_TO ? "!" + replacement : replacement;
       return replacement;
@@ -179,8 +207,15 @@ public class ProtoFieldNullComparison extends BugChecker implements BinaryTreeMa
 
   @Override
   public Description matchBinary(BinaryTree tree, VisitorState state) {
-    return MATCHER.matches(tree, state)
-        ? describeMatch(tree, SuggestedFix.replace(tree, createReplacement(tree, state)))
-        : Description.NO_MATCH;
+    if (!MATCHER.matches(tree, state)) {
+      return Description.NO_MATCH;
+    }
+
+    String replacement = createReplacement(tree, state);
+    if (replacement == null) {
+      return describeMatch(tree);
+    } else {
+      return describeMatch(tree, SuggestedFix.replace(tree, createReplacement(tree, state)));
+    }
   }
 }

@@ -20,7 +20,6 @@ import static com.google.common.base.StandardSystemProperty.JAVA_VERSION;
 import static org.junit.Assume.assumeTrue;
 
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

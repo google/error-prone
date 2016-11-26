@@ -16,12 +16,30 @@
 
 package com.google.errorprone;
 
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Collections2;
+import java.lang.annotation.Annotation;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Validates an {@code @BugPattern} annotation for wellformedness.
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public class BugPatternValidator {
+
+  private static final Function<Class<? extends Annotation>, String> GET_CANONICAL_NAME =
+      new Function<Class<? extends Annotation>, String>() {
+        @Override
+        public String apply(Class<? extends Annotation> input) {
+          return input.getCanonicalName();
+        }
+      };
+
+  private static final Joiner COMMA_JOINER = Joiner.on(", ");
 
   public static void validate(BugPattern pattern) throws ValidationException {
     if (pattern == null) {
@@ -42,22 +60,27 @@ public class BugPatternValidator {
         break;
     }
 
-    // suppressibility must be consistent with customAnnotationType.
+    // suppressibility must be consistent with customSuppressionAnnotations.
+    Set<Class<? extends Annotation>> customSuppressionAnnotations =
+        new HashSet<>(Arrays.asList(pattern.customSuppressionAnnotations()));
     switch (pattern.suppressibility()) {
       case CUSTOM_ANNOTATION:
-        if (pattern.customSuppressionAnnotation() == BugPattern.NoCustomSuppression.class) {
-          throw new ValidationException("Expected a custom suppression annotation but none was "
-              + "provided");
-        }
-        if (pattern.customSuppressionAnnotation() == SuppressWarnings.class) {
-          throw new ValidationException("Custom suppression annotation may not use "
-              + "@SuppressWarnings");
+        if (customSuppressionAnnotations.isEmpty()) {
+          throw new ValidationException(
+              "Expected a custom suppression annotation but none was provided");
+        } else if (customSuppressionAnnotations.contains(SuppressWarnings.class)) {
+          throw new ValidationException(
+              "Custom suppression annotation may not use @SuppressWarnings");
         }
         break;
-      case SUPPRESS_WARNINGS: case UNSUPPRESSIBLE:
-        if (pattern.customSuppressionAnnotation() != BugPattern.NoCustomSuppression.class) {
-          throw new ValidationException("Expected no custom suppression annotation but found one "
-              + "of type: " + pattern.customSuppressionAnnotation().getCanonicalName());
+      case SUPPRESS_WARNINGS:
+      case UNSUPPRESSIBLE:
+        if (!customSuppressionAnnotations.isEmpty()) {
+          throw new ValidationException(
+              String.format(
+                  "Expected no custom suppression annotations but found these: %s",
+                  COMMA_JOINER.join(
+                      Collections2.transform(customSuppressionAnnotations, GET_CANONICAL_NAME))));
         }
         break;
     }

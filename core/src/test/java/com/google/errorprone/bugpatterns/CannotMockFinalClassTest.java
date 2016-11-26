@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -37,7 +36,7 @@ import org.mockito.exceptions.base.MockitoException;
 @RunWith(JUnit4.class)
 public class CannotMockFinalClassTest {
   @Rule
-  public ExpectedException exception = ExpectedException.none();
+  public final ExpectedException exception = ExpectedException.none();
 
   private CompilationTestHelper compilationHelper;
 

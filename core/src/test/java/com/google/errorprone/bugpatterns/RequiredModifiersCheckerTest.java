@@ -17,13 +17,11 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-
+import javax.tools.JavaFileObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import javax.tools.JavaFileObject;
 
 /**
  * Unit tests for {@link RequiredModifiersChecker}.
@@ -173,68 +171,6 @@ public class RequiredModifiersCheckerTest {
             "package test;",
             "import test.AbstractRequired;",
             "abstract class RequiredModifiersTestCase {}")
-        .doTest();
-  }
-
-  @Test
-  public void testGuavaAnnotation() throws Exception {
-    compilationHelper
-        .addSourceLines(
-            "com/google/common/annotations/RequiredModifiers.java",
-            "package com.google.common.annotations;",
-            "import javax.lang.model.element.Modifier;",
-            "import java.lang.annotation.Target;",
-            "import java.lang.annotation.ElementType;",
-            "@Target(ElementType.ANNOTATION_TYPE)",
-            "public @interface RequiredModifiers {",
-            "  Modifier[] value();",
-            "}")
-        .addSourceLines(
-            "test/AbstractRequired.java",
-            "package test;",
-            "import static javax.lang.model.element.Modifier.ABSTRACT;",
-            "import com.google.common.annotations.RequiredModifiers;",
-            "@RequiredModifiers(ABSTRACT)",
-            "public @interface AbstractRequired {",
-            "}")
-        .addSourceLines(
-            "test/RequiredModifiersTestCase.java",
-            "package test;",
-            "import test.AbstractRequired;",
-            "// BUG: Diagnostic contains: The annotation '@AbstractRequired' has specified that it"
-                + " must be used together with the following modifiers: [abstract]",
-            "@AbstractRequired public class RequiredModifiersTestCase {",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void testGuavaAnnotationOK() throws Exception {
-    compilationHelper
-        .addSourceLines(
-            "com/google/common/annotations/RequiredModifiers.java",
-            "package com.google.common.annotations;",
-            "import javax.lang.model.element.Modifier;",
-            "import java.lang.annotation.Target;",
-            "import java.lang.annotation.ElementType;",
-            "@Target(ElementType.ANNOTATION_TYPE)",
-            "public @interface RequiredModifiers {",
-            "  Modifier[] value();",
-            "}")
-        .addSourceLines(
-            "test/AbstractRequired.java",
-            "package test;",
-            "import static javax.lang.model.element.Modifier.ABSTRACT;",
-            "import com.google.common.annotations.RequiredModifiers;",
-            "@RequiredModifiers(ABSTRACT)",
-            "public @interface AbstractRequired {",
-            "}")
-        .addSourceLines(
-            "test/RequiredModifiersTestCase.java",
-            "package test;",
-            "import test.AbstractRequired;",
-            "@AbstractRequired public abstract class RequiredModifiersTestCase {",
-            "}")
         .doTest();
   }
 

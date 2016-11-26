@@ -28,10 +28,8 @@ import com.google.common.collect.Sets.SetView;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.matchers.Description;
-
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
-
 import java.util.List;
 import java.util.Set;
 

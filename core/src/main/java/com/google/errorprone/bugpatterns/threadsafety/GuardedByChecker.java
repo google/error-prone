@@ -17,16 +17,16 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.base.Joiner;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Kind;
+import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Select;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
@@ -34,45 +34,52 @@ import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- */
-@BugPattern(name = "GuardedByChecker", altNames = "GuardedBy",
-    summary = "Checks for unguarded accesses to fields and methods with @GuardedBy annotations",
-    category = JDK, severity = ERROR, maturity = MATURE)
-public class GuardedByChecker extends GuardedByValidator implements BugChecker.VariableTreeMatcher,
-    BugChecker.MethodTreeMatcher {
+/** @author cushon@google.com (Liam Miller-Cushon) */
+@BugPattern(
+  name = "GuardedByChecker",
+  altNames = "GuardedBy",
+  summary = "Checks for unguarded accesses to fields and methods with @GuardedBy annotations",
+  category = JDK,
+  severity = ERROR
+)
+public class GuardedByChecker extends GuardedByValidator
+    implements BugChecker.VariableTreeMatcher, BugChecker.MethodTreeMatcher {
 
   private static final String JUC_READ_WRITE_LOCK = "java.util.concurrent.locks.ReadWriteLock";
 
   @Override
   public Description matchMethod(MethodTree tree, final VisitorState state) {
-    // Constructors are free to mutate guarded state without holding the necessary locks. It is
-    // assumed that all objects are thread-local during initialization.
+    // Constructors (and field initializers, instance initalizers, and class initalizers) are free
+    // to mutate guarded state without holding the necessary locks. It is assumed that all objects
+    // (and classes) are thread-local during initialization.
     if (ASTHelpers.getSymbol(tree).isConstructor()) {
       return Description.NO_MATCH;
     }
 
-    HeldLockAnalyzer.analyze(state, new HeldLockAnalyzer.LockEventListener() {
-      @Override
-      public void handleGuardedAccess(
-          ExpressionTree tree, GuardedByExpression guard, HeldLockSet live) {
-        report(GuardedByChecker.this.checkGuardedAccess(tree, guard, live, state), state);
-      }
-    });
+    HeldLockAnalyzer.analyze(
+        state,
+        new HeldLockAnalyzer.LockEventListener() {
+          @Override
+          public void handleGuardedAccess(
+              ExpressionTree tree, GuardedByExpression guard, HeldLockSet live) {
+            report(GuardedByChecker.this.checkGuardedAccess(tree, guard, live, state), state);
+          }
+        });
 
     return GuardedByValidator.validate(this, tree, state);
   }
 
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
-    // We only want to check field declarations. The VariableTree might be for a local or a
-    // parameter, but they won't have @GuardedBy annotations.
+    // We only want to check field declarations for @GuardedBy usage. The VariableTree might be
+    // for a local or a parameter, but they won't have @GuardedBy annotations.
+    //
+    // Field initializers (like constructors) are not checked for accesses of guarded fields.
     return GuardedByValidator.validate(this, tree, state);
   }
 
-  protected Description checkGuardedAccess(Tree tree, GuardedByExpression guard,
-      HeldLockSet locks, VisitorState state) {
+  protected Description checkGuardedAccess(
+      Tree tree, GuardedByExpression guard, HeldLockSet locks, VisitorState state) {
 
     // TODO(cushon): support ReadWriteLocks
     //
@@ -93,6 +100,11 @@ public class GuardedByChecker extends GuardedByValidator implements BugChecker.V
       return Description.NO_MATCH;
     }
 
+    // TODO(cushon): re-enable once the clean-up is done
+    if (guard.kind() == GuardedByExpression.Kind.ERROR) {
+      return Description.NO_MATCH;
+    }
+
     return buildDescription(tree).setMessage(buildMessage(guard, locks)).build();
   }
 
@@ -106,20 +118,65 @@ public class GuardedByChecker extends GuardedByValidator implements BugChecker.V
    * </ul>
    */
   private String buildMessage(GuardedByExpression guard, HeldLockSet locks) {
-    StringBuilder message = new StringBuilder();
-    message.append(
-        String.format(
-            "This access should be guarded by '%s'",
-            guard));
     int heldLocks = locks.allLocks().size();
+    StringBuilder message = new StringBuilder();
+    Select enclosing = findOuterInstance(guard);
+    if (enclosing != null && !enclosingInstance(guard)) {
+      if (guard == enclosing) {
+        message.append(
+            String.format(
+                "Access should be guarded by enclosing instance '%s' of '%s',"
+                    + " which is not accessible in this scope",
+                enclosing.sym().owner,
+                enclosing.base()));
+      } else {
+        message.append(
+            String.format(
+                "Access should be guarded by '%s' in enclosing instance '%s' of '%s',"
+                    + " which is not accessible in this scope",
+                guard.sym(),
+                enclosing.sym().owner,
+                enclosing.base()));
+      }
+      if (heldLocks > 0) {
+        message.append(
+            String.format("; instead found: '%s'", Joiner.on("', '").join(locks.allLocks())));
+      }
+      return message.toString();
+    }
+    message.append(String.format("This access should be guarded by '%s'", guard));
+    if (guard.kind() == GuardedByExpression.Kind.ERROR) {
+      message.append(", which could not be resolved");
+      return message.toString();
+    }
     if (heldLocks == 0) {
       message.append(", which is not currently held");
     } else {
-      message.append(String.format("; instead found: '%s'",
-          Joiner.on("', '").join(locks.allLocks())));
+      message.append(
+          String.format("; instead found: '%s'", Joiner.on("', '").join(locks.allLocks())));
     }
-    String content = message.toString();
-    return content;
+    return message.toString();
+  }
+
+  private static Select findOuterInstance(GuardedByExpression expr) {
+    while (expr.kind() == Kind.SELECT) {
+      Select select = (Select) expr;
+      if (select.sym().name.contentEquals(GuardedByExpression.ENCLOSING_INSTANCE_NAME)) {
+        return select;
+      }
+      expr = select.base();
+    }
+    return null;
+  }
+  
+  private boolean enclosingInstance(GuardedByExpression expr) {
+    while (expr.kind() == Kind.SELECT) {
+      expr = ((Select) expr).base();
+      if (expr.kind() == Kind.THIS) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
@@ -133,7 +190,7 @@ public class GuardedByChecker extends GuardedByValidator implements BugChecker.V
     }
 
     Symbol rwLockSymbol = state.getSymbolFromString(JUC_READ_WRITE_LOCK);
-    if (rwLockSymbol  == null) {
+    if (rwLockSymbol == null) {
       return false;
     }
 

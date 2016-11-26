@@ -19,11 +19,9 @@ package com.google.errorprone.refaster;
 import static com.google.errorprone.refaster.Unifier.unifyNullable;
 
 import com.google.auto.value.AutoValue;
-
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCReturn;
-
 import javax.annotation.Nullable;
 
 /**

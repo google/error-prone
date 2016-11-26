@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,7 +47,8 @@ public class UnsynchronizedOverridesSynchronizedTest {
             "test/Test.java",
             "package test;",
             "class Test extends Super {",
-            "  // BUG: Diagnostic contains: synchronized void f()",
+            "  // BUG: Diagnostic contains: f overrides synchronized method in Super",
+            "  // synchronized void f()",
             "  void f() {}",
             "}")
         .doTest();
@@ -68,6 +68,23 @@ public class UnsynchronizedOverridesSynchronizedTest {
             "package test;",
             "class Test extends Super {",
             "  synchronized void f() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void ignoreInputStream() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "test/Test.java",
+            "package test;",
+            "import java.io.InputStream;",
+            "import java.io.IOException;",
+            "class Test extends InputStream {",
+            "  @Override public int read() throws IOException {",
+            "    throw new IOException();",
+            "  }",
+            "  @Override public /*unsynchronized*/ void mark(int readlimit) {}",
             "}")
         .doTest();
   }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 // unused import to make sure we don't introduce an import conflict.
 import static junit.framework.Assert.fail;

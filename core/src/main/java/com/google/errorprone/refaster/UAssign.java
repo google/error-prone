@@ -19,7 +19,6 @@ package com.google.errorprone.refaster;
 import static com.google.errorprone.refaster.Unifier.unifications;
 
 import com.google.auto.value.AutoValue;
-
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCAssign;

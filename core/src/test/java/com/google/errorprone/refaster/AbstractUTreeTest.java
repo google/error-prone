@@ -21,14 +21,12 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.argThat;
 
 import com.google.common.base.Joiner;
-
 import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.parser.Parser;
 import com.sun.tools.javac.parser.ParserFactory;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.util.Context;
-
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
@@ -75,10 +73,11 @@ public abstract class AbstractUTreeTest {
 
   public void assertInlines(String expression, UStatement template) {
     try {
+      // javac's pretty-printer uses the platform line terminator
       assertEquals(
           String.format("Expected template %s to inline to expression %s", template, expression),
           expression,
-          Joiner.on('\n').join(template.inlineStatements(inliner)));
+          Joiner.on(System.lineSeparator()).join(template.inlineStatements(inliner)));
     } catch (CouldNotResolveImportException e) {
       throw new RuntimeException(e);
     }

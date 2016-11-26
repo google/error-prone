@@ -29,7 +29,6 @@ import static com.google.errorprone.matchers.Matchers.variableType;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Category;
-import com.google.errorprone.BugPattern.MaturityLevel;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -37,13 +36,11 @@ import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
-
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
-
 import javax.lang.model.element.Modifier;
 
 /**
@@ -51,14 +48,17 @@ import javax.lang.model.element.Modifier;
  *
  * @author Louis Wasserman
  */
-@BugPattern(name = "CannotMockFinalClass",
-    summary = "Mockito cannot mock final classes",
-    explanation = "Mockito cannot mock final classes. See "
-        + "https://github.com/mockito/mockito/wiki/FAQ for details.",
-    category = Category.MOCKITO, maturity = MaturityLevel.MATURE,
-    severity = SeverityLevel.WARNING)
-public class CannotMockFinalClass extends BugChecker implements MethodInvocationTreeMatcher,
-    VariableTreeMatcher {
+@BugPattern(
+  name = "CannotMockFinalClass",
+  summary = "Mockito cannot mock final classes",
+  explanation =
+      "Mockito cannot mock final classes. See "
+          + "https://github.com/mockito/mockito/wiki/FAQ for details.",
+  category = Category.MOCKITO,
+  severity = SeverityLevel.WARNING
+)
+public class CannotMockFinalClass extends BugChecker
+    implements MethodInvocationTreeMatcher, VariableTreeMatcher {
   // TODO(lowasser): consider stopping mocks of primitive types here or in its own checker
 
   // Runners like GwtMockito allow mocking final types, so we conservatively stick to JUnit4.

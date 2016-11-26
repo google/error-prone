@@ -22,32 +22,28 @@ import static org.junit.Assert.fail;
 import com.google.common.base.Optional;
 import com.google.errorprone.ErrorProneInMemoryFileManager;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeScanner;
-
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /** {@link GuardedByBinder}Test */
 @RunWith(JUnit4.class)
 public class GuardedByBinderTest {
 
-  private ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
+  private final ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
 
   @Test
   public void testInherited() throws Exception {
@@ -411,6 +407,33 @@ public class GuardedByBinderTest {
               )));
   }
 
+  // regression test for issue 387
+  @Test
+  public void enclosingBlockScope() throws Exception {
+    assertEquals(
+        "(SELECT (SELECT (THIS) outer$threadsafety.Test) mu)",
+        bind(
+            "",
+            "mu",
+            fileManager.forSourceLines(
+                "threadsafety/Test.java",
+                "package threadsafety;",
+                "import javax.annotation.concurrent.GuardedBy;",
+                "public class Test {",
+                "  public final Object mu = new Object();",
+                "  @GuardedBy(\"mu\") int x = 1;",
+                "  {",
+                "    new Object() {",
+                "      void f() {",
+                "        synchronized (mu) {",
+                "          x++;",
+                "        }",
+                "      }",
+                "    };",
+                "  }",
+                "}")));
+  }
+
   //TODO(cushon): disallow non-final lock expressions
   @Ignore
   @Test
@@ -480,7 +503,7 @@ public class GuardedByBinderTest {
 
   private static class FindClass extends TreeScanner {
 
-    private List<JCTree.JCClassDecl> decls = new ArrayList<JCTree.JCClassDecl>();
+    private final List<JCTree.JCClassDecl> decls = new ArrayList<JCTree.JCClassDecl>();
 
     @Override
     public void visitClassDef(JCTree.JCClassDecl classDecl) {

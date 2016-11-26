@@ -17,16 +17,11 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 
 /** {@link GuardedByChecker}Test */
 @RunWith(JUnit4.class)
@@ -859,7 +854,7 @@ public class GuardedByCheckerTest {
             "          Outer.this.x++;",
             "        }",
             "        // BUG: Diagnostic contains:",
-            "      // should be guarded by 'Outer.this'",
+            "        // should be guarded by 'Outer.this'",
             "        Outer.this.x++;",
             "      }",
             "    }",
@@ -917,7 +912,6 @@ public class GuardedByCheckerTest {
         .doTest();
   }
 
-  // TODO(cushon): make the diagnostic comprehensible...
   @Test
   public void wrongInnerClassInstance() throws Exception {
     compilationHelper
@@ -932,8 +926,8 @@ public class GuardedByCheckerTest {
             "    void m(Inner i) {",
             "      synchronized (WrongInnerClassInstance.this.lock) {",
             "        // BUG: Diagnostic contains:",
-            "        // should be guarded by 'WrongInnerClassInstance.this.lock'; instead found:"
-            + " 'WrongInnerClassInstance.this.lock'",
+            "        // guarded by 'lock' in enclosing instance"
+                + " 'threadsafety.WrongInnerClassInstance' of 'i'",
             "        i.x++;",
             "      }",
             "    }",
@@ -1177,8 +1171,295 @@ public class GuardedByCheckerTest {
         .doTest();
   }
 
+  // regression test for issue 387
   @Test
-  public void serializable() throws IOException {
-    new ObjectOutputStream(new ByteArrayOutputStream()).writeObject(new GuardedByChecker());
+  public void enclosingBlockScope() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "public class Test {",
+            "  public final Object mu = new Object();",
+            "  @GuardedBy(\"mu\") int x = 1;",
+            "  {",
+            "    new Object() {",
+            "      void f() {",
+            "        synchronized (mu) {",
+            "          x++;",
+            "        }",
+            "      }",
+            "    };",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Ignore("b/26834754") // fix resolution of qualified type names
+  @Test
+  public void qualfiedType() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "lib/Lib.java",
+            "package lib;",
+            "public class Lib {",
+            "  public static class Inner {",
+            "    public static final Object mu = new Object();",
+            "  }",
+            "}")
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "public class Test {",
+            "  public final Object mu = new Object();",
+            "  @GuardedBy(\"lib.Lib.Inner.mu\") int x = 1;",
+            "  void f() {",
+            "    synchronized (lib.Lib.Inner.mu) {",
+            "      x++;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Ignore("b/26834754") // fix resolution of qualified type names
+  @Test
+  public void innerClassTypeQualifier() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "lib/Lib.java",
+            "package lib;",
+            "public class Lib {",
+            "  public static class Inner {",
+            "    public static final Object mu = new Object();",
+            "  }",
+            "}")
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "import lib.Lib;",
+            "public class Test {",
+            "  public final Object mu = new Object();",
+            "  @GuardedBy(\"Lib.Inner.mu\") int x = 1;",
+            "  void f() {",
+            "    synchronized (Lib.Inner.mu) {",
+            "      x++;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void instanceInitializersAreUnchecked() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "public class Test {",
+            "  public final Object mu1 = new Object();",
+            "  public final Object mu2 = new Object();",
+            "  @GuardedBy(\"mu1\") int x = 1;",
+            "  {",
+            "    synchronized (mu2) {",
+            "      x++;",
+            "    }",
+            "    synchronized (mu1) {",
+            "      x++;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void classInitializersAreUnchecked() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "public class Test {",
+            "  public static final Object mu1 = new Object();",
+            "  public static final Object mu2 = new Object();",
+            "  @GuardedBy(\"mu1\") static int x = 1;",
+            "  static {",
+            "    synchronized (mu2) {",
+            "      x++;",
+            "    }",
+            "    synchronized (mu1) {",
+            "      x++;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void staticFieldInitializersAreUnchecked() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "public class Test {",
+            "  public static final Object mu = new Object();",
+            "  @GuardedBy(\"mu\") static int x0 = 1;",
+            "  static int x1 = x0++;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void instanceFieldInitializersAreUnchecked() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "public class Test {",
+            "  public final Object mu = new Object();",
+            "  @GuardedBy(\"mu\") int x0 = 1;",
+            "  int x1 = x0++;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void innerClassMethod() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "public class Test {",
+            "  public final Object mu = new Object();",
+            "  class Inner {",
+            "    @GuardedBy(\"mu\") int x;",
+            "    @GuardedBy(\"Test.this\") int y;",
+            "  }",
+            "  void f(Inner i) {",
+            "    synchronized (mu) {",
+            "      // BUG: Diagnostic contains:",
+            "      // guarded by 'mu' in enclosing instance 'threadsafety.Test' of 'i'",
+            "      i.x++;",
+            "    }",
+            "  }",
+            "  synchronized void g(Inner i) {",
+            "      // BUG: Diagnostic contains:",
+            "      // guarded by enclosing instance 'threadsafety.Test' of 'i'",
+            "    i.y++;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void innerClassMethod_classBoundary() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Outer.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "public class Outer {",
+            "  public final Object mu = new Object();",
+            "  class Inner {",
+            "    @GuardedBy(\"mu\") int x;",
+            "    @GuardedBy(\"Outer.this\") int y;",
+            "  }",
+            "}")
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "public class Test {",
+            "  void f() {",
+            "    Outer a = new Outer();",
+            "    Outer b = new Outer();",
+            "    Outer.Inner ai = a.new Inner();",
+            "    synchronized (b.mu) {",
+            "      // BUG: Diagnostic contains:",
+            "      // Access should be guarded by 'mu' in enclosing instance 'threadsafety.Outer'"
+                + " of 'ai', which is not accessible in this scope; instead found: 'b.mu'",
+            "      ai.x++;",
+            "    }",
+            "    synchronized (b) {",
+            "      // BUG: Diagnostic contains:",
+            "      // Access should be guarded by enclosing instance 'threadsafety.Outer' of 'ai',"
+                + " which is not accessible in this scope; instead found: 'b'",
+            "      ai.y++;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void regression_b27686620() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "A.java",
+            "class A extends One {",
+            "  void g() {}",
+            "}")
+        .addSourceLines(
+            "B.java",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "class One {",
+            "  @GuardedBy(\"One.class\") static int x = 1;",
+            "  static void f() { synchronized (One.class) { x++; } }",
+            "}",
+            "class Two {",
+            "  @GuardedBy(\"Two.class\") static int x = 1;",
+            "  static void f() { synchronized (Two.class) { x++; } }",
+            "}")
+        .addSourceLines(
+            "C.java",
+            "class B extends Two {",
+            "  void g() {}",
+            "}")
+        .doTest();
+  }
+
+  @Ignore // TODO(cushon): clean up existing instances and re-enable
+  @Test
+  public void qualifiedMethod() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "public class Test {",
+            "  @GuardedBy(\"this\") void f() {}",
+            "  void main() {",
+            "    // BUG: Diagnostic contains: 'this', which could not be resolved",
+            "    new Test().f();",
+            "    Test t = new Test();",
+            "    // BUG: Diagnostic contains: guarded by 't'",
+            "    t.f();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  // regression test for #426
+  @Test
+  public void noSuchMethod() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Foo.java", //
+            "public class Foo {}")
+        .addSourceLines(
+            "Test.java",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "public class Test {",
+            "  Foo foo;",
+            "  // BUG: Diagnostic contains: could not resolve guard",
+            "  @GuardedBy(\"foo.get()\") Object o = null;",
+            "}")
+        .doTest();
   }
 }

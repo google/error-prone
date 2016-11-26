@@ -17,8 +17,7 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
@@ -27,10 +26,9 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.IfTreeMatcher;
 import com.google.errorprone.fixes.Fix;
-import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ExpressionTree;
@@ -50,24 +48,20 @@ import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCExpressionStatement;
 import com.sun.tools.javac.tree.TreeInfo;
-
 import java.util.List;
 import java.util.Objects;
-
 import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/** @author cushon@google.com (Liam Miller-Cushon) */
 // TODO(cushon): allow @LazyInit on fields as a suppression mechanism?
 @BugPattern(
-    name = "DoubleCheckedLocking",
-    summary = "Double-checked locking on non-volatile fields is unsafe",
-    category = JDK,
-    severity = ERROR,
-    maturity = MATURE)
+  name = "DoubleCheckedLocking",
+  summary = "Double-checked locking on non-volatile fields is unsafe",
+  category = JDK,
+  severity = WARNING
+)
 public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
   @Override
   public Description matchIf(IfTree outerIf, VisitorState state) {
@@ -101,7 +95,7 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
     Description.Builder builder = buildDescription(outerIf);
     JCTree fieldDecl = findFieldDeclaration(state.getPath(), sym);
     if (fieldDecl != null) {
-      Fix fix = SuggestedFix.addModifier(fieldDecl, Modifier.VOLATILE, state);
+      Fix fix = SuggestedFixes.addModifiers(fieldDecl, state, Modifier.VOLATILE);
       if (fix != null) {
         builder.addFix(fix);
       }

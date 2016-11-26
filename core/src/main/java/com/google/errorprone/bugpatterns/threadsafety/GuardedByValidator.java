@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
@@ -27,32 +26,19 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByUtils.GuardedByValidationResult;
 import com.google.errorprone.matchers.Description;
-
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- */
-@BugPattern(name = "GuardedByValidator",
-    summary = "Invalid @GuardedBy expression",
-    explanation = "@GuardedBy(lock) documents that a field or method should be accessed only with "
-      + "a specific lock held. The lock argument identifies the lock that should be held when "
-      + "accessing the annotated field or method. The possible values for lock are: "
-      + "* @GuardedBy(\"this\"), meaning the intrinsic lock on the containing object (the "
-      + "object of which the method or field is a member);"
-      + "* @GuardedBy(\"fieldName\"), meaning the lock associated with the object referenced by "
-      + "the named field, either an intrinsic lock (for fields that do not refer to a Lock) or an "
-      + "explicit Lock (for fields that refer to a Lock);"
-      + "* @GuardedBy(\"ClassName.fieldName\"), like @GuardedBy(\"fieldName\"), but referencing "
-      + "a lock object held in a static field of another class;"
-      + "* @GuardedBy(\"methodName()\"), meaning the lock object that is returned by calling the "
-      + "named method;"
-      + "* @GuardedBy(\"ClassName.class\"), meaning the class literal object for the named class.",
-      category = JDK, severity = ERROR, maturity = EXPERIMENTAL)
-public class GuardedByValidator extends BugChecker implements VariableTreeMatcher,
-    MethodTreeMatcher {
+/** @author cushon@google.com (Liam Miller-Cushon) */
+@BugPattern(
+  name = "GuardedByValidator",
+  summary = "Invalid @GuardedBy expression",
+  category = JDK,
+  severity = ERROR
+)
+public class GuardedByValidator extends BugChecker
+    implements VariableTreeMatcher, MethodTreeMatcher {
 
   private static final String MESSAGE_FORMAT = "Invalid @GuardedBy expression: %s";
   

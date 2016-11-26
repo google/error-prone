@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.android;
 
 import static com.google.errorprone.BugPattern.Category.ANDROID;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -29,29 +28,28 @@ import com.google.errorprone.bugpatterns.BugChecker.MemberSelectTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.tools.javac.code.Symbol;
-
 import javax.lang.model.element.ElementKind;
 
 /**
- * Replacement of misleading
- * <a href="http://developer.android.com/reference/android/R.string.html">android.R.string</a>
+ * Replacement of misleading <a
+ * href="http://developer.android.com/reference/android/R.string.html">android.R.string</a>
  * constants with more intuitive ones.
  *
  * @author kmb@google.com (Kevin Bierhoff)
  */
-@BugPattern(name = "MislabeledAndroidString",
-    summary = "Certain resources in `android.R.string` have names that do not match their content",
-    explanation =
-        "Certain resources in `android.R.string` have names that do not match their content: "
-        + "`android.R.string.yes` is actually \"OK\" and `android.R.string.no` is \"Cancel\". "
-        + "Avoid these string resources and prefer ones whose names *do* match their content. If "
-        + "you need \"Yes\" or \"No\" you must create your own string resources.",
-    category = ANDROID,
-    severity = ERROR,
-    maturity = MATURE)
+@BugPattern(
+  name = "MislabeledAndroidString",
+  summary = "Certain resources in `android.R.string` have names that do not match their content",
+  explanation =
+      "Certain resources in `android.R.string` have names that do not match their content: "
+          + "`android.R.string.yes` is actually \"OK\" and `android.R.string.no` is \"Cancel\". "
+          + "Avoid these string resources and prefer ones whose names *do* match their content. If "
+          + "you need \"Yes\" or \"No\" you must create your own string resources.",
+  category = ANDROID,
+  severity = ERROR
+)
 public class MislabeledAndroidString extends BugChecker implements MemberSelectTreeMatcher {
 
   private static final String R_STRING_CLASSNAME = "android.R.string";

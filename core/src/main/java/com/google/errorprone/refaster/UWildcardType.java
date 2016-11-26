@@ -19,7 +19,6 @@ package com.google.errorprone.refaster;
 import static com.google.errorprone.refaster.Unifier.unifications;
 
 import com.google.auto.value.AutoValue;
-
 import com.sun.tools.javac.code.BoundKind;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.WildcardType;

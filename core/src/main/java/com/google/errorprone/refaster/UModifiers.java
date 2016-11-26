@@ -18,16 +18,13 @@ package com.google.errorprone.refaster;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
-
 import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.JCTree.JCModifiers;
 import com.sun.tools.javac.util.List;
-
 import java.util.Set;
-
 import javax.lang.model.element.Modifier;
 
 

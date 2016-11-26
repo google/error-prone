@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -60,7 +59,6 @@ public class ClassNameTest {
               "class Green {}")
           .doTest();
   }
-
 
   @Test
   public void negative() throws Exception {
@@ -149,6 +147,17 @@ public class ClassNameTest {
             "}")
         .ignoreJavacErrors()
         .matchAllDiagnostics()
+        .doTest();
+  }
+  
+  @Test
+  public void suppression() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "b/Test.java", //
+            "package b;",
+            "@SuppressWarnings(\"ClassName\")",
+            "class Green {}")
         .doTest();
   }
 }

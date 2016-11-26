@@ -19,16 +19,13 @@ package com.google.errorprone.bugpatterns.collectionincompatibletype;
 import com.google.auto.value.AutoValue;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
-
 import java.util.Collection;
 import java.util.Map;
-
 import javax.annotation.Nullable;
 
 /**
@@ -147,6 +144,9 @@ abstract class AbstractCollectionIncompatibleTypeMatcher {
   protected static final Type extractTypeArgAsMemberOfSupertype(
       Type type, Symbol superTypeSym, int typeArgIndex, Types types) {
     Type collectionType = types.asSuper(type, superTypeSym);
+    if (collectionType == null) {
+      return null;
+    }
     com.sun.tools.javac.util.List<Type> tyargs = collectionType.getTypeArguments();
     if (tyargs.size() <= typeArgIndex) {
       // Collection is raw, nothing we can do.

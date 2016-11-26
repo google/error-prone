@@ -21,7 +21,6 @@ import static com.google.errorprone.refaster.Unifier.unifyList;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
-
 import com.sun.source.tree.IntersectionTypeTree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCTypeIntersection;

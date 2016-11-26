@@ -1,0 +1,10 @@
+syntax = "proto2";
+package test;
+
+option java_package = "com.google.errorprone.testdata.proto";
+option java_mutable_api = true;
+
+message User {
+  optional string name = 1;
+  optional int64 uid = 2;
+}

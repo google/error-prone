@@ -23,12 +23,10 @@ import com.google.auto.value.AutoValue;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.EnumBiMap;
 import com.google.common.collect.Maps;
-
 import com.sun.source.tree.TreeVisitor;
 import com.sun.source.tree.WildcardTree;
 import com.sun.tools.javac.code.BoundKind;
 import com.sun.tools.javac.tree.JCTree.JCWildcard;
-
 import javax.annotation.Nullable;
 
 /**

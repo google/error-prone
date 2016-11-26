@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
@@ -28,7 +27,6 @@ import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ThrowTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-
 import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.ContinueTree;
 import com.sun.source.tree.LabeledStatementTree;
@@ -64,15 +62,10 @@ import com.sun.tools.javac.util.Name;
   altNames = {"finally", "ThrowFromFinallyBlock"},
   summary =
       "If you return or throw from a finally, then values returned or thrown from the"
-          + " try-catch block will be ignored",
-  explanation =
-      "Terminating a finally block abruptly preempts the outcome of the try block,"
-          + " and will cause the result of any previously executed return or throw statements to"
-          + " be ignored. This is very confusing. Please refactor this code to ensure that the"
-          + " finally block will always complete normally.",
+          + " try-catch block will be ignored. Consider using try-with-resources instead.",
   category = JDK,
   severity = WARNING,
-  maturity = MATURE,
+  
   generateExamplesFromTestCases = false
 )
 public class Finally extends BugChecker
@@ -165,8 +158,8 @@ public class Finally extends BugChecker
    * Ancestor matcher for statements that break or continue out of a finally block.
    */
   private static class FinallyJumpMatcher extends FinallyCompletionMatcher<StatementTree> {
-    private Name label;
-    private JumpType jumpType;
+    private final Name label;
+    private final JumpType jumpType;
 
     private enum JumpType {
       BREAK,

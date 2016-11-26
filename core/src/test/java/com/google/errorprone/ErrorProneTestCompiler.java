@@ -17,14 +17,11 @@
 package com.google.errorprone;
 
 import com.google.errorprone.scanner.ScannerSupplier;
-
 import com.sun.tools.javac.main.Main.Result;
 import com.sun.tools.javac.util.Context;
-
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.List;
-
 import javax.annotation.processing.Processor;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
@@ -37,7 +34,7 @@ public class ErrorProneTestCompiler {
   /** Wraps {@link com.google.errorprone.ErrorProneCompiler.Builder} */
   public static class Builder {
 
-    ErrorProneCompiler.Builder wrappedCompilerBuilder = new ErrorProneCompiler.Builder();
+    final BaseErrorProneCompiler.Builder wrappedCompilerBuilder = BaseErrorProneCompiler.builder();
 
     public ErrorProneTestCompiler build() {
       return new ErrorProneTestCompiler(wrappedCompilerBuilder.build());
@@ -64,14 +61,14 @@ public class ErrorProneTestCompiler {
     }
   }
 
-  private final ErrorProneCompiler compiler;
+  private final BaseErrorProneCompiler compiler;
   private final ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
 
   public ErrorProneInMemoryFileManager fileManager() {
     return fileManager;
   }
 
-  private ErrorProneTestCompiler(ErrorProneCompiler compiler) {
+  private ErrorProneTestCompiler(BaseErrorProneCompiler compiler) {
     this.compiler = compiler;
   }
 
@@ -90,9 +87,11 @@ public class ErrorProneTestCompiler {
   public Result compile(String[] args, List<JavaFileObject> sources, List<? extends Processor>
       processors) {
     Context context = new Context();
-    List<String> processedArgs =
-        CompilationTestHelper.disableImplicitProcessing(Arrays.asList(args));
-    String[] argsArray = processedArgs.toArray(new String[processedArgs.size()]);
-    return compiler.run(argsArray, context, fileManager, sources, processors);
+    if (processors == null || processors.isEmpty()) {
+      List<String> processedArgs =
+          CompilationTestHelper.disableImplicitProcessing(Arrays.asList(args));
+      args = processedArgs.toArray(new String[0]);
+    }
+    return compiler.run(args, context, fileManager, sources, processors);
   }
 }

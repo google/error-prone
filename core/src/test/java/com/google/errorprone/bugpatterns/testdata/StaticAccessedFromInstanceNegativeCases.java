@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.List;
 
@@ -48,5 +48,15 @@ public class StaticAccessedFromInstanceNegativeCases {
 
   public void test4() {
     Class<?> klass = String[].class;
+  }
+  
+  @SuppressWarnings("static")
+  public void testJavacAltname() {
+    this.staticTestMethod();
+  }
+
+  @SuppressWarnings("static-access")
+  public void testEclipseAltname() {
+    this.staticTestMethod();
   }
 }

@@ -107,10 +107,10 @@ public @interface BugPattern {
      * Errors specific to JMock.
      */
     JMOCK,
-    /**
-     * Errors specific to Android.
-     */
-    ANDROID;
+    /** Errors specific to Android. */
+    ANDROID,
+    /** Errors specific to Truth. */
+    TRUTH;
   }
 
   /**
@@ -133,35 +133,9 @@ public @interface BugPattern {
   SeverityLevel severity();
 
   public enum SeverityLevel {
-    ERROR(true),
-    WARNING(true),
-    SUGGESTION(true),
-    /**
-     * Should not be used for general code.
-     */
-    NOT_A_PROBLEM(false);
-
-    private final boolean enabled;
-
-    SeverityLevel(boolean enabled) {
-      this.enabled = enabled;
-    }
-
-    public boolean enabled() {
-      return enabled;
-    }
-  }
-
-  MaturityLevel maturity();
-
-  public enum MaturityLevel {
-    MATURE("On by default"),
-    EXPERIMENTAL("Experimental");
-
-    final String description;
-    MaturityLevel(String description) {
-      this.description = description;
-    }
+    ERROR,
+    WARNING,
+    SUGGESTION
   }
 
   /**
@@ -196,16 +170,10 @@ public @interface BugPattern {
   }
 
   /**
-   * A custom suppression annotation type to use if suppressibility is
+   * A set of custom suppression annotation types to use if suppressibility is
    * Suppressibility.CUSTOM_ANNOTATION.
    */
-  Class<? extends Annotation> customSuppressionAnnotation() default NoCustomSuppression.class;
-
-  /**
-   * A dummy annotation to use when there is no custom suppression annotation.  The JLS does not
-   * allow null as a legal element value, so we have to use a sentinel value.
-   */
-  public @interface NoCustomSuppression {}
+  Class<? extends Annotation>[] customSuppressionAnnotations() default {};
 
   /**
    * Generate an explanation of how to suppress the check.

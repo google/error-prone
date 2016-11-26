@@ -17,7 +17,6 @@
 package com.google.errorprone.refaster.annotation;
 
 import com.sun.source.tree.Tree.Kind;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

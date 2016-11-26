@@ -29,8 +29,8 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.refaster.PlaceholderMethod.PlaceholderExpressionKey;
 import com.google.errorprone.refaster.UTypeVar.TypeWithExpression;
 import com.google.errorprone.refaster.annotation.NoAutoboxing;
-
 import com.sun.source.tree.Tree.Kind;
+import com.sun.tools.javac.code.Kinds.KindSelector;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symtab;
@@ -38,6 +38,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ForAll;
 import com.sun.tools.javac.code.Type.MethodType;
 import com.sun.tools.javac.code.Types;
+import com.sun.tools.javac.comp.Attr;
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Enter;
 import com.sun.tools.javac.comp.Env;
@@ -48,6 +49,9 @@ import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.JCTree.JCCatch;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
+import com.sun.tools.javac.tree.JCTree.JCExpressionStatement;
+import com.sun.tools.javac.tree.JCTree.JCLiteral;
+import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import com.sun.tools.javac.tree.JCTree.JCTry;
 import com.sun.tools.javac.tree.Pretty;
 import com.sun.tools.javac.tree.TreeMaker;
@@ -58,18 +62,17 @@ import com.sun.tools.javac.util.ListBuffer;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Position;
 import com.sun.tools.javac.util.Warner;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.Writer;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Logger;
-
 import javax.annotation.Nullable;
 
 /**
@@ -277,6 +280,40 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
         }
 
         @Override
+        public void visitApply(JCMethodInvocation tree) {
+          JCExpression select = tree.getMethodSelect();
+          if (select != null && select.toString().equals("Refaster.emitCommentBefore")) {
+            String commentLiteral = (String) ((JCLiteral) tree.getArguments().get(0)).getValue();
+            JCExpression expr = tree.getArguments().get(1);
+            try {
+              print("/* " + commentLiteral + " */ ");
+            } catch (IOException e) {
+              throw new RuntimeException(e);
+            }
+            expr.accept(this);
+          } else {
+            super.visitApply(tree);
+          }
+        }
+
+        @Override
+        public void printStat(JCTree tree) throws IOException {
+          if (tree instanceof JCExpressionStatement
+              && ((JCExpressionStatement) tree).getExpression() instanceof JCMethodInvocation) {
+            JCMethodInvocation invocation =
+                (JCMethodInvocation) ((JCExpressionStatement) tree).getExpression();
+            JCExpression select = invocation.getMethodSelect();
+            if (select != null && select.toString().equals("Refaster.emitComment")) {
+              String commentLiteral =
+                  (String) ((JCLiteral) invocation.getArguments().get(0)).getValue();
+              print("// " + commentLiteral);
+              return;
+            }
+          }
+          super.printStat(tree);
+        }
+
+        @Override
         public void visitTry(JCTry tree) {
           if (tree.getResources().isEmpty()) {
             super.visitTry(tree);
@@ -363,12 +400,26 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
       throw new LinkageError(e.getMessage(), e);
     }
 
+    Object resultInfo;
+    try {
+      Class<?> resultInfoClass = Class.forName("com.sun.tools.javac.comp.Attr$ResultInfo");
+      Constructor<?> resultInfoCtor =
+          resultInfoClass.getDeclaredConstructor(Attr.class, KindSelector.class, Type.class);
+      resultInfoCtor.setAccessible(true);
+      resultInfo =
+          resultInfoCtor.newInstance(
+              Attr.instance(inliner.getContext()), KindSelector.PCK, Type.noType);
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage(), e);
+    }
+
     // Type inference sometimes produces diagnostics, so we need to catch them to avoid interfering
     // with the enclosing compilation.
     Log.DeferredDiagnosticHandler handler =
         new Log.DeferredDiagnosticHandler(Log.instance(inliner.getContext()));
     try {
-      MethodType result = callCheckMethod(warner, inliner, actualArgTypes, methodSymbol, site, env);
+      MethodType result =
+          callCheckMethod(warner, inliner, resultInfo, actualArgTypes, methodSymbol, site, env);
       if (!handler.getDiagnostics().isEmpty()) {
         throw new InferException(handler.getDiagnostics());
       }
@@ -401,6 +452,7 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
    */
   private MethodType callCheckMethod(Warner warner,
       Inliner inliner,
+      Object resultInfo,
       List<Type> actualArgTypes,
       MethodSymbol methodSymbol,
       Type site,
@@ -421,7 +473,7 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
         env,
         site,
         methodSymbol,
-        /*resultInfo=*/null,
+        resultInfo,
         actualArgTypes,
         /*freeTypeVariables=*/List.<Type>nil(),
         warner);

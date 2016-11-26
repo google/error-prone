@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 
@@ -29,34 +28,39 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
+import com.google.errorprone.suppliers.Supplier;
+import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
-
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree.Kind;
-import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
-
 import java.util.Arrays;
 import java.util.List;
 
 /**
  * @author bill.pugh@gmail.com (Bill Pugh)
  * @author eaftan@google.com (Eddie Aftandilian)
- *
- * TODO(eaftan): Support other types of comparisons?  Are there likely to be errors in those?
+ *     <p>TODO(eaftan): Support other types of comparisons? Are there likely to be errors in those?
  */
-@BugPattern(name = "ComparisonOutOfRange",
-    summary = "Comparison to value that is out of range for the compared type",
-    explanation = "This checker looks for equality comparisons to values that are out of " +
-        "range for the compared type.  For example, bytes may have a value in the range " +
-        Byte.MIN_VALUE + " to " + Byte.MAX_VALUE + ". Comparing a byte for equality with a value " +
-        "outside that range will always evaluate to false and usually indicates an error in the " +
-        "code.\n\n" +
-        "This checker currently supports checking for bad byte and character comparisons.",
-    category = JDK, severity = ERROR, maturity = MATURE)
+@BugPattern(
+  name = "ComparisonOutOfRange",
+  summary = "Comparison to value that is out of range for the compared type",
+  explanation =
+      "This checker looks for equality comparisons to values that are out of "
+          + "range for the compared type.  For example, bytes may have a value in the range "
+          + Byte.MIN_VALUE
+          + " to "
+          + Byte.MAX_VALUE
+          + ". Comparing a byte for equality with a value "
+          + "outside that range will always evaluate to false and usually indicates an error in "
+          + "the code.\n\n"
+          + "This checker currently supports checking for bad byte and character comparisons.",
+  category = JDK,
+  severity = ERROR
+)
 public class ComparisonOutOfRange extends BugChecker implements BinaryTreeMatcher {
 
   private static final String MESSAGE_TEMPLATE = "%ss may have a value in the range %d to %d; "
@@ -67,54 +71,28 @@ public class ComparisonOutOfRange extends BugChecker implements BinaryTreeMatche
    * type of comparison (byte or char).
    */
   private static class BadComparisonMatcher implements Matcher<BinaryTree> {
-    /**
-     * The type of bad comparison matcher to create. Must be either Byte.TYPE or Character.TYPE.
-     */
-    private Class<?> type;
-
-    private boolean initialized = false;
-    private Type comparisonType;
-    private int maxValue;
-    private int minValue;
+    private final Supplier<Type> comparisonType;
+    private final int maxValue;
+    private final int minValue;
 
     public BadComparisonMatcher(Class<?> type) {
       if (type != Byte.TYPE && type != Character.TYPE) {
         throw new IllegalArgumentException("type must be either byte or char, but was "
             + type.getName());
       }
-      this.type = type;
-    }
-
-    /**
-     * Initialize matcher for the specific type.  We can't do this in the constructor because
-     * we need the symbol table, which isn't available at that time.
-     *
-     * @param symbolTable The compiler's symbol table
-     */
-    private void init(Symtab symbolTable) {
-      if (initialized) {
-        throw new IllegalStateException("Do not try to initialize twice!");
-      }
-
-      // Specialize matcher based on type.
       if (type == Byte.TYPE) {
-        comparisonType = symbolTable.byteType;
+        comparisonType = Suppliers.BYTE_TYPE;
         maxValue = Byte.MAX_VALUE;
         minValue = Byte.MIN_VALUE;
       } else {
-        comparisonType = symbolTable.charType;
+        comparisonType = Suppliers.CHAR_TYPE;
         maxValue = Character.MAX_VALUE;
         minValue = Character.MIN_VALUE;
       }
-      initialized = true;
     }
 
     @Override
     public boolean matches(BinaryTree tree, VisitorState state) {
-      if (!initialized) {
-        init(state.getSymtab());
-      }
-
       // Must be an == or != comparison.
       if (tree.getKind() != Kind.EQUAL_TO && tree.getKind() != Kind.NOT_EQUAL_TO) {
         return false;

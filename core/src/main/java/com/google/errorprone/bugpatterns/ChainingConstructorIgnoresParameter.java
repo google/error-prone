@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Maps.newHashMap;
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.fixes.SuggestedFix.replace;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -37,7 +36,6 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
@@ -47,13 +45,14 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
-
 import java.util.List;
 import java.util.Map;
 
 /**
  * Checks, if two constructors in a class both accept {@code Foo foo} and one calls the other, that
- * the caller passes {@code foo} as a parameter. The goal is to catch copy-paste errors:<pre>
+ * the caller passes {@code foo} as a parameter. The goal is to catch copy-paste errors:
+ *
+ * <pre>
  *   MissileLauncher(Location target, boolean askForConfirmation) {
  *     ...
  *   }
@@ -66,12 +65,16 @@ import java.util.Map;
  *
  * @author cpovirk@google.com (Chris Povirk)
  */
-@BugPattern(name = "ChainingConstructorIgnoresParameter",
-    maturity = MATURE, category = JDK, severity = ERROR,
-    explanation = "A constructor parameter might not be being used as expected",
-    summary = "The called constructor accepts a parameter with the same name and type as one of "
-        + "its caller's parameters, but its caller doesn't pass that parameter to it.  It's likely "
-        + "that it was intended to.")
+@BugPattern(
+  name = "ChainingConstructorIgnoresParameter",
+  category = JDK,
+  severity = ERROR,
+  explanation = "A constructor parameter might not be being used as expected",
+  summary =
+      "The called constructor accepts a parameter with the same name and type as one of "
+          + "its caller's parameters, but its caller doesn't pass that parameter to it.  It's "
+          + "likely that it was intended to."
+)
 public final class ChainingConstructorIgnoresParameter extends BugChecker
     implements CompilationUnitTreeMatcher, MethodInvocationTreeMatcher, MethodTreeMatcher {
   private final Map<MethodSymbol, List<VariableTree>> paramTypesForMethod = newHashMap();

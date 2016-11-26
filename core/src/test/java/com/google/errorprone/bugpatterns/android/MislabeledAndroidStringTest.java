@@ -19,12 +19,10 @@ package com.google.errorprone.bugpatterns.android;
 import static com.google.common.truth.Truth.assertThat;
 
 import com.google.errorprone.CompilationTestHelper;
-
+import java.util.Map;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.util.Map;
 
 /**
  * @author kmb@google.com (Kevin Bierhoff)
@@ -85,7 +83,7 @@ public class MislabeledAndroidStringTest {
             "import android.R;",
             "public class FineStringTest {",
             "  public int getStringId() {",
-            "    return R.string.maybe;",
+            "    return R.string.copy;",
             "  }",
             "}")
         .doTest();
@@ -104,18 +102,6 @@ public class MislabeledAndroidStringTest {
   }
 
   private CompilationTestHelper createCompilationTestHelper() {
-    // Use fake android.R class to avoid compile-time dependency on Android
-    return
-        CompilationTestHelper
-            .newInstance(MislabeledAndroidString.class, getClass())
-            .addSourceLines("android/R.java",
-                "package android;",
-                "public final class R {",
-                "  public static final class string {",
-                "    public static final int yes = -1;",
-                "    public static final int no = -2;",
-                "    public static final int maybe = -3;",
-                "  }",
-                "}");
+    return CompilationTestHelper.newInstance(MislabeledAndroidString.class, getClass());
   }
 }

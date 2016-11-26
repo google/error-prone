@@ -1,4 +1,4 @@
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.testdata;
 /*
  * Copyright 2012 Google Inc. All Rights Reserved.
  *
