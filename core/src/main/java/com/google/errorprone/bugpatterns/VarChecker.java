@@ -67,12 +67,14 @@ public class VarChecker extends BugChecker implements VariableTreeMatcher {
     switch (sym.getKind()) {
       case PARAMETER:
       case LOCAL_VARIABLE:
+      case EXCEPTION_PARAMETER:
+      case RESOURCE_VARIABLE:
         return handleLocalOrParam(tree, state, sym);
       default:
         return Description.NO_MATCH;
     }
   }
-  
+
   boolean forLoopVariable(VariableTree tree, TreePath path) {
     Tree parent = path.getParentPath().getLeaf();
     if (!(parent instanceof ForLoopTree)) {

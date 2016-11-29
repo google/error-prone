@@ -260,4 +260,54 @@ public class VarCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void varCatch() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  public void x() {",
+            "    try {",
+            "    // BUG: Diagnostic contains: missing @Var",
+            "    } catch (Exception e) {",
+            "      e = null;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void finalCatch() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  public void x() {",
+            "    try {",
+            "    // BUG: Diagnostic contains: Unnecessary 'final' modifier.",
+            "    } catch (final Exception e) {",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void finalTWR() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.io.InputStream;",
+            "class Test {",
+            "  public void x() {",
+            "    // BUG: Diagnostic contains: Unnecessary 'final' modifier.",
+            "    try (final InputStream is = null) {",
+            "    } catch (Exception e) {",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
