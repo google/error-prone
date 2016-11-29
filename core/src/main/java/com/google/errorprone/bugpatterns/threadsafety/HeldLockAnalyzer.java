@@ -159,20 +159,18 @@ public class HeldLockAnalyzer {
       List<? extends Tree> resources = tree.getResources();
       scan(resources, locks);
 
-      // TODO(cushon) - recognize common try-with-resources patterns. Currently there is no standard
-      // implementation of an AutoCloseable lock resource to detect.
-      if (!resources.isEmpty()) {
-        // Bail out! We don't know what to do with try-with-resources.
-        return null;
-      }
-
       // Cheesy try/finally heuristic: assume that all locks released in the finally
       // are held for the entirety of the try and catch statements.
       Collection<GuardedByExpression> releasedLocks =
           ReleasedLockFinder.find(tree.getFinallyBlock(), visitorState);
-      scan(tree.getBlock(), locks.plusAll(releasedLocks));
+      if (resources.isEmpty()) {
+        scan(tree.getBlock(), locks.plusAll(releasedLocks));
+      } else {
+        // We don't know what to do with the try-with-resources block.
+        // TODO(cushon) - recognize common try-with-resources patterns. Currently there is no
+        // standard implementation of an AutoCloseable lock resource to detect.
+      }
       scan(tree.getCatches(), locks.plusAll(releasedLocks));
-
       scan(tree.getFinallyBlock(), locks);
       return null;
     }

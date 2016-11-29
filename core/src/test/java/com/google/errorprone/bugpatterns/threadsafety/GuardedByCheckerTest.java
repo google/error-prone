@@ -971,10 +971,11 @@ public class GuardedByCheckerTest {
         .doTest();
   }
 
-  // Test that the contents of try-with-resources are ignored (for now).
-  // TODO(cushon): support try-with-resources
+  // Test that the contents of try-with-resources block are ignored (for now), but the catch and
+  // finally blocks are checked.
+  // TODO(cushon): support try-with-resources block.
   @Test
-  public void tryWithResourcesAreUnsupported() throws Exception {
+  public void tryWithResourcesAreNotFullyUnsupported() throws Exception {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -988,6 +989,25 @@ public class GuardedByCheckerTest {
             "  void m(AutoCloseable c) throws Exception {",
             "    try (AutoCloseable unused = c) {",
             "      x++;  // should be an error!",
+            "    } catch (Exception e) {",
+            "      // BUG: Diagnostic contains:",
+            "      // should be guarded by 'this.lock'",
+            "      x++;",
+            "      throw e;",
+            "    } finally {",
+            "      // BUG: Diagnostic contains:",
+            "      // should be guarded by 'this.lock'",
+            "      x++;",
+            "    }",
+            "  }",
+            "",
+            "  void n(AutoCloseable c) throws Exception {",
+            "    lock.lock();",
+            "    try (AutoCloseable unused = c) {",
+            "    } catch (Exception e) {",
+            "      x++;",
+            "    } finally {",
+            "      lock.unlock();",
             "    }",
             "  }",
             "}")
