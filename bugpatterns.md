@@ -29,6 +29,9 @@ Calling toString on an array does not provide useful information
 __[ArraysAsListPrimitiveArray](bugpattern/ArraysAsListPrimitiveArray)__<br>
 Arrays.asList does not autobox primitive arrays, as one might expect.
 
+__[AsyncCallableReturnsNull](bugpattern/AsyncCallableReturnsNull)__<br>
+AsyncCallable should not return a null Future, only a Future whose result is null.
+
 __[AsyncFunctionReturnsNull](bugpattern/AsyncFunctionReturnsNull)__<br>
 AsyncFunction should not return a null Future, only a Future whose result is null.
 
@@ -64,6 +67,9 @@ Exception created but not thrown
 
 __[EqualsNaN](bugpattern/EqualsNaN)__<br>
 == NaN always returns false; use the isNaN methods instead
+
+__[FilesLinesLeak](bugpattern/FilesLinesLeak)__<br>
+The stream returned by Files.lines should be closed using try-with-resources
 
 __[ForOverride](bugpattern/ForOverride)__<br>
 Method annotated @ForOverride must be protected or package-private and only invoked from declaring class
@@ -530,7 +536,7 @@ __[FieldMissingNullable](bugpattern/FieldMissingNullable)__<br>
 Fields that can be null should be annotated @Nullable
 
 __[MethodCanBeStatic](bugpattern/MethodCanBeStatic)__<br>
-Method is non-static but does not reference enclosing class
+Private methods that do not reference the enclosing instance should be static
 
 __[MixedArrayDimensions](bugpattern/MixedArrayDimensions)__<br>
 C-style array declarations should not be used

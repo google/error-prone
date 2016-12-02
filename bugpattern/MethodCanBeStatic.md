@@ -1,6 +1,6 @@
 ---
 title: MethodCanBeStatic
-summary: Method is non-static but does not reference enclosing class
+summary: Private methods that do not reference the enclosing instance should be static
 layout: bugpattern
 category: JDK
 severity: SUGGESTION
@@ -12,7 +12,10 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-Methods should be static unless they reference members of their enclosing class.
+Any private helper method that never accesses `this` (even implicitly) is
+already static in spirit. Adding an explicit static keyword makes it clear that
+the method makes no use of instance state, and prevents a future editor from
+doing so accidentally.
 
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("MethodCanBeStatic")` annotation to the enclosing element.
