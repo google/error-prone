@@ -34,6 +34,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.tree.JCTree;
 import javax.lang.model.element.ElementKind;
@@ -90,7 +91,11 @@ public class FilesLinesLeak extends BugChecker implements MethodInvocationTreeMa
   }
 
   private boolean inTWR(VisitorState state) {
-    Symbol sym = ASTHelpers.getSymbol(state.getPath().getParentPath().getLeaf());
+    TreePath path = state.getPath().getParentPath();
+    while (path.getLeaf().getKind() == Tree.Kind.CONDITIONAL_EXPRESSION) {
+      path = path.getParentPath();
+    }
+    Symbol sym = ASTHelpers.getSymbol(path.getLeaf());
     return sym != null && sym.getKind() == ElementKind.RESOURCE_VARIABLE;
   }
 }

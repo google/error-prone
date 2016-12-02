@@ -130,4 +130,24 @@ public class FilesLinesLeakTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void ternary() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.io.IOException;",
+            "import java.nio.file.Files;",
+            "import java.nio.file.Path;",
+            "import java.util.stream.Collectors;",
+            "import java.util.stream.Stream;",
+            "class Test {",
+            "  String f(Path p) throws IOException {",
+            "    try (Stream<String> stream = true ? Files.lines(p) : null) {",
+            "      return stream.collect(Collectors.joining(\", \"));",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
