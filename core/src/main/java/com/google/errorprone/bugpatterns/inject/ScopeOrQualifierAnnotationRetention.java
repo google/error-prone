@@ -17,6 +17,7 @@ package com.google.errorprone.bugpatterns.inject;
 import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.bugpatterns.inject.ElementPredicates.doesNotHaveRuntimeRetention;
+import static com.google.errorprone.bugpatterns.inject.ElementPredicates.hasSourceRetention;
 import static com.google.errorprone.matchers.InjectMatchers.GUICE_BINDING_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.GUICE_SCOPE_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.JAVAX_QUALIFIER_ANNOTATION;
@@ -65,13 +66,16 @@ public class ScopeOrQualifierAnnotationRetention extends BugChecker implements C
 
   @Override
   public final Description matchClass(ClassTree classTree, VisitorState state) {
-    // TODO(glorioso): This is a poor hack to exclude android apps that are more likely to not have
-    // reflective DI than normal java. JSR spec still says the annotations should be
-    // runtime-retained, but this reduces the instances that are erroneously flagged.
-    if (!state.isAndroidCompatible()
-        && SCOPE_OR_QUALIFIER_ANNOTATION_MATCHER.matches(classTree, state)) {
+    if (SCOPE_OR_QUALIFIER_ANNOTATION_MATCHER.matches(classTree, state)) {
       ClassSymbol classSymbol = ASTHelpers.getSymbol(classTree);
-      if (doesNotHaveRuntimeRetention(classSymbol)) {
+      if (hasSourceRetention(classSymbol)) {
+        return describe(classTree, state, ASTHelpers.getAnnotation(classSymbol, Retention.class));
+      }
+
+      // TODO(glorioso): This is a poor hack to exclude android apps that are more likely to not
+      // have reflective DI than normal java. JSR spec still says the annotations should be
+      // runtime-retained, but this reduces the instances that are flagged.
+      if (!state.isAndroidCompatible() && doesNotHaveRuntimeRetention(classSymbol)) {
         // Is this in a dagger component?
         ClassTree outer = ASTHelpers.findEnclosingNode(state.getPath(), ClassTree.class);
         if (outer != null && InjectMatchers.IS_DAGGER_COMPONENT_OR_MODULE.matches(outer, state)) {

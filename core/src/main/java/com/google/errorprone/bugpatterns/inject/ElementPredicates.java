@@ -19,9 +19,6 @@ package com.google.errorprone.bugpatterns.inject;
 import static com.google.auto.common.MoreElements.asType;
 import static javax.lang.model.util.ElementFilter.constructorsIn;
 
-import com.google.auto.common.AnnotationMirrors;
-import com.google.auto.common.MoreElements;
-import com.google.common.base.Optional;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
@@ -29,8 +26,6 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -58,17 +53,20 @@ public final class ElementPredicates {
   }
 
   public static boolean doesNotHaveRuntimeRetention(Element element) {
-    Optional<AnnotationMirror> annotationMirror =
-        MoreElements.getAnnotationMirror(element, Retention.class);
-    // Default retention is CLASS, not RUNTIME, so return true if retention is missing
-    if (annotationMirror.isPresent()) {
-      AnnotationValue annotationValue =
-          AnnotationMirrors.getAnnotationValue(annotationMirror.get(), "value");
-      if (annotationValue.getValue().toString().equals(RetentionPolicy.RUNTIME.toString())) {
-        return false;
-      }
+    return effectiveRetentionPolicy(element) != RetentionPolicy.RUNTIME;
+  }
+
+  public static boolean hasSourceRetention(Element element) {
+    return effectiveRetentionPolicy(element) == RetentionPolicy.SOURCE;
+  }
+
+  private static RetentionPolicy effectiveRetentionPolicy(Element element) {
+    RetentionPolicy retentionPolicy = RetentionPolicy.CLASS;
+    Retention retentionAnnotation = element.getAnnotation(Retention.class);
+    if (retentionAnnotation != null) {
+      retentionPolicy = retentionAnnotation.value();
     }
-    return true;
+    return retentionPolicy;
   }
 
   private static List<ExecutableElement> getConstructorsWithAnnotations(

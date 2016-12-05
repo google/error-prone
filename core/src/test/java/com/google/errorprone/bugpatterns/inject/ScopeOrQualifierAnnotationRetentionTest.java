@@ -72,4 +72,19 @@ public class ScopeOrQualifierAnnotationRetentionTest {
             "public @interface TestAnnotation {}")
         .doTest();
   }
+
+  @Test
+  public void testSourceRetentionStillFiringOnAndroid() {
+    compilationHelper
+        .setArgs(Collections.singletonList("-XDandroidCompatible=true"))
+        .addSourceLines(
+            "TestAnnotation.java",
+            "import java.lang.annotation.Retention;",
+            "import java.lang.annotation.RetentionPolicy;",
+            "@javax.inject.Scope",
+            "// BUG: Diagnostic contains: @Retention(RUNTIME)",
+            "@Retention(RetentionPolicy.SOURCE)",
+            "public @interface TestAnnotation {}")
+        .doTest();
+  }
 }
