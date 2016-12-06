@@ -13,6 +13,6 @@ To ensure the stream is closed, always use try-with-resources with
 ```java
 String input;
 try (Stream<String> stream = Files.lines(path)) {
-  input = Files.lines(p).collect(Collectors.joining(", "));
+  input = stream.collect(Collectors.joining(", "));
 }
 ```
