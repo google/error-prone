@@ -17,6 +17,7 @@
 package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertWithMessage;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -30,19 +31,23 @@ import com.google.errorprone.scanner.ScannerSupplier;
 import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.main.Main.Result;
 import com.sun.tools.javac.util.Context;
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOError;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import javax.tools.Diagnostic;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
+import javax.tools.StandardLocation;
 
 /**
  * Helps test Error Prone bug checkers and compilations.
@@ -69,12 +74,20 @@ public class CompilationTestHelper {
 
   private CompilationTestHelper(ScannerSupplier scannerSupplier, String checkName, Class<?> clazz) {
     this.fileManager = new ErrorProneInMemoryFileManager(clazz);
+    try {
+      fileManager.setLocation(StandardLocation.SOURCE_PATH, Collections.emptyList());
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
     this.diagnosticHelper = new DiagnosticTestHelper(checkName);
     this.outputStream = new ByteArrayOutputStream();
     this.compiler =
         BaseErrorProneCompiler.builder()
             .report(scannerSupplier)
-            .redirectOutputTo(new PrintWriter(outputStream, /*autoFlush=*/ true))
+            .redirectOutputTo(
+                new PrintWriter(
+                    new BufferedWriter(new OutputStreamWriter(outputStream, UTF_8)),
+                    /*autoFlush=*/ true))
             .listenToDiagnostics(diagnosticHelper.collector)
             .build();
   }
@@ -178,7 +191,7 @@ public class CompilationTestHelper {
     this.expectNoDiagnostics = true;
     return this;
   }
-  
+
   /**
    * By default, the compilation helper will not run Error Prone on
    * compilations that fail with javac errors. This behaviour can be
@@ -210,7 +223,7 @@ public class CompilationTestHelper {
     expectedResult = Optional.of(result);
     return this;
   }
-  
+
   /**
    * Expects an error message matching {@code matcher} at the line below a comment matching the key.
    * For example, given the source
@@ -256,7 +269,7 @@ public class CompilationTestHelper {
         } catch (IOException e) {
           throw new IOError(e);
         }
-      }      
+      }
       assertTrue("Unused error keys: " + diagnosticHelper.getUnusedLookupKeys(),
           diagnosticHelper.getUnusedLookupKeys().isEmpty());
     }
@@ -286,13 +299,16 @@ public class CompilationTestHelper {
     } catch (InvalidCommandLineOptionException e) {
       fail("Exception during argument processing: " + e);
     }
-    CompilationTask task = compiler.getTask(
-        new PrintWriter(outputStream, /*autoFlush=*/true),
-        fileManager,
-        null,
-        buildArguments(Arrays.asList(remainingArgs)),
-        null,
-        sources);
+    CompilationTask task =
+        compiler.getTask(
+            new PrintWriter(
+                new BufferedWriter(new OutputStreamWriter(outputStream, UTF_8)),
+                /*autoFlush=*/ true),
+            fileManager,
+            null,
+            buildArguments(Arrays.asList(remainingArgs)),
+            null,
+            sources);
     boolean result = task.call();
     assertWithMessage(String.format(
             "Test program failed to compile with non Error Prone error: %s",
