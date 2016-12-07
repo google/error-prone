@@ -176,6 +176,9 @@ Using a collection function with itself as the argument.
 __[MoreThanOneInjectableConstructor](bugpattern/MoreThanOneInjectableConstructor)__<br>
 This class has more than one @Inject-annotated constructor. Please remove the @Inject annotation from all but one of them.
 
+__[MustBeClosedChecker](bugpattern/MustBeClosedChecker)__<br>
+Invocations of methods or constructors annotated with @MustBeClosed must occur within the resource variable initializer of a try-with-resources statement.
+
 __[NonCanonicalStaticImport](bugpattern/NonCanonicalStaticImport)__<br>
 Static import of type uses non-canonical name
 

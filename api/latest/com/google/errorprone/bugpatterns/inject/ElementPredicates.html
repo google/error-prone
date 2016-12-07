@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9};
+var methods = {"i0":9,"i1":9,"i2":9,"i3":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -153,9 +153,13 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>static boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/inject/ElementPredicates.html#isFinalField-javax.lang.model.element.Element-">isFinalField</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/javax/lang/model/element/Element.html?is-external=true" title="class or interface in javax.lang.model.element">Element</a>&nbsp;element)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/inject/ElementPredicates.html#hasSourceRetention-javax.lang.model.element.Element-">hasSourceRetention</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/javax/lang/model/element/Element.html?is-external=true" title="class or interface in javax.lang.model.element">Element</a>&nbsp;element)</code>&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
+<td class="colFirst"><code>static boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/inject/ElementPredicates.html#isFinalField-javax.lang.model.element.Element-">isFinalField</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/javax/lang/model/element/Element.html?is-external=true" title="class or interface in javax.lang.model.element">Element</a>&nbsp;element)</code>&nbsp;</td>
+</tr>
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/inject/ElementPredicates.html#isFirstConstructorOfMultiInjectedClass-javax.lang.model.element.Element-">isFirstConstructorOfMultiInjectedClass</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/javax/lang/model/element/Element.html?is-external=true" title="class or interface in javax.lang.model.element">Element</a>&nbsp;injectedMember)</code>&nbsp;</td>
 </tr>
@@ -219,10 +223,19 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <a name="doesNotHaveRuntimeRetention-javax.lang.model.element.Element-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>doesNotHaveRuntimeRetention</h4>
 <pre>public static&nbsp;boolean&nbsp;doesNotHaveRuntimeRetention(<a href="http://docs.oracle.com/javase/7/docs/api/javax/lang/model/element/Element.html?is-external=true" title="class or interface in javax.lang.model.element">Element</a>&nbsp;element)</pre>
+</li>
+</ul>
+<a name="hasSourceRetention-javax.lang.model.element.Element-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>hasSourceRetention</h4>
+<pre>public static&nbsp;boolean&nbsp;hasSourceRetention(<a href="http://docs.oracle.com/javase/7/docs/api/javax/lang/model/element/Element.html?is-external=true" title="class or interface in javax.lang.model.element">Element</a>&nbsp;element)</pre>
 </li>
 </ul>
 </li>

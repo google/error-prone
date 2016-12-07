@@ -2973,6 +2973,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/DatastoreMatchers.html#hasSetKeysOnlyMethodCall">hasSetKeysOnlyMethodCall</a></span> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/DatastoreMatchers.html" title="class in com.google.errorprone.matchers">DatastoreMatchers</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/inject/ElementPredicates.html#hasSourceRetention-javax.lang.model.element.Element-">hasSourceRetention(Element)</a></span> - Static method in class com.google.errorprone.bugpatterns.inject.<a href="com/google/errorprone/bugpatterns/inject/ElementPredicates.html" title="class in com.google.errorprone.bugpatterns.inject">ElementPredicates</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/HeldLockAnalyzer.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><span class="typeNameLink">HeldLockAnalyzer</span></a> - Class in <a href="com/google/errorprone/bugpatterns/threadsafety/package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a></dt>
 <dd>
 <div class="block">A method body analyzer.</div>
@@ -4125,6 +4127,11 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/MixedArrayDimensions.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MixedArrayDimensions.html" title="class in com.google.errorprone.bugpatterns">MixedArrayDimensions</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/MustBeClosedChecker.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">MustBeClosedChecker</a></dt>
+<dd>
+<div class="block">Check that the <a href="com/google/errorprone/annotations/MustBeClosed.html" title="annotation in com.google.errorprone.annotations"><code>MustBeClosed</code></a> annotation is only used for constructors of AutoCloseables
+ and methods that return an AutoCloseable.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/NonFinalCompileTimeConstant.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/NonFinalCompileTimeConstant.html" title="class in com.google.errorprone.bugpatterns">NonFinalCompileTimeConstant</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/NonOverridingEquals.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/NonOverridingEquals.html" title="class in com.google.errorprone.bugpatterns">NonOverridingEquals</a></dt>
@@ -4239,6 +4246,11 @@
 <dd>
 <div class="block">Matches calls to addAll, containsAll, removeAll, and retainAll on itself</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/MustBeClosedChecker.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">MustBeClosedChecker</a></dt>
+<dd>
+<div class="block">Check that invocations of methods annotated with <a href="com/google/errorprone/annotations/MustBeClosed.html" title="annotation in com.google.errorprone.annotations"><code>MustBeClosed</code></a> are called within the
+ resource variable initializer of a try-with-resources statement.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/NoAllocationChecker.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/NoAllocationChecker.html" title="class in com.google.errorprone.bugpatterns">NoAllocationChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/NonRuntimeAnnotation.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/NonRuntimeAnnotation.html" title="class in com.google.errorprone.bugpatterns">NonRuntimeAnnotation</a></dt>
@@ -4293,6 +4305,11 @@
 <dd>
 <div class="block">Match uses of the SimpleDateFormat constructor in which the pattern passed in contains
  YYYY but not ww, signifying that it was not intended to be a week date.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/MustBeClosedChecker.html#matchNewClass-com.sun.source.tree.NewClassTree-com.google.errorprone.VisitorState-">matchNewClass(NewClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">MustBeClosedChecker</a></dt>
+<dd>
+<div class="block">Check that construction of constructors annotated with <a href="com/google/errorprone/annotations/MustBeClosed.html" title="annotation in com.google.errorprone.annotations"><code>MustBeClosed</code></a> occurs within the
+ resource variable initializer of a try-with-resources statement.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/NoAllocationChecker.html#matchNewClass-com.sun.source.tree.NewClassTree-com.google.errorprone.VisitorState-">matchNewClass(NewClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/NoAllocationChecker.html" title="class in com.google.errorprone.bugpatterns">NoAllocationChecker</a></dt>
 <dd>&nbsp;</dd>
@@ -4638,6 +4655,18 @@
 <dt><a href="com/google/errorprone/bugpatterns/MultiVariableDeclaration.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">MultiVariableDeclaration</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/MultiVariableDeclaration.html#MultiVariableDeclaration--">MultiVariableDeclaration()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MultiVariableDeclaration.html" title="class in com.google.errorprone.bugpatterns">MultiVariableDeclaration</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/annotations/MustBeClosed.html" title="annotation in com.google.errorprone.annotations"><span class="typeNameLink">MustBeClosed</span></a> - Annotation Type in <a href="com/google/errorprone/annotations/package-summary.html">com.google.errorprone.annotations</a></dt>
+<dd>
+<div class="block">Annotation for constructors of AutoCloseables or methods that return an AutoCloseable and require
+ that the resource is closed.</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/MustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">MustBeClosedChecker</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">Checks if a constructor or method annotated with <a href="com/google/errorprone/annotations/MustBeClosed.html" title="annotation in com.google.errorprone.annotations"><code>MustBeClosed</code></a> is called within the
+ resource variable initializer of a try-with-resources statement.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/MustBeClosedChecker.html#MustBeClosedChecker--">MustBeClosedChecker()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">MustBeClosedChecker</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <a name="I:N">
