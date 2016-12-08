@@ -25,14 +25,15 @@ import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.TreeScanner;
 import com.sun.tools.javac.util.Names;
 
 /** Analyzes trees for references to their enclosing instance. */
-class CanBeStaticAnalyzer extends TreeScanner {
+public class CanBeStaticAnalyzer extends TreeScanner {
 
   /** Returns true if the tree references its enclosing class. */
-  static boolean referencesOuter(Tree tree, Symbol owner, VisitorState state) {
+  public static boolean referencesOuter(Tree tree, Symbol owner, VisitorState state) {
     CanBeStaticAnalyzer scanner = new CanBeStaticAnalyzer(owner, state);
     ((JCTree) tree).accept(scanner);
     return scanner.referencesOuter;
@@ -159,5 +160,10 @@ class CanBeStaticAnalyzer extends TreeScanner {
       }
     }
     return false;
+  }
+
+  @Override
+  public void visitAnnotation(JCAnnotation tree) {
+    // skip annotations; the keys of key/value pairs look like unqualified method invocations
   }
 }

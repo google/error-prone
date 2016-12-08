@@ -274,4 +274,19 @@ public class ClassCanBeStaticTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void annotationMethod() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  // BUG: Diagnostic contains:",
+            "  class One {",
+            "    @SuppressWarnings(value = \"\")",
+            "    void f() {}",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
