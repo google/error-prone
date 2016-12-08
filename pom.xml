@@ -34,6 +34,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <guava.version>20.0</guava.version>
     <truth.version>0.30</truth.version>
+    <javac.version>9-dev-r3297-1</javac.version>
   </properties>
 
   <modules>

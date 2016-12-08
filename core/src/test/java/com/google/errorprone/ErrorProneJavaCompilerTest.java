@@ -46,6 +46,8 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import java.io.ByteArrayOutputStream;
+import java.io.IOError;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -451,7 +453,11 @@ public class ErrorProneJavaCompilerTest {
             null,
             fileManager.forResources(getClass(), fileNames.toArray(new String[0])));
 
-    fileManager.close();
+    try {
+      fileManager.close();
+    } catch (IOException e) {
+      throw new IOError(e);
+    }
     return new CompilationResult(task.call(), diagnosticHelper);
   }
 }

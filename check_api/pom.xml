@@ -62,7 +62,7 @@
       <!-- GPLv2 with Classpath Exception -->
       <groupId>com.google.errorprone</groupId>
       <artifactId>javac</artifactId>
-      <version>1.9.0-dev-r2973-2</version>
+      <version>${javac.version}</version>
     </dependency>
     <dependency>
       <!-- Apache 2.0 -->
