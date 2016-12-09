@@ -133,7 +133,13 @@ public class InsecureCipherMode extends BugChecker implements MethodInvocationTr
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+    Description description = checkInvocation(tree, state);
 
+
+    return description;
+  }
+
+  Description checkInvocation(MethodInvocationTree tree, VisitorState state) {
     if (CIPHER_GETINSTANCE_MATCHER.matches(tree, state)) {
       return identifyEcbVulnerability(tree);
     }
