@@ -155,6 +155,7 @@ import com.google.errorprone.bugpatterns.VarChecker;
 import com.google.errorprone.bugpatterns.WaitNotInLoop;
 import com.google.errorprone.bugpatterns.WildcardImport;
 import com.google.errorprone.bugpatterns.WrongParameterPackage;
+import com.google.errorprone.bugpatterns.android.BundleDeserializationCast;
 import com.google.errorprone.bugpatterns.android.FragmentNotInstantiable;
 import com.google.errorprone.bugpatterns.android.HardCodedSdCardPath;
 import com.google.errorprone.bugpatterns.android.IsLoggableTagLength;
@@ -252,6 +253,7 @@ public class BuiltInCheckerSuppliers {
           AsyncCallableReturnsNull.class,
           AsyncFunctionReturnsNull.class,
           BadShiftAmount.class,
+          BundleDeserializationCast.class,
           ChainingConstructorIgnoresParameter.class,
           CheckReturnValue.class,
           CollectionIncompatibleType.class,
