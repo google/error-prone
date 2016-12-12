@@ -15,6 +15,7 @@
 package com.google.errorprone.refaster;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern.SeverityLevel;
@@ -119,6 +120,69 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
             "class Foo {",
             "  public static void main(String[] args) {",
             "    System.longer.println(\"bar\");",
+            "  }",
+            "}")
+        .inOrder();
+  }
+
+  @Test
+  public void overlappingDiffs_throws() {
+    DescriptionBasedDiff diff = DescriptionBasedDiff.create(compilationUnit);
+    assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            diff.onDescribed(
+                new Description(
+                    null,
+                    "message",
+                    SuggestedFix.builder()
+                        .replace(117, 120, "baz")
+                        .replace(117, 120, "bar")
+                        .build(),
+                    SeverityLevel.SUGGESTION)));
+
+    DescriptionBasedDiff diff2 = DescriptionBasedDiff.create(compilationUnit);
+    diff2.onDescribed(
+        new Description(
+            null,
+            "bah",
+            SuggestedFix.builder().replace(117, 120, "baz").build(),
+            SeverityLevel.SUGGESTION));
+
+    assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            diff2.onDescribed(
+                new Description(
+                    null,
+                    "message",
+                    SuggestedFix.builder().replace(117, 120, "bar").build(),
+                    SeverityLevel.SUGGESTION)));
+
+    DescriptionBasedDiff diff3 = DescriptionBasedDiff.createIgnoringOverlaps(compilationUnit);
+    diff3.onDescribed(
+        new Description(
+            null,
+            "bah",
+            SuggestedFix.builder().replace(117, 120, "baz").build(),
+            SeverityLevel.SUGGESTION));
+    // No throw, since it's lenient. Refactors to the first "baz" replacement and ignores this.
+    diff3.onDescribed(
+        new Description(
+            null,
+            "message",
+            SuggestedFix.builder().replace(117, 120, "bar").build(),
+            SeverityLevel.SUGGESTION));
+    diff3.applyDifferences(sourceFile);
+
+    assertThat(sourceFile.getLines())
+        .containsExactly(
+            "package foo.bar;",
+            "import com.foo.Bar;",
+            "",
+            "class Foo {",
+            "  public static void main(String[] args) {",
+            "    System.out.println(\"baz\");",
             "  }",
             "}")
         .inOrder();

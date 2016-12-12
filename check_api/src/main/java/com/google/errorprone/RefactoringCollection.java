@@ -126,7 +126,7 @@ class RefactoringCollection implements DescriptionListener.Factory {
     DelegatingDescriptionListener delegate =
         new DelegatingDescriptionListener(
             descriptionsFactory.getDescriptionListener(log, compilation),
-            DescriptionBasedDiff.create(compilation));
+            DescriptionBasedDiff.createIgnoringOverlaps(compilation));
     foundSources.put(sourceFile, delegate);
     return delegate;
   }

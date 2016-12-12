@@ -39,6 +39,7 @@ import java.util.Set;
 public final class DescriptionBasedDiff implements DescriptionListener, Diff {
 
   private final String sourcePath;
+  private final boolean ignoreOverlappingFixes;
   private final JCCompilationUnit compilationUnit;
   private final Set<String> importsToAdd;
   private final Set<String> importsToRemove;
@@ -46,12 +47,17 @@ public final class DescriptionBasedDiff implements DescriptionListener, Diff {
   private final Replacements replacements = new Replacements();
 
   public static DescriptionBasedDiff create(JCCompilationUnit compilationUnit) {
-    return new DescriptionBasedDiff(compilationUnit);
+    return new DescriptionBasedDiff(compilationUnit, false);
   }
 
-  private DescriptionBasedDiff(JCCompilationUnit compilationUnit) {
+  public static DescriptionBasedDiff createIgnoringOverlaps(JCCompilationUnit compilationUnit) {
+    return new DescriptionBasedDiff(compilationUnit, true);
+  }
+
+  private DescriptionBasedDiff(JCCompilationUnit compilationUnit, boolean ignoreOverlappingFixes) {
     this.compilationUnit = checkNotNull(compilationUnit);
     this.sourcePath = compilationUnit.getSourceFile().toUri().getPath();
+    this.ignoreOverlappingFixes = ignoreOverlappingFixes;
     this.importsToAdd = new LinkedHashSet<>();
     this.importsToRemove = new LinkedHashSet<>();
     this.endPositions = compilationUnit.endPositions;
@@ -78,7 +84,13 @@ public final class DescriptionBasedDiff implements DescriptionListener, Diff {
     importsToAdd.addAll(fix.getImportsToAdd());
     importsToRemove.addAll(fix.getImportsToRemove());
     for (Replacement replacement : fix.getReplacements(endPositions)) {
-      replacements.add(replacement);
+      try {
+        replacements.add(replacement);
+      } catch (IllegalArgumentException iae) {
+        if (!ignoreOverlappingFixes) {
+          throw iae;
+        }
+      }
     }
   }
 
