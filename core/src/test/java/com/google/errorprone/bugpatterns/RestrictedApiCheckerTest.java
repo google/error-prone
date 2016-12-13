@@ -66,6 +66,24 @@ public class RestrictedApiCheckerTest {
   }
 
   @Test
+  public void testRestrictedCallProhibited_inherited() {
+    helper
+        .addSourceLines(
+            "Testcase.java",
+            "package com.google.errorprone.bugpatterns.testdata;",
+            "class Testcase {",
+            "  void foo(RestrictedApiMethods.Subclass m) {",
+            "    // BUG: Diagnostic contains: lorem",
+            "    m.restrictedMethod();",
+            "    // BUG: Diagnostic contains: ipsum",
+            "    m.dontCallMe();",
+            "  }",
+            "}")
+        .expectResult(Result.ERROR)
+        .doTest();
+  }
+
+  @Test
   public void testRestrictedCallAllowedOnWhitelistedPath() {
     helper
         .addSourceLines(

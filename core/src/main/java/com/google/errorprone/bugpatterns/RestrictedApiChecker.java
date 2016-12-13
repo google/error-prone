@@ -31,10 +31,12 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 import javax.lang.model.type.MirroredTypesException;
@@ -59,7 +61,22 @@ public class RestrictedApiChecker extends BugChecker
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    return checkRestriction(ASTHelpers.getAnnotation(tree, RestrictedApi.class), tree, state);
+    RestrictedApi annotation = ASTHelpers.getAnnotation(tree, RestrictedApi.class);
+    if (annotation != null) {
+      return checkRestriction(annotation, tree, state);
+    }
+
+    // Try each super method for @RestrictedApi
+    Optional<MethodSymbol> superWithRestrictedApi =
+        ASTHelpers.findSuperMethods(ASTHelpers.getSymbol(tree), state.getTypes())
+            .stream()
+            .filter((t) -> ASTHelpers.hasAnnotation(t, RestrictedApi.class, state))
+            .findFirst();
+    if (!superWithRestrictedApi.isPresent()) {
+      return Description.NO_MATCH;
+    }
+    return checkRestriction(
+        ASTHelpers.getAnnotation(superWithRestrictedApi.get(), RestrictedApi.class), tree, state);
   }
 
   @Override
@@ -122,7 +139,7 @@ public class RestrictedApiChecker extends BugChecker
     }
   }
 
-  private static Matcher<Tree> anyAnnotation(Class<? extends Annotation> annotations[]) {
+  private static Matcher<Tree> anyAnnotation(Class<? extends Annotation>[] annotations) {
     ArrayList<Matcher<Tree>> matchers = new ArrayList<>(annotations.length);
     for (Class<? extends Annotation> annotation : annotations) {
       matchers.add(Matchers.hasAnnotation(annotation));

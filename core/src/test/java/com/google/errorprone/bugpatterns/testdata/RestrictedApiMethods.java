@@ -17,12 +17,11 @@
 package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.errorprone.annotations.RestrictedApi;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
 /** Example for @link{com.google.errorprone.bugpatterns.RestrictedApiCheckerTest}. */
-public class RestrictedApiMethods {
+public class RestrictedApiMethods implements IFaceWithRestriction {
 
   public int normalMethod() {
     return 0;
@@ -56,7 +55,29 @@ public class RestrictedApiMethods {
   public static int restrictedStaticMethod() {
     return 2;
   }
+
+  @Override
+  public void dontCallMe() {}
+
+  public static class Subclass extends RestrictedApiMethods {
+    @Whitelist
+    public Subclass(int restricted) {
+      super(restricted);
+    }
+
+    @Override
+    public int restrictedMethod() {
+      return 42;
+    }
+  }
 }
+
+interface IFaceWithRestriction {
+  @RestrictedApi(explanation = "ipsum", link = "nothing")
+  void dontCallMe();
+}
+
+
 
 @Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
 @interface Whitelist {}
