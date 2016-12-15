@@ -1160,14 +1160,14 @@ public class Matchers {
   }
 
   /**
-   * Converts the given matcher to one that can be applied to any tree but is only executed when
-   * run on a tree of {@code type} and returns {@code false} for all other tree types.
+   * Converts the given matcher to one that can be applied to any tree but is only executed when run
+   * on a tree of {@code type} and returns {@code false} for all other tree types.
    */
-  public static <T extends Tree> Matcher<Tree> toType(
-      final Class<T> type, final Matcher<? super T> matcher) {
-    return new Matcher<Tree>() {
+  public static <S extends Tree, T extends Tree> Matcher<T> toType(
+      final Class<S> type, final Matcher<? super S> matcher) {
+    return new Matcher<T>() {
       @Override
-      public boolean matches(Tree tree, VisitorState state) {
+      public boolean matches(T tree, VisitorState state) {
         return type.isInstance(tree) && matcher.matches(type.cast(tree), state);
       }
     };
