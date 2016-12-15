@@ -143,7 +143,7 @@ extends com.sun.tools.javac.file.JavacFileManager</pre>
 <!--   -->
 </a>
 <h3>Nested classes/interfaces inherited from class&nbsp;com.sun.tools.javac.file.JavacFileManager</h3>
-<code>com.sun.tools.javac.file.JavacFileManager.Archive, com.sun.tools.javac.file.JavacFileManager.MissingArchive, com.sun.tools.javac.file.JavacFileManager.SortFiles</code></li>
+<code>com.sun.tools.javac.file.JavacFileManager.SortFiles</code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="nested.classes.inherited.from.class.com.sun.tools.javac.file.BaseFileManager">
@@ -179,7 +179,7 @@ extends com.sun.tools.javac.file.JavacFileManager</pre>
 <!--   -->
 </a>
 <h3>Fields inherited from class&nbsp;com.sun.tools.javac.file.BaseFileManager</h3>
-<code>autoClose, charset, classLoaderClass, contentCache, locations, log, options</code></li>
+<code>autoClose, charset, classLoaderClass, contentCache, deferredCloseTimeout, locations, log, options</code></li>
 </ul>
 </li>
 </ul>
@@ -257,14 +257,14 @@ extends com.sun.tools.javac.file.JavacFileManager</pre>
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;com.sun.tools.javac.file.JavacFileManager</h3>
-<code>asPath, close, flush, getClassLoader, getFileForInput, getFileForInput, getFileForOutput, getFileForOutput, getJavaFileForInput, getJavaFileForOutput, getJavaFileObjects, getJavaFileObjects, getJavaFileObjects, getJavaFileObjectsFromFiles, getJavaFileObjectsFromPaths, getJavaFileObjectsFromStrings, getLocation, getLocationAsPaths, getMessage, getRegularFile, getRelativeName, hasLocation, inferBinaryName, isRelativeUri, isRelativeUri, isSameFile, isSymbolFileEnabled, list, openArchive, preRegister, setContext, setLocation, setLocationFromPaths, setSymbolFileEnabled, testName, toArray</code></li>
+<code>asPath, close, flush, getClassLoader, getFileForInput, getFileForOutput, getFileForOutput, getJavaFileForInput, getJavaFileForOutput, getJavaFileObject, getJavaFileObject, getJavaFileObjects, getJavaFileObjects, getJavaFileObjects, getJavaFileObjectsFromFiles, getJavaFileObjectsFromPaths, getJavaFileObjectsFromStrings, getLocation, getLocationAsPaths, getMessage, getRelativeName, hasLocation, inferBinaryName, isRelativeUri, isRelativeUri, isSameFile, isSymbolFileEnabled, list, preRegister, setContext, setLocation, setLocationFromPaths, setSymbolFileEnabled, testName, toArray</code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.com.sun.tools.javac.file.BaseFileManager">
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;com.sun.tools.javac.file.BaseFileManager</h3>
-<code>cache, createLocations, decode, flushCache, getCachedContent, getClassLoader, getDecoder, getEncodingName, getKind, getKind, getSource, handleOption, handleOption, handleOptions, isDefaultBootClassPath, isSupportedOption, makeByteBuffer, nullCheck, nullCheck, recycleByteBuffer</code></li>
+<code>cache, createLocations, decode, deferredClose, flushCache, getCachedContent, getClassLoader, getDecoder, getEncodingName, getKind, getKind, getSource, handleOption, handleOption, handleOptions, isDefaultBootClassPath, isSupportedOption, makeByteBuffer, nullCheck, nullCheck, recycleByteBuffer</code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">

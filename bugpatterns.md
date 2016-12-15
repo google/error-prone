@@ -38,6 +38,9 @@ AsyncFunction should not return a null Future, only a Future whose result is nul
 __[BadShiftAmount](bugpattern/BadShiftAmount)__<br>
 Shift by an amount that is out of range
 
+__[BundleDeserializationCast](bugpattern/BundleDeserializationCast)__<br>
+Object serialized in Bundle may have been flattened to base type.
+
 __[ChainingConstructorIgnoresParameter](bugpattern/ChainingConstructorIgnoresParameter)__<br>
 The called constructor accepts a parameter with the same name and type as one of its caller&#39;s parameters, but its caller doesn&#39;t pass that parameter to it.  It&#39;s likely that it was intended to.
 
