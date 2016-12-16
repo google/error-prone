@@ -30,6 +30,7 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.MultiMatcher;
+import com.google.errorprone.matchers.MultiMatcher.MultiMatchResult;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
@@ -54,12 +55,15 @@ import java.util.List;
 )
 public class MoreThanOneScopeAnnotationOnClass extends BugChecker implements ClassTreeMatcher {
 
+  private static final MultiMatcher<Tree, AnnotationTree> SCOPE_ANNOTATION_MATCHER =
+      annotations(AT_LEAST_ONE, IS_SCOPING_ANNOTATION);
+
   @Override
   public final Description matchClass(ClassTree classTree, VisitorState state) {
-    MultiMatcher<Tree, AnnotationTree> scopeFinder =
-        annotations(AT_LEAST_ONE, IS_SCOPING_ANNOTATION);
-    if (scopeFinder.matches(classTree, state) && !IS_DAGGER_COMPONENT.matches(classTree, state)) {
-      List<AnnotationTree> scopeAnnotations = scopeFinder.getMatchingNodes();
+    MultiMatchResult<AnnotationTree> scopeAnnotationResult =
+        SCOPE_ANNOTATION_MATCHER.multiMatchResult(classTree, state);
+    if (scopeAnnotationResult.matches() && !IS_DAGGER_COMPONENT.matches(classTree, state)) {
+      List<AnnotationTree> scopeAnnotations = scopeAnnotationResult.matchingNodes();
       if (scopeAnnotations.size() > 1) {
         return buildDescription(classTree)
             .setMessage(

@@ -43,6 +43,7 @@ import com.google.errorprone.fixes.SuggestedFix.Builder;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.MultiMatcher;
+import com.google.errorprone.matchers.MultiMatcher.MultiMatchResult;
 import com.google.errorprone.suppliers.Suppliers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.MethodTree;
@@ -75,7 +76,9 @@ public class QualifierOnMethodWithoutProvides extends BugChecker implements Meth
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
-    if (QUALIFIER_ANNOTATION_FINDER.matches(tree, state)
+    MultiMatchResult<AnnotationTree> qualifierAnnotations =
+        QUALIFIER_ANNOTATION_FINDER.multiMatchResult(tree, state);
+    if (qualifierAnnotations.matches()
         && NOT_ABSTRACT.matches(tree, state)
         && NOT_PROVIDES_METHOD.matches(tree, state)) {
       // This is the bad case. We can suggest adding @Provides if it:
@@ -109,7 +112,7 @@ public class QualifierOnMethodWithoutProvides extends BugChecker implements Meth
         }
       }
 
-      List<AnnotationTree> matchingNodes = QUALIFIER_ANNOTATION_FINDER.getMatchingNodes();
+      List<AnnotationTree> matchingNodes = qualifierAnnotations.matchingNodes();
       Builder fixBuilder = SuggestedFix.builder();
       matchingNodes.forEach(fixBuilder::delete);
       return describeMatch(matchingNodes.get(0), fixBuilder.build());

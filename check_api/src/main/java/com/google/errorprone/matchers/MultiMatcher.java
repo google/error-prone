@@ -16,8 +16,12 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.common.collect.Iterables.getOnlyElement;
+
+import com.google.auto.value.AutoValue;
+import com.google.common.collect.ImmutableList;
+import com.google.errorprone.VisitorState;
 import com.sun.source.tree.Tree;
-import java.util.List;
 
 /**
  * An matcher that applies a single matcher across multiple tree nodes.
@@ -28,15 +32,31 @@ import java.util.List;
  */
 public interface MultiMatcher<T extends Tree, N extends Tree> extends Matcher<T> {
 
+  /** Attempt to match the given node, and return the associated subnodes that matched. */
+  MultiMatchResult<N> multiMatchResult(T tree, VisitorState vs);
+
   /**
-   * This method is only valid to call after calling {@link #matches}. If that call returned true,
-   * this method will return all nodes that matched (which could be empty if the multi matcher had
-   * no nodes to process, so the child nodes vacuously matched the matcher). If that call returned
-   * false (i.e.: this multimatcher did not match the matcher), this function will return an empty
-   * list.
-   *
-   * @return all the child nodes that matched the matcher.
-   * @throws IllegalStateException if {@link #matches} wasn't called beforehand.
+   * A result from the call of {@link MultiMatcher#multiMatchResult(Tree, VisitorState)}, containing
+   * information about whether it matched, and if so, what nodes matched.
    */
-  List<N> getMatchingNodes();
+  @AutoValue
+  abstract class MultiMatchResult<N extends Tree> {
+    MultiMatchResult() {}
+    /** True if the MultiMatcher matched the nodes expected. */
+    public abstract boolean matches();
+    /**
+     * The list of nodes which matched the MultiMatcher's expectations (could be empty if the match
+     * type was ALL and there were no child nodes). Only sensical if {@link #matches()} is true.
+     */
+    public abstract ImmutableList<N> matchingNodes();
+
+    public final N onlyMatchingNode() {
+      return getOnlyElement(matchingNodes());
+    }
+
+    static <N extends Tree> MultiMatchResult<N> create(
+        boolean matches, ImmutableList<N> matchingNodes) {
+      return new AutoValue_MultiMatcher_MultiMatchResult<>(matches, matchingNodes);
+    }
+  }
 }

@@ -23,8 +23,9 @@ import static com.google.errorprone.matchers.InjectMatchers.ASSISTED_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.ASSISTED_INJECT_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.GUICE_SCOPE_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.JAVAX_SCOPE_ANNOTATION;
-import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.InjectMatchers.hasInjectAnnotation;
 import static com.google.errorprone.matchers.Matchers.annotations;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.methodHasParameters;
@@ -35,14 +36,12 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.InjectMatchers;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.matchers.MultiMatcher;
+import com.google.errorprone.matchers.MultiMatcher.MultiMatchResult;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.VariableTree;
 
 /**
  * This checker matches iff *both* of the following conditions are true: 1) The class is assisted:
@@ -66,49 +65,47 @@ import com.sun.source.tree.VariableTree;
 )
 public class AssistedInjectScoping extends BugChecker implements ClassTreeMatcher {
 
-  /**
-   * Matches classes that have an annotation that itself is annotated with @ScopeAnnotation.
-   */
-  private static final MultiMatcher<ClassTree, AnnotationTree> classAnnotationMatcher =
+  /** Matches classes that have an annotation that itself is annotated with @ScopeAnnotation. */
+  private static final MultiMatcher<ClassTree, AnnotationTree> CLASS_TO_SCOPE_ANNOTATIONS =
       annotations(
           AT_LEAST_ONE,
-          Matchers.<AnnotationTree>anyOf(
-              hasAnnotation(GUICE_SCOPE_ANNOTATION), hasAnnotation(JAVAX_SCOPE_ANNOTATION)));
+          anyOf(hasAnnotation(GUICE_SCOPE_ANNOTATION), hasAnnotation(JAVAX_SCOPE_ANNOTATION)));
 
   /** Matches if any constructor of a class is annotated with an @Inject annotation. */
-  private static final MultiMatcher<ClassTree, MethodTree> constructorWithInjectMatcher =
-      constructor(AT_LEAST_ONE, InjectMatchers.<MethodTree>hasInjectAnnotation());
+  private static final MultiMatcher<ClassTree, MethodTree> CLASS_TO_INJECTED_CONSTRUCTORS =
+      constructor(AT_LEAST_ONE, hasInjectAnnotation());
 
   /**
    * Matches if: 1) If there is a constructor that is annotated with @Inject and that constructor
    * has at least one parameter that is annotated with @Assisted. 2) If there is no @Inject
    * constructor and at least one constructor is annotated with @AssistedInject.
    */
-  private static final Matcher<ClassTree> assistedMatcher =
+  private static final Matcher<ClassTree> HAS_ASSISTED_CONSTRUCTOR =
       new Matcher<ClassTree>() {
         @Override
         public boolean matches(ClassTree classTree, VisitorState state) {
-          if (constructorWithInjectMatcher.matches(classTree, state)) {
+          MultiMatchResult<MethodTree> injectedConstructors =
+              CLASS_TO_INJECTED_CONSTRUCTORS.multiMatchResult(classTree, state);
+          if (injectedConstructors.matches()) {
             // Check constructor with @Inject annotation for parameter with @Assisted annotation.
-            return methodHasParameters(
-                    AT_LEAST_ONE, Matchers.<VariableTree>hasAnnotation(ASSISTED_ANNOTATION))
-                .matches(constructorWithInjectMatcher.getMatchingNodes().get(0), state);
+            return methodHasParameters(AT_LEAST_ONE, hasAnnotation(ASSISTED_ANNOTATION))
+                .matches(injectedConstructors.matchingNodes().get(0), state);
           }
 
-          return constructor(
-                  AT_LEAST_ONE, Matchers.<MethodTree>hasAnnotation(ASSISTED_INJECT_ANNOTATION))
+          return constructor(AT_LEAST_ONE, hasAnnotation(ASSISTED_INJECT_ANNOTATION))
               .matches(classTree, state);
         }
       };
-  public static final Matcher<ClassTree> MATCHER = allOf(classAnnotationMatcher, assistedMatcher);
 
   @Override
   public final Description matchClass(ClassTree classTree, VisitorState state) {
-    if (!MATCHER.matches(classTree, state)) {
+    MultiMatchResult<AnnotationTree> hasScopeAnnotations =
+        CLASS_TO_SCOPE_ANNOTATIONS.multiMatchResult(classTree, state);
+    if (!hasScopeAnnotations.matches() || !HAS_ASSISTED_CONSTRUCTOR.matches(classTree, state)) {
       return Description.NO_MATCH;
     }
 
-    AnnotationTree annotationWithScopeAnnotation = classAnnotationMatcher.getMatchingNodes().get(0);
+    AnnotationTree annotationWithScopeAnnotation = hasScopeAnnotations.matchingNodes().get(0);
     if (annotationWithScopeAnnotation == null) {
       throw new IllegalStateException(
           "Expected to find an annotation that was annotated with @ScopeAnnotation");

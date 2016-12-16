@@ -38,6 +38,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.InjectMatchers;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.MultiMatcher;
+import com.google.errorprone.matchers.MultiMatcher.MultiMatchResult;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
@@ -67,8 +68,7 @@ public class QualifierWithTypeUse extends BugChecker implements ClassTreeMatcher
           kindIs(ANNOTATION_TYPE),
           anyOf(
               hasAnnotation(InjectMatchers.JAVAX_QUALIFIER_ANNOTATION),
-              hasAnnotation(InjectMatchers.GUICE_BINDING_ANNOTATION)),
-          HAS_TARGET_ANNOTATION);
+              hasAnnotation(InjectMatchers.GUICE_BINDING_ANNOTATION)));
 
   private static final ImmutableSet<ElementType> FORBIDDEN_ELEMENT_TYPES =
       ImmutableSet.of(ElementType.TYPE_PARAMETER, ElementType.TYPE_USE);
@@ -76,10 +76,14 @@ public class QualifierWithTypeUse extends BugChecker implements ClassTreeMatcher
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
     if (IS_QUALIFIER_WITH_TARGET.matches(tree, state)) {
-      AnnotationTree annotationTree = HAS_TARGET_ANNOTATION.getMatchingNodes().get(0);
-      Target targetAnnotation = ASTHelpers.getAnnotation(tree, Target.class);
-      if (hasTypeUseOrTypeParameter(targetAnnotation)) {
-        return describeMatch(annotationTree, removeTypeUse(targetAnnotation, annotationTree));
+      MultiMatchResult<AnnotationTree> targetAnnotation =
+          HAS_TARGET_ANNOTATION.multiMatchResult(tree, state);
+      if (targetAnnotation.matches()) {
+        AnnotationTree annotationTree = targetAnnotation.onlyMatchingNode();
+        Target target = ASTHelpers.getAnnotation(tree, Target.class);
+        if (hasTypeUseOrTypeParameter(target)) {
+          return describeMatch(annotationTree, removeTypeUse(target, annotationTree));
+        }
       }
     }
     return Description.NO_MATCH;

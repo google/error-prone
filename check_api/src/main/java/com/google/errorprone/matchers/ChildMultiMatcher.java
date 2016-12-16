@@ -16,12 +16,11 @@
 
 package com.google.errorprone.matchers;
 
-import static com.google.common.base.Preconditions.checkState;
-
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.annotations.ForOverride;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import java.util.List;
@@ -166,7 +165,6 @@ public abstract class ChildMultiMatcher<T extends Tree, N extends Tree>
   protected final Matcher<N> nodeMatcher;
 
   private final ListMatcher<N> listMatcher;
-  private MatchResult<N> matchResult;
 
   public ChildMultiMatcher(MatchType matchType, Matcher<N> nodeMatcher) {
     this.nodeMatcher = nodeMatcher;
@@ -175,19 +173,18 @@ public abstract class ChildMultiMatcher<T extends Tree, N extends Tree>
 
   @Override
   public boolean matches(T tree, VisitorState state) {
+    return multiMatchResult(tree, state).matches();
+  }
+
+  @Override
+  public MultiMatchResult<N> multiMatchResult(T tree, VisitorState state) {
     ImmutableList.Builder<Matchable<N>> result = ImmutableList.builder();
     for (N subnode : getChildNodes(tree, state)) {
       TreePath newPath = new TreePath(state.getPath(), subnode);
       result.add(Matchable.create(subnode, state.withPath(newPath)));
     }
-    matchResult = listMatcher.matches(result.build(), nodeMatcher);
-    return matchResult.matches();
-  }
-
-  @Override
-  public List<N> getMatchingNodes() {
-    checkState(matchResult != null, "getMatchingNodes() called before matches()");
-    return matchResult.matchingNodes();
+    MatchResult<N> matchResult = listMatcher.matches(result.build(), nodeMatcher);
+    return MultiMatchResult.create(matchResult.matches(), matchResult.matchingNodes());
   }
 
   /**
@@ -195,5 +192,6 @@ public abstract class ChildMultiMatcher<T extends Tree, N extends Tree>
    * node to ensure the TreePath calculation is correct. MultiMatchers with other requirements
    * should not subclass ChildMultiMatcher.
    */
+  @ForOverride
   protected abstract Iterable<? extends N> getChildNodes(T tree, VisitorState state);
 }

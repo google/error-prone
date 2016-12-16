@@ -43,6 +43,7 @@ import com.google.errorprone.fixes.SuggestedFix.Builder;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.MultiMatcher;
+import com.google.errorprone.matchers.MultiMatcher.MultiMatchResult;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import java.lang.annotation.ElementType;
@@ -74,8 +75,7 @@ public class InvalidTargetingOnScopingAnnotation extends BugChecker implements C
   private static final Matcher<ClassTree> ANNOTATION_WITH_SCOPE_AND_TARGET =
       allOf(
           kindIs(ANNOTATION_TYPE),
-          anyOf(hasAnnotation(GUICE_SCOPE_ANNOTATION), hasAnnotation(JAVAX_SCOPE_ANNOTATION)),
-          HAS_TARGET_ANNOTATION);
+          anyOf(hasAnnotation(GUICE_SCOPE_ANNOTATION), hasAnnotation(JAVAX_SCOPE_ANNOTATION)));
 
   private static final ImmutableSet<ElementType> REQUIRED_ELEMENT_TYPES =
       immutableEnumSet(TYPE, METHOD);
@@ -83,12 +83,16 @@ public class InvalidTargetingOnScopingAnnotation extends BugChecker implements C
   @Override
   public final Description matchClass(ClassTree classTree, VisitorState state) {
     if (ANNOTATION_WITH_SCOPE_AND_TARGET.matches(classTree, state)) {
-      AnnotationTree targetTree = HAS_TARGET_ANNOTATION.getMatchingNodes().get(0);
-      Target target = getAnnotation(classTree, Target.class);
-      if (target != null
-          && // Unlikely to occur, but just in case Target isn't on the classpath.
-          !Arrays.asList(target.value()).containsAll(REQUIRED_ELEMENT_TYPES)) {
-        return describeMatch(targetTree, replaceTargetAnnotation(target, targetTree));
+      MultiMatchResult<AnnotationTree> targetAnnotation =
+          HAS_TARGET_ANNOTATION.multiMatchResult(classTree, state);
+      if (targetAnnotation.matches()) {
+        AnnotationTree targetTree = targetAnnotation.onlyMatchingNode();
+        Target target = getAnnotation(classTree, Target.class);
+        if (target != null
+            && // Unlikely to occur, but just in case Target isn't on the classpath.
+            !Arrays.asList(target.value()).containsAll(REQUIRED_ELEMENT_TYPES)) {
+          return describeMatch(targetTree, replaceTargetAnnotation(target, targetTree));
+        }
       }
     }
     return Description.NO_MATCH;

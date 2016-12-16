@@ -43,6 +43,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.matchers.MultiMatcher;
+import com.google.errorprone.matchers.MultiMatcher.MultiMatchResult;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
@@ -75,6 +76,9 @@ public class AssistedParameters extends BugChecker implements MethodTreeMatcher 
           methodIsConstructor(),
           anyOf(hasInjectAnnotation(), hasAnnotation(ASSISTED_INJECT_ANNOTATION)));
 
+  private static final MultiMatcher<MethodTree, VariableTree> ASSISTED_PARAMETER_MATCHER =
+      methodHasParameters(MatchType.AT_LEAST_ONE, Matchers.hasAnnotation(ASSISTED_ANNOTATION));
+
   private static final Function<VariableTree, String> VALUE_FROM_ASSISTED_ANNOTATION =
       new Function<VariableTree, String>() {
         @Override
@@ -94,6 +98,7 @@ public class AssistedParameters extends BugChecker implements MethodTreeMatcher 
         }
       };
 
+
   @Override
   public final Description matchMethod(MethodTree constructor, final VisitorState state) {
     if (!IS_CONSTRUCTOR_WITH_INJECT_OR_ASSISTED.matches(constructor, state)) {
@@ -101,13 +106,14 @@ public class AssistedParameters extends BugChecker implements MethodTreeMatcher 
     }
 
     // Gather @Assisted parameters, partition by type
-    MultiMatcher<MethodTree, VariableTree> parameterFinder = assistedParametersFinder();
-    if (!parameterFinder.matches(constructor, state)) {
+    MultiMatchResult<VariableTree> assistedParameters =
+        ASSISTED_PARAMETER_MATCHER.multiMatchResult(constructor, state);
+    if (!assistedParameters.matches()) {
       return Description.NO_MATCH;
     }
 
     Multimap<Type, VariableTree> parametersByType =
-        partitionParametersByType(parameterFinder.getMatchingNodes(), state);
+        partitionParametersByType(assistedParameters.matchingNodes(), state);
 
     // If there's more than one parameter with the same type, they could conflict unless their
     // @Assisted values are different.
@@ -211,8 +217,4 @@ public class AssistedParameters extends BugChecker implements MethodTreeMatcher 
     return multimap;
   }
 
-  private static MultiMatcher<MethodTree, VariableTree> assistedParametersFinder() {
-    return methodHasParameters(
-        MatchType.AT_LEAST_ONE, Matchers.<VariableTree>hasAnnotation(ASSISTED_ANNOTATION));
-  }
 }

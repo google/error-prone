@@ -38,6 +38,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.InjectMatchers;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.MultiMatcher;
+import com.google.errorprone.matchers.MultiMatcher.MultiMatchResult;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.MethodTree;
 
@@ -64,13 +65,17 @@ public class InjectOnConstructorOfAbstractClass extends BugChecker implements Me
           anyOf(isType(InjectMatchers.JAVAX_INJECT_ANNOTATION), isType(GUICE_INJECT_ANNOTATION)));
 
   private static final Matcher<MethodTree> TO_MATCH =
-      allOf(INJECT_FINDER, methodIsConstructor(), enclosingClass(hasModifier(ABSTRACT)));
+      allOf(methodIsConstructor(), enclosingClass(hasModifier(ABSTRACT)));
 
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
     if (TO_MATCH.matches(methodTree, state)) {
-      AnnotationTree injectAnnotation = INJECT_FINDER.getMatchingNodes().get(0);
-      return describeMatch(injectAnnotation, delete(injectAnnotation));
+      MultiMatchResult<AnnotationTree> injectAnnotations =
+          INJECT_FINDER.multiMatchResult(methodTree, state);
+      if (injectAnnotations.matches()) {
+        AnnotationTree injectAnnotation = injectAnnotations.matchingNodes().get(0);
+        return describeMatch(injectAnnotation, delete(injectAnnotation));
+      }
     }
     return Description.NO_MATCH;
   }
