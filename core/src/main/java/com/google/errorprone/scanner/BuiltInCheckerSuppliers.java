@@ -323,6 +323,7 @@ public class BuiltInCheckerSuppliers {
           StringBuilderInitWithChar.class,
           SuppressWarningsDeprecated.class,
           ThrowIfUncheckedKnownChecked.class,
+          TruthSelfEquals.class,
           TryFailThrowable.class,
           TypeParameterQualifier.class,
           UnnecessaryTypeArgument.class,
@@ -373,7 +374,6 @@ public class BuiltInCheckerSuppliers {
           StaticGuardedByInstance.class,
           SynchronizeOnNonFinalField.class,
           TruthConstantAsserts.class,
-          TruthSelfEquals.class,
           TypeParameterUnusedInFormals.class,
           UnsynchronizedOverridesSynchronized.class,
           WaitNotInLoop.class);

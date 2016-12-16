@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.Category.TRUTH;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
@@ -47,7 +47,7 @@ import com.sun.source.tree.MethodInvocationTree;
           + "passes/fails the test.  Either change the arguments to point to different objects or "
           + "consider using EqualsTester.",
   category = TRUTH,
-  severity = WARNING
+  severity = ERROR
 )
 public class TruthSelfEquals extends BugChecker implements MethodInvocationTreeMatcher {
 
