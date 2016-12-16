@@ -21,10 +21,12 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.annotations.concurrent.LazyInit;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.CanBeStaticAnalyzer;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
@@ -152,27 +154,41 @@ public class ImmutableAnalysis {
     if (info.isPresent()) {
       return info;
     }
+    Type mutableEnclosing = mutableEnclosingInstance(tree, type);
+    if (mutableEnclosing != null) {
+      return info.plus(
+          String.format(
+              "'%s' has mutable enclosing instance '%s'",
+              getPrettyName(type.tsym), mutableEnclosing));
+    }
+    return Violation.absent();
+  }
 
+  private Type mutableEnclosingInstance(Optional<ClassTree> tree, ClassType type) {
+    if (tree.isPresent()
+        && !CanBeStaticAnalyzer.referencesOuter(
+            tree.get(), ASTHelpers.getSymbol(tree.get()), state)) {
+      return null;
+    }
     Type enclosing = type.getEnclosingType();
     while (!Type.noType.equals(enclosing)) {
-      // require the enclosing instance to be annotated @Immutable
-      // don't worry about containerOf, this isn't an explicit type use
-      if (getImmutableAnnotation(enclosing.tsym) == null) {
-        return info.plus(
-            String.format(
-                "'%s' has mutable enclosing instance '%s'",
-                getPrettyName(type.tsym), getPrettyName(enclosing.tsym)));
+      if (getImmutableAnnotation(enclosing.tsym) == null
+          && isImmutableType(ImmutableSet.of(), enclosing).isPresent()) {
+        return enclosing;
       }
       enclosing = enclosing.getEnclosingType();
     }
-
-    return Violation.absent();
+    return null;
   }
 
   private Violation checkSuper(ImmutableSet<String> immutableTyParams, ClassType type) {
     ClassType superType = (ClassType) state.getTypes().supertype(type);
     if (superType.getKind() == TypeKind.NONE
         || state.getTypes().isSameType(state.getSymtab().objectType, superType)) {
+      return Violation.absent();
+    }
+    if (WellKnownMutability.isAnnotation(state, type)) {
+      // TODO(b/25630189): add enforcement
       return Violation.absent();
     }
 
@@ -385,6 +401,11 @@ public class ImmutableAnalysis {
         default:
           throw new AssertionError(String.format("Unexpected type kind %s", type.tsym.getKind()));
       }
+      if (WellKnownMutability.isAnnotation(state, type)) {
+        // annotation implementations may not have ANNOTATION_TYPE kind, assume they are immutable
+        // TODO(b/25630189): add enforcement
+        return Violation.absent();
+      }
       ImmutableAnnotationInfo annotation = getImmutableAnnotation(type.tsym);
       if (annotation != null) {
         return immutableInstantiation(immutableTyParams, annotation, type);
@@ -441,8 +462,12 @@ public class ImmutableAnalysis {
       // declaration
       return sym.owner.getSimpleName().toString();
     }
-    // anonymous classes have an empty name, but a recognizable superclass
+    // anonymous classes have an empty name, but a recognizable superclass or interface
     // e.g. refer to `new Runnable() { ... }` as "Runnable"
-    return state.getTypes().supertype(sym.type).tsym.getSimpleName().toString();
+    Type superType = state.getTypes().supertype(sym.type);
+    if (state.getTypes().isSameType(superType, state.getSymtab().objectType)) {
+      superType = Iterables.getFirst(state.getTypes().interfaces(sym.type), superType);
+    }
+    return superType.tsym.getSimpleName().toString();
   }
 }

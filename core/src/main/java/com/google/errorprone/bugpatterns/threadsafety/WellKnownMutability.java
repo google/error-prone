@@ -87,6 +87,7 @@ final class WellKnownMutability {
     return new Builder()
         .addAll(Primitives.allPrimitiveTypes())
         .addAll(Primitives.allWrapperTypes())
+        .add(java.lang.annotation.Annotation.class)
         .add(java.lang.Class.class)
         .add(java.lang.String.class)
         .add(java.math.BigDecimal.class)
@@ -233,5 +234,10 @@ final class WellKnownMutability {
     checkNotNull(type);
     return isAssignableTo(type, MUTABLE_MESSAGE_TYPE, state)
         && !isAssignableTo(type, PROTOCOL_MESSAGE_TYPE, state);
+  }
+
+  /** Returns true if the type is an annotation. */
+  static boolean isAnnotation(VisitorState state, Type type) {
+    return isAssignableTo(type, Suppliers.ANNOTATION_TYPE, state);
   }
 }

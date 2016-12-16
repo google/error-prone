@@ -198,6 +198,7 @@ import com.google.errorprone.bugpatterns.inject.guice.ProvidesMethodOutsideOfMod
 import com.google.errorprone.bugpatterns.threadsafety.DoubleCheckedLocking;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByChecker;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByValidator;
+import com.google.errorprone.bugpatterns.threadsafety.ImmutableAnnotationChecker;
 import com.google.errorprone.bugpatterns.threadsafety.ImmutableChecker;
 import com.google.errorprone.bugpatterns.threadsafety.ImmutableEnumChecker;
 import com.google.errorprone.bugpatterns.threadsafety.LockMethodChecker;
@@ -349,6 +350,7 @@ public class BuiltInCheckerSuppliers {
           FragmentNotInstantiable.class,
           FunctionalInterfaceClash.class,
           GetClassOnEnum.class,
+          ImmutableAnnotationChecker.class,
           ImmutableEnumChecker.class,
           IncompatibleModifiersChecker.class,
           InjectOnConstructorOfAbstractClass.class,
