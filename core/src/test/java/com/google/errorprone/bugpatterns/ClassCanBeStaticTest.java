@@ -289,4 +289,24 @@ public class ClassCanBeStaticTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void extendsHiddenInnerClass() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "A.java", //
+            "public class A {",
+            "  public class Inner {",
+            "    {",
+            "      System.err.println(A.this);",
+            "    }",
+            "  }",
+            "}")
+        .addSourceLines(
+            "B.java", //
+            "public class B extends A {",
+            "  public class Inner extends A.Inner {}",
+            "}")
+        .doTest();
+  }
 }

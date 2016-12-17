@@ -27,8 +27,6 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
-import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.tree.JCTree;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
 
@@ -63,13 +61,11 @@ public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
       // class is nested inside an inner class, so it can't be static
       return Description.NO_MATCH;
     }
-    if (tree.getExtendsClause() != null) {
-      Type extendsType = ASTHelpers.getType(tree.getExtendsClause());
-      if (CanBeStaticAnalyzer.memberOfEnclosing(currentClass, state, extendsType.tsym)) {
-        return Description.NO_MATCH;
-      }
+    if (tree.getExtendsClause() != null
+        && ASTHelpers.getType(tree.getExtendsClause()).tsym.hasOuterInstance()) {
+      return Description.NO_MATCH;
     }
-    if (CanBeStaticAnalyzer.referencesOuter((JCTree) tree, currentClass, state)) {
+    if (CanBeStaticAnalyzer.referencesOuter(tree, currentClass, state)) {
       return Description.NO_MATCH;
     }
     return describeMatch(tree, SuggestedFixes.addModifiers(tree, state, Modifier.STATIC));
