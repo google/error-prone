@@ -71,6 +71,7 @@ import com.google.errorprone.bugpatterns.HashtableContains;
 import com.google.errorprone.bugpatterns.IdentityBinaryExpression;
 import com.google.errorprone.bugpatterns.ImmutableModification;
 import com.google.errorprone.bugpatterns.IncompatibleModifiersChecker;
+import com.google.errorprone.bugpatterns.IndexOfChar;
 import com.google.errorprone.bugpatterns.InfiniteRecursion;
 import com.google.errorprone.bugpatterns.InputStreamSlowMultibyteRead;
 import com.google.errorprone.bugpatterns.InsecureCipherMode;
@@ -280,6 +281,7 @@ public class BuiltInCheckerSuppliers {
           ImmutableChecker.class,
           ImmutableModification.class,
           IncompatibleArgumentType.class,
+          IndexOfChar.class,
           InfiniteRecursion.class,
           InjectOnFinalField.class,
           InsecureCipherMode.class,
