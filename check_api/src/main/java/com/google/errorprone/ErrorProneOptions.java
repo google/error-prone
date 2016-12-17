@@ -18,43 +18,28 @@ package com.google.errorprone;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Processes command-line options specific to error-prone.
  *
- * <p>error-prone lets the user enable and disable specific checks as well as override their
- * built-in severity levels (warning vs. error).
- *
- * <p>A valid error-prone command-line option looks like:<br>
- * <pre>{@code
- * -Xep:<checkName>[:severity]
- * }</pre>
- *
- * <p>{@code checkName} is required and is the canonical name of the check, e.g. "StringEquality".
- * {@code severity} is one of {"OFF", "WARN", "ERROR"}.  Multiple flags must be passed to
- * enable or disable multiple checks.  The last flag for a specific check wins.
- *
- * <p>Examples of usage follow:<br>
- * <pre>{@code
- * -Xep:StringEquality  [turns on StringEquality check with the severity level from its BugPattern
- *                       annotation]
- * -Xep:StringEquality:OFF  [turns off StringEquality check]
- * -Xep:StringEquality:WARN  [turns on StringEquality check as a warning]
- * -Xep:StringEquality:ERROR  [turns on StringEquality check as an error]
- * -Xep:StringEquality:OFF -Xep:StringEquality  [turns on StringEquality check]
- * }</pre>
+ * <p>Documentation for the available flags are available at http://errorprone.info/docs/flags
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public class ErrorProneOptions {
 
   private static final String CUSTOM_ENABLEMENT_PREFIX = "-Xep:";
-  private static final String PATCH_FILE_PREFIX = "-XepPatch:";
+  private static final String PATCH_CHECKS_PREFIX = "-XepPatchChecks:";
+  private static final String PATCH_OUTPUT_LOCATION = "-XepPatchLocation:";
   private static final String ERRORS_AS_WARNINGS_FLAG = "-XepAllErrorsAsWarnings";
   private static final String ENABLE_ALL_CHECKS = "-XepAllDisabledChecksAsWarnings";
   private static final String IGNORE_UNKNOWN_CHECKS_FLAG = "-XepIgnoreUnknownCheckNames";
@@ -67,7 +52,8 @@ public class ErrorProneOptions {
   public static int isSupportedOption(String option) {
     boolean isSupported =
         option.startsWith(CUSTOM_ENABLEMENT_PREFIX)
-            || option.startsWith(PATCH_FILE_PREFIX)
+            || option.startsWith(PATCH_OUTPUT_LOCATION)
+            || option.startsWith(PATCH_CHECKS_PREFIX)
             || option.equals(IGNORE_UNKNOWN_CHECKS_FLAG)
             || option.equals(DISABLE_WARNINGS_IN_GENERATED_CODE_FLAG)
             || option.equals(ERRORS_AS_WARNINGS_FLAG)
@@ -92,22 +78,44 @@ public class ErrorProneOptions {
 
   @AutoValue
   abstract static class PatchingOptions {
-    abstract boolean doRefactor();
+    final boolean doRefactor() {
+      return inPlace() || !baseDirectory().isEmpty();
+    }
+
+    abstract Set<String> namedCheckers();
 
     abstract boolean inPlace();
 
     abstract String baseDirectory();
 
-    static PatchingOptions nope() {
-      return new AutoValue_ErrorProneOptions_PatchingOptions(false, false, "");
+    static Builder builder() {
+      return new AutoValue_ErrorProneOptions_PatchingOptions.Builder()
+          .baseDirectory("")
+          .inPlace(false)
+          .namedCheckers(Collections.emptySet());
     }
 
-    static PatchingOptions doInPlace() {
-      return new AutoValue_ErrorProneOptions_PatchingOptions(true, true, "");
-    }
+    @AutoValue.Builder
+    abstract static class Builder {
+      abstract Builder namedCheckers(Set<String> checkers);
 
-    static PatchingOptions baseDirectory(String baseDirectory) {
-      return new AutoValue_ErrorProneOptions_PatchingOptions(true, false, baseDirectory);
+      abstract Builder inPlace(boolean inPlace);
+
+      abstract Builder baseDirectory(String baseDirectory);
+
+      abstract PatchingOptions autoBuild();
+
+      final PatchingOptions build() {
+
+        PatchingOptions patchingOptions = autoBuild();
+
+        // If anything is specified, then checkers and output must be set.
+        if (!patchingOptions.namedCheckers().isEmpty() ^ patchingOptions.doRefactor()) {
+          throw new InvalidCommandLineOptionException(
+              "-XepPatchChecks and -XepPatchLocation must be specified together");
+        }
+        return patchingOptions;
+      }
     }
   }
 
@@ -115,11 +123,6 @@ public class ErrorProneOptions {
   private final ImmutableMap<String, Severity> severityMap;
   private final boolean ignoreUnknownChecks;
   private final boolean disableWarningsInGeneratedCode;
-
-  public boolean isDropErrorsToWarnings() {
-    return dropErrorsToWarnings;
-  }
-
   private final boolean dropErrorsToWarnings;
   private final boolean enableAllChecks;
   private final PatchingOptions patchingOptions;
@@ -157,6 +160,10 @@ public class ErrorProneOptions {
     return disableWarningsInGeneratedCode;
   }
 
+  public boolean isDropErrorsToWarnings() {
+    return dropErrorsToWarnings;
+  }
+
   public PatchingOptions patchingOptions() {
     return patchingOptions;
   }
@@ -167,7 +174,7 @@ public class ErrorProneOptions {
     private boolean dropWarningsToErrors = false;
     private boolean enableAllChecks = false;
     private Map<String, Severity> severityMap = new HashMap<>();
-    private PatchingOptions patchingOptions = PatchingOptions.nope();
+    private final PatchingOptions.Builder patchingOptionsBuilder = PatchingOptions.builder();
 
     public void setIgnoreUnknownChecks(boolean ignoreUnknownChecks) {
       this.ignoreUnknownChecks = ignoreUnknownChecks;
@@ -189,8 +196,8 @@ public class ErrorProneOptions {
       this.enableAllChecks = enableAllChecks;
     }
 
-    public void setPatchingOptions(PatchingOptions patchingOptions) {
-      this.patchingOptions = patchingOptions;
+    public PatchingOptions.Builder patchingOptionsBuilder() {
+      return patchingOptionsBuilder;
     }
 
     public ErrorProneOptions build(ImmutableList<String> outputArgs) {
@@ -201,7 +208,7 @@ public class ErrorProneOptions {
           disableWarningsInGeneratedCode,
           dropWarningsToErrors,
           enableAllChecks,
-          patchingOptions);
+          patchingOptionsBuilder.build());
     }
   }
 
@@ -248,8 +255,20 @@ public class ErrorProneOptions {
         default:
           if (arg.startsWith(CUSTOM_ENABLEMENT_PREFIX)) {
             parseCustomFlagIntoOptionsBuilder(builder, arg);
-          } else if (arg.startsWith(PATCH_FILE_PREFIX)) {
-            parsePatchArgIntoBuilder(builder, arg);
+          } else if (arg.startsWith(PATCH_OUTPUT_LOCATION)) {
+            String remaining = arg.substring(PATCH_OUTPUT_LOCATION.length());
+            if (remaining.equals("IN_PLACE")) {
+              builder.patchingOptionsBuilder().inPlace(true);
+            } else {
+              if (remaining.isEmpty()) {
+                throw new InvalidCommandLineOptionException("invalid flag: " + arg);
+              }
+              builder.patchingOptionsBuilder().baseDirectory(remaining);
+            }
+          } else if (arg.startsWith(PATCH_CHECKS_PREFIX)) {
+            String remaining = arg.substring(PATCH_CHECKS_PREFIX.length());
+            Iterable<String> checks = Splitter.on(',').trimResults().split(remaining);
+            builder.patchingOptionsBuilder().namedCheckers(ImmutableSet.copyOf(checks));
           } else {
             outputArgs.add(arg);
           }
@@ -257,18 +276,6 @@ public class ErrorProneOptions {
     }
 
     return builder.build(outputArgs.build());
-  }
-
-  private static void parsePatchArgIntoBuilder(Builder builder, String arg) {
-    String remaining = arg.substring(PATCH_FILE_PREFIX.length());
-    if (remaining.equals("IN_PLACE")) {
-      builder.setPatchingOptions(PatchingOptions.doInPlace());
-    } else {
-      if (remaining.isEmpty()) {
-        throw new InvalidCommandLineOptionException("invalid flag: " + arg);
-      }
-      builder.setPatchingOptions(PatchingOptions.baseDirectory(remaining));
-    }
   }
 
   private static void parseCustomFlagIntoOptionsBuilder(Builder builder, String arg) {

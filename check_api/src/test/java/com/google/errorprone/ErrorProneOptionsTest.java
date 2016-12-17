@@ -17,6 +17,7 @@
 package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.expectThrows;
 
 import com.google.common.collect.ImmutableMap;
@@ -124,16 +125,37 @@ public class ErrorProneOptionsTest {
 
   @Test
   public void recognizesPatch() {
-    ErrorProneOptions options = ErrorProneOptions.processArgs(new String[] {"-XepPatch:IN_PLACE"});
+    ErrorProneOptions options =
+        ErrorProneOptions.processArgs(
+            new String[] {"-XepPatchLocation:IN_PLACE", "-XepPatchChecks:FooBar,MissingOverride"});
     assertThat(options.patchingOptions().doRefactor()).isTrue();
     assertThat(options.patchingOptions().inPlace()).isTrue();
+    assertThat(options.patchingOptions().namedCheckers())
+        .containsExactly("MissingOverride", "FooBar");
 
-    options = ErrorProneOptions.processArgs(new String[] {"-XepPatch:/some/base/dir"});
+    options =
+        ErrorProneOptions.processArgs(
+            new String[] {
+              "-XepPatchLocation:/some/base/dir", "-XepPatchChecks:FooBar,MissingOverride"
+            });
     assertThat(options.patchingOptions().doRefactor()).isTrue();
     assertThat(options.patchingOptions().inPlace()).isFalse();
     assertThat(options.patchingOptions().baseDirectory()).isEqualTo("/some/base/dir");
+    assertThat(options.patchingOptions().namedCheckers())
+        .containsExactly("MissingOverride", "FooBar");
 
     options = ErrorProneOptions.processArgs(new String[] {});
     assertThat(options.patchingOptions().doRefactor()).isFalse();
+  }
+
+  @Test
+  public void throwsExceptionWithBadPatchArgs() {
+    assertThrows(
+        InvalidCommandLineOptionException.class,
+        () -> ErrorProneOptions.processArgs(new String[] {"-XepPatchLocation:IN_PLACE"}));
+    assertThrows(
+        InvalidCommandLineOptionException.class,
+        () ->
+            ErrorProneOptions.processArgs(new String[] {"-XepPatchChecks:FooBar,MissingOverride"}));
   }
 }

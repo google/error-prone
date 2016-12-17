@@ -186,9 +186,17 @@ public class BaseErrorProneCompiler {
             RefactoringCollection.refactorToPatchFile(epOptions.patchingOptions().baseDirectory());
       }
 
+
+      ScannerSupplier toUse = scannerSupplier;
+      if (!epOptions.patchingOptions().namedCheckers().isEmpty()) {
+        toUse =
+            scannerSupplier.filter(
+                bci -> epOptions.patchingOptions().namedCheckers().contains(bci.canonicalName()));
+      }
+
       analyzer =
           ErrorProneAnalyzer.createWithCustomDescriptionListener(
-              ErrorProneScannerTransformer.create(scannerSupplier.applyOverrides(epOptions).get()),
+              ErrorProneScannerTransformer.create(toUse.applyOverrides(epOptions).get()),
               epOptions,
               context,
               refactoringCollection);
