@@ -290,4 +290,29 @@ public class MockitoCastTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void rawCast() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Foo.java",
+            "import java.util.List;",
+            "public class Foo {",
+            "  public <T extends List<?>> T f(Iterable<T> xs) { return xs.iterator().next(); }",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "import java.util.ArrayList;",
+            "import static org.mockito.Mockito.when;",
+            "import static org.mockito.Answers.RETURNS_SMART_NULLS;",
+            "import org.mockito.Mock;",
+            "class Test {",
+            "  @Mock(answer = RETURNS_SMART_NULLS) Foo l;",
+            "  void m(Iterable<ArrayList<String>> xs) {",
+            "    // BUG: Diagnostic contains: when((Object) l.f(xs)).thenReturn(null);",
+            "    when(l.f(xs)).thenReturn(null);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

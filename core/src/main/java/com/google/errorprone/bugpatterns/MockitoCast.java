@@ -229,7 +229,10 @@ public class MockitoCast extends BugChecker implements CompilationUnitTreeMatche
       }
 
       final SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
-      String qual = SuggestedFixes.qualifyType(state, fixBuilder, uninstantiatedReturnType.tsym);
+      String qual =
+          uninstantiatedReturnType.tsym.getTypeParameters().isEmpty()
+              ? SuggestedFixes.qualifyType(state, fixBuilder, uninstantiatedReturnType.tsym)
+              : "Object";
       fixBuilder.prefixWith(arg, String.format("(%s) ", qual));
       return describeMatch(tree, fixBuilder.build());
     }
