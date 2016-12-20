@@ -52,7 +52,6 @@ import javax.lang.model.type.TypeMirror;
       "Calls to APIs marked @RestrictedApi are prohibited without a corresponding whitelist"
           + " annotation.",
   category = Category.ONE_OFF,
-  
   severity = SeverityLevel.ERROR,
   suppressibility = Suppressibility.UNSUPPRESSIBLE
 )
@@ -66,9 +65,14 @@ public class RestrictedApiChecker extends BugChecker
       return checkRestriction(annotation, tree, state);
     }
 
+    MethodSymbol methSymbol = ASTHelpers.getSymbol(tree);
+    if (methSymbol == null) {
+      return Description.NO_MATCH; // This shouldn't happen, but has. (See b/33758055)
+    }
+
     // Try each super method for @RestrictedApi
     Optional<MethodSymbol> superWithRestrictedApi =
-        ASTHelpers.findSuperMethods(ASTHelpers.getSymbol(tree), state.getTypes())
+        ASTHelpers.findSuperMethods(methSymbol, state.getTypes())
             .stream()
             .filter((t) -> ASTHelpers.hasAnnotation(t, RestrictedApi.class, state))
             .findFirst();
