@@ -123,8 +123,10 @@ public class EqualsIncompatibleType extends BugChecker implements MethodInvocati
     for (MethodSymbol method : overridesOfEquals) {
       ClassSymbol methodClass = method.enclClass();
       if (argumentClass.isSubClass(methodClass, types)
-          && !methodClass.equals(state.getSymtab().objectType.tsym)) {
-        // The type of the argument shares a superclass (other then java.lang.Object) or interface
+          && !methodClass.equals(state.getSymtab().objectType.tsym)
+          && !methodClass.equals(state.getSymtab().enumSym)) {
+        // The type of the argument shares a superclass
+        // (other then java.lang.Object or java.lang.Enum) or interface
         // with the receiver that implements an override of java.lang.Object.equals().
         return Description.NO_MATCH;
       }
