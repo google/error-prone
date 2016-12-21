@@ -137,4 +137,15 @@ public class MethodCanBeStaticTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void nativeMethod() {
+    testHelper
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  private native int f();",
+            "}")
+        .doTest();
+  }
 }

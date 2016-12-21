@@ -45,7 +45,7 @@ public class MethodCanBeStatic extends BugChecker implements MethodTreeMatcher {
     if (sym == null) {
       return NO_MATCH;
     }
-    if (sym.isStatic() || sym.isConstructor()) {
+    if (sym.isStatic() || sym.isConstructor() || sym.getModifiers().contains(Modifier.NATIVE)) {
       return NO_MATCH;
     }
     if (!sym.isPrivate()) {
