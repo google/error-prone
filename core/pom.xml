@@ -117,7 +117,7 @@
       <!-- Apache 2.0 -->
       <groupId>com.google.auto.value</groupId>
       <artifactId>auto-value</artifactId>
-      <version>1.1</version>
+      <version>${autovalue.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -289,6 +289,7 @@
                      Apache, BSD, and MIT are OK; others are not. -->
                 <includes>
                   <include>com.google.errorprone:error_prone_annotation</include>
+                  <include>com.google.errorprone:error_prone_check_api</include>
                   <include>com.github.stephenc.jcip:jcip-annotations</include>
                   <include>org.pcollections:pcollections</include>
                   <include>com.google.guava:guava</include>

@@ -132,6 +132,7 @@ public class ErrorProneOptionsTest {
     assertThat(options.patchingOptions().inPlace()).isTrue();
     assertThat(options.patchingOptions().namedCheckers())
         .containsExactly("MissingOverride", "FooBar");
+    assertThat(options.patchingOptions().customRefactorer()).isAbsent();
 
     options =
         ErrorProneOptions.processArgs(
@@ -143,6 +144,7 @@ public class ErrorProneOptionsTest {
     assertThat(options.patchingOptions().baseDirectory()).isEqualTo("/some/base/dir");
     assertThat(options.patchingOptions().namedCheckers())
         .containsExactly("MissingOverride", "FooBar");
+    assertThat(options.patchingOptions().customRefactorer()).isAbsent();
 
     options = ErrorProneOptions.processArgs(new String[] {});
     assertThat(options.patchingOptions().doRefactor()).isFalse();
@@ -157,5 +159,15 @@ public class ErrorProneOptionsTest {
         InvalidCommandLineOptionException.class,
         () ->
             ErrorProneOptions.processArgs(new String[] {"-XepPatchChecks:FooBar,MissingOverride"}));
+  }
+
+  @Test
+  public void recognizesRefaster() {
+    ErrorProneOptions options =
+        ErrorProneOptions.processArgs(
+            new String[] {"-XepPatchChecks:refaster:/foo/bar", "-XepPatchLocation:IN_PLACE"});
+    assertThat(options.patchingOptions().doRefactor()).isTrue();
+    assertThat(options.patchingOptions().inPlace()).isTrue();
+    assertThat(options.patchingOptions().customRefactorer()).isPresent();
   }
 }

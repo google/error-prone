@@ -37,6 +37,7 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import javax.annotation.Nullable;
 import javax.annotation.processing.Processor;
 import javax.tools.DiagnosticListener;
@@ -178,28 +179,34 @@ public class BaseErrorProneCompiler {
     setupMessageBundle(context);
     ErrorProneAnalyzer analyzer;
     if (epOptions.patchingOptions().doRefactor()) {
-      RefactoringCollection refactoringCollection;
-      if (epOptions.patchingOptions().inPlace()) {
-        refactoringCollection = RefactoringCollection.refactorInPlace();
-      } else {
-        refactoringCollection =
-            RefactoringCollection.refactorToPatchFile(epOptions.patchingOptions().baseDirectory());
-      }
+      RefactoringCollection refactoringCollection =
+          epOptions.patchingOptions().inPlace()
+              ? RefactoringCollection.refactorInPlace()
+              : RefactoringCollection.refactorToPatchFile(
+                  epOptions.patchingOptions().baseDirectory());
 
-
-      ScannerSupplier toUse = scannerSupplier;
-      if (!epOptions.patchingOptions().namedCheckers().isEmpty()) {
-        toUse =
-            scannerSupplier.filter(
-                bci -> epOptions.patchingOptions().namedCheckers().contains(bci.canonicalName()));
-      }
+      // Refaster refactorer or using builtin checks
+      CodeTransformer codeTransformer =
+          epOptions
+              .patchingOptions()
+              .customRefactorer()
+              .or(
+                  () -> {
+                    ScannerSupplier toUse = scannerSupplier;
+                    Set<String> namedCheckers = epOptions.patchingOptions().namedCheckers();
+                    if (!namedCheckers.isEmpty()) {
+                      toUse =
+                          scannerSupplier.filter(
+                              bci -> namedCheckers.contains(bci.canonicalName()));
+                    }
+                    return ErrorProneScannerTransformer.create(
+                        toUse.applyOverrides(epOptions).get());
+                  })
+              .get();
 
       analyzer =
           ErrorProneAnalyzer.createWithCustomDescriptionListener(
-              ErrorProneScannerTransformer.create(toUse.applyOverrides(epOptions).get()),
-              epOptions,
-              context,
-              refactoringCollection);
+              codeTransformer, epOptions, context, refactoringCollection);
       context.put(RefactoringCollection.class, refactoringCollection);
     } else {
       analyzer = ErrorProneAnalyzer.createByScanningForPlugins(scannerSupplier, epOptions, context);
@@ -274,19 +281,11 @@ public class BaseErrorProneCompiler {
     // Attempt the refactor
     try {
       RefactoringResult refactoringResult = refactoringCollection.applyChanges();
-      switch (refactoringResult.type()) {
-        case NO_CHANGES:
-          return original;
-        case CHANGED:
-          errOutput.println(refactoringResult.message());
-          errOutput.flush();
-          // Changes were made to the code, so we want to fail the compile phase. (This is to remind
-          // end users that the compiled code does not contained the refactored code, and that they
-          // should re-compile after inspecting the differences).
-          return Result.ERROR;
-        default:
-          throw new AssertionError("Unexpected RefactoringResult: " + refactoringResult);
+      if (refactoringResult.type() == RefactoringCollection.RefactoringResultType.CHANGED) {
+        errOutput.println(refactoringResult.message());
+        errOutput.flush();
       }
+      return original;
     } catch (Exception e) {
       errOutput.append(e.getMessage());
       errOutput.flush();

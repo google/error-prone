@@ -51,7 +51,7 @@
           <dependency>
             <groupId>com.google.errorprone</groupId>
             <artifactId>error_prone_core</artifactId>
-            <version>2.0.15</version>
+            <version>2.0.16-SNAPSHOT</version>
           </dependency>
         </dependencies>
       </plugin>
@@ -68,8 +68,8 @@
             <artifactId>maven-compiler-plugin</artifactId>
             <configuration>
               <compilerArgs combine.children="append">
-                <!--<compilerArg>-XepPatch:${basedir}</compilerArg>-->
-                <compilerArg>-XepPatch:IN_PLACE</compilerArg>
+                <compilerArg>-XepPatchLocation:${basedir}</compilerArg>
+                <compilerArg>-XepPatchChecks:DeadException,GetClassOnClass</compilerArg>
               </compilerArgs>
             </configuration>
           </plugin>

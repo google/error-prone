@@ -42,7 +42,7 @@ public final class PatchFileDestination implements FileDestination {
 
   private final Path baseDir;
   private final Path rootPath;
-  // Path -> Unified Diff String, sorted by path
+  // Path -> Unified Diff, sorted by path
   private final Map<String, String> diffByFile = new TreeMap<>();
 
   public PatchFileDestination(Path baseDir, Path rootPath) {
@@ -52,24 +52,24 @@ public final class PatchFileDestination implements FileDestination {
 
   @Override
   public void writeFile(SourceFile update) throws IOException {
-    Path originalFilePath = rootPath.resolve(update.getPath());
-    String oldSource = new String(Files.readAllBytes(originalFilePath), UTF_8);
+    Path sourceFilePath = rootPath.resolve(update.getPath());
+    String oldSource = new String(Files.readAllBytes(sourceFilePath), UTF_8);
     String newSource = update.getSourceText();
     if (!oldSource.equals(newSource)) {
       List<String> originalLines = LINE_SPLITTER.splitToList(oldSource);
 
       Patch<String> diff = DiffUtils.diff(originalLines, LINE_SPLITTER.splitToList(newSource));
-      String relativePath = relativize(update);
+      String relativePath = relativize(sourceFilePath);
       List<String> unifiedDiff =
           DiffUtils.generateUnifiedDiff(relativePath, relativePath, originalLines, diff, 2);
 
       String diffString = Joiner.on("\n").join(unifiedDiff);
-      diffByFile.put(originalFilePath.toString(), diffString);
+      diffByFile.put(sourceFilePath.toString(), diffString);
     }
   }
 
-  private String relativize(SourceFile update) {
-    return baseDir.relativize(rootPath.resolve(update.getPath())).toString();
+  private String relativize(Path sourceFilePath) {
+    return baseDir.relativize(sourceFilePath).toString();
   }
 
   public String patchFile() {

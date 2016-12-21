@@ -17,11 +17,18 @@
 package com.google.errorprone;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
+import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -88,6 +95,8 @@ public class ErrorProneOptions {
 
     abstract String baseDirectory();
 
+    abstract Optional<Supplier<CodeTransformer>> customRefactorer();
+
     static Builder builder() {
       return new AutoValue_ErrorProneOptions_PatchingOptions.Builder()
           .baseDirectory("")
@@ -97,11 +106,14 @@ public class ErrorProneOptions {
 
     @AutoValue.Builder
     abstract static class Builder {
+
       abstract Builder namedCheckers(Set<String> checkers);
 
       abstract Builder inPlace(boolean inPlace);
 
       abstract Builder baseDirectory(String baseDirectory);
+
+      abstract Builder customRefactorer(Supplier<CodeTransformer> refactorer);
 
       abstract PatchingOptions autoBuild();
 
@@ -109,8 +121,10 @@ public class ErrorProneOptions {
 
         PatchingOptions patchingOptions = autoBuild();
 
-        // If anything is specified, then checkers and output must be set.
-        if (!patchingOptions.namedCheckers().isEmpty() ^ patchingOptions.doRefactor()) {
+        // If anything is specified, then (checkers or refaster) and output must be set.
+        if ((!patchingOptions.namedCheckers().isEmpty()
+                || patchingOptions.customRefactorer().isPresent())
+            ^ patchingOptions.doRefactor()) {
           throw new InvalidCommandLineOptionException(
               "-XepPatchChecks and -XepPatchLocation must be specified together");
         }
@@ -267,8 +281,25 @@ public class ErrorProneOptions {
             }
           } else if (arg.startsWith(PATCH_CHECKS_PREFIX)) {
             String remaining = arg.substring(PATCH_CHECKS_PREFIX.length());
-            Iterable<String> checks = Splitter.on(',').trimResults().split(remaining);
-            builder.patchingOptionsBuilder().namedCheckers(ImmutableSet.copyOf(checks));
+            if (remaining.startsWith("refaster:")) {
+              // Refaster rule, load from InputStream at file
+              builder
+                  .patchingOptionsBuilder()
+                  .customRefactorer(
+                      () -> {
+                        String path = remaining.substring("refaster:".length());
+                        try (InputStream in =
+                                Files.newInputStream(FileSystems.getDefault().getPath(path));
+                            ObjectInputStream ois = new ObjectInputStream(in)) {
+                          return (CodeTransformer) ois.readObject();
+                        } catch (IOException | ClassNotFoundException e) {
+                          throw new RuntimeException("Can't load Refaster rule from " + path, e);
+                        }
+                      });
+            } else {
+              Iterable<String> checks = Splitter.on(',').trimResults().split(remaining);
+              builder.patchingOptionsBuilder().namedCheckers(ImmutableSet.copyOf(checks));
+            }
           } else {
             outputArgs.add(arg);
           }

@@ -62,10 +62,13 @@ public class RefasterRuleCompiler {
     }
 
     try {
-      return new Main(
-              "RefasterRuleCompiler",
-              new PrintWriter(new OutputStreamWriter(System.err, StandardCharsets.UTF_8)))
-          .compile(argv, context);
+      Result compileResult =
+          new Main(
+                  "RefasterRuleCompiler",
+                  new PrintWriter(new OutputStreamWriter(System.err, StandardCharsets.UTF_8)))
+              .compile(argv, context);
+      System.err.flush();
+      return compileResult;
     } catch (InvalidCommandLineOptionException e) {
       System.err.println(e.getMessage());
       System.err.flush();

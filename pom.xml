@@ -35,6 +35,7 @@
     <guava.version>20.0</guava.version>
     <truth.version>0.30</truth.version>
     <javac.version>9-dev-r3297-1</javac.version>
+    <autovalue.version>1.3</autovalue.version>
   </properties>
 
   <modules>
@@ -46,6 +47,7 @@
     <module>docgen</module>
     <module>docgen_processor</module>
     <module>ant</module>
+    <module>refaster</module>
   </modules>
 
   <scm>
