@@ -157,6 +157,13 @@ implements <a href="../../../../com/google/errorprone/matchers/MultiMatcher.html
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.MatchType.html" title="enum in com.google.errorprone.matchers">ChildMultiMatcher.MatchType</a></span></code>&nbsp;</td>
 </tr>
 </table>
+<ul class="blockList">
+<li class="blockList"><a name="nested.classes.inherited.from.class.com.google.errorprone.matchers.MultiMatcher">
+<!--   -->
+</a>
+<h3>Nested classes/interfaces inherited from interface&nbsp;com.google.errorprone.matchers.<a href="../../../../com/google/errorprone/matchers/MultiMatcher.html" title="interface in com.google.errorprone.matchers">MultiMatcher</a></h3>
+<code><a href="../../../../com/google/errorprone/matchers/MultiMatcher.MultiMatchResult.html" title="class in com.google.errorprone.matchers">MultiMatcher.MultiMatchResult</a>&lt;<a href="../../../../com/google/errorprone/matchers/MultiMatcher.MultiMatchResult.html" title="type parameter in MultiMatcher.MultiMatchResult">N</a> extends com.sun.source.tree.Tree&gt;</code></li>
+</ul>
 </li>
 </ul>
 <!-- =========== FIELD SUMMARY =========== -->
@@ -218,15 +225,16 @@ implements <a href="../../../../com/google/errorprone/matchers/MultiMatcher.html
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.html" title="type parameter in ChildMultiMatcher">N</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.html#getMatchingNodes--">getMatchingNodes</a></span>()</code>
-<div class="block">This method is only valid to call after calling <a href="../../../../com/google/errorprone/matchers/Matcher.html#matches-T-com.google.errorprone.VisitorState-"><code>Matcher.matches(T, com.google.errorprone.VisitorState)</code></a>.</div>
-</td>
-</tr>
-<tr id="i2" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.html#matches-T-com.google.errorprone.VisitorState-">matches</a></span>(<a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.html" title="type parameter in ChildMultiMatcher">T</a>&nbsp;tree,
        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/MultiMatcher.MultiMatchResult.html" title="class in com.google.errorprone.matchers">MultiMatcher.MultiMatchResult</a>&lt;<a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.html" title="type parameter in ChildMultiMatcher">N</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.html#multiMatchResult-T-com.google.errorprone.VisitorState-">multiMatchResult</a></span>(<a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.html" title="type parameter in ChildMultiMatcher">T</a>&nbsp;tree,
+                <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
+<div class="block">Attempt to match the given node, and return the associated subnodes that matched.</div>
+</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -302,24 +310,21 @@ implements <a href="../../../../com/google/errorprone/matchers/MultiMatcher.html
 </dl>
 </li>
 </ul>
-<a name="getMatchingNodes--">
+<a name="multiMatchResult-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-">
+<!--   -->
+</a><a name="multiMatchResult-T-com.google.errorprone.VisitorState-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>getMatchingNodes</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.html" title="type parameter in ChildMultiMatcher">N</a>&gt;&nbsp;getMatchingNodes()</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../com/google/errorprone/matchers/MultiMatcher.html#getMatchingNodes--">MultiMatcher</a></code></span></div>
-<div class="block">This method is only valid to call after calling <a href="../../../../com/google/errorprone/matchers/Matcher.html#matches-T-com.google.errorprone.VisitorState-"><code>Matcher.matches(T, com.google.errorprone.VisitorState)</code></a>. If that call returned true,
- this method will return all nodes that matched (which could be empty if the multi matcher had
- no nodes to process, so the child nodes vacuously matched the matcher). If that call returned
- false (i.e.: this multimatcher did not match the matcher), this function will return an empty
- list.</div>
+<h4>multiMatchResult</h4>
+<pre>public&nbsp;<a href="../../../../com/google/errorprone/matchers/MultiMatcher.MultiMatchResult.html" title="class in com.google.errorprone.matchers">MultiMatcher.MultiMatchResult</a>&lt;<a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.html" title="type parameter in ChildMultiMatcher">N</a>&gt;&nbsp;multiMatchResult(<a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.html" title="type parameter in ChildMultiMatcher">T</a>&nbsp;tree,
+                                                         <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../com/google/errorprone/matchers/MultiMatcher.html#multiMatchResult-T-com.google.errorprone.VisitorState-">MultiMatcher</a></code></span></div>
+<div class="block">Attempt to match the given node, and return the associated subnodes that matched.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../com/google/errorprone/matchers/MultiMatcher.html#getMatchingNodes--">getMatchingNodes</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/matchers/MultiMatcher.html" title="interface in com.google.errorprone.matchers">MultiMatcher</a>&lt;<a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.html" title="type parameter in ChildMultiMatcher">T</a> extends com.sun.source.tree.Tree,<a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.html" title="type parameter in ChildMultiMatcher">N</a> extends com.sun.source.tree.Tree&gt;</code></dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>all the child nodes that matched the matcher.</dd>
+<dd><code><a href="../../../../com/google/errorprone/matchers/MultiMatcher.html#multiMatchResult-T-com.google.errorprone.VisitorState-">multiMatchResult</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/matchers/MultiMatcher.html" title="interface in com.google.errorprone.matchers">MultiMatcher</a>&lt;<a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.html" title="type parameter in ChildMultiMatcher">T</a> extends com.sun.source.tree.Tree,<a href="../../../../com/google/errorprone/matchers/ChildMultiMatcher.html" title="type parameter in ChildMultiMatcher">N</a> extends com.sun.source.tree.Tree&gt;</code></dd>
 </dl>
 </li>
 </ul>

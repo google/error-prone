@@ -50,7 +50,7 @@ var activeTableTab = "activeTableTab";
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../../com/google/errorprone/matchers/MethodVisibility.Visibility.html" title="enum in com.google.errorprone.matchers"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../com/google/errorprone/matchers/NextStatement.html" title="class in com.google.errorprone.matchers"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../com/google/errorprone/matchers/MultiMatcher.MultiMatchResult.html" title="class in com.google.errorprone.matchers"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../index.html?com/google/errorprone/matchers/MultiMatcher.html" target="_top">Frames</a></li>
@@ -74,7 +74,7 @@ var activeTableTab = "activeTableTab";
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
@@ -127,6 +127,28 @@ extends <a href="../../../../com/google/errorprone/matchers/Matcher.html" title=
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="nested.class.summary">
+<!--   -->
+</a>
+<h3>Nested Class Summary</h3>
+<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Nested Class Summary table, listing nested classes, and an explanation">
+<caption><span>Nested Classes</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Interface and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/MultiMatcher.MultiMatchResult.html" title="class in com.google.errorprone.matchers">MultiMatcher.MultiMatchResult</a>&lt;<a href="../../../../com/google/errorprone/matchers/MultiMatcher.MultiMatchResult.html" title="type parameter in MultiMatcher.MultiMatchResult">N</a> extends com.sun.source.tree.Tree&gt;</span></code>
+<div class="block">A result from the call of <a href="../../../../com/google/errorprone/matchers/MultiMatcher.html#multiMatchResult-T-com.google.errorprone.VisitorState-"><code>multiMatchResult(Tree, VisitorState)</code></a>, containing
+ information about whether it matched, and if so, what nodes matched.</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
 <!-- ========== METHOD SUMMARY =========== -->
 <ul class="blockList">
 <li class="blockList"><a name="method.summary">
@@ -140,9 +162,10 @@ extends <a href="../../../../com/google/errorprone/matchers/Matcher.html" title=
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../com/google/errorprone/matchers/MultiMatcher.html" title="type parameter in MultiMatcher">N</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/MultiMatcher.html#getMatchingNodes--">getMatchingNodes</a></span>()</code>
-<div class="block">This method is only valid to call after calling <a href="../../../../com/google/errorprone/matchers/Matcher.html#matches-T-com.google.errorprone.VisitorState-"><code>Matcher.matches(T, com.google.errorprone.VisitorState)</code></a>.</div>
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/MultiMatcher.MultiMatchResult.html" title="class in com.google.errorprone.matchers">MultiMatcher.MultiMatchResult</a>&lt;<a href="../../../../com/google/errorprone/matchers/MultiMatcher.html" title="type parameter in MultiMatcher">N</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/MultiMatcher.html#multiMatchResult-T-com.google.errorprone.VisitorState-">multiMatchResult</a></span>(<a href="../../../../com/google/errorprone/matchers/MultiMatcher.html" title="type parameter in MultiMatcher">T</a>&nbsp;tree,
+                <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;vs)</code>
+<div class="block">Attempt to match the given node, and return the associated subnodes that matched.</div>
 </td>
 </tr>
 </table>
@@ -167,24 +190,17 @@ extends <a href="../../../../com/google/errorprone/matchers/Matcher.html" title=
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="getMatchingNodes--">
+<a name="multiMatchResult-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-">
+<!--   -->
+</a><a name="multiMatchResult-T-com.google.errorprone.VisitorState-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>getMatchingNodes</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../com/google/errorprone/matchers/MultiMatcher.html" title="type parameter in MultiMatcher">N</a>&gt;&nbsp;getMatchingNodes()</pre>
-<div class="block">This method is only valid to call after calling <a href="../../../../com/google/errorprone/matchers/Matcher.html#matches-T-com.google.errorprone.VisitorState-"><code>Matcher.matches(T, com.google.errorprone.VisitorState)</code></a>. If that call returned true,
- this method will return all nodes that matched (which could be empty if the multi matcher had
- no nodes to process, so the child nodes vacuously matched the matcher). If that call returned
- false (i.e.: this multimatcher did not match the matcher), this function will return an empty
- list.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>all the child nodes that matched the matcher.</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/IllegalStateException.html?is-external=true" title="class or interface in java.lang">IllegalStateException</a></code> - if <a href="../../../../com/google/errorprone/matchers/Matcher.html#matches-T-com.google.errorprone.VisitorState-"><code>Matcher.matches(T, com.google.errorprone.VisitorState)</code></a> wasn't called beforehand.</dd>
-</dl>
+<h4>multiMatchResult</h4>
+<pre><a href="../../../../com/google/errorprone/matchers/MultiMatcher.MultiMatchResult.html" title="class in com.google.errorprone.matchers">MultiMatcher.MultiMatchResult</a>&lt;<a href="../../../../com/google/errorprone/matchers/MultiMatcher.html" title="type parameter in MultiMatcher">N</a>&gt;&nbsp;multiMatchResult(<a href="../../../../com/google/errorprone/matchers/MultiMatcher.html" title="type parameter in MultiMatcher">T</a>&nbsp;tree,
+                                                  <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;vs)</pre>
+<div class="block">Attempt to match the given node, and return the associated subnodes that matched.</div>
 </li>
 </ul>
 </li>
@@ -216,7 +232,7 @@ extends <a href="../../../../com/google/errorprone/matchers/Matcher.html" title=
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../../com/google/errorprone/matchers/MethodVisibility.Visibility.html" title="enum in com.google.errorprone.matchers"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../com/google/errorprone/matchers/NextStatement.html" title="class in com.google.errorprone.matchers"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../com/google/errorprone/matchers/MultiMatcher.MultiMatchResult.html" title="class in com.google.errorprone.matchers"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../index.html?com/google/errorprone/matchers/MultiMatcher.html" target="_top">Frames</a></li>
@@ -240,7 +256,7 @@ extends <a href="../../../../com/google/errorprone/matchers/Matcher.html" title=
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>

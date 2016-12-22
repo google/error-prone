@@ -730,11 +730,11 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </td>
 </tr>
 <tr id="i97" class="rowColor">
-<td class="colFirst"><code>static &lt;T extends com.sun.source.tree.Tree&gt;<br><a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.Tree&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/Matchers.html#toType-java.lang.Class-com.google.errorprone.matchers.Matcher-">toType</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;T&gt;&nbsp;type,
-      <a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super T&gt;&nbsp;matcher)</code>
-<div class="block">Converts the given matcher to one that can be applied to any tree but is only executed when
- run on a tree of <code>type</code> and returns <code>false</code> for all other tree types.</div>
+<td class="colFirst"><code>static &lt;S extends com.sun.source.tree.Tree,T extends com.sun.source.tree.Tree&gt;<br><a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/Matchers.html#toType-java.lang.Class-com.google.errorprone.matchers.Matcher-">toType</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;S&gt;&nbsp;type,
+      <a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super S&gt;&nbsp;matcher)</code>
+<div class="block">Converts the given matcher to one that can be applied to any tree but is only executed when run
+ on a tree of <code>type</code> and returns <code>false</code> for all other tree types.</div>
 </td>
 </tr>
 <tr id="i98" class="altColor">
@@ -1828,10 +1828,10 @@ public static&nbsp;<a href="../../../../com/google/errorprone/matchers/Matcher.h
 <ul class="blockList">
 <li class="blockList">
 <h4>toType</h4>
-<pre>public static&nbsp;&lt;T extends com.sun.source.tree.Tree&gt;&nbsp;<a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.Tree&gt;&nbsp;toType(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;T&gt;&nbsp;type,
-                                                                                            <a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super T&gt;&nbsp;matcher)</pre>
-<div class="block">Converts the given matcher to one that can be applied to any tree but is only executed when
- run on a tree of <code>type</code> and returns <code>false</code> for all other tree types.</div>
+<pre>public static&nbsp;&lt;S extends com.sun.source.tree.Tree,T extends com.sun.source.tree.Tree&gt;&nbsp;<a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;&nbsp;toType(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;S&gt;&nbsp;type,
+                                                                                                        <a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super S&gt;&nbsp;matcher)</pre>
+<div class="block">Converts the given matcher to one that can be applied to any tree but is only executed when run
+ on a tree of <code>type</code> and returns <code>false</code> for all other tree types.</div>
 </li>
 </ul>
 <a name="inSynchronized--">

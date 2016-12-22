@@ -129,6 +129,22 @@ public class EqualsIncompatibleTypePositiveCases {
     // BUG: Diagnostic contains: incompatible types
     d2.equals(d1);
   }
+
+  enum MyEnum {}
+
+  enum MyOtherEnum {}
+
+  void enumEquals(MyEnum m, MyOtherEnum mm) {
+    // BUG: Diagnostic contains: incompatible types
+    m.equals(mm);
+    // BUG: Diagnostic contains: incompatible types
+    mm.equals(m);
+
+    // BUG: Diagnostic contains: incompatible types
+    com.google.common.base.Objects.equal(m, mm);
+    // BUG: Diagnostic contains: incompatible types
+    com.google.common.base.Objects.equal(mm, m);
+  }
 }
 {% endhighlight %}
 

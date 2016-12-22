@@ -113,27 +113,7 @@ var activeTableTab = "activeTableTab";
 extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></pre>
 <div class="block">Processes command-line options specific to error-prone.
 
- <p>error-prone lets the user enable and disable specific checks as well as override their
- built-in severity levels (warning vs. error).
-
- <p>A valid error-prone command-line option looks like:<br>
- <pre><code>
- -Xep:&lt;checkName&gt;[:severity]
- </code></pre>
-
- <p><code>checkName</code> is required and is the canonical name of the check, e.g. "StringEquality".
- <code>severity</code> is one of {"OFF", "WARN", "ERROR"}.  Multiple flags must be passed to
- enable or disable multiple checks.  The last flag for a specific check wins.
-
- <p>Examples of usage follow:<br>
- <pre><code>
- -Xep:StringEquality  [turns on StringEquality check with the severity level from its BugPattern
-                       annotation]
- -Xep:StringEquality:OFF  [turns off StringEquality check]
- -Xep:StringEquality:WARN  [turns on StringEquality check as a warning]
- -Xep:StringEquality:ERROR  [turns on StringEquality check as an error]
- -Xep:StringEquality:OFF -Xep:StringEquality  [turns on StringEquality check]
- </code></pre></div>
+ <p>Documentation for the available flags are available at http://errorprone.info/docs/flags</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
 <dd>eaftan@google.com (Eddie Aftandilian)</dd>
@@ -271,15 +251,6 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <pre>public&nbsp;boolean&nbsp;isEnableAllChecks()</pre>
 </li>
 </ul>
-<a name="isDropErrorsToWarnings--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>isDropErrorsToWarnings</h4>
-<pre>public&nbsp;boolean&nbsp;isDropErrorsToWarnings()</pre>
-</li>
-</ul>
 <a name="getRemainingArgs--">
 <!--   -->
 </a>
@@ -314,6 +285,15 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <li class="blockList">
 <h4>disableWarningsInGeneratedCode</h4>
 <pre>public&nbsp;boolean&nbsp;disableWarningsInGeneratedCode()</pre>
+</li>
+</ul>
+<a name="isDropErrorsToWarnings--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isDropErrorsToWarnings</h4>
+<pre>public&nbsp;boolean&nbsp;isDropErrorsToWarnings()</pre>
 </li>
 </ul>
 <a name="patchingOptions--">

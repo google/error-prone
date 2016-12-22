@@ -128,6 +128,9 @@ Modifying an immutable collection is guaranteed to throw an exception and leave 
 __[IncompatibleArgumentType](bugpattern/IncompatibleArgumentType)__<br>
 Passing argument to a generic method with an incompatible type.
 
+__[IndexOfChar](bugpattern/IndexOfChar)__<br>
+The first argument to indexOf is a Unicode code point, and the second is the index to start the search from
+
 __[InfiniteRecursion](bugpattern/InfiniteRecursion)__<br>
 This method always recurses, and will cause a StackOverflowError
 
@@ -254,6 +257,9 @@ Suppressing &quot;deprecated&quot; is probably a typo for &quot;deprecation&quot
 __[ThrowIfUncheckedKnownChecked](bugpattern/ThrowIfUncheckedKnownChecked)__<br>
 throwIfUnchecked(knownCheckedException) is a no-op.
 
+__[TruthSelfEquals](bugpattern/TruthSelfEquals)__<br>
+An object is tested for equality to itself using Truth Libraries.
+
 __[TryFailThrowable](bugpattern/TryFailThrowable)__<br>
 Catching Throwable/Error masks failures from fail() or assert*() in the try block
 
@@ -318,6 +324,9 @@ Overloads will be ambiguous when passing lambda arguments
 
 __[GetClassOnEnum](bugpattern/GetClassOnEnum)__<br>
 Calling getClass() on an enum may return a subclass of the enum type
+
+__[ImmutableAnnotationChecker](bugpattern/ImmutableAnnotationChecker)__<br>
+Annotations should always be immutable
 
 __[ImmutableEnumChecker](bugpattern/ImmutableEnumChecker)__<br>
 Enums should always be immutable
@@ -393,9 +402,6 @@ Synchronizing on non-final fields is not safe: if the field is ever updated, dif
 
 __[TruthConstantAsserts](bugpattern/TruthConstantAsserts)__<br>
 Truth Library assert is called on a constant.
-
-__[TruthSelfEquals](bugpattern/TruthSelfEquals)__<br>
-An object is tested for equality to itself using Truth Libraries.
 
 __[TypeParameterUnusedInFormals](bugpattern/TypeParameterUnusedInFormals)__<br>
 Declaring a type parameter that is only used in the return type is a misuse of generics: operations on the type parameter are unchecked, it hides unsafe casts at invocations of the method, and it interacts badly with method overload resolution.

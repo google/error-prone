@@ -3,7 +3,7 @@ title: TruthSelfEquals
 summary: An object is tested for equality to itself using Truth Libraries.
 layout: bugpattern
 category: TRUTH
-severity: WARNING
+severity: ERROR
 ---
 
 <!--
