@@ -20,7 +20,6 @@ import com.google.common.base.Optional;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis;
 import com.google.errorprone.matchers.Description;
@@ -319,10 +318,10 @@ public class VisitorState {
   /**
    * Returns the list of {@link Token}s for the given {@link JCTree}.
    *
-   * <p>This is moderately expensive (the source of the node has to be re-lexed), so it should
-   * only be used if a fix is already going to be emitted.
+   * <p>This is moderately expensive (the source of the node has to be re-lexed), so it should only
+   * be used if a fix is already going to be emitted.
    */
-  public ImmutableList<ErrorProneToken> getTokensForNode(Tree tree) {
+  public java.util.List<ErrorProneToken> getTokensForNode(Tree tree) {
     return ErrorProneTokens.getTokens(getSourceForNode(tree), context);
   }
 

@@ -148,7 +148,7 @@ public class SuggestedFixes {
     for (Modifier mod : toAdd) {
       modifierPositions.put(mod, -1);
     }
-    ImmutableList<ErrorProneToken> tokens = state.getTokensForNode(originalModifiers);
+    List<ErrorProneToken> tokens = state.getTokensForNode(originalModifiers);
     int base = ((JCTree) originalModifiers).getStartPosition();
     for (ErrorProneToken tok : tokens) {
       Modifier mod = getTokModifierKind(tok);
@@ -184,7 +184,7 @@ public class SuggestedFixes {
       return null;
     }
     SuggestedFix.Builder fix = SuggestedFix.builder();
-    ImmutableList<ErrorProneToken> tokens = state.getTokensForNode(originalModifiers);
+    List<ErrorProneToken> tokens = state.getTokensForNode(originalModifiers);
     int basePos = ((JCTree) originalModifiers).getStartPosition();
     boolean empty = true;
     for (ErrorProneToken tok : tokens) {
