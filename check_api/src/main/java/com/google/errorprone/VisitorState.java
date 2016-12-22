@@ -42,12 +42,12 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
-import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Options;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -234,26 +234,7 @@ public class VisitorState {
    * Build an instance of a Type.
    */
   public Type getType(Type baseType, boolean isArray, List<Type> typeParams) {
-    boolean isGeneric = typeParams != null && !typeParams.equals(List.nil());
-    if (!isArray && !isGeneric) {
-      // Simple type.
-      return baseType;
-    } else if (isArray && !isGeneric) {
-      // Array type, not generic.
-      ClassSymbol arraySymbol = getSymtab().arrayClass;
-      return new ArrayType(baseType, arraySymbol);
-    } else if (!isArray && isGeneric) {
-      return new ClassType(Type.noType, typeParams, baseType.tsym);
-    } else {
-      throw new IllegalArgumentException("Unsupported arguments to getType");
-    }
-  }
-
-  /**
-   * Build an instance of a Type.
-   */
-  public Type getType(Type baseType, boolean isArray, java.util.List<Type> typeParams) {
-    boolean isGeneric = typeParams != null && !typeParams.equals(List.nil());
+    boolean isGeneric = typeParams != null && !typeParams.isEmpty();
     if (!isArray && !isGeneric) {
       // Simple type.
       return baseType;
@@ -263,7 +244,8 @@ public class VisitorState {
       return new ArrayType(baseType, arraySymbol);
     } else if (!isArray && isGeneric) {
       // Generic type, not array.
-      List<Type> typeParamsCopy = List.from(typeParams.toArray(new Type[typeParams.size()]));
+      com.sun.tools.javac.util.List<Type> typeParamsCopy =
+          com.sun.tools.javac.util.List.from(typeParams);
       return new ClassType(Type.noType, typeParamsCopy, baseType.tsym);
     } else {
       throw new IllegalArgumentException("Unsupported arguments to getType");
