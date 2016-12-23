@@ -34,13 +34,14 @@ public class InputStreamSlowMultibyteReadTest {
   }
 
   @Test
-  public void doingItRight() throws Exception {
+  public void doingItRight() {
     compilationHelper
         .addSourceLines(
-            "Test.java",
-            "class Test extends java.io.InputStream {",
+            "TestClass.java",
+            "class TestClass extends java.io.InputStream {",
+            "  byte[] buf = new byte[42];",
             "  public int read(byte[] b, int a, int c) { return 0; }",
-            "  public int read() { return 0; }",
+            "  public int read() { return buf[0]; }",
             "}")
         .doTest();
   }
@@ -49,9 +50,21 @@ public class InputStreamSlowMultibyteReadTest {
   public void basic() throws Exception {
     compilationHelper
         .addSourceLines(
-            "Test.java",
-            "class Test extends java.io.InputStream {",
+            "TestClass.java",
+            "class TestClass extends java.io.InputStream {",
+            "  byte[] buf = new byte[42];",
             "  // BUG: Diagnostic contains:",
+            "  public int read() { return buf[0]; }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void dummyStreamIgnored() {
+    compilationHelper
+        .addSourceLines(
+            "TestClass.java",
+            "class TestClass extends java.io.InputStream {",
             "  public int read() { return 0; }",
             "}")
         .doTest();
@@ -60,7 +73,7 @@ public class InputStreamSlowMultibyteReadTest {
   // Here, the superclass still can't effectively multibyte-read without the underlying
   // read() method.
   @Test
-  public void inherited() throws Exception {
+  public void inherited() {
     compilationHelper
         .addSourceLines(
             "Super.java",
@@ -68,11 +81,39 @@ public class InputStreamSlowMultibyteReadTest {
             "  public int read(byte[] b, int a, int c) { return 0; }",
             "}")
         .addSourceLines(
-            "Test.java",
-            "class Test extends Super {",
+            "TestClass.java",
+            "class TestClass extends Super {",
+            "  byte[] buf = new byte[42];",
             "  // BUG: Diagnostic contains:",
-            "  public int read() { return 0; }",
+            "  public int read() { return buf[0]; }",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void junit3TestIgnored() {
+    compilationHelper
+        .addSourceLines(
+            "javatests/TestClass.java",
+            "class TestClass extends junit.framework.TestCase {",
+            " static class SomeStream extends java.io.InputStream {",
+            "  byte[] buf = new byte[42];",
+            "  public int read() { return buf[0]; }",
+            "}}")
+        .doTest();
+  }
+
+  @Test
+  public void junit4TestIgnored() {
+    compilationHelper
+        .addSourceLines(
+            "javatests/TestClass.java",
+            "@org.junit.runner.RunWith(org.junit.runners.JUnit4.class)",
+            "class TestClass {",
+            " static class SomeStream extends java.io.InputStream {",
+            "  byte[] buf = new byte[42];",
+            "  public int read() { return buf[0]; }",
+            "}}")
         .doTest();
   }
 }

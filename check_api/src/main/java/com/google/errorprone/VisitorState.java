@@ -251,6 +251,11 @@ public class VisitorState {
     }
   }
 
+  /** Build an Array Type from another Type */
+  public Type arrayTypeForType(Type baseType) {
+    return new ArrayType(baseType, getSymtab().arrayClass);
+  }
+
   /**
    * Returns the {@link TreePath} to the nearest tree node of one of the given types. To instead
    * retrieve the element directly, use {@link #findEnclosing(Class...)}.
