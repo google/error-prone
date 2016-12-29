@@ -4,8 +4,8 @@ can be passed around and deserialized into a message using
 [`MyMessage.Builder.mergeFrom(ByteString)`][merge].
 
 [`ByteString#toStringUtf8`] copies UTF-8 encoded byte data living inside the
-`ByteString` to a `java.lang.String`, discarding any [invalid UTF-8 byte
-sequences][invalid-utf8-byte-sequences].
+`ByteString` to a `java.lang.String`, replacing any [invalid UTF-8 byte
+sequences][invalid-utf8-byte-sequences] with � (the Unicode replacement character).
 
 In this circumstance, a protocol message is being serialized to a `ByteString`,
 then immediately turned into a Java `String` using the `toStringUtf8` method.

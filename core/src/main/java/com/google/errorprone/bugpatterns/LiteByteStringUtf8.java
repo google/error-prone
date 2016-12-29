@@ -35,7 +35,7 @@ import com.sun.source.tree.MethodInvocationTree;
   name = "LiteByteStringUtf8",
   category = PROTOBUF,
   summary =
-      "This pattern will silently discard certain byte sequences from the serialized protocol "
+      "This pattern will silently corrupt certain byte sequences from the serialized protocol "
           + "message. Use ByteString or byte[] directly",
   severity = WARNING
 )
