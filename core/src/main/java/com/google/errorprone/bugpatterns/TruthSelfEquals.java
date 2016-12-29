@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -33,6 +34,7 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import java.util.regex.Pattern;
 
 /**
  * Points out if an object is tested for equality/inequality to itself using Truth Libraries.
@@ -43,7 +45,7 @@ import com.sun.source.tree.MethodInvocationTree;
   name = "TruthSelfEquals",
   summary = "An object is tested for equality to itself using Truth Libraries.",
   explanation =
-      "The arguments to isEqualTo/isNotEqualTo method are the same object, so it either always "
+      "The arguments to truth equality method are the same object, so it either always "
           + "passes/fails the test.  Either change the arguments to point to different objects or "
           + "consider using EqualsTester.",
   category = TRUTH,
@@ -60,15 +62,23 @@ public class TruthSelfEquals extends BugChecker implements MethodInvocationTreeM
    * <ul>
    *   <li> assertThat(a).isEqualTo(a)
    *   <li> assertThat(a).isNotEqualTo(a)
+   *   <li> assertThat(a).isNotSameAs(a)
+   *   <li> assertThat(a).isSameAs(a)
    *   <li> assertWithMessage(msg).that(a).isEqualTo(a)
    *   <li> assertWithMessage(msg).that(a).isNotEqualTo(a)
+   *   <li> assertWithMessage(msg).that(a).isNotSameAs(a)
+   *   <li> assertWithMessage(msg).that(a).isSameAs(a)
    * </ul>
    */
+  private static final Pattern EQUALS_SAME = Pattern.compile("(isEqualTo|isSameAs)");
+
+  private static final Pattern NOT_EQUALS_NOT_SAME = Pattern.compile("(isNotEqualTo|isNotSameAs)");
+
   private static final Matcher<MethodInvocationTree> EQUALS_MATCHER =
       allOf(
           instanceMethod()
               .onDescendantOf("com.google.common.truth.Subject")
-              .named("isEqualTo")
+              .withNameMatching(EQUALS_SAME)
               .withParameters("java.lang.Object"),
           receiverSameAsParentsArgument());
 
@@ -76,7 +86,7 @@ public class TruthSelfEquals extends BugChecker implements MethodInvocationTreeM
       allOf(
           instanceMethod()
               .onDescendantOf("com.google.common.truth.Subject")
-              .named("isNotEqualTo")
+              .withNameMatching(NOT_EQUALS_NOT_SAME)
               .withParameters("java.lang.Object"),
           receiverSameAsParentsArgument());
 
@@ -95,10 +105,14 @@ public class TruthSelfEquals extends BugChecker implements MethodInvocationTreeM
     ExpressionTree toReplace = methodInvocationTree.getArguments().get(0);
     if (EQUALS_MATCHER.matches(methodInvocationTree, state)) {
       description
-          .setMessage(generateSummary("isEqualTo", "passes"))
+          .setMessage(
+              generateSummary(
+                  ASTHelpers.getSymbol(methodInvocationTree).getSimpleName().toString(), "passes"))
           .addFix(suggestEqualsTesterFix(methodInvocationTree, toReplace));
     } else if (NOT_EQUALS_MATCHER.matches(methodInvocationTree, state)) {
-      description.setMessage(generateSummary("isNotEqualTo", "fails"));
+      description.setMessage(
+          generateSummary(
+              ASTHelpers.getSymbol(methodInvocationTree).getSimpleName().toString(), "fails"));
     } else {
       return Description.NO_MATCH;
     }
@@ -110,7 +124,7 @@ public class TruthSelfEquals extends BugChecker implements MethodInvocationTreeM
   }
 
   private static String generateSummary(String methodName, String constantOutput) {
-    return "The arguments to "
+    return "The arguments to the "
         + methodName
         + " method are the same object, so it always "
         + constantOutput
