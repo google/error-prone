@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.PROTOBUF;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.receiverOfInvocation;
@@ -37,7 +37,7 @@ import com.sun.source.tree.MethodInvocationTree;
   summary =
       "This pattern will silently corrupt certain byte sequences from the serialized protocol "
           + "message. Use ByteString or byte[] directly",
-  severity = WARNING
+  severity = ERROR
 )
 public class LiteByteStringUtf8 extends BugChecker implements MethodInvocationTreeMatcher {
   private static final Matcher<MethodInvocationTree> BYTE_STRING_UTF_8 =
