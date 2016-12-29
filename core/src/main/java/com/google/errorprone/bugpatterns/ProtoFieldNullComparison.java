@@ -16,7 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.ONE_OFF;
+import static com.google.errorprone.BugPattern.Category.PROTOBUF;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 
@@ -53,7 +53,7 @@ import javax.annotation.Nullable;
           + "however does not generate `hasField()` methods for scalar fields of type `string` or "
           + "`bytes`. In those cases you will need to wrap your field in "
           + "`google.protobuf.StringValue` or `google.protobuf.BytesValue`, respectively.",
-  category = ONE_OFF,
+  category = PROTOBUF,
   severity = ERROR
 )
 public class ProtoFieldNullComparison extends BugChecker implements BinaryTreeMatcher {

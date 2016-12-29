@@ -109,6 +109,8 @@ public @interface BugPattern {
     JMOCK,
     /** Errors specific to Android. */
     ANDROID,
+    /** Errors specific to Protocol Buffers. */
+    PROTOBUF,
     /** Errors specific to Truth. */
     TRUTH;
   }
