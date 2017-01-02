@@ -101,6 +101,7 @@ final class WellKnownMutability {
         .add("org.joda.time.Instant")
         .add("org.joda.time.LocalDate")
         .add("org.joda.time.LocalDateTime")
+        .add("org.joda.time.Period")
         .add("org.joda.time.format.DateTimeFormatter")
         .add(com.google.common.primitives.UnsignedLong.class)
         .add(com.google.common.base.Converter.class)
