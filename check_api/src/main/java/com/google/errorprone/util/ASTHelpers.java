@@ -893,7 +893,9 @@ public class ASTHelpers {
    * {@code B} or {@code A}. (B's hashCode method or Object#hashCode).
    *
    * <p>Do NOT call this method unless the method you're looking for is guaranteed to exist. A fatal
-   * error will result otherwise.
+   * error will result otherwise. Note: a method can fail to exist if it was added in a newer
+   * version of a library (you may be depending on version N of a library which added a method to a
+   * class, but someone else could depend on version N-1 which didn't have that method).
    *
    * @return a MethodSymbol representing the method symbol resolved from the context of this type
    */
