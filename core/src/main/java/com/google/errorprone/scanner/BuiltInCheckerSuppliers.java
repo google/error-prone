@@ -159,6 +159,7 @@ import com.google.errorprone.bugpatterns.WaitNotInLoop;
 import com.google.errorprone.bugpatterns.WildcardImport;
 import com.google.errorprone.bugpatterns.WrongParameterPackage;
 import com.google.errorprone.bugpatterns.android.BundleDeserializationCast;
+import com.google.errorprone.bugpatterns.android.FragmentInjection;
 import com.google.errorprone.bugpatterns.android.FragmentNotInstantiable;
 import com.google.errorprone.bugpatterns.android.HardCodedSdCardPath;
 import com.google.errorprone.bugpatterns.android.IsLoggableTagLength;
@@ -353,6 +354,7 @@ public class BuiltInCheckerSuppliers {
           EqualsHashCode.class,
           EqualsIncompatibleType.class,
           Finally.class,
+          FragmentInjection.class,
           FragmentNotInstantiable.class,
           FunctionalInterfaceClash.class,
           GetClassOnEnum.class,
