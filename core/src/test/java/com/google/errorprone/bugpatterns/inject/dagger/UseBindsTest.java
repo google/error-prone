@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns.inject.dagger;
 
+import static org.junit.Assume.assumeTrue;
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import dagger.Module;
 import dagger.Provides;
@@ -113,6 +115,8 @@ public class UseBindsTest {
 
   @Test
   public void typeEqualsSetMethod() throws IOException {
+    // Don't check @Produces.type -- it has been removed
+    assumeTrue(!bindingMethodAnnotation.equals(Produces.class.getCanonicalName()));
     testHelper
         .addInputLines(
             "in/Test.java",
