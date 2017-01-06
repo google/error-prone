@@ -33,6 +33,7 @@
             <groupId>com.google.errorprone</groupId>
             <artifactId>error_prone_core</artifactId>
             <version>${project.version}</version>
+            <classifier>with-dependencies</classifier>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -60,7 +61,7 @@
                                 <!-- Include only dependencies with compatible licenses.
                                      Apache, BSD, and MIT are OK; others are not. -->
                                 <includes>
-                                    <include>com.google.errorprone:error_prone_core</include>
+                                    <include>com.google.errorprone:error_prone_core:with-dependencies</include>
                                 </includes>
                             </artifactSet>
                             <transformers>
