@@ -2,7 +2,7 @@
 title: ProtoFieldNullComparison
 summary: Protobuf fields cannot be null
 layout: bugpattern
-category: ONE_OFF
+category: PROTOBUF
 severity: ERROR
 ---
 

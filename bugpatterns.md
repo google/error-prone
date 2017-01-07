@@ -161,8 +161,14 @@ tearDown() method will not be run; Please add an @After annotation
 __[JUnit4TestNotRun](bugpattern/JUnit4TestNotRun)__<br>
 Test method will not be run; please add @Test annotation
 
+__[JUnitAssertSameCheck](bugpattern/JUnitAssertSameCheck)__<br>
+An object is tested for reference equality to itself using JUnit library.
+
 __[JavaxInjectOnAbstractMethod](bugpattern/JavaxInjectOnAbstractMethod)__<br>
 Abstract and default methods are not injectable with javax.inject.Inject
+
+__[LiteByteStringUtf8](bugpattern/LiteByteStringUtf8)__<br>
+This pattern will silently corrupt certain byte sequences from the serialized protocol message. Use ByteString or byte[] directly
 
 __[MislabeledAndroidString](bugpattern/MislabeledAndroidString)__<br>
 Certain resources in `android.R.string` have names that do not match their content
@@ -315,6 +321,9 @@ An equality test between objects with incompatible types always returns false
 
 __[Finally](bugpattern/Finally)__<br>
 If you return or throw from a finally, then values returned or thrown from the try-catch block will be ignored. Consider using try-with-resources instead.
+
+__[FragmentInjection](bugpattern/FragmentInjection)__<br>
+Classes extending PreferenceActivity must implement isValidFragment such that it does not unconditionally return true to prevent vulnerability to fragment injection attacks.
 
 __[FragmentNotInstantiable](bugpattern/FragmentNotInstantiable)__<br>
 Subclasses of Fragment must be instantiable via Class#newInstance(): the class must be public, static and have a public nullary constructor
