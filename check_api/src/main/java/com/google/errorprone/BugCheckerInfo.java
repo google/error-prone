@@ -15,6 +15,7 @@
 package com.google.errorprone;
 
 import static com.google.common.base.MoreObjects.firstNonNull;
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Preconditions;
@@ -26,6 +27,7 @@ import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.Tree;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -93,6 +95,11 @@ public class BugCheckerInfo implements Serializable {
         checkNotNull(
             checker.getAnnotation(BugPattern.class),
             "BugCheckers must be annotated with @BugPattern");
+    checkArgument(
+        !(Modifier.isAbstract(checker.getModifiers())
+            || Modifier.isInterface(checker.getModifiers())),
+        "%s must be a concrete class",
+        checker);
     try {
       BugPatternValidator.validate(pattern);
     } catch (ValidationException e) {
