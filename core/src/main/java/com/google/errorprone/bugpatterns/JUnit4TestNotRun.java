@@ -79,6 +79,10 @@ public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
           not(hasJUnitAnnotation),
           enclosingClass(isJUnit4TestClass));
 
+  protected boolean useExpandedHeuristic(VisitorState state) {
+    return Options.instance(state.context).getBoolean("expandedTestNotRunHeuristic");
+  }
+
   /**
    * Matches if:
    *
@@ -108,7 +112,7 @@ public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
     }
 
     // TODO(b/34062183): Remove check for flag once cleanup complete.
-    if (Options.instance(state.context).getBoolean("expandedTestNotRunHeuristic")) {
+    if (useExpandedHeuristic(state)) {
 
       // Method is annotated, probably not a test.
       List<? extends AnnotationTree> annotations = methodTree.getModifiers().getAnnotations();
