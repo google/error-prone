@@ -56,6 +56,6 @@ public class MethodCanBeStatic extends BugChecker implements MethodTreeMatcher {
     if (CanBeStaticAnalyzer.referencesOuter(tree, sym, state)) {
       return NO_MATCH;
     }
-    return describeMatch(tree, addModifiers(tree, state, Modifier.STATIC));
+    return describeMatch(tree.getModifiers(), addModifiers(tree, state, Modifier.STATIC));
   }
 }
