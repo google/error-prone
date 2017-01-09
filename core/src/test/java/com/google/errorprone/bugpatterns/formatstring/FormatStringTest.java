@@ -202,4 +202,21 @@ public class FormatStringTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void javaUtilTime() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.time.Instant;",
+            "import java.time.LocalDateTime;",
+            "import java.time.ZoneId;",
+            "class Test {",
+            "  void f() {",
+            "    System.err.printf(\"%tY\",",
+            "        LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault()));",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

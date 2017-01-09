@@ -29,6 +29,10 @@ import edu.umd.cs.findbugs.formatStringChecker.ExtraFormatArgumentsException;
 import edu.umd.cs.findbugs.formatStringChecker.Formatter;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.TemporalAccessor;
 import java.util.ArrayDeque;
 import java.util.Calendar;
 import java.util.Collection;
@@ -172,6 +176,9 @@ public class FormatStringValidation {
     }
     if (types.isSubtype(type, state.getTypeFromString(Calendar.class.getName()))) {
       return new GregorianCalendar();
+    }
+    if (types.isSubtype(type, state.getTypeFromString(TemporalAccessor.class.getName()))) {
+      return LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault());
     }
     return new Object();
   }
