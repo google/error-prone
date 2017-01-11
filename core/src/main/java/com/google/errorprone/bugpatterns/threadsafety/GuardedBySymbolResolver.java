@@ -34,6 +34,7 @@ import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.comp.Attr;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
+import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Name;
@@ -98,6 +99,8 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
         name = ((VariableTree) decl).getName().toString();
       } else if (decl instanceof MethodTree) {
         name = ((MethodTree) decl).getName().toString();
+      } else if (decl instanceof JCIdent) {
+        name = ((JCIdent) decl).getName().toString();
       } else {
         throw new IllegalGuardedBy(decl.getClass().toString());
       }

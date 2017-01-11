@@ -65,9 +65,7 @@ public class GuardedByCheckerTest {
         .doTest();
   }
 
-  /**
-   * "static synchronized method() { ... }" == "synchronized (MyClass.class) { ... }"
-   */
+  /** "static synchronized method() { ... }" == "synchronized (MyClass.class) { ... }" */
   @Test
   public void testStaticLocked() throws Exception {
     compilationHelper
@@ -270,6 +268,25 @@ public class GuardedByCheckerTest {
             "    // BUG: Diagnostic contains:",
             "      // should be guarded by 't.mu'",
             "    t.y++;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testUnheldItselfGuard() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "class Itself {",
+            "  @GuardedBy(\"itself\")",
+            "  int x;",
+            "  void incrementX() {",
+            "    // BUG: Diagnostic contains:",
+            "    // should be guarded by 'this.x'",
+            "    x++;",
             "  }",
             "}")
         .doTest();
@@ -1421,7 +1438,7 @@ public class GuardedByCheckerTest {
   public void regression_b27686620() throws Exception {
     compilationHelper
         .addSourceLines(
-            "A.java",
+            "A.java", //
             "class A extends One {",
             "  void g() {}",
             "}")
@@ -1437,7 +1454,7 @@ public class GuardedByCheckerTest {
             "  static void f() { synchronized (Two.class) { x++; } }",
             "}")
         .addSourceLines(
-            "C.java",
+            "C.java", //
             "class B extends Two {",
             "  void g() {}",
             "}")
