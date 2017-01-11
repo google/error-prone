@@ -18,6 +18,8 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.contains;
+import static com.google.errorprone.matchers.Matchers.enclosingMethod;
 import static com.google.errorprone.matchers.Matchers.enclosingNode;
 import static com.google.errorprone.matchers.Matchers.expressionStatement;
 import static com.google.errorprone.matchers.Matchers.isLastStatementInBlock;
@@ -48,6 +50,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
+import java.util.regex.Pattern;
 
 /**
  * An abstract base class to match method invocations in which the return value is not used.
@@ -167,6 +170,16 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
 
   private static final Matcher<StatementTree> EXPECTED_EXCEPTION_MATCHER =
       anyOf(
+          // expectedException.expect(Foo.class); me();
+          allOf(
+              isLastStatementInBlock(),
+              enclosingMethod(
+                  contains(
+                      ExpressionTree.class,
+                      methodInvocation(
+                          instanceMethod()
+                              .onDescendantOf("org.junit.rules.TestRule")
+                              .withNameMatching(Pattern.compile("expect(Message|Cause)?")))))),
           // try { me(); fail(); } catch (Throwable t) {}
           allOf(enclosingNode(kindIs(Kind.TRY)), nextStatement(expressionStatement(FAIL_METHOD))),
           // assertThrows(Throwable.class, () => { me(); })

@@ -514,9 +514,7 @@ public class Matchers {
     return new Enclosing.Class<>(matcher);
   }
 
-  /**
-   * Matches an AST node which is enclosed by a method node that matches the given matcher.
-   */
+  /** Matches an AST node which is enclosed by a method node that matches the given matcher. */
   public static <T extends Tree> Enclosing.Method<T> enclosingMethod(Matcher<MethodTree> matcher) {
     return new Enclosing.Method<>(matcher);
   }
@@ -1330,6 +1328,19 @@ public class Matchers {
    */
   public static Matcher<Tree> contains(Matcher<Tree> treeMatcher) {
     return new Contains(treeMatcher);
+  }
+
+  /**
+   * Applies the given matcher recursively to all descendants of an AST node, and matches if any
+   * matching descendant node is found.
+   *
+   * @param clazz The type of node to be matched.
+   * @param treeMatcher The matcher to apply recursively to the tree.
+   */
+  public static <T extends Tree, V extends Tree> Matcher<T> contains(
+      Class<V> clazz, Matcher<V> treeMatcher) {
+    final Matcher<Tree> contains = new Contains(toType(clazz, treeMatcher));
+    return contains::matches;
   }
 
   /**

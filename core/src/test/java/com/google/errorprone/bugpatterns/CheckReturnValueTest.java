@@ -428,6 +428,29 @@ public class CheckReturnValueTest {
   }
 
   @Test
+  public void ignoreInTestsWithRule() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Foo.java",
+            "@javax.annotation.CheckReturnValue",
+            "public class Foo {",
+            "  public int f() {",
+            "    return 42;",
+            "  }",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private org.junit.rules.ExpectedException exception;",
+            "  void f(Foo foo) {",
+            "    exception.expect(IllegalArgumentException.class);",
+            "    foo.f();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void ignoreInTestsWithFailureMessage() throws Exception {
     compilationHelper
         .addSourceLines(
