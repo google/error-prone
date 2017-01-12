@@ -478,24 +478,6 @@ public class ASTHelpers {
   }
 
   /**
-   * Find a method in the enclosing class's superclass that this method overrides.
-   *
-   * @return A superclass method that is overridden by {@code method}
-   */
-  public static MethodSymbol findSuperMethod(MethodSymbol method, Types types) {
-    TypeSymbol superClass = method.enclClass().getSuperclass().tsym;
-    if (superClass == null) {
-      return null;
-    }
-    for (Symbol sym : superClass.members().getSymbols()) {
-      if (sym.name.contentEquals(method.name) && method.overrides(sym, superClass, types, true)) {
-        return (MethodSymbol) sym;
-      }
-    }
-    return null;
-  }
-
-  /**
    * Determines whether a symbol has an annotation of the given type. This includes annotations
    * inherited from superclasses due to {@code @Inherited}.
    *
