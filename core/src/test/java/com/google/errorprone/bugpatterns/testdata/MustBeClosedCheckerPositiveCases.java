@@ -52,6 +52,10 @@ public class MustBeClosedCheckerPositiveCases {
     MustBeClosedAnnotatedConstructor() {}
   }
 
+  static interface Lambda {
+    Closeable expression();
+  }
+
   void positiveCase1() {
     // BUG: Diagnostic contains: mustBeClosedAnnotatedMethod must be called within the resource
     // variable initializer of a try-with-resources statement.
@@ -85,5 +89,37 @@ public class MustBeClosedCheckerPositiveCases {
     // BUG: Diagnostic contains: Constructor must be called within the resource variable initializer
     // of a try-with-resources statement.
     new MustBeClosedAnnotatedConstructor();
+  }
+
+  Closeable positiveCase6() {
+    // BUG: Diagnostic contains: Constructor must be called within the resource variable initializer
+    // of a try-with-resources statement.
+    return new MustBeClosedAnnotatedConstructor();
+  }
+
+  Closeable positiveCase7() {
+    // BUG: Diagnostic contains: mustBeClosedAnnotatedMethod must be called within the resource
+    // variable initializer of a try-with-resources statement.
+    return new Foo().mustBeClosedAnnotatedMethod();
+  }
+
+  void positiveCase8() {
+    Lambda expression =
+        () -> {
+          // BUG: Diagnostic contains: mustBeClosedAnnotatedMethod must be called within the resource
+          // variable initializer of a try-with-resources statement.
+          return new Foo().mustBeClosedAnnotatedMethod();
+        };
+  }
+
+  void positiveCase9() {
+    new Foo() {
+      @Override
+      public Closeable mustBeClosedAnnotatedMethod() {
+        // BUG: Diagnostic contains: Constructor must be called within the resource variable
+        // initializer of a try-with-resources statement.
+        return new MustBeClosedAnnotatedConstructor();
+      }
+    };
   }
 }

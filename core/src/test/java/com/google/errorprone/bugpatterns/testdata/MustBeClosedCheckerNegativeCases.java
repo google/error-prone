@@ -73,4 +73,16 @@ public class MustBeClosedCheckerNegativeCases {
     try (MustBeClosedAnnotatedConstructor foo = new MustBeClosedAnnotatedConstructor();
         Closeable closeable = new Foo().mustBeClosedAnnotatedMethod()) {}
   }
+
+  @MustBeClosed
+  Closeable positiveCase8() {
+    // This is fine since the caller method is annotated.
+    return new MustBeClosedAnnotatedConstructor();
+  }
+
+  @MustBeClosed
+  Closeable positiveCase7() {
+    // This is fine since the caller method is annotated.
+    return new Foo().mustBeClosedAnnotatedMethod();
+  }
 }
