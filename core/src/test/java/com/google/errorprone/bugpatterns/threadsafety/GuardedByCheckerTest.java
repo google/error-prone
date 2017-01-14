@@ -1499,4 +1499,23 @@ public class GuardedByCheckerTest {
             "}")
         .doTest();
   }
+
+  // regression test for b/34251959
+  @Test
+  public void lambda() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "public class Test {",
+            "  @GuardedBy(\"this\") int x;",
+            "  synchronized void f() {",
+            "    Runnable r = () -> {",
+            "      // BUG: Diagnostic contains: should be guarded by 'this',",
+            "      x++;",
+            "    };",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

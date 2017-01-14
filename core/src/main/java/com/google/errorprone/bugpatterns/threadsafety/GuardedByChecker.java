@@ -18,19 +18,24 @@ package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.common.base.Joiner;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.BugChecker.LambdaExpressionTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Kind;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Select;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 
@@ -43,7 +48,7 @@ import com.sun.tools.javac.code.Type;
   severity = ERROR
 )
 public class GuardedByChecker extends GuardedByValidator
-    implements BugChecker.VariableTreeMatcher, BugChecker.MethodTreeMatcher {
+    implements VariableTreeMatcher, MethodTreeMatcher, LambdaExpressionTreeMatcher {
 
   private static final String JUC_READ_WRITE_LOCK = "java.util.concurrent.locks.ReadWriteLock";
 
@@ -53,20 +58,23 @@ public class GuardedByChecker extends GuardedByValidator
     // to mutate guarded state without holding the necessary locks. It is assumed that all objects
     // (and classes) are thread-local during initialization.
     if (ASTHelpers.getSymbol(tree).isConstructor()) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
+    analyze(state);
+    return GuardedByValidator.validate(this, tree, state);
+  }
 
+  @Override
+  public Description matchLambdaExpression(LambdaExpressionTree tree, VisitorState state) {
+    analyze(state.withPath(new TreePath(state.getPath(), tree.getBody())));
+    return NO_MATCH;
+  }
+
+  private void analyze(final VisitorState state) {
     HeldLockAnalyzer.analyze(
         state,
-        new HeldLockAnalyzer.LockEventListener() {
-          @Override
-          public void handleGuardedAccess(
-              ExpressionTree tree, GuardedByExpression guard, HeldLockSet live) {
-            report(GuardedByChecker.this.checkGuardedAccess(tree, guard, live, state), state);
-          }
-        });
-
-    return GuardedByValidator.validate(this, tree, state);
+        (ExpressionTree tree, GuardedByExpression guard, HeldLockSet live) ->
+            report(GuardedByChecker.this.checkGuardedAccess(tree, guard, live, state), state));
   }
 
   @Override
@@ -93,16 +101,16 @@ public class GuardedByChecker extends GuardedByValidator
     // read or write locks are held, but that's not much better than enforcing
     // nothing.
     if (isRWLock(guard, state)) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
 
     if (locks.allLocks().contains(guard)) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
 
     // TODO(cushon): re-enable once the clean-up is done
     if (guard.kind() == GuardedByExpression.Kind.ERROR) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
 
     return buildDescription(tree).setMessage(buildMessage(guard, locks)).build();
@@ -200,7 +208,7 @@ public class GuardedByChecker extends GuardedByValidator
   // TODO(cushon) - this is a hack. Provide an abstraction for matchers that need to do
   // stateful visiting? (e.g. a traversal that passes along a set of held locks...)
   private void report(Description description, VisitorState state) {
-    if (description == null || description == Description.NO_MATCH) {
+    if (description == null || description == NO_MATCH) {
       return;
     }
     state.reportMatch(description);

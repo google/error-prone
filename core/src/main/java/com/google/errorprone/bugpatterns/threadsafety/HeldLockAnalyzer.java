@@ -34,6 +34,7 @@ import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
@@ -201,8 +202,14 @@ public class HeldLockAnalyzer {
 
     @Override
     public Void visitNewClass(NewClassTree tree, HeldLockSet locks) {
-      // Don't visit into anonymous class declarations; their method declarations
+      // Don't descend into anonymous class declarations; their method declarations
       // will be analyzed separately.
+      return null;
+    }
+
+    @Override
+    public Void visitLambdaExpression(LambdaExpressionTree node, HeldLockSet heldLockSet) {
+      // Don't descend into lambda; they will be analyzed separately.
       return null;
     }
 
