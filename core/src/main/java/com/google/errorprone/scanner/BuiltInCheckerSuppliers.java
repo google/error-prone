@@ -149,6 +149,7 @@ import com.google.errorprone.bugpatterns.TruthSelfEquals;
 import com.google.errorprone.bugpatterns.TryFailThrowable;
 import com.google.errorprone.bugpatterns.TypeParameterQualifier;
 import com.google.errorprone.bugpatterns.TypeParameterUnusedInFormals;
+import com.google.errorprone.bugpatterns.URLEqualsHashCode;
 import com.google.errorprone.bugpatterns.UnnecessaryStaticImport;
 import com.google.errorprone.bugpatterns.UnnecessaryTypeArgument;
 import com.google.errorprone.bugpatterns.UnsynchronizedOverridesSynchronized;
@@ -386,6 +387,7 @@ public class BuiltInCheckerSuppliers {
           TruthConstantAsserts.class,
           TypeParameterUnusedInFormals.class,
           UnsynchronizedOverridesSynchronized.class,
+          URLEqualsHashCode.class,
           WaitNotInLoop.class);
 
   /** A list of all checks that are off by default. */
