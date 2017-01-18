@@ -86,6 +86,7 @@ __CheckReturnValuePositiveCases.java__
 package com.google.errorprone.bugpatterns.testdata;
 
 import javax.annotation.CheckReturnValue;
+import org.junit.rules.ExpectedException;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
@@ -115,6 +116,16 @@ public class CheckReturnValuePositiveCases {
     IntValue value = new IntValue(10);
     // BUG: Diagnostic contains: value = value.increment()
     value.increment();
+  }
+
+  public void testBeforeAndAfterRule() {
+    // BUG: Diagnostic contains: remove this line
+    new IntValue(1).increment();
+    ExpectedException.none().expect(IllegalStateException.class);
+    // BUG: Diagnostic contains: remove this line
+    new IntValue(1).increment();
+
+    new IntValue(1).increment(); // No error here, last statement in block
   }
 
   public void constructor() {
