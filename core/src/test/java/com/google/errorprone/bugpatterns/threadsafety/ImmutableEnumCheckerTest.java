@@ -95,6 +95,23 @@ public class ImmutableEnumCheckerTest {
   }
 
   @Test
+  public void annotatedEnumThatImplementsImmutableInterface() {
+    compilationHelper
+        .addSourceLines(
+            "MyInterface.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable interface MyInterface {}")
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable",
+            "enum Enum implements MyInterface {",
+            "  ONE, TWO",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void mutableFieldType() {
     compilationHelper
         .addSourceLines("Foo.java", "class Foo {", "}")

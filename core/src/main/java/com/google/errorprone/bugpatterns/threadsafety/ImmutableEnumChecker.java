@@ -57,7 +57,8 @@ public class ImmutableEnumChecker extends BugChecker implements ClassTreeMatcher
       return NO_MATCH;
     }
 
-    if (ASTHelpers.hasAnnotation(symbol, Immutable.class, state)) {
+    if (ASTHelpers.hasAnnotation(symbol, Immutable.class, state)
+        && !implementsImmutableInterface(symbol)) {
       AnnotationTree annotation =
           ASTHelpers.getAnnotationWithSimpleName(tree.getModifiers().getAnnotations(), "Immutable");
       if (annotation != null) {
@@ -85,5 +86,12 @@ public class ImmutableEnumChecker extends BugChecker implements ClassTreeMatcher
 
     String message = "enums should be immutable: " + info.message();
     return buildDescription(tree).setMessage(message).build();
+  }
+
+  private static boolean implementsImmutableInterface(ClassSymbol symbol) {
+    return symbol
+        .getInterfaces()
+        .stream()
+        .anyMatch(iface -> iface.asElement().getAnnotation(Immutable.class) != null);
   }
 }
