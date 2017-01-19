@@ -76,7 +76,7 @@ public class ImmutableEnumChecker extends BugChecker implements ClassTreeMatcher
                 this,
                 state,
                 "enums should be immutable, and cannot have non-final fields",
-                "enums should be immutable")
+                "enums should only have immutable fields")
             .checkForImmutability(Optional.of(tree), ImmutableSet.of(), getType(tree));
 
     if (!info.isPresent()) {
