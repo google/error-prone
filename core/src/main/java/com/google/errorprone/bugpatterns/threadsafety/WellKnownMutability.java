@@ -126,6 +126,7 @@ final class WellKnownMutability {
         .add(com.google.common.collect.ImmutableMultimap.class, "K", "V")
         .add(com.google.common.collect.ImmutableListMultimap.class, "K", "V")
         .add(com.google.common.collect.ImmutableSetMultimap.class, "K", "V")
+        .add(com.google.common.collect.ImmutableSortedMap.class, "K", "V")
         .add(com.google.common.collect.ImmutableRangeMap.class, "K", "V")
         .add(com.google.common.collect.ImmutableTable.class, "R", "C", "V")
         .add(com.google.common.base.Optional.class, "T")
