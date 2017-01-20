@@ -23,9 +23,6 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.LinkedListMultimap;
-import com.google.common.collect.Multimap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
@@ -46,12 +43,11 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.TreeScanner;
-import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.annotation.Nullable;
+import java.util.stream.Collectors;
 import javax.lang.model.element.ElementKind;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
@@ -60,16 +56,15 @@ import javax.lang.model.element.ElementKind;
   summary = "Wildcard imports, static or otherwise, should not be used",
   category = JDK,
   severity = SUGGESTION,
-
   linkType = CUSTOM,
   link = "https://google.github.io/styleguide/javaguide.html#s3.3.1-wildcard-imports"
-  )
+)
 public class WildcardImport extends BugChecker implements CompilationUnitTreeMatcher {
 
   /** Maximum number of members to import before switching to qualified names. */
   public static final int MAX_MEMBER_IMPORTS = 20;
 
-  /** A type or member that needs to be imported.*/
+  /** A type or member that needs to be imported. */
   @AutoValue
   abstract static class TypeToImport {
 
@@ -106,43 +101,11 @@ public class WildcardImport extends BugChecker implements CompilationUnitTreeMat
     // Find all of the types that need to be imported.
     Set<TypeToImport> typesToImport = ImportCollector.collect((JCCompilationUnit) tree);
 
-    // Group the imported types by the on-demand import they replace.
-    Multimap<ImportTree, TypeToImport> toFix = groupImports(wildcardImports, typesToImport);
-
-    Fix fix = createFix(wildcardImports, toFix, state);
+    Fix fix = createFix(wildcardImports, typesToImport, state);
     if (fix.isEmpty()) {
       return NO_MATCH;
     }
     return describeMatch(wildcardImports.get(0), fix);
-  }
-
-  /**
-   * Creates a multimap from existing on-demand imports to the single-type imports we're going to
-   * add, e.g.: java.util.* -> [java.util.List, java.util.ArrayList]
-   */
-  private Multimap<ImportTree, TypeToImport> groupImports(
-      ImmutableList<ImportTree> wildcardImports, Set<TypeToImport> typesToImport) {
-    Multimap<ImportTree, TypeToImport> toFix = LinkedListMultimap.create();
-    for (TypeToImport type : typesToImport) {
-      toFix.put(findMatchingWildcardImport(wildcardImports, type), type);
-    }
-    return toFix;
-  }
-
-  /** Find an on-demand import matching the given single-type import specification. */
-  @Nullable
-  private ImportTree findMatchingWildcardImport(
-      ImmutableList<ImportTree> wildcardImports, TypeToImport type) {
-    for (ImportTree importTree : wildcardImports) {
-      // Get the name of the on-demand import's scope, e.g. 'java.util.*' -> 'java.util'. It's
-      // guaranteed to be a MemberSelectTree by getWildcardImports().
-      String importBase =
-          ((MemberSelectTree) importTree.getQualifiedIdentifier()).getExpression().toString();
-      if (type.owner().getQualifiedName().contentEquals(importBase)) {
-        return importTree;
-      }
-    }
-    throw new AssertionError("could not find import for: " + type);
   }
 
   /** Collect all on demand imports. */
@@ -222,8 +185,10 @@ public class WildcardImport extends BugChecker implements CompilationUnitTreeMat
   /** Creates a {@link Fix} that replaces wildcard imports. */
   static Fix createFix(
       ImmutableList<ImportTree> wildcardImports,
-      Multimap<ImportTree, TypeToImport> toFix,
+      Set<TypeToImport> typesToImport,
       VisitorState state) {
+    Map<Symbol, List<TypeToImport>> toFix =
+        typesToImport.stream().collect(Collectors.groupingBy(TypeToImport::owner));
     final SuggestedFix.Builder fix = SuggestedFix.builder();
     for (ImportTree importToDelete : wildcardImports) {
       String importSpecification = importToDelete.getQualifiedIdentifier().toString();
@@ -233,16 +198,12 @@ public class WildcardImport extends BugChecker implements CompilationUnitTreeMat
         fix.removeImport(importSpecification);
       }
     }
-    Multimap<Symbol, TypeToImport> importsByOwner = LinkedHashMultimap.create();
-    for (TypeToImport toImport : toFix.values()) {
-      importsByOwner.put(toImport.owner(), toImport);
-    }
-    for (Map.Entry<Symbol, Collection<TypeToImport>> entries : importsByOwner.asMap().entrySet()) {
-      final Symbol owner = entries.getKey();
-      if (entries.getValue().size() > MAX_MEMBER_IMPORTS) {
+    for (Map.Entry<Symbol, List<TypeToImport>> entry : toFix.entrySet()) {
+      final Symbol owner = entry.getKey();
+      if (entry.getValue().size() > MAX_MEMBER_IMPORTS) {
         qualifiedNameFix(fix, owner, state);
       } else {
-        for (TypeToImport toImport : toFix.values()) {
+        for (TypeToImport toImport : entry.getValue()) {
           toImport.addFix(fix);
         }
       }

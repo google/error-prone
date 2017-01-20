@@ -369,6 +369,7 @@ public class WildcardImportTest {
         .doTest();
   }
 
+  @Test
   public void sameUnitWithSpuriousWildImport() throws Exception {
     testHelper
         .addInputLines(
@@ -392,6 +393,7 @@ public class WildcardImportTest {
         .doTest();
   }
 
+  @Test
   public void nonCanonical() throws Exception {
     testHelper
         .addInputLines(
@@ -417,7 +419,7 @@ public class WildcardImportTest {
         .addOutputLines(
             "out/test/Test.java",
             "package test;",
-            "import static a.Two.Inner;",
+            "import a.Two.Inner;",
             "public class Test {",
             "  Inner i;",
             "}")
